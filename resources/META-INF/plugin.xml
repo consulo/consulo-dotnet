@@ -1,0 +1,8 @@
+<idea-plugin>
+	<id>org.mustbe.consulo.dotnet.core</id>
+	<name>.NET Core</name>
+
+	<extensions defaultExtensionNs="com.intellij">
+
+	</extensions>
+</idea-plugin>

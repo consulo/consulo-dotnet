@@ -1,0 +1,39 @@
+<component name="ArtifactManager">
+  <artifact name="dist">
+    <output-path>$PROJECT_DIR$/out/artifacts/dist</output-path>
+    <root id="root">
+      <element id="directory" name="dotnet">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="dotnet.jar">
+            <element id="module-production-resource-output" name="consulo-dotnet" />
+            <element id="module-output" name="consulo-dotnet" />
+          </element>
+        </element>
+      </element>
+      <element id="directory" name="microsoft-dotnet">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="microsoft-dotnet.jar">
+            <element id="module-production-resource-output" name="consulo-microsoft-dotnet" />
+            <element id="module-output" name="consulo-microsoft-dotnet" />
+          </element>
+        </element>
+      </element>
+      <element id="directory" name="mono-dotnet">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="mono-dotnet.jar">
+            <element id="module-output" name="consulo-mono-dotnet" />
+            <element id="module-production-resource-output" name="consulo-mono-dotnet" />
+          </element>
+        </element>
+      </element>
+      <element id="directory" name="csharp">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="csharp.jar">
+            <element id="module-output" name="consulo-csharp" />
+            <element id="module-production-resource-output" name="consulo-csharp" />
+          </element>
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

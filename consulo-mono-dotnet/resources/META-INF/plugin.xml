@@ -1,0 +1,10 @@
+<idea-plugin>
+	<id>org.mustbe.consulo.dotnet.mono</id>
+	<name>Mono .NET</name>
+	<depends>org.mustbe.consulo.dotnet.core</depends>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<moduleExtensionProvider key="mono-dotnet"
+								 implementationClass="org.mustbe.consulo.dotnet.mono.module.extension.MonoDotNetModuleExtensionProvider" />
+	</extensions>
+</idea-plugin>

@@ -1,0 +1,8 @@
+<idea-plugin>
+	<id>org.mustbe.consulo.csharp.core</id>
+	<name>C# Core</name>
+
+	<extensions defaultExtensionNs="com.intellij">
+
+	</extensions>
+</idea-plugin>
