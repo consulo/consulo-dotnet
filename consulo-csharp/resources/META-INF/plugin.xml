@@ -1,8 +1,14 @@
 <idea-plugin>
 	<id>org.mustbe.consulo.csharp.core</id>
 	<name>C# Core</name>
+	<depends>org.mustbe.consulo.dotnet.core</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<fileTypeFactory implementation="org.mustbe.consulo.csharp.CSharpFileTypeFactory" />
 
+		<syntaxHighlighter key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighter" />
+		<lang.syntaxHighlighterFactory key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighterFactory" />
+		<lang.parserDefinition language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpParserDefinition" />
+		<lang.versionResolver language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionResolver" />
 	</extensions>
 </idea-plugin>

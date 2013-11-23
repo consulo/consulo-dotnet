@@ -24,6 +24,7 @@
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
+        <orderEntry type="module" module-name="consulo-dotnet" />
       </module>
       <module name="consulo-microsoft-dotnet" dirurl="file://$PROJECT_DIR$/consulo-microsoft-dotnet">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
