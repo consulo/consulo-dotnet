@@ -20,7 +20,8 @@
 package edu.arizona.cs.mbel.metadata;
 
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import edu.arizona.cs.mbel.ByteBuffer;
@@ -37,7 +38,7 @@ import edu.arizona.cs.mbel.emit.ClassEmitter;
 public class GenericTable
 {
 	private String grammar;
-	private Hashtable data;
+	private Map<String, Object> data;
 
 	private String name;
 	private String[] fieldNames;
@@ -67,7 +68,7 @@ public class GenericTable
 			types[i] = fieldtok.nextToken();
 		}
 
-		data = new Hashtable(fieldNames.length);
+		data = new HashMap<String, Object>(fieldNames.length);
 		for(String fieldName : fieldNames)
 		{
 			data.put(fieldName, "");
@@ -89,17 +90,17 @@ public class GenericTable
 		{
 			if(types[i].startsWith("1"))
 			{
-				Integer i1 = new Integer(in.readBYTE());
+				Integer i1 = in.readBYTE();
 				data.put(fieldNames[i], i1);
 			}
 			else if(types[i].startsWith("2"))
 			{
-				Integer i2 = new Integer(in.readWORD());
+				Integer i2 = in.readWORD();
 				data.put(fieldNames[i], i2);
 			}
 			else if(types[i].startsWith("4"))
 			{
-				Long i4 = new Long(in.readDWORD());
+				Long i4 = in.readDWORD();
 				data.put(fieldNames[i], i4);
 			}
 			else if(types[i].startsWith("S"))
@@ -122,7 +123,7 @@ public class GenericTable
 				tok = new StringTokenizer(types[i], "|");
 				tok.nextToken();
 				int table = Integer.parseInt(tok.nextToken());
-				Long value = new Long(tc.readTableIndex(in, table));
+				Long value = tc.readTableIndex(in, table);
 				data.put(fieldNames[i], value);
 			}
 			else if(types[i].startsWith("C"))
@@ -130,7 +131,7 @@ public class GenericTable
 				tok = new StringTokenizer(types[i], "|");
 				tok.nextToken();
 				int coded = Integer.parseInt(tok.nextToken());
-				Long value = new Long(tc.readCodedIndex(in, coded));
+				Long value = tc.readCodedIndex(in, coded);
 				data.put(fieldNames[i], value);
 			}
 		}

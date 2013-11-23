@@ -29,7 +29,7 @@ package edu.arizona.cs.mbel.mbel;
  */
 public class EntryPoint
 {
-	private Method method;
+	private MethodDef method;
 	private FileReference file;
 	// either one or the other
 
@@ -38,7 +38,7 @@ public class EntryPoint
 	 *
 	 * @param meth the Main method (entry point)
 	 */
-	public EntryPoint(Method meth)
+	public EntryPoint(MethodDef meth)
 	{
 		method = meth;
 	}
@@ -54,7 +54,7 @@ public class EntryPoint
 	/**
 	 * Returns the method of the entrypoint (if defined, may be null)
 	 */
-	public Method getEntryPointMethod()
+	public MethodDef getEntryPointMethod()
 	{
 		return method;
 	}

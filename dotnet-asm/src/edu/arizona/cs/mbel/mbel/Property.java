@@ -38,7 +38,7 @@ public class Property implements PropertyAttributes
 	private int Flags;
 	private String Name;
 	private PropertySignature signature;
-	private Method getter, setter;
+	private MethodDef getter, setter;
 	private byte[] defaultValue;
 
 	private Vector propertyAttributes;
@@ -144,7 +144,7 @@ public class Property implements PropertyAttributes
 	/**
 	 * Returns the method reference of the Getter of this property
 	 */
-	public Method getGetter()
+	public MethodDef getGetter()
 	{
 		return getter;
 	}
@@ -152,7 +152,7 @@ public class Property implements PropertyAttributes
 	/**
 	 * Sets the Getter method for this property
 	 */
-	public void setGetter(Method get)
+	public void setGetter(MethodDef get)
 	{
 		getter = get;
 	}
@@ -160,7 +160,7 @@ public class Property implements PropertyAttributes
 	/**
 	 * Returns the method reference of the Setter of this property
 	 */
-	public Method getSetter()
+	public MethodDef getSetter()
 	{
 		return setter;
 	}
@@ -168,7 +168,7 @@ public class Property implements PropertyAttributes
 	/**
 	 * Sets the Setter method for this property
 	 */
-	public void setSetter(Method set)
+	public void setSetter(MethodDef set)
 	{
 		setter = set;
 	}

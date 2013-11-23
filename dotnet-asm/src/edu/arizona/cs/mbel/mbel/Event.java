@@ -36,7 +36,7 @@ public class Event implements EventAttributes
 	private int EventFlags;
 	private String Name;
 	private TypeRef EventType; // handler type
-	private Method addOn, removeOn, fire;
+	private MethodDef addOn, removeOn, fire;
 
 	private Vector eventAttributes;
 
@@ -114,7 +114,7 @@ public class Event implements EventAttributes
 	/**
 	 * Returns the "AddOn" method for this event
 	 */
-	public Method getAddOnMethod()
+	public MethodDef getAddOnMethod()
 	{
 		return addOn;
 	}
@@ -122,7 +122,7 @@ public class Event implements EventAttributes
 	/**
 	 * Sets the "AddOn" method for this Event
 	 */
-	public void setAddOnMethod(Method add)
+	public void setAddOnMethod(MethodDef add)
 	{
 		addOn = add;
 	}
@@ -130,7 +130,7 @@ public class Event implements EventAttributes
 	/**
 	 * Returns the "RemoveOn" method for this event
 	 */
-	public Method getRemoveOnMethod()
+	public MethodDef getRemoveOnMethod()
 	{
 		return removeOn;
 	}
@@ -138,7 +138,7 @@ public class Event implements EventAttributes
 	/**
 	 * Sets the "RemoveOn" method for this event
 	 */
-	public void setRemoveOnMethod(Method rem)
+	public void setRemoveOnMethod(MethodDef rem)
 	{
 		removeOn = rem;
 	}
@@ -146,7 +146,7 @@ public class Event implements EventAttributes
 	/**
 	 * Returns the "Fire" method for this event
 	 */
-	public Method getFireMethod()
+	public MethodDef getFireMethod()
 	{
 		return fire;
 	}
@@ -154,7 +154,7 @@ public class Event implements EventAttributes
 	/**
 	 * Sets the "Fire" method for this event
 	 */
-	public void setFireMethod(Method f)
+	public void setFireMethod(MethodDef f)
 	{
 		fire = f;
 	}

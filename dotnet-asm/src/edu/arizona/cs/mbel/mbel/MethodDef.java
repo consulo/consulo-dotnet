@@ -19,6 +19,9 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import edu.arizona.cs.mbel.instructions.CALL;
@@ -37,8 +40,8 @@ import edu.arizona.cs.mbel.signature.SignatureException;
  *
  * @author Michael Stepp
  */
-public class Method extends MethodDefOrRef implements MethodAttributes,
-		MethodImplAttributes, HasSecurity
+public class MethodDef extends MethodDefOrRef implements MethodAttributes,
+		MethodImplAttributes, HasSecurity, GenericParamOwner
 {
 	private long MethodRID = -1L;
 
@@ -53,22 +56,24 @@ public class Method extends MethodDefOrRef implements MethodAttributes,
 
 	private Vector methodAttributes;
 
+	private List<GenericParamDef> myGenericParamDefs;
+
 	/**
 	 * This method will create a default constructor for any object. The constructor
 	 * takes no arguments, has no local vars, and does nothing more than call Object.ctor().
 	 * Of course, this should only be used by classes that directly extend System.Object.
 	 * The access modifier for this Method will be Public.
 	 */
-	public static Method makeDefaultConstructor()
+	public static MethodDef makeDefaultConstructor()
 	{
-		Method ctor = null;
+		MethodDef ctor = null;
 		MethodRef super_ctor = null;
 		try
 		{
 			MethodSignature callsitesig = new MethodSignature(new ReturnTypeSignature(ReturnTypeSignature.ELEMENT_TYPE_VOID), null);
 			super_ctor = new MethodRef(".ctor", AssemblyTypeRef.OBJECT, callsitesig);
 
-			ctor = new Method(".ctor", 0, (Method.Public | Method.HideBySig | Method.SpecialName | Method.RTSpecialName),
+			ctor = new MethodDef(".ctor", 0, (MethodDef.Public | MethodDef.HideBySig | MethodDef.SpecialName | MethodDef.RTSpecialName),
 					new MethodSignature(new ReturnTypeSignature(ReturnTypeSignature.ELEMENT_TYPE_VOID), null));
 		}
 		catch(SignatureException se)
@@ -93,9 +98,8 @@ public class Method extends MethodDefOrRef implements MethodAttributes,
 	 * @param implFlags a bit vector of flags for the method implementation (defined in MethodImplAttributes)
 	 * @param flags     a bit vector of flags for this method (defined in MethodAttributes)
 	 * @param sig       the signature of this method
-	 * @param par       the TypeDef in which this method is defined
 	 */
-	public Method(String name, int implFlags, int flags, MethodSignature sig)
+	public MethodDef(String name, int implFlags, int flags, MethodSignature sig)
 	{
 		super(name, null);
 		signature = sig;
@@ -317,6 +321,22 @@ public class Method extends MethodDefOrRef implements MethodAttributes,
 	public void setFlags(int flags)
 	{
 		Flags = flags;
+	}
+
+	@Override
+	public void addGenericParam(GenericParamDef genericParamDef)
+	{
+		if(myGenericParamDefs == null)
+		{
+			myGenericParamDefs = new ArrayList<GenericParamDef>(5);
+		}
+		myGenericParamDefs.add(genericParamDef);
+	}
+
+	@Override
+	public List<GenericParamDef> getGenericParams()
+	{
+		return myGenericParamDefs == null ? Collections.<GenericParamDef>emptyList() : myGenericParamDefs;
 	}
 
 

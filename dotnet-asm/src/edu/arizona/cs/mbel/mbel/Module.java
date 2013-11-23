@@ -281,7 +281,7 @@ public class Module
 	 * @param name the name of the method, to be compared with Method.getName()
 	 * @return the given method, or null if not found
 	 */
-	public Method getGlobalMethod(String name)
+	public MethodDef getGlobalMethod(String name)
 	{
 		TypeDef mod = getTypeDefByName("", "<Module>");
 		if(mod == null)
@@ -313,7 +313,7 @@ public class Module
 	 * Global methods must be static and public, and cannot have HASTHIS or EXPLICITTHIS
 	 * in their calling convention.
 	 */
-	public void addGlobalMethod(Method method)
+	public void addGlobalMethod(MethodDef method)
 	{
 		TypeDef module = getTypeDefByName("", "<Module>");
 		if(module == null)

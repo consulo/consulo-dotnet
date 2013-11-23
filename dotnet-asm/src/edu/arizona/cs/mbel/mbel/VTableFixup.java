@@ -44,7 +44,7 @@ public class VTableFixup
 
 	private long RVA;
 	private int Type;                // 2 bytes (flags)
-	private Method[] fixups; // Methods
+	private MethodDef[] fixups; // Methods
 
 	/**
 	 * Parses a VTableFixups object from a ClassParser
@@ -57,7 +57,7 @@ public class VTableFixup
 		int Count = in.readWORD();
 		Type = in.readWORD();
 
-		fixups = new Method[Count];
+		fixups = new MethodDef[Count];
 
 		if((Type & COR_VTABLE_32BIT) != 0)
 		{
@@ -86,7 +86,7 @@ public class VTableFixup
 	/**
 	 * Returns the method references for all the RIDs in the VTable fixups
 	 */
-	public Method[] getFixups()
+	public MethodDef[] getFixups()
 	{
 		return fixups;
 	}
@@ -128,7 +128,7 @@ public class VTableFixup
 		{
 			byte[] data = new byte[fixups.length * 8];
 			int index = 0;
-			for(Method fixup : fixups)
+			for(MethodDef fixup : fixups)
 			{
 				long token = fixup.getMethodRID() | ((long) (TableConstants.Method)) << 24;
 				token &= 0xFFFFFFFFL;
@@ -148,7 +148,7 @@ public class VTableFixup
 		{
 			byte[] data = new byte[fixups.length * 4];
 			int index = 0;
-			for(Method fixup : fixups)
+			for(MethodDef fixup : fixups)
 			{
 				long token = fixup.getMethodRID() | ((long) (TableConstants.Method)) << 24;
 				token &= 0xFFFFFFFFL;

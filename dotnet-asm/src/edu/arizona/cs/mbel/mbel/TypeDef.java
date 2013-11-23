@@ -19,7 +19,10 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import edu.arizona.cs.mbel.signature.TypeAttributes;
@@ -32,18 +35,18 @@ import edu.arizona.cs.mbel.signature.TypeAttributes;
  *
  * @author Michael Stepp
  */
-public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes
+public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, GenericParamOwner
 {
 	private long TypeDefRID = -1L;
 
 	private Vector events;
 	private Vector fields;
-	private Vector methods;
+	private Vector<MethodDef> methods;
 	private Vector properties;
 	private Vector interfaces;      // InterfaceImplementations
 	private Vector attributes;
 	private Vector nestedClasses;   // TypeDefs
-	private Vector methodMaps;      // MethodMaps
+	private Vector<MethodMap> methodMaps;      // MethodMaps
 	////////////////////////////////////
 	private long Flags;
 	//////////////////////////
@@ -53,6 +56,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes
 	private DeclSecurity security;
 
 	private Vector typeDefAttributes;
+	private List<GenericParamDef> myGenericParamDefs;
 
 	/**
 	 * Constructs a TypeDef with the given namespace, name and flags
@@ -361,7 +365,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes
 	/**
 	 * Returns the event whose name is 'name', or null if not found.
 	 *
-	 * @param the name of the Event (to be compared with Event.getName())
+	 * @param name of the Event (to be compared with Event.getName())
 	 * @return the event specified, or null if not found
 	 */
 	public Event getEventByName(String name)
@@ -466,7 +470,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes
 	 *
 	 * @param method the method to add
 	 */
-	public void addMethod(Method method)
+	public void addMethod(MethodDef method)
 	{
 		if(method != null)
 		{
@@ -481,12 +485,12 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes
 	 * @param name the name of the method, to be compared to Method.getName()
 	 * @return the specified method, or null if not found
 	 */
-	public Method getMethodByName(String name)
+	public MethodDef getMethodByName(String name)
 	{
 		Iterator iter = methods.iterator();
 		while(iter.hasNext())
 		{
-			Method m = (Method) iter.next();
+			MethodDef m = (MethodDef) iter.next();
 			if(m.getName().equals(name))
 			{
 				return m;
@@ -500,14 +504,9 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes
 	 *
 	 * @return a non-null array of methods
 	 */
-	public Method[] getMethods()
+	public MethodDef[] getMethods()
 	{
-		Method[] ma = new Method[methods.size()];
-		for(int i = 0; i < ma.length; i++)
-		{
-			ma[i] = (Method) methods.get(i);
-		}
-		return ma;
+		return methods.toArray(new MethodDef[methods.size()]);
 	}
 
 	// Property methods ////////////////////////////
@@ -658,7 +657,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes
 	 * Adds a MethodMap to this TypeDef.
 	 * (note: this method does no checking to see that the method named in the MethodMap is defined in this TypeDef)
 	 *
-	 * @param the MethodMap to add
+	 * @param map MethodMap to add
 	 */
 	public void addMethodMap(MethodMap map)
 	{
@@ -693,7 +692,23 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes
 		TypeDef m = (TypeDef) o;
 		return (getName().equals(m.getName()) && getNamespace().equals(m.getNamespace()));
 	}
-   
+
+	@Override
+	public void addGenericParam(GenericParamDef genericParamDef)
+	{
+		if(myGenericParamDefs == null)
+		{
+			myGenericParamDefs = new ArrayList<GenericParamDef>(5);
+		}
+		myGenericParamDefs.add(genericParamDef);
+	}
+
+	@Override
+	public List<GenericParamDef> getGenericParams()
+	{
+		return myGenericParamDefs == null ? Collections.<GenericParamDef>emptyList() : myGenericParamDefs;
+	}
+
 /*
    public void output(){
       System.out.print("TypeDef[Name=\"" + getName() + "\", Namespace=\"" + getNamespace() + "\"");

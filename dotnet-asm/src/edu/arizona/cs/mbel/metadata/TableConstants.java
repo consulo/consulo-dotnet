@@ -70,6 +70,8 @@ public class TableConstants
 	public static final int Implementation = 9;
 	public static final int CustomAttributeType = 10;
 	public static final int ResolutionScope = 11;
+	public static final int TypeOrMethodDef = 12;
+
 	// indices for the heaps
 	public static final int StringsHeap = 0;
 	public static final int GUIDHeap = 1;
@@ -119,6 +121,7 @@ public class TableConstants
 	public static final int TypeDef = 0x02;
 	public static final int TypeRef = 0x01;
 	public static final int TypeSpec = 0x1B;
+	public static final int GenericParam = 0x2a;
 
 	public static final String[] GRAMMAR = new String[64];
 
@@ -167,6 +170,7 @@ public class TableConstants
 		GRAMMAR[TypeDef] = "TypeDef:Flags=4,Name=S,Namespace=S,Extends=C|" + TypeDefOrRef + ",FieldList=T|" + Field + ",MethodList=T|" + Method;
 		GRAMMAR[TypeRef] = "TypeRef:ResolutionScope=C|" + ResolutionScope + ",Name=S,Namespace=S";
 		GRAMMAR[TypeSpec] = "TypeSpec:Signature=B";
+		GRAMMAR[GenericParam] = "GenericParam:Flags=4,Parent=T|" + TypeOrMethodDef + ",Name=S";
 	}
 
 	// BITS[i] = ceil(lg(TABLE_OPTIONS[i].length))
@@ -182,7 +186,8 @@ public class TableConstants
 			1,
 			2,
 			3,
-			2
+			2,
+			1
 	};
 	private static final int[] MASKS = {
 			0x3,
@@ -196,7 +201,8 @@ public class TableConstants
 			0x1,
 			0x3,
 			0x7,
-			0x3
+			0x3,
+			0x1
 	};
 
 	private int[] INDEX_BITS;
@@ -293,6 +299,11 @@ public class TableConstants
 					ModuleRef,
 					AssemblyRef,
 					TypeRef
+			},
+	/*TypeOrMethodDef*/
+			{
+					TypeDef,
+					Method
 			}
 	};
 
@@ -308,7 +319,7 @@ public class TableConstants
 	 * Makes a TableConstants with the given table sizes, heap sizes, and streams
 	 *
 	 * @param compS   the #~ stream
-	 * @param stringS the #Strings heap
+	 * @param stringsS the #Strings heap
 	 * @param blobS   the #Blob heap
 	 * @param guidS   the #GUID heap
 	 * @param usS     the #US stream
@@ -328,8 +339,8 @@ public class TableConstants
 		heapIndexSizes[GUIDHeap] = c_stream.getGUIDIndexSize();
 		heapIndexSizes[BlobHeap] = c_stream.getBlobIndexSize();
 
-		INDEX_BITS = new int[12];
-		for(int j = 0; j < 12; j++)
+		INDEX_BITS = new int[TABLE_OPTIONS.length];
+		for(int j = 0; j < TABLE_OPTIONS.length; j++)
 		{
 			long max = 0;
 			for(int i = 0; i < TABLE_OPTIONS[j].length; i++)
@@ -369,7 +380,12 @@ public class TableConstants
 				tables[i] = new GenericTable[(int) c_stream.Counts[i]];
 				for(int j = 0; j < c_stream.Counts[i]; j++)
 				{
-					tables[i][j] = new GenericTable(GRAMMAR[i]);
+					String grammar = GRAMMAR[i];
+					if(grammar == null)
+					{
+						throw new IllegalArgumentException(i + " is bad index for grammar");
+					}
+					tables[i][j] = new GenericTable(grammar);
 					tables[i][j].parse(in, this);
 				}
 			}
@@ -452,7 +468,7 @@ public class TableConstants
 	public long[] parseCodedIndex(long codedIndex, int type)
 	{
 		//  converts a codedindex into a {table number, row number} int array
-		if(type < 0 || type > ResolutionScope)
+		if(type < 0 || type > TypeOrMethodDef)
 		{
 			return null;
 		}
@@ -561,7 +577,7 @@ public class TableConstants
 	/**
 	 * Returns the number of elements in the specified table
 	 *
-	 * @param the table number (i.e. TypeDef)
+	 * @param table table number (i.e. TypeDef)
 	 */
 	public long getTableSize(int table)
 	{

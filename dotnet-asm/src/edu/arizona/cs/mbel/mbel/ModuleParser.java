@@ -58,7 +58,7 @@ public class ModuleParser
 	private TypeDef[] typeDefs = null;
 	private TypeRef[] typeRefs = null;
 	private TypeSpec[] typeSpecs = null;
-	private Method[] methods = null;
+	private MethodDef[] methods = null;
 	private Field[] fields = null;
 	private ParameterInfo[] params = null;
 	private Property[] properties = null;
@@ -152,7 +152,7 @@ public class ModuleParser
 	 * Returns the method corresponding to the given Method token.
 	 * To be used by VTableFixups as a callback.
 	 */
-	public Method getVTableFixup(long methodToken)
+	public MethodDef getVTableFixup(long methodToken)
 	{
 		long toktype = (methodToken >> 24) & 0xFFL;
 		long tokrow = (methodToken & 0xFFFFFFL);
@@ -316,6 +316,7 @@ public class ModuleParser
 		setDefaultValues();
 
 		buildMemberRefs();
+		buildGenericParams();
 		buildEntryPoint();
 		buildStandAloneSigs();
 		buildMethodBodies();
@@ -728,7 +729,7 @@ public class ModuleParser
 		if(tables[TableConstants.Method] != null)
 		{
 			row = tables[TableConstants.Method];
-			methods = new Method[row.length];
+			methods = new MethodDef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
 				long RVA = row[i].getConstant("RVA").longValue();
@@ -740,9 +741,9 @@ public class ModuleParser
 				MethodSignature sig = MethodSignature.parse(new ByteBuffer(blob)
 						, group);
 
-				methods[i] = new Method(name, implFlags, flags, sig);
+				methods[i] = new MethodDef(name, implFlags, flags, sig);
 
-				if((RVA != 0) && (implFlags & Method.CodeTypeMask) == Method.Native)
+				if((RVA != 0) && (implFlags & MethodDef.CodeTypeMask) == MethodDef.Native)
 				{
 					methods[i].setMethodRVA(RVA);
 				}
@@ -1244,7 +1245,7 @@ public class ModuleParser
 				int sem = aRow.getConstant("Semantics").intValue();
 				long coded = aRow.getCodedIndex("Association");
 				long token[] = tc.parseCodedIndex(coded, TableConstants.HasSemantics);
-				Method meth = methods[(int) method - 1];
+				MethodDef meth = methods[(int) method - 1];
 
 				if(token[0] == TableConstants.Event)
 				{
@@ -1452,6 +1453,37 @@ public class ModuleParser
 		}
 	}
 
+	private void buildGenericParams()
+	{
+		GenericTable[] table = tables[TableConstants.GenericParam];
+		if(table == null)
+		{
+			return;
+		}
+
+		for(GenericTable genericTable : table)
+		{
+			String name = genericTable.getString("Name");
+
+			int flags = genericTable.getConstant("Flags").intValue();
+			long owner = genericTable.getTableIndex("Parent");
+
+			GenericParamOwner paramOwner = null;
+			long[] token = tc.parseCodedIndex(owner, TableConstants.TypeOrMethodDef);
+			if(token[0] == TableConstants.TypeDef)
+			{
+				paramOwner = typeDefs[(int) token[1] - 1];
+			}
+			else
+			{
+				paramOwner = methods[(int) token[1] - 1];
+			}
+
+			GenericParamDef paramDef = new GenericParamDef(name, flags);
+			paramOwner.addGenericParam(paramDef);
+		}
+	}
+
 	private void buildMethodBodies() throws IOException, MSILParseException
 	{
 		// build method bodies (last!)
@@ -1462,7 +1494,7 @@ public class ModuleParser
 			{
 				long implflags = row[i].getConstant("ImplFlags").intValue();
 				long RVA = row[i].getConstant("RVA").longValue();
-				if(RVA != 0 && (implflags & Method.CodeTypeMask) == Method.IL)
+				if(RVA != 0 && (implflags & MethodDef.CodeTypeMask) == MethodDef.IL)
 				{
 					in.seek(in.getFilePointer(RVA));
 					MethodBody body = new MethodBody(this);

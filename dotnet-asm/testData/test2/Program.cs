@@ -10,5 +10,7 @@ class Program
 
 class Test<T>
 {
-
+	/*static void test<M>()
+	{
+	}         */
 }

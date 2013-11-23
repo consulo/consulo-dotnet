@@ -48,7 +48,7 @@ public class ClassEmitter
 	private BlobStreamGen blobGen;
 	private GUIDStreamGen guidGen;
 	private USStreamGen usGen;
-	private Vector[] tables;
+	private Vector<GenericTable>[] tables;
 	private TableConstants tc = null;
 	/////////////////////////////////////////////////////
 	private long TypeDefCount = 1;
@@ -113,40 +113,38 @@ public class ClassEmitter
 		}
 		buildManifestResources();
 
-		{// add TypeDef tables and sub-tables
-			TypeDef[] defs = module.getTypeDefs();
-			for(TypeDef def7 : defs)
-			{
-				addTypeDef(def7);
-			}
-			for(TypeDef def6 : defs)
-			{
-				buildEvents(def6);
-			}
-			for(TypeDef def5 : defs)
-			{
-				buildProperties(def5);
-			}
-			for(TypeDef def4 : defs)
-			{
-				buildFields(def4);
-			}
-			for(TypeDef def3 : defs)
-			{
-				buildMethods(def3);
-			}
-			for(TypeDef def2 : defs)
-			{
-				buildMethodBodies(def2);
-			}
-			for(TypeDef def1 : defs)
-			{
-				buildMethodImpls(def1);
-			}
-			for(TypeDef def : defs)
-			{
-				buildInterfaceImpls(def);
-			}
+		TypeDef[] defs = module.getTypeDefs();
+		for(TypeDef def7 : defs)
+		{
+			addTypeDef(def7);
+		}
+		for(TypeDef def6 : defs)
+		{
+			buildEvents(def6);
+		}
+		for(TypeDef def5 : defs)
+		{
+			buildProperties(def5);
+		}
+		for(TypeDef def4 : defs)
+		{
+			buildFields(def4);
+		}
+		for(TypeDef def3 : defs)
+		{
+			buildMethods(def3);
+		}
+		for(TypeDef def2 : defs)
+		{
+			buildMethodBodies(def2);
+		}
+		for(TypeDef def1 : defs)
+		{
+			buildMethodImpls(def1);
+		}
+		for(TypeDef def : defs)
+		{
+			buildInterfaceImpls(def);
 		}
 
 		buildEntryPointToken();
@@ -311,7 +309,7 @@ public class ClassEmitter
 						long RVA = methodTable.getConstant("RVA").longValue();
 						int Flags = methodTable.getConstant("ImplFlags").intValue();
 
-						if((RVA != 0) && (Flags & Method.CodeTypeMask) == Method.IL)
+						if((RVA != 0) && (Flags & MethodDef.CodeTypeMask) == MethodDef.IL)
 						{
 							netPatches.addPatch(netBuffer.getPosition());
 							bodyRVAStarts[j] = netBuffer.getPosition();
@@ -447,25 +445,25 @@ public class ClassEmitter
 			GenericTable assemTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Assembly]);
 			tables[TableConstants.Assembly].add(assemTable);
 
-			assemTable.setFieldValue("HashAlgID", new Long(assemblyInfo.getHashAlg()));
-			assemTable.setFieldValue("MajorVersion", new Integer(assemblyInfo.getMajorVersion()));
-			assemTable.setFieldValue("MinorVersion", new Integer(assemblyInfo.getMinorVersion()));
-			assemTable.setFieldValue("BuildNumber", new Integer(assemblyInfo.getBuildNumber()));
-			assemTable.setFieldValue("RevisionNumber", new Integer(assemblyInfo.getRevisionNumber() + 1));
-			assemTable.setFieldValue("Flags", new Long(assemblyInfo.getFlags()));
-			assemTable.setFieldValue("PublicKey", new Long(blobGen.addBlob(assemblyInfo.getPublicKey())));
-			assemTable.setFieldValue("Name", new Long(stringsGen.addString(assemblyInfo.getName())));
-			assemTable.setFieldValue("Culture", new Long(stringsGen.addString(assemblyInfo.getCulture())));
+			assemTable.setFieldValue("HashAlgID", assemblyInfo.getHashAlg());
+			assemTable.setFieldValue("MajorVersion", assemblyInfo.getMajorVersion());
+			assemTable.setFieldValue("MinorVersion", assemblyInfo.getMinorVersion());
+			assemTable.setFieldValue("BuildNumber", assemblyInfo.getBuildNumber());
+			assemTable.setFieldValue("RevisionNumber", assemblyInfo.getRevisionNumber() + 1);
+			assemTable.setFieldValue("Flags", assemblyInfo.getFlags());
+			assemTable.setFieldValue("PublicKey", blobGen.addBlob(assemblyInfo.getPublicKey()));
+			assemTable.setFieldValue("Name", stringsGen.addString(assemblyInfo.getName()));
+			assemTable.setFieldValue("Culture", stringsGen.addString(assemblyInfo.getCulture()));
 
 			// Make DeclSecurity
 			DeclSecurity decl = assemblyInfo.getDeclSecurity();
 			if(decl != null)
 			{
 				GenericTable declTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.DeclSecurity]);
-				declTable.setFieldValue("Action", new Integer(decl.getAction()));
+				declTable.setFieldValue("Action", decl.getAction());
 				long coded = TableConstants.buildCodedIndex(TableConstants.HasDeclSecurity, TableConstants.Assembly, 1L);
-				declTable.setFieldValue("Parent", new Long(coded));
-				declTable.setFieldValue("PermissionSet", new Long(blobGen.addBlob(decl.getPermissionSet())));
+				declTable.setFieldValue("Parent", coded);
+				declTable.setFieldValue("PermissionSet", blobGen.addBlob(decl.getPermissionSet()));
 
 				tables[TableConstants.DeclSecurity].add(declTable);
 
@@ -492,11 +490,11 @@ public class ClassEmitter
 	{
 		// DONE!
 		GenericTable modTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Module]);
-		modTable.setFieldValue("Generation", new Integer(module.getGeneration()));
-		modTable.setFieldValue("Name", new Long(stringsGen.addString(module.getName())));
-		modTable.setFieldValue("Mvid", new Long(guidGen.addGUID(module.getMvidGUID())));
-		modTable.setFieldValue("EncID", new Long(guidGen.addGUID(module.getEncIdGUID())));
-		modTable.setFieldValue("EncBaseID", new Long(guidGen.addGUID(module.getEncBaseIdGUID())));
+		modTable.setFieldValue("Generation", module.getGeneration());
+		modTable.setFieldValue("Name", stringsGen.addString(module.getName()));
+		modTable.setFieldValue("Mvid", guidGen.addGUID(module.getMvidGUID()));
+		modTable.setFieldValue("EncID", guidGen.addGUID(module.getEncIdGUID()));
+		modTable.setFieldValue("EncBaseID", guidGen.addGUID(module.getEncBaseIdGUID()));
 
 		tables[TableConstants.Module].add(modTable);
 
@@ -516,9 +514,9 @@ public class ClassEmitter
 			fr.setFileRID(FileCount++);
 			tables[TableConstants.File].add(fileTable);
 
-			fileTable.setFieldValue("Flags", new Long(fr.getFlags()));
-			fileTable.setFieldValue("Name", new Long(stringsGen.addString(fr.getFileName())));
-			fileTable.setFieldValue("HashValue", new Long(blobGen.addBlob(fr.getHashValue())));
+			fileTable.setFieldValue("Flags", fr.getFlags());
+			fileTable.setFieldValue("Name", stringsGen.addString(fr.getFileName()));
+			fileTable.setFieldValue("HashValue", blobGen.addBlob(fr.getHashValue()));
 			index = fr.getFileRID();
 		}
 
@@ -543,10 +541,10 @@ public class ClassEmitter
 				LocalManifestResource lmr = (LocalManifestResource) re;
 
 				manTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ManifestResource]);
-				manTable.setFieldValue("Offset", new Long(localResources.getPosition()));
-				manTable.setFieldValue("Flags", new Long(lmr.getFlags()));
-				manTable.setFieldValue("Name", new Long(stringsGen.addString(lmr.getName())));
-				manTable.setFieldValue("Implementation", new Long(0));
+				manTable.setFieldValue("Offset", (long) localResources.getPosition());
+				manTable.setFieldValue("Flags", lmr.getFlags());
+				manTable.setFieldValue("Name", stringsGen.addString(lmr.getName()));
+				manTable.setFieldValue("Implementation", (long) 0);
 				tables[TableConstants.ManifestResource].add(manTable);
 
 				byte[] data = lmr.getResourceData();
@@ -559,13 +557,13 @@ public class ClassEmitter
 				// DONE!
 				FileManifestResource fmr = (FileManifestResource) re;
 				manTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ManifestResource]);
-				manTable.setFieldValue("Offset", new Long(0));
-				manTable.setFieldValue("Flags", new Long(re.getFlags()));
-				manTable.setFieldValue("Name", new Long(stringsGen.addString(re.getName())));
+				manTable.setFieldValue("Offset", (long) 0);
+				manTable.setFieldValue("Flags", re.getFlags());
+				manTable.setFieldValue("Name", stringsGen.addString(re.getName()));
 
 				long rid = addFile(fmr.getFileReference());
 				long coded = TableConstants.buildCodedIndex(TableConstants.Implementation, TableConstants.File, rid);
-				manTable.setFieldValue("Implementation", new Long(coded));
+				manTable.setFieldValue("Implementation", coded);
 				tables[TableConstants.ManifestResource].add(manTable);
 			}
 			else if(re instanceof AssemblyManifestResource)
@@ -576,12 +574,12 @@ public class ClassEmitter
 				long assemblyRef = addAssemblyRef(amr.getAssemblyRefInfo());
 
 				manTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ManifestResource]);
-				manTable.setFieldValue("Offset", new Long(0));
-				manTable.setFieldValue("Flags", new Long(re.getFlags()));
-				manTable.setFieldValue("Name", new Long(stringsGen.addString(re.getName())));
+				manTable.setFieldValue("Offset", (long) 0);
+				manTable.setFieldValue("Flags", re.getFlags());
+				manTable.setFieldValue("Name", stringsGen.addString(re.getName()));
 
 				long coded = TableConstants.buildCodedIndex(TableConstants.Implementation, TableConstants.AssemblyRef, assemblyRef);
-				manTable.setFieldValue("Implementation", new Long(coded));
+				manTable.setFieldValue("Implementation", coded);
 				tables[TableConstants.ManifestResource].add(manTable);
 			}
 
@@ -605,10 +603,10 @@ public class ClassEmitter
 		tables[TableConstants.ExportedType].add(exTable);
 		ref.setExportedTypeRID(ExportedTypeCount++);
 
-		exTable.setFieldValue("Flags", new Long(ref.getFlags()));
-		exTable.setFieldValue("TypeDefID", new Long(0));
-		exTable.setFieldValue("TypeName", new Long(stringsGen.addString(ref.getName())));
-		exTable.setFieldValue("TypeNamespace", new Long(stringsGen.addString(ref.getNamespace())));
+		exTable.setFieldValue("Flags", ref.getFlags());
+		exTable.setFieldValue("TypeDefID", (long) 0);
+		exTable.setFieldValue("TypeName", stringsGen.addString(ref.getName()));
+		exTable.setFieldValue("TypeNamespace", stringsGen.addString(ref.getNamespace()));
 
 		long coded = 0;
 		if(ref.getFileReference() != null)
@@ -622,7 +620,7 @@ public class ClassEmitter
 			long rid = addExportedType(ref.getExportedTypeRef());
 			coded = TableConstants.buildCodedIndex(TableConstants.Implementation, TableConstants.ExportedType, rid);
 		}
-		exTable.setFieldValue("Implementation", new Long(coded));
+		exTable.setFieldValue("Implementation", coded);
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.ExportedType, ref.getExportedTypeRID());
@@ -644,32 +642,32 @@ public class ClassEmitter
 		def.setTypeDefRID(TypeDefCount++);
 		tables[TableConstants.TypeDef].add(defTable);
 
-		defTable.setFieldValue("Flags", new Long(def.getFlags()));
-		defTable.setFieldValue("Name", new Long(stringsGen.addString(def.getName())));
-		defTable.setFieldValue("Namespace", new Long(stringsGen.addString(def.getNamespace())));
+		defTable.setFieldValue("Flags", def.getFlags());
+		defTable.setFieldValue("Name", stringsGen.addString(def.getName()));
+		defTable.setFieldValue("Namespace", stringsGen.addString(def.getNamespace()));
 
 		AbstractTypeReference parent = def.getSuperClass();
 		if(parent == null)
 		{
-			defTable.setFieldValue("Extends", new Long(0));
+			defTable.setFieldValue("Extends", (long) 0);
 		}
 		else if(parent instanceof TypeDef)
 		{
 			long rid = addTypeDef((TypeDef) parent);
 			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, rid);
-			defTable.setFieldValue("Extends", new Long(coded));
+			defTable.setFieldValue("Extends", coded);
 		}
 		else if(parent instanceof TypeRef)
 		{
 			long rid = addTypeRef((TypeRef) parent);
 			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, rid);
-			defTable.setFieldValue("Extends", new Long(coded));
+			defTable.setFieldValue("Extends", coded);
 		}
 		else if(parent instanceof TypeSpec)
 		{
 			long rid = addTypeSpec((TypeSpec) parent);
 			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeSpec, rid);
-			defTable.setFieldValue("Extends", new Long(coded));
+			defTable.setFieldValue("Extends", coded);
 		}
 
 		//////////////////////////////////////////////////////////////////
@@ -679,8 +677,8 @@ public class ClassEmitter
 		{
 			GenericTable nestTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.NestedClass]);
 			long myIndex = addTypeDef(aNested);
-			nestTable.setFieldValue("NestedClass", new Long(myIndex));
-			nestTable.setFieldValue("EnclosingClass", new Long(def.getTypeDefRID()));
+			nestTable.setFieldValue("NestedClass", myIndex);
+			nestTable.setFieldValue("EnclosingClass", def.getTypeDefRID());
 			tables[TableConstants.NestedClass].add(nestTable);
 		}
 
@@ -689,9 +687,9 @@ public class ClassEmitter
 		if(layout != null)
 		{
 			GenericTable layoutTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ClassLayout]);
-			layoutTable.setFieldValue("PackingSize", new Integer(layout.getPackingSize()));
-			layoutTable.setFieldValue("ClassSize", new Long(layout.getClassSize()));
-			layoutTable.setFieldValue("Parent", new Long(def.getTypeDefRID()));
+			layoutTable.setFieldValue("PackingSize", layout.getPackingSize());
+			layoutTable.setFieldValue("ClassSize", layout.getClassSize());
+			layoutTable.setFieldValue("Parent", def.getTypeDefRID());
 			tables[TableConstants.ClassLayout].add(layoutTable);
 		}
 
@@ -700,10 +698,10 @@ public class ClassEmitter
 		if(decl != null)
 		{
 			GenericTable declTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.DeclSecurity]);
-			declTable.setFieldValue("Action", new Integer(decl.getAction()));
+			declTable.setFieldValue("Action", decl.getAction());
 			long coded = TableConstants.buildCodedIndex(TableConstants.HasDeclSecurity, TableConstants.TypeDef, def.getTypeDefRID());
-			declTable.setFieldValue("Parent", new Long(coded));
-			declTable.setFieldValue("PermissionSet", new Long(blobGen.addBlob(decl.getPermissionSet())));
+			declTable.setFieldValue("Parent", coded);
+			declTable.setFieldValue("PermissionSet", blobGen.addBlob(decl.getPermissionSet()));
 			tables[TableConstants.DeclSecurity].add(declTable);
 
 			// Make CustomAttributes (on DeclSecurity)
@@ -728,7 +726,7 @@ public class ClassEmitter
 				- 1);
 		if(defFields.length == 0)
 		{
-			defTable.setFieldValue("FieldList", new Long(FieldCount));
+			defTable.setFieldValue("FieldList", FieldCount);
 		}
 		else
 		{
@@ -737,29 +735,29 @@ public class ClassEmitter
 			{
 				addField(defField);
 			}
-			defTable.setFieldValue("FieldList", new Long(fieldStart));
+			defTable.setFieldValue("FieldList", fieldStart);
 		}
 	}
 
 	private void buildMethods(TypeDef def)
 	{
 		// Make Methods
-		Method[] defMethods = def.getMethods();
-		GenericTable defTable = (GenericTable) tables[TableConstants.TypeDef].get((int) def.getTypeDefRID()
+		MethodDef[] defMethods = def.getMethods();
+		GenericTable defTable = tables[TableConstants.TypeDef].get((int) def.getTypeDefRID()
 				- 1);
 
 		if(defMethods.length == 0)
 		{
-			defTable.setFieldValue("MethodList", new Long(MethodCount));
+			defTable.setFieldValue("MethodList", MethodCount);
 		}
 		else
 		{
 			long methodStart = MethodCount;
-			for(Method defMethod : defMethods)
+			for(MethodDef defMethod : defMethods)
 			{
 				addMethod(defMethod);
 			}
-			defTable.setFieldValue("MethodList", new Long(methodStart));
+			defTable.setFieldValue("MethodList", methodStart);
 		}
 	}
 
@@ -775,12 +773,12 @@ public class ClassEmitter
 		tables[TableConstants.Field].add(fieldTable);
 		field.setFieldRID(FieldCount++);
 
-		fieldTable.setFieldValue("Flags", new Integer(field.getFlags()));
-		fieldTable.setFieldValue("Name", new Long(stringsGen.addString(field.getName())));
+		fieldTable.setFieldValue("Flags", field.getFlags());
+		fieldTable.setFieldValue("Name", stringsGen.addString(field.getName()));
 		ByteBuffer fieldbuffer = new ByteBuffer(100);
 		field.getSignature().emit(fieldbuffer, this);
 		byte[] blob = fieldbuffer.toByteArray();
-		fieldTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+		fieldTable.setFieldValue("Signature", blobGen.addBlob(blob));
 
 		// Make FieldMarshal DONE!
 		MarshalSignature sig = field.getFieldMarshal();
@@ -789,12 +787,12 @@ public class ClassEmitter
 			GenericTable marTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.FieldMarshal]);
 
 			long coded = TableConstants.buildCodedIndex(TableConstants.HasFieldMarshal, TableConstants.Field, field.getFieldRID());
-			marTable.setFieldValue("Parent", new Long(coded));
+			marTable.setFieldValue("Parent", coded);
 
 			ByteBuffer marbuffer = new ByteBuffer(100);
 			sig.emit(marbuffer, this);
 			byte[] data = marbuffer.toByteArray();
-			marTable.setFieldValue("NativeType", new Long(blobGen.addBlob(data)));
+			marTable.setFieldValue("NativeType", blobGen.addBlob(data));
 
 			tables[TableConstants.FieldMarshal].add(marTable);
 		}
@@ -806,12 +804,12 @@ public class ClassEmitter
 			GenericTable constTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Constant]);
 
 			byte type = field.getSignature().getType().getType();
-			constTable.setFieldValue("Type", new Integer(type & 0xFF));
-			constTable.setFieldValue("Padding", new Integer(0));
+			constTable.setFieldValue("Type", type & 0xFF);
+			constTable.setFieldValue("Padding", 0);
 
 			long coded = TableConstants.buildCodedIndex(TableConstants.HasConst, TableConstants.Field, field.getFieldRID());
-			constTable.setFieldValue("Parent", new Long(coded));
-			constTable.setFieldValue("Value", new Long(blobGen.addBlob(value)));
+			constTable.setFieldValue("Parent", coded);
+			constTable.setFieldValue("Value", blobGen.addBlob(value));
 
 			tables[TableConstants.Constant].add(constTable);
 		}
@@ -820,8 +818,8 @@ public class ClassEmitter
 		if(field.getOffset() != -1L)
 		{
 			GenericTable layoutTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.FieldLayout]);
-			layoutTable.setFieldValue("Offset", new Long(field.getOffset()));
-			layoutTable.setFieldValue("Field", new Long(field.getFieldRID()));
+			layoutTable.setFieldValue("Offset", field.getOffset());
+			layoutTable.setFieldValue("Field", field.getFieldRID());
 
 			tables[TableConstants.FieldLayout].add(layoutTable);
 		}
@@ -830,8 +828,8 @@ public class ClassEmitter
 		if(field.getFieldRVA() != -1L)
 		{
 			GenericTable fieldRVATable = new GenericTable(TableConstants.GRAMMAR[TableConstants.FieldRVA]);
-			fieldRVATable.setFieldValue("RVA", new Long(field.getFieldRVA()));
-			fieldRVATable.setFieldValue("Field", new Long(field.getFieldRID()));
+			fieldRVATable.setFieldValue("RVA", field.getFieldRVA());
+			fieldRVATable.setFieldValue("Field", field.getFieldRID());
 
 			tables[TableConstants.FieldRVA].add(fieldRVATable);
 		}
@@ -854,7 +852,7 @@ public class ClassEmitter
 		for(CustomAttribute ca : cas)
 		{
 			GenericTable caTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.CustomAttribute]);
-			caTable.setFieldValue("Parent", new Long(codedparent));
+			caTable.setFieldValue("Parent", codedparent);
 			long cons = getMethodRefToken(ca.getConstructor());
 			long type = 0;
 			if(((cons >> 24) & 0xFF) == TableConstants.Method)
@@ -865,8 +863,8 @@ public class ClassEmitter
 			{
 				type = TableConstants.buildCodedIndex(TableConstants.CustomAttributeType, TableConstants.MemberRef, (cons & 0xFFFFFFL));
 			}
-			caTable.setFieldValue("Type", new Long(type));
-			caTable.setFieldValue("Value", new Long(blobGen.addBlob(ca.getSignature())));
+			caTable.setFieldValue("Type", type);
+			caTable.setFieldValue("Value", blobGen.addBlob(ca.getSignature()));
 
 			if(!tables[TableConstants.CustomAttribute].contains(caTable))
 			{
@@ -879,15 +877,15 @@ public class ClassEmitter
 	{
 		GenericTable assRefTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.AssemblyRef]);
 
-		assRefTable.setFieldValue("MajorVersion", new Integer(info.getMajorVersion()));
-		assRefTable.setFieldValue("MinorVersion", new Integer(info.getMinorVersion()));
-		assRefTable.setFieldValue("BuildNumber", new Integer(info.getBuildNumber()));
-		assRefTable.setFieldValue("RevisionNumber", new Integer(info.getRevisionNumber()));
-		assRefTable.setFieldValue("Flags", new Long(info.getFlags()));
-		assRefTable.setFieldValue("PublicKeyOrToken", new Long(blobGen.addBlob(info.getPublicKeyOrToken())));
-		assRefTable.setFieldValue("Name", new Long(stringsGen.addString(info.getName())));
-		assRefTable.setFieldValue("Culture", new Long(stringsGen.addString(info.getCulture())));
-		assRefTable.setFieldValue("HashValue", new Long(blobGen.addBlob(info.getHashValue())));
+		assRefTable.setFieldValue("MajorVersion", info.getMajorVersion());
+		assRefTable.setFieldValue("MinorVersion", info.getMinorVersion());
+		assRefTable.setFieldValue("BuildNumber", info.getBuildNumber());
+		assRefTable.setFieldValue("RevisionNumber", info.getRevisionNumber());
+		assRefTable.setFieldValue("Flags", info.getFlags());
+		assRefTable.setFieldValue("PublicKeyOrToken", blobGen.addBlob(info.getPublicKeyOrToken()));
+		assRefTable.setFieldValue("Name", stringsGen.addString(info.getName()));
+		assRefTable.setFieldValue("Culture", stringsGen.addString(info.getCulture()));
+		assRefTable.setFieldValue("HashValue", blobGen.addBlob(info.getHashValue()));
 
 		int index = tables[TableConstants.AssemblyRef].indexOf(assRefTable);
 		if(index == -1)
@@ -911,7 +909,7 @@ public class ClassEmitter
 	{
 		GenericTable modRefTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ModuleRef]);
 
-		modRefTable.setFieldValue("Name", new Long(stringsGen.addString(info.getModuleName())));
+		modRefTable.setFieldValue("Name", stringsGen.addString(info.getModuleName()));
 
 		int index = tables[TableConstants.ModuleRef].indexOf(modRefTable);
 		if(index == -1)
@@ -931,7 +929,7 @@ public class ClassEmitter
 		return (long) index;
 	}
 
-	private long addMethod(Method method)
+	private long addMethod(MethodDef method)
 	{
 		// DONE!
 		if(method.getMethodRID() != -1L)
@@ -946,25 +944,25 @@ public class ClassEmitter
 
 		if(method.getMethodRVA() == -1L)
 		{
-			methodTable.setFieldValue("RVA", new Long(0));
+			methodTable.setFieldValue("RVA", (long) 0);
 		}
 		else
 		{
-			methodTable.setFieldValue("RVA", new Long(method.getMethodRVA()));
+			methodTable.setFieldValue("RVA", method.getMethodRVA());
 		}
-		methodTable.setFieldValue("ImplFlags", new Integer(method.getImplFlags()));
-		methodTable.setFieldValue("Flags", new Integer(method.getFlags()));
-		methodTable.setFieldValue("Name", new Long(stringsGen.addString(method.getName())));
+		methodTable.setFieldValue("ImplFlags", method.getImplFlags());
+		methodTable.setFieldValue("Flags", method.getFlags());
+		methodTable.setFieldValue("Name", stringsGen.addString(method.getName()));
 
 		ByteBuffer sigbuffer = new ByteBuffer(100);
 		method.getSignature().emit(sigbuffer, this);
 		byte[] blob = sigbuffer.toByteArray();
-		methodTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+		methodTable.setFieldValue("Signature", blobGen.addBlob(blob));
 
 		ParameterSignature[] parameters = method.getSignature().getParameters();
 		if(parameters.length == 0)
 		{
-			methodTable.setFieldValue("ParamList", new Long(ParamCount));
+			methodTable.setFieldValue("ParamList", ParamCount);
 		}
 		else
 		{
@@ -977,7 +975,7 @@ public class ClassEmitter
 			{
 				addParam(parameters[i].getParameterInfo(), i + 1, parameters[i].getType().getType());
 			}
-			methodTable.setFieldValue("ParamList", new Long(paramStart));
+			methodTable.setFieldValue("ParamList", paramStart);
 		}
 
 		// Make DeclSecurity
@@ -985,10 +983,10 @@ public class ClassEmitter
 		if(decl != null)
 		{
 			GenericTable declTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.DeclSecurity]);
-			declTable.setFieldValue("Action", new Integer(decl.getAction()));
+			declTable.setFieldValue("Action", decl.getAction());
 			long coded = TableConstants.buildCodedIndex(TableConstants.HasDeclSecurity, TableConstants.Method, method.getMethodRID());
-			declTable.setFieldValue("Parent", new Long(coded));
-			declTable.setFieldValue("PermissionSet", new Long(blobGen.addBlob(decl.getPermissionSet())));
+			declTable.setFieldValue("Parent", coded);
+			declTable.setFieldValue("PermissionSet", blobGen.addBlob(decl.getPermissionSet()));
 
 			tables[TableConstants.DeclSecurity].add(declTable);
 
@@ -1002,17 +1000,17 @@ public class ClassEmitter
 		if(sem != null)
 		{
 			GenericTable semTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.MethodSemantics]);
-			semTable.setFieldValue("Semantics", new Integer(sem.getSemantics()));
-			semTable.setFieldValue("Method", new Long(method.getMethodRID()));
+			semTable.setFieldValue("Semantics", sem.getSemantics());
+			semTable.setFieldValue("Method", method.getMethodRID());
 			if(sem.getEvent() != null)
 			{
 				long coded = TableConstants.buildCodedIndex(TableConstants.HasSemantics, TableConstants.Event, sem.getEvent().getEventRID());
-				semTable.setFieldValue("Association", new Long(coded));
+				semTable.setFieldValue("Association", coded);
 			}
 			else
 			{
 				long coded = TableConstants.buildCodedIndex(TableConstants.HasSemantics, TableConstants.Property, sem.getProperty().getPropertyRID());
-				semTable.setFieldValue("Association", new Long(coded));
+				semTable.setFieldValue("Association", coded);
 			}
 			tables[TableConstants.MethodSemantics].add(semTable);
 		}
@@ -1022,14 +1020,14 @@ public class ClassEmitter
 		if(map != null)
 		{
 			GenericTable mapTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ImplMap]);
-			mapTable.setFieldValue("MappingFlags", new Integer(map.getFlags()));
+			mapTable.setFieldValue("MappingFlags", map.getFlags());
 
 			long coded = TableConstants.buildCodedIndex(TableConstants.MemberForwarded, TableConstants.Method, method.getMethodRID());
-			mapTable.setFieldValue("MemberForwarded", new Long(coded));
-			mapTable.setFieldValue("ImportName", new Long(stringsGen.addString(map.getImportName())));
+			mapTable.setFieldValue("MemberForwarded", coded);
+			mapTable.setFieldValue("ImportName", stringsGen.addString(map.getImportName()));
 
 			long moduleRef = addModuleRef(map.getImportScope());
-			mapTable.setFieldValue("ImportScope", new Long(moduleRef));
+			mapTable.setFieldValue("ImportScope", moduleRef);
 
 			tables[TableConstants.ImplMap].add(mapTable);
 		}
@@ -1044,9 +1042,9 @@ public class ClassEmitter
 	private void buildMethodBodies(TypeDef def)
 	{
 		// Make method body
-		Method[] methodlist = def.getMethods();
+		MethodDef[] methodlist = def.getMethods();
 
-		for(Method aMethodlist : methodlist)
+		for(MethodDef aMethodlist : methodlist)
 		{
 			MethodBody body = aMethodlist.getMethodBody();
 			if(body != null)
@@ -1056,7 +1054,7 @@ public class ClassEmitter
 				ByteBuffer bodybuffer = new ByteBuffer(1000);
 				body.emit(bodybuffer, this);
 				methodBodies.add(bodybuffer);
-				methodTable.setFieldValue("RVA", new Long(methodBodies.size()));
+				methodTable.setFieldValue("RVA", (long) methodBodies.size());
 				// 'RVA' gets assigned a 1-based index into the methodBodies vector corresponding to its body
 			}
 		}
@@ -1071,37 +1069,37 @@ public class ClassEmitter
 		for(MethodMap map : maps)
 		{
 			GenericTable mapTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.MethodImpl]);
-			mapTable.setFieldValue("Class", new Long(def.getTypeDefRID()));
+			mapTable.setFieldValue("Class", def.getTypeDefRID());
 
 			MethodDefOrRef body = map.getMethodBody();
 			MethodDefOrRef decl = map.getMethodDeclaration();
 
 			// DONE!
-			if(body instanceof Method)
+			if(body instanceof MethodDef)
 			{
-				Method method = (Method) body;
+				MethodDef method = (MethodDef) body;
 				long coded = TableConstants.buildCodedIndex(TableConstants.MethodDefOrRef, TableConstants.Method, method.getMethodRID());
-				mapTable.setFieldValue("MethodBody", new Long(coded));
+				mapTable.setFieldValue("MethodBody", coded);
 			}
 			else
 			{
 				long rid = addMemberRef(body);
 				long coded = TableConstants.buildCodedIndex(TableConstants.MethodDefOrRef, TableConstants.MemberRef, rid);
-				mapTable.setFieldValue("MethodBody", new Long(coded));
+				mapTable.setFieldValue("MethodBody", coded);
 			}
 
 			// DONE!
-			if(decl instanceof Method)
+			if(decl instanceof MethodDef)
 			{
-				Method method = (Method) decl;
+				MethodDef method = (MethodDef) decl;
 				long coded = TableConstants.buildCodedIndex(TableConstants.MethodDefOrRef, TableConstants.Method, method.getMethodRID());
-				mapTable.setFieldValue("MethodDeclaration", new Long(coded));
+				mapTable.setFieldValue("MethodDeclaration", coded);
 			}
 			else
 			{
 				long rid = addMemberRef(decl);
 				long coded = TableConstants.buildCodedIndex(TableConstants.MethodDefOrRef, TableConstants.MemberRef, rid);
-				mapTable.setFieldValue("MethodDeclaration", new Long(coded));
+				mapTable.setFieldValue("MethodDeclaration", coded);
 			}
 
 			tables[TableConstants.MethodImpl].add(mapTable);
@@ -1121,9 +1119,9 @@ public class ClassEmitter
 		parameter.setParamRID(ParamCount++);
 		tables[TableConstants.Param].add(paramTable);
 
-		paramTable.setFieldValue("Flags", new Integer(parameter.getFlags()));
-		paramTable.setFieldValue("Sequence", new Integer(seq));
-		paramTable.setFieldValue("Name", new Long(stringsGen.addString(parameter.getName())));
+		paramTable.setFieldValue("Flags", parameter.getFlags());
+		paramTable.setFieldValue("Sequence", seq);
+		paramTable.setFieldValue("Name", stringsGen.addString(parameter.getName()));
 
 		// Make FieldMarshal
 		MarshalSignature sig = parameter.getFieldMarshal();
@@ -1131,12 +1129,12 @@ public class ClassEmitter
 		{
 			GenericTable marshalTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.FieldMarshal]);
 			long coded = TableConstants.buildCodedIndex(TableConstants.HasFieldMarshal, TableConstants.Param, parameter.getParamRID());
-			marshalTable.setFieldValue("Parent", new Long(coded));
+			marshalTable.setFieldValue("Parent", coded);
 
 			ByteBuffer marbuffer = new ByteBuffer(100);
 			sig.emit(marbuffer, this);
 			byte[] blob = marbuffer.toByteArray();
-			marshalTable.setFieldValue("NativeType", new Long(blobGen.addBlob(blob)));
+			marshalTable.setFieldValue("NativeType", blobGen.addBlob(blob));
 			tables[TableConstants.FieldMarshal].add(marshalTable);
 		}
 
@@ -1145,11 +1143,11 @@ public class ClassEmitter
 		if(value != null)
 		{
 			GenericTable constTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Constant]);
-			constTable.setFieldValue("Type", new Integer(type & 0xFF));
-			constTable.setFieldValue("Padding", new Integer(0));
+			constTable.setFieldValue("Type", type & 0xFF);
+			constTable.setFieldValue("Padding", 0);
 			long coded = TableConstants.buildCodedIndex(TableConstants.HasConst, TableConstants.Param, parameter.getParamRID());
-			constTable.setFieldValue("Parent", new Long(coded));
-			constTable.setFieldValue("Value", new Long(blobGen.addBlob(value)));
+			constTable.setFieldValue("Parent", coded);
+			constTable.setFieldValue("Value", blobGen.addBlob(value));
 			tables[TableConstants.Constant].add(constTable);
 		}
 
@@ -1169,19 +1167,19 @@ public class ClassEmitter
 		{
 			GenericTable implTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.InterfaceImpl]);
 
-			implTable.setFieldValue("Class", new Long(def.getTypeDefRID()));
+			implTable.setFieldValue("Class", def.getTypeDefRID());
 
 			if(anInterface.getInterface() instanceof TypeDef)
 			{
 				TypeDef interdef = (TypeDef) anInterface.getInterface();
 				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, interdef.getTypeDefRID());
-				implTable.setFieldValue("Interface", new Long(coded));
+				implTable.setFieldValue("Interface", coded);
 			}
 			else
 			{
 				long rid = addTypeRef(anInterface.getInterface());
 				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, rid);
-				implTable.setFieldValue("Interface", new Long(coded));
+				implTable.setFieldValue("Interface", coded);
 			}
 
 			tables[TableConstants.InterfaceImpl].add(implTable);
@@ -1203,8 +1201,8 @@ public class ClassEmitter
 		}
 
 		GenericTable mapTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.PropertyMap]);
-		mapTable.setFieldValue("Parent", new Long(def.getTypeDefRID()));
-		mapTable.setFieldValue("PropertyList", new Long(PropertyCount));
+		mapTable.setFieldValue("Parent", def.getTypeDefRID());
+		mapTable.setFieldValue("PropertyList", PropertyCount);
 		tables[TableConstants.PropertyMap].add(mapTable);
 
 		for(Property prop : props)
@@ -1213,22 +1211,22 @@ public class ClassEmitter
 			prop.setPropertyRID(PropertyCount++);
 			tables[TableConstants.Property].add(propTable);
 
-			propTable.setFieldValue("Flags", new Integer(prop.getFlags()));
-			propTable.setFieldValue("Name", new Long(stringsGen.addString(prop.getName())));
+			propTable.setFieldValue("Flags", prop.getFlags());
+			propTable.setFieldValue("Name", stringsGen.addString(prop.getName()));
 			ByteBuffer propBuffer = new ByteBuffer(100);
 			prop.getSignature().emit(propBuffer, this);
 			byte[] blob = propBuffer.toByteArray();
-			propTable.setFieldValue("Type", new Long(blobGen.addBlob(blob)));
+			propTable.setFieldValue("Type", blobGen.addBlob(blob));
 
 			// Make Constant
 			byte[] value = prop.getDefaultValue();
 			if(value != null)
 			{
 				GenericTable constTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Constant]);
-				constTable.setFieldValue("Type", new Integer(prop.getSignature().getType().getType() & 0xFF));
+				constTable.setFieldValue("Type", prop.getSignature().getType().getType() & 0xFF);
 				long coded = TableConstants.buildCodedIndex(TableConstants.HasConst, TableConstants.Property, prop.getPropertyRID());
-				constTable.setFieldValue("Parent", new Long(coded));
-				constTable.setFieldValue("Value", new Long(blobGen.addBlob(value)));
+				constTable.setFieldValue("Parent", coded);
+				constTable.setFieldValue("Value", blobGen.addBlob(value));
 
 				tables[TableConstants.Constant].add(constTable);
 			}
@@ -1249,8 +1247,8 @@ public class ClassEmitter
 		}
 
 		GenericTable mapTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.EventMap]);
-		mapTable.setFieldValue("Parent", new Long(def.getTypeDefRID()));
-		mapTable.setFieldValue("EventList", new Long(EventCount));
+		mapTable.setFieldValue("Parent", def.getTypeDefRID());
+		mapTable.setFieldValue("EventList", EventCount);
 		tables[TableConstants.EventMap].add(mapTable);
 
 		for(Event anEventlist : eventlist)
@@ -1259,20 +1257,20 @@ public class ClassEmitter
 			anEventlist.setEventRID(EventCount++);
 			tables[TableConstants.Event].add(eventTable);
 
-			eventTable.setFieldValue("EventFlags", new Integer(anEventlist.getEventFlags()));
-			eventTable.setFieldValue("Name", new Long(stringsGen.addString(anEventlist.getName())));
+			eventTable.setFieldValue("EventFlags", anEventlist.getEventFlags());
+			eventTable.setFieldValue("Name", stringsGen.addString(anEventlist.getName()));
 			TypeRef ref = anEventlist.getEventType();
 			if(ref instanceof TypeDef)
 			{
 				TypeDef newdef = (TypeDef) ref;
 				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, newdef.getTypeDefRID());
-				eventTable.setFieldValue("EventType", new Long(coded));
+				eventTable.setFieldValue("EventType", coded);
 			}
 			else
 			{
 				long refrid = addTypeRef(ref);
 				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, refrid);
-				eventTable.setFieldValue("EventType", new Long(coded));
+				eventTable.setFieldValue("EventType", coded);
 			}
 
 			// Make CustomAttribute
@@ -1296,7 +1294,7 @@ public class ClassEmitter
 		ByteBuffer specBuffer = new ByteBuffer(100);
 		spec.getSignature().emit(specBuffer, this);
 		byte[] blob = specBuffer.toByteArray();
-		specTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+		specTable.setFieldValue("Signature", blobGen.addBlob(blob));
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.TypeSpec, spec.getTypeSpecRID());
@@ -1316,14 +1314,14 @@ public class ClassEmitter
 		ref.setTypeRefRID(TypeRefCount++);
 		tables[TableConstants.TypeRef].add(refTable);
 
-		refTable.setFieldValue("Name", new Long(stringsGen.addString(ref.getName())));
-		refTable.setFieldValue("Namespace", new Long(stringsGen.addString(ref.getNamespace())));
+		refTable.setFieldValue("Name", stringsGen.addString(ref.getName()));
+		refTable.setFieldValue("Namespace", stringsGen.addString(ref.getNamespace()));
 		if(ref instanceof TypeDef)
 		{
 			// DONE!
 			TypeDef def = (TypeDef) ref;
 			long coded = TableConstants.buildCodedIndex(TableConstants.ResolutionScope, TableConstants.Module, 1L);
-			refTable.setFieldValue("ResolutionScope", new Long(coded));
+			refTable.setFieldValue("ResolutionScope", coded);
 		}
 		else if(ref instanceof ModuleTypeRef)
 		{
@@ -1332,7 +1330,7 @@ public class ClassEmitter
 
 			long moduleRef = addModuleRef(mref.getModuleRefInfo());
 			long coded = TableConstants.buildCodedIndex(TableConstants.ResolutionScope, TableConstants.ModuleRef, moduleRef);
-			refTable.setFieldValue("ResolutionScope", new Long(coded));
+			refTable.setFieldValue("ResolutionScope", coded);
 		}
 		else if(ref instanceof AssemblyTypeRef)
 		{
@@ -1342,7 +1340,7 @@ public class ClassEmitter
 			long assemblyRef = addAssemblyRef(aref.getAssemblyRefInfo());
 
 			long coded = TableConstants.buildCodedIndex(TableConstants.ResolutionScope, TableConstants.AssemblyRef, assemblyRef);
-			refTable.setFieldValue("ResolutionScope", new Long(coded));
+			refTable.setFieldValue("ResolutionScope", coded);
 		}
 		else if(ref instanceof NestedTypeRef)
 		{
@@ -1351,7 +1349,7 @@ public class ClassEmitter
 
 			long refRID = addTypeRef(nref.getEnclosingTypeRef());
 			long coded = TableConstants.buildCodedIndex(TableConstants.ResolutionScope, TableConstants.TypeRef, refRID);
-			refTable.setFieldValue("ResolutionScope", new Long(coded));
+			refTable.setFieldValue("ResolutionScope", coded);
 		}
 		else if(ref instanceof ExportedTypeRef)
 		{
@@ -1359,7 +1357,7 @@ public class ClassEmitter
 			ExportedTypeRef eref = (ExportedTypeRef) ref;
 
 			addExportedType(eref);
-			refTable.setFieldValue("ResolutionScope", new Long(0));
+			refTable.setFieldValue("ResolutionScope", (long) 0);
 		}
 
 		// Make CustomAttributes
@@ -1378,7 +1376,7 @@ public class ClassEmitter
 			return ref.getMemberRefRID();
 		}
 
-		if((ref instanceof Field) || (ref instanceof Method))
+		if((ref instanceof Field) || (ref instanceof MethodDef))
 		{
 			return 0L;
 		}
@@ -1387,7 +1385,7 @@ public class ClassEmitter
 		tables[TableConstants.MemberRef].add(refTable);
 		ref.setMemberRefRID(MemberRefCount++);
 
-		refTable.setFieldValue("Name", new Long(stringsGen.addString(ref.getName())));
+		refTable.setFieldValue("Name", stringsGen.addString(ref.getName()));
 
 		if(ref instanceof FieldRef)
 		{
@@ -1399,12 +1397,12 @@ public class ClassEmitter
 
 				long moduleRef = addModuleRef(fref.getModuleRefInfo());
 				long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.ModuleRef, moduleRef);
-				refTable.setFieldValue("Class", new Long(coded));
+				refTable.setFieldValue("Class", coded);
 
 				ByteBuffer refbuffer = new ByteBuffer(100);
 				fref.getSignature().emit(refbuffer, this);
 				byte[] blob = refbuffer.toByteArray();
-				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+				refTable.setFieldValue("Signature", blobGen.addBlob(blob));
 			}
 			else
 			{
@@ -1417,7 +1415,7 @@ public class ClassEmitter
 					TypeDef parentdef = (TypeDef) parent;
 
 					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeDef, parentdef.getTypeDefRID());
-					refTable.setFieldValue("Class", new Long(coded));
+					refTable.setFieldValue("Class", coded);
 				}
 				else if(parent instanceof TypeRef)
 				{
@@ -1425,7 +1423,7 @@ public class ClassEmitter
 
 					long rid = addTypeRef(parentref);
 					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeRef, rid);
-					refTable.setFieldValue("Class", new Long(coded));
+					refTable.setFieldValue("Class", coded);
 				}
 				else if(parent instanceof TypeSpec)
 				{
@@ -1433,13 +1431,13 @@ public class ClassEmitter
 
 					long rid = addTypeSpec(parentspec);
 					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeSpec, rid);
-					refTable.setFieldValue("Class", new Long(coded));
+					refTable.setFieldValue("Class", coded);
 				}
 
 				ByteBuffer refbuffer = new ByteBuffer(100);
 				fref.getSignature().emit(refbuffer, this);
 				byte[] blob = refbuffer.toByteArray();
-				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+				refTable.setFieldValue("Signature", blobGen.addBlob(blob));
 			}
 
 
@@ -1453,12 +1451,12 @@ public class ClassEmitter
 
 				long moduleRef = addModuleRef(gref.getModuleRefInfo());
 				long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.ModuleRef, moduleRef);
-				refTable.setFieldValue("Class", new Long(coded));
+				refTable.setFieldValue("Class", coded);
 
 				ByteBuffer sigbuffer = new ByteBuffer(100);
 				gref.getCallsiteSignature().emit(sigbuffer, this);
 				byte[] blob = sigbuffer.toByteArray();
-				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+				refTable.setFieldValue("Signature", blobGen.addBlob(blob));
 			}
 			else if(ref instanceof VarargsMethodRef)
 			{
@@ -1467,12 +1465,12 @@ public class ClassEmitter
 
 				long rid = vref.getMethod().getMethodRID();
 				long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.Method, rid);
-				refTable.setFieldValue("Class", new Long(coded));
+				refTable.setFieldValue("Class", coded);
 
 				ByteBuffer sigbuffer = new ByteBuffer(100);
 				vref.getCallsiteSignature().emit(sigbuffer, this);
 				byte[] blob = sigbuffer.toByteArray();
-				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+				refTable.setFieldValue("Signature", blobGen.addBlob(blob));
 			}
 			else
 			{
@@ -1486,7 +1484,7 @@ public class ClassEmitter
 					TypeDef parentdef = (TypeDef) parent;
 
 					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeDef, parentdef.getTypeDefRID());
-					refTable.setFieldValue("Class", new Long(coded));
+					refTable.setFieldValue("Class", coded);
 				}
 				else if(parent instanceof TypeRef)
 				{
@@ -1494,7 +1492,7 @@ public class ClassEmitter
 
 					long rid = addTypeRef(parentref);
 					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeRef, rid);
-					refTable.setFieldValue("Class", new Long(coded));
+					refTable.setFieldValue("Class", coded);
 				}
 				else if(parent instanceof TypeSpec)
 				{
@@ -1502,13 +1500,13 @@ public class ClassEmitter
 
 					long rid = addTypeSpec(parentspec);
 					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeSpec, rid);
-					refTable.setFieldValue("Class", new Long(coded));
+					refTable.setFieldValue("Class", coded);
 				}
 
 				ByteBuffer sigbuffer = new ByteBuffer(100);
 				mref.getCallsiteSignature().emit(sigbuffer, this);
 				byte[] blob = sigbuffer.toByteArray();
-				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+				refTable.setFieldValue("Signature", blobGen.addBlob(blob));
 			}
 		}
 
@@ -1550,7 +1548,7 @@ public class ClassEmitter
 		byte[] blob = sigbuffer.toByteArray();
 
 		GenericTable sigTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.StandAloneSig]);
-		sigTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+		sigTable.setFieldValue("Signature", blobGen.addBlob(blob));
 
 		int index = tables[TableConstants.StandAloneSig].indexOf(sigTable);
 		if(index == -1)
@@ -1582,7 +1580,7 @@ public class ClassEmitter
 		ByteBuffer sigbuffer = new ByteBuffer(100);
 		localVars.emit(sigbuffer, this);
 		byte[] blob = sigbuffer.toByteArray();
-		sigTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
+		sigTable.setFieldValue("Signature", blobGen.addBlob(blob));
 
 		int index = tables[TableConstants.StandAloneSig].indexOf(sigTable);
 		if(index == -1)
@@ -1609,9 +1607,9 @@ public class ClassEmitter
 	 */
 	public long getMethodRefToken(MethodDefOrRef method)
 	{
-		if(method instanceof Method)
+		if(method instanceof MethodDef)
 		{
-			Method meth = (Method) method;
+			MethodDef meth = (MethodDef) method;
 			return meth.getMethodRID() | (long) (TableConstants.Method << 24);
 		}
 		else

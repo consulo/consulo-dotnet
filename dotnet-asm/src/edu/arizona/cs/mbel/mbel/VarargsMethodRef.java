@@ -32,13 +32,13 @@ import edu.arizona.cs.mbel.signature.MethodSignature;
  */
 public class VarargsMethodRef extends MethodRef
 {
-	private Method method;
+	private MethodDef method;
 
 	/**
 	 * Creates a VarargsMethodRef for the given method, with the given callsite method signature.
 	 * The signature should have the VARARG calling convention.
 	 */
-	public VarargsMethodRef(Method meth, MethodSignature callsig)
+	public VarargsMethodRef(MethodDef meth, MethodSignature callsig)
 	{
 		super(meth.getName(), meth.getParent(), callsig);
 		method = meth;
@@ -56,7 +56,7 @@ public class VarargsMethodRef extends MethodRef
 	/**
 	 * Returns a reference to the method in this methodref
 	 */
-	public Method getMethod()
+	public MethodDef getMethod()
 	{
 		return method;
 	}
@@ -64,7 +64,7 @@ public class VarargsMethodRef extends MethodRef
 	/**
 	 * Sets the method for this methodref
 	 */
-	public void setMethod(Method meth)
+	public void setMethod(MethodDef meth)
 	{
 		method = meth;
 		setName(method.getName());

@@ -82,6 +82,8 @@ public class TypeSignature extends Signature
 
 		switch(data)
 		{
+			case ELEMENT_TYPE_END:
+				return null;
 			case ELEMENT_TYPE_PTR:
 			case ELEMENT_TYPE_FNPTR:
 			case ELEMENT_TYPE_ARRAY:
@@ -140,9 +142,9 @@ public class TypeSignature extends Signature
 			case ELEMENT_TYPE_OBJECT:
 				buffer.get();
 				return TypeSignature.OBJECT;
+			default:
+				throw new IllegalArgumentException("Unknown element type: " + data);
 		}
-
-		return null;
 	}
 
 	/**
