@@ -52,7 +52,7 @@ public class ModuleParser
 	private PEModule pe_module;
 	private GenericTable[][] tables;
 	private TableConstants tc;
-	private GenericTable[] row;
+
 	private MSILInputStream in;
 	/////////////////////////////////////////////
 	private TypeDef[] typeDefs = null;
@@ -512,7 +512,7 @@ public class ModuleParser
 		// build AssemblyRef table DONE!
 		if(tables[TableConstants.AssemblyRef] != null)
 		{
-			row = tables[TableConstants.AssemblyRef];
+			GenericTable[] row = tables[TableConstants.AssemblyRef];
 			assemblyRefs = new AssemblyRefInfo[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -556,7 +556,7 @@ public class ModuleParser
 		// build ModuleRef tables DONE!
 		if(tables[TableConstants.ModuleRef] != null)
 		{
-			row = tables[TableConstants.ModuleRef];
+			GenericTable[] row = tables[TableConstants.ModuleRef];
 			moduleRefs = new ModuleRefInfo[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -590,7 +590,7 @@ public class ModuleParser
 		// build Files DONE!
 		if(tables[TableConstants.File] != null)
 		{
-			row = tables[TableConstants.File];
+			GenericTable[] row = tables[TableConstants.File];
 			fileReferences = new FileReference[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -609,7 +609,7 @@ public class ModuleParser
 		// build ManifestResources (after FileReferences) DONE!
 		if(tables[TableConstants.ManifestResource] != null)
 		{
-			row = tables[TableConstants.ManifestResource];
+			GenericTable[] row = tables[TableConstants.ManifestResource];
 			mresources = new ManifestResource[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -656,7 +656,7 @@ public class ModuleParser
 
 		if(tables[TableConstants.ExportedType] != null)
 		{
-			row = tables[TableConstants.ExportedType];
+			GenericTable[] row = tables[TableConstants.ExportedType];
 			exportedTypes = new ExportedTypeRef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -691,7 +691,7 @@ public class ModuleParser
 		// build Fields (after TypeGroup) DONE!
 		if(tables[TableConstants.Field] != null)
 		{
-			row = tables[TableConstants.Field];
+			GenericTable[] row = tables[TableConstants.Field];
 			fields = new Field[tables[TableConstants.Field].length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -713,7 +713,7 @@ public class ModuleParser
 		// build FieldLayouts (after Fields) DONE!
 		if(tables[TableConstants.FieldLayout] != null)
 		{
-			row = tables[TableConstants.FieldLayout];
+			GenericTable[] row = tables[TableConstants.FieldLayout];
 			for(GenericTable aRow : row)
 			{
 				long field = getField(aRow.getTableIndex("Field"));
@@ -726,9 +726,9 @@ public class ModuleParser
 	private void buildMethods()
 	{
 		// build Methods (after Params and TypeGroup)
-		if(tables[TableConstants.Method] != null)
+		GenericTable[] row = tables[TableConstants.Method];
+		if(row != null)
 		{
-			row = tables[TableConstants.Method];
 			methods = new MethodDef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -793,7 +793,7 @@ public class ModuleParser
 		// build ImplMaps (after Methods) DONE!
 		if(tables[TableConstants.ImplMap] != null)
 		{
-			row = tables[TableConstants.ImplMap];
+			GenericTable[] row = tables[TableConstants.ImplMap];
 			for(GenericTable aRow : row)
 			{
 				long coded = aRow.getCodedIndex("MemberForwarded");
@@ -818,7 +818,7 @@ public class ModuleParser
 		// build DeclSecurity (after Assembly, Method, and TypeDefs) DONE!
 		if(tables[TableConstants.DeclSecurity] != null)
 		{
-			row = tables[TableConstants.DeclSecurity];
+			GenericTable[] row = tables[TableConstants.DeclSecurity];
 			declSecurities = new DeclSecurity[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -850,7 +850,7 @@ public class ModuleParser
 		// build TypeDefs (after Field and Methods) DONE!
 		if(tables[TableConstants.TypeDef] != null)
 		{
-			row = tables[TableConstants.TypeDef];
+			GenericTable[] row = tables[TableConstants.TypeDef];
 			typeDefs = new TypeDef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -870,7 +870,7 @@ public class ModuleParser
 		// set parents of the fields and methods (after Typedef, Method, Field) DONE!
 		if(tables[TableConstants.TypeDef] != null)
 		{
-			row = tables[TableConstants.TypeDef];
+			GenericTable[] row = tables[TableConstants.TypeDef];
 
 			for(int i = 0; i < row.length; i++)
 			{
@@ -914,7 +914,7 @@ public class ModuleParser
 		// build TypeRefs (after TypeDefs and ExportedTypes) DONE!
 		if(tables[TableConstants.TypeRef] != null)
 		{
-			row = tables[TableConstants.TypeRef];
+			GenericTable[] row = tables[TableConstants.TypeRef];
 			typeRefs = new TypeRef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -986,7 +986,7 @@ public class ModuleParser
 		// build TypeSpecs (after TypeDef and TypeRef) DONE!
 		if(tables[TableConstants.TypeSpec] != null)
 		{
-			row = tables[TableConstants.TypeSpec];
+			GenericTable[] row = tables[TableConstants.TypeSpec];
 			typeSpecs = new TypeSpec[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -1011,7 +1011,7 @@ public class ModuleParser
 		// fill in Typedef extends (after TypeRef and TypeDef) DONE!
 		if(tables[TableConstants.TypeDef] != null)
 		{
-			row = tables[TableConstants.TypeDef];
+			GenericTable[] row = tables[TableConstants.TypeDef];
 			for(int i = 0; i < row.length; i++)
 			{
 				long coded = row[i].getCodedIndex("Extends");
@@ -1036,7 +1036,7 @@ public class ModuleParser
 		// build InterfaceImpls (after TypeGroup) DONE!
 		if(tables[TableConstants.InterfaceImpl] != null)
 		{
-			row = tables[TableConstants.InterfaceImpl];
+			GenericTable[] 	row = tables[TableConstants.InterfaceImpl];
 			interfaceImpls = new InterfaceImplementation[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -1063,7 +1063,7 @@ public class ModuleParser
 		// build Properties DONE!
 		if(tables[TableConstants.Property] != null)
 		{
-			row = tables[TableConstants.Property];
+			GenericTable[] row = tables[TableConstants.Property];
 			properties = new Property[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -1083,7 +1083,7 @@ public class ModuleParser
 		// build PropertyMap (after TypeDefs and Property) DONE!
 		if(tables[TableConstants.PropertyMap] != null)
 		{
-			row = tables[TableConstants.PropertyMap];
+			GenericTable[] row = tables[TableConstants.PropertyMap];
 			for(int i = 0; i < row.length; i++)
 			{
 				long parent = row[i].getTableIndex("Parent");
@@ -1114,7 +1114,7 @@ public class ModuleParser
 		// build NestedClasses (after TypeDefs) DONE!
 		if(tables[TableConstants.NestedClass] != null)
 		{
-			row = tables[TableConstants.NestedClass];
+			GenericTable[] row = tables[TableConstants.NestedClass];
 			for(GenericTable aRow : row)
 			{
 				long nest = aRow.getTableIndex("NestedClass");
@@ -1129,7 +1129,7 @@ public class ModuleParser
 		// build ClassLayouts (after TypeDefs) DONE!
 		if(tables[TableConstants.ClassLayout] != null)
 		{
-			row = tables[TableConstants.ClassLayout];
+			GenericTable[] row = tables[TableConstants.ClassLayout];
 			for(GenericTable aRow : row)
 			{
 				long typedef = aRow.getTableIndex("Parent");
@@ -1147,7 +1147,7 @@ public class ModuleParser
 		// build FieldRVAs (after Fields)
 		if(tables[TableConstants.FieldRVA] != null)
 		{
-			row = tables[TableConstants.FieldRVA];
+			GenericTable[] row = tables[TableConstants.FieldRVA];
 			for(GenericTable aRow : row)
 			{
 				long RVA = aRow.getConstant("RVA").longValue();
@@ -1162,7 +1162,7 @@ public class ModuleParser
 		// build Events (after TypeDef and TypeRef) DONE!
 		if(tables[TableConstants.Event] != null)
 		{
-			row = tables[TableConstants.Event];
+			GenericTable[] row = tables[TableConstants.Event];
 			events = new Event[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -1191,7 +1191,7 @@ public class ModuleParser
 		// build EventMaps (after Event) DONE!
 		if(tables[TableConstants.EventMap] != null)
 		{
-			row = tables[TableConstants.EventMap];
+			GenericTable[] row = tables[TableConstants.EventMap];
 			for(int i = 0; i < row.length; i++)
 			{
 				long parent = row[i].getTableIndex("Parent");
@@ -1214,7 +1214,7 @@ public class ModuleParser
 		// build FieldMarshals (after Field and Method) DONE!
 		if(tables[TableConstants.FieldMarshal] != null)
 		{
-			row = tables[TableConstants.FieldMarshal];
+			GenericTable[] row = tables[TableConstants.FieldMarshal];
 			for(GenericTable aRow : row)
 			{
 				long[] index = tc.parseCodedIndex(aRow.getCodedIndex("Parent"), TableConstants.HasFieldMarshal);
@@ -1238,7 +1238,7 @@ public class ModuleParser
 		// build MethodSemantics (after Method, Event, Property) DONE!
 		if(tables[TableConstants.MethodSemantics] != null)
 		{
-			row = tables[TableConstants.MethodSemantics];
+			GenericTable[] row = tables[TableConstants.MethodSemantics];
 			for(GenericTable aRow : row)
 			{
 				long method = getMethod(aRow.getTableIndex("Method"));
@@ -1286,7 +1286,7 @@ public class ModuleParser
 		// build Constants (after Field, Property, Param) DONE!
 		if(tables[TableConstants.Constant] != null)
 		{
-			row = tables[TableConstants.Constant];
+			GenericTable[] row = tables[TableConstants.Constant];
 			for(GenericTable aRow : row)
 			{
 				byte[] blob = aRow.getBlob("Value");
@@ -1313,7 +1313,7 @@ public class ModuleParser
 		// build MemberRefs (after TypeGroup, Method, Field)
 		if(tables[TableConstants.MemberRef] != null)
 		{
-			row = tables[TableConstants.MemberRef];
+			GenericTable[] row = tables[TableConstants.MemberRef];
 			memberRefs = new MemberRef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -1384,7 +1384,7 @@ public class ModuleParser
 		// build MethodImpls (after TypeGroup, MemberRef, Method)
 		if(tables[TableConstants.MethodImpl] != null)
 		{
-			row = tables[TableConstants.MethodImpl];
+			GenericTable[] row = tables[TableConstants.MethodImpl];
 			for(GenericTable aRow : row)
 			{
 				long typedef = aRow.getTableIndex("Class");
@@ -1429,7 +1429,7 @@ public class ModuleParser
 		// build StandAloneSig table DONE!
 		if(tables[TableConstants.StandAloneSig] != null)
 		{
-			row = tables[TableConstants.StandAloneSig];
+			GenericTable[] row = tables[TableConstants.StandAloneSig];
 			standAloneSigs = new StandAloneSignature[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -1489,7 +1489,7 @@ public class ModuleParser
 		// build method bodies (last!)
 		if(tables[TableConstants.Method] != null)
 		{
-			row = tables[TableConstants.Method];
+			GenericTable[] row = tables[TableConstants.Method];
 			for(int i = 0; i < row.length; i++)
 			{
 				long implflags = row[i].getConstant("ImplFlags").intValue();
@@ -1509,7 +1509,7 @@ public class ModuleParser
 		// build CustomAttribute table
 		if(tables[TableConstants.CustomAttribute] != null)
 		{
-			row = tables[TableConstants.CustomAttribute];
+			GenericTable[] row = tables[TableConstants.CustomAttribute];
 			for(GenericTable aRow : row)
 			{
 				byte[] blob = aRow.getBlob("Value");
