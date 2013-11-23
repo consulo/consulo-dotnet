@@ -6,5 +6,7 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<moduleExtensionProvider key="microsoft-dotnet"
 								 implementationClass="org.mustbe.consulo.dotnet.microsoft.module.extension.MicrosoftDotNetModuleExtensionProvider" />
+
+		<sdkType implementation="org.mustbe.consulo.dotnet.microsoft.sdk.MicrosoftDotNetSdkType" />
 	</extensions>
 </idea-plugin>
