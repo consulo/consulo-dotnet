@@ -65,8 +65,7 @@ public class Method extends MethodDefOrRef implements MethodAttributes,
 		MethodRef super_ctor = null;
 		try
 		{
-			MethodSignature callsitesig = new MethodSignature(newReturnTypeSignature(ReturnTypeSignature.ELEMENT_TYPE_VOID), null);
-
+			MethodSignature callsitesig = new MethodSignature(new ReturnTypeSignature(ReturnTypeSignature.ELEMENT_TYPE_VOID), null);
 			super_ctor = new MethodRef(".ctor", AssemblyTypeRef.OBJECT, callsitesig);
 
 			ctor = new Method(".ctor", 0, (Method.Public | Method.HideBySig | Method.SpecialName | Method.RTSpecialName),
