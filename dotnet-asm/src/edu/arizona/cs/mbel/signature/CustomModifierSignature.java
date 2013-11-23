@@ -20,6 +20,12 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+import edu.arizona.cs.mbel.metadata.TableConstants;
+
 /**
  * This class describes a custom modifier to be applied to another signature type
  *
@@ -29,7 +35,7 @@ public class CustomModifierSignature extends Signature
 {
 	private byte elementType;
 	// either ELEMENT_TYPE_CMOD_OPT or ELEMENT_TYPE_CMOD_REQD
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference type;
+	private AbstractTypeReference type;
 
 	private CustomModifierSignature()
 	{
@@ -41,7 +47,7 @@ public class CustomModifierSignature extends Signature
 	 * @param optional true if this modifier is optional, false if required
 	 * @param ref      the reference to the modifier type
 	 */
-	public CustomModifierSignature(boolean optional, edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws SignatureException
+	public CustomModifierSignature(boolean optional, AbstractTypeReference ref) throws SignatureException
 	{
 		elementType = (optional ? ELEMENT_TYPE_CMOD_OPT : ELEMENT_TYPE_CMOD_REQD);
 		type = ref;
@@ -58,7 +64,7 @@ public class CustomModifierSignature extends Signature
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return a CustomModifierSignature representing the given blob, or null if there was a parse error
 	 */
-	public static CustomModifierSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static CustomModifierSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		CustomModifierSignature blob = new CustomModifierSignature();
 
@@ -73,15 +79,15 @@ public class CustomModifierSignature extends Signature
 
 		System.out.println("CMOD: {" + token[0] + "," + token[1] + "}");
 
-		if(token[0] == edu.arizona.cs.mbel.metadata.TableConstants.TypeDef)
+		if(token[0] == TableConstants.TypeDef)
 		{
 			blob.type = group.getTypeDefs()[token[1] - 1];
 		}
-		else if(token[0] == edu.arizona.cs.mbel.metadata.TableConstants.TypeRef)
+		else if(token[0] == TableConstants.TypeRef)
 		{
 			blob.type = group.getTypeRefs()[token[1] - 1];
 		}
-		else if(token[0] == edu.arizona.cs.mbel.metadata.TableConstants.TypeSpec)
+		else if(token[0] == TableConstants.TypeSpec)
 		{
 			blob.type = group.getTypeSpecs()[token[1] - 1];
 		}
@@ -104,7 +110,7 @@ public class CustomModifierSignature extends Signature
 	/**
 	 * Returns the type associated with this custom modifier
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getType()
+	public AbstractTypeReference getType()
 	{
 		return type;
 	}
@@ -114,7 +120,7 @@ public class CustomModifierSignature extends Signature
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(elementType);
 		long token = emitter.getTypeToken(type);

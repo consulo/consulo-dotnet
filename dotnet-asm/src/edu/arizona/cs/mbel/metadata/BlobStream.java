@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.metadata;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class holds the #Blob stream for a .NET module.
  * The blob stream contains raw binary data, such as default field values and method signatures.
@@ -35,7 +39,7 @@ public class BlobStream
 	/**
 	 * Parses a BlobStream from an input stream
 	 */
-	public BlobStream(edu.arizona.cs.mbel.MSILInputStream in, long size) throws java.io.IOException
+	public BlobStream(MSILInputStream in, long size) throws IOException
 	{
 		raw_bytes = new byte[(int) size];
 		in.read(raw_bytes);
@@ -68,9 +72,9 @@ public class BlobStream
 		};
 		String result = "0x";
 		int temp;
-		for(int i = 0; i < bytes.length; i++)
+		for(byte aByte : bytes)
 		{
-			temp = bytes[i] & 0xFF;
+			temp = aByte & 0xFF;
 			result += hex[(temp >> 4) & 0xF] + "" + hex[temp & 0xF];
 		}
 		if(bytes.length == 0)

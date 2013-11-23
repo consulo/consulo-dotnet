@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * End finally block (also endfault).<br>
  * Stack transition:<br>
@@ -41,7 +45,7 @@ public class ENDFINALLY extends Instruction
 		return "endfinally";
 	}
 
-	public ENDFINALLY(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public ENDFINALLY(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

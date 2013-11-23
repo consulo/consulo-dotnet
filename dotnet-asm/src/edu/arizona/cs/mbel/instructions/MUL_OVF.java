@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Multiply with overflow detection.<br>
  * Stack transition:<br>
@@ -55,7 +59,7 @@ public class MUL_OVF extends Instruction
 		return (isUnsigned() ? "mul.ovf.un" : "mul.ovf");
 	}
 
-	public MUL_OVF(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public MUL_OVF(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

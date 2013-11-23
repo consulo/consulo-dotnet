@@ -19,13 +19,15 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import edu.arizona.cs.mbel.signature.AssemblyFlags;
+
 /**
  * This TypeRef is for types defined in other assemblies. Each AssemblyTypeRef has an
  * AssemblyRefInfo object and a name and namespace.
  *
  * @author Michael Stepp
  */
-public class AssemblyTypeRef extends TypeRef implements edu.arizona.cs.mbel.signature.AssemblyFlags
+public class AssemblyTypeRef extends TypeRef implements AssemblyFlags
 {
 	/**
 	 * A TypeRef corresponding to [mscorlib]System.Object. (note this is only usable outside of mscorlib)

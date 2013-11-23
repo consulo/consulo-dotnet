@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Load array element address.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class LDELEMA extends Instruction
 {
 	public static final int LDELEMA = 0x8F;
 	protected static final int OPCODE_LIST[] = {LDELEMA};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classRef;
+	private AbstractTypeReference classRef;
 
 	/**
 	 * Makes a LDELEMA object for the given array element type
 	 *
 	 * @param ref the type reference of the arry element type
 	 */
-	public LDELEMA(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public LDELEMA(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(LDELEMA, OPCODE_LIST);
 		classRef = ref;
@@ -46,7 +53,7 @@ public class LDELEMA extends Instruction
 	/**
 	 * Returns the reference to the array element type for this instruction
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getType()
+	public AbstractTypeReference getType()
 	{
 		return classRef;
 	}
@@ -61,14 +68,14 @@ public class LDELEMA extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(classRef);
 		buffer.putTOKEN(token);
 	}
 
-	public LDELEMA(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public LDELEMA(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long classToken = parse.getMSILInputStream().readTOKEN();

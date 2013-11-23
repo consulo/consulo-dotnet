@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Initialize block of memory to value.<br>
  * Stack transition:<br>
@@ -55,7 +59,7 @@ public class INITBLK extends UnalignedPrefixInstruction
 		return "initblk";
 	}
 
-	public INITBLK(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public INITBLK(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(false, opcode, OPCODE_LIST);
 	}

@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Method call.<br>
  * Stack transition:<br>
@@ -31,14 +38,14 @@ public class CALL extends TailPrefixInstruction
 	// CALL method
 	public static final int CALL = 0x28;
 	protected static final int OPCODE_LIST[] = {CALL};
-	private edu.arizona.cs.mbel.mbel.MethodDefOrRef method;
+	private MethodDefOrRef method;
 
 	/**
 	 * Makes a CALL object with the given method reference (with no tail prefix)
 	 *
 	 * @param ref the method reference to call
 	 */
-	public CALL(edu.arizona.cs.mbel.mbel.MethodDefOrRef ref) throws InstructionInitException
+	public CALL(MethodDefOrRef ref) throws InstructionInitException
 	{
 		this(false, ref);
 	}
@@ -49,7 +56,7 @@ public class CALL extends TailPrefixInstruction
 	 * @param has true iff this CALL has a tail prefix
 	 * @param ref the method reference to call
 	 */
-	public CALL(boolean has, edu.arizona.cs.mbel.mbel.MethodDefOrRef ref) throws InstructionInitException
+	public CALL(boolean has, MethodDefOrRef ref) throws InstructionInitException
 	{
 		super(has, CALL, OPCODE_LIST);
 		method = ref;
@@ -58,7 +65,7 @@ public class CALL extends TailPrefixInstruction
 	/**
 	 * Returns the method reference for this CALL
 	 */
-	public edu.arizona.cs.mbel.mbel.MethodDefOrRef getMethod()
+	public MethodDefOrRef getMethod()
 	{
 		return method;
 	}
@@ -73,14 +80,14 @@ public class CALL extends TailPrefixInstruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getMethodRefToken(method);
 		buffer.putTOKEN(token);
 	}
 
-	public CALL(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public CALL(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long methodToken = parse.getMSILInputStream().readTOKEN();

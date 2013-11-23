@@ -20,6 +20,12 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+import edu.arizona.cs.mbel.metadata.TableConstants;
+
 /**
  * This class represents a ValueType type signature.
  *
@@ -27,7 +33,7 @@ package edu.arizona.cs.mbel.signature;
  */
 public class ValueTypeSignature extends TypeSignature
 {
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference valueType;
+	private AbstractTypeReference valueType;
 
 	/**
 	 * Constructs a ValueTypeSignature representing the given ValueType
@@ -35,7 +41,7 @@ public class ValueTypeSignature extends TypeSignature
 	 * @param value an AbstractTypeReference representing a ValueType
 	 * @throws SignatureException if value is not a ValueType or is null
 	 */
-	public ValueTypeSignature(edu.arizona.cs.mbel.mbel.AbstractTypeReference value) throws SignatureException
+	public ValueTypeSignature(AbstractTypeReference value) throws SignatureException
 	{
 		this();
 		if(value == null)
@@ -57,7 +63,7 @@ public class ValueTypeSignature extends TypeSignature
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return the ValueTypeSignature representing the binary blob, or null if there was a parse error
 	 */
-	public static TypeSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static TypeSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		ValueTypeSignature blob = new ValueTypeSignature();
 		byte data = buffer.get();
@@ -67,15 +73,15 @@ public class ValueTypeSignature extends TypeSignature
 		}
 
 		int token[] = parseTypeDefOrRefEncoded(buffer);
-		if(token[0] == edu.arizona.cs.mbel.metadata.TableConstants.TypeDef)
+		if(token[0] == TableConstants.TypeDef)
 		{
 			blob.valueType = group.getTypeDefs()[token[1] - 1];
 		}
-		else if(token[0] == edu.arizona.cs.mbel.metadata.TableConstants.TypeRef)
+		else if(token[0] == TableConstants.TypeRef)
 		{
 			blob.valueType = group.getTypeRefs()[token[1] - 1];
 		}
-		else if(token[0] == edu.arizona.cs.mbel.metadata.TableConstants.TypeSpec)
+		else if(token[0] == TableConstants.TypeSpec)
 		{
 			blob.valueType = group.getTypeSpecs()[token[1] - 1];
 		}
@@ -86,7 +92,7 @@ public class ValueTypeSignature extends TypeSignature
 		return blob;
 	}
 
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(ELEMENT_TYPE_VALUETYPE);
 		long token = emitter.getTypeToken(valueType);
@@ -97,7 +103,7 @@ public class ValueTypeSignature extends TypeSignature
 	/**
 	 * Getter method for the ValueType reference
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getValueType()
+	public AbstractTypeReference getValueType()
 	{
 		return valueType;
 	}

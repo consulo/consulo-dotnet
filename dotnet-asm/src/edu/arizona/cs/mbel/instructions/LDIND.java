@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Load indirect.<br>
  * Stack transition:<br>
@@ -98,7 +102,7 @@ public class LDIND extends UnalignedPrefixInstruction
 		return "";
 	}
 
-	public LDIND(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public LDIND(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(false, opcode, OPCODE_LIST);
 	}

@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Bitwise not (negation).<br>
  * Stack transition:<br>
@@ -42,7 +46,7 @@ public class NOT extends Instruction
 		return "not";
 	}
 
-	public NOT(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public NOT(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

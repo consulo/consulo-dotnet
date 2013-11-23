@@ -20,6 +20,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Size of type.<br>
  * Stack transition:<br>
@@ -31,14 +38,14 @@ public class SIZEOF extends Instruction
 {
 	public static final int SIZEOF = 0x1CFE;
 	protected static final int OPCODE_LIST[] = {SIZEOF};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classRef;
+	private AbstractTypeReference classRef;
 
 	/**
 	 * Makes a SIZEOF object for the given type.
 	 *
 	 * @param ref the type reference
 	 */
-	public SIZEOF(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public SIZEOF(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(SIZEOF, OPCODE_LIST);
 		classRef = ref;
@@ -47,7 +54,7 @@ public class SIZEOF extends Instruction
 	/**
 	 * Returns the type for this sizeof instruction.
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getType()
+	public AbstractTypeReference getType()
 	{
 		return classRef;
 	}
@@ -62,14 +69,14 @@ public class SIZEOF extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(classRef);
 		buffer.putTOKEN(token);
 	}
 
-	public SIZEOF(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public SIZEOF(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long valueTypeToken = parse.getMSILInputStream().readTOKEN();

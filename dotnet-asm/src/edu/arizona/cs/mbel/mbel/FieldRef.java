@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import edu.arizona.cs.mbel.signature.FieldSignature;
+
 /**
  * Repesents a field reference, as used in an instruction. Field references can
  * be fields defined in this module, another module, or another assembly. They can
@@ -28,7 +30,7 @@ package edu.arizona.cs.mbel.mbel;
  */
 public class FieldRef extends MemberRef
 {
-	private edu.arizona.cs.mbel.signature.FieldSignature signature;
+	private FieldSignature signature;
 
 	/**
 	 * Makes a field reference witht he given name, field signature, and parent type
@@ -37,7 +39,7 @@ public class FieldRef extends MemberRef
 	 * @param sig  the field signature
 	 * @param par  the parent type in which the field is defined
 	 */
-	public FieldRef(String name, edu.arizona.cs.mbel.signature.FieldSignature sig, AbstractTypeReference par)
+	public FieldRef(String name, FieldSignature sig, AbstractTypeReference par)
 	{
 		super(name, par);
 		signature = sig;
@@ -46,7 +48,7 @@ public class FieldRef extends MemberRef
 	/**
 	 * Returns the field signature for this field
 	 */
-	public edu.arizona.cs.mbel.signature.FieldSignature getSignature()
+	public FieldSignature getSignature()
 	{
 		return signature;
 	}
@@ -54,7 +56,7 @@ public class FieldRef extends MemberRef
 	/**
 	 * Sets the field signature for this field
 	 */
-	public void setSignature(edu.arizona.cs.mbel.signature.FieldSignature sig)
+	public void setSignature(FieldSignature sig)
 	{
 		signature = sig;
 	}

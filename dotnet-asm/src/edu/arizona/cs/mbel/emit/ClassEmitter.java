@@ -19,6 +19,21 @@
 
 package edu.arizona.cs.mbel.emit;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.instructions.LoadableType;
+import edu.arizona.cs.mbel.mbel.*;
+import edu.arizona.cs.mbel.metadata.GenericTable;
+import edu.arizona.cs.mbel.metadata.Metadata;
+import edu.arizona.cs.mbel.metadata.TableConstants;
+import edu.arizona.cs.mbel.parse.CLIHeader;
+import edu.arizona.cs.mbel.signature.LocalVarList;
+import edu.arizona.cs.mbel.signature.MarshalSignature;
+import edu.arizona.cs.mbel.signature.MethodSignature;
+import edu.arizona.cs.mbel.signature.ParameterInfo;
+import edu.arizona.cs.mbel.signature.ParameterSignature;
+
 /**
  * This class is used to take a Module and output the CLI Header and metadata portion of a
  * .NET module to a buffer. This class is used by Emitter to write out the .NET specific parts
@@ -28,13 +43,13 @@ package edu.arizona.cs.mbel.emit;
  */
 public class ClassEmitter
 {
-	private edu.arizona.cs.mbel.mbel.Module module;
+	private Module module;
 	private StringsStreamGen stringsGen;
 	private BlobStreamGen blobGen;
 	private GUIDStreamGen guidGen;
 	private USStreamGen usGen;
-	private java.util.Vector[] tables;
-	private edu.arizona.cs.mbel.metadata.TableConstants tc = null;
+	private Vector[] tables;
+	private TableConstants tc = null;
 	/////////////////////////////////////////////////////
 	private long TypeDefCount = 1;
 	private long TypeRefCount = 1;
@@ -49,15 +64,15 @@ public class ClassEmitter
 	private long ExportedTypeCount = 1;
 	private long EntryPointToken = 0L;
 	////////////////////////////////////
-	private edu.arizona.cs.mbel.ByteBuffer localResources;   // ByteBuffer
-	private java.util.Vector methodBodies;                   // vector of ByteBuffers
+	private ByteBuffer localResources;   // ByteBuffer
+	private Vector methodBodies;                   // vector of ByteBuffers
 	private PatchList netPatches;
 
 	/**
 	 * Creates and initializes a ClassEmitter.
 	 * Initializes the table arrays, streamgens, and buffers for local resources and method bodies.
 	 */
-	public ClassEmitter(edu.arizona.cs.mbel.mbel.Module mod)
+	public ClassEmitter(Module mod)
 	{
 		module = mod;
 
@@ -67,16 +82,16 @@ public class ClassEmitter
 		blobGen = new BlobStreamGen();
 		guidGen = new GUIDStreamGen();
 		usGen = new USStreamGen();
-		tables = new java.util.Vector[64];
+		tables = new Vector[64];
 
 		for(int i = 0; i < 64; i++)
 		{
-			tables[i] = new java.util.Vector(10);
+			tables[i] = new Vector(10);
 		}
 		////////////////////////////////////////////////
 
-		localResources = new edu.arizona.cs.mbel.ByteBuffer(2000);
-		methodBodies = new java.util.Vector(10);
+		localResources = new ByteBuffer(2000);
+		methodBodies = new Vector(10);
 	}
 
 	/**
@@ -90,47 +105,47 @@ public class ClassEmitter
 		buildAssembly();
 		buildModule();
 		{// add file references from current module (more might come from elsewhere)
-			edu.arizona.cs.mbel.mbel.FileReference[] frs = module.getFileReferences();
-			for(int i = 0; i < frs.length; i++)
+			FileReference[] frs = module.getFileReferences();
+			for(FileReference fr : frs)
 			{
-				addFile(frs[i]);
+				addFile(fr);
 			}
 		}
 		buildManifestResources();
 
 		{// add TypeDef tables and sub-tables
-			edu.arizona.cs.mbel.mbel.TypeDef[] defs = module.getTypeDefs();
-			for(int i = 0; i < defs.length; i++)
+			TypeDef[] defs = module.getTypeDefs();
+			for(TypeDef def7 : defs)
 			{
-				addTypeDef(defs[i]);
+				addTypeDef(def7);
 			}
-			for(int i = 0; i < defs.length; i++)
+			for(TypeDef def6 : defs)
 			{
-				buildEvents(defs[i]);
+				buildEvents(def6);
 			}
-			for(int i = 0; i < defs.length; i++)
+			for(TypeDef def5 : defs)
 			{
-				buildProperties(defs[i]);
+				buildProperties(def5);
 			}
-			for(int i = 0; i < defs.length; i++)
+			for(TypeDef def4 : defs)
 			{
-				buildFields(defs[i]);
+				buildFields(def4);
 			}
-			for(int i = 0; i < defs.length; i++)
+			for(TypeDef def3 : defs)
 			{
-				buildMethods(defs[i]);
+				buildMethods(def3);
 			}
-			for(int i = 0; i < defs.length; i++)
+			for(TypeDef def2 : defs)
 			{
-				buildMethodBodies(defs[i]);
+				buildMethodBodies(def2);
 			}
-			for(int i = 0; i < defs.length; i++)
+			for(TypeDef def1 : defs)
 			{
-				buildMethodImpls(defs[i]);
+				buildMethodImpls(def1);
 			}
-			for(int i = 0; i < defs.length; i++)
+			for(TypeDef def : defs)
 			{
-				buildInterfaceImpls(defs[i]);
+				buildInterfaceImpls(def);
 			}
 		}
 
@@ -143,15 +158,15 @@ public class ClassEmitter
 	 *
 	 * @param netBuffer a buffer corresponding to the .net section in a PE file, assumed to be at position 0
 	 */
-	public void emitMetadata(edu.arizona.cs.mbel.ByteBuffer netBuffer)
+	public void emitMetadata(ByteBuffer netBuffer)
 	{
 		// netBuffer will be read-only
 		// not to be called until after buildTables
 
 		netPatches = new PatchList();
 
-		edu.arizona.cs.mbel.metadata.Metadata metadata = module.getPEModule().metadata;
-		edu.arizona.cs.mbel.parse.CLIHeader cliHeader = module.getPEModule().cliHeader;
+		Metadata metadata = module.getPEModule().metadata;
+		CLIHeader cliHeader = module.getPEModule().cliHeader;
 
 		////// emit CLR Header /////////////////////////////
 		netBuffer.pad(4);
@@ -162,7 +177,7 @@ public class ClassEmitter
 		long metadataRVAStart = netBuffer.getPosition();
 		netBuffer.putDWORD(0);  // wrong value (Metadata RVA)
 		netBuffer.putDWORD(0);  // wrong value (Metadata size (includes all streams/tables))
-		netBuffer.putDWORD(cliHeader.Flags & (~cliHeader.COMIMAGE_FLAGS_STRONGNAMESIGNED) & (~cliHeader.COMIMAGE_FLAGS_TRACKDEBUGDATA));
+		netBuffer.putDWORD(cliHeader.Flags & (~CLIHeader.COMIMAGE_FLAGS_STRONGNAMESIGNED) & (~CLIHeader.COMIMAGE_FLAGS_TRACKDEBUGDATA));
 		netBuffer.putDWORD(EntryPointToken);
 		long resourceRVAStart = netBuffer.getPosition();
 		// remember to potentially add a patch here!
@@ -283,20 +298,20 @@ public class ClassEmitter
 		}
 
 
-		long[] bodyRVAStarts = new long[tables[tc.Method].size()];
+		long[] bodyRVAStarts = new long[tables[TableConstants.Method].size()];
 		for(int i = 0; i < 64; i++)
 		{
 			if(tables[i].size() > 0)
 			{
-				if(i == tc.Method)
+				if(i == TableConstants.Method)
 				{
 					for(int j = 0; j < tables[i].size(); j++)
 					{
-						edu.arizona.cs.mbel.metadata.GenericTable methodTable = (edu.arizona.cs.mbel.metadata.GenericTable) tables[i].get(j);
+						GenericTable methodTable = (GenericTable) tables[i].get(j);
 						long RVA = methodTable.getConstant("RVA").longValue();
 						int Flags = methodTable.getConstant("ImplFlags").intValue();
 
-						if((RVA != 0) && (Flags & edu.arizona.cs.mbel.mbel.Method.CodeTypeMask) == edu.arizona.cs.mbel.mbel.Method.IL)
+						if((RVA != 0) && (Flags & Method.CodeTypeMask) == Method.IL)
 						{
 							netPatches.addPatch(netBuffer.getPosition());
 							bodyRVAStarts[j] = netBuffer.getPosition();
@@ -313,7 +328,7 @@ public class ClassEmitter
 				{
 					for(int j = 0; j < tables[i].size(); j++)
 					{
-						((edu.arizona.cs.mbel.metadata.GenericTable) tables[i].get(j)).emit(netBuffer, this);
+						((GenericTable) tables[i].get(j)).emit(netBuffer, this);
 					}
 				}
 			}
@@ -383,7 +398,7 @@ public class ClassEmitter
 		long[] bodyStarts = new long[methodBodies.size()];
 		for(int i = 0; i < methodBodies.size(); i++)
 		{
-			edu.arizona.cs.mbel.ByteBuffer bodybuf = (edu.arizona.cs.mbel.ByteBuffer) methodBodies.get(i);
+			ByteBuffer bodybuf = (ByteBuffer) methodBodies.get(i);
 			netBuffer.pad(4);
 			bodyStarts[i] = netBuffer.getPosition();
 			netBuffer.concat(bodybuf);
@@ -391,11 +406,11 @@ public class ClassEmitter
 		// set RVAs (unbiased)
 		end = netBuffer.getPosition();
 		int count = 0;
-		for(int i = 0; i < bodyRVAStarts.length; i++)
+		for(long bodyRVAStart : bodyRVAStarts)
 		{
-			if(bodyRVAStarts[i] != -1L)
+			if(bodyRVAStart != -1L)
 			{
-				netBuffer.setPosition((int) bodyRVAStarts[i]);
+				netBuffer.setPosition((int) bodyRVAStart);
 				netBuffer.putDWORD(bodyStarts[count++]);
 			}
 		}
@@ -426,11 +441,11 @@ public class ClassEmitter
 	private void buildAssembly()
 	{
 		// DONE!
-		edu.arizona.cs.mbel.mbel.AssemblyInfo assemblyInfo = module.getAssemblyInfo();
+		AssemblyInfo assemblyInfo = module.getAssemblyInfo();
 		if(assemblyInfo != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable assemTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Assembly]);
-			tables[tc.Assembly].add(assemTable);
+			GenericTable assemTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Assembly]);
+			tables[TableConstants.Assembly].add(assemTable);
 
 			assemTable.setFieldValue("HashAlgID", new Long(assemblyInfo.getHashAlg()));
 			assemTable.setFieldValue("MajorVersion", new Integer(assemblyInfo.getMajorVersion()));
@@ -443,31 +458,32 @@ public class ClassEmitter
 			assemTable.setFieldValue("Culture", new Long(stringsGen.addString(assemblyInfo.getCulture())));
 
 			// Make DeclSecurity
-			edu.arizona.cs.mbel.mbel.DeclSecurity decl = assemblyInfo.getDeclSecurity();
+			DeclSecurity decl = assemblyInfo.getDeclSecurity();
 			if(decl != null)
 			{
-				edu.arizona.cs.mbel.metadata.GenericTable declTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.DeclSecurity]);
+				GenericTable declTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.DeclSecurity]);
 				declTable.setFieldValue("Action", new Integer(decl.getAction()));
-				long coded = tc.buildCodedIndex(tc.HasDeclSecurity, tc.Assembly, 1L);
+				long coded = TableConstants.buildCodedIndex(TableConstants.HasDeclSecurity, TableConstants.Assembly, 1L);
 				declTable.setFieldValue("Parent", new Long(coded));
 				declTable.setFieldValue("PermissionSet", new Long(blobGen.addBlob(decl.getPermissionSet())));
 
-				tables[tc.DeclSecurity].add(declTable);
+				tables[TableConstants.DeclSecurity].add(declTable);
 
 				// Make CustomAttributes (on DeclSecurity)
-				long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.DeclSecurity, tables[tc.DeclSecurity].size());
+				long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.DeclSecurity,
+						tables[TableConstants.DeclSecurity].size());
 				addCustomAttributes(decl.getDeclSecurityAttributes(), codedparent);
 			}
 
 			// Make ExportedTypes
-			edu.arizona.cs.mbel.mbel.ExportedTypeRef[] erefs = assemblyInfo.getExportedTypes();
-			for(int i = 0; i < erefs.length; i++)
+			ExportedTypeRef[] erefs = assemblyInfo.getExportedTypes();
+			for(ExportedTypeRef eref : erefs)
 			{
-				addExportedType(erefs[i]);
+				addExportedType(eref);
 			}
 
 			// Make CustomAttributes
-			long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.Assembly, 1L);
+			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Assembly, 1L);
 			addCustomAttributes(assemblyInfo.getAssemblyAttributes(), codedparent);
 		}
 	}
@@ -475,30 +491,30 @@ public class ClassEmitter
 	private void buildModule()
 	{
 		// DONE!
-		edu.arizona.cs.mbel.metadata.GenericTable modTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Module]);
+		GenericTable modTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Module]);
 		modTable.setFieldValue("Generation", new Integer(module.getGeneration()));
 		modTable.setFieldValue("Name", new Long(stringsGen.addString(module.getName())));
 		modTable.setFieldValue("Mvid", new Long(guidGen.addGUID(module.getMvidGUID())));
 		modTable.setFieldValue("EncID", new Long(guidGen.addGUID(module.getEncIdGUID())));
 		modTable.setFieldValue("EncBaseID", new Long(guidGen.addGUID(module.getEncBaseIdGUID())));
 
-		tables[tc.Module].add(modTable);
+		tables[TableConstants.Module].add(modTable);
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.Module, 1L);
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Module, 1L);
 		addCustomAttributes(module.getModuleAttributes(), codedparent);
 	}
 
-	private long addFile(edu.arizona.cs.mbel.mbel.FileReference fr)
+	private long addFile(FileReference fr)
 	{
 		// returns a valid RID (1-based) DONE!!
 		long index = fr.getFileRID();
 		if(index == -1L)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable fileTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.File]);
+			GenericTable fileTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.File]);
 
 			fr.setFileRID(FileCount++);
-			tables[tc.File].add(fileTable);
+			tables[TableConstants.File].add(fileTable);
 
 			fileTable.setFieldValue("Flags", new Long(fr.getFlags()));
 			fileTable.setFieldValue("Name", new Long(stringsGen.addString(fr.getFileName())));
@@ -507,7 +523,7 @@ public class ClassEmitter
 		}
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.File, index);
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.File, index);
 		addCustomAttributes(fr.getFileAttributes(), codedparent);
 
 		return index;
@@ -516,66 +532,67 @@ public class ClassEmitter
 	private void buildManifestResources()
 	{
 		// DONE!
-		edu.arizona.cs.mbel.mbel.ManifestResource[] res = module.getManifestResources();
-		edu.arizona.cs.mbel.metadata.GenericTable manTable = null;
+		ManifestResource[] res = module.getManifestResources();
+		GenericTable manTable = null;
 
-		for(int i = 0; i < res.length; i++)
+		for(ManifestResource re : res)
 		{
-			if(res[i] instanceof edu.arizona.cs.mbel.mbel.LocalManifestResource)
+			if(re instanceof LocalManifestResource)
 			{
 				// DONE!!!
-				edu.arizona.cs.mbel.mbel.LocalManifestResource lmr = (edu.arizona.cs.mbel.mbel.LocalManifestResource) res[i];
+				LocalManifestResource lmr = (LocalManifestResource) re;
 
-				manTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.ManifestResource]);
+				manTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ManifestResource]);
 				manTable.setFieldValue("Offset", new Long(localResources.getPosition()));
 				manTable.setFieldValue("Flags", new Long(lmr.getFlags()));
 				manTable.setFieldValue("Name", new Long(stringsGen.addString(lmr.getName())));
 				manTable.setFieldValue("Implementation", new Long(0));
-				tables[tc.ManifestResource].add(manTable);
+				tables[TableConstants.ManifestResource].add(manTable);
 
 				byte[] data = lmr.getResourceData();
 				localResources.putINT32(data.length);
 				localResources.put(data);
 				localResources.pad(4);
 			}
-			else if(res[i] instanceof edu.arizona.cs.mbel.mbel.FileManifestResource)
+			else if(re instanceof FileManifestResource)
 			{
 				// DONE!
-				edu.arizona.cs.mbel.mbel.FileManifestResource fmr = (edu.arizona.cs.mbel.mbel.FileManifestResource) res[i];
-				manTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.ManifestResource]);
+				FileManifestResource fmr = (FileManifestResource) re;
+				manTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ManifestResource]);
 				manTable.setFieldValue("Offset", new Long(0));
-				manTable.setFieldValue("Flags", new Long(res[i].getFlags()));
-				manTable.setFieldValue("Name", new Long(stringsGen.addString(res[i].getName())));
+				manTable.setFieldValue("Flags", new Long(re.getFlags()));
+				manTable.setFieldValue("Name", new Long(stringsGen.addString(re.getName())));
 
 				long rid = addFile(fmr.getFileReference());
-				long coded = tc.buildCodedIndex(tc.Implementation, tc.File, rid);
+				long coded = TableConstants.buildCodedIndex(TableConstants.Implementation, TableConstants.File, rid);
 				manTable.setFieldValue("Implementation", new Long(coded));
-				tables[tc.ManifestResource].add(manTable);
+				tables[TableConstants.ManifestResource].add(manTable);
 			}
-			else if(res[i] instanceof edu.arizona.cs.mbel.mbel.AssemblyManifestResource)
+			else if(re instanceof AssemblyManifestResource)
 			{
 				// DONE!!
-				edu.arizona.cs.mbel.mbel.AssemblyManifestResource amr = (edu.arizona.cs.mbel.mbel.AssemblyManifestResource) res[i];
+				AssemblyManifestResource amr = (AssemblyManifestResource) re;
 
 				long assemblyRef = addAssemblyRef(amr.getAssemblyRefInfo());
 
-				manTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.ManifestResource]);
+				manTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ManifestResource]);
 				manTable.setFieldValue("Offset", new Long(0));
-				manTable.setFieldValue("Flags", new Long(res[i].getFlags()));
-				manTable.setFieldValue("Name", new Long(stringsGen.addString(res[i].getName())));
+				manTable.setFieldValue("Flags", new Long(re.getFlags()));
+				manTable.setFieldValue("Name", new Long(stringsGen.addString(re.getName())));
 
-				long coded = tc.buildCodedIndex(tc.Implementation, tc.AssemblyRef, assemblyRef);
+				long coded = TableConstants.buildCodedIndex(TableConstants.Implementation, TableConstants.AssemblyRef, assemblyRef);
 				manTable.setFieldValue("Implementation", new Long(coded));
-				tables[tc.ManifestResource].add(manTable);
+				tables[TableConstants.ManifestResource].add(manTable);
 			}
 
 			// Make CustomAttributes
-			long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.ManifestResource, tables[tc.ManifestResource].size());
-			addCustomAttributes(res[i].getManifestResourceAttributes(), codedparent);
+			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.ManifestResource,
+					tables[TableConstants.ManifestResource].size());
+			addCustomAttributes(re.getManifestResourceAttributes(), codedparent);
 		}
 	}
 
-	private long addExportedType(edu.arizona.cs.mbel.mbel.ExportedTypeRef ref)
+	private long addExportedType(ExportedTypeRef ref)
 	{
 		// adds this as an ExportedType, NOT as a TypeRef!!! returns an ExportedType RID
 		// DONE!!!
@@ -584,8 +601,8 @@ public class ClassEmitter
 			return ref.getExportedTypeRID();
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable exTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.ExportedType]);
-		tables[tc.ExportedType].add(exTable);
+		GenericTable exTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ExportedType]);
+		tables[TableConstants.ExportedType].add(exTable);
 		ref.setExportedTypeRID(ExportedTypeCount++);
 
 		exTable.setFieldValue("Flags", new Long(ref.getFlags()));
@@ -596,25 +613,25 @@ public class ClassEmitter
 		long coded = 0;
 		if(ref.getFileReference() != null)
 		{
-			edu.arizona.cs.mbel.mbel.FileReference fr = ref.getFileReference();
+			FileReference fr = ref.getFileReference();
 			long rid = addFile(fr);
-			coded = tc.buildCodedIndex(tc.Implementation, tc.File, rid);
+			coded = TableConstants.buildCodedIndex(TableConstants.Implementation, TableConstants.File, rid);
 		}
 		else
 		{
 			long rid = addExportedType(ref.getExportedTypeRef());
-			coded = tc.buildCodedIndex(tc.Implementation, tc.ExportedType, rid);
+			coded = TableConstants.buildCodedIndex(TableConstants.Implementation, TableConstants.ExportedType, rid);
 		}
 		exTable.setFieldValue("Implementation", new Long(coded));
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.ExportedType, ref.getExportedTypeRID());
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.ExportedType, ref.getExportedTypeRID());
 		addCustomAttributes(ref.getExportedTypeAttributes(), codedparent);
 
 		return ref.getExportedTypeRID();
 	}
 
-	private long addTypeDef(edu.arizona.cs.mbel.mbel.TypeDef def)
+	private long addTypeDef(TypeDef def)
 	{
 		// all TypeDefs must be registered with the Module, so any others found will be errors
 		if(def.getTypeDefRID() != -1L)
@@ -622,91 +639,92 @@ public class ClassEmitter
 			return def.getTypeDefRID();
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable defTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.TypeDef]);
+		GenericTable defTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.TypeDef]);
 
 		def.setTypeDefRID(TypeDefCount++);
-		tables[tc.TypeDef].add(defTable);
+		tables[TableConstants.TypeDef].add(defTable);
 
 		defTable.setFieldValue("Flags", new Long(def.getFlags()));
 		defTable.setFieldValue("Name", new Long(stringsGen.addString(def.getName())));
 		defTable.setFieldValue("Namespace", new Long(stringsGen.addString(def.getNamespace())));
 
-		edu.arizona.cs.mbel.mbel.AbstractTypeReference parent = def.getSuperClass();
+		AbstractTypeReference parent = def.getSuperClass();
 		if(parent == null)
 		{
 			defTable.setFieldValue("Extends", new Long(0));
 		}
-		else if(parent instanceof edu.arizona.cs.mbel.mbel.TypeDef)
+		else if(parent instanceof TypeDef)
 		{
-			long rid = addTypeDef((edu.arizona.cs.mbel.mbel.TypeDef) parent);
-			long coded = tc.buildCodedIndex(tc.TypeDefOrRef, tc.TypeDef, rid);
+			long rid = addTypeDef((TypeDef) parent);
+			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, rid);
 			defTable.setFieldValue("Extends", new Long(coded));
 		}
-		else if(parent instanceof edu.arizona.cs.mbel.mbel.TypeRef)
+		else if(parent instanceof TypeRef)
 		{
-			long rid = addTypeRef((edu.arizona.cs.mbel.mbel.TypeRef) parent);
-			long coded = tc.buildCodedIndex(tc.TypeDefOrRef, tc.TypeRef, rid);
+			long rid = addTypeRef((TypeRef) parent);
+			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, rid);
 			defTable.setFieldValue("Extends", new Long(coded));
 		}
-		else if(parent instanceof edu.arizona.cs.mbel.mbel.TypeSpec)
+		else if(parent instanceof TypeSpec)
 		{
-			long rid = addTypeSpec((edu.arizona.cs.mbel.mbel.TypeSpec) parent);
-			long coded = tc.buildCodedIndex(tc.TypeDefOrRef, tc.TypeSpec, rid);
+			long rid = addTypeSpec((TypeSpec) parent);
+			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeSpec, rid);
 			defTable.setFieldValue("Extends", new Long(coded));
 		}
 
 		//////////////////////////////////////////////////////////////////
 		// Make NestedClass tables DONE
-		edu.arizona.cs.mbel.mbel.TypeDef[] nested = def.getNestedClasses();
-		for(int i = 0; i < nested.length; i++)
+		TypeDef[] nested = def.getNestedClasses();
+		for(TypeDef aNested : nested)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable nestTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.NestedClass]);
-			long myIndex = addTypeDef(nested[i]);
+			GenericTable nestTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.NestedClass]);
+			long myIndex = addTypeDef(aNested);
 			nestTable.setFieldValue("NestedClass", new Long(myIndex));
 			nestTable.setFieldValue("EnclosingClass", new Long(def.getTypeDefRID()));
-			tables[tc.NestedClass].add(nestTable);
+			tables[TableConstants.NestedClass].add(nestTable);
 		}
 
 		// Make ClassLayouts DONE
-		edu.arizona.cs.mbel.mbel.ClassLayout layout = def.getClassLayout();
+		ClassLayout layout = def.getClassLayout();
 		if(layout != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable layoutTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.ClassLayout]);
+			GenericTable layoutTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ClassLayout]);
 			layoutTable.setFieldValue("PackingSize", new Integer(layout.getPackingSize()));
 			layoutTable.setFieldValue("ClassSize", new Long(layout.getClassSize()));
 			layoutTable.setFieldValue("Parent", new Long(def.getTypeDefRID()));
-			tables[tc.ClassLayout].add(layoutTable);
+			tables[TableConstants.ClassLayout].add(layoutTable);
 		}
 
 		// Make DeclSecurity DONE
-		edu.arizona.cs.mbel.mbel.DeclSecurity decl = def.getDeclSecurity();
+		DeclSecurity decl = def.getDeclSecurity();
 		if(decl != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable declTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.DeclSecurity]);
+			GenericTable declTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.DeclSecurity]);
 			declTable.setFieldValue("Action", new Integer(decl.getAction()));
-			long coded = tc.buildCodedIndex(tc.HasDeclSecurity, tc.TypeDef, def.getTypeDefRID());
+			long coded = TableConstants.buildCodedIndex(TableConstants.HasDeclSecurity, TableConstants.TypeDef, def.getTypeDefRID());
 			declTable.setFieldValue("Parent", new Long(coded));
 			declTable.setFieldValue("PermissionSet", new Long(blobGen.addBlob(decl.getPermissionSet())));
-			tables[tc.DeclSecurity].add(declTable);
+			tables[TableConstants.DeclSecurity].add(declTable);
 
 			// Make CustomAttributes (on DeclSecurity)
-			long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.DeclSecurity, tables[tc.DeclSecurity].size());
+			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.DeclSecurity, tables[TableConstants
+					.DeclSecurity].size());
 			addCustomAttributes(decl.getDeclSecurityAttributes(), codedparent);
 		}
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.TypeDef, def.getTypeDefRID());
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.TypeDef, def.getTypeDefRID());
 		addCustomAttributes(def.getTypeDefAttributes(), codedparent);
 		//////////////////////////////////////////////////////////////////
 
 		return def.getTypeDefRID();
 	}
 
-	private void buildFields(edu.arizona.cs.mbel.mbel.TypeDef def)
+	private void buildFields(TypeDef def)
 	{
 		// Make Fields
-		edu.arizona.cs.mbel.mbel.Field[] defFields = def.getFields();
-		edu.arizona.cs.mbel.metadata.GenericTable defTable = (edu.arizona.cs.mbel.metadata.GenericTable) tables[tc.TypeDef].get((int) def.getTypeDefRID()
+		Field[] defFields = def.getFields();
+		GenericTable defTable = (GenericTable) tables[TableConstants.TypeDef].get((int) def.getTypeDefRID()
 				- 1);
 		if(defFields.length == 0)
 		{
@@ -715,19 +733,19 @@ public class ClassEmitter
 		else
 		{
 			long fieldStart = FieldCount;
-			for(int i = 0; i < defFields.length; i++)
+			for(Field defField : defFields)
 			{
-				addField(defFields[i]);
+				addField(defField);
 			}
 			defTable.setFieldValue("FieldList", new Long(fieldStart));
 		}
 	}
 
-	private void buildMethods(edu.arizona.cs.mbel.mbel.TypeDef def)
+	private void buildMethods(TypeDef def)
 	{
 		// Make Methods
-		edu.arizona.cs.mbel.mbel.Method[] defMethods = def.getMethods();
-		edu.arizona.cs.mbel.metadata.GenericTable defTable = (edu.arizona.cs.mbel.metadata.GenericTable) tables[tc.TypeDef].get((int) def.getTypeDefRID()
+		Method[] defMethods = def.getMethods();
+		GenericTable defTable = (GenericTable) tables[TableConstants.TypeDef].get((int) def.getTypeDefRID()
 				- 1);
 
 		if(defMethods.length == 0)
@@ -737,15 +755,15 @@ public class ClassEmitter
 		else
 		{
 			long methodStart = MethodCount;
-			for(int i = 0; i < defMethods.length; i++)
+			for(Method defMethod : defMethods)
 			{
-				addMethod(defMethods[i]);
+				addMethod(defMethod);
 			}
 			defTable.setFieldValue("MethodList", new Long(methodStart));
 		}
 	}
 
-	private long addField(edu.arizona.cs.mbel.mbel.Field field)
+	private long addField(Field field)
 	{
 		// assume this field is not in the list yet DONE!
 		if(field.getFieldRID() != -1L)
@@ -753,79 +771,79 @@ public class ClassEmitter
 			return field.getFieldRID();
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable fieldTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Field]);
-		tables[tc.Field].add(fieldTable);
+		GenericTable fieldTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Field]);
+		tables[TableConstants.Field].add(fieldTable);
 		field.setFieldRID(FieldCount++);
 
 		fieldTable.setFieldValue("Flags", new Integer(field.getFlags()));
 		fieldTable.setFieldValue("Name", new Long(stringsGen.addString(field.getName())));
-		edu.arizona.cs.mbel.ByteBuffer fieldbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+		ByteBuffer fieldbuffer = new ByteBuffer(100);
 		field.getSignature().emit(fieldbuffer, this);
 		byte[] blob = fieldbuffer.toByteArray();
 		fieldTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
 
 		// Make FieldMarshal DONE!
-		edu.arizona.cs.mbel.signature.MarshalSignature sig = field.getFieldMarshal();
+		MarshalSignature sig = field.getFieldMarshal();
 		if(sig != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable marTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.FieldMarshal]);
+			GenericTable marTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.FieldMarshal]);
 
-			long coded = tc.buildCodedIndex(tc.HasFieldMarshal, tc.Field, field.getFieldRID());
+			long coded = TableConstants.buildCodedIndex(TableConstants.HasFieldMarshal, TableConstants.Field, field.getFieldRID());
 			marTable.setFieldValue("Parent", new Long(coded));
 
-			edu.arizona.cs.mbel.ByteBuffer marbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+			ByteBuffer marbuffer = new ByteBuffer(100);
 			sig.emit(marbuffer, this);
 			byte[] data = marbuffer.toByteArray();
 			marTable.setFieldValue("NativeType", new Long(blobGen.addBlob(data)));
 
-			tables[tc.FieldMarshal].add(marTable);
+			tables[TableConstants.FieldMarshal].add(marTable);
 		}
 
 		// Make Constant DONE!
 		byte[] value = field.getDefaultValue();
 		if(value != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable constTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Constant]);
+			GenericTable constTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Constant]);
 
 			byte type = field.getSignature().getType().getType();
 			constTable.setFieldValue("Type", new Integer(type & 0xFF));
 			constTable.setFieldValue("Padding", new Integer(0));
 
-			long coded = tc.buildCodedIndex(tc.HasConst, tc.Field, field.getFieldRID());
+			long coded = TableConstants.buildCodedIndex(TableConstants.HasConst, TableConstants.Field, field.getFieldRID());
 			constTable.setFieldValue("Parent", new Long(coded));
 			constTable.setFieldValue("Value", new Long(blobGen.addBlob(value)));
 
-			tables[tc.Constant].add(constTable);
+			tables[TableConstants.Constant].add(constTable);
 		}
 
 		// Make FieldLayout DONE!
 		if(field.getOffset() != -1L)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable layoutTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.FieldLayout]);
+			GenericTable layoutTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.FieldLayout]);
 			layoutTable.setFieldValue("Offset", new Long(field.getOffset()));
 			layoutTable.setFieldValue("Field", new Long(field.getFieldRID()));
 
-			tables[tc.FieldLayout].add(layoutTable);
+			tables[TableConstants.FieldLayout].add(layoutTable);
 		}
 
 		// Make FieldRVA DONE
 		if(field.getFieldRVA() != -1L)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable fieldRVATable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.FieldRVA]);
+			GenericTable fieldRVATable = new GenericTable(TableConstants.GRAMMAR[TableConstants.FieldRVA]);
 			fieldRVATable.setFieldValue("RVA", new Long(field.getFieldRVA()));
 			fieldRVATable.setFieldValue("Field", new Long(field.getFieldRID()));
 
-			tables[tc.FieldRVA].add(fieldRVATable);
+			tables[TableConstants.FieldRVA].add(fieldRVATable);
 		}
 
 		// Make CustomAttributes DONE!
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.Field, field.getFieldRID());
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Field, field.getFieldRID());
 		addCustomAttributes(field.getFieldAttributes(), codedparent);
 
 		return field.getFieldRID();
 	}
 
-	private void addCustomAttributes(edu.arizona.cs.mbel.mbel.CustomAttribute[] cas, long codedparent)
+	private void addCustomAttributes(CustomAttribute[] cas, long codedparent)
 	{
 		// Make CustomAttributes
 		if(cas == null)
@@ -833,33 +851,33 @@ public class ClassEmitter
 			return;
 		}
 
-		for(int i = 0; i < cas.length; i++)
+		for(CustomAttribute ca : cas)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable caTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.CustomAttribute]);
+			GenericTable caTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.CustomAttribute]);
 			caTable.setFieldValue("Parent", new Long(codedparent));
-			long cons = getMethodRefToken(cas[i].getConstructor());
+			long cons = getMethodRefToken(ca.getConstructor());
 			long type = 0;
-			if(((cons >> 24) & 0xFF) == tc.Method)
+			if(((cons >> 24) & 0xFF) == TableConstants.Method)
 			{
-				type = tc.buildCodedIndex(tc.CustomAttributeType, tc.Method, (cons & 0xFFFFFFL));
+				type = TableConstants.buildCodedIndex(TableConstants.CustomAttributeType, TableConstants.Method, (cons & 0xFFFFFFL));
 			}
 			else
 			{
-				type = tc.buildCodedIndex(tc.CustomAttributeType, tc.MemberRef, (cons & 0xFFFFFFL));
+				type = TableConstants.buildCodedIndex(TableConstants.CustomAttributeType, TableConstants.MemberRef, (cons & 0xFFFFFFL));
 			}
 			caTable.setFieldValue("Type", new Long(type));
-			caTable.setFieldValue("Value", new Long(blobGen.addBlob(cas[i].getSignature())));
+			caTable.setFieldValue("Value", new Long(blobGen.addBlob(ca.getSignature())));
 
-			if(!tables[tc.CustomAttribute].contains(caTable))
+			if(!tables[TableConstants.CustomAttribute].contains(caTable))
 			{
-				tables[tc.CustomAttribute].add(caTable);
+				tables[TableConstants.CustomAttribute].add(caTable);
 			}
 		}
 	}
 
-	private long addAssemblyRef(edu.arizona.cs.mbel.mbel.AssemblyRefInfo info)
+	private long addAssemblyRef(AssemblyRefInfo info)
 	{
-		edu.arizona.cs.mbel.metadata.GenericTable assRefTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.AssemblyRef]);
+		GenericTable assRefTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.AssemblyRef]);
 
 		assRefTable.setFieldValue("MajorVersion", new Integer(info.getMajorVersion()));
 		assRefTable.setFieldValue("MinorVersion", new Integer(info.getMinorVersion()));
@@ -871,11 +889,11 @@ public class ClassEmitter
 		assRefTable.setFieldValue("Culture", new Long(stringsGen.addString(info.getCulture())));
 		assRefTable.setFieldValue("HashValue", new Long(blobGen.addBlob(info.getHashValue())));
 
-		int index = tables[tc.AssemblyRef].indexOf(assRefTable);
+		int index = tables[TableConstants.AssemblyRef].indexOf(assRefTable);
 		if(index == -1)
 		{
-			tables[tc.AssemblyRef].add(assRefTable);
-			index = tables[tc.AssemblyRef].size();
+			tables[TableConstants.AssemblyRef].add(assRefTable);
+			index = tables[TableConstants.AssemblyRef].size();
 		}
 		else
 		{
@@ -883,23 +901,23 @@ public class ClassEmitter
 		}
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.AssemblyRef, (long) index);
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.AssemblyRef, (long) index);
 		addCustomAttributes(info.getAssemblyRefAttributes(), codedparent);
 
 		return (long) index;
 	}
 
-	private long addModuleRef(edu.arizona.cs.mbel.mbel.ModuleRefInfo info)
+	private long addModuleRef(ModuleRefInfo info)
 	{
-		edu.arizona.cs.mbel.metadata.GenericTable modRefTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.ModuleRef]);
+		GenericTable modRefTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ModuleRef]);
 
 		modRefTable.setFieldValue("Name", new Long(stringsGen.addString(info.getModuleName())));
 
-		int index = tables[tc.ModuleRef].indexOf(modRefTable);
+		int index = tables[TableConstants.ModuleRef].indexOf(modRefTable);
 		if(index == -1)
 		{
-			tables[tc.ModuleRef].add(modRefTable);
-			index = tables[tc.ModuleRef].size();
+			tables[TableConstants.ModuleRef].add(modRefTable);
+			index = tables[TableConstants.ModuleRef].size();
 		}
 		else
 		{
@@ -907,13 +925,13 @@ public class ClassEmitter
 		}
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.ModuleRef, (long) index);
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.ModuleRef, (long) index);
 		addCustomAttributes(info.getModuleRefAttributes(), codedparent);
 
 		return (long) index;
 	}
 
-	private long addMethod(edu.arizona.cs.mbel.mbel.Method method)
+	private long addMethod(Method method)
 	{
 		// DONE!
 		if(method.getMethodRID() != -1L)
@@ -921,10 +939,10 @@ public class ClassEmitter
 			return method.getMethodRID();
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable methodTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Method]);
+		GenericTable methodTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Method]);
 
 		method.setMethodRID(MethodCount++);
-		tables[tc.Method].add(methodTable);
+		tables[TableConstants.Method].add(methodTable);
 
 		if(method.getMethodRVA() == -1L)
 		{
@@ -938,12 +956,12 @@ public class ClassEmitter
 		methodTable.setFieldValue("Flags", new Integer(method.getFlags()));
 		methodTable.setFieldValue("Name", new Long(stringsGen.addString(method.getName())));
 
-		edu.arizona.cs.mbel.ByteBuffer sigbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+		ByteBuffer sigbuffer = new ByteBuffer(100);
 		method.getSignature().emit(sigbuffer, this);
 		byte[] blob = sigbuffer.toByteArray();
 		methodTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
 
-		edu.arizona.cs.mbel.signature.ParameterSignature[] parameters = method.getSignature().getParameters();
+		ParameterSignature[] parameters = method.getSignature().getParameters();
 		if(parameters.length == 0)
 		{
 			methodTable.setFieldValue("ParamList", new Long(ParamCount));
@@ -963,80 +981,79 @@ public class ClassEmitter
 		}
 
 		// Make DeclSecurity
-		edu.arizona.cs.mbel.mbel.DeclSecurity decl = method.getDeclSecurity();
+		DeclSecurity decl = method.getDeclSecurity();
 		if(decl != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable declTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.DeclSecurity]);
+			GenericTable declTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.DeclSecurity]);
 			declTable.setFieldValue("Action", new Integer(decl.getAction()));
-			long coded = tc.buildCodedIndex(tc.HasDeclSecurity, tc.Method, method.getMethodRID());
+			long coded = TableConstants.buildCodedIndex(TableConstants.HasDeclSecurity, TableConstants.Method, method.getMethodRID());
 			declTable.setFieldValue("Parent", new Long(coded));
 			declTable.setFieldValue("PermissionSet", new Long(blobGen.addBlob(decl.getPermissionSet())));
 
-			tables[tc.DeclSecurity].add(declTable);
+			tables[TableConstants.DeclSecurity].add(declTable);
 
 			// Make CustomAttribute (on DeclSecurity)
-			long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.DeclSecurity, tables[tc.DeclSecurity].size());
+			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.DeclSecurity, tables[TableConstants.DeclSecurity].size());
 			addCustomAttributes(decl.getDeclSecurityAttributes(), codedparent);
 		}
 
 		// Make MethodSemantics
-		edu.arizona.cs.mbel.mbel.MethodSemantics sem = method.getMethodSemantics();
+		MethodSemantics sem = method.getMethodSemantics();
 		if(sem != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable semTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.MethodSemantics]);
+			GenericTable semTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.MethodSemantics]);
 			semTable.setFieldValue("Semantics", new Integer(sem.getSemantics()));
 			semTable.setFieldValue("Method", new Long(method.getMethodRID()));
 			if(sem.getEvent() != null)
 			{
-				long coded = tc.buildCodedIndex(tc.HasSemantics, tc.Event, sem.getEvent().getEventRID());
+				long coded = TableConstants.buildCodedIndex(TableConstants.HasSemantics, TableConstants.Event, sem.getEvent().getEventRID());
 				semTable.setFieldValue("Association", new Long(coded));
 			}
 			else
 			{
-				long coded = tc.buildCodedIndex(tc.HasSemantics, tc.Property, sem.getProperty().getPropertyRID());
+				long coded = TableConstants.buildCodedIndex(TableConstants.HasSemantics, TableConstants.Property, sem.getProperty().getPropertyRID());
 				semTable.setFieldValue("Association", new Long(coded));
 			}
-			tables[tc.MethodSemantics].add(semTable);
+			tables[TableConstants.MethodSemantics].add(semTable);
 		}
 
 		// Make ImplMap
-		edu.arizona.cs.mbel.mbel.ImplementationMap map = method.getImplementationMap();
+		ImplementationMap map = method.getImplementationMap();
 		if(map != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable mapTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.ImplMap]);
+			GenericTable mapTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.ImplMap]);
 			mapTable.setFieldValue("MappingFlags", new Integer(map.getFlags()));
 
-			long coded = tc.buildCodedIndex(tc.MemberForwarded, tc.Method, method.getMethodRID());
+			long coded = TableConstants.buildCodedIndex(TableConstants.MemberForwarded, TableConstants.Method, method.getMethodRID());
 			mapTable.setFieldValue("MemberForwarded", new Long(coded));
 			mapTable.setFieldValue("ImportName", new Long(stringsGen.addString(map.getImportName())));
 
 			long moduleRef = addModuleRef(map.getImportScope());
 			mapTable.setFieldValue("ImportScope", new Long(moduleRef));
 
-			tables[tc.ImplMap].add(mapTable);
+			tables[TableConstants.ImplMap].add(mapTable);
 		}
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.Method, method.getMethodRID());
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Method, method.getMethodRID());
 		addCustomAttributes(method.getMethodAttributes(), codedparent);
 
 		return method.getMethodRID();
 	}
 
-	private void buildMethodBodies(edu.arizona.cs.mbel.mbel.TypeDef def)
+	private void buildMethodBodies(TypeDef def)
 	{
 		// Make method body
-		edu.arizona.cs.mbel.mbel.Method[] methodlist = def.getMethods();
+		Method[] methodlist = def.getMethods();
 
-		for(int i = 0; i < methodlist.length; i++)
+		for(Method aMethodlist : methodlist)
 		{
-			edu.arizona.cs.mbel.mbel.MethodBody body = methodlist[i].getMethodBody();
+			MethodBody body = aMethodlist.getMethodBody();
 			if(body != null)
 			{
-				edu.arizona.cs.mbel.metadata.GenericTable methodTable = (edu.arizona.cs.mbel.metadata.GenericTable) tables[tc.Method].get((int) methodlist[i]
-						.getMethodRID() - 1);
+				GenericTable methodTable = (GenericTable) tables[TableConstants.Method].get((int) aMethodlist.getMethodRID() - 1);
 
-				edu.arizona.cs.mbel.ByteBuffer bodybuffer = new edu.arizona.cs.mbel.ByteBuffer(1000);
+				ByteBuffer bodybuffer = new ByteBuffer(1000);
 				body.emit(bodybuffer, this);
 				methodBodies.add(bodybuffer);
 				methodTable.setFieldValue("RVA", new Long(methodBodies.size()));
@@ -1046,52 +1063,52 @@ public class ClassEmitter
 	}
 
 
-	private void buildMethodImpls(edu.arizona.cs.mbel.mbel.TypeDef def)
+	private void buildMethodImpls(TypeDef def)
 	{
 		// DONE!
-		edu.arizona.cs.mbel.mbel.MethodMap[] maps = def.getMethodMaps();
+		MethodMap[] maps = def.getMethodMaps();
 
-		for(int i = 0; i < maps.length; i++)
+		for(MethodMap map : maps)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable mapTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.MethodImpl]);
+			GenericTable mapTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.MethodImpl]);
 			mapTable.setFieldValue("Class", new Long(def.getTypeDefRID()));
 
-			edu.arizona.cs.mbel.mbel.MethodDefOrRef body = maps[i].getMethodBody();
-			edu.arizona.cs.mbel.mbel.MethodDefOrRef decl = maps[i].getMethodDeclaration();
+			MethodDefOrRef body = map.getMethodBody();
+			MethodDefOrRef decl = map.getMethodDeclaration();
 
 			// DONE!
-			if(body instanceof edu.arizona.cs.mbel.mbel.Method)
+			if(body instanceof Method)
 			{
-				edu.arizona.cs.mbel.mbel.Method method = (edu.arizona.cs.mbel.mbel.Method) body;
-				long coded = tc.buildCodedIndex(tc.MethodDefOrRef, tc.Method, method.getMethodRID());
+				Method method = (Method) body;
+				long coded = TableConstants.buildCodedIndex(TableConstants.MethodDefOrRef, TableConstants.Method, method.getMethodRID());
 				mapTable.setFieldValue("MethodBody", new Long(coded));
 			}
 			else
 			{
 				long rid = addMemberRef(body);
-				long coded = tc.buildCodedIndex(tc.MethodDefOrRef, tc.MemberRef, rid);
+				long coded = TableConstants.buildCodedIndex(TableConstants.MethodDefOrRef, TableConstants.MemberRef, rid);
 				mapTable.setFieldValue("MethodBody", new Long(coded));
 			}
 
 			// DONE!
-			if(decl instanceof edu.arizona.cs.mbel.mbel.Method)
+			if(decl instanceof Method)
 			{
-				edu.arizona.cs.mbel.mbel.Method method = (edu.arizona.cs.mbel.mbel.Method) decl;
-				long coded = tc.buildCodedIndex(tc.MethodDefOrRef, tc.Method, method.getMethodRID());
+				Method method = (Method) decl;
+				long coded = TableConstants.buildCodedIndex(TableConstants.MethodDefOrRef, TableConstants.Method, method.getMethodRID());
 				mapTable.setFieldValue("MethodDeclaration", new Long(coded));
 			}
 			else
 			{
 				long rid = addMemberRef(decl);
-				long coded = tc.buildCodedIndex(tc.MethodDefOrRef, tc.MemberRef, rid);
+				long coded = TableConstants.buildCodedIndex(TableConstants.MethodDefOrRef, TableConstants.MemberRef, rid);
 				mapTable.setFieldValue("MethodDeclaration", new Long(coded));
 			}
 
-			tables[tc.MethodImpl].add(mapTable);
+			tables[TableConstants.MethodImpl].add(mapTable);
 		}
 	}
 
-	private long addParam(edu.arizona.cs.mbel.signature.ParameterInfo parameter, int seq, byte type)
+	private long addParam(ParameterInfo parameter, int seq, byte type)
 	{
 		// DONE!
 		if(parameter.getParamRID() != -1L)
@@ -1099,171 +1116,172 @@ public class ClassEmitter
 			return parameter.getParamRID();
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable paramTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Param]);
+		GenericTable paramTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Param]);
 
 		parameter.setParamRID(ParamCount++);
-		tables[tc.Param].add(paramTable);
+		tables[TableConstants.Param].add(paramTable);
 
 		paramTable.setFieldValue("Flags", new Integer(parameter.getFlags()));
 		paramTable.setFieldValue("Sequence", new Integer(seq));
 		paramTable.setFieldValue("Name", new Long(stringsGen.addString(parameter.getName())));
 
 		// Make FieldMarshal
-		edu.arizona.cs.mbel.signature.MarshalSignature sig = parameter.getFieldMarshal();
+		MarshalSignature sig = parameter.getFieldMarshal();
 		if(sig != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable marshalTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.FieldMarshal]);
-			long coded = tc.buildCodedIndex(tc.HasFieldMarshal, tc.Param, parameter.getParamRID());
+			GenericTable marshalTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.FieldMarshal]);
+			long coded = TableConstants.buildCodedIndex(TableConstants.HasFieldMarshal, TableConstants.Param, parameter.getParamRID());
 			marshalTable.setFieldValue("Parent", new Long(coded));
 
-			edu.arizona.cs.mbel.ByteBuffer marbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+			ByteBuffer marbuffer = new ByteBuffer(100);
 			sig.emit(marbuffer, this);
 			byte[] blob = marbuffer.toByteArray();
 			marshalTable.setFieldValue("NativeType", new Long(blobGen.addBlob(blob)));
-			tables[tc.FieldMarshal].add(marshalTable);
+			tables[TableConstants.FieldMarshal].add(marshalTable);
 		}
 
 		// Make Constant
 		byte[] value = parameter.getDefaultValue();
 		if(value != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable constTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Constant]);
+			GenericTable constTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Constant]);
 			constTable.setFieldValue("Type", new Integer(type & 0xFF));
 			constTable.setFieldValue("Padding", new Integer(0));
-			long coded = tc.buildCodedIndex(tc.HasConst, tc.Param, parameter.getParamRID());
+			long coded = TableConstants.buildCodedIndex(TableConstants.HasConst, TableConstants.Param, parameter.getParamRID());
 			constTable.setFieldValue("Parent", new Long(coded));
 			constTable.setFieldValue("Value", new Long(blobGen.addBlob(value)));
-			tables[tc.Constant].add(constTable);
+			tables[TableConstants.Constant].add(constTable);
 		}
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.Param, parameter.getParamRID());
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Param, parameter.getParamRID());
 		addCustomAttributes(parameter.getParamAttributes(), codedparent);
 
 		return parameter.getParamRID();
 	}
 
-	private void buildInterfaceImpls(edu.arizona.cs.mbel.mbel.TypeDef def)
+	private void buildInterfaceImpls(TypeDef def)
 	{
 		// DONE!
-		edu.arizona.cs.mbel.mbel.InterfaceImplementation[] interfaces = def.getInterfaceImplementations();
+		InterfaceImplementation[] interfaces = def.getInterfaceImplementations();
 
-		for(int i = 0; i < interfaces.length; i++)
+		for(InterfaceImplementation anInterface : interfaces)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable implTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.InterfaceImpl]);
+			GenericTable implTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.InterfaceImpl]);
 
 			implTable.setFieldValue("Class", new Long(def.getTypeDefRID()));
 
-			if(interfaces[i].getInterface() instanceof edu.arizona.cs.mbel.mbel.TypeDef)
+			if(anInterface.getInterface() instanceof TypeDef)
 			{
-				edu.arizona.cs.mbel.mbel.TypeDef interdef = (edu.arizona.cs.mbel.mbel.TypeDef) interfaces[i].getInterface();
-				long coded = tc.buildCodedIndex(tc.TypeDefOrRef, tc.TypeDef, interdef.getTypeDefRID());
+				TypeDef interdef = (TypeDef) anInterface.getInterface();
+				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, interdef.getTypeDefRID());
 				implTable.setFieldValue("Interface", new Long(coded));
 			}
 			else
 			{
-				long rid = addTypeRef(interfaces[i].getInterface());
-				long coded = tc.buildCodedIndex(tc.TypeDefOrRef, tc.TypeRef, rid);
+				long rid = addTypeRef(anInterface.getInterface());
+				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, rid);
 				implTable.setFieldValue("Interface", new Long(coded));
 			}
 
-			tables[tc.InterfaceImpl].add(implTable);
+			tables[TableConstants.InterfaceImpl].add(implTable);
 
 			// Make CustomAttributes
-			long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.InterfaceImpl, tables[tc.InterfaceImpl].size());
-			addCustomAttributes(interfaces[i].getInterfaceImplAttributes(), codedparent);
+			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.InterfaceImpl,
+					tables[TableConstants.InterfaceImpl].size());
+			addCustomAttributes(anInterface.getInterfaceImplAttributes(), codedparent);
 		}
 	}
 
-	private void buildProperties(edu.arizona.cs.mbel.mbel.TypeDef def)
+	private void buildProperties(TypeDef def)
 	{
 		// DONE!!
-		edu.arizona.cs.mbel.mbel.Property[] props = def.getProperties();
+		Property[] props = def.getProperties();
 		if(props.length == 0)
 		{
 			return;
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable mapTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.PropertyMap]);
+		GenericTable mapTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.PropertyMap]);
 		mapTable.setFieldValue("Parent", new Long(def.getTypeDefRID()));
 		mapTable.setFieldValue("PropertyList", new Long(PropertyCount));
-		tables[tc.PropertyMap].add(mapTable);
+		tables[TableConstants.PropertyMap].add(mapTable);
 
-		for(int i = 0; i < props.length; i++)
+		for(Property prop : props)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable propTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Property]);
-			props[i].setPropertyRID(PropertyCount++);
-			tables[tc.Property].add(propTable);
+			GenericTable propTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Property]);
+			prop.setPropertyRID(PropertyCount++);
+			tables[TableConstants.Property].add(propTable);
 
-			propTable.setFieldValue("Flags", new Integer(props[i].getFlags()));
-			propTable.setFieldValue("Name", new Long(stringsGen.addString(props[i].getName())));
-			edu.arizona.cs.mbel.ByteBuffer propBuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
-			props[i].getSignature().emit(propBuffer, this);
+			propTable.setFieldValue("Flags", new Integer(prop.getFlags()));
+			propTable.setFieldValue("Name", new Long(stringsGen.addString(prop.getName())));
+			ByteBuffer propBuffer = new ByteBuffer(100);
+			prop.getSignature().emit(propBuffer, this);
 			byte[] blob = propBuffer.toByteArray();
 			propTable.setFieldValue("Type", new Long(blobGen.addBlob(blob)));
 
 			// Make Constant
-			byte[] value = props[i].getDefaultValue();
+			byte[] value = prop.getDefaultValue();
 			if(value != null)
 			{
-				edu.arizona.cs.mbel.metadata.GenericTable constTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Constant]);
-				constTable.setFieldValue("Type", new Integer(props[i].getSignature().getType().getType() & 0xFF));
-				long coded = tc.buildCodedIndex(tc.HasConst, tc.Property, props[i].getPropertyRID());
+				GenericTable constTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Constant]);
+				constTable.setFieldValue("Type", new Integer(prop.getSignature().getType().getType() & 0xFF));
+				long coded = TableConstants.buildCodedIndex(TableConstants.HasConst, TableConstants.Property, prop.getPropertyRID());
 				constTable.setFieldValue("Parent", new Long(coded));
 				constTable.setFieldValue("Value", new Long(blobGen.addBlob(value)));
 
-				tables[tc.Constant].add(constTable);
+				tables[TableConstants.Constant].add(constTable);
 			}
 
 			// Make CustomAttributes
-			long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.Property, props[i].getPropertyRID());
-			addCustomAttributes(props[i].getPropertyAttributes(), codedparent);
+			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Property, prop.getPropertyRID());
+			addCustomAttributes(prop.getPropertyAttributes(), codedparent);
 		}
 	}
 
-	private void buildEvents(edu.arizona.cs.mbel.mbel.TypeDef def)
+	private void buildEvents(TypeDef def)
 	{
 		// DONE!
-		edu.arizona.cs.mbel.mbel.Event[] eventlist = def.getEvents();
+		Event[] eventlist = def.getEvents();
 		if(eventlist.length == 0)
 		{
 			return;
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable mapTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.EventMap]);
+		GenericTable mapTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.EventMap]);
 		mapTable.setFieldValue("Parent", new Long(def.getTypeDefRID()));
 		mapTable.setFieldValue("EventList", new Long(EventCount));
-		tables[tc.EventMap].add(mapTable);
+		tables[TableConstants.EventMap].add(mapTable);
 
-		for(int i = 0; i < eventlist.length; i++)
+		for(Event anEventlist : eventlist)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable eventTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.Event]);
-			eventlist[i].setEventRID(EventCount++);
-			tables[tc.Event].add(eventTable);
+			GenericTable eventTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.Event]);
+			anEventlist.setEventRID(EventCount++);
+			tables[TableConstants.Event].add(eventTable);
 
-			eventTable.setFieldValue("EventFlags", new Integer(eventlist[i].getEventFlags()));
-			eventTable.setFieldValue("Name", new Long(stringsGen.addString(eventlist[i].getName())));
-			edu.arizona.cs.mbel.mbel.TypeRef ref = eventlist[i].getEventType();
-			if(ref instanceof edu.arizona.cs.mbel.mbel.TypeDef)
+			eventTable.setFieldValue("EventFlags", new Integer(anEventlist.getEventFlags()));
+			eventTable.setFieldValue("Name", new Long(stringsGen.addString(anEventlist.getName())));
+			TypeRef ref = anEventlist.getEventType();
+			if(ref instanceof TypeDef)
 			{
-				edu.arizona.cs.mbel.mbel.TypeDef newdef = (edu.arizona.cs.mbel.mbel.TypeDef) ref;
-				long coded = tc.buildCodedIndex(tc.TypeDefOrRef, tc.TypeDef, newdef.getTypeDefRID());
+				TypeDef newdef = (TypeDef) ref;
+				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, newdef.getTypeDefRID());
 				eventTable.setFieldValue("EventType", new Long(coded));
 			}
 			else
 			{
 				long refrid = addTypeRef(ref);
-				long coded = tc.buildCodedIndex(tc.TypeDefOrRef, tc.TypeRef, refrid);
+				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, refrid);
 				eventTable.setFieldValue("EventType", new Long(coded));
 			}
 
 			// Make CustomAttribute
-			long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.Event, eventlist[i].getEventRID());
-			addCustomAttributes(eventlist[i].getEventAttributes(), codedparent);
+			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Event, anEventlist.getEventRID());
+			addCustomAttributes(anEventlist.getEventAttributes(), codedparent);
 		}
 	}
 
-	private long addTypeSpec(edu.arizona.cs.mbel.mbel.TypeSpec spec)
+	private long addTypeSpec(TypeSpec spec)
 	{
 		// DONE!
 		if(spec.getTypeSpecRID() != -1L)
@@ -1271,87 +1289,87 @@ public class ClassEmitter
 			return spec.getTypeSpecRID();
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable specTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.TypeSpec]);
+		GenericTable specTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.TypeSpec]);
 		spec.setTypeSpecRID(TypeSpecCount++);
-		tables[tc.TypeSpec].add(specTable);
+		tables[TableConstants.TypeSpec].add(specTable);
 
-		edu.arizona.cs.mbel.ByteBuffer specBuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+		ByteBuffer specBuffer = new ByteBuffer(100);
 		spec.getSignature().emit(specBuffer, this);
 		byte[] blob = specBuffer.toByteArray();
 		specTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.TypeSpec, spec.getTypeSpecRID());
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.TypeSpec, spec.getTypeSpecRID());
 		addCustomAttributes(spec.getTypeSpecAttributes(), codedparent);
 
 		return spec.getTypeSpecRID();
 	}
 
-	private long addTypeRef(edu.arizona.cs.mbel.mbel.TypeRef ref)
+	private long addTypeRef(TypeRef ref)
 	{
 		if(ref.getTypeRefRID() != -1L)
 		{
 			return ref.getTypeRefRID();
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable refTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.TypeRef]);
+		GenericTable refTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.TypeRef]);
 		ref.setTypeRefRID(TypeRefCount++);
-		tables[tc.TypeRef].add(refTable);
+		tables[TableConstants.TypeRef].add(refTable);
 
 		refTable.setFieldValue("Name", new Long(stringsGen.addString(ref.getName())));
 		refTable.setFieldValue("Namespace", new Long(stringsGen.addString(ref.getNamespace())));
-		if(ref instanceof edu.arizona.cs.mbel.mbel.TypeDef)
+		if(ref instanceof TypeDef)
 		{
 			// DONE!
-			edu.arizona.cs.mbel.mbel.TypeDef def = (edu.arizona.cs.mbel.mbel.TypeDef) ref;
-			long coded = tc.buildCodedIndex(tc.ResolutionScope, tc.Module, 1L);
+			TypeDef def = (TypeDef) ref;
+			long coded = TableConstants.buildCodedIndex(TableConstants.ResolutionScope, TableConstants.Module, 1L);
 			refTable.setFieldValue("ResolutionScope", new Long(coded));
 		}
-		else if(ref instanceof edu.arizona.cs.mbel.mbel.ModuleTypeRef)
+		else if(ref instanceof ModuleTypeRef)
 		{
 			// DONE!
-			edu.arizona.cs.mbel.mbel.ModuleTypeRef mref = (edu.arizona.cs.mbel.mbel.ModuleTypeRef) ref;
+			ModuleTypeRef mref = (ModuleTypeRef) ref;
 
 			long moduleRef = addModuleRef(mref.getModuleRefInfo());
-			long coded = tc.buildCodedIndex(tc.ResolutionScope, tc.ModuleRef, moduleRef);
+			long coded = TableConstants.buildCodedIndex(TableConstants.ResolutionScope, TableConstants.ModuleRef, moduleRef);
 			refTable.setFieldValue("ResolutionScope", new Long(coded));
 		}
-		else if(ref instanceof edu.arizona.cs.mbel.mbel.AssemblyTypeRef)
+		else if(ref instanceof AssemblyTypeRef)
 		{
 			// DONE!
-			edu.arizona.cs.mbel.mbel.AssemblyTypeRef aref = (edu.arizona.cs.mbel.mbel.AssemblyTypeRef) ref;
+			AssemblyTypeRef aref = (AssemblyTypeRef) ref;
 
 			long assemblyRef = addAssemblyRef(aref.getAssemblyRefInfo());
 
-			long coded = tc.buildCodedIndex(tc.ResolutionScope, tc.AssemblyRef, assemblyRef);
+			long coded = TableConstants.buildCodedIndex(TableConstants.ResolutionScope, TableConstants.AssemblyRef, assemblyRef);
 			refTable.setFieldValue("ResolutionScope", new Long(coded));
 		}
-		else if(ref instanceof edu.arizona.cs.mbel.mbel.NestedTypeRef)
+		else if(ref instanceof NestedTypeRef)
 		{
 			// DONE!!
-			edu.arizona.cs.mbel.mbel.NestedTypeRef nref = (edu.arizona.cs.mbel.mbel.NestedTypeRef) ref;
+			NestedTypeRef nref = (NestedTypeRef) ref;
 
 			long refRID = addTypeRef(nref.getEnclosingTypeRef());
-			long coded = tc.buildCodedIndex(tc.ResolutionScope, tc.TypeRef, refRID);
+			long coded = TableConstants.buildCodedIndex(TableConstants.ResolutionScope, TableConstants.TypeRef, refRID);
 			refTable.setFieldValue("ResolutionScope", new Long(coded));
 		}
-		else if(ref instanceof edu.arizona.cs.mbel.mbel.ExportedTypeRef)
+		else if(ref instanceof ExportedTypeRef)
 		{
 			// DONE!!
-			edu.arizona.cs.mbel.mbel.ExportedTypeRef eref = (edu.arizona.cs.mbel.mbel.ExportedTypeRef) ref;
+			ExportedTypeRef eref = (ExportedTypeRef) ref;
 
 			addExportedType(eref);
 			refTable.setFieldValue("ResolutionScope", new Long(0));
 		}
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.TypeRef, ref.getTypeRefRID());
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.TypeRef, ref.getTypeRefRID());
 		addCustomAttributes(ref.getTypeRefAttributes(), codedparent);
 
 		return ref.getTypeRefRID();
 	}
 
-	private long addMemberRef(edu.arizona.cs.mbel.mbel.MemberRef ref)
+	private long addMemberRef(MemberRef ref)
 	{
 		// DONE!
 		// adds this as a MemberRef, not as a Field or Method!
@@ -1360,30 +1378,30 @@ public class ClassEmitter
 			return ref.getMemberRefRID();
 		}
 
-		if((ref instanceof edu.arizona.cs.mbel.mbel.Field) || (ref instanceof edu.arizona.cs.mbel.mbel.Method))
+		if((ref instanceof Field) || (ref instanceof Method))
 		{
 			return 0L;
 		}
 
-		edu.arizona.cs.mbel.metadata.GenericTable refTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.MemberRef]);
-		tables[tc.MemberRef].add(refTable);
+		GenericTable refTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.MemberRef]);
+		tables[TableConstants.MemberRef].add(refTable);
 		ref.setMemberRefRID(MemberRefCount++);
 
 		refTable.setFieldValue("Name", new Long(stringsGen.addString(ref.getName())));
 
-		if(ref instanceof edu.arizona.cs.mbel.mbel.FieldRef)
+		if(ref instanceof FieldRef)
 		{
 			// DONE!
-			if(ref instanceof edu.arizona.cs.mbel.mbel.GlobalFieldRef)
+			if(ref instanceof GlobalFieldRef)
 			{
 				// DONE!
-				edu.arizona.cs.mbel.mbel.GlobalFieldRef fref = (edu.arizona.cs.mbel.mbel.GlobalFieldRef) ref;
+				GlobalFieldRef fref = (GlobalFieldRef) ref;
 
 				long moduleRef = addModuleRef(fref.getModuleRefInfo());
-				long coded = tc.buildCodedIndex(tc.MemberRefParent, tc.ModuleRef, moduleRef);
+				long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.ModuleRef, moduleRef);
 				refTable.setFieldValue("Class", new Long(coded));
 
-				edu.arizona.cs.mbel.ByteBuffer refbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+				ByteBuffer refbuffer = new ByteBuffer(100);
 				fref.getSignature().emit(refbuffer, this);
 				byte[] blob = refbuffer.toByteArray();
 				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
@@ -1392,33 +1410,33 @@ public class ClassEmitter
 			{
 				// DONE!
 				// normal FieldRef
-				edu.arizona.cs.mbel.mbel.FieldRef fref = (edu.arizona.cs.mbel.mbel.FieldRef) ref;
-				edu.arizona.cs.mbel.mbel.AbstractTypeReference parent = fref.getParent();
-				if(parent instanceof edu.arizona.cs.mbel.mbel.TypeDef)
+				FieldRef fref = (FieldRef) ref;
+				AbstractTypeReference parent = fref.getParent();
+				if(parent instanceof TypeDef)
 				{
-					edu.arizona.cs.mbel.mbel.TypeDef parentdef = (edu.arizona.cs.mbel.mbel.TypeDef) parent;
+					TypeDef parentdef = (TypeDef) parent;
 
-					long coded = tc.buildCodedIndex(tc.MemberRefParent, tc.TypeDef, parentdef.getTypeDefRID());
+					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeDef, parentdef.getTypeDefRID());
 					refTable.setFieldValue("Class", new Long(coded));
 				}
-				else if(parent instanceof edu.arizona.cs.mbel.mbel.TypeRef)
+				else if(parent instanceof TypeRef)
 				{
-					edu.arizona.cs.mbel.mbel.TypeRef parentref = (edu.arizona.cs.mbel.mbel.TypeRef) parent;
+					TypeRef parentref = (TypeRef) parent;
 
 					long rid = addTypeRef(parentref);
-					long coded = tc.buildCodedIndex(tc.MemberRefParent, tc.TypeRef, rid);
+					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeRef, rid);
 					refTable.setFieldValue("Class", new Long(coded));
 				}
-				else if(parent instanceof edu.arizona.cs.mbel.mbel.TypeSpec)
+				else if(parent instanceof TypeSpec)
 				{
-					edu.arizona.cs.mbel.mbel.TypeSpec parentspec = (edu.arizona.cs.mbel.mbel.TypeSpec) parent;
+					TypeSpec parentspec = (TypeSpec) parent;
 
 					long rid = addTypeSpec(parentspec);
-					long coded = tc.buildCodedIndex(tc.MemberRefParent, tc.TypeSpec, rid);
+					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeSpec, rid);
 					refTable.setFieldValue("Class", new Long(coded));
 				}
 
-				edu.arizona.cs.mbel.ByteBuffer refbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+				ByteBuffer refbuffer = new ByteBuffer(100);
 				fref.getSignature().emit(refbuffer, this);
 				byte[] blob = refbuffer.toByteArray();
 				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
@@ -1426,32 +1444,32 @@ public class ClassEmitter
 
 
 		}
-		else if(ref instanceof edu.arizona.cs.mbel.mbel.MethodDefOrRef)
+		else if(ref instanceof MethodDefOrRef)
 		{
-			if(ref instanceof edu.arizona.cs.mbel.mbel.GlobalMethodRef)
+			if(ref instanceof GlobalMethodRef)
 			{
 				// DONE!
-				edu.arizona.cs.mbel.mbel.GlobalMethodRef gref = (edu.arizona.cs.mbel.mbel.GlobalMethodRef) ref;
+				GlobalMethodRef gref = (GlobalMethodRef) ref;
 
 				long moduleRef = addModuleRef(gref.getModuleRefInfo());
-				long coded = tc.buildCodedIndex(tc.MemberRefParent, tc.ModuleRef, moduleRef);
+				long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.ModuleRef, moduleRef);
 				refTable.setFieldValue("Class", new Long(coded));
 
-				edu.arizona.cs.mbel.ByteBuffer sigbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+				ByteBuffer sigbuffer = new ByteBuffer(100);
 				gref.getCallsiteSignature().emit(sigbuffer, this);
 				byte[] blob = sigbuffer.toByteArray();
 				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
 			}
-			else if(ref instanceof edu.arizona.cs.mbel.mbel.VarargsMethodRef)
+			else if(ref instanceof VarargsMethodRef)
 			{
 				// DONE!
-				edu.arizona.cs.mbel.mbel.VarargsMethodRef vref = (edu.arizona.cs.mbel.mbel.VarargsMethodRef) ref;
+				VarargsMethodRef vref = (VarargsMethodRef) ref;
 
 				long rid = vref.getMethod().getMethodRID();
-				long coded = tc.buildCodedIndex(tc.MemberRefParent, tc.Method, rid);
+				long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.Method, rid);
 				refTable.setFieldValue("Class", new Long(coded));
 
-				edu.arizona.cs.mbel.ByteBuffer sigbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+				ByteBuffer sigbuffer = new ByteBuffer(100);
 				vref.getCallsiteSignature().emit(sigbuffer, this);
 				byte[] blob = sigbuffer.toByteArray();
 				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
@@ -1460,34 +1478,34 @@ public class ClassEmitter
 			{
 				// DONE!
 				// normal MethodRef
-				edu.arizona.cs.mbel.mbel.MethodRef mref = (edu.arizona.cs.mbel.mbel.MethodRef) ref;
-				edu.arizona.cs.mbel.mbel.AbstractTypeReference parent = mref.getParent();
+				MethodRef mref = (MethodRef) ref;
+				AbstractTypeReference parent = mref.getParent();
 
-				if(parent instanceof edu.arizona.cs.mbel.mbel.TypeDef)
+				if(parent instanceof TypeDef)
 				{
-					edu.arizona.cs.mbel.mbel.TypeDef parentdef = (edu.arizona.cs.mbel.mbel.TypeDef) parent;
+					TypeDef parentdef = (TypeDef) parent;
 
-					long coded = tc.buildCodedIndex(tc.MemberRefParent, tc.TypeDef, parentdef.getTypeDefRID());
+					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeDef, parentdef.getTypeDefRID());
 					refTable.setFieldValue("Class", new Long(coded));
 				}
-				else if(parent instanceof edu.arizona.cs.mbel.mbel.TypeRef)
+				else if(parent instanceof TypeRef)
 				{
-					edu.arizona.cs.mbel.mbel.TypeRef parentref = (edu.arizona.cs.mbel.mbel.TypeRef) parent;
+					TypeRef parentref = (TypeRef) parent;
 
 					long rid = addTypeRef(parentref);
-					long coded = tc.buildCodedIndex(tc.MemberRefParent, tc.TypeRef, rid);
+					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeRef, rid);
 					refTable.setFieldValue("Class", new Long(coded));
 				}
-				else if(parent instanceof edu.arizona.cs.mbel.mbel.TypeSpec)
+				else if(parent instanceof TypeSpec)
 				{
-					edu.arizona.cs.mbel.mbel.TypeSpec parentspec = (edu.arizona.cs.mbel.mbel.TypeSpec) parent;
+					TypeSpec parentspec = (TypeSpec) parent;
 
 					long rid = addTypeSpec(parentspec);
-					long coded = tc.buildCodedIndex(tc.MemberRefParent, tc.TypeSpec, rid);
+					long coded = TableConstants.buildCodedIndex(TableConstants.MemberRefParent, TableConstants.TypeSpec, rid);
 					refTable.setFieldValue("Class", new Long(coded));
 				}
 
-				edu.arizona.cs.mbel.ByteBuffer sigbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+				ByteBuffer sigbuffer = new ByteBuffer(100);
 				mref.getCallsiteSignature().emit(sigbuffer, this);
 				byte[] blob = sigbuffer.toByteArray();
 				refTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
@@ -1495,7 +1513,7 @@ public class ClassEmitter
 		}
 
 		// Make CustomAttribute
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.MemberRef, ref.getMemberRefRID());
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.MemberRef, ref.getMemberRefRID());
 		addCustomAttributes(ref.getMemberRefAttributes(), codedparent);
 
 		return ref.getMemberRefRID();
@@ -1503,18 +1521,18 @@ public class ClassEmitter
 
 	private void buildEntryPointToken()
 	{
-		edu.arizona.cs.mbel.mbel.EntryPoint entryPoint = module.getEntryPoint();
+		EntryPoint entryPoint = module.getEntryPoint();
 		if(entryPoint != null)
 		{
 			if(entryPoint.getEntryPointFile() != null)
 			{
 				EntryPointToken = addFile(entryPoint.getEntryPointFile());
-				EntryPointToken |= (long) (tc.File << 24);
+				EntryPointToken |= (long) (TableConstants.File << 24);
 			}
 			else
 			{
 				EntryPointToken = entryPoint.getEntryPointMethod().getMethodRID();
-				EntryPointToken |= (long) (tc.Method << 24);
+				EntryPointToken |= (long) (TableConstants.Method << 24);
 			}
 		}
 	}
@@ -1523,31 +1541,31 @@ public class ClassEmitter
 	/**
 	 * Returns a StandAloneSig token for the given method callsite signature
 	 */
-	public long getStandAloneSigToken(edu.arizona.cs.mbel.signature.MethodSignature callsiteSig)
+	public long getStandAloneSigToken(MethodSignature callsiteSig)
 	{
 		// to be called by calli instructions only (not LocalVarList in methodbodies)
 		// returns a token, not an RID
-		edu.arizona.cs.mbel.ByteBuffer sigbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+		ByteBuffer sigbuffer = new ByteBuffer(100);
 		callsiteSig.emit(sigbuffer, this);
 		byte[] blob = sigbuffer.toByteArray();
 
-		edu.arizona.cs.mbel.metadata.GenericTable sigTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.StandAloneSig]);
+		GenericTable sigTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.StandAloneSig]);
 		sigTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
 
-		int index = tables[tc.StandAloneSig].indexOf(sigTable);
+		int index = tables[TableConstants.StandAloneSig].indexOf(sigTable);
 		if(index == -1)
 		{
-			tables[tc.StandAloneSig].add(sigTable);
-			index = tables[tc.StandAloneSig].size();
+			tables[TableConstants.StandAloneSig].add(sigTable);
+			index = tables[TableConstants.StandAloneSig].size();
 		}
 		else
 		{
 			index++;
 		}
-		long token = (index | (tc.StandAloneSig << 24)) & 0xFFFFFFFFL;
+		long token = (index | (TableConstants.StandAloneSig << 24)) & 0xFFFFFFFFL;
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.StandAloneSig, (long) index);
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.StandAloneSig, (long) index);
 		addCustomAttributes(callsiteSig.getStandAloneSigAttributes(), codedparent);
 
 		return token;
@@ -1556,31 +1574,31 @@ public class ClassEmitter
 	/**
 	 * Returns a StandAloneSig token for the given local variable list
 	 */
-	public long getStandAloneSigToken(edu.arizona.cs.mbel.signature.LocalVarList localVars)
+	public long getStandAloneSigToken(LocalVarList localVars)
 	{
 		// to be called by method body
 		// returns a token, not an RID
-		edu.arizona.cs.mbel.metadata.GenericTable sigTable = new edu.arizona.cs.mbel.metadata.GenericTable(tc.GRAMMAR[tc.StandAloneSig]);
-		edu.arizona.cs.mbel.ByteBuffer sigbuffer = new edu.arizona.cs.mbel.ByteBuffer(100);
+		GenericTable sigTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.StandAloneSig]);
+		ByteBuffer sigbuffer = new ByteBuffer(100);
 		localVars.emit(sigbuffer, this);
 		byte[] blob = sigbuffer.toByteArray();
 		sigTable.setFieldValue("Signature", new Long(blobGen.addBlob(blob)));
 
-		int index = tables[tc.StandAloneSig].indexOf(sigTable);
+		int index = tables[TableConstants.StandAloneSig].indexOf(sigTable);
 		if(index == -1)
 		{
-			tables[tc.StandAloneSig].add(sigTable);
-			index = tables[tc.StandAloneSig].size();
+			tables[TableConstants.StandAloneSig].add(sigTable);
+			index = tables[TableConstants.StandAloneSig].size();
 		}
 		else
 		{
 			index++;
 		}
 
-		long token = ((long) index | (long) (tc.StandAloneSig << 24));
+		long token = ((long) index | (long) (TableConstants.StandAloneSig << 24));
 
 		// Make CustomAttributes
-		long codedparent = tc.buildCodedIndex(tc.HasCustomAttribute, tc.StandAloneSig, (long) index);
+		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.StandAloneSig, (long) index);
 		addCustomAttributes(localVars.getStandAloneSigAttributes(), codedparent);
 
 		return token;
@@ -1589,66 +1607,66 @@ public class ClassEmitter
 	/**
 	 * Returns the MethodRef or MethodDef token for the given method
 	 */
-	public long getMethodRefToken(edu.arizona.cs.mbel.mbel.MethodDefOrRef method)
+	public long getMethodRefToken(MethodDefOrRef method)
 	{
-		if(method instanceof edu.arizona.cs.mbel.mbel.Method)
+		if(method instanceof Method)
 		{
-			edu.arizona.cs.mbel.mbel.Method meth = (edu.arizona.cs.mbel.mbel.Method) method;
-			return meth.getMethodRID() | (long) (tc.Method << 24);
+			Method meth = (Method) method;
+			return meth.getMethodRID() | (long) (TableConstants.Method << 24);
 		}
 		else
 		{
 			long rid = addMemberRef(method);
-			return (rid | (long) (tc.MemberRef << 24));
+			return (rid | (long) (TableConstants.MemberRef << 24));
 		}
 	}
 
 	/**
 	 * Returns the FieldRef or FieldDef token for the given field
 	 */
-	public long getFieldRefToken(edu.arizona.cs.mbel.mbel.FieldRef field)
+	public long getFieldRefToken(FieldRef field)
 	{
-		if(field instanceof edu.arizona.cs.mbel.mbel.Field)
+		if(field instanceof Field)
 		{
-			edu.arizona.cs.mbel.mbel.Field f = (edu.arizona.cs.mbel.mbel.Field) field;
-			return (f.getFieldRID() | (long) (tc.Field << 24));
+			Field f = (Field) field;
+			return (f.getFieldRID() | (long) (TableConstants.Field << 24));
 		}
 		else
 		{
 			long rid = addMemberRef(field);
-			return (rid | (long) (tc.MemberRef << 24));
+			return (rid | (long) (TableConstants.MemberRef << 24));
 		}
 	}
 
 	/**
 	 * Returns the TypeDef, TypeRef, or TypeSpec token for the given type
 	 */
-	public long getTypeToken(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref)
+	public long getTypeToken(AbstractTypeReference ref)
 	{
 		// DONE!
-		if(ref instanceof edu.arizona.cs.mbel.mbel.TypeDef)
+		if(ref instanceof TypeDef)
 		{
-			edu.arizona.cs.mbel.mbel.TypeDef def = (edu.arizona.cs.mbel.mbel.TypeDef) ref;
+			TypeDef def = (TypeDef) ref;
 			long result = 0L;
 			if(def.getTypeDefRID() != -1L)
 			{
 				result = def.getTypeDefRID();
-				result |= (tc.TypeDef << 24);
+				result |= (TableConstants.TypeDef << 24);
 			}
 			return result;
 		}
-		else if(ref instanceof edu.arizona.cs.mbel.mbel.TypeRef)
+		else if(ref instanceof TypeRef)
 		{
-			edu.arizona.cs.mbel.mbel.TypeRef typeref = (edu.arizona.cs.mbel.mbel.TypeRef) ref;
+			TypeRef typeref = (TypeRef) ref;
 			long result = addTypeRef(typeref);
-			result |= (tc.TypeRef << 24);
+			result |= (TableConstants.TypeRef << 24);
 			return result;
 		}
-		else if(ref instanceof edu.arizona.cs.mbel.mbel.TypeSpec)
+		else if(ref instanceof TypeSpec)
 		{
-			edu.arizona.cs.mbel.mbel.TypeSpec spec = (edu.arizona.cs.mbel.mbel.TypeSpec) ref;
+			TypeSpec spec = (TypeSpec) ref;
 			long result = addTypeSpec(spec);
-			result |= (tc.TypeSpec << 24);
+			result |= (TableConstants.TypeSpec << 24);
 			return result;
 		}
 		return 0L;
@@ -1657,41 +1675,41 @@ public class ClassEmitter
 	/**
 	 * Returns the correct token for the given loadable type (from ldtoken instruction)
 	 */
-	public long getLoadableTypeToken(edu.arizona.cs.mbel.instructions.LoadableType type)
+	public long getLoadableTypeToken(LoadableType type)
 	{
-		if(type instanceof edu.arizona.cs.mbel.mbel.AbstractTypeReference)
+		if(type instanceof AbstractTypeReference)
 		{
-			if(type instanceof edu.arizona.cs.mbel.mbel.TypeDef)
+			if(type instanceof TypeDef)
 			{
-				edu.arizona.cs.mbel.mbel.TypeDef def = (edu.arizona.cs.mbel.mbel.TypeDef) type;
-				return (def.getTypeDefRID() | (long) (tc.TypeDef << 24));
+				TypeDef def = (TypeDef) type;
+				return (def.getTypeDefRID() | (long) (TableConstants.TypeDef << 24));
 			}
-			else if(type instanceof edu.arizona.cs.mbel.mbel.TypeSpec)
+			else if(type instanceof TypeSpec)
 			{
-				edu.arizona.cs.mbel.mbel.TypeSpec spec = (edu.arizona.cs.mbel.mbel.TypeSpec) type;
+				TypeSpec spec = (TypeSpec) type;
 				long rid = addTypeSpec(spec);
-				return (rid | (long) (tc.TypeSpec << 24));
+				return (rid | (long) (TableConstants.TypeSpec << 24));
 			}
 			else
 			{
 				// TypeRef
-				edu.arizona.cs.mbel.mbel.TypeRef ref = (edu.arizona.cs.mbel.mbel.TypeRef) type;
+				TypeRef ref = (TypeRef) type;
 				long rid = addTypeRef(ref);
-				return (rid | (long) (tc.TypeRef << 24));
+				return (rid | (long) (TableConstants.TypeRef << 24));
 			}
 		}
 		else
 		{// MemberRef
-			if(type instanceof edu.arizona.cs.mbel.mbel.MethodDefOrRef)
+			if(type instanceof MethodDefOrRef)
 			{
 				// MethodDefOrRef
-				edu.arizona.cs.mbel.mbel.MethodDefOrRef method = (edu.arizona.cs.mbel.mbel.MethodDefOrRef) type;
+				MethodDefOrRef method = (MethodDefOrRef) type;
 				return getMethodRefToken(method);
 			}
 			else
 			{
 				// FieldRef
-				edu.arizona.cs.mbel.mbel.FieldRef field = (edu.arizona.cs.mbel.mbel.FieldRef) type;
+				FieldRef field = (FieldRef) type;
 				return getFieldRefToken(field);
 			}
 		}
@@ -1703,13 +1721,13 @@ public class ClassEmitter
 	public long getUserStringToken(String str)
 	{
 		long token = usGen.addUserString(str);
-		return (token | (long) (tc.USString << 24));
+		return (token | (long) (TableConstants.USString << 24));
 	}
 
 	/**
 	 * Returns the list of metadata tables, indexed by token type number
 	 */
-	public java.util.Vector[] getTables()
+	public Vector[] getTables()
 	{
 		return tables;
 	}
@@ -1749,7 +1767,7 @@ public class ClassEmitter
 	/**
 	 * Returns a vector of ByteBuffers containing the method bodies defined in this Module
 	 */
-	public java.util.Vector getMethodBodies()
+	public Vector getMethodBodies()
 	{
 		return methodBodies;
 	}
@@ -1757,7 +1775,7 @@ public class ClassEmitter
 	/**
 	 * Returns a ByteBuffer with all the managed resource data to be embedded in this file.
 	 */
-	public edu.arizona.cs.mbel.ByteBuffer getLocalResources()
+	public ByteBuffer getLocalResources()
 	{
 		return localResources;
 	}
@@ -1768,7 +1786,7 @@ public class ClassEmitter
 	 * @param buffer the buffer to write to
 	 * @param token  a Number containing the strings token (will be a Long)
 	 */
-	public void putStringsToken(edu.arizona.cs.mbel.ByteBuffer buffer, Number token)
+	public void putStringsToken(ByteBuffer buffer, Number token)
 	{
 		if(stringsGen.getLength() >= 65536)
 		{
@@ -1786,7 +1804,7 @@ public class ClassEmitter
 	 * @param buffer the buffer to write to
 	 * @param token  a Number containing the blob token (will be a Long)
 	 */
-	public void putBlobToken(edu.arizona.cs.mbel.ByteBuffer buffer, Number token)
+	public void putBlobToken(ByteBuffer buffer, Number token)
 	{
 		if(blobGen.getLength() >= 65536)
 		{
@@ -1804,7 +1822,7 @@ public class ClassEmitter
 	 * @param buffer the buffer to write to
 	 * @param token  a Number containing the GUID token (will be a Long)
 	 */
-	public void putGUIDToken(edu.arizona.cs.mbel.ByteBuffer buffer, Number token)
+	public void putGUIDToken(ByteBuffer buffer, Number token)
 	{
 		if(guidGen.getNumGUIDS() >= 65536)
 		{
@@ -1823,7 +1841,7 @@ public class ClassEmitter
 	 * @param type   the token type of this token
 	 * @param rid    a Number containing the table index (will be a Long)
 	 */
-	public void putTableIndex(edu.arizona.cs.mbel.ByteBuffer buffer, int type, Number rid)
+	public void putTableIndex(ByteBuffer buffer, int type, Number rid)
 	{
 		if(tables[type].size() >= 65536)
 		{
@@ -1842,19 +1860,19 @@ public class ClassEmitter
 	 * @param type   the coded index type
 	 * @param coded  a Number containing the coded index (will be a Long)
 	 */
-	public void putCodedIndex(edu.arizona.cs.mbel.ByteBuffer buffer, int type, Number coded)
+	public void putCodedIndex(ByteBuffer buffer, int type, Number coded)
 	{
 		int max = 0;
 
-		for(int i = 0; i < tc.TABLE_OPTIONS[type].length; i++)
+		for(int i = 0; i < TableConstants.TABLE_OPTIONS[type].length; i++)
 		{
-			if(0 <= tc.TABLE_OPTIONS[type][i] && tc.TABLE_OPTIONS[type][i] < 64)
+			if(0 <= TableConstants.TABLE_OPTIONS[type][i] && TableConstants.TABLE_OPTIONS[type][i] < 64)
 			{
-				max = Math.max(max, tables[tc.TABLE_OPTIONS[type][i]].size());
+				max = Math.max(max, tables[TableConstants.TABLE_OPTIONS[type][i]].size());
 			}
 		}
 
-		if((max << tc.BITS[type]) >= 65536)
+		if((max << TableConstants.BITS[type]) >= 65536)
 		{
 			buffer.putDWORD(coded.longValue() & 0xFFFFFFFFL);
 		}

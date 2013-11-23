@@ -19,13 +19,17 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.lang.UnsupportedOperationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * An iterator for an InstructionList. The objects that next() returns are InstructionHandles.
  * The remove() method is not implemented, since removing handles can cause TargetLostExceptions.
  *
  * @author Michael Stepp
  */
-public class InstructionIterator implements java.util.Iterator
+public class InstructionIterator implements Iterator
 {
 	private InstructionHandle head, tail, current;
 
@@ -45,7 +49,7 @@ public class InstructionIterator implements java.util.Iterator
 	{
 		if(!hasNext())
 		{
-			throw new java.util.NoSuchElementException("Iteration has passed end of list");
+			throw new NoSuchElementException("Iteration has passed end of list");
 		}
 		current = current.next;
 		return current;
@@ -53,6 +57,6 @@ public class InstructionIterator implements java.util.Iterator
 
 	public void remove()
 	{
-		throw new java.lang.UnsupportedOperationException();
+		throw new UnsupportedOperationException();
 	}
 }

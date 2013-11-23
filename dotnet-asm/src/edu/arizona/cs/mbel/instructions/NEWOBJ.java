@@ -20,6 +20,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Create new object.<br>
  * Stack transition:<br>
@@ -31,20 +38,20 @@ public class NEWOBJ extends Instruction
 {
 	public static final int NEWOBJ = 0x73;
 	protected static final int OPCODE_LIST[] = {NEWOBJ};
-	private edu.arizona.cs.mbel.mbel.MethodDefOrRef method; // for constructor
+	private MethodDefOrRef method; // for constructor
 
 	/**
 	 * Makes a NEWOBJ object with the given constructor method.
 	 *
 	 * @param ref the method reference of the constructor for this type.
 	 */
-	public NEWOBJ(edu.arizona.cs.mbel.mbel.MethodDefOrRef ref) throws InstructionInitException
+	public NEWOBJ(MethodDefOrRef ref) throws InstructionInitException
 	{
 		super(NEWOBJ, OPCODE_LIST);
 		method = ref;
 	}
 
-	public edu.arizona.cs.mbel.mbel.MethodDefOrRef getMethod()
+	public MethodDefOrRef getMethod()
 	{
 		return method;
 	}
@@ -59,14 +66,14 @@ public class NEWOBJ extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getMethodRefToken(method);
 		buffer.putTOKEN(token);
 	}
 
-	public NEWOBJ(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public NEWOBJ(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long methodToken = parse.getMSILInputStream().readTOKEN();

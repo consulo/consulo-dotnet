@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Allocate space in the local dynamic memory pool.<br>
  * Stack transition:<br>
@@ -41,7 +45,7 @@ public class LOCALLOC extends Instruction
 		return "localloc";
 	}
 
-	public LOCALLOC(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public LOCALLOC(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

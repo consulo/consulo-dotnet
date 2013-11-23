@@ -19,6 +19,12 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Switch instruction (jump table).<br>
  * Stack transition:<br>
@@ -46,11 +52,11 @@ public class SWITCH extends Instruction implements InstructionTargeter
 		targets = new int[ihs.length];
 		handles = ihs;
 
-		for(int i = 0; i < handles.length; i++)
+		for(InstructionHandle handle : handles)
 		{
-			if(handles[i] != null)
+			if(handle != null)
 			{
-				handles[i].addTargeter(this);
+				handle.addTargeter(this);
 			}
 		}
 	}
@@ -88,30 +94,30 @@ public class SWITCH extends Instruction implements InstructionTargeter
 		{
 			return;
 		}
-		for(int i = 0; i < handles.length; i++)
+		for(InstructionHandle handle1 : handles)
 		{
-			if(handles[i] != null)
+			if(handle1 != null)
 			{
-				handles[i].removeTargeter(this);
+				handle1.removeTargeter(this);
 			}
 		}
 
 		handles = ihs;
 		targets = new int[ihs.length];
-		for(int i = 0; i < handles.length; i++)
+		for(InstructionHandle handle : handles)
 		{
-			if(handles[i] != null)
+			if(handle != null)
 			{
-				handles[i].addTargeter(this);
+				handle.addTargeter(this);
 			}
 		}
 	}
 
 	public boolean containsTarget(InstructionHandle ih)
 	{
-		for(int i = 0; i < handles.length; i++)
+		for(InstructionHandle handle : handles)
 		{
-			if(handles[i] == ih)
+			if(handle == ih)
 			{
 				return true;
 			}
@@ -152,17 +158,17 @@ public class SWITCH extends Instruction implements InstructionTargeter
 		return (super.getLength() + (targets.length + 1) * 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		buffer.putINT32(targets.length);
-		for(int i = 0; i < targets.length; i++)
+		for(int target : targets)
 		{
-			buffer.putINT32(targets[i]);
+			buffer.putINT32(target);
 		}
 	}
 
-	public SWITCH(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public SWITCH(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long numTargets = parse.getMSILInputStream().readUINT32();

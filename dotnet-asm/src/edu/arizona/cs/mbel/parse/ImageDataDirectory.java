@@ -20,6 +20,11 @@
 
 package edu.arizona.cs.mbel.parse;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class holds a data directory entry, which comes after the PE header in a PE/COFF file.
  * A data directory entry has only 2 fields: VirtualAddress and Size.
@@ -75,7 +80,7 @@ public class ImageDataDirectory
 	/**
 	 * Parses an ImageDataDirectory from an input stream
 	 */
-	public ImageDataDirectory(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException
+	public ImageDataDirectory(MSILInputStream in) throws IOException
 	{
 		VirtualAddress = in.readDWORD();
 		Size = in.readDWORD();
@@ -84,7 +89,7 @@ public class ImageDataDirectory
 	/**
 	 * Writes this data directory out to a buffer
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		buffer.putDWORD(VirtualAddress);
 		buffer.putDWORD(Size);

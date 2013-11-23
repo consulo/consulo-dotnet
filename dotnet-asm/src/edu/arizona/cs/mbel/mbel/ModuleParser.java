@@ -19,6 +19,27 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.instructions.LoadableType;
+import edu.arizona.cs.mbel.metadata.GenericTable;
+import edu.arizona.cs.mbel.metadata.TableConstants;
+import edu.arizona.cs.mbel.parse.MSILParseException;
+import edu.arizona.cs.mbel.parse.PEModule;
+import edu.arizona.cs.mbel.signature.CallingConvention;
+import edu.arizona.cs.mbel.signature.FieldSignature;
+import edu.arizona.cs.mbel.signature.LocalVarList;
+import edu.arizona.cs.mbel.signature.MarshalSignature;
+import edu.arizona.cs.mbel.signature.MethodSignature;
+import edu.arizona.cs.mbel.signature.ParameterInfo;
+import edu.arizona.cs.mbel.signature.ParameterSignature;
+import edu.arizona.cs.mbel.signature.PropertySignature;
+import edu.arizona.cs.mbel.signature.StandAloneSignature;
+import edu.arizona.cs.mbel.signature.TypeSpecSignature;
+
 /**
  * This class is all that is needed to parse a Module from a file.
  * The user will construct a ClassParser, then call parseMetadata and get back an MBEL Module.
@@ -26,20 +47,20 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class ClassParser
+public class ModuleParser
 {
-	private edu.arizona.cs.mbel.parse.PEModule pe_module;
-	private edu.arizona.cs.mbel.metadata.GenericTable[][] tables;
-	private edu.arizona.cs.mbel.metadata.TableConstants tc;
-	private edu.arizona.cs.mbel.metadata.GenericTable[] row;
-	private edu.arizona.cs.mbel.MSILInputStream in;
+	private PEModule pe_module;
+	private GenericTable[][] tables;
+	private TableConstants tc;
+	private GenericTable[] row;
+	private MSILInputStream in;
 	/////////////////////////////////////////////
 	private TypeDef[] typeDefs = null;
 	private TypeRef[] typeRefs = null;
 	private TypeSpec[] typeSpecs = null;
 	private Method[] methods = null;
 	private Field[] fields = null;
-	private edu.arizona.cs.mbel.signature.ParameterInfo[] params = null;
+	private ParameterInfo[] params = null;
 	private Property[] properties = null;
 	private Event[] events = null;
 	private FileReference[] fileReferences = null;
@@ -54,16 +75,16 @@ public class ClassParser
 	private InterfaceImplementation[] interfaceImpls = null;
 	private ModuleRefInfo[] moduleRefs = null;
 	private DeclSecurity[] declSecurities = null;
-	private edu.arizona.cs.mbel.signature.StandAloneSignature[] standAloneSigs = null;
+	private StandAloneSignature[] standAloneSigs = null;
 
 	/**
 	 * Makes a ClassParser that uses the given input stream.
 	 * It is assumed that the input stream is open to the beginning of a .NET module file.
 	 */
-	public ClassParser(java.io.InputStream instream) throws java.io.IOException, edu.arizona.cs.mbel.parse.MSILParseException
+	public ModuleParser(InputStream instream) throws IOException, MSILParseException
 	{
-		in = new edu.arizona.cs.mbel.MSILInputStream(instream);
-		pe_module = new edu.arizona.cs.mbel.parse.PEModule(in);
+		in = new MSILInputStream(instream);
+		pe_module = new PEModule(in);
 		tc = pe_module.metadata.parseTableConstants(in);
 		tables = tc.getTables();
 	}
@@ -72,7 +93,7 @@ public class ClassParser
 	 * Returns the MSILInputStream that this parser is using.
 	 * This method is used as a callback in other classes.
 	 */
-	public edu.arizona.cs.mbel.MSILInputStream getMSILInputStream()
+	public MSILInputStream getMSILInputStream()
 	{
 		return in;
 	}
@@ -80,14 +101,14 @@ public class ClassParser
 	/**
 	 * Returns a method signature given the metadata token for a StandAloneSig table
 	 */
-	public edu.arizona.cs.mbel.signature.MethodSignature getStandAloneSignature(long token)
+	public MethodSignature getStandAloneSignature(long token)
 	{
 		long type = (token >> 24) & 0xFFL;
 		long tokrow = token & 0xFFFFFFL;
 
-		if(type == tc.StandAloneSig)
+		if(type == TableConstants.StandAloneSig)
 		{
-			return (edu.arizona.cs.mbel.signature.MethodSignature) standAloneSigs[(int) tokrow - 1];
+			return (MethodSignature) standAloneSigs[(int) tokrow - 1];
 		}
 		return null;
 	}
@@ -95,32 +116,32 @@ public class ClassParser
 	/**
 	 * Returns an implementer of LoadableType given the token from a ldtoken instruction
 	 */
-	public edu.arizona.cs.mbel.instructions.LoadableType getLoadableType(long token)
+	public LoadableType getLoadableType(long token)
 	{
 		long type = (token >> 24) & 0xFFL;
 		long tokrow = (token & 0xFFFFFFL);
 
-		if(type == tc.TypeDef)
+		if(type == TableConstants.TypeDef)
 		{
 			return typeDefs[(int) tokrow - 1];
 		}
-		else if(type == tc.TypeRef)
+		else if(type == TableConstants.TypeRef)
 		{
 			return typeRefs[(int) tokrow - 1];
 		}
-		else if(type == tc.TypeSpec)
+		else if(type == TableConstants.TypeSpec)
 		{
 			return typeSpecs[(int) tokrow - 1];
 		}
-		else if(type == tc.Method)
+		else if(type == TableConstants.Method)
 		{
 			return methods[(int) tokrow - 1];
 		}
-		else if(type == tc.Field)
+		else if(type == TableConstants.Field)
 		{
 			return fields[(int) tokrow - 1];
 		}
-		else if(type == tc.MemberRef)
+		else if(type == TableConstants.MemberRef)
 		{
 			return memberRefs[(int) tokrow - 1];
 		}
@@ -136,7 +157,7 @@ public class ClassParser
 		long toktype = (methodToken >> 24) & 0xFFL;
 		long tokrow = (methodToken & 0xFFFFFFL);
 
-		if(toktype != tc.Method)
+		if(toktype != TableConstants.Method)
 		{
 			return null;
 		}
@@ -152,11 +173,11 @@ public class ClassParser
 		long type = (token >> 24) & 0xFFL;
 		long tokrow = token & 0xFFFFFFL;
 
-		if(type == tc.Method)
+		if(type == TableConstants.Method)
 		{
 			return methods[(int) getMethod(tokrow) - 1];
 		}
-		else if(type == tc.MemberRef)
+		else if(type == TableConstants.MemberRef)
 		{
 			return (MethodDefOrRef) memberRefs[(int) tokrow - 1];
 		}
@@ -172,11 +193,11 @@ public class ClassParser
 		long type = (token >> 24) & 0xFFL;
 		long tokrow = (token & 0xFFFFFFL);
 
-		if(type == tc.Field)
+		if(type == TableConstants.Field)
 		{
 			return fields[(int) getField(tokrow) - 1];
 		}
-		else if(type == tc.MemberRef)
+		else if(type == TableConstants.MemberRef)
 		{
 			return (FieldRef) memberRefs[(int) tokrow - 1];
 		}
@@ -191,7 +212,7 @@ public class ClassParser
 	{
 		long type = (token >> 24) & 0xFFL;
 		long tokrow = token & 0xFFFFFFL;
-		if(type != tc.USString)
+		if(type != TableConstants.USString)
 		{
 			return null;
 		}
@@ -201,14 +222,14 @@ public class ClassParser
 	/**
 	 * Returns a local variable list, given the token of a StandAloneSig table
 	 */
-	public edu.arizona.cs.mbel.signature.LocalVarList getLocalVarList(long token)
+	public LocalVarList getLocalVarList(long token)
 	{
 		long type = (token >> 24) & 0xFFL;
 		long tokrow = (token & 0xFFFFFFL);
 
-		if(type == tc.StandAloneSig)
+		if(type == TableConstants.StandAloneSig)
 		{
-			return (edu.arizona.cs.mbel.signature.LocalVarList) standAloneSigs[(int) tokrow - 1];
+			return (LocalVarList) standAloneSigs[(int) tokrow - 1];
 		}
 		return null;
 	}
@@ -222,15 +243,15 @@ public class ClassParser
 		long type = (token >> 24) & 0xFFL;
 		long tokrow = token & 0xFFFFFFL;
 
-		if(type == tc.TypeDef)
+		if(type == TableConstants.TypeDef)
 		{
 			return typeDefs[(int) tokrow - 1];
 		}
-		else if(type == tc.TypeRef)
+		else if(type == TableConstants.TypeRef)
 		{
 			return typeRefs[(int) tokrow - 1];
 		}
-		else if(type == tc.TypeSpec)
+		else if(type == TableConstants.TypeSpec)
 		{
 			return typeSpecs[(int) tokrow - 1];
 		}
@@ -251,7 +272,7 @@ public class ClassParser
 	 * It will parse the various structures in the most convenient order possible, all of which
 	 * are either accessible from the Module, or are unimportant and discarded.
 	 */
-	public Module parseModule() throws java.io.IOException, edu.arizona.cs.mbel.parse.MSILParseException
+	public Module parseModule() throws IOException, MSILParseException
 	{
 		// REMEMBER!!! ALL TOKEN VALUES ARE 1-BASED INDICES!!!!
 
@@ -274,9 +295,9 @@ public class ClassParser
 		buildFields();
 		setFieldLayouts();
 		setFieldRVAs();
-		if(tables[tc.Param] != null)
+		if(tables[TableConstants.Param] != null)
 		{
-			params = new edu.arizona.cs.mbel.signature.ParameterInfo[tables[tc.Param].length];
+			params = new ParameterInfo[tables[TableConstants.Param].length];
 		}
 		buildMethods();
 		setImplMaps();
@@ -402,10 +423,9 @@ public class ClassParser
 	private long getMethod(long token)
 	{
 		// maps tokens through MethodPtrs, if necessary
-		if(tables[tc.MethodPtr] != null)
+		if(tables[TableConstants.MethodPtr] != null)
 		{
-			long newtok = tables[tc.MethodPtr][(int) token - 1].getTableIndex("Method").longValue();
-			return newtok;
+			return tables[TableConstants.MethodPtr][(int) token - 1].getTableIndex("Method");
 		}
 		else
 		{
@@ -415,10 +435,9 @@ public class ClassParser
 
 	private long getField(long token)
 	{
-		if(tables[tc.FieldPtr] != null)
+		if(tables[TableConstants.FieldPtr] != null)
 		{
-			long newtok = tables[tc.FieldPtr][(int) token - 1].getTableIndex("Field").longValue();
-			return newtok;
+			return tables[TableConstants.FieldPtr][(int) token - 1].getTableIndex("Field");
 		}
 		else
 		{
@@ -428,10 +447,9 @@ public class ClassParser
 
 	private long getEvent(long token)
 	{
-		if(tables[tc.EventPtr] != null)
+		if(tables[TableConstants.EventPtr] != null)
 		{
-			long newtok = tables[tc.EventPtr][(int) token - 1].getTableIndex("Event").longValue();
-			return newtok;
+			return tables[TableConstants.EventPtr][(int) token - 1].getTableIndex("Event");
 		}
 		else
 		{
@@ -441,10 +459,9 @@ public class ClassParser
 
 	private long getParam(long token)
 	{
-		if(tables[tc.ParamPtr] != null)
+		if(tables[TableConstants.ParamPtr] != null)
 		{
-			long newtok = tables[tc.ParamPtr][(int) token - 1].getTableIndex("Param").longValue();
-			return newtok;
+			return tables[TableConstants.ParamPtr][(int) token - 1].getTableIndex("Param");
 		}
 		else
 		{
@@ -454,10 +471,9 @@ public class ClassParser
 
 	private long getProperty(long token)
 	{
-		if(tables[tc.PropertyPtr] != null)
+		if(tables[TableConstants.PropertyPtr] != null)
 		{
-			long newtok = tables[tc.PropertyPtr][(int) token - 1].getTableIndex("Property").longValue();
-			return newtok;
+			return tables[TableConstants.PropertyPtr][(int) token - 1].getTableIndex("Property");
 		}
 		else
 		{
@@ -470,9 +486,9 @@ public class ClassParser
 	private void buildAssemblyInfo()
 	{
 		// build Assembly table (after Module) DONE!
-		if(tables[tc.Assembly] != null)
+		if(tables[TableConstants.Assembly] != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable ass = tables[tc.Assembly][0];
+			GenericTable ass = tables[TableConstants.Assembly][0];
 
 			long hash = ass.getConstant("HashAlgID").longValue();
 			int maj = ass.getConstant("MajorVersion").intValue();
@@ -493,9 +509,9 @@ public class ClassParser
 	private void buildAssemblyRefs()
 	{
 		// build AssemblyRef table DONE!
-		if(tables[tc.AssemblyRef] != null)
+		if(tables[TableConstants.AssemblyRef] != null)
 		{
-			row = tables[tc.AssemblyRef];
+			row = tables[TableConstants.AssemblyRef];
 			assemblyRefs = new AssemblyRefInfo[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -517,9 +533,9 @@ public class ClassParser
 	private void buildModule()
 	{
 		// build Module (after Assembly) DONE!
-		if(tables[tc.Module] != null)
+		if(tables[TableConstants.Module] != null)
 		{
-			edu.arizona.cs.mbel.metadata.GenericTable mod = tables[tc.Module][0];
+			GenericTable mod = tables[TableConstants.Module][0];
 			String name = mod.getString("Name");
 			int generation = mod.getConstant("Generation").intValue();
 			byte[] mvid = mod.getGUID("Mvid");
@@ -537,9 +553,9 @@ public class ClassParser
 	private void buildModuleRefs()
 	{
 		// build ModuleRef tables DONE!
-		if(tables[tc.ModuleRef] != null)
+		if(tables[TableConstants.ModuleRef] != null)
 		{
-			row = tables[tc.ModuleRef];
+			row = tables[TableConstants.ModuleRef];
 			moduleRefs = new ModuleRefInfo[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -556,12 +572,12 @@ public class ClassParser
 		long type = (entrytoken >> 24) & 0xFFL;
 		long tokrow = (entrytoken & 0xFFFFFFL);
 
-		if(type == tc.Method)
+		if(type == TableConstants.Method)
 		{
 			entryPoint = new EntryPoint(methods[(int) getMethod(tokrow) - 1]);
 			module.setEntryPoint(entryPoint);
 		}
-		else if(type == tc.File)
+		else if(type == TableConstants.File)
 		{
 			entryPoint = new EntryPoint(fileReferences[(int) tokrow - 1]);
 			module.setEntryPoint(entryPoint);
@@ -571,9 +587,9 @@ public class ClassParser
 	private void buildFileReferences()
 	{
 		// build Files DONE!
-		if(tables[tc.File] != null)
+		if(tables[TableConstants.File] != null)
 		{
-			row = tables[tc.File];
+			row = tables[TableConstants.File];
 			fileReferences = new FileReference[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -587,16 +603,16 @@ public class ClassParser
 		}
 	}
 
-	private void buildManifestResources() throws java.io.IOException
+	private void buildManifestResources() throws IOException
 	{
 		// build ManifestResources (after FileReferences) DONE!
-		if(tables[tc.ManifestResource] != null)
+		if(tables[TableConstants.ManifestResource] != null)
 		{
-			row = tables[tc.ManifestResource];
+			row = tables[TableConstants.ManifestResource];
 			mresources = new ManifestResource[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
-				long coded = row[i].getCodedIndex("Implementation").longValue();
+				long coded = row[i].getCodedIndex("Implementation");
 				String name = row[i].getString("Name");
 				long flags = row[i].getConstant("Flags").longValue();
 
@@ -614,13 +630,13 @@ public class ClassParser
 				}
 				else
 				{
-					long token[] = tc.parseCodedIndex(coded, tc.Implementation);
-					if(token[0] == tc.File)
+					long token[] = tc.parseCodedIndex(coded, TableConstants.Implementation);
+					if(token[0] == TableConstants.File)
 					{
 						// FileManifestResource
 						mresources[i] = new FileManifestResource(fileReferences[(int) token[1] - 1], flags);
 					}
-					else if(token[0] == tc.AssemblyRef)
+					else if(token[0] == TableConstants.AssemblyRef)
 					{
 						// AssemblyManifestResource
 						AssemblyManifestResource res = new AssemblyManifestResource(name, flags, assemblyRefs[(int) token[1] - 1]);
@@ -637,9 +653,9 @@ public class ClassParser
 	{
 		// build ExportedTypes (after File) DONE!
 
-		if(tables[tc.ExportedType] != null)
+		if(tables[TableConstants.ExportedType] != null)
 		{
-			row = tables[tc.ExportedType];
+			row = tables[TableConstants.ExportedType];
 			exportedTypes = new ExportedTypeRef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -655,9 +671,9 @@ public class ClassParser
 			}
 			for(int i = 0; i < row.length; i++)
 			{
-				long coded = row[i].getCodedIndex("Implementation").longValue();
-				long[] token = tc.parseCodedIndex(coded, tc.Implementation);
-				if(token[0] == tc.ExportedType)
+				long coded = row[i].getCodedIndex("Implementation");
+				long[] token = tc.parseCodedIndex(coded, TableConstants.Implementation);
+				if(token[0] == TableConstants.ExportedType)
 				{
 					exportedTypes[i].setExportedTypeRef(exportedTypes[(int) token[1] - 1]);
 				}
@@ -672,16 +688,16 @@ public class ClassParser
 	private void buildFields()
 	{
 		// build Fields (after TypeGroup) DONE!
-		if(tables[tc.Field] != null)
+		if(tables[TableConstants.Field] != null)
 		{
-			row = tables[tc.Field];
-			fields = new Field[tables[tc.Field].length];
+			row = tables[TableConstants.Field];
+			fields = new Field[tables[TableConstants.Field].length];
 			for(int i = 0; i < row.length; i++)
 			{
 				int Flags = row[i].getConstant("Flags").intValue();
 				String name = row[i].getString("Name");
 				byte[] blob = row[i].getBlob("Signature");
-				edu.arizona.cs.mbel.signature.FieldSignature sig = edu.arizona.cs.mbel.signature.FieldSignature.parse(new edu.arizona.cs.mbel.ByteBuffer(blob),
+				FieldSignature sig = FieldSignature.parse(new ByteBuffer(blob),
 						group);
 				fields[i] = new Field(name, sig);
 				fields[i].setFlags(Flags);
@@ -694,13 +710,13 @@ public class ClassParser
 	private void setFieldLayouts()
 	{
 		// build FieldLayouts (after Fields) DONE!
-		if(tables[tc.FieldLayout] != null)
+		if(tables[TableConstants.FieldLayout] != null)
 		{
-			row = tables[tc.FieldLayout];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.FieldLayout];
+			for(GenericTable aRow : row)
 			{
-				long field = getField(row[i].getTableIndex("Field").longValue());
-				long Offset = row[i].getConstant("Offset").longValue();
+				long field = getField(aRow.getTableIndex("Field"));
+				long Offset = aRow.getConstant("Offset").longValue();
 				fields[(int) field - 1].setOffset(Offset);
 			}
 		}
@@ -709,9 +725,9 @@ public class ClassParser
 	private void buildMethods()
 	{
 		// build Methods (after Params and TypeGroup)
-		if(tables[tc.Method] != null)
+		if(tables[TableConstants.Method] != null)
 		{
-			row = tables[tc.Method];
+			row = tables[TableConstants.Method];
 			methods = new Method[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -721,7 +737,7 @@ public class ClassParser
 				int flags = row[i].getConstant("Flags").intValue();
 				byte[] blob = row[i].getBlob("Signature");
 
-				edu.arizona.cs.mbel.signature.MethodSignature sig = edu.arizona.cs.mbel.signature.MethodSignature.parse(new edu.arizona.cs.mbel.ByteBuffer(blob)
+				MethodSignature sig = MethodSignature.parse(new ByteBuffer(blob)
 						, group);
 
 				methods[i] = new Method(name, implFlags, flags, sig);
@@ -735,13 +751,13 @@ public class ClassParser
 			// add params DONE!
 			for(int i = 0; i < row.length; i++)
 			{
-				edu.arizona.cs.mbel.signature.ParameterSignature[] pSigs = methods[i].getSignature().getParameters();
+				ParameterSignature[] pSigs = methods[i].getSignature().getParameters();
 
-				long startI = row[i].getTableIndex("ParamList").longValue();
-				if(!(startI == 0 || tables[tc.Param] == null || startI > tables[tc.Param].length))
+				long startI = row[i].getTableIndex("ParamList");
+				if(!(startI == 0 || tables[TableConstants.Param] == null || startI > tables[TableConstants.Param].length))
 				{
 					// valid start of paramlist
-					long endI = tables[tc.Param].length + 1;
+					long endI = tables[TableConstants.Param].length + 1;
 					if(i < row.length - 1)
 					{
 						endI = Math.min(endI, row[i + 1].getTableIndex("ParamList").longValue());
@@ -751,18 +767,18 @@ public class ClassParser
 
 					for(long j = startI; j < endI; j++)
 					{
-						edu.arizona.cs.mbel.metadata.GenericTable paramTable = tables[tc.Param][(int) getParam(j) - 1];
+						GenericTable paramTable = tables[TableConstants.Param][(int) getParam(j) - 1];
 						int flags = paramTable.getConstant("Flags").intValue();
 						int seq = paramTable.getConstant("Sequence").intValue();
 						String name = paramTable.getString("Name");
 						if(seq == 0)
 						{
-							params[(int) getParam(j) - 1] = new edu.arizona.cs.mbel.signature.ParameterInfo(name, flags);
+							params[(int) getParam(j) - 1] = new ParameterInfo(name, flags);
 							methods[i].getSignature().getReturnType().setParameterInfo(params[(int) getParam(j) - 1]);
 						}
 						else
 						{
-							params[(int) getParam(j) - 1] = new edu.arizona.cs.mbel.signature.ParameterInfo(name, flags);
+							params[(int) getParam(j) - 1] = new ParameterInfo(name, flags);
 							pSigs[seq - 1].setParameterInfo(params[(int) getParam(j) - 1]);
 						}
 					}
@@ -774,22 +790,22 @@ public class ClassParser
 	private void setImplMaps()
 	{
 		// build ImplMaps (after Methods) DONE!
-		if(tables[tc.ImplMap] != null)
+		if(tables[TableConstants.ImplMap] != null)
 		{
-			row = tables[tc.ImplMap];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.ImplMap];
+			for(GenericTable aRow : row)
 			{
-				long coded = row[i].getCodedIndex("MemberForwarded").longValue();
-				long token[] = tc.parseCodedIndex(coded, tc.MemberForwarded);
-				if(token[0] != tc.Method)
+				long coded = aRow.getCodedIndex("MemberForwarded");
+				long token[] = tc.parseCodedIndex(coded, TableConstants.MemberForwarded);
+				if(token[0] != TableConstants.Method)
 				{
 					continue;
 				}
 				long method = getMethod(token[1]);
 
-				int flags = row[i].getConstant("MappingFlags").intValue();
-				String name = row[i].getString("ImportName");
-				long modref = row[i].getTableIndex("ImportScope").longValue();
+				int flags = aRow.getConstant("MappingFlags").intValue();
+				String name = aRow.getString("ImportName");
+				long modref = aRow.getTableIndex("ImportScope");
 
 				methods[(int) method - 1].setImplementationMap(new ImplementationMap(flags, name, moduleRefs[(int) modref - 1]));
 			}
@@ -799,27 +815,27 @@ public class ClassParser
 	private void setDeclSecurity()
 	{
 		// build DeclSecurity (after Assembly, Method, and TypeDefs) DONE!
-		if(tables[tc.DeclSecurity] != null)
+		if(tables[TableConstants.DeclSecurity] != null)
 		{
-			row = tables[tc.DeclSecurity];
+			row = tables[TableConstants.DeclSecurity];
 			declSecurities = new DeclSecurity[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
-				long coded = row[i].getCodedIndex("Parent").longValue();
-				long token[] = tc.parseCodedIndex(coded, tc.HasDeclSecurity);
+				long coded = row[i].getCodedIndex("Parent");
+				long token[] = tc.parseCodedIndex(coded, TableConstants.HasDeclSecurity);
 				int Action = row[i].getConstant("Action").intValue();
 				byte[] permission = row[i].getBlob("PermissionSet");
 				declSecurities[i] = new DeclSecurity(Action, permission);
 
-				if(token[0] == tc.TypeDef)
+				if(token[0] == TableConstants.TypeDef)
 				{
 					typeDefs[(int) token[1] - 1].setDeclSecurity(declSecurities[i]);
 				}
-				else if(token[0] == tc.Method)
+				else if(token[0] == TableConstants.Method)
 				{
 					methods[(int) getMethod(token[1]) - 1].setDeclSecurity(declSecurities[i]);
 				}
-				else if(token[0] == tc.Assembly)
+				else if(token[0] == TableConstants.Assembly)
 				{
 					assemblyInfo.setDeclSecurity(declSecurities[i]);
 				}
@@ -831,9 +847,9 @@ public class ClassParser
 	private void buildTypeDefs()
 	{
 		// build TypeDefs (after Field and Methods) DONE!
-		if(tables[tc.TypeDef] != null)
+		if(tables[TableConstants.TypeDef] != null)
 		{
-			row = tables[tc.TypeDef];
+			row = tables[TableConstants.TypeDef];
 			typeDefs = new TypeDef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -851,14 +867,14 @@ public class ClassParser
 	private void setFieldsAndMethods()
 	{
 		// set parents of the fields and methods (after Typedef, Method, Field) DONE!
-		if(tables[tc.TypeDef] != null)
+		if(tables[TableConstants.TypeDef] != null)
 		{
-			row = tables[tc.TypeDef];
+			row = tables[TableConstants.TypeDef];
 
 			for(int i = 0; i < row.length; i++)
 			{
-				long fieldS = row[i].getTableIndex("FieldList").longValue();
-				if(!(fieldS == 0 || tables[tc.Field] == null || fieldS > tables[tc.Field].length))
+				long fieldS = row[i].getTableIndex("FieldList");
+				if(!(fieldS == 0 || tables[TableConstants.Field] == null || fieldS > tables[TableConstants.Field].length))
 				{
 					long fieldE = fields.length + 1;
 					if(i < row.length - 1)
@@ -873,8 +889,8 @@ public class ClassParser
 					// this sets the field parents
 				}
 
-				long methodS = row[i].getTableIndex("MethodList").longValue();
-				if(!(methodS == 0 || tables[tc.Method] == null || methodS > tables[tc.Method].length))
+				long methodS = row[i].getTableIndex("MethodList");
+				if(!(methodS == 0 || tables[TableConstants.Method] == null || methodS > tables[TableConstants.Method].length))
 				{
 					long methodE = methods.length + 1;
 					if(i < row.length - 1)
@@ -895,13 +911,13 @@ public class ClassParser
 	private void buildTypeRefs()
 	{
 		// build TypeRefs (after TypeDefs and ExportedTypes) DONE!
-		if(tables[tc.TypeRef] != null)
+		if(tables[TableConstants.TypeRef] != null)
 		{
-			row = tables[tc.TypeRef];
+			row = tables[TableConstants.TypeRef];
 			typeRefs = new TypeRef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
-				long coded = row[i].getCodedIndex("ResolutionScope").longValue();
+				long coded = row[i].getCodedIndex("ResolutionScope");
 
 				if(coded == 0L)
 				{
@@ -909,52 +925,52 @@ public class ClassParser
 					String Name = row[i].getString("Name");
 					String Namespace = row[i].getString("Namespace");
 
-					for(int j = 0; j < exportedTypes.length; j++)
+					for(ExportedTypeRef exportedType : exportedTypes)
 					{
-						if(Name.equals(exportedTypes[j].getName()) && Namespace.equals(exportedTypes[j].getNamespace()))
+						if(Name.equals(exportedType.getName()) && Namespace.equals(exportedType.getNamespace()))
 						{
-							typeRefs[i] = exportedTypes[j];
+							typeRefs[i] = exportedType;
 						}
 					}
 					continue;
 				}
 
-				long[] token = tc.parseCodedIndex(coded, tc.ResolutionScope);
+				long[] token = tc.parseCodedIndex(coded, TableConstants.ResolutionScope);
 				String Namespace = row[i].getString("Namespace");
 				String Name = row[i].getString("Name");
 
 				switch((int) token[0])
 				{
-					case edu.arizona.cs.mbel.metadata.TableConstants.ModuleRef:
+					case TableConstants.ModuleRef:
 					{
 						ModuleTypeRef mod = new ModuleTypeRef(moduleRefs[(int) token[1] - 1], Namespace, Name);
 						typeRefs[i] = mod;
 						break;
 					}
 
-					case edu.arizona.cs.mbel.metadata.TableConstants.TypeRef:
+					case TableConstants.TypeRef:
 					{
 						NestedTypeRef nest = new NestedTypeRef(Namespace, Name, typeRefs[(int) token[1] - 1]);
 						typeRefs[i] = nest;
 						break;
 					}
 
-					case edu.arizona.cs.mbel.metadata.TableConstants.AssemblyRef:
+					case TableConstants.AssemblyRef:
 					{
 						AssemblyTypeRef assem = new AssemblyTypeRef(assemblyRefs[(int) token[1] - 1], Namespace, Name);
 						typeRefs[i] = assem;
 						break;
 					}
 
-					case edu.arizona.cs.mbel.metadata.TableConstants.Module:
+					case TableConstants.Module:
 					{
 						// (Implementation == 0x4?)
 						// search through TypeDefs for Name and Namespace
-						for(int j = 0; j < typeDefs.length; j++)
+						for(TypeDef typeDef : typeDefs)
 						{
-							if(typeDefs[j].getName().equals(Name) && typeDefs[j].getNamespace().equals(Namespace))
+							if(typeDef.getName().equals(Name) && typeDef.getNamespace().equals(Namespace))
 							{
-								typeRefs[i] = typeDefs[j];
+								typeRefs[i] = typeDef;
 							}
 						}
 						break;
@@ -967,9 +983,9 @@ public class ClassParser
 	private void buildTypeSpecs()
 	{
 		// build TypeSpecs (after TypeDef and TypeRef) DONE!
-		if(tables[tc.TypeSpec] != null)
+		if(tables[TableConstants.TypeSpec] != null)
 		{
-			row = tables[tc.TypeSpec];
+			row = tables[TableConstants.TypeSpec];
 			typeSpecs = new TypeSpec[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -977,11 +993,11 @@ public class ClassParser
 			}
 
 			byte[] blob = null;
-			edu.arizona.cs.mbel.signature.TypeSpecSignature sig = null;
+			TypeSpecSignature sig = null;
 			for(int i = 0; i < row.length; i++)
 			{
 				blob = row[i].getBlob("Signature");
-				sig = (edu.arizona.cs.mbel.signature.TypeSpecSignature) edu.arizona.cs.mbel.signature.TypeSpecSignature.parse(new edu.arizona.cs.mbel.ByteBuffer
+				sig = (TypeSpecSignature) TypeSpecSignature.parse(new ByteBuffer
 						(blob), new TypeGroup(typeDefs, typeRefs, typeSpecs));
 				typeSpecs[i].setSignature(sig);
 				//module.addTypeSpec(typeSpecs[i]);
@@ -992,16 +1008,16 @@ public class ClassParser
 	private void setSuperClasses()
 	{
 		// fill in Typedef extends (after TypeRef and TypeDef) DONE!
-		if(tables[tc.TypeDef] != null)
+		if(tables[TableConstants.TypeDef] != null)
 		{
-			row = tables[tc.TypeDef];
+			row = tables[TableConstants.TypeDef];
 			for(int i = 0; i < row.length; i++)
 			{
-				long coded = row[i].getCodedIndex("Extends").longValue();
+				long coded = row[i].getCodedIndex("Extends");
 				if(coded != 0L)
 				{
-					long[] token = tc.parseCodedIndex(coded, tc.TypeDefOrRef);
-					if(token[0] == tc.TypeDef)
+					long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRef);
+					if(token[0] == TableConstants.TypeDef)
 					{
 						typeDefs[i].setSuperClass(typeDefs[(int) token[1] - 1]);
 					}
@@ -1017,22 +1033,22 @@ public class ClassParser
 	private void setInterfaceImpls()
 	{
 		// build InterfaceImpls (after TypeGroup) DONE!
-		if(tables[tc.InterfaceImpl] != null)
+		if(tables[TableConstants.InterfaceImpl] != null)
 		{
-			row = tables[tc.InterfaceImpl];
+			row = tables[TableConstants.InterfaceImpl];
 			interfaceImpls = new InterfaceImplementation[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
-				long clazz = row[i].getTableIndex("Class").longValue();
+				long clazz = row[i].getTableIndex("Class");
 				TypeDef def = typeDefs[(int) clazz - 1];
-				long coded = row[i].getCodedIndex("Interface").longValue();
-				long inter[] = tc.parseCodedIndex(coded, tc.TypeDefOrRef);
+				long coded = row[i].getCodedIndex("Interface");
+				long inter[] = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRef);
 
-				if(inter[0] == tc.TypeDef)
+				if(inter[0] == TableConstants.TypeDef)
 				{
 					interfaceImpls[i] = new InterfaceImplementation(typeDefs[(int) inter[1] - 1]);
 				}
-				else if(inter[0] == tc.TypeRef)
+				else if(inter[0] == TableConstants.TypeRef)
 				{
 					interfaceImpls[i] = new InterfaceImplementation(typeRefs[(int) inter[1] - 1]);
 				}
@@ -1044,16 +1060,16 @@ public class ClassParser
 	private void buildProperties()
 	{
 		// build Properties DONE!
-		if(tables[tc.Property] != null)
+		if(tables[TableConstants.Property] != null)
 		{
-			row = tables[tc.Property];
+			row = tables[TableConstants.Property];
 			properties = new Property[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
 				String name = row[i].getString("Name");
 				int flags = row[i].getConstant("Flags").intValue();
 				byte[] blob = row[i].getBlob("Type");
-				edu.arizona.cs.mbel.signature.PropertySignature sig = edu.arizona.cs.mbel.signature.PropertySignature.parse(new edu.arizona.cs.mbel.ByteBuffer
+				PropertySignature sig = PropertySignature.parse(new ByteBuffer
 						(blob), group);
 
 				properties[i] = new Property(name, flags, sig);
@@ -1064,18 +1080,18 @@ public class ClassParser
 	private void setPropertyMaps()
 	{
 		// build PropertyMap (after TypeDefs and Property) DONE!
-		if(tables[tc.PropertyMap] != null)
+		if(tables[TableConstants.PropertyMap] != null)
 		{
-			row = tables[tc.PropertyMap];
+			row = tables[TableConstants.PropertyMap];
 			for(int i = 0; i < row.length; i++)
 			{
-				long parent = row[i].getTableIndex("Parent").longValue();
+				long parent = row[i].getTableIndex("Parent");
 				if(parent == 0)
 				{
 					continue;
 				}
-				long propS = row[i].getTableIndex("PropertyList").longValue();
-				if(propS == 0 || tables[tc.Property] == null || propS > tables[tc.Property].length)
+				long propS = row[i].getTableIndex("PropertyList");
+				if(propS == 0 || tables[TableConstants.Property] == null || propS > tables[TableConstants.Property].length)
 				{
 					continue;
 				}
@@ -1095,13 +1111,13 @@ public class ClassParser
 	private void setNestedClasses()
 	{
 		// build NestedClasses (after TypeDefs) DONE!
-		if(tables[tc.NestedClass] != null)
+		if(tables[TableConstants.NestedClass] != null)
 		{
-			row = tables[tc.NestedClass];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.NestedClass];
+			for(GenericTable aRow : row)
 			{
-				long nest = row[i].getTableIndex("NestedClass").longValue();
-				long enclose = row[i].getTableIndex("EnclosingClass").longValue();
+				long nest = aRow.getTableIndex("NestedClass");
+				long enclose = aRow.getTableIndex("EnclosingClass");
 				typeDefs[(int) enclose - 1].addNestedClass(typeDefs[(int) nest - 1]);
 			}
 		}
@@ -1110,14 +1126,14 @@ public class ClassParser
 	private void setClassLayouts()
 	{
 		// build ClassLayouts (after TypeDefs) DONE!
-		if(tables[tc.ClassLayout] != null)
+		if(tables[TableConstants.ClassLayout] != null)
 		{
-			row = tables[tc.ClassLayout];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.ClassLayout];
+			for(GenericTable aRow : row)
 			{
-				long typedef = row[i].getTableIndex("Parent").longValue();
-				int pSize = row[i].getConstant("PackingSize").intValue();
-				long cSize = row[i].getConstant("ClassSize").longValue();
+				long typedef = aRow.getTableIndex("Parent");
+				int pSize = aRow.getConstant("PackingSize").intValue();
+				long cSize = aRow.getConstant("ClassSize").longValue();
 
 				ClassLayout layout = new ClassLayout(pSize, cSize);
 				typeDefs[(int) typedef - 1].setClassLayout(layout);
@@ -1128,13 +1144,13 @@ public class ClassParser
 	private void setFieldRVAs()
 	{
 		// build FieldRVAs (after Fields)
-		if(tables[tc.FieldRVA] != null)
+		if(tables[TableConstants.FieldRVA] != null)
 		{
-			row = tables[tc.FieldRVA];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.FieldRVA];
+			for(GenericTable aRow : row)
 			{
-				long RVA = row[i].getConstant("RVA").longValue();
-				long field = getField(row[i].getTableIndex("Field").longValue());
+				long RVA = aRow.getConstant("RVA").longValue();
+				long field = getField(aRow.getTableIndex("Field"));
 				fields[(int) field - 1].setFieldRVA(RVA);
 			}
 		}
@@ -1143,9 +1159,9 @@ public class ClassParser
 	private void buildEvents()
 	{
 		// build Events (after TypeDef and TypeRef) DONE!
-		if(tables[tc.Event] != null)
+		if(tables[TableConstants.Event] != null)
 		{
-			row = tables[tc.Event];
+			row = tables[TableConstants.Event];
 			events = new Event[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
@@ -1153,9 +1169,9 @@ public class ClassParser
 				int flags = row[i].getConstant("EventFlags").intValue();
 
 				TypeRef handler = null;
-				long coded = row[i].getCodedIndex("EventType").longValue();
-				long[] token = tc.parseCodedIndex(coded, tc.TypeDefOrRef);
-				if(token[0] == tc.TypeDef)
+				long coded = row[i].getCodedIndex("EventType");
+				long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRef);
+				if(token[0] == TableConstants.TypeDef)
 				{
 					handler = typeDefs[(int) token[1] - 1];
 				}
@@ -1172,13 +1188,13 @@ public class ClassParser
 	private void setEventMaps()
 	{
 		// build EventMaps (after Event) DONE!
-		if(tables[tc.EventMap] != null)
+		if(tables[TableConstants.EventMap] != null)
 		{
-			row = tables[tc.EventMap];
+			row = tables[TableConstants.EventMap];
 			for(int i = 0; i < row.length; i++)
 			{
-				long parent = row[i].getTableIndex("Parent").longValue();
-				long eventS = row[i].getTableIndex("EventList").longValue();
+				long parent = row[i].getTableIndex("Parent");
+				long eventS = row[i].getTableIndex("EventList");
 				long eventE = events.length + 1;
 				if(i < row.length - 1)
 				{
@@ -1195,17 +1211,16 @@ public class ClassParser
 	private void setFieldMarshals()
 	{
 		// build FieldMarshals (after Field and Method) DONE!
-		if(tables[tc.FieldMarshal] != null)
+		if(tables[TableConstants.FieldMarshal] != null)
 		{
-			row = tables[tc.FieldMarshal];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.FieldMarshal];
+			for(GenericTable aRow : row)
 			{
-				long[] index = tc.parseCodedIndex(row[i].getCodedIndex("Parent").longValue(), tc.HasFieldMarshal);
-				byte[] blob = row[i].getBlob("NativeType");
-				edu.arizona.cs.mbel.signature.MarshalSignature sig = edu.arizona.cs.mbel.signature.MarshalSignature.parse(new edu.arizona.cs.mbel.ByteBuffer
-						(blob));
+				long[] index = tc.parseCodedIndex(aRow.getCodedIndex("Parent"), TableConstants.HasFieldMarshal);
+				byte[] blob = aRow.getBlob("NativeType");
+				MarshalSignature sig = MarshalSignature.parse(new ByteBuffer(blob));
 
-				if(index[0] == tc.Field) // Field
+				if(index[0] == TableConstants.Field) // Field
 				{
 					fields[(int) getField(index[1]) - 1].setFieldMarshal(sig);
 				}
@@ -1220,18 +1235,18 @@ public class ClassParser
 	private void setMethodSemantics()
 	{
 		// build MethodSemantics (after Method, Event, Property) DONE!
-		if(tables[tc.MethodSemantics] != null)
+		if(tables[TableConstants.MethodSemantics] != null)
 		{
-			row = tables[tc.MethodSemantics];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.MethodSemantics];
+			for(GenericTable aRow : row)
 			{
-				long method = getMethod(row[i].getTableIndex("Method").longValue());
-				int sem = row[i].getConstant("Semantics").intValue();
-				long coded = row[i].getCodedIndex("Association").longValue();
-				long token[] = tc.parseCodedIndex(coded, tc.HasSemantics);
+				long method = getMethod(aRow.getTableIndex("Method"));
+				int sem = aRow.getConstant("Semantics").intValue();
+				long coded = aRow.getCodedIndex("Association");
+				long token[] = tc.parseCodedIndex(coded, TableConstants.HasSemantics);
 				Method meth = methods[(int) method - 1];
 
-				if(token[0] == tc.Event)
+				if(token[0] == TableConstants.Event)
 				{
 					Event event = events[(int) getEvent(token[1]) - 1];
 					meth.setMethodSemantics(new MethodSemantics(sem, event));
@@ -1248,7 +1263,7 @@ public class ClassParser
 						event.setFireMethod(meth);
 					}
 				}
-				else if(token[0] == tc.Property)
+				else if(token[0] == TableConstants.Property)
 				{
 					Property prop = properties[(int) getProperty(token[1]) - 1];
 					meth.setMethodSemantics(new MethodSemantics(sem, prop));
@@ -1268,23 +1283,23 @@ public class ClassParser
 	private void setDefaultValues()
 	{
 		// build Constants (after Field, Property, Param) DONE!
-		if(tables[tc.Constant] != null)
+		if(tables[TableConstants.Constant] != null)
 		{
-			row = tables[tc.Constant];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.Constant];
+			for(GenericTable aRow : row)
 			{
-				byte[] blob = row[i].getBlob("Value");
-				long coded = row[i].getCodedIndex("Parent").longValue();
-				long token[] = tc.parseCodedIndex(coded, tc.HasConst);
-				if(token[0] == tc.Field)
+				byte[] blob = aRow.getBlob("Value");
+				long coded = aRow.getCodedIndex("Parent");
+				long token[] = tc.parseCodedIndex(coded, TableConstants.HasConst);
+				if(token[0] == TableConstants.Field)
 				{
 					fields[(int) getField(token[1]) - 1].setDefaultValue(blob);
 				}
-				else if(token[0] == tc.Param)
+				else if(token[0] == TableConstants.Param)
 				{
 					params[(int) getParam(token[1]) - 1].setDefaultValue(blob);
 				}
-				else if(token[0] == tc.Property)
+				else if(token[0] == TableConstants.Property)
 				{
 					properties[(int) getProperty(token[1]) - 1].setDefaultValue(blob);
 				}
@@ -1295,35 +1310,35 @@ public class ClassParser
 	private void buildMemberRefs()
 	{
 		// build MemberRefs (after TypeGroup, Method, Field)
-		if(tables[tc.MemberRef] != null)
+		if(tables[TableConstants.MemberRef] != null)
 		{
-			row = tables[tc.MemberRef];
+			row = tables[TableConstants.MemberRef];
 			memberRefs = new MemberRef[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
 				byte[] blob = row[i].getBlob("Signature");
-				if((blob[0] & 0x0F) == edu.arizona.cs.mbel.signature.CallingConvention.FIELD)
+				if((blob[0] & 0x0F) == CallingConvention.FIELD)
 				{
 					// FIELDREF
-					long coded = row[i].getCodedIndex("Class").longValue();
-					long newtok[] = tc.parseCodedIndex(coded, tc.MemberRefParent);
+					long coded = row[i].getCodedIndex("Class");
+					long newtok[] = tc.parseCodedIndex(coded, TableConstants.MemberRefParent);
 					String name = row[i].getString("Name");
-					edu.arizona.cs.mbel.signature.FieldSignature sig = edu.arizona.cs.mbel.signature.FieldSignature.parse(new edu.arizona.cs.mbel.ByteBuffer(blob),
+					FieldSignature sig = FieldSignature.parse(new ByteBuffer(blob),
 							group);
 
-					if(newtok[0] == tc.TypeRef)
+					if(newtok[0] == TableConstants.TypeRef)
 					{
 						memberRefs[i] = new FieldRef(name, sig, typeRefs[(int) newtok[1] - 1]);
 					}
-					else if(newtok[0] == tc.ModuleRef)
+					else if(newtok[0] == TableConstants.ModuleRef)
 					{
 						memberRefs[i] = new GlobalFieldRef(moduleRefs[(int) newtok[1] - 1], name, sig);
 					}
-					else if(newtok[0] == tc.TypeSpec)
+					else if(newtok[0] == TableConstants.TypeSpec)
 					{
 						memberRefs[i] = new FieldRef(name, sig, typeSpecs[(int) newtok[1] - 1]);
 					}
-					else if(newtok[0] == tc.TypeDef)
+					else if(newtok[0] == TableConstants.TypeDef)
 					{
 						memberRefs[i] = new FieldRef(name, sig, typeDefs[(int) newtok[1] - 1]);
 					}
@@ -1331,30 +1346,30 @@ public class ClassParser
 				else
 				{
 					// METHODREF
-					long coded = row[i].getCodedIndex("Class").longValue();
-					long newtok[] = tc.parseCodedIndex(coded, tc.MemberRefParent);
+					long coded = row[i].getCodedIndex("Class");
+					long newtok[] = tc.parseCodedIndex(coded, TableConstants.MemberRefParent);
 					String name = row[i].getString("Name");
 
-					edu.arizona.cs.mbel.signature.MethodSignature callsig = edu.arizona.cs.mbel.signature.MethodSignature.parse(new edu.arizona.cs.mbel.ByteBuffer
+					MethodSignature callsig = MethodSignature.parse(new ByteBuffer
 							(blob), group);
 
-					if(newtok[0] == tc.TypeRef)
+					if(newtok[0] == TableConstants.TypeRef)
 					{
 						memberRefs[i] = new MethodRef(name, typeRefs[(int) newtok[1] - 1], callsig);
 					}
-					else if(newtok[0] == tc.ModuleRef)
+					else if(newtok[0] == TableConstants.ModuleRef)
 					{
 						memberRefs[i] = new GlobalMethodRef(moduleRefs[(int) newtok[1] - 1], name, callsig);
 					}
-					else if(newtok[0] == tc.Method)
+					else if(newtok[0] == TableConstants.Method)
 					{
 						memberRefs[i] = new VarargsMethodRef(methods[(int) getMethod(newtok[1]) - 1], callsig);
 					}
-					else if(newtok[0] == tc.TypeSpec)
+					else if(newtok[0] == TableConstants.TypeSpec)
 					{
 						memberRefs[i] = new MethodRef(name, typeSpecs[(int) newtok[1] - 1], callsig);
 					}
-					else if(newtok[0] == tc.TypeDef)
+					else if(newtok[0] == TableConstants.TypeDef)
 					{
 						memberRefs[i] = new MethodRef(name, typeDefs[(int) newtok[1] - 1], callsig);
 					}
@@ -1366,20 +1381,20 @@ public class ClassParser
 	private void setMethodMaps()
 	{
 		// build MethodImpls (after TypeGroup, MemberRef, Method)
-		if(tables[tc.MethodImpl] != null)
+		if(tables[TableConstants.MethodImpl] != null)
 		{
-			row = tables[tc.MethodImpl];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.MethodImpl];
+			for(GenericTable aRow : row)
 			{
-				long typedef = row[i].getTableIndex("Class").longValue();
-				long coded = row[i].getCodedIndex("MethodDeclaration").longValue();
-				long decltoken[] = tc.parseCodedIndex(coded, tc.MethodDefOrRef);
-				coded = row[i].getCodedIndex("MethodBody").longValue();
-				long bodytoken[] = tc.parseCodedIndex(coded, tc.MethodDefOrRef);
+				long typedef = aRow.getTableIndex("Class");
+				long coded = aRow.getCodedIndex("MethodDeclaration");
+				long decltoken[] = tc.parseCodedIndex(coded, TableConstants.MethodDefOrRef);
+				coded = aRow.getCodedIndex("MethodBody");
+				long bodytoken[] = tc.parseCodedIndex(coded, TableConstants.MethodDefOrRef);
 
 				MethodDefOrRef body = null, decl = null;
 
-				if(bodytoken[0] == tc.Method)
+				if(bodytoken[0] == TableConstants.Method)
 				{
 					// Method
 					body = methods[(int) getMethod(bodytoken[1]) - 1];
@@ -1390,7 +1405,7 @@ public class ClassParser
 					body = (MethodDefOrRef) memberRefs[(int) bodytoken[1] - 1];
 				}
 
-				if(decltoken[0] == tc.Method)
+				if(decltoken[0] == TableConstants.Method)
 				{
 					// Method
 					decl = methods[(int) getMethod(decltoken[1]) - 1];
@@ -1411,38 +1426,38 @@ public class ClassParser
 	private void buildStandAloneSigs()
 	{
 		// build StandAloneSig table DONE!
-		if(tables[tc.StandAloneSig] != null)
+		if(tables[TableConstants.StandAloneSig] != null)
 		{
-			row = tables[tc.StandAloneSig];
-			standAloneSigs = new edu.arizona.cs.mbel.signature.StandAloneSignature[row.length];
+			row = tables[TableConstants.StandAloneSig];
+			standAloneSigs = new StandAloneSignature[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
 				byte[] blob = row[i].getBlob("Signature");
-				if((blob[0] & 0x0F) == edu.arizona.cs.mbel.signature.CallingConvention.LOCAL_SIG)
+				if((blob[0] & 0x0F) == CallingConvention.LOCAL_SIG)
 				{
 					// LocalVarList
-					standAloneSigs[i] = edu.arizona.cs.mbel.signature.LocalVarList.parse(new edu.arizona.cs.mbel.ByteBuffer(blob), group);
+					standAloneSigs[i] = LocalVarList.parse(new ByteBuffer(blob), group);
 				}
-				else if((blob[0] & 0x0F) == edu.arizona.cs.mbel.signature.CallingConvention.FIELD)
+				else if((blob[0] & 0x0F) == CallingConvention.FIELD)
 				{
 					// field
-					standAloneSigs[i] = edu.arizona.cs.mbel.signature.FieldSignature.parse(new edu.arizona.cs.mbel.ByteBuffer(blob), group);
+					standAloneSigs[i] = FieldSignature.parse(new ByteBuffer(blob), group);
 				}
 				else
 				{
 					// MethodSignature
-					standAloneSigs[i] = edu.arizona.cs.mbel.signature.MethodSignature.parse(new edu.arizona.cs.mbel.ByteBuffer(blob), group);
+					standAloneSigs[i] = MethodSignature.parse(new ByteBuffer(blob), group);
 				}
 			}
 		}
 	}
 
-	private void buildMethodBodies() throws java.io.IOException, edu.arizona.cs.mbel.parse.MSILParseException
+	private void buildMethodBodies() throws IOException, MSILParseException
 	{
 		// build method bodies (last!)
-		if(tables[tc.Method] != null)
+		if(tables[TableConstants.Method] != null)
 		{
-			row = tables[tc.Method];
+			row = tables[TableConstants.Method];
 			for(int i = 0; i < row.length; i++)
 			{
 				long implflags = row[i].getConstant("ImplFlags").intValue();
@@ -1460,102 +1475,102 @@ public class ClassParser
 	private void setCustomAttributes()
 	{
 		// build CustomAttribute table
-		if(tables[tc.CustomAttribute] != null)
+		if(tables[TableConstants.CustomAttribute] != null)
 		{
-			row = tables[tc.CustomAttribute];
-			for(int i = 0; i < row.length; i++)
+			row = tables[TableConstants.CustomAttribute];
+			for(GenericTable aRow : row)
 			{
-				byte[] blob = row[i].getBlob("Value");
-				long coded = row[i].getCodedIndex("Type").longValue();
-				long[] token = tc.parseCodedIndex(coded, tc.CustomAttributeType);
+				byte[] blob = aRow.getBlob("Value");
+				long coded = aRow.getCodedIndex("Type");
+				long[] token = tc.parseCodedIndex(coded, TableConstants.CustomAttributeType);
 
 				CustomAttribute ca = null;
 
-				if(token[0] == tc.Method)
+				if(token[0] == TableConstants.Method)
 				{
 					ca = new CustomAttribute(blob, methods[(int) getMethod(token[1]) - 1]);
 				}
-				else if(token[0] == tc.MemberRef)
+				else if(token[0] == TableConstants.MemberRef)
 				{
 					ca = new CustomAttribute(blob, (MethodDefOrRef) memberRefs[(int) token[1] - 1]);
 				}
 
-				coded = row[i].getCodedIndex("Parent").longValue();
-				token = tc.parseCodedIndex(coded, tc.HasCustomAttribute);
+				coded = aRow.getCodedIndex("Parent");
+				token = tc.parseCodedIndex(coded, TableConstants.HasCustomAttribute);
 
-				if(token[0] == tc.Method)
+				if(token[0] == TableConstants.Method)
 				{
 					methods[(int) getMethod(token[1]) - 1].addMethodAttribute(ca);
 				}
-				else if(token[0] == tc.Field)
+				else if(token[0] == TableConstants.Field)
 				{
 					fields[(int) getField(token[1]) - 1].addFieldAttribute(ca);
 				}
-				else if(token[0] == tc.TypeRef)
+				else if(token[0] == TableConstants.TypeRef)
 				{
 					typeRefs[(int) token[1] - 1].addTypeRefAttribute(ca);
 				}
-				else if(token[0] == tc.TypeDef)
+				else if(token[0] == TableConstants.TypeDef)
 				{
 					typeDefs[(int) token[1] - 1].addTypeDefAttribute(ca);
 				}
-				else if(token[0] == tc.Param)
+				else if(token[0] == TableConstants.Param)
 				{
 					params[(int) getParam(token[1]) - 1].addParamAttribute(ca);
 				}
-				else if(token[0] == tc.InterfaceImpl)
+				else if(token[0] == TableConstants.InterfaceImpl)
 				{
 					interfaceImpls[(int) token[1] - 1].addInterfaceImplAttribute(ca);
 				}
-				else if(token[0] == tc.MemberRef)
+				else if(token[0] == TableConstants.MemberRef)
 				{
 					memberRefs[(int) token[1] - 1].addMemberRefAttribute(ca);
 				}
-				else if(token[0] == tc.Module)
+				else if(token[0] == TableConstants.Module)
 				{
 					module.addModuleAttribute(ca);
 				}
-				else if(token[0] == tc.DeclSecurity)
+				else if(token[0] == TableConstants.DeclSecurity)
 				{
 					declSecurities[(int) token[1] - 1].addDeclSecurityAttribute(ca);
 				}
-				else if(token[0] == tc.Property)
+				else if(token[0] == TableConstants.Property)
 				{
 					properties[(int) getProperty(token[1]) - 1].addPropertyAttribute(ca);
 				}
-				else if(token[0] == tc.Event)
+				else if(token[0] == TableConstants.Event)
 				{
 					events[(int) getEvent(token[1]) - 1].addEventAttribute(ca);
 				}
-				else if(token[0] == tc.StandAloneSig)
+				else if(token[0] == TableConstants.StandAloneSig)
 				{
 					standAloneSigs[(int) token[1] - 1].addStandAloneSigAttribute(ca);
 				}
-				else if(token[0] == tc.ModuleRef)
+				else if(token[0] == TableConstants.ModuleRef)
 				{
 					moduleRefs[(int) token[1] - 1].addModuleRefAttribute(ca);
 				}
-				else if(token[0] == tc.TypeSpec)
+				else if(token[0] == TableConstants.TypeSpec)
 				{
 					typeSpecs[(int) token[1] - 1].addTypeSpecAttribute(ca);
 				}
-				else if(token[0] == tc.Assembly)
+				else if(token[0] == TableConstants.Assembly)
 				{
 					assemblyInfo.addAssemblyAttribute(ca);
 				}
-				else if(token[0] == tc.AssemblyRef)
+				else if(token[0] == TableConstants.AssemblyRef)
 				{
 					assemblyRefs[(int) token[1] - 1].addAssemblyRefAttribute(ca);
 				}
-				else if(token[0] == tc.File)
+				else if(token[0] == TableConstants.File)
 				{
 					fileReferences[(int) token[1] - 1].addFileAttribute(ca);
 				}
-				else if(token[0] == tc.ExportedType)
+				else if(token[0] == TableConstants.ExportedType)
 				{
 					exportedTypes[(int) token[1] - 1].addExportedTypeAttribute(ca);
 				}
-				else if(token[0] == tc.ManifestResource)
+				else if(token[0] == TableConstants.ManifestResource)
 				{
 					mresources[(int) token[1] - 1].addManifestResourceAttribute(ca);
 				}
@@ -1563,7 +1578,7 @@ public class ClassParser
 		}
 	}
 
-	private void buildVTableFixups() throws java.io.IOException
+	private void buildVTableFixups() throws IOException
 	{
 		long VirtualAddress = pe_module.cliHeader.VTableFixups.VirtualAddress;
 		long Size = pe_module.cliHeader.VTableFixups.Size;

@@ -19,6 +19,11 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.PropertyAttributes;
+import edu.arizona.cs.mbel.signature.PropertySignature;
+
 /**
  * This class represents a .NET property. Properties have a name and property signature,
  * as well as references to their getter and setter methods. A Property may optionally have
@@ -26,17 +31,17 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class Property implements edu.arizona.cs.mbel.signature.PropertyAttributes
+public class Property implements PropertyAttributes
 {
 	private long PropertyRID = -1L;
 
 	private int Flags;
 	private String Name;
-	private edu.arizona.cs.mbel.signature.PropertySignature signature;
+	private PropertySignature signature;
 	private Method getter, setter;
 	private byte[] defaultValue;
 
-	private java.util.Vector propertyAttributes;
+	private Vector propertyAttributes;
 
 	/**
 	 * Makes a new Property with the given name, flags, and signature
@@ -45,13 +50,13 @@ public class Property implements edu.arizona.cs.mbel.signature.PropertyAttribute
 	 * @param flags a bit vector of flags (defined in PropertyAttributes)
 	 * @param sig   the property signature for this property
 	 */
-	public Property(String name, int flags, edu.arizona.cs.mbel.signature.PropertySignature sig)
+	public Property(String name, int flags, PropertySignature sig)
 	{
 		Name = name;
 		Flags = flags;
 		signature = sig;
 
-		propertyAttributes = new java.util.Vector(10);
+		propertyAttributes = new Vector(10);
 	}
 
 	/**
@@ -203,7 +208,7 @@ public class Property implements edu.arizona.cs.mbel.signature.PropertyAttribute
 	/**
 	 * Returns the property signature for this property
 	 */
-	public edu.arizona.cs.mbel.signature.PropertySignature getSignature()
+	public PropertySignature getSignature()
 	{
 		return signature;
 	}
@@ -211,7 +216,7 @@ public class Property implements edu.arizona.cs.mbel.signature.PropertyAttribute
 	/**
 	 * Sets the property signature for this property
 	 */
-	public void setSignature(edu.arizona.cs.mbel.signature.PropertySignature sig)
+	public void setSignature(PropertySignature sig)
 	{
 		signature = sig;
 	}

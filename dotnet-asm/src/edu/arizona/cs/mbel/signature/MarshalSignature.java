@@ -20,6 +20,9 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+
 /**
  * This class describes .NET field marshalling information
  *
@@ -90,7 +93,7 @@ public class MarshalSignature extends Signature implements MarshalSignatureConst
 	 * @param buffer the buffer to read from
 	 * @return a MarshalSignature representing the given binary blob, or null if there was a parse error
 	 */
-	public static MarshalSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public static MarshalSignature parse(ByteBuffer buffer)
 	{
 		MarshalSignature blob = new MarshalSignature();
 
@@ -183,7 +186,7 @@ public class MarshalSignature extends Signature implements MarshalSignatureConst
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		if(isArray())
 		{

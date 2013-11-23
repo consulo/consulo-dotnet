@@ -19,6 +19,11 @@ package edu.arizona.cs.mbel.parse;
  */
 
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class parses the PE header of a PE/COFF file
  *
@@ -133,7 +138,7 @@ public class PE_Header
 	/**
 	 * Parses a PE_Header from an input stream
 	 */
-	public PE_Header(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException, MSILParseException
+	public PE_Header(MSILInputStream in) throws IOException, MSILParseException
 	{
 		Magic = in.readWORD();
 		MajorLinkerVersion = in.readBYTE();
@@ -218,7 +223,7 @@ public class PE_Header
 	/**
 	 * Writes the PE_Header out to a buffer
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		buffer.putWORD(Magic);
 		buffer.put(MajorLinkerVersion);

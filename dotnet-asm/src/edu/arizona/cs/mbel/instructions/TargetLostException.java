@@ -20,13 +20,15 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.lang.Exception;
+
 /**
  * Thrown when an Instructionhandle is removed from an InstructionList,
  * but the list still has other handles that target it.
  *
  * @author Michael Stepp
  */
-public final class TargetLostException extends java.lang.Exception
+public final class TargetLostException extends Exception
 {
 	private InstructionHandle[] handles;
 

@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Addition.<br>
  * Stack transition:<br>
@@ -42,7 +46,7 @@ public class ADD extends Instruction
 		return "add";
 	}
 
-	public ADD(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public ADD(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

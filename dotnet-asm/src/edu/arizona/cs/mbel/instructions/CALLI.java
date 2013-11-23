@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+import edu.arizona.cs.mbel.signature.MethodSignature;
+
 /**
  * Indirect method call. Calls method on stack with given signature.<br>
  * Stack transition:<br>
@@ -31,14 +38,14 @@ public class CALLI extends TailPrefixInstruction
 	// CALLI callsitedescr
 	public static final int CALLI = 0x29;
 	protected static final int OPCODE_LIST[] = {CALLI};
-	private edu.arizona.cs.mbel.signature.MethodSignature signature;
+	private MethodSignature signature;
 
 	/**
 	 * Makes a new CALLI object with the given method callsite signature (with no tail prefix)
 	 *
 	 * @param sig the method callsite signature
 	 */
-	public CALLI(edu.arizona.cs.mbel.signature.MethodSignature sig) throws InstructionInitException
+	public CALLI(MethodSignature sig) throws InstructionInitException
 	{
 		this(false, sig);
 	}
@@ -49,7 +56,7 @@ public class CALLI extends TailPrefixInstruction
 	 * @param has true iff this CALLI has a tail prefix
 	 * @param sig the method callsite signature
 	 */
-	public CALLI(boolean has, edu.arizona.cs.mbel.signature.MethodSignature sig) throws InstructionInitException
+	public CALLI(boolean has, MethodSignature sig) throws InstructionInitException
 	{
 		super(has, CALLI, OPCODE_LIST);
 		signature = sig;
@@ -58,7 +65,7 @@ public class CALLI extends TailPrefixInstruction
 	/**
 	 * Returns the method callsite signature for this CALLI
 	 */
-	public edu.arizona.cs.mbel.signature.MethodSignature getMethodSignature()
+	public MethodSignature getMethodSignature()
 	{
 		return signature;
 	}
@@ -73,14 +80,14 @@ public class CALLI extends TailPrefixInstruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getStandAloneSigToken(signature);
 		buffer.putTOKEN(token);
 	}
 
-	public CALLI(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public CALLI(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long callsiteDescriptor = parse.getMSILInputStream().readTOKEN();

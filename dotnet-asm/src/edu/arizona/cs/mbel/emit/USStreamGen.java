@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.emit;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+
 /**
  * This is used to construct a #US stream from a Module. Strings are passed to
  * addUserString and are added to this stream, and a token is returned. The only
@@ -105,9 +107,9 @@ class USStreamGen
 
 		grow(toadd.length);
 		long result = length;
-		for(int i = 0; i < toadd.length; i++)
+		for(byte aToadd : toadd)
 		{
-			data[(int) (length / SIZE)][(int) (length % SIZE)] = toadd[i];
+			data[(int) (length / SIZE)][(int) (length % SIZE)] = aToadd;
 			length++;
 		}
 		return result;
@@ -124,7 +126,7 @@ class USStreamGen
 	/**
 	 * Writes this #US stream to a buffer (should write getLength() bytes)
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		long len = length;
 		int i = 0;

@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.AssemblyFlags;
+
 /**
  * This class is simply a container for all the fields found in an AssemblyRef metadata table.
  * It is used by AssemblyTypeRef and AssemblyManifestResource, and directly maps to its own
@@ -26,7 +30,7 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class AssemblyRefInfo implements edu.arizona.cs.mbel.signature.AssemblyFlags, edu.arizona.cs.mbel.signature.Culture
+public class AssemblyRefInfo implements AssemblyFlags, edu.arizona.cs.mbel.signature.Culture
 {
 	/**
 	 * A pre-made assembly ref for mscorlib.dll, since it will be used often
@@ -70,7 +74,7 @@ public class AssemblyRefInfo implements edu.arizona.cs.mbel.signature.AssemblyFl
 	private String Name;
 	private String Culture;
 	private byte[] HashValue;        // blob
-	private java.util.Vector assemblyRefAttributes;
+	private Vector assemblyRefAttributes;
 
 	/**
 	 * Makes an AssemblyRefInfo with the given information
@@ -96,7 +100,7 @@ public class AssemblyRefInfo implements edu.arizona.cs.mbel.signature.AssemblyFl
 		Culture = cult;
 		HashValue = hash;
 
-		assemblyRefAttributes = new java.util.Vector(10);
+		assemblyRefAttributes = new Vector(10);
 	}
 
 	/**

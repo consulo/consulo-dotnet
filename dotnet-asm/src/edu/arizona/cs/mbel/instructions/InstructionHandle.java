@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.util.Vector;
+
 /**
  * A doubly-linked-list wrapper around an instruction. Handles also hold the byte offset
  * position of the instruction they carry, within its instruction list. Branch instructions
@@ -28,7 +30,7 @@ package edu.arizona.cs.mbel.instructions;
  */
 public class InstructionHandle
 {
-	private java.util.Vector targeters;
+	private Vector targeters;
 	private Instruction instruction;
 	protected InstructionHandle next, prev;
 	protected int position;
@@ -41,7 +43,7 @@ public class InstructionHandle
 		instruction = instr;
 		next = prev = null;
 		position = -1;
-		targeters = new java.util.Vector(10);
+		targeters = new Vector(10);
 	}
 
 	/**
@@ -94,9 +96,9 @@ public class InstructionHandle
 		{
 			return;
 		}
-		for(int i = 0; i < targeters.size(); i++)
+		for(Object targeter : targeters)
 		{
-			if(targeters.get(i) == tar)
+			if(targeter == tar)
 			{
 				return;
 			}
@@ -118,9 +120,9 @@ public class InstructionHandle
 	 */
 	public void removeAllTargeters()
 	{
-		for(int i = 0; i < targeters.size(); i++)
+		for(Object targeter : targeters)
 		{
-			InstructionTargeter tar = (InstructionTargeter) targeters.get(i);
+			InstructionTargeter tar = (InstructionTargeter) targeter;
 			tar.updateTarget(this, null);
 		}
 		targeters.removeAllElements();

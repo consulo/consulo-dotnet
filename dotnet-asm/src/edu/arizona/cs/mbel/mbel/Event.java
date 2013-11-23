@@ -19,13 +19,17 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.EventAttributes;
+
 /**
  * Represents a .NET event. Events may have references to their
  * add, remove, and fire methods, and also their handler type.
  *
  * @author Michael Stepp
  */
-public class Event implements edu.arizona.cs.mbel.signature.EventAttributes
+public class Event implements EventAttributes
 {
 	private long EventRID = -1L;
 
@@ -34,7 +38,7 @@ public class Event implements edu.arizona.cs.mbel.signature.EventAttributes
 	private TypeRef EventType; // handler type
 	private Method addOn, removeOn, fire;
 
-	private java.util.Vector eventAttributes;
+	private Vector eventAttributes;
 
 	/**
 	 * Makes a new Event with the given name, flags, and handler type
@@ -49,7 +53,7 @@ public class Event implements edu.arizona.cs.mbel.signature.EventAttributes
 		EventFlags = flags;
 		EventType = handler;
 
-		eventAttributes = new java.util.Vector(10);
+		eventAttributes = new Vector(10);
 	}
 
 	/**

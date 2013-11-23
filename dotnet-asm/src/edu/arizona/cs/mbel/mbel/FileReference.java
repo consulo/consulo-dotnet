@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.FileAttributes;
+
 /**
  * This class represents a File reference, and is analogous to a File metadata table.
  * Modules use these to refer to other modules in the same assembly, as well as
@@ -26,7 +30,7 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class FileReference implements edu.arizona.cs.mbel.signature.FileAttributes
+public class FileReference implements FileAttributes
 {
 	private long FileRID = -1L;
 
@@ -34,7 +38,7 @@ public class FileReference implements edu.arizona.cs.mbel.signature.FileAttribut
 	private String Name;          // filename, no path
 	private byte[] HashValue;     // blob (cannot be null)
 
-	private java.util.Vector fileAttributes;
+	private Vector fileAttributes;
 
 	/**
 	 * Makes a FileReference with the given flags, filename, and hash value
@@ -49,7 +53,7 @@ public class FileReference implements edu.arizona.cs.mbel.signature.FileAttribut
 		Name = filename;
 		HashValue = hash;
 
-		fileAttributes = new java.util.Vector(10);
+		fileAttributes = new Vector(10);
 	}
 
 	/**

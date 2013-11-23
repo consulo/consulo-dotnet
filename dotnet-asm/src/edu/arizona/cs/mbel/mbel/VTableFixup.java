@@ -19,6 +19,11 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.metadata.TableConstants;
+
 /**
  * This class holds the VTable fixups for a module. VTable fixups are only needed by native code,
  * and since MBEL is not designed to deal with native code (or rather, specifically designed NOT to
@@ -39,20 +44,20 @@ public class VTableFixup
 
 	private long RVA;
 	private int Type;                // 2 bytes (flags)
-	private edu.arizona.cs.mbel.mbel.Method[] fixups; // Methods
+	private Method[] fixups; // Methods
 
 	/**
 	 * Parses a VTableFixups object from a ClassParser
 	 */
-	protected VTableFixup(ClassParser parser) throws java.io.IOException
+	protected VTableFixup(ModuleParser parser) throws IOException
 	{
-		edu.arizona.cs.mbel.MSILInputStream in = parser.getMSILInputStream();
+		MSILInputStream in = parser.getMSILInputStream();
 
 		RVA = in.readDWORD();
 		int Count = in.readWORD();
 		Type = in.readWORD();
 
-		fixups = new edu.arizona.cs.mbel.mbel.Method[Count];
+		fixups = new Method[Count];
 
 		if((Type & COR_VTABLE_32BIT) != 0)
 		{
@@ -123,9 +128,9 @@ public class VTableFixup
 		{
 			byte[] data = new byte[fixups.length * 8];
 			int index = 0;
-			for(int i = 0; i < fixups.length; i++)
+			for(Method fixup : fixups)
 			{
-				long token = fixups[i].getMethodRID() | ((long) (edu.arizona.cs.mbel.metadata.TableConstants.Method)) << 24;
+				long token = fixup.getMethodRID() | ((long) (TableConstants.Method)) << 24;
 				token &= 0xFFFFFFFFL;
 				data[index + 0] = (byte) (token & 0xFF);
 				data[index + 1] = (byte) ((token >> 8) & 0xFF);
@@ -143,9 +148,9 @@ public class VTableFixup
 		{
 			byte[] data = new byte[fixups.length * 4];
 			int index = 0;
-			for(int i = 0; i < fixups.length; i++)
+			for(Method fixup : fixups)
 			{
-				long token = fixups[i].getMethodRID() | ((long) (edu.arizona.cs.mbel.metadata.TableConstants.Method)) << 24;
+				long token = fixup.getMethodRID() | ((long) (TableConstants.Method)) << 24;
 				token &= 0xFFFFFFFFL;
 				data[index + 0] = (byte) (token & 0xFF);
 				data[index + 1] = (byte) ((token >> 8) & 0xFF);

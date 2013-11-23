@@ -20,6 +20,12 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+import edu.arizona.cs.mbel.metadata.TableConstants;
+
 /**
  * This class describes a class type signature
  *
@@ -27,14 +33,14 @@ package edu.arizona.cs.mbel.signature;
  */
 public class ClassTypeSignature extends TypeSignature
 {
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classType;
+	private AbstractTypeReference classType;
 
 	/**
 	 * Makes a class signature representing the given type
 	 *
 	 * @param clazz an mbel reference to the type this signature describes
 	 */
-	public ClassTypeSignature(edu.arizona.cs.mbel.mbel.AbstractTypeReference clazz) throws SignatureException
+	public ClassTypeSignature(AbstractTypeReference clazz) throws SignatureException
 	{
 		this();
 		if(clazz == null)
@@ -56,7 +62,7 @@ public class ClassTypeSignature extends TypeSignature
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return a ClassTypeSignature representing the given blob, or null if there was a parse error
 	 */
-	public static TypeSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static TypeSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		ClassTypeSignature blob = new ClassTypeSignature();
 		byte data = buffer.get();
@@ -66,15 +72,15 @@ public class ClassTypeSignature extends TypeSignature
 		}
 
 		int token[] = parseTypeDefOrRefEncoded(buffer);
-		if(token[0] == edu.arizona.cs.mbel.metadata.TableConstants.TypeDef)
+		if(token[0] == TableConstants.TypeDef)
 		{
 			blob.classType = group.getTypeDefs()[token[1] - 1];
 		}
-		else if(token[0] == edu.arizona.cs.mbel.metadata.TableConstants.TypeRef)
+		else if(token[0] == TableConstants.TypeRef)
 		{
 			blob.classType = group.getTypeRefs()[token[1] - 1];
 		}
-		else if(token[0] == edu.arizona.cs.mbel.metadata.TableConstants.TypeSpec)
+		else if(token[0] == TableConstants.TypeSpec)
 		{
 			blob.classType = group.getTypeSpecs()[token[1] - 1];
 		}
@@ -88,12 +94,12 @@ public class ClassTypeSignature extends TypeSignature
 	/**
 	 * Returns a reference to the type this type signature describes
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getClassType()
+	public AbstractTypeReference getClassType()
 	{
 		return classType;
 	}
 
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(ELEMENT_TYPE_CLASS);
 		long token = emitter.getTypeToken(classType);

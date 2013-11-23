@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.FieldRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Load static field (value).<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class LDSFLD extends VolatilePrefixInstruction
 {
 	public static final int LDSFLD = 0x7E;
 	protected static final int OPCODE_LIST[] = {LDSFLD};
-	private edu.arizona.cs.mbel.mbel.FieldRef field;
+	private FieldRef field;
 
 	/**
 	 * Makes a LDSFLD object for the given static field with no volatile prefix
 	 *
 	 * @param ref a reference to a static field
 	 */
-	public LDSFLD(edu.arizona.cs.mbel.mbel.FieldRef ref) throws InstructionInitException
+	public LDSFLD(FieldRef ref) throws InstructionInitException
 	{
 		super(false, LDSFLD, OPCODE_LIST);
 		field = ref;
@@ -49,7 +56,7 @@ public class LDSFLD extends VolatilePrefixInstruction
 	 * @param hasV true iff this LDSFLD has a volatile prefix
 	 * @param ref  a reference to a static field
 	 */
-	public LDSFLD(boolean hasV, edu.arizona.cs.mbel.mbel.FieldRef ref) throws InstructionInitException
+	public LDSFLD(boolean hasV, FieldRef ref) throws InstructionInitException
 	{
 		super(hasV, LDSFLD, OPCODE_LIST);
 		field = ref;
@@ -58,7 +65,7 @@ public class LDSFLD extends VolatilePrefixInstruction
 	/**
 	 * Returns a reference to the static field for this instruction
 	 */
-	public edu.arizona.cs.mbel.mbel.FieldRef getField()
+	public FieldRef getField()
 	{
 		return field;
 	}
@@ -73,14 +80,14 @@ public class LDSFLD extends VolatilePrefixInstruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getFieldRefToken(field);
 		buffer.putTOKEN(token);
 	}
 
-	public LDSFLD(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public LDSFLD(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(false, opcode, OPCODE_LIST);
 		long fieldToken = parse.getMSILInputStream().readTOKEN();

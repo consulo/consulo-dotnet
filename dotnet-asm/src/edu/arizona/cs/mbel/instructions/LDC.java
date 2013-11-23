@@ -19,6 +19,12 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Load constant.<br>
  * Stack transition:<br>
@@ -211,7 +217,7 @@ public class LDC extends Instruction implements ShortFormInstruction
 		}
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		if(getOpcode() == LDC_I4)
@@ -236,7 +242,7 @@ public class LDC extends Instruction implements ShortFormInstruction
 		}
 	}
 
-	public LDC(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public LDC(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		if(opcode == LDC_I4)

@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
 /**
  * This class encapsulates the implementation of an interface by a TypeDef.
  * A TypeDef will have a vector of these, one for each interface it implements.
@@ -30,7 +32,7 @@ package edu.arizona.cs.mbel.mbel;
 public class InterfaceImplementation
 {
 	private TypeRef interfaceType;
-	private java.util.Vector interfaceImplAttributes;
+	private Vector interfaceImplAttributes;
 
 	/**
 	 * Makes a new InterfaceImplementation object for the given interface
@@ -40,7 +42,7 @@ public class InterfaceImplementation
 	public InterfaceImplementation(TypeRef ref)
 	{
 		interfaceType = ref;
-		interfaceImplAttributes = new java.util.Vector(10);
+		interfaceImplAttributes = new Vector(10);
 	}
 
 	/**

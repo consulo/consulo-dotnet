@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Is instance of type check.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class ISINST extends Instruction
 {
 	public static final int ISINST = 0x75;
 	protected static final int OPCODE_LIST[] = {ISINST};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classRef;
+	private AbstractTypeReference classRef;
 
 	/**
 	 * Makes a ISINST object for the given type reference
 	 *
 	 * @param ref the type to check against the object
 	 */
-	public ISINST(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public ISINST(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(ISINST, OPCODE_LIST);
 		classRef = ref;
@@ -46,7 +53,7 @@ public class ISINST extends Instruction
 	/**
 	 * Returns the type reference for this instruction
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getType()
+	public AbstractTypeReference getType()
 	{
 		return classRef;
 	}
@@ -61,14 +68,14 @@ public class ISINST extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(classRef);
 		buffer.putTOKEN(token);
 	}
 
-	public ISINST(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public ISINST(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long classToken = parse.getMSILInputStream().readTOKEN();

@@ -20,6 +20,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.FieldRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Store static field.<br>
  * Stack transition:<br>
@@ -31,12 +38,12 @@ public class STSFLD extends VolatilePrefixInstruction
 {
 	public static final int STSFLD = 0x80;
 	protected static final int OPCODE_LIST[] = {STSFLD};
-	private edu.arizona.cs.mbel.mbel.FieldRef field;
+	private FieldRef field;
 
 	/**
 	 * Makes a STSFLD object for the given Field reference with no volatile prefix.
 	 */
-	public STSFLD(edu.arizona.cs.mbel.mbel.FieldRef ref) throws InstructionInitException
+	public STSFLD(FieldRef ref) throws InstructionInitException
 	{
 		super(false, STSFLD, OPCODE_LIST);
 		field = ref;
@@ -47,7 +54,7 @@ public class STSFLD extends VolatilePrefixInstruction
 	 *
 	 * @param hasV true iff this STSFLD has a volatile prefix
 	 */
-	public STSFLD(boolean hasV, edu.arizona.cs.mbel.mbel.FieldRef ref) throws InstructionInitException
+	public STSFLD(boolean hasV, FieldRef ref) throws InstructionInitException
 	{
 		super(hasV, STSFLD, OPCODE_LIST);
 		field = ref;
@@ -56,7 +63,7 @@ public class STSFLD extends VolatilePrefixInstruction
 	/**
 	 * Returns the FieldRef to which this STSFLD refers
 	 */
-	public edu.arizona.cs.mbel.mbel.FieldRef getField()
+	public FieldRef getField()
 	{
 		return field;
 	}
@@ -71,14 +78,14 @@ public class STSFLD extends VolatilePrefixInstruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getFieldRefToken(field);
 		buffer.putTOKEN(token);
 	}
 
-	public STSFLD(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public STSFLD(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(false, opcode, OPCODE_LIST);
 		long fieldToken = parse.getMSILInputStream().readTOKEN();

@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.metadata;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class stores the #GUID metadata stream.
  * A GUID is a 128-bit value (Globally Unique IDentifier).
@@ -39,7 +43,7 @@ public class GUIDStream
 	 * @param in   the input stream to read from
 	 * @param size the size in bytes of the #GUID stream
 	 */
-	public GUIDStream(edu.arizona.cs.mbel.MSILInputStream in, long size) throws java.io.IOException
+	public GUIDStream(MSILInputStream in, long size) throws IOException
 	{
 		guids = new byte[(int) (size >> 4) + 1][16];
 		num_guids = 0;
@@ -80,9 +84,9 @@ public class GUIDStream
 		};
 		String result = "0x";
 		int temp;
-		for(int i = 0; i < guid.length; i++)
+		for(byte aGuid : guid)
 		{
-			temp = guid[i] & 0xFF;
+			temp = aGuid & 0xFF;
 			result += hex[(temp >> 4) & 0xF] + hex[temp & 0xF];
 		}
 		if(guid.length == 0)

@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Calls a virtual method.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class CALLVIRT extends TailPrefixInstruction
 {
 	public static final int CALLVIRT = 0x6F;
 	protected static final int OPCODE_LIST[] = {CALLVIRT};
-	private edu.arizona.cs.mbel.mbel.MethodDefOrRef method;
+	private MethodDefOrRef method;
 
 	/**
 	 * Makes a CALLVIRT object for the given method reference (with no tail prefix)
 	 *
 	 * @param ref the method reference
 	 */
-	public CALLVIRT(edu.arizona.cs.mbel.mbel.MethodDefOrRef ref) throws InstructionInitException
+	public CALLVIRT(MethodDefOrRef ref) throws InstructionInitException
 	{
 		this(false, ref);
 	}
@@ -48,7 +55,7 @@ public class CALLVIRT extends TailPrefixInstruction
 	 * @param has true iff this CALLVIRT has a tail prefix
 	 * @param ref the method reference
 	 */
-	public CALLVIRT(boolean has, edu.arizona.cs.mbel.mbel.MethodDefOrRef ref) throws InstructionInitException
+	public CALLVIRT(boolean has, MethodDefOrRef ref) throws InstructionInitException
 	{
 		super(has, CALLVIRT, OPCODE_LIST);
 		method = ref;
@@ -57,7 +64,7 @@ public class CALLVIRT extends TailPrefixInstruction
 	/**
 	 * Returns the method reference for this instruction
 	 */
-	public edu.arizona.cs.mbel.mbel.MethodDefOrRef getMethod()
+	public MethodDefOrRef getMethod()
 	{
 		return method;
 	}
@@ -72,14 +79,14 @@ public class CALLVIRT extends TailPrefixInstruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getMethodRefToken(method);
 		buffer.putTOKEN(token);
 	}
 
-	public CALLVIRT(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public CALLVIRT(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long methodToken = parse.getMSILInputStream().readTOKEN();

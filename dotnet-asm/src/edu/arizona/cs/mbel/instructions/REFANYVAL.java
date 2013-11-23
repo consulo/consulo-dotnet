@@ -20,6 +20,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Reference any value. Loads the address stored in a typed reference.<br>
  * Stack transition:<br>
@@ -31,14 +38,14 @@ public class REFANYVAL extends Instruction
 {
 	public static final int REFANYVAL = 0xC2;
 	protected static final int OPCODE_LIST[] = {REFANYVAL};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classRef;
+	private AbstractTypeReference classRef;
 
 	/**
 	 * Makes a REFANYVAL object for the given type reference
 	 *
 	 * @param ref the type reference
 	 */
-	public REFANYVAL(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public REFANYVAL(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(REFANYVAL, OPCODE_LIST);
 		classRef = ref;
@@ -47,7 +54,7 @@ public class REFANYVAL extends Instruction
 	/**
 	 * Returns the type reference for this instruction
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getType()
+	public AbstractTypeReference getType()
 	{
 		return classRef;
 	}
@@ -62,14 +69,14 @@ public class REFANYVAL extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(classRef);
 		buffer.putTOKEN(token);
 	}
 
-	public REFANYVAL(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public REFANYVAL(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long typeToken = parse.getMSILInputStream().readTOKEN();

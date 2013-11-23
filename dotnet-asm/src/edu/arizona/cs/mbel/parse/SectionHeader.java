@@ -19,6 +19,11 @@ package edu.arizona.cs.mbel.parse;
  */
 
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This is the structure used to parse a PE/COFF Section Header.
  * Sections must appear in ascending order of virtual address,
@@ -76,7 +81,7 @@ public class SectionHeader
 	/**
 	 * Parses a Section Header from an input stream
 	 */
-	protected SectionHeader(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException
+	protected SectionHeader(MSILInputStream in) throws IOException
 	{
 		startFP = in.getCurrent();
 
@@ -113,7 +118,7 @@ public class SectionHeader
 	/**
 	 * Writes this section header out to a buffer
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		buffer.put(Name);
 		buffer.putDWORD(VirtualSize);

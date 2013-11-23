@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Boxes a ValueType.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class BOX extends Instruction
 {
 	public static final int BOX = 0x8C;
 	protected static final int OPCODE_LIST[] = {BOX};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference valueType;
+	private AbstractTypeReference valueType;
 
 	/**
 	 * Makes a BOX object for the given ValueType
 	 *
 	 * @param ref the type reference of the ValueType
 	 */
-	public BOX(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public BOX(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(BOX, OPCODE_LIST);
 		valueType = ref;
@@ -46,7 +53,7 @@ public class BOX extends Instruction
 	/**
 	 * Returns the tyep reference for the ValueType
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getValueType()
+	public AbstractTypeReference getValueType()
 	{
 		return valueType;
 	}
@@ -61,14 +68,14 @@ public class BOX extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(valueType);
 		buffer.putTOKEN(token);
 	}
 
-	public BOX(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public BOX(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long valueTypeToken = parse.getMSILInputStream().readTOKEN();

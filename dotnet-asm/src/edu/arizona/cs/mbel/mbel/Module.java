@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.parse.PEModule;
+
 /**
  * This class represents a .NET Module. The Module is the root of the tree as far as MBEL objects are concerned.
  * Modules contain the list of TypeDefs defined in this Module, and this list must be kept up to date by the user
@@ -32,7 +36,7 @@ package edu.arizona.cs.mbel.mbel;
  */
 public class Module
 {
-	private edu.arizona.cs.mbel.parse.PEModule pe_module;
+	private PEModule pe_module;
 	//////////////////////////////////////////////////////
 	private int Generation;
 	private String Name;
@@ -40,14 +44,14 @@ public class Module
 	private byte[] EncID;               // GUID
 	private byte[] EncBaseID;           // GUID
 	//////////////////////////////////////////////////////
-	private java.util.Vector typeDefs;
-	private java.util.Vector fileReferences;
-	private java.util.Vector manifestResources;
-	private java.util.Vector vtableFixups;
+	private Vector typeDefs;
+	private Vector fileReferences;
+	private Vector manifestResources;
+	private Vector vtableFixups;
 	private AssemblyInfo assemblyInfo;
 	private EntryPoint entryPoint;
 
-	private java.util.Vector moduleAttributes;
+	private Vector moduleAttributes;
 
 	/**
 	 * Constructs a new Module "from scratch".
@@ -60,17 +64,17 @@ public class Module
 	 */
 	public Module(String name, byte[] mvid, int sub)
 	{
-		pe_module = new edu.arizona.cs.mbel.parse.PEModule(sub);
+		pe_module = new PEModule(sub);
 		Generation = 0;
 		Name = name;
 		Mvid = mvid;
 		EncID = new byte[0];
 		EncBaseID = new byte[0];
-		typeDefs = new java.util.Vector(10);
-		fileReferences = new java.util.Vector(10);
-		manifestResources = new java.util.Vector(10);
-		vtableFixups = new java.util.Vector(10);
-		moduleAttributes = new java.util.Vector(10);
+		typeDefs = new Vector(10);
+		fileReferences = new Vector(10);
+		manifestResources = new Vector(10);
+		vtableFixups = new Vector(10);
+		moduleAttributes = new Vector(10);
 
 		assemblyInfo = null;
 		entryPoint = null;
@@ -87,18 +91,18 @@ public class Module
 	 * @param pe   the PE/COFF file header structure of the file this Module was read from.
 	 * @param name the logical name of this Module (usually == the filename)
 	 */
-	protected Module(edu.arizona.cs.mbel.parse.PEModule pe, String name)
+	protected Module(PEModule pe, String name)
 	{
 		pe_module = pe;
 		Name = name;
-		typeDefs = new java.util.Vector(20);
-		fileReferences = new java.util.Vector(10);
-		manifestResources = new java.util.Vector(5);
-		vtableFixups = new java.util.Vector(10);
+		typeDefs = new Vector(20);
+		fileReferences = new Vector(10);
+		manifestResources = new Vector(5);
+		vtableFixups = new Vector(10);
 		assemblyInfo = null;
 		entryPoint = null;
 
-		moduleAttributes = new java.util.Vector(10);
+		moduleAttributes = new Vector(10);
 	}
 
 	/**
@@ -144,7 +148,7 @@ public class Module
 	/**
 	 * Returns the PEModule header data from the input file of this Module (used by emitter only)
 	 */
-	public edu.arizona.cs.mbel.parse.PEModule getPEModule()
+	public PEModule getPEModule()
 	{
 		return pe_module;
 	}
@@ -329,9 +333,9 @@ public class Module
 	 */
 	public TypeDef getTypeDefByName(String ns, String name)
 	{
-		for(int i = 0; i < typeDefs.size(); i++)
+		for(Object typeDef : typeDefs)
 		{
-			TypeDef def = (TypeDef) (typeDefs.get(i));
+			TypeDef def = (TypeDef) typeDef;
 			if(ns.equals(def.getNamespace()) && name.equals(def.getName()))
 			{
 				return def;

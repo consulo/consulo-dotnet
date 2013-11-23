@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.FieldRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Load static field address.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class LDSFLDA extends Instruction
 {
 	public static final int LDSFLDA = 0x7F;
 	protected static final int OPCODE_LIST[] = {LDSFLDA};
-	private edu.arizona.cs.mbel.mbel.FieldRef field;
+	private FieldRef field;
 
 	/**
 	 * Makes a LDSFLDA object for the given static field.
 	 *
 	 * @param ref a reference to a static field
 	 */
-	public LDSFLDA(edu.arizona.cs.mbel.mbel.FieldRef ref) throws InstructionInitException
+	public LDSFLDA(FieldRef ref) throws InstructionInitException
 	{
 		super(LDSFLDA, OPCODE_LIST);
 		field = ref;
@@ -46,7 +53,7 @@ public class LDSFLDA extends Instruction
 	/**
 	 * Returns a reference to the static field for this instruction
 	 */
-	public edu.arizona.cs.mbel.mbel.FieldRef getField()
+	public FieldRef getField()
 	{
 		return field;
 	}
@@ -61,14 +68,14 @@ public class LDSFLDA extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getFieldRefToken(field);
 		buffer.putTOKEN(token);
 	}
 
-	public LDSFLDA(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public LDSFLDA(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long fieldToken = parse.getMSILInputStream().readTOKEN();

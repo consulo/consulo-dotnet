@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.parse;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class holds the data from the COFF Header in a PE/COFF file.
  * The COFF header comes right after the PE signature, and right before the PE header.
@@ -112,7 +116,7 @@ public class COFF_Header
 	/**
 	 * Parses a COFF_Header from an input stream
 	 */
-	public COFF_Header(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException, MSILParseException
+	public COFF_Header(MSILInputStream in) throws IOException, MSILParseException
 	{
 		Machine = in.readWORD();
 		NumberOfSections = in.readWORD();

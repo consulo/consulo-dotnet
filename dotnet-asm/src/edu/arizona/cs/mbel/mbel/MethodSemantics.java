@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import edu.arizona.cs.mbel.signature.MethodSemanticsAttributes;
+
 /**
  * This class represents a set of special semantics for a method. These special
  * semantics can be property getters or setters, or event methods. While a MethodSemantics
@@ -27,7 +29,7 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class MethodSemantics implements edu.arizona.cs.mbel.signature.MethodSemanticsAttributes
+public class MethodSemantics implements MethodSemanticsAttributes
 {
 	// Setter, Getter, Other, AddOn, RemoveOn, Fire
 	private int Semantics;  // 2 bytes

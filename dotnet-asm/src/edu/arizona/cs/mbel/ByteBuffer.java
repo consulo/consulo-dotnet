@@ -281,9 +281,9 @@ public class ByteBuffer
 			buffer = newbuf;
 		}
 
-		for(int i = 0; i < data.length; i++)
+		for(byte aData : data)
 		{
-			buffer[position / SIZE][position % SIZE] = data[i];
+			buffer[position / SIZE][position % SIZE] = aData;
 			last = Math.max(last, (position++));
 		}
 	}

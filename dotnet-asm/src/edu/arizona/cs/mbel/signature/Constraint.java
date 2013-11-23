@@ -20,6 +20,9 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+
 /**
  * This class decsribes a constraint on a local var.
  * As of right now, the only possible constraint is ELEMENT_TYPE_PINNED,
@@ -45,7 +48,7 @@ public class Constraint extends Signature
 	 * @param buffer the buffer to read from
 	 * @return a Constraint representing the given blob, or null if there was a parse error
 	 */
-	public static Constraint parse(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public static Constraint parse(ByteBuffer buffer)
 	{
 		Constraint blob = new Constraint();
 		blob.elementType = buffer.get();
@@ -69,7 +72,7 @@ public class Constraint extends Signature
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(elementType);
 	}

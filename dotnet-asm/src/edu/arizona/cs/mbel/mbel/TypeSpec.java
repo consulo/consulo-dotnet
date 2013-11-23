@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.TypeSpecSignature;
+
 /**
  * Represents an on-the-fly type specification. TypeSpecs can be arrays,
  * pointers, or function pointer. A TypeSpec is mostly defined by its internal
@@ -29,13 +33,13 @@ package edu.arizona.cs.mbel.mbel;
 public class TypeSpec extends AbstractTypeReference
 {
 	private long TypeSpecRID = -1L;
-	private edu.arizona.cs.mbel.signature.TypeSpecSignature signature;
-	private java.util.Vector typeSpecAttributes;
+	private TypeSpecSignature signature;
+	private Vector typeSpecAttributes;
 
 	/**
 	 * Makes a TypeSpec with the given TypeSpecSignature
 	 */
-	public TypeSpec(edu.arizona.cs.mbel.signature.TypeSpecSignature sig)
+	public TypeSpec(TypeSpecSignature sig)
 	{
 		this();
 		signature = sig;
@@ -44,7 +48,7 @@ public class TypeSpec extends AbstractTypeReference
 	protected TypeSpec()
 	{
 		// donothing constructor
-		typeSpecAttributes = new java.util.Vector(10);
+		typeSpecAttributes = new Vector(10);
 	}
 
 	/**
@@ -105,7 +109,7 @@ public class TypeSpec extends AbstractTypeReference
 	/**
 	 * Returns the TypeSpecSignature for this TypeSpec.
 	 */
-	public edu.arizona.cs.mbel.signature.TypeSpecSignature getSignature()
+	public TypeSpecSignature getSignature()
 	{
 		return signature;
 	}
@@ -113,7 +117,7 @@ public class TypeSpec extends AbstractTypeReference
 	/**
 	 * Sets the TypeSpecSignature for this TypeSpec.
 	 */
-	public void setSignature(edu.arizona.cs.mbel.signature.TypeSpecSignature sig)
+	public void setSignature(TypeSpecSignature sig)
 	{
 		signature = sig;
 	}

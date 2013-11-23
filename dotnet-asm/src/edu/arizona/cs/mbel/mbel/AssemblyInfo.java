@@ -19,6 +19,11 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.AssemblyFlags;
+import edu.arizona.cs.mbel.signature.AssemblyHashAlgorithm;
+
 /**
  * This class contains the extra information that a prime module would have.
  * The Module instance representing the prime module of this assembly will own an AssemblyInfo
@@ -27,7 +32,7 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class AssemblyInfo implements HasSecurity, edu.arizona.cs.mbel.signature.AssemblyHashAlgorithm, edu.arizona.cs.mbel.signature.AssemblyFlags,
+public class AssemblyInfo implements HasSecurity, AssemblyHashAlgorithm, AssemblyFlags,
 		edu.arizona.cs.mbel.signature.Culture
 {
 	private long HashAlgId;
@@ -37,8 +42,8 @@ public class AssemblyInfo implements HasSecurity, edu.arizona.cs.mbel.signature.
 	private String Name;
 	private String Culture;
 	private DeclSecurity security;
-	private java.util.Vector exportedTypes;
-	private java.util.Vector assemblyAttributes;
+	private Vector exportedTypes;
+	private Vector assemblyAttributes;
 
 	/**
 	 * Makes a new AssemblyInfo with the given information
@@ -69,8 +74,8 @@ public class AssemblyInfo implements HasSecurity, edu.arizona.cs.mbel.signature.
 		Name = name;
 		Culture = culture;
 
-		exportedTypes = new java.util.Vector(10);
-		assemblyAttributes = new java.util.Vector(10);
+		exportedTypes = new Vector(10);
+		assemblyAttributes = new Vector(10);
 	}
 
 	/**

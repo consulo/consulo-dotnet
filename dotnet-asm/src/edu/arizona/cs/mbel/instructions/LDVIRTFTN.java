@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Load virtual method pointer.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class LDVIRTFTN extends Instruction
 {
 	public static final int LDVIRTFTN = 0x07FE;
 	protected static final int OPCODE_LIST[] = {LDVIRTFTN};
-	private edu.arizona.cs.mbel.mbel.MethodDefOrRef method;
+	private MethodDefOrRef method;
 
 	/**
 	 * Makes a LDVIRTFTN object for the given method reference.
 	 *
 	 * @param ref the method reference
 	 */
-	public LDVIRTFTN(edu.arizona.cs.mbel.mbel.MethodDefOrRef ref) throws InstructionInitException
+	public LDVIRTFTN(MethodDefOrRef ref) throws InstructionInitException
 	{
 		super(LDVIRTFTN, OPCODE_LIST);
 		method = ref;
@@ -46,7 +53,7 @@ public class LDVIRTFTN extends Instruction
 	/**
 	 * Returns the method reference for this instruction.
 	 */
-	public edu.arizona.cs.mbel.mbel.MethodDefOrRef getMethod()
+	public MethodDefOrRef getMethod()
 	{
 		return method;
 	}
@@ -61,14 +68,14 @@ public class LDVIRTFTN extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getMethodRefToken(method);
 		buffer.putTOKEN(token);
 	}
 
-	public LDVIRTFTN(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public LDVIRTFTN(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long methodToken = parse.getMSILInputStream().readTOKEN();

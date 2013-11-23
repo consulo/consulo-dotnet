@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import edu.arizona.cs.mbel.signature.MethodSignature;
+
 /**
  * Represents a method reference. Method references refer to
  * methods defined in types in other modules/assemblies.
@@ -31,12 +33,12 @@ package edu.arizona.cs.mbel.mbel;
  */
 public class MethodRef extends MethodDefOrRef
 {
-	private edu.arizona.cs.mbel.signature.MethodSignature callsiteSignature;
+	private MethodSignature callsiteSignature;
 
 	/**
 	 * Creates a MethodRef with the given name, parent type, and method callsite signature
 	 */
-	public MethodRef(String name, AbstractTypeReference ref, edu.arizona.cs.mbel.signature.MethodSignature sig)
+	public MethodRef(String name, AbstractTypeReference ref, MethodSignature sig)
 	{
 		super(name, ref);
 		callsiteSignature = sig;
@@ -45,7 +47,7 @@ public class MethodRef extends MethodDefOrRef
 	/**
 	 * Returns the method callsite signature for this method reference
 	 */
-	public edu.arizona.cs.mbel.signature.MethodSignature getCallsiteSignature()
+	public MethodSignature getCallsiteSignature()
 	{
 		return callsiteSignature;
 	}
@@ -53,7 +55,7 @@ public class MethodRef extends MethodDefOrRef
 	/**
 	 * Sets the method callsite signature for this method reference
 	 */
-	public void setCallsiteSignature(edu.arizona.cs.mbel.signature.MethodSignature sig)
+	public void setCallsiteSignature(MethodSignature sig)
 	{
 		callsiteSignature = sig;
 	}

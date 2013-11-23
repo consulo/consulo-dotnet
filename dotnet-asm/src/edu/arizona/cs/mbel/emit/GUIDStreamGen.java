@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.emit;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+
 /**
  * This class is used to construct  #GUID stream from a Module.
  * GUIDs are passed in using addGUID, and a 1-based GUID index is returned.
@@ -120,7 +122,7 @@ class GUIDStreamGen
 	 * Writes out this GUID stream to a buffer.
 	 * Should write getNumGUIDs()*16 bytes.
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		for(int i = 0; i < numguids; i++)
 		{

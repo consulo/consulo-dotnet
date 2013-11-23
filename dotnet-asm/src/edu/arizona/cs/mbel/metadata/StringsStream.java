@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.metadata;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class represents a stores the #Strings metadata heap.
  * Strings in this heap are ASCII, 8-bit, null-terminated strings.
@@ -37,7 +41,7 @@ public class StringsStream
 	 * @param in   the input stream to read from
 	 * @param size the size in bytes of the stream
 	 */
-	public StringsStream(edu.arizona.cs.mbel.MSILInputStream in, long size) throws java.io.IOException
+	public StringsStream(MSILInputStream in, long size) throws IOException
 	{
 		raw_bytes = new byte[(int) size];
 		in.read(raw_bytes);

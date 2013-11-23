@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+
 /**
  * This class represents the description of variables types
  * that are used in the mbel Fields. The primitive types are singletons
@@ -72,7 +76,7 @@ public class TypeSignature extends Signature
 	 * @param group  A TypeGroup for reconciling tokens to TypeDefs, etc.
 	 * @return A TypeSignature or subclass representing the binary blob, or null if there was a parse error
 	 */
-	public static TypeSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static TypeSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		byte data = buffer.peek();
 
@@ -154,7 +158,7 @@ public class TypeSignature extends Signature
 	 *
 	 * @param buffer the buffer into which the signature will be written
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(elementType);
 	}

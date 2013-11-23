@@ -20,6 +20,12 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+
 /**
  * This class describes the signature of a Property
  *
@@ -29,7 +35,7 @@ public class PropertySignature extends Signature implements CallingConvention
 {
 	private byte flags;
 	private TypeSignature type;
-	private java.util.Vector params; // ParameterSignatures
+	private Vector params; // ParameterSignatures
 
 	private PropertySignature()
 	{
@@ -64,18 +70,18 @@ public class PropertySignature extends Signature implements CallingConvention
 		}
 		if(Params == null)
 		{
-			params = new java.util.Vector(10);
+			params = new Vector(10);
 		}
 		else
 		{
-			params = new java.util.Vector(10 + Params.length);
-			for(int i = 0; i < Params.length; i++)
+			params = new Vector(10 + Params.length);
+			for(ParameterSignature Param : Params)
 			{
-				if(Params[i] == null)
+				if(Param == null)
 				{
 					throw new SignatureException("PropertySignature: null parameter given");
 				}
-				params.add(Params[i]);
+				params.add(Param);
 			}
 		}
 	}
@@ -88,7 +94,7 @@ public class PropertySignature extends Signature implements CallingConvention
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return a PropertySignature representing the given blob, or null if there was a parse error
 	 */
-	public static PropertySignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static PropertySignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		PropertySignature blob = new PropertySignature();
 
@@ -107,7 +113,7 @@ public class PropertySignature extends Signature implements CallingConvention
 			return null;
 		}
 
-		blob.params = new java.util.Vector(paramCount + 10);
+		blob.params = new Vector(paramCount + 10);
 		ParameterSignature temp = null;
 		for(int i = 0; i < paramCount; i++)
 		{
@@ -176,14 +182,14 @@ public class PropertySignature extends Signature implements CallingConvention
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(PROPERTY);
 		buffer.put(encodeInteger(params.size()));
 		type.emit(buffer, emitter);
-		for(int i = 0; i < params.size(); i++)
+		for(Object param : params)
 		{
-			((ParameterSignature) params.get(i)).emit(buffer, emitter);
+			((ParameterSignature) param).emit(buffer, emitter);
 		}
 	}
 

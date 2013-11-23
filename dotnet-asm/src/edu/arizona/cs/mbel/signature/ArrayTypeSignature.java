@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+
 /**
  * This class describes an array type
  *
@@ -59,7 +63,7 @@ public class ArrayTypeSignature extends TypeSpecSignature
 	 * @param group  a TyprGroup for reconciling tokens to mbel references
 	 * @return an ArrayTypeSignature representing the given blob, or null if there was a parse error
 	 */
-	public static TypeSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static TypeSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		ArrayTypeSignature blob = new ArrayTypeSignature();
 		byte data = buffer.get();
@@ -103,7 +107,7 @@ public class ArrayTypeSignature extends TypeSpecSignature
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(ELEMENT_TYPE_ARRAY);
 		elementTypeSignature.emit(buffer, emitter);

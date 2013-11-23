@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Subtract without overflow detection.<br>
  * Stack transition:<br>
@@ -42,7 +46,7 @@ public class SUB extends Instruction
 		return "sub";
 	}
 
-	public SUB(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public SUB(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

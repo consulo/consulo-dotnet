@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.mbel.CustomAttribute;
+
 /**
  * This class holds the information needed for a method parameter.
  * Both ParameterSignature and ReturnTypeSignature may containt an
@@ -35,7 +39,7 @@ public class ParameterInfo implements ParamAttributes
 	private String Name;
 	private MarshalSignature fieldMarshal;
 	private byte[] defaultValue;
-	private java.util.Vector paramAttributes;
+	private Vector paramAttributes;
 
 	/**
 	 * Constructs a ParameterInfo object with the given name and flags
@@ -45,7 +49,7 @@ public class ParameterInfo implements ParamAttributes
 	 */
 	public ParameterInfo(String name, int flags)
 	{
-		paramAttributes = new java.util.Vector(10);
+		paramAttributes = new Vector(10);
 		Name = name;
 		Flags = flags;
 	}
@@ -53,7 +57,7 @@ public class ParameterInfo implements ParamAttributes
 	/**
 	 * Adds a CustomAttribute to this ParameterInfo
 	 */
-	public void addParamAttribute(edu.arizona.cs.mbel.mbel.CustomAttribute ca)
+	public void addParamAttribute(CustomAttribute ca)
 	{
 		if(ca != null)
 		{
@@ -64,12 +68,12 @@ public class ParameterInfo implements ParamAttributes
 	/**
 	 * Returns a non-null array of CustomAttributes for this ParameterInfo (Param)
 	 */
-	public edu.arizona.cs.mbel.mbel.CustomAttribute[] getParamAttributes()
+	public CustomAttribute[] getParamAttributes()
 	{
-		edu.arizona.cs.mbel.mbel.CustomAttribute[] cas = new edu.arizona.cs.mbel.mbel.CustomAttribute[paramAttributes.size()];
+		CustomAttribute[] cas = new CustomAttribute[paramAttributes.size()];
 		for(int i = 0; i < cas.length; i++)
 		{
-			cas[i] = (edu.arizona.cs.mbel.mbel.CustomAttribute) paramAttributes.get(i);
+			cas[i] = (CustomAttribute) paramAttributes.get(i);
 		}
 		return cas;
 	}
@@ -77,7 +81,7 @@ public class ParameterInfo implements ParamAttributes
 	/**
 	 * Removes a CustomAttribute from this Param
 	 */
-	public void removeParamAttribute(edu.arizona.cs.mbel.mbel.CustomAttribute ca)
+	public void removeParamAttribute(CustomAttribute ca)
 	{
 		if(ca != null)
 		{

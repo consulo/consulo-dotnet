@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import edu.arizona.cs.mbel.signature.MethodSignature;
+
 /**
  * This class represents a typeref for a global method in another module in this assembly.
  * Global methods actually belong to a hidden TypeDef called "<Module>" with namespace "".
@@ -36,7 +38,7 @@ public class GlobalMethodRef extends MethodRef
 	 * @param name the name of the method
 	 * @param sig  the callsite signature of the method
 	 */
-	public GlobalMethodRef(ModuleRefInfo mod, String name, edu.arizona.cs.mbel.signature.MethodSignature sig)
+	public GlobalMethodRef(ModuleRefInfo mod, String name, MethodSignature sig)
 	{
 		super(name, new ModuleTypeRef(mod, "", "<Module>"), sig);
 		moduleRef = mod;

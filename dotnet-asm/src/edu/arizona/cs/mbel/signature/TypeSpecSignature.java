@@ -20,6 +20,9 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+
 /**
  * This class holds the description of a TypeSpec
  *
@@ -39,7 +42,7 @@ public abstract class TypeSpecSignature extends TypeSignature
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return a TypeSpecSignature representing the binary blob, or null if there was a parse error
 	 */
-	public static TypeSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static TypeSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		byte data = buffer.peek();
 		switch(data)

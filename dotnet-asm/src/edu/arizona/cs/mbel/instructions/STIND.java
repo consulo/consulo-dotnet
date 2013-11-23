@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Store indirect.<br>
  * Stack transition:<br>
@@ -89,7 +93,7 @@ public class STIND extends UnalignedPrefixInstruction
 		return "";
 	}
 
-	public STIND(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public STIND(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(false, opcode, OPCODE_LIST);
 	}

@@ -19,6 +19,12 @@
 
 package edu.arizona.cs.mbel.metadata;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.parse.MSILParseException;
+
 /**
  * This class contains the raw form of the metadata in a .NET module.
  *
@@ -82,14 +88,14 @@ public class Metadata
 	 *
 	 * @param in the input stream to read from
 	 */
-	public Metadata(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException, edu.arizona.cs.mbel.parse.MSILParseException
+	public Metadata(MSILInputStream in) throws IOException, MSILParseException
 	{
 		startFP = in.getCurrent();
 
 		Signature = in.readDWORD();
 		if(Signature != MAGIC)
 		{
-			throw new edu.arizona.cs.mbel.parse.MSILParseException("Metadata: Bad magic number");
+			throw new MSILParseException("Metadata: Bad magic number");
 		}
 
 		//// read storage signature //////////
@@ -128,8 +134,8 @@ public class Metadata
 	/**
 	 * Parses the metadata tables and streams, and returns them in a TableConstant object.
 	 */
-	public TableConstants parseTableConstants(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException,
-			edu.arizona.cs.mbel.parse.MSILParseException
+	public TableConstants parseTableConstants(MSILInputStream in) throws IOException,
+			MSILParseException
 	{
 		StringsStream strings_stream = null;
 		BlobStream blob_stream = null;
@@ -183,7 +189,7 @@ public class Metadata
 
 		if(c_stream == null)
 		{
-			throw new edu.arizona.cs.mbel.parse.MSILParseException("Metadata: ~ or - stream not found");
+			throw new MSILParseException("Metadata: ~ or - stream not found");
 		}
 
 		TableConstants tc = new TableConstants(c_stream, strings_stream, blob_stream, guid_stream, us_stream);
@@ -192,7 +198,7 @@ public class Metadata
 		return tc;
 	}
 
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		buffer.putDWORD(Signature);
 		buffer.putWORD(MajorVersion);
@@ -248,7 +254,7 @@ class StreamHeader
 	 *
 	 * @param in the input stream to read from
 	 */
-	protected StreamHeader(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException
+	protected StreamHeader(MSILInputStream in) throws IOException
 	{
 		Offset = in.readDWORD();
 		Size = in.readDWORD();
@@ -272,7 +278,7 @@ class StreamHeader
 		rcName = name;
 	}
 
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		// must be emitted on 4-byte boundary
 		buffer.putDWORD(Offset);

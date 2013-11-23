@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Convert values with overflow detection (unsigned).<br>
  * Stack transition:<br>
@@ -85,7 +89,7 @@ public class CONV_OVF_UN extends Instruction
 		return "";
 	}
 
-	public CONV_OVF_UN(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public CONV_OVF_UN(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

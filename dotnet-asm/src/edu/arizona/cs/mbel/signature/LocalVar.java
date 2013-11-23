@@ -20,6 +20,12 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+
 /**
  * This class models a single local var, whereas LocalVarList
  * contains a list of all the LocalVars for a whole method
@@ -28,7 +34,7 @@ package edu.arizona.cs.mbel.signature;
  */
 public class LocalVar extends Signature
 {
-	private java.util.Vector constraints;  // Constraints
+	private Vector constraints;  // Constraints
 	private boolean byref;
 	private TypeSignature type;
 
@@ -46,7 +52,7 @@ public class LocalVar extends Signature
 		}
 		byref = BYREF;
 		type = t;
-		constraints = new java.util.Vector(5);
+		constraints = new Vector(5);
 	}
 
 	/**
@@ -64,14 +70,14 @@ public class LocalVar extends Signature
 		}
 		byref = BYREF;
 		type = t;
-		constraints = new java.util.Vector(5);
+		constraints = new Vector(5);
 		if(con != null)
 		{
-			for(int i = 0; i < con.length; i++)
+			for(Constraint aCon : con)
 			{
-				if(con[i] != null)
+				if(aCon != null)
 				{
-					constraints.add(con[i]);
+					constraints.add(aCon);
 				}
 			}
 		}
@@ -88,11 +94,11 @@ public class LocalVar extends Signature
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return a LocalVar representing the given blob, or null if there was a parse error
 	 */
-	public static LocalVar parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static LocalVar parse(ByteBuffer buffer, TypeGroup group)
 	{
 		LocalVar blob = new LocalVar();
 
-		blob.constraints = new java.util.Vector(5);
+		blob.constraints = new Vector(5);
 		int pos = buffer.getPosition();
 		Constraint temp = Constraint.parse(buffer);
 		while(temp != null)
@@ -152,11 +158,11 @@ public class LocalVar extends Signature
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
-		for(int i = 0; i < constraints.size(); i++)
+		for(Object constraint : constraints)
 		{
-			((Constraint) constraints.get(i)).emit(buffer, emitter);
+			((Constraint) constraint).emit(buffer, emitter);
 		}
 		if(byref)
 		{

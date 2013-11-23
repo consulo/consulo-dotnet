@@ -20,6 +20,8 @@
 
 package edu.arizona.cs.mbel.emit;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+
 /**
  * This class is used to construct a #Strings stream from a Module.
  * A string is passed in using addString, and its token value is returned.
@@ -68,9 +70,9 @@ class StringsStreamGen
 
 		grow(blob.length);
 		long result = length;
-		for(int i = 0; i < blob.length; i++)
+		for(byte aBlob : blob)
 		{
-			data[(int) (length / SIZE)][(int) (length % SIZE)] = blob[i];
+			data[(int) (length / SIZE)][(int) (length % SIZE)] = aBlob;
 			length++;
 		}
 		return result;
@@ -134,7 +136,7 @@ class StringsStreamGen
 	/**
 	 * Writes this strings stream out to a buffer (should write getLength() bytes)
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		long len = length;
 		int i = 0;

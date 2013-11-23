@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import edu.arizona.cs.mbel.signature.FieldSignature;
+
 /**
  * This class is for global fields defined in other modules of the same assembly.
  * Global fields are actually defined in a hidden TypeDef named "<Module>" with namespace "".
@@ -36,7 +38,7 @@ public class GlobalFieldRef extends FieldRef
 	 * @param name   the name of this global field
 	 * @param sig    the field signature of this global field
 	 */
-	public GlobalFieldRef(ModuleRefInfo module, String name, edu.arizona.cs.mbel.signature.FieldSignature sig)
+	public GlobalFieldRef(ModuleRefInfo module, String name, FieldSignature sig)
 	{
 		super(name, sig, new ModuleTypeRef(module, "", "<Module>"));
 		moduleRef = module;

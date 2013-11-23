@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import edu.arizona.cs.mbel.signature.PInvokeAttributes;
+
 /**
  * This class allows a managed .NET Method object to act as a wrapper around an unmanaged
  * DLL method. Upon calling the managed method, the runtime will see the ImplementationMap
@@ -26,7 +28,7 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class ImplementationMap implements edu.arizona.cs.mbel.signature.PInvokeAttributes
+public class ImplementationMap implements PInvokeAttributes
 {
 	private int MappingFlags;
 	private String ImportName;          // name of method in unmanaged DLL

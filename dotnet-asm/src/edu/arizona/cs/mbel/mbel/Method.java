@@ -19,14 +19,26 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.instructions.CALL;
+import edu.arizona.cs.mbel.instructions.InstructionList;
+import edu.arizona.cs.mbel.instructions.LDARG;
+import edu.arizona.cs.mbel.instructions.RET;
+import edu.arizona.cs.mbel.signature.MethodAttributes;
+import edu.arizona.cs.mbel.signature.MethodImplAttributes;
+import edu.arizona.cs.mbel.signature.MethodSignature;
+import edu.arizona.cs.mbel.signature.ReturnTypeSignature;
+import edu.arizona.cs.mbel.signature.SignatureException;
+
 /**
  * This class represents a .NET Method. Not all methods will have a MethodBody. A method may
  * optionally have a MethodSemantics instance, an ImplementationMap, a DeclSecurity, and a native RVA.
  *
  * @author Michael Stepp
  */
-public class Method extends MethodDefOrRef implements edu.arizona.cs.mbel.signature.MethodAttributes,
-		edu.arizona.cs.mbel.signature.MethodImplAttributes, HasSecurity
+public class Method extends MethodDefOrRef implements MethodAttributes,
+		MethodImplAttributes, HasSecurity
 {
 	private long MethodRID = -1L;
 
@@ -36,10 +48,10 @@ public class Method extends MethodDefOrRef implements edu.arizona.cs.mbel.signat
 	private MethodSemantics semantics;
 	private ImplementationMap implMap;
 	private DeclSecurity security;
-	private edu.arizona.cs.mbel.signature.MethodSignature signature;
+	private MethodSignature signature;
 	private long methodRVA = -1L;
 
-	private java.util.Vector methodAttributes;
+	private Vector methodAttributes;
 
 	/**
 	 * This method will create a default constructor for any object. The constructor
@@ -53,26 +65,24 @@ public class Method extends MethodDefOrRef implements edu.arizona.cs.mbel.signat
 		MethodRef super_ctor = null;
 		try
 		{
-			edu.arizona.cs.mbel.signature.MethodSignature callsitesig = new edu.arizona.cs.mbel.signature.MethodSignature(new edu.arizona.cs.mbel.signature
-					.ReturnTypeSignature(edu.arizona.cs.mbel.signature.ReturnTypeSignature.ELEMENT_TYPE_VOID), null);
+			MethodSignature callsitesig = new MethodSignature(newReturnTypeSignature(ReturnTypeSignature.ELEMENT_TYPE_VOID), null);
 
 			super_ctor = new MethodRef(".ctor", AssemblyTypeRef.OBJECT, callsitesig);
 
 			ctor = new Method(".ctor", 0, (Method.Public | Method.HideBySig | Method.SpecialName | Method.RTSpecialName),
-					new edu.arizona.cs.mbel.signature.MethodSignature(new edu.arizona.cs.mbel.signature.ReturnTypeSignature(edu.arizona.cs.mbel.signature
-							.ReturnTypeSignature.ELEMENT_TYPE_VOID), null));
+					new MethodSignature(new ReturnTypeSignature(ReturnTypeSignature.ELEMENT_TYPE_VOID), null));
 		}
-		catch(edu.arizona.cs.mbel.signature.SignatureException se)
+		catch(SignatureException se)
 		{
 		}
 
 		MethodBody body = new MethodBody(true, 1, null);
 		ctor.setMethodBody(body);
 
-		edu.arizona.cs.mbel.instructions.InstructionList ilist = body.getInstructionList();
-		ilist.append(new edu.arizona.cs.mbel.instructions.LDARG(edu.arizona.cs.mbel.instructions.LDARG.LDARG_0));
-		ilist.append(new edu.arizona.cs.mbel.instructions.CALL(super_ctor));
-		ilist.append(new edu.arizona.cs.mbel.instructions.RET());
+		InstructionList ilist = body.getInstructionList();
+		ilist.append(new LDARG(LDARG.LDARG_0));
+		ilist.append(new CALL(super_ctor));
+		ilist.append(new RET());
 
 		return ctor;
 	}
@@ -86,13 +96,13 @@ public class Method extends MethodDefOrRef implements edu.arizona.cs.mbel.signat
 	 * @param sig       the signature of this method
 	 * @param par       the TypeDef in which this method is defined
 	 */
-	public Method(String name, int implFlags, int flags, edu.arizona.cs.mbel.signature.MethodSignature sig)
+	public Method(String name, int implFlags, int flags, MethodSignature sig)
 	{
 		super(name, null);
 		signature = sig;
 		ImplFlags = implFlags;
 		Flags = flags;
-		methodAttributes = new java.util.Vector(10);
+		methodAttributes = new Vector(10);
 	}
 
 	/**
@@ -171,7 +181,7 @@ public class Method extends MethodDefOrRef implements edu.arizona.cs.mbel.signat
 	 * Returns the method signature for this method.
 	 * This is a definition signature, not a callsite signature.
 	 */
-	public edu.arizona.cs.mbel.signature.MethodSignature getSignature()
+	public MethodSignature getSignature()
 	{
 		return signature;
 	}
@@ -179,7 +189,7 @@ public class Method extends MethodDefOrRef implements edu.arizona.cs.mbel.signat
 	/**
 	 * Sets the method signature for this method
 	 */
-	public void setSignature(edu.arizona.cs.mbel.signature.MethodSignature sig)
+	public void setSignature(MethodSignature sig)
 	{
 		signature = sig;
 	}

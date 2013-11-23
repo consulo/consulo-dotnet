@@ -19,6 +19,11 @@
 
 package edu.arizona.cs.mbel.parse;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * Ths MS-DOS stub starts a PE/COFF file. The only relevant field in this structure
  * is the NewFileHeaderAddress, which will be at offset 0x3C romt he start of the file.
@@ -170,7 +175,7 @@ public class MSDOS_Stub
 	/**
 	 * Prses an MSDOS_Stub from an input stream
 	 */
-	public MSDOS_Stub(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException, MSILParseException
+	public MSDOS_Stub(MSILInputStream in) throws IOException, MSILParseException
 	{
 		Magic = in.readWORD();
 		if(Magic != MAGIC)
@@ -207,7 +212,7 @@ public class MSDOS_Stub
 	/**
 	 * Writes the MSDOS_Stub back out to a buffer
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer out)
+	public void emit(ByteBuffer out)
 	{
 		out.putWORD(MAGIC);
 		out.put(data1);

@@ -20,6 +20,9 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+
 /**
  * Superclass of all signature types. This inheritance hierarchy is just for
  * convenience, to supply useful state and behavior to each signature class
@@ -33,7 +36,7 @@ abstract class Signature implements SignatureConstants
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public abstract void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter);
+	public abstract void emit(ByteBuffer buffer, ClassEmitter emitter);
 
 	/**
 	 * Parses a PackedLen coded integer from the given buffer
@@ -41,7 +44,7 @@ abstract class Signature implements SignatureConstants
 	 * @param buffer the buffer
 	 * @return the decoded integer value
 	 */
-	public static int readCodedInteger(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public static int readCodedInteger(ByteBuffer buffer)
 	{
 		int result = 0;
 		byte data1 = buffer.get();
@@ -75,7 +78,7 @@ abstract class Signature implements SignatureConstants
 	 * @param buffer the buffer to read from
 	 * @return an int array with {table num, row num}
 	 */
-	public static int[] parseTypeDefOrRefEncoded(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public static int[] parseTypeDefOrRefEncoded(ByteBuffer buffer)
 	{
 		// returns {table, row} tuple
 		int[] ROWS = {

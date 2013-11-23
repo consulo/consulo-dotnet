@@ -19,6 +19,11 @@ package edu.arizona.cs.mbel.parse;
  */
 
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.metadata.Metadata;
+
 /**
  * This class is used to parse and hold all the header information about a PE/COFF file.
  * It also keeps buffers for the contents of each of the sections in the file.
@@ -31,7 +36,7 @@ public class PEModule
 	public COFF_Header coff_header;
 	public PE_Header pe_header;
 	public CLIHeader cliHeader;
-	public edu.arizona.cs.mbel.metadata.Metadata metadata;
+	public Metadata metadata;
 	public SectionHeader[] section_headers;
 	public byte[][] sections;
 
@@ -41,7 +46,7 @@ public class PEModule
 		coff_header = new COFF_Header();
 		pe_header = new PE_Header(sub);
 		cliHeader = new CLIHeader();
-		metadata = new edu.arizona.cs.mbel.metadata.Metadata();
+		metadata = new Metadata();
 
 		section_headers = new SectionHeader[2];
 		section_headers[0] = new SectionHeader();
@@ -231,7 +236,7 @@ public class PEModule
 	/**
 	 * Parses a PEModule from an input stream
 	 */
-	public PEModule(edu.arizona.cs.mbel.MSILInputStream msil) throws java.io.IOException, MSILParseException
+	public PEModule(MSILInputStream msil) throws IOException, MSILParseException
 	{
 		msdos_stub = new MSDOS_Stub(msil);
 
@@ -272,14 +277,14 @@ public class PEModule
 		long metadataRVA = cliHeader.MetaData.VirtualAddress;
 		long metadataFP = msil.getFilePointer(metadataRVA);
 		msil.seek(metadataFP);
-		metadata = new edu.arizona.cs.mbel.metadata.Metadata(msil);
+		metadata = new Metadata(msil);
 		///////////////////////////////////////////////////////
 	}
 
 	/**
 	 * This method buffers each section of the PE/COFF file. This should only be called by ClassParser.
 	 */
-	public void bufferSections(edu.arizona.cs.mbel.MSILInputStream msil) throws java.io.IOException
+	public void bufferSections(MSILInputStream msil) throws IOException
 	{
 		sections = new byte[coff_header.NumberOfSections][];
 
@@ -296,7 +301,7 @@ public class PEModule
 	 */
 	public boolean isDLLFile()
 	{
-		return ((coff_header.Characteristics & coff_header.IMAGE_FILE_DLL) != 0);
+		return ((coff_header.Characteristics & COFF_Header.IMAGE_FILE_DLL) != 0);
 	}
    
 	 /*

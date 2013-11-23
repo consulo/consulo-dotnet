@@ -20,6 +20,8 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+
 /**
  * An exception clause that only catches exceptions of the given type.
  *
@@ -27,7 +29,7 @@ package edu.arizona.cs.mbel.instructions;
  */
 public class TypedExceptionClause extends StructuredExceptionClause
 {
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference exceptionType;
+	private AbstractTypeReference exceptionType;
 
 	/**
 	 * Creates a TypedException clause with the given instruction range, that accepts exceptions of type 'type'.
@@ -38,7 +40,7 @@ public class TypedExceptionClause extends StructuredExceptionClause
 	 * @param hs   the handler block start point
 	 * @param he   the handler end point
 	 */
-	public TypedExceptionClause(edu.arizona.cs.mbel.mbel.AbstractTypeReference type, InstructionHandle ts, InstructionHandle te, InstructionHandle hs,
+	public TypedExceptionClause(AbstractTypeReference type, InstructionHandle ts, InstructionHandle te, InstructionHandle hs,
 			InstructionHandle he)
 	{
 		super(ts, te, hs, he);
@@ -48,7 +50,7 @@ public class TypedExceptionClause extends StructuredExceptionClause
 	/**
 	 * Returns the type of exception this clause looks for
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getExceptionType()
+	public AbstractTypeReference getExceptionType()
 	{
 		return exceptionType;
 	}

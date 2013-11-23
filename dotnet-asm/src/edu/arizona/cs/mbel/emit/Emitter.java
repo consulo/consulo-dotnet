@@ -19,6 +19,18 @@
 
 package edu.arizona.cs.mbel.emit;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.mbel.Module;
+import edu.arizona.cs.mbel.mbel.VTableFixup;
+import edu.arizona.cs.mbel.parse.COFF_Header;
+import edu.arizona.cs.mbel.parse.ImageDataDirectory;
+import edu.arizona.cs.mbel.parse.PEModule;
+import edu.arizona.cs.mbel.parse.PE_Header;
+import edu.arizona.cs.mbel.parse.SectionHeader;
+
 /**
  * This class is the main class used to emit an MBEL Module back to disk. All that is
  * needed is a correct Module instance, and an Emitter can write out a valid PE/COFF
@@ -40,9 +52,9 @@ public class Emitter
 	};
 	private static final int PE_HEADER_SIZE = 224;
 
-	private edu.arizona.cs.mbel.mbel.Module module;
-	private edu.arizona.cs.mbel.parse.PEModule pe_module;
-	private edu.arizona.cs.mbel.parse.PE_Header pe_header;
+	private Module module;
+	private PEModule pe_module;
+	private PE_Header pe_header;
 
 	private long timeStamp;
 	private boolean hadToShift;
@@ -50,7 +62,7 @@ public class Emitter
 	/**
 	 * Makes an Emitter for the given Module
 	 */
-	public Emitter(edu.arizona.cs.mbel.mbel.Module mod) throws java.io.IOException
+	public Emitter(Module mod) throws IOException
 	{
 		module = mod;
 		pe_module = module.getPEModule();
@@ -67,11 +79,11 @@ public class Emitter
 	/**
 	 * Writes the Module back out to the given output filename
 	 */
-	public void emitModule(java.io.OutputStream out) throws java.io.IOException
+	public void emitModule(OutputStream out) throws IOException
 	{
-		edu.arizona.cs.mbel.ByteBuffer bigBuffer = new edu.arizona.cs.mbel.ByteBuffer(1000000);
-		edu.arizona.cs.mbel.ByteBuffer netBuffer = new edu.arizona.cs.mbel.ByteBuffer(200000);
-		edu.arizona.cs.mbel.parse.COFF_Header coff_header = pe_module.coff_header;
+		ByteBuffer bigBuffer = new ByteBuffer(1000000);
+		ByteBuffer netBuffer = new ByteBuffer(200000);
+		COFF_Header coff_header = pe_module.coff_header;
 
 
 		ClassEmitter classEmitter = new ClassEmitter(module);
@@ -98,12 +110,12 @@ public class Emitter
 			// no .net section header, add one
 			netSectionIndex = numSects;
 			numSects++;
-			edu.arizona.cs.mbel.parse.SectionHeader[] new_headers = new edu.arizona.cs.mbel.parse.SectionHeader[numSects];
+			SectionHeader[] new_headers = new SectionHeader[numSects];
 			for(int i = 0; i < netSectionIndex; i++)
 			{
 				new_headers[i] = pe_module.section_headers[i];
 			}
-			new_headers[netSectionIndex] = new edu.arizona.cs.mbel.parse.SectionHeader();
+			new_headers[netSectionIndex] = new SectionHeader();
 			pe_module.section_headers = new_headers;
 
 			new_headers[netSectionIndex].Name = NET_NAME;
@@ -112,9 +124,9 @@ public class Emitter
 			new_headers[netSectionIndex].SizeOfRawData = netBuffer.getPosition();// will be rounded to FileAlignment already
 			new_headers[netSectionIndex].PointerToRawData = new_headers[netSectionIndex - 1].PointerToRawData + new_headers[netSectionIndex - 1]
 					.SizeOfRawData;
-			new_headers[netSectionIndex].Characteristics = new_headers[netSectionIndex].IMAGE_SCN_CNT_CODE |
-					new_headers[netSectionIndex].IMAGE_SCN_MEM_READ |
-					new_headers[netSectionIndex].IMAGE_SCN_MEM_EXECUTE;
+			new_headers[netSectionIndex].Characteristics = SectionHeader.IMAGE_SCN_CNT_CODE |
+					SectionHeader.IMAGE_SCN_MEM_READ |
+					SectionHeader.IMAGE_SCN_MEM_EXECUTE;
 		}
 		else
 		{
@@ -133,11 +145,11 @@ public class Emitter
 		bigBuffer.putDWORD(coff_header.PointerToSymbolTable);
 		bigBuffer.putDWORD(coff_header.NumberOfSymbols);
 		bigBuffer.putWORD(PE_HEADER_SIZE);
-		bigBuffer.putWORD(coff_header.Characteristics | coff_header.IMAGE_FILE_LOCAL_SYMS_STRIPPED);
+		bigBuffer.putWORD(coff_header.Characteristics | COFF_Header.IMAGE_FILE_LOCAL_SYMS_STRIPPED);
 		/////////////////////////////////////////////////
 
 
-		long endOfHeadersFP = bigBuffer.getPosition() + PE_HEADER_SIZE + (edu.arizona.cs.mbel.parse.SectionHeader.STRUCT_SIZE * numSects);
+		long endOfHeadersFP = bigBuffer.getPosition() + PE_HEADER_SIZE + (SectionHeader.STRUCT_SIZE * numSects);
 
 
 		//// emit PE Header /////////////////////////////
@@ -175,10 +187,10 @@ public class Emitter
 
 
 		////// re-emit VTableFixups (in same place as old VTableFixups) ////////////////
-		edu.arizona.cs.mbel.mbel.VTableFixup[] fixups = module.getVTableFixups();
-		for(int i = 0; i < fixups.length; i++)
+		VTableFixup[] fixups = module.getVTableFixups();
+		for(VTableFixup fixup : fixups)
 		{
-			long VTABLERVA = fixups[i].getRVA();
+			long VTABLERVA = fixup.getRVA();
 			int FP = 0;
 			int sectIndex = 0;
 			for(int j = 0; j < numNormalSects; j++)
@@ -192,7 +204,7 @@ public class Emitter
 			}
 
 			byte[] section = pe_module.sections[sectIndex];
-			byte[] vtable = fixups[i].toByteArray();
+			byte[] vtable = fixup.toByteArray();
 			for(int j = 0; j < vtable.length; j++)
 			{
 				section[FP + j] = vtable[j];
@@ -263,7 +275,7 @@ public class Emitter
 		{
 
 			{// Debug Table
-				long debugRVA = pe_header.DataDirectory[edu.arizona.cs.mbel.parse.ImageDataDirectory.DEBUG_TABLE_INDEX].VirtualAddress;
+				long debugRVA = pe_header.DataDirectory[ImageDataDirectory.DEBUG_TABLE_INDEX].VirtualAddress;
 				int debugFP = 0;
 				int sectIndex = 0;
 				for(int i = 0; i < numNormalSects; i++)

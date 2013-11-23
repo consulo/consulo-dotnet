@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.instructions.LoadableType;
+
 /**
  * Abstract parent of all member references. A member reference will
  * either refer to a field or a method. MemberRefs are specifically used in the IL
@@ -26,13 +30,13 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public abstract class MemberRef implements edu.arizona.cs.mbel.instructions.LoadableType
+public abstract class MemberRef implements LoadableType
 {
 	private long MemberRefRID = -1L;
 	private String Name; // field or method name
 	private AbstractTypeReference parent;
 
-	private java.util.Vector memberRefAttributes;
+	private Vector memberRefAttributes;
 
 	/**
 	 * Creates a new MemberRef with the given name and parent type
@@ -42,7 +46,7 @@ public abstract class MemberRef implements edu.arizona.cs.mbel.instructions.Load
 		Name = name;
 		parent = ref;
 
-		memberRefAttributes = new java.util.Vector(10);
+		memberRefAttributes = new Vector(10);
 	}
 
 	/**

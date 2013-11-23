@@ -20,6 +20,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Store object.<br>
  * Stack transition:<br>
@@ -31,14 +38,14 @@ public class STOBJ extends UnalignedPrefixInstruction
 {
 	public static final int STOBJ = 0x81;
 	protected static final int OPCODE_LIST[] = {STOBJ};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classRef;
+	private AbstractTypeReference classRef;
 
 	/**
 	 * Makes a STOBJ for the given type (with no unaligned prefix nor volatile prefix)
 	 *
 	 * @param ref the type
 	 */
-	public STOBJ(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public STOBJ(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(false, STOBJ, OPCODE_LIST);
 		classRef = ref;
@@ -51,7 +58,7 @@ public class STOBJ extends UnalignedPrefixInstruction
 	 * @param hasV      true iff this STOBJ has a volatile prefix
 	 * @param ref       the type
 	 */
-	public STOBJ(int alignment, boolean hasV, edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public STOBJ(int alignment, boolean hasV, AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(alignment, hasV, STOBJ, OPCODE_LIST);
 		classRef = ref;
@@ -60,7 +67,7 @@ public class STOBJ extends UnalignedPrefixInstruction
 	/**
 	 * Returns the type for this STOBJ
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getType()
+	public AbstractTypeReference getType()
 	{
 		return classRef;
 	}
@@ -75,14 +82,14 @@ public class STOBJ extends UnalignedPrefixInstruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(classRef);
 		buffer.putTOKEN(token);
 	}
 
-	public STOBJ(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public STOBJ(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(false, opcode, OPCODE_LIST);
 		long classToken = parse.getMSILInputStream().readTOKEN();

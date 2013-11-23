@@ -20,6 +20,12 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+
 /**
  * This class describes a parameter in a method signature
  *
@@ -27,7 +33,7 @@ package edu.arizona.cs.mbel.signature;
  */
 public class ParameterSignature extends Signature
 {
-	private java.util.Vector customMods;   // CustomModifierSignatures
+	private Vector customMods;   // CustomModifierSignatures
 	private TypeSignature type;
 	private byte elementType;
 	private ParameterInfo paramInfo;
@@ -45,7 +51,7 @@ public class ParameterSignature extends Signature
 	 */
 	public ParameterSignature(TypeSignature sig, boolean byref) throws SignatureException
 	{
-		customMods = new java.util.Vector(10);
+		customMods = new Vector(10);
 		type = sig;
 		if(type == null)
 		{
@@ -59,7 +65,7 @@ public class ParameterSignature extends Signature
 	 */
 	public ParameterSignature()
 	{
-		customMods = new java.util.Vector(10);
+		customMods = new Vector(10);
 		elementType = ELEMENT_TYPE_TYPEDBYREF;
 	}
 
@@ -70,7 +76,7 @@ public class ParameterSignature extends Signature
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return a ParameterSignature representing the given binary blob, or null if there was a parse error
 	 */
-	public static ParameterSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static ParameterSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		ParameterSignature blob = new ParameterSignature();
 
@@ -168,11 +174,11 @@ public class ParameterSignature extends Signature
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
-		for(int i = 0; i < customMods.size(); i++)
+		for(Object customMod : customMods)
 		{
-			((CustomModifierSignature) customMods.get(i)).emit(buffer, emitter);
+			((CustomModifierSignature) customMod).emit(buffer, emitter);
 		}
 		if(elementType == ELEMENT_TYPE_TYPEONLY)
 		{

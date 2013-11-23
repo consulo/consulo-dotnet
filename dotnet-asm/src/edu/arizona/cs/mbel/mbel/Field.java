@@ -20,23 +20,29 @@
 package edu.arizona.cs.mbel.mbel;
 
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.FieldAttributes;
+import edu.arizona.cs.mbel.signature.FieldSignature;
+import edu.arizona.cs.mbel.signature.MarshalSignature;
+
 /**
  * This class represents a .NET Field. All Fields will be owned by TypeDefs, and any new fields
  * constructed by the user must be added to the parent TypeDef using TypeDef.addField(Field).
  *
  * @author Michael Stepp
  */
-public class Field extends FieldRef implements edu.arizona.cs.mbel.signature.FieldAttributes
+public class Field extends FieldRef implements FieldAttributes
 {
 	private long FieldRID = -1L;
 
 	private int Flags;
-	private edu.arizona.cs.mbel.signature.MarshalSignature fieldMarshal;
+	private MarshalSignature fieldMarshal;
 	private byte[] defaultValue;  // only from Constant
 	private long Offset = -1L;      // from FieldLayout (only present if Flags&ExplicitLayout)
 	private long FieldRVA = -1L;
 
-	private java.util.Vector fieldAttributes;
+	private Vector fieldAttributes;
 
 	/**
 	 * Constructs a Field witht he given name, flags, and signature.
@@ -45,11 +51,11 @@ public class Field extends FieldRef implements edu.arizona.cs.mbel.signature.Fie
 	 * @param flags a bit vector of flag values (defined in FieldAttributes)
 	 * @param sig   the field signature for this field
 	 */
-	public Field(String name, int flags, edu.arizona.cs.mbel.signature.FieldSignature sig)
+	public Field(String name, int flags, FieldSignature sig)
 	{
 		super(name, sig, null);
 		Flags = flags;
-		fieldAttributes = new java.util.Vector(10);
+		fieldAttributes = new Vector(10);
 	}
 
 	/**
@@ -60,11 +66,11 @@ public class Field extends FieldRef implements edu.arizona.cs.mbel.signature.Fie
 	 * @param name the name of this Field
 	 * @param sig  the FieldSignature for this Field
 	 */
-	public Field(String name, edu.arizona.cs.mbel.signature.FieldSignature sig)
+	public Field(String name, FieldSignature sig)
 	{
 		super(name, sig, null);
 		Flags = Private;
-		fieldAttributes = new java.util.Vector(10);
+		fieldAttributes = new Vector(10);
 	}
 
 	/**
@@ -244,7 +250,7 @@ public class Field extends FieldRef implements edu.arizona.cs.mbel.signature.Fie
 	/**
 	 * Returns the FieldMarshal information for this Field (or null if none defined)
 	 */
-	public edu.arizona.cs.mbel.signature.MarshalSignature getFieldMarshal()
+	public MarshalSignature getFieldMarshal()
 	{
 		return fieldMarshal;
 	}
@@ -254,7 +260,7 @@ public class Field extends FieldRef implements edu.arizona.cs.mbel.signature.Fie
 	 *
 	 * @param sig the new FieldMarshal for this field. if sig==null, removes the FieldMarshal
 	 */
-	public void setFieldMarshal(edu.arizona.cs.mbel.signature.MarshalSignature sig)
+	public void setFieldMarshal(MarshalSignature sig)
 	{
 		if(sig == null)
 		{

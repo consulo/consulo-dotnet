@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.TypeAttributes;
+
 /**
  * This class is a TypeRef that refers a type defined in another module of this assembly,
  * as referenced by the ExportedType table. Thus, it is a public class in another module.
@@ -26,7 +30,7 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class ExportedTypeRef extends TypeRef implements edu.arizona.cs.mbel.signature.TypeAttributes
+public class ExportedTypeRef extends TypeRef implements TypeAttributes
 {
 	private long ExportedTypeRID = -1L;
 
@@ -35,7 +39,7 @@ public class ExportedTypeRef extends TypeRef implements edu.arizona.cs.mbel.sign
 	private ExportedTypeRef exportedType;
 	// one or the other will be nonnull
 
-	private java.util.Vector exportedTypeAttributes;
+	private Vector exportedTypeAttributes;
 
 	/**
 	 * Makes an ExportedTypeRef with the given namespace, name, and flags
@@ -49,7 +53,7 @@ public class ExportedTypeRef extends TypeRef implements edu.arizona.cs.mbel.sign
 		super(ns, name);
 		Flags = flags;
 
-		exportedTypeAttributes = new java.util.Vector(10);
+		exportedTypeAttributes = new Vector(10);
 	}
 
 	/**

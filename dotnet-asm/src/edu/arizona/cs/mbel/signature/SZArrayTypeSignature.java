@@ -20,6 +20,12 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+
 /**
  * This class represents a type signature for an SZARRAY (Single-dimensional, Zero-based array)
  *
@@ -27,7 +33,7 @@ package edu.arizona.cs.mbel.signature;
  */
 public class SZArrayTypeSignature extends TypeSpecSignature
 {
-	private java.util.Vector customMods;   // CustomModifierSignatures
+	private Vector customMods;   // CustomModifierSignatures
 	private TypeSignature elementTypeSignature;
 
 	/**
@@ -55,14 +61,14 @@ public class SZArrayTypeSignature extends TypeSpecSignature
 		}
 		elementTypeSignature = type;
 
-		customMods = new java.util.Vector(10);
+		customMods = new Vector(10);
 		if(mods != null)
 		{
-			for(int i = 0; i < mods.length; i++)
+			for(CustomModifierSignature mod : mods)
 			{
-				if(mods[i] != null)
+				if(mod != null)
 				{
-					customMods.add(mods[i]);
+					customMods.add(mod);
 				}
 			}
 		}
@@ -80,7 +86,7 @@ public class SZArrayTypeSignature extends TypeSpecSignature
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return an SZArrayTypeSignature representing this binary blob, or null if there was a parse error
 	 */
-	public static TypeSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static TypeSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		SZArrayTypeSignature blob = new SZArrayTypeSignature();
 		byte data = buffer.get();
@@ -89,7 +95,7 @@ public class SZArrayTypeSignature extends TypeSpecSignature
 			return null;
 		}
 
-		blob.customMods = new java.util.Vector(10);
+		blob.customMods = new Vector(10);
 		int pos = buffer.getPosition();
 		CustomModifierSignature temp = CustomModifierSignature.parse(buffer, group);
 		while(temp != null)
@@ -130,12 +136,12 @@ public class SZArrayTypeSignature extends TypeSpecSignature
 		return elementTypeSignature;
 	}
 
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(ELEMENT_TYPE_SZARRAY);
-		for(int i = 0; i < customMods.size(); i++)
+		for(Object customMod : customMods)
 		{
-			((CustomModifierSignature) customMods.get(i)).emit(buffer, emitter);
+			((CustomModifierSignature) customMod).emit(buffer, emitter);
 		}
 		elementTypeSignature.emit(buffer, emitter);
 	}

@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.metadata;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class represents a #~ or #- metadata stream.
  * These streams contain the metadata tables. A #- stream in "unoptimized" which
@@ -51,7 +55,7 @@ public class CompressedStream
 	/**
 	 * Parses a CompressedStream from an input stream
 	 */
-	public CompressedStream(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException
+	public CompressedStream(MSILInputStream in) throws IOException
 	{
 		in.readDWORD();   // reserved 4 bytes (==0)
 		Major = in.readBYTE();

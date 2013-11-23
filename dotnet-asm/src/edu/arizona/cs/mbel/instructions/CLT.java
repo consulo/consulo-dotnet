@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Compare less than.<br>
  * Stack transition:<br>
@@ -55,7 +59,7 @@ public class CLT extends Instruction
 		return (isUnsignedOrUnordered() ? "clt.un" : "clt");
 	}
 
-	public CLT(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public CLT(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

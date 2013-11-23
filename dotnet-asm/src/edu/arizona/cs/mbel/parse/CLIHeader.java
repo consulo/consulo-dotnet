@@ -44,6 +44,11 @@ package edu.arizona.cs.mbel.parse;
    Should be in a read only, sharable section
 */
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class holds the data for the CLI header of a .NET module. This
  * will be pointed to by the CLI header entry of the DataDirectory table.
@@ -93,7 +98,7 @@ public class CLIHeader
 	/**
 	 * Parses a CLI header from an input stream
 	 */
-	public CLIHeader(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException, edu.arizona.cs.mbel.parse.MSILParseException
+	public CLIHeader(MSILInputStream in) throws IOException, MSILParseException
 	{
 		long start = in.getCurrent();
 		HeaderSize = in.readDWORD();
@@ -117,7 +122,7 @@ public class CLIHeader
 	/**
 	 * Writes a CLI header out to a buffer
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		buffer.putDWORD(72);
 		buffer.putWORD(MajorRuntimeVersion);

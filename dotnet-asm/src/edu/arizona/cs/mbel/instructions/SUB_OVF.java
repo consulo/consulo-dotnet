@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Subtract with overflow detection.<br>
  * Stack transition:<br>
@@ -56,7 +60,7 @@ public class SUB_OVF extends Instruction
 		return (isUnsigned() ? "sub.ovf.un" : "sub.ovf");
 	}
 
-	public SUB_OVF(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public SUB_OVF(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

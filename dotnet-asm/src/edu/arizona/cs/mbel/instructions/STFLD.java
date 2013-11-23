@@ -20,6 +20,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.FieldRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Store to field.<br>
  * Stack transition:<br>
@@ -31,14 +38,14 @@ public class STFLD extends UnalignedPrefixInstruction
 {
 	public static final int STFLD = 0x7D;
 	protected static final int OPCODE_LIST[] = {STFLD};
-	private edu.arizona.cs.mbel.mbel.FieldRef field;
+	private FieldRef field;
 
 	/**
 	 * Makes a STFLD object for the given field with no unaligned prefix nore volatile prefix
 	 *
 	 * @param ref a reference to the desired field
 	 */
-	public STFLD(edu.arizona.cs.mbel.mbel.FieldRef ref) throws InstructionInitException
+	public STFLD(FieldRef ref) throws InstructionInitException
 	{
 		super(false, STFLD, OPCODE_LIST);
 		field = ref;
@@ -51,7 +58,7 @@ public class STFLD extends UnalignedPrefixInstruction
 	 * @param hasV      true iff this STFLD has a volatile prefix
 	 * @param ref       a reference to the desired field
 	 */
-	public STFLD(int alignment, boolean hasV, edu.arizona.cs.mbel.mbel.FieldRef ref) throws InstructionInitException
+	public STFLD(int alignment, boolean hasV, FieldRef ref) throws InstructionInitException
 	{
 		super(alignment, hasV, STFLD, OPCODE_LIST);
 		field = ref;
@@ -60,7 +67,7 @@ public class STFLD extends UnalignedPrefixInstruction
 	/**
 	 * Returns a reference to the field for this instruction
 	 */
-	public edu.arizona.cs.mbel.mbel.FieldRef getField()
+	public FieldRef getField()
 	{
 		return field;
 	}
@@ -75,14 +82,14 @@ public class STFLD extends UnalignedPrefixInstruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getFieldRefToken(field);
 		buffer.putTOKEN(token);
 	}
 
-	public STFLD(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public STFLD(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(false, opcode, OPCODE_LIST);
 		long fieldToken = parse.getMSILInputStream().readTOKEN();

@@ -20,6 +20,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Unboxes a ValueType object.<br>
  * Stack transition:<br>
@@ -31,14 +38,14 @@ public class UNBOX extends Instruction
 {
 	public static final int UNBOX = 0x79;
 	protected static final int OPCODE_LIST[] = {UNBOX};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classRef;
+	private AbstractTypeReference classRef;
 
 	/**
 	 * Creates an UNBOX instruction for the given ValueType
 	 *
 	 * @param ref a reference to a ValueType
 	 */
-	public UNBOX(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public UNBOX(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(UNBOX, OPCODE_LIST);
 		classRef = ref;
@@ -47,7 +54,7 @@ public class UNBOX extends Instruction
 	/**
 	 * Returns the ValueType reference for this UNBOX
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getType()
+	public AbstractTypeReference getType()
 	{
 		return classRef;
 	}
@@ -62,14 +69,14 @@ public class UNBOX extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(classRef);
 		buffer.putTOKEN(token);
 	}
 
-	public UNBOX(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public UNBOX(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long valueTypeToken = parse.getMSILInputStream().readTOKEN();

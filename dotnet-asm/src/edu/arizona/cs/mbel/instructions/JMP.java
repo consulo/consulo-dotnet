@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Jump to method.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class JMP extends Instruction
 {
 	public static final int JMP = 0x27;
 	protected static final int OPCODE_LIST[] = {JMP};
-	private edu.arizona.cs.mbel.mbel.MethodDefOrRef method;
+	private MethodDefOrRef method;
 
 	/**
 	 * Makes a JMP object for the given method reference
 	 *
 	 * @param ref the method reference
 	 */
-	public JMP(edu.arizona.cs.mbel.mbel.MethodDefOrRef ref) throws InstructionInitException
+	public JMP(MethodDefOrRef ref) throws InstructionInitException
 	{
 		super(JMP, OPCODE_LIST);
 		method = ref;
@@ -46,7 +53,7 @@ public class JMP extends Instruction
 	/**
 	 * Returns the method reference for this JMP
 	 */
-	public edu.arizona.cs.mbel.mbel.MethodDefOrRef getMethod()
+	public MethodDefOrRef getMethod()
 	{
 		return method;
 	}
@@ -61,14 +68,14 @@ public class JMP extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getMethodRefToken(method);
 		buffer.putTOKEN(token);
 	}
 
-	public JMP(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public JMP(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long methodToken = parse.getMSILInputStream().readTOKEN();

@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.metadata;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class represents the user string stream in module metadata.
  * User strings are UNICODE-16 strings, little-endian. They are single-null terminated.
@@ -36,7 +40,7 @@ public class USStream
 	 * @param in   the input stream
 	 * @param size the size in bytes of this USStream
 	 */
-	public USStream(edu.arizona.cs.mbel.MSILInputStream in, long size) throws java.io.IOException
+	public USStream(MSILInputStream in, long size) throws IOException
 	{
 		rawbytes = new byte[(int) size];
 		in.read(rawbytes);

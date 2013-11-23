@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.FieldRef;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Load field.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class LDFLD extends UnalignedPrefixInstruction
 {
 	public static final int LDFLD = 0x7B;
 	protected static final int OPCODE_LIST[] = {LDFLD};
-	private edu.arizona.cs.mbel.mbel.FieldRef field;
+	private FieldRef field;
 
 	/**
 	 * Makes a LDFLD object from the given field reference with no unaligned prefix nor volatile prefix
 	 *
 	 * @param ref the field reference
 	 */
-	public LDFLD(edu.arizona.cs.mbel.mbel.FieldRef ref) throws InstructionInitException
+	public LDFLD(FieldRef ref) throws InstructionInitException
 	{
 		super(false, LDFLD, OPCODE_LIST);
 		field = ref;
@@ -51,7 +58,7 @@ public class LDFLD extends UnalignedPrefixInstruction
 	 * @param hasV      true iff this LDFLD has a volatile prefix
 	 * @param ref       the field reference
 	 */
-	public LDFLD(int alignment, boolean hasV, edu.arizona.cs.mbel.mbel.FieldRef ref) throws InstructionInitException
+	public LDFLD(int alignment, boolean hasV, FieldRef ref) throws InstructionInitException
 	{
 		super(alignment, hasV, LDFLD, OPCODE_LIST);
 		field = ref;
@@ -60,7 +67,7 @@ public class LDFLD extends UnalignedPrefixInstruction
 	/**
 	 * Returns the field reference for this instruction.
 	 */
-	public edu.arizona.cs.mbel.mbel.FieldRef getField()
+	public FieldRef getField()
 	{
 		return field;
 	}
@@ -75,14 +82,14 @@ public class LDFLD extends UnalignedPrefixInstruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getFieldRefToken(field);
 		buffer.putTOKEN(token);
 	}
 
-	public LDFLD(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public LDFLD(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(false, opcode, OPCODE_LIST);
 		long fieldToken = parse.getMSILInputStream().readTOKEN();

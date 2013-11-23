@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
 /**
  * This class contains all the information used in referencing another module.
  * This class is used in ModuleTypeRef, GlobalMethodRef, GlobalFieldRef, and ImplementationMap.
@@ -31,7 +33,7 @@ public class ModuleRefInfo
 	private long ModuleRefRID = -1L;
 
 	private String moduleName;
-	private java.util.Vector moduleRefAttributes;
+	private Vector moduleRefAttributes;
 
 	/**
 	 * Makes a new ModuleRefInfo with the given module name
@@ -41,7 +43,7 @@ public class ModuleRefInfo
 	public ModuleRefInfo(String modName)
 	{
 		moduleName = modName;
-		moduleRefAttributes = new java.util.Vector(10);
+		moduleRefAttributes = new Vector(10);
 	}
 
 	/**

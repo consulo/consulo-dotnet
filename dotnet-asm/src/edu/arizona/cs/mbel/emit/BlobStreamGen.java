@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.emit;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+
 /**
  * This class is used to generate a #Blob stream from a parsed Module.
  * The Blob stream packs blobs in the order they are given, and does not
@@ -103,9 +105,9 @@ class BlobStreamGen
 
 		grow(toadd.length);
 		long result = length;
-		for(int i = 0; i < toadd.length; i++)
+		for(byte aToadd : toadd)
 		{
-			data[(int) (length / SIZE)][(int) (length % SIZE)] = toadd[i];
+			data[(int) (length / SIZE)][(int) (length % SIZE)] = aToadd;
 			length++;
 		}
 		return result;
@@ -169,7 +171,7 @@ class BlobStreamGen
 	/**
 	 * Writes this blob stream out to a buffer, as it would to a file
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public void emit(ByteBuffer buffer)
 	{
 		long len = length;
 		int i = 0;

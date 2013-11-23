@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Casts an object to a given class type.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class CASTCLASS extends Instruction
 {
 	public static final int CASTCLASS = 0x74;
 	protected static final int OPCODE_LIST[] = {CASTCLASS};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classRef;
+	private AbstractTypeReference classRef;
 
 	/**
 	 * Makes a CASTCLASS object with the given type reference
 	 *
 	 * @param ref the type reference for this instruction
 	 */
-	public CASTCLASS(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public CASTCLASS(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(CASTCLASS, OPCODE_LIST);
 		classRef = ref;
@@ -51,7 +58,7 @@ public class CASTCLASS extends Instruction
 	/**
 	 * Returns the type reference for this instruction
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getType()
+	public AbstractTypeReference getType()
 	{
 		return classRef;
 	}
@@ -61,14 +68,14 @@ public class CASTCLASS extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(classRef);
 		buffer.putTOKEN(token);
 	}
 
-	public CASTCLASS(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public CASTCLASS(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long classToken = parse.getMSILInputStream().readTOKEN();

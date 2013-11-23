@@ -19,6 +19,11 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Iterator;
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.TypeAttributes;
+
 /**
  * This class represents a .NET type definition (analogous to a Class in Java).
  * A TypeDef can be Class, an Interface, or a ValueType. TypeDef extends TypeRef
@@ -27,18 +32,18 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class TypeDef extends TypeRef implements HasSecurity, edu.arizona.cs.mbel.signature.TypeAttributes
+public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes
 {
 	private long TypeDefRID = -1L;
 
-	private java.util.Vector events;
-	private java.util.Vector fields;
-	private java.util.Vector methods;
-	private java.util.Vector properties;
-	private java.util.Vector interfaces;      // InterfaceImplementations
-	private java.util.Vector attributes;
-	private java.util.Vector nestedClasses;   // TypeDefs
-	private java.util.Vector methodMaps;      // MethodMaps
+	private Vector events;
+	private Vector fields;
+	private Vector methods;
+	private Vector properties;
+	private Vector interfaces;      // InterfaceImplementations
+	private Vector attributes;
+	private Vector nestedClasses;   // TypeDefs
+	private Vector methodMaps;      // MethodMaps
 	////////////////////////////////////
 	private long Flags;
 	//////////////////////////
@@ -47,7 +52,7 @@ public class TypeDef extends TypeRef implements HasSecurity, edu.arizona.cs.mbel
 	private TypeRef superClass;               // will NOT be a TypeSpec
 	private DeclSecurity security;
 
-	private java.util.Vector typeDefAttributes;
+	private Vector typeDefAttributes;
 
 	/**
 	 * Constructs a TypeDef with the given namespace, name and flags
@@ -61,15 +66,15 @@ public class TypeDef extends TypeRef implements HasSecurity, edu.arizona.cs.mbel
 		super(ns, name);
 		Flags = flags;
 
-		events = new java.util.Vector(5);
-		fields = new java.util.Vector(10);
-		methods = new java.util.Vector(10);
-		properties = new java.util.Vector(10);
-		interfaces = new java.util.Vector(5);
-		attributes = new java.util.Vector(5);
-		nestedClasses = new java.util.Vector(2);
-		methodMaps = new java.util.Vector(5);
-		typeDefAttributes = new java.util.Vector(10);
+		events = new Vector(5);
+		fields = new Vector(10);
+		methods = new Vector(10);
+		properties = new Vector(10);
+		interfaces = new Vector(5);
+		attributes = new Vector(5);
+		nestedClasses = new Vector(2);
+		methodMaps = new Vector(5);
+		typeDefAttributes = new Vector(10);
 
 		superClass = AssemblyTypeRef.OBJECT;
 		if(name.equals("<Module>"))
@@ -361,7 +366,7 @@ public class TypeDef extends TypeRef implements HasSecurity, edu.arizona.cs.mbel
 	 */
 	public Event getEventByName(String name)
 	{
-		java.util.Iterator iter = events.iterator();
+		Iterator iter = events.iterator();
 		while(iter.hasNext())
 		{
 			Event event = (Event) iter.next();
@@ -413,7 +418,7 @@ public class TypeDef extends TypeRef implements HasSecurity, edu.arizona.cs.mbel
 	 */
 	public Field getFieldByName(String name)
 	{
-		java.util.Iterator iter = fields.iterator();
+		Iterator iter = fields.iterator();
 		while(iter.hasNext())
 		{
 			Field f = (Field) iter.next();
@@ -478,7 +483,7 @@ public class TypeDef extends TypeRef implements HasSecurity, edu.arizona.cs.mbel
 	 */
 	public Method getMethodByName(String name)
 	{
-		java.util.Iterator iter = methods.iterator();
+		Iterator iter = methods.iterator();
 		while(iter.hasNext())
 		{
 			Method m = (Method) iter.next();
@@ -528,7 +533,7 @@ public class TypeDef extends TypeRef implements HasSecurity, edu.arizona.cs.mbel
 	 */
 	public Property getPropertyByName(String name)
 	{
-		java.util.Iterator iter = properties.iterator();
+		Iterator iter = properties.iterator();
 		while(iter.hasNext())
 		{
 			Property p = (Property) iter.next();
@@ -586,9 +591,9 @@ public class TypeDef extends TypeRef implements HasSecurity, edu.arizona.cs.mbel
 		// 2. inter is an interface
 		// 3. I implement inter directly (i.e. my superclass does not implement it)
 
-		for(int i = 0; i < interfaces.size(); i++)
+		for(Object anInterface : interfaces)
 		{
-			InterfaceImplementation impl = (InterfaceImplementation) interfaces.get(i);
+			InterfaceImplementation impl = (InterfaceImplementation) anInterface;
 			if(impl.getInterface().equals(inter))
 			{
 				return true;
@@ -606,9 +611,9 @@ public class TypeDef extends TypeRef implements HasSecurity, edu.arizona.cs.mbel
 	 */
 	public InterfaceImplementation getInterfaceByName(String namespace, String name)
 	{
-		for(int i = 0; i < interfaces.size(); i++)
+		for(Object anInterface : interfaces)
 		{
-			InterfaceImplementation impl = (InterfaceImplementation) interfaces.get(i);
+			InterfaceImplementation impl = (InterfaceImplementation) anInterface;
 			TypeRef ref = impl.getInterface();
 			if(ref.getNamespace().equals(namespace) && ref.getName().equals(name))
 			{

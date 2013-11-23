@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.SecurityActions;
+
 /**
  * This class contains the security permission information for certain .NET objects.
  * These canonly be applied to classes that implenent HasSecurity (AssemblyInfo, TypeDef, and Method).
@@ -27,13 +31,13 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public class DeclSecurity implements edu.arizona.cs.mbel.signature.SecurityActions
+public class DeclSecurity implements SecurityActions
 {
 	private int Action;           // 2 byte constant
 	private byte[] permissionSet;
 	// blob that is an XML serialization of the permission set
 
-	private java.util.Vector declSecurityAttributes;
+	private Vector declSecurityAttributes;
 
 	/**
 	 * Makes a new DeclSecurity object with the given action code and permission set
@@ -46,7 +50,7 @@ public class DeclSecurity implements edu.arizona.cs.mbel.signature.SecurityActio
 		Action = action;
 		permissionSet = permission;
 
-		declSecurityAttributes = new java.util.Vector(10);
+		declSecurityAttributes = new Vector(10);
 	}
 
 	/**

@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Make new array.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class NEWARR extends Instruction
 {
 	public static final int NEWARR = 0x8D;
 	protected static final int OPCODE_LIST[] = {NEWARR};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classRef; // element type
+	private AbstractTypeReference classRef; // element type
 
 	/**
 	 * Makes a NEWARR object with the given element type.
 	 *
 	 * @param ref the element type of the array
 	 */
-	public NEWARR(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public NEWARR(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(NEWARR, OPCODE_LIST);
 		classRef = ref;
@@ -46,7 +53,7 @@ public class NEWARR extends Instruction
 	/**
 	 * Returns the element type for this new array.
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getType()
+	public AbstractTypeReference getType()
 	{
 		return classRef;
 	}
@@ -61,14 +68,14 @@ public class NEWARR extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(classRef);
 		buffer.putTOKEN(token);
 	}
 
-	public NEWARR(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public NEWARR(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long classToken = parse.getMSILInputStream().readTOKEN();

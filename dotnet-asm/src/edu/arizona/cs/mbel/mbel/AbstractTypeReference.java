@@ -19,6 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import edu.arizona.cs.mbel.instructions.LoadableType;
+
 /**
  * The abstract parent class of TypeDef, TypeRef, and TypeSpec.
  * These are all the classes that can represent defined types in a module.
@@ -27,7 +29,7 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public abstract class AbstractTypeReference implements edu.arizona.cs.mbel.instructions.LoadableType
+public abstract class AbstractTypeReference implements LoadableType
 {
 	//public abstract void output();
 }

@@ -20,6 +20,9 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+
 /**
  * This class describes the shape of a general array
  *
@@ -48,9 +51,9 @@ public class ArrayShapeSignature extends Signature
 		else
 		{
 			sizes = Sizes;
-			for(int i = 0; i < sizes.length; i++)
+			for(int size : sizes)
 			{
-				if(sizes[i] < 0)
+				if(size < 0)
 				{
 					throw new SignatureException("ArrayShapeSignature: Negative array size given");
 				}
@@ -76,7 +79,7 @@ public class ArrayShapeSignature extends Signature
 	 * @param buffer the bufer to read from
 	 * @return an ArrayShapeSignature representing the given blob, or null if there was a parse error
 	 */
-	public static ArrayShapeSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer)
+	public static ArrayShapeSignature parse(ByteBuffer buffer)
 	{
 		ArrayShapeSignature blob = new ArrayShapeSignature();
 
@@ -131,18 +134,18 @@ public class ArrayShapeSignature extends Signature
 	 *
 	 * @param buffer the buffer to read from
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(encodeInteger(rank));
 		buffer.put(encodeInteger(sizes.length));
-		for(int i = 0; i < sizes.length; i++)
+		for(int size : sizes)
 		{
-			buffer.put(encodeInteger(sizes[i]));
+			buffer.put(encodeInteger(size));
 		}
 		buffer.put(encodeInteger(loBounds.length));
-		for(int i = 0; i < loBounds.length; i++)
+		for(int loBound : loBounds)
 		{
-			buffer.put(encodeInteger(loBounds[i]));
+			buffer.put(encodeInteger(loBound));
 		}
 	}
 

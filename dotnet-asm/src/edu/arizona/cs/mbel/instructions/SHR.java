@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Shift right (shr preserves the top bit, shr.un zeroes the top bit).<br>
  * Stack transition:<br>
@@ -51,7 +55,7 @@ public class SHR extends Instruction
 		return (isUnsigned() ? "shr.un" : "shr");
 	}
 
-	public SHR(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public SHR(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

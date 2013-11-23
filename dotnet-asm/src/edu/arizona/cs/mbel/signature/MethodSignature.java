@@ -20,6 +20,12 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+
 /**
  * This class describes a method signature
  *
@@ -31,7 +37,7 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 	private int requiredParamCount;
 	// number of params before SENTINEL
 	private ReturnTypeSignature returnType;
-	private java.util.Vector params;
+	private Vector params;
 
 	private MethodSignature()
 	{
@@ -52,32 +58,32 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 		flags = (byte) ((hasthis ? HASTHIS : 0) | (explicitthis ? EXPLICITTHIS : 0) | VARARG);
 		if(requiredParams == null)
 		{
-			params = new java.util.Vector(10);
+			params = new Vector(10);
 			requiredParamCount = 0;
 		}
 		else
 		{
-			params = new java.util.Vector(requiredParams.length + 10);
-			for(int i = 0; i < requiredParams.length; i++)
+			params = new Vector(requiredParams.length + 10);
+			for(ParameterSignature requiredParam : requiredParams)
 			{
-				if(requiredParams[i] == null)
+				if(requiredParam == null)
 				{
 					throw new SignatureException("MethodSignature: Null required parameter given");
 				}
-				params.add(requiredParams[i]);
+				params.add(requiredParam);
 			}
 			requiredParamCount = params.size();
 		}
 
 		if(extraParams != null)
 		{
-			for(int i = 0; i < extraParams.length; i++)
+			for(ParameterSignature extraParam : extraParams)
 			{
-				if(extraParams[i] == null)
+				if(extraParam == null)
 				{
 					throw new SignatureException("MethodSignature: Null extra parameter given");
 				}
-				params.add(extraParams[i]);
+				params.add(extraParam);
 			}
 		}
 		returnType = rType;
@@ -117,18 +123,18 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 		requiredParamCount = -1;
 		if(Params == null)
 		{
-			params = new java.util.Vector(10);
+			params = new Vector(10);
 		}
 		else
 		{
-			params = new java.util.Vector(Params.length + 10);
-			for(int i = 0; i < Params.length; i++)
+			params = new Vector(Params.length + 10);
+			for(ParameterSignature Param : Params)
 			{
-				if(Params[i] == null)
+				if(Param == null)
 				{
 					throw new SignatureException("MethodSignature: Null param given");
 				}
-				params.add(Params[i]);
+				params.add(Param);
 			}
 		}
 		returnType = rType;
@@ -146,7 +152,7 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return a MethodSignature representing the given blob, or null if there was a parse error
 	 */
-	public static MethodSignature parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static MethodSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
 		MethodSignature blob = new MethodSignature();
 
@@ -158,7 +164,7 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 			return null;
 		}
 
-		blob.params = new java.util.Vector(paramCount + 10);
+		blob.params = new Vector(paramCount + 10);
 		ParameterSignature temp = null;
 		blob.requiredParamCount = -1;
 		for(int i = 0; i < paramCount; i++)
@@ -322,7 +328,7 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(flags);
 		byte[] count = encodeInteger(params.size());

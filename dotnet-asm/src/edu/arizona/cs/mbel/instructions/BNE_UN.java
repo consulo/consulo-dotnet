@@ -19,6 +19,12 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Branch not equal or unordered.<br>
  * Stack transition:<br>
@@ -63,7 +69,7 @@ public class BNE_UN extends BranchInstruction
 		return (super.getLength() + (isShort() ? 1 : 4));
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		if(isShort())
@@ -76,7 +82,7 @@ public class BNE_UN extends BranchInstruction
 		}
 	}
 
-	public BNE_UN(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public BNE_UN(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		setTarget((isShort() ? parse.getMSILInputStream().readINT8() : parse.getMSILInputStream().readINT32()));

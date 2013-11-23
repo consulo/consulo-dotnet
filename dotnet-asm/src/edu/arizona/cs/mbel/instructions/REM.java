@@ -20,6 +20,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Remainder (mod).<br>
  * Stack transition:<br>
@@ -56,7 +60,7 @@ public class REM extends Instruction
 		return (isUnsigned() ? "rem.un" : "rem");
 	}
 
-	public REM(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public REM(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

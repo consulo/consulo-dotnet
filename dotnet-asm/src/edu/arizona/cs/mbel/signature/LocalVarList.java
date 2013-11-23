@@ -20,6 +20,12 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.TypeGroup;
+
 /**
  * This class describes the list of local vars in a method signature.
  * This class is one of the Signature classes, but I removed the trailing
@@ -29,7 +35,7 @@ package edu.arizona.cs.mbel.signature;
  */
 public class LocalVarList extends StandAloneSignature implements CallingConvention
 {
-	private java.util.Vector localVars;    // [count]
+	private Vector localVars;    // [count]
 
 	/**
 	 * Makes a LocalVarList from the given localVars
@@ -40,16 +46,16 @@ public class LocalVarList extends StandAloneSignature implements CallingConventi
 	{
 		if(locals == null)
 		{
-			localVars = new java.util.Vector(5);
+			localVars = new Vector(5);
 		}
 		else
 		{
-			localVars = new java.util.Vector(locals.length + 5);
-			for(int i = 0; i < locals.length; i++)
+			localVars = new Vector(locals.length + 5);
+			for(LocalVar local : locals)
 			{
-				if(locals[i] != null)
+				if(local != null)
 				{
-					localVars.add(locals[i]);
+					localVars.add(local);
 				}
 			}
 		}
@@ -66,7 +72,7 @@ public class LocalVarList extends StandAloneSignature implements CallingConventi
 	 * @param group  a TypeGroup for reconciling tokens to mbel references
 	 * @return a LocalVarListSignature representing the given blob, or null if there was a parse error
 	 */
-	public static LocalVarList parse(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.mbel.TypeGroup group)
+	public static LocalVarList parse(ByteBuffer buffer, TypeGroup group)
 	{
 		LocalVarList blob = new LocalVarList();
 
@@ -78,7 +84,7 @@ public class LocalVarList extends StandAloneSignature implements CallingConventi
 
 		int count = readCodedInteger(buffer);
 
-		blob.localVars = new java.util.Vector(count);
+		blob.localVars = new Vector(count);
 		LocalVar var = null;
 		for(int i = 0; i < count; i++)
 		{
@@ -131,13 +137,13 @@ public class LocalVarList extends StandAloneSignature implements CallingConventi
 	 *
 	 * @param buffer the buffer to write to
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		buffer.put(LOCAL_SIG);
 		buffer.put(encodeInteger(localVars.size()));
-		for(int i = 0; i < localVars.size(); i++)
+		for(Object localVar : localVars)
 		{
-			((LocalVar) localVars.get(i)).emit(buffer, emitter);
+			((LocalVar) localVar).emit(buffer, emitter);
 		}
 	}
 

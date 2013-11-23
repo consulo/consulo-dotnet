@@ -19,6 +19,13 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Copy ValueType.<br>
  * Stack transition:<br>
@@ -30,14 +37,14 @@ public class CPOBJ extends Instruction
 {
 	public static final int CPOBJ = 0x70;
 	protected static final int OPCODE_LIST[] = {CPOBJ};
-	private edu.arizona.cs.mbel.mbel.AbstractTypeReference classRef;
+	private AbstractTypeReference classRef;
 
 	/**
 	 * Makes a CPOBJ object for the given ValueType
 	 *
 	 * @param ref the type reference of the ValueType
 	 */
-	public CPOBJ(edu.arizona.cs.mbel.mbel.AbstractTypeReference ref) throws InstructionInitException
+	public CPOBJ(AbstractTypeReference ref) throws InstructionInitException
 	{
 		super(CPOBJ, OPCODE_LIST);
 		classRef = ref;
@@ -46,7 +53,7 @@ public class CPOBJ extends Instruction
 	/**
 	 * Returns the type reference of the ValueType for this instruction
 	 */
-	public edu.arizona.cs.mbel.mbel.AbstractTypeReference getValueType()
+	public AbstractTypeReference getValueType()
 	{
 		return classRef;
 	}
@@ -61,14 +68,14 @@ public class CPOBJ extends Instruction
 		return (super.getLength() + 4);
 	}
 
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		super.emit(buffer, emitter);
 		long token = emitter.getTypeToken(classRef);
 		buffer.putTOKEN(token);
 	}
 
-	public CPOBJ(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public CPOBJ(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 		long classToken = parse.getMSILInputStream().readTOKEN();

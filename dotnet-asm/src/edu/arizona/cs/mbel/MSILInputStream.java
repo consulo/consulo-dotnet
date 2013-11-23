@@ -19,6 +19,11 @@ package edu.arizona.cs.mbel;
  */
 
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import edu.arizona.cs.mbel.parse.SectionHeader;
+
 /**
  * This is an input stream that buffers the entire PE/COFF file in advance.
  * Since even the main library files (like mscorlib.dll) are no more than ~2mb,
@@ -29,7 +34,7 @@ package edu.arizona.cs.mbel;
  */
 public class MSILInputStream
 {
-	private edu.arizona.cs.mbel.parse.SectionHeader[] headers;
+	private SectionHeader[] headers;
 	private byte[] data;
 	private int current;
 	private int size;
@@ -40,7 +45,7 @@ public class MSILInputStream
 	 * data that is available at the time the constructor is called (i.e. as much as is reported by
 	 * InputStream.available()).
 	 */
-	public MSILInputStream(java.io.InputStream input) throws java.io.IOException
+	public MSILInputStream(InputStream input) throws IOException
 	{
 		// reads in an entire input stream and buffers it
 		current = 0;
@@ -52,12 +57,12 @@ public class MSILInputStream
 	/**
 	 * Moves the file pointer to the given location.
 	 */
-	public void seek(long pos) throws java.io.IOException
+	public void seek(long pos) throws IOException
 	{
 		// skips to absolute location 'point' in the file
 		if(pos < 0 || pos >= size)
 		{
-			throw new java.io.IOException("MSILInputStream.seek: Seek position outside of file bounds: " + pos);
+			throw new IOException("MSILInputStream.seek: Seek position outside of file bounds: " + pos);
 		}
 
 		current = (int) pos;
@@ -67,7 +72,7 @@ public class MSILInputStream
 	 * This method allows the MSILInputStream to computer file offsets from RVAs in the file.
 	 * This method must be called before any calls to getFilePointer are made.
 	 */
-	public void activate(edu.arizona.cs.mbel.parse.SectionHeader[] hdrs)
+	public void activate(SectionHeader[] hdrs)
 	{
 		headers = hdrs;
 	}
@@ -78,11 +83,11 @@ public class MSILInputStream
 	 */
 	public long getFilePointer(long RVA)
 	{
-		for(int i = 0; i < headers.length; i++)
+		for(SectionHeader header : headers)
 		{
-			if(headers[i].VirtualAddress <= RVA && (headers[i].VirtualAddress + headers[i].SizeOfRawData) > RVA)
+			if(header.VirtualAddress <= RVA && (header.VirtualAddress + header.SizeOfRawData) > RVA)
 			{
-				return ((RVA - headers[i].VirtualAddress) + headers[i].PointerToRawData);
+				return ((RVA - header.VirtualAddress) + header.PointerToRawData);
 			}
 		}
 		return -1L;
@@ -92,7 +97,7 @@ public class MSILInputStream
 	 * Reads a null-terminated ASCII string from the file starting
 	 * at the current location and ending at the next 0x00 ('\0') byte.
 	 */
-	public String readASCII() throws java.io.IOException
+	public String readASCII() throws IOException
 	{
 		String result = "";
 		int BYTE;
@@ -106,7 +111,7 @@ public class MSILInputStream
 	/**
 	 * Returns the current file position of this input stream
 	 */
-	public long getCurrent() throws java.io.IOException
+	public long getCurrent() throws IOException
 	{
 		return (long) current;
 	}
@@ -118,15 +123,15 @@ public class MSILInputStream
 	 * or will returns false. The file position after an unsuccessful match is undefined,
 	 * but will be somewhere between start and (start+bytes.length).
 	 */
-	public boolean match(byte[] bytes) throws java.io.IOException
+	public boolean match(byte[] bytes) throws IOException
 	{
 		if((current + bytes.length) > size)
 		{
 			return false;
 		}
-		for(int i = 0; i < bytes.length; i++)
+		for(byte aByte : bytes)
 		{
-			if(bytes[i] != data[current++])
+			if(aByte != data[current++])
 			{
 				return false;
 			}
@@ -181,7 +186,7 @@ public class MSILInputStream
 	 *
 	 * @param bytes the array to read into. this will attempt to read bytes.length bytes from the file
 	 */
-	public void read(byte[] bytes) throws java.io.IOException
+	public void read(byte[] bytes) throws IOException
 	{
 		if(bytes == null)
 		{
@@ -189,7 +194,7 @@ public class MSILInputStream
 		}
 		if((current + bytes.length) > size)
 		{
-			throw new java.io.IOException("BufferedMSILInputStream.read: Premature EOF");
+			throw new IOException("BufferedMSILInputStream.read: Premature EOF");
 		}
 
 		for(int i = 0; i < bytes.length; i++)
@@ -202,7 +207,7 @@ public class MSILInputStream
 	 * Reads an unsigned byte from the file, returned in the lower 8 bits of an int.
 	 * Advances the file pointer by 1.
 	 */
-	public int readBYTE() throws java.io.IOException
+	public int readBYTE() throws IOException
 	{
 		// throws java.io.IOException if EOF
 		return ((int) (data[current++] & 0xFF)) & 0xFF;
@@ -212,11 +217,11 @@ public class MSILInputStream
 	 * Reads an unsigned 2-byte integer from the file, returned in the lower 2 bytes of an int
 	 * Advances the file pointer by 2.
 	 */
-	public int readWORD() throws java.io.IOException
+	public int readWORD() throws IOException
 	{
 		if(current + 1 >= size)
 		{
-			throw new java.io.IOException("MSILInputStream.readWORD: Premature EOF");
+			throw new IOException("MSILInputStream.readWORD: Premature EOF");
 		}
 
 		int b1 = readBYTE();
@@ -229,11 +234,11 @@ public class MSILInputStream
 	 * Reads an unsigned 4-byte integer from the file and returns it the lower 4 bytes of a long.
 	 * Advances the file pointer by 4.
 	 */
-	public long readDWORD() throws java.io.IOException
+	public long readDWORD() throws IOException
 	{
 		if(current + 3 >= size)
 		{
-			throw new java.io.IOException("MSILInputStream.readDWORD: Premature EOF");
+			throw new IOException("MSILInputStream.readDWORD: Premature EOF");
 		}
 		int b1 = readBYTE();
 		int b2 = readBYTE();
@@ -248,12 +253,12 @@ public class MSILInputStream
 	 * Reads an 8-byte (signed) quantity and returns it in a long.
 	 * Advances the file pointer by 8.
 	 */
-	public long readDDWORD() throws java.io.IOException
+	public long readDDWORD() throws IOException
 	{
 		// throws java.io.IOException if EOF
 		if(current + 7 >= size)
 		{
-			throw new java.io.IOException("MSILInputStream.readDWORD: Premature EOF");
+			throw new IOException("MSILInputStream.readDWORD: Premature EOF");
 		}
 		int b1 = readBYTE();
 		int b2 = readBYTE();
@@ -274,7 +279,7 @@ public class MSILInputStream
 	 * Reads an int64 (signed) from the file and returns it in a long.
 	 * Advances the file pointer by 8.
 	 */
-	public long readINT64() throws java.io.IOException
+	public long readINT64() throws IOException
 	{
 		return readDDWORD();
 	}
@@ -283,11 +288,11 @@ public class MSILInputStream
 	 * Reads an int32 (signed) from the file and returns it in an int.
 	 * Advances the file pointer by 4.
 	 */
-	public int readINT32() throws java.io.IOException
+	public int readINT32() throws IOException
 	{
 		if(current + 3 >= size)
 		{
-			throw new java.io.IOException("MSILInputStream.readINT32: Premature EOF");
+			throw new IOException("MSILInputStream.readINT32: Premature EOF");
 		}
 
 		int b1 = readBYTE();
@@ -304,12 +309,12 @@ public class MSILInputStream
 	 * Reads an int16 (signed) from the file and returns it in an int.
 	 * Advances the file pointer by 2.
 	 */
-	public int readINT16() throws java.io.IOException
+	public int readINT16() throws IOException
 	{
 		short shorty = 0;
 		if(current + 1 >= size)
 		{
-			throw new java.io.IOException("MSILInputStream.readINT16: Premature EOF");
+			throw new IOException("MSILInputStream.readINT16: Premature EOF");
 		}
 		int b1 = readBYTE();
 		int b2 = readBYTE();
@@ -322,11 +327,11 @@ public class MSILInputStream
 	 * Reads an int8 (signed) from the file and returns it in an int.
 	 * Advances the file pointer by 1.
 	 */
-	public int readINT8() throws java.io.IOException
+	public int readINT8() throws IOException
 	{
 		if(current >= size)
 		{
-			throw new java.io.IOException("MSILInputStream.readINT8: Premature EOF");
+			throw new IOException("MSILInputStream.readINT8: Premature EOF");
 		}
 		return (int) data[current++];
 	}
@@ -335,7 +340,7 @@ public class MSILInputStream
 	 * Reads an r4 from the file and returns it in a float.
 	 * Advances the file pointer by 4.
 	 */
-	public float readR4() throws java.io.IOException
+	public float readR4() throws IOException
 	{
 		return Float.intBitsToFloat((int) readDWORD());
 	}
@@ -344,7 +349,7 @@ public class MSILInputStream
 	 * Reads an r8 from the file and returns it in a double.
 	 * Advances the file pointer by 8.
 	 */
-	public double readR8() throws java.io.IOException
+	public double readR8() throws IOException
 	{
 		return Double.longBitsToDouble(readDDWORD());
 	}
@@ -353,7 +358,7 @@ public class MSILInputStream
 	 * Reads an uint32 from the file and returns it in the lower 4 bytes of a long.
 	 * Advances the file pointer by 4.
 	 */
-	public long readUINT32() throws java.io.IOException
+	public long readUINT32() throws IOException
 	{
 		return readDWORD();
 	}
@@ -362,7 +367,7 @@ public class MSILInputStream
 	 * Reads an uint16 from the file and returns it in the lower 2 bytes of an int.
 	 * Advances the file pointer by 2.
 	 */
-	public int readUINT16() throws java.io.IOException
+	public int readUINT16() throws IOException
 	{
 		return readWORD();
 	}
@@ -371,7 +376,7 @@ public class MSILInputStream
 	 * Reads an uint8 from the file and returns it in the lower byte of an int.
 	 * Advances the file pointer by 1.
 	 */
-	public int readUINT8() throws java.io.IOException
+	public int readUINT8() throws IOException
 	{
 		return readBYTE();
 	}
@@ -380,7 +385,7 @@ public class MSILInputStream
 	 * Reads a token from the file and returns it in a long.
 	 * Advances the file pointer by 4.
 	 */
-	public long readTOKEN() throws java.io.IOException
+	public long readTOKEN() throws IOException
 	{
 		return readDWORD();
 	}
@@ -391,11 +396,11 @@ public class MSILInputStream
 	 *
 	 * @param length the number of bytes to zero out, must be positive
 	 */
-	public void zero(long length) throws java.io.IOException
+	public void zero(long length) throws IOException
 	{
 		if((current + length) >= size || length < 0)
 		{
-			throw new java.io.IOException("MSILInputStream.zero: Invalid length parameter");
+			throw new IOException("MSILInputStream.zero: Invalid length parameter");
 		}
 		for(int i = 0; i < length; i++)
 		{

@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Compare greater than.<br>
  * Stack transition:<br>
@@ -55,7 +59,7 @@ public class CGT extends Instruction
 		return (isUnsignedOrUnordered() ? "cgt.un" : "cgt");
 	}
 
-	public CGT(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public CGT(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.signature.ManifestResourceAttributes;
+
 /**
  * Represents a managed resource. Managed resources can be embedded in the current module,
  * or found in another assembly, or in a File that is reference by this module.
@@ -26,11 +30,11 @@ package edu.arizona.cs.mbel.mbel;
  *
  * @author Michael Stepp
  */
-public abstract class ManifestResource implements edu.arizona.cs.mbel.signature.ManifestResourceAttributes
+public abstract class ManifestResource implements ManifestResourceAttributes
 {
 	private long Flags;
 	private String Name;
-	private java.util.Vector manifestResourceAttributes;
+	private Vector manifestResourceAttributes;
 
 	/**
 	 * Makes a new ManifestResource with the given name and flags
@@ -43,7 +47,7 @@ public abstract class ManifestResource implements edu.arizona.cs.mbel.signature.
 		Name = name;
 		Flags = flags;
 
-		manifestResourceAttributes = new java.util.Vector(10);
+		manifestResourceAttributes = new Vector(10);
 	}
 
 	/**

@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+
 /**
  * Reference any type. Loads the type out of a typed reference.<br>
  * Stack transition:<br>
@@ -41,7 +45,7 @@ public class REFANYTYPE extends Instruction
 		return "refanytype";
 	}
 
-	public REFANYTYPE(int opcode, edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException, InstructionInitException
+	public REFANYTYPE(int opcode, ModuleParser parse) throws IOException, InstructionInitException
 	{
 		super(opcode, OPCODE_LIST);
 	}

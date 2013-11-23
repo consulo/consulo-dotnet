@@ -19,6 +19,10 @@
 
 package edu.arizona.cs.mbel.metadata;
 
+import java.io.IOException;
+
+import edu.arizona.cs.mbel.MSILInputStream;
+
 /**
  * This class contains parsing methods and constants for dealing with metadata tables.
  * Reference: ECMA Spec, PartitionII, page 21.
@@ -354,7 +358,7 @@ public class TableConstants
 	 *
 	 * @param in the input stream to read from
 	 */
-	public void parseTables(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException
+	public void parseTables(MSILInputStream in) throws IOException
 	{
 		tables = new GenericTable[64][];
 
@@ -485,7 +489,7 @@ public class TableConstants
 	 * @param type the type of coded index (one of the constants defined in this class, i.e. HasConst)
 	 * @return a coded index value
 	 */
-	public long readCodedIndex(edu.arizona.cs.mbel.MSILInputStream in, int type) throws java.io.IOException
+	public long readCodedIndex(MSILInputStream in, int type) throws IOException
 	{
 		// reads the correct number of bytes into a coded index long
 		// (this long can then be run through parseCodedIndex)
@@ -511,7 +515,7 @@ public class TableConstants
 	 * @param heap a constant indicating which heap you want (constants defined in this class, i.e. StringsHeap)
 	 * @return a token into one of the heaps
 	 */
-	public long readHeapIndex(edu.arizona.cs.mbel.MSILInputStream in, int heap) throws java.io.IOException
+	public long readHeapIndex(MSILInputStream in, int heap) throws IOException
 	{
 		// reads the appropriate number of bytes from the file into a long
 		if(heap < 0 || heap >= 3)
@@ -537,7 +541,7 @@ public class TableConstants
 	 * @param table the number of the table type (constants defined in this class, i.e. TypeDef)
 	 * @return a table index token (RID)
 	 */
-	public long readTableIndex(edu.arizona.cs.mbel.MSILInputStream in, int table) throws java.io.IOException
+	public long readTableIndex(MSILInputStream in, int table) throws IOException
 	{
 		// reads the appropriate number of bytes for the given table index
 		if(table < 0 || table >= 64)

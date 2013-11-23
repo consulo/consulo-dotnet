@@ -19,6 +19,22 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import java.io.IOException;
+import java.util.Vector;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.instructions.FaultClause;
+import edu.arizona.cs.mbel.instructions.FilteredExceptionClause;
+import edu.arizona.cs.mbel.instructions.FinallyClause;
+import edu.arizona.cs.mbel.instructions.InstructionHandle;
+import edu.arizona.cs.mbel.instructions.InstructionList;
+import edu.arizona.cs.mbel.instructions.StructuredExceptionClause;
+import edu.arizona.cs.mbel.instructions.TypedExceptionClause;
+import edu.arizona.cs.mbel.parse.MSILParseException;
+import edu.arizona.cs.mbel.signature.LocalVarList;
+
 /**
  * This class represents a method body. It has an InstructionList with the actual Instrucitons in it
  * and a vector of exception clauses defined within the method. It also contains information about
@@ -36,9 +52,9 @@ public class MethodBody
 
 	private int Flags;      // only kept this for FLAG_INIT_LOCALS
 	private int MaxStack;
-	private edu.arizona.cs.mbel.signature.LocalVarList localVars; // may be null
-	private edu.arizona.cs.mbel.instructions.InstructionList instructionList;
-	private java.util.Vector SECs;   // structured exception clauses
+	private LocalVarList localVars; // may be null
+	private InstructionList instructionList;
+	private Vector SECs;   // structured exception clauses
 
 	/**
 	 * Makes a MethodBody with the given max stack value and local vars, possibly initializing local vars
@@ -47,22 +63,22 @@ public class MethodBody
 	 * @param maxstack   the maximum number of itesm that may be pushed onthe stack in this method call
 	 * @param locals     the local variables list signature (may be null if no locals)
 	 */
-	public MethodBody(boolean initlocals, int maxstack, edu.arizona.cs.mbel.signature.LocalVarList locals)
+	public MethodBody(boolean initlocals, int maxstack, LocalVarList locals)
 	{
 		Flags = (initlocals ? FLAG_INIT_LOCALS : 0);
 		MaxStack = maxstack;
 		localVars = locals;
-		instructionList = new edu.arizona.cs.mbel.instructions.InstructionList();
-		SECs = new java.util.Vector(10);
+		instructionList = new InstructionList();
+		SECs = new Vector(10);
 	}
 
 	/**
 	 * Makes a MethodBody by parsing it from a ClassParser
 	 */
-	protected MethodBody(ClassParser parse) throws java.io.IOException, edu.arizona.cs.mbel.parse.MSILParseException
+	protected MethodBody(ModuleParser parse) throws IOException, MSILParseException
 	{
 		boolean moreSects = false;
-		edu.arizona.cs.mbel.MSILInputStream in = parse.getMSILInputStream();
+		MSILInputStream in = parse.getMSILInputStream();
 
 		long start = in.getCurrent();
 
@@ -102,8 +118,8 @@ public class MethodBody
 			localVars = parse.getLocalVarList(LocalVarSigTok);
 		}
 
-		instructionList = new edu.arizona.cs.mbel.instructions.InstructionList(parse, CodeSize);
-		SECs = new java.util.Vector(5);
+		instructionList = new InstructionList(parse, CodeSize);
+		SECs = new Vector(5);
 
 		// this comes after the body
 		if(moreSects)
@@ -115,39 +131,39 @@ public class MethodBody
 				method_data_section = new MethodDataSection(in);
 				for(int i = 0; i < method_data_section.nclauses; i++)
 				{
-					edu.arizona.cs.mbel.instructions.InstructionHandle ts = instructionList.getHandleAt((int) method_data_section.clauses[i].TryOffset);
-					edu.arizona.cs.mbel.instructions.InstructionHandle te = instructionList.getHandleEndingAt((int) (method_data_section.clauses[i].TryOffset +
+					InstructionHandle ts = instructionList.getHandleAt((int) method_data_section.clauses[i].TryOffset);
+					InstructionHandle te = instructionList.getHandleEndingAt((int) (method_data_section.clauses[i].TryOffset +
 							method_data_section.clauses[i].TryLength));
-					edu.arizona.cs.mbel.instructions.InstructionHandle hs = instructionList.getHandleAt((int) method_data_section.clauses[i].HandlerOffset);
-					edu.arizona.cs.mbel.instructions.InstructionHandle he = instructionList.getHandleEndingAt((int) (method_data_section.clauses[i].HandlerOffset +
+					InstructionHandle hs = instructionList.getHandleAt((int) method_data_section.clauses[i].HandlerOffset);
+					InstructionHandle he = instructionList.getHandleEndingAt((int) (method_data_section.clauses[i].HandlerOffset +
 							method_data_section.clauses[i].HandlerLength));
 
 					switch(method_data_section.clauses[i].Flags)
 					{
 						case Clause.FLAG_CLAUSE_EXCEPTION:
 						{
-							edu.arizona.cs.mbel.mbel.AbstractTypeReference type = parse.getClassRef(method_data_section.clauses[i].ClassToken);
-							SECs.add(new edu.arizona.cs.mbel.instructions.TypedExceptionClause(type, ts, te, hs, he));
+							AbstractTypeReference type = parse.getClassRef(method_data_section.clauses[i].ClassToken);
+							SECs.add(new TypedExceptionClause(type, ts, te, hs, he));
 							break;
 						}
 
 						case Clause.FLAG_CLAUSE_FILTER:
 						{
-							edu.arizona.cs.mbel.instructions.InstructionHandle fs = instructionList.getHandleAt((int) method_data_section.clauses[i].FilterOffset);
-							edu.arizona.cs.mbel.instructions.InstructionHandle fe = instructionList.getHandleEndingAt((int) method_data_section.clauses[i].HandlerOffset);
-							SECs.add(new edu.arizona.cs.mbel.instructions.FilteredExceptionClause(fs, fe, ts, te, hs, he));
+							InstructionHandle fs = instructionList.getHandleAt((int) method_data_section.clauses[i].FilterOffset);
+							InstructionHandle fe = instructionList.getHandleEndingAt((int) method_data_section.clauses[i].HandlerOffset);
+							SECs.add(new FilteredExceptionClause(fs, fe, ts, te, hs, he));
 							break;
 						}
 
 						case Clause.FLAG_CLAUSE_FINALLY:
 						{
-							SECs.add(new edu.arizona.cs.mbel.instructions.FinallyClause(ts, te, hs, he));
+							SECs.add(new FinallyClause(ts, te, hs, he));
 							break;
 						}
 
 						case Clause.FLAG_CLAUSE_FAULT:
 						{
-							SECs.add(new edu.arizona.cs.mbel.instructions.FaultClause(ts, te, hs, he));
+							SECs.add(new FaultClause(ts, te, hs, he));
 							break;
 						}
 					}
@@ -166,12 +182,12 @@ public class MethodBody
 	/**
 	 * Returns a non-null array of StructuredExceptionClauses for this method body
 	 */
-	public edu.arizona.cs.mbel.instructions.StructuredExceptionClause[] getSECs()
+	public StructuredExceptionClause[] getSECs()
 	{
-		edu.arizona.cs.mbel.instructions.StructuredExceptionClause[] secs = new edu.arizona.cs.mbel.instructions.StructuredExceptionClause[SECs.size()];
+		StructuredExceptionClause[] secs = new StructuredExceptionClause[SECs.size()];
 		for(int i = 0; i < secs.length; i++)
 		{
-			secs[i] = (edu.arizona.cs.mbel.instructions.StructuredExceptionClause) SECs.get(i);
+			secs[i] = (StructuredExceptionClause) SECs.get(i);
 		}
 		return secs;
 	}
@@ -179,7 +195,7 @@ public class MethodBody
 	/**
 	 * Returns the local variable list signature for this method body
 	 */
-	public edu.arizona.cs.mbel.signature.LocalVarList getLocalVarList()
+	public LocalVarList getLocalVarList()
 	{
 		return localVars;
 	}
@@ -187,7 +203,7 @@ public class MethodBody
 	/**
 	 * Adds a Structured Exception Clause to this method
 	 */
-	public void addSEC(edu.arizona.cs.mbel.instructions.StructuredExceptionClause sec)
+	public void addSEC(StructuredExceptionClause sec)
 	{
 		SECs.add(sec);
 	}
@@ -195,7 +211,7 @@ public class MethodBody
 	/**
 	 * Removes a Structured Exception Clause from this method, using equals()
 	 */
-	public void removeSEC(edu.arizona.cs.mbel.instructions.StructuredExceptionClause sec)
+	public void removeSEC(StructuredExceptionClause sec)
 	{
 		SECs.remove(sec);
 	}
@@ -258,7 +274,7 @@ public class MethodBody
 	/**
 	 * Returns the instruction list for this method body (never null)
 	 */
-	public edu.arizona.cs.mbel.instructions.InstructionList getInstructionList()
+	public InstructionList getInstructionList()
 	{
 		return instructionList;
 	}
@@ -266,7 +282,7 @@ public class MethodBody
 	/**
 	 * Emits this method body to a ByteBuffer, with the given ClassEmitter
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		// DONE!!!
 		instructionList.setPositions();
@@ -324,12 +340,11 @@ public class MethodBody
 			flags |= (SECs.size() * 24 + 4);
 			buffer.putINT32(flags);
 
-			for(int i = 0; i < SECs.size(); i++)
+			for(Object obj : SECs)
 			{
-				Object obj = SECs.get(i);
-				if(obj instanceof edu.arizona.cs.mbel.instructions.FaultClause)
+				if(obj instanceof FaultClause)
 				{
-					edu.arizona.cs.mbel.instructions.FaultClause fc = (edu.arizona.cs.mbel.instructions.FaultClause) obj;
+					FaultClause fc = (FaultClause) obj;
 					buffer.putINT32(4);
 					buffer.putINT32(fc.getTryStart().getPosition());
 					int trylength = fc.getTryEnd().getPosition() + fc.getTryEnd().getInstruction().getLength() - fc.getTryStart().getPosition();
@@ -340,9 +355,9 @@ public class MethodBody
 					buffer.putINT32(handlerlength);
 					buffer.putTOKEN(0);
 				}
-				else if(obj instanceof edu.arizona.cs.mbel.instructions.FilteredExceptionClause)
+				else if(obj instanceof FilteredExceptionClause)
 				{
-					edu.arizona.cs.mbel.instructions.FilteredExceptionClause fec = (edu.arizona.cs.mbel.instructions.FilteredExceptionClause) obj;
+					FilteredExceptionClause fec = (FilteredExceptionClause) obj;
 					buffer.putINT32(1);
 					buffer.putINT32(fec.getTryStart().getPosition());
 					int trylength = fec.getTryEnd().getPosition() + fec.getTryEnd().getInstruction().getLength() - fec.getTryStart().getPosition();
@@ -354,9 +369,9 @@ public class MethodBody
 
 					buffer.putINT32(fec.getFilterStart().getPosition());
 				}
-				else if(obj instanceof edu.arizona.cs.mbel.instructions.FinallyClause)
+				else if(obj instanceof FinallyClause)
 				{
-					edu.arizona.cs.mbel.instructions.FinallyClause fc = (edu.arizona.cs.mbel.instructions.FinallyClause) obj;
+					FinallyClause fc = (FinallyClause) obj;
 					buffer.putINT32(2);
 					buffer.putINT32(fc.getTryStart().getPosition());
 					int trylength = fc.getTryEnd().getPosition() + fc.getTryEnd().getInstruction().getLength() - fc.getTryStart().getPosition();
@@ -367,9 +382,9 @@ public class MethodBody
 					buffer.putINT32(handlerlength);
 					buffer.putTOKEN(0);
 				}
-				else if(obj instanceof edu.arizona.cs.mbel.instructions.TypedExceptionClause)
+				else if(obj instanceof TypedExceptionClause)
 				{
-					edu.arizona.cs.mbel.instructions.TypedExceptionClause tec = (edu.arizona.cs.mbel.instructions.TypedExceptionClause) obj;
+					TypedExceptionClause tec = (TypedExceptionClause) obj;
 					buffer.putINT32(0);
 					buffer.putINT32(tec.getTryStart().getPosition());
 					int trylength = tec.getTryEnd().getPosition() + tec.getTryEnd().getInstruction().getLength() - tec.getTryStart().getPosition();
@@ -424,7 +439,7 @@ class MethodDataSection
 	public Clause[] clauses;// [nclauses]
 	public int nclauses;
 
-	public MethodDataSection(edu.arizona.cs.mbel.MSILInputStream in) throws java.io.IOException
+	public MethodDataSection(MSILInputStream in) throws IOException
 	{
 		Kind = in.readBYTE();
 		DataSize = in.readBYTE();
@@ -498,7 +513,7 @@ class Clause
 	//////////////////////////////////////
 	private boolean isTiny;
 
-	protected Clause(edu.arizona.cs.mbel.MSILInputStream in, boolean tiny) throws java.io.IOException
+	protected Clause(MSILInputStream in, boolean tiny) throws IOException
 	{
 		isTiny = tiny;
 

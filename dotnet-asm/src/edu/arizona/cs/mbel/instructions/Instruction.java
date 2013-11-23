@@ -21,6 +21,18 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+import java.lang.Class;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.Hashtable;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+import edu.arizona.cs.mbel.parse.MSILParseException;
+
 /**
  * This class is the abstract parent of all the Instruction classes. It contains the factory method
  * parseInstruction which will return the correct subclass of Instruction when given an input stream.
@@ -38,14 +50,14 @@ package edu.arizona.cs.mbel.instructions;
  */
 public abstract class Instruction
 {
-	private static final java.util.Hashtable CLASS_HASH = new java.util.Hashtable(101);
+	private static final Hashtable CLASS_HASH = new Hashtable(101);
 	private int opcode;
 
 	static
 	{
 		// initialize the CLASS_HASH table
 		int i = 0;
-		java.lang.Class[] CLASSES = new java.lang.Class[88];
+		Class[] CLASSES = new Class[88];
 		CLASSES[i++] = ADD.class;
 		CLASSES[i++] = ADD_OVF.class;
 		CLASSES[i++] = AND.class;
@@ -139,13 +151,13 @@ public abstract class Instruction
 		int[] OPCODE_LIST = null;
 		try
 		{
-			for(int j = 0; j < CLASSES.length; j++)
+			for(Class CLASS : CLASSES)
 			{
-				java.lang.reflect.Field opcodes = CLASSES[j].getDeclaredField("OPCODE_LIST");
+				Field opcodes = CLASS.getDeclaredField("OPCODE_LIST");
 				OPCODE_LIST = (int[]) opcodes.get(null);
 				for(int k = 0; k < OPCODE_LIST.length; k++)
 				{
-					CLASS_HASH.put(new Integer(OPCODE_LIST[k]), CLASSES[j]);
+					CLASS_HASH.put(new Integer(OPCODE_LIST[k]), CLASS);
 				}
 			}
 		}
@@ -162,9 +174,9 @@ public abstract class Instruction
 			throw new InstructionInitException("Invalid opcode in initializer");
 		}
 		boolean found = false;
-		for(int i = 0; i < opcodes.length; i++)
+		for(int opcode1 : opcodes)
 		{
-			if(op == opcodes[i])
+			if(op == opcode1)
 			{
 				found = true;
 				break;
@@ -234,7 +246,7 @@ public abstract class Instruction
 	 * @param buffer  the buffer to write to
 	 * @param emitter a ClassEmitter for reconciling references to tokens
 	 */
-	protected void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	protected void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		// this implementation is a default one for instructions
 		// with no arguments
@@ -283,8 +295,8 @@ public abstract class Instruction
 	 * @param parse the ClassParser used to parse this module
 	 * @return an Instruction object (i.e. an instance of the correct subclass)
 	 */
-	public static Instruction readInstruction(edu.arizona.cs.mbel.mbel.ClassParser parse) throws java.io.IOException,
-			edu.arizona.cs.mbel.parse.MSILParseException
+	public static Instruction readInstruction(ModuleParser parse) throws IOException,
+			MSILParseException
 	{
 		boolean tailP = false;
 		boolean volatileP = false;
@@ -292,7 +304,7 @@ public abstract class Instruction
 		int unalignedByte = 0;
 		int input;
 
-		edu.arizona.cs.mbel.MSILInputStream in = parse.getMSILInputStream();
+		MSILInputStream in = parse.getMSILInputStream();
 
 		input = in.readBYTE();
 		if(input == 0xFE)
@@ -308,7 +320,7 @@ public abstract class Instruction
 				unalignedByte = in.readUINT8();
 				if(!(unalignedByte == 1 || unalignedByte == 2 || unalignedByte == 4))
 				{
-					throw new edu.arizona.cs.mbel.parse.MSILParseException("Instruction.readInstruction: \'unaligned.\' prefix alignment value is not one of 1,2, " +
+					throw new MSILParseException("Instruction.readInstruction: \'unaligned.\' prefix alignment value is not one of 1,2, " +
 							"" + "or 4");
 				}
 
@@ -336,7 +348,7 @@ public abstract class Instruction
 						unalignedByte = in.readUINT8();
 						if(!(unalignedByte == 1 || unalignedByte == 2 || unalignedByte == 4))
 						{
-							throw new edu.arizona.cs.mbel.parse.MSILParseException("Instruction.readInstruction: \'unaligned.\' prefix alignment value is not one of 1,2," +
+							throw new MSILParseException("Instruction.readInstruction: \'unaligned.\' prefix alignment value is not one of 1,2," +
 									"" + " or 4");
 						}
 					}
@@ -347,18 +359,18 @@ public abstract class Instruction
 		Object obj = CLASS_HASH.get(new Integer(input));
 		if(obj == null || !(obj instanceof Class))
 		{
-			throw new edu.arizona.cs.mbel.parse.MSILParseException("Instruction.readInstruction: Invalid instruction code");
+			throw new MSILParseException("Instruction.readInstruction: Invalid instruction code");
 		}
 
 		Class clazz = (Class) obj;
 		Class[] parseParams = {
 				int.class,
-				edu.arizona.cs.mbel.mbel.ClassParser.class
+				ModuleParser.class
 		};
 
 		try
 		{
-			java.lang.reflect.Constructor newInst = clazz.getConstructor(parseParams);
+			Constructor newInst = clazz.getConstructor(parseParams);
 			Instruction instr = (Instruction) newInst.newInstance(new Object[]{
 					new Integer(input),
 					parse

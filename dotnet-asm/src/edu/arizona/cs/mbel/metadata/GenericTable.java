@@ -19,6 +19,14 @@
 
 package edu.arizona.cs.mbel.metadata;
 
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+
 /**
  * This class is used as a generic construct to hold the data from any arbitrary metadata table.
  * It does this by means of a parsing grammar and a hashtable. The grammar is one of the constant
@@ -29,7 +37,7 @@ package edu.arizona.cs.mbel.metadata;
 public class GenericTable
 {
 	private String grammar;
-	private java.util.Hashtable data;
+	private Hashtable data;
 
 	private String name;
 	private String[] fieldNames;
@@ -44,25 +52,25 @@ public class GenericTable
 	{
 		grammar = Grammar;
 
-		java.util.StringTokenizer outer = new java.util.StringTokenizer(grammar, ":");
+		StringTokenizer outer = new StringTokenizer(grammar, ":");
 		name = outer.nextToken();
 		String theRest = outer.nextToken();
-		outer = new java.util.StringTokenizer(theRest, ",");
+		outer = new StringTokenizer(theRest, ",");
 
 		fieldNames = new String[outer.countTokens()];
 		types = new String[fieldNames.length];
 		for(int i = 0; i < fieldNames.length; i++)
 		{
 			String field = outer.nextToken();
-			java.util.StringTokenizer fieldtok = new java.util.StringTokenizer(field, "=");
+			StringTokenizer fieldtok = new StringTokenizer(field, "=");
 			fieldNames[i] = fieldtok.nextToken();
 			types[i] = fieldtok.nextToken();
 		}
 
-		data = new java.util.Hashtable(fieldNames.length);
-		for(int i = 0; i < fieldNames.length; i++)
+		data = new Hashtable(fieldNames.length);
+		for(String fieldName : fieldNames)
 		{
-			data.put(fieldNames[i], "");
+			data.put(fieldName, "");
 		}
 	}
 
@@ -73,9 +81,9 @@ public class GenericTable
 	 * @param in the input stream to read from
 	 * @param tc a TableConstants instance to read in heap indexes, table indexes, coded indexes, etc.
 	 */
-	public void parse(edu.arizona.cs.mbel.MSILInputStream in, TableConstants tc) throws java.io.IOException
+	public void parse(MSILInputStream in, TableConstants tc) throws IOException
 	{
-		java.util.StringTokenizer tok = null;
+		StringTokenizer tok = null;
 
 		for(int i = 0; i < fieldNames.length; i++)
 		{
@@ -111,7 +119,7 @@ public class GenericTable
 			}
 			else if(types[i].startsWith("T"))
 			{
-				tok = new java.util.StringTokenizer(types[i], "|");
+				tok = new StringTokenizer(types[i], "|");
 				tok.nextToken();
 				int table = Integer.parseInt(tok.nextToken());
 				Long value = new Long(tc.readTableIndex(in, table));
@@ -119,7 +127,7 @@ public class GenericTable
 			}
 			else if(types[i].startsWith("C"))
 			{
-				tok = new java.util.StringTokenizer(types[i], "|");
+				tok = new StringTokenizer(types[i], "|");
 				tok.nextToken();
 				int coded = Integer.parseInt(tok.nextToken());
 				Long value = new Long(tc.readCodedIndex(in, coded));
@@ -264,9 +272,9 @@ public class GenericTable
 		}
 
 		boolean found = false;
-		for(int i = 0; i < fieldNames.length; i++)
+		for(String fieldName1 : fieldNames)
 		{
-			if(fieldName.equals(fieldNames[i]))
+			if(fieldName.equals(fieldName1))
 			{
 				found = true;
 				break;
@@ -303,7 +311,7 @@ public class GenericTable
    }
    */
 
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		for(int i = 0; i < fieldNames.length; i++)
 		{
@@ -364,10 +372,10 @@ public class GenericTable
 		{
 			return false;
 		}
-		for(int i = 0; i < fieldNames.length; i++)
+		for(String fieldName : fieldNames)
 		{
-			Object obj1 = data.get(fieldNames[i]);
-			Object obj2 = table.data.get(fieldNames[i]);
+			Object obj1 = data.get(fieldName);
+			Object obj2 = table.data.get(fieldName);
 			if(obj1 instanceof byte[])
 			{
 				byte[] b1 = (byte[]) obj1;

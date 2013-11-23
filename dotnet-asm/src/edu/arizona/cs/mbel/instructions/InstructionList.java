@@ -19,6 +19,15 @@
 
 package edu.arizona.cs.mbel.instructions;
 
+import java.io.IOException;
+import java.util.Iterator;
+
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.emit.ClassEmitter;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
+import edu.arizona.cs.mbel.parse.MSILParseException;
+
 /**
  * Represents a contiguous list of instructions, as in a method.
  * The underlying structure is a linked list of InstructionHandle objects.
@@ -51,23 +60,23 @@ public class InstructionList
 	 * @param parse    the ClassParser for this module
 	 * @param CodeSize the size in bytes of the instrucitons on disk; used as a stopping point
 	 */
-	public InstructionList(edu.arizona.cs.mbel.mbel.ClassParser parse, long CodeSize) throws java.io.IOException,
-			edu.arizona.cs.mbel.parse.MSILParseException
+	public InstructionList(ModuleParser parse, long CodeSize) throws IOException,
+			MSILParseException
 	{
 		this();
 
-		edu.arizona.cs.mbel.MSILInputStream in = parse.getMSILInputStream();
+		MSILInputStream in = parse.getMSILInputStream();
 
 		long START = in.getCurrent();
 		long pos = 0;
 		while(pos < CodeSize)
 		{
-			edu.arizona.cs.mbel.instructions.InstructionHandle ih = append(edu.arizona.cs.mbel.instructions.Instruction.readInstruction(parse));
+			InstructionHandle ih = append(Instruction.readInstruction(parse));
 			ih.updatePosition((int) pos);
 			pos = in.getCurrent() - START;
 		}
 
-		edu.arizona.cs.mbel.instructions.Instruction instr = null;
+		Instruction instr = null;
 		for(InstructionHandle iter = handleFirst.next; iter != handleLast; iter = iter.next)
 		{
 			instr = iter.getInstruction();
@@ -92,7 +101,7 @@ public class InstructionList
 
 					if(!got)
 					{
-						throw new edu.arizona.cs.mbel.parse.MSILParseException("InstructionList: Cannot resolve branch target");
+						throw new MSILParseException("InstructionList: Cannot resolve branch target");
 					}
 				}
 				else
@@ -110,7 +119,7 @@ public class InstructionList
 					}
 					if(!got)
 					{
-						throw new edu.arizona.cs.mbel.parse.MSILParseException("InstructionList: Cannot resolve branch target");
+						throw new MSILParseException("InstructionList: Cannot resolve branch target");
 					}
 				}
 			}
@@ -151,7 +160,7 @@ public class InstructionList
 
 					if(!got)
 					{
-						throw new edu.arizona.cs.mbel.parse.MSILParseException("InstructionList: Cannot resolve switch target");
+						throw new MSILParseException("InstructionList: Cannot resolve switch target");
 					}
 				}
 				swit.setTargetHandles(ihs);
@@ -159,7 +168,7 @@ public class InstructionList
 		}
 	}
 
-	public java.util.Iterator iterator()
+	public Iterator iterator()
 	{
 		return new InstructionIterator(handleFirst, handleLast);
 	}
@@ -613,7 +622,7 @@ public class InstructionList
 	/**
 	 * Write this InstructionList out to a buffer
 	 */
-	public void emit(edu.arizona.cs.mbel.ByteBuffer buffer, edu.arizona.cs.mbel.emit.ClassEmitter emitter)
+	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		// do not call until after setPositions()
 		for(InstructionHandle iter = handleFirst.next; iter != handleLast; iter = iter.next)

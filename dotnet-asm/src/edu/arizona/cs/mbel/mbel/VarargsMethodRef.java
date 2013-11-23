@@ -20,6 +20,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
+import edu.arizona.cs.mbel.signature.MethodSignature;
+
 /**
  * Represents a method reference for a CALLI instruction,
  * which has a callsite method signature. This is only used when
@@ -36,7 +38,7 @@ public class VarargsMethodRef extends MethodRef
 	 * Creates a VarargsMethodRef for the given method, with the given callsite method signature.
 	 * The signature should have the VARARG calling convention.
 	 */
-	public VarargsMethodRef(Method meth, edu.arizona.cs.mbel.signature.MethodSignature callsig)
+	public VarargsMethodRef(Method meth, MethodSignature callsig)
 	{
 		super(meth.getName(), meth.getParent(), callsig);
 		method = meth;
