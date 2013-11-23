@@ -42,5 +42,6 @@ public interface MethodImplAttributes
 	public static final int InternalCall = 0x1000;
 	public static final int Synchronized = 0x0020;
 	public static final int NoInlining = 0x0008;
+	public static final int NoOptimization = 0x0040;
 	public static final int MaxMethodImplVal = 0xffff;
 }

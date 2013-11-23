@@ -13,11 +13,18 @@ import junit.framework.TestCase;
  */
 public class DotNetAsmTest extends TestCase
 {
+	// simple reader test
 	public void test1() throws Exception
 	{
 	}
 
+	// test with class generic parameter
 	public void test2() throws Exception
+	{
+	}
+
+	// test with method generic parameter
+	public void test3() throws Exception
 	{
 	}
 
