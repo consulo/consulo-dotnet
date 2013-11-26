@@ -1,4 +1,4 @@
-package org.mustbe.consulo.dotnet.microsoft;
+package org.mustbe.consulo.microsoft.dotnet;
 
 import javax.swing.Icon;
 

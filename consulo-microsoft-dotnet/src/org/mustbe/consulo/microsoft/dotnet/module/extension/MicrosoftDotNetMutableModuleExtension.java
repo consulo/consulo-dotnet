@@ -1,4 +1,4 @@
-package org.mustbe.consulo.dotnet.microsoft.module.extension;
+package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
 import javax.swing.JComponent;
 

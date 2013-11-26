@@ -1,12 +1,12 @@
 <idea-plugin>
-	<id>org.mustbe.consulo.dotnet.microsoft</id>
+	<id>org.mustbe.consulo.microsoft.dotnet</id>
 	<name>Microsoft .NET</name>
 	<depends>org.mustbe.consulo.dotnet.core</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<moduleExtensionProvider key="microsoft-dotnet"
-								 implementationClass="org.mustbe.consulo.dotnet.microsoft.module.extension.MicrosoftDotNetModuleExtensionProvider" />
+								 implementationClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtensionProvider" />
 
-		<sdkType implementation="org.mustbe.consulo.dotnet.microsoft.sdk.MicrosoftDotNetSdkType" />
+		<sdkType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
 	</extensions>
 </idea-plugin>

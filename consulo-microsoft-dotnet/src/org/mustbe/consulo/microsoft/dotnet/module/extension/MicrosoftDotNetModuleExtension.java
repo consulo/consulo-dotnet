@@ -1,9 +1,9 @@
-package org.mustbe.consulo.dotnet.microsoft.module.extension;
+package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetVersion;
-import org.mustbe.consulo.dotnet.microsoft.sdk.MicrosoftDotNetSdkType;
+import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;

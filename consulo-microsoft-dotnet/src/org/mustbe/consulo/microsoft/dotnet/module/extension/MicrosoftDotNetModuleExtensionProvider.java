@@ -1,11 +1,11 @@
-package org.mustbe.consulo.dotnet.microsoft.module.extension;
+package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
 import javax.swing.Icon;
 
 import org.consulo.module.extension.ModuleExtensionProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.microsoft.MicrosoftDotNetIcons;
+import org.mustbe.consulo.microsoft.dotnet.MicrosoftDotNetIcons;
 import com.intellij.openapi.module.Module;
 
 /**

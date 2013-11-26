@@ -1,0 +1,11 @@
+<idea-plugin>
+	<id>org.mustbe.consulo.microsoft.csharp</id>
+	<name>Microsoft C#</name>
+	<depends>org.mustbe.consulo.csharp.core</depends>
+	<depends>org.mustbe.consulo.microsoft.dotnet</depends>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<moduleExtensionProvider key="microsoft-csharp" parent-key="microsoft-dotnet"
+								 implementationClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtensionProvider"/>
+	</extensions>
+</idea-plugin>

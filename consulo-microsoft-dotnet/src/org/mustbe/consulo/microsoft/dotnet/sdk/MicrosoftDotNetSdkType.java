@@ -1,4 +1,4 @@
-package org.mustbe.consulo.dotnet.microsoft.sdk;
+package org.mustbe.consulo.microsoft.dotnet.sdk;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import javax.swing.JComponent;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.microsoft.MicrosoftDotNetIcons;
+import org.mustbe.consulo.microsoft.dotnet.MicrosoftDotNetIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
