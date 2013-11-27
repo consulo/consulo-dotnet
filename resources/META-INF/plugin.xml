@@ -3,8 +3,11 @@
 	<name>.NET Core</name>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<configurationType implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationType" />
+		<configurationType implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationType"/>
 
-		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompiler" />
+		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompiler"/>
+
+		<projectService serviceInterface="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"
+						serviceImplementation="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"/>
 	</extensions>
 </idea-plugin>

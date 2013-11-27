@@ -1,14 +1,15 @@
 package org.mustbe.consulo.dotnet.compiler;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Function;
 
 /**
  * @author VISTALL
@@ -16,7 +17,7 @@ import com.intellij.util.Function;
  */
 public class DotNetCompilerOptionsBuilder
 {
-	private String myExecutableFromSdk;
+	private String myExecutable;
 	private Project myProject;
 	private Sdk mySdk;
 
@@ -26,13 +27,27 @@ public class DotNetCompilerOptionsBuilder
 		mySdk = sdk;
 	}
 
-	public GeneralCommandLine createCommandLine(Collection<VirtualFile> results)
+	public GeneralCommandLine createCommandLine(Module module, Collection<VirtualFile> results) throws IOException
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
-		commandLine.setExePath(mySdk.getHomePath() + "\\" + myExecutableFromSdk);
+		commandLine.setExePath(myExecutable);
 		commandLine.setWorkDirectory(myProject.getBasePath());
 
-		String fileList = StringUtil.join(results, new Function<VirtualFile, String>()
+		File tempFile = FileUtil.createTempFile("consulo-csc", ".rsp");
+
+		String outputFile = DotNetMacros.extract(module, false, false);
+		FileUtil.appendToFile(tempFile, "/out:" + outputFile + "\n");
+		FileUtil.appendToFile(tempFile, "/utf8output\n");
+
+		for(VirtualFile result : results)
+		{
+			FileUtil.appendToFile(tempFile, FileUtil.toSystemDependentName(result.getPath()) + "\n");
+		}
+
+		FileUtil.createParentDirs(new File(outputFile));
+
+		commandLine.addParameter("@" + tempFile.getAbsolutePath());
+		/*String fileList = StringUtil.join(results, new Function<VirtualFile, String>()
 		{
 			@Override
 			public String fun(VirtualFile virtualFile)
@@ -40,12 +55,14 @@ public class DotNetCompilerOptionsBuilder
 				return FileUtil.toSystemDependentName(virtualFile.getPath());
 			}
 		}, " ");
-		commandLine.addParameter(fileList);
+		commandLine.addParameter(fileList);   */
+
+
 		return commandLine;
 	}
 
 	public void setExecutableFromSdk(String executableFromSdk)
 	{
-		myExecutableFromSdk = executableFromSdk;
+		myExecutable = mySdk.getHomePath() + "\\" + executableFromSdk;
 	}
 }

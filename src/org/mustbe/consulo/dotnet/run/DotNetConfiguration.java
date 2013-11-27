@@ -1,10 +1,13 @@
 package org.mustbe.consulo.dotnet.run;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
@@ -25,6 +28,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.WriteExternalException;
 import lombok.val;
 
 /**
@@ -57,6 +62,20 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		return list;
 	}
 
+	@Override
+	public void readExternal(Element element) throws InvalidDataException
+	{
+		super.readExternal(element);
+		readModule(element);
+	}
+
+	@Override
+	public void writeExternal(Element element) throws WriteExternalException
+	{
+		super.writeExternal(element);
+		writeModule(element);
+	}
+
 	@NotNull
 	@Override
 	public SettingsEditor<? extends RunConfiguration> getConfigurationEditor()
@@ -68,6 +87,16 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	@Override
 	public RunProfileState getState(@NotNull Executor executor, @NotNull final ExecutionEnvironment executionEnvironment) throws ExecutionException
 	{
+		val module = getConfigurationModule().getModule();
+		if(module == null)
+		{
+			throw new ExecutionException("Module is empty");
+		}
+		val exeFile = DotNetMacros.extract(module, false, false);
+		if(!new File(exeFile).exists())
+		{
+			throw new ExecutionException(exeFile + " is not exists");
+		}
 		return new RunProfileState()
 		{
 			@Nullable
@@ -77,7 +106,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 				val builder = TextConsoleBuilderFactory.getInstance().createBuilder(executionEnvironment.getProject());
 
 				GeneralCommandLine commandLine = new GeneralCommandLine();
-				commandLine.setExePath(getProject().getBasePath() + "/" + "Program.exe");  //TODO [VISTALL]
+				commandLine.setExePath(exeFile);
 
 				OSProcessHandler osProcessHandler = new OSProcessHandler(commandLine);
 

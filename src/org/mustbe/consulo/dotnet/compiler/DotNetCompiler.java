@@ -10,7 +10,6 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
-import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
@@ -129,13 +128,14 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 
 			langDotNetModuleExtension.setupCompilerOptions(builder);
 
-			GeneralCommandLine commandLine = builder.createCommandLine(entry.getValue());
-
 			try
 			{
+				GeneralCommandLine commandLine = builder.createCommandLine(module, entry.getValue());
+
 				val process = commandLine.createProcess();
 				val processHandler = new CapturingProcessHandler(process);
 
+				// src\Test.cs(7,42): error CS1002: ожидалась ;
 				ProcessOutput processOutput = processHandler.runProcess();
 				for(String s : processOutput.getStdoutLines())
 				{
@@ -147,7 +147,7 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 					compileContext.addMessage(CompilerMessageCategory.ERROR, s, null, -1 ,-1);
 				}
 			}
-			catch(ExecutionException e)
+			catch(Exception e)
 			{
 				e.printStackTrace();
 			}
