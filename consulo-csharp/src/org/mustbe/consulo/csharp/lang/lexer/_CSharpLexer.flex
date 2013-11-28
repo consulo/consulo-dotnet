@@ -47,15 +47,54 @@ FLOAT_LITERAL=(({FLOATING_POINT_LITERAL1})|({FLOATING_POINT_LITERAL2}))
 {
 	{VERBATIM_STRING_LITERAL} { return CSharpTokens.VERBATIM_STRING_LITERAL; }
 
-	"string"                 { return CSharpTokens.STRING_KEYWORD; }
+	"using"                   { return CSharpTokens.USING_KEYWORD; }
 
-	"void"                   { return CSharpTokens.VOID_KEYWORD; }
+// native types
+	"string"                  { return CSharpTokens.STRING_KEYWORD; }
 
-	"using"                  { return CSharpTokens.USING_KEYWORD; }
+	"void"                    { return CSharpTokens.VOID_KEYWORD; }
 
-	"static"                 { return CSharpTokens.STATIC_KEYWORD; }
+	"int"                     { return CSharpTokens.INT_KEYWORD; }
 
-	"class"                  { return CSharpTokens.CLASS_KEYWORD; }
+// modifier tokens
+	"static"                  { return CSharpTokens.STATIC_KEYWORD; }
+
+	"public"                  { return CSharpTokens.PUBLIC_KEYWORD; }
+
+// declaration tokens
+	"namespace"               { return CSharpTokens.NAMESPACE_KEYWORD; }
+
+	"class"                   { return CSharpTokens.CLASS_KEYWORD; }
+
+	"interface"               { return CSharpTokens.INTERFACE_KEYWORD; }
+
+	"struct"                  { return CSharpTokens.STRUCT_KEYWORD; }
+
+	"enum"                    { return CSharpTokens.ENUM_KEYWORD; }
+
+	"event"                   { return CSharpTokens.EVENT_KEYWORD; }
+
+	"delegate"                { return CSharpTokens.DELEGATE_KEYWORD; }
+
+// expression tokens
+	"new"                     { return CSharpTokens.NEW_KEYWORD; }
+
+	"typeof"                  { return CSharpTokens.TYPEOF_KEYWORD; }
+
+//
+	"{"                       { return CSharpTokens.LBRACE; }
+
+	"}"                       { return CSharpTokens.RBRACE; }
+
+	"("                       { return CSharpTokens.LPAR; }
+
+	")"                       { return CSharpTokens.RPAR; }
+
+	";"                       { return CSharpTokens.SEMICOLON; }
+
+	"."                       { return CSharpTokens.DOT; }
+
+	","                       { return CSharpTokens.COMMA; }
 
 	{SINGLE_LINE_COMMENT}     { return CSharpTokens.LINE_COMMENT; }
 

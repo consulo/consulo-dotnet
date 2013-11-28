@@ -16,9 +16,43 @@ public interface CSharpTokens extends TokenType
 
 	IElementType VOID_KEYWORD = new IElementType("VOID_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType INT_KEYWORD = new IElementType("INT_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType STATIC_KEYWORD = new IElementType("STATIC_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType PUBLIC_KEYWORD = new IElementType("PUBLIC_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType NAMESPACE_KEYWORD = new IElementType("NAMESPACE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType EVENT_KEYWORD = new IElementType("EVENT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType DELEGATE_KEYWORD = new IElementType("DELEGATE_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType CLASS_KEYWORD = new IElementType("CLASS_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType INTERFACE_KEYWORD = new IElementType("INTERFACE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType STRUCT_KEYWORD = new IElementType("STRUCT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType ENUM_KEYWORD = new IElementType("ENUM_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType NEW_KEYWORD = new IElementType("NEW_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType TYPEOF_KEYWORD = new IElementType("TYPEOF_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType LBRACE = new IElementType("LBRACE", CSharpLanguage.INSTANCE);
+
+	IElementType RBRACE = new IElementType("RBRACE", CSharpLanguage.INSTANCE);
+
+	IElementType LPAR = new IElementType("LPAR", CSharpLanguage.INSTANCE);
+
+	IElementType RPAR = new IElementType("RPAR", CSharpLanguage.INSTANCE);
+
+	IElementType COMMA = new IElementType("COMMA", CSharpLanguage.INSTANCE);
+
+	IElementType SEMICOLON = new IElementType("SEMICOLON", CSharpLanguage.INSTANCE);
+
+	IElementType DOT = new IElementType("DOT", CSharpLanguage.INSTANCE);
 
 	IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", CSharpLanguage.INSTANCE);
 

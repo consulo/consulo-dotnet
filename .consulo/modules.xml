@@ -18,6 +18,7 @@
       <module name="consulo-csharp" dirurl="file://$PROJECT_DIR$/consulo-csharp">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
         <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />

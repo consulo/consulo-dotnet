@@ -3,16 +3,14 @@ package org.mustbe.consulo.csharp.lang;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.lexer.CSharpLexer;
+import org.mustbe.consulo.csharp.lang.parser.CSharpParser;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.dotnet.DotNetVersion;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.LanguageVersionWithParsing;
-import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.ArrayUtil;
 
@@ -43,21 +41,7 @@ public enum CSharpLanguageVersion implements LanguageVersion<CSharpLanguage>, La
 	@Override
 	public PsiParser createParser(@Nullable Project project)
 	{
-		return new PsiParser()
-		{
-			@NotNull
-			@Override
-			public ASTNode parse(@NotNull IElementType elementType, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
-			{
-				PsiBuilder.Marker mark = builder.mark();
-				while(!builder.eof())
-				{
-					builder.advanceLexer();
-				}
-				mark.done(elementType);
-				return builder.getTreeBuilt();
-			}
-		};
+		return new CSharpParser();
 	}
 
 	@NotNull

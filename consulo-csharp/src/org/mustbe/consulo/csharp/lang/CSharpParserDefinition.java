@@ -1,7 +1,7 @@
 package org.mustbe.consulo.csharp.lang;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpFile;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersionableParserDefinition;
@@ -35,7 +35,7 @@ public class CSharpParserDefinition extends LanguageVersionableParserDefinition
 	@Override
 	public PsiFile createFile(FileViewProvider fileViewProvider)
 	{
-		return new CSharpFile(fileViewProvider);
+		return new CSharpFileImpl(fileViewProvider);
 	}
 
 	@Override

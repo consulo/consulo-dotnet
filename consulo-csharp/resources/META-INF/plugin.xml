@@ -7,6 +7,9 @@
 		<fileTypeFactory implementation="org.mustbe.consulo.csharp.CSharpFileTypeFactory" />
 
 		<syntaxHighlighter key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighter" />
+		<highlightVisitor implementation="org.mustbe.consulo.csharp.ide.highlight.CSharpHighlightVisitor" />
+
+		<lang.braceMatcher language="C#" implementationClass="org.mustbe.consulo.csharp.CSharpBraceMatcher" />
 		<lang.syntaxHighlighterFactory key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighterFactory" />
 		<lang.parserDefinition language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpParserDefinition" />
 		<lang.versionResolver language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionResolver" />

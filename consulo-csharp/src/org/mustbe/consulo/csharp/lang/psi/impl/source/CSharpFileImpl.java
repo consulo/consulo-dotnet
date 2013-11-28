@@ -1,19 +1,20 @@
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
+import org.mustbe.consulo.dotnet.psi.DotNetFile;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 
 /**
  * @author VISTALL
- * @since 22.11.13.
+ * @since 28.11.13.
  */
-public class CSharpFile extends PsiFileBase
+public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 {
-	public CSharpFile(@NotNull FileViewProvider viewProvider)
+	public CSharpFileImpl(@NotNull FileViewProvider viewProvider)
 	{
 		super(viewProvider, CSharpLanguage.INSTANCE);
 	}
