@@ -31,7 +31,7 @@ public class DotNetCompilerOptionsBuilder
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(myExecutable);
-		commandLine.setWorkDirectory(myProject.getBasePath());
+		commandLine.setWorkDirectory(module.getModuleDirPath());
 
 		File tempFile = FileUtil.createTempFile("consulo-csc", ".rsp");
 

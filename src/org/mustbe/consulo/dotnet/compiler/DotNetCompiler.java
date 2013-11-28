@@ -24,6 +24,7 @@ import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.CommonProcessors;
@@ -135,16 +136,10 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 				val process = commandLine.createProcess();
 				val processHandler = new CapturingProcessHandler(process);
 
-				// src\Test.cs(7,42): error CS1002: ожидалась ;
 				ProcessOutput processOutput = processHandler.runProcess();
 				for(String s : processOutput.getStdoutLines())
 				{
-					compileContext.addMessage(CompilerMessageCategory.INFORMATION, s, null, -1 ,-1);
-				}
-
-				for(String s : processOutput.getStderrLines())
-				{
-					compileContext.addMessage(CompilerMessageCategory.ERROR, s, null, -1 ,-1);
+					addMessage(compileContext, module, s);
 				}
 			}
 			catch(Exception e)
@@ -154,6 +149,36 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 		}
 
 		return processingItems;
+	}
+
+	// src\Test.cs(7,42): error CS1002: ожидалась ;
+	private static void addMessage(CompileContext compileContext, Module module, String line)
+	{
+		String[] split = line.split(":");
+		if(split.length != 3)
+		{
+			return;
+		}
+		String fileAndPosition = split[0].trim();
+		String idAndType = split[1].trim();
+		String message = split[2].trim();
+
+		String file = fileAndPosition.substring(0, fileAndPosition.lastIndexOf("("));
+		String position = fileAndPosition.substring(fileAndPosition.lastIndexOf("(") + 1, fileAndPosition.length() - 1);
+		String[] lineAndColumn = position.split(",");
+
+		String[] idAndTypeArray = idAndType.split(" ");
+		CompilerMessageCategory category = CompilerMessageCategory.INFORMATION;
+		if(idAndTypeArray[0].equals("error"))
+		{
+			category = CompilerMessageCategory.ERROR;
+		}
+
+
+		String url = module.getModuleDirUrl() + "/" + FileUtil.toSystemIndependentName(file);
+
+		compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", url, Integer.parseInt(lineAndColumn[0]),
+				Integer.parseInt(lineAndColumn[1]));
 	}
 
 	@Override
