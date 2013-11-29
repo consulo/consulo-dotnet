@@ -86,6 +86,10 @@ FLOAT_LITERAL=(({FLOATING_POINT_LITERAL1})|({FLOATING_POINT_LITERAL2}))
 
 	"}"                       { return CSharpTokens.RBRACE; }
 
+	"["                       { return CSharpTokens.LBRACKET; }
+
+	"]"                       { return CSharpTokens.RBRACKET; }
+
 	"("                       { return CSharpTokens.LPAR; }
 
 	")"                       { return CSharpTokens.RPAR; }

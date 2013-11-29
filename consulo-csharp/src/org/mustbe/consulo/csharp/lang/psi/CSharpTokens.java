@@ -48,6 +48,10 @@ public interface CSharpTokens extends TokenType
 
 	IElementType RPAR = new IElementType("RPAR", CSharpLanguage.INSTANCE);
 
+	IElementType LBRACKET = new IElementType("LBRACKET", CSharpLanguage.INSTANCE);
+
+	IElementType RBRACKET = new IElementType("RBRACKET", CSharpLanguage.INSTANCE);
+
 	IElementType COMMA = new IElementType("COMMA", CSharpLanguage.INSTANCE);
 
 	IElementType SEMICOLON = new IElementType("SEMICOLON", CSharpLanguage.INSTANCE);
