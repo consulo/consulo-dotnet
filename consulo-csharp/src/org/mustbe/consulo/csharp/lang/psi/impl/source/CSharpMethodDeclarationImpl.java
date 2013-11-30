@@ -7,6 +7,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpCodeBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
@@ -84,5 +86,20 @@ public class CSharpMethodDeclarationImpl extends CSharpElementImpl implements CS
 	public CSharpCodeBlock getCodeBlock()
 	{
 		return findChildByClass(CSharpCodeBlock.class);
+	}
+
+	@Nullable
+	@Override
+	public DotNetGenericParameterList getGenericParameterList()
+	{
+		return findChildByClass(DotNetGenericParameterList.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetGenericParameter[] getGenericParameters()
+	{
+		DotNetGenericParameterList genericParameterList = getGenericParameterList();
+		return genericParameterList == null ? DotNetGenericParameter.EMPTY_ARRAY : genericParameterList.getParameters();
 	}
 }
