@@ -48,6 +48,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType RPAR = new IElementType("RPAR", CSharpLanguage.INSTANCE);
 
+	IElementType EQ = new IElementType("EQ", CSharpLanguage.INSTANCE);
+
 	IElementType LBRACKET = new IElementType("LBRACKET", CSharpLanguage.INSTANCE);
 
 	IElementType RBRACKET = new IElementType("RBRACKET", CSharpLanguage.INSTANCE);
@@ -59,6 +61,14 @@ public interface CSharpTokens extends TokenType
 	IElementType DOT = new IElementType("DOT", CSharpLanguage.INSTANCE);
 
 	IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", CSharpLanguage.INSTANCE);
+
+	IElementType INTEGER_LITERAL = new IElementType("INTEGER_LITERAL", CSharpLanguage.INSTANCE);
+
+	IElementType LONG_LITERAL = new IElementType("LONG_LITERAL", CSharpLanguage.INSTANCE);
+
+	IElementType FLOAT_LITERAL = new IElementType("FLOAT_LITERAL", CSharpLanguage.INSTANCE);
+
+	IElementType DOUBLE_LITERAL = new IElementType("DOUBLE_LITERAL", CSharpLanguage.INSTANCE);
 
 	IElementType CHARACTER_LITERAL = new IElementType("CHARACTER_LITERAL", CSharpLanguage.INSTANCE);
 
