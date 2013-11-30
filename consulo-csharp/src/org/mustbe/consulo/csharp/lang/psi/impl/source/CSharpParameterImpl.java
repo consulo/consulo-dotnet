@@ -3,6 +3,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -19,6 +20,12 @@ public class CSharpParameterImpl extends CSharpElementImpl implements DotNetPara
 	public CSharpParameterImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	public void accept(@NotNull CSharpElementVisitor visitor)
+	{
+		visitor.visitParameter(this);
 	}
 
 	@Nullable

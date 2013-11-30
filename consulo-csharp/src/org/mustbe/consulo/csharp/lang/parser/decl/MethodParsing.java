@@ -62,9 +62,11 @@ public class MethodParsing extends SharingParsingHelpers
 
 	private static void parseCodeBlock(CSharpBuilderWrapper builder)
 	{
-		if(expect(builder, LBRACE, "'{' expected"))
+		if(builder.getTokenType() == LBRACE)
 		{
 			PsiBuilder.Marker mark = builder.mark();
+			builder.advanceLexer();
+
 			//TODO [VISTALL] temp code
 
 			int brace = 0;
@@ -94,6 +96,10 @@ public class MethodParsing extends SharingParsingHelpers
 
 			expect(builder, RBRACE, "'}' expected");
 			mark.done(CODE_BLOCK);
+		}
+		else
+		{
+			builder.error("'{' expected");
 		}
 	}
 

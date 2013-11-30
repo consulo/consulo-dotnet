@@ -4,14 +4,15 @@
 	<depends>org.mustbe.consulo.dotnet.core</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="org.mustbe.consulo.csharp.CSharpFileTypeFactory" />
+		<fileTypeFactory implementation="org.mustbe.consulo.csharp.CSharpFileTypeFactory"/>
 
-		<syntaxHighlighter key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighter" />
-		<highlightVisitor implementation="org.mustbe.consulo.csharp.ide.highlight.CSharpHighlightVisitor" />
+		<syntaxHighlighter key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighter"/>
+		<highlightVisitor implementation="org.mustbe.consulo.csharp.ide.highlight.CSharpHighlightVisitor"/>
 
-		<lang.braceMatcher language="C#" implementationClass="org.mustbe.consulo.csharp.CSharpBraceMatcher" />
-		<lang.syntaxHighlighterFactory key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighterFactory" />
-		<lang.parserDefinition language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpParserDefinition" />
-		<lang.versionResolver language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionResolver" />
+		<lang.braceMatcher language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpPairedBraceMatcher"/>
+		<lang.foldingBuilder language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpFoldingBuilder"/>
+		<lang.syntaxHighlighterFactory key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighterFactory"/>
+		<lang.parserDefinition language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpParserDefinition"/>
+		<lang.versionResolver language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionResolver"/>
 	</extensions>
 </idea-plugin>

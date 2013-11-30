@@ -3,9 +3,10 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
@@ -14,11 +15,17 @@ import com.intellij.util.IncorrectOperationException;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpTypeDeclarationImpl extends CSharpElementImpl implements DotNetTypeDeclaration
+public class CSharpTypeDeclarationImpl extends CSharpElementImpl implements CSharpTypeDeclaration
 {
 	public CSharpTypeDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	public void accept(@NotNull CSharpElementVisitor visitor)
+	{
+		visitor.visitTypeDeclaration(this);
 	}
 
 	@Nullable
@@ -46,5 +53,17 @@ public class CSharpTypeDeclarationImpl extends CSharpElementImpl implements DotN
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
+	}
+
+	@Override
+	public PsiElement getLeftBrace()
+	{
+		return findChildByType(CSharpTokens.LBRACE);
+	}
+
+	@Override
+	public PsiElement getRightBrace()
+	{
+		return findChildByType(CSharpTokens.RBRACE);
 	}
 }

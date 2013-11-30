@@ -3,9 +3,10 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpCodeBlock;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.dotnet.psi.DotNetCodeBlock;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
@@ -17,11 +18,17 @@ import com.intellij.util.IncorrectOperationException;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpMethodDeclarationImpl extends CSharpElementImpl implements DotNetMethodDeclaration
+public class CSharpMethodDeclarationImpl extends CSharpElementImpl implements CSharpMethodDeclaration
 {
 	public CSharpMethodDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	public void accept(@NotNull CSharpElementVisitor visitor)
+	{
+		visitor.visitMethodDeclaration(this);
 	}
 
 	@Nullable
@@ -74,8 +81,8 @@ public class CSharpMethodDeclarationImpl extends CSharpElementImpl implements Do
 
 	@Nullable
 	@Override
-	public DotNetCodeBlock getCodeBlock()
+	public CSharpCodeBlock getCodeBlock()
 	{
-		return findChildByClass(DotNetCodeBlock.class);
+		return findChildByClass(CSharpCodeBlock.class);
 	}
 }

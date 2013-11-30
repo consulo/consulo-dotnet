@@ -1,4 +1,4 @@
-package org.mustbe.consulo.csharp;
+package org.mustbe.consulo.csharp.lang;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,7 @@ import com.intellij.psi.tree.IElementType;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpBraceMatcher implements PairedBraceMatcher
+public class CSharpPairedBraceMatcher implements PairedBraceMatcher
 {
 	private static BracePair[] ourPairs = new BracePair[]{
 			new BracePair(CSharpTokens.LBRACE, CSharpTokens.RBRACE, true),
