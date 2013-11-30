@@ -83,4 +83,19 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(list);
 	}
+
+	public void visitGenericConstraintList(CSharpGenericConstraintListImpl list)
+	{
+		visitElement(list);
+	}
+
+	public void visitGenericConstraint(CSharpGenericConstraintImpl constraint)
+	{
+		visitElement(constraint);
+	}
+
+	public void visitNewGenericConstraintValue(CSharpNewGenericConstraintValueImpl value)
+	{
+		visitElement(value);
+	}
 }

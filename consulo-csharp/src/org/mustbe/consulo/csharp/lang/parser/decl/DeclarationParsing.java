@@ -4,7 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
-import com.intellij.psi.tree.TokenSet;
+import com.intellij.lang.PsiBuilder;
+import com.intellij.util.NotNullFunction;
 import lombok.val;
 
 /**
@@ -13,8 +14,6 @@ import lombok.val;
  */
 public class DeclarationParsing extends SharingParsingHelpers
 {
-	public static final TokenSet PARTIAL_SET = TokenSet.create(PARTIAL_KEYWORD);
-
 	public static boolean parse(@NotNull CSharpBuilderWrapper builder, boolean inner)
 	{
 		if(inner && builder.getTokenType() == RBRACE)
@@ -24,9 +23,17 @@ public class DeclarationParsing extends SharingParsingHelpers
 
 		val marker = builder.mark();
 
-		builder.enableSoftKeywords(PARTIAL_SET);
+		val modifierListBuilder = parseWithSoftElements(new NotNullFunction<CSharpBuilderWrapper, PsiBuilder.Marker>()
+		{
+			@NotNull
+			@Override
+			public PsiBuilder.Marker fun(CSharpBuilderWrapper builderWrapper)
+			{
+				return parseModifierList(builderWrapper);
+			}
+		}, builder, PARTIAL_KEYWORD);
 
-		val modifierListBuilder = parseModifierList(builder);
+		assert modifierListBuilder != null;
 
 		val tokenType = builder.getTokenType();
 		if(tokenType == NAMESPACE_KEYWORD)
@@ -35,8 +42,6 @@ public class DeclarationParsing extends SharingParsingHelpers
 		}
 		else if(CSharpTokenSets.TYPE_DECLARATION_START.contains(tokenType))
 		{
-			builder.disableSoftKeywords(PARTIAL_SET);
-
 			TypeDeclarationParsing.parse(builder, marker);
 		}
 		else if(tokenType == EVENT_KEYWORD)

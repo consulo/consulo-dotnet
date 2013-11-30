@@ -19,6 +19,10 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 
 		GenericParameterParsing.parseList(builder);
 
+		//TODO [VISTALL] extend list
+
+		GenericParameterParsing.parseGenericConstraintList(builder);
+
 		if(expect(builder, LBRACE, "'{' expected"))
 		{
 			UsingStatementParsing.parseUsingList(builder);

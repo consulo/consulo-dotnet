@@ -58,6 +58,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType EQ = new IElementType("EQ", CSharpLanguage.INSTANCE);
 
+	IElementType COLON = new IElementType("COLON", CSharpLanguage.INSTANCE);
+
 	IElementType LBRACKET = new IElementType("LBRACKET", CSharpLanguage.INSTANCE);
 
 	IElementType RBRACKET = new IElementType("RBRACKET", CSharpLanguage.INSTANCE);

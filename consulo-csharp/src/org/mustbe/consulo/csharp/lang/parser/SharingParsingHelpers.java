@@ -1,12 +1,15 @@
 package org.mustbe.consulo.csharp.lang.parser;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
+import com.intellij.util.NullableFunction;
 import lombok.val;
 
 /**
@@ -58,6 +61,17 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		}
 		marker.done(MODIFIER_LIST);
 		return marker;
+	}
+
+	@Nullable
+	protected static PsiBuilder.Marker parseWithSoftElements(NullableFunction<CSharpBuilderWrapper, PsiBuilder.Marker> func,
+			CSharpBuilderWrapper builderWrapper, IElementType... softs)
+	{
+		TokenSet tokenSet = TokenSet.create(softs);
+		builderWrapper.enableSoftKeywords(tokenSet);
+		PsiBuilder.Marker fun = func.fun(builderWrapper);
+		builderWrapper.disableSoftKeywords(tokenSet);
+		return fun;
 	}
 
 	protected static boolean expect(PsiBuilder builder, IElementType elementType, String message)

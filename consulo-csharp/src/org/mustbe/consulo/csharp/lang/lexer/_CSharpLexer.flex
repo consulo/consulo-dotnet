@@ -113,6 +113,8 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	"="                       { return CSharpTokens.EQ; }
 
+	":"                       { return CSharpTokens.COLON; }
+
 	";"                       { return CSharpTokens.SEMICOLON; }
 
 	"."                       { return CSharpTokens.DOT; }
