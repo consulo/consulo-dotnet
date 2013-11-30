@@ -40,6 +40,10 @@ public interface CSharpTokens extends TokenType
 
 	IElementType TYPEOF_KEYWORD = new IElementType("TYPEOF_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType IN_KEYWORD = new IElementType("IN_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType OUT_KEYWORD = new IElementType("OUT_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType LBRACE = new IElementType("LBRACE", CSharpLanguage.INSTANCE);
 
 	IElementType RBRACE = new IElementType("RBRACE", CSharpLanguage.INSTANCE);
@@ -47,6 +51,10 @@ public interface CSharpTokens extends TokenType
 	IElementType LPAR = new IElementType("LPAR", CSharpLanguage.INSTANCE);
 
 	IElementType RPAR = new IElementType("RPAR", CSharpLanguage.INSTANCE);
+
+	IElementType LT = new IElementType("LT", CSharpLanguage.INSTANCE);
+
+	IElementType GT = new IElementType("GT", CSharpLanguage.INSTANCE);
 
 	IElementType EQ = new IElementType("EQ", CSharpLanguage.INSTANCE);
 
@@ -61,6 +69,10 @@ public interface CSharpTokens extends TokenType
 	IElementType DOT = new IElementType("DOT", CSharpLanguage.INSTANCE);
 
 	IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", CSharpLanguage.INSTANCE);
+
+	IElementType LINE_DOC_COMMENT = new IElementType("LINE_DOC_COMMENT", CSharpLanguage.INSTANCE);
+
+	IElementType BLOCK_COMMENT = new IElementType("BLOCK_COMMENT", CSharpLanguage.INSTANCE);
 
 	IElementType INTEGER_LITERAL = new IElementType("INTEGER_LITERAL", CSharpLanguage.INSTANCE);
 

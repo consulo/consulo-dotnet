@@ -15,12 +15,22 @@ public class UsingStatementParsing extends SharingParsingHelpers
 	{
 		val m = builder.mark();
 
+		boolean empty = true;
 		while(builder.getTokenType() == USING_KEYWORD)
 		{
 			parseUsing(builder);
+
+			empty = false;
 		}
 
-		m.done(USING_LIST);
+		if(empty)
+		{
+			m.drop();
+		}
+		else
+		{
+			m.done(USING_LIST);
+		}
 	}
 
 	public static void parseUsing(PsiBuilder builder)

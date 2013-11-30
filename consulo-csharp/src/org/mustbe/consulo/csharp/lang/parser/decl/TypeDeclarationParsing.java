@@ -17,6 +17,8 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 
 		expect(builder, IDENTIFIER, "Name expected");
 
+		GenericParameterParsing.parseList(builder);
+
 		if(expect(builder, LBRACE, "'{' expected"))
 		{
 			UsingStatementParsing.parseUsingList(builder);

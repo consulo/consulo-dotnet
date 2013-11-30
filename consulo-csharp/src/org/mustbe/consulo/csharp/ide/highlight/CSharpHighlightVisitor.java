@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
@@ -49,6 +50,12 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
+	public void visitGenericParameter(CSharpGenericParameterImpl parameter)
+	{
+		highlightNamed(parameter, parameter.getNameIdentifier());
+	}
+
+	@Override
 	public void visitTypeDeclaration(CSharpTypeDeclarationImpl declaration)
 	{
 		super.visitTypeDeclaration(declaration);
@@ -67,6 +74,10 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		if(element instanceof CSharpTypeDeclarationImpl)
 		{
 			key = CSharpHighlightKey.CLASS_NAME;
+		}
+		else if(element instanceof CSharpGenericParameterImpl)
+		{
+			key = CSharpHighlightKey.GENERIC_PARAMETER_NAME;
 		}
 		else
 		{

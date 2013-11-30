@@ -23,6 +23,8 @@ public class CSharpSyntaxHighlighter extends SyntaxHighlighterBase
 	static
 	{
 		safeMap(ourKeys, CSharpTokens.LINE_COMMENT, CSharpHighlightKey.LINE_COMMENT);
+		safeMap(ourKeys, CSharpTokens.LINE_DOC_COMMENT, CSharpHighlightKey.LINE_COMMENT);
+		safeMap(ourKeys, CSharpTokens.BLOCK_COMMENT, CSharpHighlightKey.BLOCK_COMMENT);
 		safeMap(ourKeys, CSharpTokenSets.STRINGS, CSharpHighlightKey.STRING);
 		safeMap(ourKeys, CSharpTokenSets.KEYWORDS, CSharpHighlightKey.KEYWORD);
 	}

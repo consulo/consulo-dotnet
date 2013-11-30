@@ -19,6 +19,11 @@ public class CSharpParsingTest extends ParsingTestCase
 		doTest(true);
 	}
 
+	public void testGenericParameters()
+	{
+		doTest(true);
+	}
+
 	@Override
 	protected boolean shouldContainTempFiles()
 	{

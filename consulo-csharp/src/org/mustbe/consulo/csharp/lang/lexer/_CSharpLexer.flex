@@ -70,6 +70,10 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	"public"                  { return CSharpTokens.PUBLIC_KEYWORD; }
 
+	"in"                      { return CSharpTokens.IN_KEYWORD; }
+
+	"out"                     { return CSharpTokens.OUT_KEYWORD; }
+
 // declaration tokens
 	"namespace"               { return CSharpTokens.NAMESPACE_KEYWORD; }
 
@@ -103,6 +107,10 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	")"                       { return CSharpTokens.RPAR; }
 
+	"<"                       { return CSharpTokens.LT; }
+
+	">"                       { return CSharpTokens.GT; }
+
 	"="                       { return CSharpTokens.EQ; }
 
 	";"                       { return CSharpTokens.SEMICOLON; }
@@ -111,7 +119,11 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	","                       { return CSharpTokens.COMMA; }
 
+	{SINGLE_LINE_DOC_COMMENT} { return CSharpTokens.LINE_DOC_COMMENT; }
+
 	{SINGLE_LINE_COMMENT}     { return CSharpTokens.LINE_COMMENT; }
+
+	{MULTI_LINE_STYLE_COMMENT} { return CSharpTokens.BLOCK_COMMENT; }
 
 	{INTEGER_LITERAL}         { return CSharpTokens.INTEGER_LITERAL; }
 

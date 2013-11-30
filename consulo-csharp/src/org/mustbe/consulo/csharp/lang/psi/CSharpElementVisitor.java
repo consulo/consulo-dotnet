@@ -73,4 +73,14 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(statement);
 	}
+
+	public void visitGenericParameter(CSharpGenericParameterImpl parameter)
+	{
+		visitElement(parameter);
+	}
+
+	public void visitGenericParameterList(CSharpGenericParameterListImpl list)
+	{
+		visitElement(list);
+	}
 }

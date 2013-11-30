@@ -29,12 +29,16 @@ public interface CSharpElements
 
 	IElementType TYPE_DECLARATION = new IElementTypeAsPsiFactory("TYPE_DECLARATION", CSharpLanguage.INSTANCE, CSharpTypeDeclarationImpl.class);
 
+	IElementType GENERIC_PARAMETER_LIST = new IElementTypeAsPsiFactory("GENERIC_PARAMETER_LIST", CSharpLanguage.INSTANCE,
+			CSharpGenericParameterListImpl.class);
+
+	IElementType GENERIC_PARAMETER = new IElementTypeAsPsiFactory("GENERIC_PARAMETER", CSharpLanguage.INSTANCE, CSharpGenericParameterImpl.class);
+
 	IElementType TYPE = new IElementTypeAsPsiFactory("TYPE", CSharpLanguage.INSTANCE, CSharpTypeImpl.class);
 
 	IElementType CODE_BLOCK = new IElementTypeAsPsiFactory("CODE_BLOCK", CSharpLanguage.INSTANCE, CSharpCodeBlockImpl.class);
 
 	IElementType MODIFIER_LIST = new IElementTypeAsPsiFactory("MODIFIER_LIST", CSharpLanguage.INSTANCE, CSharpModifierListImpl.class);
 
-	IElementType REFERENCE_EXPRESSION = new IElementTypeAsPsiFactory("REFERENCE_EXPRESSION", CSharpLanguage.INSTANCE,
-			CSharpReferenceExpressionImpl.class);
+	IElementType REFERENCE_EXPRESSION = new IElementTypeAsPsiFactory("REFERENCE_EXPRESSION", CSharpLanguage.INSTANCE, CSharpReferenceExpressionImpl.class);
 }

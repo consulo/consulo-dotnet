@@ -1,6 +1,4 @@
 FILE
-  CSharpUsingListImpl(USING_LIST)
-    <empty list>
   CSharpTypeDeclarationImpl(TYPE_DECLARATION)
     CSharpModifierListImpl(MODIFIER_LIST)
       PsiElement(PARTIAL_KEYWORD)('partial')
@@ -11,8 +9,6 @@ FILE
     PsiWhiteSpace('\n')
     PsiElement(LBRACE)('{')
     PsiWhiteSpace('\n\t')
-    CSharpUsingListImpl(USING_LIST)
-      <empty list>
     CSharpMethodDeclarationImpl(METHOD_DECLARATION)
       CSharpModifierListImpl(MODIFIER_LIST)
         PsiElement(PARTIAL_KEYWORD)('partial')
