@@ -1,14 +1,16 @@
 package org.mustbe.consulo.csharp.ide.highlight;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
@@ -41,9 +43,37 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		IElementType elementType = element.getNode().getElementType();
 		if(CSharpSoftTokens.ALL.contains(elementType))
 		{
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(element).textAttributes
-					(DefaultLanguageHighlighterColors.LABEL).create());//TODO [VISTALL] use KEYWORD, LABEL is debug
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(element).textAttributes(CSharpHighlightKey
+					.KEYWORD).create());
 		}
+	}
+
+	@Override
+	public void visitTypeDeclaration(CSharpTypeDeclarationImpl declaration)
+	{
+		super.visitTypeDeclaration(declaration);
+
+		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
+	private void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
+	{
+		if(target == null)
+		{
+			return;
+		}
+
+		TextAttributesKey key = null;
+		if(element instanceof CSharpTypeDeclarationImpl)
+		{
+			key = CSharpHighlightKey.CLASS_NAME;
+		}
+		else
+		{
+			return;
+		}
+
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes(key).create());
 	}
 
 	@Override

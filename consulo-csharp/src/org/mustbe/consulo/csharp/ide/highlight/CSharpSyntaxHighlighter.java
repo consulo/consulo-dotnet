@@ -8,7 +8,6 @@ import org.mustbe.consulo.csharp.lang.lexer.CSharpLexer;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
@@ -23,9 +22,9 @@ public class CSharpSyntaxHighlighter extends SyntaxHighlighterBase
 
 	static
 	{
-		safeMap(ourKeys, CSharpTokens.LINE_COMMENT, DefaultLanguageHighlighterColors.LINE_COMMENT);
-		safeMap(ourKeys, CSharpTokenSets.STRINGS, DefaultLanguageHighlighterColors.STRING);
-		safeMap(ourKeys, CSharpTokenSets.KEYWORDS, DefaultLanguageHighlighterColors.KEYWORD);
+		safeMap(ourKeys, CSharpTokens.LINE_COMMENT, CSharpHighlightKey.LINE_COMMENT);
+		safeMap(ourKeys, CSharpTokenSets.STRINGS, CSharpHighlightKey.STRING);
+		safeMap(ourKeys, CSharpTokenSets.KEYWORDS, CSharpHighlightKey.KEYWORD);
 	}
 
 	@NotNull
