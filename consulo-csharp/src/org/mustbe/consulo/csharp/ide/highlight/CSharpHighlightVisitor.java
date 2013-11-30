@@ -44,7 +44,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		if(CSharpSoftTokens.ALL.contains(elementType))
 		{
 			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(element).textAttributes(CSharpHighlightKey
-					.KEYWORD).create());
+					.SOFT_KEYWORD).create());
 		}
 	}
 
