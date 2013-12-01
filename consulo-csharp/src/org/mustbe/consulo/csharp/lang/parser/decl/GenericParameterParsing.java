@@ -101,7 +101,7 @@ public class GenericParameterParsing extends SharingParsingHelpers
 
 		builder.advanceLexer();
 
-		expect(builder, IDENTIFIER, "Identifier expected");
+		doneOneElement(builder, IDENTIFIER, REFERENCE_EXPRESSION, "Identifier expected");
 		expect(builder, COLON, "Identifier expected");
 
 		PsiBuilder.Marker value = builder.mark();

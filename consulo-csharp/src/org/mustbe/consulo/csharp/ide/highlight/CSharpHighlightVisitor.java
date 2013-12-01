@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
@@ -15,6 +16,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -53,6 +55,31 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	public void visitGenericParameter(CSharpGenericParameterImpl parameter)
 	{
 		highlightNamed(parameter, parameter.getNameIdentifier());
+	}
+
+	@Override
+	public void visitGenericConstraint(CSharpGenericConstraintImpl constraint)
+	{
+		super.visitGenericConstraint(constraint);
+
+		val genericParameterReference = constraint.getGenericParameterReference();
+		if(genericParameterReference == null)
+		{
+			return;
+		}
+		val referenceElement = genericParameterReference.getReferenceElement();
+		val resolve = genericParameterReference.resolve();
+
+		if(resolve != null)
+		{
+			assert referenceElement != null;
+			highlightNamed(resolve, referenceElement);
+		}
+		else
+		{
+			assert referenceElement != null;
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).range(referenceElement).create());
+		}
 	}
 
 	@Override

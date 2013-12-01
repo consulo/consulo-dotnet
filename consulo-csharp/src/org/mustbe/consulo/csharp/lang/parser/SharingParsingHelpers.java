@@ -90,4 +90,19 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 			return false;
 		}
 	}
+
+	protected static boolean doneOneElement(PsiBuilder builder, IElementType elementType, IElementType to, String message)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+		if(expect(builder, elementType, message))
+		{
+			mark.done(to);
+			return true;
+		}
+		else
+		{
+			mark.drop();
+			return false;
+		}
+	}
 }
