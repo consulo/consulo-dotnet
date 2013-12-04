@@ -2,16 +2,14 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
-import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.psi.tree.IElementType;
 import lombok.val;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public class MethodParsing extends SharingParsingHelpers
+public class MethodParsing extends MemberWithBodyParsing
 {
 	public static void parseMethodStartAtType(@NotNull CSharpBuilderWrapper builder, @NotNull PsiBuilder.Marker marker)
 	{
@@ -60,48 +58,6 @@ public class MethodParsing extends SharingParsingHelpers
 		marker.done(constructor ? CONSTRUCTOR_DECLARATION : METHOD_DECLARATION);
 	}
 
-	private static void parseCodeBlock(CSharpBuilderWrapper builder)
-	{
-		if(builder.getTokenType() == LBRACE)
-		{
-			PsiBuilder.Marker mark = builder.mark();
-			builder.advanceLexer();
-
-			//TODO [VISTALL] temp code
-
-			int brace = 0;
-
-			while(!builder.eof())
-			{
-				IElementType tokenType = builder.getTokenType();
-				if(tokenType == LBRACE)
-				{
-					brace ++;
-					builder.advanceLexer();
-				}
-				else if(tokenType == RBRACE)
-				{
-					brace --;
-					if(brace < 0)
-					{
-						break;
-					}
-					builder.advanceLexer();
-				}
-				else
-				{
-					builder.advanceLexer();
-				}
-			}
-
-			expect(builder, RBRACE, "'}' expected");
-			mark.done(CODE_BLOCK);
-		}
-		else
-		{
-			builder.error("'{' expected");
-		}
-	}
 
 	private static void parseParameterList(CSharpBuilderWrapper builder)
 	{

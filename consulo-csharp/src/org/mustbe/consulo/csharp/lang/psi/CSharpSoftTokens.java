@@ -16,5 +16,13 @@ public interface CSharpSoftTokens extends CSharpTokens
 
 	IElementType GLOBAL_KEYWORD = new IElementType("GLOBAL_KEYWORD", CSharpLanguage.INSTANCE);
 
-	TokenSet ALL = TokenSet.create(PARTIAL_KEYWORD, WHERE_KEYWORD, GLOBAL_KEYWORD);
+	IElementType ADD_KEYWORD = new IElementType("ADD_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType REMOVE_KEYWORD = new IElementType("REMOVE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType SET_KEYWORD = new IElementType("SET_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType GET_KEYWORD = new IElementType("GET_KEYWORD", CSharpLanguage.INSTANCE);
+
+	TokenSet ALL = TokenSet.create(PARTIAL_KEYWORD, WHERE_KEYWORD, GLOBAL_KEYWORD, ADD_KEYWORD, REMOVE_KEYWORD, SET_KEYWORD, GET_KEYWORD);
 }

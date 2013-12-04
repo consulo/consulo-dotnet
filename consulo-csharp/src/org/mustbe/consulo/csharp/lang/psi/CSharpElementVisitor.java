@@ -103,4 +103,19 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(list);
 	}
+
+	public void visitEventDeclaration(CSharpEventDeclarationImpl declaration)
+	{
+		visitElement(declaration);
+	}
+
+	public void visitPropertyDeclaration(CSharpPropertyDeclarationImpl declaration)
+	{
+		visitElement(declaration);
+	}
+
+	public void visitEventAccessor(CSharpEventAccessorImpl accessor)
+	{
+		visitElement(accessor);
+	}
 }

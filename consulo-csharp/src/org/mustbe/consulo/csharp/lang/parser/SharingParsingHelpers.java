@@ -99,10 +99,16 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 	protected static PsiBuilder.Marker parseWithSoftElements(NullableFunction<CSharpBuilderWrapper, PsiBuilder.Marker> func,
 			CSharpBuilderWrapper builderWrapper, IElementType... softs)
 	{
-		TokenSet tokenSet = TokenSet.create(softs);
-		builderWrapper.enableSoftKeywords(tokenSet);
+		return parseWithSoftElements(func, builderWrapper, TokenSet.create(softs));
+	}
+
+	@Nullable
+	protected static PsiBuilder.Marker parseWithSoftElements(NullableFunction<CSharpBuilderWrapper, PsiBuilder.Marker> func,
+			CSharpBuilderWrapper builderWrapper, TokenSet softs)
+	{
+		builderWrapper.enableSoftKeywords(softs);
 		PsiBuilder.Marker fun = func.fun(builderWrapper);
-		builderWrapper.disableSoftKeywords(tokenSet);
+		builderWrapper.disableSoftKeywords(softs);
 		return fun;
 	}
 

@@ -29,6 +29,13 @@ public interface CSharpElements
 
 	IElementType TYPE_DECLARATION = new IElementTypeAsPsiFactory("TYPE_DECLARATION", CSharpLanguage.INSTANCE, CSharpTypeDeclarationImpl.class);
 
+	IElementType EVENT_DECLARATION = new IElementTypeAsPsiFactory("EVENT_DECLARATION", CSharpLanguage.INSTANCE, CSharpEventDeclarationImpl.class);
+
+	IElementType EVENT_ACCESSOR = new IElementTypeAsPsiFactory("EVENT_ACCESSOR", CSharpLanguage.INSTANCE, CSharpEventAccessorImpl.class);
+
+	IElementType PROPERTY_DECLARATION = new IElementTypeAsPsiFactory("PROPERTY_DECLARATION", CSharpLanguage.INSTANCE,
+			CSharpPropertyDeclarationImpl.class);
+
 	IElementType GENERIC_PARAMETER_LIST = new IElementTypeAsPsiFactory("GENERIC_PARAMETER_LIST", CSharpLanguage.INSTANCE,
 			CSharpGenericParameterListImpl.class);
 
@@ -37,8 +44,7 @@ public interface CSharpElements
 	IElementType GENERIC_CONSTRAINT_LIST = new IElementTypeAsPsiFactory("GENERIC_CONSTRAINT_LIST", CSharpLanguage.INSTANCE,
 			CSharpGenericConstraintListImpl.class);
 
-	IElementType GENERIC_CONSTRAINT = new IElementTypeAsPsiFactory("GENERIC_CONSTRAINT", CSharpLanguage.INSTANCE,
-			CSharpGenericConstraintImpl.class);
+	IElementType GENERIC_CONSTRAINT = new IElementTypeAsPsiFactory("GENERIC_CONSTRAINT", CSharpLanguage.INSTANCE, CSharpGenericConstraintImpl.class);
 
 	IElementType NEW_GENERIC_CONSTRAINT_VALUE = new IElementTypeAsPsiFactory("NEW_GENERIC_CONSTRAINT_VALUE", CSharpLanguage.INSTANCE,
 			CSharpNewGenericConstraintValueImpl.class);

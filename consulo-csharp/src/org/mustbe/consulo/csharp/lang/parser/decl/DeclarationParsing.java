@@ -46,11 +46,7 @@ public class DeclarationParsing extends SharingParsingHelpers
 		}
 		else if(tokenType == EVENT_KEYWORD)
 		{
-			modifierListBuilder.drop();
-			marker.drop();
-
-			marker.error("Unknown how parse " + tokenType);
-			builder.advanceLexer();
+			EventParsing.parse(builder, marker);
 		}
 		else if(tokenType == DELEGATE_KEYWORD)
 		{

@@ -7,7 +7,7 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetProperty extends DotNetModifierListOwner, PsiNameIdentifierOwner
+public interface DotNetPropertyDeclaration extends DotNetModifierListOwner, PsiNameIdentifierOwner
 {
 	@NotNull
 	DotNetPropertyAccessor[] getAccessors();
