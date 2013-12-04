@@ -91,6 +91,8 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	"ushort"                  { return CSharpTokens.USHORT_KEYWORD; }
 
+	"dynamic"                 { return CSharpTokens.DYNAMIC_KEYWORD; }
+
 // modifier tokens
 	"static"                  { return CSharpTokens.STATIC_KEYWORD; }
 

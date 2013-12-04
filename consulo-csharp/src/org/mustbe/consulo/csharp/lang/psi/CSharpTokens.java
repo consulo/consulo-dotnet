@@ -24,6 +24,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType USHORT_KEYWORD = new IElementType("USHORT_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType DYNAMIC_KEYWORD = new IElementType("DYNAMIC_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType DECIMAL_KEYWORD = new IElementType("DECIMAL_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType DOUBLE_KEYWORD = new IElementType("DOUBLE_KEYWORD", CSharpLanguage.INSTANCE);
