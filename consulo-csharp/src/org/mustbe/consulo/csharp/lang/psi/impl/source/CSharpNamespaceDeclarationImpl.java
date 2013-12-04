@@ -8,6 +8,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -24,6 +25,13 @@ public class CSharpNamespaceDeclarationImpl extends CSharpElementImpl implements
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitNamespaceDeclaration(this);
+	}
+
+	@Override
+	public boolean hasModifier(@NotNull IElementType modifier)
+	{
+		DotNetModifierList modifierList = getModifierList();
+		return modifierList != null && modifierList.hasModifier(modifier);
 	}
 
 	@Nullable

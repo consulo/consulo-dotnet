@@ -4,10 +4,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEventDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
@@ -90,6 +97,38 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		highlightNamed(declaration, declaration.getNameIdentifier());
 	}
 
+	@Override
+	public void visitFieldDeclaration(CSharpFieldDeclarationImpl declaration)
+	{
+		super.visitFieldDeclaration(declaration);
+
+		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
+	@Override
+	public void visitParameter(CSharpParameterImpl parameter)
+	{
+		super.visitParameter(parameter);
+
+		highlightNamed(parameter, parameter.getNameIdentifier());
+	}
+
+	@Override
+	public void visitPropertyDeclaration(CSharpPropertyDeclarationImpl declaration)
+	{
+		super.visitPropertyDeclaration(declaration);
+
+		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
+	@Override
+	public void visitEventDeclaration(CSharpEventDeclarationImpl declaration)
+	{
+		super.visitEventDeclaration(declaration);
+
+		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
 	private void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
 	{
 		if(target == null)
@@ -105,6 +144,15 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		else if(element instanceof CSharpGenericParameterImpl)
 		{
 			key = CSharpHighlightKey.GENERIC_PARAMETER_NAME;
+		}
+		else if(element instanceof DotNetParameter)
+		{
+			key = CSharpHighlightKey.PARAMETER;
+		}
+		else if(element instanceof DotNetVariable)
+		{
+			key = ((DotNetVariable) element).hasModifier(CSharpTokens.STATIC_KEYWORD) ? CSharpHighlightKey.STATIC_FIELD : CSharpHighlightKey
+					.INSTANCE_FIELD;
 		}
 		else
 		{

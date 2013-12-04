@@ -9,6 +9,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -27,6 +28,13 @@ public abstract class CSharpMemberImpl extends CSharpElementImpl implements PsiN
 	public DotNetModifierList getModifierList()
 	{
 		return findChildByClass(DotNetModifierList.class);
+	}
+
+	@Override
+	public boolean hasModifier(@NotNull IElementType modifier)
+	{
+		DotNetModifierList modifierList = getModifierList();
+		return modifierList != null && modifierList.hasModifier(modifier);
 	}
 
 	@Override
