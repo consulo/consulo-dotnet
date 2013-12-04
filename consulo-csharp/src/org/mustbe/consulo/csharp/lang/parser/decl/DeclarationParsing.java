@@ -31,7 +31,7 @@ public class DeclarationParsing extends SharingParsingHelpers
 			{
 				return parseModifierList(builderWrapper);
 			}
-		}, builder, PARTIAL_KEYWORD);
+		}, builder, PARTIAL_KEYWORD, ASYNC_KEYWORD);
 
 		assert modifierListBuilder != null;
 
