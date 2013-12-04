@@ -70,6 +70,32 @@ public interface CSharpTokens extends TokenType
 
 	IElementType OUT_KEYWORD = new IElementType("OUT_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType INTERNAL_KEYWORD = new IElementType("INTERNAL_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType ABSTRACT_KEYWORD = new IElementType("ABSTRACT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType PRIVATE_KEYWORD = new IElementType("PRIVATE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType SEALED_KEYWORD = new IElementType("SEALED_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType UNSAFE_KEYWORD = new IElementType("UNSAFE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType OVERRIDE_KEYWORD = new IElementType("OVERRIDE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType REF_KEYWORD = new IElementType("REF_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType EXTERN_KEYWORD = new IElementType("EXTERN_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType VIRTUAL_KEYWORD = new IElementType("VIRTUAL_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType PROTECTED_KEYWORD = new IElementType("PROTECTED_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType VOLATILE_KEYWORD = new IElementType("VOLATILE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType PARAMS_KEYWORD = new IElementType("PARAMS_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType READONLY_KEYWORD = new IElementType("READONLY_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType LBRACE = new IElementType("LBRACE", CSharpLanguage.INSTANCE);
 
 	IElementType RBRACE = new IElementType("RBRACE", CSharpLanguage.INSTANCE);

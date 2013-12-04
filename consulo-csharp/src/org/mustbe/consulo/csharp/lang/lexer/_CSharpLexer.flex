@@ -100,6 +100,32 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	"out"                     { return CSharpTokens.OUT_KEYWORD; }
 
+	"abstract"                { return CSharpTokens.ABSTRACT_KEYWORD; }
+
+	"extern"                  { return CSharpTokens.EXTERN_KEYWORD; }
+
+	"internal"                { return CSharpTokens.INTERNAL_KEYWORD; }
+
+	"override"                { return CSharpTokens.OVERRIDE_KEYWORD; }
+
+	"params"                  { return CSharpTokens.PARAMS_KEYWORD; }
+
+	"private"                 { return CSharpTokens.PRIVATE_KEYWORD; }
+
+	"protected"               { return CSharpTokens.PROTECTED_KEYWORD; }
+
+	"ref"                     { return CSharpTokens.REF_KEYWORD; }
+
+	"readonly"                { return CSharpTokens.READONLY_KEYWORD; }
+
+	"sealed"                  { return CSharpTokens.SEALED_KEYWORD; }
+
+	"unsafe"                  { return CSharpTokens.UNSAFE_KEYWORD; }
+
+	"virtual"                 { return CSharpTokens.VIRTUAL_KEYWORD; }
+
+	"volatile"                { return CSharpTokens.VOLATILE_KEYWORD; }
+
 // declaration tokens
 	"namespace"               { return CSharpTokens.NAMESPACE_KEYWORD; }
 
