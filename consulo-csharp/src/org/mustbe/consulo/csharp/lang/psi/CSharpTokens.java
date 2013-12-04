@@ -18,6 +18,32 @@ public interface CSharpTokens extends TokenType
 
 	IElementType INT_KEYWORD = new IElementType("INT_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType BYTE_KEYWORD = new IElementType("BYTE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType BOOL_KEYWORD = new IElementType("BOOL_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType USHORT_KEYWORD = new IElementType("USHORT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType DECIMAL_KEYWORD = new IElementType("DECIMAL_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType DOUBLE_KEYWORD = new IElementType("DOUBLE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType LONG_KEYWORD = new IElementType("LONG_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType ULONG_KEYWORD = new IElementType("ULONG_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType FLOAT_KEYWORD = new IElementType("FLOAT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType OBJECT_KEYWORD = new IElementType("OBJECT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType SBYTE_KEYWORD = new IElementType("SBYTE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType SHORT_KEYWORD = new IElementType("SHORT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType CHAR_KEYWORD = new IElementType("CHAR_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType UINT_KEYWORD = new IElementType("UINT_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType STATIC_KEYWORD = new IElementType("STATIC_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType PUBLIC_KEYWORD = new IElementType("PUBLIC_KEYWORD", CSharpLanguage.INSTANCE);

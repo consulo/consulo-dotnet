@@ -43,7 +43,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 	{
 		PsiBuilder.Marker marker = builder.mark();
 		IElementType tokenType = builder.getTokenType();
-		if(CSharpTokenSets.NATIVE_TYPES.contains(tokenType))
+		if(CSharpTokenSets.PRIMITIVE_TYPES.contains(tokenType))
 		{
 			builder.advanceLexer();
 		}

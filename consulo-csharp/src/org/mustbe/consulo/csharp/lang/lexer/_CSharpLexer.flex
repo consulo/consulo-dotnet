@@ -65,6 +65,32 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	"int"                     { return CSharpTokens.INT_KEYWORD; }
 
+	"bool"                    { return CSharpTokens.BOOL_KEYWORD; }
+
+	"byte"                    { return CSharpTokens.BYTE_KEYWORD; }
+
+	"char"                    { return CSharpTokens.CHAR_KEYWORD; }
+
+	"decimal"                 { return CSharpTokens.DECIMAL_KEYWORD; }
+
+	"double"                  { return CSharpTokens.DOUBLE_KEYWORD; }
+
+	"float"                   { return CSharpTokens.FLOAT_KEYWORD; }
+
+	"long"                    { return CSharpTokens.LONG_KEYWORD; }
+
+	"object"                  { return CSharpTokens.OBJECT_KEYWORD; }
+
+	"sbyte"                   { return CSharpTokens.SBYTE_KEYWORD; }
+
+	"short"                   { return CSharpTokens.SHORT_KEYWORD; }
+
+	"uint"                    { return CSharpTokens.UINT_KEYWORD; }
+
+	"ulong"                   { return CSharpTokens.ULONG_KEYWORD; }
+
+	"ushort"                  { return CSharpTokens.USHORT_KEYWORD; }
+
 // modifier tokens
 	"static"                  { return CSharpTokens.STATIC_KEYWORD; }
 
