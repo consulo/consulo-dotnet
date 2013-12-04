@@ -1,9 +1,11 @@
 package org.mustbe.consulo.csharp.lang.parser.decl;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import org.mustbe.consulo.csharp.lang.parser.stmt.UsingStatementParsing;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.util.NotNullFunction;
 
 /**
  * @author VISTALL
@@ -19,7 +21,23 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 
 		GenericParameterParsing.parseList(builder);
 
-		//TODO [VISTALL] extend list
+		if(builder.getTokenType() == COLON)
+		{
+			parseWithSoftElements(new NotNullFunction<CSharpBuilderWrapper, PsiBuilder.Marker>()
+			{
+				@NotNull
+				@Override
+				public PsiBuilder.Marker fun(CSharpBuilderWrapper builderWrapper)
+				{
+					PsiBuilder.Marker mark = builderWrapper.mark();
+					builderWrapper.advanceLexer();  // colon
+
+					parseTypeList(builderWrapper);
+					mark.done(EXTENDS_LIST);
+					return mark;
+				}
+			}, builder, GLOBAL_KEYWORD);
+		}
 
 		GenericParameterParsing.parseGenericConstraintList(builder);
 

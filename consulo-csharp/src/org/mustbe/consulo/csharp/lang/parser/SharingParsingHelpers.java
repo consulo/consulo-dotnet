@@ -18,6 +18,27 @@ import lombok.val;
  */
 public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSharpElements
 {
+	protected static void parseTypeList(@NotNull CSharpBuilderWrapper builder)
+	{
+		while(!builder.eof())
+		{
+			PsiBuilder.Marker marker = parseType(builder);
+			if(marker == null)
+			{
+				break;
+			}
+
+			if(builder.getTokenType() == COMMA)
+			{
+				builder.advanceLexer();
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+
 	protected static PsiBuilder.Marker parseType(@NotNull CSharpBuilderWrapper builder)
 	{
 		PsiBuilder.Marker marker = builder.mark();
@@ -29,6 +50,17 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		else if(builder.getTokenType() == IDENTIFIER)
 		{
 			ExpressionParsing.parseQualifiedReference(builder, null);
+		}
+		else if(builder.getTokenType() == GLOBAL_KEYWORD)
+		{
+			PsiBuilder.Marker mark = builder.mark();
+			builder.advanceLexer();
+
+			if(expect(builder, COLONCOLON, "'::' expected"))
+			{
+				expect(builder, IDENTIFIER, "Identifier expected");
+			}
+			mark.done(REFERENCE_EXPRESSION);
 		}
 		else
 		{

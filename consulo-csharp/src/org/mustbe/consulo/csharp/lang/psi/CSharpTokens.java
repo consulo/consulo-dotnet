@@ -60,6 +60,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType COLON = new IElementType("COLON", CSharpLanguage.INSTANCE);
 
+	IElementType COLONCOLON = new IElementType("COLONCOLON", CSharpLanguage.INSTANCE);
+
 	IElementType LBRACKET = new IElementType("LBRACKET", CSharpLanguage.INSTANCE);
 
 	IElementType RBRACKET = new IElementType("RBRACKET", CSharpLanguage.INSTANCE);

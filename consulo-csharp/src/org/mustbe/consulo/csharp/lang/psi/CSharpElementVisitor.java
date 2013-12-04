@@ -98,4 +98,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(value);
 	}
+
+	public void visitTypeList(CSharpTypeListImpl list)
+	{
+		visitElement(list);
+	}
 }

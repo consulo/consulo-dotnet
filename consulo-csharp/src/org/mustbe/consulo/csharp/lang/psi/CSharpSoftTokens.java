@@ -14,5 +14,7 @@ public interface CSharpSoftTokens extends CSharpTokens
 
 	IElementType WHERE_KEYWORD = new IElementType("WHERE_KEYWORD", CSharpLanguage.INSTANCE);
 
-	TokenSet ALL = TokenSet.create(PARTIAL_KEYWORD, WHERE_KEYWORD);
+	IElementType GLOBAL_KEYWORD = new IElementType("GLOBAL_KEYWORD", CSharpLanguage.INSTANCE);
+
+	TokenSet ALL = TokenSet.create(PARTIAL_KEYWORD, WHERE_KEYWORD, GLOBAL_KEYWORD);
 }
