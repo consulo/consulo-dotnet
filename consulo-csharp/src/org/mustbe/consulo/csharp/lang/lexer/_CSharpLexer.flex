@@ -93,6 +93,8 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	"dynamic"                 { return CSharpTokens.DYNAMIC_KEYWORD; }
 
+	"var"                     { return CSharpTokens.VAR_KEYWORD; }
+
 // modifier tokens
 	"static"                  { return CSharpTokens.STATIC_KEYWORD; }
 
@@ -142,6 +144,8 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 	"event"                   { return CSharpTokens.EVENT_KEYWORD; }
 
 	"delegate"                { return CSharpTokens.DELEGATE_KEYWORD; }
+
+	"const"                   { return CSharpTokens.CONST_KEYWORD; }
 
 // expression tokens
 	"new"                     { return CSharpTokens.NEW_KEYWORD; }

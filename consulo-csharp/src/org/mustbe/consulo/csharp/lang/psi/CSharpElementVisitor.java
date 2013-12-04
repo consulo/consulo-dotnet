@@ -118,4 +118,14 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(accessor);
 	}
+
+	public void visitPropertyAccessor(CSharpPropertyAccessorImpl accessor)
+	{
+		visitElement(accessor);
+	}
+
+	public void visitFieldDeclaration(CSharpFieldDeclarationImpl declaration)
+	{
+		visitElement(declaration);
+	}
 }

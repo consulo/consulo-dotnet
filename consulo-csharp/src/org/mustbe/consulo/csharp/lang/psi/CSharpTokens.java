@@ -26,6 +26,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType DYNAMIC_KEYWORD = new IElementType("DYNAMIC_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType VAR_KEYWORD = new IElementType("VAR_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType DECIMAL_KEYWORD = new IElementType("DECIMAL_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType DOUBLE_KEYWORD = new IElementType("DOUBLE_KEYWORD", CSharpLanguage.INSTANCE);
@@ -55,6 +57,8 @@ public interface CSharpTokens extends TokenType
 	IElementType EVENT_KEYWORD = new IElementType("EVENT_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType DELEGATE_KEYWORD = new IElementType("DELEGATE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType CONST_KEYWORD = new IElementType("CONST_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType CLASS_KEYWORD = new IElementType("CLASS_KEYWORD", CSharpLanguage.INSTANCE);
 

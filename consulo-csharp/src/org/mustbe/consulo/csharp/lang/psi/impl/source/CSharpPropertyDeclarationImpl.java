@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyAccessor;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -28,5 +29,12 @@ public class CSharpPropertyDeclarationImpl extends CSharpMemberImpl implements D
 	public DotNetPropertyAccessor[] getAccessors()
 	{
 		return findChildrenByClass(DotNetPropertyAccessor.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetType getType()
+	{
+		return findNotNullChildByClass(DotNetType.class);
 	}
 }

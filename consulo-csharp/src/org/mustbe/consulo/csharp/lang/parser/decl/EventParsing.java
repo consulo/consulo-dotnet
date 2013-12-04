@@ -11,8 +11,6 @@ public class EventParsing extends MemberWithBodyParsing
 {
 	public static void parse(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
 	{
-		builder.advanceLexer();
-
 		if(parseType(builder) == null)
 		{
 			builder.error("Type expected");

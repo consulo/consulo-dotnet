@@ -46,6 +46,8 @@ public class DeclarationParsing extends SharingParsingHelpers
 		}
 		else if(tokenType == EVENT_KEYWORD)
 		{
+			builder.advanceLexer();
+
 			EventParsing.parse(builder, marker);
 		}
 		else if(tokenType == DELEGATE_KEYWORD)
@@ -53,6 +55,12 @@ public class DeclarationParsing extends SharingParsingHelpers
 			builder.advanceLexer();
 
 			MethodParsing.parseMethodStartAtType(builder, marker);
+		}
+		else if(tokenType == CONST_KEYWORD)
+		{
+			builder.advanceLexer();
+
+			FieldOrPropertyParsing.parseFieldBeforeName(builder, marker);
 		}
 		else
 		{
@@ -80,15 +88,11 @@ public class DeclarationParsing extends SharingParsingHelpers
 					}
 					else
 					{
-						builder.error("TODO: Variable parsing");
-						modifierListBuilder.drop();
-						marker.drop();
-						return false;
+						FieldOrPropertyParsing.parseFieldOrPropertyAfterName(builder, marker);
 					}
 				}
 				else
 				{
-					builder.error("Unknown how parse " + tokenType);
 					modifierListBuilder.drop();
 					marker.drop();
 					return false;
