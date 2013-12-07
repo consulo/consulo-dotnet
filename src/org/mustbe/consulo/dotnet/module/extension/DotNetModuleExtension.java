@@ -3,6 +3,7 @@ package org.mustbe.consulo.dotnet.module.extension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetVersion;
+import com.intellij.execution.configurations.GeneralCommandLine;
 
 /**
  * @author VISTALL
@@ -12,4 +13,7 @@ public interface DotNetModuleExtension<T extends ModuleExtensionWithSdk<T>> exte
 {
 	@NotNull
 	DotNetVersion getVersion();
+
+	@NotNull
+	GeneralCommandLine createRunCommandLine(@NotNull String fileName);
 }

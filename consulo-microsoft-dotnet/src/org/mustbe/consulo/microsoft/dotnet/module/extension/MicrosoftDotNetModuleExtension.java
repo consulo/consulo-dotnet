@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetVersion;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
+import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
 
@@ -31,5 +32,14 @@ public class MicrosoftDotNetModuleExtension extends ModuleExtensionWithSdkImpl<M
 	public DotNetVersion getVersion()
 	{
 		return DotNetVersion.LAST;
+	}
+
+	@NotNull
+	@Override
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName)
+	{
+		GeneralCommandLine commandLine = new GeneralCommandLine();
+		commandLine.setExePath(fileName);
+		return commandLine;
 	}
 }

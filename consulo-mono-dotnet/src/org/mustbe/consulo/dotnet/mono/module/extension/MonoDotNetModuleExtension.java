@@ -5,8 +5,11 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetVersion;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.mono.sdk.MonoSdkType;
+import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.util.SystemInfo;
 
 /**
  * @author VISTALL
@@ -31,5 +34,18 @@ public class MonoDotNetModuleExtension extends ModuleExtensionWithSdkImpl<MonoDo
 	public DotNetVersion getVersion()
 	{
 		return DotNetVersion.LAST;
+	}
+
+	@NotNull
+	@Override
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName)
+	{
+		Sdk sdk = getSdk();
+		assert sdk != null;
+
+		GeneralCommandLine commandLine = new GeneralCommandLine();
+		commandLine.setExePath(sdk.getHomePath() + "/../../../bin/mono" + (SystemInfo.isWindows ? ".exe" : ""));
+		commandLine.addParameter(fileName);
+		return commandLine;
 	}
 }
