@@ -2,17 +2,20 @@ package org.mustbe.consulo.dotnet.mono.module.extension;
 
 import javax.swing.JComponent;
 
-import org.consulo.module.extension.MutableModuleExtension;
+import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
+import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension implements MutableModuleExtension<MonoDotNetModuleExtension>
+public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension implements MutableModuleExtensionWithSdk<MonoDotNetModuleExtension>
 {
 	private MonoDotNetModuleExtension myOriginalModuleExtension;
 
@@ -26,7 +29,14 @@ public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension 
 	@Override
 	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		return null;
+		return wrapToNorth(new ModuleExtensionWithSdkPanel(this, runnable));
+	}
+
+	@NotNull
+	@Override
+	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
+	{
+		return (MutableModuleInheritableNamedPointer<Sdk>) super.getInheritableSdk();
 	}
 
 	@Override
@@ -38,7 +48,7 @@ public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension 
 	@Override
 	public boolean isModified()
 	{
-		return myOriginalModuleExtension.isEnabled() != isEnabled();
+		return isModifiedImpl(myOriginalModuleExtension);
 	}
 
 	@Override

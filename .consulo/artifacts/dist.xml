@@ -8,6 +8,9 @@
             <element id="module-production-resource-output" name="consulo-dotnet" />
             <element id="module-output" name="consulo-dotnet" />
           </element>
+          <element id="zip-archive" name="dotnet-asm.jar">
+            <element id="module-output" name="dotnet-asm" />
+          </element>
         </element>
       </element>
       <element id="directory" name="microsoft-dotnet">
@@ -39,6 +42,14 @@
           <element id="zip-archive" name="microsoft-csharp.jar">
             <element id="module-output" name="consulo-microsoft-csharp" />
             <element id="module-production-resource-output" name="consulo-microsoft-csharp" />
+          </element>
+        </element>
+      </element>
+      <element id="directory" name="mono-csharp">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="mono-csharp.jar">
+            <element id="module-production-resource-output" name="consulo-mono-csharp" />
+            <element id="module-output" name="consulo-mono-csharp" />
           </element>
         </element>
       </element>

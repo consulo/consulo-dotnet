@@ -1,0 +1,11 @@
+<idea-plugin>
+	<id>org.mustbe.consulo.mono.csharp</id>
+	<name>Mono C#</name>
+	<depends>org.mustbe.consulo.csharp.core</depends>
+	<depends>org.mustbe.consulo.dotnet.mono</depends>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<moduleExtensionProvider key="mono-csharp" parent-key="mono-dotnet"
+								 implementationClass="org.mustbe.consulo.microsoft.csharp.module.extension.MonoCSharpModuleExtensionProvider"/>
+	</extensions>
+</idea-plugin>

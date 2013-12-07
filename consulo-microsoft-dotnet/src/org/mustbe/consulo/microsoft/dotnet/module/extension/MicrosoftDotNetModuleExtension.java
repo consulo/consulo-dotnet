@@ -3,8 +3,8 @@ package org.mustbe.consulo.microsoft.dotnet.module.extension;
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetVersion;
-import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
 
@@ -12,7 +12,8 @@ import com.intellij.openapi.projectRoots.SdkType;
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MicrosoftDotNetModuleExtension extends ModuleExtensionWithSdkImpl<MicrosoftDotNetModuleExtension> implements DotNetModuleExtension<MicrosoftDotNetModuleExtension>
+public class MicrosoftDotNetModuleExtension extends ModuleExtensionWithSdkImpl<MicrosoftDotNetModuleExtension> implements
+		DotNetModuleExtension<MicrosoftDotNetModuleExtension>
 {
 	public MicrosoftDotNetModuleExtension(@NotNull String id, @NotNull Module module)
 	{
@@ -25,6 +26,7 @@ public class MicrosoftDotNetModuleExtension extends ModuleExtensionWithSdkImpl<M
 		return MicrosoftDotNetSdkType.class;
 	}
 
+	@NotNull
 	@Override
 	public DotNetVersion getVersion()
 	{

@@ -1,6 +1,7 @@
 package org.mustbe.consulo.dotnet.module.extension;
 
 import org.consulo.module.extension.ModuleExtensionWithSdk;
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetVersion;
 
 /**
@@ -9,5 +10,6 @@ import org.mustbe.consulo.dotnet.DotNetVersion;
  */
 public interface DotNetModuleExtension<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionWithSdk<T>
 {
+	@NotNull
 	DotNetVersion getVersion();
 }

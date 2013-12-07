@@ -92,6 +92,8 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		{
 			throw new ExecutionException("Module is empty");
 		}
+
+		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		val exeFile = DotNetMacros.extract(module, false, false);
 		if(!new File(exeFile).exists())
 		{

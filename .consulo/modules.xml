@@ -44,6 +44,7 @@
       <module name="consulo-mono-dotnet" dirurl="file://$PROJECT_DIR$/consulo-mono-dotnet">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
         <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -76,6 +77,19 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="consulo-csharp" />
         <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
+      </module>
+      <module name="consulo-mono-csharp" dirurl="file://$PROJECT_DIR$/consulo-mono-csharp">
+        <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
+        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+        <content url="file://$MODULE_DIR$">
+          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+        </content>
+        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
+        <orderEntry type="module-extension-sdk" extension-id="java" />
+        <orderEntry type="sourceFolder" forTests="false" />
+        <orderEntry type="module" module-name="consulo-csharp" />
+        <orderEntry type="module" module-name="consulo-mono-dotnet" />
       </module>
     </modules>
   </component>

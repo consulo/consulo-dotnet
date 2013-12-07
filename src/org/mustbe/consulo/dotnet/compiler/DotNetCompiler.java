@@ -65,10 +65,10 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 
 	@NotNull
 	@Override
-	public ProcessingItem[] getProcessingItems(CompileContext compileContext)
+	public ProcessingItem[] getProcessingItems(final CompileContext compileContext)
 	{
 		List<ProcessingItem> itemList = new ArrayList<ProcessingItem>();
-		for(Module module : ModuleManager.getInstance(compileContext.getProject()).getModules())
+		for(val module : ModuleManager.getInstance(compileContext.getProject()).getModules())
 		{
 			val extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
 			if(extension == null)
@@ -81,7 +81,8 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 				@Override
 				protected boolean accept(VirtualFile virtualFile)
 				{
-					return virtualFile.getFileType() == extension.getFileType();
+					return virtualFile.getFileType() == extension.getFileType() && ModuleUtilCore.findModuleForFile(virtualFile,
+							compileContext.getProject()) == module;
 				}
 			};
 

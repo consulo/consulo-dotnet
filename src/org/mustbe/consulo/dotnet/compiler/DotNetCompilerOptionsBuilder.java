@@ -37,7 +37,7 @@ public class DotNetCompilerOptionsBuilder
 
 		String outputFile = DotNetMacros.extract(module, false, false);
 		FileUtil.appendToFile(tempFile, "/out:" + outputFile + "\n");
-		FileUtil.appendToFile(tempFile, "/utf8output\n");
+		//FileUtil.appendToFile(tempFile, "/utf8output\n");
 
 		for(VirtualFile result : results)
 		{
@@ -47,16 +47,6 @@ public class DotNetCompilerOptionsBuilder
 		FileUtil.createParentDirs(new File(outputFile));
 
 		commandLine.addParameter("@" + tempFile.getAbsolutePath());
-		/*String fileList = StringUtil.join(results, new Function<VirtualFile, String>()
-		{
-			@Override
-			public String fun(VirtualFile virtualFile)
-			{
-				return FileUtil.toSystemDependentName(virtualFile.getPath());
-			}
-		}, " ");
-		commandLine.addParameter(fileList);   */
-
 
 		return commandLine;
 	}
