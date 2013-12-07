@@ -25,8 +25,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.MultiMap;
 import lombok.val;
@@ -126,7 +128,7 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 			DotNetModuleLangExtension langDotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
 			DotNetModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 
-			DotNetCompilerOptionsBuilder builder = new DotNetCompilerOptionsBuilder(compileContext.getProject(), dotNetModuleExtension.getSdk());
+			DotNetCompilerOptionsBuilder builder = new DotNetCompilerOptionsBuilder(dotNetModuleExtension.getSdk());
 
 			langDotNetModuleExtension.setupCompilerOptions(builder);
 
@@ -152,10 +154,11 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 		return processingItems;
 	}
 
-	// src\Test.cs(7,42): error CS1002: ожидалась ;
+	// src\Test.cs(7,42): error CS1002: ожидалась ;  [microsoft]
+	// C:\Users\VISTALL\\ConsuloProjects\\untitled30\mono-test\\Program.cs(7,17): error CS0117: error description [mono]
 	private static void addMessage(CompileContext compileContext, Module module, String line)
 	{
-		String[] split = line.split(":");
+		String[] split = line.split(": ");
 		if(split.length != 3)
 		{
 			return;
@@ -176,9 +179,17 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 		}
 
 
-		String url = module.getModuleDirUrl() + "/" + FileUtil.toSystemIndependentName(file);
+		String fileUrl = FileUtil.toSystemIndependentName(file);
+		if(!FileUtil.isAbsolute(fileUrl))
+		{
+			fileUrl = module.getModuleDirUrl() + "/" + fileUrl;
+		}
+		else
+		{
+			fileUrl = VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, fileUrl);
+		}
 
-		compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", url, Integer.parseInt(lineAndColumn[0]),
+		compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", fileUrl, Integer.parseInt(lineAndColumn[0]),
 				Integer.parseInt(lineAndColumn[1]));
 	}
 

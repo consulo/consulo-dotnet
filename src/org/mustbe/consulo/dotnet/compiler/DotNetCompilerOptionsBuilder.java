@@ -2,11 +2,13 @@ package org.mustbe.consulo.dotnet.compiler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -18,13 +20,19 @@ import com.intellij.openapi.vfs.VirtualFile;
 public class DotNetCompilerOptionsBuilder
 {
 	private String myExecutable;
-	private Project myProject;
 	private Sdk mySdk;
 
-	public DotNetCompilerOptionsBuilder(Project project, Sdk sdk)
+	private final List<String> myArguments = new ArrayList<String>();
+
+	public DotNetCompilerOptionsBuilder(Sdk sdk)
 	{
-		myProject = project;
 		mySdk = sdk;
+	}
+
+	public DotNetCompilerOptionsBuilder addArgument(@NotNull String arg)
+	{
+		myArguments.add(arg + "\n");
+		return this;
 	}
 
 	public GeneralCommandLine createCommandLine(Module module, Collection<VirtualFile> results) throws IOException
@@ -37,7 +45,10 @@ public class DotNetCompilerOptionsBuilder
 
 		String outputFile = DotNetMacros.extract(module, false, false);
 		FileUtil.appendToFile(tempFile, "/out:" + outputFile + "\n");
-		//FileUtil.appendToFile(tempFile, "/utf8output\n");
+		for(String argument : myArguments)
+		{
+			FileUtil.appendToFile(tempFile, argument);
+		}
 
 		for(VirtualFile result : results)
 		{
@@ -47,7 +58,7 @@ public class DotNetCompilerOptionsBuilder
 		FileUtil.createParentDirs(new File(outputFile));
 
 		commandLine.addParameter("@" + tempFile.getAbsolutePath());
-
+		commandLine.setRedirectErrorStream(true);
 		return commandLine;
 	}
 
