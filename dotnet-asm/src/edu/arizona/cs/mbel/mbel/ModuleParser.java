@@ -764,8 +764,6 @@ public class ModuleParser
 						endI = Math.min(endI, row[i + 1].getTableIndex("ParamList").longValue());
 					}
 
-					int count = 0;
-
 					for(long j = startI; j < endI; j++)
 					{
 						GenericTable paramTable = tables[TableConstants.Param][(int) getParam(j) - 1];

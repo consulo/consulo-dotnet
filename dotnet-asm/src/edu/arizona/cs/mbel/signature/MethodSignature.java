@@ -101,9 +101,9 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 	 * @param rType  the return type of this method
 	 * @param params the parameter list for this method
 	 */
-	public MethodSignature(ReturnTypeSignature rType, ParameterSignature[] Params) throws SignatureException
+	public MethodSignature(ReturnTypeSignature rType, ParameterSignature[] params) throws SignatureException
 	{
-		this(true, false, DEFAULT, rType, Params);
+		this(true, false, DEFAULT, rType, params);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 	 * parameter signatures of this method signature.
 	 *
 	 * @param hasthis     true iff this method has a 'this' pointer
-	 * @param explictthis true iff this method has an explicit 'this' pointer
+	 * @param explicitthis true iff this method has an explicit 'this' pointer
 	 * @param convention  the calling convention of this method (defined in CallingConvention)
 	 * @param rType       return type signature for this method
 	 * @param Params      array of parameter signatures for this method
@@ -157,6 +157,12 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 		MethodSignature blob = new MethodSignature();
 
 		blob.flags = buffer.get();
+		if((blob.flags & CallingConvention.GENERIC) != 0)
+		{
+			// we only read size, but adding it at another methods
+			//noinspection UnusedDeclaration
+			int genericParameterSize = readCodedInteger(buffer);
+		}
 		int paramCount = readCodedInteger(buffer);
 		blob.returnType = ReturnTypeSignature.parse(buffer, group);
 		if(blob.returnType == null)

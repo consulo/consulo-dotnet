@@ -37,6 +37,7 @@ public interface CallingConvention
 	public static final byte LOCAL_SIG = 0x07;
 	public static final byte PROPERTY = 0x08;
 	public static final byte UNMANAGED = 0x09;
+	public static final byte GENERIC = 0x10;
 	public static final byte CALL_CONV_MASK = 0x0F;
 	// one of the above is ORed with any of the below
 	public static final byte HASTHIS = 0x20;
