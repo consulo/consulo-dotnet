@@ -28,6 +28,16 @@ public class DotNetAsmTest extends TestCase
 	{
 	}
 
+	// test with method generic parameter and A constraint
+	public void test4() throws Exception
+	{
+	}
+
+	// test with method generic parameter and struct constraint
+	public void test5() throws Exception
+	{
+	}
+
 	@Override
 	protected void runTest() throws Throwable
 	{

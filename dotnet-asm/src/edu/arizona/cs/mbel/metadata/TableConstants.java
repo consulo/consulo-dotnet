@@ -122,8 +122,10 @@ public class TableConstants
 	public static final int TypeRef = 0x01;
 	public static final int TypeSpec = 0x1B;
 	public static final int GenericParam = 0x2a;
+	public static final int MethodSpec = 0x2b;
+	public static final int GenericParamConstraint = 0x2c;
 
-	public static final String[] GRAMMAR = new String[64];
+	public static final String[] GRAMMAR = new String[66];
 
 	static
 	{
@@ -171,6 +173,8 @@ public class TableConstants
 		GRAMMAR[TypeRef] = "TypeRef:ResolutionScope=C|" + ResolutionScope + ",Name=S,Namespace=S";
 		GRAMMAR[TypeSpec] = "TypeSpec:Signature=B";
 		GRAMMAR[GenericParam] = "GenericParam:Flags=4,Parent=T|" + TypeOrMethodDef + ",Name=S";
+		GRAMMAR[MethodSpec] = null; //TODO [VISTALL]
+		GRAMMAR[GenericParamConstraint] = "GenericParamConstraint:Parent=T|" + GenericParam + ",Constraint=C|" + TypeDefOrRef;
 	}
 
 	// BITS[i] = ceil(lg(TABLE_OPTIONS[i].length))

@@ -1,5 +1,9 @@
 package edu.arizona.cs.mbel.mbel;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 23.11.13.
@@ -8,11 +12,21 @@ public class GenericParamDef
 {
 	private final String myName;
 	private final int myFlags;
+	private List<TypeDef> myConstraints = Collections.emptyList();
 
 	public GenericParamDef(String name, int flags)
 	{
 		myName = name;
 		myFlags = flags;
+	}
+
+	public void addConstraint(TypeDef typeDef)
+	{
+		if(myConstraints.isEmpty())
+		{
+			myConstraints = new ArrayList<TypeDef>(2);
+		}
+		myConstraints.add(typeDef);
 	}
 
 	public String getName()

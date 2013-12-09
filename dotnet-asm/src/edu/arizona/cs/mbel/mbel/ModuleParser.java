@@ -59,6 +59,7 @@ public class ModuleParser
 	private TypeRef[] typeRefs = null;
 	private TypeSpec[] typeSpecs = null;
 	private MethodDef[] methods = null;
+	private GenericParamDef[] myGenericParams;
 	private Field[] fields = null;
 	private ParameterInfo[] params = null;
 	private Property[] properties = null;
@@ -317,6 +318,7 @@ public class ModuleParser
 
 		buildMemberRefs();
 		buildGenericParams();
+		buildGenericParamConstraints();
 		buildEntryPoint();
 		buildStandAloneSigs();
 		buildMethodBodies();
@@ -1459,6 +1461,9 @@ public class ModuleParser
 			return;
 		}
 
+		myGenericParams = new GenericParamDef[table.length];
+
+		int i = 0;
 		for(GenericTable genericTable : table)
 		{
 			String name = genericTable.getString("Name");
@@ -1479,7 +1484,43 @@ public class ModuleParser
 
 			GenericParamDef paramDef = new GenericParamDef(name, flags);
 			paramOwner.addGenericParam(paramDef);
+
+			myGenericParams[i] = paramDef;
 		}
+	}
+
+	private void buildGenericParamConstraints()
+	{
+		GenericTable[] table = tables[TableConstants.GenericParamConstraint];
+		if(table == null)
+		{
+			return;
+		}
+
+		for(GenericTable genericTable : table)
+		{
+			long parent = genericTable.getTableIndex("Parent");
+			long constraint = genericTable.getCodedIndex("Constraint");
+
+			long[] values = tc.parseCodedIndex(constraint, TableConstants.TypeDefOrRef);
+
+			GenericParamDef paramDef = myGenericParams[longToIndex(parent)];
+			if(values[0] == TableConstants.TypeDef)
+			{
+				TypeDef value = typeDefs[longToIndex(values[1])];
+				paramDef.addConstraint(value);
+			}
+			else if(values[1] == TableConstants.TypeRef)
+			{
+				TypeRef value = typeRefs[longToIndex(values[1])];
+				throw new UnsupportedOperationException("TypeRef is not supported " + value);
+			}
+		}
+	}
+
+	private static int longToIndex(long index)
+	{
+		return (int) (index - 1);
 	}
 
 	private void buildMethodBodies() throws IOException, MSILParseException
