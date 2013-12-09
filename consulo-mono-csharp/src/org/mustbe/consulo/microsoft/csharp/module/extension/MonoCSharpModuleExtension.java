@@ -2,7 +2,7 @@ package org.mustbe.consulo.microsoft.csharp.module.extension;
 
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.CSharpFileType;
+import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.fileTypes.LanguageFileType;

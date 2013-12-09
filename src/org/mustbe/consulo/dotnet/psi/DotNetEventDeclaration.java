@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetEventDeclaration extends DotNetVariable
+public interface DotNetEventDeclaration extends DotNetVariable, DotNetMemberOwner
 {
 	@NotNull
 	DotNetEventAccessor[] getAccessors();

@@ -2,6 +2,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyAccessor;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -36,5 +37,12 @@ public class CSharpPropertyDeclarationImpl extends CSharpMemberImpl implements D
 	public DotNetType getType()
 	{
 		return findNotNullChildByClass(DotNetType.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetNamedElement[] getMembers()
+	{
+		return findChildrenByClass(DotNetNamedElement.class);
 	}
 }

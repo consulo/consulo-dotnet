@@ -1,14 +1,17 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
@@ -49,6 +52,12 @@ public class CSharpNamespaceDeclarationImpl extends CSharpElementImpl implements
 	}
 
 	@Override
+	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	{
+		return null;
+	}
+
+	@Override
 	public PsiElement getLeftBrace()
 	{
 		return findChildByType(CSharpTokens.LBRACE);
@@ -58,5 +67,12 @@ public class CSharpNamespaceDeclarationImpl extends CSharpElementImpl implements
 	public PsiElement getRightBrace()
 	{
 		return findChildByType(CSharpTokens.RBRACE);
+	}
+
+	@NotNull
+	@Override
+	public DotNetNamedElement[] getMembers()
+	{
+		return findChildrenByClass(DotNetNamedElement.class);
 	}
 }

@@ -1,10 +1,11 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.CSharpFileType;
+import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetFile;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
@@ -39,5 +40,12 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 	public FileType getFileType()
 	{
 		return CSharpFileType.INSTANCE;
+	}
+
+	@NotNull
+	@Override
+	public DotNetNamedElement[] getMembers()
+	{
+		return findChildrenByClass(DotNetNamedElement.class);
 	}
 }

@@ -1,6 +1,7 @@
-package org.mustbe.consulo.csharp;
+package org.mustbe.consulo.csharp.lang;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 

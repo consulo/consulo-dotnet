@@ -4,11 +4,14 @@
 	<depends>org.mustbe.consulo.dotnet.core</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="org.mustbe.consulo.csharp.CSharpFileTypeFactory"/>
+		<fileTypeFactory implementation="org.mustbe.consulo.csharp.lang.CSharpFileTypeFactory"/>
 
 		<syntaxHighlighter key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighter"/>
 		<highlightVisitor implementation="org.mustbe.consulo.csharp.ide.highlight.CSharpHighlightVisitor"/>
+		<iconDescriptorUpdater implementation="org.mustbe.consulo.csharp.lang.CSharpIconDescriptorUpdater" />
+		<treeStructureProvider implementation="org.mustbe.consulo.csharp.ide.projectView.CSharpProjectViewProvider" />
 
+		<lang.elementIcon language="C#" file="/icons/csharpLang.png" />
 		<lang.braceMatcher language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpPairedBraceMatcher"/>
 		<lang.foldingBuilder language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpFoldingBuilder"/>
 		<lang.syntaxHighlighterFactory key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighterFactory"/>

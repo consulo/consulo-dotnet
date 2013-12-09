@@ -1,10 +1,10 @@
-package org.mustbe.consulo.csharp;
+package org.mustbe.consulo.csharp.lang;
 
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.CSharpLanguage;
+import org.mustbe.consulo.csharp.CSharpIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**

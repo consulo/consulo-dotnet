@@ -11,4 +11,5 @@ import com.intellij.openapi.util.IconLoader;
 public interface CSharpIcons
 {
 	Icon FileType = IconLoader.findIcon("/icons/csharp.png");
+	Icon Lang = IconLoader.findIcon("/icons/csharpLang.png");
 }

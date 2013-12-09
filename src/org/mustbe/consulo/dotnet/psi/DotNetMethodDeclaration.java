@@ -8,7 +8,7 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetMethodDeclaration extends DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetGenericParameterListOwner
+public interface DotNetMethodDeclaration extends DotNetModifierListOwner, DotNetNamedElement, PsiNameIdentifierOwner, DotNetGenericParameterListOwner
 {
 	boolean isDelegate();
 
