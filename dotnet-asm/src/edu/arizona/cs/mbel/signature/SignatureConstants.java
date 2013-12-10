@@ -48,13 +48,16 @@ public interface SignatureConstants
 	public static final byte ELEMENT_TYPE_BYREF = 0x10;  // followed by <type> token
 	public static final byte ELEMENT_TYPE_VALUETYPE = 0x11;  // followed by <type> token
 	public static final byte ELEMENT_TYPE_CLASS = 0x12;  // followed by <type> token
+	public static final byte ELEMENT_TYPE_VAR = 0x13;  // followed by generic parameter number
 	public static final byte ELEMENT_TYPE_ARRAY = 0x14;  // <type> <rank> <boundsCount> <bound1> ... <loCount> <lo1> ...
+	public static final byte ELEMENT_TYPE_GENERIC_INST = 0x15;  // <type> <type-arg-count> <type-1> ... <type-n>
 	public static final byte ELEMENT_TYPE_TYPEDBYREF = 0x16;
 	public static final byte ELEMENT_TYPE_I = 0x18;  // System.IntPtr
 	public static final byte ELEMENT_TYPE_U = 0x19;  // System.UIntPtr
 	public static final byte ELEMENT_TYPE_FNPTR = 0x1b;  // Followed by full method signature
 	public static final byte ELEMENT_TYPE_OBJECT = 0x1c;  // System.Object
 	public static final byte ELEMENT_TYPE_SZARRAY = 0x1d;  // Single-dim array with 0 lower bound
+	public static final byte ELEMENT_TYPE_MVAR = 0x1e;  // followed by method generic parameter number
 	public static final byte ELEMENT_TYPE_CMOD_REQD = 0x1f;  // Required modifier : followed by a TypeDef or TypeRef token
 	public static final byte ELEMENT_TYPE_CMOD_OPT = 0x20;  // Optional modifier : followed by a TypeDef or TypeRef token
 	public static final byte ELEMENT_TYPE_INTERNAL = 0x21;  // Implemented within the CLI

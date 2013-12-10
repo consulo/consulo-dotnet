@@ -22,10 +22,10 @@
 package edu.arizona.cs.mbel.instructions;
 
 import java.io.IOException;
-import java.lang.Class;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.MSILInputStream;
@@ -50,7 +50,7 @@ import edu.arizona.cs.mbel.parse.MSILParseException;
  */
 public abstract class Instruction
 {
-	private static final Hashtable CLASS_HASH = new Hashtable(101);
+	private static final Map<Integer, Class> CLASS_HASH = new HashMap<Integer, Class>();
 	private int opcode;
 
 	static
@@ -155,9 +155,9 @@ public abstract class Instruction
 			{
 				Field opcodes = CLASS.getDeclaredField("OPCODE_LIST");
 				OPCODE_LIST = (int[]) opcodes.get(null);
-				for(int k = 0; k < OPCODE_LIST.length; k++)
+				for(int aOPCODE_LIST : OPCODE_LIST)
 				{
-					CLASS_HASH.put(new Integer(OPCODE_LIST[k]), CLASS);
+					CLASS_HASH.put(aOPCODE_LIST, CLASS);
 				}
 			}
 		}
@@ -356,13 +356,12 @@ public abstract class Instruction
 			}
 		}
 
-		Object obj = CLASS_HASH.get(new Integer(input));
-		if(obj == null || !(obj instanceof Class))
+		Class<?> obj = CLASS_HASH.get(input);
+		if(obj == null)
 		{
-			throw new MSILParseException("Instruction.readInstruction: Invalid instruction code");
+			throw new IllegalArgumentException("Instruction.readInstruction: Invalid instruction code: " + input + " Opcode: " + Opcodes.values()[input]);
 		}
 
-		Class clazz = (Class) obj;
 		Class[] parseParams = {
 				int.class,
 				ModuleParser.class
@@ -370,11 +369,8 @@ public abstract class Instruction
 
 		try
 		{
-			Constructor newInst = clazz.getConstructor(parseParams);
-			Instruction instr = (Instruction) newInst.newInstance(new Object[]{
-					new Integer(input),
-					parse
-			});
+			Constructor newInst = obj.getConstructor(parseParams);
+			Instruction instr = (Instruction) newInst.newInstance(new Integer(input), parse);
 			if(instr instanceof TailPrefixInstruction)
 			{
 				((TailPrefixInstruction) instr).setTailPrefix(tailP);

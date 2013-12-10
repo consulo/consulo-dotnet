@@ -151,6 +151,23 @@ public class ByteBuffer
 		return value;
 	}
 
+	public long getCompressedUInt32()
+	{
+		int first = get() & 0xFF;
+		if((first & 0x80) == 0)
+		{
+			return first;
+		}
+
+		if((first & 0x40) == 0)
+		{
+			return ((first & ~0x80) << 8) | (get() & 0xFF);
+		}
+
+		return ((first & ~0xc0) << 24) | (get() & 0xFF) << 16 | (get() & 0xFF) << 8 | (get() & 0xFF);
+	}
+
+
 	/**
 	 * Returns the byte stored in this ByteBuffer at the current position.
 	 * This method does not advance the current position.

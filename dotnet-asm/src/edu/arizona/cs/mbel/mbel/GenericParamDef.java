@@ -12,7 +12,7 @@ public class GenericParamDef
 {
 	private final String myName;
 	private final int myFlags;
-	private List<TypeDef> myConstraints = Collections.emptyList();
+	private List<Object> myConstraints = Collections.emptyList();
 
 	public GenericParamDef(String name, int flags)
 	{
@@ -20,11 +20,11 @@ public class GenericParamDef
 		myFlags = flags;
 	}
 
-	public void addConstraint(TypeDef typeDef)
+	public void addConstraint(Object typeDef)
 	{
 		if(myConstraints.isEmpty())
 		{
-			myConstraints = new ArrayList<TypeDef>(2);
+			myConstraints = new ArrayList<Object>(2);   //TypeRef or TypeDef
 		}
 		myConstraints.add(typeDef);
 	}

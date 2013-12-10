@@ -173,7 +173,7 @@ public class TableConstants
 		GRAMMAR[TypeRef] = "TypeRef:ResolutionScope=C|" + ResolutionScope + ",Name=S,Namespace=S";
 		GRAMMAR[TypeSpec] = "TypeSpec:Signature=B";
 		GRAMMAR[GenericParam] = "GenericParam:Flags=4,Parent=T|" + TypeOrMethodDef + ",Name=S";
-		GRAMMAR[MethodSpec] = null; //TODO [VISTALL]
+		GRAMMAR[MethodSpec] = "MethodSpec:Method=C|" + MethodDefOrRef + ",Instantiation=B";
 		GRAMMAR[GenericParamConstraint] = "GenericParamConstraint:Parent=T|" + GenericParam + ",Constraint=C|" + TypeDefOrRef;
 	}
 

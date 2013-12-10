@@ -89,7 +89,6 @@ public class TypeSignature extends Signature
 			case ELEMENT_TYPE_ARRAY:
 			case ELEMENT_TYPE_SZARRAY:
 				return TypeSpecSignature.parse(buffer, group);
-
 			case ELEMENT_TYPE_VALUETYPE:
 				return ValueTypeSignature.parse(buffer, group);
 			case ELEMENT_TYPE_CLASS:
@@ -142,6 +141,16 @@ public class TypeSignature extends Signature
 			case ELEMENT_TYPE_OBJECT:
 				buffer.get();
 				return TypeSignature.OBJECT;
+			case ELEMENT_TYPE_MVAR:
+				buffer.get();
+				long methodGenericParameterIndex = buffer.getCompressedUInt32();
+				return TypeSignature.OBJECT;  //TODO [VISTALL]
+			case ELEMENT_TYPE_VAR:
+				buffer.get();
+				long classGenericParameterIndex = buffer.getCompressedUInt32();
+				return TypeSignature.OBJECT; //TODO [VISTALL]
+			case ELEMENT_TYPE_GENERIC_INST:
+				return TypeSignature.OBJECT; //TODO [VISTALL]
 			default:
 				throw new IllegalArgumentException("Unknown element type: " + data);
 		}

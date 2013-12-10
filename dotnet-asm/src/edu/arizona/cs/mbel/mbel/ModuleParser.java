@@ -590,15 +590,15 @@ public class ModuleParser
 	private void buildFileReferences()
 	{
 		// build Files DONE!
-		if(tables[TableConstants.File] != null)
+		GenericTable[] table = tables[TableConstants.File];
+		if(table != null)
 		{
-			GenericTable[] row = tables[TableConstants.File];
-			fileReferences = new FileReference[row.length];
-			for(int i = 0; i < row.length; i++)
+			fileReferences = new FileReference[table.length];
+			for(int i = 0; i < table.length; i++)
 			{
-				long flags = row[i].getConstant("Flags").longValue();
-				String name = row[i].getString("Name");
-				byte[] hashValue = row[i].getBlob("HashValue");
+				long flags = table[i].getConstant("Flags").longValue();
+				String name = table[i].getString("Name");
+				byte[] hashValue = table[i].getBlob("HashValue");
 
 				fileReferences[i] = new FileReference(flags, name, hashValue);
 				module.addFileReference(fileReferences[i]);
@@ -655,16 +655,15 @@ public class ModuleParser
 	private void buildExportedTypes()
 	{
 		// build ExportedTypes (after File) DONE!
-
-		if(tables[TableConstants.ExportedType] != null)
+		GenericTable[] table = tables[TableConstants.ExportedType];
+		if(table != null)
 		{
-			GenericTable[] row = tables[TableConstants.ExportedType];
-			exportedTypes = new ExportedTypeRef[row.length];
-			for(int i = 0; i < row.length; i++)
+			exportedTypes = new ExportedTypeRef[table.length];
+			for(int i = 0; i < table.length; i++)
 			{
-				String ns = row[i].getString("TypeNamespace");
-				String name = row[i].getString("TypeName");
-				long flags = row[i].getConstant("Flags").longValue();
+				String ns = table[i].getString("TypeNamespace");
+				String name = table[i].getString("TypeName");
+				long flags = table[i].getConstant("Flags").longValue();
 
 				exportedTypes[i] = new ExportedTypeRef(ns, name, flags);
 				if(assemblyInfo != null)
@@ -672,17 +671,21 @@ public class ModuleParser
 					assemblyInfo.addExportedType(exportedTypes[i]);
 				}
 			}
-			for(int i = 0; i < row.length; i++)
+			for(int i = 0; i < table.length; i++)
 			{
-				long coded = row[i].getCodedIndex("Implementation");
+				long coded = table[i].getCodedIndex("Implementation");
 				long[] token = tc.parseCodedIndex(coded, TableConstants.Implementation);
 				if(token[0] == TableConstants.ExportedType)
 				{
-					exportedTypes[i].setExportedTypeRef(exportedTypes[(int) token[1] - 1]);
+					exportedTypes[i].setExportedTypeRef(exportedTypes[longToIndex(token[1])]);
 				}
 				else
 				{
-					exportedTypes[i].setFileReference(fileReferences[(int) token[1] - 1]);
+					if(fileReferences == null)
+					{
+						continue;
+					}
+					exportedTypes[i].setFileReference(fileReferences[longToIndex(token[1])]);
 				}
 			}
 		}
@@ -1485,7 +1488,7 @@ public class ModuleParser
 			GenericParamDef paramDef = new GenericParamDef(name, flags);
 			paramOwner.addGenericParam(paramDef);
 
-			myGenericParams[i] = paramDef;
+			myGenericParams[i++] = paramDef;
 		}
 	}
 
@@ -1505,6 +1508,7 @@ public class ModuleParser
 			long[] values = tc.parseCodedIndex(constraint, TableConstants.TypeDefOrRef);
 
 			GenericParamDef paramDef = myGenericParams[longToIndex(parent)];
+			assert paramDef != null : parent;
 			if(values[0] == TableConstants.TypeDef)
 			{
 				TypeDef value = typeDefs[longToIndex(values[1])];
@@ -1513,7 +1517,7 @@ public class ModuleParser
 			else if(values[1] == TableConstants.TypeRef)
 			{
 				TypeRef value = typeRefs[longToIndex(values[1])];
-				throw new UnsupportedOperationException("TypeRef is not supported " + value);
+				paramDef.addConstraint(value);
 			}
 		}
 	}
