@@ -33,6 +33,8 @@ public class MethodParsing extends MemberWithBodyParsing
 
 	public static void parseMethodStartAfterName(@NotNull CSharpBuilderWrapper builder, @NotNull PsiBuilder.Marker marker, boolean constructor)
 	{
+		GenericParameterParsing.parseList(builder);
+
 		if(builder.getTokenType() == LPAR)
 		{
 			parseParameterList(builder);
@@ -45,6 +47,10 @@ public class MethodParsing extends MemberWithBodyParsing
 		if(constructor)
 		{
 			//TODO [VISTALL] base calls
+		}
+		else
+		{
+			GenericParameterParsing.parseGenericConstraintList(builder);
 		}
 
 		if(!expect(builder, SEMICOLON, null))

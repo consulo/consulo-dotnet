@@ -90,7 +90,7 @@ public class GenericParameterParsing extends SharingParsingHelpers
 		return marker;
 	}
 
-	public static PsiBuilder.Marker parseGenericConstraint(CSharpBuilderWrapper builder)
+	private static PsiBuilder.Marker parseGenericConstraint(CSharpBuilderWrapper builder)
 	{
 		if(builder.getTokenType() != WHERE_KEYWORD)
 		{

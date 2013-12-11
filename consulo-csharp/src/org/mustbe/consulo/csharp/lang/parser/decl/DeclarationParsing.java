@@ -82,7 +82,7 @@ public class DeclarationParsing extends SharingParsingHelpers
 				else if(expect(builder, IDENTIFIER, "Name expected"))
 				{
 					// MODIFIER_LIST TYPE IDENTIFIER LPAR -> METHOD
-					if(builder.getTokenType() == LPAR)
+					if(builder.getTokenType() == LPAR || builder.getTokenType() == LT)
 					{
 						MethodParsing.parseMethodStartAfterName(builder, marker, false);
 					}
