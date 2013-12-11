@@ -70,7 +70,7 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 	public ProcessingItem[] getProcessingItems(final CompileContext compileContext)
 	{
 		List<ProcessingItem> itemList = new ArrayList<ProcessingItem>();
-		for(val module : ModuleManager.getInstance(compileContext.getProject()).getModules())
+		for(val module : compileContext.getCompileScope().getAffectedModules())
 		{
 			val extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
 			if(extension == null)
