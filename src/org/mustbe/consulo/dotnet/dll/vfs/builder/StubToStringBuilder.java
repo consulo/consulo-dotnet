@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.text.StringUtil;
 import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.signature.TypeAttributes;
 
 /**
  * @author VISTALL
@@ -46,8 +47,67 @@ public class StubToStringBuilder
 		{
 			name = name.substring(0, i);
 		}
-		StubBlock stubBlock = new StubBlock("class " + name, '{', '}');
+
+		StringBuilder builder =  new StringBuilder();
+		if(isSet(TypeAttributes.VisibilityMask, TypeAttributes.Public))
+		{
+			builder.append("public ");
+		}
+		else
+		{
+			builder.append("internal ");
+		}
+
+		if(isSet(TypeAttributes.Sealed))
+		{
+			builder.append("sealed ");
+		}
+
+		if(isSet(TypeAttributes.Abstract))
+		{
+			builder.append("abstract ");
+		}
+
+		if(myTypeDef.isEnum())
+		{
+			builder.append("enum ");
+		}
+		else if(myTypeDef.isValueType())
+		{
+			builder.append("struct ");
+		}
+		else if(isSet(TypeAttributes.Interface))
+		{
+			builder.append("interface ");
+		}
+		else
+		{
+			builder.append("class ");
+		}
+		builder.append(name);
+
+		StubBlock stubBlock = new StubBlock(builder.toString(), '{', '}');
 		return stubBlock;
+	}
+
+	private boolean isSet(int mod)
+	{
+		return isSet(myTypeDef.getFlags(), mod);
+	}
+
+	private boolean isSet(long value, int mod)
+	{
+		return (value & mod) == mod;
+	}
+
+	private boolean isSet(int mod, int v)
+	{
+		return isSet(myTypeDef.getFlags(), mod, v);
+	}
+
+	private boolean isSet(long value, int mod, int v)
+	{
+		return (value & mod) == v;
 	}
 
 	@Nullable

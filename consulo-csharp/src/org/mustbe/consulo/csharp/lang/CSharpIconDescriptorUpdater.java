@@ -1,5 +1,7 @@
 package org.mustbe.consulo.csharp.lang;
 
+import javax.swing.Icon;
+
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.*;
@@ -39,8 +41,21 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		}
 		else if(element instanceof DotNetTypeDeclaration)
 		{
-			iconDescriptor.setMainIcon(((DotNetTypeDeclaration) element).hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractClass :
-					AllIcons.Nodes.Class);
+			Icon main = null;
+			if(((DotNetTypeDeclaration) element).isInterface())
+			{
+				main = AllIcons.Nodes.Interface;
+			}
+			else if(((DotNetTypeDeclaration) element).isEnum())
+			{
+				main = AllIcons.Nodes.Enum;
+			}
+			else
+			{
+				main = ((DotNetTypeDeclaration) element).hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractClass : AllIcons.Nodes
+						.Class;
+			}
+			iconDescriptor.setMainIcon(main);
 
 			processModifierListOwner(element, iconDescriptor);
 		}

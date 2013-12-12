@@ -8,4 +8,9 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  */
 public interface DotNetTypeDeclaration extends DotNetModifierListOwner, DotNetGenericParameterListOwner, PsiNameIdentifierOwner, DotNetMemberOwner
 {
+	boolean isInterface();
+
+	boolean isStruct();
+
+	boolean isEnum();
 }

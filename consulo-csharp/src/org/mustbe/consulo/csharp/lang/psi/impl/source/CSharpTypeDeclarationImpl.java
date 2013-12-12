@@ -61,4 +61,22 @@ public class CSharpTypeDeclarationImpl extends CSharpMemberImpl implements CShar
 	{
 		return findChildrenByClass(DotNetNamedElement.class);
 	}
+
+	@Override
+	public boolean isInterface()
+	{
+		return findChildByType(CSharpTokens.INTERFACE_KEYWORD) != null;
+	}
+
+	@Override
+	public boolean isStruct()
+	{
+		return findChildByType(CSharpTokens.STRUCT_KEYWORD) != null;
+	}
+
+	@Override
+	public boolean isEnum()
+	{
+		return findChildByType(CSharpTokens.ENUM_KEYWORD) != null;
+	}
 }
