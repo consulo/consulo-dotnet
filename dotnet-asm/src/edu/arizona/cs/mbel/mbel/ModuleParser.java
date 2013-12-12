@@ -321,7 +321,8 @@ public class ModuleParser
 		buildGenericParamConstraints();
 		buildEntryPoint();
 		buildStandAloneSigs();
-		buildMethodBodies();
+		//TODO [VISTALL] disabled. Code bodies we dont needed
+		// buildMethodBodies();
 
 		setCustomAttributes();
 

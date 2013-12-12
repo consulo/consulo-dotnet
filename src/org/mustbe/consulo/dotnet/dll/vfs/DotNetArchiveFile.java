@@ -1,0 +1,165 @@
+package org.mustbe.consulo.dotnet.dll.vfs;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.ArchiveEntry;
+import com.intellij.openapi.vfs.ArchiveFile;
+import edu.arizona.cs.mbel.mbel.Module;
+import edu.arizona.cs.mbel.mbel.TypeDef;
+import lombok.val;
+
+/**
+ * @author VISTALL
+ * @since 11.12.13.
+ */
+public class DotNetArchiveFile implements ArchiveFile
+{
+	private Module myModule;
+	private long myLastModified;
+
+	private final List<ArchiveEntry> myArchiveEntries;
+
+	public DotNetArchiveFile(Module module, long l)
+	{
+		myModule = module;
+		myLastModified = l;
+		myArchiveEntries = map();
+	}
+
+	private List<ArchiveEntry> map()
+	{
+		val typeDefs = myModule.getTypeDefs();
+		val fileList = new ArrayList<DotNetFileArchiveEntry>();
+
+		// iterate type def add as files
+		for(TypeDef typeDef : typeDefs)
+		{
+			String path;
+			String namespace = typeDef.getNamespace();
+			String name = typeDef.getName();
+			if(StringUtil.isEmpty(namespace))
+			{
+				path = name + ".cs";
+			}
+			else
+			{
+				path = namespace.replace(".", "/") + "/" + name + ".cs";
+			}
+			fileList.add(new DotNetFileArchiveEntry(typeDef, path, myLastModified));
+		}
+
+		// sort - at to head, files without namespaces
+		Collections.sort(fileList, new Comparator<DotNetFileArchiveEntry>()
+		{
+			@Override
+			public int compare(DotNetFileArchiveEntry o1, DotNetFileArchiveEntry o2)
+			{
+				int compare = StringUtil.compare(o1.getTypeDef().getNamespace(), o2.getTypeDef().getNamespace(), true);
+				if(compare != 0)
+				{
+					return compare;
+				}
+
+				return o1.getName().compareToIgnoreCase(o2.getName());
+			}
+		});
+
+		val list = new ArrayList<ArchiveEntry>(fileList.size() + 10);
+
+		val alreadyAddedNamespaces = new ArrayList<String>();
+
+		for(DotNetFileArchiveEntry fileEntry : fileList)
+		{
+			DotNetDirArchiveEntry dirEntry = creaNamespaceDirIfNeed(alreadyAddedNamespaces, fileEntry, myLastModified);
+			if(dirEntry != null)
+			{
+				list.add(dirEntry);
+			}
+			list.add(fileEntry);
+		}
+
+		return list;
+	}
+
+	private static DotNetDirArchiveEntry creaNamespaceDirIfNeed(List<String> defineList, DotNetFileArchiveEntry position, long lastModified)
+	{
+		String namespace = position.getTypeDef().getNamespace();
+		if(StringUtil.isEmpty(namespace))
+		{
+			return null;
+		}
+
+		String[] split = namespace.split("\\.");
+
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0; i < split.length; i++)
+		{
+			String part = split[i];
+			if(i != 0)
+			{
+				builder.append("/");
+			}
+
+			builder.append(part);
+
+			val dirPath = builder.toString();
+			if(!defineList.contains(dirPath))
+			{
+				defineList.add(dirPath);
+
+				return new DotNetDirArchiveEntry(dirPath + "/", lastModified);
+			}
+		}
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public ArchiveEntry getEntry(String s)
+	{
+		//noinspection ForLoopReplaceableByForEach
+		for(int i = 0; i < myArchiveEntries.size(); i++)
+		{
+			ArchiveEntry entry = myArchiveEntries.get(i);
+			if(StringUtil.equals(entry.getName(), s))
+			{
+				return entry;
+			}
+		}
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public InputStream getInputStream(ArchiveEntry archiveEntry) throws IOException
+	{
+		if(archiveEntry instanceof DotNetDirArchiveEntry)
+		{
+			return new ByteArrayInputStream(new byte[0]);
+		}
+		return ((DotNetFileArchiveEntry)archiveEntry).createInputStream();
+	}
+
+	@NotNull
+	@Override
+	public Iterator<? extends ArchiveEntry> entries()
+	{
+		return myArchiveEntries.iterator();
+	}
+
+	@Override
+	public int getSize()
+	{
+		return myArchiveEntries.size();
+	}
+}
