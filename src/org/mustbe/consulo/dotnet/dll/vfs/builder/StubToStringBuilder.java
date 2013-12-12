@@ -1,8 +1,13 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.Function;
+import edu.arizona.cs.mbel.mbel.GenericParamDef;
+import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
 
@@ -86,8 +91,29 @@ public class StubToStringBuilder
 		}
 		builder.append(name);
 
+		processGenericParameterList(myTypeDef, builder);
+
 		StubBlock stubBlock = new StubBlock(builder.toString(), '{', '}');
 		return stubBlock;
+	}
+
+	private static void processGenericParameterList(GenericParamOwner owner, StringBuilder builder)
+	{
+		List<GenericParamDef> genericParams = owner.getGenericParams();
+		if(genericParams.isEmpty())
+		{
+			return;
+		}
+
+		String text = StringUtil.join(genericParams, new Function<GenericParamDef, String>()
+		{
+			@Override
+			public String fun(GenericParamDef genericParamDef)
+			{
+				return genericParamDef.getName();
+			}
+		}, ", ");
+		builder.append("<").append(text).append(">");
 	}
 
 	private boolean isSet(int mod)
