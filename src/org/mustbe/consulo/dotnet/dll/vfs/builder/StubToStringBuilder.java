@@ -8,7 +8,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import edu.arizona.cs.mbel.mbel.GenericParamDef;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
+import edu.arizona.cs.mbel.mbel.MethodDef;
+import edu.arizona.cs.mbel.mbel.Property;
 import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.signature.MethodAttributes;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
 
 /**
@@ -18,6 +21,7 @@ import edu.arizona.cs.mbel.signature.TypeAttributes;
 public class StubToStringBuilder
 {
 	private static final char GENERIC_MARKER_IN_NAME = '`';
+	private static final String CONSTRUCTOR_NAME = ".ctor";
 
 	private TypeDef myTypeDef;
 	private StubBlock myRoot;
@@ -43,8 +47,7 @@ public class StubToStringBuilder
 		}
 	}
 
-	@NotNull
-	private StubBlock processType()
+	private String getUserTypeDefName()
 	{
 		String name = myTypeDef.getName();
 		int i = name.lastIndexOf(GENERIC_MARKER_IN_NAME);
@@ -52,9 +55,14 @@ public class StubToStringBuilder
 		{
 			name = name.substring(0, i);
 		}
+		return name;
+	}
 
+	@NotNull
+	private StubBlock processType()
+	{
 		StringBuilder builder =  new StringBuilder();
-		if(isSet(TypeAttributes.VisibilityMask, TypeAttributes.Public))
+		if(isSet(myTypeDef.getFlags(), TypeAttributes.VisibilityMask, TypeAttributes.Public))
 		{
 			builder.append("public ");
 		}
@@ -63,12 +71,12 @@ public class StubToStringBuilder
 			builder.append("internal ");
 		}
 
-		if(isSet(TypeAttributes.Sealed))
+		if(isSet(myTypeDef.getFlags(), TypeAttributes.Sealed))
 		{
 			builder.append("sealed ");
 		}
 
-		if(isSet(TypeAttributes.Abstract))
+		if(isSet(myTypeDef.getFlags(), TypeAttributes.Abstract))
 		{
 			builder.append("abstract ");
 		}
@@ -81,7 +89,7 @@ public class StubToStringBuilder
 		{
 			builder.append("struct ");
 		}
-		else if(isSet(TypeAttributes.Interface))
+		else if(isSet(myTypeDef.getFlags(), TypeAttributes.Interface))
 		{
 			builder.append("interface ");
 		}
@@ -89,9 +97,74 @@ public class StubToStringBuilder
 		{
 			builder.append("class ");
 		}
-		builder.append(name);
+		builder.append(getUserTypeDefName());
 
 		processGenericParameterList(myTypeDef, builder);
+
+		StubBlock stubBlock = new StubBlock(builder.toString(), '{', '}');
+		processMembers(stubBlock);
+		return stubBlock;
+	}
+
+	private void processMembers(StubBlock parent)
+	{
+		for(Property property : myTypeDef.getProperties())
+		{
+			StubBlock stubBlock = processProperty(property);
+
+			parent.getBlocks().add(stubBlock);
+		}
+
+		for(MethodDef methodDef : myTypeDef.getMethods())
+		{
+			StubBlock stubBlock = processMethod(methodDef);
+
+			if(stubBlock == null)
+			{
+				continue;
+			}
+			parent.getBlocks().add(stubBlock);
+		}
+	}
+
+	private StubBlock processProperty(Property property)
+	{
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("int");
+		builder.append(" ");
+		builder.append(property.getName());
+
+		StubBlock stubBlock = new StubBlock(builder.toString(), '{', '}');
+		return stubBlock;
+	}
+
+	private StubBlock processMethod(MethodDef methodDef)
+	{
+		String name = methodDef.getName();
+		if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
+		{
+			// dont show properties methods
+			if(name.startsWith("get_") || name.startsWith("set_"))
+			{
+				return null;
+			}
+		}
+
+		StringBuilder builder = new StringBuilder();
+
+		if(name.equals(CONSTRUCTOR_NAME))
+		{
+			builder.append(getUserTypeDefName());
+		}
+		else
+		{
+			builder.append(methodDef.getName());
+		}
+
+		processGenericParameterList(methodDef, builder);
+
+		builder.append("()");
 
 		StubBlock stubBlock = new StubBlock(builder.toString(), '{', '}');
 		return stubBlock;
@@ -116,19 +189,9 @@ public class StubToStringBuilder
 		builder.append("<").append(text).append(">");
 	}
 
-	private boolean isSet(int mod)
-	{
-		return isSet(myTypeDef.getFlags(), mod);
-	}
-
 	private boolean isSet(long value, int mod)
 	{
 		return (value & mod) == mod;
-	}
-
-	private boolean isSet(int mod, int v)
-	{
-		return isSet(myTypeDef.getFlags(), mod, v);
 	}
 
 	private boolean isSet(long value, int mod, int v)
@@ -170,8 +233,14 @@ public class StubToStringBuilder
 		builder.append(root.getIndents()[0]);
 		builder.append('\n');
 
-		for(StubBlock stubBlock : root.getBlocks())
+		List<StubBlock> blocks = root.getBlocks();
+		for(int i = 0; i < blocks.size(); i++)
 		{
+			if(i != 0)
+			{
+				builder.append('\n');
+			}
+			StubBlock stubBlock = blocks.get(i);
 			processBlock(builder, stubBlock, index + 1);
 		}
 
