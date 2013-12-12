@@ -236,12 +236,20 @@ public class StubToStringBuilder
 			builder.append("internal ");
 		}
 
+		boolean noBody = false;
 		if(delegate)
 		{
 			builder.append("delegate ");
+			noBody = true;
 		}
 		else
 		{
+			if(isSet(methodDef.getFlags(), MethodAttributes.Abstract))
+			{
+				builder.append("abstract ");
+				noBody = true;
+			}
+
 			if(isSet(methodDef.getFlags(), MethodAttributes.Static))
 			{
 				builder.append("static ");
@@ -278,7 +286,7 @@ public class StubToStringBuilder
 
 		processParameterList(methodDef.getSignature().getParameters(), builder);
 
-		if(delegate)
+		if(noBody)
 		{
 			return new StubBlock(builder.toString(), null);
 		}
