@@ -11,6 +11,8 @@ import edu.arizona.cs.mbel.mbel.TypeDef;
  */
 public class StubToStringBuilder
 {
+	private static final char GENERIC_MARKER_IN_NAME = '`';
+
 	private TypeDef myTypeDef;
 	private StubBlock myRoot;
 
@@ -38,7 +40,13 @@ public class StubToStringBuilder
 	@NotNull
 	private StubBlock processType()
 	{
-		StubBlock stubBlock = new StubBlock("class " + myTypeDef.getName(), '{', '}');
+		String name = myTypeDef.getName();
+		int i = name.lastIndexOf(GENERIC_MARKER_IN_NAME);
+		if(i > 0)
+		{
+			name = name.substring(0, i);
+		}
+		StubBlock stubBlock = new StubBlock("class " + name, '{', '}');
 		return stubBlock;
 	}
 
