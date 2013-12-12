@@ -13,6 +13,10 @@ public class ExpressionParsing extends SharingParsingHelpers
 {
 	public static PsiBuilder.Marker parseQualifiedReference(@NotNull PsiBuilder builder, @Nullable PsiBuilder.Marker prevMarker)
 	{
+		if(prevMarker != null)
+		{
+			builder.advanceLexer(); // skip dot
+		}
 		PsiBuilder.Marker marker = prevMarker == null ? builder.mark() : prevMarker;
 
 		if(expect(builder, IDENTIFIER, "Identifier expected"))
