@@ -177,6 +177,8 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	";"                       { return CSharpTokens.SEMICOLON; }
 
+	"*"                       { return CSharpTokens.MUL; }
+
 	"."                       { return CSharpTokens.DOT; }
 
 	","                       { return CSharpTokens.COMMA; }

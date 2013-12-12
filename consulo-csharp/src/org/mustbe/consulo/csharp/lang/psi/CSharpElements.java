@@ -55,6 +55,8 @@ public interface CSharpElements
 
 	IElementType TYPE = new IElementTypeAsPsiFactory("TYPE", CSharpLanguage.INSTANCE, CSharpTypeImpl.class);
 
+	IElementType POINTER_TYPE = new IElementTypeAsPsiFactory("POINTER_TYPE", CSharpLanguage.INSTANCE, CSharpTypeImpl.class);
+
 	IElementType CODE_BLOCK = new IElementTypeAsPsiFactory("CODE_BLOCK", CSharpLanguage.INSTANCE, CSharpCodeBlockImpl.class);
 
 	IElementType MODIFIER_LIST = new IElementTypeAsPsiFactory("MODIFIER_LIST", CSharpLanguage.INSTANCE, CSharpModifierListImpl.class);

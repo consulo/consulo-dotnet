@@ -71,6 +71,15 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		if(marker != null)
 		{
 			marker.done(TYPE);
+
+			if(builder.getTokenType() == MUL)
+			{
+				marker = marker.precede();
+
+				builder.advanceLexer();
+
+				marker.done(POINTER_TYPE);
+			}
 		}
 		return marker;
 	}

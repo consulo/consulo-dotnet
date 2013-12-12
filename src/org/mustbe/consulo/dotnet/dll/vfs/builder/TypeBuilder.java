@@ -1,6 +1,7 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import edu.arizona.cs.mbel.signature.ClassTypeSignature;
+import edu.arizona.cs.mbel.signature.PointerTypeSignature;
 import edu.arizona.cs.mbel.signature.SignatureConstants;
 import edu.arizona.cs.mbel.signature.TypeSignature;
 import edu.arizona.cs.mbel.signature.ValueTypeSignature;
@@ -65,6 +66,11 @@ public class TypeBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_OBJECT:
 				builder.append("object");
+				break;
+			case ELEMENT_TYPE_PTR:
+				PointerTypeSignature pointerTypeSignature = (PointerTypeSignature) signature;
+				builder.append(typeToString(pointerTypeSignature.getPointerType()));
+				builder.append("*");
 				break;
 			case ELEMENT_TYPE_CLASS:
 				ClassTypeSignature typeSignature = (ClassTypeSignature) signature;

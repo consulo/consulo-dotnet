@@ -130,6 +130,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType DOT = new IElementType("DOT", CSharpLanguage.INSTANCE);
 
+	IElementType MUL = new IElementType("MUL", CSharpLanguage.INSTANCE);
+
 	IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", CSharpLanguage.INSTANCE);
 
 	IElementType LINE_DOC_COMMENT = new IElementType("LINE_DOC_COMMENT", CSharpLanguage.INSTANCE);
