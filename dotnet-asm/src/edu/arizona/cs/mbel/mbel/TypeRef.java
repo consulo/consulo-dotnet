@@ -129,6 +129,16 @@ public abstract class TypeRef extends AbstractTypeReference
 		return Namespace;
 	}
 
+	@Override
+	public String getFullName()
+	{
+		if(getNamespace() == null || getNamespace().isEmpty())
+		{
+			return getName();
+		}
+		return getNamespace() + "." + getName();
+	}
+
 	/**
 	 * Sets the namespace of this TypeRef
 	 */

@@ -27,7 +27,7 @@ public class Test
 			System.out.println(zipEntry.getName() + " " + zipEntry.getSize());
 		}  */
 
-		long value = 2198;
+		long value = 257;
 		for(int i = 0; i < 32; i++)
 		{
 			int mask = 1 << i;

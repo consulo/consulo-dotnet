@@ -32,4 +32,6 @@ import edu.arizona.cs.mbel.instructions.LoadableType;
 public abstract class AbstractTypeReference implements LoadableType
 {
 	//public abstract void output();
+
+	public abstract String getFullName();
 }

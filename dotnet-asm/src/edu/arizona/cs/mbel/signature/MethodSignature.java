@@ -37,7 +37,7 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 	private int requiredParamCount;
 	// number of params before SENTINEL
 	private ReturnTypeSignature returnType;
-	private Vector params;
+	private Vector<ParameterSignature> params;
 
 	private MethodSignature()
 	{
@@ -58,12 +58,12 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 		flags = (byte) ((hasthis ? HASTHIS : 0) | (explicitthis ? EXPLICITTHIS : 0) | VARARG);
 		if(requiredParams == null)
 		{
-			params = new Vector(10);
+			params = new Vector<ParameterSignature>();
 			requiredParamCount = 0;
 		}
 		else
 		{
-			params = new Vector(requiredParams.length + 10);
+			params = new Vector<ParameterSignature>(requiredParams.length + 10);
 			for(ParameterSignature requiredParam : requiredParams)
 			{
 				if(requiredParam == null)

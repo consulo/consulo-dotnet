@@ -277,16 +277,6 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 
 		security = decl;
 	}
-
-	/**
-	 * Returns the full name of this TypeDef.
-	 * FullName == Namespace + "." + Name
-	 */
-	public String getFullName()
-	{
-		return (getNamespace() + "." + getName());
-	}
-
 	/**
 	 * Returns the superclass of this TypeDef. For interfaces, this will be null.
 	 * For ValueTypes, this should be System.ValueType or System.Enum

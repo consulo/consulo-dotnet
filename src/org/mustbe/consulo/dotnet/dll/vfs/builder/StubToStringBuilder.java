@@ -1,11 +1,14 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetClasses;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import edu.arizona.cs.mbel.mbel.GenericParamDef;
@@ -13,7 +16,9 @@ import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.Property;
 import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
+import edu.arizona.cs.mbel.signature.ParameterSignature;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
 
 /**
@@ -48,6 +53,13 @@ public class StubToStringBuilder
 			put("op_GreaterThanOrEqual", ">=");
 			put("op_OnesComplement", "~");
 			put("op_LogicalNot", "!");
+		}
+	};
+
+	private static List<String> SKIPPED = new ArrayList<String>()
+	{
+		{
+			add("System.Runtime.Serialization.ISerializable.GetObjectData");
 		}
 	};
 
@@ -86,10 +98,26 @@ public class StubToStringBuilder
 		return name;
 	}
 
+	// System.MulticastDelegate
+	// Invoke
 	@NotNull
 	private StubBlock processType()
 	{
-		StringBuilder builder =  new StringBuilder();
+		TypeRef superClass = myTypeDef.getSuperClass();
+		if(superClass != null && Comparing.equal(DotNetClasses.System_MulticastDelegate, superClass.getFullName()))
+		{
+			for(MethodDef methodDef : myTypeDef.getMethods())
+			{
+				if("Invoke".equals(methodDef.getName()))
+				{
+					return processMethod(methodDef, getUserTypeDefName(), true);
+				}
+
+			}
+			assert true;
+		}
+
+		StringBuilder builder = new StringBuilder();
 		if(isSet(myTypeDef.getFlags(), TypeAttributes.VisibilityMask, TypeAttributes.Public))
 		{
 			builder.append("public ");
@@ -129,7 +157,7 @@ public class StubToStringBuilder
 
 		processGenericParameterList(myTypeDef, builder);
 
-		StubBlock stubBlock = new StubBlock(builder.toString(), '{', '}');
+		StubBlock stubBlock = new StubBlock(builder.toString(), null, '{', '}');
 		processMembers(stubBlock);
 		return stubBlock;
 	}
@@ -145,7 +173,7 @@ public class StubToStringBuilder
 
 		for(MethodDef methodDef : myTypeDef.getMethods())
 		{
-			StubBlock stubBlock = processMethod(methodDef);
+			StubBlock stubBlock = processMethod(methodDef, methodDef.getName(), false);
 
 			if(stubBlock == null)
 			{
@@ -159,17 +187,24 @@ public class StubToStringBuilder
 	{
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("int");
+		builder.append(TypeBuilder.typeToString(property.getSignature().getType()));
 		builder.append(" ");
 		builder.append(property.getName());
 
-		StubBlock stubBlock = new StubBlock(builder.toString(), '{', '}');
+		StubBlock stubBlock = new StubBlock(builder.toString(), null, '{', '}');
 		return stubBlock;
 	}
 
-	private StubBlock processMethod(MethodDef methodDef)
+	private StubBlock processMethod(MethodDef methodDef, String name, boolean delegate)
 	{
-		String name = methodDef.getName();
+		for(String prefix : SKIPPED)
+		{
+			if(StringUtil.equals(name, prefix))
+			{
+				return null;
+			}
+		}
+
 		if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 		{
 			// dont show properties methods
@@ -187,12 +222,50 @@ public class StubToStringBuilder
 
 		StringBuilder builder = new StringBuilder();
 
+		if(isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Public))
+		{
+			builder.append("public ");
+		}
+		else if(isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Private))
+		{
+			builder.append("private ");
+
+		}
+		else
+		{
+			builder.append("internal ");
+		}
+
+		if(delegate)
+		{
+			builder.append("delegate ");
+		}
+		else
+		{
+			if(isSet(methodDef.getFlags(), MethodAttributes.Static))
+			{
+				builder.append("static ");
+			}
+
+			if(isSet(methodDef.getFlags(), MethodAttributes.Virtual))
+			{
+				builder.append("virtual ");
+			}
+		}
+
+		if(isSet(methodDef.getFlags(), MethodAttributes.Final))
+		{
+			//builder.append("final "); //TODO [VISTALL] final  ? maybe sealed ?
+		}
+
 		if(name.equals(CONSTRUCTOR_NAME))
 		{
 			builder.append(getUserTypeDefName());
 		}
 		else
 		{
+			builder.append(TypeBuilder.typeToString(methodDef.getSignature().getReturnType().getType())).append(" ");
+
 			if(SPECIAL_METHOD_NAMES.containsValue(name))
 			{
 				builder.append("operator ");
@@ -203,10 +276,33 @@ public class StubToStringBuilder
 
 		processGenericParameterList(methodDef, builder);
 
-		builder.append("()");
+		processParameterList(methodDef.getSignature().getParameters(), builder);
 
-		StubBlock stubBlock = new StubBlock(builder.toString(), '{', '}');
-		return stubBlock;
+		if(delegate)
+		{
+			return new StubBlock(builder.toString(), null);
+		}
+		else
+		{
+			return new StubBlock(builder.toString(), "// Bodies decompilation is not supported\n", '{', '}');
+		}
+	}
+
+	private static void processParameterList(ParameterSignature[] owner, StringBuilder builder)
+	{
+		String text = StringUtil.join(owner, new Function<ParameterSignature, String>()
+		{
+			@Override
+			public String fun(ParameterSignature paramDef)
+			{
+				StringBuilder p = new StringBuilder();
+				p.append(TypeBuilder.typeToString(paramDef.getType()));
+				p.append(" ");
+				p.append(paramDef.getParameterInfo().getName());
+				return p.toString();
+			}
+		}, ", ");
+		builder.append("(").append(text).append(")");
 	}
 
 	private static void processGenericParameterList(GenericParamOwner owner, StringBuilder builder)
@@ -247,7 +343,7 @@ public class StubToStringBuilder
 			return null;
 		}
 
-		return new StubBlock("namespace " + namespace, '{', '}');
+		return new StubBlock("namespace " + namespace, null, '{', '}');
 	}
 
 	@NotNull
@@ -267,24 +363,39 @@ public class StubToStringBuilder
 	{
 		builder.append(StringUtil.repeatSymbol('\t', index));
 		builder.append(root.getStartText());
-		builder.append('\n');
-		builder.append(StringUtil.repeatSymbol('\t', index));
-		builder.append(root.getIndents()[0]);
-		builder.append('\n');
+		char[] indents = root.getIndents();
 
-		List<StubBlock> blocks = root.getBlocks();
-		for(int i = 0; i < blocks.size(); i++)
+		if(indents.length > 0)
 		{
-			if(i != 0)
-			{
-				builder.append('\n');
-			}
-			StubBlock stubBlock = blocks.get(i);
-			processBlock(builder, stubBlock, index + 1);
-		}
+			builder.append('\n');
+			builder.append(StringUtil.repeatSymbol('\t', index));
+			builder.append(indents[0]);
+			builder.append('\n');
 
-		builder.append(StringUtil.repeatSymbol('\t', index));
-		builder.append(root.getIndents()[1]);
+			List<StubBlock> blocks = root.getBlocks();
+			for(int i = 0; i < blocks.size(); i++)
+			{
+				if(i != 0)
+				{
+					builder.append('\n');
+				}
+				StubBlock stubBlock = blocks.get(i);
+				processBlock(builder, stubBlock, index + 1);
+			}
+
+			String innerText = root.getInnerText();
+			if(innerText != null)
+			{
+				builder.append(StringUtil.repeatSymbol('\t', index + 1)).append(innerText);
+			}
+
+			builder.append(StringUtil.repeatSymbol('\t', index));
+			builder.append(indents[1]);
+		}
+		else
+		{
+			builder.append(";");
+		}
 		builder.append('\n');
 	}
 }

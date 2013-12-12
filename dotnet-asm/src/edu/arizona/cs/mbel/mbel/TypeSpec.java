@@ -121,6 +121,12 @@ public class TypeSpec extends AbstractTypeReference
 	{
 		signature = sig;
 	}
+
+	@Override
+	public String getFullName()
+	{
+		return "TypeSpec?"; //TODO [VISTALL]
+	}
    
 /*
    public void output(){
