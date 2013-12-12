@@ -1,6 +1,8 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +24,32 @@ public class StubToStringBuilder
 {
 	private static final char GENERIC_MARKER_IN_NAME = '`';
 	private static final String CONSTRUCTOR_NAME = ".ctor";
+	private static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
+	private static final String ARRAY_PROPERTY_NAME = "Item";
+
+	private static Map<String, String> SPECIAL_METHOD_NAMES = new HashMap<String, String>()
+	{
+		{
+			put("op_Addition", "+");
+			put("op_Subtraction", "-");
+			put("op_Multiply", "*");
+			put("op_Division", "/");
+			put("op_Modulus", "%");
+			put("op_BitwiseAnd", "&");
+			put("op_BitwiseOr", "|");
+			put("op_ExclusiveOr", "^");
+			put("op_LeftShift", "<<");
+			put("op_RightShift", ">>");
+			put("op_Equality", "==");
+			put("op_Inequality", "!=");
+			put("op_LessThan", "<");
+			put("op_LessThanOrEqual", "<=");
+			put("op_GreaterThan", ">");
+			put("op_GreaterThanOrEqual", ">=");
+			put("op_OnesComplement", "~");
+			put("op_LogicalNot", "!");
+		}
+	};
 
 	private TypeDef myTypeDef;
 	private StubBlock myRoot;
@@ -145,9 +173,15 @@ public class StubToStringBuilder
 		if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 		{
 			// dont show properties methods
-			if(name.startsWith("get_") || name.startsWith("set_"))
+			if(name.startsWith("get_") || name.startsWith("set_") || name.equals(STATIC_CONSTRUCTOR_NAME))
 			{
 				return null;
+			}
+
+			String operator = SPECIAL_METHOD_NAMES.get(name);
+			if(operator != null)
+			{
+				name = operator;
 			}
 		}
 
@@ -159,7 +193,12 @@ public class StubToStringBuilder
 		}
 		else
 		{
-			builder.append(methodDef.getName());
+			if(SPECIAL_METHOD_NAMES.containsValue(name))
+			{
+				builder.append("operator ");
+			}
+
+			builder.append(name);
 		}
 
 		processGenericParameterList(methodDef, builder);
