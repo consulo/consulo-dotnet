@@ -28,6 +28,7 @@ import org.mustbe.consulo.dotnet.dll.vfs.DotNetFileArchiveEntry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
 import edu.arizona.cs.mbel.mbel.GenericParamDef;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.MethodDef;
@@ -128,7 +129,7 @@ public class StubToStringBuilder
 			{
 				if("Invoke".equals(methodDef.getName()))
 				{
-					return processMethod(typeDef, methodDef, StubToStringUtil.getUserTypeDefName(typeDef), true);
+					return processMethod(typeDef, methodDef, StubToStringUtil.getUserTypeDefName(typeDef), true, false);
 				}
 
 			}
@@ -184,61 +185,106 @@ public class StubToStringBuilder
 	{
 		for(Property property : typeDef.getProperties())
 		{
-			StubBlock stubBlock = processProperty(property);
+			StubBlock stubBlock = processProperty(typeDef, property);
 
 			parent.getBlocks().add(stubBlock);
 		}
 
-		for(MethodDef methodDef : typeDef.getMethods())
+		l:for(MethodDef methodDef : typeDef.getMethods())
 		{
-			StubBlock stubBlock = processMethod(typeDef, methodDef, methodDef.getName(), false);
+			String name = methodDef.getName();
 
-			if(stubBlock == null)
+			if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 			{
-				continue;
+				// dont show properties methods
+				if(name.startsWith("get_") || name.startsWith("set_") || name.equals(STATIC_CONSTRUCTOR_NAME))
+				{
+					continue;
+				}
 			}
+
+			for(String prefix : SKIPPED)
+			{
+				if(StringUtil.equals(name, prefix))
+				{
+					continue l;
+				}
+			}
+
+			StubBlock stubBlock = processMethod(typeDef, methodDef, name, false, false);
+
 			parent.getBlocks().add(stubBlock);
 		}
 	}
 
-	private static StubBlock processProperty(Property property)
+	private static StubBlock processProperty(TypeDef typeDef, Property property)
 	{
+		StubBlock getterStub = null;
+		StubBlock setterStub = null;
+
+		MethodDef getter = property.getGetter();
+		if(getter != null)
+		{
+			getterStub = processMethod(typeDef, getter, "get", false, true);
+		}
+		MethodDef setter = property.getSetter();
+		if(setter != null)
+		{
+			setterStub = processMethod(typeDef, setter, "set", false, true);
+		}
+
+		AccessModifier propertyModifier = AccessModifier.INTERNAL;
+
+		if(getter == null && setter != null)
+		{
+			propertyModifier = getMethodAccess(setter);
+		}
+		else if(getter != null && setter == null)
+		{
+			propertyModifier = getMethodAccess(getter);
+		}
+		else
+		{
+			if(getMethodAccess(setter) == getMethodAccess(getter))
+			{
+				propertyModifier = getMethodAccess(getter);
+			}
+		}
+
 		StringBuilder builder = new StringBuilder();
 
+		builder.append(propertyModifier.name().toLowerCase()).append(" ");
 		builder.append(TypeToStringBuilder.typeToString(property.getSignature().getType()));
 		builder.append(" ");
 		builder.append(cutSuperName(property.getName()));
 
 		StubBlock stubBlock = new StubBlock(builder.toString(), null, '{', '}');
+		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), getterStub);
+		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), setterStub);
+
 		return stubBlock;
 	}
 
-	private static StubBlock processMethod(TypeDef typeDef, MethodDef methodDef, String name, boolean delegate)
+	private static AccessModifier getMethodAccess(MethodDef methodDef)
 	{
-		for(String prefix : SKIPPED)
+		if(isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Public))
 		{
-			if(StringUtil.equals(name, prefix))
-			{
-				return null;
-			}
+			return AccessModifier.PUBLIC;
 		}
+		else if(isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Private))
+		{
+			return AccessModifier.PRIVATE;
+		}
+		else
+		{
+			return AccessModifier.INTERNAL;
+		}
+	}
 
+	@NotNull
+	private static StubBlock processMethod(TypeDef typeDef, MethodDef methodDef, String name, boolean delegate, boolean accessor)
+	{
 		boolean constructor = name.equals(CONSTRUCTOR_NAME);
-
-		if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
-		{
-			// dont show properties methods
-			if(name.startsWith("get_") || name.startsWith("set_") || name.equals(STATIC_CONSTRUCTOR_NAME))
-			{
-				return null;
-			}
-
-			String operator = SPECIAL_METHOD_NAMES.get(name);
-			if(operator != null)
-			{
-				name = operator;
-			}
-		}
 
 		if(!constructor)
 		{
@@ -247,21 +293,9 @@ public class StubToStringBuilder
 
 		StringBuilder builder = new StringBuilder();
 
-		if(isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Public))
-		{
-			builder.append("public ");
-		}
-		else if(isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Private))
-		{
-			builder.append("private ");
+		builder.append(getMethodAccess(methodDef).name().toLowerCase()).append(" ");
 
-		}
-		else
-		{
-			builder.append("internal ");
-		}
-
-		boolean noBody = false;
+		boolean noBody = accessor;
 		if(delegate)
 		{
 			builder.append("delegate ");
@@ -297,19 +331,25 @@ public class StubToStringBuilder
 		}
 		else
 		{
-			builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getType())).append(" ");
-
-			if(SPECIAL_METHOD_NAMES.containsValue(name))
+			if(!accessor)
 			{
-				builder.append("operator ");
+				builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getType())).append(" ");
+
+				if(SPECIAL_METHOD_NAMES.containsValue(name))
+				{
+					builder.append("operator ");
+				}
 			}
 
 			builder.append(name);
 		}
 
-		processGenericParameterList(methodDef, builder);
+		if(!accessor)
+		{
+			processGenericParameterList(methodDef, builder);
 
-		processParameterList(methodDef.getSignature().getParameters(), builder);
+			processParameterList(methodDef.getSignature().getParameters(), builder);
+		}
 
 		if(noBody)
 		{
