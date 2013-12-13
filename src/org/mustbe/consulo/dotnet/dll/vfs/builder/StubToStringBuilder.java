@@ -24,6 +24,7 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetClasses;
+import org.mustbe.consulo.dotnet.dll.vfs.DotNetFileArchiveEntry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
@@ -36,6 +37,7 @@ import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -43,7 +45,6 @@ import edu.arizona.cs.mbel.signature.TypeAttributes;
  */
 public class StubToStringBuilder
 {
-	private static final char GENERIC_MARKER_IN_NAME = '`';
 	private static final String CONSTRUCTOR_NAME = ".ctor";
 	private static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
 	private static final String ARRAY_PROPERTY_NAME = "Item";
@@ -79,54 +80,55 @@ public class StubToStringBuilder
 		}
 	};
 
-	private TypeDef myTypeDef;
 	private StubBlock myRoot;
 
-	public StubToStringBuilder(TypeDef typeDef)
+	public StubToStringBuilder(DotNetFileArchiveEntry archiveEntry)
 	{
-		myTypeDef = typeDef;
-
-		StubBlock namespaceBlock = processNamespace();
+		StubBlock namespaceBlock = processNamespace(archiveEntry.getNamespace());
 		if(namespaceBlock != null)
 		{
 			myRoot = namespaceBlock;
 		}
 
-		StubBlock typeBlock = processType();
-		if(namespaceBlock != null)
+		for(TypeDef typeDef : archiveEntry.getTypeDefs())
 		{
-			namespaceBlock.getBlocks().add(typeBlock);
-		}
-		else
-		{
-			myRoot = typeBlock;
-		}
-	}
+			StubBlock typeBlock = processType(typeDef);
+			if(namespaceBlock != null)
+			{
+				namespaceBlock.getBlocks().add(typeBlock);
+			}
+			else
+			{
+				// if more that one type in future file
+				if(myRoot != null)
+				{
+					val oldRoot = myRoot;
 
-	private String getUserTypeDefName()
-	{
-		String name = myTypeDef.getName();
-		int i = name.lastIndexOf(GENERIC_MARKER_IN_NAME);
-		if(i > 0)
-		{
-			name = name.substring(0, i);
+					myRoot = new StubBlock("", null, ' ', ' ');
+					myRoot.getBlocks().add(oldRoot);
+					myRoot.getBlocks().add(typeBlock);
+				}
+				else
+				{
+					myRoot = typeBlock;
+				}
+			}
 		}
-		return name;
 	}
 
 	// System.MulticastDelegate
 	// Invoke
 	@NotNull
-	private StubBlock processType()
+	private static StubBlock processType(TypeDef typeDef)
 	{
-		TypeRef superClass = myTypeDef.getSuperClass();
+		TypeRef superClass = typeDef.getSuperClass();
 		if(superClass != null && Comparing.equal(DotNetClasses.System_MulticastDelegate, superClass.getFullName()))
 		{
-			for(MethodDef methodDef : myTypeDef.getMethods())
+			for(MethodDef methodDef : typeDef.getMethods())
 			{
 				if("Invoke".equals(methodDef.getName()))
 				{
-					return processMethod(methodDef, getUserTypeDefName(), true);
+					return processMethod(typeDef, methodDef, StubToStringUtil.getUserTypeDefName(typeDef), true);
 				}
 
 			}
@@ -134,7 +136,7 @@ public class StubToStringBuilder
 		}
 
 		StringBuilder builder = new StringBuilder();
-		if(isSet(myTypeDef.getFlags(), TypeAttributes.VisibilityMask, TypeAttributes.Public))
+		if(isSet(typeDef.getFlags(), TypeAttributes.VisibilityMask, TypeAttributes.Public))
 		{
 			builder.append("public ");
 		}
@@ -143,25 +145,25 @@ public class StubToStringBuilder
 			builder.append("internal ");
 		}
 
-		if(isSet(myTypeDef.getFlags(), TypeAttributes.Sealed))
+		if(isSet(typeDef.getFlags(), TypeAttributes.Sealed))
 		{
 			builder.append("sealed ");
 		}
 
-		if(isSet(myTypeDef.getFlags(), TypeAttributes.Abstract))
+		if(isSet(typeDef.getFlags(), TypeAttributes.Abstract))
 		{
 			builder.append("abstract ");
 		}
 
-		if(myTypeDef.isEnum())
+		if(typeDef.isEnum())
 		{
 			builder.append("enum ");
 		}
-		else if(myTypeDef.isValueType())
+		else if(typeDef.isValueType())
 		{
 			builder.append("struct ");
 		}
-		else if(isSet(myTypeDef.getFlags(), TypeAttributes.Interface))
+		else if(isSet(typeDef.getFlags(), TypeAttributes.Interface))
 		{
 			builder.append("interface ");
 		}
@@ -169,27 +171,27 @@ public class StubToStringBuilder
 		{
 			builder.append("class ");
 		}
-		builder.append(getUserTypeDefName());
+		builder.append(StubToStringUtil.getUserTypeDefName(typeDef));
 
-		processGenericParameterList(myTypeDef, builder);
+		processGenericParameterList(typeDef, builder);
 
 		StubBlock stubBlock = new StubBlock(builder.toString(), null, '{', '}');
-		processMembers(stubBlock);
+		processMembers(typeDef, stubBlock);
 		return stubBlock;
 	}
 
-	private void processMembers(StubBlock parent)
+	private static void processMembers(TypeDef typeDef, StubBlock parent)
 	{
-		for(Property property : myTypeDef.getProperties())
+		for(Property property : typeDef.getProperties())
 		{
 			StubBlock stubBlock = processProperty(property);
 
 			parent.getBlocks().add(stubBlock);
 		}
 
-		for(MethodDef methodDef : myTypeDef.getMethods())
+		for(MethodDef methodDef : typeDef.getMethods())
 		{
-			StubBlock stubBlock = processMethod(methodDef, methodDef.getName(), false);
+			StubBlock stubBlock = processMethod(typeDef, methodDef, methodDef.getName(), false);
 
 			if(stubBlock == null)
 			{
@@ -199,7 +201,7 @@ public class StubToStringBuilder
 		}
 	}
 
-	private StubBlock processProperty(Property property)
+	private static StubBlock processProperty(Property property)
 	{
 		StringBuilder builder = new StringBuilder();
 
@@ -211,7 +213,7 @@ public class StubToStringBuilder
 		return stubBlock;
 	}
 
-	private StubBlock processMethod(MethodDef methodDef, String name, boolean delegate)
+	private static StubBlock processMethod(TypeDef typeDef, MethodDef methodDef, String name, boolean delegate)
 	{
 		for(String prefix : SKIPPED)
 		{
@@ -284,7 +286,7 @@ public class StubToStringBuilder
 
 		if(name.equals(CONSTRUCTOR_NAME))
 		{
-			builder.append(getUserTypeDefName());
+			builder.append(StubToStringUtil.getUserTypeDefName(typeDef));
 		}
 		else
 		{
@@ -348,20 +350,19 @@ public class StubToStringBuilder
 		builder.append("<").append(text).append(">");
 	}
 
-	private boolean isSet(long value, int mod)
+	private static boolean isSet(long value, int mod)
 	{
 		return (value & mod) == mod;
 	}
 
-	private boolean isSet(long value, int mod, int v)
+	private static boolean isSet(long value, int mod, int v)
 	{
 		return (value & mod) == v;
 	}
 
 	@Nullable
-	private StubBlock processNamespace()
+	private static StubBlock processNamespace(String namespace)
 	{
-		String namespace = myTypeDef.getNamespace();
 		if(StringUtil.isEmpty(namespace))
 		{
 			return null;

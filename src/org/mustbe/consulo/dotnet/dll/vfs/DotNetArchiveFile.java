@@ -22,11 +22,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.StubToStringUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;
@@ -57,21 +59,49 @@ public class DotNetArchiveFile implements ArchiveFile
 		val typeDefs = myModule.getTypeDefs();
 		val fileList = new ArrayList<DotNetFileArchiveEntry>();
 
+		val duplicateMap = new HashMap<String, DotNetFileArchiveEntry>();
+
 		// iterate type def add as files
 		for(TypeDef typeDef : typeDefs)
 		{
+			if(StubToStringUtil.isInvisibleTypeDef(typeDef))
+			{
+				continue;
+			}
+
+			String systemName = typeDef.getName();
+			String userName = StubToStringUtil.getUserTypeDefName(typeDef);
+
 			String path;
 			String namespace = typeDef.getNamespace();
-			String name = typeDef.getName();
 			if(StringUtil.isEmpty(namespace))
 			{
-				path = name + ".cs";
+				path = userName + ".cs";
 			}
 			else
 			{
-				path = namespace.replace(".", "/") + "/" + name + ".cs";
+				path = namespace.replace(".", "/") + "/" + userName + ".cs";
 			}
-			fileList.add(new DotNetFileArchiveEntry(typeDef, path, myLastModified));
+
+			// when systemName contains `
+			if(systemName.length() != userName.length())
+			{
+				DotNetFileArchiveEntry fileWithSameName = duplicateMap.get(path);
+				if(fileWithSameName != null)
+				{
+					fileWithSameName.addTypeDef(typeDef);
+				}
+				else
+				{
+					DotNetFileArchiveEntry e = new DotNetFileArchiveEntry(typeDef, path, myLastModified);
+					fileList.add(e);
+					duplicateMap.put(path, e);
+				}
+			}
+			else
+			{
+				fileList.add(new DotNetFileArchiveEntry(typeDef, path, myLastModified));
+			}
 		}
 
 		// sort - at to head, files without namespaces
@@ -80,7 +110,7 @@ public class DotNetArchiveFile implements ArchiveFile
 			@Override
 			public int compare(DotNetFileArchiveEntry o1, DotNetFileArchiveEntry o2)
 			{
-				int compare = StringUtil.compare(o1.getTypeDef().getNamespace(), o2.getTypeDef().getNamespace(), true);
+				int compare = StringUtil.compare(o1.getNamespace(), o2.getNamespace(), true);
 				if(compare != 0)
 				{
 					return compare;
@@ -109,7 +139,7 @@ public class DotNetArchiveFile implements ArchiveFile
 
 	private static DotNetDirArchiveEntry creaNamespaceDirIfNeed(List<String> defineList, DotNetFileArchiveEntry position, long lastModified)
 	{
-		String namespace = position.getTypeDef().getNamespace();
+		String namespace = position.getNamespace();
 		if(StringUtil.isEmpty(namespace))
 		{
 			return null;

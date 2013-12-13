@@ -18,11 +18,13 @@ package org.mustbe.consulo.dotnet.dll.vfs;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.StubToStringBuilder;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.ArchiveEntry;
+import com.intellij.util.SmartList;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 
 /**
@@ -31,7 +33,7 @@ import edu.arizona.cs.mbel.mbel.TypeDef;
  */
 public class DotNetFileArchiveEntry implements ArchiveEntry
 {
-	private final TypeDef myTypeDef;
+	private final List<TypeDef> myTypeDefs;
 	private final String myName;
 	private long myLastModified;
 
@@ -41,7 +43,7 @@ public class DotNetFileArchiveEntry implements ArchiveEntry
 		@Override
 		protected byte[] compute()
 		{
-			StubToStringBuilder builder = new StubToStringBuilder(myTypeDef);
+			StubToStringBuilder builder = new StubToStringBuilder(DotNetFileArchiveEntry.this);
 			String gen = builder.gen();
 			return gen.getBytes();
 		}
@@ -49,9 +51,20 @@ public class DotNetFileArchiveEntry implements ArchiveEntry
 
 	public DotNetFileArchiveEntry(TypeDef typeDef, String name, long lastModified)
 	{
-		myTypeDef = typeDef;
+		myTypeDefs = new SmartList<TypeDef>(typeDef);
 		myName = name;
 		myLastModified = lastModified;
+	}
+
+	public void addTypeDef(@NotNull TypeDef typeDef)
+	{
+		myTypeDefs.add(typeDef);
+	}
+
+	@NotNull
+	public List<TypeDef> getTypeDefs()
+	{
+		return myTypeDefs;
 	}
 
 	@Override
@@ -79,9 +92,10 @@ public class DotNetFileArchiveEntry implements ArchiveEntry
 	}
 
 	@NotNull
-	public TypeDef getTypeDef()
+	public String getNamespace()
 	{
-		return myTypeDef;
+		assert !myTypeDefs.isEmpty();
+		return myTypeDefs.get(0).getNamespace();
 	}
 
 	@NotNull
