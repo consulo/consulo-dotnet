@@ -20,6 +20,9 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
@@ -142,15 +145,20 @@ public class TypeSignature extends Signature
 				buffer.get();
 				return TypeSignature.OBJECT;
 			case ELEMENT_TYPE_MVAR:
-				buffer.get();
-				long methodGenericParameterIndex = buffer.getCompressedUInt32();
-				return TypeSignature.OBJECT;  //TODO [VISTALL]
 			case ELEMENT_TYPE_VAR:
 				buffer.get();
-				long classGenericParameterIndex = buffer.getCompressedUInt32();
-				return TypeSignature.OBJECT; //TODO [VISTALL]
+				return new XGenericTypeSignature(data, buffer.getCompressedUInt32());
 			case ELEMENT_TYPE_GENERIC_INST:
-				return TypeSignature.OBJECT; //TODO [VISTALL]
+				buffer.get();
+				TypeSignature mainType = parse(buffer, group);
+				int size = buffer.getCompressedUInt32();
+				List<TypeSignature> list = new ArrayList<TypeSignature>(size);
+				for(int i = 0; i < size; i++)
+				{
+					TypeSignature parse = parse(buffer, group);
+					list.add(parse);
+				}
+				return new TypeSignatureWithGenericParameters(mainType, list);
 			default:
 				throw new IllegalArgumentException("Unknown element type: " + data);
 		}

@@ -151,7 +151,7 @@ public class ByteBuffer
 		return value;
 	}
 
-	public long getCompressedUInt32()
+	public int getCompressedUInt32()
 	{
 		int first = get() & 0xFF;
 		if((first & 0x80) == 0)

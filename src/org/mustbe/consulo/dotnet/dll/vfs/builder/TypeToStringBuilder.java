@@ -16,11 +16,15 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
+import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.signature.ClassTypeSignature;
 import edu.arizona.cs.mbel.signature.PointerTypeSignature;
+import edu.arizona.cs.mbel.signature.SZArrayTypeSignature;
 import edu.arizona.cs.mbel.signature.SignatureConstants;
 import edu.arizona.cs.mbel.signature.TypeSignature;
+import edu.arizona.cs.mbel.signature.TypeSignatureWithGenericParameters;
 import edu.arizona.cs.mbel.signature.ValueTypeSignature;
+import edu.arizona.cs.mbel.signature.XGenericTypeSignature;
 
 /**
  * @author VISTALL
@@ -28,7 +32,7 @@ import edu.arizona.cs.mbel.signature.ValueTypeSignature;
  */
 public class TypeToStringBuilder implements SignatureConstants
 {
-	public static String typeToString(TypeSignature signature)
+	public static String typeToString(TypeSignature signature, GenericParamOwner typeDef, GenericParamOwner memberDef)
 	{
 		if(signature == null)
 		{
@@ -85,16 +89,48 @@ public class TypeToStringBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_PTR:
 				PointerTypeSignature pointerTypeSignature = (PointerTypeSignature) signature;
-				builder.append(typeToString(pointerTypeSignature.getPointerType()));
+				builder.append(typeToString(pointerTypeSignature.getPointerType(), typeDef, memberDef));
 				builder.append("*");
+				break;
+			case ELEMENT_TYPE_SZARRAY:
+				SZArrayTypeSignature szArrayTypeSignature = (SZArrayTypeSignature)signature;
+				builder.append(typeToString(szArrayTypeSignature.getElementType(), typeDef, memberDef));
+				builder.append("[]");
 				break;
 			case ELEMENT_TYPE_CLASS:
 				ClassTypeSignature typeSignature = (ClassTypeSignature) signature;
-				builder.append(typeSignature.getClassType().getFullName());
+				builder.append(StubToStringUtil.getUserTypeDefName(typeSignature.getClassType().getFullName()));
+				break;
+			case ELEMENT_TYPE_GENERIC_INST:
+				TypeSignatureWithGenericParameters mainTypeSignature = (TypeSignatureWithGenericParameters) signature;
+				builder.append(typeToString(mainTypeSignature.getSignature(), typeDef, memberDef));
+				if(!mainTypeSignature.getGenericArguments().isEmpty())
+				{
+					builder.append("<");
+					for(int i = 0; i < mainTypeSignature.getGenericArguments().size(); i++)
+					{
+						if(i != 0)
+						{
+							builder.append(", ");
+						}
+						builder.append(typeToString(mainTypeSignature.getGenericArguments().get(i), typeDef, memberDef));
+					}
+					builder.append(">");
+				}
+				break;
+			case ELEMENT_TYPE_VAR:
+				XGenericTypeSignature typeGenericTypeSignature = (XGenericTypeSignature) signature;
+				assert typeDef != null;
+				builder.append(typeDef.getGenericParams().get(typeGenericTypeSignature.getIndex()).getName());
+				break;
+			case ELEMENT_TYPE_MVAR:
+				XGenericTypeSignature methodGenericTypeSignature = (XGenericTypeSignature) signature;
+				assert memberDef != null;
+				builder.append(typeDef.getGenericParams().get(methodGenericTypeSignature.getIndex()).getName());
 				break;
 			case ELEMENT_TYPE_VALUETYPE:
 				ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
-				builder.append(valueTypeSignature.getValueType().getFullName());
+				builder.append(StubToStringUtil.getUserTypeDefName(valueTypeSignature.getValueType().getFullName()));
 				break;
 			default:
 				builder.append("UNK").append(Integer.toHexString(type).toUpperCase());

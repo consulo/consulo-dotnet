@@ -4,25 +4,23 @@ class Program
 {
     static void Main()
     {
-        Console.Write("Hello world!");
+       // Console.Write("Hello world!");
     }
+
+   /* static System.Collections.Generic.LinkedList<String> test()
+    {
+    	return null;
+    }  */
 }
 
-interface A
+
+
+
+interface C : System.Collections.Generic.ICollection<String>
 {
 
 }
-
-interface B
-{
-
-}
-
-interface C : A, B
-{
-
-}
-
+  /*
 class Test
 {
     public static Test operator +(Test c1, Test c2) 
@@ -36,4 +34,4 @@ class Test
 	{
     get{return 1;} set{}
 	} 
-}
+}           */

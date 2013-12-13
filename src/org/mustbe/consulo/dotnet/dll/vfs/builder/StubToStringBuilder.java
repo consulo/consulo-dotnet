@@ -287,7 +287,7 @@ public class StubToStringBuilder
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(propertyModifier.name().toLowerCase()).append(" ");
-		builder.append(TypeToStringBuilder.typeToString(property.getSignature().getType()));
+		builder.append(TypeToStringBuilder.typeToString(property.getSignature().getType(), typeDef, null));
 		builder.append(" ");
 		builder.append(cutSuperName(property.getName()));
 
@@ -366,7 +366,7 @@ public class StubToStringBuilder
 		{
 			if(!accessor)
 			{
-				builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getType())).append(" ");
+				builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getType(), typeDef, methodDef)).append(" ");
 
 				if(SPECIAL_METHOD_NAMES.containsValue(name))
 				{
@@ -381,7 +381,7 @@ public class StubToStringBuilder
 		{
 			processGenericParameterList(methodDef, builder);
 
-			processParameterList(methodDef.getSignature().getParameters(), builder);
+			processParameterList(typeDef, methodDef, methodDef.getSignature().getParameters(), builder);
 		}
 
 		if(noBody)
@@ -410,7 +410,7 @@ public class StubToStringBuilder
 		}
 	}
 
-	private static void processParameterList(ParameterSignature[] owner, StringBuilder builder)
+	private static void processParameterList(final TypeDef typeDef, final MethodDef methodDef, ParameterSignature[] owner, StringBuilder builder)
 	{
 		String text = StringUtil.join(owner, new Function<ParameterSignature, String>()
 		{
@@ -418,7 +418,7 @@ public class StubToStringBuilder
 			public String fun(ParameterSignature paramDef)
 			{
 				StringBuilder p = new StringBuilder();
-				p.append(TypeToStringBuilder.typeToString(paramDef.getType()));
+				p.append(TypeToStringBuilder.typeToString(paramDef.getType(), typeDef, methodDef));
 				p.append(" ");
 				p.append(paramDef.getParameterInfo().getName());
 				return p.toString();

@@ -31,7 +31,11 @@ public class StubToStringUtil
 
 	public static String getUserTypeDefName(TypeDef typeDef)
 	{
-		String name = typeDef.getName();
+		return getUserTypeDefName(typeDef.getName());
+	}
+
+	public static String getUserTypeDefName(String name)
+	{
 		int i = name.lastIndexOf(GENERIC_MARKER_IN_NAME);
 		if(i > 0)
 		{
