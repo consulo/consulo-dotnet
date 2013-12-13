@@ -27,7 +27,7 @@ public class Test
 			System.out.println(zipEntry.getName() + " " + zipEntry.getSize());
 		}  */
 
-		long value = 257;
+		long value = 481;
 		for(int i = 0; i < 32; i++)
 		{
 			int mask = 1 << i;
@@ -37,5 +37,8 @@ public class Test
 			}
 		}
 		System.out.println((value & MethodAttributes.SpecialName) == MethodAttributes.SpecialName);
+
+		String test = "System.Core.IsFixed";
+		System.out.println(test.substring(test.lastIndexOf('.') + 1, test.length()));
 	}
 }

@@ -207,7 +207,7 @@ public class StubToStringBuilder
 
 		builder.append(TypeToStringBuilder.typeToString(property.getSignature().getType()));
 		builder.append(" ");
-		builder.append(property.getName());
+		builder.append(cutSuperName(property.getName()));
 
 		StubBlock stubBlock = new StubBlock(builder.toString(), null, '{', '}');
 		return stubBlock;
@@ -223,6 +223,8 @@ public class StubToStringBuilder
 			}
 		}
 
+		boolean constructor = name.equals(CONSTRUCTOR_NAME);
+
 		if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 		{
 			// dont show properties methods
@@ -236,6 +238,11 @@ public class StubToStringBuilder
 			{
 				name = operator;
 			}
+		}
+
+		if(!constructor)
+		{
+			name = cutSuperName(name);
 		}
 
 		StringBuilder builder = new StringBuilder();
@@ -284,7 +291,7 @@ public class StubToStringBuilder
 			//builder.append("final "); //TODO [VISTALL] final  ? maybe sealed ?
 		}
 
-		if(name.equals(CONSTRUCTOR_NAME))
+		if(constructor)
 		{
 			builder.append(StubToStringUtil.getUserTypeDefName(typeDef));
 		}
@@ -311,6 +318,22 @@ public class StubToStringBuilder
 		else
 		{
 			return new StubBlock(builder.toString(), "// Bodies decompilation is not supported\n", '{', '}');
+		}
+	}
+
+	@NotNull
+	private static String cutSuperName(@NotNull String name)
+	{
+		if(StringUtil.containsChar(name, '.'))
+		{
+			// method override(implement) from superclass, cut owner of super method
+			val dotIndex = name.lastIndexOf('.');
+			name = name.substring(dotIndex + 1, name.length());
+			return name;
+		}
+		else
+		{
+			return name;
 		}
 	}
 
