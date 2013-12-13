@@ -30,6 +30,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import edu.arizona.cs.mbel.mbel.Field;
 import edu.arizona.cs.mbel.mbel.GenericParamDef;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.InterfaceImplementation;
@@ -37,6 +38,7 @@ import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.Property;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import edu.arizona.cs.mbel.mbel.TypeRef;
+import edu.arizona.cs.mbel.signature.FieldAttributes;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
@@ -51,6 +53,7 @@ public class StubToStringBuilder
 	private static final String CONSTRUCTOR_NAME = ".ctor";
 	private static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
 	private static final String ARRAY_PROPERTY_NAME = "Item";
+	private static final char[] BRACES = {'{', '}'};
 
 	private static Map<String, String> SPECIAL_METHOD_NAMES = new HashMap<String, String>()
 	{
@@ -107,7 +110,7 @@ public class StubToStringBuilder
 				{
 					val oldRoot = myRoot;
 
-					myRoot = new StubBlock("", null, ' ', ' ');
+					myRoot = new StubBlock("", null, new char[]{' ', ' '});
 					myRoot.getBlocks().add(oldRoot);
 					myRoot.getBlocks().add(typeBlock);
 				}
@@ -209,13 +212,36 @@ public class StubToStringBuilder
 			}, ", "));
 		}
 
-		StubBlock stubBlock = new StubBlock(builder.toString(), null, '{', '}');
+		StubBlock stubBlock = new StubBlock(builder.toString(), null, BRACES);
 		processMembers(typeDef, stubBlock);
 		return stubBlock;
 	}
 
 	private static void processMembers(TypeDef typeDef, StubBlock parent)
 	{
+		boolean isEnum = typeDef.isEnum();
+		for(Field field : typeDef.getFields())
+		{
+			if(isEnum)
+			{
+				if(isSet(field.getFlags(), FieldAttributes.Static))
+				{
+					parent.getBlocks().add(new LineStubBlock(field.getName() + ","));
+				}
+			}
+			else
+			{
+				StubBlock stubBlock = processField(typeDef, field);
+
+				parent.getBlocks().add(stubBlock);
+			}
+		}
+
+		if(isEnum)
+		{
+			return;
+		}
+
 		for(Property property : typeDef.getProperties())
 		{
 			StubBlock stubBlock = processProperty(typeDef, property);
@@ -248,6 +274,24 @@ public class StubToStringBuilder
 
 			parent.getBlocks().add(stubBlock);
 		}
+	}
+
+	private static StubBlock processField(TypeDef typeDef, Field field)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(getFieldAccess(field).name().toLowerCase());
+		builder.append(" ");
+
+		if(isSet(field.getFlags(), FieldAttributes.Static))
+		{
+			builder.append("static ");
+		}
+
+		builder.append(TypeToStringBuilder.typeToString(field.getSignature().getType(), typeDef, typeDef));
+		builder.append(" ");
+		builder.append(field.getName());
+
+		return new LineStubBlock(builder.toString() + ";");
 	}
 
 	private static StubBlock processProperty(TypeDef typeDef, Property property)
@@ -291,11 +335,27 @@ public class StubToStringBuilder
 		builder.append(" ");
 		builder.append(cutSuperName(property.getName()));
 
-		StubBlock stubBlock = new StubBlock(builder.toString(), null, '{', '}');
+		StubBlock stubBlock = new StubBlock(builder.toString(), null, BRACES);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), getterStub);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), setterStub);
 
 		return stubBlock;
+	}
+
+	private static AccessModifier getFieldAccess(Field methodDef)
+	{
+		if(isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Public))
+		{
+			return AccessModifier.PUBLIC;
+		}
+		else if(isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Private))
+		{
+			return AccessModifier.PRIVATE;
+		}
+		else
+		{
+			return AccessModifier.INTERNAL;
+		}
 	}
 
 	private static AccessModifier getMethodAccess(MethodDef methodDef)
@@ -386,11 +446,11 @@ public class StubToStringBuilder
 
 		if(noBody)
 		{
-			return new StubBlock(builder.toString(), null);
+			return new LineStubBlock(builder.toString() + ";");
 		}
 		else
 		{
-			return new StubBlock(builder.toString(), "// Bodies decompilation is not supported\n", '{', '}');
+			return new StubBlock(builder.toString(), "// Bodies decompilation is not supported\n", BRACES);
 		}
 	}
 
@@ -464,7 +524,7 @@ public class StubToStringBuilder
 			return null;
 		}
 
-		return new StubBlock("namespace " + namespace, null, '{', '}');
+		return new StubBlock("namespace " + namespace, null, BRACES);
 	}
 
 	@NotNull
@@ -484,10 +544,10 @@ public class StubToStringBuilder
 	{
 		builder.append(StringUtil.repeatSymbol('\t', index));
 		builder.append(root.getStartText());
-		char[] indents = root.getIndents();
 
-		if(indents.length > 0)
+		if(!(root instanceof LineStubBlock))
 		{
+			char[] indents = root.getIndents();
 			builder.append('\n');
 			builder.append(StringUtil.repeatSymbol('\t', index));
 			builder.append(indents[0]);
@@ -512,10 +572,6 @@ public class StubToStringBuilder
 
 			builder.append(StringUtil.repeatSymbol('\t', index));
 			builder.append(indents[1]);
-		}
-		else
-		{
-			builder.append(";");
 		}
 		builder.append('\n');
 	}

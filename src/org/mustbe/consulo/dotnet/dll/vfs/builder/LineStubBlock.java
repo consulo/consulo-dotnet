@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet;
+package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 /**
  * @author VISTALL
- * @since 12.12.13.
+ * @since 13.12.13.
  */
-public interface DotNetTypes
+public class LineStubBlock extends StubBlock
 {
-	String System_MulticastDelegate = "System.MulticastDelegate";
-	String System_Object = "System.Object";
-	String System_Enum = "System.Enum";
+	public LineStubBlock(String startText)
+	{
+		super(startText, null, new char[0]);
+	}
 }

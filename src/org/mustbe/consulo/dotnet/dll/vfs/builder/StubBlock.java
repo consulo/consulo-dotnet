@@ -31,7 +31,7 @@ public class StubBlock
 
 	private List<StubBlock> myBlocks = new ArrayList<StubBlock>(2);
 
-	public StubBlock(String startText, String innerText, char... indents)
+	public StubBlock(String startText, String innerText, char[] indents)
 	{
 		myStartText = startText;
 		myInnerText = innerText;

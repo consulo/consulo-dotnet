@@ -167,9 +167,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 		}
 
 		AssemblyTypeRef ref = (AssemblyTypeRef) superClass;
-		return (ref.getAssemblyRefInfo().equals(AssemblyRefInfo.MSCORLIB) &&
-				ref.getNamespace().equals("System") &&
-				ref.getName().equals("Enum"));
+		return ref.getFullName().equals("System.Enum");
 	}
 
 	/**
@@ -192,9 +190,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 			return false;
 		}
 		AssemblyTypeRef ref = (AssemblyTypeRef) superClass;
-		return (ref.getAssemblyRefInfo().equals(AssemblyRefInfo.MSCORLIB) &&
-				ref.getNamespace().equals("System") &&
-				ref.getName().equals("ValueType"));
+		return ref.getFullName().equals("System.ValueType");
 	}
 
 	/**

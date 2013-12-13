@@ -126,7 +126,7 @@ public class TypeToStringBuilder implements SignatureConstants
 			case ELEMENT_TYPE_MVAR:
 				XGenericTypeSignature methodGenericTypeSignature = (XGenericTypeSignature) signature;
 				assert memberDef != null;
-				builder.append(typeDef.getGenericParams().get(methodGenericTypeSignature.getIndex()).getName());
+				builder.append(memberDef.getGenericParams().get(methodGenericTypeSignature.getIndex()).getName());
 				break;
 			case ELEMENT_TYPE_VALUETYPE:
 				ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
