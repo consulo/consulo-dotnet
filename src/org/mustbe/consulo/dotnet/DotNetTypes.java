@@ -20,7 +20,8 @@ package org.mustbe.consulo.dotnet;
  * @author VISTALL
  * @since 12.12.13.
  */
-public interface DotNetClasses
+public interface DotNetTypes
 {
-	String System_MulticastDelegate= "System.MulticastDelegate";
+	String System_MulticastDelegate = "System.MulticastDelegate";
+	String System_Object = "System.Object";
 }

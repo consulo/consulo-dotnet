@@ -17,13 +17,14 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetClasses;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.dll.vfs.DotNetFileArchiveEntry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -31,6 +32,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import edu.arizona.cs.mbel.mbel.GenericParamDef;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
+import edu.arizona.cs.mbel.mbel.InterfaceImplementation;
 import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.Property;
 import edu.arizona.cs.mbel.mbel.TypeDef;
@@ -123,7 +125,7 @@ public class StubToStringBuilder
 	private static StubBlock processType(TypeDef typeDef)
 	{
 		TypeRef superClass = typeDef.getSuperClass();
-		if(superClass != null && Comparing.equal(DotNetClasses.System_MulticastDelegate, superClass.getFullName()))
+		if(superClass != null && Comparing.equal(DotNetTypes.System_MulticastDelegate, superClass.getFullName()))
 		{
 			for(MethodDef methodDef : typeDef.getMethods())
 			{
@@ -175,6 +177,37 @@ public class StubToStringBuilder
 		builder.append(StubToStringUtil.getUserTypeDefName(typeDef));
 
 		processGenericParameterList(typeDef, builder);
+
+		InterfaceImplementation[] interfaceImplementations = typeDef.getInterfaceImplementations();
+		List<Object> supers = new ArrayList<Object>(interfaceImplementations.length + 1);
+		if(superClass != null && !superClass.getFullName().equals(DotNetTypes.System_Object))
+		{
+			supers.add(superClass);
+		}
+
+		Collections.addAll(supers, interfaceImplementations);
+
+		if(!supers.isEmpty())
+		{
+			builder.append(" : ");
+
+			builder.append(StringUtil.join(supers, new Function<Object, String>()
+			{
+				@Override
+				public String fun(Object o)
+				{
+					if(o instanceof TypeRef)
+					{
+						return ((TypeRef) o).getFullName();
+					}
+					else if(o instanceof InterfaceImplementation)
+					{
+						return ((InterfaceImplementation) o).getInterface().getFullName();
+					}
+					return null;
+				}
+			}, ", "));
+		}
 
 		StubBlock stubBlock = new StubBlock(builder.toString(), null, '{', '}');
 		processMembers(typeDef, stubBlock);

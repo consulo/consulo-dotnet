@@ -32,7 +32,7 @@ import java.util.Vector;
 public class InterfaceImplementation
 {
 	private TypeRef interfaceType;
-	private Vector interfaceImplAttributes;
+	private Vector<CustomAttribute> interfaceImplAttributes;
 
 	/**
 	 * Makes a new InterfaceImplementation object for the given interface
@@ -42,7 +42,7 @@ public class InterfaceImplementation
 	public InterfaceImplementation(TypeRef ref)
 	{
 		interfaceType = ref;
-		interfaceImplAttributes = new Vector(10);
+		interfaceImplAttributes = new Vector<CustomAttribute>(0);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class InterfaceImplementation
 		CustomAttribute[] cas = new CustomAttribute[interfaceImplAttributes.size()];
 		for(int i = 0; i < cas.length; i++)
 		{
-			cas[i] = (CustomAttribute) interfaceImplAttributes.get(i);
+			cas[i] = interfaceImplAttributes.get(i);
 		}
 		return cas;
 	}

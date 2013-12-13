@@ -43,7 +43,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	private Vector fields;
 	private Vector<MethodDef> methods;
 	private Vector properties;
-	private Vector interfaces;      // InterfaceImplementations
+	private Vector<InterfaceImplementation> interfaces;      // InterfaceImplementations
 	private Vector attributes;
 	private Vector nestedClasses;   // TypeDefs
 	private Vector<MethodMap> methodMaps;      // MethodMaps
@@ -619,12 +619,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 */
 	public InterfaceImplementation[] getInterfaceImplementations()
 	{
-		InterfaceImplementation[] ia = new InterfaceImplementation[interfaces.size()];
-		for(int i = 0; i < ia.length; i++)
-		{
-			ia[i] = (InterfaceImplementation) interfaces.get(i);
-		}
-		return ia;
+		return interfaces.toArray(new InterfaceImplementation[interfaces.size()]);
 	}
 	//////////////////////////////////////////////////////
 

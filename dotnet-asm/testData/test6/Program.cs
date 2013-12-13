@@ -8,6 +8,21 @@ class Program
     }
 }
 
+interface A
+{
+
+}
+
+interface B
+{
+
+}
+
+interface C : A, B
+{
+
+}
+
 class Test
 {
     public static Test operator +(Test c1, Test c2) 
