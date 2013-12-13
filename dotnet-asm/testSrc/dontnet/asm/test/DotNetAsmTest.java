@@ -38,6 +38,10 @@ public class DotNetAsmTest extends TestCase
 	{
 	}
 
+	public void test6() throws Exception
+	{
+	}
+
 	@Override
 	protected void runTest() throws Throwable
 	{
