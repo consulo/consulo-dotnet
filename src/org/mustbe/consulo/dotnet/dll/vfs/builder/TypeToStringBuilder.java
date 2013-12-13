@@ -26,7 +26,7 @@ import edu.arizona.cs.mbel.signature.ValueTypeSignature;
  * @author VISTALL
  * @since 12.12.13.
  */
-public class TypeBuilder implements SignatureConstants
+public class TypeToStringBuilder implements SignatureConstants
 {
 	public static String typeToString(TypeSignature signature)
 	{

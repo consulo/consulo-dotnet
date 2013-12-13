@@ -203,7 +203,7 @@ public class StubToStringBuilder
 	{
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(TypeBuilder.typeToString(property.getSignature().getType()));
+		builder.append(TypeToStringBuilder.typeToString(property.getSignature().getType()));
 		builder.append(" ");
 		builder.append(property.getName());
 
@@ -288,7 +288,7 @@ public class StubToStringBuilder
 		}
 		else
 		{
-			builder.append(TypeBuilder.typeToString(methodDef.getSignature().getReturnType().getType())).append(" ");
+			builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getType())).append(" ");
 
 			if(SPECIAL_METHOD_NAMES.containsValue(name))
 			{
@@ -320,7 +320,7 @@ public class StubToStringBuilder
 			public String fun(ParameterSignature paramDef)
 			{
 				StringBuilder p = new StringBuilder();
-				p.append(TypeBuilder.typeToString(paramDef.getType()));
+				p.append(TypeToStringBuilder.typeToString(paramDef.getType()));
 				p.append(" ");
 				p.append(paramDef.getParameterInfo().getName());
 				return p.toString();
