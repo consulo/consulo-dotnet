@@ -18,16 +18,16 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeWrapperWithTypeArguments;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 13.12.13.
  */
-public class CSharpTypeImpl extends CSharpElementImpl implements DotNetElement
+public class CSharpTypeWrapperWithTypeArgumentsImpl extends CSharpElementImpl implements DotNetTypeWrapperWithTypeArguments
 {
-	public CSharpTypeImpl(@NotNull ASTNode node)
+	public CSharpTypeWrapperWithTypeArgumentsImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -35,6 +35,6 @@ public class CSharpTypeImpl extends CSharpElementImpl implements DotNetElement
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitType(this);
+		visitor.visitTypeWrapperWithTypeArguments(this);
 	}
 }

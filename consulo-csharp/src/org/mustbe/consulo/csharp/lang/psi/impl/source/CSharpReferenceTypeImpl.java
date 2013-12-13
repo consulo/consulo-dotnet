@@ -18,29 +18,23 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 04.12.13.
+ * @since 28.11.13.
  */
-public class CSharpTypeListImpl extends CSharpElementImpl
+public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNetReferenceType
 {
-	public CSharpTypeListImpl(@NotNull ASTNode node)
+	public CSharpReferenceTypeImpl(@NotNull ASTNode node)
 	{
 		super(node);
-	}
-
-	@NotNull
-	public DotNetType[] getTypes()
-	{
-		return findChildrenByClass(DotNetType.class);
 	}
 
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitTypeList(this);
+		visitor.visitReferenceType(this);
 	}
 }

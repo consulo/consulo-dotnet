@@ -34,15 +34,22 @@ import lombok.val;
  */
 public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSharpElements
 {
-	protected static void parseTypeList(@NotNull CSharpBuilderWrapper builder)
+	protected static boolean parseTypeList(@NotNull CSharpBuilderWrapper builder)
 	{
+		boolean empty = true;
 		while(!builder.eof())
 		{
 			PsiBuilder.Marker marker = parseType(builder);
 			if(marker == null)
 			{
+				if(!empty)
+				{
+					builder.error("Type expected");
+				}
 				break;
 			}
+
+			empty = false;
 
 			if(builder.getTokenType() == COMMA)
 			{
@@ -53,19 +60,63 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 				break;
 			}
 		}
+		return empty;
 	}
 
 	protected static PsiBuilder.Marker parseType(@NotNull CSharpBuilderWrapper builder)
 	{
+		PsiBuilder.Marker marker = parseInnerType(builder);
+		if(marker == null)
+		{
+			return null;
+		}
+
+		if(builder.getTokenType() == LT)
+		{
+			marker = marker.precede();
+			builder.advanceLexer();
+			if(parseTypeList(builder))
+			{
+				builder.error("Type expected");
+			}
+			expect(builder, GT, "'>' expected");
+			marker.done(TYPE_WRAPPER_WITH_TYPE_ARGUMENTS);
+		}
+
+		if(builder.getTokenType() == MUL)
+		{
+			marker = marker.precede();
+
+			builder.advanceLexer();
+
+			marker.done(POINTER_TYPE);
+		}
+
+		while(builder.getTokenType() == LBRACKET)
+		{
+			marker = marker.precede();
+			builder.advanceLexer();
+			expect(builder, RBRACKET, "']' expected");
+			marker.done(ARRAY_TYPE);
+		}
+
+		return marker;
+	}
+
+	private static PsiBuilder.Marker parseInnerType(@NotNull CSharpBuilderWrapper builder)
+	{
 		PsiBuilder.Marker marker = builder.mark();
 		IElementType tokenType = builder.getTokenType();
+
 		if(CSharpTokenSets.PRIMITIVE_TYPES.contains(tokenType))
 		{
 			builder.advanceLexer();
+			marker.done(NATIVE_TYPE);
 		}
 		else if(builder.getTokenType() == IDENTIFIER)
 		{
 			ExpressionParsing.parseQualifiedReference(builder, null);
+			marker.done(REFERENCE_TYPE);
 		}
 		else if(builder.getTokenType() == GLOBAL_KEYWORD)
 		{
@@ -77,25 +128,12 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 				expect(builder, IDENTIFIER, "Identifier expected");
 			}
 			mark.done(REFERENCE_EXPRESSION);
+			marker.done(REFERENCE_TYPE);
 		}
 		else
 		{
 			marker.drop();
 			marker = null;
-		}
-
-		if(marker != null)
-		{
-			marker.done(TYPE);
-
-			if(builder.getTokenType() == MUL)
-			{
-				marker = marker.precede();
-
-				builder.advanceLexer();
-
-				marker.done(POINTER_TYPE);
-			}
 		}
 		return marker;
 	}

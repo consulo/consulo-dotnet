@@ -14,33 +14,12 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
-
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
-import com.intellij.lang.ASTNode;
+package org.mustbe.consulo.dotnet.psi;
 
 /**
  * @author VISTALL
- * @since 04.12.13.
+ * @since 13.12.13.
  */
-public class CSharpTypeListImpl extends CSharpElementImpl
+public interface DotNetTypeWrapperWithTypeArguments extends DotNetType
 {
-	public CSharpTypeListImpl(@NotNull ASTNode node)
-	{
-		super(node);
-	}
-
-	@NotNull
-	public DotNetType[] getTypes()
-	{
-		return findChildrenByClass(DotNetType.class);
-	}
-
-	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
-	{
-		visitor.visitTypeList(this);
-	}
 }

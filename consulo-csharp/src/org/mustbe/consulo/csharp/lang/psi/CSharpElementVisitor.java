@@ -80,7 +80,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(declaration);
 	}
 
-	public void visitType(CSharpTypeImpl type)
+	public void visitReferenceType(CSharpReferenceTypeImpl type)
 	{
 		visitElement(type);
 	}
@@ -143,5 +143,25 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	public void visitFieldDeclaration(CSharpFieldDeclarationImpl declaration)
 	{
 		visitElement(declaration);
+	}
+
+	public void visitPointerType(CSharpPointerTypeImpl type)
+	{
+		visitElement(type);
+	}
+
+	public void visitNativeType(CSharpNativeTypeImpl type)
+	{
+		visitElement(type);
+	}
+
+	public void visitTypeWrapperWithTypeArguments(CSharpTypeWrapperWithTypeArgumentsImpl typeArguments)
+	{
+		visitElement(typeArguments);
+	}
+
+	public void visitArrayType(CSharpArrayTypeImpl type)
+	{
+		visitElement(type);
 	}
 }
