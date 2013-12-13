@@ -25,4 +25,5 @@ public interface DotNetTypes
 	String System_MulticastDelegate = "System.MulticastDelegate";
 	String System_Object = "System.Object";
 	String System_Enum = "System.Enum";
+	String System_ValueType = "System.ValueType";
 }

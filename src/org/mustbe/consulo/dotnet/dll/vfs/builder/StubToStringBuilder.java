@@ -79,10 +79,19 @@ public class StubToStringBuilder
 		}
 	};
 
-	private static List<String> SKIPPED = new ArrayList<String>()
+	private static List<String> SKIPPED_METHODS = new ArrayList<String>()
 	{
 		{
 			add("System.Runtime.Serialization.ISerializable.GetObjectData");
+		}
+	};
+
+	private static List<String> SKIPPED_SUPERTYPES = new ArrayList<String>()
+	{
+		{
+			add(DotNetTypes.System_Object);
+			add(DotNetTypes.System_Enum);
+			add(DotNetTypes.System_ValueType);
 		}
 	};
 
@@ -183,9 +192,13 @@ public class StubToStringBuilder
 
 		InterfaceImplementation[] interfaceImplementations = typeDef.getInterfaceImplementations();
 		List<Object> supers = new ArrayList<Object>(interfaceImplementations.length + 1);
-		if(superClass != null && !superClass.getFullName().equals(DotNetTypes.System_Object))
+		if(superClass != null)
 		{
-			supers.add(superClass);
+			String fullName = superClass.getFullName();
+			if(!SKIPPED_SUPERTYPES.contains(fullName))
+			{
+				supers.add(superClass);
+			}
 		}
 
 		Collections.addAll(supers, interfaceImplementations);
@@ -262,7 +275,7 @@ public class StubToStringBuilder
 				}
 			}
 
-			for(String prefix : SKIPPED)
+			for(String prefix : SKIPPED_METHODS)
 			{
 				if(StringUtil.equals(name, prefix))
 				{
