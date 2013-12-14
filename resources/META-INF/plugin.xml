@@ -14,9 +14,11 @@
   ~ limitations under the License.
   -->
 
-<idea-plugin>
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
 	<id>org.mustbe.consulo.dotnet.core</id>
 	<name>.NET Core</name>
+
+	<xi:include href="/META-INF/CSharp.xml" xpointer="xpointer(/idea-plugin/*)" />
 
 	<application-components>
 		<component>

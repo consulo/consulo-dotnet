@@ -7,6 +7,16 @@
           <element id="zip-archive" name="dotnet.jar">
             <element id="module-production-resource-output" name="consulo-dotnet" />
             <element id="module-output" name="consulo-dotnet" />
+            <element id="module-output" name="dotnet-psi-api" />
+            <element id="module-production-resource-output" name="dotnet-psi-api" />
+            <element id="module-output" name="dotnet-api" />
+            <element id="module-production-resource-output" name="dotnet-api" />
+            <element id="module-output" name="csharp-impl" />
+            <element id="module-production-resource-output" name="csharp-impl" />
+            <element id="module-output" name="csharp-psi-api" />
+            <element id="module-production-resource-output" name="csharp-psi-api" />
+            <element id="module-output" name="csharp-psi-impl" />
+            <element id="module-production-resource-output" name="csharp-psi-impl" />
           </element>
           <element id="zip-archive" name="dotnet-asm.jar">
             <element id="module-output" name="dotnet-asm" />
@@ -26,14 +36,6 @@
           <element id="zip-archive" name="mono-dotnet.jar">
             <element id="module-output" name="consulo-mono-dotnet" />
             <element id="module-production-resource-output" name="consulo-mono-dotnet" />
-          </element>
-        </element>
-      </element>
-      <element id="directory" name="csharp">
-        <element id="directory" name="lib">
-          <element id="zip-archive" name="csharp.jar">
-            <element id="module-output" name="consulo-csharp" />
-            <element id="module-production-resource-output" name="consulo-csharp" />
           </element>
         </element>
       </element>
