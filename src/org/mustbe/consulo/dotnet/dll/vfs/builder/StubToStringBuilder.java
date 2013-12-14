@@ -79,13 +79,6 @@ public class StubToStringBuilder
 		}
 	};
 
-	private static List<String> SKIPPED_METHODS = new ArrayList<String>()
-	{
-		{
-			add("System.Runtime.Serialization.ISerializable.GetObjectData");
-		}
-	};
-
 	private static List<String> SKIPPED_SUPERTYPES = new ArrayList<String>()
 	{
 		{
@@ -262,7 +255,7 @@ public class StubToStringBuilder
 			parent.getBlocks().add(stubBlock);
 		}
 
-		l:for(MethodDef methodDef : typeDef.getMethods())
+		for(MethodDef methodDef : typeDef.getMethods())
 		{
 			String name = methodDef.getName();
 
@@ -272,14 +265,6 @@ public class StubToStringBuilder
 				if(name.startsWith("get_") || name.startsWith("set_") || name.equals(STATIC_CONSTRUCTOR_NAME))
 				{
 					continue;
-				}
-			}
-
-			for(String prefix : SKIPPED_METHODS)
-			{
-				if(StringUtil.equals(name, prefix))
-				{
-					continue l;
 				}
 			}
 
