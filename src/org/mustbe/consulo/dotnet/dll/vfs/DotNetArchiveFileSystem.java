@@ -25,6 +25,7 @@ import org.consulo.vfs.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.DotNetDllFileType;
+import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -40,7 +41,7 @@ import lombok.val;
  * @since 28.11.13.
  */
 @Logger
-public class DotNetArchiveFileSystem extends ArchiveFileSystemBase
+public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements ApplicationComponent
 {
 	@NotNull
 	public static DotNetArchiveFileSystem getInstance()
@@ -95,5 +96,24 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase
 	public String getProtocol()
 	{
 		return DotNetDllFileType.PROTOCOL;
+	}
+
+	@Override
+	public void initComponent()
+	{
+
+	}
+
+	@Override
+	public void disposeComponent()
+	{
+
+	}
+
+	@NotNull
+	@Override
+	public String getComponentName()
+	{
+		return "DotNetArchiveFileSystem";
 	}
 }
