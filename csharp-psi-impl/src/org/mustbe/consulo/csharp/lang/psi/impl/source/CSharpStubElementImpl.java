@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -34,6 +36,12 @@ public abstract class CSharpStubElementImpl<S extends StubElement> extends StubB
 	public CSharpStubElementImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	public ItemPresentation getPresentation()
+	{
+		return ItemPresentationProviders.getItemPresentation(this);
 	}
 
 	public CSharpStubElementImpl(@NotNull S stub, @NotNull IStubElementType<? extends S, ?> nodeType)
