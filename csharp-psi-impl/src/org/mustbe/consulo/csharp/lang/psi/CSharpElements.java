@@ -27,8 +27,8 @@ import com.intellij.psi.tree.IElementTypeAsPsiFactory;
  */
 public interface CSharpElements
 {
-	IElementType NAMESPACE_DECLARATION = new IElementTypeAsPsiFactory("NAMESPACE_DECLARATION", CSharpLanguage.INSTANCE,
-			CSharpNamespaceDeclarationImpl.class);
+	IElementType NAMESPACE_DECLARATION = CSharpStubElements.NAMESPACE_DECLARATION;
+	/*new IElementTypeAsPsiFactory("NAMESPACE_DECLARATION", CSharpLanguage.INSTANCE, CSharpNamespaceDeclarationImpl.class);  */
 
 	IElementType USING_LIST = new IElementTypeAsPsiFactory("USING_LIST", CSharpLanguage.INSTANCE, CSharpUsingListImpl.class);
 

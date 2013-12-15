@@ -21,7 +21,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
@@ -34,11 +36,16 @@ import com.intellij.util.IncorrectOperationException;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpNamespaceDeclarationImpl extends CSharpElementImpl implements CSharpNamespaceDeclaration
+public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharpNamespaceStub> implements CSharpNamespaceDeclaration
 {
 	public CSharpNamespaceDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpNamespaceDeclarationImpl(@NotNull CSharpNamespaceStub stub)
+	{
+		super(stub, CSharpStubElements.NAMESPACE_DECLARATION);
 	}
 
 	@Override

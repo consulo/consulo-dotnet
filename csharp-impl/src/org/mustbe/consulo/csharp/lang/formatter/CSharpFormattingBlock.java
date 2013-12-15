@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.CSharpParserDefinition;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.formatting.Block;
@@ -129,7 +129,7 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 		{
 			return Indent.getNoneIndent();
 		}  */
-		else if(elementType == CSharpParserDefinition.FILE_ELEMENT_TYPE)
+		else if(elementType == CSharpStubElements.FILE)
 		{
 			return Indent.getNoneIndent();
 		}
@@ -143,7 +143,7 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 	@Override
 	protected Indent getChildIndent()
 	{
-		if(getNode().getElementType() == CSharpParserDefinition.FILE_ELEMENT_TYPE)
+		if(getNode().getElementType() == CSharpStubElements.FILE)
 		{
 			return Indent.getNoneIndent();
 		}
