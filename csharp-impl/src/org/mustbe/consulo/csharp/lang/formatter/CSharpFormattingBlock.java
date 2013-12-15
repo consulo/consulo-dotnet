@@ -143,6 +143,10 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 	@Override
 	protected Indent getChildIndent()
 	{
+		if(getNode().getElementType() == CSharpParserDefinition.FILE_ELEMENT_TYPE)
+		{
+			return Indent.getNoneIndent();
+		}
 		return Indent.getNormalIndent();
 	}
 
