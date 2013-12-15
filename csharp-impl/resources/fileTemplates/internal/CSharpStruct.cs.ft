@@ -1,4 +1,5 @@
-#if (${NAMESPACE_NAME} && ${NAMESPACE_NAME} != "")namespace ${NAMESPACE_NAME} {#end
+#if (${NAMESPACE_NAME} && ${NAMESPACE_NAME} != "")namespace ${NAMESPACE_NAME} {
+#end
 public struct ${NAME} {
 
 }

@@ -24,6 +24,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -90,5 +91,11 @@ public class CSharpNamespaceDeclarationImpl extends CSharpElementImpl implements
 	public DotNetNamedElement[] getMembers()
 	{
 		return findChildrenByClass(DotNetNamedElement.class);
+	}
+
+	@Override
+	public DotNetReferenceExpression getNamespaceReference()
+	{
+		return findChildByClass(DotNetReferenceExpression.class);
 	}
 }

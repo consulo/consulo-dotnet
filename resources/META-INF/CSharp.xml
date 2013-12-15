@@ -16,10 +16,10 @@
 
 <idea-plugin>
 	<actions>
-		<action id="CSharp.File" class="org.mustbe.consulo.csharp.ide.actions.NewCSharpClassAction">
+		<action id="CSharp.Class" class="org.mustbe.consulo.csharp.ide.actions.NewCSharpClassAction">
 			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
 		</action>
-		<action id="CSharp.Class" class="org.mustbe.consulo.csharp.ide.actions.NewCSharpFileAction">
+		<action id="CSharp.File" class="org.mustbe.consulo.csharp.ide.actions.NewCSharpFileAction">
 			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
 		</action>
 	</actions>
@@ -41,6 +41,7 @@
 		<iconDescriptorUpdater implementation="org.mustbe.consulo.csharp.lang.CSharpIconDescriptorUpdater"/>
 		<treeStructureProvider implementation="org.mustbe.consulo.csharp.ide.projectView.CSharpProjectViewProvider"/>
 
+		<lang.formatter language="C#" implementationClass="org.mustbe.consulo.csharp.lang.formatter.CSharpFormattingModelBuilder" />
 		<lang.elementIcon language="C#" file="/icons/csharpLang.png"/>
 		<lang.braceMatcher language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpPairedBraceMatcher"/>
 		<lang.foldingBuilder language="C#" implementationClass="org.mustbe.consulo.csharp.lang.CSharpFoldingBuilder"/>

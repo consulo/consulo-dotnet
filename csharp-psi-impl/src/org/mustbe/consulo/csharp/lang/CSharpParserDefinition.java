@@ -32,7 +32,7 @@ import com.intellij.psi.tree.IFileElementType;
  */
 public class CSharpParserDefinition extends LanguageVersionableParserDefinition
 {
-	private static final IFileElementType FILE_ELEMENT_TYPE = new IFileElementType(CSharpLanguage.INSTANCE);
+	public static final IFileElementType FILE_ELEMENT_TYPE = new IFileElementType(CSharpLanguage.INSTANCE);
 
 	@NotNull
 	@Override

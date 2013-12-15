@@ -16,7 +16,9 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 
 /**
  * @author VISTALL
@@ -24,4 +26,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
  */
 public interface CSharpNamespaceDeclaration extends DotNetNamespaceDeclaration, CSharpBodyWithBraces
 {
+	@Nullable
+	DotNetReferenceExpression getNamespaceReference();
 }
