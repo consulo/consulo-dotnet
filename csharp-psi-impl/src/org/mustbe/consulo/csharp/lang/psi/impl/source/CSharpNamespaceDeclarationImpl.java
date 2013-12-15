@@ -71,6 +71,11 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	@Override
 	public String getName()
 	{
+		CSharpNamespaceStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getName();
+		}
 		CSharpReferenceExpressionImpl childByClass = findChildByClass(CSharpReferenceExpressionImpl.class);
 		return childByClass != null ? childByClass.getText() : null;
 	}
