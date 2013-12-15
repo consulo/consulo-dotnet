@@ -16,27 +16,18 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.stub.index;
 
-import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
-import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndexExtension;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
  * @since 15.12.13.
  */
-public class NamespaceIndex extends StringStubIndexExtension<CSharpNamespaceDeclaration>
+public interface CSharpIndexKeys
 {
-	public static NamespaceIndex getInstance()
-	{
-		return StubIndexExtension.EP_NAME.findExtension(NamespaceIndex.class);
-	}
-
-	@NotNull
-	@Override
-	public StubIndexKey<String, CSharpNamespaceDeclaration> getKey()
-	{
-		return CSharpIndexKeys.NAMESPACE_INDEX;
-	}
+	StubIndexKey<String, CSharpNamespaceDeclaration> NAMESPACE_INDEX = StubIndexKey.createIndexKey("csharp.namespace.index");
+	StubIndexKey<String, CSharpNamespaceDeclaration> NAMESPACE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("csharp.namespace.by.qname.index");
+	StubIndexKey<String, CSharpTypeDeclaration> TYPE_INDEX = StubIndexKey.createIndexKey("csharp.type.index");
+	StubIndexKey<String, CSharpTypeDeclaration> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("csharp.type.by.qname.index");
 }

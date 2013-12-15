@@ -26,6 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -109,5 +110,23 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	public DotNetReferenceExpression getNamespaceReference()
 	{
 		return findChildByClass(DotNetReferenceExpression.class);
+	}
+
+	@Nullable
+	@Override
+	public String getQName()
+	{
+		CSharpNamespaceStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getQName();
+		}
+
+		PsiElement parent = getParent();
+		if(parent instanceof DotNetNamespaceDeclaration)
+		{
+			return ((DotNetNamespaceDeclaration) parent).getQName() + "." + getName();
+		}
+		return getName();
 	}
 }

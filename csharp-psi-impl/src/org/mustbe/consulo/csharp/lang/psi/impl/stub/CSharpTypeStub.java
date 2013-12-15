@@ -18,7 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNamespaceDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
@@ -27,13 +27,13 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 15.12.13.
  */
-public class CSharpNamespaceStub extends NamedStubBase<CSharpNamespaceDeclarationImpl>
+public class CSharpTypeStub extends NamedStubBase<CSharpTypeDeclaration>
 {
 	private StringRef myQName;
 
-	public CSharpNamespaceStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname)
+	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname)
 	{
-		super(parent, CSharpStubElements.NAMESPACE_DECLARATION, name);
+		super(parent, CSharpStubElements.TYPE_DECLARATION, name);
 		myQName = qname;
 	}
 
@@ -41,4 +41,5 @@ public class CSharpNamespaceStub extends NamedStubBase<CSharpNamespaceDeclaratio
 	public String getQName()
 	{
 		return StringRef.toString(myQName);
-	}}
+	}
+}

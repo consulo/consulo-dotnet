@@ -26,17 +26,17 @@ import com.intellij.psi.stubs.StubIndexKey;
  * @author VISTALL
  * @since 15.12.13.
  */
-public class NamespaceIndex extends StringStubIndexExtension<CSharpNamespaceDeclaration>
+public class NamespaceByQNameIndex extends StringStubIndexExtension<CSharpNamespaceDeclaration>
 {
-	public static NamespaceIndex getInstance()
+	public static NamespaceByQNameIndex getInstance()
 	{
-		return StubIndexExtension.EP_NAME.findExtension(NamespaceIndex.class);
+		return StubIndexExtension.EP_NAME.findExtension(NamespaceByQNameIndex.class);
 	}
 
 	@NotNull
 	@Override
 	public StubIndexKey<String, CSharpNamespaceDeclaration> getKey()
 	{
-		return CSharpIndexKeys.NAMESPACE_INDEX;
+		return CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX;
 	}
 }

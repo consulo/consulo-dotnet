@@ -17,7 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
@@ -26,17 +26,17 @@ import com.intellij.psi.stubs.StubIndexKey;
  * @author VISTALL
  * @since 15.12.13.
  */
-public class NamespaceIndex extends StringStubIndexExtension<CSharpNamespaceDeclaration>
+public class TypeByQNameIndex extends StringStubIndexExtension<CSharpTypeDeclaration>
 {
-	public static NamespaceIndex getInstance()
+	public static TypeByQNameIndex getInstance()
 	{
-		return StubIndexExtension.EP_NAME.findExtension(NamespaceIndex.class);
+		return StubIndexExtension.EP_NAME.findExtension(TypeByQNameIndex.class);
 	}
 
 	@NotNull
 	@Override
-	public StubIndexKey<String, CSharpNamespaceDeclaration> getKey()
+	public StubIndexKey<String, CSharpTypeDeclaration> getKey()
 	{
-		return CSharpIndexKeys.NAMESPACE_INDEX;
+		return CSharpIndexKeys.TYPE_BY_QNAME_INDEX;
 	}
 }

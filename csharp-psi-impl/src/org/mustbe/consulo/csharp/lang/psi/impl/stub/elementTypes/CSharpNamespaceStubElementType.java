@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNamespaceDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.NamespaceIndexKeys;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -56,13 +56,15 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 	@Override
 	public CSharpNamespaceStub createStub(@NotNull CSharpNamespaceDeclarationImpl cSharpNamespaceDeclaration, StubElement stubElement)
 	{
-		return new CSharpNamespaceStub(stubElement, StringRef.fromNullableString(cSharpNamespaceDeclaration.getName()));
+		return new CSharpNamespaceStub(stubElement, StringRef.fromNullableString(cSharpNamespaceDeclaration.getName()),
+				StringRef.fromNullableString(cSharpNamespaceDeclaration.getQName()));
 	}
 
 	@Override
 	public void serialize(@NotNull CSharpNamespaceStub cSharpNamespaceStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(cSharpNamespaceStub.getName());
+		stubOutputStream.writeName(cSharpNamespaceStub.getQName());
 	}
 
 	@NotNull
@@ -70,7 +72,8 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 	public CSharpNamespaceStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
 	{
 		StringRef name = stubInputStream.readName();
-		return new CSharpNamespaceStub(stubElement, name);
+		StringRef qname = stubInputStream.readName();
+		return new CSharpNamespaceStub(stubElement, name, qname);
 	}
 
 	@Override
@@ -79,7 +82,13 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 		String name = cSharpNamespaceStub.getName();
 		if(!StringUtil.isEmpty(name))
 		{
-			indexSink.occurrence(NamespaceIndexKeys.NAMESPACE_INDEX, name);
+			indexSink.occurrence(CSharpIndexKeys.NAMESPACE_INDEX, name);
+		}
+
+		String qName = cSharpNamespaceStub.getQName();
+		if(!StringUtil.isEmpty(qName))
+		{
+			indexSink.occurrence(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName);
 		}
 	}
 }

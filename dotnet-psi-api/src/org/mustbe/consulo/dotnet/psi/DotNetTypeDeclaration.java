@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
@@ -29,4 +30,7 @@ public interface DotNetTypeDeclaration extends DotNetModifierListOwner, DotNetGe
 	boolean isStruct();
 
 	boolean isEnum();
+
+	@Nullable
+	String getQName();
 }

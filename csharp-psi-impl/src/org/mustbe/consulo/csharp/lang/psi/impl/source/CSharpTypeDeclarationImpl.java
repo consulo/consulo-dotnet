@@ -19,11 +19,14 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 
@@ -31,11 +34,16 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpTypeDeclarationImpl extends CSharpMemberImpl implements CSharpTypeDeclaration
+public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeStub> implements CSharpTypeDeclaration
 {
 	public CSharpTypeDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpTypeDeclarationImpl(@NotNull CSharpTypeStub stub)
+	{
+		super(stub, CSharpStubElements.TYPE_DECLARATION);
 	}
 
 	@Override
@@ -94,5 +102,23 @@ public class CSharpTypeDeclarationImpl extends CSharpMemberImpl implements CShar
 	public boolean isEnum()
 	{
 		return findChildByType(CSharpTokens.ENUM_KEYWORD) != null;
+	}
+
+	@Nullable
+	@Override
+	public String getQName()
+	{
+		CSharpTypeStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getQName();
+		}
+
+		PsiElement parent = getParent();
+		if(parent instanceof DotNetNamespaceDeclaration)
+		{
+			return ((DotNetNamespaceDeclaration) parent).getQName() + "." + getName();
+		}
+		return getName();
 	}
 }
