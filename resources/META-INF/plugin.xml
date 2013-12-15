@@ -17,6 +17,7 @@
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
 	<id>org.mustbe.consulo.dotnet.core</id>
 	<name>.NET Core</name>
+	<resource-bundle>messages.DotNetBundle</resource-bundle>
 
 	<xi:include href="/META-INF/CSharp.xml" xpointer="xpointer(/idea-plugin/*)" />
 

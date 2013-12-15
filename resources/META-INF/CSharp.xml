@@ -15,7 +15,23 @@
   -->
 
 <idea-plugin>
+	<actions>
+		<action id="CSharp.File" class="org.mustbe.consulo.csharp.ide.actions.NewCSharpClassAction">
+			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
+		</action>
+		<action id="CSharp.Class" class="org.mustbe.consulo.csharp.ide.actions.NewCSharpFileAction">
+			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
+		</action>
+	</actions>
+
 	<extensions defaultExtensionNs="com.intellij">
+
+		<internalFileTemplate name="CSharpClass" />
+		<internalFileTemplate name="CSharpInterface" />
+		<internalFileTemplate name="CSharpEnum" />
+		<internalFileTemplate name="CSharpStruct" />
+		<internalFileTemplate name="CSharpFile" />
+
 		<applicationService serviceInterface="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionHelper"
 							serviceImplementation="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionHelperImpl"/>
 		<fileTypeFactory implementation="org.mustbe.consulo.csharp.lang.CSharpFileTypeFactory"/>

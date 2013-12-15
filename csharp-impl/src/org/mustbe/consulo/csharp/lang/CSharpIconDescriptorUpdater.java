@@ -66,6 +66,10 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			{
 				main = AllIcons.Nodes.Enum;
 			}
+			else if(((DotNetTypeDeclaration) element).isStruct())
+			{
+				main = AllIcons.Nodes.Static;  //TODO [VISTALL] icon
+			}
 			else
 			{
 				main = ((DotNetTypeDeclaration) element).hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractClass : AllIcons.Nodes

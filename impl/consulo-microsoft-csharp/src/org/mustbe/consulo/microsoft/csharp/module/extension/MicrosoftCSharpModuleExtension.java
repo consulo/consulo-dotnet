@@ -19,6 +19,7 @@ package org.mustbe.consulo.microsoft.csharp.module.extension;
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
+import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.fileTypes.LanguageFileType;
@@ -29,7 +30,7 @@ import com.intellij.openapi.module.Module;
  * @since 26.11.13.
  */
 public class MicrosoftCSharpModuleExtension extends ModuleExtensionImpl<MicrosoftCSharpModuleExtension> implements
-		DotNetModuleLangExtension<MicrosoftCSharpModuleExtension>
+		DotNetModuleLangExtension<MicrosoftCSharpModuleExtension>, CSharpModuleExtension<MicrosoftCSharpModuleExtension>
 
 {
 	public MicrosoftCSharpModuleExtension(@NotNull String id, @NotNull Module module)
