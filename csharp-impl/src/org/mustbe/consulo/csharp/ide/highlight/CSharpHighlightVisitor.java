@@ -28,6 +28,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImp
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
@@ -58,14 +59,12 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	@Override
 	public void visit(@NotNull PsiElement element)
 	{
-		element.acceptChildren(this);
+		element.accept(this);
 	}
 
 	@Override
 	public void visitElement(PsiElement element)
 	{
-		super.visitElement(element);
-
 		IElementType elementType = element.getNode().getElementType();
 		if(CSharpSoftTokens.ALL.contains(elementType))
 		{
@@ -143,6 +142,24 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		super.visitEventDeclaration(declaration);
 
 		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
+	@Override
+	public void visitReferenceExpression(CSharpReferenceExpressionImpl expression)
+	{
+		super.visitReferenceExpression(expression);
+
+		PsiElement resolve = expression.resolve();
+		if(resolve == null)
+		{
+			PsiElement referenceElement = expression.getReferenceElement();
+			if(referenceElement == null)
+			{
+				return;
+			}
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip
+					("'" + referenceElement.getText() + "' is not resolved").range(referenceElement).create());
+		}
 	}
 
 	private void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
