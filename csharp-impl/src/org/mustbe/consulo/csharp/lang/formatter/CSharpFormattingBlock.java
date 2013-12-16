@@ -26,6 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.dotnet.psi.DotNetCodeBlock;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Spacing;
@@ -135,6 +136,12 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 		}
 		else
 		{
+			PsiElement psi = getNode().getPsi();
+			PsiElement parent = psi.getParent();
+			if(parent instanceof DotNetCodeBlock)
+			{
+				return Indent.getNormalIndent();
+			}
 			return Indent.getNoneIndent();
 		}
 	}

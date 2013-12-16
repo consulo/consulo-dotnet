@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
-import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -42,7 +41,6 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			return null;
 		}
-		System.out.println(((LighterASTNode)marker).getTokenType());
 
 		IElementType tokenType = wrapper.getTokenType();
 		if(tokenType == LPAR)
