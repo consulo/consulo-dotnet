@@ -69,6 +69,17 @@ public abstract class CSharpStubMemberImpl<S extends NamedStub<?>> extends CShar
 	}
 
 	@Override
+	public int getTextOffset()
+	{
+		PsiElement nameIdentifier = getNameIdentifier();
+		if(nameIdentifier != null)
+		{
+			return nameIdentifier.getTextOffset();
+		}
+		return super.getTextOffset();
+	}
+
+	@Override
 	public String getName()
 	{
 		S stub = getStub();

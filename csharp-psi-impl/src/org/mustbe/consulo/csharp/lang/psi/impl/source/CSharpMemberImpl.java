@@ -40,6 +40,17 @@ public abstract class CSharpMemberImpl extends CSharpElementImpl implements PsiN
 	}
 
 	@Override
+	public int getTextOffset()
+	{
+		PsiElement nameIdentifier = getNameIdentifier();
+		if(nameIdentifier != null)
+		{
+			return nameIdentifier.getTextOffset();
+		}
+		return super.getTextOffset();
+	}
+
+	@Override
 	@Nullable
 	public DotNetModifierList getModifierList()
 	{
