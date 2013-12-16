@@ -25,8 +25,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.BitUtil;
 
 /**
  * @author VISTALL
@@ -35,7 +37,7 @@ import com.intellij.psi.PsiFile;
 public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 {
 	@Override
-	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int i)
+	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags)
 	{
 		PsiFile containingFile = element.getContainingFile();
 		if(containingFile == null)
@@ -53,7 +55,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			iconDescriptor.setMainIcon(((DotNetMethodDeclaration) element).hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes
 					.AbstractMethod : AllIcons.Nodes.Method);
 
-			processModifierListOwner(element, iconDescriptor);
+			processModifierListOwner(element, iconDescriptor, flags);
 		}
 		else if(element instanceof DotNetTypeDeclaration)
 		{
@@ -77,7 +79,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			}
 			iconDescriptor.setMainIcon(main);
 
-			processModifierListOwner(element, iconDescriptor);
+			processModifierListOwner(element, iconDescriptor, flags);
 		}
 		else if(element instanceof DotNetGenericParameter)
 		{
@@ -91,19 +93,19 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Field);
 
-			processModifierListOwner(element, iconDescriptor);
+			processModifierListOwner(element, iconDescriptor, flags);
 		}
 		else if(element instanceof DotNetPropertyDeclaration)
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Property);
 
-			processModifierListOwner(element, iconDescriptor);
+			processModifierListOwner(element, iconDescriptor, flags);
 		}
 		else if(element instanceof DotNetEventDeclaration)
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Property);  //TODO [VISTALL] icon
 
-			processModifierListOwner(element, iconDescriptor);
+			processModifierListOwner(element, iconDescriptor, flags);
 		}
 		else if(element instanceof DotNetNamespaceDeclaration)
 		{
@@ -113,34 +115,37 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Method);  //TODO [VISTALL] icon
 
-			processModifierListOwner(element, iconDescriptor);
+			processModifierListOwner(element, iconDescriptor, flags);
 		}
 		else if(element instanceof DotNetPropertyAccessor)
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Method);  //TODO [VISTALL] icon
 
-			processModifierListOwner(element, iconDescriptor);
+			processModifierListOwner(element, iconDescriptor, flags);
 		}
 	}
 
-	private static void processModifierListOwner(PsiElement element, IconDescriptor iconDescriptor)
+	private static void processModifierListOwner(PsiElement element, IconDescriptor iconDescriptor, int flags)
 	{
 		DotNetModifierListOwner owner = (DotNetModifierListOwner) element;
-		if(owner.hasModifier(CSharpTokens.PRIVATE_KEYWORD))
+		if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
 		{
-			iconDescriptor.setRightIcon(AllIcons.Nodes.C_private);
-		}
-		else if(owner.hasModifier(CSharpTokens.PUBLIC_KEYWORD))
-		{
-			iconDescriptor.setRightIcon(AllIcons.Nodes.C_public);
-		}
-		else if(owner.hasModifier(CSharpTokens.PROTECTED_KEYWORD))
-		{
-			iconDescriptor.setRightIcon(AllIcons.Nodes.C_protected);
-		}
-		else
-		{
-			iconDescriptor.setRightIcon(AllIcons.Nodes.C_plocal);
+			if(owner.hasModifier(CSharpTokens.PRIVATE_KEYWORD))
+			{
+				iconDescriptor.setRightIcon(AllIcons.Nodes.C_private);
+			}
+			else if(owner.hasModifier(CSharpTokens.PUBLIC_KEYWORD))
+			{
+				iconDescriptor.setRightIcon(AllIcons.Nodes.C_public);
+			}
+			else if(owner.hasModifier(CSharpTokens.PROTECTED_KEYWORD))
+			{
+				iconDescriptor.setRightIcon(AllIcons.Nodes.C_protected);
+			}
+			else
+			{
+				iconDescriptor.setRightIcon(AllIcons.Nodes.C_plocal);
+			}
 		}
 	}
 }

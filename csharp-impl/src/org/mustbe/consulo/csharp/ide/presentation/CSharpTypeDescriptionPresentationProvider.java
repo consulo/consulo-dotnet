@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProvider;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -64,7 +65,7 @@ public class CSharpTypeDescriptionPresentationProvider implements ItemPresentati
 		@Override
 		public Icon getIcon(boolean b)
 		{
-			return IconDescriptorUpdaters.getIcon(myDeclaration, 0);
+			return IconDescriptorUpdaters.getIcon(myDeclaration, Iconable.ICON_FLAG_VISIBILITY);
 		}
 	}
 	@Override
