@@ -159,14 +159,7 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 				ProcessOutput processOutput = processHandler.runProcess();
 				for(String s : processOutput.getStdoutLines())
 				{
-					try
-					{
-						addMessage(compileContext, module, s);
-					}
-					catch(Exception e)
-					{
-						compileContext.addMessage(CompilerMessageCategory.ERROR, s, null, -1, -1);
-					}
+					addMessage(compileContext, module, s);
 				}
 			}
 			catch(Exception e)
@@ -183,38 +176,62 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 	private static void addMessage(CompileContext compileContext, Module module, String line)
 	{
 		String[] split = line.split(": ");
-		if(split.length != 3)
+		if(split.length == 3)
 		{
-			throw new IllegalArgumentException(line);
+			String fileAndPosition = split[0].trim();
+			String idAndType = split[1].trim();
+			String message = split[2].trim();
+
+			String file = fileAndPosition.substring(0, fileAndPosition.lastIndexOf("("));
+			String position = fileAndPosition.substring(fileAndPosition.lastIndexOf("(") + 1, fileAndPosition.length() - 1);
+			String[] lineAndColumn = position.split(",");
+
+			String[] idAndTypeArray = idAndType.split(" ");
+			CompilerMessageCategory category = CompilerMessageCategory.INFORMATION;
+			if(idAndTypeArray[0].equals("error"))
+			{
+				category = CompilerMessageCategory.ERROR;
+			}
+			else if(idAndTypeArray[0].equals("warning"))
+			{
+				category = CompilerMessageCategory.WARNING;
+			}
+
+			String fileUrl = FileUtil.toSystemIndependentName(file);
+			if(!FileUtil.isAbsolute(fileUrl))
+			{
+				fileUrl = module.getModuleDirUrl() + "/" + fileUrl;
+			}
+			else
+			{
+				fileUrl = VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, fileUrl);
+			}
+
+			compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", fileUrl, Integer.parseInt(lineAndColumn[0]),
+					Integer.parseInt(lineAndColumn[1]));
 		}
-		String fileAndPosition = split[0].trim();
-		String idAndType = split[1].trim();
-		String message = split[2].trim();
-
-		String file = fileAndPosition.substring(0, fileAndPosition.lastIndexOf("("));
-		String position = fileAndPosition.substring(fileAndPosition.lastIndexOf("(") + 1, fileAndPosition.length() - 1);
-		String[] lineAndColumn = position.split(",");
-
-		String[] idAndTypeArray = idAndType.split(" ");
-		CompilerMessageCategory category = CompilerMessageCategory.INFORMATION;
-		if(idAndTypeArray[0].equals("error"))
+		else if(split.length == 2)
 		{
-			category = CompilerMessageCategory.ERROR;
-		}
+			String idAndType = split[0].trim();
+			String message = split[1].trim();
 
+			String[] idAndTypeArray = idAndType.split(" ");
+			CompilerMessageCategory category = CompilerMessageCategory.INFORMATION;
+			if(idAndTypeArray[0].equals("error"))
+			{
+				category = CompilerMessageCategory.ERROR;
+			}
+			else if(idAndTypeArray[0].equals("warning"))
+			{
+				category = CompilerMessageCategory.WARNING;
+			}
 
-		String fileUrl = FileUtil.toSystemIndependentName(file);
-		if(!FileUtil.isAbsolute(fileUrl))
-		{
-			fileUrl = module.getModuleDirUrl() + "/" + fileUrl;
+			compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", null, -1, -1);
 		}
 		else
 		{
-			fileUrl = VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, fileUrl);
+			compileContext.addMessage(CompilerMessageCategory.INFORMATION, line, null, -1, -1);
 		}
-
-		compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", fileUrl, Integer.parseInt(lineAndColumn[0]),
-				Integer.parseInt(lineAndColumn[1]));
 	}
 
 	@Override

@@ -47,7 +47,8 @@ public class MicrosoftCSharpModuleExtension extends ModuleExtensionImpl<Microsof
 	@Override
 	public void setupCompilerOptions(DotNetCompilerOptionsBuilder optionsBuilder)
 	{
-		optionsBuilder.addArgument("/utf8output"); // utf8 output
+		optionsBuilder.addArgument("/fullpaths");
+		optionsBuilder.addArgument("/utf8output");
 		optionsBuilder.setExecutableFromSdk("csc.exe");
 	}
 }
