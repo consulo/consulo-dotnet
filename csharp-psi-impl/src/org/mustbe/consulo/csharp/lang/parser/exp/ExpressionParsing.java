@@ -14,19 +14,52 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.parser;
+package org.mustbe.consulo.csharp.lang.parser.exp;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 16.12.13.
  */
 public class ExpressionParsing extends SharingParsingHelpers
 {
+	private static final TokenSet CONSTANTS = TokenSet.create(INTEGER_LITERAL, STRING_LITERAL, DOUBLE_LITERAL, FLOAT_LITERAL, LONG_LITERAL,
+			BOOL_LITERAL, NULL_LITERAL);
+
+	@Nullable
+	public static PsiBuilder.Marker parse(CSharpBuilderWrapper wrapper)
+	{
+		PsiBuilder.Marker marker = parsePrimary(wrapper);
+
+
+		return marker;
+	}
+
+	private static PsiBuilder.Marker parsePrimary(CSharpBuilderWrapper wrapper)
+	{
+		PsiBuilder.Marker mark = wrapper.mark();
+		IElementType tokenType = wrapper.getTokenType();
+		if(CONSTANTS.contains(tokenType))
+		{
+			wrapper.advanceLexer();
+
+			mark.done(CONSTANT_EXPRESSION);
+		}
+		else
+		{
+			mark.drop();
+			mark = null;
+		}
+		return mark;
+	}
+
 	public static PsiBuilder.Marker parseQualifiedReference(@NotNull PsiBuilder builder, @Nullable PsiBuilder.Marker prevMarker)
 	{
 		if(prevMarker != null)

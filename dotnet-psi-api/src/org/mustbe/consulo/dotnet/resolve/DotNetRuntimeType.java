@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.PsiNameIdentifierOwner;
+package org.mustbe.consulo.dotnet.resolve;
 
 /**
  * @author VISTALL
- * @since 04.12.13.
+ * @since 16.12.13.
  */
-public interface DotNetVariable extends PsiNameIdentifierOwner, DotNetNamedElement, DotNetModifierListOwner
+public interface DotNetRuntimeType
 {
-	@NotNull
-	DotNetType getType();
+	DotNetRuntimeType ERROR_TYPE = new DotNetRuntimeType()
+	{
 
-	@Nullable
-	DotNetExpression getInitializer();
+	};
 }

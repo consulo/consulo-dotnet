@@ -20,6 +20,6 @@ package org.mustbe.consulo.dotnet.psi;
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetReferenceExpression extends DotNetElement
+public interface DotNetReferenceExpression extends DotNetExpression
 {
 }

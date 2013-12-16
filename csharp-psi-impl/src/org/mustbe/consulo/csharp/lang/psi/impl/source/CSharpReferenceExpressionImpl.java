@@ -22,6 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
@@ -153,5 +154,11 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	public boolean isSoft()
 	{
 		return false;
+	}
+
+	@Override
+	public DotNetRuntimeType resolveType()
+	{
+		return DotNetRuntimeType.ERROR_TYPE;
 	}
 }

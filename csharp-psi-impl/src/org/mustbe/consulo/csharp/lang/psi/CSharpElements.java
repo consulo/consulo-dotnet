@@ -28,7 +28,6 @@ import com.intellij.psi.tree.IElementTypeAsPsiFactory;
 public interface CSharpElements
 {
 	IElementType NAMESPACE_DECLARATION = CSharpStubElements.NAMESPACE_DECLARATION;
-	/*new IElementTypeAsPsiFactory("NAMESPACE_DECLARATION", CSharpLanguage.INSTANCE, CSharpNamespaceDeclarationImpl.class);  */
 
 	IElementType USING_LIST = new IElementTypeAsPsiFactory("USING_LIST", CSharpLanguage.INSTANCE, CSharpUsingListImpl.class);
 
@@ -44,13 +43,14 @@ public interface CSharpElements
 	IElementType PARAMETER = new IElementTypeAsPsiFactory("PARAMETER", CSharpLanguage.INSTANCE, CSharpParameterImpl.class);
 
 	IElementType TYPE_DECLARATION = CSharpStubElements.TYPE_DECLARATION;
-	/*new IElementTypeAsPsiFactory("TYPE_DECLARATION", CSharpLanguage.INSTANCE, CSharpTypeDeclarationImpl.class); */
 
 	IElementType EVENT_DECLARATION = new IElementTypeAsPsiFactory("EVENT_DECLARATION", CSharpLanguage.INSTANCE, CSharpEventDeclarationImpl.class);
 
 	IElementType EVENT_ACCESSOR = new IElementTypeAsPsiFactory("EVENT_ACCESSOR", CSharpLanguage.INSTANCE, CSharpEventAccessorImpl.class);
 
 	IElementType FIELD_DECLARATION = new IElementTypeAsPsiFactory("FIELD_DECLARATION", CSharpLanguage.INSTANCE, CSharpFieldDeclarationImpl.class);
+
+	IElementType LOCAL_VARIABLE = new IElementTypeAsPsiFactory("LOCAL_VARIABLE", CSharpLanguage.INSTANCE, CSharpLocalVariableImpl.class);
 
 	IElementType PROPERTY_DECLARATION = new IElementTypeAsPsiFactory("PROPERTY_DECLARATION", CSharpLanguage.INSTANCE,
 			CSharpPropertyDeclarationImpl.class);
@@ -86,6 +86,9 @@ public interface CSharpElements
 	IElementType MODIFIER_LIST = new IElementTypeAsPsiFactory("MODIFIER_LIST", CSharpLanguage.INSTANCE, CSharpModifierListImpl.class);
 
 	IElementType EXTENDS_LIST = new IElementTypeAsPsiFactory("EXTENDS_LIST", CSharpLanguage.INSTANCE, CSharpTypeListImpl.class);
+
+	IElementType CONSTANT_EXPRESSION = new IElementTypeAsPsiFactory("CONSTANT_EXPRESSION", CSharpLanguage.INSTANCE,
+			CSharpConstantExpressionImpl.class);
 
 	IElementType REFERENCE_EXPRESSION = new IElementTypeAsPsiFactory("REFERENCE_EXPRESSION", CSharpLanguage.INSTANCE, CSharpReferenceExpressionImpl.class);
 }

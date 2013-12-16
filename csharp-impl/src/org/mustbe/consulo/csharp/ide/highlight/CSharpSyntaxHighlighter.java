@@ -43,6 +43,10 @@ public class CSharpSyntaxHighlighter extends SyntaxHighlighterBase
 		safeMap(ourKeys, CSharpTokens.BLOCK_COMMENT, CSharpHighlightKey.BLOCK_COMMENT);
 		safeMap(ourKeys, CSharpTokenSets.STRINGS, CSharpHighlightKey.STRING);
 		safeMap(ourKeys, CSharpTokenSets.KEYWORDS, CSharpHighlightKey.KEYWORD);
+		safeMap(ourKeys, CSharpTokens.INTEGER_LITERAL, CSharpHighlightKey.NUMBER);
+		safeMap(ourKeys, CSharpTokens.LONG_LITERAL, CSharpHighlightKey.NUMBER);
+		safeMap(ourKeys, CSharpTokens.FLOAT_LITERAL, CSharpHighlightKey.NUMBER);
+		safeMap(ourKeys, CSharpTokens.DOUBLE_LITERAL, CSharpHighlightKey.NUMBER);
 	}
 
 	@NotNull

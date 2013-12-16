@@ -42,6 +42,8 @@ public interface CSharpSoftTokens extends CSharpTokens
 
 	IElementType ASYNC_KEYWORD = new IElementType("ASYNC_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType VAR_KEYWORD = new IElementType("VAR_KEYWORD", CSharpLanguage.INSTANCE);
+
 	TokenSet ALL = TokenSet.create(PARTIAL_KEYWORD, WHERE_KEYWORD, GLOBAL_KEYWORD, ADD_KEYWORD, REMOVE_KEYWORD, SET_KEYWORD, GET_KEYWORD,
-			ASYNC_KEYWORD);
+			ASYNC_KEYWORD, VAR_KEYWORD);
 }

@@ -17,21 +17,18 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 04.12.13.
+ * @since 16.12.13.
  */
-public class CSharpFieldDeclarationImpl extends CSharpMemberImpl implements DotNetFieldDeclaration
+public class CSharpConstantExpressionImpl extends CSharpElementImpl implements DotNetExpression
 {
-	public CSharpFieldDeclarationImpl(@NotNull ASTNode node)
+	public CSharpConstantExpressionImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -39,26 +36,12 @@ public class CSharpFieldDeclarationImpl extends CSharpMemberImpl implements DotN
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitFieldDeclaration(this);
-	}
-
-	@NotNull
-	@Override
-	public DotNetType getType()
-	{
-		return findNotNullChildByClass(DotNetType.class);
-	}
-
-	@Nullable
-	@Override
-	public DotNetExpression getInitializer()
-	{
-		return findChildByClass(DotNetExpression.class);
+		visitor.visitConstantExpression(this);
 	}
 
 	@Override
-	public boolean isConstant()
+	public DotNetRuntimeType resolveType()
 	{
-		return findChildByType(CSharpTokens.CONST_KEYWORD) != null;
+		return DotNetRuntimeType.ERROR_TYPE;
 	}
 }

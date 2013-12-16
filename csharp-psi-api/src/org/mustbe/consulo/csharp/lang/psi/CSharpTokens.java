@@ -42,7 +42,6 @@ public interface CSharpTokens extends TokenType
 
 	IElementType DYNAMIC_KEYWORD = new IElementType("DYNAMIC_KEYWORD", CSharpLanguage.INSTANCE);
 
-	IElementType VAR_KEYWORD = new IElementType("VAR_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType DECIMAL_KEYWORD = new IElementType("DECIMAL_KEYWORD", CSharpLanguage.INSTANCE);
 
@@ -163,6 +162,10 @@ public interface CSharpTokens extends TokenType
 	IElementType DOUBLE_LITERAL = new IElementType("DOUBLE_LITERAL", CSharpLanguage.INSTANCE);
 
 	IElementType CHARACTER_LITERAL = new IElementType("CHARACTER_LITERAL", CSharpLanguage.INSTANCE);
+
+	IElementType BOOL_LITERAL = new IElementType("BOOL_LITERAL", CSharpLanguage.INSTANCE);
+
+	IElementType NULL_LITERAL = new IElementType("NULL_LITERAL", CSharpLanguage.INSTANCE);
 
 	IElementType STRING_LITERAL = new IElementType("STRING_LITERAL", CSharpLanguage.INSTANCE);
 

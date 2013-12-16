@@ -93,8 +93,6 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 	"dynamic"                 { return CSharpTokens.DYNAMIC_KEYWORD; }
 
-	"var"                     { return CSharpTokens.VAR_KEYWORD; }
-
 // modifier tokens
 	"static"                  { return CSharpTokens.STATIC_KEYWORD; }
 
@@ -182,6 +180,12 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 	"."                       { return CSharpTokens.DOT; }
 
 	","                       { return CSharpTokens.COMMA; }
+
+	"false"                   { return CSharpTokens.BOOL_LITERAL; }
+
+	"true"                    { return CSharpTokens.BOOL_LITERAL; }
+
+	"null"                    { return CSharpTokens.NULL_LITERAL; }
 
 	{SINGLE_LINE_DOC_COMMENT} { return CSharpTokens.LINE_DOC_COMMENT; }
 

@@ -17,9 +17,11 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetEventAccessor;
 import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import com.intellij.lang.ASTNode;
@@ -53,6 +55,13 @@ public class CSharpEventDeclarationImpl extends CSharpMemberImpl implements DotN
 	public DotNetType getType()
 	{
 		return findNotNullChildByClass(DotNetType.class);
+	}
+
+	@Nullable
+	@Override
+	public DotNetExpression getInitializer()
+	{
+		return null;
 	}
 
 	@NotNull

@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.parser.decl;
 
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
+import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import com.intellij.lang.PsiBuilder;
 
 /**
@@ -35,14 +36,30 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		{
 			if(expect(builder, IDENTIFIER, "Name expected"))
 			{
-				if(!expect(builder, SEMICOLON, null))
-				{
-					builder.error("Expression expected");
-				}
+				parseInitializer(builder);
 			}
 		}
 
 		marker.done(FIELD_DECLARATION);
+	}
+
+	private static void parseInitializer(CSharpBuilderWrapper builder)
+	{
+		if(!expect(builder, SEMICOLON, null))
+		{
+			if(expect(builder, EQ, "'=' expected"))
+			{
+				PsiBuilder.Marker parse = ExpressionParsing.parse(builder);
+				if(parse == null)
+				{
+					builder.error("Expression expected");
+				}
+				else
+				{
+					expect(builder, SEMICOLON, "';' expected");
+				}
+			}
+		}
 	}
 
 	public static void parseFieldOrPropertyAfterName(CSharpBuilderWrapper builderWrapper, PsiBuilder.Marker marker)
@@ -55,15 +72,8 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		}
 		else
 		{
-			if(builderWrapper.getTokenType() == SEMICOLON)
-			{
-				builderWrapper.advanceLexer();
-			}
-			else
-			{
-				builderWrapper.error("Unknown how parse " + builderWrapper.getTokenType());
-				builderWrapper.advanceLexer();
-			}
+			parseInitializer(builderWrapper);
+
 			marker.done(FIELD_DECLARATION);
 		}
 	}
