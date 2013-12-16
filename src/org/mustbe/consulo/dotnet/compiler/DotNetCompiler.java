@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
@@ -38,7 +39,6 @@ import com.intellij.openapi.compiler.FileProcessingCompiler;
 import com.intellij.openapi.compiler.SourceProcessingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
@@ -53,6 +53,7 @@ import lombok.val;
  * @author VISTALL
  * @since 26.11.13.
  */
+@Logger
 public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingCompiler
 {
 	@NotNull
@@ -158,12 +159,19 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 				ProcessOutput processOutput = processHandler.runProcess();
 				for(String s : processOutput.getStdoutLines())
 				{
-					addMessage(compileContext, module, s);
+					try
+					{
+						addMessage(compileContext, module, s);
+					}
+					catch(Exception e)
+					{
+						compileContext.addMessage(CompilerMessageCategory.ERROR, s, null, -1, -1);
+					}
 				}
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				LOGGER.error(e);
 			}
 		}
 
@@ -177,7 +185,7 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 		String[] split = line.split(": ");
 		if(split.length != 3)
 		{
-			return;
+			throw new IllegalArgumentException(line);
 		}
 		String fileAndPosition = split[0].trim();
 		String idAndType = split[1].trim();
