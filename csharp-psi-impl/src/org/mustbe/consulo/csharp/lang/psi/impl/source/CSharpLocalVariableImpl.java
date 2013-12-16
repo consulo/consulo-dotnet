@@ -20,11 +20,11 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -34,7 +34,7 @@ import com.intellij.util.IncorrectOperationException;
  * @author VISTALL
  * @since 16.12.13.
  */
-public class CSharpLocalVariableImpl extends CSharpElementImpl implements DotNetVariable
+public class CSharpLocalVariableImpl extends CSharpElementImpl implements CSharpLocalVariable
 {
 	public CSharpLocalVariableImpl(@NotNull ASTNode node)
 	{
@@ -92,5 +92,11 @@ public class CSharpLocalVariableImpl extends CSharpElementImpl implements DotNet
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
+	}
+
+	@Override
+	public boolean isConstant()
+	{
+		return findChildByType(CSharpTokens.CONST_KEYWORD) != null;
 	}
 }

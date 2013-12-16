@@ -90,5 +90,17 @@ public interface CSharpElements
 	IElementType CONSTANT_EXPRESSION = new IElementTypeAsPsiFactory("CONSTANT_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpConstantExpressionImpl.class);
 
-	IElementType REFERENCE_EXPRESSION = new IElementTypeAsPsiFactory("REFERENCE_EXPRESSION", CSharpLanguage.INSTANCE, CSharpReferenceExpressionImpl.class);
+	IElementType REFERENCE_EXPRESSION = new IElementTypeAsPsiFactory("REFERENCE_EXPRESSION", CSharpLanguage.INSTANCE,
+			CSharpReferenceExpressionImpl.class);
+
+	IElementType METHOD_CALL_EXPRESSION = new IElementTypeAsPsiFactory("METHOD_CALL_EXPRESSION", CSharpLanguage.INSTANCE,
+			CSharpMethodCallExpressionImpl.class);
+
+	IElementType METHOD_CALL_PARAMETER_LIST = new IElementTypeAsPsiFactory("METHOD_CALL_PARAMETER_LIST", CSharpLanguage.INSTANCE,
+			CSharpMethodCallParameterListImpl.class);
+
+	IElementType LOCAL_VARIABLE_DECLARATION_STATEMENT = new IElementTypeAsPsiFactory("LOCAL_VARIABLE_DECLARATION_STATEMENT",
+			CSharpLanguage.INSTANCE, CSharpLocalVariableDeclarationStatementImpl.class);
+
+	IElementType EXPRESSION_STATEMENT = new IElementTypeAsPsiFactory("EXPRESSION_STATEMENT", CSharpLanguage.INSTANCE, CSharpExpressionStatementImpl.class);
 }

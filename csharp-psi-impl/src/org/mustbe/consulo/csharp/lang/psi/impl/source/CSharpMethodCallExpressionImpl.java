@@ -17,20 +17,18 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpCodeBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.dotnet.psi.DotNetStatement;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 16.12.13.
  */
-public class CSharpCodeBlockImpl extends CSharpElementImpl implements CSharpCodeBlock
+public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements DotNetExpression
 {
-	public CSharpCodeBlockImpl(@NotNull ASTNode node)
+	public CSharpMethodCallExpressionImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -38,25 +36,12 @@ public class CSharpCodeBlockImpl extends CSharpElementImpl implements CSharpCode
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitCodeBlock(this);
+		visitor.visitMethodCallExpression(this);
 	}
 
 	@Override
-	public PsiElement getLeftBrace()
+	public DotNetRuntimeType resolveType()
 	{
-		return findChildByType(CSharpTokens.LBRACE);
-	}
-
-	@Override
-	public PsiElement getRightBrace()
-	{
-		return findChildByType(CSharpTokens.RBRACE);
-	}
-
-	@NotNull
-	@Override
-	public DotNetStatement[] getStatements()
-	{
-		return findChildrenByClass(DotNetStatement.class);
+		return DotNetRuntimeType.ERROR_TYPE;
 	}
 }

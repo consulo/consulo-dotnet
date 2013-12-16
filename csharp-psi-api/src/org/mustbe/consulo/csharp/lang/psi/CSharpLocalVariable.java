@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 16.12.13.
  */
-public interface DotNetCodeBlock extends DotNetElement
+public interface CSharpLocalVariable extends DotNetVariable
 {
-	@NotNull
-	DotNetStatement[] getStatements();
+	boolean isConstant();
 }

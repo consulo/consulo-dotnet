@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -37,9 +38,67 @@ public class ExpressionParsing extends SharingParsingHelpers
 	public static PsiBuilder.Marker parse(CSharpBuilderWrapper wrapper)
 	{
 		PsiBuilder.Marker marker = parsePrimary(wrapper);
+		if(marker == null)
+		{
+			return null;
+		}
+		System.out.println(((LighterASTNode)marker).getTokenType());
 
+		IElementType tokenType = wrapper.getTokenType();
+		if(tokenType == LPAR)
+		{
+			marker = marker.precede();
+
+			parseParameterList(wrapper);
+
+			marker.done(METHOD_CALL_EXPRESSION);
+		}
 
 		return marker;
+	}
+
+	private static void parseParameterList(CSharpBuilderWrapper builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		if(builder.getTokenType() == RPAR)
+		{
+			mark.done(METHOD_CALL_PARAMETER_LIST);
+			return;
+		}
+
+		boolean empty = true;
+		while(!builder.eof())
+		{
+			PsiBuilder.Marker marker = parse(builder);
+			if(marker == null)
+			{
+				if(!empty)
+				{
+					builder.error("Expression expected");
+				}
+				break;
+			}
+
+			empty = false;
+
+			if(builder.getTokenType() == COMMA)
+			{
+				builder.advanceLexer();
+			}
+			else if(builder.getTokenType() == RPAR)
+			{
+				break;
+			}
+			else
+			{
+				break;
+			}
+		}
+		expect(builder, RPAR, "')' expected");
+		mark.done(METHOD_CALL_PARAMETER_LIST);
 	}
 
 	private static PsiBuilder.Marker parsePrimary(CSharpBuilderWrapper wrapper)
@@ -51,6 +110,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 			wrapper.advanceLexer();
 
 			mark.done(CONSTANT_EXPRESSION);
+		}
+		else if(wrapper.getTokenType() == IDENTIFIER)
+		{
+			mark.drop();
+			mark = parseQualifiedReference(wrapper, null);
 		}
 		else
 		{
@@ -74,7 +138,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 			if(builder.getTokenType() == DOT)
 			{
-				parseQualifiedReference(builder, marker.precede());
+				marker = parseQualifiedReference(builder, marker.precede());
 			}
 		}
 		else

@@ -49,7 +49,28 @@ public class StatementParsing extends SharingParsingHelpers
 		PsiBuilder.Marker marker = parseVariableDecl(wrapper, tokenType == CONST_KEYWORD);
 		if(marker == null)
 		{
-			return null;
+			marker = wrapper.mark();
+
+			if(ExpressionParsing.parse(wrapper) != null)
+			{
+				expect(wrapper, SEMICOLON, "';' expected");
+
+				marker.done(EXPRESSION_STATEMENT);
+			}
+			else
+			{
+				wrapper.error("Unknown how parse: " + wrapper.getTokenType());
+				wrapper.advanceLexer();
+
+				marker.drop();
+			}
+			return marker;
+		}
+		else
+		{
+			marker = marker.precede();
+
+			marker.done(LOCAL_VARIABLE_DECLARATION_STATEMENT);
 		}
 
 		return marker;
@@ -57,28 +78,30 @@ public class StatementParsing extends SharingParsingHelpers
 
 	private static PsiBuilder.Marker parseVariableDecl(CSharpBuilderWrapper wrapper, boolean constToken)
 	{
+		PsiBuilder.Marker mark = wrapper.mark();
+
 		if(constToken)
 		{
 			wrapper.advanceLexer();
 		}
 
-		PsiBuilder.Marker marker = parseType(wrapper);
-		if(marker == null)
+		PsiBuilder.Marker typeMarker = parseType(wrapper);
+		if(typeMarker == null)
 		{
+			if(constToken)
+			{
+				wrapper.error("Type expected");
+			}
+			mark.rollbackTo();
+
 			return null;
 		}
 
 		if(wrapper.getTokenType() == IDENTIFIER)
 		{
-			marker = marker.precede();
-
 			wrapper.advanceLexer();
 
-			if(expect(wrapper, SEMICOLON, null))
-			{
-				marker.done(LOCAL_VARIABLE);
-			}
-			else
+			if(!expect(wrapper, SEMICOLON, null))
 			{
 				if(expect(wrapper, EQ, "'=' expected"))
 				{
@@ -92,12 +115,12 @@ public class StatementParsing extends SharingParsingHelpers
 						expect(wrapper, SEMICOLON, "';' expected");
 					}
 				}
-				marker.done(LOCAL_VARIABLE);
 			}
-			return marker;
+			mark.done(LOCAL_VARIABLE);
+			return mark;
 		}
 
-		marker.drop();
+		mark.rollbackTo();
 		return null;
 	}
 }

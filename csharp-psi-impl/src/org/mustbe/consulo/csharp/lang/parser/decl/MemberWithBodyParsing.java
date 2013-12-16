@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import org.mustbe.consulo.csharp.lang.parser.stmt.StatementParsing;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -84,30 +85,19 @@ public class MemberWithBodyParsing extends SharingParsingHelpers
 			PsiBuilder.Marker mark = builder.mark();
 			builder.advanceLexer();
 
-			//TODO [VISTALL] temp code
-
-			int brace = 0;
-
 			while(!builder.eof())
 			{
-				IElementType tokenType = builder.getTokenType();
-				if(tokenType == LBRACE)
+				if(builder.getTokenType() == RBRACE)
 				{
-					brace ++;
-					builder.advanceLexer();
-				}
-				else if(tokenType == RBRACE)
-				{
-					brace --;
-					if(brace < 0)
-					{
-						break;
-					}
-					builder.advanceLexer();
+					break;
 				}
 				else
 				{
-					builder.advanceLexer();
+					PsiBuilder.Marker marker = StatementParsing.parse(builder);
+					if(marker == null)
+					{
+						break;
+					}
 				}
 			}
 

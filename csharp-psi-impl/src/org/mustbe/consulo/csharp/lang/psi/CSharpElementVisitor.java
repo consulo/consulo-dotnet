@@ -174,4 +174,24 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(expression);
 	}
+
+	public void visitLocalVariableDeclarationStatement(CSharpLocalVariableDeclarationStatement statement)
+	{
+		visitElement(statement);
+	}
+
+	public void visitExpressionStatement(CSharpExpressionStatementImpl statement)
+	{
+		visitElement(statement);
+	}
+
+	public void visitMethodCallExpression(CSharpMethodCallExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitMethodCallParameterList(CSharpMethodCallParameterListImpl list)
+	{
+		visitElement(list);
+	}
 }

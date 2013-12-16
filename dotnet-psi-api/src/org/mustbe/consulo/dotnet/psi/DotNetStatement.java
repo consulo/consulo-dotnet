@@ -16,14 +16,10 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 16.12.13.
  */
-public interface DotNetCodeBlock extends DotNetElement
+public interface DotNetStatement extends DotNetElement
 {
-	@NotNull
-	DotNetStatement[] getStatements();
 }
