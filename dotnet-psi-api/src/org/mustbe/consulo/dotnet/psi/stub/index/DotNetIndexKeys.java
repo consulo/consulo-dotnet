@@ -26,7 +26,6 @@ import com.intellij.psi.stubs.StubIndexKey;
  */
 public interface DotNetIndexKeys
 {
-	StubIndexKey<String, DotNetNamespaceDeclaration> NAMESPACE_INDEX = StubIndexKey.createIndexKey(".net.namespace.index");
 	StubIndexKey<String, DotNetNamespaceDeclaration> NAMESPACE_BY_QNAME_INDEX = StubIndexKey.createIndexKey(".net.namespace.by.qname.index");
 	StubIndexKey<String, DotNetTypeDeclaration> TYPE_INDEX = StubIndexKey.createIndexKey(".net.type.index");
 	StubIndexKey<String, DotNetTypeDeclaration> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey(".net.type.by.qname.index");

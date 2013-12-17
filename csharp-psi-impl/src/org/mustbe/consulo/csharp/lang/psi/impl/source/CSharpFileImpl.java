@@ -58,6 +58,7 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{
+
 		return super.processDeclarations(processor, state, lastParent, place);
 	}
 

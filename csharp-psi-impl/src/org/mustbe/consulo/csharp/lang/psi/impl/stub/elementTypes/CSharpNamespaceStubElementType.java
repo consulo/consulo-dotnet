@@ -79,12 +79,6 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 	@Override
 	public void indexStub(@NotNull CSharpNamespaceStub cSharpNamespaceStub, @NotNull IndexSink indexSink)
 	{
-		String name = cSharpNamespaceStub.getName();
-		if(!StringUtil.isEmpty(name))
-		{
-			indexSink.occurrence(DotNetIndexKeys.NAMESPACE_INDEX, name);
-		}
-
 		String qName = cSharpNamespaceStub.getQName();
 		if(!StringUtil.isEmpty(qName))
 		{
