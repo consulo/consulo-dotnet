@@ -20,20 +20,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.CollectScopeProcessor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.TypeDefResolveScopeProcessor;
 import org.mustbe.consulo.dotnet.packageSupport.DotNetPackageDescriptor;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
-import org.mustbe.consulo.packageSupport.*;
 import org.mustbe.consulo.packageSupport.Package;
+import org.mustbe.consulo.packageSupport.PackageManager;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
+import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiQualifiedReferenceElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.ResolveResult;
+import com.intellij.psi.scope.util.PsiScopesUtilCore;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import lombok.val;
@@ -42,13 +50,16 @@ import lombok.val;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements DotNetReferenceExpression, PsiQualifiedReferenceElement
+public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements DotNetReferenceExpression, PsiQualifiedReferenceElement,
+		PsiPolyVariantReference
 {
 	private enum ResolveToKind
 	{
 		TYPE_PARAMETER_FROM_PARENT,
 		NAMESPACE,
 		NAMESPACE_WITH_CREATE_OPTION,
+		METHOD,
+		CLASS,
 		ANY_MEMBER
 	}
 
@@ -110,9 +121,9 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return new TextRange(startOffset, referenceElement.getTextLength() + startOffset);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
-	public PsiElement resolve()
+	public ResolveResult[] multiResolve(boolean b)
 	{
 		ResolveToKind kind = kind();
 		PsiElement parent = getParent();
@@ -129,7 +140,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					if(Comparing.equal(o.getName(), getReferenceName()))
 					{
-						return o;
+						return new ResolveResult[]{new PsiElementResolveResult(o)};
 					}
 				}
 				break;
@@ -137,11 +148,45 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case NAMESPACE_WITH_CREATE_OPTION:
 				String qName = stripSpaces(getText());
 				Package aPackage = PackageManager.getInstance(getProject()).findPackage(qName, getResolveScope(), DotNetPackageDescriptor.INSTANCE);
-				return aPackage;
+				return new ResolveResult[]{new PsiElementResolveResult(aPackage)};
+			case CLASS:
+				PsiElement qualifier = getQualifier();
+				if(qualifier instanceof CSharpReferenceExpressionImpl)
+				{
+					PsiElement resolve = ((CSharpReferenceExpressionImpl) qualifier).resolve();
+					if(resolve instanceof Package)
+					{
+						TypeDefResolveScopeProcessor p = new TypeDefResolveScopeProcessor(getReferenceName());
+						p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
+
+						PsiScopesUtilCore.treeWalkUp(p, resolve, null);
+
+						return p.toResolveResults();
+					}
+					else
+					{
+						return ResolveResult.EMPTY_ARRAY;
+					}
+				}
+
+				assert qualifier == null;
+
+				break;
+			case METHOD:
+				break;
 			case ANY_MEMBER:
+
 				break;
 		}
-		return null;
+		return ResolveResult.EMPTY_ARRAY;
+	}
+
+	@Nullable
+	@Override
+	public PsiElement resolve()
+	{
+		ResolveResult[] resolveResults = multiResolve(false);
+		return resolveResults.length == 0 ? null : resolveResults[0].getElement();
 	}
 
 	private String stripSpaces(String text)
@@ -175,9 +220,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
 		}
+		else if(parent instanceof DotNetReferenceType)
+		{
+			return ResolveToKind.CLASS;
+		}
 		else if(parent instanceof CSharpUsingStatementImpl)
 		{
-			return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+			return ResolveToKind.NAMESPACE;
 		}
 		else if(parent instanceof CSharpReferenceExpressionImpl)
 		{
@@ -188,8 +237,17 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 			if(PsiTreeUtil.getParentOfType(this, CSharpUsingStatementImpl.class) != null)
 			{
-				return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+				return ResolveToKind.NAMESPACE;
 			}
+
+			if(PsiTreeUtil.getParentOfType(this, DotNetReferenceType.class) != null)
+			{
+				return ResolveToKind.NAMESPACE;
+			}
+		}
+		else if(parent instanceof CSharpMethodCallExpressionImpl)
+		{
+			return ResolveToKind.METHOD;
 		}
 
 		return ResolveToKind.ANY_MEMBER;
@@ -224,7 +282,29 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public Object[] getVariants()
 	{
-		return new Object[0];
+		PsiElement qualifier = getQualifier();
+		String qualifiedName = null;
+
+		PsiElement resolve = null;
+		if(qualifier instanceof CSharpReferenceExpressionImpl)
+		{
+			resolve = ((CSharpReferenceExpressionImpl) qualifier).resolve();
+		}
+
+		if(resolve instanceof DotNetTypeDeclaration)
+		{
+			qualifiedName = ((DotNetTypeDeclaration) resolve).getQName();
+		}
+		else if(resolve instanceof Package)
+		{
+			qualifiedName = ((Package) resolve).getName();
+		}
+		CollectScopeProcessor p = new CollectScopeProcessor(qualifiedName);
+		p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
+
+		PsiScopesUtilCore.treeWalkUp(p, resolve == null ? this : resolve, null);
+
+		return p.getElements().toArray();
 	}
 
 	@Override

@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.packageSupport;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.project.Project;
@@ -36,6 +38,9 @@ public interface PackageDescriptor
 
 	@NotNull
 	String fromQName(@NotNull QualifiedName name);
+
+	@NotNull
+	List<PsiElement> getChildren(@NotNull QualifiedName qualifiedName, @NotNull GlobalSearchScope globalSearchScope, @NotNull Project project);
 
 	@NotNull
 	QualifiedName toQName(@NotNull String name);

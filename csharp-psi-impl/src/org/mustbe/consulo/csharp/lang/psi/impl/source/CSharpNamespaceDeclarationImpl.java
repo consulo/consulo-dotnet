@@ -24,12 +24,18 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
+import org.mustbe.consulo.dotnet.packageSupport.DotNetPackageDescriptor;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
+import org.mustbe.consulo.packageSupport.*;
+import org.mustbe.consulo.packageSupport.Package;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
@@ -128,5 +134,23 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 			return ((DotNetNamespaceDeclaration) parent).getQName() + "." + getName();
 		}
 		return getName();
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		GlobalSearchScope hint = processor.getHint(Package.SEARCH_SCOPE_KEY);
+		hint = hint == null ? GlobalSearchScope.allScope(getProject()) : hint;
+		String qName = getQName();
+		if(qName == null)
+		{
+			return true;
+		}
+
+		Package aPackage = PackageManager.getInstance(getProject()).findPackage(qName, hint, DotNetPackageDescriptor.INSTANCE);
+
+		assert aPackage != null;
+		return aPackage.processDeclarations(processor, state, lastParent, place);
 	}
 }

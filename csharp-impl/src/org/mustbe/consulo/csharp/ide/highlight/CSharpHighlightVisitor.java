@@ -59,7 +59,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	@Override
 	public void visit(@NotNull PsiElement element)
 	{
-		element.accept(this);
+		element.acceptChildren(this);
 	}
 
 	@Override
@@ -159,6 +159,15 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			}
 			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip
 					("'" + referenceElement.getText() + "' is not resolved").range(referenceElement).create());
+		}
+		else
+		{
+			PsiElement referenceElement = expression.getReferenceElement();
+			if(referenceElement == null)
+			{
+				return;
+			}
+			highlightNamed(resolve, referenceElement);
 		}
 	}
 

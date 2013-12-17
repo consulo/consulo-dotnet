@@ -16,13 +16,19 @@
 
 package org.mustbe.consulo.dotnet.packageSupport;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import org.mustbe.consulo.dotnet.psi.stub.index.NamespaceByQNameIndex;
+import org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.packageSupport.PackageDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
@@ -31,6 +37,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.Processor;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IdFilter;
 import lombok.val;
 
@@ -104,5 +111,69 @@ public class DotNetPackageDescriptor implements PackageDescriptor
 			return QualifiedName.fromComponents();
 		}
 		return QualifiedName.fromDottedString(name);
+	}
+
+	@Override
+	@NotNull
+	public List<PsiElement> getChildren(@NotNull final QualifiedName qualifiedName, @NotNull GlobalSearchScope globalSearchScope,
+			@NotNull Project project)
+	{
+		val tnames = new HashSet<String>();
+		val nnames = new HashSet<String>();
+		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.TYPE_BY_QNAME_INDEX, new Processor<String>()
+		{
+			@Override
+			public boolean process(String s)
+			{
+				QualifiedName q = toQName(s);
+				if(qualifiedName.getComponentCount() == 0)
+				{
+					if( q.getComponentCount() == 1)
+					{
+						tnames.add(s);
+					}
+				}
+				else if(q.matchesPrefix(qualifiedName) && (q.getComponentCount() - 1) == qualifiedName.getComponentCount())
+				{
+					tnames.add(s);
+				}
+				return true;
+			}
+		}, globalSearchScope, IdFilter.getProjectIdFilter(project, false));
+
+		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, new Processor<String>()
+		{
+			@Override
+			public boolean process(String s)
+			{
+				QualifiedName q = toQName(s);
+				if(qualifiedName.getComponentCount() == 0)
+				{
+					if( q.getComponentCount() == 1)
+					{
+						nnames.add(s);
+					}
+				}
+				else if(q.matchesPrefix(qualifiedName) && (q.getComponentCount() - 1) == qualifiedName.getComponentCount())
+				{
+					nnames.add(s);
+				}
+				return true;
+			}
+		}, globalSearchScope, IdFilter.getProjectIdFilter(project, false));
+
+		val list = new LinkedHashSet<PsiElement>(tnames.size() + nnames.size());
+		for(String name : tnames)
+		{
+			Collection<DotNetTypeDeclaration> elements = TypeByQNameIndex.getInstance().get(name, project, GlobalSearchScope.allScope(project));
+			ContainerUtil.addAllNotNull(list, elements);
+		}
+	/*	for(String name : nnames)
+		{
+			Collection<DotNetNamespaceDeclaration> elements = NamespaceByQNameIndex.getInstance().get(name, project,
+					GlobalSearchScope.allScope(project));
+			ContainerUtil.addAllNotNull(list, elements);
+		}  */
+		return new ArrayList<PsiElement>(list);
 	}
 }
