@@ -194,4 +194,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(list);
 	}
+
+	public void visitTypeOfExpression(CSharpTypeOfExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
 }

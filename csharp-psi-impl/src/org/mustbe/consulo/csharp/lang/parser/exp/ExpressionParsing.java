@@ -109,6 +109,10 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 			mark.done(CONSTANT_EXPRESSION);
 		}
+		else if(tokenType == TYPEOF_KEYWORD)
+		{
+			parseTypeOfExpression(wrapper, mark);
+		}
 		else if(wrapper.getTokenType() == IDENTIFIER)
 		{
 			mark.drop();
@@ -120,6 +124,21 @@ public class ExpressionParsing extends SharingParsingHelpers
 			mark = null;
 		}
 		return mark;
+	}
+
+	private static void parseTypeOfExpression(CSharpBuilderWrapper builder, PsiBuilder.Marker mark)
+	{
+		builder.advanceLexer();
+
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			if(parseType(builder) == null)
+			{
+				builder.error("Type expected");
+			}
+			expect(builder, RPAR, "')' expected");
+		}
+		mark.done(TYPE_OF_EXPRESSION);
 	}
 
 	public static PsiBuilder.Marker parseQualifiedReference(@NotNull PsiBuilder builder, @Nullable PsiBuilder.Marker prevMarker)
