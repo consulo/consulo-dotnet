@@ -215,18 +215,43 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 			String idAndType = split[0].trim();
 			String message = split[1].trim();
 
-			String[] idAndTypeArray = idAndType.split(" ");
-			CompilerMessageCategory category = CompilerMessageCategory.INFORMATION;
-			if(idAndTypeArray[0].equals("error"))
+			//C:\Users\VISTALL\ConsuloProjects\\untitled30\\mono-test\\Program.cs(5,9): (Location of the symbol related to previous error)
+			if(message.startsWith("(")) // only with ?
 			{
-				category = CompilerMessageCategory.ERROR;
-			}
-			else if(idAndTypeArray[0].equals("warning"))
-			{
-				category = CompilerMessageCategory.WARNING;
-			}
+				String file = idAndType.substring(0, idAndType.lastIndexOf("("));
+				String position = idAndType.substring(idAndType.lastIndexOf("(") + 1, idAndType.length() - 1);
+				String[] lineAndColumn = position.split(",");
 
-			compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", null, -1, -1);
+				String fileUrl = FileUtil.toSystemIndependentName(file);
+				if(!FileUtil.isAbsolute(fileUrl))
+				{
+					fileUrl = module.getModuleDirUrl() + "/" + fileUrl;
+				}
+				else
+				{
+					fileUrl = VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, fileUrl);
+				}
+
+				message = message.substring(1, message.length());
+				message = message.substring(0, message.length() - 1);
+				compileContext.addMessage(CompilerMessageCategory.INFORMATION, message, fileUrl, Integer.parseInt(lineAndColumn[0]),
+						Integer.parseInt(lineAndColumn[1]));
+			}
+			else
+			{
+				String[] idAndTypeArray = idAndType.split(" ");
+				CompilerMessageCategory category = CompilerMessageCategory.INFORMATION;
+				if(idAndTypeArray[0].equals("error"))
+				{
+					category = CompilerMessageCategory.ERROR;
+				}
+				else if(idAndTypeArray[0].equals("warning"))
+				{
+					category = CompilerMessageCategory.WARNING;
+				}
+
+				compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", null, -1, -1);
+			}
 		}
 		else
 		{
