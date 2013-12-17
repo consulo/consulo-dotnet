@@ -148,6 +148,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case NAMESPACE_WITH_CREATE_OPTION:
 				String qName = stripSpaces(getText());
 				Package aPackage = PackageManager.getInstance(getProject()).findPackage(qName, getResolveScope(), DotNetPackageDescriptor.INSTANCE);
+				if(aPackage == null)
+				{
+					return ResolveResult.EMPTY_ARRAY;
+				}
 				return new ResolveResult[]{new PsiElementResolveResult(aPackage)};
 			case CLASS:
 				PsiElement qualifier = getQualifier();
