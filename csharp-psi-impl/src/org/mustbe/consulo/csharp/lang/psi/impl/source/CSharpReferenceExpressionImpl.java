@@ -133,7 +133,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				DotNetGenericParameterListOwner parameterListOwner = PsiTreeUtil.getParentOfType(this, DotNetGenericParameterListOwner.class);
 				if(parameterListOwner == null)
 				{
-					return null;
+					return ResolveResult.EMPTY_ARRAY;
 				}
 
 				for(val o : parameterListOwner.getGenericParameters())
