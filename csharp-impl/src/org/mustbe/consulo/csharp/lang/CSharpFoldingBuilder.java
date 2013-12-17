@@ -27,6 +27,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpCodeBlockImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingStatementImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
@@ -64,6 +65,11 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 				}
 
 				CSharpUsingStatementImpl statement = statements[0];
+				DotNetReferenceExpression namespaceReference = statement.getNamespaceReference();
+				if(namespaceReference == null)
+				{
+					return;
+				}
 
 				ASTNode usingKeyword = statement.getNode().findChildByType(CSharpTokens.USING_KEYWORD);
 

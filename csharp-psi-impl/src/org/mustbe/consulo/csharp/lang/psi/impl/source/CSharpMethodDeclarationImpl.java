@@ -27,6 +27,9 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
@@ -86,5 +89,20 @@ public class CSharpMethodDeclarationImpl extends CSharpMemberImpl implements CSh
 	{
 		DotNetGenericParameterList genericParameterList = getGenericParameterList();
 		return genericParameterList == null ? DotNetGenericParameter.EMPTY_ARRAY : genericParameterList.getParameters();
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
+		{
+			if(!processor.execute(dotNetGenericParameter, state))
+			{
+				return false;
+			}
+		}
+
+		return super.processDeclarations(processor, state, lastParent, place);
 	}
 }

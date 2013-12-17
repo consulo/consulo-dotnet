@@ -68,7 +68,7 @@ public class Package extends LightElement implements PsiNamedElement
 		List<PsiElement> children = DotNetPackageDescriptor.INSTANCE.getChildren(myQualifiedName, globalSearchScope, getProject());
 		for(PsiElement child : children)
 		{
-			if(!child.processDeclarations(processor, state, lastParent, place))
+			if(!processor.execute(child, state))
 			{
 				return false;
 			}

@@ -18,7 +18,11 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
@@ -29,6 +33,25 @@ public class CSharpUsingStatementImpl extends CSharpElementImpl
 	public CSharpUsingStatementImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public DotNetReferenceExpression getNamespaceReference()
+	{
+		return findChildByClass(DotNetReferenceExpression.class);
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		DotNetReferenceExpression namespaceReference = getNamespaceReference();
+		if(namespaceReference == null)
+		{
+			return true;
+		}
+
+		PsiElement resolve = namespaceReference.resolve();
+		return resolve != null && resolve.processDeclarations(processor, state, lastParent, place);
 	}
 
 	@Override

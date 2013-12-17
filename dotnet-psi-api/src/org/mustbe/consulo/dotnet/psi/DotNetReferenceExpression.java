@@ -16,10 +16,12 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import com.intellij.psi.PsiPolyVariantReference;
+
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetReferenceExpression extends DotNetExpression
+public interface DotNetReferenceExpression extends DotNetExpression, PsiPolyVariantReference
 {
 }

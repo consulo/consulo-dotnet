@@ -14,51 +14,53 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util;
+
+import java.util.Collections;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import com.intellij.lang.ASTNode;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.scope.util.PsiScopesUtilCore;
+import com.intellij.util.SmartList;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 17.12.13.
  */
-public class CSharpUsingListImpl extends CSharpElementImpl
+public class CSharpPsiScopesUtil extends PsiScopesUtilCore
 {
-	public CSharpUsingListImpl(@NotNull ASTNode node)
+	public static boolean processUsing(@NotNull PsiElement element, @NotNull PsiScopeProcessor processor, @NotNull ResolveState state)
 	{
-		super(node);
-	}
+		List<PsiElement> list = new SmartList<PsiElement>();
 
-	@NotNull
-	public CSharpUsingStatementImpl[] getStatements()
-	{
-		return findChildrenByClass(CSharpUsingStatementImpl.class);
-	}
-
-	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
-			place)
-	{
-		for(CSharpUsingStatementImpl cSharpUsingStatement : getStatements())
+		PsiElement it = element.getParent().getFirstChild();
+		while(it != null)
 		{
-			if(!PsiScopesUtilCore.treeWalkUp(processor, cSharpUsingStatement, cSharpUsingStatement, state))
+			if(it instanceof CSharpUsingListImpl)
+			{
+				list.add(it);
+			}
+			else if(it == element)
+			{
+				break;
+			}
+			it = it.getNextSibling();
+		}
+
+		Collections.reverse(list);
+
+		for(PsiElement psiElement : list)
+		{
+			if(!CSharpPsiScopesUtil.treeWalkUp(processor, psiElement, psiElement, state))
 			{
 				return false;
 			}
 		}
 
 		return true;
-	}
-
-	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
-	{
-		visitor.visitUsingList(this);
 	}
 }
