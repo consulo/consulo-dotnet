@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
+import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -83,13 +83,13 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 		String name = cSharpTypeStub.getName();
 		if(!StringUtil.isEmpty(name))
 		{
-			indexSink.occurrence(CSharpIndexKeys.TYPE_INDEX, name);
+			indexSink.occurrence(DotNetIndexKeys.TYPE_INDEX, name);
 		}
 
 		String qName = cSharpTypeStub.getQName();
 		if(!StringUtil.isEmpty(qName))
 		{
-			indexSink.occurrence(CSharpIndexKeys.TYPE_BY_QNAME_INDEX, qName);
+			indexSink.occurrence(DotNetIndexKeys.TYPE_BY_QNAME_INDEX, qName);
 		}
 	}
 }

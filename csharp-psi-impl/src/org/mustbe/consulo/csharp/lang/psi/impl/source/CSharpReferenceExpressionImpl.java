@@ -20,12 +20,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.dotnet.packageSupport.DotNetPackageDescriptor;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.packageSupport.*;
+import org.mustbe.consulo.packageSupport.Package;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiQualifiedReferenceElement;
 import com.intellij.psi.PsiReference;
@@ -39,6 +44,14 @@ import lombok.val;
  */
 public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements DotNetReferenceExpression, PsiQualifiedReferenceElement
 {
+	private enum ResolveToKind
+	{
+		TYPE_PARAMETER_FROM_PARENT,
+		NAMESPACE,
+		NAMESPACE_WITH_CREATE_OPTION,
+		ANY_MEMBER
+	}
+
 	public CSharpReferenceExpressionImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -66,7 +79,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public PsiElement getQualifier()
 	{
-		return null;
+		return findChildByClass(CSharpReferenceExpressionImpl.class);
 	}
 
 	@Nullable
@@ -91,12 +104,61 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			return TextRange.EMPTY_RANGE;
 		}
-		return new TextRange(0, referenceElement.getTextLength());
+
+		PsiElement qualifier = getQualifier();
+		int startOffset = qualifier != null ? qualifier.getTextLength() + 1 : 0;
+		return new TextRange(startOffset, referenceElement.getTextLength() + startOffset);
 	}
 
 	@Nullable
 	@Override
 	public PsiElement resolve()
+	{
+		ResolveToKind kind = kind();
+		PsiElement parent = getParent();
+		switch(kind)
+		{
+			case TYPE_PARAMETER_FROM_PARENT:
+				DotNetGenericParameterListOwner parameterListOwner = PsiTreeUtil.getParentOfType(this, DotNetGenericParameterListOwner.class);
+				if(parameterListOwner == null)
+				{
+					return null;
+				}
+
+				for(val o : parameterListOwner.getGenericParameters())
+				{
+					if(Comparing.equal(o.getName(), getReferenceName()))
+					{
+						return o;
+					}
+				}
+				break;
+			case NAMESPACE:
+			case NAMESPACE_WITH_CREATE_OPTION:
+				String qName = stripSpaces(getText());
+				Package aPackage = PackageManager.getInstance(getProject()).findPackage(qName, getResolveScope(), DotNetPackageDescriptor.INSTANCE);
+				return aPackage;
+			case ANY_MEMBER:
+				break;
+		}
+		return null;
+	}
+
+	private String stripSpaces(String text)
+	{
+		StringBuilder builder = new StringBuilder(text.length());
+		char[] chars = text.toCharArray();
+		for(char aChar : chars)
+		{
+			if(!StringUtil.isWhiteSpace(aChar))
+			{
+				builder.append(aChar);
+			}
+		}
+		return builder.toString();
+	}
+
+	private ResolveToKind kind()
 	{
 		PsiElement parent = getParent();
 		if(parent instanceof CSharpGenericConstraintImpl)
@@ -107,15 +169,30 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return null;
 			}
 
-			for(val o : parameterListOwner.getGenericParameters())
+			return ResolveToKind.TYPE_PARAMETER_FROM_PARENT;
+		}
+		else if(parent instanceof DotNetNamespaceDeclaration)
+		{
+			return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+		}
+		else if(parent instanceof CSharpUsingStatementImpl)
+		{
+			return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+		}
+		else if(parent instanceof CSharpReferenceExpressionImpl)
+		{
+			if(PsiTreeUtil.getParentOfType(this, DotNetNamespaceDeclaration.class) != null)
 			{
-				if(Comparing.equal(o.getName(), getReferenceName()))
-				{
-					return o;
-				}
+				return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+			}
+
+			if(PsiTreeUtil.getParentOfType(this, CSharpUsingStatementImpl.class) != null)
+			{
+				return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
 			}
 		}
-		return null;
+
+		return ResolveToKind.ANY_MEMBER;
 	}
 
 	@NotNull

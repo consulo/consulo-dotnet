@@ -16,6 +16,7 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="dotnet-asm" />
         <orderEntry type="module" module-name="dotnet-api" />
+        <orderEntry type="module" module-name="dotnet-psi-api" />
       </module>
       <module name="impl/consulo-microsoft-dotnet" dirurl="file://$PROJECT_DIR$/impl/consulo-microsoft-dotnet">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />

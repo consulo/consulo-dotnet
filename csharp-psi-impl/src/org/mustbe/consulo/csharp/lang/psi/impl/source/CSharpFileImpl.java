@@ -25,7 +25,10 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
@@ -49,6 +52,13 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 		{
 			super.accept(visitor);
 		}
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		return super.processDeclarations(processor, state, lastParent, place);
 	}
 
 	@NotNull

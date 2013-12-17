@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNamespaceDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
+import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -82,13 +82,13 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 		String name = cSharpNamespaceStub.getName();
 		if(!StringUtil.isEmpty(name))
 		{
-			indexSink.occurrence(CSharpIndexKeys.NAMESPACE_INDEX, name);
+			indexSink.occurrence(DotNetIndexKeys.NAMESPACE_INDEX, name);
 		}
 
 		String qName = cSharpNamespaceStub.getQName();
 		if(!StringUtil.isEmpty(qName))
 		{
-			indexSink.occurrence(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName);
+			indexSink.occurrence(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName);
 		}
 	}
 }

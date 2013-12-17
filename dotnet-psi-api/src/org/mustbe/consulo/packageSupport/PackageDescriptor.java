@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.stub.index;
+package org.mustbe.consulo.packageSupport;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
-import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.QualifiedName;
 
 /**
  * @author VISTALL
- * @since 15.12.13.
+ * @since 16.12.13.
  */
-public class NamespaceByQNameIndex extends StringStubIndexExtension<CSharpNamespaceDeclaration>
+public interface PackageDescriptor
 {
-	public static NamespaceByQNameIndex getInstance()
-	{
-		return StubIndexExtension.EP_NAME.findExtension(NamespaceByQNameIndex.class);
-	}
+	boolean canCreate(@NotNull String nodes, Project project, GlobalSearchScope searchScope);
+
+	@Nullable
+	PsiElement getNavigationItem(@NotNull QualifiedName qualifiedName, @NotNull Project project);
 
 	@NotNull
-	@Override
-	public StubIndexKey<String, CSharpNamespaceDeclaration> getKey()
-	{
-		return CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX;
-	}
+	String fromQName(@NotNull QualifiedName name);
+
+	@NotNull
+	QualifiedName toQName(@NotNull String name);
 }

@@ -35,6 +35,14 @@
 
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompiler"/>
 
+		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.NamespaceIndex" />
+		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.NamespaceByQNameIndex" />
+		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.TypeIndex" />
+		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex" />
+
+		<projectService serviceInterface="org.mustbe.consulo.packageSupport.PackageManager"
+						serviceImplementation="org.mustbe.consulo.packageSupport.PackageManager" />
+
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"
 						serviceImplementation="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"/>
 	</extensions>

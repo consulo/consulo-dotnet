@@ -21,7 +21,8 @@ import java.util.Collection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeIndex;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.stub.index.TypeIndex;
 import com.intellij.navigation.GotoClassContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -63,7 +64,7 @@ public class CSharpTypeNameContributor implements GotoClassContributor
 	@Override
 	public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems)
 	{
-		Collection<CSharpTypeDeclaration> cSharpTypeDeclarations = TypeIndex.getInstance().get(name, project, GlobalSearchScope.allScope(project));
+		Collection<DotNetTypeDeclaration> cSharpTypeDeclarations = TypeIndex.getInstance().get(name, project, GlobalSearchScope.allScope(project));
 		return cSharpTypeDeclarations.toArray(new NavigationItem[cSharpTypeDeclarations.size()]);
 	}
 }
