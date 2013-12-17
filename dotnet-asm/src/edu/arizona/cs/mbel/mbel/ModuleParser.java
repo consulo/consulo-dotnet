@@ -680,13 +680,17 @@ public class ModuleParser
 				{
 					exportedTypes[i].setExportedTypeRef(exportedTypes[longToIndex(token[1])]);
 				}
+				else if(token[0] == TableConstants.File)
+				{
+					exportedTypes[i].setFileReference(fileReferences[longToIndex(token[1])]);
+				}
+				else if(token[0] == TableConstants.AssemblyRef)
+				{
+					exportedTypes[i].setAssemblyRefInfo(assemblyRefs[longToIndex(token[1])]);
+				}
 				else
 				{
-					if(fileReferences == null)
-					{
-						continue;
-					}
-					exportedTypes[i].setFileReference(fileReferences[longToIndex(token[1])]);
+					throw new IllegalArgumentException();
 				}
 			}
 		}
@@ -994,7 +998,7 @@ public class ModuleParser
 			typeSpecs = new TypeSpec[row.length];
 			for(int i = 0; i < row.length; i++)
 			{
-				typeSpecs[i] = new TypeSpec();
+				typeSpecs[i] = new TypeSpec(null);
 			}
 
 			byte[] blob = null;
@@ -1024,11 +1028,19 @@ public class ModuleParser
 					long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRef);
 					if(token[0] == TableConstants.TypeDef)
 					{
-						typeDefs[i].setSuperClass(typeDefs[(int) token[1] - 1]);
+						typeDefs[i].setSuperClass(typeDefs[longToIndex(token[1])]);
+					}
+					else if(token[0] == TableConstants.TypeRef)
+					{
+						typeDefs[i].setSuperClass(typeRefs[longToIndex(token[1])]);
+					}
+					else if(token[0] == TableConstants.TypeSpec)
+					{
+						typeDefs[i].setSuperClass(typeSpecs[longToIndex(token[1])]);
 					}
 					else
 					{
-						typeDefs[i].setSuperClass(typeRefs[(int) token[1] - 1]);
+						throw new IllegalArgumentException();
 					}
 				}
 			}
@@ -1173,16 +1185,24 @@ public class ModuleParser
 				String name = row[i].getString("Name");
 				int flags = row[i].getConstant("EventFlags").intValue();
 
-				TypeRef handler = null;
+				Object handler = null;
 				long coded = row[i].getCodedIndex("EventType");
 				long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRef);
 				if(token[0] == TableConstants.TypeDef)
 				{
-					handler = typeDefs[(int) token[1] - 1];
+					handler = typeDefs[longToIndex(token[1])];
+				}
+				else if(token[0] == TableConstants.TypeRef)
+				{
+					handler = typeRefs[longToIndex(token[1])];
+				}
+				else if(token[0] == TableConstants.TypeSpec)
+				{
+					handler = typeSpecs[longToIndex(token[1])];
 				}
 				else
 				{
-					handler = typeRefs[(int) token[1] - 1];
+					throw new IllegalArgumentException();
 				}
 
 				events[i] = new Event(name, flags, handler);

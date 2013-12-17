@@ -13,8 +13,7 @@ public class Test
 {
 	public static void main(String[] args) throws Exception
 	{
-		ModuleParser moduleParser = new ModuleParser(new FileInputStream("H:\\github.com\\consulo-incubator\\consulo-dotnet\\dotnet-asm\\testData" +
-				"\\test6\\Program.exe"));
+		ModuleParser moduleParser = new ModuleParser(new FileInputStream("C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\System.Core.dll"));
 
 		Module module = moduleParser.parseModule();
 		/*ZipFile zipFile = new ZipFile("out\\artifacts\\dist\\csharp\\lib\\csharp.jar");

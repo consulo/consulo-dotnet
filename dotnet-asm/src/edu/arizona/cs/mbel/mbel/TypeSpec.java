@@ -34,21 +34,14 @@ public class TypeSpec extends AbstractTypeReference
 {
 	private long TypeSpecRID = -1L;
 	private TypeSpecSignature signature;
-	private Vector typeSpecAttributes;
+	private Vector<CustomAttribute> typeSpecAttributes = new Vector<CustomAttribute>();
 
 	/**
 	 * Makes a TypeSpec with the given TypeSpecSignature
 	 */
 	public TypeSpec(TypeSpecSignature sig)
 	{
-		this();
 		signature = sig;
-	}
-
-	protected TypeSpec()
-	{
-		// donothing constructor
-		typeSpecAttributes = new Vector(10);
 	}
 
 	/**
@@ -67,12 +60,7 @@ public class TypeSpec extends AbstractTypeReference
 	 */
 	public CustomAttribute[] getTypeSpecAttributes()
 	{
-		CustomAttribute[] cas = new CustomAttribute[typeSpecAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) typeSpecAttributes.get(i);
-		}
-		return cas;
+		return typeSpecAttributes.toArray(new CustomAttribute[typeSpecAttributes.size()]);
 	}
 
 	/**
@@ -125,7 +113,7 @@ public class TypeSpec extends AbstractTypeReference
 	@Override
 	public String getFullName()
 	{
-		return "TypeSpec?"; //TODO [VISTALL]
+		throw new IllegalArgumentException();
 	}
    
 /*

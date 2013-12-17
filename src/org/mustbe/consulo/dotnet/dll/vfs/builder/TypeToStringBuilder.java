@@ -18,6 +18,8 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
+import edu.arizona.cs.mbel.mbel.TypeRef;
+import edu.arizona.cs.mbel.mbel.TypeSpec;
 import edu.arizona.cs.mbel.signature.ClassTypeSignature;
 import edu.arizona.cs.mbel.signature.PointerTypeSignature;
 import edu.arizona.cs.mbel.signature.SZArrayTypeSignature;
@@ -144,5 +146,25 @@ public class TypeToStringBuilder implements SignatureConstants
 				break;
 		}
 		return builder.toString();
+	}
+
+	public static String toStringFromDefRefSpec(Object o)
+	{
+		if(o == null)
+		{
+			return null;
+		}
+		else if(o instanceof TypeRef)
+		{
+			return ((TypeRef) o).getFullName();
+		}
+		else if(o instanceof TypeSpec)
+		{
+			return typeToString(((TypeSpec) o).getSignature(), null, null);
+		}
+		else
+		{
+			throw new IllegalArgumentException(o.toString());
+		}
 	}
 }

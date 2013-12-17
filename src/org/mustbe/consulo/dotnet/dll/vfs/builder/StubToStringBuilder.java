@@ -30,6 +30,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
 import edu.arizona.cs.mbel.mbel.Field;
 import edu.arizona.cs.mbel.mbel.GenericParamDef;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
@@ -37,7 +38,6 @@ import edu.arizona.cs.mbel.mbel.InterfaceImplementation;
 import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.Property;
 import edu.arizona.cs.mbel.mbel.TypeDef;
-import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
@@ -53,7 +53,10 @@ public class StubToStringBuilder
 	private static final String CONSTRUCTOR_NAME = ".ctor";
 	private static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
 	private static final String ARRAY_PROPERTY_NAME = "Item";
-	private static final char[] BRACES = {'{', '}'};
+	private static final char[] BRACES = {
+			'{',
+			'}'
+	};
 
 	private static Map<String, String> SPECIAL_METHOD_NAMES = new HashMap<String, String>()
 	{
@@ -112,7 +115,10 @@ public class StubToStringBuilder
 				{
 					val oldRoot = myRoot;
 
-					myRoot = new StubBlock("", null, new char[]{' ', ' '});
+					myRoot = new StubBlock("", null, new char[]{
+							' ',
+							' '
+					});
 					myRoot.getBlocks().add(oldRoot);
 					myRoot.getBlocks().add(typeBlock);
 				}
@@ -129,8 +135,8 @@ public class StubToStringBuilder
 	@NotNull
 	private static StubBlock processType(TypeDef typeDef)
 	{
-		TypeRef superClass = typeDef.getSuperClass();
-		if(superClass != null && Comparing.equal(DotNetTypes.System_MulticastDelegate, superClass.getFullName()))
+		String superSuperClassFullName = TypeToStringBuilder.toStringFromDefRefSpec(typeDef.getSuperClass());
+		if(Comparing.equal(DotNetTypes.System_MulticastDelegate, superSuperClassFullName))
 		{
 			for(MethodDef methodDef : typeDef.getMethods())
 			{
@@ -185,12 +191,11 @@ public class StubToStringBuilder
 
 		InterfaceImplementation[] interfaceImplementations = typeDef.getInterfaceImplementations();
 		List<Object> supers = new ArrayList<Object>(interfaceImplementations.length + 1);
-		if(superClass != null)
+		if(superSuperClassFullName != null)
 		{
-			String fullName = superClass.getFullName();
-			if(!SKIPPED_SUPERTYPES.contains(fullName))
+			if(!SKIPPED_SUPERTYPES.contains(superSuperClassFullName))
 			{
-				supers.add(superClass);
+				supers.add(typeDef.getSuperClass());
 			}
 		}
 
@@ -205,9 +210,9 @@ public class StubToStringBuilder
 				@Override
 				public String fun(Object o)
 				{
-					if(o instanceof TypeRef)
+					if(o instanceof AbstractTypeReference)
 					{
-						return ((TypeRef) o).getFullName();
+						return TypeToStringBuilder.toStringFromDefRefSpec(o);
 					}
 					else if(o instanceof InterfaceImplementation)
 					{

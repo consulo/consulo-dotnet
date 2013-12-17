@@ -52,7 +52,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	//////////////////////////
 	private Module parent;
 	private ClassLayout classLayout;
-	private TypeRef superClass;               // will NOT be a TypeSpec
+	private Object superClass;
 	private DeclSecurity security;
 
 	private Vector typeDefAttributes;
@@ -277,7 +277,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 * Returns the superclass of this TypeDef. For interfaces, this will be null.
 	 * For ValueTypes, this should be System.ValueType or System.Enum
 	 */
-	public TypeRef getSuperClass()
+	public Object getSuperClass()
 	{
 		return superClass;
 	}
@@ -288,7 +288,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param ref the TypeRef of the superclass
 	 */
-	public void setSuperClass(TypeRef ref)
+	public void setSuperClass(Object ref)
 	{
 		if((Flags & ClassSemanticsMask) != Interface)
 		{

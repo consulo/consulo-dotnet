@@ -646,7 +646,7 @@ public class ClassEmitter
 		defTable.setFieldValue("Name", stringsGen.addString(def.getName()));
 		defTable.setFieldValue("Namespace", stringsGen.addString(def.getNamespace()));
 
-		AbstractTypeReference parent = def.getSuperClass();
+		Object parent = def.getSuperClass();
 		if(parent == null)
 		{
 			defTable.setFieldValue("Extends", (long) 0);
@@ -1259,16 +1259,16 @@ public class ClassEmitter
 
 			eventTable.setFieldValue("EventFlags", anEventlist.getEventFlags());
 			eventTable.setFieldValue("Name", stringsGen.addString(anEventlist.getName()));
-			TypeRef ref = anEventlist.getEventType();
+			Object ref = anEventlist.getEventType();
 			if(ref instanceof TypeDef)
 			{
 				TypeDef newdef = (TypeDef) ref;
 				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, newdef.getTypeDefRID());
 				eventTable.setFieldValue("EventType", coded);
 			}
-			else
+			else if(ref instanceof TypeRef)
 			{
-				long refrid = addTypeRef(ref);
+				long refrid = addTypeRef((TypeRef) ref);
 				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, refrid);
 				eventTable.setFieldValue("EventType", coded);
 			}

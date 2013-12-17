@@ -77,8 +77,6 @@ public class CustomModifierSignature extends Signature
 
 		int token[] = parseTypeDefOrRefEncoded(buffer);
 
-		System.out.println("CMOD: {" + token[0] + "," + token[1] + "}");
-
 		if(token[0] == TableConstants.TypeDef)
 		{
 			blob.type = group.getTypeDefs()[token[1] - 1];
@@ -93,7 +91,7 @@ public class CustomModifierSignature extends Signature
 		}
 		else
 		{
-			return null;
+			throw new IllegalArgumentException();
 		}
 		return blob;
 	}

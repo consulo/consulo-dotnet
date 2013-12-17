@@ -35,11 +35,13 @@ public class ExportedTypeRef extends TypeRef implements TypeAttributes
 	private long ExportedTypeRID = -1L;
 
 	private long Flags;
-	private FileReference file;
-	private ExportedTypeRef exportedType;
-	// one or the other will be nonnull
 
-	private Vector exportedTypeAttributes;
+	// one or the other will be nonnull
+	private ExportedTypeRef exportedType;
+	private FileReference file;
+	private AssemblyRefInfo myAssemblyRefInfo;
+
+	private Vector<CustomAttribute> exportedTypeAttributes;
 
 	/**
 	 * Makes an ExportedTypeRef with the given namespace, name, and flags
@@ -53,7 +55,7 @@ public class ExportedTypeRef extends TypeRef implements TypeAttributes
 		super(ns, name);
 		Flags = flags;
 
-		exportedTypeAttributes = new Vector(10);
+		exportedTypeAttributes = new Vector<CustomAttribute>(0);
 	}
 
 	/**
@@ -220,17 +222,15 @@ public class ExportedTypeRef extends TypeRef implements TypeAttributes
 		}
 	}
 
-/*
-   public void output(){
-      System.out.print("ExportedTypeRef[Name=\""+getName()+"\", Namespace=\""+getNamespace()+"\"");
-      if (file!=null){
-         System.out.print(", File=");
-         file.output();
-      }else{
-         System.out.print(", ExportedType=");
-         exportedType.output();
-      }
-      System.out.print("]");
-   }
-*/
+	public AssemblyRefInfo getAssemblyRefInfo()
+	{
+		return myAssemblyRefInfo;
+	}
+
+	public void setAssemblyRefInfo(AssemblyRefInfo assemblyRefInfo)
+	{
+		file = null;
+		exportedType = null;
+		myAssemblyRefInfo = assemblyRefInfo;
+	}
 }

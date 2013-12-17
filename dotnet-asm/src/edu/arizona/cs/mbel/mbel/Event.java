@@ -35,7 +35,7 @@ public class Event implements EventAttributes
 
 	private int EventFlags;
 	private String Name;
-	private TypeRef EventType; // handler type
+	private Object EventType; // type def, type ref, type spec
 	private MethodDef addOn, removeOn, fire;
 
 	private Vector eventAttributes;
@@ -47,7 +47,7 @@ public class Event implements EventAttributes
 	 * @param flags   a bit vector of event flags, as defined in EventAttributes
 	 * @param handler the TypeRef of the handler for this event
 	 */
-	public Event(String name, int flags, TypeRef handler)
+	public Event(String name, int flags, Object handler)
 	{
 		Name = name;
 		EventFlags = flags;
@@ -162,7 +162,7 @@ public class Event implements EventAttributes
 	/**
 	 * Returns the TypeRef of the handler for this event
 	 */
-	public TypeRef getEventType()
+	public Object getEventType()
 	{
 		return EventType;
 	}
@@ -170,7 +170,7 @@ public class Event implements EventAttributes
 	/**
 	 * Sets the TypeRef for the handler for this event
 	 */
-	public void setEventType(TypeRef type)
+	public void setEventType(Object type)
 	{
 		EventType = type;
 	}

@@ -148,6 +148,8 @@ public class TypeSignature extends Signature
 			case ELEMENT_TYPE_VAR:
 				buffer.get();
 				return new XGenericTypeSignature(data, buffer.getCompressedUInt32());
+			case ELEMENT_TYPE_TYPEDBYREF:
+				return TypeSignature.OBJECT;
 			case ELEMENT_TYPE_GENERIC_INST:
 				buffer.get();
 				TypeSignature mainType = parse(buffer, group);
@@ -160,7 +162,7 @@ public class TypeSignature extends Signature
 				}
 				return new TypeSignatureWithGenericParameters(mainType, list);
 			default:
-				throw new IllegalArgumentException("Unknown element type: " + data);
+				throw new IllegalArgumentException("Unknown element type: " + Integer.toHexString(data).toUpperCase());
 		}
 	}
 
