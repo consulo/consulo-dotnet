@@ -26,4 +26,6 @@ public interface DotNetTypes
 	String System_Object = "System.Object";
 	String System_Enum = "System.Enum";
 	String System_ValueType = "System.ValueType";
+	String System_IntPtr = "System.IntPtr";
+	String System_UIntPtr = "System.UIntPtr";
 }
