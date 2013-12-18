@@ -18,22 +18,38 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpMacroActiveBlockStopImpl extends CSharpElementImpl
+public class CSharpMacroBlockStartImpl extends CSharpElementImpl
 {
-	public CSharpMacroActiveBlockStopImpl(@NotNull ASTNode node)
+	public CSharpMacroBlockStartImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public PsiElement getValue()
+	{
+		return findChildByType(CSharpTokens.MACRO_VALUE);
+	}
+
+	public IElementType findStartElementType()
+	{
+		TokenSet tokenSet = TokenSet.create(CSharpTokens.MACRO_IF_KEYWORD, CSharpTokens.MACRO_REGION_KEYWORD);
+		PsiElement notNullChildByType = findNotNullChildByType(tokenSet);
+		return notNullChildByType.getNode().getElementType();
 	}
 
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitMacroActiveBlockStop(this);
+		visitor.visitMacroBlockStart(this);
 	}
 }

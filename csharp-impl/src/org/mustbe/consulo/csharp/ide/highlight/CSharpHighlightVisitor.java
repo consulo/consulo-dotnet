@@ -29,6 +29,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
+import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -74,10 +75,10 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
-	public void visitMacroNonActiveBlock(CSharpMacroNonActiveBlockImpl block)
+	public void visitMacroBody(CSharpMacroBodyImpl block)
 	{
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(block).textAttributes(CSharpHighlightKey
-				.BLOCK_COMMENT).create());
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(block).textAttributes
+				(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES).create());
 	}
 
 	@Override

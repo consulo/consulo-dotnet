@@ -65,10 +65,16 @@ public class MacroParsing extends SharingParsingHelpers
 					macroesInfo.addActiveBlock(MACRO_IF_KEYWORD, currentOffset);
 
 					skipUntilStop(builder);
-					mark.done(MACRO_ACTIVE_BLOCK_START);
+					mark.done(MACRO_BLOCK_START);
 				}
 				else
 				{
+					skipUntilStop(builder);
+					mark.done(MACRO_BLOCK_START);
+
+					mark = mark.precede();
+
+					PsiBuilder.Marker marker = builder.mark();
 					while(!builder.eof())
 					{
 						if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
@@ -77,17 +83,28 @@ public class MacroParsing extends SharingParsingHelpers
 						}
 						builder.advanceLexer();
 					}
-					expect(builder, MACRO_ENDIF_KEYWORD, "'#endif' expected");
+					marker.done(MACRO_BODY);
 
-					skipUntilStop(builder);
-					mark.done(MACRO_NON_ACTIVE_BLOCK);
+					if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
+					{
+						PsiBuilder.Marker endIfMarker = builder.mark();
+						builder.advanceLexer();
+						skipUntilStop(builder);
+						endIfMarker.done(MACRO_BLOCK_STOP);
+					}
+					else
+					{
+						builder.error("'#endif' expected");
+					}
+
+					mark.done(MACRO_BLOCK);
 				}
 			}
 			else
 			{
 				builder.error("Identifier expected");
 				skipUntilStop(builder);
-				mark.done(MACRO_ACTIVE_BLOCK_START);
+				mark.done(MACRO_BLOCK_START);
 			}
 			return true;
 		}
@@ -102,7 +119,7 @@ public class MacroParsing extends SharingParsingHelpers
 			}
 
 			skipUntilStop(builder);
-			mark.done(MACRO_ACTIVE_BLOCK_STOP);
+			mark.done(MACRO_BLOCK_STOP);
 			return true;
 		}
 		else

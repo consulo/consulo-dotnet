@@ -27,7 +27,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpBodyWithBraces;
 import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpCodeBlockImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroActiveBlockStartImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBodyImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingStatementImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
@@ -72,10 +73,11 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		psi.accept(new CSharpRecursiveElementVisitor()
 		{
 			@Override
-			public void visitMacroActiveBlockStart(CSharpMacroActiveBlockStartImpl start)
+			public void visitMacroBlockStart(CSharpMacroBlockStartImpl start)
 			{
 				MacroActiveBlockInfo macroActiveBlockInfo = macroesInfo.findStartActiveBlock(start.getFirstChild().getTextOffset());
-				if(macroActiveBlockInfo == null || macroActiveBlockInfo.getStopOffset() == -1)
+				if(macroActiveBlockInfo == null || macroActiveBlockInfo.getStopOffset() == -1 || macroActiveBlockInfo.getElementType() !=
+						CSharpTokens.MACRO_REGION_KEYWORD)
 				{
 					return;
 				}
@@ -86,7 +88,14 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 				assert elementAt != null;
 
 				PsiElement parent = elementAt.getParent();
-				foldingList.add(new FoldingDescriptor(start, new TextRange(start.getTextRange().getStartOffset(), parent.getTextRange().getEndOffset())));
+				foldingList.add(new FoldingDescriptor(start, new TextRange(start.getTextRange().getStartOffset(),
+						parent.getTextRange().getEndOffset())));
+			}
+
+			@Override
+			public void visitMacroBody(CSharpMacroBodyImpl block)
+			{
+				foldingList.add(new FoldingDescriptor(block, block.getTextRange()));
 			}
 
 			@Override
@@ -150,10 +159,14 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		{
 			return "{...}";
 		}
-		else if(psi instanceof CSharpMacroActiveBlockStartImpl)
+		else if(psi instanceof CSharpMacroBodyImpl)
 		{
-			IElementType startElementType = ((CSharpMacroActiveBlockStartImpl) psi).findStartElementType();
-			PsiElement value = ((CSharpMacroActiveBlockStartImpl) psi).getValue();
+			return "<non active block>";
+		}
+		else if(psi instanceof CSharpMacroBlockStartImpl)
+		{
+			IElementType startElementType = ((CSharpMacroBlockStartImpl) psi).findStartElementType();
+			PsiElement value = ((CSharpMacroBlockStartImpl) psi).getValue();
 			String valueText = value == null ? "<empty>" : value.getText();
 			if(startElementType == CSharpTokens.MACRO_IF_KEYWORD)
 			{
@@ -169,6 +182,10 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 	{
 		PsiElement psi = astNode.getPsi();
 		if(psi instanceof CSharpUsingListImpl)
+		{
+			return true;
+		}
+		else if(psi instanceof CSharpMacroBodyImpl)
 		{
 			return true;
 		}

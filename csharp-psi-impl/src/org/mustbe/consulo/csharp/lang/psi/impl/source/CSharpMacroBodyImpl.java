@@ -24,9 +24,9 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpMacroNonActiveBlockImpl extends CSharpElementImpl
+public class CSharpMacroBodyImpl extends CSharpElementImpl
 {
-	public CSharpMacroNonActiveBlockImpl(@NotNull ASTNode node)
+	public CSharpMacroBodyImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -34,6 +34,6 @@ public class CSharpMacroNonActiveBlockImpl extends CSharpElementImpl
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitMacroNonActiveBlock(this);
+		visitor.visitMacroBody(this);
 	}
 }
