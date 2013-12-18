@@ -117,6 +117,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType READONLY_KEYWORD = new IElementType("READONLY_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType OPERATOR_KEYWORD = new IElementType("OPERATOR_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType LBRACE = new IElementType("LBRACE", CSharpLanguage.INSTANCE);
 
 	IElementType RBRACE = new IElementType("RBRACE", CSharpLanguage.INSTANCE);
@@ -146,6 +148,36 @@ public interface CSharpTokens extends TokenType
 	IElementType DOT = new IElementType("DOT", CSharpLanguage.INSTANCE);
 
 	IElementType MUL = new IElementType("MUL", CSharpLanguage.INSTANCE);
+
+	IElementType EQEQ = new IElementType("EQEQ", CSharpLanguage.INSTANCE);
+
+	IElementType PLUS = new IElementType("PLUS", CSharpLanguage.INSTANCE);
+
+	IElementType MINUS = new IElementType("MINUS", CSharpLanguage.INSTANCE);
+
+	IElementType NTEQ = new IElementType("NTEQ", CSharpLanguage.INSTANCE);
+
+	IElementType AND = new IElementType("AND", CSharpLanguage.INSTANCE);
+
+	IElementType GTEQ = new IElementType("GTEQ", CSharpLanguage.INSTANCE);
+
+	IElementType GTGT = new IElementType("GTGT", CSharpLanguage.INSTANCE);
+
+	IElementType LTLT = new IElementType("LTLT", CSharpLanguage.INSTANCE);
+
+	IElementType LTEQ = new IElementType("LTEQ", CSharpLanguage.INSTANCE);
+
+	IElementType CARET = new IElementType("CARET", CSharpLanguage.INSTANCE);
+
+	IElementType DIV = new IElementType("DIV", CSharpLanguage.INSTANCE);
+
+	IElementType EXCL = new IElementType("EXCL", CSharpLanguage.INSTANCE);
+
+	IElementType OR = new IElementType("OR", CSharpLanguage.INSTANCE);
+
+	IElementType TILDE = new IElementType("TILDE", CSharpLanguage.INSTANCE);
+
+	IElementType PERC = new IElementType("PERC", CSharpLanguage.INSTANCE);
 
 	IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", CSharpLanguage.INSTANCE);
 

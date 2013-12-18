@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpCodeBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
@@ -72,9 +73,26 @@ public class CSharpMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMeth
 	}
 
 	@Override
+	@Nullable
+	public PsiElement getNameIdentifier()
+	{
+		if(isOperator())
+		{
+			return findChildByFilter(CSharpTokenSets.OVERLOADING_OPERATORS);
+		}
+		return findChildByType(CSharpTokens.IDENTIFIER);
+	}
+
+	@Override
 	public boolean isDelegate()
 	{
 		return findChildByType(CSharpTokens.DELEGATE_KEYWORD) != null;
+	}
+
+	@Override
+	public boolean isOperator()
+	{
+		return findChildByType(CSharpTokens.OPERATOR_KEYWORD) != null;
 	}
 
 	@Nullable

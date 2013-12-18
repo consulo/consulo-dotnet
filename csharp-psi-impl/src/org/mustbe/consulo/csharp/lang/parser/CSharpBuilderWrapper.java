@@ -73,6 +73,37 @@ public class CSharpBuilderWrapper extends PsiBuilderAdapter
 	}
 
 	@Nullable
+	public IElementType getTokenTypeGGLL()
+	{
+		IElementType tokenType = getTokenType();
+		if(tokenType == CSharpTokens.LT)
+		{
+			if(lookAhead(1) == CSharpTokens.LT)
+			{
+				return CSharpTokens.LTLT;
+			}
+		}
+		else if(tokenType == CSharpTokens.GT)
+		{
+			if(lookAhead(1) == CSharpTokens.GT)
+			{
+				return CSharpTokens.GTGT;
+			}
+		}
+		return tokenType;
+	}
+
+	public void advanceLexerGGLL()
+	{
+		IElementType tokenTypeGGLL = getTokenTypeGGLL();
+		if(tokenTypeGGLL == CSharpTokens.GTGT || tokenTypeGGLL == CSharpTokens.LTLT)
+		{
+			advanceLexer();
+		}
+		advanceLexer();
+	}
+
+	@Nullable
 	@Override
 	public IElementType getTokenType()
 	{

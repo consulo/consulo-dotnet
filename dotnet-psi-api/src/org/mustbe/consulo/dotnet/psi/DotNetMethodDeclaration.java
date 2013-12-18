@@ -31,6 +31,8 @@ public interface DotNetMethodDeclaration extends DotNetModifierListOwner, DotNet
 
 	boolean isDelegate();
 
+	boolean isOperator();
+
 	@Nullable
 	DotNetParameterList getParameterList();
 

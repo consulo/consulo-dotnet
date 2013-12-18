@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.psi.tree.IElementType;
 import lombok.val;
 
 /**
@@ -42,7 +43,31 @@ public class MethodParsing extends MemberWithBodyParsing
 
 	public static void parseMethodStartAfterType(@NotNull CSharpBuilderWrapper builder, @NotNull PsiBuilder.Marker marker, boolean constructor)
 	{
-		expect(builder, IDENTIFIER, "Name expected");
+		if(constructor)
+		{
+			expect(builder, IDENTIFIER, "Name expected");
+		}
+		else
+		{
+			if(builder.getTokenType() == OPERATOR_KEYWORD)
+			{
+				builder.advanceLexer();
+
+				IElementType tokenTypeGGLL = builder.getTokenTypeGGLL();
+				if(OVERLOADING_OPERATORS.contains(tokenTypeGGLL))
+				{
+					builder.advanceLexerGGLL();
+				}
+				else
+				{
+					builder.error("Operator name expected");
+				}
+			}
+			else
+			{
+				expect(builder, IDENTIFIER, "Name expected");
+			}
+		}
 
 		parseMethodStartAfterName(builder, marker, constructor);
 	}

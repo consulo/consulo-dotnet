@@ -167,6 +167,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"readonly"                { return CSharpTokens.READONLY_KEYWORD; }
 
+	"operator"                { return CSharpTokens.OPERATOR_KEYWORD; }
+
 	"sealed"                  { return CSharpTokens.SEALED_KEYWORD; }
 
 	"unsafe"                  { return CSharpTokens.UNSAFE_KEYWORD; }
@@ -210,6 +212,10 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	")"                       { return CSharpTokens.RPAR; }
 
+	"<="                      { return CSharpTokens.LTEQ; }
+
+	">="                      { return CSharpTokens.GTEQ; }
+
 	"<"                       { return CSharpTokens.LT; }
 
 	">"                       { return CSharpTokens.GT; }
@@ -223,6 +229,28 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 	";"                       { return CSharpTokens.SEMICOLON; }
 
 	"*"                       { return CSharpTokens.MUL; }
+
+	"=="                      { return CSharpTokens.EQEQ; }
+
+	"+"                       { return CSharpTokens.PLUS; }
+
+	"-"                       { return CSharpTokens.MINUS; }
+
+	"/"                       { return CSharpTokens.DIV; }
+
+	"%"                       { return CSharpTokens.PERC; }
+
+	"&"                       { return CSharpTokens.AND; }
+
+	"|"                       { return CSharpTokens.OR; }
+
+	"~"                       { return CSharpTokens.TILDE; }
+
+	"!="                      { return CSharpTokens.NTEQ; }
+
+	"!"                       { return CSharpTokens.EXCL; }
+
+	"^"                       { return CSharpTokens.CARET; }
 
 	"."                       { return CSharpTokens.DOT; }
 

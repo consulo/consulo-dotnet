@@ -441,9 +441,13 @@ public class StubToStringBuilder
 			{
 				builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getType(), typeDef, methodDef)).append(" ");
 
-				if(SPECIAL_METHOD_NAMES.containsValue(name))
+				if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 				{
-					builder.append("operator ");
+					if(SPECIAL_METHOD_NAMES.containsKey(name))
+					{
+						builder.append("operator ");
+						name = SPECIAL_METHOD_NAMES.get(name);
+					}
 				}
 			}
 

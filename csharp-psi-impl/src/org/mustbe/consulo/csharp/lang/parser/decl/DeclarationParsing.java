@@ -107,6 +107,10 @@ public class DeclarationParsing extends SharingParsingHelpers
 					marker.drop();
 					return false;
 				}
+				else if(builder.getTokenType() == OPERATOR_KEYWORD)
+				{
+					MethodParsing.parseMethodStartAfterType(builder, marker, false);
+				}
 				else if(expect(builder, IDENTIFIER, "Name expected"))
 				{
 					// MODIFIER_LIST TYPE IDENTIFIER LPAR -> METHOD
