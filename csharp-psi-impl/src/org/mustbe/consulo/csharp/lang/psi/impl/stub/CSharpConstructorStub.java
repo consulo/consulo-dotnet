@@ -14,29 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 18.12.13.
  */
-public interface DotNetMethodDeclaration extends DotNetModifierListOwner, DotNetNamedElement, PsiNameIdentifierOwner, DotNetGenericParameterListOwner
+public class CSharpConstructorStub extends CSharpMethodStub
 {
-	@Nullable
-	String getQName();
-
-	boolean isDelegate();
-
-	@Nullable
-	DotNetParameterList getParameterList();
-
-	@NotNull
-	DotNetParameter[] getParameters();
-
-	@Nullable
-	DotNetCodeBlock getCodeBlock();
+	public CSharpConstructorStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname)
+	{
+		super(parent, CSharpStubElements.CONSTRUCTOR_DECLARATION, name, qname);
+	}
 }

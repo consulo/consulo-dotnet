@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.dotnet.psi.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import com.intellij.psi.stubs.StringStubIndexExtension;
+import com.intellij.psi.stubs.StubIndexExtension;
+import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 18.12.13.
  */
-public interface DotNetMethodDeclaration extends DotNetModifierListOwner, DotNetNamedElement, PsiNameIdentifierOwner, DotNetGenericParameterListOwner
+public class MethodByQNameIndex extends StringStubIndexExtension<DotNetMethodDeclaration>
 {
-	@Nullable
-	String getQName();
-
-	boolean isDelegate();
-
-	@Nullable
-	DotNetParameterList getParameterList();
+	public static MethodByQNameIndex getInstance()
+	{
+		return StubIndexExtension.EP_NAME.findExtension(MethodByQNameIndex.class);
+	}
 
 	@NotNull
-	DotNetParameter[] getParameters();
-
-	@Nullable
-	DotNetCodeBlock getCodeBlock();
+	@Override
+	public StubIndexKey<String, DotNetMethodDeclaration> getKey()
+	{
+		return DotNetIndexKeys.METHOD_BY_QNAME_INDEX;
+	}
 }

@@ -122,7 +122,7 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 		CSharpNamespaceStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.getQName();
+			return stub.getName();
 		}
 
 		PsiElement parent = getParent();

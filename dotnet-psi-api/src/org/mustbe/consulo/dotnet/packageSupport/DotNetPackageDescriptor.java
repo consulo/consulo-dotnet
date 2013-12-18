@@ -24,9 +24,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
+import org.mustbe.consulo.dotnet.psi.stub.index.MethodByQNameIndex;
 import org.mustbe.consulo.dotnet.psi.stub.index.NamespaceByQNameIndex;
 import org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.packageSupport.PackageDescriptor;
@@ -120,6 +122,7 @@ public class DotNetPackageDescriptor implements PackageDescriptor
 	{
 		val tnames = new HashSet<String>();
 		val nnames = new HashSet<String>();
+		val mnames = new HashSet<String>();
 		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.TYPE_BY_QNAME_INDEX, new Processor<String>()
 		{
 			@Override
@@ -128,7 +131,7 @@ public class DotNetPackageDescriptor implements PackageDescriptor
 				QualifiedName q = toQName(s);
 				if(qualifiedName.getComponentCount() == 0)
 				{
-					if( q.getComponentCount() == 1)
+					if(q.getComponentCount() == 1)
 					{
 						tnames.add(s);
 					}
@@ -149,7 +152,7 @@ public class DotNetPackageDescriptor implements PackageDescriptor
 				QualifiedName q = toQName(s);
 				if(qualifiedName.getComponentCount() == 0)
 				{
-					if( q.getComponentCount() == 1)
+					if(q.getComponentCount() == 1)
 					{
 						nnames.add(s);
 					}
@@ -162,7 +165,28 @@ public class DotNetPackageDescriptor implements PackageDescriptor
 			}
 		}, globalSearchScope, IdFilter.getProjectIdFilter(project, false));
 
-		val list = new LinkedHashSet<PsiElement>(tnames.size() + nnames.size());
+		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.METHOD_BY_QNAME_INDEX, new Processor<String>()
+		{
+			@Override
+			public boolean process(String s)
+			{
+				QualifiedName q = toQName(s);
+				if(qualifiedName.getComponentCount() == 0)
+				{
+					if(q.getComponentCount() == 1)
+					{
+						mnames.add(s);
+					}
+				}
+				else if(q.matchesPrefix(qualifiedName) && (q.getComponentCount() - 1) == qualifiedName.getComponentCount())
+				{
+					mnames.add(s);
+				}
+				return true;
+			}
+		}, globalSearchScope, IdFilter.getProjectIdFilter(project, false));
+
+		val list = new LinkedHashSet<PsiElement>(tnames.size() + nnames.size() + mnames.size());
 		for(String name : tnames)
 		{
 			Collection<DotNetTypeDeclaration> elements = TypeByQNameIndex.getInstance().get(name, project, GlobalSearchScope.allScope(project));
@@ -172,6 +196,11 @@ public class DotNetPackageDescriptor implements PackageDescriptor
 		{
 			Collection<DotNetNamespaceDeclaration> elements = NamespaceByQNameIndex.getInstance().get(name, project,
 					GlobalSearchScope.allScope(project));
+			ContainerUtil.addAllNotNull(list, elements);
+		}
+		for(String name : mnames)
+		{
+			Collection<DotNetMethodDeclaration> elements = MethodByQNameIndex.getInstance().get(name, project, GlobalSearchScope.allScope(project));
 			ContainerUtil.addAllNotNull(list, elements);
 		}
 		return new ArrayList<PsiElement>(list);

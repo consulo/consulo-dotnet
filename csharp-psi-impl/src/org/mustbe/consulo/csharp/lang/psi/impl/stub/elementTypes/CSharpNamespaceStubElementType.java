@@ -56,30 +56,27 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 	@Override
 	public CSharpNamespaceStub createStub(@NotNull CSharpNamespaceDeclarationImpl cSharpNamespaceDeclaration, StubElement stubElement)
 	{
-		return new CSharpNamespaceStub(stubElement, StringRef.fromNullableString(cSharpNamespaceDeclaration.getName()),
-				StringRef.fromNullableString(cSharpNamespaceDeclaration.getQName()));
+		return new CSharpNamespaceStub(stubElement, StringRef.fromNullableString(cSharpNamespaceDeclaration.getQName()));
 	}
 
 	@Override
 	public void serialize(@NotNull CSharpNamespaceStub cSharpNamespaceStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(cSharpNamespaceStub.getName());
-		stubOutputStream.writeName(cSharpNamespaceStub.getQName());
 	}
 
 	@NotNull
 	@Override
 	public CSharpNamespaceStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
 	{
-		StringRef name = stubInputStream.readName();
 		StringRef qname = stubInputStream.readName();
-		return new CSharpNamespaceStub(stubElement, name, qname);
+		return new CSharpNamespaceStub(stubElement, qname);
 	}
 
 	@Override
 	public void indexStub(@NotNull CSharpNamespaceStub cSharpNamespaceStub, @NotNull IndexSink indexSink)
 	{
-		String qName = cSharpNamespaceStub.getQName();
+		String qName = cSharpNamespaceStub.getName();
 		if(!StringUtil.isEmpty(qName))
 		{
 			indexSink.occurrence(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName);

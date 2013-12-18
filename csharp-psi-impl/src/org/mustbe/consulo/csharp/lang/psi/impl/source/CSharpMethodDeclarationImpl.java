@@ -22,6 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpCodeBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -30,22 +31,44 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.stubs.IStubElementType;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpMethodDeclarationImpl extends CSharpMemberImpl implements CSharpMethodDeclaration
+public class CSharpMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMethodStub> implements CSharpMethodDeclaration
 {
 	public CSharpMethodDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
+	public CSharpMethodDeclarationImpl(@NotNull CSharpMethodStub stub, @NotNull IStubElementType<? extends CSharpMethodStub, ?> nodeType)
+	{
+		super(stub, nodeType);
+	}
+
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitMethodDeclaration(this);
+	}
+
+	@Nullable
+	@Override
+	public String getQName()
+	{
+		PsiElement parent = getParent();
+		if(parent instanceof CSharpTypeDeclarationImpl)
+		{
+			return ((CSharpTypeDeclarationImpl) parent).getQName() + "." + getName();
+		}
+		else if(parent instanceof CSharpNamespaceDeclarationImpl)
+		{
+			return ((CSharpNamespaceDeclarationImpl) parent).getQName() + "." + getName();
+		}
+		return getName();
 	}
 
 	@Override

@@ -33,10 +33,9 @@ public interface CSharpElements
 
 	IElementType USING_STATEMENT = new IElementTypeAsPsiFactory("USING_STATEMENT", CSharpLanguage.INSTANCE, CSharpUsingStatementImpl.class);
 
-	IElementType METHOD_DECLARATION = new IElementTypeAsPsiFactory("METHOD_DECLARATION", CSharpLanguage.INSTANCE, CSharpMethodDeclarationImpl.class);
+	IElementType METHOD_DECLARATION = CSharpStubElements.METHOD_DECLARATION;
 
-	IElementType CONSTRUCTOR_DECLARATION = new IElementTypeAsPsiFactory("CONSTRUCTOR_DECLARATION", CSharpLanguage.INSTANCE,
-			CSharpConstructorDeclarationImpl.class);
+	IElementType CONSTRUCTOR_DECLARATION = CSharpStubElements.CONSTRUCTOR_DECLARATION;
 
 	IElementType PARAMETER_LIST = new IElementTypeAsPsiFactory("PARAMETER_LIST", CSharpLanguage.INSTANCE, CSharpParameterListImpl.class);
 

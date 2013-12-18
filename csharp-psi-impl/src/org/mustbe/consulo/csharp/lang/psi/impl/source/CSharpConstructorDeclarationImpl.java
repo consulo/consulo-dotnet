@@ -18,8 +18,11 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpConstructorStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.stubs.IStubElementType;
 
 /**
  * @author VISTALL
@@ -30,6 +33,11 @@ public class CSharpConstructorDeclarationImpl extends CSharpMethodDeclarationImp
 	public CSharpConstructorDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpConstructorDeclarationImpl(@NotNull CSharpConstructorStub stub, @NotNull IStubElementType<? extends CSharpMethodStub, ?> nodeType)
+	{
+		super(stub, nodeType);
 	}
 
 	@Override

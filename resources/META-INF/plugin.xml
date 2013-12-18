@@ -38,6 +38,8 @@
 		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.NamespaceByQNameIndex" />
 		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.TypeIndex" />
 		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex" />
+		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.MethodIndex" />
+		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.MethodByQNameIndex" />
 
 		<projectService serviceInterface="org.mustbe.consulo.packageSupport.PackageManager"
 						serviceImplementation="org.mustbe.consulo.packageSupport.PackageManager" />

@@ -18,19 +18,35 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNamespaceDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 15.12.13.
+ * @since 18.12.13.
  */
-public class CSharpNamespaceStub extends NamedStubBase<CSharpNamespaceDeclarationImpl>
+public class CSharpMethodStub extends NamedStubBase<CSharpTypeDeclaration>
 {
-	public CSharpNamespaceStub(StubElement parent, @Nullable StringRef qname)
+	private StringRef myQName;
+
+	public CSharpMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname)
 	{
-		super(parent, CSharpStubElements.NAMESPACE_DECLARATION, qname);
+		super(parent, CSharpStubElements.METHOD_DECLARATION, name);
+		myQName = qname;
+	}
+
+	public CSharpMethodStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, StringRef QName)
+	{
+		super(parent, elementType, name);
+		myQName = QName;
+	}
+
+	@Nullable
+	public String getQName()
+	{
+		return StringRef.toString(myQName);
 	}
 }

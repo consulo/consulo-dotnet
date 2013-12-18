@@ -16,7 +16,9 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpConstructorStubElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpFileStubElementType;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpMethodStubElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpNamespaceStubElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpTypeStubElementType;
 
@@ -29,4 +31,6 @@ public interface CSharpStubElements
 	CSharpFileStubElementType FILE = new CSharpFileStubElementType();
 	CSharpNamespaceStubElementType NAMESPACE_DECLARATION = new CSharpNamespaceStubElementType();
 	CSharpTypeStubElementType TYPE_DECLARATION = new CSharpTypeStubElementType();
+	CSharpMethodStubElementType METHOD_DECLARATION = new CSharpMethodStubElementType();
+	CSharpConstructorStubElementType CONSTRUCTOR_DECLARATION = new CSharpConstructorStubElementType();
 }
