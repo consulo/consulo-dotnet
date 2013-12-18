@@ -31,7 +31,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import org.mustbe.consulo.packageSupport.Package;
 import org.mustbe.consulo.packageSupport.PackageManager;
@@ -47,6 +47,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.scope.util.PsiScopesUtilCore;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import lombok.val;
 
@@ -311,26 +312,28 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	public Object[] getVariants()
 	{
 		PsiElement qualifier = getQualifier();
-		String qualifiedName = null;
 
-		PsiElement resolve = null;
-		if(qualifier instanceof CSharpReferenceExpressionImpl)
+		PsiElement target = this;
+		if(qualifier instanceof DotNetExpression)
 		{
-			resolve = ((CSharpReferenceExpressionImpl) qualifier).resolve();
+			DotNetRuntimeType runtimeType = ((DotNetExpression) qualifier).resolveType();
+			if(runtimeType == DotNetRuntimeType.ERROR_TYPE)
+			{
+				return ArrayUtil.EMPTY_OBJECT_ARRAY;
+			}
+
+			PsiElement psiElement = runtimeType.toPsiElement();
+			if(psiElement == null)
+			{
+				return ArrayUtil.EMPTY_OBJECT_ARRAY;
+			}
+			target = psiElement;
 		}
 
-		if(resolve instanceof DotNetTypeDeclaration)
-		{
-			qualifiedName = ((DotNetTypeDeclaration) resolve).getQName();
-		}
-		else if(resolve instanceof Package)
-		{
-			qualifiedName = ((Package) resolve).getName();
-		}
-		CollectScopeProcessor p = new CollectScopeProcessor(qualifiedName);
+		CollectScopeProcessor p = new CollectScopeProcessor();
 		p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
 
-		PsiScopesUtilCore.treeWalkUp(p, resolve == null ? this : resolve, null);
+		PsiScopesUtilCore.treeWalkUp(p, target, null);
 
 		return p.getElements().toArray();
 	}
@@ -352,6 +355,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		else if(resolve instanceof CSharpTypeDeclarationImpl)
 		{
 			return new CSharpTypeDefRuntimeType(((CSharpTypeDeclarationImpl) resolve).getQName(), getProject(), getResolveScope());
+		}
+		else if(resolve instanceof DotNetVariable)
+		{
+			return ((DotNetVariable) resolve).toRuntimeType();
 		}
 		return DotNetRuntimeType.ERROR_TYPE;
 	}

@@ -63,6 +63,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		if(builder.getTokenType() == RPAR)
 		{
+			builder.advanceLexer();
 			mark.done(METHOD_CALL_PARAMETER_LIST);
 			return;
 		}

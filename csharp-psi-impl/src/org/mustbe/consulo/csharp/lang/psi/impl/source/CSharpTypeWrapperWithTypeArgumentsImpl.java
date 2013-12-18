@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeWrapperWithTypeArguments;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -30,6 +31,12 @@ public class CSharpTypeWrapperWithTypeArgumentsImpl extends CSharpElementImpl im
 	public CSharpTypeWrapperWithTypeArgumentsImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	public DotNetRuntimeType toRuntimeType()
+	{
+		return DotNetRuntimeType.ERROR_TYPE;
 	}
 
 	@Override

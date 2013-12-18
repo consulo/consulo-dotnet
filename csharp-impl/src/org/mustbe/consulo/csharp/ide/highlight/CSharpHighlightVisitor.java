@@ -226,6 +226,10 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			key = ((DotNetMethodDeclaration) element).hasModifier(CSharpTokens.STATIC_KEYWORD) ? CSharpHighlightKey.STATIC_METHOD :
 					CSharpHighlightKey.INSTANCE_METHOD;
 		}
+		else if(element instanceof CSharpLocalVariableImpl)
+		{
+			return;
+		}
 		else if(element instanceof DotNetVariable)
 		{
 			key = ((DotNetVariable) element).hasModifier(CSharpTokens.STATIC_KEYWORD) ? CSharpHighlightKey.STATIC_FIELD : CSharpHighlightKey

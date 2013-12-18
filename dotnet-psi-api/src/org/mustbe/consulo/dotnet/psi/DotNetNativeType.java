@@ -16,10 +16,15 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.PsiElement;
+
 /**
  * @author VISTALL
  * @since 13.12.13.
  */
 public interface DotNetNativeType extends DotNetType
 {
+	@NotNull
+	PsiElement getTypeElement();
 }

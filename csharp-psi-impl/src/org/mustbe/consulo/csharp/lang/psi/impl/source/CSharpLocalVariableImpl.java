@@ -25,6 +25,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -59,6 +60,13 @@ public class CSharpLocalVariableImpl extends CSharpElementImpl implements CSharp
 	public DotNetType getType()
 	{
 		return findNotNullChildByClass(DotNetType.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetRuntimeType toRuntimeType()
+	{
+		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@Override

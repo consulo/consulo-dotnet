@@ -19,10 +19,13 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpCodeBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
@@ -58,5 +61,26 @@ public class CSharpCodeBlockImpl extends CSharpElementImpl implements CSharpCode
 	public DotNetStatement[] getStatements()
 	{
 		return findChildrenByClass(DotNetStatement.class);
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		for(DotNetStatement dotNetStatement : getStatements())
+		{
+			if(dotNetStatement instanceof CSharpLocalVariableDeclarationStatementImpl)
+			{
+				CSharpLocalVariable[] variables = ((CSharpLocalVariableDeclarationStatementImpl) dotNetStatement).getVariables();
+				for(CSharpLocalVariable variable : variables)
+				{
+					if(!processor.execute(variable, state))
+					{
+						return false;
+					}
+				}
+			}
+		}
+		return super.processDeclarations(processor, state, lastParent, place);
 	}
 }

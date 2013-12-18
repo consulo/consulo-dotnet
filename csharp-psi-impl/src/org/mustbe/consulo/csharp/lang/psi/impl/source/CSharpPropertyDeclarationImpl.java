@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyAccessor;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -48,6 +49,13 @@ public class CSharpPropertyDeclarationImpl extends CSharpMemberImpl implements D
 	public DotNetPropertyAccessor[] getAccessors()
 	{
 		return findChildrenByClass(DotNetPropertyAccessor.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetRuntimeType toRuntimeType()
+	{
+		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@NotNull

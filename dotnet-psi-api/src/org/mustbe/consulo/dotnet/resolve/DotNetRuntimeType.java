@@ -41,6 +41,38 @@ public interface DotNetRuntimeType
 		}
 	};
 
+	DotNetRuntimeType UNKNOWN_TYPE = new DotNetRuntimeType()
+	{
+		@Override
+		public boolean isNullable()
+		{
+			return true;
+		}
+
+		@Nullable
+		@Override
+		public PsiElement toPsiElement()
+		{
+			return null;
+		}
+	};
+
+	DotNetRuntimeType AUTO_TYPE = new DotNetRuntimeType()
+	{
+		@Override
+		public boolean isNullable()
+		{
+			return true;
+		}
+
+		@Nullable
+		@Override
+		public PsiElement toPsiElement()
+		{
+			return null;
+		}
+	};
+
 	boolean isNullable();
 
 	@Nullable

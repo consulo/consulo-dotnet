@@ -22,6 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -39,6 +40,13 @@ public class CSharpParameterImpl extends CSharpMemberImpl implements DotNetParam
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitParameter(this);
+	}
+
+	@NotNull
+	@Override
+	public DotNetRuntimeType toRuntimeType()
+	{
+		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@NotNull

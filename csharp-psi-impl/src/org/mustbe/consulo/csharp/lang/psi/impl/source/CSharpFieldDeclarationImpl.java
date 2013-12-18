@@ -23,6 +23,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -40,6 +41,13 @@ public class CSharpFieldDeclarationImpl extends CSharpMemberImpl implements DotN
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitFieldDeclaration(this);
+	}
+
+	@NotNull
+	@Override
+	public DotNetRuntimeType toRuntimeType()
+	{
+		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@NotNull

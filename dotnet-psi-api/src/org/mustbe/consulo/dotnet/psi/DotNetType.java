@@ -16,10 +16,13 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
 public interface DotNetType extends DotNetElement
 {
+	DotNetRuntimeType toRuntimeType();
 }

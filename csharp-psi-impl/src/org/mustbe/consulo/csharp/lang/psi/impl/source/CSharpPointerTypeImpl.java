@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetPointerType;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -36,5 +37,11 @@ public class CSharpPointerTypeImpl extends CSharpElementImpl implements DotNetPo
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitPointerType(this);
+	}
+
+	@Override
+	public DotNetRuntimeType toRuntimeType()
+	{
+		return DotNetRuntimeType.ERROR_TYPE;
 	}
 }

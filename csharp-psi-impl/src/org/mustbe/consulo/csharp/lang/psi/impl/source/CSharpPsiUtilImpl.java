@@ -17,31 +17,34 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.dotnet.psi.DotNetArrayType;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
-import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 13.12.13.
+ * @since 18.12.13.
  */
-public class CSharpArrayTypeImpl extends CSharpElementImpl implements DotNetArrayType
+public class CSharpPsiUtilImpl
 {
-	public CSharpArrayTypeImpl(@NotNull ASTNode node)
+	@NotNull
+	public static DotNetRuntimeType toRuntimeType(@NotNull DotNetVariable variable)
 	{
-		super(node);
-	}
+		DotNetType type = variable.getType();
 
-	@Override
-	public DotNetRuntimeType toRuntimeType()
-	{
+		DotNetRuntimeType runtimeType = type.toRuntimeType();
+		if(runtimeType == DotNetRuntimeType.AUTO_TYPE)
+		{
+			DotNetExpression initializer = variable.getInitializer();
+			if(initializer == null)
+			{
+				return DotNetRuntimeType.UNKNOWN_TYPE;
+			}
+
+			return initializer.resolveType();
+		}
+
 		return DotNetRuntimeType.ERROR_TYPE;
-	}
-
-	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
-	{
-		visitor.visitArrayType(this);
 	}
 }

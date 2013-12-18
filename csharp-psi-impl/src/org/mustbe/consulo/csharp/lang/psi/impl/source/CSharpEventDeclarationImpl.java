@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -48,6 +49,13 @@ public class CSharpEventDeclarationImpl extends CSharpMemberImpl implements DotN
 	public DotNetEventAccessor[] getAccessors()
 	{
 		return findChildrenByClass(DotNetEventAccessor.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetRuntimeType toRuntimeType()
+	{
+		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@Override

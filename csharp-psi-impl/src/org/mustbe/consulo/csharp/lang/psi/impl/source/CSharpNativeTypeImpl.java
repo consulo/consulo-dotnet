@@ -18,8 +18,13 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -36,5 +41,23 @@ public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNat
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitNativeType(this);
+	}
+
+	@Override
+	public DotNetRuntimeType toRuntimeType()
+	{
+		IElementType elementType = getTypeElement().getNode().getElementType();
+		if(elementType == CSharpSoftTokens.VAR_KEYWORD)
+		{
+			return DotNetRuntimeType.AUTO_TYPE;
+		}
+		return DotNetRuntimeType.ERROR_TYPE;
+	}
+
+	@NotNull
+	@Override
+	public PsiElement getTypeElement()
+	{
+		return findNotNullChildByFilter(CSharpTokenSets.PRIMITIVE_TYPES);
 	}
 }
