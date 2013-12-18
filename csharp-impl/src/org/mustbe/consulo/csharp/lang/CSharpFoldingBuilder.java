@@ -85,7 +85,10 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 				PsiElement elementAt = containingFile.findElementAt(macroActiveBlockInfo.getStopOffset());
 				// it ill return keyword #endregion of #endif
 
-				assert elementAt != null;
+				if(elementAt == null)
+				{
+					return;
+				}
 
 				PsiElement parent = elementAt.getParent();
 				foldingList.add(new FoldingDescriptor(start, new TextRange(start.getTextRange().getStartOffset(),
@@ -165,12 +168,23 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		}
 		else if(psi instanceof CSharpMacroBlockStartImpl)
 		{
-			IElementType startElementType = ((CSharpMacroBlockStartImpl) psi).findStartElementType();
+			PsiElement startElement = ((CSharpMacroBlockStartImpl) psi).getStartElement();
+
 			PsiElement value = ((CSharpMacroBlockStartImpl) psi).getValue();
 			String valueText = value == null ? "<empty>" : value.getText();
-			if(startElementType == CSharpTokens.MACRO_IF_KEYWORD)
+			if(startElement != null)
 			{
-				return "#if " + valueText;
+				IElementType elementType = startElement.getNode().getElementType();
+				if(elementType == CSharpTokens.MACRO_IF_KEYWORD)
+				{
+					return "#if " + valueText;
+				}
+				else if(elementType == CSharpTokens.MACRO_REGION_KEYWORD)
+				{
+					String text = psi.getText();
+					String textOfMessage = text.substring(startElement.getTextLength(), text.length());
+					return textOfMessage.trim();
+				}
 			}
 			return "##";
 		}

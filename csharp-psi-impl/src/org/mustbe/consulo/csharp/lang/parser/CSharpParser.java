@@ -56,7 +56,7 @@ public class CSharpParser extends SharingParsingHelpers implements PsiParser
 
 		while(!builder.eof())
 		{
-			if(!MacroParsing.parse(builderWrapper, macroesInfo) && !DeclarationParsing.parse(builderWrapper, false))
+			if(!MacroParsing.parse(builderWrapper, macroesInfo) && !DeclarationParsing.parse(builderWrapper, macroesInfo, false))
 			{
 				builder.advanceLexer();
 			}

@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.util.NotNullFunction;
 
@@ -28,7 +29,7 @@ import com.intellij.util.NotNullFunction;
  */
 public class TypeDeclarationParsing extends SharingParsingHelpers
 {
-	public static void parse(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
+	public static void parse(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, MacroesInfo macroesInfo)
 	{
 		builder.advanceLexer();
 
@@ -60,7 +61,7 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 		{
 			while(!builder.eof() && builder.getTokenType() != RBRACE)
 			{
-				if(!DeclarationParsing.parse(builder, true))
+				if(!DeclarationParsing.parse(builder, macroesInfo, true))
 				{
 					break;
 				}

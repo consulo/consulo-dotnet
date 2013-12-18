@@ -77,8 +77,30 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	@Override
 	public void visitMacroBody(CSharpMacroBodyImpl block)
 	{
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(block).textAttributes
-				(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES).create());
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(block).textAttributes(CodeInsightColors
+				.NOT_USED_ELEMENT_ATTRIBUTES).create());
+	}
+
+	@Override
+	public void visitMacroBlockStart(CSharpMacroBlockStartImpl start)
+	{
+		PsiElement startElement = start.getStartElement();
+		if(startElement != null && startElement.getNode().getElementType() == CSharpTokens.MACRO_REGION_KEYWORD)
+		{
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(start).textAttributes(CSharpHighlightKey
+					.LINE_COMMENT).create());
+		}
+	}
+
+	@Override
+	public void visitMacroBlockStop(CSharpMacroBlockStopImpl stop)
+	{
+		IElementType startElementType = stop.findStopElementType();
+		if(startElementType == CSharpTokens.MACRO_ENDREGION_KEYWORD)
+		{
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(stop).textAttributes(CSharpHighlightKey
+					.LINE_COMMENT).create());
+		}
 	}
 
 	@Override

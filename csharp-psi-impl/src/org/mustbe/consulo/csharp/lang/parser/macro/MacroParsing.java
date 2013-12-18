@@ -108,6 +108,32 @@ public class MacroParsing extends SharingParsingHelpers
 			}
 			return true;
 		}
+		else if(token == MACRO_REGION_KEYWORD)
+		{
+			val currentOffset = builder.getCurrentOffset();
+
+			builder.advanceLexer();
+
+			macroesInfo.addActiveBlock(MACRO_REGION_KEYWORD, currentOffset);
+
+			skipUntilStop(builder);
+			mark.done(MACRO_BLOCK_START);
+			return true;
+		}
+		else if(token == MACRO_ENDREGION_KEYWORD)
+		{
+			val currentOffset = builder.getCurrentOffset();
+
+			builder.advanceLexer();
+			if(macroesInfo.findStartActiveBlockForStop(MACRO_REGION_KEYWORD, currentOffset) == null)
+			{
+				builder.error("'#endregion' without '#region'");
+			}
+
+			skipUntilStop(builder);
+			mark.done(MACRO_BLOCK_STOP);
+			return true;
+		}
 		else if(token == MACRO_ENDIF_KEYWORD)
 		{
 			val currentOffset = builder.getCurrentOffset();
