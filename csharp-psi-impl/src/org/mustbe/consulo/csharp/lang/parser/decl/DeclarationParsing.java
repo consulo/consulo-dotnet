@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import org.mustbe.consulo.csharp.lang.parser.UsingStatementParsing;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.util.NotNullFunction;
@@ -71,6 +72,10 @@ public class DeclarationParsing extends SharingParsingHelpers
 			builder.advanceLexer();
 
 			MethodParsing.parseMethodStartAtType(builder, marker);
+		}
+		else if(tokenType == USING_KEYWORD)
+		{
+			UsingStatementParsing.parseUsingList(builder, marker);
 		}
 		else if(tokenType == CONST_KEYWORD)
 		{

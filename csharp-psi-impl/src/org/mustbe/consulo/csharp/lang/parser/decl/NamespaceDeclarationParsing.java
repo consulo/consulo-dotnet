@@ -18,7 +18,6 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
-import org.mustbe.consulo.csharp.lang.parser.UsingStatementParsing;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import com.intellij.lang.PsiBuilder;
 
@@ -39,8 +38,6 @@ public class NamespaceDeclarationParsing extends SharingParsingHelpers
 
 		if(expect(builder, LBRACE, "'{' expected"))
 		{
-			UsingStatementParsing.parseUsingList(builder);
-
 			while(!builder.eof() && builder.getTokenType() != RBRACE)
 			{
 				if(!DeclarationParsing.parse(builder, true))

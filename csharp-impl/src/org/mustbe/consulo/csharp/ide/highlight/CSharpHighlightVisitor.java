@@ -21,15 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEventDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
@@ -79,6 +71,13 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 			parent.accept(this);
 		}
+	}
+
+	@Override
+	public void visitMacroNonActiveBlock(CSharpMacroNonActiveBlockImpl block)
+	{
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(block).textAttributes(CSharpHighlightKey
+				.BLOCK_COMMENT).create());
 	}
 
 	@Override
@@ -165,8 +164,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			{
 				return;
 			}
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip
-					("'" + referenceElement.getText() + "' is not resolved").range(referenceElement).create());
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip("'" + referenceElement
+					.getText() + "' is not resolved").range(referenceElement).create());
 		}
 		else
 		{
@@ -201,8 +200,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 		else if(element instanceof DotNetMethodDeclaration)
 		{
-			key = ((DotNetMethodDeclaration) element).hasModifier(CSharpTokens.STATIC_KEYWORD) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
-					.INSTANCE_METHOD;
+			key = ((DotNetMethodDeclaration) element).hasModifier(CSharpTokens.STATIC_KEYWORD) ? CSharpHighlightKey.STATIC_METHOD :
+					CSharpHighlightKey.INSTANCE_METHOD;
 		}
 		else if(element instanceof DotNetVariable)
 		{

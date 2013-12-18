@@ -19,7 +19,6 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
-import org.mustbe.consulo.csharp.lang.parser.UsingStatementParsing;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.util.NotNullFunction;
 
@@ -59,8 +58,6 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 
 		if(expect(builder, LBRACE, "'{' expected"))
 		{
-			UsingStatementParsing.parseUsingList(builder);
-
 			while(!builder.eof() && builder.getTokenType() != RBRACE)
 			{
 				if(!DeclarationParsing.parse(builder, true))

@@ -26,10 +26,8 @@ import lombok.val;
  */
 public class UsingStatementParsing extends SharingParsingHelpers
 {
-	public static void parseUsingList(PsiBuilder builder)
+	public static void parseUsingList(PsiBuilder builder, PsiBuilder.Marker marker)
 	{
-		val m = builder.mark();
-
 		boolean empty = true;
 		while(builder.getTokenType() == USING_KEYWORD)
 		{
@@ -40,11 +38,11 @@ public class UsingStatementParsing extends SharingParsingHelpers
 
 		if(empty)
 		{
-			m.drop();
+			marker.drop();
 		}
 		else
 		{
-			m.done(USING_LIST);
+			marker.done(USING_LIST);
 		}
 	}
 

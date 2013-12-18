@@ -21,10 +21,13 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.parser.macro.MacroActiveBlockInfo;
+import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import org.mustbe.consulo.csharp.lang.psi.CSharpBodyWithBraces;
 import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpCodeBlockImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroActiveBlockStartImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingStatementImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
@@ -37,6 +40,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.tree.IElementType;
 import lombok.val;
 
 /**
@@ -53,8 +57,38 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 
 		PsiElement psi = astNode.getPsi();
 
+		MacroesInfo temp = null;
+		val containingFile = psi.getContainingFile();
+		if(containingFile != null)
+		{
+			temp = containingFile.getUserData(MacroesInfo.MACROES_INFO_KEY);
+		}
+		if(temp == null)
+		{
+			temp = MacroesInfo.EMPTY;
+		}
+
+		val macroesInfo = temp;
 		psi.accept(new CSharpRecursiveElementVisitor()
 		{
+			@Override
+			public void visitMacroActiveBlockStart(CSharpMacroActiveBlockStartImpl start)
+			{
+				MacroActiveBlockInfo macroActiveBlockInfo = macroesInfo.findStartActiveBlock(start.getFirstChild().getTextOffset());
+				if(macroActiveBlockInfo == null || macroActiveBlockInfo.getStopOffset() == -1)
+				{
+					return;
+				}
+				assert containingFile != null;
+				PsiElement elementAt = containingFile.findElementAt(macroActiveBlockInfo.getStopOffset());
+				// it ill return keyword #endregion of #endif
+
+				assert elementAt != null;
+
+				PsiElement parent = elementAt.getParent();
+				foldingList.add(new FoldingDescriptor(start, new TextRange(start.getTextRange().getStartOffset(), parent.getTextRange().getEndOffset())));
+			}
+
 			@Override
 			public void visitUsingList(CSharpUsingListImpl list)
 			{
@@ -75,8 +109,8 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 
 				assert usingKeyword != null;
 
-				foldingList.add(new FoldingDescriptor(list,
-						new TextRange(usingKeyword.getTextRange().getEndOffset() + 1, list.getNode().getTextRange().getEndOffset())));
+				foldingList.add(new FoldingDescriptor(list, new TextRange(usingKeyword.getTextRange().getEndOffset() + 1,
+						list.getNode().getTextRange().getEndOffset())));
 			}
 
 			@Override
@@ -115,6 +149,17 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		else if(psi instanceof CSharpCodeBlockImpl)
 		{
 			return "{...}";
+		}
+		else if(psi instanceof CSharpMacroActiveBlockStartImpl)
+		{
+			IElementType startElementType = ((CSharpMacroActiveBlockStartImpl) psi).findStartElementType();
+			PsiElement value = ((CSharpMacroActiveBlockStartImpl) psi).getValue();
+			String valueText = value == null ? "<empty>" : value.getText();
+			if(startElementType == CSharpTokens.MACRO_IF_KEYWORD)
+			{
+				return "#if " + valueText;
+			}
+			return "##";
 		}
 		return null;
 	}

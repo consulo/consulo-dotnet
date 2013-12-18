@@ -96,14 +96,24 @@ public interface CSharpElements
 	IElementType METHOD_CALL_EXPRESSION = new IElementTypeAsPsiFactory("METHOD_CALL_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpMethodCallExpressionImpl.class);
 
-	IElementType TYPE_OF_EXPRESSION = new IElementTypeAsPsiFactory("TYPE_OF_EXPRESSION", CSharpLanguage.INSTANCE,
-			CSharpTypeOfExpressionImpl.class);
+	IElementType TYPE_OF_EXPRESSION = new IElementTypeAsPsiFactory("TYPE_OF_EXPRESSION", CSharpLanguage.INSTANCE, CSharpTypeOfExpressionImpl.class);
 
 	IElementType METHOD_CALL_PARAMETER_LIST = new IElementTypeAsPsiFactory("METHOD_CALL_PARAMETER_LIST", CSharpLanguage.INSTANCE,
 			CSharpMethodCallParameterListImpl.class);
 
 	IElementType LOCAL_VARIABLE_DECLARATION_STATEMENT = new IElementTypeAsPsiFactory("LOCAL_VARIABLE_DECLARATION_STATEMENT",
 			CSharpLanguage.INSTANCE, CSharpLocalVariableDeclarationStatementImpl.class);
+
+	IElementType MACRO_DEFINE = new IElementTypeAsPsiFactory("MACRO_DEFINE", CSharpLanguage.INSTANCE, CSharpMacroDefineImpl.class);
+
+	IElementType MACRO_ACTIVE_BLOCK_START = new IElementTypeAsPsiFactory("MACRO_ACTIVE_BLOCK_START", CSharpLanguage.INSTANCE,
+			CSharpMacroActiveBlockStartImpl.class);
+
+	IElementType MACRO_ACTIVE_BLOCK_STOP = new IElementTypeAsPsiFactory("MACRO_ACTIVE_BLOCK_STOP", CSharpLanguage.INSTANCE,
+			CSharpMacroActiveBlockStopImpl.class);
+
+	IElementType MACRO_NON_ACTIVE_BLOCK = new IElementTypeAsPsiFactory("MACRO_NON_ACTIVE_BLOCK", CSharpLanguage.INSTANCE,
+			CSharpMacroNonActiveBlockImpl.class);
 
 	IElementType EXPRESSION_STATEMENT = new IElementTypeAsPsiFactory("EXPRESSION_STATEMENT", CSharpLanguage.INSTANCE, CSharpExpressionStatementImpl.class);
 }
