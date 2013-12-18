@@ -22,7 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.CollectScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.TypeOrGenericParameterResolveScopeProcessor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberToTypeValueResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespaceDefRuntimeType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefRuntimeType;
 import org.mustbe.consulo.dotnet.packageSupport.DotNetPackageDescriptor;
@@ -64,7 +64,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		NAMESPACE,
 		NAMESPACE_WITH_CREATE_OPTION,
 		METHOD,
-		TYPE_OR_GENERIC_PARAMETER,
+		TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD,
 		ANY_MEMBER
 	}
 
@@ -159,13 +159,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					return ResolveResult.EMPTY_ARRAY;
 				}
 				return new ResolveResult[]{new PsiElementResolveResult(aPackage)};
-			case TYPE_OR_GENERIC_PARAMETER:
+			case TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD:
 				if(qualifier instanceof CSharpReferenceExpressionImpl)
 				{
 					PsiElement resolve = ((CSharpReferenceExpressionImpl) qualifier).resolve();
 					if(resolve instanceof Package)
 					{
-						TypeOrGenericParameterResolveScopeProcessor p = new TypeOrGenericParameterResolveScopeProcessor(getReferenceName());
+						MemberToTypeValueResolveScopeProcessor p = new MemberToTypeValueResolveScopeProcessor(getReferenceName());
 						p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
 
 						PsiScopesUtilCore.treeWalkUp(p, resolve, null);
@@ -179,7 +179,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}
 
 				assert qualifier == null;
-				TypeOrGenericParameterResolveScopeProcessor p = new TypeOrGenericParameterResolveScopeProcessor(getReferenceName());
+				MemberToTypeValueResolveScopeProcessor p = new MemberToTypeValueResolveScopeProcessor(getReferenceName());
 				p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
 				PsiScopesUtilCore.treeWalkUp(p, this, null);
 				return p.toResolveResults();
@@ -251,7 +251,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(parent instanceof DotNetReferenceType)
 		{
-			return ResolveToKind.TYPE_OR_GENERIC_PARAMETER;
+			return ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD;
 		}
 		else if(parent instanceof CSharpUsingStatementImpl)
 		{
