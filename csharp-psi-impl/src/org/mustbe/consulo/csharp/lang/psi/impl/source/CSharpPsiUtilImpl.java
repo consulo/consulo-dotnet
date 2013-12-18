@@ -42,9 +42,11 @@ public class CSharpPsiUtilImpl
 				return DotNetRuntimeType.UNKNOWN_TYPE;
 			}
 
-			return initializer.resolveType();
+			return initializer.toRuntimeType();
 		}
-
-		return DotNetRuntimeType.ERROR_TYPE;
+		else
+		{
+			return runtimeType;
+		}
 	}
 }

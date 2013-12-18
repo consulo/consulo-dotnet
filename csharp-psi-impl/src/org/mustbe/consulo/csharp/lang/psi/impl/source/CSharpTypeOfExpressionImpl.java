@@ -42,7 +42,7 @@ public class CSharpTypeOfExpressionImpl extends CSharpElementImpl implements Dot
 	}
 
 	@Override
-	public DotNetRuntimeType resolveType()
+	public DotNetRuntimeType toRuntimeType()
 	{
 		return new CSharpTypeDefRuntimeType(DotNetTypes.System_RuntimeType, getProject(), getResolveScope());
 	}

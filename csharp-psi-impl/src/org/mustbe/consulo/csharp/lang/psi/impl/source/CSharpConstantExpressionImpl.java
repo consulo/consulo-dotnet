@@ -40,7 +40,7 @@ public class CSharpConstantExpressionImpl extends CSharpElementImpl implements D
 	}
 
 	@Override
-	public DotNetRuntimeType resolveType()
+	public DotNetRuntimeType toRuntimeType()
 	{
 		return DotNetRuntimeType.ERROR_TYPE;
 	}

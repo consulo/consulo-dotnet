@@ -24,5 +24,5 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
  */
 public interface DotNetExpression extends DotNetElement
 {
-	DotNetRuntimeType resolveType();
+	DotNetRuntimeType toRuntimeType();
 }

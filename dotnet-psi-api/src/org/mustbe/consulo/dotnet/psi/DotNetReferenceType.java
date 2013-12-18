@@ -22,4 +22,5 @@ package org.mustbe.consulo.dotnet.psi;
  */
 public interface DotNetReferenceType extends DotNetType
 {
+	DotNetReferenceExpression getReferenceExpression();
 }

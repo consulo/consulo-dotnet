@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
@@ -42,6 +43,17 @@ public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNet
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{
-		return DotNetRuntimeType.ERROR_TYPE;
+		DotNetReferenceExpression referenceExpression = getReferenceExpression();
+		if(referenceExpression == null)
+		{
+			return DotNetRuntimeType.ERROR_TYPE;
+		}
+		return referenceExpression.toRuntimeType();
+	}
+
+	@Override
+	public DotNetReferenceExpression getReferenceExpression()
+	{
+		return findChildByClass(DotNetReferenceExpression.class);
 	}
 }

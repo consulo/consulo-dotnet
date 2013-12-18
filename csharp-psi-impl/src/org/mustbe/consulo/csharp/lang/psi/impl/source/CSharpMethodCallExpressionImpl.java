@@ -40,7 +40,7 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 	}
 
 	@Override
-	public DotNetRuntimeType resolveType()
+	public DotNetRuntimeType toRuntimeType()
 	{
 		return DotNetRuntimeType.ERROR_TYPE;
 	}

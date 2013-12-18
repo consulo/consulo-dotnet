@@ -190,7 +190,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				PsiElement target = this;
 				if(qualifier instanceof DotNetExpression)
 				{
-					DotNetRuntimeType runtimeType = ((DotNetExpression) qualifier).resolveType();
+					DotNetRuntimeType runtimeType = ((DotNetExpression) qualifier).toRuntimeType();
 					if(runtimeType == DotNetRuntimeType.ERROR_TYPE)
 					{
 						return ResolveResult.EMPTY_ARRAY;
@@ -316,7 +316,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		PsiElement target = this;
 		if(qualifier instanceof DotNetExpression)
 		{
-			DotNetRuntimeType runtimeType = ((DotNetExpression) qualifier).resolveType();
+			DotNetRuntimeType runtimeType = ((DotNetExpression) qualifier).toRuntimeType();
 			if(runtimeType == DotNetRuntimeType.ERROR_TYPE)
 			{
 				return ArrayUtil.EMPTY_OBJECT_ARRAY;
@@ -345,7 +345,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	}
 
 	@Override
-	public DotNetRuntimeType resolveType()
+	public DotNetRuntimeType toRuntimeType()
 	{
 		PsiElement resolve = resolve();
 		if(resolve instanceof CSharpNamespaceDeclarationImpl)
