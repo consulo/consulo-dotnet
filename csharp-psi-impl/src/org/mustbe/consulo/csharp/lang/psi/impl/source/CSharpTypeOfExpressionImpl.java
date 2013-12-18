@@ -18,6 +18,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefRuntimeType;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
@@ -42,6 +44,6 @@ public class CSharpTypeOfExpressionImpl extends CSharpElementImpl implements Dot
 	@Override
 	public DotNetRuntimeType resolveType()
 	{
-		return DotNetRuntimeType.ERROR_TYPE;
+		return new CSharpTypeDefRuntimeType(DotNetTypes.System_RuntimeType, getProject(), getResolveScope());
 	}
 }

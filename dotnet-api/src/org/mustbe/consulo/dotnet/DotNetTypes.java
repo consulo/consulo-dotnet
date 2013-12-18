@@ -28,4 +28,5 @@ public interface DotNetTypes
 	String System_ValueType = "System.ValueType";
 	String System_IntPtr = "System.IntPtr";
 	String System_UIntPtr = "System.UIntPtr";
+	String System_RuntimeType = "System.RuntimeType";
 }
