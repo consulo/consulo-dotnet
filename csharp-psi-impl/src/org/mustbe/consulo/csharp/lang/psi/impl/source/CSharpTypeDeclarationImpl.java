@@ -142,6 +142,14 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 			}
 		}
 
+		for(DotNetNamedElement namedElement : getMembers())
+		{
+			if(!processor.execute(namedElement, state))
+			{
+				return false;
+			}
+		}
+
 		if(!processor.execute(this, state))
 		{
 			return false;

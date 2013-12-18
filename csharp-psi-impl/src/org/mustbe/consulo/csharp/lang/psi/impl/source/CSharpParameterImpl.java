@@ -17,8 +17,11 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -36,5 +39,19 @@ public class CSharpParameterImpl extends CSharpMemberImpl implements DotNetParam
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitParameter(this);
+	}
+
+	@NotNull
+	@Override
+	public DotNetType getType()
+	{
+		return findNotNullChildByClass(DotNetType.class);
+	}
+
+	@Nullable
+	@Override
+	public DotNetExpression getInitializer()
+	{
+		return null;
 	}
 }

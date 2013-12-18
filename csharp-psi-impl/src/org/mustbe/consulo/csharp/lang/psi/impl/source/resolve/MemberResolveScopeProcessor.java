@@ -17,19 +17,37 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.BaseScopeProcessor;
 
 /**
  * @author VISTALL
  * @since 17.12.13.
  */
-public class MemberResolveScopeProcessor extends BaseScopeProcessor
+public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 {
+	private final String myReferenceName;
+	private final boolean myOnlyMethods;
+
+	public MemberResolveScopeProcessor(String referenceName, boolean onlyMethods)
+	{
+		myReferenceName = referenceName;
+		myOnlyMethods = onlyMethods;
+	}
+
 	@Override
 	public boolean execute(@NotNull PsiElement element, ResolveState state)
 	{
-		return false;
+		if(myOnlyMethods && element instanceof DotNetMethodDeclaration || !myOnlyMethods && element instanceof DotNetNamedElement)
+		{
+			if(Comparing.equal(((DotNetNamedElement) element).getName(), myReferenceName))
+			{
+				myElements.add(element);
+			}
+		}
+		return true;
 	}
 }

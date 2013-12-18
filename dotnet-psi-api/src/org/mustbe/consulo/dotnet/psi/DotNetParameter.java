@@ -17,13 +17,12 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
-import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
 @ArrayFactoryFields
-public interface DotNetParameter extends DotNetModifierListOwner, PsiNameIdentifierOwner
+public interface DotNetParameter extends DotNetVariable
 {
 }

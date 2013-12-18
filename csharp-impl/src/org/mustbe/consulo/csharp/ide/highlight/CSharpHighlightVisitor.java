@@ -30,6 +30,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
@@ -70,6 +71,13 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		{
 			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(element).textAttributes(CSharpHighlightKey
 					.SOFT_KEYWORD).create());
+		}
+
+		if(element.getNode().getElementType() == CSharpTokens.IDENTIFIER)
+		{
+			PsiElement parent = element.getParent();
+
+			parent.accept(this);
 		}
 	}
 
@@ -190,6 +198,11 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		else if(element instanceof DotNetParameter)
 		{
 			key = CSharpHighlightKey.PARAMETER;
+		}
+		else if(element instanceof DotNetMethodDeclaration)
+		{
+			key = ((DotNetMethodDeclaration) element).hasModifier(CSharpTokens.STATIC_KEYWORD) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
+					.INSTANCE_METHOD;
 		}
 		else if(element instanceof DotNetVariable)
 		{

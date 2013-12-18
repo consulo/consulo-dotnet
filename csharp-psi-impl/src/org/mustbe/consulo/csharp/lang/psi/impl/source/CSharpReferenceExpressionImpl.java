@@ -21,8 +21,12 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.CollectScopeProcessor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.TypeOrGenericParameterResolveScopeProcessor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespaceDefRuntimeType;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefRuntimeType;
 import org.mustbe.consulo.dotnet.packageSupport.DotNetPackageDescriptor;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
@@ -127,6 +131,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	{
 		ResolveToKind kind = kind();
 		PsiElement parent = getParent();
+		PsiElement qualifier = getQualifier();
 		switch(kind)
 		{
 			case TYPE_PARAMETER_FROM_PARENT:
@@ -154,7 +159,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}
 				return new ResolveResult[]{new PsiElementResolveResult(aPackage)};
 			case TYPE_OR_GENERIC_PARAMETER:
-				PsiElement qualifier = getQualifier();
 				if(qualifier instanceof CSharpReferenceExpressionImpl)
 				{
 					PsiElement resolve = ((CSharpReferenceExpressionImpl) qualifier).resolve();
@@ -179,10 +183,28 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				PsiScopesUtilCore.treeWalkUp(p, this, null);
 				return p.toResolveResults();
 			case METHOD:
-				break;
 			case ANY_MEMBER:
+				MemberResolveScopeProcessor processor = new MemberResolveScopeProcessor(getReferenceName(), kind == ResolveToKind.METHOD);
 
-				break;
+				PsiElement target = this;
+				if(qualifier instanceof DotNetExpression)
+				{
+					DotNetRuntimeType runtimeType = ((DotNetExpression) qualifier).resolveType();
+					if(runtimeType == DotNetRuntimeType.ERROR_TYPE)
+					{
+						return ResolveResult.EMPTY_ARRAY;
+					}
+
+					PsiElement psiElement = runtimeType.toPsiElement();
+					if(psiElement == null)
+					{
+						return ResolveResult.EMPTY_ARRAY;
+					}
+					target = psiElement;
+				}
+
+				PsiScopesUtilCore.treeWalkUp(processor, target, null);
+				return processor.toResolveResults();
 		}
 		return ResolveResult.EMPTY_ARRAY;
 	}
@@ -322,6 +344,15 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public DotNetRuntimeType resolveType()
 	{
+		PsiElement resolve = resolve();
+		if(resolve instanceof CSharpNamespaceDeclarationImpl)
+		{
+			return new CSharpNamespaceDefRuntimeType(((CSharpNamespaceDeclarationImpl) resolve).getQName(), getProject(), getResolveScope());
+		}
+		else if(resolve instanceof CSharpTypeDeclarationImpl)
+		{
+			return new CSharpTypeDefRuntimeType(((CSharpTypeDeclarationImpl) resolve).getQName(), getProject(), getResolveScope());
+		}
 		return DotNetRuntimeType.ERROR_TYPE;
 	}
 }

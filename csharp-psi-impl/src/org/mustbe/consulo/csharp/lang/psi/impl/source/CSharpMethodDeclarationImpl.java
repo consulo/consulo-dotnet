@@ -103,6 +103,14 @@ public class CSharpMethodDeclarationImpl extends CSharpMemberImpl implements CSh
 			}
 		}
 
+		for(DotNetParameter parameter : getParameters())
+		{
+			if(!processor.execute(parameter, state))
+			{
+				return false;
+			}
+		}
+
 		return super.processDeclarations(processor, state, lastParent, place);
 	}
 }

@@ -16,6 +16,9 @@
 
 package org.mustbe.consulo.dotnet.resolve;
 
+import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiElement;
+
 /**
  * @author VISTALL
  * @since 16.12.13.
@@ -24,6 +27,22 @@ public interface DotNetRuntimeType
 {
 	DotNetRuntimeType ERROR_TYPE = new DotNetRuntimeType()
 	{
+		@Override
+		public boolean isNullable()
+		{
+			return true;
+		}
 
+		@Nullable
+		@Override
+		public PsiElement toPsiElement()
+		{
+			return null;
+		}
 	};
+
+	boolean isNullable();
+
+	@Nullable
+	PsiElement toPsiElement();
 }

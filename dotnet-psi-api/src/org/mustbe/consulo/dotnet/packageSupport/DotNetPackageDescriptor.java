@@ -168,12 +168,12 @@ public class DotNetPackageDescriptor implements PackageDescriptor
 			Collection<DotNetTypeDeclaration> elements = TypeByQNameIndex.getInstance().get(name, project, GlobalSearchScope.allScope(project));
 			ContainerUtil.addAllNotNull(list, elements);
 		}
-	/*	for(String name : nnames)
+		for(String name : nnames)
 		{
 			Collection<DotNetNamespaceDeclaration> elements = NamespaceByQNameIndex.getInstance().get(name, project,
 					GlobalSearchScope.allScope(project));
 			ContainerUtil.addAllNotNull(list, elements);
-		}  */
+		}
 		return new ArrayList<PsiElement>(list);
 	}
 }
