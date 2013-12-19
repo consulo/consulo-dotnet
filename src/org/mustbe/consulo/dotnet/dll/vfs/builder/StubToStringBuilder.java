@@ -280,12 +280,16 @@ public class StubToStringBuilder
 
 		for(MethodDef methodDef : typeDef.getMethods())
 		{
-			String name = methodDef.getName();
+			String name = cutSuperName(methodDef.getName());
 
 			if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 			{
 				// dont show properties methods
-				if(name.startsWith("get_") || name.startsWith("set_") || name.equals(STATIC_CONSTRUCTOR_NAME))
+				if(name.startsWith("get_") ||
+						name.startsWith("set_") ||
+						name.startsWith("add_") ||
+						name.startsWith("remove_") ||
+						name.equals(STATIC_CONSTRUCTOR_NAME))
 				{
 					continue;
 				}
@@ -447,13 +451,6 @@ public class StubToStringBuilder
 	@NotNull
 	private static StubBlock processMethod(TypeDef typeDef, MethodDef methodDef, String name, boolean delegate, boolean accessor)
 	{
-		boolean constructor = name.equals(CONSTRUCTOR_NAME);
-
-		if(!constructor)
-		{
-			name = cutSuperName(name);
-		}
-
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(getMethodAccess(methodDef).name().toLowerCase()).append(" ");
@@ -488,7 +485,7 @@ public class StubToStringBuilder
 			//builder.append("final "); //TODO [VISTALL] final  ? maybe sealed ?
 		}
 
-		if(constructor)
+		if(name.equals(CONSTRUCTOR_NAME))
 		{
 			builder.append(StubToStringUtil.getUserTypeDefName(typeDef));
 		}
@@ -524,14 +521,21 @@ public class StubToStringBuilder
 		}
 		else
 		{
-			return new StubBlock(builder.toString(), "// Bodies decompilation is not supported\n", BRACES);
+			StringBuilder cmt = new StringBuilder("// Bodies decompilation is not supported.");
+			cmt.append(" Flags ").append(methodDef.getFlags());
+			cmt.append(". ImplFlags ").append(methodDef.getFlags()).append("\n");
+			return new StubBlock(builder.toString(), cmt.toString() /*"// Bodies decompilation is not supported\n"*/, BRACES);
 		}
 	}
 
 	@NotNull
 	private static String cutSuperName(@NotNull String name)
 	{
-		if(StringUtil.containsChar(name, '.'))
+		if(name.equals(CONSTRUCTOR_NAME))
+		{
+			return CONSTRUCTOR_NAME;
+		}
+		else if(StringUtil.containsChar(name, '.'))
 		{
 			// method override(implement) from superclass, cut owner of super method
 			val dotIndex = name.lastIndexOf('.');
