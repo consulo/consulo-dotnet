@@ -64,6 +64,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		NAMESPACE,
 		NAMESPACE_WITH_CREATE_OPTION,
 		METHOD,
+		ATTRIBUTE,
 		TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD,
 		ANY_MEMBER
 	}
@@ -159,30 +160,15 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					return ResolveResult.EMPTY_ARRAY;
 				}
 				return new ResolveResult[]{new PsiElementResolveResult(aPackage)};
-			case TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD:
-				if(qualifier instanceof CSharpReferenceExpressionImpl)
+			case ATTRIBUTE:
+				ResolveResult[] resolveResults = processTypeOrGenericParameterOrMethod(qualifier, getReferenceName() + "Attribute");
+				if(resolveResults.length != 1)
 				{
-					PsiElement resolve = ((CSharpReferenceExpressionImpl) qualifier).resolve();
-					if(resolve instanceof Package)
-					{
-						MemberToTypeValueResolveScopeProcessor p = new MemberToTypeValueResolveScopeProcessor(getReferenceName());
-						p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
-
-						PsiScopesUtilCore.treeWalkUp(p, resolve, null);
-
-						return p.toResolveResults();
-					}
-					else
-					{
-						return ResolveResult.EMPTY_ARRAY;
-					}
+					return resolveResults;
 				}
-
-				assert qualifier == null;
-				MemberToTypeValueResolveScopeProcessor p = new MemberToTypeValueResolveScopeProcessor(getReferenceName());
-				p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
-				PsiScopesUtilCore.treeWalkUp(p, this, null);
-				return p.toResolveResults();
+				return resolveResults; //TODO [VISTALL] resolve to constuctor
+			case TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD:
+				return processTypeOrGenericParameterOrMethod(qualifier, getReferenceName());
 			case METHOD:
 			case ANY_MEMBER:
 				MemberResolveScopeProcessor processor = new MemberResolveScopeProcessor(getReferenceName(), kind == ResolveToKind.METHOD);
@@ -208,6 +194,33 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return processor.toResolveResults();
 		}
 		return ResolveResult.EMPTY_ARRAY;
+	}
+
+	private ResolveResult[] processTypeOrGenericParameterOrMethod(PsiElement qualifier, String referenceName)
+	{
+		if(qualifier instanceof CSharpReferenceExpressionImpl)
+		{
+			PsiElement resolve = ((CSharpReferenceExpressionImpl) qualifier).resolve();
+			if(resolve instanceof Package)
+			{
+				MemberToTypeValueResolveScopeProcessor p = new MemberToTypeValueResolveScopeProcessor(referenceName);
+				p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
+
+				PsiScopesUtilCore.treeWalkUp(p, resolve, null);
+
+				return p.toResolveResults();
+			}
+			else
+			{
+				return ResolveResult.EMPTY_ARRAY;
+			}
+		}
+
+		assert qualifier == null;
+		MemberToTypeValueResolveScopeProcessor p = new MemberToTypeValueResolveScopeProcessor(referenceName);
+		p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
+		PsiScopesUtilCore.treeWalkUp(p, this, null);
+		return p.toResolveResults();
 	}
 
 	@Nullable
@@ -257,11 +270,20 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			return ResolveToKind.NAMESPACE;
 		}
+		else if(parent instanceof CSharpAttributeImpl)
+		{
+			return ResolveToKind.ATTRIBUTE;
+		}
 		else if(parent instanceof CSharpReferenceExpressionImpl)
 		{
 			if(PsiTreeUtil.getParentOfType(this, DotNetNamespaceDeclaration.class) != null)
 			{
 				return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+			}
+
+			if(PsiTreeUtil.getParentOfType(this, CSharpAttributeImpl.class) != null)
+			{
+				return ResolveToKind.NAMESPACE;
 			}
 
 			if(PsiTreeUtil.getParentOfType(this, CSharpUsingStatementImpl.class) != null)
