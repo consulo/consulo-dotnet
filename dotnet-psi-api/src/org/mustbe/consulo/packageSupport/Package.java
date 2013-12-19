@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.packageSupport;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +65,7 @@ public class Package extends LightElement implements PsiNamedElement
 		{
 			globalSearchScope = GlobalSearchScope.allScope(getProject());
 		}
-		List<PsiElement> children = DotNetPackageDescriptor.INSTANCE.getChildren(myQualifiedName, globalSearchScope, getProject());
+		Collection<? extends PsiElement> children = DotNetPackageDescriptor.INSTANCE.getChildren(myQualifiedName, globalSearchScope, getProject());
 		for(PsiElement child : children)
 		{
 			if(!processor.execute(child, state))
@@ -80,7 +80,7 @@ public class Package extends LightElement implements PsiNamedElement
 	@Override
 	public PsiElement[] getChildren()
 	{
-		List<PsiElement> children = DotNetPackageDescriptor.INSTANCE.getChildren(myQualifiedName, GlobalSearchScope.allScope(getProject()),
+		Collection<? extends PsiElement> children = DotNetPackageDescriptor.INSTANCE.getChildren(myQualifiedName, GlobalSearchScope.allScope(getProject()),
 				getProject());
 		return children.toArray(new PsiElement[children.size()]);
 	}

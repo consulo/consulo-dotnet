@@ -18,19 +18,35 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNamespaceDeclarationImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 15.12.13.
+ * @since 19.12.13.
  */
-public class CSharpNamespaceStub extends StubWithParentQName<CSharpNamespaceDeclarationImpl>
+public class StubWithParentQName<T extends DotNetNamedElement> extends NamedStubBase<T>
 {
-	public CSharpNamespaceStub(StubElement parent, @Nullable StringRef qname, @NotNull StringRef parentQName)
+	private StringRef myParentQName;
+
+	public StubWithParentQName(StubElement parent, IStubElementType elementType, @Nullable StringRef name, @NotNull StringRef namespaceQName)
 	{
-		super(parent, CSharpStubElements.NAMESPACE_DECLARATION, qname, parentQName);
+		super(parent, elementType, name);
+		myParentQName = namespaceQName;
+	}
+
+	public StubWithParentQName(StubElement parent, IStubElementType elementType, @Nullable String name, @NotNull StringRef namespaceQName)
+	{
+		super(parent, elementType, name);
+		myParentQName = namespaceQName;
+	}
+
+	@Nullable
+	public String getParentQName()
+	{
+		return StringRef.toString(myParentQName);
 	}
 }

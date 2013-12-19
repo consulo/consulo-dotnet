@@ -58,14 +58,14 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 	public CSharpTypeStub createStub(@NotNull CSharpTypeDeclaration cSharpTypeDeclaration, StubElement stubElement)
 	{
 		return new CSharpTypeStub(stubElement, StringRef.fromNullableString(cSharpTypeDeclaration.getName()),
-				StringRef.fromNullableString(cSharpTypeDeclaration.getQName()));
+				StringRef.fromNullableString(cSharpTypeDeclaration.getParentQName()));
 	}
 
 	@Override
 	public void serialize(@NotNull CSharpTypeStub cSharpTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(cSharpTypeStub.getName());
-		stubOutputStream.writeName(cSharpTypeStub.getQName());
+		stubOutputStream.writeName(cSharpTypeStub.getParentQName());
 	}
 
 	@NotNull
@@ -73,8 +73,8 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 	public CSharpTypeStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
 	{
 		StringRef name = stubInputStream.readName();
-		StringRef qname = stubInputStream.readName();
-		return new CSharpTypeStub(stubElement, name, qname);
+		StringRef parentQName = stubInputStream.readName();
+		return new CSharpTypeStub(stubElement, name, parentQName);
 	}
 
 	@Override
@@ -84,12 +84,11 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 		if(!StringUtil.isEmpty(name))
 		{
 			indexSink.occurrence(DotNetIndexKeys.TYPE_INDEX, name);
-		}
 
-		String qName = cSharpTypeStub.getQName();
-		if(!StringUtil.isEmpty(qName))
-		{
-			indexSink.occurrence(DotNetIndexKeys.TYPE_BY_QNAME_INDEX, qName);
+			String parentQName = cSharpTypeStub.getParentQName();
+
+			indexSink.occurrence(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, parentQName);
+			indexSink.occurrence(DotNetIndexKeys.TYPE_BY_QNAME_INDEX, StringUtil.isEmpty(parentQName) ? name : parentQName + "." + name);
 		}
 	}
 }

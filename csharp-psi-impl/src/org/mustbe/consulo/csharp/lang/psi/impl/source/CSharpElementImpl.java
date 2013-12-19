@@ -23,6 +23,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -33,6 +34,13 @@ public abstract class CSharpElementImpl extends ASTWrapperPsiElement
 	public CSharpElementImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@NotNull
+	@Override
+	public GlobalSearchScope getResolveScope()
+	{
+		return super.getResolveScope();
 	}
 
 	@Override

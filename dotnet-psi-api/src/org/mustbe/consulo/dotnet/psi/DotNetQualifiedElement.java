@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.stub;
+package org.mustbe.consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNamespaceDeclarationImpl;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 15.12.13.
+ * @since 19.12.13.
  */
-public class CSharpNamespaceStub extends StubWithParentQName<CSharpNamespaceDeclarationImpl>
+public interface DotNetQualifiedElement extends DotNetNamedElement
 {
-	public CSharpNamespaceStub(StubElement parent, @Nullable StringRef qname, @NotNull StringRef parentQName)
-	{
-		super(parent, CSharpStubElements.NAMESPACE_DECLARATION, qname, parentQName);
-	}
+	@Nullable
+	String getParentQName();
+
+	@Nullable
+	String getQName();
 }

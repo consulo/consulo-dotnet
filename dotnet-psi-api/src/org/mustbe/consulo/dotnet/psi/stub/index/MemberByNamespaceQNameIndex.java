@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.stub;
+package org.mustbe.consulo.dotnet.psi.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNamespaceDeclarationImpl;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import com.intellij.psi.stubs.StringStubIndexExtension;
+import com.intellij.psi.stubs.StubIndexExtension;
+import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 15.12.13.
+ * @since 18.12.13.
  */
-public class CSharpNamespaceStub extends StubWithParentQName<CSharpNamespaceDeclarationImpl>
+public class MemberByNamespaceQNameIndex extends StringStubIndexExtension<DotNetNamedElement>
 {
-	public CSharpNamespaceStub(StubElement parent, @Nullable StringRef qname, @NotNull StringRef parentQName)
+	public static MemberByNamespaceQNameIndex getInstance()
 	{
-		super(parent, CSharpStubElements.NAMESPACE_DECLARATION, qname, parentQName);
+		return StubIndexExtension.EP_NAME.findExtension(MemberByNamespaceQNameIndex.class);
+	}
+
+	@NotNull
+	@Override
+	public StubIndexKey<String, DotNetNamedElement> getKey()
+	{
+		return DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX;
 	}
 }

@@ -24,11 +24,8 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetMethodDeclaration extends DotNetModifierListOwner, DotNetNamedElement, PsiNameIdentifierOwner, DotNetGenericParameterListOwner
+public interface DotNetMethodDeclaration extends DotNetModifierListOwner, DotNetQualifiedElement, PsiNameIdentifierOwner, DotNetGenericParameterListOwner
 {
-	@Nullable
-	String getQName();
-
 	boolean isDelegate();
 
 	boolean isOperator();

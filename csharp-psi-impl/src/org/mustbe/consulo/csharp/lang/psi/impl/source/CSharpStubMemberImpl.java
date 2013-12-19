@@ -20,13 +20,15 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.StubWithParentQName;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.NamedStub;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
@@ -34,8 +36,8 @@ import com.intellij.util.IncorrectOperationException;
  * @author VISTALL
  * @since 15.12.13.
  */
-public abstract class CSharpStubMemberImpl<S extends NamedStub<?>> extends CSharpStubElementImpl<S> implements PsiNameIdentifierOwner,
-		DotNetModifierListOwner
+public abstract class CSharpStubMemberImpl<S extends StubWithParentQName<?>> extends CSharpStubElementImpl<S> implements PsiNameIdentifierOwner,
+		DotNetModifierListOwner, DotNetQualifiedElement
 {
 	public CSharpStubMemberImpl(@NotNull ASTNode node)
 	{
@@ -66,6 +68,35 @@ public abstract class CSharpStubMemberImpl<S extends NamedStub<?>> extends CShar
 	public PsiElement getNameIdentifier()
 	{
 		return findChildByType(CSharpTokens.IDENTIFIER);
+	}
+
+	@Nullable
+	@Override
+	public String getQName()
+	{
+		String parentQName = getParentQName();
+		if(StringUtil.isEmpty(parentQName))
+		{
+			return getName();
+		}
+		return parentQName + "." + getName();
+	}
+
+	@Nullable
+	@Override
+	public String getParentQName()
+	{
+		S stub = getStub();
+		if(stub != null)
+		{
+			return stub.getParentQName();
+		}
+		PsiElement parent = getParent();
+		if(parent instanceof DotNetQualifiedElement)
+		{
+			return ((DotNetQualifiedElement) parent).getQName();
+		}
+		return "";
 	}
 
 	@Override

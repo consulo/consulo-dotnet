@@ -14,35 +14,33 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.packageSupport;
-
-import java.util.Collection;
+package org.mustbe.consulo.csharp.lang.psi.impl.resolve;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.QualifiedName;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.ResolveScopeEnlarger;
+import com.intellij.psi.search.GlobalSearchScopes;
+import com.intellij.psi.search.SearchScope;
 
 /**
  * @author VISTALL
- * @since 16.12.13.
+ * @since 19.12.13.
  */
-public interface PackageDescriptor
+public class CSharpResolveScopeEnlarger extends ResolveScopeEnlarger
 {
-	boolean canCreate(@NotNull String nodes, Project project, GlobalSearchScope searchScope);
-
 	@Nullable
-	PsiElement getNavigationItem(@NotNull QualifiedName qualifiedName, @NotNull Project project);
-
-	@NotNull
-	String fromQName(@NotNull QualifiedName name);
-
-	@NotNull
-	Collection<? extends PsiElement> getChildren(@NotNull QualifiedName qualifiedName, @NotNull GlobalSearchScope globalSearchScope,
-		@NotNull Project project);
-
-	@NotNull
-	QualifiedName toQName(@NotNull String name);
+	@Override
+	public SearchScope getAdditionalResolveScope(@NotNull VirtualFile virtualFile, Project project)
+	{
+		Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
+		if(moduleForFile != null)
+		{
+			return GlobalSearchScopes.directoryScope(project, moduleForFile.getModuleDir(), true);
+		}
+		return null;
+	}
 }

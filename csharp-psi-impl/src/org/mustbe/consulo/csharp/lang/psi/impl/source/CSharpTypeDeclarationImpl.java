@@ -27,7 +27,6 @@ import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -105,24 +104,6 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	public boolean isEnum()
 	{
 		return findChildByType(CSharpTokens.ENUM_KEYWORD) != null;
-	}
-
-	@Nullable
-	@Override
-	public String getQName()
-	{
-		CSharpTypeStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getQName();
-		}
-
-		PsiElement parent = getParent();
-		if(parent instanceof DotNetNamespaceDeclaration)
-		{
-			return ((DotNetNamespaceDeclaration) parent).getQName() + "." + getName();
-		}
-		return getName();
 	}
 
 	@Override

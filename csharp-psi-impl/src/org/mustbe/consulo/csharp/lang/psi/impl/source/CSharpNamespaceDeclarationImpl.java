@@ -30,6 +30,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -75,11 +76,6 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	@Override
 	public String getName()
 	{
-		CSharpNamespaceStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getName();
-		}
 		CSharpReferenceExpressionImpl childByClass = findChildByClass(CSharpReferenceExpressionImpl.class);
 		return childByClass != null ? childByClass.getText() : null;
 	}
@@ -117,6 +113,24 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 
 	@Nullable
 	@Override
+	public String getParentQName()
+	{
+		CSharpNamespaceStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getParentQName();
+		}
+
+		PsiElement parent = getParent();
+		if(parent instanceof DotNetNamespaceDeclaration)
+		{
+			return ((DotNetNamespaceDeclaration) parent).getQName();
+		}
+		return "";
+	}
+
+	@Nullable
+	@Override
 	public String getQName()
 	{
 		CSharpNamespaceStub stub = getStub();
@@ -125,10 +139,10 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 			return stub.getName();
 		}
 
-		PsiElement parent = getParent();
-		if(parent instanceof DotNetNamespaceDeclaration)
+		String str = getParentQName();
+		if(!StringUtil.isEmpty(str))
 		{
-			return ((DotNetNamespaceDeclaration) parent).getQName() + "." + getName();
+			return str + "." + getName();
 		}
 		return getName();
 	}
@@ -142,13 +156,13 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 			return false;
 		}
 
-		DotNetReferenceExpression namespaceReference = getNamespaceReference();
-		if(namespaceReference == null)
+		for(DotNetNamedElement dotNetNamedElement : getMembers())
 		{
-			return true;
+			if(!processor.execute(dotNetNamedElement, state))
+			{
+				return false;
+			}
 		}
-
-		PsiElement resolve = namespaceReference.resolve();
-		return resolve != null && resolve.processDeclarations(processor, state, lastParent, place);
+		return true;
 	}
 }

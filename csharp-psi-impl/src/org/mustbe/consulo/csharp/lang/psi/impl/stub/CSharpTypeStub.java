@@ -19,7 +19,6 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
-import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 
@@ -27,19 +26,10 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 15.12.13.
  */
-public class CSharpTypeStub extends NamedStubBase<CSharpTypeDeclaration>
+public class CSharpTypeStub extends StubWithParentQName<CSharpTypeDeclaration>
 {
-	private StringRef myQName;
-
-	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname)
+	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef parentQName)
 	{
-		super(parent, CSharpStubElements.TYPE_DECLARATION, name);
-		myQName = qname;
-	}
-
-	@Nullable
-	public String getQName()
-	{
-		return StringRef.toString(myQName);
+		super(parent, CSharpStubElements.TYPE_DECLARATION, name, parentQName);
 	}
 }

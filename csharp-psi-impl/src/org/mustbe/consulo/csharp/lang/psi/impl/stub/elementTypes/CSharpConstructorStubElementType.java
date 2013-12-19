@@ -57,14 +57,14 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 	public CSharpConstructorStub createStub(@NotNull CSharpConstructorDeclarationImpl methodDeclaration, StubElement stubElement)
 	{
 		return new CSharpConstructorStub(stubElement, StringRef.fromNullableString(methodDeclaration.getName()),
-				StringRef.fromNullableString(methodDeclaration.getQName()));
+				StringRef.fromNullableString(methodDeclaration.getParentQName()));
 	}
 
 	@Override
 	public void serialize(@NotNull CSharpConstructorStub cSharpTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(cSharpTypeStub.getName());
-		stubOutputStream.writeName(cSharpTypeStub.getQName());
+		stubOutputStream.writeName(cSharpTypeStub.getParentQName());
 	}
 
 	@NotNull
@@ -83,12 +83,11 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 		if(!StringUtil.isEmpty(name))
 		{
 			indexSink.occurrence(DotNetIndexKeys.METHOD_INDEX, name);
-		}
 
-		String qName = cSharpTypeStub.getQName();
-		if(!StringUtil.isEmpty(qName))
-		{
-			indexSink.occurrence(DotNetIndexKeys.METHOD_BY_QNAME_INDEX, qName);
+			String parentQName = cSharpTypeStub.getParentQName();
+			indexSink.occurrence(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, parentQName);
+
+			indexSink.occurrence(DotNetIndexKeys.METHOD_BY_QNAME_INDEX, StringUtil.isEmpty(parentQName) ? name : parentQName + "." + name);
 		}
 	}
 }

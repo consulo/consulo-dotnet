@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.psi.stub.index;
 
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.stubs.StubIndexKey;
@@ -27,6 +28,8 @@ import com.intellij.psi.stubs.StubIndexKey;
  */
 public interface DotNetIndexKeys
 {
+	StubIndexKey<String, DotNetNamedElement> MEMBER_BY_NAMESPACE_QNAME_INDEX = StubIndexKey.createIndexKey(".net.member.by.namespace.qname.index");
+
 	StubIndexKey<String, DotNetNamespaceDeclaration> NAMESPACE_BY_QNAME_INDEX = StubIndexKey.createIndexKey(".net.namespace.by.qname.index");
 	StubIndexKey<String, DotNetMethodDeclaration> METHOD_INDEX = StubIndexKey.createIndexKey(".net.method.index");
 	StubIndexKey<String, DotNetMethodDeclaration> METHOD_BY_QNAME_INDEX = StubIndexKey.createIndexKey(".net.method.by.qname.index");

@@ -23,7 +23,6 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNamespaceDeclaration
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -56,13 +55,15 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 	@Override
 	public CSharpNamespaceStub createStub(@NotNull CSharpNamespaceDeclarationImpl cSharpNamespaceDeclaration, StubElement stubElement)
 	{
-		return new CSharpNamespaceStub(stubElement, StringRef.fromNullableString(cSharpNamespaceDeclaration.getQName()));
+		return new CSharpNamespaceStub(stubElement, StringRef.fromNullableString(cSharpNamespaceDeclaration.getQName()),
+				StringRef.fromNullableString(cSharpNamespaceDeclaration.getParentQName()));
 	}
 
 	@Override
 	public void serialize(@NotNull CSharpNamespaceStub cSharpNamespaceStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(cSharpNamespaceStub.getName());
+		stubOutputStream.writeName(cSharpNamespaceStub.getParentQName());
 	}
 
 	@NotNull
@@ -70,16 +71,16 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 	public CSharpNamespaceStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
 	{
 		StringRef qname = stubInputStream.readName();
-		return new CSharpNamespaceStub(stubElement, qname);
+		StringRef parentQName = stubInputStream.readName();
+		return new CSharpNamespaceStub(stubElement, qname, parentQName);
 	}
 
 	@Override
 	public void indexStub(@NotNull CSharpNamespaceStub cSharpNamespaceStub, @NotNull IndexSink indexSink)
 	{
 		String qName = cSharpNamespaceStub.getName();
-		if(!StringUtil.isEmpty(qName))
-		{
-			indexSink.occurrence(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName);
-		}
+		indexSink.occurrence(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName == null ? "" : qName);
+		String parentQName = cSharpNamespaceStub.getParentQName();
+		indexSink.occurrence(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, parentQName == null ? "" :parentQName);
 	}
 }

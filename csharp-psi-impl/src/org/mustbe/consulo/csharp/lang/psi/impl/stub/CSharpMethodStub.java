@@ -17,10 +17,9 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 
@@ -28,25 +27,15 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpMethodStub extends NamedStubBase<CSharpTypeDeclaration>
+public class CSharpMethodStub extends StubWithParentQName<CSharpMethodDeclaration>
 {
-	private StringRef myQName;
-
 	public CSharpMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname)
 	{
-		super(parent, CSharpStubElements.METHOD_DECLARATION, name);
-		myQName = qname;
+		super(parent, CSharpStubElements.METHOD_DECLARATION, name, qname);
 	}
 
-	public CSharpMethodStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, StringRef QName)
+	public CSharpMethodStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, StringRef qname)
 	{
-		super(parent, elementType, name);
-		myQName = QName;
-	}
-
-	@Nullable
-	public String getQName()
-	{
-		return StringRef.toString(myQName);
+		super(parent, elementType, name, qname);
 	}
 }

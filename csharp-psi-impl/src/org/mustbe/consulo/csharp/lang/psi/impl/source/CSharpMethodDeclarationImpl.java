@@ -56,22 +56,6 @@ public class CSharpMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMeth
 		visitor.visitMethodDeclaration(this);
 	}
 
-	@Nullable
-	@Override
-	public String getQName()
-	{
-		PsiElement parent = getParent();
-		if(parent instanceof CSharpTypeDeclarationImpl)
-		{
-			return ((CSharpTypeDeclarationImpl) parent).getQName() + "." + getName();
-		}
-		else if(parent instanceof CSharpNamespaceDeclarationImpl)
-		{
-			return ((CSharpNamespaceDeclarationImpl) parent).getQName() + "." + getName();
-		}
-		return getName();
-	}
-
 	@Override
 	@Nullable
 	public PsiElement getNameIdentifier()

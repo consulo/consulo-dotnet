@@ -53,8 +53,8 @@ public class CSharpTypeDefRuntimeType implements DotNetRuntimeType
 	@Override
 	public PsiElement toPsiElement()
 	{
-		Collection<DotNetTypeDeclaration> t = TypeByQNameIndex.getInstance().get(myQualifiedName, myProject,GlobalSearchScope.allScope(myProject));
-		 //TODO [VISTALL] bug with scope ?
+		Collection<DotNetTypeDeclaration> t = TypeByQNameIndex.getInstance().get(myQualifiedName, myProject, myResolveScope);
+
 		return t.isEmpty() ? null : t.iterator().next();
 	}
 }
