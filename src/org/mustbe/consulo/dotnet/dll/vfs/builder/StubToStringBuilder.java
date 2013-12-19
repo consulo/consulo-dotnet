@@ -31,6 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.Event;
 import edu.arizona.cs.mbel.mbel.Field;
 import edu.arizona.cs.mbel.mbel.GenericParamDef;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
@@ -270,6 +271,13 @@ public class StubToStringBuilder
 			parent.getBlocks().add(stubBlock);
 		}
 
+		for(Event event : typeDef.getEvents())
+		{
+			StubBlock stubBlock = processEvent(typeDef, event);
+
+			parent.getBlocks().add(stubBlock);
+		}
+
 		for(MethodDef methodDef : typeDef.getMethods())
 		{
 			String name = methodDef.getName();
@@ -351,6 +359,55 @@ public class StubToStringBuilder
 		StubBlock stubBlock = new StubBlock(builder.toString(), null, BRACES);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), getterStub);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), setterStub);
+
+		return stubBlock;
+	}
+
+	private static StubBlock processEvent(TypeDef typeDef, Event event)
+	{
+		StubBlock addOnMethodStub = null;
+		StubBlock removeOnStub = null;
+
+		MethodDef addOnMethod = event.getAddOnMethod();
+		if(addOnMethod != null)
+		{
+			addOnMethodStub = processMethod(typeDef, addOnMethod, "add", false, true);
+		}
+		MethodDef removeOnMethod = event.getRemoveOnMethod();
+		if(removeOnMethod != null)
+		{
+			removeOnStub = processMethod(typeDef, removeOnMethod, "remove", false, true);
+		}
+
+		AccessModifier propertyModifier = AccessModifier.INTERNAL;
+
+		if(addOnMethod == null && removeOnMethod != null)
+		{
+			propertyModifier = getMethodAccess(removeOnMethod);
+		}
+		else if(addOnMethod != null && removeOnMethod == null)
+		{
+			propertyModifier = getMethodAccess(addOnMethod);
+		}
+		else
+		{
+			if(getMethodAccess(removeOnMethod) == getMethodAccess(addOnMethod))
+			{
+				propertyModifier = getMethodAccess(addOnMethod);
+			}
+		}
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(propertyModifier.name().toLowerCase()).append(" ");
+		builder.append("event ");
+		builder.append(TypeToStringBuilder.toStringFromDefRefSpec(event.getEventType()));
+		builder.append(" ");
+		builder.append(cutSuperName(event.getName()));
+
+		StubBlock stubBlock = new StubBlock(builder.toString(), null, BRACES);
+		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), addOnMethodStub);
+		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), removeOnStub);
 
 		return stubBlock;
 	}
