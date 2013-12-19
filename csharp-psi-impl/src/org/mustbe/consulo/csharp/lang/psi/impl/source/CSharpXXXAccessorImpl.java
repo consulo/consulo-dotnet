@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
-import org.mustbe.consulo.dotnet.psi.DotNetPropertyAccessor;
+import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 
@@ -28,9 +28,9 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpPropertyAccessorImpl extends CSharpMemberImpl implements DotNetPropertyAccessor
+public class CSharpXXXAccessorImpl extends CSharpMemberImpl implements DotNetXXXAccessor
 {
-	public CSharpPropertyAccessorImpl(@NotNull ASTNode node)
+	public CSharpXXXAccessorImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -39,12 +39,12 @@ public class CSharpPropertyAccessorImpl extends CSharpMemberImpl implements DotN
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(CSharpTokenSets.PROPERTY_ACCESSOR_START);
+		return findChildByType(CSharpTokenSets.XXX_ACCESSOR_START);
 	}
 
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitPropertyAccessor(this);
+		visitor.visitXXXAccessor(this);
 	}
 }

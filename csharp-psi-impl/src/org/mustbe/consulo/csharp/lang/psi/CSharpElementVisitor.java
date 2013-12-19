@@ -130,12 +130,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(declaration);
 	}
 
-	public void visitEventAccessor(CSharpEventAccessorImpl accessor)
-	{
-		visitElement(accessor);
-	}
-
-	public void visitPropertyAccessor(CSharpPropertyAccessorImpl accessor)
+	public void visitXXXAccessor(CSharpXXXAccessorImpl accessor)
 	{
 		visitElement(accessor);
 	}

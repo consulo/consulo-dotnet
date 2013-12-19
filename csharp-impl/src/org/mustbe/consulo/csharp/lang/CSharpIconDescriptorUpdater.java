@@ -111,15 +111,9 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Package);  //TODO [VISTALL] icon
 		}
-		else if(element instanceof DotNetEventAccessor)
+		else if(element instanceof DotNetXXXAccessor)
 		{
-			iconDescriptor.setMainIcon(AllIcons.Nodes.Method);  //TODO [VISTALL] icon
-
-			processModifierListOwner(element, iconDescriptor, flags);
-		}
-		else if(element instanceof DotNetPropertyAccessor)
-		{
-			iconDescriptor.setMainIcon(AllIcons.Nodes.Method);  //TODO [VISTALL] icon
+			iconDescriptor.setMainIcon(AllIcons.Nodes.Method);
 
 			processModifierListOwner(element, iconDescriptor, flags);
 		}

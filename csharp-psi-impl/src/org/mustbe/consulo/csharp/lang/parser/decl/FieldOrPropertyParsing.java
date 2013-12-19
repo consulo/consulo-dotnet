@@ -66,7 +66,7 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 	{
 		if(builderWrapper.getTokenType() == LBRACE)
 		{
-			parseAccessors(builderWrapper, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_START);
+			parseAccessors(builderWrapper, XXX_ACCESSOR, PROPERTY_ACCESSOR_START);
 
 			marker.done(PROPERTY_DECLARATION);
 		}

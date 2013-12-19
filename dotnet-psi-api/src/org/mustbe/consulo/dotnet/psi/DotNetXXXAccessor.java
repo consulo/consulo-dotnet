@@ -21,7 +21,11 @@ import com.intellij.psi.PsiNameIdentifierOwner;
 /**
  * @author VISTALL
  * @since 28.11.13.
+ * Index Method
+ * Property
+ * Event
  */
-public interface DotNetPropertyAccessor extends DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetNamedElement
+public interface DotNetXXXAccessor extends DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetNamedElement
 {
+
 }

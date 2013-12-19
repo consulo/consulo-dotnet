@@ -25,5 +25,5 @@ import org.jetbrains.annotations.NotNull;
 public interface DotNetEventDeclaration extends DotNetVariable, DotNetMemberOwner
 {
 	@NotNull
-	DotNetEventAccessor[] getAccessors();
+	DotNetXXXAccessor[] getAccessors();
 }

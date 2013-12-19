@@ -37,7 +37,7 @@ public class EventParsing extends MemberWithBodyParsing
 			{
 				if(!expect(builder, SEMICOLON, null))
 				{
-					parseAccessors(builder, EVENT_ACCESSOR, EVENT_ACCESSOR_START);
+					parseAccessors(builder, XXX_ACCESSOR, EVENT_ACCESSOR_START);
 				}
 			}
 		}

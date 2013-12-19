@@ -21,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetPropertyAccessor;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
@@ -46,9 +46,9 @@ public class CSharpPropertyDeclarationImpl extends CSharpMemberImpl implements D
 
 	@NotNull
 	@Override
-	public DotNetPropertyAccessor[] getAccessors()
+	public DotNetXXXAccessor[] getAccessors()
 	{
-		return findChildrenByClass(DotNetPropertyAccessor.class);
+		return findChildrenByClass(DotNetXXXAccessor.class);
 	}
 
 	@NotNull

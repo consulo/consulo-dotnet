@@ -45,7 +45,7 @@ public interface CSharpElements
 
 	IElementType EVENT_DECLARATION = new IElementTypeAsPsiFactory("EVENT_DECLARATION", CSharpLanguage.INSTANCE, CSharpEventDeclarationImpl.class);
 
-	IElementType EVENT_ACCESSOR = new IElementTypeAsPsiFactory("EVENT_ACCESSOR", CSharpLanguage.INSTANCE, CSharpEventAccessorImpl.class);
+	IElementType XXX_ACCESSOR = new IElementTypeAsPsiFactory("XXX_ACCESSOR", CSharpLanguage.INSTANCE, CSharpXXXAccessorImpl.class);
 
 	IElementType FIELD_DECLARATION = new IElementTypeAsPsiFactory("FIELD_DECLARATION", CSharpLanguage.INSTANCE, CSharpFieldDeclarationImpl.class);
 
@@ -53,8 +53,6 @@ public interface CSharpElements
 
 	IElementType PROPERTY_DECLARATION = new IElementTypeAsPsiFactory("PROPERTY_DECLARATION", CSharpLanguage.INSTANCE,
 			CSharpPropertyDeclarationImpl.class);
-
-	IElementType PROPERTY_ACCESSOR = new IElementTypeAsPsiFactory("PROPERTY_ACCESSOR", CSharpLanguage.INSTANCE, CSharpPropertyAccessorImpl.class);
 
 	IElementType GENERIC_PARAMETER_LIST = new IElementTypeAsPsiFactory("GENERIC_PARAMETER_LIST", CSharpLanguage.INSTANCE,
 			CSharpGenericParameterListImpl.class);

@@ -103,9 +103,8 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 				elementType == METHOD_DECLARATION ||
 				elementType == FIELD_DECLARATION ||
 				elementType == PROPERTY_DECLARATION ||
-				elementType == PROPERTY_ACCESSOR ||
+				elementType == XXX_ACCESSOR ||
 				elementType == EVENT_DECLARATION ||
-				elementType == EVENT_ACCESSOR ||
 				elementType == MACRO_BLOCK ||
 				elementType == CONSTRUCTOR_DECLARATION)
 		{
