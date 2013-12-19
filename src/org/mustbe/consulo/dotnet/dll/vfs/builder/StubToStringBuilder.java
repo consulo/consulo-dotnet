@@ -517,10 +517,7 @@ public class StubToStringBuilder
 		}
 		else
 		{
-			StringBuilder cmt = new StringBuilder("// Bodies decompilation is not supported.");
-			cmt.append(" Flags ").append(methodDef.getFlags());
-			cmt.append(". ImplFlags ").append(methodDef.getFlags()).append("\n");
-			return new StubBlock(builder.toString(), cmt.toString() /*"// Bodies decompilation is not supported\n"*/, BRACES);
+			return new StubBlock(builder.toString(), "// Bodies decompilation is not supported\n", BRACES);
 		}
 	}
 
