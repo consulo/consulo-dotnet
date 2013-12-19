@@ -143,18 +143,14 @@ public class StubToStringBuilder
 			{
 				if("Invoke".equals(methodDef.getName()))
 				{
-					return processMethod(typeDef, methodDef, StubToStringUtil.getUserTypeDefName(typeDef), true, false);
-				}
-			/*	if("Invoke".equals(methodDef.getName()))
-				{
 					MethodDef newMethodDef = new MethodDef(StubToStringUtil.getUserTypeDefName(typeDef), methodDef.getImplFlags(), methodDef.getFlags(),
 							methodDef.getSignature());
 					for(GenericParamDef paramDef : typeDef.getGenericParams())
 					{
-						methodDef.addGenericParam(paramDef);
+						newMethodDef.addGenericParam(paramDef);
 					}
 					return processMethod(typeDef, newMethodDef, newMethodDef.getName(), true, false);
-				}*/
+				}
 
 			}
 			assert true;
