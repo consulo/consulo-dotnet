@@ -234,7 +234,11 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"=="                      { return CSharpTokens.EQEQ; }
 
+	"++"                      { return CSharpTokens.PLUSPLUS; }
+
 	"+"                       { return CSharpTokens.PLUS; }
+
+	"--"                      { return CSharpTokens.MINUSMINUS; }
 
 	"-"                       { return CSharpTokens.MINUS; }
 

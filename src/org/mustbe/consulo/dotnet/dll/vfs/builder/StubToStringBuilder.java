@@ -63,7 +63,9 @@ public class StubToStringBuilder
 	{
 		{
 			put("op_Addition", "+");
+			put("op_UnaryPlus", "+");
 			put("op_Subtraction", "-");
+			put("op_UnaryNegation", "-");
 			put("op_Multiply", "*");
 			put("op_Division", "/");
 			put("op_Modulus", "%");
@@ -80,6 +82,8 @@ public class StubToStringBuilder
 			put("op_GreaterThanOrEqual", ">=");
 			put("op_OnesComplement", "~");
 			put("op_LogicalNot", "!");
+			put("op_Increment", "++");
+			put("op_Decrement", "--");
 		}
 	};
 

@@ -155,7 +155,11 @@ public interface CSharpTokens extends TokenType
 
 	IElementType PLUS = new IElementType("PLUS", CSharpLanguage.INSTANCE);
 
+	IElementType PLUSPLUS = new IElementType("PLUSPLUS", CSharpLanguage.INSTANCE);
+
 	IElementType MINUS = new IElementType("MINUS", CSharpLanguage.INSTANCE);
+
+	IElementType MINUSMINUS = new IElementType("MINUSMINUS", CSharpLanguage.INSTANCE);
 
 	IElementType NTEQ = new IElementType("NTEQ", CSharpLanguage.INSTANCE);
 
