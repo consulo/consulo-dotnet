@@ -62,7 +62,7 @@ public class GenericParameterParsing extends SharingParsingHelpers
 	{
 		val marker = builder.mark();
 
-		parseModifierList(builder);
+		parseModifierListWithAttributes(builder);
 
 		expect(builder, IDENTIFIER, "Name expected");
 

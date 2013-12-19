@@ -53,7 +53,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	@Override
 	public void visit(@NotNull PsiElement element)
 	{
-		element.acceptChildren(this);
+		element.accept(this);
 	}
 
 	@Override

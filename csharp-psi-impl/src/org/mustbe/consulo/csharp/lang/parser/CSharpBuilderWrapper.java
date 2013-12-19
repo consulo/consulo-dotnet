@@ -34,14 +34,14 @@ import com.intellij.psi.tree.TokenSet;
  */
 public class CSharpBuilderWrapper extends PsiBuilderAdapter
 {
-	private static Map<String, IElementType> myTextToSoftKeywords = new HashMap<String, IElementType>();
+	private static Map<String, IElementType> ourIdentifierToSoftKeywords = new HashMap<String, IElementType>();
 
 	static
 	{
 		for(IElementType o : CSharpSoftTokens.ALL.getTypes())
 		{
 			String keyword = o.toString().replace("_KEYWORD", "").toLowerCase();
-			myTextToSoftKeywords.put(keyword, o);
+			ourIdentifierToSoftKeywords.put(keyword, o);
 		}
 	}
 
@@ -103,6 +103,15 @@ public class CSharpBuilderWrapper extends PsiBuilderAdapter
 		advanceLexer();
 	}
 
+	public void remapBackIfSoft()
+	{
+		IElementType tokenType = getTokenType();
+		if(ourIdentifierToSoftKeywords.containsValue(tokenType))
+		{
+			remapCurrentToken(CSharpTokens.IDENTIFIER);
+		}
+	}
+
 	@Nullable
 	@Override
 	public IElementType getTokenType()
@@ -110,7 +119,7 @@ public class CSharpBuilderWrapper extends PsiBuilderAdapter
 		IElementType tokenType = super.getTokenType();
 		if(tokenType == CSharpTokens.IDENTIFIER)
 		{
-			IElementType elementType = myTextToSoftKeywords.get(getTokenText());
+			IElementType elementType = ourIdentifierToSoftKeywords.get(getTokenText());
 			if(elementType != null && mySoftSet.contains(elementType))
 			{
 				remapCurrentToken(elementType);

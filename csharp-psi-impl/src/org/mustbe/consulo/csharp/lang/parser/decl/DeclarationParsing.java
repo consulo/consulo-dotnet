@@ -53,7 +53,7 @@ public class DeclarationParsing extends SharingParsingHelpers
 			@Override
 			public PsiBuilder.Marker fun(CSharpBuilderWrapper builderWrapper)
 			{
-				return parseModifierList(builderWrapper);
+				return parseModifierListWithAttributes(builderWrapper);
 			}
 		}, builder, PARTIAL_KEYWORD, ASYNC_KEYWORD);
 
@@ -101,7 +101,10 @@ public class DeclarationParsing extends SharingParsingHelpers
 			{
 				if(parseType(builder) == null)
 				{
-					builder.error("Type expected " + builder.getTokenType());
+					if(builder.getTokenType() != null)
+					{
+						builder.error("Type expected " + builder.getTokenType());
+					}
 
 					modifierListBuilder.drop();
 					marker.drop();

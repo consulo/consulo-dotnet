@@ -55,7 +55,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		return marker;
 	}
 
-	private static void parseParameterList(CSharpBuilderWrapper builder)
+	public static void parseParameterList(CSharpBuilderWrapper builder)
 	{
 		PsiBuilder.Marker mark = builder.mark();
 

@@ -137,7 +137,7 @@ public class MethodParsing extends MemberWithBodyParsing
 	{
 		val mark = builder.mark();
 
-		parseModifierList(builder);
+		parseModifierListWithAttributes(builder);
 
 		if(parseType(builder) == null)
 		{

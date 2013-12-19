@@ -138,7 +138,118 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		return marker;
 	}
 
-	protected static PsiBuilder.Marker parseModifierList(PsiBuilder builder)
+	protected static boolean parseAttributeList(CSharpBuilderWrapper builder)
+	{
+		boolean empty = true;
+		while(builder.getTokenType() == LBRACKET)
+		{
+			empty = false;
+			PsiBuilder.Marker mark = builder.mark();
+			builder.advanceLexer();
+
+			builder.enableSoftKeywords(ATTRIBUTE_TARGETS);
+			IElementType tokenType = builder.getTokenType();
+			builder.disableSoftKeywords(ATTRIBUTE_TARGETS);
+
+			if(builder.lookAhead(1) != COLON)
+			{
+				builder.remapBackIfSoft();
+			}
+			else
+			{
+				if(!ATTRIBUTE_TARGETS.contains(tokenType))
+				{
+					builder.error("Wrong attribute target");
+				}
+				builder.advanceLexer(); // target type
+				builder.advanceLexer(); // colon
+			}
+
+			while(!builder.eof())
+			{
+				PsiBuilder.Marker attMark = parseAttribute(builder);
+				if(attMark == null)
+				{
+					builder.error("Attribute name expected");
+					break;
+				}
+
+				if(builder.getTokenType() == COMMA)
+				{
+					builder.advanceLexer();
+				}
+				else if(builder.getTokenType() == RBRACKET)
+				{
+					break;
+				}
+			}
+
+			expect(builder, RBRACKET, "']' expected");
+			mark.done(ATTRIBUTE_LIST);
+		}
+		return empty;
+	}
+
+	private static PsiBuilder.Marker parseAttribute(CSharpBuilderWrapper builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+		if(ExpressionParsing.parseQualifiedReference(builder, null) == null)
+		{
+			mark.drop();
+			return null;
+		}
+
+		parseAttributeParameterList(builder); //TODO [VISTALL] currently is bad due it cant be parsed expression like [A(t=true)]
+		mark.done(ATTRIBUTE);
+		return mark;
+	}
+
+	public static void parseAttributeParameterList(CSharpBuilderWrapper builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		if(builder.getTokenType() == RPAR)
+		{
+			builder.advanceLexer();
+			mark.done(METHOD_CALL_PARAMETER_LIST);
+			return;
+		}
+
+		boolean empty = true;
+		while(!builder.eof())
+		{
+			PsiBuilder.Marker marker = ExpressionParsing.parse(builder);
+			if(marker == null)
+			{
+				if(!empty)
+				{
+					builder.error("Expression expected");
+				}
+				break;
+			}
+
+			empty = false;
+
+			if(builder.getTokenType() == COMMA)
+			{
+				builder.advanceLexer();
+			}
+			else if(builder.getTokenType() == RPAR)
+			{
+				break;
+			}
+			else
+			{
+				break;
+			}
+		}
+		expect(builder, RPAR, "')' expected");
+		mark.done(METHOD_CALL_PARAMETER_LIST);
+	}
+
+	protected static PsiBuilder.Marker parseModifierList(CSharpBuilderWrapper builder)
 	{
 		val marker = builder.mark();
 
@@ -148,7 +259,6 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 			{
 				builder.advanceLexer();
 			}
-			//TODO [VISTALL] attributes
 			else
 			{
 				break;
@@ -156,6 +266,32 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		}
 		marker.done(MODIFIER_LIST);
 		return marker;
+	}
+
+	protected static PsiBuilder.Marker parseModifierListWithAttributes(CSharpBuilderWrapper builder)
+	{
+		if(MODIFIERS.contains(builder.getTokenType()))
+		{
+			return parseModifierList(builder);
+		}
+		else
+		{
+			val marker = builder.mark();
+			parseAttributeList(builder);
+			while(!builder.eof())
+			{
+				if(MODIFIERS.contains(builder.getTokenType()))
+				{
+					builder.advanceLexer();
+				}
+				else
+				{
+					break;
+				}
+			}
+			marker.done(MODIFIER_LIST);
+			return marker;
+		}
 	}
 
 	@Nullable

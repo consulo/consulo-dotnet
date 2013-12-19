@@ -49,7 +49,7 @@ public class MemberWithBodyParsing extends SharingParsingHelpers
 	{
 		PsiBuilder.Marker marker = builder.mark();
 
-		parseModifierList(builder);
+		parseModifierListWithAttributes(builder);
 
 		builder.enableSoftKeywords(tokenSet);
 		boolean contains = tokenSet.contains(builder.getTokenType());

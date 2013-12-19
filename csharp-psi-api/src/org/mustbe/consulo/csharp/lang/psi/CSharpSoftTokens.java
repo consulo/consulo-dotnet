@@ -44,6 +44,26 @@ public interface CSharpSoftTokens extends CSharpTokens
 
 	IElementType VAR_KEYWORD = new IElementType("VAR_KEYWORD", CSharpLanguage.INSTANCE);
 
+	// attributes target
+	IElementType ASSEMBLY_KEYWORD = new IElementType("ASSEMBLY_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType MODULE_KEYWORD = new IElementType("MODULE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType FIELD_KEYWORD = new IElementType("FIELD_KEYWORD", CSharpLanguage.INSTANCE);
+
+	// event is normal keyword IElementType EVENT_KEYWORD = new IElementType("EVENT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType METHOD_KEYWORD = new IElementType("METHOD_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType PARAM_KEYWORD = new IElementType("PARAM_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType PROPERTY_KEYWORD = new IElementType("PROPERTY_KEYWORD", CSharpLanguage.INSTANCE);
+
+	// return is normal keyword IElementType RETURN_KEYWORD = new IElementType("RETURN_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType TYPE_KEYWORD = new IElementType("TYPE_KEYWORD", CSharpLanguage.INSTANCE);
+
 	TokenSet ALL = TokenSet.create(PARTIAL_KEYWORD, WHERE_KEYWORD, GLOBAL_KEYWORD, ADD_KEYWORD, REMOVE_KEYWORD, SET_KEYWORD, GET_KEYWORD,
-			ASYNC_KEYWORD, VAR_KEYWORD);
+			ASYNC_KEYWORD, VAR_KEYWORD, ASSEMBLY_KEYWORD, MODULE_KEYWORD, FIELD_KEYWORD, METHOD_KEYWORD, PARAM_KEYWORD, PROPERTY_KEYWORD,
+			TYPE_KEYWORD);
 }

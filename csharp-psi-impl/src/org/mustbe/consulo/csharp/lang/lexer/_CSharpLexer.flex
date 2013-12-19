@@ -199,6 +199,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"typeof"                  { return CSharpTokens.TYPEOF_KEYWORD; }
 
+	"return"                  { return CSharpTokens.RETURN_KEYWORD; }
+
 //
 	"{"                       { return CSharpTokens.LBRACE; }
 

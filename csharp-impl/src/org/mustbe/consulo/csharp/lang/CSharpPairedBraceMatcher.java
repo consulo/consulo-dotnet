@@ -32,7 +32,8 @@ public class CSharpPairedBraceMatcher implements PairedBraceMatcher
 {
 	private static BracePair[] ourPairs = new BracePair[]{
 			new BracePair(CSharpTokens.LBRACE, CSharpTokens.RBRACE, true),
-			new BracePair(CSharpTokens.LPAR, CSharpTokens.RPAR, false)
+			new BracePair(CSharpTokens.LPAR, CSharpTokens.RPAR, false),
+			new BracePair(CSharpTokens.LBRACKET, CSharpTokens.RBRACKET, false)
 	};
 
 	@Override

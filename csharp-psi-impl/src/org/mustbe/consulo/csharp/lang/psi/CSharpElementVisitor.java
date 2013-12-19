@@ -224,4 +224,14 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(block);
 	}
+
+	public void visitAttributeList(CSharpAttributeListImpl list)
+	{
+		visitElement(list);
+	}
+
+	public void visitAttribute(CSharpAttributeImpl attribute)
+	{
+		visitElement(attribute);
+	}
 }
