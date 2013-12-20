@@ -26,6 +26,7 @@ import javax.swing.JComponent;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.microsoft.dotnet.MicrosoftDotNetIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -38,7 +39,6 @@ import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.roots.OrderRootType;
@@ -53,7 +53,7 @@ import lombok.val;
  * @author VISTALL
  * @since 23.11.13.
  */
-public class MicrosoftDotNetSdkType extends SdkType
+public class MicrosoftDotNetSdkType extends DotNetSdkType
 {
 	public MicrosoftDotNetSdkType()
 	{

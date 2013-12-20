@@ -26,6 +26,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.mono.MonoDotNetIcons;
+import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -40,7 +41,6 @@ import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.roots.OrderRootType;
@@ -56,7 +56,7 @@ import lombok.val;
  * @author VISTALL
  * @since 06.12.13.
  */
-public class MonoSdkType extends SdkType
+public class MonoSdkType extends DotNetSdkType
 {
 	public MonoSdkType()
 	{
