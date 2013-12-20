@@ -34,14 +34,7 @@ public class CollectScopeProcessor extends AbstractScopeProcessor
 	@Override
 	public boolean execute(@NotNull PsiElement element, ResolveState state)
 	{
-		if(element instanceof org.mustbe.consulo.packageSupport.Package)
-		{
-			if(!myElements.contains(element))
-			{
-				myElements.add(element);
-			}
-		}
-		else if(element instanceof DotNetNamedElement)
+		if(element instanceof DotNetNamedElement)
 		{
 			if(!myElements.contains(element))
 			{
