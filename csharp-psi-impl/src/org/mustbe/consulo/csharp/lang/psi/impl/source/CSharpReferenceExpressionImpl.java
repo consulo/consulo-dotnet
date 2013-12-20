@@ -28,7 +28,6 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDef
 import org.mustbe.consulo.dotnet.packageSupport.DotNetPackageDescriptor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
@@ -258,7 +257,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 			return ResolveToKind.TYPE_PARAMETER_FROM_PARENT;
 		}
-		else if(parent instanceof DotNetNamespaceDeclaration)
+		else if(parent instanceof CSharpNamespaceDeclarationImpl)
 		{
 			return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
 		}
@@ -276,9 +275,14 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(parent instanceof CSharpReferenceExpressionImpl)
 		{
-			if(PsiTreeUtil.getParentOfType(this, DotNetNamespaceDeclaration.class) != null)
+			CSharpNamespaceDeclarationImpl netNamespaceDeclaration = PsiTreeUtil.getParentOfType(this, CSharpNamespaceDeclarationImpl.class);
+			if(netNamespaceDeclaration != null)
 			{
-				return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+				DotNetReferenceExpression namespaceReference = netNamespaceDeclaration.getNamespaceReference();
+				if(namespaceReference != null && PsiTreeUtil.isAncestor(namespaceReference, this, false))
+				{
+					return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+				}
 			}
 
 			if(PsiTreeUtil.getParentOfType(this, CSharpAttributeImpl.class) != null)
