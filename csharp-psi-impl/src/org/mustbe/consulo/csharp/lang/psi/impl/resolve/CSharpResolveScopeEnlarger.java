@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.resolve;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -36,10 +37,13 @@ public class CSharpResolveScopeEnlarger extends ResolveScopeEnlarger
 	@Override
 	public SearchScope getAdditionalResolveScope(@NotNull VirtualFile virtualFile, Project project)
 	{
-		Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
-		if(moduleForFile != null)
+		if(virtualFile.getFileType() == CSharpFileType.INSTANCE)
 		{
-			return GlobalSearchScopes.directoryScope(project, moduleForFile.getModuleDir(), true);
+			Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
+			if(moduleForFile != null)
+			{
+				return GlobalSearchScopes.directoryScope(project, moduleForFile.getModuleDir(), true);
+			}
 		}
 		return null;
 	}
