@@ -64,4 +64,16 @@ public class DotNetMacros
 		path = StringUtil.replace(path, OUTPUT_FILE_EXT, fileExtension);
 		return FileUtil.toSystemDependentName(VfsUtil.urlToPath(path));
 	}
+
+	public static String getModuleOutputDirUrl(@NotNull Module module, boolean debug)
+	{
+		ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+		String path = DotNetCompilerConfiguration.getInstance(module.getProject()).getOutputDir();
+		path = StringUtil.replace(path, MODULE_OUTPUT_DIR, compilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance
+				()));
+
+		path = StringUtil.replace(path, CONFIGURATION, debug ? "debug" : "release");
+		path = StringUtil.replace(path, MODULE_NAME, module.getName());
+		return path;
+	}
 }

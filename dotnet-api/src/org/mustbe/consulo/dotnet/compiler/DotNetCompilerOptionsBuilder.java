@@ -19,17 +19,20 @@ package org.mustbe.consulo.dotnet.compiler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.SmartList;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -53,7 +56,7 @@ public class DotNetCompilerOptionsBuilder
 		return this;
 	}
 
-	public GeneralCommandLine createCommandLine(Module module, Collection<VirtualFile> results) throws IOException
+	public GeneralCommandLine createCommandLine(Module module, VirtualFile[] results) throws IOException
 	{
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 
@@ -76,6 +79,22 @@ public class DotNetCompilerOptionsBuilder
 		addArgument("/target:" + target);
 		String outputFile = DotNetMacros.extract(module, false, extension.getTarget());
 		addArgument("/out:" + outputFile);
+
+		val dependFiles = new SmartList<String>();
+		Module[] dependencies = ModuleRootManager.getInstance(module).getDependencies();
+		for(Module dependency : dependencies)
+		{
+			DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(dependency, DotNetModuleExtension.class);
+			if(dependencyExtension != null)
+			{
+				dependFiles.add(DotNetMacros.extract(dependency, false, dependencyExtension.getTarget()));
+			}
+		}
+
+		if(!dependFiles.isEmpty())
+		{
+			addArgument("/reference:" + StringUtils.join(dependFiles, ","));
+		}
 
 		File tempFile = FileUtil.createTempFile("consulo-dotnet-rsp", ".rsp");
 		for(String argument : myArguments)

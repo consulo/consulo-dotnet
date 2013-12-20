@@ -16,13 +16,6 @@
 
 package org.mustbe.consulo.dotnet.compiler;
 
-import java.io.DataInput;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
@@ -34,19 +27,15 @@ import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import com.intellij.openapi.compiler.EmptyValidityState;
-import com.intellij.openapi.compiler.FileProcessingCompiler;
-import com.intellij.openapi.compiler.SourceProcessingCompiler;
-import com.intellij.openapi.compiler.ValidityState;
+import com.intellij.openapi.compiler.TranslatingCompiler;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.CommonProcessors;
-import com.intellij.util.containers.MultiMap;
+import com.intellij.util.Chunk;
 import lombok.val;
 
 /**
@@ -54,13 +43,18 @@ import lombok.val;
  * @since 26.11.13.
  */
 @Logger
-public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingCompiler
+public class DotNetCompiler implements TranslatingCompiler
 {
 	@NotNull
 	@Override
 	public String getDescription()
 	{
-		return "#";
+		return "DotNetCompiler";
+	}
+
+	@Override
+	public void init(@NotNull CompilerManager compilerManager)
+	{
 	}
 
 	@Override
@@ -78,97 +72,53 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 	}
 
 	@Override
-	public void init(@NotNull CompilerManager compilerManager)
+	public boolean isCompilableFile(VirtualFile virtualFile, CompileContext compileContext)
 	{
-	}
-
-	@NotNull
-	@Override
-	public ProcessingItem[] getProcessingItems(final CompileContext compileContext)
-	{
-		List<ProcessingItem> itemList = new ArrayList<ProcessingItem>();
-		for(val module : compileContext.getCompileScope().getAffectedModules())
+		if(virtualFile == null)
 		{
-			val extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
-			if(extension == null)
-			{
-				continue;
-			}
-
-			CommonProcessors.CollectProcessor<VirtualFile> processor = new CommonProcessors.CollectProcessor<VirtualFile>()
-			{
-				@Override
-				protected boolean accept(VirtualFile virtualFile)
-				{
-					return virtualFile.getFileType() == extension.getFileType() && ModuleUtilCore.findModuleForFile(virtualFile,
-							compileContext.getProject()) == module;
-				}
-			};
-
-			VfsUtil.processFilesRecursively(module.getModuleDir(), processor);
-
-			Collection<VirtualFile> results = processor.getResults();
-			if(results.isEmpty())
-			{
-				continue;
-			}
-
-			for(VirtualFile result : results)
-			{
-				itemList.add(new DotNetProcessingItem(result, module));
-			}
-
+			return false;
 		}
-
-		return itemList.isEmpty() ? ProcessingItem.EMPTY_ARRAY : itemList.toArray(new ProcessingItem[itemList.size()]);
+		Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, compileContext.getProject());
+		if(moduleForFile == null)
+		{
+			return false;
+		}
+		DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(moduleForFile, DotNetModuleLangExtension.class);
+		return extension != null && virtualFile.getFileType() == extension.getFileType();
 	}
 
 	@Override
-	public ProcessingItem[] process(CompileContext compileContext, ProcessingItem[] processingItems)
+	public void compile(CompileContext compileContext, Chunk<Module> moduleChunk, VirtualFile[] virtualFiles, OutputSink outputSink)
 	{
-		if(processingItems.length == 0)
+		Module module = moduleChunk.getNodes().iterator().next();
+
+		DotNetModuleLangExtension langDotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
+		DotNetModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+
+		assert dotNetModuleExtension != null;
+		assert langDotNetModuleExtension != null;
+
+		DotNetCompilerOptionsBuilder builder = new DotNetCompilerOptionsBuilder(dotNetModuleExtension.getSdk());
+
+		langDotNetModuleExtension.setupCompilerOptions(builder);
+
+		try
 		{
-			return ProcessingItem.EMPTY_ARRAY;
-		}
+			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles);
 
-		MultiMap<Module, VirtualFile> map = new MultiMap<Module, VirtualFile>();
-		for(ProcessingItem processingItem : processingItems)
-		{
-			DotNetProcessingItem item = (DotNetProcessingItem) processingItem;
-			map.putValue(item.getModule(), item.getFile());
-		}
+			val process = commandLine.createProcess();
+			val processHandler = new CapturingProcessHandler(process);
 
-		for(Map.Entry<Module, Collection<VirtualFile>> entry : map.entrySet())
-		{
-			Module module = entry.getKey();
-
-			DotNetModuleLangExtension langDotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
-			DotNetModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-
-			DotNetCompilerOptionsBuilder builder = new DotNetCompilerOptionsBuilder(dotNetModuleExtension.getSdk());
-
-			langDotNetModuleExtension.setupCompilerOptions(builder);
-
-			try
+			ProcessOutput processOutput = processHandler.runProcess();
+			for(String s : processOutput.getStdoutLines())
 			{
-				GeneralCommandLine commandLine = builder.createCommandLine(module, entry.getValue());
-
-				val process = commandLine.createProcess();
-				val processHandler = new CapturingProcessHandler(process);
-
-				ProcessOutput processOutput = processHandler.runProcess();
-				for(String s : processOutput.getStdoutLines())
-				{
-					addMessage(compileContext, module, s);
-				}
-			}
-			catch(Exception e)
-			{
-				LOGGER.error(e);
+				addMessage(compileContext, module, s);
 			}
 		}
-
-		return processingItems;
+		catch(Exception e)
+		{
+			LOGGER.error(e);
+		}
 	}
 
 	// src\Test.cs(7,42): error CS1002: ожидалась ;  [microsoft]
@@ -259,9 +209,17 @@ public class DotNetCompiler implements FileProcessingCompiler, SourceProcessingC
 		}
 	}
 
+	@NotNull
 	@Override
-	public ValidityState createValidityState(DataInput dataInput) throws IOException
+	public FileType[] getInputFileTypes()
 	{
-		return new EmptyValidityState();
+		return FileType.EMPTY_ARRAY;
+	}
+
+	@NotNull
+	@Override
+	public FileType[] getOutputFileTypes()
+	{
+		return FileType.EMPTY_ARRAY;
 	}
 }

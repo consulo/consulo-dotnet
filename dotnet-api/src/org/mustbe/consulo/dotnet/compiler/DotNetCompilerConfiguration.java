@@ -41,8 +41,13 @@ public class DotNetCompilerConfiguration implements PersistentStateComponent<Ele
 	@NotNull
 	public String getOutputFile()
 	{
-		return DotNetMacros.MODULE_OUTPUT_DIR + "/" + DotNetMacros.CONFIGURATION + "/" + DotNetMacros.MODULE_NAME + "." + DotNetMacros
-				.OUTPUT_FILE_EXT;
+		return getOutputDir() + "/" + DotNetMacros.MODULE_NAME + "." + DotNetMacros.OUTPUT_FILE_EXT;
+	}
+
+	@NotNull
+	public String getOutputDir()
+	{
+		return DotNetMacros.MODULE_OUTPUT_DIR + "/" + DotNetMacros.CONFIGURATION;
 	}
 
 	@Nullable
