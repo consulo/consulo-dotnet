@@ -17,7 +17,9 @@
 package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.DotNetVersion;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
@@ -32,6 +34,8 @@ import com.intellij.openapi.projectRoots.SdkType;
 public class MicrosoftDotNetModuleExtension extends ModuleExtensionWithSdkImpl<MicrosoftDotNetModuleExtension> implements
 		DotNetModuleExtension<MicrosoftDotNetModuleExtension>
 {
+	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
+
 	public MicrosoftDotNetModuleExtension(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
@@ -52,10 +56,40 @@ public class MicrosoftDotNetModuleExtension extends ModuleExtensionWithSdkImpl<M
 
 	@NotNull
 	@Override
+	public DotNetTarget getTarget()
+	{
+		return myTarget;
+	}
+
+	@Override
+	protected void loadStateImpl(@NotNull Element element)
+	{
+		super.loadStateImpl(element);
+
+		myTarget = DotNetTarget.valueOf(element.getAttributeValue("target", DotNetTarget.EXECUTABLE.name()));
+	}
+
+	@Override
+	protected void getStateImpl(@NotNull Element element)
+	{
+		super.getStateImpl(element);
+
+		element.setAttribute("target", myTarget.name());
+	}
+
+	@NotNull
+	@Override
 	public GeneralCommandLine createRunCommandLine(@NotNull String fileName)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(fileName);
 		return commandLine;
+	}
+
+	@Override
+	public void commit(@NotNull MicrosoftDotNetModuleExtension mutableModuleExtension)
+	{
+		super.commit(mutableModuleExtension);
+		myTarget = mutableModuleExtension.myTarget;
 	}
 }

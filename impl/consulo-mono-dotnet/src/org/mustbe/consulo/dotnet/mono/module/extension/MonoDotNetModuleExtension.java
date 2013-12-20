@@ -17,7 +17,9 @@
 package org.mustbe.consulo.dotnet.mono.module.extension;
 
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.DotNetVersion;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.mono.sdk.MonoSdkType;
@@ -34,6 +36,8 @@ import com.intellij.openapi.util.SystemInfo;
 public class MonoDotNetModuleExtension extends ModuleExtensionWithSdkImpl<MonoDotNetModuleExtension> implements
 		DotNetModuleExtension<MonoDotNetModuleExtension>
 {
+	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
+
 	public MonoDotNetModuleExtension(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
@@ -63,5 +67,35 @@ public class MonoDotNetModuleExtension extends ModuleExtensionWithSdkImpl<MonoDo
 		commandLine.setExePath(sdk.getHomePath() + "/../../../bin/mono" + (SystemInfo.isWindows ? ".exe" : ""));
 		commandLine.addParameter(fileName);
 		return commandLine;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTarget getTarget()
+	{
+		return myTarget;
+	}
+
+	@Override
+	protected void loadStateImpl(@NotNull Element element)
+	{
+		super.loadStateImpl(element);
+
+		myTarget = DotNetTarget.valueOf(element.getAttributeValue("target", DotNetTarget.EXECUTABLE.name()));
+	}
+
+	@Override
+	protected void getStateImpl(@NotNull Element element)
+	{
+		super.getStateImpl(element);
+
+		element.setAttribute("target", myTarget.name());
+	}
+
+	@Override
+	public void commit(@NotNull MonoDotNetModuleExtension mutableModuleExtension)
+	{
+		super.commit(mutableModuleExtension);
+		myTarget = mutableModuleExtension.myTarget;
 	}
 }

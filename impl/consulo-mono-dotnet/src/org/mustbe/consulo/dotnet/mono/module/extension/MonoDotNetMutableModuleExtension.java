@@ -16,16 +16,29 @@
 
 package org.mustbe.consulo.dotnet.mono.module.extension;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JList;
+import javax.swing.JPanel;
 
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetBundle;
+import org.mustbe.consulo.dotnet.DotNetTarget;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.components.JBLabel;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -45,7 +58,43 @@ public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension 
 	@Override
 	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		return wrapToNorth(new ModuleExtensionWithSdkPanel(this, runnable));
+		JPanel panel = new JPanel(new VerticalFlowLayout());
+		panel.add(new ModuleExtensionWithSdkPanel(this, runnable));
+
+		val comp = new JComboBox(DotNetTarget.values());
+		comp.setRenderer(new ListCellRendererWrapper<DotNetTarget>()
+		{
+			@Override
+			public void customize(JList jList, DotNetTarget dotNetTarget, int i, boolean b, boolean b2)
+			{
+				setText(dotNetTarget.getDescription());
+			}
+		});
+		comp.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				setTarget((DotNetTarget) comp.getSelectedItem());
+			}
+		});
+
+		panel.add(labeledLine(DotNetBundle.message("target.label"), comp));
+
+		return wrapToNorth(panel);
+	}
+
+	private static JPanel labeledLine(String text, JComponent component)
+	{
+		JPanel targetPanel = new JPanel(new BorderLayout());
+		targetPanel.add(new JBLabel(text), BorderLayout.WEST);
+		targetPanel.add(component);
+		return targetPanel;
+	}
+
+	public void setTarget(DotNetTarget target)
+	{
+		myTarget = target;
 	}
 
 	@NotNull
@@ -64,7 +113,7 @@ public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension 
 	@Override
 	public boolean isModified()
 	{
-		return isModifiedImpl(myOriginalModuleExtension);
+		return isModifiedImpl(myOriginalModuleExtension) || myTarget != myOriginalModuleExtension.getTarget();
 	}
 
 	@Override

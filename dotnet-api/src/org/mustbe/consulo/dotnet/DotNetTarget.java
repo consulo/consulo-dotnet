@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.extension;
-
-import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.DotNetTarget;
-import org.mustbe.consulo.dotnet.DotNetVersion;
-import com.intellij.execution.configurations.GeneralCommandLine;
+package org.mustbe.consulo.dotnet;
 
 /**
  * @author VISTALL
- * @since 20.11.13.
+ * @since 20.12.13.
  */
-public interface DotNetModuleExtension<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionWithSdk<T>
+public enum DotNetTarget
 {
-	@NotNull
-	DotNetTarget getTarget();
+	EXECUTABLE(DotNetBundle.message("executable.desc")),
+	LIBRARY(DotNetBundle.message("library.desc"));
 
-	@NotNull
-	DotNetVersion getVersion();
+	private final String myDescription;
 
-	@NotNull
-	GeneralCommandLine createRunCommandLine(@NotNull String fileName);
+	DotNetTarget(String description)
+	{
+		myDescription = description;
+	}
+
+	public String getDescription()
+	{
+		return myDescription;
+	}
 }

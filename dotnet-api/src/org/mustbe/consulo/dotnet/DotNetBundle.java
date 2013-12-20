@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.extension;
+package org.mustbe.consulo.dotnet;
 
-import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.DotNetTarget;
-import org.mustbe.consulo.dotnet.DotNetVersion;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import org.consulo.lombok.annotations.Bundle;
 
 /**
  * @author VISTALL
- * @since 20.11.13.
+ * @since 20.12.13.
  */
-public interface DotNetModuleExtension<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionWithSdk<T>
+@Bundle("messages.DotNetBundle")
+public class DotNetBundle
 {
-	@NotNull
-	DotNetTarget getTarget();
-
-	@NotNull
-	DotNetVersion getVersion();
-
-	@NotNull
-	GeneralCommandLine createRunCommandLine(@NotNull String fileName);
 }

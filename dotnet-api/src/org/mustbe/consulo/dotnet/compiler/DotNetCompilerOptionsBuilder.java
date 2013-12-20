@@ -23,8 +23,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -53,14 +55,29 @@ public class DotNetCompilerOptionsBuilder
 
 	public GeneralCommandLine createCommandLine(Module module, Collection<VirtualFile> results) throws IOException
 	{
+		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+
+		assert extension != null;
+		String target = null;
+		switch(extension.getTarget())
+		{
+			case EXECUTABLE:
+				target = "exe";
+				break;
+			case LIBRARY:
+				target = "library";
+				break;
+		}
+
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(myExecutable);
 		commandLine.setWorkDirectory(module.getModuleDirPath());
 
-		File tempFile = FileUtil.createTempFile("consulo-csc", ".rsp");
+		addArgument("/target:" + target);
+		String outputFile = DotNetMacros.extract(module, false, extension.getTarget());
+		addArgument("/out:" + outputFile);
 
-		String outputFile = DotNetMacros.extract(module, false, false);
-		FileUtil.appendToFile(tempFile, "/out:" + outputFile + "\n");
+		File tempFile = FileUtil.createTempFile("consulo-dotnet-rsp", ".rsp");
 		for(String argument : myArguments)
 		{
 			FileUtil.appendToFile(tempFile, argument);

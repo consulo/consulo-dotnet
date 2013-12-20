@@ -109,13 +109,15 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		}
 
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-		val exeFile = DotNetMacros.extract(module, false, false);
+
+		assert extension != null;
+
+		val exeFile = DotNetMacros.extract(module, false, extension.getTarget());
 		if(!new File(exeFile).exists())
 		{
 			throw new ExecutionException(exeFile + " is not exists");
 		}
 
-		assert extension != null;
 		val runCommandLine = extension.createRunCommandLine(exeFile);
 		return new RunProfileState()
 		{
