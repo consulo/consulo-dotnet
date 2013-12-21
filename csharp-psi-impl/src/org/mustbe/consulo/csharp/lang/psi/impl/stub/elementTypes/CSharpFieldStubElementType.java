@@ -22,7 +22,10 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpFieldStub;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -72,5 +75,15 @@ public class CSharpFieldStubElementType extends CSharpAbstractStubElementType<CS
 		StringRef name = stubInputStream.readName();
 		StringRef parentQName = stubInputStream.readName();
 		return new CSharpFieldStub(stubElement, name, parentQName);
+	}
+
+	@Override
+	public void indexStub(@NotNull CSharpFieldStub cSharpFieldStub, @NotNull IndexSink indexSink)
+	{
+		String name = cSharpFieldStub.getName();
+		if(!StringUtil.isEmpty(name))
+		{
+			indexSink.occurrence(DotNetIndexKeys.FIELD_INDEX, name);
+		}
 	}
 }

@@ -22,7 +22,10 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEventDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpEventStub;
 import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
+import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -72,5 +75,15 @@ public class CSharpEventElementType extends CSharpAbstractStubElementType<CSharp
 		StringRef name = stubInputStream.readName();
 		StringRef parentQName = stubInputStream.readName();
 		return new CSharpEventStub(stubElement, name, parentQName);
+	}
+
+	@Override
+	public void indexStub(@NotNull CSharpEventStub cSharpEventStub, @NotNull IndexSink indexSink)
+	{
+		String name = cSharpEventStub.getName();
+		if(!StringUtil.isEmpty(name))
+		{
+			indexSink.occurrence(DotNetIndexKeys.EVENT_INDEX, name);
+		}
 	}
 }

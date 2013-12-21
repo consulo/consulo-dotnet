@@ -16,9 +16,12 @@
 
 package org.mustbe.consulo.dotnet.psi.stub.index;
 
+import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.stubs.StubIndexKey;
 
@@ -35,4 +38,8 @@ public interface DotNetIndexKeys
 	StubIndexKey<String, DotNetMethodDeclaration> METHOD_BY_QNAME_INDEX = StubIndexKey.createIndexKey(".net.method.by.qname.index");
 	StubIndexKey<String, DotNetTypeDeclaration> TYPE_INDEX = StubIndexKey.createIndexKey(".net.type.index");
 	StubIndexKey<String, DotNetTypeDeclaration> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey(".net.type.by.qname.index");
+
+	StubIndexKey<String, DotNetEventDeclaration> EVENT_INDEX = StubIndexKey.createIndexKey(".net.event.index");
+	StubIndexKey<String, DotNetPropertyDeclaration> PROPERTY_INDEX = StubIndexKey.createIndexKey(".net.property.index");
+	StubIndexKey<String, DotNetFieldDeclaration> FIELD_INDEX = StubIndexKey.createIndexKey(".net.field.index");
 }

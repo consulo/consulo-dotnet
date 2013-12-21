@@ -20,38 +20,26 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import org.mustbe.consulo.dotnet.psi.stub.index.TypeIndex;
+import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.GotoClassContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.StubIndex;
+import com.intellij.util.Processor;
+import com.intellij.util.indexing.FindSymbolParameters;
+import com.intellij.util.indexing.IdFilter;
 
 /**
  * @author VISTALL
- * @since 15.12.13.
+ * @since 15.12.13
  */
-public class CSharpTypeNameContributor implements GotoClassContributor
+public class CSharpTypeNameContributor implements ChooseByNameContributorEx, GotoClassContributor
 {
-	@Nullable
-	@Override
-	public String getQualifiedName(NavigationItem navigationItem)
-	{
-		if(navigationItem instanceof CSharpTypeDeclaration)
-		{
-			return ((CSharpTypeDeclaration) navigationItem).getQName();
-		}
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public String getQualifiedNameSeparator()
-	{
-		return ".";
-	}
-
 	@NotNull
 	@Override
 	public String[] getNames(Project project, boolean includeNonProjectItems)
@@ -66,5 +54,41 @@ public class CSharpTypeNameContributor implements GotoClassContributor
 	{
 		Collection<DotNetTypeDeclaration> cSharpTypeDeclarations = TypeIndex.getInstance().get(name, project, GlobalSearchScope.allScope(project));
 		return cSharpTypeDeclarations.toArray(new NavigationItem[cSharpTypeDeclarations.size()]);
+	}
+
+	@Override
+	public void processNames(@NotNull Processor<String> stringProcessor, @NotNull GlobalSearchScope searchScope, @Nullable IdFilter idFilter)
+	{
+		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.TYPE_INDEX, stringProcessor, searchScope, idFilter);
+	}
+
+	@Override
+	public void processElementsWithName(@NotNull String name, @NotNull Processor<NavigationItem> navigationItemProcessor,
+			@NotNull FindSymbolParameters findSymbolParameters)
+	{
+		Project project = findSymbolParameters.getProject();
+		IdFilter idFilter = findSymbolParameters.getIdFilter();
+		Processor<DotNetTypeDeclaration> castVar = (Processor) navigationItemProcessor;
+		GlobalSearchScope searchScope = findSymbolParameters.getSearchScope();
+
+		StubIndex.getInstance().process(DotNetIndexKeys.TYPE_INDEX, name, project, searchScope, idFilter, castVar);
+	}
+
+	@Nullable
+	@Override
+	public String getQualifiedName(NavigationItem navigationItem)
+	{
+		if(navigationItem instanceof DotNetQualifiedElement)
+		{
+			return ((DotNetQualifiedElement) navigationItem).getQName();
+		}
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public String getQualifiedNameSeparator()
+	{
+		return ".";
 	}
 }

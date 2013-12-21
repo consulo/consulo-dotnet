@@ -19,25 +19,24 @@ package org.mustbe.consulo.csharp.ide.presentation;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProvider;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 15.12.13.
+ * @since 21.12.13.
  */
-public class CSharpTypeDescriptionPresentationProvider implements ItemPresentationProvider<CSharpTypeDeclarationImpl>
+public class CSharpQualifiedElementPresentationProvider implements ItemPresentationProvider<NavigationItem>
 {
-	public static class CSharpTypeDescriptionPresentation implements ItemPresentation
+	public static class It implements ItemPresentation
 	{
-		private final CSharpTypeDeclarationImpl myDeclaration;
+		private final DotNetQualifiedElement myDeclaration;
 
-		public CSharpTypeDescriptionPresentation(CSharpTypeDeclarationImpl declaration)
+		public It(DotNetQualifiedElement declaration)
 		{
 			myDeclaration = declaration;
 		}
@@ -53,12 +52,7 @@ public class CSharpTypeDescriptionPresentationProvider implements ItemPresentati
 		@Override
 		public String getLocationString()
 		{
-			PsiElement parent = myDeclaration.getParent();
-			if(parent instanceof DotNetNamespaceDeclaration)
-			{
-				return ((DotNetNamespaceDeclaration) parent).getQName();
-			}
-			return null;
+			return myDeclaration.getParentQName();
 		}
 
 		@Nullable
@@ -68,9 +62,10 @@ public class CSharpTypeDescriptionPresentationProvider implements ItemPresentati
 			return IconDescriptorUpdaters.getIcon(myDeclaration, Iconable.ICON_FLAG_VISIBILITY);
 		}
 	}
+
 	@Override
-	public ItemPresentation getPresentation(CSharpTypeDeclarationImpl cSharpTypeDeclaration)
+	public ItemPresentation getPresentation(NavigationItem qualifiedElement)
 	{
-		return new CSharpTypeDescriptionPresentation(cSharpTypeDeclaration);
+		return new It((DotNetQualifiedElement)qualifiedElement);
 	}
 }

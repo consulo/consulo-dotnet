@@ -22,7 +22,10 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpPropertyStub;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
+import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -72,5 +75,15 @@ public class CSharpPropertyElementType extends CSharpAbstractStubElementType<CSh
 		StringRef name = stubInputStream.readName();
 		StringRef parentQName = stubInputStream.readName();
 		return new CSharpPropertyStub(stubElement, name, parentQName);
+	}
+
+	@Override
+	public void indexStub(@NotNull CSharpPropertyStub cSharpPropertyStub, @NotNull IndexSink indexSink)
+	{
+		String name = cSharpPropertyStub.getName();
+		if(!StringUtil.isEmpty(name))
+		{
+			indexSink.occurrence(DotNetIndexKeys.PROPERTY_INDEX, name);
+		}
 	}
 }
