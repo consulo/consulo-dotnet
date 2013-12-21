@@ -17,10 +17,14 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpConstructorStubElementType;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpEventElementType;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpFieldStubElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpFileStubElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpMethodStubElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpNamespaceStubElementType;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpPropertyElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpTypeStubElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
@@ -33,4 +37,11 @@ public interface CSharpStubElements
 	CSharpTypeStubElementType TYPE_DECLARATION = new CSharpTypeStubElementType();
 	CSharpMethodStubElementType METHOD_DECLARATION = new CSharpMethodStubElementType();
 	CSharpConstructorStubElementType CONSTRUCTOR_DECLARATION = new CSharpConstructorStubElementType();
+	CSharpPropertyElementType PROPERTY_DECLARATION = new CSharpPropertyElementType();
+	CSharpEventElementType EVENT_DECLARATION = new CSharpEventElementType();
+	CSharpFieldStubElementType FIELD_DECLARATION = new CSharpFieldStubElementType();
+
+	TokenSet QUALIFIED_MEMBERS = TokenSet.create(CSharpStubElements.NAMESPACE_DECLARATION, CSharpStubElements.TYPE_DECLARATION,
+			CSharpStubElements.METHOD_DECLARATION, CSharpStubElements.CONSTRUCTOR_DECLARATION, CSharpStubElements.PROPERTY_DECLARATION,
+			CSharpStubElements.EVENT_DECLARATION, CSharpStubElements.FIELD_DECLARATION);
 }

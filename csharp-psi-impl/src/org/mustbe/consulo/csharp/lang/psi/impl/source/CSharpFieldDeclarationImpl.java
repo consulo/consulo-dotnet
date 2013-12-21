@@ -19,7 +19,9 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpFieldStub;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -30,11 +32,16 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpFieldDeclarationImpl extends CSharpMemberImpl implements DotNetFieldDeclaration
+public class CSharpFieldDeclarationImpl extends CSharpStubMemberImpl<CSharpFieldStub> implements DotNetFieldDeclaration
 {
 	public CSharpFieldDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpFieldDeclarationImpl(@NotNull CSharpFieldStub stub)
+	{
+		super(stub, CSharpStubElements.FIELD_DECLARATION);
 	}
 
 	@Override

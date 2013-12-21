@@ -19,11 +19,13 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpEventStub;
 import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
@@ -31,11 +33,16 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpEventDeclarationImpl extends CSharpMemberImpl implements DotNetEventDeclaration
+public class CSharpEventDeclarationImpl extends CSharpStubMemberImpl<CSharpEventStub> implements DotNetEventDeclaration
 {
 	public CSharpEventDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpEventDeclarationImpl(@NotNull CSharpEventStub stub)
+	{
+		super(stub, CSharpStubElements.EVENT_DECLARATION);
 	}
 
 	@Override

@@ -253,6 +253,10 @@ public class StubToStringBuilder
 			}
 			else
 			{
+				if(StubToStringUtil.isInvisibleMember(field.getName()))
+				{
+					continue;
+				}
 				StubBlock stubBlock = processField(typeDef, field);
 
 				parent.getBlocks().add(stubBlock);

@@ -19,6 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpPropertyStub;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
@@ -31,11 +33,16 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpPropertyDeclarationImpl extends CSharpMemberImpl implements DotNetPropertyDeclaration
+public class CSharpPropertyDeclarationImpl extends CSharpStubMemberImpl<CSharpPropertyStub> implements DotNetPropertyDeclaration
 {
 	public CSharpPropertyDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpPropertyDeclarationImpl(@NotNull CSharpPropertyStub stub)
+	{
+		super(stub, CSharpStubElements.PROPERTY_DECLARATION);
 	}
 
 	@Override

@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 21.12.13.
  */
-public interface DotNetEventDeclaration extends DotNetVariable, DotNetMemberOwner, DotNetQualifiedElement
+public class CSharpEventStub extends StubWithParentQName<DotNetEventDeclaration>
 {
-	@NotNull
-	DotNetXXXAccessor[] getAccessors();
+	public CSharpEventStub(StubElement parent, @Nullable StringRef name, @NotNull StringRef namespaceQName)
+	{
+		super(parent, CSharpStubElements.EVENT_DECLARATION, name, namespaceQName);
+	}
 }

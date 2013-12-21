@@ -27,6 +27,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -38,6 +39,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  */
 public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeStub> implements CSharpTypeDeclaration
 {
+
 	public CSharpTypeDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -83,9 +85,9 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 
 	@NotNull
 	@Override
-	public DotNetNamedElement[] getMembers()
+	public DotNetQualifiedElement[] getMembers()
 	{
-		return findChildrenByClass(DotNetNamedElement.class);
+		return getStubOrPsiChildren(CSharpStubElements.QUALIFIED_MEMBERS, DotNetQualifiedElement.ARRAY_FACTORY);
 	}
 
 	@Override

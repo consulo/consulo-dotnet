@@ -43,16 +43,15 @@ public interface CSharpElements
 
 	IElementType TYPE_DECLARATION = CSharpStubElements.TYPE_DECLARATION;
 
-	IElementType EVENT_DECLARATION = new IElementTypeAsPsiFactory("EVENT_DECLARATION", CSharpLanguage.INSTANCE, CSharpEventDeclarationImpl.class);
+	IElementType EVENT_DECLARATION = CSharpStubElements.EVENT_DECLARATION;
 
 	IElementType XXX_ACCESSOR = new IElementTypeAsPsiFactory("XXX_ACCESSOR", CSharpLanguage.INSTANCE, CSharpXXXAccessorImpl.class);
 
-	IElementType FIELD_DECLARATION = new IElementTypeAsPsiFactory("FIELD_DECLARATION", CSharpLanguage.INSTANCE, CSharpFieldDeclarationImpl.class);
+	IElementType FIELD_DECLARATION = CSharpStubElements.FIELD_DECLARATION;
 
 	IElementType LOCAL_VARIABLE = new IElementTypeAsPsiFactory("LOCAL_VARIABLE", CSharpLanguage.INSTANCE, CSharpLocalVariableImpl.class);
 
-	IElementType PROPERTY_DECLARATION = new IElementTypeAsPsiFactory("PROPERTY_DECLARATION", CSharpLanguage.INSTANCE,
-			CSharpPropertyDeclarationImpl.class);
+	IElementType PROPERTY_DECLARATION = CSharpStubElements.PROPERTY_DECLARATION;
 
 	IElementType GENERIC_PARAMETER_LIST = new IElementTypeAsPsiFactory("GENERIC_PARAMETER_LIST", CSharpLanguage.INSTANCE,
 			CSharpGenericParameterListImpl.class);

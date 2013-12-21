@@ -18,7 +18,6 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import com.intellij.openapi.util.text.StringUtil;
 import edu.arizona.cs.mbel.mbel.TypeDef;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -44,9 +43,8 @@ public class StubToStringUtil
 		return name;
 	}
 
-	public static boolean isInvisibleTypeDef(TypeDef typeDef)
+	public static boolean isInvisibleMember(String name)
 	{
-		val name = typeDef.getName();
 		for(char illegalChar : ILLEGAL_CHARS)
 		{
 			if(StringUtil.containsChar(name, illegalChar))
