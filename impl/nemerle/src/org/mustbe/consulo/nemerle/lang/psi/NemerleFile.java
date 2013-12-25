@@ -14,23 +14,30 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.extension;
+package org.mustbe.consulo.nemerle.lang.psi;
 
-import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.projectRoots.Sdk;
+import org.mustbe.consulo.nemerle.lang.NemerleFileType;
+import org.mustbe.consulo.nemerle.lang.NemerleLanguage;
+import com.intellij.extapi.psi.PsiFileBase;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.psi.FileViewProvider;
 
 /**
  * @author VISTALL
- * @since 26.11.13.
+ * @since 25.12.13.
  */
-public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T>> extends ModuleExtension<T>
+public class NemerleFile extends PsiFileBase
 {
-	@NotNull
-	LanguageFileType getFileType();
+	public NemerleFile(@NotNull FileViewProvider viewProvider)
+	{
+		super(viewProvider, NemerleLanguage.INSTANCE);
+	}
 
 	@NotNull
-	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk);
+	@Override
+	public FileType getFileType()
+	{
+		return NemerleFileType.INSTANCE;
+	}
 }

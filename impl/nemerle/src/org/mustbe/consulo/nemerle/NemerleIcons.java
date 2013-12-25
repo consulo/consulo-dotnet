@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.extension;
+package org.mustbe.consulo.nemerle;
 
-import org.consulo.module.extension.ModuleExtension;
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.projectRoots.Sdk;
+import javax.swing.Icon;
+
+import com.intellij.openapi.util.IconLoader;
 
 /**
  * @author VISTALL
- * @since 26.11.13.
+ * @since 25.12.13.
  */
-public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T>> extends ModuleExtension<T>
+public interface NemerleIcons
 {
-	@NotNull
-	LanguageFileType getFileType();
-
-	@NotNull
-	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk);
+	Icon Nemerle = IconLoader.findIcon("/icons/nemerle.png");
 }

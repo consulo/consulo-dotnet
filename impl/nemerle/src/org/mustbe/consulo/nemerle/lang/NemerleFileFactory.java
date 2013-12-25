@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.extension;
+package org.mustbe.consulo.nemerle.lang;
 
-import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.fileTypes.FileTypeConsumer;
+import com.intellij.openapi.fileTypes.FileTypeFactory;
 
 /**
  * @author VISTALL
- * @since 26.11.13.
+ * @since 25.12.13.
  */
-public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T>> extends ModuleExtension<T>
+public class NemerleFileFactory extends FileTypeFactory
 {
-	@NotNull
-	LanguageFileType getFileType();
-
-	@NotNull
-	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk);
+	@Override
+	public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer)
+	{
+		fileTypeConsumer.consume(NemerleFileType.INSTANCE);
+	}
 }

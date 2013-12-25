@@ -14,23 +14,53 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.extension;
+package org.mustbe.consulo.nemerle.lang;
 
-import org.consulo.module.extension.ModuleExtension;
+import javax.swing.Icon;
+
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.nemerle.NemerleIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.projectRoots.Sdk;
 
 /**
  * @author VISTALL
- * @since 26.11.13.
+ * @since 25.12.13.
  */
-public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T>> extends ModuleExtension<T>
+public class NemerleFileType extends LanguageFileType
 {
-	@NotNull
-	LanguageFileType getFileType();
+	public static final NemerleFileType INSTANCE = new NemerleFileType();
+
+	private NemerleFileType()
+	{
+		super(NemerleLanguage.INSTANCE);
+	}
 
 	@NotNull
-	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk);
+	@Override
+	public String getName()
+	{
+		return "NEMERLE";
+	}
+
+	@NotNull
+	@Override
+	public String getDescription()
+	{
+		return "Nemerle files";
+	}
+
+	@NotNull
+	@Override
+	public String getDefaultExtension()
+	{
+		return "n";
+	}
+
+	@Nullable
+	@Override
+	public Icon getIcon()
+	{
+		return NemerleIcons.Nemerle;
+	}
 }

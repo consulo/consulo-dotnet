@@ -55,6 +55,14 @@
           </element>
         </element>
       </element>
+      <element id="directory" name="nemerle">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="nemerle.jar">
+            <element id="module-output" name="nemerle" />
+            <element id="module-production-resource-output" name="nemerle" />
+          </element>
+        </element>
+      </element>
     </root>
   </artifact>
 </component>

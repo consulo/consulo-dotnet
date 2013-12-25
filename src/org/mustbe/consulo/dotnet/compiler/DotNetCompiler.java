@@ -26,15 +26,11 @@ import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.TranslatingCompiler;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.Chunk;
 import lombok.val;
 
@@ -98,9 +94,7 @@ public class DotNetCompiler implements TranslatingCompiler
 		assert dotNetModuleExtension != null;
 		assert langDotNetModuleExtension != null;
 
-		DotNetCompilerOptionsBuilder builder = new DotNetCompilerOptionsBuilder(dotNetModuleExtension.getSdk());
-
-		langDotNetModuleExtension.setupCompilerOptions(builder);
+		DotNetCompilerOptionsBuilder builder = langDotNetModuleExtension.createCompilerOptionsBuilder(dotNetModuleExtension.getSdk());
 
 		try
 		{
@@ -112,100 +106,12 @@ public class DotNetCompiler implements TranslatingCompiler
 			ProcessOutput processOutput = processHandler.runProcess();
 			for(String s : processOutput.getStdoutLines())
 			{
-				addMessage(compileContext, module, s);
+				builder.addMessage(compileContext, module, s);
 			}
 		}
 		catch(Exception e)
 		{
 			LOGGER.error(e);
-		}
-	}
-
-	// src\Test.cs(7,42): error CS1002: ожидалась ;  [microsoft]
-	// C:\Users\VISTALL\\ConsuloProjects\\untitled30\mono-test\\Program.cs(7,17): error CS0117: error description [mono]
-	private static void addMessage(CompileContext compileContext, Module module, String line)
-	{
-		String[] split = line.split(": ");
-		if(split.length == 3)
-		{
-			String fileAndPosition = split[0].trim();
-			String idAndType = split[1].trim();
-			String message = split[2].trim();
-
-			String file = fileAndPosition.substring(0, fileAndPosition.lastIndexOf("("));
-			String position = fileAndPosition.substring(fileAndPosition.lastIndexOf("(") + 1, fileAndPosition.length() - 1);
-			String[] lineAndColumn = position.split(",");
-
-			String[] idAndTypeArray = idAndType.split(" ");
-			CompilerMessageCategory category = CompilerMessageCategory.INFORMATION;
-			if(idAndTypeArray[0].equals("error"))
-			{
-				category = CompilerMessageCategory.ERROR;
-			}
-			else if(idAndTypeArray[0].equals("warning"))
-			{
-				category = CompilerMessageCategory.WARNING;
-			}
-
-			String fileUrl = FileUtil.toSystemIndependentName(file);
-			if(!FileUtil.isAbsolute(fileUrl))
-			{
-				fileUrl = module.getModuleDirUrl() + "/" + fileUrl;
-			}
-			else
-			{
-				fileUrl = VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, fileUrl);
-			}
-
-			compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", fileUrl, Integer.parseInt(lineAndColumn[0]),
-					Integer.parseInt(lineAndColumn[1]));
-		}
-		else if(split.length == 2)
-		{
-			String idAndType = split[0].trim();
-			String message = split[1].trim();
-
-			//C:\Users\VISTALL\ConsuloProjects\\untitled30\\mono-test\\Program.cs(5,9): (Location of the symbol related to previous error)
-			if(message.startsWith("(")) // only with ?
-			{
-				String file = idAndType.substring(0, idAndType.lastIndexOf("("));
-				String position = idAndType.substring(idAndType.lastIndexOf("(") + 1, idAndType.length() - 1);
-				String[] lineAndColumn = position.split(",");
-
-				String fileUrl = FileUtil.toSystemIndependentName(file);
-				if(!FileUtil.isAbsolute(fileUrl))
-				{
-					fileUrl = module.getModuleDirUrl() + "/" + fileUrl;
-				}
-				else
-				{
-					fileUrl = VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, fileUrl);
-				}
-
-				message = message.substring(1, message.length());
-				message = message.substring(0, message.length() - 1);
-				compileContext.addMessage(CompilerMessageCategory.INFORMATION, message, fileUrl, Integer.parseInt(lineAndColumn[0]),
-						Integer.parseInt(lineAndColumn[1]));
-			}
-			else
-			{
-				String[] idAndTypeArray = idAndType.split(" ");
-				CompilerMessageCategory category = CompilerMessageCategory.INFORMATION;
-				if(idAndTypeArray[0].equals("error"))
-				{
-					category = CompilerMessageCategory.ERROR;
-				}
-				else if(idAndTypeArray[0].equals("warning"))
-				{
-					category = CompilerMessageCategory.WARNING;
-				}
-
-				compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", null, -1, -1);
-			}
-		}
-		else
-		{
-			compileContext.addMessage(CompilerMessageCategory.INFORMATION, line, null, -1, -1);
 		}
 	}
 

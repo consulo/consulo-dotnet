@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.extension;
+package org.mustbe.consulo.nemerle.lang;
 
-import org.consulo.module.extension.ModuleExtension;
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.lang.Language;
 
 /**
  * @author VISTALL
- * @since 26.11.13.
+ * @since 25.12.13.
  */
-public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T>> extends ModuleExtension<T>
+public class NemerleLanguage extends Language
 {
-	@NotNull
-	LanguageFileType getFileType();
+	public static final NemerleLanguage INSTANCE = new NemerleLanguage();
 
-	@NotNull
-	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk);
+	private NemerleLanguage()
+	{
+		super("NEMERLE");
+	}
 }

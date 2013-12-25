@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.mono.MonoDotNetIcons;
@@ -37,13 +36,11 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
@@ -97,30 +94,11 @@ public class MonoSdkType extends DotNetSdkType
 		}
 	}
 
-	@Nullable
-	@Override
-	public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator)
-	{
-		return null;
-	}
-
 	@NotNull
 	@Override
 	public String getPresentableName()
 	{
 		return "Mono .NET";
-	}
-
-	@Override
-	public void saveAdditionalData(SdkAdditionalData sdkAdditionalData, Element element)
-	{
-
-	}
-
-	@Override
-	public boolean isRootTypeApplicable(OrderRootType type)
-	{
-		return type == OrderRootType.CLASSES;
 	}
 
 	@Nullable

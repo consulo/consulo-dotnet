@@ -21,9 +21,11 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
+import org.mustbe.consulo.dotnet.compiler.MSBaseDotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
 
 /**
  * @author VISTALL
@@ -38,17 +40,21 @@ public class MicrosoftCSharpModuleExtension extends ModuleExtensionImpl<Microsof
 		super(id, module);
 	}
 
+	@NotNull
 	@Override
 	public LanguageFileType getFileType()
 	{
 		return CSharpFileType.INSTANCE;
 	}
 
+	@NotNull
 	@Override
-	public void setupCompilerOptions(DotNetCompilerOptionsBuilder optionsBuilder)
+	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk)
 	{
+		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(dotNetSdk);
 		optionsBuilder.addArgument("/fullpaths");
 		optionsBuilder.addArgument("/utf8output");
 		optionsBuilder.setExecutableFromSdk("csc.exe");
+		return optionsBuilder;
 	}
 }

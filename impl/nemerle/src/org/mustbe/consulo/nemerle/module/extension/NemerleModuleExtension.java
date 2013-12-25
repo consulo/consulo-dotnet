@@ -14,45 +14,48 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.microsoft.csharp.module.extension;
+package org.mustbe.consulo.nemerle.module.extension;
 
-import org.consulo.module.extension.impl.ModuleExtensionImpl;
+import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.CSharpFileType;
-import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
-import org.mustbe.consulo.dotnet.compiler.MSBaseDotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import org.mustbe.consulo.nemerle.compiler.NemerleCompilerOptionsBuilder;
+import org.mustbe.consulo.nemerle.lang.NemerleFileType;
+import org.mustbe.consulo.nemerle.sdk.NemerleSdkType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
 
 /**
  * @author VISTALL
- * @since 26.11.13.
+ * @since 25.12.13.
  */
-public class MonoCSharpModuleExtension extends ModuleExtensionImpl<MonoCSharpModuleExtension> implements
-		DotNetModuleLangExtension<MonoCSharpModuleExtension>, CSharpModuleExtension<MonoCSharpModuleExtension>
-
+public class NemerleModuleExtension extends ModuleExtensionWithSdkImpl<NemerleModuleExtension> implements DotNetModuleLangExtension<NemerleModuleExtension>
 {
-	public MonoCSharpModuleExtension(@NotNull String id, @NotNull Module module)
+	public NemerleModuleExtension(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
+	}
+
+	@Override
+	protected Class<? extends SdkType> getSdkTypeClass()
+	{
+		return NemerleSdkType.class;
 	}
 
 	@NotNull
 	@Override
 	public LanguageFileType getFileType()
 	{
-		return CSharpFileType.INSTANCE;
+		return NemerleFileType.INSTANCE;
 	}
 
 	@NotNull
 	@Override
 	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk)
 	{
-		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(dotNetSdk);
-		optionsBuilder.setExecutableFromSdk("mcs.exe");
-		return optionsBuilder;
+		return new NemerleCompilerOptionsBuilder(dotNetSdk);
 	}
 }
