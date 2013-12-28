@@ -46,13 +46,6 @@ public class MonoDotNetModuleExtensionProvider implements ModuleExtensionProvide
 
 	@NotNull
 	@Override
-	public Class<MonoDotNetModuleExtension> getImmutableClass()
-	{
-		return MonoDotNetModuleExtension.class;
-	}
-
-	@NotNull
-	@Override
 	public MonoDotNetModuleExtension createImmutable(@NotNull String s, @NotNull Module module)
 	{
 		return new MonoDotNetModuleExtension(s, module);

@@ -46,13 +46,6 @@ public class MicrosoftDotNetModuleExtensionProvider implements ModuleExtensionPr
 
 	@NotNull
 	@Override
-	public Class<MicrosoftDotNetModuleExtension> getImmutableClass()
-	{
-		return MicrosoftDotNetModuleExtension.class;
-	}
-
-	@NotNull
-	@Override
 	public MicrosoftDotNetModuleExtension createImmutable(@NotNull String s, @NotNull Module module)
 	{
 		return new MicrosoftDotNetModuleExtension(s, module);

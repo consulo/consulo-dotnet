@@ -46,13 +46,6 @@ public class NemerleModuleExtensionProvider implements ModuleExtensionProvider<N
 
 	@NotNull
 	@Override
-	public Class<NemerleModuleExtension> getImmutableClass()
-	{
-		return NemerleModuleExtension.class;
-	}
-
-	@NotNull
-	@Override
 	public NemerleModuleExtension createImmutable(@NotNull String s, @NotNull Module module)
 	{
 		return new NemerleModuleExtension(s, module);

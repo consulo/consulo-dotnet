@@ -46,13 +46,6 @@ public class MicrosoftCSharpModuleExtensionProvider implements ModuleExtensionPr
 
 	@NotNull
 	@Override
-	public Class<MicrosoftCSharpModuleExtension> getImmutableClass()
-	{
-		return MicrosoftCSharpModuleExtension.class;
-	}
-
-	@NotNull
-	@Override
 	public MicrosoftCSharpModuleExtension createImmutable(@NotNull String s, @NotNull Module module)
 	{
 		return new MicrosoftCSharpModuleExtension(s, module);
