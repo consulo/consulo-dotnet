@@ -48,6 +48,8 @@ public class CSharpNativeRuntimeType implements DotNetRuntimeType
 			put(CSharpTokens.LONG_KEYWORD, new CSharpNativeRuntimeType("long", "System.Long"));
 			put(CSharpTokens.ULONG_KEYWORD, new CSharpNativeRuntimeType("ulong", "System.ULong"));
 			put(CSharpTokens.VOID_KEYWORD, new CSharpNativeRuntimeType("void", "System.Void"));
+			put(CSharpTokens.SHORT_KEYWORD, new CSharpNativeRuntimeType("short", "System.Int16"));
+			put(CSharpTokens.USHORT_KEYWORD, new CSharpNativeRuntimeType("ushort", "System.UInt16"));
 		}
 	};
 
