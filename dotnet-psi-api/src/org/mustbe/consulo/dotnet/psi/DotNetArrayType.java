@@ -16,10 +16,14 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 13.12.13.
  */
 public interface DotNetArrayType extends DotNetType
 {
+	@NotNull
+	DotNetType getInnerType();
 }

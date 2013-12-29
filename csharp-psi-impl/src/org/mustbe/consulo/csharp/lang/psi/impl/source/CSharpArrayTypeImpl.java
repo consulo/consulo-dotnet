@@ -18,7 +18,9 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayRuntimeType;
 import org.mustbe.consulo.dotnet.psi.DotNetArrayType;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
@@ -36,12 +38,21 @@ public class CSharpArrayTypeImpl extends CSharpElementImpl implements DotNetArra
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{
-		return DotNetRuntimeType.ERROR_TYPE;
+		DotNetType innerType = getInnerType();
+
+		return new CSharpArrayRuntimeType(innerType.toRuntimeType());
 	}
 
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitArrayType(this);
+	}
+
+	@NotNull
+	@Override
+	public DotNetType getInnerType()
+	{
+		return findNotNullChildByClass(DotNetType.class);
 	}
 }
