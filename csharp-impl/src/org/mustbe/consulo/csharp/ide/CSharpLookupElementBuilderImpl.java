@@ -20,7 +20,6 @@ import java.util.Collection;
 
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.codeInsight.completion.CompletionData;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -103,19 +102,8 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 
 			builder = builder.withTypeText(typeDeclaration.getPresentableParentQName());
 
-			DotNetGenericParameter[] genericParameters = typeDeclaration.getGenericParameters();
-			if(genericParameters.length > 0)
-			{
-				String parameterText = "<" + StringUtil.join(genericParameters, new Function<DotNetGenericParameter, String>()
-				{
-					@Override
-					public String fun(DotNetGenericParameter dotNetRuntimeType)
-					{
-						return dotNetRuntimeType.getName();
-					}
-				}, ", ") + ">";
-				builder = builder.withTailText(parameterText, true);
-			}
+			builder = builder.withTailText(CSharpElementPresentationUtil.formatGenericParameters(typeDeclaration), true);
+
 			return builder;
 		}
 		else
