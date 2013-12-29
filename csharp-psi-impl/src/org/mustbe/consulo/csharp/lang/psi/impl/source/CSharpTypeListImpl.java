@@ -19,23 +19,44 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpTypeListImpl extends CSharpElementImpl
+public class CSharpTypeListImpl extends CSharpElementImpl implements DotNetTypeList
 {
 	public CSharpTypeListImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
+	@Override
 	@NotNull
 	public DotNetType[] getTypes()
 	{
 		return findChildrenByClass(DotNetType.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetRuntimeType[] getRuntimeTypes()
+	{
+		DotNetType[] types = getTypes();
+		if(types.length == 0)
+		{
+			return DotNetRuntimeType.EMPTY_ARRAY;
+		}
+		DotNetRuntimeType[] array = new DotNetRuntimeType[types.length];
+		for(int i = 0; i < types.length; i++)
+		{
+			DotNetType type = types[i];
+			array[i] = type.toRuntimeType();
+		}
+		return array;
 	}
 
 	@Override

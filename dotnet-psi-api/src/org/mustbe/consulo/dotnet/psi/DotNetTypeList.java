@@ -16,22 +16,18 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
-import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 29.12.13.
  */
-public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetModifierListOwner, DotNetGenericParameterListOwner,
-		PsiNameIdentifierOwner, DotNetMemberOwner
+public interface DotNetTypeList extends DotNetElement
 {
-	boolean isInterface();
+	@NotNull
+	DotNetType[] getTypes();
 
-	boolean isStruct();
-
-	boolean isEnum();
-
-	@Nullable
-	DotNetTypeList getExtendTypeList();
+	@NotNull
+	DotNetRuntimeType[] getRuntimeTypes();
 }
