@@ -30,6 +30,8 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetDllFileTypeFactory" />
 
+		<!--<packageViewHelper implementation="org.mustbe.consulo.dotnet.ide.projectView.DotNetPackageViewHelper" /> -->
+
 		<configurationType implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationType"/>
 		<programRunner implementation="org.mustbe.consulo.dotnet.run.DotNetDebuggerProgramRunner" />
 
@@ -48,9 +50,6 @@
 		<stubIndex implementation="org.mustbe.consulo.dotnet.psi.stub.index.EventIndex" />
 
 		<resolveScopeEnlarger implementation="org.mustbe.consulo.csharp.lang.psi.impl.resolve.CSharpResolveScopeEnlarger" />
-
-		<projectService serviceInterface="org.mustbe.consulo.packageSupport.PackageManager"
-						serviceImplementation="org.mustbe.consulo.packageSupport.PackageManager" />
 
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"
 						serviceImplementation="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"/>

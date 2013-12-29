@@ -18,11 +18,11 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.scope.util.PsiScopesUtilCore;
 
 /**
  * @author VISTALL
@@ -47,7 +47,7 @@ public class CSharpUsingListImpl extends CSharpElementImpl
 	{
 		for(CSharpUsingStatementImpl cSharpUsingStatement : getStatements())
 		{
-			if(!PsiScopesUtilCore.treeWalkUp(processor, cSharpUsingStatement, cSharpUsingStatement, state))
+			if(!CSharpResolveUtil.treeWalkUp(processor, cSharpUsingStatement, cSharpUsingStatement, state))
 			{
 				return false;
 			}

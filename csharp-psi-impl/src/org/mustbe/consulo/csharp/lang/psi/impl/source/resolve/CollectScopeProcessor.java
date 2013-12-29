@@ -36,10 +36,7 @@ public class CollectScopeProcessor extends AbstractScopeProcessor
 	{
 		if(element instanceof DotNetNamedElement)
 		{
-			if(!myElements.contains(element))
-			{
-				myElements.add(element);
-			}
+			addElement(element);
 		}
 		return true;
 	}

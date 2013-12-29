@@ -19,7 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpPsiScopesUtil;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeList;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeTargetType;
@@ -66,7 +66,7 @@ public class CSharpAttributeListImpl extends CSharpElementImpl implements DotNet
 	{
 		if(getParent() instanceof PsiFile)
 		{
-			if(!CSharpPsiScopesUtil.processUsing(this, processor, state))
+			if(!CSharpResolveUtil.processUsingOld(this, processor, state))
 			{
 				return false;
 			}

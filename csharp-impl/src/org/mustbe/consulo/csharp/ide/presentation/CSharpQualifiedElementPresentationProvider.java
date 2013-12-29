@@ -52,7 +52,7 @@ public class CSharpQualifiedElementPresentationProvider implements ItemPresentat
 		@Override
 		public String getLocationString()
 		{
-			return myDeclaration.getParentQName();
+			return myDeclaration.getPresentableParentQName();
 		}
 
 		@Nullable

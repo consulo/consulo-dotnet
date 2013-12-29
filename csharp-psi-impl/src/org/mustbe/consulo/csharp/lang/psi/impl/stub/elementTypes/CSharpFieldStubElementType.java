@@ -58,7 +58,7 @@ public class CSharpFieldStubElementType extends CSharpAbstractStubElementType<CS
 	public CSharpFieldStub createStub(@NotNull DotNetFieldDeclaration fieldDeclaration, StubElement stubElement)
 	{
 		return new CSharpFieldStub(stubElement, StringRef.fromNullableString(fieldDeclaration.getName()),
-				StringRef.fromNullableString(fieldDeclaration.getParentQName()));
+				StringRef.fromNullableString(fieldDeclaration.getPresentableParentQName()));
 	}
 
 	@Override

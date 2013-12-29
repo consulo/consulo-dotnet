@@ -17,9 +17,8 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.packageSupport.DotNetPackageDescriptor;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
-import org.mustbe.consulo.packageSupport.PackageManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -51,6 +50,6 @@ public class CSharpNamespaceDefRuntimeType implements DotNetRuntimeType
 	@Override
 	public PsiElement toPsiElement()
 	{
-		return PackageManager.getInstance(myProject).findPackage(myQualifiedName, myResolveScope, DotNetPackageDescriptor.INSTANCE);
+		return CSharpNamespaceHelper.getNamespaceElement(myProject, myQualifiedName, myResolveScope);
 	}
 }

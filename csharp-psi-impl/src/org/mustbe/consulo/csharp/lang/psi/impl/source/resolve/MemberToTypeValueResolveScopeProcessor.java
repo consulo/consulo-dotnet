@@ -47,7 +47,7 @@ public class MemberToTypeValueResolveScopeProcessor extends AbstractScopeProcess
 			String name = ((PsiNamedElement) element).getName();
 			if(Comparing.equal(myName, name))
 			{
-				myElements.add(element);
+				addElement(element);
 			}
 		}
 		return true;

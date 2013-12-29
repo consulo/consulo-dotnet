@@ -58,7 +58,7 @@ public class CSharpEventElementType extends CSharpAbstractStubElementType<CSharp
 	public CSharpEventStub createStub(@NotNull DotNetEventDeclaration dotNetEventDeclaration, StubElement stubElement)
 	{
 		return new CSharpEventStub(stubElement, StringRef.fromNullableString(dotNetEventDeclaration.getName()),
-				StringRef.fromNullableString(dotNetEventDeclaration.getParentQName()));
+				StringRef.fromNullableString(dotNetEventDeclaration.getPresentableParentQName()));
 	}
 
 	@Override

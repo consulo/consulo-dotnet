@@ -20,6 +20,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
@@ -39,6 +40,12 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 	@Override
 	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags)
 	{
+		if(element instanceof CSharpNamespaceAsElement)
+		{
+			iconDescriptor.setMainIcon(AllIcons.Nodes.Package);
+			return;
+		}
+
 		PsiFile containingFile = element.getContainingFile();
 		if(containingFile == null)
 		{

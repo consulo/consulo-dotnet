@@ -27,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
 public interface DotNetQualifiedElement extends DotNetNamedElement
 {
 	@Nullable
-	String getParentQName();
+	String getPresentableParentQName();
 
 	@Nullable
-	String getQName();
+	String getPresentableQName();
 }

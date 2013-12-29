@@ -58,7 +58,7 @@ public class CSharpPropertyElementType extends CSharpAbstractStubElementType<CSh
 	public CSharpPropertyStub createStub(@NotNull DotNetPropertyDeclaration dotNetPropertyDeclaration, StubElement stubElement)
 	{
 		return new CSharpPropertyStub(stubElement, StringRef.fromNullableString(dotNetPropertyDeclaration.getName()),
-				StringRef.fromNullableString(dotNetPropertyDeclaration.getParentQName()));
+				StringRef.fromNullableString(dotNetPropertyDeclaration.getPresentableParentQName()));
 	}
 
 	@Override

@@ -16,11 +16,15 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
-import java.util.ArrayList;
-import java.util.List;
+import gnu.trove.THashSet;
+
+import java.util.Collection;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
@@ -34,7 +38,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  */
 public abstract class AbstractScopeProcessor extends UserDataHolderBase implements PsiScopeProcessor
 {
-	protected final List<PsiElement> myElements = new ArrayList<PsiElement>();
+	protected final Set<PsiElement> myElements = new THashSet<PsiElement>();
 
 	@Nullable
 	@Override
@@ -44,9 +48,22 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 	}
 
 	@NotNull
-	public List<PsiElement> getElements()
+	public Collection<PsiElement> getElements()
 	{
 		return myElements;
+	}
+
+	public void addElement(PsiElement element)
+	{
+		if(element instanceof DotNetNamespaceDeclaration)
+		{
+			myElements.add(CSharpNamespaceHelper.getNamespaceElement(element.getProject(), ((DotNetNamespaceDeclaration) element)
+					.getPresentableQName(), element.getResolveScope()));
+		}
+		else
+		{
+			myElements.add(element);
+		}
 	}
 
 	@NotNull
@@ -56,11 +73,11 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 		{
 			return ResolveResult.EMPTY_ARRAY;
 		}
+		int i = 0;
 		ResolveResult[] k = new ResolveResult[myElements.size()];
-		for(int i = 0; i < myElements.size(); i++)
+		for(PsiElement element : myElements)
 		{
-			PsiElement psiElement = myElements.get(i);
-			k[i] = new PsiElementResolveResult(psiElement);
+			k[i ++] = new PsiElementResolveResult(element, element.isValid());
 		}
 		return k;
 	}

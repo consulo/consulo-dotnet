@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
@@ -30,6 +31,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -58,7 +60,7 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 	public CSharpTypeStub createStub(@NotNull CSharpTypeDeclaration cSharpTypeDeclaration, StubElement stubElement)
 	{
 		return new CSharpTypeStub(stubElement, StringRef.fromNullableString(cSharpTypeDeclaration.getName()),
-				StringRef.fromNullableString(cSharpTypeDeclaration.getParentQName()));
+				StringRef.fromNullableString(cSharpTypeDeclaration.getPresentableParentQName()));
 	}
 
 	@Override
@@ -85,10 +87,11 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 		{
 			indexSink.occurrence(DotNetIndexKeys.TYPE_INDEX, name);
 
-			String parentQName = cSharpTypeStub.getParentQName();
+			val parentQName = cSharpTypeStub.getParentQName();
 
-			indexSink.occurrence(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, parentQName);
-			indexSink.occurrence(DotNetIndexKeys.TYPE_BY_QNAME_INDEX, StringUtil.isEmpty(parentQName) ? name : parentQName + "." + name);
+			indexSink.occurrence(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.getNamespaceForIndexing(parentQName));
+
+			indexSink.occurrence(DotNetIndexKeys.TYPE_BY_QNAME_INDEX, CSharpNamespaceHelper.getNameWithNamespaceForIndexing(parentQName, name));
 		}
 	}
 }

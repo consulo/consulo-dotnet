@@ -80,7 +80,7 @@ public class CSharpTypeNameContributor implements ChooseByNameContributorEx, Got
 	{
 		if(navigationItem instanceof DotNetQualifiedElement)
 		{
-			return ((DotNetQualifiedElement) navigationItem).getQName();
+			return ((DotNetQualifiedElement) navigationItem).getPresentableQName();
 		}
 		return null;
 	}

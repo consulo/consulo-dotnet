@@ -72,9 +72,9 @@ public abstract class CSharpStubMemberImpl<S extends StubWithParentQName<?>> ext
 
 	@Nullable
 	@Override
-	public String getQName()
+	public String getPresentableQName()
 	{
-		String parentQName = getParentQName();
+		String parentQName = getPresentableParentQName();
 		if(StringUtil.isEmpty(parentQName))
 		{
 			return getName();
@@ -84,7 +84,7 @@ public abstract class CSharpStubMemberImpl<S extends StubWithParentQName<?>> ext
 
 	@Nullable
 	@Override
-	public String getParentQName()
+	public String getPresentableParentQName()
 	{
 		S stub = getStub();
 		if(stub != null)
@@ -94,7 +94,7 @@ public abstract class CSharpStubMemberImpl<S extends StubWithParentQName<?>> ext
 		PsiElement parent = getParent();
 		if(parent instanceof DotNetQualifiedElement)
 		{
-			return ((DotNetQualifiedElement) parent).getQName();
+			return ((DotNetQualifiedElement) parent).getPresentableQName();
 		}
 		return "";
 	}

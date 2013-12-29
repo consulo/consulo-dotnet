@@ -23,7 +23,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpPsiScopesUtil;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -36,7 +37,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.IncorrectOperationException;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -77,8 +80,29 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	@Override
 	public String getName()
 	{
-		CSharpReferenceExpressionImpl childByClass = findChildByClass(CSharpReferenceExpressionImpl.class);
-		return childByClass != null ? childByClass.getText() : null;
+		CSharpNamespaceStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getName();
+		}
+		String presentableQName0 = getQNameFromDecl();
+
+		if(StringUtil.isEmpty(presentableQName0))
+		{
+			return null;
+		}
+		else
+		{
+			if(presentableQName0.contains(CSharpNamespaceHelper.NAMESPACE_SEPARATOR))
+			{
+				val qualifiedName = QualifiedName.fromDottedString(presentableQName0);
+				return qualifiedName.getLastComponent();
+			}
+			else
+			{
+				return presentableQName0;
+			}
+		}
 	}
 
 	@Override
@@ -114,7 +138,7 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 
 	@Nullable
 	@Override
-	public String getParentQName()
+	public String getPresentableParentQName()
 	{
 		CSharpNamespaceStub stub = getStub();
 		if(stub != null)
@@ -122,25 +146,34 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 			return stub.getParentQName();
 		}
 
+		String fullQName = null;
 		PsiElement parent = getParent();
 		if(parent instanceof DotNetNamespaceDeclaration)
 		{
-			return ((DotNetNamespaceDeclaration) parent).getQName();
+			fullQName = ((DotNetNamespaceDeclaration) parent).getPresentableQName() + getQNameFromDecl();
 		}
-		return "";
+		else
+		{
+			fullQName = getQNameFromDecl();
+		}
+
+		if(fullQName == null)
+		{
+			return null;
+		}
+
+		QualifiedName qualifiedName = QualifiedName.fromDottedString(fullQName);
+
+		QualifiedName qParent = qualifiedName.getParent();
+		assert qParent != null;
+		return qParent.toString();
 	}
 
 	@Nullable
 	@Override
-	public String getQName()
+	public String getPresentableQName()
 	{
-		CSharpNamespaceStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getName();
-		}
-
-		String str = getParentQName();
+		String str = getPresentableParentQName();
 		if(!StringUtil.isEmpty(str))
 		{
 			return str + "." + getName();
@@ -148,11 +181,18 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 		return getName();
 	}
 
+	@Nullable
+	public String getQNameFromDecl()
+	{
+		CSharpReferenceExpressionImpl childByClass = findChildByClass(CSharpReferenceExpressionImpl.class);
+		return childByClass != null ? childByClass.getText() : null;
+	}
+
 	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{
-		if(!CSharpPsiScopesUtil.processUsing(this, processor, state))
+		if(!CSharpResolveUtil.processUsingOld(this, processor, state))
 		{
 			return false;
 		}

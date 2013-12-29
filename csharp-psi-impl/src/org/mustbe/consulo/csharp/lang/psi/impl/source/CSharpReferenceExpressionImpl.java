@@ -20,20 +20,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.CollectScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberToTypeValueResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespaceDefRuntimeType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefRuntimeType;
-import org.mustbe.consulo.dotnet.packageSupport.DotNetPackageDescriptor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
-import org.mustbe.consulo.packageSupport.Package;
-import org.mustbe.consulo.packageSupport.PackageManager;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
@@ -44,7 +44,6 @@ import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiQualifiedReferenceElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
-import com.intellij.psi.scope.util.PsiScopesUtilCore;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
@@ -153,8 +152,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case NAMESPACE:
 			case NAMESPACE_WITH_CREATE_OPTION:
 				String qName = stripSpaces(getText());
-				Package aPackage = PackageManager.getInstance(getProject()).findPackage(qName, getResolveScope(), DotNetPackageDescriptor.INSTANCE);
-				if(aPackage == null)
+				CSharpNamespaceAsElement aPackage = CSharpNamespaceHelper.getNamespaceElement(getProject(), qName, getResolveScope());
+				if(!aPackage.isValid())
 				{
 					return ResolveResult.EMPTY_ARRAY;
 				}
@@ -170,7 +169,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return processTypeOrGenericParameterOrMethod(qualifier, getReferenceName());
 			case METHOD:
 			case ANY_MEMBER:
-				MemberResolveScopeProcessor processor = new MemberResolveScopeProcessor(getReferenceName(), kind == ResolveToKind.METHOD);
+				MemberResolveScopeProcessor p = new MemberResolveScopeProcessor(getReferenceName(), kind == ResolveToKind.METHOD);
 
 				PsiElement target = this;
 				if(qualifier instanceof DotNetExpression)
@@ -189,36 +188,29 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					target = psiElement;
 				}
 
-				PsiScopesUtilCore.treeWalkUp(processor, target, null);
-				return processor.toResolveResults();
+				p.putUserData(CSharpResolveUtil.QUALIFIED, target != this);
+				CSharpResolveUtil.treeWalkUp(p, target, null);
+				return p.toResolveResults();
 		}
 		return ResolveResult.EMPTY_ARRAY;
 	}
 
 	private ResolveResult[] processTypeOrGenericParameterOrMethod(PsiElement qualifier, String referenceName)
 	{
+		PsiElement target = this;
 		if(qualifier instanceof CSharpReferenceExpressionImpl)
 		{
 			PsiElement resolve = ((CSharpReferenceExpressionImpl) qualifier).resolve();
-			if(resolve instanceof Package)
+			if(resolve != null)
 			{
-				MemberToTypeValueResolveScopeProcessor p = new MemberToTypeValueResolveScopeProcessor(referenceName);
-				p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
-
-				PsiScopesUtilCore.treeWalkUp(p, resolve, null);
-
-				return p.toResolveResults();
-			}
-			else
-			{
-				return ResolveResult.EMPTY_ARRAY;
+				target = resolve;
 			}
 		}
 
-		assert qualifier == null;
 		MemberToTypeValueResolveScopeProcessor p = new MemberToTypeValueResolveScopeProcessor(referenceName);
-		p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
-		PsiScopesUtilCore.treeWalkUp(p, this, null);
+		p.putUserData(CSharpResolveUtil.QUALIFIED, target != this);
+
+		CSharpResolveUtil.treeWalkUp(p, target, null);
 		return p.toResolveResults();
 	}
 
@@ -357,9 +349,9 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 
 		CollectScopeProcessor p = new CollectScopeProcessor();
-		p.putUserData(Package.SEARCH_SCOPE_KEY, getResolveScope());
+		p.putUserData(CSharpResolveUtil.QUALIFIED, target != this);
 
-		PsiScopesUtilCore.treeWalkUp(p, target, null);
+		CSharpResolveUtil.treeWalkUp(p, target, null);
 
 		return p.getElements().toArray();
 	}
@@ -374,13 +366,14 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	public DotNetRuntimeType toRuntimeType()
 	{
 		PsiElement resolve = resolve();
-		if(resolve instanceof CSharpNamespaceDeclarationImpl)
+		if(resolve instanceof CSharpNamespaceAsElement)
 		{
-			return new CSharpNamespaceDefRuntimeType(((CSharpNamespaceDeclarationImpl) resolve).getQName(), getProject(), getResolveScope());
+			return new CSharpNamespaceDefRuntimeType(((CSharpNamespaceAsElement) resolve).getQName(), getProject(),
+					getResolveScope());
 		}
 		else if(resolve instanceof CSharpTypeDeclarationImpl)
 		{
-			return new CSharpTypeDefRuntimeType(((CSharpTypeDeclarationImpl) resolve).getQName(), getProject(), getResolveScope());
+			return new CSharpTypeDefRuntimeType(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), getProject(), getResolveScope());
 		}
 		else if(resolve instanceof DotNetVariable)
 		{

@@ -57,7 +57,7 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 	public CSharpConstructorStub createStub(@NotNull CSharpConstructorDeclarationImpl methodDeclaration, StubElement stubElement)
 	{
 		return new CSharpConstructorStub(stubElement, StringRef.fromNullableString(methodDeclaration.getName()),
-				StringRef.fromNullableString(methodDeclaration.getParentQName()));
+				StringRef.fromNullableString(methodDeclaration.getPresentableParentQName()));
 	}
 
 	@Override
@@ -83,11 +83,6 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 		if(!StringUtil.isEmpty(name))
 		{
 			indexSink.occurrence(DotNetIndexKeys.METHOD_INDEX, name);
-
-			String parentQName = cSharpTypeStub.getParentQName();
-			indexSink.occurrence(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, parentQName);
-
-			indexSink.occurrence(DotNetIndexKeys.METHOD_BY_QNAME_INDEX, StringUtil.isEmpty(parentQName) ? name : parentQName + "." + name);
 		}
 	}
 }

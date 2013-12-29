@@ -51,7 +51,7 @@ public class CSharpUsingStatementImpl extends CSharpElementImpl
 		}
 
 		PsiElement resolve = namespaceReference.resolve();
-		return resolve != null && resolve.processDeclarations(processor, state, lastParent, place);
+		return resolve == null || resolve.processDeclarations(processor, state, lastParent, place);
 	}
 
 	@Override

@@ -20,11 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.dotnet.packageSupport.DotNetPackageDescriptor;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetFile;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.packageSupport.Package;
-import org.mustbe.consulo.packageSupport.PackageManager;
+import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
@@ -32,7 +31,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.StubIndex;
+import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
@@ -50,7 +50,7 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 	{
 		if(visitor instanceof CSharpElementVisitor)
 		{
-			((CSharpElementVisitor)visitor).visitCSharpFile(this);
+			((CSharpElementVisitor) visitor).visitCSharpFile(this);
 		}
 		else
 		{
@@ -59,16 +59,19 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
-			place)
+	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
 	{
-		GlobalSearchScope hint = processor.getHint(Package.SEARCH_SCOPE_KEY);
-		hint = hint == null ? GlobalSearchScope.allScope(getProject()) : hint;
+		return StubIndex.getInstance().process(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.ROOT, getProject(),
+				getResolveScope(), new Processor<DotNetNamedElement>()
 
-		Package aPackage = PackageManager.getInstance(getProject()).findPackage("", hint, DotNetPackageDescriptor.INSTANCE);
-
-		assert aPackage != null;
-		return aPackage.processDeclarations(processor, state, lastParent, place);
+		{
+			@Override
+			public boolean process(DotNetNamedElement dotNetNamespaceDeclaration)
+			{
+				return processor.execute(dotNetNamespaceDeclaration, state);
+			}
+		});
 	}
 
 	@NotNull

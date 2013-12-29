@@ -45,7 +45,7 @@ public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 		{
 			if(Comparing.equal(((DotNetNamedElement) element).getName(), myReferenceName))
 			{
-				myElements.add(element);
+				addElement(element);
 			}
 		}
 		return true;
