@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.ide;
 
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import java.util.Collection;
+
+import org.consulo.lombok.annotations.ProjectService;
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 29.12.13.
  */
-public interface DotNetParameterList extends DotNetElement
+@ProjectService
+public abstract class CSharpLookupElementBuilder
 {
-	@NotNull
-	DotNetParameter[] getParameters();
+	public abstract LookupElement[] buildToLookupElements(PsiElement[] arguments);
 
-	@NotNull
-	DotNetRuntimeType[] getParameterTypes();
+	public abstract LookupElement[] buildToLookupElements(Collection<? extends PsiElement> arguments);
 }

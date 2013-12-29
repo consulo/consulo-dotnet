@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.resolve;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
 
@@ -23,6 +24,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 16.12.13.
  */
+@ArrayFactoryFields
 public interface DotNetRuntimeType
 {
 	DotNetRuntimeType ERROR_TYPE = new DotNetRuntimeType()

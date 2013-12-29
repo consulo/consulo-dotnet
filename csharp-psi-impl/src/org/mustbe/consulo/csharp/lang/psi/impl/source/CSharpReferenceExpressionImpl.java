@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.CSharpLookupElementBuilder;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
@@ -353,7 +354,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 		CSharpResolveUtil.treeWalkUp(p, target, null);
 
-		return p.getElements().toArray();
+		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(p.getElements());
 	}
 
 	@Override

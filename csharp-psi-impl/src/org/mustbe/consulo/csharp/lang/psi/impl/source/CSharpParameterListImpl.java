@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -44,5 +45,22 @@ public class CSharpParameterListImpl extends CSharpElementImpl implements DotNet
 	public DotNetParameter[] getParameters()
 	{
 		return findChildrenByClass(DotNetParameter.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetRuntimeType[] getParameterTypes()
+	{
+		DotNetParameter[] parameters = getParameters();
+		if(parameters.length == 0)
+		{
+			return DotNetRuntimeType.EMPTY_ARRAY;
+		}
+		DotNetRuntimeType[] dotNetRuntimeTypes = new DotNetRuntimeType[parameters.length];
+		for(int i = 0; i < dotNetRuntimeTypes.length; i++)
+		{
+			dotNetRuntimeTypes[i] = parameters[i].toRuntimeType();
+		}
+		return dotNetRuntimeTypes;
 	}
 }
