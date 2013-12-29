@@ -154,7 +154,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case NAMESPACE_WITH_CREATE_OPTION:
 				String qName = stripSpaces(getText());
 				CSharpNamespaceAsElement aPackage = CSharpNamespaceHelper.getNamespaceElement(getProject(), qName, getResolveScope());
-				if(!aPackage.isValid())
+				if(aPackage == null)
 				{
 					return ResolveResult.EMPTY_ARRAY;
 				}

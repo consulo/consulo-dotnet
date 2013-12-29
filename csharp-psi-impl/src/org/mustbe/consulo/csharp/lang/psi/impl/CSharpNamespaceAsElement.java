@@ -18,11 +18,13 @@ package org.mustbe.consulo.csharp.lang.psi.impl;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
+import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiNamedElement;
@@ -54,14 +56,31 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 		mySearchScopes = searchScopes;
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public PsiElement getNavigationElement()
 	{
 		return findFirstNamespace();
 	}
 
-	private DotNetNamespaceDeclaration findFirstNamespace()
+	@Override
+	public void navigate(boolean requestFocus)
+	{
+		PsiElement navigationElement = findFirstNamespace();
+		if(navigationElement instanceof Navigatable)
+		{
+			((Navigatable) navigationElement).navigate(requestFocus);
+		}
+	}
+
+	@Override
+	public boolean isValid()
+	{
+		return findFirstNamespace() != null;
+	}
+
+	@Nullable
+	public DotNetNamespaceDeclaration findFirstNamespace()
 	{
 		val ref = new Ref<DotNetNamespaceDeclaration>();
 		StubIndex.getInstance().process(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, getQName(), getProject(), mySearchScopes,

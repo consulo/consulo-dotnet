@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.lexer.CSharpLexer;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
@@ -66,6 +67,10 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 		else if(element instanceof DotNetMethodDeclaration)
 		{
 			return "method";
+		}
+		else if(element instanceof CSharpNamespaceAsElement)
+		{
+			return "namespace";
 		}
 		return "getType " + element.getNode().getElementType();
 	}

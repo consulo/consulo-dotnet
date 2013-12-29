@@ -31,13 +31,18 @@ public class CSharpNamespaceHelper
 	public static final String ROOT = "<root>";
 	public static final String NAMESPACE_SEPARATOR = ".";
 
-	@NotNull
+	@Nullable
 	public static CSharpNamespaceAsElement getNamespaceElement(@NotNull Project project, @NotNull String qName, @NotNull GlobalSearchScope
 			globalSearchScope)
 	{
 		assert !qName.isEmpty() : "Dont use empty namespace name. Use 'ROOT' field";
 
-		return new CSharpNamespaceAsElement(project, qName, globalSearchScope);
+		CSharpNamespaceAsElement cSharpNamespaceAsElement = new CSharpNamespaceAsElement(project, qName, globalSearchScope);
+		if(cSharpNamespaceAsElement.findFirstNamespace() == null)
+		{
+			return null;
+		}
+		return cSharpNamespaceAsElement;
 	}
 
 	@NotNull

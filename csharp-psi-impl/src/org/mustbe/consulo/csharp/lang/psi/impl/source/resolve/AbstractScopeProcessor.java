@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.openapi.util.Key;
@@ -57,8 +58,13 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 	{
 		if(element instanceof DotNetNamespaceDeclaration)
 		{
-			myElements.add(CSharpNamespaceHelper.getNamespaceElement(element.getProject(), ((DotNetNamespaceDeclaration) element)
-					.getPresentableQName(), element.getResolveScope()));
+			CSharpNamespaceAsElement namespaceElement = CSharpNamespaceHelper.getNamespaceElement(element.getProject(),
+					((DotNetNamespaceDeclaration) element).getPresentableQName(), element.getResolveScope());
+			if(namespaceElement == null)
+			{
+				return;
+			}
+			myElements.add(namespaceElement);
 		}
 		else
 		{

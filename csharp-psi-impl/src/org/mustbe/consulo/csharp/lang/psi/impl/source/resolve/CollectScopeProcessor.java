@@ -17,7 +17,9 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpConstructorDeclarationImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -41,6 +43,10 @@ public class CollectScopeProcessor extends AbstractScopeProcessor
 		}
 		if(element instanceof DotNetNamedElement)
 		{
+			if(element instanceof DotNetModifierListOwner && !((DotNetModifierListOwner) element).hasModifier(CSharpTokens.PUBLIC_KEYWORD))
+			{
+				return true;
+			}
 			addElement(element);
 		}
 		return true;
