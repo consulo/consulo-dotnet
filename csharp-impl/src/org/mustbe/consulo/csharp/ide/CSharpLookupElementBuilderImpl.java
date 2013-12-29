@@ -19,9 +19,12 @@ package org.mustbe.consulo.csharp.ide;
 import java.util.Collection;
 
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.codeInsight.completion.CompletionData;
+import com.intellij.codeInsight.completion.InsertHandler;
+import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.ide.IconDescriptorUpdaters;
@@ -91,6 +94,22 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 
 			builder = builder.withTypeText(returnTypeForRuntime.getPresentableText());
 			builder = builder.withTailText(parameterText, false);
+			builder = builder.withInsertHandler(new InsertHandler<LookupElement>()
+			{
+				@Override
+				public void handleInsert(InsertionContext insertionContext, LookupElement lookupElement)
+				{
+					int offset = insertionContext.getEditor().getCaretModel().getOffset();
+
+					PsiElement elementAt = insertionContext.getFile().findElementAt(offset);
+					// dont insert () if it inside method call
+					if(elementAt == null || elementAt.getNode().getElementType() != CSharpTokens.LPAR)
+					{
+						insertionContext.getDocument().insertString(offset, "()");
+						insertionContext.getEditor().getCaretModel().moveToOffset(offset + 1);
+					}
+				}
+			});
 			return builder;
 		}
 		else if(element instanceof CSharpTypeDeclaration)
