@@ -19,11 +19,15 @@ package org.mustbe.consulo.csharp.ide.findUsage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.lexer.CSharpLexer;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEventDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
@@ -60,11 +64,11 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 	@Override
 	public String getType(@NotNull PsiElement element)
 	{
-		if(element instanceof DotNetTypeDeclaration)
+		if(element instanceof CSharpTypeDeclaration)
 		{
 			return "type";
 		}
-		else if(element instanceof DotNetMethodDeclaration)
+		else if(element instanceof CSharpMethodDeclaration)
 		{
 			return "method";
 		}
@@ -72,6 +76,23 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 		{
 			return "namespace";
 		}
+		else if(element instanceof CSharpEventDeclarationImpl)
+		{
+			return "event";
+		}
+		else if(element instanceof CSharpPropertyDeclarationImpl)
+		{
+			return "property";
+		}
+		else if(element instanceof CSharpParameterImpl)
+		{
+			return "parameter";
+		}
+		else if(element instanceof CSharpFieldDeclarationImpl)
+		{
+			return "field";
+		}
+
 		return "getType " + element.getNode().getElementType();
 	}
 
