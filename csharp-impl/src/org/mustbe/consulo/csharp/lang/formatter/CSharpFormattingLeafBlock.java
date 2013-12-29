@@ -29,7 +29,9 @@ import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Spacing;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
 
@@ -69,6 +71,15 @@ public class CSharpFormattingLeafBlock extends AbstractBlock implements CSharpEl
 	@Override
 	public Indent getIndent()
 	{
+		IElementType elementType = getNode().getElementType();
+		if(CSharpTokenSets.COMMENTS.contains(elementType))
+		{
+			PsiElement parent = getNode().getPsi().getParent();
+			if(!(parent instanceof PsiFile))
+			{
+				return Indent.getNormalIndent();
+			}
+		}
 		return Indent.getNoneIndent();
 	}
 

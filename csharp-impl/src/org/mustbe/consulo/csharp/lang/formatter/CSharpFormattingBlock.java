@@ -73,7 +73,8 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 				continue;
 			}
 
-			if(KEYWORDS.contains(elementType) || elementType == IDENTIFIER || elementType == REFERENCE_EXPRESSION || elementType == MODIFIER_LIST)
+			if(KEYWORDS.contains(elementType) || elementType == IDENTIFIER || elementType == REFERENCE_EXPRESSION || elementType == MODIFIER_LIST ||
+					CSharpTokenSets.COMMENTS.contains(elementType))
 			{
 				if(elementType == MODIFIER_LIST)
 				{
