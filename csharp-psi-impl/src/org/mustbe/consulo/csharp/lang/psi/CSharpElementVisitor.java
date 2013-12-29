@@ -234,4 +234,19 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(expression);
 	}
+
+	public void visitNewExpression(CSharpNewExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitFieldOrPropertySetBlock(CSharpFieldOrPropertySetBlock block)
+	{
+		visitElement(block);
+	}
+
+	public void visitFieldOrPropertySet(CSharpFieldOrPropertySet element)
+	{
+		visitElement(element);
+	}
 }

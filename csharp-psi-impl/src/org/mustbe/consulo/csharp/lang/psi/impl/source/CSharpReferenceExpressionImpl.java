@@ -20,9 +20,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.CSharpLookupElementBuilder;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySet;
+import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.AbstractScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.CollectScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberToTypeValueResolveScopeProcessor;
@@ -33,6 +36,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
@@ -65,7 +69,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		METHOD,
 		ATTRIBUTE,
 		TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD,
-		ANY_MEMBER
+		ANY_MEMBER,
+		FIELD_OR_PROPERTY
 	}
 
 	public CSharpReferenceExpressionImpl(@NotNull ASTNode node)
@@ -130,6 +135,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public ResolveResult[] multiResolve(boolean b)
 	{
+		AbstractScopeProcessor p = null;
 		ResolveToKind kind = kind();
 		PsiElement parent = getParent();
 		PsiElement qualifier = getQualifier();
@@ -150,6 +156,28 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					}
 				}
 				break;
+			case FIELD_OR_PROPERTY:
+				CSharpNewExpression newExpression = PsiTreeUtil.getParentOfType(this, CSharpNewExpression.class);
+				assert newExpression != null;
+				DotNetType newType = newExpression.getNewType();
+				if(newType == null)
+				{
+					return ResolveResult.EMPTY_ARRAY;
+				}
+				DotNetRuntimeType runtimeType1 = newType.toRuntimeType();
+				if(runtimeType1 == null)
+				{
+					return ResolveResult.EMPTY_ARRAY;
+				}
+				PsiElement psiElement1 = runtimeType1.toPsiElement();
+				if(psiElement1 == null)
+				{
+					return ResolveResult.EMPTY_ARRAY;
+				}
+				p = new MemberResolveScopeProcessor(getReferenceName(), false);
+				p.putUserData(CSharpResolveUtil.QUALIFIED, false);
+				CSharpResolveUtil.treeWalkUp(p, psiElement1, null);
+				return p.toResolveResults();
 			case NAMESPACE:
 			case NAMESPACE_WITH_CREATE_OPTION:
 				String qName = stripSpaces(getText());
@@ -170,7 +198,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return processTypeOrGenericParameterOrMethod(qualifier, getReferenceName());
 			case METHOD:
 			case ANY_MEMBER:
-				MemberResolveScopeProcessor p = new MemberResolveScopeProcessor(getReferenceName(), kind == ResolveToKind.METHOD);
+				p = new MemberResolveScopeProcessor(getReferenceName(), kind == ResolveToKind.METHOD);
 
 				PsiElement target = this;
 				if(qualifier instanceof DotNetExpression)
@@ -265,6 +293,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		else if(parent instanceof CSharpAttributeImpl)
 		{
 			return ResolveToKind.ATTRIBUTE;
+		}
+		else if(parent instanceof CSharpFieldOrPropertySet)
+		{
+			if(((CSharpFieldOrPropertySet) parent).getReferenceExpression() == this)
+			{
+				return ResolveToKind.FIELD_OR_PROPERTY;
+			}
 		}
 		else if(parent instanceof CSharpReferenceExpressionImpl)
 		{
@@ -369,8 +404,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		PsiElement resolve = resolve();
 		if(resolve instanceof CSharpNamespaceAsElement)
 		{
-			return new CSharpNamespaceDefRuntimeType(((CSharpNamespaceAsElement) resolve).getQName(), getProject(),
-					getResolveScope());
+			return new CSharpNamespaceDefRuntimeType(((CSharpNamespaceAsElement) resolve).getQName(), getProject(), getResolveScope());
 		}
 		else if(resolve instanceof CSharpTypeDeclarationImpl)
 		{

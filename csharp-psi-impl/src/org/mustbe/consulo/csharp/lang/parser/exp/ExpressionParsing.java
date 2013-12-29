@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 
@@ -110,6 +111,10 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			parseTypeOfExpression(wrapper, mark);
 		}
+		else if(tokenType == NEW_KEYWORD)
+		{
+			parseNewExpression(wrapper, mark);
+		}
 		else if(wrapper.getTokenType() == IDENTIFIER)
 		{
 			mark.drop();
@@ -121,6 +126,94 @@ public class ExpressionParsing extends SharingParsingHelpers
 			mark = null;
 		}
 		return mark;
+	}
+
+	private static void parseNewExpression(CSharpBuilderWrapper builder, PsiBuilder.Marker mark)
+	{
+		builder.advanceLexer();
+
+		IElementType elementType = null;
+		PsiBuilder.Marker typeMarker = parseType(builder);
+		if(typeMarker == null)
+		{
+			builder.error("Type expected");
+		}
+		else
+		{
+			elementType = ((LighterASTNode) typeMarker).getTokenType();
+		}
+
+		if(elementType == ARRAY_TYPE)
+		{
+			if(builder.getTokenType() == LBRACKET)
+			{
+
+			}
+		}
+		else
+		{
+			if(builder.getTokenType() == LPAR)
+			{
+				parseParameterList(builder);
+			}
+
+			if(builder.getTokenType() == LBRACE)
+			{
+				parseFieldOrPropertySetBlock(builder);
+			}
+		}
+
+		mark.done(NEW_EXPRESSION);
+	}
+
+	private static void parseFieldOrPropertySetBlock(CSharpBuilderWrapper builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		while(!builder.eof())
+		{
+			if(parseFieldOrPropertySet(builder) == null)
+			{
+				break;
+			}
+
+			if(builder.getTokenType() == COMMA)
+			{
+				builder.advanceLexer();
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		expect(builder, RBRACE, "'}' expected");
+		mark.done(FIELD_OR_PROPERTY_SET_BLOCK);
+	}
+
+	private static PsiBuilder.Marker parseFieldOrPropertySet(CSharpBuilderWrapper builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		if(doneOneElement(builder, IDENTIFIER, REFERENCE_EXPRESSION, "Identifier expected"))
+		{
+			if(expect(builder, EQ, "'=' expected"))
+			{
+				if(ExpressionParsing.parse(builder) == null)
+				{
+					builder.error("Expression expected");
+				}
+			}
+			mark.done(FIELD_OR_PROPERTY_SET);
+			return mark;
+		}
+		else
+		{
+			mark.drop();
+			return null;
+		}
 	}
 
 	private static void parseTypeOfExpression(CSharpBuilderWrapper builder, PsiBuilder.Marker mark)

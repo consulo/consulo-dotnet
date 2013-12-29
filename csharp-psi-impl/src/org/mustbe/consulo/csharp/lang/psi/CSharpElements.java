@@ -96,6 +96,14 @@ public interface CSharpElements
 
 	IElementType BINARY_EXPRESSION = new IElementTypeAsPsiFactory("BINARY_EXPRESSION", CSharpLanguage.INSTANCE, CSharpBinaryExpressionImpl.class);
 
+	IElementType NEW_EXPRESSION = new IElementTypeAsPsiFactory("NEW_EXPRESSION", CSharpLanguage.INSTANCE, CSharpNewExpressionImpl.class);
+
+	IElementType FIELD_OR_PROPERTY_SET = new IElementTypeAsPsiFactory("FIELD_OR_PROPERTY_SET", CSharpLanguage.INSTANCE,
+			CSharpFieldOrPropertySetImpl.class);
+
+	IElementType FIELD_OR_PROPERTY_SET_BLOCK = new IElementTypeAsPsiFactory("FIELD_OR_PROPERTY_SET_BLOCK", CSharpLanguage.INSTANCE,
+			CSharpFieldOrPropertySetBlockImpl.class);
+
 	IElementType METHOD_CALL_PARAMETER_LIST = new IElementTypeAsPsiFactory("METHOD_CALL_PARAMETER_LIST", CSharpLanguage.INSTANCE,
 			CSharpMethodCallParameterListImpl.class);
 
@@ -104,19 +112,16 @@ public interface CSharpElements
 
 	IElementType MACRO_DEFINE = new IElementTypeAsPsiFactory("MACRO_DEFINE", CSharpLanguage.INSTANCE, CSharpMacroDefineImpl.class);
 
-	IElementType MACRO_BLOCK_START = new IElementTypeAsPsiFactory("MACRO_BLOCK_START", CSharpLanguage.INSTANCE,
-			CSharpMacroBlockStartImpl.class);
+	IElementType MACRO_BLOCK_START = new IElementTypeAsPsiFactory("MACRO_BLOCK_START", CSharpLanguage.INSTANCE, CSharpMacroBlockStartImpl.class);
 
-	IElementType MACRO_BLOCK = new IElementTypeAsPsiFactory("MACRO_BLOCK", CSharpLanguage.INSTANCE,
-			CSharpMacroBlockImpl.class);
+	IElementType MACRO_BLOCK = new IElementTypeAsPsiFactory("MACRO_BLOCK", CSharpLanguage.INSTANCE, CSharpMacroBlockImpl.class);
 
-	IElementType MACRO_BLOCK_STOP = new IElementTypeAsPsiFactory("MACRO_BLOCK_STOP", CSharpLanguage.INSTANCE,
-			CSharpMacroBlockStopImpl.class);
+	IElementType MACRO_BLOCK_STOP = new IElementTypeAsPsiFactory("MACRO_BLOCK_STOP", CSharpLanguage.INSTANCE, CSharpMacroBlockStopImpl.class);
 
-	IElementType MACRO_BODY = new IElementTypeAsPsiFactory("MACRO_BODY", CSharpLanguage.INSTANCE,
-			CSharpMacroBodyImpl.class);
+	IElementType MACRO_BODY = new IElementTypeAsPsiFactory("MACRO_BODY", CSharpLanguage.INSTANCE, CSharpMacroBodyImpl.class);
 
-	IElementType EXPRESSION_STATEMENT = new IElementTypeAsPsiFactory("EXPRESSION_STATEMENT", CSharpLanguage.INSTANCE, CSharpExpressionStatementImpl.class);
+	IElementType EXPRESSION_STATEMENT = new IElementTypeAsPsiFactory("EXPRESSION_STATEMENT", CSharpLanguage.INSTANCE,
+			CSharpExpressionStatementImpl.class);
 
 	IElementType ATTRIBUTE_LIST = new IElementTypeAsPsiFactory("ATTRIBUTE_LIST", CSharpLanguage.INSTANCE, CSharpAttributeListImpl.class);
 
