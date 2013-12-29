@@ -59,6 +59,6 @@ public class CSharpNamespaceDefRuntimeType implements DotNetRuntimeType
 	@Override
 	public PsiElement toPsiElement()
 	{
-		return CSharpNamespaceHelper.getNamespaceElement(myProject, myQualifiedName, myResolveScope);
+		return CSharpNamespaceHelper.getNamespaceElementIfFind(myProject, myQualifiedName, myResolveScope);
 	}
 }

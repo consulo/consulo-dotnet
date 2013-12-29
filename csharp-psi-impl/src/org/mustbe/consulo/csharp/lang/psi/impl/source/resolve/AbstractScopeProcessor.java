@@ -58,8 +58,8 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 	{
 		if(element instanceof DotNetNamespaceDeclaration)
 		{
-			CSharpNamespaceAsElement namespaceElement = CSharpNamespaceHelper.getNamespaceElement(element.getProject(),
-					((DotNetNamespaceDeclaration) element).getPresentableQName(), element.getResolveScope());
+			CSharpNamespaceAsElement namespaceElement = CSharpNamespaceHelper.getNamespaceElementIfFind(element.getProject(), ((DotNetNamespaceDeclaration)
+					element).getPresentableQName(), element.getResolveScope());
 			if(namespaceElement == null)
 			{
 				return;

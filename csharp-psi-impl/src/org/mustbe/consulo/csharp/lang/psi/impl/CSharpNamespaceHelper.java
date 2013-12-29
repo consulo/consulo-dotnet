@@ -32,7 +32,7 @@ public class CSharpNamespaceHelper
 	public static final String NAMESPACE_SEPARATOR = ".";
 
 	@Nullable
-	public static CSharpNamespaceAsElement getNamespaceElement(@NotNull Project project, @NotNull String qName, @NotNull GlobalSearchScope
+	public static CSharpNamespaceAsElement getNamespaceElementIfFind(@NotNull Project project, @NotNull String qName, @NotNull GlobalSearchScope
 			globalSearchScope)
 	{
 		assert !qName.isEmpty() : "Dont use empty namespace name. Use 'ROOT' field";
