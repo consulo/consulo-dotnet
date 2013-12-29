@@ -16,10 +16,14 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
 import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
@@ -33,6 +37,27 @@ import com.intellij.psi.tree.IElementType;
  */
 public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNativeType
 {
+	private static final Map<IElementType, CSharpNativeRuntimeType> ELEMENT_TYPE_TO_TYPE = new HashMap<IElementType, CSharpNativeRuntimeType>()
+	{
+		{
+			put(CSharpTokens.BOOL_KEYWORD, CSharpNativeRuntimeType.BOOL);
+			put(CSharpTokens.DOUBLE_KEYWORD, CSharpNativeRuntimeType.DOUBLE);
+			put(CSharpTokens.FLOAT_KEYWORD, CSharpNativeRuntimeType.FLOAT);
+			put(CSharpTokens.CHAR_KEYWORD, CSharpNativeRuntimeType.CHAR);
+			put(CSharpTokens.OBJECT_KEYWORD, CSharpNativeRuntimeType.OBJECT);
+			put(CSharpTokens.STRING_KEYWORD, CSharpNativeRuntimeType.STRING);
+			put(CSharpTokens.SBYTE_KEYWORD, CSharpNativeRuntimeType.SBYTE);
+			put(CSharpTokens.BYTE_KEYWORD, CSharpNativeRuntimeType.BYTE);
+			put(CSharpTokens.INT_KEYWORD, CSharpNativeRuntimeType.INT);
+			put(CSharpTokens.UINT_KEYWORD, CSharpNativeRuntimeType.UINT);
+			put(CSharpTokens.LONG_KEYWORD, CSharpNativeRuntimeType.LONG);
+			put(CSharpTokens.ULONG_KEYWORD, CSharpNativeRuntimeType.ULONG);
+			put(CSharpTokens.VOID_KEYWORD, CSharpNativeRuntimeType.VOID);
+			put(CSharpTokens.SHORT_KEYWORD, CSharpNativeRuntimeType.SHORT);
+			put(CSharpTokens.USHORT_KEYWORD, CSharpNativeRuntimeType.USHORT);
+		}
+	};
+
 	public CSharpNativeTypeImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -52,7 +77,7 @@ public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNat
 		{
 			return DotNetRuntimeType.AUTO_TYPE;
 		}
-		return CSharpNativeRuntimeType.toType(elementType);
+		return ELEMENT_TYPE_TO_TYPE.get(elementType);
 	}
 
 	@NotNull

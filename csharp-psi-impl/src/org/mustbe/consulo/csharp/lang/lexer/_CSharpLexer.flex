@@ -262,6 +262,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	","                       { return CSharpTokens.COMMA; }
 
+	"??"                      { return CSharpTokens.NULL_COALESCING; }
+
 	"false"                   { return CSharpTokens.BOOL_LITERAL; }
 
 	"true"                    { return CSharpTokens.BOOL_LITERAL; }

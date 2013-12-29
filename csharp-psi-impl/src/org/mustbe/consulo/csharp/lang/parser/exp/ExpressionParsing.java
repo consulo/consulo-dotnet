@@ -22,7 +22,6 @@ import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
@@ -30,9 +29,6 @@ import com.intellij.psi.tree.TokenSet;
  */
 public class ExpressionParsing extends SharingParsingHelpers
 {
-	private static final TokenSet CONSTANTS = TokenSet.create(INTEGER_LITERAL, STRING_LITERAL, DOUBLE_LITERAL, FLOAT_LITERAL, LONG_LITERAL,
-			BOOL_LITERAL, NULL_LITERAL);
-
 	@Nullable
 	public static PsiBuilder.Marker parse(CSharpBuilderWrapper wrapper)
 	{
@@ -104,7 +100,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 	{
 		PsiBuilder.Marker mark = wrapper.mark();
 		IElementType tokenType = wrapper.getTokenType();
-		if(CONSTANTS.contains(tokenType))
+		if(CONSTANT_LITERALS.contains(tokenType))
 		{
 			wrapper.advanceLexer();
 

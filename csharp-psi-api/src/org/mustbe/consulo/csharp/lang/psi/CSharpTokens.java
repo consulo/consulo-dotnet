@@ -185,6 +185,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType PERC = new IElementType("PERC", CSharpLanguage.INSTANCE);
 
+	IElementType NULL_COALESCING = new IElementType("NULL_COALESCING", CSharpLanguage.INSTANCE);
+
 	IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", CSharpLanguage.INSTANCE);
 
 	IElementType LINE_DOC_COMMENT = new IElementType("LINE_DOC_COMMENT", CSharpLanguage.INSTANCE);

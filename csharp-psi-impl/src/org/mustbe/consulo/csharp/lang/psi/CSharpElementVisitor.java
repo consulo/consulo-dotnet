@@ -229,4 +229,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(attribute);
 	}
+
+	public void visitBinaryExpression(CSharpBinaryExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
 }

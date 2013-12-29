@@ -17,23 +17,18 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpBinaryExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
- * @since 16.12.13.
+ * @since 29.12.13.
  */
-public class CSharpConstantExpressionImpl extends CSharpElementImpl implements DotNetExpression
+public class CSharpBinaryExpressionImpl extends CSharpElementImpl implements CSharpBinaryExpression
 {
-	public CSharpConstantExpressionImpl(@NotNull ASTNode node)
+	public CSharpBinaryExpressionImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -41,19 +36,12 @@ public class CSharpConstantExpressionImpl extends CSharpElementImpl implements D
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitConstantExpression(this);
+		visitor.visitBinaryExpression(this);
 	}
 
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{
-		PsiElement byType = findChildByType(CSharpTokenSets.CONSTANT_LITERALS);
-		assert byType != null;
-		IElementType elementType = byType.getNode().getElementType();
-		if(elementType == CSharpTokens.STRING_LITERAL)
-		{
-			return CSharpNativeRuntimeType.STRING;
-		}
 		return DotNetRuntimeType.ERROR_TYPE;
 	}
 }
