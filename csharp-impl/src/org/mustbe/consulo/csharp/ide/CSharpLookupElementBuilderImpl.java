@@ -19,13 +19,15 @@ package org.mustbe.consulo.csharp.ide;
 import java.util.Collection;
 
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.codeInsight.completion.CompletionData;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
+import com.intellij.util.Function;
 
 /**
  * @author VISTALL
@@ -69,8 +71,25 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 	{
 		if(element instanceof CSharpMethodDeclaration)
 		{
-			LookupElementBuilder builder = LookupElementBuilder.create((PsiNamedElement) element);
+			CSharpMethodDeclaration methodDeclaration = (CSharpMethodDeclaration) element;
+			DotNetRuntimeType[] parameterTypes = methodDeclaration.getParameterTypesForRuntime();
+
+			DotNetRuntimeType returnTypeForRuntime = methodDeclaration.getReturnTypeForRuntime();
+
+			String parameterText = "(" + StringUtil.join(parameterTypes, new Function<DotNetRuntimeType, String>()
+			{
+				@Override
+				public String fun(DotNetRuntimeType dotNetRuntimeType)
+				{
+					return dotNetRuntimeType.getPresentableText();
+				}
+			}, ", ") + ")";
+
+			LookupElementBuilder builder = LookupElementBuilder.create(methodDeclaration);
 			builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
+
+			builder = builder.withTypeText(returnTypeForRuntime.getPresentableText());
+			builder = builder.withTailText(parameterText, false);
 			return builder;
 		}
 		else

@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpConstructorDeclarationImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -34,6 +35,10 @@ public class CollectScopeProcessor extends AbstractScopeProcessor
 	@Override
 	public boolean execute(@NotNull PsiElement element, ResolveState state)
 	{
+		if(element instanceof CSharpConstructorDeclarationImpl)
+		{
+			return true;
+		}
 		if(element instanceof DotNetNamedElement)
 		{
 			addElement(element);

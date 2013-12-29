@@ -49,7 +49,7 @@ public class CSharpParameterListImpl extends CSharpElementImpl implements DotNet
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType[] getParameterTypes()
+	public DotNetRuntimeType[] getParameterTypesForRuntime()
 	{
 		DotNetParameter[] parameters = getParameters();
 		if(parameters.length == 0)

@@ -29,6 +29,13 @@ public interface DotNetRuntimeType
 {
 	DotNetRuntimeType ERROR_TYPE = new DotNetRuntimeType()
 	{
+		@Nullable
+		@Override
+		public String getPresentableText()
+		{
+			return "<error>";
+		}
+
 		@Override
 		public boolean isNullable()
 		{
@@ -45,6 +52,13 @@ public interface DotNetRuntimeType
 
 	DotNetRuntimeType UNKNOWN_TYPE = new DotNetRuntimeType()
 	{
+		@Nullable
+		@Override
+		public String getPresentableText()
+		{
+			return "<unknown>";
+		}
+
 		@Override
 		public boolean isNullable()
 		{
@@ -61,6 +75,13 @@ public interface DotNetRuntimeType
 
 	DotNetRuntimeType AUTO_TYPE = new DotNetRuntimeType()
 	{
+		@Nullable
+		@Override
+		public String getPresentableText()
+		{
+			return "var";
+		}
+
 		@Override
 		public boolean isNullable()
 		{
@@ -74,6 +95,9 @@ public interface DotNetRuntimeType
 			return null;
 		}
 	};
+
+	@Nullable
+	String getPresentableText();
 
 	boolean isNullable();
 

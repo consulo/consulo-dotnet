@@ -29,5 +29,5 @@ public interface DotNetParameterList extends DotNetElement
 	DotNetParameter[] getParameters();
 
 	@NotNull
-	DotNetRuntimeType[] getParameterTypes();
+	DotNetRuntimeType[] getParameterTypesForRuntime();
 }

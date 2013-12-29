@@ -28,6 +28,8 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -94,11 +96,34 @@ public class CSharpMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMeth
 		return parameterList == null ? DotNetParameter.EMPTY_ARRAY : parameterList.getParameters();
 	}
 
+	@NotNull
+	@Override
+	public DotNetRuntimeType[] getParameterTypesForRuntime()
+	{
+		DotNetParameterList parameterList = getParameterList();
+		return parameterList == null ? DotNetRuntimeType.EMPTY_ARRAY : parameterList.getParameterTypesForRuntime();
+	}
+
 	@Nullable
 	@Override
 	public CSharpCodeBlock getCodeBlock()
 	{
 		return findChildByClass(CSharpCodeBlock.class);
+	}
+
+	@Nullable
+	@Override
+	public DotNetType getReturnType()
+	{
+		return findChildByClass(DotNetType.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetRuntimeType getReturnTypeForRuntime()
+	{
+		DotNetType returnType = getReturnType();
+		return returnType == null ? DotNetRuntimeType.ERROR_TYPE : returnType.toRuntimeType();
 	}
 
 	@Nullable

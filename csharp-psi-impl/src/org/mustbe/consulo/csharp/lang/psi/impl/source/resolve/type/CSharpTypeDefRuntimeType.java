@@ -25,6 +25,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.QualifiedName;
 
 /**
  * @author VISTALL
@@ -41,6 +42,14 @@ public class CSharpTypeDefRuntimeType implements DotNetRuntimeType
 		myQualifiedName = qualifiedName;
 		myProject = project;
 		myResolveScope = resolveScope;
+	}
+
+	@Nullable
+	@Override
+	public String getPresentableText()
+	{
+		QualifiedName qualifiedName = QualifiedName.fromDottedString(myQualifiedName);
+		return qualifiedName.getLastComponent();
 	}
 
 	@Override

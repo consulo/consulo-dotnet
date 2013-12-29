@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
 import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
@@ -51,7 +52,7 @@ public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNat
 		{
 			return DotNetRuntimeType.AUTO_TYPE;
 		}
-		return DotNetRuntimeType.ERROR_TYPE;
+		return CSharpNativeRuntimeType.toType(elementType);
 	}
 
 	@NotNull
