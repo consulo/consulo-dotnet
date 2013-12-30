@@ -85,10 +85,10 @@ public class StatementParsing extends SharingParsingHelpers
 			{
 				parseYieldStatement(wrapper, marker);
 			}
-			/*else if(wrapper.getTokenType() == WHILE_KEYWORD)
+			else if(wrapper.getTokenType() == WHILE_KEYWORD)
 			{
-				parseStatementWithParenthesesExpression(wrapper, marker, LOCK_STATEMENT);
-			}     */
+				parseStatementWithParenthesesExpression(wrapper, marker, WHILE_STATEMENT);
+			}
 			else if(ExpressionParsing.parse(wrapper) != null)
 			{
 				expect(wrapper, SEMICOLON, "';' expected");

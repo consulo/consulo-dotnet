@@ -279,4 +279,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(statement);
 	}
+
+	public void visitWhileStatement(CSharpWhileStatementImpl statement)
+	{
+		visitElement(statement);
+	}
 }
