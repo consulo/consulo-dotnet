@@ -21,6 +21,10 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 
 /**
  * @author VISTALL
@@ -28,6 +32,17 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
  */
 public class CSharpPsiUtilImpl
 {
+	public static boolean isCompiledElement(@NotNull PsiElement psi)
+	{
+		PsiFile containingFile = psi.getContainingFile();
+		if(containingFile == null)
+		{
+			return false;
+		}
+		VirtualFile virtualFile = containingFile.getVirtualFile();
+		return virtualFile != null && ProjectFileIndex.SERVICE.getInstance(psi.getProject()).isInLibraryClasses(virtualFile);
+	}
+
 	@NotNull
 	public static DotNetRuntimeType toRuntimeType(@NotNull DotNetVariable variable)
 	{

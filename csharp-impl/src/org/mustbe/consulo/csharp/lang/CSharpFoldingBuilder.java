@@ -36,11 +36,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import lombok.val;
 
@@ -203,25 +200,7 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		{
 			return true;
 		}
-		else if(psi instanceof CSharpCodeBlockImpl)
-		{
-			return isCompiledElement(psi);
-		}
-		return false;
-	}
 
-	private boolean isCompiledElement(PsiElement psi)
-	{
-		PsiFile containingFile = psi.getContainingFile();
-		if(containingFile == null)
-		{
-			return false;
-		}
-		VirtualFile virtualFile = containingFile.getVirtualFile();
-		if(virtualFile == null)
-		{
-			return false;
-		}
-		return ProjectFileIndex.SERVICE.getInstance(psi.getProject()).isInLibraryClasses(virtualFile);
+		return false;
 	}
 }
