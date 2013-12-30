@@ -209,6 +209,12 @@ public interface CSharpTokens extends TokenType
 
 	IElementType DOUBLE_LITERAL = new IElementType("DOUBLE_LITERAL", CSharpLanguage.INSTANCE);
 
+	IElementType UINTEGER_LITERAL = new IElementType("UINTEGER_LITERAL", CSharpLanguage.INSTANCE);
+
+	IElementType ULONG_LITERAL = new IElementType("ULONG_LITERAL", CSharpLanguage.INSTANCE);
+
+	IElementType DECIMAL_LITERAL = new IElementType("DECIMAL_LITERAL", CSharpLanguage.INSTANCE);
+
 	IElementType CHARACTER_LITERAL = new IElementType("CHARACTER_LITERAL", CSharpLanguage.INSTANCE);
 
 	IElementType BOOL_LITERAL = new IElementType("BOOL_LITERAL", CSharpLanguage.INSTANCE);

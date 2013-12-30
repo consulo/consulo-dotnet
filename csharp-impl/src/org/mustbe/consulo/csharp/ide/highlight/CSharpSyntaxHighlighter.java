@@ -47,6 +47,9 @@ public class CSharpSyntaxHighlighter extends SyntaxHighlighterBase
 		safeMap(ourKeys, CSharpTokens.LONG_LITERAL, CSharpHighlightKey.NUMBER);
 		safeMap(ourKeys, CSharpTokens.FLOAT_LITERAL, CSharpHighlightKey.NUMBER);
 		safeMap(ourKeys, CSharpTokens.DOUBLE_LITERAL, CSharpHighlightKey.NUMBER);
+		safeMap(ourKeys, CSharpTokens.DECIMAL_LITERAL, CSharpHighlightKey.NUMBER);
+		safeMap(ourKeys, CSharpTokens.ULONG_LITERAL, CSharpHighlightKey.NUMBER);
+		safeMap(ourKeys, CSharpTokens.UINTEGER_LITERAL, CSharpHighlightKey.NUMBER);
 	}
 
 	@NotNull

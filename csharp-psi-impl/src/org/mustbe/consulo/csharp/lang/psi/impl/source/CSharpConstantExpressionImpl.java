@@ -54,6 +54,42 @@ public class CSharpConstantExpressionImpl extends CSharpElementImpl implements D
 		{
 			return CSharpNativeRuntimeType.STRING;
 		}
+		else if(elementType == CSharpTokens.VERBATIM_STRING_LITERAL)
+		{
+			return CSharpNativeRuntimeType.STRING;
+		}
+		else if(elementType == CSharpTokens.UINTEGER_LITERAL)
+		{
+			return CSharpNativeRuntimeType.UINT;
+		}
+		else if(elementType == CSharpTokens.ULONG_LITERAL)
+		{
+			return CSharpNativeRuntimeType.ULONG;
+		}
+		else if(elementType == CSharpTokens.INTEGER_LITERAL)
+		{
+			return CSharpNativeRuntimeType.INT;
+		}
+		else if(elementType == CSharpTokens.LONG_LITERAL)
+		{
+			return CSharpNativeRuntimeType.LONG;
+		}
+		else if(elementType == CSharpTokens.FLOAT_LITERAL)
+		{
+			return CSharpNativeRuntimeType.FLOAT;
+		}
+		else if(elementType == CSharpTokens.DOUBLE_LITERAL)
+		{
+			return CSharpNativeRuntimeType.DOUBLE;
+		}
+		else if(elementType == CSharpTokens.NULL_LITERAL)
+		{
+			return DotNetRuntimeType.AUTO_TYPE;
+		}
+		else if(elementType == CSharpTokens.BOOL_LITERAL)
+		{
+			return CSharpNativeRuntimeType.BOOL;
+		}
 		return DotNetRuntimeType.ERROR_TYPE;
 	}
 }
