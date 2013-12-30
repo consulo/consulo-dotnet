@@ -52,7 +52,11 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			marker = wrapper.mark();
 
+			//fixme [vistall] only yield?
+			wrapper.enableSoftKeyword(YIELD_KEYWORD);
 			tokenType = wrapper.getTokenType();
+			wrapper.disableSoftKeyword(YIELD_KEYWORD);
+
 			if(tokenType == LOCK_KEYWORD)
 			{
 				parseStatementWithParenthesesExpression(wrapper, marker, LOCK_STATEMENT);
@@ -72,6 +76,14 @@ public class StatementParsing extends SharingParsingHelpers
 				expect(wrapper, SEMICOLON, "';' expected");
 
 				marker.done(CONTINUE_STATEMENT);
+			}
+			else if(tokenType == RETURN_KEYWORD)
+			{
+				parseReturnStatement(wrapper, marker);
+			}
+			else if(tokenType == YIELD_KEYWORD)
+			{
+				parseYieldStatement(wrapper, marker);
 			}
 			/*else if(wrapper.getTokenType() == WHILE_KEYWORD)
 			{
@@ -100,6 +112,48 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 
 		return marker;
+	}
+
+	private static void parseYieldStatement(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker)
+	{
+		assert wrapper.getTokenType() == YIELD_KEYWORD;
+
+		wrapper.advanceLexer();
+
+		if(wrapper.getTokenType() == BREAK_KEYWORD)
+		{
+			PsiBuilder.Marker mark = wrapper.mark();
+			wrapper.advanceLexer();
+			mark.done(BREAK_STATEMENT);
+		}
+		else if(wrapper.getTokenType() == RETURN_KEYWORD)
+		{
+			PsiBuilder.Marker mark = wrapper.mark();
+			wrapper.advanceLexer();
+			ExpressionParsing.parse(wrapper);
+			mark.done(RETURN_STATEMENT);
+		}
+		else
+		{
+			wrapper.error("'break' or 'return' expected");
+		}
+
+		expect(wrapper, SEMICOLON, "';' expected");
+
+		marker.done(YIELD_STATEMENT);
+	}
+
+	private static void parseReturnStatement(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker)
+	{
+		assert wrapper.getTokenType() == RETURN_KEYWORD;
+
+		wrapper.advanceLexer();
+
+		ExpressionParsing.parse(wrapper);
+
+		expect(wrapper, SEMICOLON, "';' expected");
+
+		marker.done(RETURN_STATEMENT);
 	}
 
 	private static void parseStatementWithParenthesesExpression(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker, IElementType doneElement)
