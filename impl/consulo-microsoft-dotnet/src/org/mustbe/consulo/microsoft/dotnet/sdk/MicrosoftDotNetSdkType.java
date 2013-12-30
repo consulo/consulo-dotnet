@@ -32,6 +32,9 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkTable;
@@ -41,6 +44,9 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import lombok.val;
 
@@ -55,11 +61,13 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 		super("MICROSOFT_DOTNET_SDK");
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String suggestHomePath()
 	{
-		return null;
+		val windir = System.getenv("windir");
+
+		return windir + "/Microsoft.NET";
 	}
 
 	@Override
@@ -112,10 +120,15 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	@Override
 	public void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, final Consumer<Sdk> sdkCreatedCallback)
 	{
-		String windir = System.getenv("windir");
+		FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+		VirtualFile microNetVirtualFile = FileChooser.chooseFile(singleFolderDescriptor, null, LocalFileSystem.getInstance().findFileByIoFile(new File
+				(suggestHomePath())));
+		if(microNetVirtualFile == null)
+		{
+			return;
+		}
 
-
-		File microNet = new File(windir, "Microsoft.NET");
+		File microNet = VfsUtil.virtualToIoFile(microNetVirtualFile);
 
 		List<Pair<String, File>> list = new ArrayList<Pair<String, File>>();
 
@@ -163,8 +176,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 					val path = pair.getSecond();
 					val absolutePath = path.getAbsolutePath();
 
-					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MicrosoftDotNetSdkType.this, absolutePath,
-							thisSdks);
+					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MicrosoftDotNetSdkType.this, absolutePath, thisSdks);
 					SdkImpl sdk = new SdkImpl(uniqueSdkName, MicrosoftDotNetSdkType.this);
 					sdk.setVersionString(getVersionString(absolutePath));
 					sdk.setHomePath(absolutePath);
