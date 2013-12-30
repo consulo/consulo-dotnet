@@ -27,6 +27,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySet;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
@@ -34,6 +35,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.AbstractScopeProce
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberToTypeValueResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespaceDefRuntimeType;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefRuntimeType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -42,7 +44,9 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
@@ -75,6 +79,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		NAMESPACE_WITH_CREATE_OPTION,
 		METHOD,
 		ATTRIBUTE,
+		NATIVE_TYPE_WRAPPER,
 		TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD,
 		ANY_MEMBER,
 		FIELD_OR_PROPERTY
@@ -143,7 +148,19 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	public ResolveResult[] multiResolve(boolean b)
 	{
 		val kind = kind();
-		val text = stripSpaces(getReferenceName()) + (kind == ResolveToKind.ATTRIBUTE ? "Attribute" : "");
+		final String text;
+		switch(kind)
+		{
+			case ATTRIBUTE:
+				text = stripSpaces(getReferenceName()) + "Attribute";
+				break;
+			case NATIVE_TYPE_WRAPPER:
+				text = "";
+				break;
+			default:
+				text = stripSpaces(getReferenceName());
+				break;
+		}
 		val psiElements = collectResults(kind, new Condition<PsiNamedElement>()
 		{
 			@Override
@@ -155,7 +172,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return toResolveResults(psiElements);
 	}
 
-	private Collection<PsiElement> collectResults(ResolveToKind kind, Condition<PsiNamedElement> condition)
+	private Collection<? extends PsiElement> collectResults(ResolveToKind kind, Condition<PsiNamedElement> condition)
 	{
 		AbstractScopeProcessor p = null;
 		PsiElement qualifier = getQualifier();
@@ -178,6 +195,17 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					}
 				}
 				return list;
+			case NATIVE_TYPE_WRAPPER:
+				PsiElement nativeElement = findChildByType(CSharpTokenSets.NATIVE_TYPES);
+				assert nativeElement != null;
+				CSharpNativeRuntimeType nativeRuntimeType = CSharpNativeTypeImpl.ELEMENT_TYPE_TO_TYPE.get(nativeElement.getNode().getElementType());
+
+				assert nativeRuntimeType != null;
+
+				Collection<DotNetTypeDeclaration> dotNetTypeDeclarations = TypeByQNameIndex.getInstance().get(nativeRuntimeType
+						.getWrapperQualifiedClass(), getProject(), getResolveScope());
+
+				return dotNetTypeDeclarations;
 			case FIELD_OR_PROPERTY:
 				CSharpNewExpression newExpression = PsiTreeUtil.getParentOfType(this, CSharpNewExpression.class);
 				assert newExpression != null;
@@ -266,7 +294,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	}
 
 	@NotNull
-	private static ResolveResult[] toResolveResults(Collection<PsiElement> elements)
+	private static ResolveResult[] toResolveResults(Collection<? extends PsiElement> elements)
 	{
 		if(elements.isEmpty())
 		{
@@ -390,6 +418,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			return ResolveToKind.METHOD;
 		}
 
+		PsiElement nativeElement = findChildByType(CSharpTokenSets.NATIVE_TYPES);
+		if(nativeElement != null)
+		{
+			return ResolveToKind.NATIVE_TYPE_WRAPPER;
+		}
+
 		return ResolveToKind.ANY_MEMBER;
 	}
 
@@ -423,8 +457,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	public Object[] getVariants()
 	{
 		ResolveToKind kind = kind();
+		if(kind == ResolveToKind.NATIVE_TYPE_WRAPPER)
+		{
+			kind = ResolveToKind.ANY_MEMBER;
+		}
 
-		Collection<PsiElement> psiElements = collectResults(kind, new Condition<PsiNamedElement>()
+		Collection<? extends PsiElement> psiElements = collectResults(kind, new Condition<PsiNamedElement>()
 		{
 			@Override
 			public boolean value(PsiNamedElement psiNamedElement)

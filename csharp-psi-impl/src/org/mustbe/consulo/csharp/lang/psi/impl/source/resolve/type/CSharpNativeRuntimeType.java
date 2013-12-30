@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.psi.PsiElement;
@@ -69,5 +70,11 @@ public class CSharpNativeRuntimeType implements DotNetRuntimeType
 	public PsiElement toPsiElement()
 	{
 		return null;
+	}
+
+	@NotNull
+	public String getWrapperQualifiedClass()
+	{
+		return myWrapperQualifiedClass;
 	}
 }

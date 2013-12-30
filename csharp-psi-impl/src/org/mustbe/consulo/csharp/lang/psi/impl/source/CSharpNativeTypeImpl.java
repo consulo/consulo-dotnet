@@ -37,7 +37,7 @@ import com.intellij.psi.tree.IElementType;
  */
 public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNativeType
 {
-	private static final Map<IElementType, CSharpNativeRuntimeType> ELEMENT_TYPE_TO_TYPE = new HashMap<IElementType, CSharpNativeRuntimeType>()
+	public static final Map<IElementType, CSharpNativeRuntimeType> ELEMENT_TYPE_TO_TYPE = new HashMap<IElementType, CSharpNativeRuntimeType>()
 	{
 		{
 			put(CSharpTokens.BOOL_KEYWORD, CSharpNativeRuntimeType.BOOL);
@@ -84,6 +84,6 @@ public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNat
 	@Override
 	public PsiElement getTypeElement()
 	{
-		return findNotNullChildByFilter(CSharpTokenSets.PRIMITIVE_TYPES);
+		return findNotNullChildByFilter(CSharpTokenSets.NATIVE_TYPES);
 	}
 }

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
@@ -114,6 +115,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 		else if(tokenType == NEW_KEYWORD)
 		{
 			parseNewExpression(wrapper, mark);
+		}
+		else if(CSharpTokenSets.NATIVE_TYPES.contains(tokenType))
+		{
+			wrapper.advanceLexer();
+			mark.done(REFERENCE_EXPRESSION);
 		}
 		else if(tokenType == LPAR)
 		{
