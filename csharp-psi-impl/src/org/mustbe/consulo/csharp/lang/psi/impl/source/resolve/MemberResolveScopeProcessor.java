@@ -17,10 +17,10 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 
 /**
@@ -29,21 +29,19 @@ import com.intellij.psi.ResolveState;
  */
 public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 {
-	private final String myReferenceName;
-	private final boolean myOnlyMethods;
+	private final Condition<PsiNamedElement> myCond;
 
-	public MemberResolveScopeProcessor(String referenceName, boolean onlyMethods)
+	public MemberResolveScopeProcessor(Condition<PsiNamedElement> condition)
 	{
-		myReferenceName = referenceName;
-		myOnlyMethods = onlyMethods;
+		myCond = condition;
 	}
 
 	@Override
 	public boolean execute(@NotNull PsiElement element, ResolveState state)
 	{
-		if(myOnlyMethods && element instanceof DotNetMethodDeclaration || !myOnlyMethods && element instanceof DotNetNamedElement)
+		if(element instanceof DotNetNamedElement)
 		{
-			if(Comparing.equal(((DotNetNamedElement) element).getName(), myReferenceName))
+			if(myCond.value((DotNetNamedElement) element))
 			{
 				addElement(element);
 			}

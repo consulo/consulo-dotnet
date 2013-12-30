@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
-import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
@@ -31,11 +31,11 @@ import com.intellij.psi.ResolveState;
  */
 public class MemberToTypeValueResolveScopeProcessor extends AbstractScopeProcessor
 {
-	private final String myName;
+	private final Condition<PsiNamedElement> myCondition;
 
-	public MemberToTypeValueResolveScopeProcessor(String name)
+	public MemberToTypeValueResolveScopeProcessor(Condition<PsiNamedElement> condition)
 	{
-		myName = name;
+		myCondition = condition;
 	}
 
 	@Override
@@ -44,8 +44,7 @@ public class MemberToTypeValueResolveScopeProcessor extends AbstractScopeProcess
 		if(element instanceof CSharpTypeDeclarationImpl || element instanceof CSharpGenericParameterImpl || element instanceof
 				CSharpMethodDeclaration && ((CSharpMethodDeclaration) element).isDelegate())
 		{
-			String name = ((PsiNamedElement) element).getName();
-			if(Comparing.equal(myName, name))
+			if(myCondition.value((PsiNamedElement) element))
 			{
 				addElement(element);
 			}
