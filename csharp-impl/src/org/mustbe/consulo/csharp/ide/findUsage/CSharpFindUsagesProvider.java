@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.ide.findUsage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.lexer.CSharpLexer;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
@@ -87,6 +88,10 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 		else if(element instanceof CSharpParameterImpl)
 		{
 			return "parameter";
+		}
+		else if(element instanceof CSharpLocalVariable)
+		{
+			return "local variable";
 		}
 		else if(element instanceof CSharpFieldDeclarationImpl)
 		{

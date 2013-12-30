@@ -87,6 +87,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType TYPEOF_KEYWORD = new IElementType("TYPEOF_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType LOCK_KEYWORD = new IElementType("LOCK_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType RETURN_KEYWORD = new IElementType("RETURN_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType IN_KEYWORD = new IElementType("IN_KEYWORD", CSharpLanguage.INSTANCE);

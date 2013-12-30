@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.parser.stmt;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import org.mustbe.consulo.csharp.lang.parser.decl.MemberWithBodyParsing;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
@@ -51,7 +52,15 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			marker = wrapper.mark();
 
-			if(ExpressionParsing.parse(wrapper) != null)
+			if(wrapper.getTokenType() == LOCK_KEYWORD)
+			{
+				parseStatementWithParenthesesExpression(wrapper, marker, LOCK_STATEMENT);
+			}
+			/*else if(wrapper.getTokenType() == WHILE_KEYWORD)
+			{
+				parseStatementWithParenthesesExpression(wrapper, marker, LOCK_STATEMENT);
+			}     */
+			else if(ExpressionParsing.parse(wrapper) != null)
 			{
 				expect(wrapper, SEMICOLON, "';' expected");
 
@@ -74,6 +83,17 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 
 		return marker;
+	}
+
+	private static void parseStatementWithParenthesesExpression(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker, IElementType doneElement)
+	{
+		wrapper.advanceLexer();
+
+		ExpressionParsing.parseParenthesesExpression(wrapper);
+
+		MemberWithBodyParsing.parseCodeBlock(wrapper);
+
+		marker.done(doneElement);
 	}
 
 	private static PsiBuilder.Marker parseVariableDecl(CSharpBuilderWrapper wrapper, boolean constToken)

@@ -115,6 +115,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			parseNewExpression(wrapper, mark);
 		}
+		else if(tokenType == LPAR)
+		{
+			mark.drop();
+			mark = parseParenthesesExpression(wrapper);
+		}
 		else if(wrapper.getTokenType() == IDENTIFIER)
 		{
 			mark.drop();
@@ -126,6 +131,23 @@ public class ExpressionParsing extends SharingParsingHelpers
 			mark = null;
 		}
 		return mark;
+	}
+
+	public static PsiBuilder.Marker parseParenthesesExpression(CSharpBuilderWrapper builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			parse(builder);
+			expect(builder, RPAR, "')' expected");
+			mark.done(PARENTHESES_EXPRESSION);
+			return mark;
+		}
+		else
+		{
+			mark.drop();
+			return null;
+		}
 	}
 
 	private static void parseNewExpression(CSharpBuilderWrapper builder, PsiBuilder.Marker mark)
