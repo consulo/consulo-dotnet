@@ -194,24 +194,27 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		builder.advanceLexer();
 
-		while(!builder.eof())
+		if(!expect(builder, RBRACE, null))
 		{
-			if(parseFieldOrPropertySet(builder) == null)
+			while(!builder.eof())
 			{
-				break;
-			}
+				if(parseFieldOrPropertySet(builder) == null)
+				{
+					break;
+				}
 
-			if(builder.getTokenType() == COMMA)
-			{
-				builder.advanceLexer();
+				if(builder.getTokenType() == COMMA)
+				{
+					builder.advanceLexer();
+				}
+				else
+				{
+					break;
+				}
 			}
-			else
-			{
-				break;
-			}
+			expect(builder, RBRACE, "'}' expected");
 		}
 
-		expect(builder, RBRACE, "'}' expected");
 		mark.done(FIELD_OR_PROPERTY_SET_BLOCK);
 	}
 
