@@ -259,4 +259,14 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(expression);
 	}
+
+	public void visitBreakStatement(CSharpBreakStatementImpl statement)
+	{
+		visitElement(statement);
+	}
+
+	public void visitContinueStatement(CSharpContinueStatementImpl statement)
+	{
+		visitElement(statement);
+	}
 }

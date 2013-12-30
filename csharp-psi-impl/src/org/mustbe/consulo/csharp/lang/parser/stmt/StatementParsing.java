@@ -52,9 +52,26 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			marker = wrapper.mark();
 
-			if(wrapper.getTokenType() == LOCK_KEYWORD)
+			tokenType = wrapper.getTokenType();
+			if(tokenType == LOCK_KEYWORD)
 			{
 				parseStatementWithParenthesesExpression(wrapper, marker, LOCK_STATEMENT);
+			}
+			else if(tokenType == BREAK_KEYWORD)
+			{
+				wrapper.advanceLexer();
+
+				expect(wrapper, SEMICOLON, "';' expected");
+
+				marker.done(BREAK_STATEMENT);
+			}
+			else if(tokenType == CONTINUE_KEYWORD)
+			{
+				wrapper.advanceLexer();
+
+				expect(wrapper, SEMICOLON, "';' expected");
+
+				marker.done(CONTINUE_STATEMENT);
 			}
 			/*else if(wrapper.getTokenType() == WHILE_KEYWORD)
 			{
@@ -92,6 +109,8 @@ public class StatementParsing extends SharingParsingHelpers
 		ExpressionParsing.parseParenthesesExpression(wrapper);
 
 		MemberWithBodyParsing.parseCodeBlock(wrapper);
+
+		expect(wrapper, SEMICOLON, null);
 
 		marker.done(doneElement);
 	}

@@ -44,6 +44,8 @@ public interface CSharpSoftTokens extends CSharpTokens
 
 	IElementType VAR_KEYWORD = new IElementType("VAR_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType YIELD_KEYWORD = new IElementType("YIELD_KEYWORD", CSharpLanguage.INSTANCE);
+
 	// attributes target
 	IElementType ASSEMBLY_KEYWORD = new IElementType("ASSEMBLY_KEYWORD", CSharpLanguage.INSTANCE);
 
@@ -65,5 +67,5 @@ public interface CSharpSoftTokens extends CSharpTokens
 
 	TokenSet ALL = TokenSet.create(PARTIAL_KEYWORD, WHERE_KEYWORD, GLOBAL_KEYWORD, ADD_KEYWORD, REMOVE_KEYWORD, SET_KEYWORD, GET_KEYWORD,
 			ASYNC_KEYWORD, VAR_KEYWORD, ASSEMBLY_KEYWORD, MODULE_KEYWORD, FIELD_KEYWORD, METHOD_KEYWORD, PARAM_KEYWORD, PROPERTY_KEYWORD,
-			TYPE_KEYWORD);
+			TYPE_KEYWORD, YIELD_KEYWORD);
 }
