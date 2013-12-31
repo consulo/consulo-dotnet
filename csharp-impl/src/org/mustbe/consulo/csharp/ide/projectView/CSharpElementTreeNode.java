@@ -28,6 +28,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
@@ -95,6 +96,10 @@ public class CSharpElementTreeNode extends AbstractPsiBasedNode<DotNetNamedEleme
 		else if(value instanceof DotNetFieldDeclaration)
 		{
 			presentationData.setPresentableText(CSharpElementPresentationUtil.formatField((DotNetFieldDeclaration) value));
+		}
+		else if(value instanceof DotNetNamespaceDeclaration)
+		{
+			presentationData.setPresentableText(((DotNetNamespaceDeclaration) value).getPresentableQName());
 		}
 		else
 		{
