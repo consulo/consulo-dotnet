@@ -71,7 +71,7 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 		}
 
 		AddUsingAction action = new AddUsingAction(editor, myRef, q);
-		String message = ShowAutoImportPass.getMessage(true, DotNetBundle.message("using.popup", q.iterator().next()));
+		String message = ShowAutoImportPass.getMessage(q.size() != 1, DotNetBundle.message("use.popup", q.iterator().next()));
 
 		HintManager.getInstance().showQuestionHint(editor, message, myRef.getTextOffset(), myRef.getTextRange().getEndOffset(), action);
 

@@ -81,31 +81,43 @@ public class AddUsingAction implements QuestionAction
 	{
 		PsiDocumentManager.getInstance(myProject).commitAllDocuments();
 
-		BaseListPopupStep<String> step = new BaseListPopupStep<String>(DotNetBundle.message("add.using"), myElements, AllIcons.Nodes.Package)
+		if(myElements.size() == 1)
 		{
-			@Override
-			public PopupStep onChosen(final String selectedValue, boolean finalChoice)
+			execute0(myElements.get(0));
+		}
+		else
+		{
+			BaseListPopupStep<String> step = new BaseListPopupStep<String>(DotNetBundle.message("add.using"), myElements, AllIcons.Nodes.Package)
 			{
-				PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-
-				new WriteCommandAction<Object>(myRef.getProject(), myRef.getContainingFile())
+				@Override
+				public PopupStep onChosen(final String selectedValue, boolean finalChoice)
 				{
-					@Override
-					protected void run(Result<Object> objectResult) throws Throwable
-					{
-						execute0(selectedValue);
-					}
-				}.execute();
-				return FINAL_CHOICE;
-			}
-		};
+					execute0(selectedValue);
+					return FINAL_CHOICE;
+				}
+			};
 
-		JBPopupFactory.getInstance().createListPopup(step).showInBestPositionFor(myEditor);
+			JBPopupFactory.getInstance().createListPopup(step).showInBestPositionFor(myEditor);
+		}
 
 		return true;
 	}
 
-	private void execute0(String qName)
+	private void execute0(final String qName)
+	{
+		PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+
+		new WriteCommandAction<Object>(myRef.getProject(), myRef.getContainingFile())
+		{
+			@Override
+			protected void run(Result<Object> objectResult) throws Throwable
+			{
+				addUsing(qName);
+			}
+		}.execute();
+	}
+
+	private void addUsing(String qName)
 	{
 		PsiElement elementForBeforeAdd = getElementForBeforeAdd();
 
