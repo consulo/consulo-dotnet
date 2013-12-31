@@ -443,7 +443,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
 	{
-		return null;
+		return this;
 	}
 
 	@Override

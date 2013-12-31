@@ -29,6 +29,8 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
+import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
+import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
@@ -187,8 +189,14 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			{
 				return;
 			}
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip("'" + referenceElement
-					.getText() + "' is not resolved").range(referenceElement).create());
+			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip("'" + referenceElement.getText()
+					+ "' is not resolved").range(referenceElement).create();
+			myHighlightInfoHolder.add(info);
+
+			if(expression.getQualifier() == null)
+			{
+				UnresolvedReferenceQuickFixProvider.registerReferenceFixes(expression, new QuickFixActionRegistrarImpl(info));
+			}
 		}
 		else
 		{

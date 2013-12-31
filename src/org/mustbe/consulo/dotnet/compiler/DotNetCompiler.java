@@ -30,6 +30,7 @@ import com.intellij.openapi.compiler.TranslatingCompiler;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Chunk;
 import lombok.val;
@@ -74,7 +75,12 @@ public class DotNetCompiler implements TranslatingCompiler
 		{
 			return false;
 		}
-		Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, compileContext.getProject());
+		Project project = compileContext.getProject();
+		if(project == null)
+		{
+			return false;
+		}
+		Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
 		if(moduleForFile == null)
 		{
 			return false;

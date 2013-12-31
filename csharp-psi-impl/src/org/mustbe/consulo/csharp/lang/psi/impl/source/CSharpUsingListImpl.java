@@ -18,10 +18,13 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
+import com.intellij.psi.TokenType;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
@@ -39,6 +42,21 @@ public class CSharpUsingListImpl extends CSharpElementImpl
 	public CSharpUsingStatementImpl[] getStatements()
 	{
 		return findChildrenByClass(CSharpUsingStatementImpl.class);
+	}
+
+	public void addUsing(@NotNull String qName)
+	{
+		CSharpUsingStatementImpl newStatement = CSharpFileFactory.createUsingStatement(getProject(), qName);
+
+		CSharpUsingStatementImpl[] statements = getStatements();
+
+		CSharpUsingStatementImpl last = statements[statements.length - 1];
+
+		LeafPsiElement leafPsiElement = new LeafPsiElement(TokenType.WHITE_SPACE, "\n");
+
+		getNode().addChild(leafPsiElement);
+
+		addAfter(newStatement, leafPsiElement);
 	}
 
 	@Override
