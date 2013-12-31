@@ -35,6 +35,7 @@ public class CSharpArrayTypeImpl extends CSharpElementImpl implements DotNetArra
 		super(node);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

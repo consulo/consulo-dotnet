@@ -19,15 +19,17 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -39,7 +41,6 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  */
 public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeStub> implements CSharpTypeDeclaration
 {
-
 	public CSharpTypeDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -112,11 +113,6 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
-		if(!CSharpResolveUtil.processUsingOld(this, processor, state))
-		{
-			return false;
-		}
-
 		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
 		{
 			if(!processor.execute(dotNetGenericParameter, state))
@@ -138,5 +134,18 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public DotNetTypeList getExtendList()
+	{
+		return (DotNetTypeList) findChildByType(CSharpElements.EXTENDS_LIST);
+	}
+
+	@Override
+	public DotNetType[] getExtends()
+	{
+		DotNetTypeList extendList = getExtendList();
+		return extendList == null ? DotNetType.EMPTY_ARRAY : extendList.getTypes();
 	}
 }

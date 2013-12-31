@@ -19,13 +19,17 @@ package org.mustbe.consulo.csharp.lang;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -67,23 +71,41 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		else if(element instanceof DotNetTypeDeclaration)
 		{
 			Icon main = null;
-			if(((DotNetTypeDeclaration) element).isInterface())
+
+			CSharpTypeDeclaration typeDeclaration = (CSharpTypeDeclaration) element;
+			if(!DumbService.getInstance(element.getProject()).isDumb())
 			{
-				main = AllIcons.Nodes.Interface;
+				if(CSharpInheritUtil.isParentOf(typeDeclaration, DotNetTypes.System_Attribute))
+				{
+					main = AllIcons.Nodes.Annotationtype;
+				}
+				else if(CSharpInheritUtil.isParentOfOrSelf(typeDeclaration, DotNetTypes.System_Exception))
+				{
+					main = typeDeclaration.hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractException : AllIcons.Nodes
+							.ExceptionClass;
+				}
 			}
-			else if(((DotNetTypeDeclaration) element).isEnum())
+
+			if(main == null)
 			{
-				main = AllIcons.Nodes.Enum;
+				if(typeDeclaration.isInterface())
+				{
+					main = AllIcons.Nodes.Interface;
+				}
+				else if(typeDeclaration.isEnum())
+				{
+					main = AllIcons.Nodes.Enum;
+				}
+				else if(typeDeclaration.isStruct())
+				{
+					main = AllIcons.Nodes.Static;  //TODO [VISTALL] icon
+				}
+				else
+				{
+					main = typeDeclaration.hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractClass : AllIcons.Nodes.Class;
+				}
 			}
-			else if(((DotNetTypeDeclaration) element).isStruct())
-			{
-				main = AllIcons.Nodes.Static;  //TODO [VISTALL] icon
-			}
-			else
-			{
-				main = ((DotNetTypeDeclaration) element).hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractClass : AllIcons.Nodes
-						.Class;
-			}
+
 			iconDescriptor.setMainIcon(main);
 
 			processModifierListOwner(element, iconDescriptor, flags);

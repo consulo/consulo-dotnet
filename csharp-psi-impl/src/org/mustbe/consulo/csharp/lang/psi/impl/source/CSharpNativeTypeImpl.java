@@ -69,6 +69,7 @@ public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNat
 		visitor.visitNativeType(this);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

@@ -40,6 +40,7 @@ public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNet
 		visitor.visitReferenceType(this);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

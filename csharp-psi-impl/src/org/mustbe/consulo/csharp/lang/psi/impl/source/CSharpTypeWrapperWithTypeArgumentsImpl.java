@@ -33,6 +33,7 @@ public class CSharpTypeWrapperWithTypeArgumentsImpl extends CSharpElementImpl im
 		super(node);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

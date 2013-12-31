@@ -19,13 +19,14 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpTypeListImpl extends CSharpElementImpl
+public class CSharpTypeListImpl extends CSharpElementImpl implements DotNetTypeList
 {
 	public CSharpTypeListImpl(@NotNull ASTNode node)
 	{
@@ -33,6 +34,7 @@ public class CSharpTypeListImpl extends CSharpElementImpl
 	}
 
 	@NotNull
+	@Override
 	public DotNetType[] getTypes()
 	{
 		return findChildrenByClass(DotNetType.class);

@@ -16,17 +16,14 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 31.12.13.
  */
-@ArrayFactoryFields
-public interface DotNetType extends DotNetElement
+public interface DotNetTypeList extends DotNetElement
 {
 	@NotNull
-	DotNetRuntimeType toRuntimeType();
+	DotNetType[] getTypes();
 }

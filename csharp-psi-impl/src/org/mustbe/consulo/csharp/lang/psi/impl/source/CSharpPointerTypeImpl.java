@@ -39,6 +39,7 @@ public class CSharpPointerTypeImpl extends CSharpElementImpl implements DotNetPo
 		visitor.visitPointerType(this);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{
