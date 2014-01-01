@@ -45,6 +45,7 @@
 		<treeStructureProvider implementation="org.mustbe.consulo.csharp.ide.projectView.CSharpProjectViewProvider"/>
 		<autoImportOptionsProvider instance="org.mustbe.consulo.csharp.ide.codeInsight.CSharpAutoImportOptions" />
 		<stubElementTypeHolder class="org.mustbe.consulo.csharp.lang.psi.CSharpStubElements" />
+		<codeInsight.lineMarkerProvider language="C#" implementationClass="org.mustbe.consulo.csharp.ide.CSharpLineMarkerProvider" />
 
 		<lang.findUsagesProvider language="C#" implementationClass="org.mustbe.consulo.csharp.ide.findUsage.CSharpFindUsagesProvider" />
 
