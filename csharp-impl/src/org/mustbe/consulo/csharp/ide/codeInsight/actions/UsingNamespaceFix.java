@@ -22,7 +22,8 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.dotnet.DotNetBundle;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.stub.index.MethodIndex;
 import org.mustbe.consulo.dotnet.psi.stub.index.TypeIndex;
 import com.intellij.codeInsight.daemon.impl.ShowAutoImportPass;
 import com.intellij.codeInsight.hint.HintManager;
@@ -80,22 +81,36 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 
 	private List<String> collectAvailableNamespaces()
 	{
-		val set = new ArrayList<String>();
+		val list = new ArrayList<String>();
 
 		String referenceName = myRef.getReferenceName();
 		val types = TypeIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
 
-		for(DotNetTypeDeclaration type : types)
+		for(val type : types)
 		{
 			String presentableParentQName = type.getPresentableParentQName();
 			if(StringUtil.isEmpty(presentableParentQName))
 			{
 				continue;
 			}
-			set.add(presentableParentQName);
+			list.add(presentableParentQName);
 		}
 
-		return set;
+		val methods = MethodIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
+
+		for(val method : methods)
+		{
+			if((method.getParent() instanceof DotNetNamespaceDeclaration || method.getParent() instanceof PsiFile) && method.isDelegate())
+			{
+				String presentableParentQName = method.getPresentableParentQName();
+				if(StringUtil.isEmpty(presentableParentQName))
+				{
+					continue;
+				}
+				list.add(presentableParentQName);
+			}
+		}
+		return list;
 	}
 
 	@Override
