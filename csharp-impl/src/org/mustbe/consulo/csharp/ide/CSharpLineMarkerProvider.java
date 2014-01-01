@@ -32,9 +32,14 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Function;
 import lombok.val;
@@ -43,7 +48,7 @@ import lombok.val;
  * @author VISTALL
  * @since 29.12.13.
  */
-public class CSharpLineMarkerProvider implements LineMarkerProvider
+public class CSharpLineMarkerProvider implements LineMarkerProvider, DumbAware
 {
 	@Nullable
 	@Override
@@ -53,22 +58,22 @@ public class CSharpLineMarkerProvider implements LineMarkerProvider
 	}
 
 	@Override
-	public void collectSlowLineMarkers(@NotNull List<PsiElement> psiElements, @NotNull Collection<LineMarkerInfo> lineMarkerInfos)
+	public void collectSlowLineMarkers(@NotNull List<PsiElement> elements, @NotNull Collection<LineMarkerInfo> lineMarkerInfos)
 	{
-		if(psiElements.isEmpty())
+		ApplicationManager.getApplication().assertReadAccessAllowed();
+
+		if(elements.isEmpty() || DumbService.getInstance(elements.get(0).getProject()).isDumb())
 		{
 			return;
 		}
 
 
-		for(PsiElement psiElement : psiElements)
+		for(PsiElement psiElement : elements)
 		{
 			if(psiElement.getParent() instanceof CSharpTypeDeclaration && psiElement.getNode().getElementType() == CSharpTokens.IDENTIFIER)
 			{
-				List<DotNetTypeDeclaration> children = findChildren((CSharpTypeDeclaration) psiElement.getParent());
-				if(!children.isEmpty())
+				if(hasChild((CSharpTypeDeclaration) psiElement.getParent()))
 				{
-
 					val lineMarkerInfo = new LineMarkerInfo<PsiElement>(psiElement, psiElement.getTextRange(), AllIcons.Gutter.OverridenMethod,
 							Pass.UPDATE_ALL, new Function<PsiElement, String>()
 					{
@@ -95,29 +100,60 @@ public class CSharpLineMarkerProvider implements LineMarkerProvider
 		}
 	}
 
+	private static boolean hasChild(final CSharpTypeDeclaration type)
+	{
+		if(type.hasModifier(CSharpTokens.SEALED_KEYWORD))
+		{
+			return false;
+		}
+		val project = type.getProject();
+
+		val qName = type.getPresentableQName();
+
+		assert qName != null;
+
+		val useScope = type.getUseScope();
+		if(!(useScope instanceof GlobalSearchScope))
+		{
+			return false;
+		}
+		val ref = new Ref<Boolean>(Boolean.FALSE);
+	/*	StubIndex.getInstance().processAllKeys(DotNetIndexKeys.TYPE_INDEX, new Processor<String>()
+		{
+			@Override
+			public boolean process(String name)
+			{
+				StubIndex.getInstance().process(DotNetIndexKeys.TYPE_INDEX, name, project, (GlobalSearchScope) useScope, new Processor<DotNetTypeDeclaration>()
+				{
+					@Override
+					public boolean process(DotNetTypeDeclaration dotNetTypeDeclaration)
+					{
+						if(type == dotNetTypeDeclaration)
+						{
+							return true;
+						}
+						if(CSharpInheritUtil.isParentOf(dotNetTypeDeclaration, qName))
+						{
+							ref.set(Boolean.TRUE);
+							return false;
+						}
+						return true;
+					}
+				});
+
+				return !ref.get();
+			}
+		}, (GlobalSearchScope) useScope, IdFilter.getProjectIdFilter(project, false));
+
+		   */
+		return ref.get();
+	}
+
 	private static List<DotNetTypeDeclaration> findChildren(final CSharpTypeDeclaration type)
 	{
 		val list = new ArrayList<DotNetTypeDeclaration>();
 
-		/*val project = type.getProject();
 
-		TypeIndex.getInstance().processAllKeys(project, new Processor<String>()
-		{
-			@Override
-			public boolean process(String s)
-			{
-				Collection<DotNetTypeDeclaration> dotNetTypeDeclarations = TypeIndex.getInstance().get(s, project,
-						GlobalSearchScope.allScope(project));
-				for(DotNetTypeDeclaration dotNetTypeDeclaration : dotNetTypeDeclarations)
-				{
-					if(CSharpInheritUtil.isInherit(type, dotNetTypeDeclaration))
-					{
-						list.add(dotNetTypeDeclaration);
-					}
-				}
-				return true;
-			}
-		});   */
 		return list;
 	}
 }

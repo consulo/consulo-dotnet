@@ -16,10 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 
 /**
  * @author VISTALL
@@ -27,8 +24,4 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
  */
 public interface CSharpTypeDeclaration extends DotNetTypeDeclaration, CSharpBodyWithBraces
 {
-	@Nullable
-	DotNetTypeList getExtendList();
-
-	DotNetType[] getExtends();
 }

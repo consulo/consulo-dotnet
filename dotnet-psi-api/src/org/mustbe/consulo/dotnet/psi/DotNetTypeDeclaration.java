@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
@@ -33,5 +34,8 @@ public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetMod
 	boolean isEnum();
 
 	@Nullable
-	DotNetTypeList getExtendTypeList();
+	DotNetTypeList getExtendList();
+
+	@NotNull
+	DotNetType[] getExtends();
 }

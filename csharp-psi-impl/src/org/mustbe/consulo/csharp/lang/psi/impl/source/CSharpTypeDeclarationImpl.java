@@ -109,13 +109,6 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 		return findChildByType(CSharpTokens.ENUM_KEYWORD) != null;
 	}
 
-	@Nullable
-	@Override
-	public DotNetTypeList getExtendTypeList()
-	{
-		return (DotNetTypeList) findChildByType(CSharpElements.EXTENDS_LIST);
-	}
-
 	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
@@ -150,6 +143,7 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	}
 
 	@Override
+	@NotNull
 	public DotNetType[] getExtends()
 	{
 		DotNetTypeList extendList = getExtendList();
