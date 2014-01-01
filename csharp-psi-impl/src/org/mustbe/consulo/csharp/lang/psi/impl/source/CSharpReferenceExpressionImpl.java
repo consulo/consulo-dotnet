@@ -174,6 +174,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 	private Collection<? extends PsiElement> collectResults(ResolveToKind kind, Condition<PsiNamedElement> condition)
 	{
+		if(!isValid())
+		{
+			return Collections.emptyList();
+		}
 		AbstractScopeProcessor p = null;
 		PsiElement qualifier = getQualifier();
 		switch(kind)

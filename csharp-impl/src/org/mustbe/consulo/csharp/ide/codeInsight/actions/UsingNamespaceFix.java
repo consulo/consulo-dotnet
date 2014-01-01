@@ -17,10 +17,12 @@
 package org.mustbe.consulo.csharp.ide.codeInsight.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.MethodIndex;
@@ -81,6 +83,11 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 
 	private List<String> collectAvailableNamespaces()
 	{
+		if(myRef.getQualifier() != null || myRef.getParent() instanceof CSharpUsingStatementImpl)
+		{
+			return Collections.emptyList();
+		}
+
 		val list = new ArrayList<String>();
 
 		String referenceName = myRef.getReferenceName();
