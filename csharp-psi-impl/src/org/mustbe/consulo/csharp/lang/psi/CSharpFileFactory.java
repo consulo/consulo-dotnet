@@ -39,6 +39,14 @@ public class CSharpFileFactory
 		return (CSharpUsingListImpl) fileFromText.getFirstChild();
 	}
 
+	public static CSharpUsingListImpl createUsingListFromText(@NotNull Project project, @NotNull String text)
+	{
+		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE,
+				text);
+
+		return (CSharpUsingListImpl) fileFromText.getFirstChild();
+	}
+
 	public static CSharpUsingStatementImpl createUsingStatement(@NotNull Project project, @NotNull String qName)
 	{
 		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE,
