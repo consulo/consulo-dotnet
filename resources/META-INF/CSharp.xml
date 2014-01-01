@@ -34,13 +34,16 @@
 
 		<applicationService serviceInterface="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionHelper"
 							serviceImplementation="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionHelperImpl"/>
+		<applicationService serviceInterface="org.mustbe.consulo.csharp.ide.codeInsight.CSharpCodeInsightSettings"
+							serviceImplementation="org.mustbe.consulo.csharp.ide.codeInsight.CSharpCodeInsightSettings" />
+
 		<fileTypeFactory implementation="org.mustbe.consulo.csharp.lang.CSharpFileTypeFactory"/>
 
 		<syntaxHighlighter key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighter"/>
 		<highlightVisitor implementation="org.mustbe.consulo.csharp.ide.highlight.CSharpHighlightVisitor"/>
 		<iconDescriptorUpdater implementation="org.mustbe.consulo.csharp.lang.CSharpIconDescriptorUpdater"/>
 		<treeStructureProvider implementation="org.mustbe.consulo.csharp.ide.projectView.CSharpProjectViewProvider"/>
-
+		<autoImportOptionsProvider instance="org.mustbe.consulo.csharp.ide.codeInsight.CSharpAutoImportOptions" />
 		<stubElementTypeHolder class="org.mustbe.consulo.csharp.lang.psi.CSharpStubElements" />
 
 		<lang.findUsagesProvider language="C#" implementationClass="org.mustbe.consulo.csharp.ide.findUsage.CSharpFindUsagesProvider" />

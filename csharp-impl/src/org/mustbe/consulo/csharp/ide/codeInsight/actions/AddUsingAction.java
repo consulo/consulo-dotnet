@@ -19,16 +19,20 @@ package org.mustbe.consulo.csharp.ide.codeInsight.actions;
 import java.util.Collection;
 import java.util.List;
 
+import org.consulo.lombok.annotations.Logger;
+import org.mustbe.consulo.csharp.ide.codeInsight.CSharpCodeInsightSettings;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex;
+import com.intellij.codeInsight.actions.OptimizeImportsProcessor;
 import com.intellij.codeInsight.hint.QuestionAction;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.RangeMarker;
@@ -42,11 +46,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
  * @since 30.12.13.
  */
+@Logger
 public class AddUsingAction implements QuestionAction
 {
 	private final Editor myEditor;
@@ -147,7 +153,20 @@ public class AddUsingAction implements QuestionAction
 		LogicalPosition pos = new LogicalPosition(line, 0);
 		myEditor.getCaretModel().moveToLogicalPosition(pos);
 
-		bindToRef(qName);
+		try
+		{
+			bindToRef(qName);
+
+			if (CSharpCodeInsightSettings.getInstance().OPTIMIZE_IMPORTS_ON_THE_FLY)
+			{
+				Document document = myEditor.getDocument();
+				PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
+				new OptimizeImportsProcessor(myProject, psiFile).runWithoutProgress();
+			}
+		}
+		catch(IncorrectOperationException e){
+			LOGGER.error(e);
+		}
 
 		line = myEditor.getCaretModel().getLogicalPosition().line;
 		LogicalPosition pos1 = new LogicalPosition(line, col);
