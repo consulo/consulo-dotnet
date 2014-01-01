@@ -102,7 +102,7 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 			public void visitUsingList(CSharpUsingListImpl list)
 			{
 				CSharpUsingStatementImpl[] statements = list.getStatements();
-				if(statements.length == 0)
+				if(statements.length <= 1)
 				{
 					return;
 				}
@@ -118,8 +118,10 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 
 				assert usingKeyword != null;
 
-				foldingList.add(new FoldingDescriptor(list, new TextRange(usingKeyword.getTextRange().getEndOffset() + 1,
-						list.getNode().getTextRange().getEndOffset())));
+				int startOffset = usingKeyword.getTextRange().getEndOffset() + 1;
+				int endOffset = statements[statements.length - 1].getLastChild().getTextRange().getEndOffset();
+
+				foldingList.add(new FoldingDescriptor(list, new TextRange(startOffset, endOffset)));
 			}
 
 			@Override
