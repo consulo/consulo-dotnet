@@ -83,7 +83,7 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 
 	private List<String> collectAvailableNamespaces()
 	{
-		if(myRef.getQualifier() != null || myRef.getParent() instanceof CSharpUsingStatementImpl)
+		if(myRef.getQualifier() != null || myRef.getParent() instanceof CSharpUsingStatementImpl || !myRef.isValid())
 		{
 			return Collections.emptyList();
 		}
