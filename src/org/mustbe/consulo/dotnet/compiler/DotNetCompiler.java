@@ -104,7 +104,7 @@ public class DotNetCompiler implements TranslatingCompiler
 
 		try
 		{
-			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles);
+			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, false);
 
 			val process = commandLine.createProcess();
 			val processHandler = new CapturingProcessHandler(process);

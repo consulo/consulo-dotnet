@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
+import org.mustbe.consulo.dotnet.compiler.DotNetCompilerUtil;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.nemerle.module.extension.NemerleModuleExtension;
@@ -33,10 +34,8 @@ import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.SmartList;
 import lombok.val;
 
 /**
@@ -60,7 +59,7 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results) throws IOException
+	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, boolean debug) throws IOException
 	{
 		Sdk sdk = ModuleUtilCore.getSdk(module, NemerleModuleExtension.class);
 		assert sdk != null;
@@ -85,20 +84,10 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("-target:" + target);
-		String outputFile = DotNetMacros.extract(module, false, extension.getTarget());
+		String outputFile = DotNetMacros.extract(module, debug, extension.getTarget());
 		arguments.add("-out:" + FileUtil.toSystemIndependentName(outputFile));
 
-		val dependFiles = new SmartList<String>();
-		Module[] dependencies = ModuleRootManager.getInstance(module).getDependencies();
-		for(Module dependency : dependencies)
-		{
-			DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(dependency, DotNetModuleExtension.class);
-			if(dependencyExtension != null)
-			{
-				dependFiles.add(FileUtil.toSystemIndependentName(DotNetMacros.extract(dependency, false, dependencyExtension.getTarget())));
-			}
-		}
-
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, debug, true, false);
 		if(!dependFiles.isEmpty())
 		{
 			arguments.add("-reference:" + StringUtils.join(dependFiles, ","));

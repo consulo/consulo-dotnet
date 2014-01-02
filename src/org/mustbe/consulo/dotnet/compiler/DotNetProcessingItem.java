@@ -31,13 +31,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingItem
 {
 	private final VirtualFile myVirtualFile;
-	private final Module myModule;
 	private final Module myTarget;
 
-	public DotNetProcessingItem(VirtualFile virtualFile, Module module, Module target)
+	public DotNetProcessingItem(VirtualFile virtualFile, Module target)
 	{
 		myVirtualFile = virtualFile;
-		myModule = module;
 		myTarget = target;
 	}
 
@@ -53,11 +51,6 @@ public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingIt
 	public ValidityState getValidityState()
 	{
 		return new EmptyValidityState();
-	}
-
-	public Module getModule()
-	{
-		return myModule;
 	}
 
 	public Module getTarget()

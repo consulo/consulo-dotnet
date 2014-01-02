@@ -30,12 +30,10 @@ import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.SmartList;
 import lombok.val;
 
 /**
@@ -151,7 +149,7 @@ public class MSBaseDotNetCompilerOptionsBuilder implements  DotNetCompilerOption
 
 	@Override
 	@NotNull
-	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results) throws IOException
+	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, boolean debug) throws IOException
 	{
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 
@@ -172,20 +170,10 @@ public class MSBaseDotNetCompilerOptionsBuilder implements  DotNetCompilerOption
 		commandLine.setWorkDirectory(module.getModuleDirPath());
 
 		addArgument("/target:" + target);
-		String outputFile = DotNetMacros.extract(module, false, extension.getTarget());
+		String outputFile = DotNetMacros.extract(module, debug, extension.getTarget());
 		addArgument("/out:" + outputFile);
 
-		val dependFiles = new SmartList<String>();
-		Module[] dependencies = ModuleRootManager.getInstance(module).getDependencies();
-		for(Module dependency : dependencies)
-		{
-			DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(dependency, DotNetModuleExtension.class);
-			if(dependencyExtension != null)
-			{
-				dependFiles.add(DotNetMacros.extract(dependency, false, dependencyExtension.getTarget()));
-			}
-		}
-
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, debug, false, false);
 		if(!dependFiles.isEmpty())
 		{
 			addArgument("/reference:" + StringUtils.join(dependFiles, ","));

@@ -33,5 +33,5 @@ public interface DotNetCompilerOptionsBuilder
 	void addMessage(CompileContext compileContext, Module module, String line);
 
 	@NotNull
-	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results) throws IOException;
+	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, boolean debug) throws IOException;
 }

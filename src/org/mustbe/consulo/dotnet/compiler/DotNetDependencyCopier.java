@@ -20,7 +20,6 @@ import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -93,34 +92,25 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				continue;
 			}
 
-			val r = new ReadAction<Set<Module>>()
+			val r = new ReadAction<Set<String>>()
 			{
 				@Override
-				protected void run(Result<Set<Module>> listResult) throws Throwable
+				protected void run(Result<Set<String>> listResult) throws Throwable
 				{
-					Set<Module> modules = new HashSet<Module>();
-					ModuleUtilCore.getDependencies(module, modules);
-					listResult.setResult(modules);
+					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, false, true, true));
 				}
 			}.execute();
 
-			Set<Module> list = r.getResultObject();
-			list.remove(module);
+			val list = r.getResultObject();
 
-			for(Module d : list)
+			for(val d : list)
 			{
-				DotNetModuleExtension dExt = ModuleUtilCore.getExtension(d, DotNetModuleExtension.class);
-				if(dExt != null)
+				VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(new File(d), true);
+				if(fileByIoFile == null)
 				{
-					String file = DotNetMacros.extract(d, false, dExt.getTarget());
-
-					VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(new File(file), true);
-					if(fileByIoFile == null)
-					{
-						continue;
-					}
-					itemList.add(new DotNetProcessingItem(fileByIoFile, d, module));
+					continue;
 				}
+				itemList.add(new DotNetProcessingItem(fileByIoFile, module));
 			}
 		}
 
@@ -148,7 +138,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			{
 				FileUtil.copy(file, copyFile);
 
-				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null, null));
+				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null));
 			}
 			catch(IOException e)
 			{
