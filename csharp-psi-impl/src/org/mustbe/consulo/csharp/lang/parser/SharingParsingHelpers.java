@@ -199,7 +199,10 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 			return null;
 		}
 
-		parseAttributeParameterList(builder); //TODO [VISTALL] currently is bad due it cant be parsed expression like [A(t=true)]
+		if(builder.getTokenType() == LPAR)
+		{
+			parseAttributeParameterList(builder); //TODO [VISTALL] currently is bad due it cant be parsed expression like [A(t=true)]
+		}
 		mark.done(ATTRIBUTE);
 		return mark;
 	}
