@@ -44,8 +44,7 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import com.intellij.psi.PsiParserFacade;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -139,9 +138,11 @@ public class AddUsingAction implements QuestionAction
 
 			CSharpUsingListImpl usingStatement = CSharpFileFactory.createUsingList(myProject, qName);
 
-			PsiElement psiElement = elementForBeforeAdd.addBefore(usingStatement, firstChild);
+			PsiElement usingStatementNew = elementForBeforeAdd.addBefore(usingStatement, firstChild);
 
-			psiElement.getNode().addChild(new LeafPsiElement(TokenType.WHITE_SPACE, "\n"));
+			PsiElement whiteSpaceFromText = PsiParserFacade.SERVICE.getInstance(myProject).createWhiteSpaceFromText("\n\n");
+
+			elementForBeforeAdd.addAfter(whiteSpaceFromText, usingStatementNew);
 		}
 
 		int caretOffset = myEditor.getCaretModel().getOffset();
