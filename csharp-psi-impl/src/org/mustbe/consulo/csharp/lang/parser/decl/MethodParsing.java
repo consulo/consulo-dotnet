@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
+import org.mustbe.consulo.csharp.lang.parser.stmt.StatementParsing;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import lombok.val;
@@ -98,7 +99,11 @@ public class MethodParsing extends MemberWithBodyParsing
 		{
 			if(builder.getTokenType() == LBRACE)
 			{
-				parseCodeBlock(builder);
+				StatementParsing.parse(builder);
+			}
+			else
+			{
+				builder.error("';' expected");
 			}
 		}
 

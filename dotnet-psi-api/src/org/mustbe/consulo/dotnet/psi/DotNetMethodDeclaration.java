@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.psi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
@@ -41,7 +42,7 @@ public interface DotNetMethodDeclaration extends DotNetModifierListOwner, DotNet
 	DotNetRuntimeType[] getParameterTypesForRuntime();
 
 	@Nullable
-	DotNetCodeBlock getCodeBlock();
+	PsiElement getCodeBlock();
 
 	@Nullable
 	DotNetType getReturnType();

@@ -35,11 +35,6 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(list);
 	}
 
-	public void visitCodeBlock(CSharpCodeBlockImpl block)
-	{
-		visitElement(block);
-	}
-
 	public void visitConstructorDeclaration(CSharpConstructorDeclarationImpl declaration)
 	{
 		visitMethodDeclaration(declaration);
@@ -366,6 +361,16 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	}
 
 	public void visitForeachStatement(CSharpForeachStatementImpl statement)
+	{
+		visitElement(statement);
+	}
+
+	public void visitIfStatement(CSharpIfStatementImpl statement)
+	{
+		visitElement(statement);
+	}
+
+	public void visitBlockStatement(CSharpBlockStatementImpl statement)
 	{
 		visitElement(statement);
 	}

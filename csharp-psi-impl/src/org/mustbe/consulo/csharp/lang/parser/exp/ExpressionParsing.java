@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
-import org.mustbe.consulo.csharp.lang.parser.decl.MemberWithBodyParsing;
+import org.mustbe.consulo.csharp.lang.parser.stmt.StatementParsing;
 import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.TokenType;
@@ -765,7 +765,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		final PsiBuilder.Marker body;
 		if(builder.getTokenType() == LBRACE)
 		{
-			body = MemberWithBodyParsing.parseCodeBlock(builder);
+			body = StatementParsing.parse(builder);
 		}
 		else
 		{

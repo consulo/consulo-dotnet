@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -25,5 +26,5 @@ import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 public interface CSharpMethodDeclaration extends DotNetMethodDeclaration
 {
 	@Override
-	CSharpCodeBlock getCodeBlock();
+	PsiElement getCodeBlock();
 }

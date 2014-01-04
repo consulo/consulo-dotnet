@@ -61,7 +61,7 @@ public class MemberWithBodyParsing extends SharingParsingHelpers
 
 			if(builder.getTokenType() == LBRACE)
 			{
-				parseCodeBlock(builder);
+				StatementParsing.parse(builder);
 			}
 			else
 			{
@@ -76,39 +76,5 @@ public class MemberWithBodyParsing extends SharingParsingHelpers
 			marker = null;
 		}
 		return marker;
-	}
-
-	public static PsiBuilder.Marker parseCodeBlock(CSharpBuilderWrapper builder)
-	{
-		if(builder.getTokenType() == LBRACE)
-		{
-			PsiBuilder.Marker mark = builder.mark();
-			builder.advanceLexer();
-
-			while(!builder.eof())
-			{
-				if(builder.getTokenType() == RBRACE)
-				{
-					break;
-				}
-				else
-				{
-					PsiBuilder.Marker marker = StatementParsing.parse(builder);
-					if(marker == null)
-					{
-						break;
-					}
-				}
-			}
-
-			expect(builder, RBRACE, "'}' expected");
-			mark.done(CODE_BLOCK);
-			return mark;
-		}
-		else
-		{
-			builder.error("'{' expected");
-			return null;
-		}
 	}
 }

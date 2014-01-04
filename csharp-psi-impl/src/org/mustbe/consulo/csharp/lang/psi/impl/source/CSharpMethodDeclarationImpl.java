@@ -18,7 +18,6 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpCodeBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
@@ -28,6 +27,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
@@ -106,9 +106,9 @@ public class CSharpMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMeth
 
 	@Nullable
 	@Override
-	public CSharpCodeBlock getCodeBlock()
+	public PsiElement getCodeBlock()
 	{
-		return findChildByClass(CSharpCodeBlock.class);
+		return findChildByClass(DotNetStatement.class);
 	}
 
 	@Nullable

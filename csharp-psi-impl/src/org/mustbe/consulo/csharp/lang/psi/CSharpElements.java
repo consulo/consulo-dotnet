@@ -79,8 +79,6 @@ public interface CSharpElements
 	IElementType TYPE_WRAPPER_WITH_TYPE_ARGUMENTS = new IElementTypeAsPsiFactory("TYPE_WRAPPER_WITH_TYPE_ARGUMENTS", CSharpLanguage.INSTANCE,
 			CSharpTypeWrapperWithTypeArgumentsImpl.class);
 
-	IElementType CODE_BLOCK = new IElementTypeAsPsiFactory("CODE_BLOCK", CSharpLanguage.INSTANCE, CSharpCodeBlockImpl.class);
-
 	IElementType MODIFIER_LIST = new IElementTypeAsPsiFactory("MODIFIER_LIST", CSharpLanguage.INSTANCE, CSharpModifierListImpl.class);
 
 	IElementType EXTENDS_LIST = new IElementTypeAsPsiFactory("EXTENDS_LIST", CSharpLanguage.INSTANCE, CSharpTypeListImpl.class);
@@ -115,6 +113,10 @@ public interface CSharpElements
 
 	IElementType TYPE_CAST_EXPRESSION = new IElementTypeAsPsiFactory("TYPE_CAST_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpTypeCastExpressionImpl.class);
+
+	IElementType IF_STATEMENT = new IElementTypeAsPsiFactory("IF_STATEMENT", CSharpLanguage.INSTANCE, CSharpIfStatementImpl.class);
+
+	IElementType BLOCK_STATEMENT = new IElementTypeAsPsiFactory("BLOCK_STATEMENT", CSharpLanguage.INSTANCE, CSharpBlockStatementImpl.class);
 
 	IElementType ARRAY_ACCESS_EXPRESSION = new IElementTypeAsPsiFactory("ARRAY_ACCESS_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpArrayAccessExpressionImpl.class);

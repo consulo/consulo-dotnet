@@ -137,6 +137,10 @@ public interface CSharpTokens extends TokenType
 
 	IElementType THIS_KEYWORD = new IElementType("THIS_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType IF_KEYWORD = new IElementType("IF_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType ELSE_KEYWORD = new IElementType("ELSE_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType LBRACE = new IElementType("LBRACE", CSharpLanguage.INSTANCE);
 
 	IElementType RBRACE = new IElementType("RBRACE", CSharpLanguage.INSTANCE);

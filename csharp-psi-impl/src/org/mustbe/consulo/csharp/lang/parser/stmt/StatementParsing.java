@@ -16,10 +16,10 @@
 
 package org.mustbe.consulo.csharp.lang.parser.stmt;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
-import org.mustbe.consulo.csharp.lang.parser.decl.MemberWithBodyParsing;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import org.mustbe.consulo.csharp.lang.parser.exp.LinqParsing;
 import com.intellij.lang.PsiBuilder;
@@ -44,12 +44,12 @@ public class StatementParsing extends SharingParsingHelpers
 			@Override
 			public PsiBuilder.Marker fun(CSharpBuilderWrapper builderWrapper)
 			{
-				return parse0(builderWrapper);
+				return parseStatement(builderWrapper);
 			}
 		}, wrapper, BODY_SOFT_KEYWORDS);
 	}
 
-	private static PsiBuilder.Marker parse0(CSharpBuilderWrapper wrapper)
+	private static PsiBuilder.Marker parseStatement(CSharpBuilderWrapper wrapper)
 	{
 		IElementType tokenType = wrapper.getTokenType();
 		PsiBuilder.Marker marker = parseVariableDecl(wrapper, tokenType == CONST_KEYWORD);
@@ -91,6 +91,14 @@ public class StatementParsing extends SharingParsingHelpers
 			{
 				parseYieldStatement(wrapper, marker);
 			}
+			else if(tokenType == IF_KEYWORD)
+			{
+				parseIfStatement(wrapper, marker);
+			}
+			else if(tokenType == LBRACE)
+			{
+				parseBlockStatement(wrapper, marker);
+			}
 			else if(wrapper.getTokenType() == WHILE_KEYWORD)
 			{
 				parseStatementWithParenthesesExpression(wrapper, marker, WHILE_STATEMENT);
@@ -118,6 +126,41 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 
 		return marker;
+	}
+
+	@NotNull
+	private static PsiBuilder.Marker parseIfStatement(final CSharpBuilderWrapper builder, final PsiBuilder.Marker mark)
+	{
+		builder.advanceLexer();
+
+		if(!parseExpressionInParenth(builder))
+		{
+			mark.done(IF_STATEMENT);
+			return mark;
+		}
+
+		val thenStatement = parseStatement(builder);
+		if(thenStatement == null)
+		{
+			builder.error("Expected statement");
+			mark.done(IF_STATEMENT);
+			return mark;
+		}
+
+		if(!expect(builder, ELSE_KEYWORD, null))
+		{
+			mark.done(IF_STATEMENT);
+			return mark;
+		}
+
+		val elseStatement = parseStatement(builder);
+		if(elseStatement == null)
+		{
+			builder.error("Expected statement");
+		}
+
+		mark.done(IF_STATEMENT);
+		return mark;
 	}
 
 	private static void parseForeach(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
@@ -158,10 +201,75 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 		else
 		{
-			MemberWithBodyParsing.parseCodeBlock(builder);
+			StatementParsing.parse(builder);
 		}
 
 		marker.done(FOREACH_STATEMENT);
+	}
+
+	private static PsiBuilder.Marker parseBlockStatement(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
+	{
+		if(builder.getTokenType() == LBRACE)
+		{
+			builder.advanceLexer();
+
+			while(!builder.eof())
+			{
+				if(builder.getTokenType() == RBRACE)
+				{
+					break;
+				}
+				else
+				{
+					PsiBuilder.Marker anotherMarker = parse(builder);
+					if(anotherMarker == null)
+					{
+						break;
+					}
+				}
+			}
+
+			expect(builder, RBRACE, "'}' expected");
+			marker.done(BLOCK_STATEMENT);
+			return marker;
+		}
+		else
+		{
+			builder.error("'{' expected");
+			return null;
+		}
+	}
+
+	private static boolean parseExpressionInParenth(final CSharpBuilderWrapper builder)
+	{
+		if(!expect(builder, LPAR, "'(' expected"))
+		{
+			return false;
+		}
+
+		final PsiBuilder.Marker beforeExpr = builder.mark();
+		final PsiBuilder.Marker expr = ExpressionParsing.parse(builder);
+		if(expr == null || builder.getTokenType() == SEMICOLON)
+		{
+			beforeExpr.rollbackTo();
+			builder.error("Expression expected");
+			if(builder.getTokenType() != RPAR)
+			{
+				return false;
+			}
+		}
+		else
+		{
+			beforeExpr.drop();
+			if(builder.getTokenType() != RPAR)
+			{
+				builder.error("')' expected");
+				return false;
+			}
+		}
+
+		builder.advanceLexer();
+		return true;
 	}
 
 	private static void parseYieldStatement(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker)
@@ -210,9 +318,9 @@ public class StatementParsing extends SharingParsingHelpers
 	{
 		wrapper.advanceLexer();
 
-		ExpressionParsing.parseParenthesesExpression(wrapper);
+		parseExpressionInParenth(wrapper);
 
-		MemberWithBodyParsing.parseCodeBlock(wrapper);
+		StatementParsing.parse(wrapper);
 
 		expect(wrapper, SEMICOLON, null);
 

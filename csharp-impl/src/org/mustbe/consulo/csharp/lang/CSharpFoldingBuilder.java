@@ -26,7 +26,7 @@ import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import org.mustbe.consulo.csharp.lang.psi.CSharpBodyWithBraces;
 import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpCodeBlockImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBodyImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
@@ -125,11 +125,11 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 			}
 
 			@Override
-			public void visitCodeBlock(CSharpCodeBlockImpl block)
+			public void visitBlockStatement(CSharpBlockStatementImpl statement)
 			{
-				super.visitCodeBlock(block);
+				super.visitBlockStatement(statement);
 
-				addBodyWithBraces(foldingList, block);
+				addBodyWithBraces(foldingList, statement);
 			}
 		});
 		return foldingList.toArray(new FoldingDescriptor[foldingList.size()]);
@@ -157,7 +157,7 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		{
 			return "...";
 		}
-		else if(psi instanceof CSharpCodeBlockImpl)
+		else if(psi instanceof CSharpBlockStatementImpl)
 		{
 			return "{...}";
 		}

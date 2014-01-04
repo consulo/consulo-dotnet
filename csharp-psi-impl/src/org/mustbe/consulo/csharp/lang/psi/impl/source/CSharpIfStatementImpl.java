@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
-import org.mustbe.consulo.dotnet.psi.DotNetCodeBlock;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.dotnet.psi.DotNetStatement;
+import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 30.11.13.
+ * @since 04.01.14.
  */
-public interface CSharpCodeBlock extends DotNetCodeBlock, CSharpBodyWithBraces
+public class CSharpIfStatementImpl extends CSharpElementImpl implements DotNetStatement
 {
+	public CSharpIfStatementImpl(@NotNull ASTNode node)
+	{
+		super(node);
+	}
 
+	@Override
+	public void accept(@NotNull CSharpElementVisitor visitor)
+	{
+		visitor.visitIfStatement(this);
+	}
 }

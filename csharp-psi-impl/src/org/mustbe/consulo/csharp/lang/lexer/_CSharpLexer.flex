@@ -220,6 +220,10 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"this"                    { return CSharpTokens.THIS_KEYWORD; }
 
+	"if"                      { return CSharpTokens.IF_KEYWORD; }
+
+	"else"                    { return CSharpTokens.ELSE_KEYWORD; }
+
 //
 	"{"                       { return CSharpTokens.LBRACE; }
 
