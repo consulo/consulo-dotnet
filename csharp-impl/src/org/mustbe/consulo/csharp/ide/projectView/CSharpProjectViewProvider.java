@@ -21,7 +21,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -38,7 +41,7 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 	@Override
 	public PsiElement getTopLevelElement(PsiElement element)
 	{
-		return null;
+		return element.getContainingFile();
 	}
 
 	@Override
@@ -53,10 +56,20 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 		List<AbstractTreeNode> nodes = new ArrayList<AbstractTreeNode>(abstractTreeNodes.size());
 		for(AbstractTreeNode treeNode : abstractTreeNodes)
 		{
-			Object element = treeNode.getValue();
-			if(element instanceof DotNetMemberOwner)
+			Object value = treeNode.getValue();
+			if(value instanceof CSharpFileImpl)
 			{
-				nodes.add(new CSharpElementTreeNode((DotNetMemberOwner) element, settings));
+				DotNetNamedElement singleElement = findSingleElement((CSharpFileImpl) value);
+				if(singleElement != null)
+				{
+					nodes.add(new CSharpQElementTreeNode(singleElement, settings));
+					continue;
+				}
+			}
+
+			if(value instanceof DotNetMemberOwner)
+			{
+				nodes.add(new CSharpElementTreeNode((DotNetMemberOwner) value, settings));
 			}
 			else
 			{
@@ -64,6 +77,31 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 			}
 		}
 		return nodes;
+	}
+
+	@Nullable
+	private static DotNetNamedElement findSingleElement(CSharpFileImpl file)
+	{
+		DotNetNamedElement[] members = file.getMembers();
+		if(members.length != 1)
+		{
+			return null;
+		}
+
+		DotNetNamedElement member = members[0];
+		if(member instanceof DotNetNamespaceDeclaration)
+		{
+			DotNetNamedElement[] namespacesDeclarations = ((DotNetNamespaceDeclaration) member).getMembers();
+			if(namespacesDeclarations.length != 1)
+			{
+				return null;
+			}
+			return namespacesDeclarations[0];
+		}
+		else
+		{
+			return member;
+		}
 	}
 
 	@Nullable
