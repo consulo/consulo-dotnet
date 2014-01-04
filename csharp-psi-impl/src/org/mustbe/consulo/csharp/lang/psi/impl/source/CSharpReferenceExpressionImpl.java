@@ -246,7 +246,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				CSharpResolveUtil.treeWalkUp(p, psiElement1, null);
 				return p.getElements();
 			case NAMESPACE:
-			case NAMESPACE_WITH_CREATE_OPTION:
 				String qName = stripSpaces(getText());
 				CSharpNamespaceAsElement aPackage = CSharpNamespaceHelper.getNamespaceElementIfFind(getProject(), qName, getResolveScope());
 				if(aPackage == null)
@@ -254,6 +253,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					return Collections.emptyList();
 				}
 				return Collections.<PsiElement>singletonList(aPackage);
+			case NAMESPACE_WITH_CREATE_OPTION:
+				return Collections.<PsiElement>singletonList(new CSharpNamespaceAsElement(getProject(), stripSpaces(getText()), getResolveScope()));
 			case ATTRIBUTE:
 				val resolveResults = processTypeOrGenericParameterOrMethod(qualifier, condition);
 				if(resolveResults.size() != 1)

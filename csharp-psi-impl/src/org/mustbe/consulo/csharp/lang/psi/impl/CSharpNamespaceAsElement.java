@@ -16,14 +16,16 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl;
 
+import java.util.Collection;
+
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
+import org.mustbe.consulo.dotnet.psi.stub.index.NamespaceByQNameIndex;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
@@ -34,8 +36,11 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.QualifiedName;
+import com.intellij.util.CommonProcessors;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.indexing.IdFilter;
 import lombok.val;
 
 /**
@@ -82,19 +87,34 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 	@Nullable
 	public DotNetNamespaceDeclaration findFirstNamespace()
 	{
-		val ref = new Ref<DotNetNamespaceDeclaration>();
-		StubIndex.getInstance().process(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, getQName(), getProject(), mySearchScopes,
-				new Processor<DotNetNamespaceDeclaration>()
+		val findFirstProcessor = new CommonProcessors.FindFirstProcessor<DotNetNamespaceDeclaration>();
+		StubIndex.getInstance().process(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, myQName, getProject(), mySearchScopes, findFirstProcessor);
+		if(findFirstProcessor.getFoundValue() != null)
+		{
+			return findFirstProcessor.getFoundValue();
+		}
 
+		val findFirstProcessor2 = new CommonProcessors.FindFirstProcessor<String>()
 		{
 			@Override
-			public boolean process(DotNetNamespaceDeclaration dotNetNamespaceDeclaration)
+			protected boolean accept(String qName2)
 			{
-				ref.set(dotNetNamespaceDeclaration);
-				return false;
+				return qName2.startsWith(myQName);
 			}
-		});
-		return ref.get();
+		};
+
+		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, findFirstProcessor2, mySearchScopes,
+				IdFilter.getProjectIdFilter(getProject(), false));
+
+		if(findFirstProcessor2.getFoundValue() != null)
+		{
+			Collection<DotNetNamespaceDeclaration> dotNetNamespaceDeclarations = NamespaceByQNameIndex.getInstance().get(findFirstProcessor2
+					.getFoundValue(), getProject(), mySearchScopes);
+
+			return ContainerUtil.getFirstItem(dotNetNamespaceDeclarations);
+		}
+
+		return null;
 	}
 
 	@Override

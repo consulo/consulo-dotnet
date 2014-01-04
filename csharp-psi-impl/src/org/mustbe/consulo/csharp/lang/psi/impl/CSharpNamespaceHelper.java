@@ -18,9 +18,15 @@ package org.mustbe.consulo.csharp.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.StubIndex;
+import com.intellij.util.CommonProcessors;
+import com.intellij.util.indexing.IdFilter;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -32,17 +38,38 @@ public class CSharpNamespaceHelper
 	public static final String NAMESPACE_SEPARATOR = ".";
 
 	@Nullable
-	public static CSharpNamespaceAsElement getNamespaceElementIfFind(@NotNull Project project, @NotNull String qName, @NotNull GlobalSearchScope
-			globalSearchScope)
+	public static CSharpNamespaceAsElement getNamespaceElementIfFind(@NotNull Project project, @NotNull final String qName,
+			@NotNull GlobalSearchScope globalSearchScope)
 	{
 		assert !qName.isEmpty() : "Dont use empty namespace name. Use 'ROOT' field";
 
-		CSharpNamespaceAsElement cSharpNamespaceAsElement = new CSharpNamespaceAsElement(project, qName, globalSearchScope);
-		if(cSharpNamespaceAsElement.findFirstNamespace() == null)
+		val findFirstProcessor = new CommonProcessors.FindFirstProcessor<DotNetNamespaceDeclaration>();
+
+		StubIndex.getInstance().process(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName, project, globalSearchScope, findFirstProcessor);
+
+		if(findFirstProcessor.getFoundValue() != null)
 		{
-			return null;
+			return new CSharpNamespaceAsElement(project, qName, globalSearchScope);
 		}
-		return cSharpNamespaceAsElement;
+
+		// for example u decl 'namespace NUnit.Test', but dont decl 'namespace NUnit'
+		// and that 'using NUnit' ill be error
+		val findFirstProcessor2 = new CommonProcessors.FindFirstProcessor<String>()
+		{
+			@Override
+			protected boolean accept(String qName2)
+			{
+				return qName2.startsWith(qName);
+			}
+		};
+		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, findFirstProcessor2, globalSearchScope,
+				IdFilter.getProjectIdFilter(project, false));
+
+		if(findFirstProcessor2.getFoundValue() != null)
+		{
+			return new CSharpNamespaceAsElement(project, qName, globalSearchScope);
+		}
+		return null;
 	}
 
 	@NotNull
