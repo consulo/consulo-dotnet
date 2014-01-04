@@ -42,7 +42,7 @@ public class UsingStatementParsing extends SharingParsingHelpers
 		}
 		else
 		{
-			marker.done(USING_LIST);
+			marker.done(USING_NAMESPACE_LIST);
 		}
 	}
 
@@ -56,6 +56,6 @@ public class UsingStatementParsing extends SharingParsingHelpers
 
 		expect(builder, SEMICOLON, "';' expected");
 
-		marker.done(USING_STATEMENT);
+		marker.done(USING_NAMESPACE_STATEMENT);
 	}
 }

@@ -29,9 +29,11 @@ public interface CSharpElements
 {
 	IElementType NAMESPACE_DECLARATION = CSharpStubElements.NAMESPACE_DECLARATION;
 
-	IElementType USING_LIST = new IElementTypeAsPsiFactory("USING_LIST", CSharpLanguage.INSTANCE, CSharpUsingListImpl.class);
+	IElementType USING_NAMESPACE_LIST = new IElementTypeAsPsiFactory("USING_NAMESPACE_LIST", CSharpLanguage.INSTANCE,
+			CSharpUsingNamespaceListImpl.class);
 
-	IElementType USING_STATEMENT = new IElementTypeAsPsiFactory("USING_STATEMENT", CSharpLanguage.INSTANCE, CSharpUsingStatementImpl.class);
+	IElementType USING_NAMESPACE_STATEMENT = new IElementTypeAsPsiFactory("USING_NAMESPACE_STATEMENT", CSharpLanguage.INSTANCE,
+			CSharpUsingNamespaceStatementImpl.class);
 
 	IElementType METHOD_DECLARATION = CSharpStubElements.METHOD_DECLARATION;
 
@@ -117,41 +119,31 @@ public interface CSharpElements
 	IElementType ARRAY_ACCESS_EXPRESSION = new IElementTypeAsPsiFactory("ARRAY_ACCESS_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpArrayAccessExpressionImpl.class);
 
-	IElementType POSTFIX_EXPRESSION = new IElementTypeAsPsiFactory("POSTFIX_EXPRESSION", CSharpLanguage.INSTANCE,
-			CSharpPostfixExpressionImpl.class);
+	IElementType POSTFIX_EXPRESSION = new IElementTypeAsPsiFactory("POSTFIX_EXPRESSION", CSharpLanguage.INSTANCE, CSharpPostfixExpressionImpl.class);
 
-	IElementType PREFIX_EXPRESSION = new IElementTypeAsPsiFactory("PREFIX_EXPRESSION", CSharpLanguage.INSTANCE,
-			CSharpPrefixExpressionImpl.class);
+	IElementType PREFIX_EXPRESSION = new IElementTypeAsPsiFactory("PREFIX_EXPRESSION", CSharpLanguage.INSTANCE, CSharpPrefixExpressionImpl.class);
 
 	IElementType POLYADIC_EXPRESSION = new IElementTypeAsPsiFactory("POLYADIC_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpPolyadicExpressionImpl.class);
 
-	IElementType EMPTY_EXPRESSION = new IElementTypeAsPsiFactory("EMPTY_EXPRESSION", CSharpLanguage.INSTANCE,
-			CSharpEmptyExpressionImpl.class);
+	IElementType EMPTY_EXPRESSION = new IElementTypeAsPsiFactory("EMPTY_EXPRESSION", CSharpLanguage.INSTANCE, CSharpEmptyExpressionImpl.class);
 
 	IElementType PARENTHESES_EXPRESSION = new IElementTypeAsPsiFactory("PARENTHESES_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpParenthesesExpressionImpl.class);
 
-	IElementType LINQ_EXPRESSION = new IElementTypeAsPsiFactory("LINQ_EXPRESSION", CSharpLanguage.INSTANCE,
-			CSharpLinqExpressionImpl.class);
+	IElementType LINQ_EXPRESSION = new IElementTypeAsPsiFactory("LINQ_EXPRESSION", CSharpLanguage.INSTANCE, CSharpLinqExpressionImpl.class);
 
-	IElementType LINQ_FROM = new IElementTypeAsPsiFactory("LINQ_FROM", CSharpLanguage.INSTANCE,
-			CSharpLinqFromImpl.class);
+	IElementType LINQ_FROM = new IElementTypeAsPsiFactory("LINQ_FROM", CSharpLanguage.INSTANCE, CSharpLinqFromImpl.class);
 
-	IElementType LINQ_IN = new IElementTypeAsPsiFactory("LINQ_IN", CSharpLanguage.INSTANCE,
-			CSharpLinqInImpl.class);
+	IElementType LINQ_IN = new IElementTypeAsPsiFactory("LINQ_IN", CSharpLanguage.INSTANCE, CSharpLinqInImpl.class);
 
-	IElementType LINQ_LET = new IElementTypeAsPsiFactory("LINQ_LET", CSharpLanguage.INSTANCE,
-			CSharpLinqLetImpl.class);
+	IElementType LINQ_LET = new IElementTypeAsPsiFactory("LINQ_LET", CSharpLanguage.INSTANCE, CSharpLinqLetImpl.class);
 
-	IElementType LINQ_WHERE = new IElementTypeAsPsiFactory("LINQ_WHERE", CSharpLanguage.INSTANCE,
-			CSharpLinqWhereImpl.class);
+	IElementType LINQ_WHERE = new IElementTypeAsPsiFactory("LINQ_WHERE", CSharpLanguage.INSTANCE, CSharpLinqWhereImpl.class);
 
-	IElementType LINQ_SELECT = new IElementTypeAsPsiFactory("LINQ_SELECT", CSharpLanguage.INSTANCE,
-		CSharpLinqSelectImpl.class);
+	IElementType LINQ_SELECT = new IElementTypeAsPsiFactory("LINQ_SELECT", CSharpLanguage.INSTANCE, CSharpLinqSelectImpl.class);
 
-	IElementType LAMBDA_EXPRESSION = new IElementTypeAsPsiFactory("LAMBDA_EXPRESSION", CSharpLanguage.INSTANCE,
-			CSharpLambdaExpressionImpl.class);
+	IElementType LAMBDA_EXPRESSION = new IElementTypeAsPsiFactory("LAMBDA_EXPRESSION", CSharpLanguage.INSTANCE, CSharpLambdaExpressionImpl.class);
 
 	IElementType FIELD_OR_PROPERTY_SET = new IElementTypeAsPsiFactory("FIELD_OR_PROPERTY_SET", CSharpLanguage.INSTANCE,
 			CSharpFieldOrPropertySetImpl.class);

@@ -28,9 +28,9 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpUsingStatementImpl extends CSharpElementImpl
+public class CSharpUsingNamespaceStatementImpl extends CSharpElementImpl
 {
-	public CSharpUsingStatementImpl(@NotNull ASTNode node)
+	public CSharpUsingNamespaceStatementImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -57,6 +57,6 @@ public class CSharpUsingStatementImpl extends CSharpElementImpl
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitUsingStatement(this);
+		visitor.visitUsingNamespaceStatement(this);
 	}
 }

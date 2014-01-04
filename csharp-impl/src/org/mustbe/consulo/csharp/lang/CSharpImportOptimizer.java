@@ -23,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ImportOptimizer;
 import com.intellij.psi.PsiFile;
@@ -53,7 +53,7 @@ public class CSharpImportOptimizer implements ImportOptimizer
 				psiFile.accept(new CSharpRecursiveElementVisitor()
 				{
 					@Override
-					public void visitUsingList(CSharpUsingListImpl list)
+					public void visitUsingNamespaceList(CSharpUsingNamespaceListImpl list)
 					{
 						formatUsing(list);
 					}
@@ -62,10 +62,10 @@ public class CSharpImportOptimizer implements ImportOptimizer
 		};
 	}
 
-	private static void formatUsing(@NotNull CSharpUsingListImpl usingList)
+	private static void formatUsing(@NotNull CSharpUsingNamespaceListImpl usingList)
 	{
 		Set<String> set = new TreeSet<String>();
-		for(CSharpUsingStatementImpl statement : usingList.getStatements())
+		for(CSharpUsingNamespaceStatementImpl statement : usingList.getStatements())
 		{
 			DotNetReferenceExpression namespaceReference = statement.getNamespaceReference();
 			if(namespaceReference == null)  // if using dont have reference - dont format it
@@ -80,7 +80,7 @@ public class CSharpImportOptimizer implements ImportOptimizer
 		{
 			builder.append("using ").append(qName).append(";\n");
 		}
-		CSharpUsingListImpl usingListFromText = CSharpFileFactory.createUsingListFromText(usingList.getProject(), builder.toString());
+		CSharpUsingNamespaceListImpl usingListFromText = CSharpFileFactory.createUsingListFromText(usingList.getProject(), builder.toString());
 
 		usingList.replace(usingListFromText);
 	}

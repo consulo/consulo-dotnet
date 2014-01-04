@@ -382,7 +382,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			return ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD;
 		}
-		else if(parent instanceof CSharpUsingStatementImpl)
+		else if(parent instanceof CSharpUsingNamespaceStatementImpl)
 		{
 			return ResolveToKind.NAMESPACE;
 		}
@@ -414,7 +414,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return ResolveToKind.NAMESPACE;
 			}
 
-			if(PsiTreeUtil.getParentOfType(this, CSharpUsingStatementImpl.class) != null)
+			if(PsiTreeUtil.getParentOfType(this, CSharpUsingNamespaceStatementImpl.class) != null)
 			{
 				return ResolveToKind.NAMESPACE;
 			}

@@ -26,7 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpAttributeListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
@@ -117,7 +117,7 @@ public class CSharpResolveUtil
 		PsiElement it = element.getParent().getFirstChild();
 		while(it != null)
 		{
-			if(it instanceof CSharpUsingListImpl)
+			if(it instanceof CSharpUsingNamespaceListImpl)
 			{
 				list.add(it);
 			}

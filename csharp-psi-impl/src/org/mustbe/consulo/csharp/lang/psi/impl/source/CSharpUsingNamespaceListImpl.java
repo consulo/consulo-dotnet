@@ -31,26 +31,26 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpUsingListImpl extends CSharpElementImpl
+public class CSharpUsingNamespaceListImpl extends CSharpElementImpl
 {
-	public CSharpUsingListImpl(@NotNull ASTNode node)
+	public CSharpUsingNamespaceListImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
 	@NotNull
-	public CSharpUsingStatementImpl[] getStatements()
+	public CSharpUsingNamespaceStatementImpl[] getStatements()
 	{
-		return findChildrenByClass(CSharpUsingStatementImpl.class);
+		return findChildrenByClass(CSharpUsingNamespaceStatementImpl.class);
 	}
 
 	public void addUsing(@NotNull String qName)
 	{
-		CSharpUsingStatementImpl newStatement = CSharpFileFactory.createUsingStatement(getProject(), qName);
+		CSharpUsingNamespaceStatementImpl newStatement = CSharpFileFactory.createUsingStatement(getProject(), qName);
 
-		CSharpUsingStatementImpl[] statements = getStatements();
+		CSharpUsingNamespaceStatementImpl[] statements = getStatements();
 
-		CSharpUsingStatementImpl last = statements[statements.length - 1];
+		CSharpUsingNamespaceStatementImpl last = statements[statements.length - 1];
 
 		LeafPsiElement leafPsiElement = new LeafPsiElement(TokenType.WHITE_SPACE, "\n");
 
@@ -63,7 +63,7 @@ public class CSharpUsingListImpl extends CSharpElementImpl
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{
-		for(CSharpUsingStatementImpl cSharpUsingStatement : getStatements())
+		for(CSharpUsingNamespaceStatementImpl cSharpUsingStatement : getStatements())
 		{
 			if(!CSharpResolveUtil.treeWalkUp(processor, cSharpUsingStatement, cSharpUsingStatement, state))
 			{
@@ -77,6 +77,6 @@ public class CSharpUsingListImpl extends CSharpElementImpl
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitUsingList(this);
+		visitor.visitUsingNamespaceList(this);
 	}
 }

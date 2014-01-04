@@ -112,7 +112,7 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 				elementType == XXX_ACCESSOR ||
 				elementType == EVENT_DECLARATION ||
 				elementType == MACRO_BLOCK ||
-				elementType == USING_LIST ||
+				elementType == USING_NAMESPACE_LIST ||
 				elementType == CONSTRUCTOR_DECLARATION)
 		{
 			PsiElement psiElement = getNode().getPsi().getParent();

@@ -29,8 +29,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpCodeBlockImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBodyImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
@@ -99,15 +99,15 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 			}
 
 			@Override
-			public void visitUsingList(CSharpUsingListImpl list)
+			public void visitUsingNamespaceList(CSharpUsingNamespaceListImpl list)
 			{
-				CSharpUsingStatementImpl[] statements = list.getStatements();
+				CSharpUsingNamespaceStatementImpl[] statements = list.getStatements();
 				if(statements.length <= 1)
 				{
 					return;
 				}
 
-				CSharpUsingStatementImpl statement = statements[0];
+				CSharpUsingNamespaceStatementImpl statement = statements[0];
 				DotNetReferenceExpression namespaceReference = statement.getNamespaceReference();
 				if(namespaceReference == null)
 				{
@@ -153,7 +153,7 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 	public String getPlaceholderText(@NotNull ASTNode astNode)
 	{
 		PsiElement psi = astNode.getPsi();
-		if(psi instanceof CSharpUsingListImpl)
+		if(psi instanceof CSharpUsingNamespaceListImpl)
 		{
 			return "...";
 		}
@@ -194,7 +194,7 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 	public boolean isCollapsedByDefault(@NotNull ASTNode astNode)
 	{
 		PsiElement psi = astNode.getPsi();
-		if(psi instanceof CSharpUsingListImpl)
+		if(psi instanceof CSharpUsingNamespaceListImpl)
 		{
 			return true;
 		}

@@ -19,8 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFileFactory;
 import lombok.val;
@@ -31,28 +31,28 @@ import lombok.val;
  */
 public class CSharpFileFactory
 {
-	public static CSharpUsingListImpl createUsingList(@NotNull Project project, @NotNull String qName)
+	public static CSharpUsingNamespaceListImpl createUsingList(@NotNull Project project, @NotNull String qName)
 	{
 		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE,
 				"using " + qName + ";");
 
-		return (CSharpUsingListImpl) fileFromText.getFirstChild();
+		return (CSharpUsingNamespaceListImpl) fileFromText.getFirstChild();
 	}
 
-	public static CSharpUsingListImpl createUsingListFromText(@NotNull Project project, @NotNull String text)
+	public static CSharpUsingNamespaceListImpl createUsingListFromText(@NotNull Project project, @NotNull String text)
 	{
 		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE,
 				text);
 
-		return (CSharpUsingListImpl) fileFromText.getFirstChild();
+		return (CSharpUsingNamespaceListImpl) fileFromText.getFirstChild();
 	}
 
-	public static CSharpUsingStatementImpl createUsingStatement(@NotNull Project project, @NotNull String qName)
+	public static CSharpUsingNamespaceStatementImpl createUsingStatement(@NotNull Project project, @NotNull String qName)
 	{
 		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE,
 				"using " + qName + ";");
 
-		CSharpUsingListImpl firstChild = (CSharpUsingListImpl) fileFromText.getFirstChild();
+		CSharpUsingNamespaceListImpl firstChild = (CSharpUsingNamespaceListImpl) fileFromText.getFirstChild();
 		return firstChild.getStatements()[0];
 	}
 }
