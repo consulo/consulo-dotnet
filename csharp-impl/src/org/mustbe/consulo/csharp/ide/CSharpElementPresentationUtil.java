@@ -23,6 +23,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 
@@ -33,10 +34,44 @@ import com.intellij.util.Function;
 public class CSharpElementPresentationUtil
 {
 	@NotNull
+	public static String formatTypeWithGenericParameters(@NotNull DotNetTypeDeclaration typeDeclaration)
+	{
+		DotNetGenericParameter[] genericParameters = typeDeclaration.getGenericParameters();
+		String name = typeDeclaration.getName();
+		if(genericParameters.length == 0)
+		{
+			return name == null ? "<null>" : name;
+		}
+
+		StringBuilder builder = new StringBuilder();
+		builder.append(name == null ? "<null>" : name);
+		formatTypeGenericParameters(genericParameters, builder);
+		return builder.toString();
+	}
+
+	public static void formatTypeGenericParameters(@NotNull DotNetGenericParameter[] parameters, @NotNull StringBuilder builder)
+	{
+		if(parameters.length > 0)
+		{
+			builder.append("<");
+			builder.append(StringUtil.join(parameters, new Function<DotNetGenericParameter, String>()
+			{
+				@Override
+				public String fun(DotNetGenericParameter dotNetGenericParameter)
+				{
+					return dotNetGenericParameter.getName();
+				}
+			}, ", "));
+			builder.append(">");
+		}
+	}
+
+	@NotNull
 	public static String formatMethod(@NotNull DotNetMethodDeclaration methodDeclaration)
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(methodDeclaration.getName());
+		formatTypeGenericParameters(methodDeclaration.getGenericParameters(), builder);
 		formatParameters(methodDeclaration, builder);
 		return builder.toString();
 	}

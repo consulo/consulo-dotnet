@@ -28,6 +28,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.ide.IconDescriptorUpdaters;
@@ -38,6 +39,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 
 /**
  * @author VISTALL
@@ -96,15 +98,15 @@ public class CSharpQElementTreeNode extends AbstractPsiBasedNode<DotNetNamedElem
 		String presentableParentQName = qualifiedElement.getPresentableParentQName();
 		if(!StringUtil.isEmpty(presentableParentQName))
 		{
-			presentationData.setPresentableText(presentableParentQName + "::" + getText(qualifiedElement));
+			presentationData.setPresentableText(presentableParentQName + "::" + getPresentableText(qualifiedElement));
 		}
 		else
 		{
-			presentationData.setPresentableText(getText(qualifiedElement));
+			presentationData.setPresentableText(getPresentableText(qualifiedElement));
 		}
 	}
 
-	private String getText(DotNetQualifiedElement value)
+	public static String getPresentableText(PsiNamedElement value)
 	{
 		if(value instanceof DotNetMethodDeclaration)
 		{
@@ -114,13 +116,17 @@ public class CSharpQElementTreeNode extends AbstractPsiBasedNode<DotNetNamedElem
 		{
 			return CSharpElementPresentationUtil.formatField((DotNetFieldDeclaration) value);
 		}
+		else if(value instanceof DotNetNamespaceDeclaration)
+		{
+			return ((DotNetNamespaceDeclaration) value).getPresentableQName();
+		}
 		else if(value instanceof DotNetTypeDeclaration)
 		{
-			return value.getName();
+			return CSharpElementPresentationUtil.formatTypeWithGenericParameters((DotNetTypeDeclaration) value);
 		}
 		else
 		{
-			throw new IllegalArgumentException(value.getNode().getElementType().toString());
+			return value.getName();
 		}
 	}
 }
