@@ -364,4 +364,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(select);
 	}
+
+	public void visitForeachStatement(CSharpForeachStatementImpl statement)
+	{
+		visitElement(statement);
+	}
 }

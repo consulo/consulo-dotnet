@@ -97,6 +97,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType RETURN_KEYWORD = new IElementType("RETURN_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType FOREACH_KEYWORD = new IElementType("FOREACH_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType IN_KEYWORD = new IElementType("IN_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType OUT_KEYWORD = new IElementType("OUT_KEYWORD", CSharpLanguage.INSTANCE);

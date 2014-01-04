@@ -210,6 +210,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"while"                   { return CSharpTokens.WHILE_KEYWORD; }
 
+	"foreach"                 { return CSharpTokens.FOREACH_KEYWORD; }
+
 	"break"                   { return CSharpTokens.BREAK_KEYWORD; }
 
 	"continue"                { return CSharpTokens.CONTINUE_KEYWORD; }

@@ -83,6 +83,10 @@ public class StatementParsing extends SharingParsingHelpers
 			{
 				parseReturnStatement(wrapper, marker);
 			}
+			else if(tokenType == FOREACH_KEYWORD)
+			{
+				parseForeach(wrapper, marker);
+			}
 			else if(tokenType == YIELD_KEYWORD)
 			{
 				parseYieldStatement(wrapper, marker);
@@ -114,6 +118,50 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 
 		return marker;
+	}
+
+	private static void parseForeach(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
+	{
+		assert builder.getTokenType() == FOREACH_KEYWORD;
+
+		builder.advanceLexer();
+
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			PsiBuilder.Marker varMarker = builder.mark();
+
+			if(parseType(builder) != null)
+			{
+				expect(builder, IDENTIFIER, "Identifier expected");
+			}
+			else
+			{
+				builder.error("Type expected");
+			}
+
+			varMarker.done(LOCAL_VARIABLE);
+
+			if(expect(builder, IN_KEYWORD, "'in' expected"))
+			{
+				if(ExpressionParsing.parse(builder) == null)
+				{
+					builder.error("Expression expected");
+				}
+			}
+
+			expect(builder, RPAR, "')' expected");
+		}
+
+		if(builder.getTokenType() == SEMICOLON)
+		{
+			builder.advanceLexer();
+		}
+		else
+		{
+			MemberWithBodyParsing.parseCodeBlock(builder);
+		}
+
+		marker.done(FOREACH_STATEMENT);
 	}
 
 	private static void parseYieldStatement(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker)
