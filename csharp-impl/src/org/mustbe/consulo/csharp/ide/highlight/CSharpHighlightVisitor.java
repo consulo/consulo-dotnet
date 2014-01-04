@@ -19,11 +19,14 @@ package org.mustbe.consulo.csharp.ide.highlight;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
@@ -219,7 +222,14 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		TextAttributesKey key = null;
 		if(element instanceof CSharpTypeDeclarationImpl)
 		{
-			key = CSharpHighlightKey.CLASS_NAME;
+			if(CSharpInheritUtil.isParentOf((DotNetTypeDeclaration) element, DotNetTypes.System_Attribute))
+			{
+				key = CSharpHighlightKey.ATTRIBUTE_NAME;
+			}
+			else
+			{
+				key = CSharpHighlightKey.CLASS_NAME;
+			}
 		}
 		else if(element instanceof CSharpGenericParameterImpl)
 		{
