@@ -355,6 +355,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 				toCreate = IS_EXPRESSION;
 				toParse = ExprType.TYPE;
 			}
+			else if(tokenType == AS_KEYWORD)
+			{
+				toCreate = AS_EXPRESSION;
+				toParse = ExprType.TYPE;
+			}
 			else
 			{
 				break;

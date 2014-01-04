@@ -133,6 +133,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType IS_KEYWORD = new IElementType("IS_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType AS_KEYWORD = new IElementType("AS_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType BASE_KEYWORD = new IElementType("BASE_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType THIS_KEYWORD = new IElementType("THIS_KEYWORD", CSharpLanguage.INSTANCE);

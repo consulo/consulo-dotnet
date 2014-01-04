@@ -204,6 +204,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"is"                      { return CSharpTokens.IS_KEYWORD; }
 
+	"as"                      { return CSharpTokens.AS_KEYWORD; }
+
 	"lock"                    { return CSharpTokens.LOCK_KEYWORD; }
 
 	"return"                  { return CSharpTokens.RETURN_KEYWORD; }
