@@ -95,16 +95,20 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 
 		if(builder.getTokenType() == LT)
 		{
+			marker = marker.precede();
+
 			typeInfo = new TypeInfo();
 			typeInfo.isParameterized = true;
 
-			marker = marker.precede();
+			PsiBuilder.Marker mark = builder.mark();
 			builder.advanceLexer();
 			if(parseTypeList(builder))
 			{
 				builder.error("Type expected");
 			}
 			expect(builder, GT, "'>' expected");
+			mark.done(TYPE_ARGUMENTS);
+
 			marker.done(TYPE_WRAPPER_WITH_TYPE_ARGUMENTS);
 		}
 

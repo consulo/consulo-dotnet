@@ -83,6 +83,8 @@ public interface CSharpElements
 
 	IElementType EXTENDS_LIST = new IElementTypeAsPsiFactory("EXTENDS_LIST", CSharpLanguage.INSTANCE, CSharpTypeListImpl.class);
 
+	IElementType TYPE_ARGUMENTS = new IElementTypeAsPsiFactory("TYPE_ARGUMENTS", CSharpLanguage.INSTANCE, CSharpTypeListImpl.class);
+
 	IElementType CONSTANT_EXPRESSION = new IElementTypeAsPsiFactory("CONSTANT_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpConstantExpressionImpl.class);
 

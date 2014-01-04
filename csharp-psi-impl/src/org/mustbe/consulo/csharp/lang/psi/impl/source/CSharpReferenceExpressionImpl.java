@@ -229,10 +229,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					return Collections.emptyList();
 				}
 				DotNetRuntimeType runtimeType1 = newType.toRuntimeType();
-				if(runtimeType1 == null)
-				{
-					return Collections.emptyList();
-				}
 				PsiElement psiElement1 = runtimeType1.toPsiElement();
 				if(psiElement1 == null)
 				{

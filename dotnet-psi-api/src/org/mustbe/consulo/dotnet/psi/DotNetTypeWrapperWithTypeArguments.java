@@ -16,10 +16,21 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 13.12.13.
  */
 public interface DotNetTypeWrapperWithTypeArguments extends DotNetType
 {
+	@NotNull
+	DotNetType getInnerType();
+
+	@Nullable
+	DotNetTypeList getArgumentsList();
+
+	@NotNull
+	DotNetType[] getArguments();
 }

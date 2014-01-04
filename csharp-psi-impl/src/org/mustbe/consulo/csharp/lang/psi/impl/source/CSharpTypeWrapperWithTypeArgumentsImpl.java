@@ -17,7 +17,11 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericWrapperRuntimeType;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeWrapperWithTypeArguments;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
@@ -37,12 +41,52 @@ public class CSharpTypeWrapperWithTypeArgumentsImpl extends CSharpElementImpl im
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{
-		return DotNetRuntimeType.ERROR_TYPE;
+		DotNetType innerType = getInnerType();
+		DotNetType[] arguments = getArguments();
+		if(arguments.length == 0)
+		{
+			return innerType.toRuntimeType();
+		}
+
+		DotNetRuntimeType[] rArguments = new DotNetRuntimeType[arguments.length];
+		for(int i = 0; i < arguments.length; i++)
+		{
+			DotNetType argument = arguments[i];
+			rArguments[i] = argument.toRuntimeType();
+		}
+
+		return new CSharpGenericWrapperRuntimeType(innerType.toRuntimeType(), rArguments);
 	}
 
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitTypeWrapperWithTypeArguments(this);
+	}
+
+	@NotNull
+	@Override
+	public DotNetType getInnerType()
+	{
+		return findNotNullChildByClass(DotNetType.class);
+	}
+
+	@Nullable
+	@Override
+	public DotNetTypeList getArgumentsList()
+	{
+		return findChildByClass(DotNetTypeList.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetType[] getArguments()
+	{
+		DotNetTypeList argumentsList = getArgumentsList();
+		if(argumentsList == null)
+		{
+			return DotNetType.EMPTY_ARRAY;
+		}
+		return argumentsList.getTypes();
 	}
 }
