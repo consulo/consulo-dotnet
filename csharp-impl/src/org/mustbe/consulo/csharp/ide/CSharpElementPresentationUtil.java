@@ -47,7 +47,7 @@ public class CSharpElementPresentationUtil
 		StringBuilder builder = new StringBuilder();
 		builder.append(fieldDeclaration.getName());
 		builder.append(":");
-		builder.append(fieldDeclaration.getType().toRuntimeType().getPresentableText());
+		builder.append(fieldDeclaration.toRuntimeType().getPresentableText());
 		return builder.toString();
 	}
 
