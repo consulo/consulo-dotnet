@@ -24,5 +24,5 @@ import org.mustbe.consulo.dotnet.psi.DotNetVariable;
  */
 public interface CSharpLocalVariable extends DotNetVariable
 {
-	boolean isConstant();
+
 }

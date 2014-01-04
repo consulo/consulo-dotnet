@@ -58,6 +58,12 @@ public class CSharpEventDeclarationImpl extends CSharpStubMemberImpl<CSharpEvent
 		return findChildrenByClass(DotNetXXXAccessor.class);
 	}
 
+	@Override
+	public boolean isConstant()
+	{
+		return false;
+	}
+
 	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()

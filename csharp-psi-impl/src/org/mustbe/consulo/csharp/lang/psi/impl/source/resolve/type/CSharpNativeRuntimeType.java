@@ -60,6 +60,13 @@ public class CSharpNativeRuntimeType implements DotNetRuntimeType
 		return myPresentableText;
 	}
 
+	@Nullable
+	@Override
+	public String getQualifiedText()
+	{
+		return myPresentableText;
+	}
+
 	@Override
 	public boolean isNullable()
 	{

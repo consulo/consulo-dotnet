@@ -52,6 +52,13 @@ public class CSharpTypeDefRuntimeType implements DotNetRuntimeType
 		return qualifiedName.getLastComponent();
 	}
 
+	@Nullable
+	@Override
+	public String getQualifiedText()
+	{
+		return myQualifiedName;
+	}
+
 	@Override
 	public boolean isNullable()
 	{

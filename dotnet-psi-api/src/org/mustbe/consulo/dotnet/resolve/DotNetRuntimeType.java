@@ -36,6 +36,13 @@ public interface DotNetRuntimeType
 			return "<error>";
 		}
 
+		@Nullable
+		@Override
+		public String getQualifiedText()
+		{
+			return getPresentableText();
+		}
+
 		@Override
 		public boolean isNullable()
 		{
@@ -57,6 +64,13 @@ public interface DotNetRuntimeType
 		public String getPresentableText()
 		{
 			return "<unknown>";
+		}
+
+		@Nullable
+		@Override
+		public String getQualifiedText()
+		{
+			return getPresentableText();
 		}
 
 		@Override
@@ -82,6 +96,13 @@ public interface DotNetRuntimeType
 			return "var";
 		}
 
+		@Nullable
+		@Override
+		public String getQualifiedText()
+		{
+			return getPresentableText();
+		}
+
 		@Override
 		public boolean isNullable()
 		{
@@ -98,6 +119,9 @@ public interface DotNetRuntimeType
 
 	@Nullable
 	String getPresentableText();
+
+	@Nullable
+	String getQualifiedText();
 
 	boolean isNullable();
 

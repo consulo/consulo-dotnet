@@ -42,6 +42,12 @@ public class CSharpParameterImpl extends CSharpMemberImpl implements DotNetParam
 		visitor.visitParameter(this);
 	}
 
+	@Override
+	public boolean isConstant()
+	{
+		return false;
+	}
+
 	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()

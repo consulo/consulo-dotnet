@@ -55,6 +55,26 @@ public class CSharpGenericWrapperRuntimeType implements DotNetRuntimeType
 		return builder.toString();
 	}
 
+	@Nullable
+	@Override
+	public String getQualifiedText()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(myInner.getQualifiedText());
+		builder.append("<");
+		for(int i = 0; i < myArguments.length; i++)
+		{
+			if(i != 0)
+			{
+				builder.append(", ");
+			}
+			DotNetRuntimeType argument = myArguments[i];
+			builder.append(argument.getQualifiedText());
+		}
+		builder.append(">");
+		return builder.toString();
+	}
+
 	@Override
 	public boolean isNullable()
 	{

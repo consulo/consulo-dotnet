@@ -40,6 +40,13 @@ public class CSharpArrayRuntimeType implements DotNetRuntimeType
 		return myInnerType.getPresentableText() + "[]";
 	}
 
+	@Nullable
+	@Override
+	public String getQualifiedText()
+	{
+		return myInnerType.getQualifiedText() + "[]";
+	}
+
 	@Override
 	public boolean isNullable()
 	{

@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.ide.run.CSharpRunUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
@@ -169,6 +170,18 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			{
 				iconDescriptor.setRightIcon(AllIcons.Nodes.C_plocal);
 			}
+		}
+
+		if(owner.hasModifier(CSharpTokens.SEALED_KEYWORD) || owner.hasModifier(CSharpTokens.READONLY_KEYWORD) || element instanceof DotNetVariable
+				&& ((DotNetVariable) element).isConstant())
+		{
+			iconDescriptor.addLayerIcon(AllIcons.Nodes.FinalMark);
+		}
+
+		if(element instanceof DotNetTypeDeclaration && CSharpRunUtil.hasEntryPoint((DotNetTypeDeclaration) element) ||
+				element instanceof DotNetMethodDeclaration && CSharpRunUtil.isEntryPoint((DotNetMethodDeclaration) element))
+		{
+			iconDescriptor.addLayerIcon(AllIcons.Nodes.RunnableMark);
 		}
 	}
 }
