@@ -41,6 +41,7 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 		visitor.visitNewExpression(this);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

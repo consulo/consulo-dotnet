@@ -284,4 +284,54 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(statement);
 	}
+
+	public void visitIsExpression(CSharpIsExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitConditionalExpression(CSharpConditionalExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitNullCoalescingExpression(CSharpNullCoalescingExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitAssignmentExpression(CSharpAssignmentExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitTypeCastExpression(CSharpTypeCastExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitArrayAccessExpression(CSharpArrayAccessExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitPostfixExpression(CSharpPostfixExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitPrefixExpression(CSharpPrefixExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitPolyadicExpression(CSharpPolyadicExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitLambdaExpression(CSharpLambdaExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
 }

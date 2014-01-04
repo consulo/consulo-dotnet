@@ -129,6 +129,12 @@ public interface CSharpTokens extends TokenType
 
 	IElementType OPERATOR_KEYWORD = new IElementType("OPERATOR_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType IS_KEYWORD = new IElementType("IS_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType BASE_KEYWORD = new IElementType("BASE_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType THIS_KEYWORD = new IElementType("THIS_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType LBRACE = new IElementType("LBRACE", CSharpLanguage.INSTANCE);
 
 	IElementType RBRACE = new IElementType("RBRACE", CSharpLanguage.INSTANCE);
@@ -167,11 +173,15 @@ public interface CSharpTokens extends TokenType
 
 	IElementType MINUS = new IElementType("MINUS", CSharpLanguage.INSTANCE);
 
+	IElementType DARROW = new IElementType("DARROW", CSharpLanguage.INSTANCE);
+
 	IElementType MINUSMINUS = new IElementType("MINUSMINUS", CSharpLanguage.INSTANCE);
 
 	IElementType NTEQ = new IElementType("NTEQ", CSharpLanguage.INSTANCE);
 
 	IElementType AND = new IElementType("AND", CSharpLanguage.INSTANCE);
+
+	IElementType ANDAND = new IElementType("ANDAND", CSharpLanguage.INSTANCE);
 
 	IElementType GTEQ = new IElementType("GTEQ", CSharpLanguage.INSTANCE);
 
@@ -181,7 +191,7 @@ public interface CSharpTokens extends TokenType
 
 	IElementType LTEQ = new IElementType("LTEQ", CSharpLanguage.INSTANCE);
 
-	IElementType CARET = new IElementType("CARET", CSharpLanguage.INSTANCE);
+	IElementType XOR = new IElementType("XOR", CSharpLanguage.INSTANCE);
 
 	IElementType DIV = new IElementType("DIV", CSharpLanguage.INSTANCE);
 
@@ -189,9 +199,13 @@ public interface CSharpTokens extends TokenType
 
 	IElementType OR = new IElementType("OR", CSharpLanguage.INSTANCE);
 
+	IElementType OROR = new IElementType("OROR", CSharpLanguage.INSTANCE);
+
 	IElementType TILDE = new IElementType("TILDE", CSharpLanguage.INSTANCE);
 
 	IElementType PERC = new IElementType("PERC", CSharpLanguage.INSTANCE);
+
+	IElementType QUEST = new IElementType("QUEST", CSharpLanguage.INSTANCE);
 
 	IElementType NULL_COALESCING = new IElementType("NULL_COALESCING", CSharpLanguage.INSTANCE);
 

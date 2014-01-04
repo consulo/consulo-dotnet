@@ -46,6 +46,7 @@ public class CSharpParenthesesExpressionImpl extends CSharpElementImpl implement
 		visitor.visitParenthesesExpression(this);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

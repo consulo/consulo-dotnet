@@ -39,6 +39,7 @@ public class CSharpBinaryExpressionImpl extends CSharpElementImpl implements CSh
 		visitor.visitBinaryExpression(this);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

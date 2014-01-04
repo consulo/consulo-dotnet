@@ -202,6 +202,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"typeof"                  { return CSharpTokens.TYPEOF_KEYWORD; }
 
+	"is"                      { return CSharpTokens.IS_KEYWORD; }
+
 	"lock"                    { return CSharpTokens.LOCK_KEYWORD; }
 
 	"return"                  { return CSharpTokens.RETURN_KEYWORD; }
@@ -211,6 +213,10 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 	"break"                   { return CSharpTokens.BREAK_KEYWORD; }
 
 	"continue"                { return CSharpTokens.CONTINUE_KEYWORD; }
+
+	"base"                    { return CSharpTokens.BASE_KEYWORD; }
+
+	"this"                    { return CSharpTokens.THIS_KEYWORD; }
 
 //
 	"{"                       { return CSharpTokens.LBRACE; }
@@ -243,6 +249,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"*"                       { return CSharpTokens.MUL; }
 
+	"=>"                      { return CSharpTokens.DARROW; }
+
 	"=="                      { return CSharpTokens.EQEQ; }
 
 	"++"                      { return CSharpTokens.PLUSPLUS; }
@@ -257,7 +265,11 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"%"                       { return CSharpTokens.PERC; }
 
+	"&&"                      { return CSharpTokens.ANDAND; }
+
 	"&"                       { return CSharpTokens.AND; }
+
+	"||"                      { return CSharpTokens.OROR; }
 
 	"|"                       { return CSharpTokens.OR; }
 
@@ -267,13 +279,15 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"!"                       { return CSharpTokens.EXCL; }
 
-	"^"                       { return CSharpTokens.CARET; }
+	"^"                       { return CSharpTokens.XOR; }
 
 	"."                       { return CSharpTokens.DOT; }
 
 	","                       { return CSharpTokens.COMMA; }
 
 	"??"                      { return CSharpTokens.NULL_COALESCING; }
+
+	"?"                       { return CSharpTokens.QUEST; }
 
 	"false"                   { return CSharpTokens.BOOL_LITERAL; }
 

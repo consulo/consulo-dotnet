@@ -37,8 +37,8 @@ public class CSharpNativeRuntimeType implements DotNetRuntimeType
 	public static final CSharpNativeRuntimeType BYTE =  new CSharpNativeRuntimeType("byte", "System.Byte");
 	public static final CSharpNativeRuntimeType INT = new CSharpNativeRuntimeType("int", "System.Int32");
 	public static final CSharpNativeRuntimeType UINT =  new CSharpNativeRuntimeType("uint", "System.UInt32");
-	public static final CSharpNativeRuntimeType LONG = new CSharpNativeRuntimeType("long", "System.Long");
-	public static final CSharpNativeRuntimeType ULONG = new CSharpNativeRuntimeType("ulong", "System.ULong");
+	public static final CSharpNativeRuntimeType LONG = new CSharpNativeRuntimeType("long", "System.Int64");
+	public static final CSharpNativeRuntimeType ULONG = new CSharpNativeRuntimeType("ulong", "System.UInt64");
 	public static final CSharpNativeRuntimeType VOID =  new CSharpNativeRuntimeType("void", "System.Void");
 	public static final CSharpNativeRuntimeType SHORT = new CSharpNativeRuntimeType("short", "System.Int16");
 	public static final CSharpNativeRuntimeType USHORT =  new CSharpNativeRuntimeType("ushort", "System.UInt16");

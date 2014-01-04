@@ -41,6 +41,7 @@ public class CSharpTypeOfExpressionImpl extends CSharpElementImpl implements Dot
 		visitor.visitTypeOfExpression(this);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

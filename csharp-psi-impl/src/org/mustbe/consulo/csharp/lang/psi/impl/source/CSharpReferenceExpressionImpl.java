@@ -203,9 +203,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				PsiElement nativeElement = findChildByType(CSharpTokenSets.NATIVE_TYPES);
 				assert nativeElement != null;
 				CSharpNativeRuntimeType nativeRuntimeType = CSharpNativeTypeImpl.ELEMENT_TYPE_TO_TYPE.get(nativeElement.getNode().getElementType());
-
-				assert nativeRuntimeType != null;
-
+				if(nativeRuntimeType == null)
+				{
+					return Collections.emptyList();
+				}
 				Collection<DotNetTypeDeclaration> dotNetTypeDeclarations = TypeByQNameIndex.getInstance().get(nativeRuntimeType
 						.getWrapperQualifiedClass(), getProject(), getResolveScope());
 
@@ -483,6 +484,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return false;
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

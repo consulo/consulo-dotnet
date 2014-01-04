@@ -44,6 +44,7 @@ public class CSharpConstantExpressionImpl extends CSharpElementImpl implements D
 		visitor.visitConstantExpression(this);
 	}
 
+	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

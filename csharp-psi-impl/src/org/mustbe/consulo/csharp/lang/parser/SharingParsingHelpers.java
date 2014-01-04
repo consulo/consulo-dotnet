@@ -16,13 +16,17 @@
 
 package org.mustbe.consulo.csharp.lang.parser;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.WhitespacesAndCommentsBinder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.NullableFunction;
@@ -34,12 +38,27 @@ import lombok.val;
  */
 public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSharpElements
 {
+	public static final WhitespacesAndCommentsBinder GREEDY_RIGHT_EDGE_PROCESSOR = new WhitespacesAndCommentsBinder()
+	{
+		@Override
+		public int getEdgePosition(final List<IElementType> tokens, final boolean atStreamEdge, final TokenTextGetter getter)
+		{
+			return tokens.size();
+		}
+	};
+
+	public static class TypeInfo
+	{
+		public boolean isNative;
+		public PsiBuilder.Marker marker;
+	}
+
 	protected static boolean parseTypeList(@NotNull CSharpBuilderWrapper builder)
 	{
 		boolean empty = true;
 		while(!builder.eof())
 		{
-			PsiBuilder.Marker marker = parseType(builder);
+			val marker = parseType(builder);
 			if(marker == null)
 			{
 				if(!empty)
@@ -63,16 +82,20 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		return empty;
 	}
 
-	protected static PsiBuilder.Marker parseType(@NotNull CSharpBuilderWrapper builder)
+	protected static TypeInfo parseType(@NotNull CSharpBuilderWrapper builder)
 	{
-		PsiBuilder.Marker marker = parseInnerType(builder);
-		if(marker == null)
+		TypeInfo typeInfo = parseInnerType(builder);
+		if(typeInfo == null)
 		{
 			return null;
 		}
 
+		PsiBuilder.Marker marker = typeInfo.marker;
+
 		if(builder.getTokenType() == LT)
 		{
+			typeInfo = new TypeInfo();
+
 			marker = marker.precede();
 			builder.advanceLexer();
 			if(parseTypeList(builder))
@@ -85,6 +108,8 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 
 		if(builder.getTokenType() == MUL)
 		{
+			typeInfo = new TypeInfo();
+
 			marker = marker.precede();
 
 			builder.advanceLexer();
@@ -94,24 +119,32 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 
 		while(builder.getTokenType() == LBRACKET)
 		{
+			typeInfo = new TypeInfo();
+
 			marker = marker.precede();
 			builder.advanceLexer();
 			expect(builder, RBRACKET, "']' expected");
 			marker.done(ARRAY_TYPE);
 		}
 
-		return marker;
+		typeInfo.marker = marker;
+		return typeInfo;
 	}
 
-	private static PsiBuilder.Marker parseInnerType(@NotNull CSharpBuilderWrapper builder)
+	private static TypeInfo parseInnerType(@NotNull CSharpBuilderWrapper builder)
 	{
+		TypeInfo typeInfo = new TypeInfo();
+
 		PsiBuilder.Marker marker = builder.mark();
 		IElementType tokenType = builder.getTokenType();
 
+		typeInfo.marker = marker;
 		if(CSharpTokenSets.NATIVE_TYPES.contains(tokenType))
 		{
 			builder.advanceLexer();
 			marker.done(NATIVE_TYPE);
+
+			typeInfo.isNative = true;
 		}
 		else if(builder.getTokenType() == IDENTIFIER)
 		{
@@ -133,9 +166,10 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		else
 		{
 			marker.drop();
-			marker = null;
+			return null;
 		}
-		return marker;
+
+		return typeInfo;
 	}
 
 	protected static boolean parseAttributeList(CSharpBuilderWrapper builder)
@@ -314,6 +348,12 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		return fun;
 	}
 
+	@Nullable
+	public static IElementType exprType(@Nullable final PsiBuilder.Marker marker)
+	{
+		return marker != null ? ((LighterASTNode) marker).getTokenType() : null;
+	}
+
 	protected static boolean expect(PsiBuilder builder, IElementType elementType, String message)
 	{
 		if(builder.getTokenType() == elementType)
@@ -329,6 +369,28 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 			}
 			return false;
 		}
+	}
+
+	protected static boolean expect(PsiBuilder builder, TokenSet tokenSet, String message)
+	{
+		if(tokenSet.contains(builder.getTokenType()))
+		{
+			builder.advanceLexer();
+			return true;
+		}
+		else
+		{
+			if(message != null)
+			{
+				builder.error(message);
+			}
+			return false;
+		}
+	}
+
+	public static void emptyElement(final PsiBuilder builder, final IElementType type)
+	{
+		builder.mark().done(type);
 	}
 
 	protected static boolean doneOneElement(PsiBuilder builder, IElementType elementType, IElementType to, String message)

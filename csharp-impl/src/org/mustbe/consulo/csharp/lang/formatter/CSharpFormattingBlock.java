@@ -73,7 +73,11 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 				continue;
 			}
 
-			if(KEYWORDS.contains(elementType) || elementType == IDENTIFIER || elementType == REFERENCE_EXPRESSION || elementType == MODIFIER_LIST ||
+			if(KEYWORDS.contains(elementType) ||
+					elementType == IDENTIFIER ||
+					elementType == REFERENCE_EXPRESSION ||
+					elementType == MODIFIER_LIST ||
+					CSharpTokenSets.LITERALS.contains(elementType) ||
 					CSharpTokenSets.COMMENTS.contains(elementType))
 			{
 				if(elementType == MODIFIER_LIST)
@@ -108,6 +112,7 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 				elementType == XXX_ACCESSOR ||
 				elementType == EVENT_DECLARATION ||
 				elementType == MACRO_BLOCK ||
+				elementType == USING_LIST ||
 				elementType == CONSTRUCTOR_DECLARATION)
 		{
 			PsiElement psiElement = getNode().getPsi().getParent();
@@ -117,10 +122,6 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 			}
 			return Indent.getNormalIndent();
 		}
-		/*else if(elementType == CODE_BLOCK)
-		{
-			return Indent.getNormalIndent();
-		}*/
 		else if(elementType == LBRACE || elementType == RBRACE)
 		{
 			return Indent.getNoneIndent();
@@ -140,7 +141,7 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 		else if(elementType == MACRO_BLOCK_START || elementType == MACRO_BLOCK_STOP)
 		{
 			PsiElement psi = getNode().getPsi();
-			if(psi instanceof CSharpMacroBlockImpl)
+			if(psi.getParent() instanceof CSharpMacroBlockImpl)
 			{
 				return Indent.getNoneIndent();
 			}

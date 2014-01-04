@@ -24,6 +24,7 @@ import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.NullableFunction;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -178,13 +179,20 @@ public class StatementParsing extends SharingParsingHelpers
 			wrapper.advanceLexer();
 		}
 
-		PsiBuilder.Marker typeMarker = parseType(wrapper);
-		if(typeMarker == null)
+		val typeInfo = parseType(wrapper);
+		if(typeInfo == null)
 		{
 			if(constToken)
 			{
 				wrapper.error("Type expected");
 			}
+			mark.rollbackTo();
+
+			return null;
+		}
+
+		if(wrapper.getTokenType() == DOT && typeInfo.isNative)
+		{
 			mark.rollbackTo();
 
 			return null;

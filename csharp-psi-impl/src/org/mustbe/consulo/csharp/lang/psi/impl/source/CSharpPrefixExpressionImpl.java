@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 16.12.13.
+ * @since 04.01.14.
  */
-public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements DotNetExpression
+public class CSharpPrefixExpressionImpl extends CSharpElementImpl implements DotNetExpression
 {
-	public CSharpMethodCallExpressionImpl(@NotNull ASTNode node)
+	public CSharpPrefixExpressionImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -36,7 +36,7 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitMethodCallExpression(this);
+		visitor.visitPrefixExpression(this);
 	}
 
 	@NotNull
