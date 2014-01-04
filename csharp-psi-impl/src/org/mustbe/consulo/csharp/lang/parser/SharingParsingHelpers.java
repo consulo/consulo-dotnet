@@ -112,7 +112,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 			marker.done(TYPE_WRAPPER_WITH_TYPE_ARGUMENTS);
 		}
 
-		if(builder.getTokenType() == MUL)
+		while(builder.getTokenType() == MUL)
 		{
 			typeInfo = new TypeInfo();
 
@@ -131,6 +131,17 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 			builder.advanceLexer();
 			expect(builder, RBRACKET, "']' expected");
 			marker.done(ARRAY_TYPE);
+		}
+
+		while(builder.getTokenType() == MUL)
+		{
+			typeInfo = new TypeInfo();
+
+			marker = marker.precede();
+
+			builder.advanceLexer();
+
+			marker.done(POINTER_TYPE);
 		}
 
 		typeInfo.marker = marker;
