@@ -143,7 +143,7 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 	@Override
 	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile psiFile)
 	{
-		return true;
+		return !collectAvailableNamespaces().isEmpty();
 	}
 
 	@Override
