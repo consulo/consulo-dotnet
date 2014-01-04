@@ -50,6 +50,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 	public static class TypeInfo
 	{
 		public boolean isNative;
+		public boolean isParameterized;
 		public PsiBuilder.Marker marker;
 	}
 
@@ -95,6 +96,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		if(builder.getTokenType() == LT)
 		{
 			typeInfo = new TypeInfo();
+			typeInfo.isParameterized = true;
 
 			marker = marker.precede();
 			builder.advanceLexer();

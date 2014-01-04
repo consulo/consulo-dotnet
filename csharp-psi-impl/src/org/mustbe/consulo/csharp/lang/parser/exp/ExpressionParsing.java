@@ -236,7 +236,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 				return parsePostfix(builder);
 			}
 
-			if(PREF_ARITHMETIC_OPS.contains(builder.getTokenType())/* && !typeInfo.isPrimitive*/)
+			if(PREF_ARITHMETIC_OPS.contains(builder.getTokenType()) && !typeInfo.isNative)
 			{
 				typeCast.rollbackTo();
 				return parsePostfix(builder);
@@ -245,7 +245,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 			final PsiBuilder.Marker expr = parseUnary(builder);
 			if(expr == null)
 			{
-				if(/*!typeInfo.isParameterized*/Boolean.TRUE)
+				if(!typeInfo.isParameterized)
 				{  // cannot parse correct parenthesized expression after correct parameterized type
 					typeCast.rollbackTo();
 					return parsePostfix(builder);
