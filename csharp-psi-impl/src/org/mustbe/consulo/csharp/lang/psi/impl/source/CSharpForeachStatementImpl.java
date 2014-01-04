@@ -17,9 +17,14 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
@@ -36,5 +41,26 @@ public class CSharpForeachStatementImpl extends CSharpElementImpl implements Dot
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitForeachStatement(this);
+	}
+
+	@Nullable
+	public CSharpLocalVariable getVariable()
+	{
+		return findChildByClass(CSharpLocalVariable.class);
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		CSharpLocalVariable variable = getVariable();
+		if(variable != null)
+		{
+			if(!processor.execute(variable, state))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }
