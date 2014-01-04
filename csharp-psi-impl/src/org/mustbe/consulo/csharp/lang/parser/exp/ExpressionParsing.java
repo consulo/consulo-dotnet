@@ -621,6 +621,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 			return parseTypeOfExpression(builder, null);
 		}
 
+		if(tokenType == DEFAULT_KEYWORD)
+		{
+			return parseDefaultExpression(builder, null);
+		}
+
 		if(tokenType == LPAR)
 		{
 			final PsiBuilder.Marker lambda = parseLambdaAfterParenth(builder, null);
@@ -945,6 +950,23 @@ public class ExpressionParsing extends SharingParsingHelpers
 			mark.drop();
 			return null;
 		}
+	}
+
+	private static PsiBuilder.Marker parseDefaultExpression(CSharpBuilderWrapper builder, PsiBuilder.Marker mark)
+	{
+		PsiBuilder.Marker newMarker = mark == null ? builder.mark() : mark.precede();
+		builder.advanceLexer();
+
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			if(parseType(builder) == null)
+			{
+				builder.error("Type expected");
+			}
+			expect(builder, RPAR, "')' expected");
+		}
+		newMarker.done(DEFAULT_EXPRESSION);
+		return newMarker;
 	}
 
 	private static PsiBuilder.Marker parseTypeOfExpression(CSharpBuilderWrapper builder, PsiBuilder.Marker mark)
