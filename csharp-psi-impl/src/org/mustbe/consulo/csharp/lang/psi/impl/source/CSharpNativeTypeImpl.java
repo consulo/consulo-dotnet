@@ -55,6 +55,7 @@ public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNat
 			put(CSharpTokens.VOID_KEYWORD, CSharpNativeRuntimeType.VOID);
 			put(CSharpTokens.SHORT_KEYWORD, CSharpNativeRuntimeType.SHORT);
 			put(CSharpTokens.USHORT_KEYWORD, CSharpNativeRuntimeType.USHORT);
+			put(CSharpTokens.DECIMAL_KEYWORD, CSharpNativeRuntimeType.DECIMAL);
 		}
 	};
 

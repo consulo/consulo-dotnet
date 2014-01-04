@@ -42,6 +42,7 @@ public class CSharpNativeRuntimeType implements DotNetRuntimeType
 	public static final CSharpNativeRuntimeType VOID =  new CSharpNativeRuntimeType("void", "System.Void");
 	public static final CSharpNativeRuntimeType SHORT = new CSharpNativeRuntimeType("short", "System.Int16");
 	public static final CSharpNativeRuntimeType USHORT =  new CSharpNativeRuntimeType("ushort", "System.UInt16");
+	public static final CSharpNativeRuntimeType DECIMAL = new CSharpNativeRuntimeType("decimal", "System.Decimal");
 
 	private final String myPresentableText;
 	private final String myWrapperQualifiedClass;
