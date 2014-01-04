@@ -334,4 +334,34 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(expression);
 	}
+
+	public void visitLinqExpression(CSharpLinqExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitLinqFrom(CSharpLinqFromImpl select)
+	{
+		visitElement(select);
+	}
+
+	public void visitLinqIn(CSharpLinqInImpl in)
+	{
+		visitElement(in);
+	}
+
+	public void visitLinqLet(CSharpLinqLetImpl let)
+	{
+		visitElement(let);
+	}
+
+	public void visitLinqWhere(CSharpLinqWhereImpl where)
+	{
+		visitElement(where);
+	}
+
+	public void visitLinqSelect(CSharpLinqSelectImpl select)
+	{
+		visitElement(select);
+	}
 }

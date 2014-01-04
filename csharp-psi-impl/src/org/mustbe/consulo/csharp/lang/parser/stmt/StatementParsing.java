@@ -21,8 +21,10 @@ import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import org.mustbe.consulo.csharp.lang.parser.decl.MemberWithBodyParsing;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
+import org.mustbe.consulo.csharp.lang.parser.exp.LinqParsing;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.NullableFunction;
 import lombok.val;
 
@@ -32,6 +34,8 @@ import lombok.val;
  */
 public class StatementParsing extends SharingParsingHelpers
 {
+	private static final TokenSet BODY_SOFT_KEYWORDS = TokenSet.orSet(TokenSet.create(VAR_KEYWORD, YIELD_KEYWORD), LinqParsing.LINQ_KEYWORDS);
+
 	public static PsiBuilder.Marker parse(CSharpBuilderWrapper wrapper)
 	{
 		return parseWithSoftElements(new NullableFunction<CSharpBuilderWrapper, PsiBuilder.Marker>()
@@ -42,7 +46,7 @@ public class StatementParsing extends SharingParsingHelpers
 			{
 				return parse0(builderWrapper);
 			}
-		}, wrapper, VAR_KEYWORD);
+		}, wrapper, BODY_SOFT_KEYWORDS);
 	}
 
 	private static PsiBuilder.Marker parse0(CSharpBuilderWrapper wrapper)
@@ -53,10 +57,7 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			marker = wrapper.mark();
 
-			//fixme [vistall] only yield?
-			wrapper.enableSoftKeyword(YIELD_KEYWORD);
 			tokenType = wrapper.getTokenType();
-			wrapper.disableSoftKeyword(YIELD_KEYWORD);
 
 			if(tokenType == LOCK_KEYWORD)
 			{

@@ -130,6 +130,24 @@ public interface CSharpElements
 	IElementType PARENTHESES_EXPRESSION = new IElementTypeAsPsiFactory("PARENTHESES_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpParenthesesExpressionImpl.class);
 
+	IElementType LINQ_EXPRESSION = new IElementTypeAsPsiFactory("LINQ_EXPRESSION", CSharpLanguage.INSTANCE,
+			CSharpLinqExpressionImpl.class);
+
+	IElementType LINQ_FROM = new IElementTypeAsPsiFactory("LINQ_FROM", CSharpLanguage.INSTANCE,
+			CSharpLinqFromImpl.class);
+
+	IElementType LINQ_IN = new IElementTypeAsPsiFactory("LINQ_IN", CSharpLanguage.INSTANCE,
+			CSharpLinqInImpl.class);
+
+	IElementType LINQ_LET = new IElementTypeAsPsiFactory("LINQ_LET", CSharpLanguage.INSTANCE,
+			CSharpLinqLetImpl.class);
+
+	IElementType LINQ_WHERE = new IElementTypeAsPsiFactory("LINQ_WHERE", CSharpLanguage.INSTANCE,
+			CSharpLinqWhereImpl.class);
+
+	IElementType LINQ_SELECT = new IElementTypeAsPsiFactory("LINQ_SELECT", CSharpLanguage.INSTANCE,
+		CSharpLinqSelectImpl.class);
+
 	IElementType LAMBDA_EXPRESSION = new IElementTypeAsPsiFactory("LAMBDA_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpLambdaExpressionImpl.class);
 

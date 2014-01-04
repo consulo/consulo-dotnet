@@ -61,7 +61,8 @@ public class ExpressionParsing extends SharingParsingHelpers
 	private static final TokenSet ARGS_LIST_CONTINUE = TokenSet.create(IDENTIFIER, TokenType.BAD_CHARACTER, COMMA, INTEGER_LITERAL, STRING_LITERAL);
 	private static final TokenSet ARGS_LIST_END = TokenSet.create(RPAR, RBRACE, RBRACKET);
 	private static final TokenSet ID_OR_SUPER = TokenSet.create(IDENTIFIER, BASE_KEYWORD);
-	private static final TokenSet THIS_OR_SUPER = TokenSet.create(THIS_KEYWORD, BASE_KEYWORD);
+	private static final TokenSet THIS_OR_BASE = TokenSet.create(THIS_KEYWORD, BASE_KEYWORD);
+
 
 	@Nullable
 	public static PsiBuilder.Marker parse(final CSharpBuilderWrapper builder)
@@ -644,6 +645,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 			return parenth;
 		}
 
+		if(tokenType == FROM_KEYWORD)
+		{
+			return LinqParsing.parseLinqExpression(builder);
+		}
+
 		if(tokenType == IDENTIFIER)
 		{
 			if(builder.lookAhead(1) == DARROW)
@@ -667,7 +673,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 			return refExpr;
 		}
 
-		if(THIS_OR_SUPER.contains(tokenType))
+		if(THIS_OR_BASE.contains(tokenType))
 		{
 			val expr = builder.mark();
 			builder.advanceLexer();

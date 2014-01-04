@@ -82,7 +82,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		NATIVE_TYPE_WRAPPER,
 		TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD,
 		ANY_MEMBER,
-		FIELD_OR_PROPERTY
+		FIELD_OR_PROPERTY,
+		THIS
 	}
 
 	public CSharpReferenceExpressionImpl(@NotNull ASTNode node)
@@ -155,6 +156,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				text = stripSpaces(getReferenceName()) + "Attribute";
 				break;
 			case NATIVE_TYPE_WRAPPER:
+			case THIS:
 				text = "";
 				break;
 			default:
@@ -182,6 +184,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		PsiElement qualifier = getQualifier();
 		switch(kind)
 		{
+			case THIS:
+				DotNetTypeDeclaration typeDeclaration = PsiTreeUtil.getParentOfType(this, DotNetTypeDeclaration.class);
+				if(typeDeclaration != null)
+				{
+					return Collections.singletonList(typeDeclaration);
+				}
+				break;
 			case TYPE_PARAMETER_FROM_PARENT:
 				DotNetGenericParameterListOwner parameterListOwner = PsiTreeUtil.getParentOfType(this, DotNetGenericParameterListOwner.class);
 				if(parameterListOwner == null)
@@ -429,6 +438,11 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			return ResolveToKind.NATIVE_TYPE_WRAPPER;
 		}
 
+		PsiElement childByType = findChildByType(CSharpTokens.THIS_KEYWORD);
+		if(childByType != null)
+		{
+			return ResolveToKind.THIS;
+		}
 		return ResolveToKind.ANY_MEMBER;
 	}
 

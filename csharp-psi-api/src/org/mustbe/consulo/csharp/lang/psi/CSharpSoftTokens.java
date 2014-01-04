@@ -46,6 +46,21 @@ public interface CSharpSoftTokens extends CSharpTokens
 
 	IElementType YIELD_KEYWORD = new IElementType("YIELD_KEYWORD", CSharpLanguage.INSTANCE);
 
+	// linq
+	IElementType FROM_KEYWORD = new IElementType("FROM_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType LET_KEYWORD = new IElementType("LET_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType SELECT_KEYWORD = new IElementType("SELECT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType GROUP_KEYWORD = new IElementType("GROUP_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType BY_KEYWORD = new IElementType("BY_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType INTO_KEYWORD = new IElementType("INTO_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType ORDERBY_KEYWORD = new IElementType("ORDERBY_KEYWORD", CSharpLanguage.INSTANCE);
+
 	// attributes target
 	IElementType ASSEMBLY_KEYWORD = new IElementType("ASSEMBLY_KEYWORD", CSharpLanguage.INSTANCE);
 
@@ -67,5 +82,5 @@ public interface CSharpSoftTokens extends CSharpTokens
 
 	TokenSet ALL = TokenSet.create(PARTIAL_KEYWORD, WHERE_KEYWORD, GLOBAL_KEYWORD, ADD_KEYWORD, REMOVE_KEYWORD, SET_KEYWORD, GET_KEYWORD,
 			ASYNC_KEYWORD, VAR_KEYWORD, ASSEMBLY_KEYWORD, MODULE_KEYWORD, FIELD_KEYWORD, METHOD_KEYWORD, PARAM_KEYWORD, PROPERTY_KEYWORD,
-			TYPE_KEYWORD, YIELD_KEYWORD);
+			TYPE_KEYWORD, YIELD_KEYWORD, FROM_KEYWORD, SELECT_KEYWORD, GROUP_KEYWORD, BY_KEYWORD, INTO_KEYWORD, ORDERBY_KEYWORD, LET_KEYWORD);
 }
