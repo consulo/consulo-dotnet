@@ -332,6 +332,11 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			}
 		}
 
+		if(!target.isValid())
+		{
+			return Collections.emptyList();
+		}
+
 		MemberToTypeValueResolveScopeProcessor p = new MemberToTypeValueResolveScopeProcessor(condition);
 		p.putUserData(CSharpResolveUtil.QUALIFIED, target != this);
 
