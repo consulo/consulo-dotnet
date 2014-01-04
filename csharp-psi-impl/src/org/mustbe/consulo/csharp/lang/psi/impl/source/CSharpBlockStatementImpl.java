@@ -23,6 +23,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
@@ -51,5 +53,25 @@ public class CSharpBlockStatementImpl extends CSharpElementImpl implements DotNe
 	public PsiElement getRightBrace()
 	{
 		return findChildByType(CSharpTokens.RBRACE);
+	}
+
+	@NotNull
+	public DotNetStatement[] getStatements()
+	{
+		return findChildrenByClass(DotNetStatement.class);
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		for(DotNetStatement dotNetStatement : getStatements())
+		{
+			if(!dotNetStatement.processDeclarations(processor, state, lastParent, place))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }

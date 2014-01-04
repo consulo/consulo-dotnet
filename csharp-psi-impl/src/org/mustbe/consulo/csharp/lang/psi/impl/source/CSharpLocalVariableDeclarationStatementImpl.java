@@ -21,6 +21,9 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariableDeclarationStatement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
@@ -44,5 +47,19 @@ public class CSharpLocalVariableDeclarationStatementImpl extends CSharpElementIm
 	public CSharpLocalVariable[] getVariables()
 	{
 		return findChildrenByClass(CSharpLocalVariable.class);
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		for(CSharpLocalVariable cSharpLocalVariable : getVariables())
+		{
+			if(!processor.execute(cSharpLocalVariable, state))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }
