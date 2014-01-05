@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,13 +28,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import lombok.val;
 
-/**
- * @author VISTALL
- * @since 16.12.13
- *        <p/>
- *        Base on code from java plugin - class ExpressionParser
- *        License Apache 2, Copyright 2000-2013 JetBrains s.r.o
- */
 public class ExpressionParsing extends SharingParsingHelpers
 {
 	private enum ExprType
