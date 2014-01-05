@@ -32,4 +32,5 @@ public interface DotNetTypes
 	String System_UIntPtr = "System.UIntPtr";
 	String System_RuntimeType = "System.RuntimeType";
 	String System_String = "System.String";
+	String System_IDisposable = "System.IDisposable";
 }

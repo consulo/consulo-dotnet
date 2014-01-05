@@ -22,4 +22,5 @@ package org.mustbe.consulo.dotnet.psi;
  */
 public interface DotNetConstructorDeclaration extends DotNetMethodDeclaration
 {
+	boolean isDeConstructor();
 }

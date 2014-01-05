@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpConstructorStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
@@ -44,5 +45,11 @@ public class CSharpConstructorDeclarationImpl extends CSharpMethodDeclarationImp
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitConstructorDeclaration(this);
+	}
+
+	@Override
+	public boolean isDeConstructor()
+	{
+		return findChildByType(CSharpTokens.TILDE) != null;
 	}
 }

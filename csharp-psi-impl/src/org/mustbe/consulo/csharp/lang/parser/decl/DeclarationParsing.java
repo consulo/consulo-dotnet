@@ -97,6 +97,12 @@ public class DeclarationParsing extends SharingParsingHelpers
 			{
 				MethodParsing.parseMethodStartAfterType(builder, marker, true);
 			}
+			else if(tokenType == TILDE)
+			{
+				builder.advanceLexer();
+
+				MethodParsing.parseMethodStartAfterType(builder, marker, true);
+			}
 			else
 			{
 				if(parseType(builder) == null)
