@@ -47,6 +47,10 @@ public class CSharpPsiUtilImpl
 	public static DotNetRuntimeType toRuntimeType(@NotNull DotNetVariable variable)
 	{
 		DotNetType type = variable.getType();
+		if(type == null)
+		{
+			return DotNetRuntimeType.ERROR_TYPE;
+		}
 
 		DotNetRuntimeType runtimeType = type.toRuntimeType();
 		if(runtimeType == DotNetRuntimeType.AUTO_TYPE)

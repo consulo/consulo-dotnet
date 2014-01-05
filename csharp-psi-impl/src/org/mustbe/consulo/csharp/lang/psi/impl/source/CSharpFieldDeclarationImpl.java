@@ -24,9 +24,12 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpFieldStub;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author VISTALL
@@ -57,11 +60,33 @@ public class CSharpFieldDeclarationImpl extends CSharpStubMemberImpl<CSharpField
 		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetType getType()
 	{
-		return findNotNullChildByClass(DotNetType.class);
+		DotNetType type = findChildByClass(DotNetType.class);
+		// int a, b
+		if(type == null && getNameIdentifier() != null)
+		{
+			CSharpFieldDeclarationImpl fieldDeclaration = PsiTreeUtil.getPrevSiblingOfType(this, CSharpFieldDeclarationImpl.class);
+			assert fieldDeclaration != null;
+			return fieldDeclaration.getType();
+		}
+		return type;
+	}
+
+	@Nullable
+	@Override
+	public DotNetModifierList getModifierList()
+	{
+		DotNetModifierList childByClass = findChildByClass(DotNetModifierList.class);
+		if(childByClass == null && getNameIdentifier() != null)
+		{
+			CSharpFieldDeclarationImpl fieldDeclaration = PsiTreeUtil.getPrevSiblingOfType(this, CSharpFieldDeclarationImpl.class);
+			assert fieldDeclaration != null;
+			return fieldDeclaration.getModifierList();
+		}
+		return super.getModifierList();
 	}
 
 	@Nullable
@@ -74,6 +99,8 @@ public class CSharpFieldDeclarationImpl extends CSharpStubMemberImpl<CSharpField
 	@Override
 	public boolean isConstant()
 	{
-		return findChildByType(CSharpTokens.CONST_KEYWORD) != null;
+		PsiElement psiElement = findChildByType(CSharpTokens.CONST_KEYWORD);
+
+		return psiElement != null;
 	}
 }

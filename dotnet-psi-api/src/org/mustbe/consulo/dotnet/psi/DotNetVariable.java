@@ -32,7 +32,7 @@ public interface DotNetVariable extends PsiNameIdentifierOwner, DotNetNamedEleme
 	@NotNull
 	DotNetRuntimeType toRuntimeType();
 
-	@NotNull
+	@Nullable
 	DotNetType getType();
 
 	@Nullable

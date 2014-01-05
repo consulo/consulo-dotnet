@@ -29,6 +29,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -55,11 +56,19 @@ public class CSharpLocalVariableImpl extends CSharpElementImpl implements CSharp
 		visitor.visitLocalVariable(this);
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetType getType()
 	{
-		return findNotNullChildByClass(DotNetType.class);
+		DotNetType type = findChildByClass(DotNetType.class);
+		// int a, b
+		if(type == null && getNameIdentifier() != null)
+		{
+			CSharpFieldDeclarationImpl fieldDeclaration = PsiTreeUtil.getPrevSiblingOfType(this, CSharpFieldDeclarationImpl.class);
+			assert fieldDeclaration != null;
+			return fieldDeclaration.getType();
+		}
+		return type;
 	}
 
 	@NotNull

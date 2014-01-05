@@ -26,7 +26,7 @@ import com.intellij.lang.PsiBuilder;
  */
 public class FieldOrPropertyParsing extends MemberWithBodyParsing
 {
-	public static void parseFieldBeforeName(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
+	public static void parseFieldAtType(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
 	{
 		if(parseType(builder) == null)
 		{
@@ -34,31 +34,52 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		}
 		else
 		{
-			if(expect(builder, IDENTIFIER, "Name expected"))
+			parseFieldOrLocalVariableAtName(builder, marker, false);
+		}
+	}
+
+	public static void parseFieldOrLocalVariableAtName(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
+	{
+		if(builder.getTokenType() == IDENTIFIER)
+		{
+			builder.advanceLexer();
+
+			parseFieldAfterName(builder, marker, local);
+		}
+		else
+		{
+			builder.error("Name expected");
+
+			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
+		}
+	}
+
+	private static void parseFieldAfterName(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
+	{
+		if(builder.getTokenType() == EQ)
+		{
+			builder.advanceLexer();
+			if(ExpressionParsing.parse(builder) == null)
 			{
-				parseInitializer(builder);
+				builder.error("Expression expected");
 			}
 		}
 
-		marker.done(FIELD_DECLARATION);
-	}
-
-	private static void parseInitializer(CSharpBuilderWrapper builder)
-	{
-		if(!expect(builder, SEMICOLON, null))
+		if(builder.getTokenType() == COMMA)
 		{
-			if(expect(builder, EQ, "'=' expected"))
-			{
-				PsiBuilder.Marker parse = ExpressionParsing.parse(builder);
-				if(parse == null)
-				{
-					builder.error("Expression expected");
-				}
-				else
-				{
-					expect(builder, SEMICOLON, "';' expected");
-				}
-			}
+			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
+
+			builder.advanceLexer();
+
+			PsiBuilder.Marker newMarker = builder.mark();
+
+			parseFieldOrLocalVariableAtName(builder, newMarker, local);
+		}
+		else
+		{
+			expect(builder, SEMICOLON, "';' expected");
+
+			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
 		}
 	}
 
@@ -72,9 +93,7 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		}
 		else
 		{
-			parseInitializer(builderWrapper);
-
-			marker.done(FIELD_DECLARATION);
+			parseFieldAfterName(builderWrapper, marker, false);
 		}
 	}
 }

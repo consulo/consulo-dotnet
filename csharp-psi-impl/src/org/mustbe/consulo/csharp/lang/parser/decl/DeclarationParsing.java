@@ -88,7 +88,7 @@ public class DeclarationParsing extends SharingParsingHelpers
 		{
 			builder.advanceLexer();
 
-			FieldOrPropertyParsing.parseFieldBeforeName(builder, marker);
+			FieldOrPropertyParsing.parseFieldAtType(builder, marker);
 		}
 		else
 		{
