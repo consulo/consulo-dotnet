@@ -42,7 +42,10 @@ public class CSharpTypedHandler extends TypedHandlerDelegate
 			return Result.CONTINUE;
 		}
 
-		autoPopupMemberLookup(project, editor);
+		if(c == '.')
+		{
+			autoPopupMemberLookup(project, editor);
+		}
 		return Result.CONTINUE;
 	}
 
