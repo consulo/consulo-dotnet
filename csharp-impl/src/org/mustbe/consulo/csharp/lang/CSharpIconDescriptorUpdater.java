@@ -20,15 +20,18 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.run.CSharpRunUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -72,7 +75,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			Icon main = null;
 
 			CSharpTypeDeclaration typeDeclaration = (CSharpTypeDeclaration) element;
-			/*if(!DumbService.getInstance(element.getProject()).isDumb())
+			if(!DumbService.getInstance(element.getProject()).isDumb())
 			{
 				if(CSharpInheritUtil.isParentOf(typeDeclaration, DotNetTypes.System_Attribute))
 				{
@@ -83,7 +86,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 					main = typeDeclaration.hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes.AbstractException : AllIcons.Nodes
 							.ExceptionClass;
 				}
-			}      */
+			}
 
 			if(main == null)
 			{
