@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpPropertyStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
@@ -32,14 +32,14 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpPropertyDeclarationImpl extends CSharpStubVariableImpl<CSharpPropertyStub> implements DotNetPropertyDeclaration
+public class CSharpPropertyDeclarationImpl extends CSharpStubVariableImpl<CSharpVariableStub<DotNetPropertyDeclaration>> implements DotNetPropertyDeclaration
 {
 	public CSharpPropertyDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public CSharpPropertyDeclarationImpl(@NotNull CSharpPropertyStub stub)
+	public CSharpPropertyDeclarationImpl(@NotNull CSharpVariableStub<DotNetPropertyDeclaration> stub)
 	{
 		super(stub, CSharpStubElements.PROPERTY_DECLARATION);
 	}

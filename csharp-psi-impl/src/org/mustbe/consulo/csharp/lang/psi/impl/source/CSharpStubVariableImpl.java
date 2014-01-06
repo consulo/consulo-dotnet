@@ -18,7 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.StubWithParentQName;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
@@ -32,7 +32,7 @@ import com.intellij.psi.util.CachedValuesManager;
  * @author VISTALL
  * @since 06.01.14.
  */
-public abstract class CSharpStubVariableImpl<S extends StubWithParentQName<?>> extends CSharpStubMemberImpl<S> implements DotNetVariable
+public abstract class CSharpStubVariableImpl<S extends CSharpVariableStub<?>> extends CSharpStubMemberImpl<S> implements DotNetVariable
 {
 	private CachedValue<DotNetRuntimeType> myCachedValue;
 
@@ -49,6 +49,11 @@ public abstract class CSharpStubVariableImpl<S extends StubWithParentQName<?>> e
 	@Override
 	public boolean isConstant()
 	{
+		S stub = getStub();
+		if(stub != null)
+		{
+			return stub.isConstant();
+		}
 		return false;
 	}
 

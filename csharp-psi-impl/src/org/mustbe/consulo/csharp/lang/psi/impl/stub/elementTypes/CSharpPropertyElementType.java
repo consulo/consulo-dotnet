@@ -16,26 +16,20 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes;
 
-import java.io.IOException;
-
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpPropertyStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
  * @since 21.12.13.
  */
-public class CSharpPropertyElementType extends CSharpAbstractStubElementType<CSharpPropertyStub, DotNetPropertyDeclaration>
+public class CSharpPropertyElementType extends CSharpVariableStubElementType<DotNetPropertyDeclaration>
 {
 	public CSharpPropertyElementType()
 	{
@@ -49,36 +43,13 @@ public class CSharpPropertyElementType extends CSharpAbstractStubElementType<CSh
 	}
 
 	@Override
-	public DotNetPropertyDeclaration createPsi(@NotNull CSharpPropertyStub cSharpPropertyStub)
+	public DotNetPropertyDeclaration createPsi(@NotNull CSharpVariableStub cSharpPropertyStub)
 	{
 		return new CSharpPropertyDeclarationImpl(cSharpPropertyStub);
 	}
 
 	@Override
-	public CSharpPropertyStub createStub(@NotNull DotNetPropertyDeclaration dotNetPropertyDeclaration, StubElement stubElement)
-	{
-		return new CSharpPropertyStub(stubElement, StringRef.fromNullableString(dotNetPropertyDeclaration.getName()),
-				StringRef.fromNullableString(dotNetPropertyDeclaration.getPresentableParentQName()));
-	}
-
-	@Override
-	public void serialize(@NotNull CSharpPropertyStub cSharpPropertyStub, @NotNull StubOutputStream stubOutputStream) throws IOException
-	{
-		stubOutputStream.writeName(cSharpPropertyStub.getName());
-		stubOutputStream.writeName(cSharpPropertyStub.getParentQName());
-	}
-
-	@NotNull
-	@Override
-	public CSharpPropertyStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
-	{
-		StringRef name = stubInputStream.readName();
-		StringRef parentQName = stubInputStream.readName();
-		return new CSharpPropertyStub(stubElement, name, parentQName);
-	}
-
-	@Override
-	public void indexStub(@NotNull CSharpPropertyStub cSharpPropertyStub, @NotNull IndexSink indexSink)
+	public void indexStub(@NotNull CSharpVariableStub cSharpPropertyStub, @NotNull IndexSink indexSink)
 	{
 		String name = cSharpPropertyStub.getName();
 		if(!StringUtil.isEmpty(name))

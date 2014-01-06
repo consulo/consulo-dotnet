@@ -25,6 +25,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
@@ -241,7 +242,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 		else if(element instanceof DotNetMethodDeclaration)
 		{
-			key = ((DotNetMethodDeclaration) element).hasModifier(CSharpTokens.STATIC_KEYWORD) ? CSharpHighlightKey.STATIC_METHOD :
+			key = ((DotNetMethodDeclaration) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD :
 					CSharpHighlightKey.INSTANCE_METHOD;
 		}
 		else if(element instanceof CSharpLocalVariableImpl)
@@ -250,7 +251,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 		else if(element instanceof DotNetVariable)
 		{
-			key = ((DotNetVariable) element).hasModifier(CSharpTokens.STATIC_KEYWORD) ? CSharpHighlightKey.STATIC_FIELD : CSharpHighlightKey
+			key = ((DotNetVariable) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_FIELD : CSharpHighlightKey
 					.INSTANCE_FIELD;
 		}
 		else

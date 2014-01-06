@@ -16,8 +16,15 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.IElementType;
@@ -28,6 +35,19 @@ import com.intellij.psi.tree.IElementType;
  */
 public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetModifierList
 {
+	private static final Map<DotNetModifier, IElementType> ourModifiers = new HashMap<DotNetModifier, IElementType>()
+	{
+		{
+			put(DotNetModifier.STATIC, CSharpTokens.STATIC_KEYWORD);
+			put(DotNetModifier.PUBLIC, CSharpTokens.PUBLIC_KEYWORD);
+			put(DotNetModifier.PROTECTED, CSharpTokens.PROTECTED_KEYWORD);
+			put(DotNetModifier.PRIVATE, CSharpTokens.PRIVATE_KEYWORD);
+			put(DotNetModifier.SEALED, CSharpTokens.SEALED_KEYWORD);
+			put(DotNetModifier.READONLY, CSharpTokens.READONLY_KEYWORD);
+			put(DotNetModifier.ABSTRACT, CSharpTokens.ABSTRACT_KEYWORD);
+			put(DotNetModifier.STATIC, CSharpTokens.STATIC_KEYWORD);
+		}
+	};
 	public CSharpModifierListImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -39,9 +59,25 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 		visitor.visitModifierList(this);
 	}
 
+	@NotNull
 	@Override
-	public boolean hasModifier(@NotNull IElementType modifier)
+	public DotNetModifier[] getModifiers()
 	{
-		return findChildByType(modifier) != null;
+		List<DotNetModifier> list = new ArrayList<DotNetModifier>();
+		for(Map.Entry<DotNetModifier, IElementType> entry : ourModifiers.entrySet())
+		{
+			if(findChildByType(entry.getValue()) != null)
+			{
+				list.add(entry.getKey());
+			}
+		}
+		return list.toArray(new DotNetModifier[list.size()]);
+	}
+
+	@Override
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	{
+		IElementType iElementType = ourModifiers.get(modifier);
+		return iElementType != null && findChildByType(iElementType) != null;
 	}
 }

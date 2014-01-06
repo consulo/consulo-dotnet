@@ -26,10 +26,10 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 15.12.13.
  */
-public class CSharpTypeStub extends StubWithParentQName<CSharpTypeDeclaration>
+public class CSharpTypeStub extends MemberStub<CSharpTypeDeclaration>
 {
-	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef parentQName)
+	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef parentQName, int modifierMask)
 	{
-		super(parent, CSharpStubElements.TYPE_DECLARATION, name, parentQName);
+		super(parent, CSharpStubElements.TYPE_DECLARATION, name, parentQName, modifierMask);
 	}
 }

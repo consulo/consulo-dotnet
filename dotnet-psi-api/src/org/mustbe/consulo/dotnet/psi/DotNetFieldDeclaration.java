@@ -22,5 +22,4 @@ package org.mustbe.consulo.dotnet.psi;
  */
 public interface DotNetFieldDeclaration extends DotNetVariable, DotNetQualifiedElement
 {
-	boolean isConstant();
 }

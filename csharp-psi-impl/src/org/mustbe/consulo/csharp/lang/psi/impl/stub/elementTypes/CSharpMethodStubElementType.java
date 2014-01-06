@@ -23,6 +23,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
@@ -59,8 +60,11 @@ public class CSharpMethodStubElementType extends CSharpAbstractStubElementType<C
 	@Override
 	public CSharpMethodStub createStub(@NotNull CSharpMethodDeclaration methodDeclaration, StubElement stubElement)
 	{
-		return new CSharpMethodStub(stubElement, StringRef.fromNullableString(methodDeclaration.getName()),
-				StringRef.fromNullableString(methodDeclaration.getPresentableParentQName()));
+		StringRef name = StringRef.fromNullableString(methodDeclaration.getName());
+		StringRef parentQName = StringRef.fromNullableString(methodDeclaration.getPresentableParentQName());
+		int modifierMask = MemberStub.getModifierMask(methodDeclaration);
+
+		return new CSharpMethodStub(stubElement, name, parentQName, modifierMask);
 	}
 
 	@Override
@@ -68,6 +72,7 @@ public class CSharpMethodStubElementType extends CSharpAbstractStubElementType<C
 	{
 		stubOutputStream.writeName(cSharpTypeStub.getName());
 		stubOutputStream.writeName(cSharpTypeStub.getParentQName());
+		stubOutputStream.writeInt(cSharpTypeStub.getModifierMask());
 	}
 
 	@NotNull
@@ -76,7 +81,8 @@ public class CSharpMethodStubElementType extends CSharpAbstractStubElementType<C
 	{
 		StringRef name = stubInputStream.readName();
 		StringRef qname = stubInputStream.readName();
-		return new CSharpMethodStub(stubElement, name, qname);
+		int modifierMask = stubInputStream.readInt();
+		return new CSharpMethodStub(stubElement, name, qname, modifierMask);
 	}
 
 	@Override

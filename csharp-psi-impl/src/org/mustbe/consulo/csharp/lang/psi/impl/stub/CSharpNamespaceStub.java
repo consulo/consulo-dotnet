@@ -27,10 +27,10 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 15.12.13.
  */
-public class CSharpNamespaceStub extends StubWithParentQName<CSharpNamespaceDeclarationImpl>
+public class CSharpNamespaceStub extends MemberStub<CSharpNamespaceDeclarationImpl>
 {
 	public CSharpNamespaceStub(StubElement parent, @Nullable StringRef name, @NotNull StringRef parentQName)
 	{
-		super(parent, CSharpStubElements.NAMESPACE_DECLARATION, name, parentQName);
+		super(parent, CSharpStubElements.NAMESPACE_DECLARATION, name, parentQName, 0);
 	}
 }

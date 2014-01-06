@@ -57,8 +57,9 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 	@Override
 	public CSharpNamespaceStub createStub(@NotNull CSharpNamespaceDeclarationImpl cSharpNamespaceDeclaration, StubElement stubElement)
 	{
-		return new CSharpNamespaceStub(stubElement, StringRef.fromNullableString(cSharpNamespaceDeclaration.getName()),
-				StringRef.fromNullableString(cSharpNamespaceDeclaration.getPresentableParentQName()));
+		StringRef name = StringRef.fromNullableString(cSharpNamespaceDeclaration.getName());
+		StringRef parentQName = StringRef.fromNullableString(cSharpNamespaceDeclaration.getPresentableParentQName());
+		return new CSharpNamespaceStub(stubElement, name, parentQName);
 	}
 
 	@Override

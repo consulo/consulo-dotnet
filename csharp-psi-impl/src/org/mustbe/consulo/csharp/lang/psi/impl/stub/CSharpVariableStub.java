@@ -18,8 +18,9 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpVariableStubElementType;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 
@@ -27,10 +28,24 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 21.12.13.
  */
-public class CSharpPropertyStub extends StubWithParentQName<DotNetPropertyDeclaration>
+public class CSharpVariableStub<V extends DotNetVariable & DotNetQualifiedElement> extends MemberStub<V>
 {
-	public CSharpPropertyStub(StubElement parent, @Nullable StringRef name, @NotNull StringRef namespaceQName)
+	private boolean myConstant;
+
+	public CSharpVariableStub(
+			StubElement parent,
+			CSharpVariableStubElementType<V> elementType,
+			@Nullable StringRef name,
+			@NotNull StringRef namespaceQName,
+			int modifierMask,
+			boolean constant)
 	{
-		super(parent, CSharpStubElements.PROPERTY_DECLARATION, name, namespaceQName);
+		super(parent, elementType, name, namespaceQName, modifierMask);
+		myConstant = constant;
+	}
+
+	public boolean isConstant()
+	{
+		return myConstant;
 	}
 }

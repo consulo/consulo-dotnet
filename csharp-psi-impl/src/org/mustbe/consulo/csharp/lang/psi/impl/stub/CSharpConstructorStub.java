@@ -27,8 +27,8 @@ import com.intellij.util.io.StringRef;
  */
 public class CSharpConstructorStub extends CSharpMethodStub
 {
-	public CSharpConstructorStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname)
+	public CSharpConstructorStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask)
 	{
-		super(parent, CSharpStubElements.CONSTRUCTOR_DECLARATION, name, qname);
+		super(parent, CSharpStubElements.CONSTRUCTOR_DECLARATION, name, qname, modifierMask);
 	}
 }

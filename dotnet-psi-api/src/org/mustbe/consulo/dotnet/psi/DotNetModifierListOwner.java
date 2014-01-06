@@ -18,7 +18,6 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import com.intellij.psi.tree.IElementType;
  */
 public interface DotNetModifierListOwner extends DotNetElement
 {
-	boolean hasModifier(@NotNull IElementType modifier);
+	boolean hasModifier(@NotNull DotNetModifier modifier);
 
 	@Nullable
 	DotNetModifierList getModifierList();

@@ -16,26 +16,20 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes;
 
-import java.io.IOException;
-
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEventDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpEventStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
  * @since 21.12.13.
  */
-public class CSharpEventElementType extends CSharpAbstractStubElementType<CSharpEventStub, DotNetEventDeclaration>
+public class CSharpEventElementType extends CSharpVariableStubElementType<DotNetEventDeclaration>
 {
 	public CSharpEventElementType()
 	{
@@ -49,36 +43,13 @@ public class CSharpEventElementType extends CSharpAbstractStubElementType<CSharp
 	}
 
 	@Override
-	public DotNetEventDeclaration createPsi(@NotNull CSharpEventStub cSharpEventStub)
+	public DotNetEventDeclaration createPsi(@NotNull CSharpVariableStub<DotNetEventDeclaration> cSharpEventStub)
 	{
 		return new CSharpEventDeclarationImpl(cSharpEventStub);
 	}
 
 	@Override
-	public CSharpEventStub createStub(@NotNull DotNetEventDeclaration dotNetEventDeclaration, StubElement stubElement)
-	{
-		return new CSharpEventStub(stubElement, StringRef.fromNullableString(dotNetEventDeclaration.getName()),
-				StringRef.fromNullableString(dotNetEventDeclaration.getPresentableParentQName()));
-	}
-
-	@Override
-	public void serialize(@NotNull CSharpEventStub cSharpEventStub, @NotNull StubOutputStream stubOutputStream) throws IOException
-	{
-		stubOutputStream.writeName(cSharpEventStub.getName());
-		stubOutputStream.writeName(cSharpEventStub.getParentQName());
-	}
-
-	@NotNull
-	@Override
-	public CSharpEventStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
-	{
-		StringRef name = stubInputStream.readName();
-		StringRef parentQName = stubInputStream.readName();
-		return new CSharpEventStub(stubElement, name, parentQName);
-	}
-
-	@Override
-	public void indexStub(@NotNull CSharpEventStub cSharpEventStub, @NotNull IndexSink indexSink)
+	public void indexStub(@NotNull CSharpVariableStub<DotNetEventDeclaration> cSharpEventStub, @NotNull IndexSink indexSink)
 	{
 		String name = cSharpEventStub.getName();
 		if(!StringUtil.isEmpty(name))

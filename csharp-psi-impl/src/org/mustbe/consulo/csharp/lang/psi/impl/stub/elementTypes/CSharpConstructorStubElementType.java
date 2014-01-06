@@ -21,6 +21,7 @@ import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpConstructorDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpConstructorStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
@@ -56,8 +57,10 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 	@Override
 	public CSharpConstructorStub createStub(@NotNull CSharpConstructorDeclarationImpl methodDeclaration, StubElement stubElement)
 	{
-		return new CSharpConstructorStub(stubElement, StringRef.fromNullableString(methodDeclaration.getName()),
-				StringRef.fromNullableString(methodDeclaration.getPresentableParentQName()));
+		StringRef name = StringRef.fromNullableString(methodDeclaration.getName());
+		StringRef qname = StringRef.fromNullableString(methodDeclaration.getPresentableParentQName());
+		int modifierMask = MemberStub.getModifierMask(methodDeclaration);
+		return new CSharpConstructorStub(stubElement, name, qname, modifierMask);
 	}
 
 	@Override
@@ -65,6 +68,7 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 	{
 		stubOutputStream.writeName(cSharpTypeStub.getName());
 		stubOutputStream.writeName(cSharpTypeStub.getParentQName());
+		stubOutputStream.writeInt(cSharpTypeStub.getModifierMask());
 	}
 
 	@NotNull
@@ -73,7 +77,8 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 	{
 		StringRef name = stubInputStream.readName();
 		StringRef qname = stubInputStream.readName();
-		return new CSharpConstructorStub(stubElement, name, qname);
+		int modifierMask = stubInputStream.readInt();
+		return new CSharpConstructorStub(stubElement, name, qname, modifierMask);
 	}
 
 	@Override

@@ -24,8 +24,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
@@ -36,7 +36,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.IncorrectOperationException;
 import lombok.val;
@@ -64,7 +63,7 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	}
 
 	@Override
-	public boolean hasModifier(@NotNull IElementType modifier)
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		DotNetModifierList modifierList = getModifierList();
 		return modifierList != null && modifierList.hasModifier(modifier);
@@ -192,11 +191,6 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{
-		if(!CSharpResolveUtil.processUsingOld(this, processor, state))
-		{
-			return false;
-		}
-
 		for(DotNetNamedElement dotNetNamedElement : getMembers())
 		{
 			if(!processor.execute(dotNetNamedElement, state))

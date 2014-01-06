@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpFieldStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
@@ -34,14 +34,14 @@ import com.intellij.psi.util.PsiTreeUtil;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpFieldDeclarationImpl extends CSharpStubVariableImpl<CSharpFieldStub> implements DotNetFieldDeclaration
+public class CSharpFieldDeclarationImpl extends CSharpStubVariableImpl<CSharpVariableStub<DotNetFieldDeclaration>> implements DotNetFieldDeclaration
 {
 	public CSharpFieldDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public CSharpFieldDeclarationImpl(@NotNull CSharpFieldStub stub)
+	public CSharpFieldDeclarationImpl(@NotNull CSharpVariableStub<DotNetFieldDeclaration> stub)
 	{
 		super(stub, CSharpStubElements.FIELD_DECLARATION);
 	}
@@ -91,6 +91,10 @@ public class CSharpFieldDeclarationImpl extends CSharpStubVariableImpl<CSharpFie
 	@Override
 	public boolean isConstant()
 	{
+		if(super.isConstant())
+		{
+			return true;
+		}
 		PsiElement psiElement = findChildByType(CSharpTokens.CONST_KEYWORD);
 
 		return psiElement != null;

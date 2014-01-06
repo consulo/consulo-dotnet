@@ -16,16 +16,29 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
- * @author VISTALL
- * @since 28.11.13.
- */
-public interface DotNetModifierList extends DotNetElement
+* @author VISTALL
+* @since 06.01.14.
+*/
+public enum DotNetModifier
 {
-	@NotNull
-	DotNetModifier[] getModifiers();
+	PUBLIC,
+	PRIVATE,
+	PROTECTED,
+	STATIC,
+	SEALED,
+	READONLY,
+	ABSTRACT;
 
-	boolean hasModifier(@NotNull DotNetModifier modifier);
+	private int myMask;
+
+	DotNetModifier()
+	{
+		myMask = 1 << ordinal();
+	}
+
+	public int mask()
+	{
+		return myMask;
+	}
 }

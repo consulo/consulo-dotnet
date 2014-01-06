@@ -16,26 +16,20 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes;
 
-import java.io.IOException;
-
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpFieldStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
  * @since 21.12.13.
  */
-public class CSharpFieldStubElementType extends CSharpAbstractStubElementType<CSharpFieldStub, DotNetFieldDeclaration>
+public class CSharpFieldStubElementType extends CSharpVariableStubElementType<DotNetFieldDeclaration>
 {
 	public CSharpFieldStubElementType()
 	{
@@ -49,36 +43,13 @@ public class CSharpFieldStubElementType extends CSharpAbstractStubElementType<CS
 	}
 
 	@Override
-	public DotNetFieldDeclaration createPsi(@NotNull CSharpFieldStub fieldStub)
+	public DotNetFieldDeclaration createPsi(@NotNull CSharpVariableStub<DotNetFieldDeclaration> fieldStub)
 	{
 		return new CSharpFieldDeclarationImpl(fieldStub);
 	}
 
 	@Override
-	public CSharpFieldStub createStub(@NotNull DotNetFieldDeclaration fieldDeclaration, StubElement stubElement)
-	{
-		return new CSharpFieldStub(stubElement, StringRef.fromNullableString(fieldDeclaration.getName()),
-				StringRef.fromNullableString(fieldDeclaration.getPresentableParentQName()));
-	}
-
-	@Override
-	public void serialize(@NotNull CSharpFieldStub fieldStub, @NotNull StubOutputStream stubOutputStream) throws IOException
-	{
-		stubOutputStream.writeName(fieldStub.getName());
-		stubOutputStream.writeName(fieldStub.getParentQName());
-	}
-
-	@NotNull
-	@Override
-	public CSharpFieldStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
-	{
-		StringRef name = stubInputStream.readName();
-		StringRef parentQName = stubInputStream.readName();
-		return new CSharpFieldStub(stubElement, name, parentQName);
-	}
-
-	@Override
-	public void indexStub(@NotNull CSharpFieldStub cSharpFieldStub, @NotNull IndexSink indexSink)
+	public void indexStub(@NotNull CSharpVariableStub<DotNetFieldDeclaration> cSharpFieldStub, @NotNull IndexSink indexSink)
 	{
 		String name = cSharpFieldStub.getName();
 		if(!StringUtil.isEmpty(name))

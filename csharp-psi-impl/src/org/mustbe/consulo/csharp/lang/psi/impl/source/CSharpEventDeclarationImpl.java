@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpEventStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -32,14 +32,14 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpEventDeclarationImpl extends CSharpStubVariableImpl<CSharpEventStub> implements DotNetEventDeclaration
+public class CSharpEventDeclarationImpl extends CSharpStubVariableImpl<CSharpVariableStub<DotNetEventDeclaration>> implements DotNetEventDeclaration
 {
 	public CSharpEventDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public CSharpEventDeclarationImpl(@NotNull CSharpEventStub stub)
+	public CSharpEventDeclarationImpl(@NotNull CSharpVariableStub<DotNetEventDeclaration> stub)
 	{
 		super(stub, CSharpStubElements.EVENT_DECLARATION);
 	}

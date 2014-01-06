@@ -27,15 +27,15 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpMethodStub extends StubWithParentQName<CSharpMethodDeclaration>
+public class CSharpMethodStub extends MemberStub<CSharpMethodDeclaration>
 {
-	public CSharpMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname)
+	public CSharpMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask)
 	{
-		super(parent, CSharpStubElements.METHOD_DECLARATION, name, qname);
+		super(parent, CSharpStubElements.METHOD_DECLARATION, name, qname, modifierMask);
 	}
 
-	public CSharpMethodStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, StringRef qname)
+	public CSharpMethodStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, StringRef qname, int modifierMask)
 	{
-		super(parent, elementType, name, qname);
+		super(parent, elementType, name, qname, modifierMask);
 	}
 }

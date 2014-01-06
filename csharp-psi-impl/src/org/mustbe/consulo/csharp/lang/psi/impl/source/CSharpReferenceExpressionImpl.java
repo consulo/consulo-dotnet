@@ -49,6 +49,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
@@ -523,7 +524,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return true;
 			}
 		});
-		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(psiElements);
+		long time = System.currentTimeMillis();
+		LookupElement[] elements = CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(psiElements);
+		System.out.println((System.currentTimeMillis() - time) + " ms");
+		return elements;
 	}
 
 	@Override

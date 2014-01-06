@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.run.CSharpRunUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
@@ -66,7 +65,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 
 		if(element instanceof DotNetMethodDeclaration)
 		{
-			iconDescriptor.setMainIcon(((DotNetMethodDeclaration) element).hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes
+			iconDescriptor.setMainIcon(((DotNetMethodDeclaration) element).hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes
 					.AbstractMethod : AllIcons.Nodes.Method);
 
 			processModifierListOwner(element, iconDescriptor, flags);
@@ -84,7 +83,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 				}
 				else if(CSharpInheritUtil.isParentOfOrSelf(typeDeclaration, DotNetTypes.System_Exception))
 				{
-					main = typeDeclaration.hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractException : AllIcons.Nodes
+					main = typeDeclaration.hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes.AbstractException : AllIcons.Nodes
 							.ExceptionClass;
 				}
 			}
@@ -105,7 +104,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 				}
 				else
 				{
-					main = typeDeclaration.hasModifier(CSharpTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractClass : AllIcons.Nodes.Class;
+					main = typeDeclaration.hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes.AbstractClass : AllIcons.Nodes.Class;
 				}
 			}
 
@@ -164,15 +163,15 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		DotNetModifierListOwner owner = (DotNetModifierListOwner) element;
 		if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
 		{
-			if(owner.hasModifier(CSharpTokens.PRIVATE_KEYWORD))
+			if(owner.hasModifier(DotNetModifier.PRIVATE))
 			{
 				iconDescriptor.setRightIcon(AllIcons.Nodes.C_private);
 			}
-			else if(owner.hasModifier(CSharpTokens.PUBLIC_KEYWORD))
+			else if(owner.hasModifier(DotNetModifier.PUBLIC))
 			{
 				iconDescriptor.setRightIcon(AllIcons.Nodes.C_public);
 			}
-			else if(owner.hasModifier(CSharpTokens.PROTECTED_KEYWORD))
+			else if(owner.hasModifier(DotNetModifier.PROTECTED))
 			{
 				iconDescriptor.setRightIcon(AllIcons.Nodes.C_protected);
 			}
@@ -182,7 +181,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			}
 		}
 
-		if(owner.hasModifier(CSharpTokens.SEALED_KEYWORD) || owner.hasModifier(CSharpTokens.READONLY_KEYWORD) || element instanceof DotNetVariable
+		if(owner.hasModifier(DotNetModifier.SEALED) || owner.hasModifier(DotNetModifier.READONLY) || element instanceof DotNetVariable
 				&& ((DotNetVariable) element).isConstant())
 		{
 			iconDescriptor.addLayerIcon(AllIcons.Nodes.FinalMark);
