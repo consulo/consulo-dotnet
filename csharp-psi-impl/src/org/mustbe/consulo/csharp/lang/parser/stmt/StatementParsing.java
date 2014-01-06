@@ -100,6 +100,10 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			parseStatementWithParenthesesExpression(wrapper, marker, WHILE_STATEMENT);
 		}
+		else if(tokenType == USING_KEYWORD)
+		{
+			parseUsing(wrapper, marker);
+		}
 		else if(tokenType == CONST_KEYWORD)
 		{
 			PsiBuilder.Marker varMark = wrapper.mark();
@@ -107,6 +111,8 @@ public class StatementParsing extends SharingParsingHelpers
 			wrapper.advanceLexer();
 
 			FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(wrapper, varMark, true);
+
+			expect(wrapper, SEMICOLON, "';' expected");
 
 			marker.done(LOCAL_VARIABLE_DECLARATION_STATEMENT);
 		}
@@ -128,10 +134,41 @@ public class StatementParsing extends SharingParsingHelpers
 			}
 			else
 			{
+				expect(wrapper, SEMICOLON, "';' expected");
+
 				marker.done(LOCAL_VARIABLE_DECLARATION_STATEMENT);
 			}
 		}
 		return marker;
+	}
+
+	private static void parseUsing(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker)
+	{
+		builder.advanceLexer();
+
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			if(FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithRollback(builder, builder.mark(), true) == null)
+			{
+				if(ExpressionParsing.parse(builder) == null)
+				{
+					builder.error("Expression expected");
+				}
+			}
+
+			expect(builder, RPAR, "')' expected");
+		}
+
+		if(builder.getTokenType() == LBRACE)
+		{
+			parseStatement(builder);
+		}
+		else
+		{
+			builder.error("'{' expected");
+		}
+
+		marker.done(USING_STATEMENT);
 	}
 
 	@NotNull

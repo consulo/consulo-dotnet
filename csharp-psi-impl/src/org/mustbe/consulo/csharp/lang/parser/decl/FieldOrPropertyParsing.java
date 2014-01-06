@@ -114,8 +114,6 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		}
 		else
 		{
-			expect(builder, SEMICOLON, "';' expected");
-
 			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
 
 			return marker;
@@ -133,6 +131,8 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		else
 		{
 			parseFieldAfterName(builderWrapper, marker, false);
+
+			expect(builderWrapper, SEMICOLON, "';' expected");
 		}
 	}
 }
