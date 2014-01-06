@@ -611,12 +611,17 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		if(tokenType == TYPEOF_KEYWORD)
 		{
-			return parseTypeOfExpression(builder, null);
+			return parseExpressionWithTypeInLParRPar(builder, null, TYPE_OF_EXPRESSION);
 		}
 
 		if(tokenType == DEFAULT_KEYWORD)
 		{
-			return parseDefaultExpression(builder, null);
+			return parseExpressionWithTypeInLParRPar(builder, null, DEFAULT_EXPRESSION);
+		}
+
+		if(tokenType == SIZEOF_KEYWORD)
+		{
+			return parseExpressionWithTypeInLParRPar(builder, null, SIZE_OF_EXPRESSION);
 		}
 
 		if(tokenType == LPAR)
@@ -945,7 +950,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		}
 	}
 
-	private static PsiBuilder.Marker parseDefaultExpression(CSharpBuilderWrapper builder, PsiBuilder.Marker mark)
+	private static PsiBuilder.Marker parseExpressionWithTypeInLParRPar(CSharpBuilderWrapper builder, PsiBuilder.Marker mark, IElementType to)
 	{
 		PsiBuilder.Marker newMarker = mark == null ? builder.mark() : mark.precede();
 		builder.advanceLexer();
@@ -958,24 +963,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 			}
 			expect(builder, RPAR, "')' expected");
 		}
-		newMarker.done(DEFAULT_EXPRESSION);
-		return newMarker;
-	}
-
-	private static PsiBuilder.Marker parseTypeOfExpression(CSharpBuilderWrapper builder, PsiBuilder.Marker mark)
-	{
-		PsiBuilder.Marker newMarker = mark == null ? builder.mark() : mark.precede();
-		builder.advanceLexer();
-
-		if(expect(builder, LPAR, "'(' expected"))
-		{
-			if(parseType(builder) == null)
-			{
-				builder.error("Type expected");
-			}
-			expect(builder, RPAR, "')' expected");
-		}
-		newMarker.done(TYPE_OF_EXPRESSION);
+		newMarker.done(to);
 		return newMarker;
 	}
 

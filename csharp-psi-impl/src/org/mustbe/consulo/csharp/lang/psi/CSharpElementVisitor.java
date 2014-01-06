@@ -389,4 +389,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(statement);
 	}
+
+	public void visitSizeOfExpression(CSharpSizeOfExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
 }
