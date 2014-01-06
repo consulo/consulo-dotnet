@@ -53,6 +53,8 @@
 				implementation="org.mustbe.consulo.csharp.ide.codeInsight.CSharpUnresolvedReferenceQuickFixProvider" />
 		<referenceImporter implementation="org.mustbe.consulo.csharp.ide.codeInsight.CSharpReferenceImporter" />
 
+		<typedHandler implementation="org.mustbe.consulo.csharp.ide.completion.CSharpTypedHandler" id="csharp" />
+
 		<gotoClassContributor implementation="org.mustbe.consulo.csharp.ide.navigation.CSharpTypeNameContributor" />
 		<gotoSymbolContributor implementation="org.mustbe.consulo.csharp.ide.navigation.CSharpSymbolNameContributor" />
 
