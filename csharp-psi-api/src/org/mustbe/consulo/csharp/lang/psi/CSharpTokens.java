@@ -76,6 +76,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType CONST_KEYWORD = new IElementType("CONST_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType GOTO_KEYWORD = new IElementType("GOTO_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType CLASS_KEYWORD = new IElementType("CLASS_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType INTERFACE_KEYWORD = new IElementType("INTERFACE_KEYWORD", CSharpLanguage.INSTANCE);

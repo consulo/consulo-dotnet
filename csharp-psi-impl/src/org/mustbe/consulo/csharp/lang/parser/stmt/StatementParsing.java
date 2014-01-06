@@ -68,6 +68,16 @@ public class StatementParsing extends SharingParsingHelpers
 
 			marker.done(BREAK_STATEMENT);
 		}
+		else if(tokenType == GOTO_KEYWORD)
+		{
+			wrapper.advanceLexer();
+
+			doneOneElement(wrapper, IDENTIFIER, REFERENCE_EXPRESSION, "Identifier expected");
+
+			expect(wrapper, SEMICOLON, "';' expected");
+
+			marker.done(GOTO_STATEMENT);
+		}
 		else if(tokenType == CONTINUE_KEYWORD)
 		{
 			wrapper.advanceLexer();
@@ -122,6 +132,12 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 		else
 		{
+			if(tokenType == IDENTIFIER && wrapper.lookAhead(1) == COLON)
+			{
+				parseLabeledStatement(wrapper, marker);
+				return marker;
+			}
+
 			PsiBuilder.Marker varMarker = wrapper.mark();
 			if(FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithRollback(wrapper, varMarker, true) == null)
 			{
@@ -144,6 +160,23 @@ public class StatementParsing extends SharingParsingHelpers
 			}
 		}
 		return marker;
+	}
+
+	private static void parseLabeledStatement(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker)
+	{
+		builder.advanceLexer();
+		builder.advanceLexer();
+
+		if(builder.getTokenType() == LBRACE)
+		{
+			parseStatement(builder);
+		}
+		else
+		{
+			builder.error("'{' expected");
+		}
+
+		marker.done(LABELED_STATEMENT);
 	}
 
 	private static void parseUsingOrFixed(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker, IElementType to)

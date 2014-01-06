@@ -399,4 +399,14 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(statement);
 	}
+
+	public void visitGotoStatement(CSharpGotoStatementImpl element)
+	{
+		visitElement(element);
+	}
+
+	public void visitLabeledStatement(CSharpLabeledStatementImpl statement)
+	{
+		visitElement(statement);
+	}
 }

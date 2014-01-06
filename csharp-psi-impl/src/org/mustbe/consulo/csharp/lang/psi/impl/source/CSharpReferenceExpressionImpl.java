@@ -41,6 +41,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolve
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -83,7 +84,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD,
 		ANY_MEMBER,
 		FIELD_OR_PROPERTY,
-		THIS
+		THIS,
+		LABEL
 	}
 
 	public CSharpReferenceExpressionImpl(@NotNull ASTNode node)
@@ -244,6 +246,19 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}));
 				p.putUserData(CSharpResolveUtil.QUALIFIED, false);
 				CSharpResolveUtil.treeWalkUp(p, psiElement1, null);
+				return p.getElements();
+			case LABEL:
+				DotNetQualifiedElement parentOfType = PsiTreeUtil.getParentOfType(this, DotNetQualifiedElement.class);
+				assert parentOfType != null;
+				p = new MemberResolveScopeProcessor(Conditions.and(condition, new Condition<PsiNamedElement>()
+				{
+					@Override
+					public boolean value(PsiNamedElement psiNamedElement)
+					{
+						return psiNamedElement instanceof CSharpLabeledStatementImpl;
+					}
+				}));
+				CSharpResolveUtil.treeWalkUp(p, this, parentOfType);
 				return p.getElements();
 			case NAMESPACE:
 				String qName = stripSpaces(getText());
@@ -432,6 +447,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		else if(parent instanceof CSharpMethodCallExpressionImpl)
 		{
 			return ResolveToKind.METHOD;
+		}
+		else if(parent instanceof CSharpGotoStatementImpl)
+		{
+			return ResolveToKind.LABEL;
 		}
 
 		PsiElement nativeElement = findChildByType(CSharpTokenSets.NATIVE_TYPES);
