@@ -17,8 +17,10 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
@@ -39,10 +41,21 @@ public class CSharpDefaultExpressionImpl extends CSharpElementImpl implements Do
 		visitor.visitDefaultExpression(this);
 	}
 
+	@Nullable
+	public DotNetType getType()
+	{
+		return findChildByClass(DotNetType.class);
+	}
+
 	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{
-		return DotNetRuntimeType.ERROR_TYPE;
+		DotNetType type = getType();
+		if(type == null)
+		{
+			return DotNetRuntimeType.ERROR_TYPE;
+		}
+		return type.toRuntimeType();
 	}
 }
