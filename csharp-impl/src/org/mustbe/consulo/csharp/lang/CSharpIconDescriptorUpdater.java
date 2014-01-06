@@ -24,6 +24,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.icons.AllIcons;
@@ -114,6 +115,10 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		else if(element instanceof DotNetGenericParameter)
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.TypeAlias);
+		}
+		else if(element instanceof CSharpLabeledStatementImpl)
+		{
+			iconDescriptor.setMainIcon(AllIcons.Nodes.Advice);
 		}
 		else if(element instanceof DotNetParameter)
 		{
