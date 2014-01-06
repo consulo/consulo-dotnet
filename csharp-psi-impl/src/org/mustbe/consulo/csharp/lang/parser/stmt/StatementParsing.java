@@ -138,13 +138,16 @@ public class StatementParsing extends SharingParsingHelpers
 				return marker;
 			}
 
-			PsiBuilder.Marker varMarker = wrapper.mark();
-			if(FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithRollback(wrapper, varMarker, true) == null)
+			if(FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithRollback(wrapper, wrapper.mark(), true) == null)
 			{
 				PsiBuilder.Marker expressionMarker = ExpressionParsing.parse(wrapper);
 				if(expressionMarker == null)
 				{
-					wrapper.error("Expression expected");
+					FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(wrapper, wrapper.mark(), true);
+
+					expect(wrapper, SEMICOLON, "';' expected");
+
+					marker.done(LOCAL_VARIABLE_DECLARATION_STATEMENT);
 				}
 				else
 				{
