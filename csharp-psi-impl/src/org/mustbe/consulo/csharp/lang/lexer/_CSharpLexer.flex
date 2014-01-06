@@ -204,6 +204,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"sizeof"                  { return CSharpTokens.SIZEOF_KEYWORD; }
 
+	"fixed"                   { return CSharpTokens.FIXED_KEYWORD; }
+
 	"is"                      { return CSharpTokens.IS_KEYWORD; }
 
 	"default"                 { return CSharpTokens.DEFAULT_KEYWORD; }

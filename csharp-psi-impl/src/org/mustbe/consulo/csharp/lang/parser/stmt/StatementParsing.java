@@ -102,7 +102,11 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 		else if(tokenType == USING_KEYWORD)
 		{
-			parseUsing(wrapper, marker);
+			parseUsingOrFixed(wrapper, marker, USING_STATEMENT);
+		}
+		else if(tokenType == FIXED_KEYWORD)
+		{
+			parseUsingOrFixed(wrapper, marker, FIXED_STATEMENT);
 		}
 		else if(tokenType == CONST_KEYWORD)
 		{
@@ -142,7 +146,7 @@ public class StatementParsing extends SharingParsingHelpers
 		return marker;
 	}
 
-	private static void parseUsing(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker)
+	private static void parseUsingOrFixed(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker, IElementType to)
 	{
 		builder.advanceLexer();
 
@@ -168,7 +172,7 @@ public class StatementParsing extends SharingParsingHelpers
 			builder.error("'{' expected");
 		}
 
-		marker.done(USING_STATEMENT);
+		marker.done(to);
 	}
 
 	@NotNull
