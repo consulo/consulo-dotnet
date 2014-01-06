@@ -176,12 +176,26 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return toResolveResults(psiElements);
 	}
 
-	private Collection<? extends PsiElement> collectResults(ResolveToKind kind, Condition<PsiNamedElement> condition)
+	private Collection<? extends PsiElement> collectResults(@NotNull ResolveToKind kind, Condition<PsiNamedElement> condition)
 	{
 		if(!isValid())
 		{
 			return Collections.emptyList();
 		}
+
+		// dont allow resolving labels in references, when out from goto
+		if(kind != ResolveToKind.LABEL)
+		{
+			condition = Conditions.and(condition, new Condition<PsiNamedElement>()
+			{
+				@Override
+				public boolean value(PsiNamedElement psiNamedElement)
+				{
+					return !(psiNamedElement instanceof CSharpLabeledStatementImpl);
+				}
+			});
+		}
+
 		AbstractScopeProcessor p = null;
 		PsiElement qualifier = getQualifier();
 		switch(kind)
@@ -381,6 +395,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return builder.toString();
 	}
 
+	@NotNull
 	private ResolveToKind kind()
 	{
 		PsiElement parent = getParent();
