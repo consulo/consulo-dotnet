@@ -16,6 +16,10 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiElement;
+
 /**
  * @author VISTALL
  * @since 13.12.13.
@@ -24,4 +28,9 @@ package org.mustbe.consulo.dotnet.psi;
  */
 public interface DotNetPointerType extends DotNetType
 {
+	@Nullable
+	DotNetType getInnerType();
+
+	@NotNull
+	PsiElement getAsterisk();
 }
