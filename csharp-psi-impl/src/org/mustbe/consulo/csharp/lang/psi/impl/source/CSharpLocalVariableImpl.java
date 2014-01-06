@@ -25,7 +25,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -36,7 +35,7 @@ import com.intellij.util.IncorrectOperationException;
  * @author VISTALL
  * @since 16.12.13.
  */
-public class CSharpLocalVariableImpl extends CSharpElementImpl implements CSharpLocalVariable
+public class CSharpLocalVariableImpl extends CSharpVariableImpl implements CSharpLocalVariable
 {
 	public CSharpLocalVariableImpl(@NotNull ASTNode node)
 	{
@@ -69,13 +68,6 @@ public class CSharpLocalVariableImpl extends CSharpElementImpl implements CSharp
 			return fieldDeclaration.getType();
 		}
 		return type;
-	}
-
-	@NotNull
-	@Override
-	public DotNetRuntimeType toRuntimeType()
-	{
-		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@Override

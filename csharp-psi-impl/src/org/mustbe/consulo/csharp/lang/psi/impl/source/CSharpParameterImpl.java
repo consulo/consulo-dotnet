@@ -22,14 +22,13 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpParameterImpl extends CSharpMemberImpl implements DotNetParameter
+public class CSharpParameterImpl extends CSharpVariableImpl implements DotNetParameter
 {
 	public CSharpParameterImpl(@NotNull ASTNode node)
 	{
@@ -40,19 +39,6 @@ public class CSharpParameterImpl extends CSharpMemberImpl implements DotNetParam
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitParameter(this);
-	}
-
-	@Override
-	public boolean isConstant()
-	{
-		return false;
-	}
-
-	@NotNull
-	@Override
-	public DotNetRuntimeType toRuntimeType()
-	{
-		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@NotNull
@@ -66,6 +52,6 @@ public class CSharpParameterImpl extends CSharpMemberImpl implements DotNetParam
 	@Override
 	public DotNetExpression getInitializer()
 	{
-		return null;
+		return findChildByClass(DotNetExpression.class);
 	}
 }

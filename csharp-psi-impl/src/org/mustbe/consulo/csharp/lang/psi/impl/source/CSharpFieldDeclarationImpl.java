@@ -26,7 +26,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -35,7 +34,7 @@ import com.intellij.psi.util.PsiTreeUtil;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpFieldDeclarationImpl extends CSharpStubMemberImpl<CSharpFieldStub> implements DotNetFieldDeclaration
+public class CSharpFieldDeclarationImpl extends CSharpStubVariableImpl<CSharpFieldStub> implements DotNetFieldDeclaration
 {
 	public CSharpFieldDeclarationImpl(@NotNull ASTNode node)
 	{
@@ -51,13 +50,6 @@ public class CSharpFieldDeclarationImpl extends CSharpStubMemberImpl<CSharpField
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitFieldDeclaration(this);
-	}
-
-	@NotNull
-	@Override
-	public DotNetRuntimeType toRuntimeType()
-	{
-		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@Nullable

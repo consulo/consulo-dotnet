@@ -35,6 +35,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
 
 /**
  * @author VISTALL
@@ -42,6 +45,8 @@ import com.intellij.psi.stubs.IStubElementType;
  */
 public class CSharpMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMethodStub> implements CSharpMethodDeclaration
 {
+	private CachedValue<DotNetRuntimeType> myCachedValue;
+
 	public CSharpMethodDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -122,8 +127,22 @@ public class CSharpMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMeth
 	@Override
 	public DotNetRuntimeType getReturnTypeForRuntime()
 	{
-		DotNetType returnType = getReturnType();
-		return returnType == null ? DotNetRuntimeType.ERROR_TYPE : returnType.toRuntimeType();
+		if(myCachedValue != null)
+		{
+			return myCachedValue.getValue();
+		}
+		myCachedValue = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<DotNetRuntimeType>()
+		{
+			@Nullable
+			@Override
+			public Result<DotNetRuntimeType> compute()
+			{
+				DotNetType returnType = getReturnType();
+				DotNetRuntimeType runtimeType = returnType == null ? DotNetRuntimeType.ERROR_TYPE : returnType.toRuntimeType();
+				return Result.createSingleDependency(runtimeType, CSharpMethodDeclarationImpl.this);
+			}
+		}, false);
+		return myCachedValue.getValue();
 	}
 
 	@Nullable

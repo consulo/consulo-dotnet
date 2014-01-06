@@ -26,14 +26,13 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpEventDeclarationImpl extends CSharpStubMemberImpl<CSharpEventStub> implements DotNetEventDeclaration
+public class CSharpEventDeclarationImpl extends CSharpStubVariableImpl<CSharpEventStub> implements DotNetEventDeclaration
 {
 	public CSharpEventDeclarationImpl(@NotNull ASTNode node)
 	{
@@ -56,19 +55,6 @@ public class CSharpEventDeclarationImpl extends CSharpStubMemberImpl<CSharpEvent
 	public DotNetXXXAccessor[] getAccessors()
 	{
 		return findChildrenByClass(DotNetXXXAccessor.class);
-	}
-
-	@Override
-	public boolean isConstant()
-	{
-		return false;
-	}
-
-	@NotNull
-	@Override
-	public DotNetRuntimeType toRuntimeType()
-	{
-		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@Override

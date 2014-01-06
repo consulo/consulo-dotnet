@@ -26,14 +26,13 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpPropertyDeclarationImpl extends CSharpStubMemberImpl<CSharpPropertyStub> implements DotNetPropertyDeclaration
+public class CSharpPropertyDeclarationImpl extends CSharpStubVariableImpl<CSharpPropertyStub> implements DotNetPropertyDeclaration
 {
 	public CSharpPropertyDeclarationImpl(@NotNull ASTNode node)
 	{
@@ -56,19 +55,6 @@ public class CSharpPropertyDeclarationImpl extends CSharpStubMemberImpl<CSharpPr
 	public DotNetXXXAccessor[] getAccessors()
 	{
 		return findChildrenByClass(DotNetXXXAccessor.class);
-	}
-
-	@Override
-	public boolean isConstant()
-	{
-		return false;
-	}
-
-	@NotNull
-	@Override
-	public DotNetRuntimeType toRuntimeType()
-	{
-		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}
 
 	@NotNull
