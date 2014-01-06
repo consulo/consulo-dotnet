@@ -17,15 +17,24 @@
 package org.mustbe.consulo.csharp.ide;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpArrayTypeImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNativeTypeImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPointerTypeImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceTypeImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeWrapperWithTypeArgumentsImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -82,26 +91,26 @@ public class CSharpElementPresentationUtil
 		StringBuilder builder = new StringBuilder();
 		builder.append(fieldDeclaration.getName());
 		builder.append(":");
-		builder.append(fieldDeclaration.toRuntimeType().getPresentableText());
+		builder.append(formatType(fieldDeclaration.getType()));
 		return builder.toString();
 	}
 
 	private static void formatParameters(@NotNull DotNetMethodDeclaration methodDeclaration, @NotNull StringBuilder builder)
 	{
-		DotNetParameter[] parameterTypesForRuntime = methodDeclaration.getParameters();
-		if(parameterTypesForRuntime.length == 0)
+		DotNetParameter[] parameters = methodDeclaration.getParameters();
+		if(parameters.length == 0)
 		{
 			builder.append("()");
 		}
 		else
 		{
 			builder.append("(");
-			builder.append(StringUtil.join(parameterTypesForRuntime, new Function<DotNetParameter, String>()
+			builder.append(StringUtil.join(parameters, new Function<DotNetParameter, String>()
 			{
 				@Override
 				public String fun(DotNetParameter parameter)
 				{
-					return parameter.getName() + ":" + parameter.toRuntimeType().getPresentableText();
+					return parameter.getName() + ":" + formatType(parameter.getType());
 				}
 			}, ", "));
 			builder.append(")");
@@ -109,7 +118,7 @@ public class CSharpElementPresentationUtil
 
 		if(!(methodDeclaration instanceof DotNetConstructorDeclaration))
 		{
-			builder.append(":").append(methodDeclaration.getReturnTypeForRuntime().getPresentableText());
+			builder.append(":").append(formatType(methodDeclaration.getReturnType()));
 		}
 	}
 
@@ -124,10 +133,79 @@ public class CSharpElementPresentationUtil
 		return "<" + StringUtil.join(genericParameters, new Function<DotNetGenericParameter, String>()
 		{
 			@Override
-			public String fun(DotNetGenericParameter dotNetRuntimeType)
+			public String fun(DotNetGenericParameter genericParameter)
 			{
-				return dotNetRuntimeType.getName();
+				return genericParameter.getName();
 			}
 		}, ", ") + ">";
+	}
+
+	public static String formatType(DotNetType type)
+	{
+		if(type == null)
+		{
+			return "<null>";
+		}
+
+		val builder = new StringBuilder();
+		type.accept(new CSharpRecursiveElementVisitor()
+		{
+			@Override
+			public void visitReferenceType(CSharpReferenceTypeImpl type)
+			{
+				DotNetReferenceExpression referenceExpression = type.getReferenceExpression();
+				if(referenceExpression == null)
+				{
+					builder.append("<null>");
+				}
+				else
+				{
+					builder.append(referenceExpression.getReferenceName());
+				}
+			}
+
+			@Override
+			public void visitTypeWrapperWithTypeArguments(CSharpTypeWrapperWithTypeArgumentsImpl typeArguments)
+			{
+				super.visitTypeWrapperWithTypeArguments(typeArguments);
+
+				DotNetType[] arguments = typeArguments.getArguments();
+				if(arguments.length > 0)
+				{
+					builder.append("<");
+					for(int i = 0; i < arguments.length; i++)
+					{
+						DotNetType argument = arguments[i];
+						if(i != 0)
+						{
+							builder.append(", ");
+						}
+						builder.append(formatType(argument));
+					}
+					builder.append(">");
+				}
+			}
+
+			@Override
+			public void visitNativeType(CSharpNativeTypeImpl type)
+			{
+				builder.append(type.getText());
+			}
+
+			@Override
+			public void visitPointerType(CSharpPointerTypeImpl type)
+			{
+				super.visitPointerType(type);
+				builder.append("*");
+			}
+
+			@Override
+			public void visitArrayType(CSharpArrayTypeImpl type)
+			{
+				super.visitArrayType(type);
+				builder.append("[]");
+			}
+		});
+		return builder.toString();
 	}
 }
