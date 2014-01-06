@@ -26,19 +26,37 @@ import com.intellij.lang.PsiBuilder;
  */
 public class FieldOrPropertyParsing extends MemberWithBodyParsing
 {
-	public static void parseFieldAtType(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
+	public static void parseFieldOrLocalVariableAtTypeWithDone(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
 	{
 		if(parseType(builder) == null)
 		{
 			builder.error("Type expected");
+
+			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
 		}
 		else
 		{
-			parseFieldOrLocalVariableAtName(builder, marker, false);
+			parseFieldOrLocalVariableAtNameWithDone(builder, marker, local);
 		}
 	}
 
-	public static void parseFieldOrLocalVariableAtName(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
+	public static PsiBuilder.Marker parseFieldOrLocalVariableAtTypeWithRollback(CSharpBuilderWrapper builder, PsiBuilder.Marker marker,
+			boolean local)
+	{
+		if(parseType(builder) == null)
+		{
+			builder.error("Type expected");
+
+			marker.rollbackTo();
+			return null;
+		}
+		else
+		{
+			return parseFieldOrLocalVariableAtNameWithRollback(builder, marker, local);
+		}
+	}
+
+	public static void parseFieldOrLocalVariableAtNameWithDone(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
 	{
 		if(builder.getTokenType() == IDENTIFIER)
 		{
@@ -54,7 +72,24 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		}
 	}
 
-	private static void parseFieldAfterName(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
+	public static PsiBuilder.Marker parseFieldOrLocalVariableAtNameWithRollback(CSharpBuilderWrapper builder, PsiBuilder.Marker marker,
+			boolean local)
+	{
+		if(builder.getTokenType() == IDENTIFIER)
+		{
+			builder.advanceLexer();
+
+			return parseFieldAfterName(builder, marker, local);
+		}
+		else
+		{
+			builder.error("Name expected");
+			marker.rollbackTo();
+			return null;
+		}
+	}
+
+	private static PsiBuilder.Marker parseFieldAfterName(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
 	{
 		if(builder.getTokenType() == EQ)
 		{
@@ -73,13 +108,17 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 
 			PsiBuilder.Marker newMarker = builder.mark();
 
-			parseFieldOrLocalVariableAtName(builder, newMarker, local);
+			parseFieldOrLocalVariableAtNameWithDone(builder, newMarker, local);
+
+			return marker;
 		}
 		else
 		{
 			expect(builder, SEMICOLON, "';' expected");
 
 			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
+
+			return marker;
 		}
 	}
 

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import org.mustbe.consulo.csharp.lang.parser.decl.FieldOrPropertyParsing;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import org.mustbe.consulo.csharp.lang.parser.exp.LinqParsing;
 import com.intellij.lang.PsiBuilder;
@@ -51,80 +52,85 @@ public class StatementParsing extends SharingParsingHelpers
 
 	private static PsiBuilder.Marker parseStatement(CSharpBuilderWrapper wrapper)
 	{
-		IElementType tokenType = wrapper.getTokenType();
-		PsiBuilder.Marker marker = parseVariableDecl(wrapper, tokenType == CONST_KEYWORD);
-		if(marker == null)
+		val marker = wrapper.mark();
+
+		val tokenType = wrapper.getTokenType();
+
+		if(tokenType == LOCK_KEYWORD)
 		{
-			marker = wrapper.mark();
-
-			tokenType = wrapper.getTokenType();
-
-			if(tokenType == LOCK_KEYWORD)
-			{
-				parseStatementWithParenthesesExpression(wrapper, marker, LOCK_STATEMENT);
-			}
-			else if(tokenType == BREAK_KEYWORD)
-			{
-				wrapper.advanceLexer();
-
-				expect(wrapper, SEMICOLON, "';' expected");
-
-				marker.done(BREAK_STATEMENT);
-			}
-			else if(tokenType == CONTINUE_KEYWORD)
-			{
-				wrapper.advanceLexer();
-
-				expect(wrapper, SEMICOLON, "';' expected");
-
-				marker.done(CONTINUE_STATEMENT);
-			}
-			else if(tokenType == RETURN_KEYWORD)
-			{
-				parseReturnStatement(wrapper, marker);
-			}
-			else if(tokenType == FOREACH_KEYWORD)
-			{
-				parseForeach(wrapper, marker);
-			}
-			else if(tokenType == YIELD_KEYWORD)
-			{
-				parseYieldStatement(wrapper, marker);
-			}
-			else if(tokenType == IF_KEYWORD)
-			{
-				parseIfStatement(wrapper, marker);
-			}
-			else if(tokenType == LBRACE)
-			{
-				parseBlockStatement(wrapper, marker);
-			}
-			else if(wrapper.getTokenType() == WHILE_KEYWORD)
-			{
-				parseStatementWithParenthesesExpression(wrapper, marker, WHILE_STATEMENT);
-			}
-			else if(ExpressionParsing.parse(wrapper) != null)
-			{
-				expect(wrapper, SEMICOLON, "';' expected");
-
-				marker.done(EXPRESSION_STATEMENT);
-			}
-			else
-			{
-				wrapper.error("Unknown how parse: " + wrapper.getTokenType());
-				wrapper.advanceLexer();
-
-				marker.drop();
-			}
-			return marker;
+			parseStatementWithParenthesesExpression(wrapper, marker, LOCK_STATEMENT);
 		}
-		else
+		else if(tokenType == BREAK_KEYWORD)
 		{
-			marker = marker.precede();
+			wrapper.advanceLexer();
+
+			expect(wrapper, SEMICOLON, "';' expected");
+
+			marker.done(BREAK_STATEMENT);
+		}
+		else if(tokenType == CONTINUE_KEYWORD)
+		{
+			wrapper.advanceLexer();
+
+			expect(wrapper, SEMICOLON, "';' expected");
+
+			marker.done(CONTINUE_STATEMENT);
+		}
+		else if(tokenType == RETURN_KEYWORD)
+		{
+			parseReturnStatement(wrapper, marker);
+		}
+		else if(tokenType == FOREACH_KEYWORD)
+		{
+			parseForeach(wrapper, marker);
+		}
+		else if(tokenType == YIELD_KEYWORD)
+		{
+			parseYieldStatement(wrapper, marker);
+		}
+		else if(tokenType == IF_KEYWORD)
+		{
+			parseIfStatement(wrapper, marker);
+		}
+		else if(tokenType == LBRACE)
+		{
+			parseBlockStatement(wrapper, marker);
+		}
+		else if(tokenType == WHILE_KEYWORD)
+		{
+			parseStatementWithParenthesesExpression(wrapper, marker, WHILE_STATEMENT);
+		}
+		else if(tokenType == CONST_KEYWORD)
+		{
+			PsiBuilder.Marker varMark = wrapper.mark();
+
+			wrapper.advanceLexer();
+
+			FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(wrapper, varMark, true);
 
 			marker.done(LOCAL_VARIABLE_DECLARATION_STATEMENT);
 		}
-
+		else
+		{
+			PsiBuilder.Marker varMarker = wrapper.mark();
+			if(FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithRollback(wrapper, varMarker, true) == null)
+			{
+				PsiBuilder.Marker expressionMarker = ExpressionParsing.parse(wrapper);
+				if(expressionMarker == null)
+				{
+					wrapper.error("Expression expected");
+				}
+				else
+				{
+					expect(wrapper, SEMICOLON, "';' expected");
+					marker.done(EXPRESSION_STATEMENT);
+				}
+			}
+			else
+			{
+				marker.done(LOCAL_VARIABLE_DECLARATION_STATEMENT);
+			}
+		}
 		return marker;
 	}
 
@@ -325,60 +331,5 @@ public class StatementParsing extends SharingParsingHelpers
 		expect(wrapper, SEMICOLON, null);
 
 		marker.done(doneElement);
-	}
-
-	private static PsiBuilder.Marker parseVariableDecl(CSharpBuilderWrapper wrapper, boolean constToken)
-	{
-		PsiBuilder.Marker mark = wrapper.mark();
-
-		if(constToken)
-		{
-			wrapper.advanceLexer();
-		}
-
-		val typeInfo = parseType(wrapper);
-		if(typeInfo == null)
-		{
-			if(constToken)
-			{
-				wrapper.error("Type expected");
-			}
-			mark.rollbackTo();
-
-			return null;
-		}
-
-		if(wrapper.getTokenType() == DOT && typeInfo.isNative)
-		{
-			mark.rollbackTo();
-
-			return null;
-		}
-
-		if(wrapper.getTokenType() == IDENTIFIER)
-		{
-			wrapper.advanceLexer();
-
-			if(!expect(wrapper, SEMICOLON, null))
-			{
-				if(expect(wrapper, EQ, "'=' expected"))
-				{
-					PsiBuilder.Marker parse = ExpressionParsing.parse(wrapper);
-					if(parse == null)
-					{
-						wrapper.error("Expression expected");
-					}
-					else
-					{
-						expect(wrapper, SEMICOLON, "';' expected");
-					}
-				}
-			}
-			mark.done(LOCAL_VARIABLE);
-			return mark;
-		}
-
-		mark.rollbackTo();
-		return null;
 	}
 }
