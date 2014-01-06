@@ -21,6 +21,7 @@ import java.util.Collection;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.codeInsight.completion.CompletionData;
 import com.intellij.codeInsight.completion.InsertHandler;
@@ -110,6 +111,17 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 					}
 				}
 			});
+			return builder;
+		}
+		else if(element instanceof DotNetVariable)
+		{
+			DotNetVariable typeDeclaration = (DotNetVariable) element;
+			LookupElementBuilder builder = LookupElementBuilder.create(typeDeclaration);
+
+			builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
+
+			builder = builder.withTypeText(typeDeclaration.toRuntimeType().getPresentableText());
+
 			return builder;
 		}
 		else if(element instanceof CSharpTypeDeclaration)

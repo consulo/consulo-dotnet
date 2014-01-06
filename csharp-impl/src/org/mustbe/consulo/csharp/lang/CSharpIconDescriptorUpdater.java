@@ -21,6 +21,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.run.CSharpRunUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
@@ -119,6 +120,10 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		else if(element instanceof CSharpLabeledStatementImpl)
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Advice);
+		}
+		else if(element instanceof CSharpLocalVariable)
+		{
+			iconDescriptor.setMainIcon(AllIcons.Nodes.Variable);
 		}
 		else if(element instanceof DotNetParameter)
 		{
