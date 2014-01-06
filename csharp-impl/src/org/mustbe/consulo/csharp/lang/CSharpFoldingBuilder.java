@@ -31,6 +31,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBodyImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
@@ -129,6 +130,10 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 			{
 				super.visitBlockStatement(statement);
 
+				if(!(statement.getParent() instanceof DotNetMethodDeclaration))
+				{
+					return;
+				}
 				addBodyWithBraces(foldingList, statement);
 			}
 		});
