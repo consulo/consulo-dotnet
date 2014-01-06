@@ -49,12 +49,12 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
-import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
@@ -154,14 +154,24 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		switch(kind)
 		{
 			case ATTRIBUTE:
-				text = stripSpaces(getReferenceName()) + "Attribute";
+				String referenceName = getReferenceName();
+				if(referenceName == null)
+				{
+					return ResolveResult.EMPTY_ARRAY;
+				}
+				text = StringUtil.strip(referenceName, CharFilter.NOT_WHITESPACE_FILTER) + "Attribute";
 				break;
 			case NATIVE_TYPE_WRAPPER:
 			case THIS:
 				text = "";
 				break;
 			default:
-				text = stripSpaces(getReferenceName());
+				String referenceName2 = getReferenceName();
+				if(referenceName2 == null)
+				{
+					return ResolveResult.EMPTY_ARRAY;
+				}
+				text = StringUtil.strip(referenceName2, CharFilter.NOT_WHITESPACE_FILTER);
 				break;
 		}
 		val psiElements = collectResults(kind, new Condition<PsiNamedElement>()
@@ -274,7 +284,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				CSharpResolveUtil.treeWalkUp(p, this, parentOfType);
 				return p.getElements();
 			case NAMESPACE:
-				String qName = stripSpaces(getText());
+				String qName = StringUtil.strip(getText(), CharFilter.NOT_WHITESPACE_FILTER);
 				CSharpNamespaceAsElement aPackage = CSharpNamespaceHelper.getNamespaceElementIfFind(getProject(), qName, getResolveScope());
 				if(aPackage == null)
 				{
@@ -282,7 +292,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}
 				return Collections.<PsiElement>singletonList(aPackage);
 			case NAMESPACE_WITH_CREATE_OPTION:
-				return Collections.<PsiElement>singletonList(new CSharpNamespaceAsElement(getProject(), stripSpaces(getText()), getResolveScope()));
+				String qName2 = StringUtil.strip(getText(), CharFilter.NOT_WHITESPACE_FILTER);
+				return Collections.<PsiElement>singletonList(new CSharpNamespaceAsElement(getProject(), qName2, getResolveScope()));
 			case ATTRIBUTE:
 				val resolveResults = processTypeOrGenericParameterOrMethod(qualifier, condition);
 				if(resolveResults.size() != 1)
@@ -378,20 +389,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	{
 		ResolveResult[] resolveResults = multiResolve(false);
 		return resolveResults.length == 0 ? null : resolveResults[0].getElement();
-	}
-
-	private String stripSpaces(String text)
-	{
-		StringBuilder builder = new StringBuilder(text.length());
-		char[] chars = text.toCharArray();
-		for(char aChar : chars)
-		{
-			if(!StringUtil.isWhiteSpace(aChar))
-			{
-				builder.append(aChar);
-			}
-		}
-		return builder.toString();
 	}
 
 	@NotNull
@@ -524,10 +521,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return true;
 			}
 		});
-		long time = System.currentTimeMillis();
-		LookupElement[] elements = CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(psiElements);
-		System.out.println((System.currentTimeMillis() - time) + " ms");
-		return elements;
+		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(psiElements);
 	}
 
 	@Override
