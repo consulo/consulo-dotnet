@@ -94,18 +94,33 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	@Override
 	public boolean isInterface()
 	{
+		CSharpTypeStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getType() == CSharpTypeStub.INTERFACE;
+		}
 		return findChildByType(CSharpTokens.INTERFACE_KEYWORD) != null;
 	}
 
 	@Override
 	public boolean isStruct()
 	{
+		CSharpTypeStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getType() == CSharpTypeStub.STRUCT;
+		}
 		return findChildByType(CSharpTokens.STRUCT_KEYWORD) != null;
 	}
 
 	@Override
 	public boolean isEnum()
 	{
+		CSharpTypeStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getType() == CSharpTypeStub.ENUM;
+		}
 		return findChildByType(CSharpTokens.ENUM_KEYWORD) != null;
 	}
 

@@ -28,8 +28,41 @@ import com.intellij.util.io.StringRef;
  */
 public class CSharpTypeStub extends MemberStub<CSharpTypeDeclaration>
 {
-	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef parentQName, int modifierMask)
+	public static final byte TYPE = 0;
+	public static final byte STRUCT = 1;
+	public static final byte INTERFACE = 1;
+	public static final byte ENUM = 2;
+
+	private final byte myType;
+
+	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef parentQName, int modifierMask, byte type)
 	{
 		super(parent, CSharpStubElements.TYPE_DECLARATION, name, parentQName, modifierMask);
+		myType = type;
+	}
+
+	public byte getType()
+	{
+		return myType;
+	}
+
+	public static byte getType(CSharpTypeDeclaration typeDeclaration)
+	{
+		if(typeDeclaration.isInterface())
+		{
+			return INTERFACE;
+		}
+		else if(typeDeclaration.isEnum())
+		{
+			return ENUM;
+		}
+		else if(typeDeclaration.isStruct())
+		{
+			return STRUCT;
+		}
+		else
+		{
+			return TYPE;
+		}
 	}
 }
