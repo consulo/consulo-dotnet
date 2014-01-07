@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
@@ -31,6 +32,19 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 	public CSharpMethodCallExpressionImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@Nullable
+	public CSharpMethodCallParameterListImpl getParameterList()
+	{
+		return findChildByClass(CSharpMethodCallParameterListImpl.class);
+	}
+
+	@NotNull
+	public DotNetExpression[] getParameterExpressions()
+	{
+		CSharpMethodCallParameterListImpl parameterList = getParameterList();
+		return parameterList == null ? DotNetExpression.EMPTY_ARRAY : parameterList.getExpressions();
 	}
 
 	@Override

@@ -34,6 +34,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.AbstractScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberToTypeValueResolveScopeProcessor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespaceDefRuntimeType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefRuntimeType;
@@ -313,7 +314,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 						@Override
 						public boolean value(PsiNamedElement psiNamedElement)
 						{
-							return psiNamedElement instanceof CSharpMethodDeclaration;
+							return psiNamedElement instanceof CSharpMethodDeclaration && MethodAcceptorImpl.isAccepted(CSharpReferenceExpressionImpl
+									.this, (CSharpMethodDeclaration) psiNamedElement);
 						}
 					});
 				}
@@ -400,7 +402,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			DotNetGenericParameterListOwner parameterListOwner = PsiTreeUtil.getParentOfType(this, DotNetGenericParameterListOwner.class);
 			if(parameterListOwner == null)
 			{
-				return null;
+				return ResolveToKind.ANY_MEMBER;
 			}
 
 			return ResolveToKind.TYPE_PARAMETER_FROM_PARENT;

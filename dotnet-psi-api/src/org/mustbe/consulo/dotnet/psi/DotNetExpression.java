@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 
@@ -23,6 +24,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
  * @author VISTALL
  * @since 16.12.13.
  */
+@ArrayFactoryFields
 public interface DotNetExpression extends DotNetElement
 {
 	@NotNull

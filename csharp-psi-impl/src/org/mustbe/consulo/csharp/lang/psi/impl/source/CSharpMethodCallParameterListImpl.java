@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -29,6 +30,12 @@ public class CSharpMethodCallParameterListImpl extends CSharpElementImpl
 	public CSharpMethodCallParameterListImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@NotNull
+	public DotNetExpression[] getExpressions()
+	{
+		return findChildrenByClass(DotNetExpression.class);
 	}
 
 	@Override
