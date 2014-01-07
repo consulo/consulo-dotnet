@@ -138,26 +138,24 @@ public class StatementParsing extends SharingParsingHelpers
 				return marker;
 			}
 
-			if(FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithRollback(wrapper, wrapper.mark(), true) == null)
+			PsiBuilder.Marker varMarker = parseVariableDecl(wrapper, false);
+			if(varMarker == null)
 			{
 				PsiBuilder.Marker expressionMarker = ExpressionParsing.parse(wrapper);
 				if(expressionMarker == null)
 				{
-					FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(wrapper, wrapper.mark(), true);
-
-					expect(wrapper, SEMICOLON, "';' expected");
-
-					marker.done(LOCAL_VARIABLE_DECLARATION_STATEMENT);
+					wrapper.error("Expression expected");
+					wrapper.advanceLexer();
 				}
 				else
 				{
 					expect(wrapper, SEMICOLON, "';' expected");
-					marker.done(EXPRESSION_STATEMENT);
 				}
+				marker.done(EXPRESSION_STATEMENT);
 			}
 			else
 			{
-				expect(wrapper, SEMICOLON, "';' expected");
+				//expect(wrapper, SEMICOLON, "';' expected");
 
 				marker.done(LOCAL_VARIABLE_DECLARATION_STATEMENT);
 			}
@@ -408,5 +406,63 @@ public class StatementParsing extends SharingParsingHelpers
 		expect(wrapper, SEMICOLON, null);
 
 		marker.done(doneElement);
+	}
+
+	private static PsiBuilder.Marker parseVariableDecl(CSharpBuilderWrapper builder, boolean constToken)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		if(constToken)
+		{
+			builder.advanceLexer();
+		}
+
+		TypeInfo typeMarker = parseType(builder);
+		if(typeMarker == null)
+		{
+			if(constToken)
+			{
+				builder.error("Type expected");
+			}
+			mark.rollbackTo();
+
+			return null;
+		}
+
+		if(builder.getTokenType() == IDENTIFIER)
+		{
+			builder.advanceLexer();
+
+			if(builder.getTokenType() == EQ)
+			{
+				builder.advanceLexer();
+				PsiBuilder.Marker parse = ExpressionParsing.parse(builder);
+				if(parse == null)
+				{
+					builder.error("Expression expected");
+				}
+			}
+
+			if(builder.getTokenType() == COMMA)
+			{
+				mark.done(LOCAL_VARIABLE);
+
+				builder.advanceLexer();
+
+				FieldOrPropertyParsing.parseFieldOrLocalVariableAtNameWithDone(builder, builder.mark(), true);
+
+				expect(builder, SEMICOLON, "';' expected");
+			}
+			else
+			{
+				expect(builder, SEMICOLON, "';' expected");
+
+				mark.done(LOCAL_VARIABLE);
+			}
+			return mark;
+		}
+
+		mark.rollbackTo();
+		return null;
 	}
 }

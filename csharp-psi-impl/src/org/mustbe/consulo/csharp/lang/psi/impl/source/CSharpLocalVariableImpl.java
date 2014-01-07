@@ -63,9 +63,9 @@ public class CSharpLocalVariableImpl extends CSharpVariableImpl implements CShar
 		// int a, b
 		if(type == null && getNameIdentifier() != null)
 		{
-			CSharpFieldDeclarationImpl fieldDeclaration = PsiTreeUtil.getPrevSiblingOfType(this, CSharpFieldDeclarationImpl.class);
-			assert fieldDeclaration != null;
-			return fieldDeclaration.getType();
+			CSharpLocalVariableImpl localVariable = PsiTreeUtil.getPrevSiblingOfType(this, CSharpLocalVariableImpl.class);
+			assert localVariable != null;
+			return localVariable.getType();
 		}
 		return type;
 	}
