@@ -148,6 +148,21 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 		{
 			return false;
 		}
+		/*
+		for(DotNetType dotNetType : getExtends())
+		{
+			DotNetRuntimeType runtimeType = dotNetType.toRuntimeType();
+			PsiElement psiElement = runtimeType.toPsiElement();
+			if(psiElement == null)
+			{
+				continue;
+			}
+			if(!psiElement.processDeclarations(processor, state, lastParent, place))
+			{
+				return false;
+			}
+		}  */
+
 		return true;
 	}
 

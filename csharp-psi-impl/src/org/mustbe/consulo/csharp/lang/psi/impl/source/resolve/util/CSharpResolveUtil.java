@@ -104,12 +104,6 @@ public class CSharpResolveUtil
 		return true;
 	}
 
-	@Deprecated
-	public static boolean processUsingOld(@NotNull PsiElement element, @NotNull PsiScopeProcessor processor, @NotNull ResolveState state)
-	{
-		return true;
-	}
-
 	private static boolean processUsing(@NotNull PsiElement element, @NotNull PsiScopeProcessor processor, @NotNull ResolveState state)
 	{
 		List<PsiElement> list = new SmartList<PsiElement>();
