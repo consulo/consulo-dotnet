@@ -51,6 +51,7 @@
 
 		<codeInsight.unresolvedReferenceQuickFixProvider
 				implementation="org.mustbe.consulo.csharp.ide.codeInsight.CSharpUnresolvedReferenceQuickFixProvider" />
+		<completion.contributor language="C#" implementationClass="org.mustbe.consulo.csharp.ide.completion.CSharpKeywordCompletionContributor" />
 		<referenceImporter implementation="org.mustbe.consulo.csharp.ide.codeInsight.CSharpReferenceImporter" />
 
 		<typedHandler implementation="org.mustbe.consulo.csharp.ide.completion.CSharpTypedHandler" id="csharp" />
