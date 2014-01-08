@@ -81,7 +81,7 @@ public class CSharpResolveUtil
 				if(scope instanceof CSharpAttributeListImpl && scope.getParent() instanceof CSharpFileImpl || !(scope instanceof
 						CSharpAttributeListImpl))
 				{
-					if(!processUsing(scope, processor, state))
+					if(!processUsing(scope, maxScope, processor, state))
 					{
 						return false;
 					}
@@ -104,7 +104,7 @@ public class CSharpResolveUtil
 		return true;
 	}
 
-	private static boolean processUsing(@NotNull PsiElement element, @NotNull PsiScopeProcessor processor, @NotNull ResolveState state)
+	private static boolean processUsing(@NotNull PsiElement element, PsiElement maxScope, @NotNull PsiScopeProcessor processor, @NotNull ResolveState state)
 	{
 		List<PsiElement> list = new SmartList<PsiElement>();
 
@@ -126,7 +126,7 @@ public class CSharpResolveUtil
 
 		for(PsiElement psiElement : list)
 		{
-			if(!treeWalkUp(processor, psiElement, psiElement, state))
+			if(!psiElement.processDeclarations(processor, state, maxScope, element))
 			{
 				return false;
 			}

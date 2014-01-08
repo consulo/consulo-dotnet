@@ -19,7 +19,6 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -65,7 +64,7 @@ public class CSharpUsingNamespaceListImpl extends CSharpElementImpl
 	{
 		for(CSharpUsingNamespaceStatementImpl cSharpUsingStatement : getStatements())
 		{
-			if(!CSharpResolveUtil.treeWalkUp(processor, cSharpUsingStatement, cSharpUsingStatement, state))
+			if(!cSharpUsingStatement.processDeclarations(processor, state, lastParent, place))
 			{
 				return false;
 			}
