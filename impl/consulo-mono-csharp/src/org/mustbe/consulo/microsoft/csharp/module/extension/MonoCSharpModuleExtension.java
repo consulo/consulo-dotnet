@@ -16,14 +16,10 @@
 
 package org.mustbe.consulo.microsoft.csharp.module.extension;
 
-import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.compiler.MSBaseDotNetCompilerOptionsBuilder;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
-import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 
@@ -31,9 +27,7 @@ import com.intellij.openapi.projectRoots.Sdk;
  * @author VISTALL
  * @since 26.11.13.
  */
-public class MonoCSharpModuleExtension extends ModuleExtensionImpl<MonoCSharpModuleExtension> implements
-		DotNetModuleLangExtension<MonoCSharpModuleExtension>, CSharpModuleExtension<MonoCSharpModuleExtension>
-
+public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpModuleExtension>
 {
 	public MonoCSharpModuleExtension(@NotNull String id, @NotNull Module module)
 	{
@@ -42,16 +36,13 @@ public class MonoCSharpModuleExtension extends ModuleExtensionImpl<MonoCSharpMod
 
 	@NotNull
 	@Override
-	public LanguageFileType getFileType()
-	{
-		return CSharpFileType.INSTANCE;
-	}
-
-	@NotNull
-	@Override
 	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk)
 	{
 		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(dotNetSdk);
+		if(isUnsafeEnabled())
+		{
+			optionsBuilder.addArgument("/unsafe");
+		}
 		optionsBuilder.setExecutableFromSdk("mcs.exe");
 		return optionsBuilder;
 	}

@@ -22,11 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -46,6 +48,7 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 			put(DotNetModifier.READONLY, CSharpTokens.READONLY_KEYWORD);
 			put(DotNetModifier.ABSTRACT, CSharpTokens.ABSTRACT_KEYWORD);
 			put(DotNetModifier.STATIC, CSharpTokens.STATIC_KEYWORD);
+			put(DotNetModifier.UNSAFE, CSharpTokens.UNSAFE_KEYWORD);
 		}
 	};
 	public CSharpModifierListImpl(@NotNull ASTNode node)
@@ -79,5 +82,12 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 	{
 		IElementType iElementType = ourModifiers.get(modifier);
 		return iElementType != null && findChildByType(iElementType) != null;
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getModifier(IElementType elementType)
+	{
+		return findChildByType(elementType);
 	}
 }

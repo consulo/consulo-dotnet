@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.lang.ASTNode;
@@ -46,6 +47,12 @@ public class CSharpFixedStatementImpl extends CSharpElementImpl implements DotNe
 	public DotNetVariable[] getVariables()
 	{
 		return findChildrenByClass(DotNetVariable.class);
+	}
+
+	@NotNull
+	public PsiElement getFixedElement()
+	{
+		return findNotNullChildByType(CSharpTokens.FIXED_KEYWORD);
 	}
 
 	@Override

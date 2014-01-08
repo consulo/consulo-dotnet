@@ -42,7 +42,7 @@ public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension 
 	@Override
 	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		return null;
+		return createConfigurablePanelImpl(modifiableRootModel, runnable);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension 
 	@Override
 	public boolean isModified()
 	{
-		return myIsEnabled != myOriginal.isEnabled();
+		return isModifiedImpl(myOriginal);
 	}
 
 	@Override

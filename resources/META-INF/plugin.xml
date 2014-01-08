@@ -20,6 +20,7 @@
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
 
 	<xi:include href="/META-INF/CSharp.xml" xpointer="xpointer(/idea-plugin/*)" />
+	<xi:include href="/META-INF/CSharpInspections.xml" xpointer="xpointer(/idea-plugin/*)" />
 
 	<application-components>
 		<component>
