@@ -17,10 +17,12 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpTypeUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 
 /**
  * @author VISTALL
@@ -41,6 +43,20 @@ public class MethodAcceptorImpl
 			if(expressions.length != parameters.length)
 			{
 				return false;
+			}
+
+			for(int i = 0; i < expressions.length; i++)
+			{
+				DotNetExpression expression = expressions[i];
+				DotNetParameter parameter = parameters[i];
+
+				DotNetRuntimeType expressionType = expression.toRuntimeType();
+				DotNetRuntimeType parameterType = parameter.toRuntimeType();
+
+				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType))
+				{
+					return false;
+				}
 			}
 
 			return true;

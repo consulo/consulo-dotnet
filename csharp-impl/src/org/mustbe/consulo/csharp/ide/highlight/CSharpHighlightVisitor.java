@@ -39,6 +39,7 @@ import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.ResolveResult;
 import com.intellij.psi.tree.IElementType;
 import lombok.val;
 
@@ -192,32 +193,40 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	public void visitReferenceExpression(CSharpReferenceExpressionImpl expression)
 	{
 		super.visitReferenceExpression(expression);
-
-		PsiElement resolve = expression.resolve();
-		if(resolve == null)
+		PsiElement referenceElement = expression.getReferenceElement();
+		if(referenceElement == null)
 		{
-			PsiElement referenceElement = expression.getReferenceElement();
-			if(referenceElement == null)
-			{
-				return;
-			}
-			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip("'" + referenceElement.getText()
-					+ "' is not resolved").range(referenceElement).create();
-			myHighlightInfoHolder.add(info);
+			return;
+		}
 
-			if(expression.getQualifier() == null)
-			{
-				UnresolvedReferenceQuickFixProvider.registerReferenceFixes(expression, new QuickFixActionRegistrarImpl(info));
-			}
+		ResolveResult[] resolve = expression.multiResolve(false);
+		if(resolve.length == 1)
+		{
+			highlightNamed(resolve[0].getElement(), referenceElement);
 		}
 		else
 		{
-			PsiElement referenceElement = expression.getReferenceElement();
-			if(referenceElement == null)
+			ResolveResult[] resolveResults = expression.multiResolve(true);
+			if(resolveResults.length == 0)
 			{
-				return;
+				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip("'" + referenceElement
+						.getText() + "' is not resolved").range(referenceElement).create();
+
+				myHighlightInfoHolder.add(info);
+
+				if(expression.getQualifier() == null)
+				{
+					UnresolvedReferenceQuickFixProvider.registerReferenceFixes(expression, new QuickFixActionRegistrarImpl(info));
+				}
 			}
-			highlightNamed(resolve, referenceElement);
+			else
+			{
+				System.out.println(resolveResults.length);
+				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip
+						("'" + referenceElement.getText() + "' .....").range(referenceElement).create();
+
+				myHighlightInfoHolder.add(info);
+			}
 		}
 	}
 
@@ -250,8 +259,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 		else if(element instanceof DotNetMethodDeclaration)
 		{
-			key = ((DotNetMethodDeclaration) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD :
-					CSharpHighlightKey.INSTANCE_METHOD;
+			key = ((DotNetMethodDeclaration) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
+					.INSTANCE_METHOD;
 		}
 		else if(element instanceof CSharpLocalVariableImpl)
 		{

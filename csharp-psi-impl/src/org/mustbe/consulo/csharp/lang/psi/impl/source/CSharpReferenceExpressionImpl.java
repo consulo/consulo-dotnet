@@ -148,7 +148,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 	@NotNull
 	@Override
-	public ResolveResult[] multiResolve(boolean b)
+	public ResolveResult[] multiResolve(boolean incompleteCode)
 	{
 		val kind = kind();
 		final String text;
@@ -182,11 +182,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			{
 				return Comparing.equal(text, netNamedElement.getName());
 			}
-		});
+		}, incompleteCode);
 		return toResolveResults(psiElements);
 	}
 
-	private Collection<? extends PsiElement> collectResults(@NotNull ResolveToKind kind, Condition<PsiNamedElement> condition)
+	private Collection<? extends PsiElement> collectResults(@NotNull ResolveToKind kind, Condition<PsiNamedElement> condition,
+			final boolean incompleteCode)
 	{
 		if(!isValid())
 		{
@@ -314,8 +315,16 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 						@Override
 						public boolean value(PsiNamedElement psiNamedElement)
 						{
-							return psiNamedElement instanceof CSharpMethodDeclaration && MethodAcceptorImpl.isAccepted(CSharpReferenceExpressionImpl
-									.this, (CSharpMethodDeclaration) psiNamedElement);
+							if(psiNamedElement instanceof CSharpMethodDeclaration)
+							{
+								if(!incompleteCode && !MethodAcceptorImpl.isAccepted(CSharpReferenceExpressionImpl
+										.this, (CSharpMethodDeclaration) psiNamedElement))
+								{
+									return false;
+								}
+								return true;
+							}
+							return false;
 						}
 					});
 				}
@@ -522,7 +531,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			{
 				return true;
 			}
-		});
+		}, false);
 		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(psiElements);
 	}
 
