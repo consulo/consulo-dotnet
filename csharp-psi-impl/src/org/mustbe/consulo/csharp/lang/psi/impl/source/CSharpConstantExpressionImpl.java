@@ -85,7 +85,7 @@ public class CSharpConstantExpressionImpl extends CSharpElementImpl implements D
 		}
 		else if(elementType == CSharpTokens.NULL_LITERAL)
 		{
-			return DotNetRuntimeType.AUTO_TYPE;
+			return DotNetRuntimeType.NULL_TYPE;
 		}
 		else if(elementType == CSharpTokens.BOOL_LITERAL)
 		{

@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 
 /**
@@ -24,11 +25,24 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
  */
 public class CSharpTypeUtil
 {
-	public static boolean isInheritable(DotNetRuntimeType top, DotNetRuntimeType target)
+	/**
+	 * We have expression
+	 * int a = "test";
+	 *
+	 * "test" - string type, ill be 'top' parameter
+	 * int - int type, ill 'target'
+	 * return false due it not be casted
+	 */
+	public static boolean isInheritable(@NotNull DotNetRuntimeType top, @NotNull DotNetRuntimeType target)
 	{
 		if(top == DotNetRuntimeType.ERROR_TYPE || target == DotNetRuntimeType.ERROR_TYPE)
 		{
 			return false;
+		}
+
+		if(top == DotNetRuntimeType.NULL_TYPE && target.isNullable())
+		{
+			return true;
 		}
 
 		if(top.equals(target))

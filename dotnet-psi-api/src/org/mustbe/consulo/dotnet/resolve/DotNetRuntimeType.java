@@ -117,6 +117,36 @@ public interface DotNetRuntimeType
 		}
 	};
 
+	DotNetRuntimeType NULL_TYPE = new DotNetRuntimeType()
+	{
+		@Nullable
+		@Override
+		public String getPresentableText()
+		{
+			return "null";
+		}
+
+		@Nullable
+		@Override
+		public String getQualifiedText()
+		{
+			return getPresentableText();
+		}
+
+		@Override
+		public boolean isNullable()
+		{
+			return true;
+		}
+
+		@Nullable
+		@Override
+		public PsiElement toPsiElement()
+		{
+			return null;
+		}
+	};
+
 	@Nullable
 	String getPresentableText();
 
