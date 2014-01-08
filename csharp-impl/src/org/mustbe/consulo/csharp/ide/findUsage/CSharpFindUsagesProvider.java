@@ -25,6 +25,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEventDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
@@ -97,7 +98,10 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 		{
 			return "field";
 		}
-
+		else if(element instanceof CSharpEnumConstantDeclarationImpl)
+		{
+			return "enum constant";
+		}
 		return "getType " + element.getNode().getElementType();
 	}
 
