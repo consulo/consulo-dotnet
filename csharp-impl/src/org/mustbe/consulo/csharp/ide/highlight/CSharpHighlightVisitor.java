@@ -221,7 +221,6 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			}
 			else
 			{
-				System.out.println(resolveResults.length);
 				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip
 						("'" + referenceElement.getText() + "' .....").range(referenceElement).create();
 
