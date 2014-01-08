@@ -46,4 +46,6 @@ public interface CSharpStubElements
 	TokenSet QUALIFIED_MEMBERS = TokenSet.create(CSharpStubElements.NAMESPACE_DECLARATION, CSharpStubElements.TYPE_DECLARATION,
 			CSharpStubElements.METHOD_DECLARATION, CSharpStubElements.CONSTRUCTOR_DECLARATION, CSharpStubElements.PROPERTY_DECLARATION,
 			CSharpStubElements.EVENT_DECLARATION, CSharpStubElements.FIELD_DECLARATION, CSharpStubElements.ENUM_CONSTANT_DECLARATION);
+
+	TokenSet QUALIFIED_MEMBERS_WITH_USING = TokenSet.orSet(QUALIFIED_MEMBERS, TokenSet.create(CSharpElements.USING_NAMESPACE_LIST));
 }

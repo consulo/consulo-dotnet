@@ -146,11 +146,13 @@ public class MethodParsing extends MemberWithBodyParsing
 
 		if(parseType(builder) == null)
 		{
-			builder.error("Type expected");
+			mark.error("Type expected");
 		}
+		else
+		{
+			expect(builder, IDENTIFIER, "Name expected");
 
-		expect(builder, IDENTIFIER, "Name expected");
-
-		mark.done(PARAMETER);
+			mark.done(PARAMETER);
+		}
 	}
 }

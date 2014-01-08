@@ -16,6 +16,10 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpBodyWithBraces;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
@@ -65,7 +69,20 @@ public class CSharpBlockStatementImpl extends CSharpElementImpl implements DotNe
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{
-		for(DotNetStatement dotNetStatement : getStatements())
+		DotNetStatement[] statements = getStatements();
+		List<PsiElement> elements = new ArrayList<PsiElement>(statements.length);
+		for(DotNetStatement statement : statements)
+		{
+			if(statement == lastParent)
+			{
+				break;
+			}
+			elements.add(statement);
+		}
+
+		Collections.reverse(elements);
+
+		for(PsiElement dotNetStatement : elements)
 		{
 			if(!dotNetStatement.processDeclarations(processor, state, lastParent, place))
 			{

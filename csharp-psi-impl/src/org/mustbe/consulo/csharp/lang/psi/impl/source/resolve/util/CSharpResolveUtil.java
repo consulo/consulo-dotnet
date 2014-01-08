@@ -16,25 +16,15 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpAttributeListImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.util.SmartList;
 
 /**
  * @author VISTALL
@@ -43,30 +33,40 @@ import com.intellij.util.SmartList;
 @Logger
 public class CSharpResolveUtil
 {
-	public static final Key<Boolean> QUALIFIED = Key.create("qualified");
-
-	public static boolean treeWalkUp(@NotNull PsiScopeProcessor processor, @NotNull PsiElement entrance, @Nullable PsiElement maxScope)
+	public static boolean treeWalkUp(
+			@NotNull PsiScopeProcessor processor,
+			@NotNull PsiElement entrance,
+			@NotNull PsiElement sender,
+			@Nullable PsiElement maxScope)
 	{
-		return treeWalkUp(processor, entrance, maxScope, ResolveState.initial());
+		return treeWalkUp(processor, entrance, sender, maxScope, ResolveState.initial());
 	}
 
-	public static boolean treeWalkUp(@NotNull final PsiScopeProcessor processor, @NotNull final PsiElement entrance,
-			@Nullable final PsiElement maxScope, @NotNull final ResolveState state)
+	public static boolean treeWalkUp(
+			@NotNull final PsiScopeProcessor processor,
+			@NotNull final PsiElement entrance,
+			@NotNull final PsiElement sender,
+			@Nullable PsiElement maxScope,
+			@NotNull final ResolveState state)
 	{
 		if(!entrance.isValid())
 		{
 			LOGGER.error(new PsiInvalidElementAccessException(entrance));
 		}
-		boolean q = processor.getHint(QUALIFIED) == Boolean.TRUE;
 
 		PsiElement prevParent = entrance;
 		PsiElement scope = entrance;
+
+		if(maxScope == null)
+		{
+			maxScope = sender.getContainingFile();
+		}
 
 		while(scope != null)
 		{
 			ProgressIndicatorProvider.checkCanceled();
 
-			if(q && scope instanceof PsiFile)
+			if(entrance != sender && scope instanceof PsiFile)
 			{
 				break;
 			}
@@ -76,59 +76,21 @@ public class CSharpResolveUtil
 				return false; // resolved
 			}
 
-			if(scope instanceof CSharpNamespaceDeclaration || scope instanceof CSharpTypeDeclaration || scope instanceof CSharpAttributeListImpl)
+			if(entrance != sender)
 			{
-				if(scope instanceof CSharpAttributeListImpl && scope.getParent() instanceof CSharpFileImpl || !(scope instanceof
-						CSharpAttributeListImpl))
-				{
-					if(!processUsing(scope, maxScope, processor, state))
-					{
-						return false;
-					}
-				}
+				break;
 			}
 
 			if(scope == maxScope)
 			{
 				break;
 			}
+
 			prevParent = scope;
 			scope = prevParent.getContext();
 			if(scope != null && scope != prevParent.getParent() && !scope.isValid())
 			{
 				break;
-			}
-
-		}
-
-		return true;
-	}
-
-	private static boolean processUsing(@NotNull PsiElement element, PsiElement maxScope, @NotNull PsiScopeProcessor processor, @NotNull ResolveState state)
-	{
-		List<PsiElement> list = new SmartList<PsiElement>();
-
-		PsiElement it = element.getParent().getFirstChild();
-		while(it != null)
-		{
-			if(it instanceof CSharpUsingNamespaceListImpl)
-			{
-				list.add(it);
-			}
-			else if(it == element)
-			{
-				break;
-			}
-			it = it.getNextSibling();
-		}
-
-		Collections.reverse(list);
-
-		for(PsiElement psiElement : list)
-		{
-			if(!psiElement.processDeclarations(processor, state, maxScope, element))
-			{
-				return false;
 			}
 		}
 

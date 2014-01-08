@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetFile;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -62,6 +63,29 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
+		for(PsiElement psiElement : getChildren())
+		{
+			if(!CSharpStubElements.QUALIFIED_MEMBERS_WITH_USING.contains(psiElement.getNode().getElementType()))
+			{
+				continue;
+			}
+
+			if(psiElement instanceof CSharpUsingNamespaceListImpl)
+			{
+				if(!psiElement.processDeclarations(processor, state, lastParent, place))
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if(!processor.execute(psiElement, state))
+				{
+					return false;
+				}
+			}
+		}
+
 		return StubIndex.getInstance().process(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.ROOT, getProject(),
 				getResolveScope(), new Processor<DotNetNamedElement>()
 

@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +29,6 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
@@ -188,14 +189,25 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
-			place)
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
 	{
-		for(DotNetNamedElement dotNetNamedElement : getMembers())
+		List<PsiElement> childrenByType = findChildrenByType(CSharpStubElements.QUALIFIED_MEMBERS_WITH_USING);
+		for(PsiElement dotNetNamedElement : childrenByType)
 		{
-			if(!processor.execute(dotNetNamedElement, state))
+			if(dotNetNamedElement instanceof CSharpUsingNamespaceListImpl)
 			{
-				return false;
+				if(!dotNetNamedElement.processDeclarations(processor, state, lastParent, place))
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if(!processor.execute(dotNetNamedElement, state))
+				{
+					return false;
+				}
 			}
 		}
 		return true;
