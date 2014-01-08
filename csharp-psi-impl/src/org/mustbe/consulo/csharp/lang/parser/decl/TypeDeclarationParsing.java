@@ -31,6 +31,8 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 {
 	public static void parse(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, MacroesInfo macroesInfo)
 	{
+		boolean isEnum = builder.getTokenType() == ENUM_KEYWORD;
+
 		builder.advanceLexer();
 
 		expect(builder, IDENTIFIER, "Name expected");
@@ -61,7 +63,14 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 		{
 			while(!builder.eof() && builder.getTokenType() != RBRACE)
 			{
-				if(!DeclarationParsing.parse(builder, macroesInfo, true))
+				if(isEnum)
+				{
+					if(!FieldOrPropertyParsing.parseFieldOrLocalVariableAtNameWithDone(builder, builder.mark(), ENUM_CONSTANT_DECLARATION))
+					{
+						break;
+					}
+				}
+				else if(!DeclarationParsing.parse(builder, macroesInfo, true))
 				{
 					break;
 				}

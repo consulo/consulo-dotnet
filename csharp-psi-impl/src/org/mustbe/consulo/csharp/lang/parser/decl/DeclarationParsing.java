@@ -88,7 +88,7 @@ public class DeclarationParsing extends SharingParsingHelpers
 		{
 			builder.advanceLexer();
 
-			FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(builder, marker, false);
+			FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(builder, marker, FIELD_DECLARATION);
 
 			expect(builder, SEMICOLON, "';' expected");
 		}

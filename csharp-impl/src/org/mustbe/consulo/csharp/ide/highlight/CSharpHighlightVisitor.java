@@ -157,6 +157,14 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
+	public void visitEnumConstantDeclaration(CSharpEnumConstantDeclarationImpl declaration)
+	{
+		super.visitEnumConstantDeclaration(declaration);
+
+		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
+	@Override
 	public void visitParameter(CSharpParameterImpl parameter)
 	{
 		super.visitParameter(parameter);

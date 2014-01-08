@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpConstructorStubElementType;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpEnumConstantStubElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpEventElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpFieldStubElementType;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpFileStubElementType;
@@ -40,8 +41,9 @@ public interface CSharpStubElements
 	CSharpPropertyElementType PROPERTY_DECLARATION = new CSharpPropertyElementType();
 	CSharpEventElementType EVENT_DECLARATION = new CSharpEventElementType();
 	CSharpFieldStubElementType FIELD_DECLARATION = new CSharpFieldStubElementType();
+	CSharpEnumConstantStubElementType ENUM_CONSTANT_DECLARATION = new CSharpEnumConstantStubElementType();
 
 	TokenSet QUALIFIED_MEMBERS = TokenSet.create(CSharpStubElements.NAMESPACE_DECLARATION, CSharpStubElements.TYPE_DECLARATION,
 			CSharpStubElements.METHOD_DECLARATION, CSharpStubElements.CONSTRUCTOR_DECLARATION, CSharpStubElements.PROPERTY_DECLARATION,
-			CSharpStubElements.EVENT_DECLARATION, CSharpStubElements.FIELD_DECLARATION);
+			CSharpStubElements.EVENT_DECLARATION, CSharpStubElements.FIELD_DECLARATION, CSharpStubElements.ENUM_CONSTANT_DECLARATION);
 }

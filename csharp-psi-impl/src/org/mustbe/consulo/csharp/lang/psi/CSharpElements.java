@@ -51,6 +51,8 @@ public interface CSharpElements
 
 	IElementType FIELD_DECLARATION = CSharpStubElements.FIELD_DECLARATION;
 
+	IElementType ENUM_CONSTANT_DECLARATION = CSharpStubElements.ENUM_CONSTANT_DECLARATION;
+
 	IElementType LOCAL_VARIABLE = new IElementTypeAsPsiFactory("LOCAL_VARIABLE", CSharpLanguage.INSTANCE, CSharpLocalVariableImpl.class);
 
 	IElementType PROPERTY_DECLARATION = CSharpStubElements.PROPERTY_DECLARATION;

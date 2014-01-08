@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -26,22 +27,22 @@ import com.intellij.lang.PsiBuilder;
  */
 public class FieldOrPropertyParsing extends MemberWithBodyParsing
 {
-	public static void parseFieldOrLocalVariableAtTypeWithDone(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
+	public static void parseFieldOrLocalVariableAtTypeWithDone(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, IElementType to)
 	{
 		if(parseType(builder) == null)
 		{
 			builder.error("Type expected");
 
-			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
+			marker.done(to);
 		}
 		else
 		{
-			parseFieldOrLocalVariableAtNameWithDone(builder, marker, local);
+			parseFieldOrLocalVariableAtNameWithDone(builder, marker, to);
 		}
 	}
 
 	public static PsiBuilder.Marker parseFieldOrLocalVariableAtTypeWithRollback(CSharpBuilderWrapper builder, PsiBuilder.Marker marker,
-			boolean local)
+		IElementType to)
 	{
 		if(parseType(builder) == null)
 		{
@@ -52,34 +53,36 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		}
 		else
 		{
-			return parseFieldOrLocalVariableAtNameWithRollback(builder, marker, local);
+			return parseFieldOrLocalVariableAtNameWithRollback(builder, marker, to);
 		}
 	}
 
-	public static void parseFieldOrLocalVariableAtNameWithDone(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
+	public static boolean parseFieldOrLocalVariableAtNameWithDone(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, IElementType to)
 	{
 		if(builder.getTokenType() == IDENTIFIER)
 		{
 			builder.advanceLexer();
 
-			parseFieldAfterName(builder, marker, local);
+			parseFieldAfterName(builder, marker, to);
+			return true;
 		}
 		else
 		{
 			builder.error("Name expected");
 
-			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
+			marker.done(to);
+			return false;
 		}
 	}
 
 	public static PsiBuilder.Marker parseFieldOrLocalVariableAtNameWithRollback(CSharpBuilderWrapper builder, PsiBuilder.Marker marker,
-			boolean local)
+			IElementType to)
 	{
 		if(builder.getTokenType() == IDENTIFIER)
 		{
 			builder.advanceLexer();
 
-			return parseFieldAfterName(builder, marker, local);
+			return parseFieldAfterName(builder, marker, to);
 		}
 		else
 		{
@@ -89,7 +92,7 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		}
 	}
 
-	private static PsiBuilder.Marker parseFieldAfterName(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean local)
+	private static PsiBuilder.Marker parseFieldAfterName(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, IElementType to)
 	{
 		if(builder.getTokenType() == EQ)
 		{
@@ -102,19 +105,19 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 
 		if(builder.getTokenType() == COMMA)
 		{
-			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
+			marker.done(to);
 
 			builder.advanceLexer();
 
 			PsiBuilder.Marker newMarker = builder.mark();
 
-			parseFieldOrLocalVariableAtNameWithDone(builder, newMarker, local);
+			parseFieldOrLocalVariableAtNameWithDone(builder, newMarker, to);
 
 			return marker;
 		}
 		else
 		{
-			marker.done(local ? LOCAL_VARIABLE : FIELD_DECLARATION);
+			marker.done(to);
 
 			return marker;
 		}
@@ -130,7 +133,7 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		}
 		else
 		{
-			parseFieldAfterName(builderWrapper, marker, false);
+			parseFieldAfterName(builderWrapper, marker, FIELD_DECLARATION);
 
 			expect(builderWrapper, SEMICOLON, "';' expected");
 		}

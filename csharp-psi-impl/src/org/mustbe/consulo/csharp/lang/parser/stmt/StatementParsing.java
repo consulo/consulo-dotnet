@@ -124,7 +124,7 @@ public class StatementParsing extends SharingParsingHelpers
 
 			wrapper.advanceLexer();
 
-			FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(wrapper, varMark, true);
+			FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(wrapper, varMark, LOCAL_VARIABLE);
 
 			expect(wrapper, SEMICOLON, "';' expected");
 
@@ -186,7 +186,7 @@ public class StatementParsing extends SharingParsingHelpers
 
 		if(expect(builder, LPAR, "'(' expected"))
 		{
-			if(FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithRollback(builder, builder.mark(), true) == null)
+			if(FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithRollback(builder, builder.mark(), LOCAL_VARIABLE) == null)
 			{
 				if(ExpressionParsing.parse(builder) == null)
 				{
@@ -449,7 +449,7 @@ public class StatementParsing extends SharingParsingHelpers
 
 				builder.advanceLexer();
 
-				FieldOrPropertyParsing.parseFieldOrLocalVariableAtNameWithDone(builder, builder.mark(), true);
+				FieldOrPropertyParsing.parseFieldOrLocalVariableAtNameWithDone(builder, builder.mark(), LOCAL_VARIABLE);
 
 				expect(builder, SEMICOLON, "';' expected");
 			}

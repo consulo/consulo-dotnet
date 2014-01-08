@@ -409,4 +409,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(statement);
 	}
+
+	public void visitEnumConstantDeclaration(CSharpEnumConstantDeclarationImpl cSharpEnumConstant)
+	{
+		visitElement(cSharpEnumConstant);
+	}
 }
