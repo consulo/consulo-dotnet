@@ -59,16 +59,17 @@ public class GenericTable
 
 		name = split.get(0);
 
-		StringTokenizer outer = new StringTokenizer(split.get(1), ",");
+		List<String> outer = StringUtil.split(split.get(1), ",");
 
-		fieldNames = new String[outer.countTokens()];
+		fieldNames = new String[outer.size()];
 		types = new String[fieldNames.length];
 		for(int i = 0; i < fieldNames.length; i++)
 		{
-			String field = outer.nextToken();
-			StringTokenizer fieldtok = new StringTokenizer(field, "=");
-			fieldNames[i] = fieldtok.nextToken();
-			types[i] = fieldtok.nextToken();
+			String field = outer.get(i);
+
+			List<String> fieldtok = StringUtil.split(field, "=");
+			fieldNames[i] = fieldtok.get(0);
+			types[i] = fieldtok.get(1);
 		}
 
 		data = new HashMap<String, Object>(fieldNames.length);
