@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.psi.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
@@ -26,7 +26,7 @@ import com.intellij.psi.stubs.StubIndexKey;
  * @author VISTALL
  * @since 18.12.13.
  */
-public class MethodIndex extends StringStubIndexExtension<DotNetMethodDeclaration>
+public class MethodIndex extends StringStubIndexExtension<DotNetLikeMethodDeclaration>
 {
 	public static MethodIndex getInstance()
 	{
@@ -35,7 +35,7 @@ public class MethodIndex extends StringStubIndexExtension<DotNetMethodDeclaratio
 
 	@NotNull
 	@Override
-	public StubIndexKey<String, DotNetMethodDeclaration> getKey()
+	public StubIndexKey<String, DotNetLikeMethodDeclaration> getKey()
 	{
 		return DotNetIndexKeys.METHOD_INDEX;
 	}

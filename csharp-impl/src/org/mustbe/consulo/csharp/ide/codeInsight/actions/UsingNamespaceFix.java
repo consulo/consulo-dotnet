@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetBundle;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.stub.index.MethodIndex;
 import org.mustbe.consulo.dotnet.psi.stub.index.TypeIndex;
@@ -107,7 +108,8 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 
 		for(val method : methods)
 		{
-			if((method.getParent() instanceof DotNetNamespaceDeclaration || method.getParent() instanceof PsiFile) && method.isDelegate())
+			if((method.getParent() instanceof DotNetNamespaceDeclaration || method.getParent() instanceof PsiFile) && method instanceof
+					DotNetMethodDeclaration && ((DotNetMethodDeclaration) method).isDelegate())
 			{
 				String presentableParentQName = method.getPresentableParentQName();
 				if(StringUtil.isEmpty(presentableParentQName))

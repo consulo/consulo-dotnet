@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.psi.stub.index;
 
 import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
@@ -34,7 +35,7 @@ public interface DotNetIndexKeys
 	StubIndexKey<String, DotNetNamedElement> MEMBER_BY_NAMESPACE_QNAME_INDEX = StubIndexKey.createIndexKey(".net.member.by.namespace.qname.index");
 
 	StubIndexKey<String, DotNetNamespaceDeclaration> NAMESPACE_BY_QNAME_INDEX = StubIndexKey.createIndexKey(".net.namespace.by.qname.index");
-	StubIndexKey<String, DotNetMethodDeclaration> METHOD_INDEX = StubIndexKey.createIndexKey(".net.method.index");
+	StubIndexKey<String, DotNetLikeMethodDeclaration> METHOD_INDEX = StubIndexKey.createIndexKey(".net.method.index");
 	StubIndexKey<String, DotNetMethodDeclaration> METHOD_BY_QNAME_INDEX = StubIndexKey.createIndexKey(".net.method.by.qname.index");
 	StubIndexKey<String, DotNetTypeDeclaration> TYPE_INDEX = StubIndexKey.createIndexKey(".net.type.index");
 	StubIndexKey<String, DotNetTypeDeclaration> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey(".net.type.by.qname.index");
