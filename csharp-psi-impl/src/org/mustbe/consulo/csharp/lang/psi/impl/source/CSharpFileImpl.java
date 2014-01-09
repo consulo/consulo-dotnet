@@ -35,6 +35,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubIndex;
+import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 
 /**
@@ -46,6 +47,20 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 	public CSharpFileImpl(@NotNull FileViewProvider viewProvider)
 	{
 		super(viewProvider, CSharpLanguage.INSTANCE);
+	}
+
+	@Override
+	public void deleteChildRange(PsiElement first, PsiElement last) throws IncorrectOperationException
+	{
+		DotNetNamedElement singleElement = CSharpPsiUtilImpl.findSingleElement(this);
+		if(singleElement != null && (singleElement == first || singleElement == last))
+		{
+			delete();
+		}
+		else
+		{
+			super.deleteChildRange(first, last);
+		}
 	}
 
 	@Override

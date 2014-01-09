@@ -22,15 +22,13 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPsiUtilImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -56,7 +54,7 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 			Object value = treeNode.getValue();
 			if(value instanceof CSharpFileImpl)
 			{
-				DotNetNamedElement singleElement = findSingleElement((CSharpFileImpl) value);
+				DotNetNamedElement singleElement = CSharpPsiUtilImpl.findSingleElement((CSharpFileImpl) value);
 				if(singleElement != null)
 				{
 					nodes.add(new CSharpQElementTreeNode(singleElement, settings));
@@ -74,41 +72,6 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 			}
 		}
 		return nodes;
-	}
-
-	@Nullable
-	private static DotNetNamedElement findSingleElement(CSharpFileImpl file)
-	{
-		DotNetNamedElement[] members = file.getMembers();
-		if(members.length != 1)
-		{
-			return null;
-		}
-
-		DotNetNamedElement member = members[0];
-		if(member instanceof DotNetNamespaceDeclaration)
-		{
-			DotNetNamedElement[] namespacesDeclarations = ((DotNetNamespaceDeclaration) member).getMembers();
-			if(namespacesDeclarations.length != 1)
-			{
-				return null;
-			}
-			DotNetNamedElement namespacesDeclaration = namespacesDeclarations[0];
-			if(Comparing.equal(FileUtil.getNameWithoutExtension(file.getName()), namespacesDeclaration.getName()))
-			{
-				return namespacesDeclaration;
-			}
-			return null;
-		}
-		else
-		{
-			if(Comparing.equal(FileUtil.getNameWithoutExtension(file.getName()), member.getName()))
-			{
-				return member;
-			}
-		}
-
-		return null;
 	}
 
 	@Nullable

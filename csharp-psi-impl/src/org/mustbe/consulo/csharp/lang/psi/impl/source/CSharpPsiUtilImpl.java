@@ -17,11 +17,16 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -41,6 +46,47 @@ public class CSharpPsiUtilImpl
 		}
 		VirtualFile virtualFile = containingFile.getVirtualFile();
 		return virtualFile != null && ProjectFileIndex.SERVICE.getInstance(psi.getProject()).isInLibraryClasses(virtualFile);
+	}
+
+
+	@Nullable
+	public static DotNetNamedElement findSingleElement(PsiFile file)
+	{
+		if(!(file instanceof CSharpFileImpl))
+		{
+			return null;
+		}
+
+		DotNetNamedElement[] members = ((CSharpFileImpl) file).getMembers();
+		if(members.length != 1)
+		{
+			return null;
+		}
+
+		DotNetNamedElement member = members[0];
+		if(member instanceof DotNetNamespaceDeclaration)
+		{
+			DotNetNamedElement[] namespacesDeclarations = ((DotNetNamespaceDeclaration) member).getMembers();
+			if(namespacesDeclarations.length != 1)
+			{
+				return null;
+			}
+			DotNetNamedElement namespacesDeclaration = namespacesDeclarations[0];
+			if(Comparing.equal(FileUtil.getNameWithoutExtension(file.getName()), namespacesDeclaration.getName()))
+			{
+				return namespacesDeclaration;
+			}
+			return null;
+		}
+		else
+		{
+			if(Comparing.equal(FileUtil.getNameWithoutExtension(file.getName()), member.getName()))
+			{
+				return member;
+			}
+		}
+
+		return null;
 	}
 
 	@NotNull

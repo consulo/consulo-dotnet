@@ -18,11 +18,13 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
@@ -36,6 +38,21 @@ public abstract class CSharpStubElementImpl<S extends StubElement> extends StubB
 	public CSharpStubElementImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	public void deleteChildInternal(@NotNull ASTNode child)
+	{
+		PsiFile containingFile = getContainingFile();
+		DotNetNamedElement singleElement = CSharpPsiUtilImpl.findSingleElement(containingFile);
+		if(singleElement != null && singleElement == child.getPsi())
+		{
+			containingFile.delete();
+		}
+		else
+		{
+			super.deleteChildInternal(child);
+		}
 	}
 
 	@Override

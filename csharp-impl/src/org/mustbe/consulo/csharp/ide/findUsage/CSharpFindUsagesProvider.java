@@ -30,6 +30,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEventDeclarationImpl
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
@@ -46,13 +47,14 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 	@Override
 	public WordsScanner getWordsScanner()
 	{
-		return new DefaultWordsScanner(new CSharpLexer(), TokenSet.create(CSharpTokens.IDENTIFIER), CSharpTokenSets.COMMENTS, CSharpTokenSets.LITERALS);
+		return new DefaultWordsScanner(new CSharpLexer(), TokenSet.create(CSharpTokens.IDENTIFIER), CSharpTokenSets.COMMENTS,
+				CSharpTokenSets.LITERALS);
 	}
 
 	@Override
 	public boolean canFindUsagesFor(@NotNull PsiElement element)
 	{
-		return true;
+		return element instanceof DotNetNamedElement || element instanceof CSharpNamespaceAsElement;
 	}
 
 	@Nullable
@@ -109,6 +111,11 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 	@Override
 	public String getDescriptiveName(@NotNull PsiElement element)
 	{
+		if(element instanceof DotNetNamedElement)
+		{
+			String name = ((DotNetNamedElement) element).getName();
+			return name == null ? "null" : name;
+		}
 
 		return "getDescriptiveName " + element.getNode().getElementType();
 	}
