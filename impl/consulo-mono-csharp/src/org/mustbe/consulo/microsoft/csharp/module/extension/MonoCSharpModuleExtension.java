@@ -43,6 +43,7 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 		{
 			optionsBuilder.addArgument("/unsafe");
 		}
+		optionsBuilder.addArgument("/nostdlib+");
 		optionsBuilder.setExecutableFromSdk("mcs.exe");
 		return optionsBuilder;
 	}

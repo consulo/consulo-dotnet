@@ -24,8 +24,10 @@ import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.LibraryOrderEntry;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ModuleOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.util.io.FileUtil;
@@ -41,7 +43,7 @@ public class DotNetCompilerUtil
 {
 	@NotNull
 	public static Set<String> collectDependencies(@NotNull Module module, final boolean debug, final boolean toSystemInDepend,
-			final boolean goInside)
+			final boolean forDependCopy)
 	{
 		val list = new HashSet<String>();
 		val processed = new HashSet<Module>();
@@ -52,9 +54,25 @@ public class DotNetCompilerUtil
 		moduleRootManager.processOrder(new RootPolicy<Object>()
 		{
 			@Override
+			public Object visitModuleJdkOrderEntry(ModuleExtensionWithSdkOrderEntry jdkOrderEntry, Object value)
+			{
+				if(!forDependCopy)
+				{
+					collectFromRoot(jdkOrderEntry);
+				}
+				return null;
+			}
+
+			@Override
 			public Object visitLibraryOrderEntry(LibraryOrderEntry libraryOrderEntry, Object value)
 			{
-				for(VirtualFile virtualFile : libraryOrderEntry.getFiles(OrderRootType.CLASSES))
+				collectFromRoot(libraryOrderEntry);
+				return null;
+			}
+
+			private void collectFromRoot(OrderEntry orderEntry)
+			{
+				for(VirtualFile virtualFile : orderEntry.getFiles(OrderRootType.CLASSES))
 				{
 					VirtualFile virtualFileForJar = ArchiveVfsUtil.getVirtualFileForJar(virtualFile);
 					String path = null;
@@ -76,7 +94,6 @@ public class DotNetCompilerUtil
 						list.add(path);
 					}
 				}
-				return null;
 			}
 
 			@Override
@@ -109,7 +126,7 @@ public class DotNetCompilerUtil
 					}
 				}
 
-				if(goInside)
+				if(forDependCopy)
 				{
 					Set<String> strings = collectDependencies(depModule, debug, toSystemInDepend, true);
 					list.addAll(strings);

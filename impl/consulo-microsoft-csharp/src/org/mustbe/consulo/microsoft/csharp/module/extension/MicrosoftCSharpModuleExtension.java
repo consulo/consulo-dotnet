@@ -41,6 +41,7 @@ public class MicrosoftCSharpModuleExtension extends CSharpModuleExtension<Micros
 		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(dotNetSdk);
 		optionsBuilder.addArgument("/fullpaths");
 		optionsBuilder.addArgument("/utf8output");
+		optionsBuilder.addArgument("/nostdlib+");
 		if(isUnsafeEnabled())
 		{
 			optionsBuilder.addArgument("/unsafe");
