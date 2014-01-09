@@ -19,8 +19,6 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
 import edu.arizona.cs.mbel.signature.TypeAttributes;
 
 /**
@@ -41,8 +39,6 @@ public class ExportedTypeRef extends TypeRef implements TypeAttributes
 	private FileReference file;
 	private AssemblyRefInfo myAssemblyRefInfo;
 
-	private Vector<CustomAttribute> exportedTypeAttributes;
-
 	/**
 	 * Makes an ExportedTypeRef with the given namespace, name, and flags
 	 *
@@ -54,8 +50,6 @@ public class ExportedTypeRef extends TypeRef implements TypeAttributes
 	{
 		super(ns, name);
 		Flags = flags;
-
-		exportedTypeAttributes = new Vector<CustomAttribute>(0);
 	}
 
 	/**
@@ -88,42 +82,6 @@ public class ExportedTypeRef extends TypeRef implements TypeAttributes
 		Flags = flags;
 		exportedType = parent;
 		file = null;
-	}
-
-
-	/**
-	 * Adds a CustomAttribute to this ExportedTypeRef
-	 */
-	public void addExportedTypeAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			exportedTypeAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this ExportedTypeRef (ExportedType)
-	 */
-	public CustomAttribute[] getExportedTypeAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[exportedTypeAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) exportedTypeAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this ExportedType
-	 */
-	public void removeExportedTypeAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			exportedTypeAttributes.remove(ca);
-		}
 	}
 
 	/**

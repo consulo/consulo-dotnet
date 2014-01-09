@@ -19,8 +19,7 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 import edu.arizona.cs.mbel.signature.ManifestResourceAttributes;
 
 /**
@@ -30,11 +29,10 @@ import edu.arizona.cs.mbel.signature.ManifestResourceAttributes;
  *
  * @author Michael Stepp
  */
-public abstract class ManifestResource implements ManifestResourceAttributes
+public abstract class ManifestResource extends BaseCustomAttributeOwner implements ManifestResourceAttributes
 {
 	private long Flags;
 	private String Name;
-	private Vector manifestResourceAttributes;
 
 	/**
 	 * Makes a new ManifestResource with the given name and flags
@@ -46,43 +44,6 @@ public abstract class ManifestResource implements ManifestResourceAttributes
 	{
 		Name = name;
 		Flags = flags;
-
-		manifestResourceAttributes = new Vector(10);
-	}
-
-	/**
-	 * Adds a CustomAttribute to this ManifestResource
-	 */
-	public void addManifestResourceAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			manifestResourceAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this ManifestResource
-	 */
-	public CustomAttribute[] getManifestResourceAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[manifestResourceAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) manifestResourceAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this ManifestResource
-	 */
-	public void removeManifestResourceAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			manifestResourceAttributes.remove(ca);
-		}
 	}
 
 	/**

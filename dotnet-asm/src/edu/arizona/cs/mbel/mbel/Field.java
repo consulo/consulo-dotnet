@@ -20,8 +20,6 @@
 package edu.arizona.cs.mbel.mbel;
 
 
-import java.util.Vector;
-
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 import edu.arizona.cs.mbel.signature.FieldSignature;
 import edu.arizona.cs.mbel.signature.MarshalSignature;
@@ -42,8 +40,6 @@ public class Field extends FieldRef implements FieldAttributes
 	private long Offset = -1L;      // from FieldLayout (only present if Flags&ExplicitLayout)
 	private long FieldRVA = -1L;
 
-	private Vector fieldAttributes;
-
 	/**
 	 * Constructs a Field witht he given name, flags, and signature.
 	 *
@@ -55,7 +51,6 @@ public class Field extends FieldRef implements FieldAttributes
 	{
 		super(name, sig, null);
 		Flags = flags;
-		fieldAttributes = new Vector(10);
 	}
 
 	/**
@@ -70,48 +65,7 @@ public class Field extends FieldRef implements FieldAttributes
 	{
 		super(name, sig, null);
 		Flags = Private;
-		fieldAttributes = new Vector(10);
 	}
-
-	/**
-	 * Adds a CustomAttribute to this Field
-	 *
-	 * @param ca the CustomAttribute
-	 */
-	public void addFieldAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			fieldAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns the CustomAttributes applied to this Field
-	 *
-	 * @return a non-null array of CustomAttributes
-	 */
-	public CustomAttribute[] getFieldAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[fieldAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) fieldAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this Field
-	 */
-	public void removeFieldAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			fieldAttributes.remove(ca);
-		}
-	}
-
 
 	protected void setFieldRVA(long rva)
 	{

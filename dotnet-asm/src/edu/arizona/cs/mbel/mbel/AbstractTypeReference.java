@@ -20,6 +20,7 @@
 package edu.arizona.cs.mbel.mbel;
 
 import edu.arizona.cs.mbel.instructions.LoadableType;
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 
 /**
  * The abstract parent class of TypeDef, TypeRef, and TypeSpec.
@@ -29,7 +30,7 @@ import edu.arizona.cs.mbel.instructions.LoadableType;
  *
  * @author Michael Stepp
  */
-public abstract class AbstractTypeReference implements LoadableType
+public abstract class AbstractTypeReference extends BaseCustomAttributeOwner implements LoadableType
 {
 	//public abstract void output();
 

@@ -19,9 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
 import edu.arizona.cs.mbel.signature.AssemblyFlags;
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 
 /**
  * This class is simply a container for all the fields found in an AssemblyRef metadata table.
@@ -30,7 +29,7 @@ import edu.arizona.cs.mbel.signature.AssemblyFlags;
  *
  * @author Michael Stepp
  */
-public class AssemblyRefInfo implements AssemblyFlags, edu.arizona.cs.mbel.signature.Culture
+public class AssemblyRefInfo extends BaseCustomAttributeOwner implements AssemblyFlags, edu.arizona.cs.mbel.signature.Culture
 {
 	/**
 	 * A pre-made assembly ref for mscorlib.dll, since it will be used often
@@ -74,7 +73,6 @@ public class AssemblyRefInfo implements AssemblyFlags, edu.arizona.cs.mbel.signa
 	private String Name;
 	private String Culture;
 	private byte[] HashValue;        // blob
-	private Vector assemblyRefAttributes;
 
 	/**
 	 * Makes an AssemblyRefInfo with the given information
@@ -99,8 +97,6 @@ public class AssemblyRefInfo implements AssemblyFlags, edu.arizona.cs.mbel.signa
 		Name = name;
 		Culture = cult;
 		HashValue = hash;
-
-		assemblyRefAttributes = new Vector(10);
 	}
 
 	/**
@@ -119,41 +115,6 @@ public class AssemblyRefInfo implements AssemblyFlags, edu.arizona.cs.mbel.signa
 		if(AssemblyRefRID == -1L)
 		{
 			AssemblyRefRID = rid;
-		}
-	}
-
-	/**
-	 * Adds a CustomAttribute to this AssemblyRefInfo
-	 */
-	public void addAssemblyRefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			assemblyRefAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this AssemblyRefInfo (AssemblyRef)
-	 */
-	public CustomAttribute[] getAssemblyRefAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[assemblyRefAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) assemblyRefAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this AssemblyRef
-	 */
-	public void removeAssemblyRefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			assemblyRefAttributes.remove(ca);
 		}
 	}
 

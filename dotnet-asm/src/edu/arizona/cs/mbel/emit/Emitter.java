@@ -187,8 +187,7 @@ public class Emitter
 
 
 		////// re-emit VTableFixups (in same place as old VTableFixups) ////////////////
-		VTableFixup[] fixups = module.getVTableFixups();
-		for(VTableFixup fixup : fixups)
+		for(VTableFixup fixup : module.getVTableFixups())
 		{
 			long VTABLERVA = fixup.getRVA();
 			int FP = 0;

@@ -19,8 +19,7 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 import edu.arizona.cs.mbel.signature.PropertyAttributes;
 import edu.arizona.cs.mbel.signature.PropertySignature;
 
@@ -31,7 +30,7 @@ import edu.arizona.cs.mbel.signature.PropertySignature;
  *
  * @author Michael Stepp
  */
-public class Property implements PropertyAttributes
+public class Property extends BaseCustomAttributeOwner implements PropertyAttributes
 {
 	private long PropertyRID = -1L;
 
@@ -41,7 +40,6 @@ public class Property implements PropertyAttributes
 	private MethodDef getter, setter;
 	private byte[] defaultValue;
 
-	private Vector propertyAttributes;
 
 	/**
 	 * Makes a new Property with the given name, flags, and signature
@@ -55,43 +53,6 @@ public class Property implements PropertyAttributes
 		Name = name;
 		Flags = flags;
 		signature = sig;
-
-		propertyAttributes = new Vector(10);
-	}
-
-	/**
-	 * Adds a CustomAttribute to this Property
-	 */
-	public void addPropertyAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			propertyAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this Property
-	 */
-	public CustomAttribute[] getPropertyAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[propertyAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) propertyAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this Property
-	 */
-	public void removePropertyAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			propertyAttributes.remove(ca);
-		}
 	}
 
 	/**

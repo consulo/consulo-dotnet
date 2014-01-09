@@ -20,8 +20,11 @@
 
 package edu.arizona.cs.mbel.signature;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import edu.arizona.cs.mbel.mbel.CustomAttribute;
 
 /**
@@ -31,38 +34,42 @@ import edu.arizona.cs.mbel.mbel.CustomAttribute;
  *
  * @author Michael Stepp
  */
-public abstract class StandAloneSignature extends Signature
+public abstract class StandAloneSignature extends Signature implements CustomAttributeOwner
 {
-	private Vector standAloneSigAttributes;
+	private List<CustomAttribute> myCustomAttributes = Collections.emptyList();
 
 	protected StandAloneSignature()
 	{
-		standAloneSigAttributes = new Vector(10);
 	}
 
-	public void addStandAloneSigAttribute(CustomAttribute ca)
+	/**
+	 * Adds a CustomAttribute to this MemberRef
+	 */
+	@Override
+	public void addCustomAttribute(@NotNull CustomAttribute ca)
 	{
-		if(ca != null)
+		if(myCustomAttributes == Collections.<CustomAttribute>emptyList())
 		{
-			standAloneSigAttributes.add(ca);
+			myCustomAttributes = new ArrayList<CustomAttribute>();
 		}
+		myCustomAttributes.add(ca);
 	}
 
-	public CustomAttribute[] getStandAloneSigAttributes()
+	/**
+	 * Returns a non-null array of the CustomAttributes on this MemberRef
+	 */
+	@Override
+	public CustomAttribute[] getCustomAttributes()
 	{
-		CustomAttribute[] cas = new CustomAttribute[standAloneSigAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) standAloneSigAttributes.get(i);
-		}
-		return cas;
+		return myCustomAttributes.toArray(new CustomAttribute[myCustomAttributes.size()]);
 	}
 
-	public void removeStandAloneSigAttribute(CustomAttribute ca)
+	/**
+	 * Removes a CustomAttribute from thie MemberRef
+	 */
+	@Override
+	public void removeCustomAttribute(@NotNull CustomAttribute ca)
 	{
-		if(ca != null)
-		{
-			standAloneSigAttributes.remove(ca);
-		}
+		myCustomAttributes.remove(ca);
 	}
 }

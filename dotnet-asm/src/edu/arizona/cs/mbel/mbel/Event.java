@@ -19,8 +19,7 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 import edu.arizona.cs.mbel.signature.EventAttributes;
 
 /**
@@ -29,7 +28,7 @@ import edu.arizona.cs.mbel.signature.EventAttributes;
  *
  * @author Michael Stepp
  */
-public class Event implements EventAttributes
+public class Event extends BaseCustomAttributeOwner implements EventAttributes
 {
 	private long EventRID = -1L;
 
@@ -37,8 +36,6 @@ public class Event implements EventAttributes
 	private String Name;
 	private Object EventType; // type def, type ref, type spec
 	private MethodDef addOn, removeOn, fire;
-
-	private Vector eventAttributes;
 
 	/**
 	 * Makes a new Event with the given name, flags, and handler type
@@ -52,43 +49,6 @@ public class Event implements EventAttributes
 		Name = name;
 		EventFlags = flags;
 		EventType = handler;
-
-		eventAttributes = new Vector(10);
-	}
-
-	/**
-	 * Adds a CustomAttribute to this event
-	 */
-	public void addEventAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			eventAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this Event
-	 */
-	public CustomAttribute[] getEventAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[eventAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) eventAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this Event
-	 */
-	public void removeEventAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			eventAttributes.remove(ca);
-		}
 	}
 
 	/**

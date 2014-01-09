@@ -20,10 +20,6 @@
 
 package edu.arizona.cs.mbel.signature;
 
-import java.util.Vector;
-
-import edu.arizona.cs.mbel.mbel.CustomAttribute;
-
 /**
  * This class holds the information needed for a method parameter.
  * Both ParameterSignature and ReturnTypeSignature may containt an
@@ -32,14 +28,13 @@ import edu.arizona.cs.mbel.mbel.CustomAttribute;
  *
  * @author Michael Stepp
  */
-public class ParameterInfo implements ParamAttributes
+public class ParameterInfo extends BaseCustomAttributeOwner implements ParamAttributes
 {
 	private long ParamRID = -1L;
 	private int Flags;
 	private String Name;
 	private MarshalSignature fieldMarshal;
 	private byte[] defaultValue;
-	private Vector paramAttributes;
 
 	/**
 	 * Constructs a ParameterInfo object with the given name and flags
@@ -49,44 +44,8 @@ public class ParameterInfo implements ParamAttributes
 	 */
 	public ParameterInfo(String name, int flags)
 	{
-		paramAttributes = new Vector(10);
 		Name = name;
 		Flags = flags;
-	}
-
-	/**
-	 * Adds a CustomAttribute to this ParameterInfo
-	 */
-	public void addParamAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			paramAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes for this ParameterInfo (Param)
-	 */
-	public CustomAttribute[] getParamAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[paramAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) paramAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this Param
-	 */
-	public void removeParamAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			paramAttributes.remove(ca);
-		}
 	}
 
 	/**

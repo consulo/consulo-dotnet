@@ -58,7 +58,7 @@ public class TableConstants
 
 	// indices for coded index types (to be used
 	// in the arrays and methods also defined in this class)
-	public static final int TypeDefOrRef = 0;
+	public static final int TypeDefOrRefOrSpec = 0;
 	public static final int HasConst = 1;
 	public static final int HasCustomAttribute = 2;
 	public static final int HasFieldMarshal = 3;
@@ -143,7 +143,7 @@ public class TableConstants
 		GRAMMAR[ENCLog] = "ENCLog:Token=4,FuncCode=4";
 		GRAMMAR[ENCMap] = "ENCMap:Token=4";
 		GRAMMAR[EventMap] = "EventMap:Parent=T|" + TypeDef + ",EventList=T|" + Event;
-		GRAMMAR[Event] = "Event:EventFlags=2,Name=S,EventType=C|" + TypeDefOrRef;
+		GRAMMAR[Event] = "Event:EventFlags=2,Name=S,EventType=C|" + TypeDefOrRefOrSpec;
 		GRAMMAR[EventPtr] = "EventPtr:Event=T|" + Event;
 		GRAMMAR[ExportedType] = "ExportedType:Flags=4,TypeDefID=4,TypeName=S,TypeNamespace=S,Implementation=C|" + Implementation;
 		GRAMMAR[Field] = "Field:Flags=2,Name=S,Signature=B";
@@ -153,7 +153,7 @@ public class TableConstants
 		GRAMMAR[FieldRVA] = "FieldRVA:RVA=4,Field=T|" + Field;
 		GRAMMAR[File] = "File:Flags=4,Name=S,HashValue=B";
 		GRAMMAR[ImplMap] = "ImplMap:MappingFlags=2,MemberForwarded=C|" + MemberForwarded + ",ImportName=S,ImportScope=T|" + ModuleRef;
-		GRAMMAR[InterfaceImpl] = "InterfaceImpl:Class=T|" + TypeDef + ",Interface=C|" + TypeDefOrRef;
+		GRAMMAR[InterfaceImpl] = "InterfaceImpl:Class=T|" + TypeDef + ",Interface=C|" + TypeDefOrRefOrSpec;
 		GRAMMAR[ManifestResource] = "ManifestResource:Offset=4,Flags=4,Name=S,Implementation=C|" + Implementation;
 		GRAMMAR[MemberRef] = "MemberRef:Class=C|" + MemberRefParent + ",Name=S,Signature=B";
 		GRAMMAR[Method] = "Method:RVA=4,ImplFlags=2,Flags=2,Name=S,Signature=B,ParamList=T|" + Param;
@@ -169,12 +169,12 @@ public class TableConstants
 		GRAMMAR[PropertyMap] = "PropertyMap:Parent=T|" + TypeDef + ",PropertyList=T|" + Property;
 		GRAMMAR[PropertyPtr] = "PropertyPtr:Property=T|" + Property;
 		GRAMMAR[StandAloneSig] = "StandAloneSig:Signature=B";
-		GRAMMAR[TypeDef] = "TypeDef:Flags=4,Name=S,Namespace=S,Extends=C|" + TypeDefOrRef + ",FieldList=T|" + Field + ",MethodList=T|" + Method;
+		GRAMMAR[TypeDef] = "TypeDef:Flags=4,Name=S,Namespace=S,Extends=C|" + TypeDefOrRefOrSpec + ",FieldList=T|" + Field + ",MethodList=T|" + Method;
 		GRAMMAR[TypeRef] = "TypeRef:ResolutionScope=C|" + ResolutionScope + ",Name=S,Namespace=S";
 		GRAMMAR[TypeSpec] = "TypeSpec:Signature=B";
 		GRAMMAR[GenericParam] = "GenericParam:Flags=4,Parent=T|" + TypeOrMethodDef + ",Name=S";
 		GRAMMAR[MethodSpec] = "MethodSpec:Method=C|" + MethodDefOrRef + ",Instantiation=B";
-		GRAMMAR[GenericParamConstraint] = "GenericParamConstraint:Parent=T|" + GenericParam + ",Constraint=C|" + TypeDefOrRef;
+		GRAMMAR[GenericParamConstraint] = "GenericParamConstraint:Parent=T|" + GenericParam + ",Constraint=C|" + TypeDefOrRefOrSpec;
 	}
 
 	// BITS[i] = ceil(lg(TABLE_OPTIONS[i].length))

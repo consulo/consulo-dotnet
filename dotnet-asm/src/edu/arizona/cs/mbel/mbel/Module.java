@@ -19,9 +19,12 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.consulo.annotations.Immutable;
 import edu.arizona.cs.mbel.parse.PEModule;
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 
 /**
  * This class represents a .NET Module. The Module is the root of the tree as far as MBEL objects are concerned.
@@ -34,7 +37,7 @@ import edu.arizona.cs.mbel.parse.PEModule;
  *
  * @author Michael Stepp
  */
-public class Module
+public class Module extends BaseCustomAttributeOwner
 {
 	private PEModule pe_module;
 	//////////////////////////////////////////////////////
@@ -44,14 +47,12 @@ public class Module
 	private byte[] EncID;               // GUID
 	private byte[] EncBaseID;           // GUID
 	//////////////////////////////////////////////////////
-	private Vector typeDefs;
-	private Vector fileReferences;
-	private Vector manifestResources;
-	private Vector vtableFixups;
+	private List<TypeDef> typeDefs = new ArrayList<TypeDef>();
+	private List<FileReference> fileReferences = new ArrayList<FileReference>(10);
+	private List<ManifestResource> manifestResources = new ArrayList<ManifestResource>(10);
+	private List<VTableFixup> vtableFixups = new ArrayList<VTableFixup>();
 	private AssemblyInfo assemblyInfo;
 	private EntryPoint entryPoint;
-
-	private Vector moduleAttributes;
 
 	/**
 	 * Constructs a new Module "from scratch".
@@ -70,15 +71,6 @@ public class Module
 		Mvid = mvid;
 		EncID = new byte[0];
 		EncBaseID = new byte[0];
-		typeDefs = new Vector(10);
-		fileReferences = new Vector(10);
-		manifestResources = new Vector(10);
-		vtableFixups = new Vector(10);
-		moduleAttributes = new Vector(10);
-
-		assemblyInfo = null;
-		entryPoint = null;
-
 
 		TypeDef mod = new TypeDef("", "<Module>", 0);
 		addTypeDef(mod);
@@ -95,55 +87,7 @@ public class Module
 	{
 		pe_module = pe;
 		Name = name;
-		typeDefs = new Vector(20);
-		fileReferences = new Vector(10);
-		manifestResources = new Vector(5);
-		vtableFixups = new Vector(10);
-		assemblyInfo = null;
-		entryPoint = null;
-
-		moduleAttributes = new Vector(10);
 	}
-
-	/**
-	 * Adds a CustomAttribute to this Module
-	 *
-	 * @param ca the CustomAttribute to add
-	 */
-	public void addModuleAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			moduleAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a list of the CustomAttributes on this Module
-	 *
-	 * @return a non-null array of CustomAttributes
-	 */
-	public CustomAttribute[] getModuleAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[moduleAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) moduleAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this Module
-	 */
-	public void removeModuleAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			moduleAttributes.remove(ca);
-		}
-	}
-
 
 	/**
 	 * Returns the PEModule header data from the input file of this Module (used by emitter only)
@@ -237,14 +181,10 @@ public class Module
 	 *
 	 * @return a non-null array of VTableFixups
 	 */
-	public VTableFixup[] getVTableFixups()
+	@Immutable
+	public List<VTableFixup> getVTableFixups()
 	{
-		VTableFixup[] vt = new VTableFixup[vtableFixups.size()];
-		for(int i = 0; i < vt.length; i++)
-		{
-			vt[i] = (VTableFixup) vtableFixups.get(i);
-		}
-		return vt;
+		return vtableFixups;
 	}
 
 	/**
@@ -333,12 +273,11 @@ public class Module
 	 */
 	public TypeDef getTypeDefByName(String ns, String name)
 	{
-		for(Object typeDef : typeDefs)
+		for(TypeDef typeDef : typeDefs)
 		{
-			TypeDef def = (TypeDef) typeDef;
-			if(ns.equals(def.getNamespace()) && name.equals(def.getName()))
+			if(ns.equals(typeDef.getNamespace()) && name.equals(typeDef.getName()))
 			{
-				return def;
+				return typeDef;
 			}
 		}
 		return null;
@@ -349,14 +288,10 @@ public class Module
 	 *
 	 * @return a non-null array of TypeDefs
 	 */
-	public TypeDef[] getTypeDefs()
+	@Immutable
+	public List<TypeDef> getTypeDefs()
 	{
-		TypeDef[] classes = new TypeDef[typeDefs.size()];
-		for(int i = 0; i < classes.length; i++)
-		{
-			classes[i] = (TypeDef) typeDefs.get(i);
-		}
-		return classes;
+		return typeDefs;
 	}
 
 	/**
@@ -364,14 +299,10 @@ public class Module
 	 *
 	 * @return a non-null array of FileReferences
 	 */
-	public FileReference[] getFileReferences()
+	@Immutable
+	public List<FileReference> getFileReferences()
 	{
-		FileReference[] refs = new FileReference[fileReferences.size()];
-		for(int i = 0; i < refs.length; i++)
-		{
-			refs[i] = (FileReference) fileReferences.get(i);
-		}
-		return refs;
+		return fileReferences;
 	}
 
 	/**

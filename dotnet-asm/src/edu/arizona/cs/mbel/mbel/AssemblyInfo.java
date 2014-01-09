@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import edu.arizona.cs.mbel.signature.AssemblyFlags;
 import edu.arizona.cs.mbel.signature.AssemblyHashAlgorithm;
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 
 /**
  * This class contains the extra information that a prime module would have.
@@ -32,7 +33,7 @@ import edu.arizona.cs.mbel.signature.AssemblyHashAlgorithm;
  *
  * @author Michael Stepp
  */
-public class AssemblyInfo implements HasSecurity, AssemblyHashAlgorithm, AssemblyFlags,
+public class AssemblyInfo extends BaseCustomAttributeOwner implements HasSecurity, AssemblyHashAlgorithm, AssemblyFlags,
 		edu.arizona.cs.mbel.signature.Culture
 {
 	private long HashAlgId;
@@ -43,7 +44,6 @@ public class AssemblyInfo implements HasSecurity, AssemblyHashAlgorithm, Assembl
 	private String Culture;
 	private DeclSecurity security;
 	private Vector exportedTypes;
-	private Vector assemblyAttributes;
 
 	/**
 	 * Makes a new AssemblyInfo with the given information
@@ -75,42 +75,6 @@ public class AssemblyInfo implements HasSecurity, AssemblyHashAlgorithm, Assembl
 		Culture = culture;
 
 		exportedTypes = new Vector(10);
-		assemblyAttributes = new Vector(10);
-	}
-
-	/**
-	 * Adds a CustomAttribute to this AssemblyInfo
-	 */
-	public void addAssemblyAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			assemblyAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this AssemblyInfo (Assembly)
-	 */
-	public CustomAttribute[] getAssemblyAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[assemblyAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) assemblyAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this Assembly
-	 */
-	public void removeAssemblyAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			assemblyAttributes.remove(ca);
-		}
 	}
 
 	/**

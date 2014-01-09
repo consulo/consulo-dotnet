@@ -19,7 +19,8 @@
 
 package edu.arizona.cs.mbel.emit;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.instructions.LoadableType;
@@ -28,6 +29,7 @@ import edu.arizona.cs.mbel.metadata.GenericTable;
 import edu.arizona.cs.mbel.metadata.Metadata;
 import edu.arizona.cs.mbel.metadata.TableConstants;
 import edu.arizona.cs.mbel.parse.CLIHeader;
+import edu.arizona.cs.mbel.signature.CustomAttributeOwner;
 import edu.arizona.cs.mbel.signature.LocalVarList;
 import edu.arizona.cs.mbel.signature.MarshalSignature;
 import edu.arizona.cs.mbel.signature.MethodSignature;
@@ -48,7 +50,7 @@ public class ClassEmitter
 	private BlobStreamGen blobGen;
 	private GUIDStreamGen guidGen;
 	private USStreamGen usGen;
-	private Vector<GenericTable>[] tables;
+	private List<GenericTable>[] tables;
 	private TableConstants tc = null;
 	/////////////////////////////////////////////////////
 	private long TypeDefCount = 1;
@@ -65,7 +67,7 @@ public class ClassEmitter
 	private long EntryPointToken = 0L;
 	////////////////////////////////////
 	private ByteBuffer localResources;   // ByteBuffer
-	private Vector methodBodies;                   // vector of ByteBuffers
+	private List<ByteBuffer> methodBodies;                   // vector of ByteBuffers
 	private PatchList netPatches;
 
 	/**
@@ -82,16 +84,16 @@ public class ClassEmitter
 		blobGen = new BlobStreamGen();
 		guidGen = new GUIDStreamGen();
 		usGen = new USStreamGen();
-		tables = new Vector[64];
+		tables = new ArrayList[64];
 
 		for(int i = 0; i < 64; i++)
 		{
-			tables[i] = new Vector(10);
+			tables[i] = new ArrayList<GenericTable>(10);
 		}
 		////////////////////////////////////////////////
 
 		localResources = new ByteBuffer(2000);
-		methodBodies = new Vector(10);
+		methodBodies = new ArrayList<ByteBuffer>(10);
 	}
 
 	/**
@@ -105,7 +107,7 @@ public class ClassEmitter
 		buildAssembly();
 		buildModule();
 		{// add file references from current module (more might come from elsewhere)
-			FileReference[] frs = module.getFileReferences();
+			List<FileReference> frs = module.getFileReferences();
 			for(FileReference fr : frs)
 			{
 				addFile(fr);
@@ -113,7 +115,7 @@ public class ClassEmitter
 		}
 		buildManifestResources();
 
-		TypeDef[] defs = module.getTypeDefs();
+		List<TypeDef> defs = module.getTypeDefs();
 		for(TypeDef def7 : defs)
 		{
 			addTypeDef(def7);
@@ -305,7 +307,7 @@ public class ClassEmitter
 				{
 					for(int j = 0; j < tables[i].size(); j++)
 					{
-						GenericTable methodTable = (GenericTable) tables[i].get(j);
+						GenericTable methodTable = tables[i].get(j);
 						long RVA = methodTable.getConstant("RVA").longValue();
 						int Flags = methodTable.getConstant("ImplFlags").intValue();
 
@@ -326,7 +328,7 @@ public class ClassEmitter
 				{
 					for(int j = 0; j < tables[i].size(); j++)
 					{
-						((GenericTable) tables[i].get(j)).emit(netBuffer, this);
+						tables[i].get(j).emit(netBuffer, this);
 					}
 				}
 			}
@@ -396,7 +398,7 @@ public class ClassEmitter
 		long[] bodyStarts = new long[methodBodies.size()];
 		for(int i = 0; i < methodBodies.size(); i++)
 		{
-			ByteBuffer bodybuf = (ByteBuffer) methodBodies.get(i);
+			ByteBuffer bodybuf = methodBodies.get(i);
 			netBuffer.pad(4);
 			bodyStarts[i] = netBuffer.getPosition();
 			netBuffer.concat(bodybuf);
@@ -470,7 +472,7 @@ public class ClassEmitter
 				// Make CustomAttributes (on DeclSecurity)
 				long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.DeclSecurity,
 						tables[TableConstants.DeclSecurity].size());
-				addCustomAttributes(decl.getDeclSecurityAttributes(), codedparent);
+				addCustomAttributes(decl, codedparent);
 			}
 
 			// Make ExportedTypes
@@ -482,7 +484,7 @@ public class ClassEmitter
 
 			// Make CustomAttributes
 			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Assembly, 1L);
-			addCustomAttributes(assemblyInfo.getAssemblyAttributes(), codedparent);
+			addCustomAttributes(assemblyInfo, codedparent);
 		}
 	}
 
@@ -500,7 +502,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Module, 1L);
-		addCustomAttributes(module.getModuleAttributes(), codedparent);
+		addCustomAttributes(module, codedparent);
 	}
 
 	private long addFile(FileReference fr)
@@ -522,7 +524,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.File, index);
-		addCustomAttributes(fr.getFileAttributes(), codedparent);
+		addCustomAttributes(fr, codedparent);
 
 		return index;
 	}
@@ -586,7 +588,7 @@ public class ClassEmitter
 			// Make CustomAttributes
 			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.ManifestResource,
 					tables[TableConstants.ManifestResource].size());
-			addCustomAttributes(re.getManifestResourceAttributes(), codedparent);
+			addCustomAttributes(re, codedparent);
 		}
 	}
 
@@ -624,7 +626,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.ExportedType, ref.getExportedTypeRID());
-		addCustomAttributes(ref.getExportedTypeAttributes(), codedparent);
+		addCustomAttributes(ref, codedparent);
 
 		return ref.getExportedTypeRID();
 	}
@@ -654,19 +656,19 @@ public class ClassEmitter
 		else if(parent instanceof TypeDef)
 		{
 			long rid = addTypeDef((TypeDef) parent);
-			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, rid);
+			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRefOrSpec, TableConstants.TypeDef, rid);
 			defTable.setFieldValue("Extends", coded);
 		}
 		else if(parent instanceof TypeRef)
 		{
 			long rid = addTypeRef((TypeRef) parent);
-			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, rid);
+			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRefOrSpec, TableConstants.TypeRef, rid);
 			defTable.setFieldValue("Extends", coded);
 		}
 		else if(parent instanceof TypeSpec)
 		{
 			long rid = addTypeSpec((TypeSpec) parent);
-			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeSpec, rid);
+			long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRefOrSpec, TableConstants.TypeSpec, rid);
 			defTable.setFieldValue("Extends", coded);
 		}
 
@@ -707,12 +709,12 @@ public class ClassEmitter
 			// Make CustomAttributes (on DeclSecurity)
 			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.DeclSecurity, tables[TableConstants
 					.DeclSecurity].size());
-			addCustomAttributes(decl.getDeclSecurityAttributes(), codedparent);
+			addCustomAttributes(decl, codedparent);
 		}
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.TypeDef, def.getTypeDefRID());
-		addCustomAttributes(def.getTypeDefAttributes(), codedparent);
+		addCustomAttributes(def, codedparent);
 		//////////////////////////////////////////////////////////////////
 
 		return def.getTypeDefRID();
@@ -721,10 +723,10 @@ public class ClassEmitter
 	private void buildFields(TypeDef def)
 	{
 		// Make Fields
-		Field[] defFields = def.getFields();
-		GenericTable defTable = (GenericTable) tables[TableConstants.TypeDef].get((int) def.getTypeDefRID()
+		List<Field> defFields = def.getFields();
+		GenericTable defTable = tables[TableConstants.TypeDef].get((int) def.getTypeDefRID()
 				- 1);
-		if(defFields.length == 0)
+		if(defFields.isEmpty())
 		{
 			defTable.setFieldValue("FieldList", FieldCount);
 		}
@@ -742,11 +744,11 @@ public class ClassEmitter
 	private void buildMethods(TypeDef def)
 	{
 		// Make Methods
-		MethodDef[] defMethods = def.getMethods();
+		List<MethodDef> defMethods = def.getMethods();
 		GenericTable defTable = tables[TableConstants.TypeDef].get((int) def.getTypeDefRID()
 				- 1);
 
-		if(defMethods.length == 0)
+		if(defMethods.isEmpty())
 		{
 			defTable.setFieldValue("MethodList", MethodCount);
 		}
@@ -836,12 +838,12 @@ public class ClassEmitter
 
 		// Make CustomAttributes DONE!
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Field, field.getFieldRID());
-		addCustomAttributes(field.getFieldAttributes(), codedparent);
+		addCustomAttributes(field, codedparent);
 
 		return field.getFieldRID();
 	}
 
-	private void addCustomAttributes(CustomAttribute[] cas, long codedparent)
+	private void addCustomAttributes(CustomAttributeOwner cas, long codedparent)
 	{
 		// Make CustomAttributes
 		if(cas == null)
@@ -849,7 +851,7 @@ public class ClassEmitter
 			return;
 		}
 
-		for(CustomAttribute ca : cas)
+		for(CustomAttribute ca : cas.getCustomAttributes())
 		{
 			GenericTable caTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.CustomAttribute]);
 			caTable.setFieldValue("Parent", codedparent);
@@ -900,7 +902,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.AssemblyRef, (long) index);
-		addCustomAttributes(info.getAssemblyRefAttributes(), codedparent);
+		addCustomAttributes(info, codedparent);
 
 		return (long) index;
 	}
@@ -924,7 +926,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.ModuleRef, (long) index);
-		addCustomAttributes(info.getModuleRefAttributes(), codedparent);
+		addCustomAttributes(info, codedparent);
 
 		return (long) index;
 	}
@@ -992,7 +994,7 @@ public class ClassEmitter
 
 			// Make CustomAttribute (on DeclSecurity)
 			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.DeclSecurity, tables[TableConstants.DeclSecurity].size());
-			addCustomAttributes(decl.getDeclSecurityAttributes(), codedparent);
+			addCustomAttributes(decl, codedparent);
 		}
 
 		// Make MethodSemantics
@@ -1034,7 +1036,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Method, method.getMethodRID());
-		addCustomAttributes(method.getMethodAttributes(), codedparent);
+		addCustomAttributes(method, codedparent);
 
 		return method.getMethodRID();
 	}
@@ -1042,14 +1044,14 @@ public class ClassEmitter
 	private void buildMethodBodies(TypeDef def)
 	{
 		// Make method body
-		MethodDef[] methodlist = def.getMethods();
+		List<MethodDef> methodlist = def.getMethods();
 
 		for(MethodDef aMethodlist : methodlist)
 		{
 			MethodBody body = aMethodlist.getMethodBody();
 			if(body != null)
 			{
-				GenericTable methodTable = (GenericTable) tables[TableConstants.Method].get((int) aMethodlist.getMethodRID() - 1);
+				GenericTable methodTable = tables[TableConstants.Method].get((int) aMethodlist.getMethodRID() - 1);
 
 				ByteBuffer bodybuffer = new ByteBuffer(1000);
 				body.emit(bodybuffer, this);
@@ -1153,32 +1155,36 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Param, parameter.getParamRID());
-		addCustomAttributes(parameter.getParamAttributes(), codedparent);
+		addCustomAttributes(parameter, codedparent);
 
 		return parameter.getParamRID();
 	}
 
 	private void buildInterfaceImpls(TypeDef def)
 	{
-		// DONE!
-		InterfaceImplementation[] interfaces = def.getInterfaceImplementations();
-
-		for(InterfaceImplementation anInterface : interfaces)
+		for(InterfaceImplementation anInterface : def.getInterfaceImplementations())
 		{
 			GenericTable implTable = new GenericTable(TableConstants.GRAMMAR[TableConstants.InterfaceImpl]);
 
 			implTable.setFieldValue("Class", def.getTypeDefRID());
 
-			if(anInterface.getInterface() instanceof TypeDef)
+			Object typeInfo = anInterface.getInterface();
+			if(typeInfo instanceof TypeDef)
 			{
-				TypeDef interdef = (TypeDef) anInterface.getInterface();
-				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, interdef.getTypeDefRID());
+				TypeDef interdef = (TypeDef) typeInfo;
+				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRefOrSpec, TableConstants.TypeDef, interdef.getTypeDefRID());
 				implTable.setFieldValue("Interface", coded);
 			}
-			else
+			else if(typeInfo instanceof TypeRef)
 			{
-				long rid = addTypeRef(anInterface.getInterface());
-				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, rid);
+				long rid = addTypeRef((TypeRef) typeInfo);
+				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRefOrSpec, TableConstants.TypeRef, rid);
+				implTable.setFieldValue("Interface", coded);
+			}
+			else if(typeInfo instanceof TypeSpec)
+			{
+				long rid = addTypeSpec((TypeSpec) typeInfo);
+				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRefOrSpec, TableConstants.TypeRef, rid);
 				implTable.setFieldValue("Interface", coded);
 			}
 
@@ -1187,15 +1193,14 @@ public class ClassEmitter
 			// Make CustomAttributes
 			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.InterfaceImpl,
 					tables[TableConstants.InterfaceImpl].size());
-			addCustomAttributes(anInterface.getInterfaceImplAttributes(), codedparent);
+			addCustomAttributes(anInterface, codedparent);
 		}
 	}
 
 	private void buildProperties(TypeDef def)
 	{
-		// DONE!!
-		Property[] props = def.getProperties();
-		if(props.length == 0)
+		List<Property> props = def.getProperties();
+		if(props.isEmpty())
 		{
 			return;
 		}
@@ -1233,15 +1238,15 @@ public class ClassEmitter
 
 			// Make CustomAttributes
 			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Property, prop.getPropertyRID());
-			addCustomAttributes(prop.getPropertyAttributes(), codedparent);
+			addCustomAttributes(prop, codedparent);
 		}
 	}
 
 	private void buildEvents(TypeDef def)
 	{
 		// DONE!
-		Event[] eventlist = def.getEvents();
-		if(eventlist.length == 0)
+		List<Event> eventlist = def.getEvents();
+		if(eventlist.isEmpty())
 		{
 			return;
 		}
@@ -1263,19 +1268,19 @@ public class ClassEmitter
 			if(ref instanceof TypeDef)
 			{
 				TypeDef newdef = (TypeDef) ref;
-				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeDef, newdef.getTypeDefRID());
+				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRefOrSpec, TableConstants.TypeDef, newdef.getTypeDefRID());
 				eventTable.setFieldValue("EventType", coded);
 			}
 			else if(ref instanceof TypeRef)
 			{
 				long refrid = addTypeRef((TypeRef) ref);
-				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRef, TableConstants.TypeRef, refrid);
+				long coded = TableConstants.buildCodedIndex(TableConstants.TypeDefOrRefOrSpec, TableConstants.TypeRef, refrid);
 				eventTable.setFieldValue("EventType", coded);
 			}
 
 			// Make CustomAttribute
 			long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.Event, anEventlist.getEventRID());
-			addCustomAttributes(anEventlist.getEventAttributes(), codedparent);
+			addCustomAttributes(anEventlist, codedparent);
 		}
 	}
 
@@ -1298,7 +1303,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.TypeSpec, spec.getTypeSpecRID());
-		addCustomAttributes(spec.getTypeSpecAttributes(), codedparent);
+		addCustomAttributes(spec, codedparent);
 
 		return spec.getTypeSpecRID();
 	}
@@ -1362,7 +1367,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.TypeRef, ref.getTypeRefRID());
-		addCustomAttributes(ref.getTypeRefAttributes(), codedparent);
+		addCustomAttributes(ref, codedparent);
 
 		return ref.getTypeRefRID();
 	}
@@ -1512,7 +1517,7 @@ public class ClassEmitter
 
 		// Make CustomAttribute
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.MemberRef, ref.getMemberRefRID());
-		addCustomAttributes(ref.getMemberRefAttributes(), codedparent);
+		addCustomAttributes(ref, codedparent);
 
 		return ref.getMemberRefRID();
 	}
@@ -1564,7 +1569,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.StandAloneSig, (long) index);
-		addCustomAttributes(callsiteSig.getStandAloneSigAttributes(), codedparent);
+		addCustomAttributes(callsiteSig, codedparent);
 
 		return token;
 	}
@@ -1597,7 +1602,7 @@ public class ClassEmitter
 
 		// Make CustomAttributes
 		long codedparent = TableConstants.buildCodedIndex(TableConstants.HasCustomAttribute, TableConstants.StandAloneSig, (long) index);
-		addCustomAttributes(localVars.getStandAloneSigAttributes(), codedparent);
+		addCustomAttributes(localVars, codedparent);
 
 		return token;
 	}
@@ -1725,7 +1730,7 @@ public class ClassEmitter
 	/**
 	 * Returns the list of metadata tables, indexed by token type number
 	 */
-	public Vector[] getTables()
+	public List<GenericTable>[] getTables()
 	{
 		return tables;
 	}
@@ -1765,7 +1770,7 @@ public class ClassEmitter
 	/**
 	 * Returns a vector of ByteBuffers containing the method bodies defined in this Module
 	 */
-	public Vector getMethodBodies()
+	public List<ByteBuffer> getMethodBodies()
 	{
 		return methodBodies;
 	}

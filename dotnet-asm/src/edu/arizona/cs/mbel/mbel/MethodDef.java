@@ -22,8 +22,9 @@ package edu.arizona.cs.mbel.mbel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
+import org.consulo.annotations.Immutable;
+import org.jetbrains.annotations.NotNull;
 import edu.arizona.cs.mbel.instructions.CALL;
 import edu.arizona.cs.mbel.instructions.InstructionList;
 import edu.arizona.cs.mbel.instructions.LDARG;
@@ -54,9 +55,7 @@ public class MethodDef extends MethodDefOrRef implements MethodAttributes,
 	private MethodSignature signature;
 	private long methodRVA = -1L;
 
-	private Vector methodAttributes;
-
-	private List<GenericParamDef> myGenericParamDefs;
+	private List<GenericParamDef> myGenericParamDefs = Collections.emptyList();
 
 	/**
 	 * This method will create a default constructor for any object. The constructor
@@ -105,44 +104,7 @@ public class MethodDef extends MethodDefOrRef implements MethodAttributes,
 		signature = sig;
 		ImplFlags = implFlags;
 		Flags = flags;
-		methodAttributes = new Vector(10);
 	}
-
-	/**
-	 * Adds a CustomAttribute to this Method
-	 */
-	public void addMethodAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			methodAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this Method (Method)
-	 */
-	public CustomAttribute[] getMethodAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[methodAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) methodAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this Method
-	 */
-	public void removeMethodAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			methodAttributes.remove(ca);
-		}
-	}
-
 
 	/**
 	 * Sets the RVA of this method (only for native methods)
@@ -326,17 +288,19 @@ public class MethodDef extends MethodDefOrRef implements MethodAttributes,
 	@Override
 	public void addGenericParam(GenericParamDef genericParamDef)
 	{
-		if(myGenericParamDefs == null)
+		if(myGenericParamDefs == Collections.<GenericParamDef>emptyList())
 		{
 			myGenericParamDefs = new ArrayList<GenericParamDef>(5);
 		}
 		myGenericParamDefs.add(genericParamDef);
 	}
 
+	@NotNull
 	@Override
+	@Immutable
 	public List<GenericParamDef> getGenericParams()
 	{
-		return myGenericParamDefs == null ? Collections.<GenericParamDef>emptyList() : myGenericParamDefs;
+		return myGenericParamDefs;
 	}
 
 

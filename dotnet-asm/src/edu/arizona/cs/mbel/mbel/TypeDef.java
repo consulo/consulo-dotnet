@@ -21,10 +21,10 @@ package edu.arizona.cs.mbel.mbel;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
+import org.consulo.annotations.Immutable;
+import org.jetbrains.annotations.NotNull;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
 
 /**
@@ -39,14 +39,14 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 {
 	private long TypeDefRID = -1L;
 
-	private Vector events;
-	private Vector fields;
-	private Vector<MethodDef> methods;
-	private Vector properties;
-	private Vector<InterfaceImplementation> interfaces;      // InterfaceImplementations
-	private Vector attributes;
-	private Vector nestedClasses;   // TypeDefs
-	private Vector<MethodMap> methodMaps;      // MethodMaps
+	private List<Event> events = Collections.emptyList();
+	private List<Field> fields = Collections.emptyList();
+	private List<MethodDef> methods = Collections.emptyList();
+	private List<Property> properties = Collections.emptyList();
+	private List<InterfaceImplementation> interfaces = Collections.emptyList();
+
+	private List<TypeDef> nestedClasses = Collections.emptyList();
+	private List<MethodMap> methodMaps = Collections.emptyList();
 	////////////////////////////////////
 	private long Flags;
 	//////////////////////////
@@ -55,8 +55,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	private Object superClass;
 	private DeclSecurity security;
 
-	private Vector typeDefAttributes;
-	private List<GenericParamDef> myGenericParamDefs;
+	private List<GenericParamDef> myGenericParamDefs = Collections.emptyList();
 
 	/**
 	 * Constructs a TypeDef with the given namespace, name and flags
@@ -70,59 +69,10 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 		super(ns, name);
 		Flags = flags;
 
-		events = new Vector(5);
-		fields = new Vector(10);
-		methods = new Vector(10);
-		properties = new Vector(10);
-		interfaces = new Vector(5);
-		attributes = new Vector(5);
-		nestedClasses = new Vector(2);
-		methodMaps = new Vector(5);
-		typeDefAttributes = new Vector(10);
-
 		superClass = AssemblyTypeRef.OBJECT;
 		if(name.equals("<Module>"))
 		{
 			superClass = null;
-		}
-	}
-
-	/**
-	 * Adds a CustomAttribute to this TypeDef
-	 *
-	 * @param ca the CustomAttribute to apply to this TypeDef
-	 */
-	public void addTypeDefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			typeDefAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns all CustomAttributes applied to this TypeDef
-	 *
-	 * @return an arrayof the CustomAttributes on this TypeDef
-	 */
-	public CustomAttribute[] getTypeDefAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[typeDefAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) typeDefAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this TypeDef
-	 */
-	public void removeTypeDefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			typeDefAttributes.remove(ca);
 		}
 	}
 
@@ -248,6 +198,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	/**
 	 * Returns the DeclSecurity information for this TypeDef
 	 */
+	@Override
 	public DeclSecurity getDeclSecurity()
 	{
 		return security;
@@ -260,6 +211,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param decl the DeclSecurity object
 	 */
+	@Override
 	public void setDeclSecurity(DeclSecurity decl)
 	{
 		if(decl == null)
@@ -315,12 +267,13 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param def the inner class TypeDef
 	 */
-	public void addNestedClass(TypeDef def)
+	public void addNestedClass(@NotNull TypeDef def)
 	{
-		if(def != null)
+		if(nestedClasses == Collections.<TypeDef>emptyList())
 		{
-			nestedClasses.add(def);
+			nestedClasses = new ArrayList<TypeDef>();
 		}
+		nestedClasses.add(def);
 	}
 
 	/**
@@ -340,12 +293,13 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param event the event to add
 	 */
-	public void addEvent(Event event)
+	public void addEvent(@NotNull Event event)
 	{
-		if(event != null)
+		if(events == Collections.<Event>emptyList())
 		{
-			events.add(event);
+			events = new ArrayList<Event>();
 		}
+		events.add(event);
 	}
 
 	/**
@@ -356,10 +310,8 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 */
 	public Event getEventByName(String name)
 	{
-		Iterator iter = events.iterator();
-		while(iter.hasNext())
+		for(Event event : events)
 		{
-			Event event = (Event) iter.next();
 			if(event.getName().equals(name))
 			{
 				return event;
@@ -373,14 +325,10 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @return a non-null array of Events
 	 */
-	public Event[] getEvents()
+	@Immutable
+	public List<Event> getEvents()
 	{
-		Event e[] = new Event[events.size()];
-		for(int i = 0; i < e.length; i++)
-		{
-			e[i] = (Event) events.get(i);
-		}
-		return e;
+		return events;
 	}
 
 	// Field methods ///////////////////////////////
@@ -391,13 +339,14 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param field the field to add
 	 */
-	public void addField(Field field)
+	public void addField(@NotNull Field field)
 	{
-		if(field != null)
+		if(fields == Collections.<Field>emptyList())
 		{
-			fields.add(field);
-			field.setParent(this);
+			fields = new ArrayList<Field>();
 		}
+		fields.add(field);
+		field.setParent(this);
 	}
 
 	/**
@@ -408,10 +357,8 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 */
 	public Field getFieldByName(String name)
 	{
-		Iterator iter = fields.iterator();
-		while(iter.hasNext())
+		for(Field f : fields)
 		{
-			Field f = (Field) iter.next();
 			if(f.getName().equals(name))
 			{
 				return f;
@@ -425,14 +372,10 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @return a non-null array of fields
 	 */
-	public Field[] getFields()
+	@Immutable
+	public List<Field> getFields()
 	{
-		Field[] fa = new Field[fields.size()];
-		for(int i = 0; i < fa.length; i++)
-		{
-			fa[i] = (Field) fields.get(i);
-		}
-		return fa;
+		return fields;
 	}
 
 	/**
@@ -456,13 +399,14 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param method the method to add
 	 */
-	public void addMethod(MethodDef method)
+	public void addMethod(@NotNull MethodDef method)
 	{
-		if(method != null)
+		if(methods == Collections.<MethodDef>emptyList())
 		{
-			methods.add(method);
-			method.setParent(this);
+			methods = new ArrayList<MethodDef>();
 		}
+		methods.add(method);
+		method.setParent(this);
 	}
 
 	/**
@@ -473,10 +417,8 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 */
 	public MethodDef getMethodByName(String name)
 	{
-		Iterator iter = methods.iterator();
-		while(iter.hasNext())
+		for(MethodDef m : methods)
 		{
-			MethodDef m = (MethodDef) iter.next();
 			if(m.getName().equals(name))
 			{
 				return m;
@@ -490,9 +432,11 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @return a non-null array of methods
 	 */
-	public MethodDef[] getMethods()
+	@NotNull
+	@Immutable
+	public List<MethodDef> getMethods()
 	{
-		return methods.toArray(new MethodDef[methods.size()]);
+		return methods;
 	}
 
 	// Property methods ////////////////////////////
@@ -502,12 +446,13 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param prop the property to add
 	 */
-	public void addProperty(Property prop)
+	public void addProperty(@NotNull Property prop)
 	{
-		if(prop != null)
+		if(properties == Collections.<Property>emptyList())
 		{
-			properties.add(prop);
+			properties = new ArrayList<Property>();
 		}
+		properties.add(prop);
 	}
 
 	/**
@@ -518,10 +463,8 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 */
 	public Property getPropertyByName(String name)
 	{
-		Iterator iter = properties.iterator();
-		while(iter.hasNext())
+		for(Property p : properties)
 		{
-			Property p = (Property) iter.next();
 			if(p.getName().equals(name))
 			{
 				return p;
@@ -535,14 +478,11 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @return a non-null array of properties
 	 */
-	public Property[] getProperties()
+	@NotNull
+	@Immutable
+	public List<Property> getProperties()
 	{
-		Property[] pa = new Property[properties.size()];
-		for(int i = 0; i < pa.length; i++)
-		{
-			pa[i] = (Property) properties.get(i);
-		}
-		return pa;
+		return properties;
 	}
 
 	// Interface methods /////////////////////////////////
@@ -552,12 +492,13 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param inter the InterfaceImplementation for the given interface
 	 */
-	public void addInterface(InterfaceImplementation inter)
+	public void addInterface(@NotNull InterfaceImplementation inter)
 	{
-		if(inter != null)
+		if(interfaces == Collections.<InterfaceImplementation>emptyList())
 		{
-			interfaces.add(inter);
+			interfaces = new ArrayList<InterfaceImplementation>(5);
 		}
+		interfaces.add(inter);
 	}
 
 	/**
@@ -588,34 +529,15 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	}
 
 	/**
-	 * Returns the interface whose name is given by Namespace and Name.
-	 *
-	 * @param namespace the namespace of the target interface (to be compared to TypeRef.getNamespace())
-	 * @param name      the name of the target interface (to be compared to TypeRef.getName())
-	 * @return the InterfaceImplementation containing the given interface, or null if not found
-	 */
-	public InterfaceImplementation getInterfaceByName(String namespace, String name)
-	{
-		for(Object anInterface : interfaces)
-		{
-			InterfaceImplementation impl = (InterfaceImplementation) anInterface;
-			TypeRef ref = impl.getInterface();
-			if(ref.getNamespace().equals(namespace) && ref.getName().equals(name))
-			{
-				return impl;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Returns a list of the interfaces implemented by this TypeDef.
 	 *
 	 * @return a non-null array of interfaces
 	 */
-	public InterfaceImplementation[] getInterfaceImplementations()
+	@NotNull
+	@Immutable
+	public List<InterfaceImplementation> getInterfaceImplementations()
 	{
-		return interfaces.toArray(new InterfaceImplementation[interfaces.size()]);
+		return interfaces;
 	}
 	//////////////////////////////////////////////////////
 
@@ -626,12 +548,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 */
 	public MethodMap[] getMethodMaps()
 	{
-		MethodMap[] maps = new MethodMap[methodMaps.size()];
-		for(int i = 0; i < maps.length; i++)
-		{
-			maps[i] = (MethodMap) methodMaps.get(i);
-		}
-		return maps;
+		return methodMaps.toArray(new MethodMap[methodMaps.size()]);
 	}
 
 	/**
@@ -640,12 +557,13 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param map MethodMap to add
 	 */
-	public void addMethodMap(MethodMap map)
+	public void addMethodMap(@NotNull MethodMap map)
 	{
-		if(map != null)
+		if(methodMaps == Collections.<MethodMap>emptyList())
 		{
-			methodMaps.add(map);
+			methodMaps = new ArrayList<MethodMap>();
 		}
+		methodMaps.add(map);
 	}
 
 	/**
@@ -653,7 +571,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 *
 	 * @param map the MethodMap to remove
 	 */
-	public void removeMethodMap(MethodMap map)
+	public void removeMethodMap(@NotNull MethodMap map)
 	{
 		methodMaps.remove(map);
 	}
@@ -663,6 +581,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	 * Compares 2 TypeDefs.
 	 * TypeDefs are considered equal if their names and namespaces are equal.
 	 */
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null || !(o instanceof TypeDef))
@@ -677,17 +596,19 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	@Override
 	public void addGenericParam(GenericParamDef genericParamDef)
 	{
-		if(myGenericParamDefs == null)
+		if(myGenericParamDefs == Collections.<GenericParamDef>emptyList())
 		{
 			myGenericParamDefs = new ArrayList<GenericParamDef>(5);
 		}
 		myGenericParamDefs.add(genericParamDef);
 	}
 
+	@NotNull
 	@Override
+	@Immutable
 	public List<GenericParamDef> getGenericParams()
 	{
-		return myGenericParamDefs == null ? Collections.<GenericParamDef>emptyList() : myGenericParamDefs;
+		return myGenericParamDefs;
 	}
 
 /*

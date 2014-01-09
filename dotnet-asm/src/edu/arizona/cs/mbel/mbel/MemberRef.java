@@ -19,9 +19,8 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
 import edu.arizona.cs.mbel.instructions.LoadableType;
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 
 /**
  * Abstract parent of all member references. A member reference will
@@ -30,13 +29,11 @@ import edu.arizona.cs.mbel.instructions.LoadableType;
  *
  * @author Michael Stepp
  */
-public abstract class MemberRef implements LoadableType
+public abstract class MemberRef extends BaseCustomAttributeOwner implements LoadableType
 {
 	private long MemberRefRID = -1L;
 	private String Name; // field or method name
 	private AbstractTypeReference parent;
-
-	private Vector memberRefAttributes;
 
 	/**
 	 * Creates a new MemberRef with the given name and parent type
@@ -45,45 +42,7 @@ public abstract class MemberRef implements LoadableType
 	{
 		Name = name;
 		parent = ref;
-
-		memberRefAttributes = new Vector(10);
 	}
-
-	/**
-	 * Adds a CustomAttribute to this MemberRef
-	 */
-	public void addMemberRefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			memberRefAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of the CustomAttributes on this MemberRef
-	 */
-	public CustomAttribute[] getMemberRefAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[memberRefAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) memberRefAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from thie MemberRef
-	 */
-	public void removeMemberRefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			memberRefAttributes.remove(ca);
-		}
-	}
-
 
 	/**
 	 * Returns the MemberRef RID of this MemberRef (used by emitter)

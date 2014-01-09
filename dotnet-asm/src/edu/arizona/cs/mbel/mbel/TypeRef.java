@@ -19,8 +19,6 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
 /**
  * Represents a type reference. Type references refer to types
  * in other assemblies or modules, as well as nested types or even
@@ -34,7 +32,6 @@ public abstract class TypeRef extends AbstractTypeReference
 	private String Name;
 	private String Namespace;
 
-	private Vector typeRefAttributes;
 
 	/**
 	 * Makes a TypeRef with the given name and namespace.
@@ -46,43 +43,6 @@ public abstract class TypeRef extends AbstractTypeReference
 	{
 		Name = name;
 		Namespace = ns;
-
-		typeRefAttributes = new Vector(10);
-	}
-
-	/**
-	 * Adds a CustomAttribute to this TypeRef
-	 */
-	public void addTypeRefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			typeRefAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this TypeRef
-	 */
-	public CustomAttribute[] getTypeRefAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[typeRefAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) typeRefAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this TypeRef
-	 */
-	public void removeTypeRefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			typeRefAttributes.remove(ca);
-		}
 	}
 
 	/**

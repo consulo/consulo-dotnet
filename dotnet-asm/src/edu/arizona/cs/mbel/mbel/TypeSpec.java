@@ -19,8 +19,6 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
 import edu.arizona.cs.mbel.signature.TypeSpecSignature;
 
 /**
@@ -34,7 +32,6 @@ public class TypeSpec extends AbstractTypeReference
 {
 	private long TypeSpecRID = -1L;
 	private TypeSpecSignature signature;
-	private Vector<CustomAttribute> typeSpecAttributes = new Vector<CustomAttribute>();
 
 	/**
 	 * Makes a TypeSpec with the given TypeSpecSignature
@@ -42,36 +39,6 @@ public class TypeSpec extends AbstractTypeReference
 	public TypeSpec(TypeSpecSignature sig)
 	{
 		signature = sig;
-	}
-
-	/**
-	 * Adds a CustomAttribute to this TypeSpec
-	 */
-	public void addTypeSpecAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			typeSpecAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null list of CustomAttributes on this TypeSpec
-	 */
-	public CustomAttribute[] getTypeSpecAttributes()
-	{
-		return typeSpecAttributes.toArray(new CustomAttribute[typeSpecAttributes.size()]);
-	}
-
-	/**
-	 * Removes a CustomAttribute from this TypeSpec
-	 */
-	public void removeTypeSpecAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			typeSpecAttributes.remove(ca);
-		}
 	}
 
 	/**

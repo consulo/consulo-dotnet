@@ -19,8 +19,7 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 import edu.arizona.cs.mbel.signature.SecurityActions;
 
 /**
@@ -31,13 +30,11 @@ import edu.arizona.cs.mbel.signature.SecurityActions;
  *
  * @author Michael Stepp
  */
-public class DeclSecurity implements SecurityActions
+public class DeclSecurity extends BaseCustomAttributeOwner implements SecurityActions
 {
 	private int Action;           // 2 byte constant
 	private byte[] permissionSet;
 	// blob that is an XML serialization of the permission set
-
-	private Vector declSecurityAttributes;
 
 	/**
 	 * Makes a new DeclSecurity object with the given action code and permission set
@@ -49,45 +46,7 @@ public class DeclSecurity implements SecurityActions
 	{
 		Action = action;
 		permissionSet = permission;
-
-		declSecurityAttributes = new Vector(10);
 	}
-
-	/**
-	 * Adds a CustomAttribute to this DeclSecurity
-	 */
-	public void addDeclSecurityAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			declSecurityAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this DeclSecurity (DeclSecurity)
-	 */
-	public CustomAttribute[] getDeclSecurityAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[declSecurityAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) declSecurityAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute fromt his DeclSecurity
-	 */
-	public void removeDeclSecurityAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			declSecurityAttributes.remove(ca);
-		}
-	}
-
 
 	/**
 	 * Returns the action code for this DeclSecurity (defined in SecurityActions)

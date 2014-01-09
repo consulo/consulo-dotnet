@@ -17,7 +17,6 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,8 +199,8 @@ public class StubToStringBuilder
 
 		processGenericParameterList(typeDef, builder);
 
-		InterfaceImplementation[] interfaceImplementations = typeDef.getInterfaceImplementations();
-		List<Object> supers = new ArrayList<Object>(interfaceImplementations.length + 1);
+		val interfaceImplementations = typeDef.getInterfaceImplementations();
+		List<Object> supers = new ArrayList<Object>(interfaceImplementations.size() + 1);
 		if(superSuperClassFullName != null)
 		{
 			if(!SKIPPED_SUPERTYPES.contains(superSuperClassFullName))
@@ -210,7 +209,7 @@ public class StubToStringBuilder
 			}
 		}
 
-		Collections.addAll(supers, interfaceImplementations);
+		supers.addAll(interfaceImplementations);
 
 		if(!supers.isEmpty())
 		{
@@ -227,7 +226,7 @@ public class StubToStringBuilder
 					}
 					else if(o instanceof InterfaceImplementation)
 					{
-						return ((InterfaceImplementation) o).getInterface().getFullName();
+						return TypeToStringBuilder.toStringFromDefRefSpec(((InterfaceImplementation) o).getInterface());
 					}
 					return null;
 				}

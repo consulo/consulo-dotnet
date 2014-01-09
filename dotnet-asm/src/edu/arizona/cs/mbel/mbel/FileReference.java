@@ -19,8 +19,7 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
-
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 import edu.arizona.cs.mbel.signature.FileAttributes;
 
 /**
@@ -30,15 +29,13 @@ import edu.arizona.cs.mbel.signature.FileAttributes;
  *
  * @author Michael Stepp
  */
-public class FileReference implements FileAttributes
+public class FileReference extends BaseCustomAttributeOwner implements FileAttributes
 {
 	private long FileRID = -1L;
 
 	private long Flags;
 	private String Name;          // filename, no path
 	private byte[] HashValue;     // blob (cannot be null)
-
-	private Vector fileAttributes;
 
 	/**
 	 * Makes a FileReference with the given flags, filename, and hash value
@@ -52,45 +49,7 @@ public class FileReference implements FileAttributes
 		Flags = flags;
 		Name = filename;
 		HashValue = hash;
-
-		fileAttributes = new Vector(10);
 	}
-
-	/**
-	 * Adds a CustomAttribute to this FileReference
-	 */
-	public void addFileAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			fileAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on thie FileReference  (File)
-	 */
-	public CustomAttribute[] getFileAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[fileAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) fileAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this File
-	 */
-	public void removeFileAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			fileAttributes.remove(ca);
-		}
-	}
-
 
 	/**
 	 * Returns the File RID of this FileReference

@@ -19,7 +19,7 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 
 /**
  * This class contains all the information used in referencing another module.
@@ -28,12 +28,11 @@ import java.util.Vector;
  *
  * @author Michael Stepp
  */
-public class ModuleRefInfo
+public class ModuleRefInfo extends BaseCustomAttributeOwner
 {
 	private long ModuleRefRID = -1L;
 
 	private String moduleName;
-	private Vector moduleRefAttributes;
 
 	/**
 	 * Makes a new ModuleRefInfo with the given module name
@@ -43,7 +42,6 @@ public class ModuleRefInfo
 	public ModuleRefInfo(String modName)
 	{
 		moduleName = modName;
-		moduleRefAttributes = new Vector(10);
 	}
 
 	/**
@@ -71,40 +69,5 @@ public class ModuleRefInfo
 	public String getModuleName()
 	{
 		return moduleName;
-	}
-
-	/**
-	 * Adds a CustomAttribute to this ModuleRefInfo
-	 */
-	public void addModuleRefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			moduleRefAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of the CustomAttributes on this ModuleRefInfo (ModuleRef)
-	 */
-	public CustomAttribute[] getModuleRefAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[moduleRefAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = (CustomAttribute) moduleRefAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this ModuleRef
-	 */
-	public void removeModuleRefAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			moduleRefAttributes.remove(ca);
-		}
 	}
 }

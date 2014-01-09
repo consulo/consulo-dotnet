@@ -1025,7 +1025,7 @@ public class ModuleParser
 				long coded = row[i].getCodedIndex("Extends");
 				if(coded != 0L)
 				{
-					long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRef);
+					long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRefOrSpec);
 					if(token[0] == TableConstants.TypeDef)
 					{
 						typeDefs[i].setSuperClass(typeDefs[longToIndex(token[1])]);
@@ -1059,7 +1059,7 @@ public class ModuleParser
 				long clazz = row[i].getTableIndex("Class");
 				TypeDef def = typeDefs[(int) clazz - 1];
 				long coded = row[i].getCodedIndex("Interface");
-				long inter[] = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRef);
+				long inter[] = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRefOrSpec);
 
 				if(inter[0] == TableConstants.TypeDef)
 				{
@@ -1068,6 +1068,10 @@ public class ModuleParser
 				else if(inter[0] == TableConstants.TypeRef)
 				{
 					interfaceImpls[i] = new InterfaceImplementation(typeRefs[(int) inter[1] - 1]);
+				}
+				else if(inter[0] == TableConstants.TypeSpec)
+				{
+					interfaceImpls[i] = new InterfaceImplementation(typeSpecs[(int) inter[1] - 1]);
 				}
 				def.addInterface(interfaceImpls[i]);
 			}
@@ -1187,7 +1191,7 @@ public class ModuleParser
 
 				Object handler = null;
 				long coded = row[i].getCodedIndex("EventType");
-				long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRef);
+				long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRefOrSpec);
 				if(token[0] == TableConstants.TypeDef)
 				{
 					handler = typeDefs[longToIndex(token[1])];
@@ -1526,7 +1530,7 @@ public class ModuleParser
 			long parent = genericTable.getTableIndex("Parent");
 			long constraint = genericTable.getCodedIndex("Constraint");
 
-			long[] values = tc.parseCodedIndex(constraint, TableConstants.TypeDefOrRef);
+			long[] values = tc.parseCodedIndex(constraint, TableConstants.TypeDefOrRefOrSpec);
 
 			GenericParamDef paramDef = myGenericParams[longToIndex(parent)];
 			assert paramDef != null : parent;
@@ -1596,79 +1600,79 @@ public class ModuleParser
 
 				if(token[0] == TableConstants.Method)
 				{
-					methods[(int) getMethod(token[1]) - 1].addMethodAttribute(ca);
+					methods[(int) getMethod(token[1]) - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.Field)
 				{
-					fields[(int) getField(token[1]) - 1].addFieldAttribute(ca);
+					fields[(int) getField(token[1]) - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.TypeRef)
 				{
-					typeRefs[(int) token[1] - 1].addTypeRefAttribute(ca);
+					typeRefs[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.TypeDef)
 				{
-					typeDefs[(int) token[1] - 1].addTypeDefAttribute(ca);
+					typeDefs[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.Param)
 				{
-					params[(int) getParam(token[1]) - 1].addParamAttribute(ca);
+					params[(int) getParam(token[1]) - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.InterfaceImpl)
 				{
-					interfaceImpls[(int) token[1] - 1].addInterfaceImplAttribute(ca);
+					interfaceImpls[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.MemberRef)
 				{
-					memberRefs[(int) token[1] - 1].addMemberRefAttribute(ca);
+					memberRefs[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.Module)
 				{
-					module.addModuleAttribute(ca);
+					module.addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.DeclSecurity)
 				{
-					declSecurities[(int) token[1] - 1].addDeclSecurityAttribute(ca);
+					declSecurities[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.Property)
 				{
-					properties[(int) getProperty(token[1]) - 1].addPropertyAttribute(ca);
+					properties[(int) getProperty(token[1]) - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.Event)
 				{
-					events[(int) getEvent(token[1]) - 1].addEventAttribute(ca);
+					events[(int) getEvent(token[1]) - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.StandAloneSig)
 				{
-					standAloneSigs[(int) token[1] - 1].addStandAloneSigAttribute(ca);
+					standAloneSigs[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.ModuleRef)
 				{
-					moduleRefs[(int) token[1] - 1].addModuleRefAttribute(ca);
+					moduleRefs[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.TypeSpec)
 				{
-					typeSpecs[(int) token[1] - 1].addTypeSpecAttribute(ca);
+					typeSpecs[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.Assembly)
 				{
-					assemblyInfo.addAssemblyAttribute(ca);
+					assemblyInfo.addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.AssemblyRef)
 				{
-					assemblyRefs[(int) token[1] - 1].addAssemblyRefAttribute(ca);
+					assemblyRefs[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.File)
 				{
-					fileReferences[(int) token[1] - 1].addFileAttribute(ca);
+					fileReferences[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.ExportedType)
 				{
-					exportedTypes[(int) token[1] - 1].addExportedTypeAttribute(ca);
+					exportedTypes[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.ManifestResource)
 				{
-					mresources[(int) token[1] - 1].addManifestResourceAttribute(ca);
+					mresources[(int) token[1] - 1].addCustomAttribute(ca);
 				}
 			}
 		}

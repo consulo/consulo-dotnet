@@ -19,7 +19,7 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import java.util.Vector;
+import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 
 /**
  * This class encapsulates the implementation of an interface by a TypeDef.
@@ -29,62 +29,25 @@ import java.util.Vector;
  *
  * @author Michael Stepp
  */
-public class InterfaceImplementation
+public class InterfaceImplementation extends BaseCustomAttributeOwner
 {
-	private TypeRef interfaceType;
-	private Vector<CustomAttribute> interfaceImplAttributes;
+	private Object interfaceType;
 
 	/**
 	 * Makes a new InterfaceImplementation object for the given interface
 	 *
 	 * @param ref a TypeRef that represents an interface
 	 */
-	public InterfaceImplementation(TypeRef ref)
+	public InterfaceImplementation(Object ref)
 	{
 		interfaceType = ref;
-		interfaceImplAttributes = new Vector<CustomAttribute>(0);
 	}
 
 	/**
 	 * Returns the TypeRef of the interface.
 	 */
-	public TypeRef getInterface()
+	public Object getInterface()
 	{
 		return interfaceType;
-	}
-
-	/**
-	 * Adds a CustomAttribute to this InterfaceImpl
-	 */
-	public void addInterfaceImplAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			interfaceImplAttributes.add(ca);
-		}
-	}
-
-	/**
-	 * Returns a non-null array of CustomAttributes on this InterfaceImplementation (InterfaceImpl)
-	 */
-	public CustomAttribute[] getInterfaceImplAttributes()
-	{
-		CustomAttribute[] cas = new CustomAttribute[interfaceImplAttributes.size()];
-		for(int i = 0; i < cas.length; i++)
-		{
-			cas[i] = interfaceImplAttributes.get(i);
-		}
-		return cas;
-	}
-
-	/**
-	 * Removes a CustomAttribute from this InterfaceImpl
-	 */
-	public void removeInterfaceImplAttribute(CustomAttribute ca)
-	{
-		if(ca != null)
-		{
-			interfaceImplAttributes.remove(ca);
-		}
 	}
 }
