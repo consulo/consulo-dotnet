@@ -16,6 +16,9 @@
 
 package org.mustbe.consulo.csharp.ide.highlight;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
@@ -199,15 +202,36 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			return;
 		}
 
-		ResolveResult[] resolve = expression.multiResolve(false);
-		if(resolve.length == 1)
+		ResolveResult[] r = expression.multiResolve(true);
+		List<PsiElement> validResults = new ArrayList<PsiElement>();
+		List<PsiElement> invalidResults = new ArrayList<PsiElement>();
+
+		for(ResolveResult resolveResult : r)
 		{
-			highlightNamed(resolve[0].getElement(), referenceElement);
+			if(resolveResult.isValidResult())
+			{
+				validResults.add(resolveResult.getElement());
+			}
+			else
+			{
+				invalidResults.add(resolveResult.getElement());
+			}
+		}
+
+		if(validResults.size() == 1)
+		{
+			highlightNamed(validResults.get(0), referenceElement);
+		}
+		else if(validResults.size() > 1)
+		{
+			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip
+					("'" + referenceElement.getText() + "' too many references").range(referenceElement).create();
+
+			myHighlightInfoHolder.add(info);
 		}
 		else
 		{
-			ResolveResult[] resolveResults = expression.multiResolve(true);
-			if(resolveResults.length == 0)
+			if(invalidResults.isEmpty())
 			{
 				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip("'" + referenceElement
 						.getText() + "' is not resolved").range(referenceElement).create();
