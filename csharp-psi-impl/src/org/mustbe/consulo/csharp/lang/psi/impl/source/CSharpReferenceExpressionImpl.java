@@ -216,8 +216,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					@Override
 					public boolean value(PsiElement psiNamedElement)
 					{
-						return psiNamedElement instanceof CSharpMethodDeclaration &&
-								MethodAcceptorImpl.isAccepted(CSharpReferenceExpressionImpl.this, (CSharpMethodDeclaration) psiNamedElement);
+						return psiNamedElement instanceof CSharpMethodDeclaration && MethodAcceptorImpl.isAccepted(CSharpReferenceExpressionImpl
+								.this, (CSharpMethodDeclaration) psiNamedElement);
 					}
 				};
 				break;
@@ -229,7 +229,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					{
 						if(element instanceof DotNetGenericParameterListOwner)
 						{
-							DotNetReferenceType referenceType = (DotNetReferenceType)getParent();
+							DotNetReferenceType referenceType = (DotNetReferenceType) getParent();
 							if(referenceType.getParent() instanceof DotNetTypeWrapperWithTypeArguments)
 							{
 								DotNetType[] arguments = ((DotNetTypeWrapperWithTypeArguments) referenceType.getParent()).getArguments();
@@ -249,23 +249,21 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				break;
 		}
 
-		ResolveResult[] resolveResults = toResolveResults(psiElements, newCond);
-
 		if(!incompleteCode)
 		{
-			val list = new ArrayList<ResolveResult>(resolveResults.length);
-			for(ResolveResult resolveResult : resolveResults)
+			val list = new ArrayList<ResolveResult>(psiElements.size());
+			for(PsiElement resolveResult : psiElements)
 			{
-				if(resolveResult.isValidResult())
+				if(newCond.value(resolveResult))
 				{
-					list.add(resolveResult);
+					list.add(new PsiElementResolveResult(resolveResult, true));
 				}
 			}
-			return list.isEmpty() ? ResolveResult.EMPTY_ARRAY : list.toArray(new ResolveResult[list.size()]);
+			return list.toArray(new ResolveResult[list.size()]);
 		}
 		else
 		{
-			return resolveResults;
+			return toResolveResults(psiElements, newCond);
 		}
 	}
 

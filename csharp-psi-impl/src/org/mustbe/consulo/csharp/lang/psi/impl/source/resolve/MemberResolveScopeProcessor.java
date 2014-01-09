@@ -46,7 +46,6 @@ public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 			if(myCond.value((DotNetNamedElement) element))
 			{
 				addElement(element);
-				return myIncomplete;
 			}
 		}
 		return true;
