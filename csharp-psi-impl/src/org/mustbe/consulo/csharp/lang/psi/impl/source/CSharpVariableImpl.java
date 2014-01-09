@@ -18,7 +18,6 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
@@ -53,9 +52,7 @@ public abstract class CSharpVariableImpl extends CSharpMemberImpl implements Dot
 			@Override
 			public Result<DotNetRuntimeType> compute()
 			{
-				DotNetType type = getType();
-				DotNetRuntimeType runtimeType = type == null ? DotNetRuntimeType.ERROR_TYPE : type.toRuntimeType();
-				return Result.createSingleDependency(runtimeType, CSharpVariableImpl.this);
+				return Result.createSingleDependency(CSharpPsiUtilImpl.toRuntimeType(CSharpVariableImpl.this), CSharpVariableImpl.this);
 			}
 		}, false);
 		return myCachedValue.getValue();

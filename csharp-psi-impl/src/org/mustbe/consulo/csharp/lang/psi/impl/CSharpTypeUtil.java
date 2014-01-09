@@ -17,7 +17,11 @@
 package org.mustbe.consulo.csharp.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -28,7 +32,7 @@ public class CSharpTypeUtil
 	/**
 	 * We have expression
 	 * int a = "test";
-	 *
+	 * <p/>
 	 * "test" - string type, ill be 'top' parameter
 	 * int - int type, ill 'target'
 	 * return false due it not be casted
@@ -49,6 +53,23 @@ public class CSharpTypeUtil
 		{
 			return true;
 		}
+
+		PsiElement topElement = top.toPsiElement();
+		PsiElement targetElement = target.toPsiElement();
+		if(Comparing.equal(topElement, targetElement))
+		{
+			return true;
+		}
+
+		if(topElement instanceof DotNetTypeDeclaration && target instanceof CSharpNativeRuntimeType)
+		{
+			if(Comparing.equal(((DotNetTypeDeclaration) topElement).getPresentableQName(), ((CSharpNativeRuntimeType) target)
+					.getWrapperQualifiedClass()))
+			{
+				return true;
+			}
+		}
+
 
 		return false;
 	}
