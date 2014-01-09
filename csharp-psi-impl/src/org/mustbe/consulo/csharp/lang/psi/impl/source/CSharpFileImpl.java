@@ -24,6 +24,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetFile;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
@@ -32,6 +33,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.Processor;
 
@@ -107,8 +109,13 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 
 	@NotNull
 	@Override
-	public DotNetNamedElement[] getMembers()
+	public DotNetQualifiedElement[] getMembers()
 	{
-		return findChildrenByClass(DotNetNamedElement.class);
+		StubElement<?> stub = getStub();
+		if(stub != null)
+		{
+			return stub.getChildrenByType(CSharpStubElements.QUALIFIED_MEMBERS, DotNetQualifiedElement.ARRAY_FACTORY);
+		}
+		return findChildrenByClass(DotNetQualifiedElement.class);
 	}
 }
