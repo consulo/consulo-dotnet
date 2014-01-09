@@ -31,6 +31,8 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockImpl;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Spacing;
+import com.intellij.formatting.Wrap;
+import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
@@ -77,6 +79,8 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 					elementType == IDENTIFIER ||
 					elementType == REFERENCE_EXPRESSION ||
 					elementType == MODIFIER_LIST ||
+					elementType == LBRACE ||
+					elementType == RBRACE ||
 					CSharpTokenSets.LITERALS.contains(elementType) ||
 					CSharpTokenSets.COMMENTS.contains(elementType))
 			{
@@ -98,6 +102,17 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 		}
 	}
 
+	@Nullable
+	@Override
+	public Wrap getWrap()
+	{
+		IElementType elementType = getNode().getElementType();
+		if(elementType == FIELD_OR_PROPERTY_SET)
+		{
+			return Wrap.createWrap(WrapType.ALWAYS, true);
+		}
+		return super.getWrap();
+	}
 
 	@Override
 	public Indent getIndent()

@@ -28,6 +28,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Spacing;
+import com.intellij.formatting.Wrap;
+import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
@@ -44,6 +46,18 @@ public class CSharpFormattingLeafBlock extends AbstractBlock implements CSharpEl
 	protected CSharpFormattingLeafBlock(@NotNull ASTNode node)
 	{
 		super(node, null, null);
+	}
+
+	@Nullable
+	@Override
+	public Wrap getWrap()
+	{
+		IElementType elementType = getNode().getElementType();
+		if(elementType == LBRACE || elementType == RBRACE)
+		{
+			return Wrap.createWrap(WrapType.ALWAYS, true);
+		}
+		return null;
 	}
 
 	@Override
