@@ -579,7 +579,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			{
 				return true;
 			}
-		}, false);
+		}, true);
 		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(psiElements);
 	}
 
