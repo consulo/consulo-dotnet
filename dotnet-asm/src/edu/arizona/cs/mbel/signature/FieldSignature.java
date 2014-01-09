@@ -104,7 +104,7 @@ public class FieldSignature extends StandAloneSignature implements CallingConven
 		}
 		buffer.setPosition(pos);
 
-		blob.type = TypeSignature.parse(buffer, group);
+		blob.type = TypeSignatureParser.parse(buffer, group);
 		if(blob.type == null)
 		{
 			return null;

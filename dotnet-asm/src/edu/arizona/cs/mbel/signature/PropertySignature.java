@@ -107,7 +107,7 @@ public class PropertySignature extends Signature implements CallingConvention
 
 		int paramCount = readCodedInteger(buffer);
 
-		blob.type = TypeSignature.parse(buffer, group);
+		blob.type = TypeSignatureParser.parse(buffer, group);
 		if(blob.type == null)
 		{
 			return null;

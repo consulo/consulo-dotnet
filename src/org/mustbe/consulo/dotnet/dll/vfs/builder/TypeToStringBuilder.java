@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
+import org.consulo.lombok.annotations.Logger;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.TypeRef;
@@ -33,6 +34,7 @@ import edu.arizona.cs.mbel.signature.XGenericTypeSignature;
  * @author VISTALL
  * @since 12.12.13.
  */
+@Logger
 public class TypeToStringBuilder implements SignatureConstants
 {
 	public static String typeToString(TypeSignature signature, GenericParamOwner typeDef, GenericParamOwner memberDef)
@@ -148,7 +150,7 @@ public class TypeToStringBuilder implements SignatureConstants
 		return builder.toString();
 	}
 
-	public static String toStringFromDefRefSpec(Object o)
+	public static String toStringFromDefRefSpec(Object o, GenericParamOwner typeDef, GenericParamOwner methodDef)
 	{
 		if(o == null)
 		{
@@ -160,7 +162,7 @@ public class TypeToStringBuilder implements SignatureConstants
 		}
 		else if(o instanceof TypeSpec)
 		{
-			return typeToString(((TypeSpec) o).getSignature(), null, null);
+			return typeToString(((TypeSpec) o).getSignature(), typeDef, methodDef);
 		}
 		else
 		{

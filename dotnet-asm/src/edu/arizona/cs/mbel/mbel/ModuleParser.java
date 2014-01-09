@@ -29,16 +29,7 @@ import edu.arizona.cs.mbel.metadata.GenericTable;
 import edu.arizona.cs.mbel.metadata.TableConstants;
 import edu.arizona.cs.mbel.parse.MSILParseException;
 import edu.arizona.cs.mbel.parse.PEModule;
-import edu.arizona.cs.mbel.signature.CallingConvention;
-import edu.arizona.cs.mbel.signature.FieldSignature;
-import edu.arizona.cs.mbel.signature.LocalVarList;
-import edu.arizona.cs.mbel.signature.MarshalSignature;
-import edu.arizona.cs.mbel.signature.MethodSignature;
-import edu.arizona.cs.mbel.signature.ParameterInfo;
-import edu.arizona.cs.mbel.signature.ParameterSignature;
-import edu.arizona.cs.mbel.signature.PropertySignature;
-import edu.arizona.cs.mbel.signature.StandAloneSignature;
-import edu.arizona.cs.mbel.signature.TypeSpecSignature;
+import edu.arizona.cs.mbel.signature.*;
 
 /**
  * This class is all that is needed to parse a Module from a file.
@@ -1002,12 +993,11 @@ public class ModuleParser
 			}
 
 			byte[] blob = null;
-			TypeSpecSignature sig = null;
+			TypeSignature sig = null;
 			for(int i = 0; i < row.length; i++)
 			{
 				blob = row[i].getBlob("Signature");
-				sig = (TypeSpecSignature) TypeSpecSignature.parse(new ByteBuffer
-						(blob), new TypeGroup(typeDefs, typeRefs, typeSpecs));
+				sig = TypeSignatureParser.parse(new ByteBuffer(blob), new TypeGroup(typeDefs, typeRefs, typeSpecs));
 				typeSpecs[i].setSignature(sig);
 				//module.addTypeSpec(typeSpecs[i]);
 			}

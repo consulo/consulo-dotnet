@@ -106,7 +106,7 @@ public class SZArrayTypeSignature extends TypeSpecSignature
 		}
 		buffer.setPosition(pos);
 
-		blob.elementTypeSignature = TypeSignature.parse(buffer, group);
+		blob.elementTypeSignature = TypeSignatureParser.parse(buffer, group);
 		if(blob.elementTypeSignature == null)
 		{
 			return null;

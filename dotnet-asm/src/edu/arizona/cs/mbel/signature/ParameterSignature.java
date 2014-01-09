@@ -96,7 +96,7 @@ public class ParameterSignature extends Signature
 		{
 			blob.elementType = data;
 			buffer.get();
-			blob.type = TypeSignature.parse(buffer, group);
+			blob.type = TypeSignatureParser.parse(buffer, group);
 			if(blob.type == null)
 			{
 				return null;
@@ -110,7 +110,7 @@ public class ParameterSignature extends Signature
 		else
 		{
 			// just Type
-			blob.type = TypeSignature.parse(buffer, group);
+			blob.type = TypeSignatureParser.parse(buffer, group);
 			if(blob.type == null)
 			{
 				return null;

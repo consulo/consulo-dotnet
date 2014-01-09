@@ -115,7 +115,7 @@ public class LocalVar extends Signature
 			blob.byref = true;
 			buffer.get();
 		}
-		blob.type = TypeSignature.parse(buffer, group);
+		blob.type = TypeSignatureParser.parse(buffer, group);
 		if(blob.type == null)
 		{
 			return null;

@@ -72,7 +72,7 @@ public class ArrayTypeSignature extends TypeSpecSignature
 			return null;
 		}
 
-		blob.elementTypeSignature = TypeSignature.parse(buffer, group);
+		blob.elementTypeSignature = TypeSignatureParser.parse(buffer, group);
 		if(blob.elementTypeSignature == null)
 		{
 			return null;

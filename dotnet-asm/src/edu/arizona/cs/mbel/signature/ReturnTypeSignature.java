@@ -132,7 +132,7 @@ public class ReturnTypeSignature extends Signature
 				blob.elementType = data;
 				buffer.get();
 			}
-			blob.type = TypeSignature.parse(buffer, group);
+			blob.type = TypeSignatureParser.parse(buffer, group);
 			if(blob.type == null)
 			{
 				return null;

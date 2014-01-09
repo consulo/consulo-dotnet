@@ -19,7 +19,7 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import edu.arizona.cs.mbel.signature.TypeSpecSignature;
+import edu.arizona.cs.mbel.signature.TypeSignature;
 
 /**
  * Represents an on-the-fly type specification. TypeSpecs can be arrays,
@@ -31,12 +31,12 @@ import edu.arizona.cs.mbel.signature.TypeSpecSignature;
 public class TypeSpec extends AbstractTypeReference
 {
 	private long TypeSpecRID = -1L;
-	private TypeSpecSignature signature;
+	private TypeSignature signature;
 
 	/**
 	 * Makes a TypeSpec with the given TypeSpecSignature
 	 */
-	public TypeSpec(TypeSpecSignature sig)
+	public TypeSpec(TypeSignature sig)
 	{
 		signature = sig;
 	}
@@ -64,7 +64,7 @@ public class TypeSpec extends AbstractTypeReference
 	/**
 	 * Returns the TypeSpecSignature for this TypeSpec.
 	 */
-	public TypeSpecSignature getSignature()
+	public TypeSignature getSignature()
 	{
 		return signature;
 	}
@@ -72,7 +72,7 @@ public class TypeSpec extends AbstractTypeReference
 	/**
 	 * Sets the TypeSpecSignature for this TypeSpec.
 	 */
-	public void setSignature(TypeSpecSignature sig)
+	public void setSignature(TypeSignature sig)
 	{
 		signature = sig;
 	}

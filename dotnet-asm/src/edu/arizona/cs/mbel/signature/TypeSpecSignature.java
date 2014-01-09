@@ -56,6 +56,7 @@ public abstract class TypeSpecSignature extends TypeSignature
 			case ELEMENT_TYPE_SZARRAY:
 				return SZArrayTypeSignature.parse(buffer, group);
 			default:
+				System.out.println(data);
 				return null;
 		}
 	}

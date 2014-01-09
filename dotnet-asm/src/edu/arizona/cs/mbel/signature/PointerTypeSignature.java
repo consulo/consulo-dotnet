@@ -124,7 +124,7 @@ public class PointerTypeSignature extends TypeSpecSignature
 		data = buffer.peek();
 		if(data != ELEMENT_TYPE_VOID)
 		{
-			blob.type = TypeSignature.parse(buffer, group);
+			blob.type = TypeSignatureParser.parse(buffer, group);
 			if(blob.type == null)
 			{
 				return null;

@@ -137,9 +137,9 @@ public class StubToStringBuilder
 	// System.MulticastDelegate
 	// Invoke
 	@NotNull
-	private static StubBlock processType(TypeDef typeDef)
+	private static StubBlock processType(final TypeDef typeDef)
 	{
-		String superSuperClassFullName = TypeToStringBuilder.toStringFromDefRefSpec(typeDef.getSuperClass());
+		String superSuperClassFullName = TypeToStringBuilder.toStringFromDefRefSpec(typeDef.getSuperClass(), typeDef, null);
 		if(Comparing.equal(DotNetTypes.System_MulticastDelegate, superSuperClassFullName))
 		{
 			for(MethodDef methodDef : typeDef.getMethods())
@@ -222,11 +222,11 @@ public class StubToStringBuilder
 				{
 					if(o instanceof AbstractTypeReference)
 					{
-						return TypeToStringBuilder.toStringFromDefRefSpec(o);
+						return TypeToStringBuilder.toStringFromDefRefSpec(o, typeDef, null);
 					}
 					else if(o instanceof InterfaceImplementation)
 					{
-						return TypeToStringBuilder.toStringFromDefRefSpec(((InterfaceImplementation) o).getInterface());
+						return TypeToStringBuilder.toStringFromDefRefSpec(((InterfaceImplementation) o).getInterface(), typeDef, null);
 					}
 					return null;
 				}
@@ -408,7 +408,7 @@ public class StubToStringBuilder
 
 		builder.append(propertyModifier.name().toLowerCase()).append(" ");
 		builder.append("event ");
-		builder.append(TypeToStringBuilder.toStringFromDefRefSpec(event.getEventType()));
+		builder.append(TypeToStringBuilder.toStringFromDefRefSpec(event.getEventType(), typeDef, null));
 		builder.append(" ");
 		builder.append(cutSuperName(event.getName()));
 
