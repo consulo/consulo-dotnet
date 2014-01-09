@@ -49,7 +49,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 
 	public static class TypeInfo
 	{
-		public boolean isNative;
+		public IElementType nativeElementType;
 		public boolean isParameterized;
 		public PsiBuilder.Marker marker;
 	}
@@ -161,7 +161,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 			builder.advanceLexer();
 			marker.done(NATIVE_TYPE);
 
-			typeInfo.isNative = true;
+			typeInfo.nativeElementType = tokenType;
 		}
 		else if(builder.getTokenType() == IDENTIFIER)
 		{

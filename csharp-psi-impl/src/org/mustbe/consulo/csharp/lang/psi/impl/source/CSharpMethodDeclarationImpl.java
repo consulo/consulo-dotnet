@@ -23,30 +23,16 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
-import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
-import org.mustbe.consulo.dotnet.psi.DotNetStatement;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMethodStub> implements CSharpMethodDeclaration
+public class CSharpMethodDeclarationImpl extends CSharpLikeMethodDeclarationImpl implements CSharpMethodDeclaration
 {
-	private CachedValue<DotNetRuntimeType> myCachedValue;
-
 	public CSharpMethodDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -84,102 +70,5 @@ public class CSharpMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMeth
 	public boolean isOperator()
 	{
 		return findChildByType(CSharpTokens.OPERATOR_KEYWORD) != null;
-	}
-
-	@Nullable
-	@Override
-	public DotNetParameterList getParameterList()
-	{
-		return findChildByClass(DotNetParameterList.class);
-	}
-
-	@NotNull
-	@Override
-	public DotNetParameter[] getParameters()
-	{
-		DotNetParameterList parameterList = getParameterList();
-		return parameterList == null ? DotNetParameter.EMPTY_ARRAY : parameterList.getParameters();
-	}
-
-	@NotNull
-	@Override
-	public DotNetRuntimeType[] getParameterTypesForRuntime()
-	{
-		DotNetParameterList parameterList = getParameterList();
-		return parameterList == null ? DotNetRuntimeType.EMPTY_ARRAY : parameterList.getParameterTypesForRuntime();
-	}
-
-	@Nullable
-	@Override
-	public PsiElement getCodeBlock()
-	{
-		return findChildByClass(DotNetStatement.class);
-	}
-
-	@Nullable
-	@Override
-	public DotNetType getReturnType()
-	{
-		return findChildByClass(DotNetType.class);
-	}
-
-	@NotNull
-	@Override
-	public DotNetRuntimeType getReturnTypeForRuntime()
-	{
-		if(myCachedValue != null)
-		{
-			return myCachedValue.getValue();
-		}
-		myCachedValue = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<DotNetRuntimeType>()
-		{
-			@Nullable
-			@Override
-			public Result<DotNetRuntimeType> compute()
-			{
-				DotNetType returnType = getReturnType();
-				DotNetRuntimeType runtimeType = returnType == null ? DotNetRuntimeType.ERROR_TYPE : returnType.toRuntimeType();
-				return Result.createSingleDependency(runtimeType, CSharpMethodDeclarationImpl.this);
-			}
-		}, false);
-		return myCachedValue.getValue();
-	}
-
-	@Nullable
-	@Override
-	public DotNetGenericParameterList getGenericParameterList()
-	{
-		return findChildByClass(DotNetGenericParameterList.class);
-	}
-
-	@NotNull
-	@Override
-	public DotNetGenericParameter[] getGenericParameters()
-	{
-		DotNetGenericParameterList genericParameterList = getGenericParameterList();
-		return genericParameterList == null ? DotNetGenericParameter.EMPTY_ARRAY : genericParameterList.getParameters();
-	}
-
-	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
-			place)
-	{
-		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
-		{
-			if(!processor.execute(dotNetGenericParameter, state))
-			{
-				return false;
-			}
-		}
-
-		for(DotNetParameter parameter : getParameters())
-		{
-			if(!processor.execute(parameter, state))
-			{
-				return false;
-			}
-		}
-
-		return super.processDeclarations(processor, state, lastParent, place);
 	}
 }

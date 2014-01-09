@@ -47,6 +47,8 @@ public interface CSharpElements
 
 	IElementType EVENT_DECLARATION = CSharpStubElements.EVENT_DECLARATION;
 
+	IElementType CONVERSION_METHOD_DECLARATION = CSharpStubElements.CONVERSION_METHOD_DECLARATION;
+
 	IElementType XXX_ACCESSOR = new IElementTypeAsPsiFactory("XXX_ACCESSOR", CSharpLanguage.INSTANCE, CSharpXXXAccessorImpl.class);
 
 	IElementType FIELD_DECLARATION = CSharpStubElements.FIELD_DECLARATION;

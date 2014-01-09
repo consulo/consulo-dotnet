@@ -16,11 +16,32 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import com.intellij.psi.PsiElement;
+
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 09.01.14
  */
-public interface DotNetConstructorDeclaration extends DotNetLikeMethodDeclaration
+public interface DotNetLikeMethodDeclaration extends DotNetModifierListOwner, DotNetQualifiedElement, DotNetGenericParameterListOwner
 {
-	boolean isDeConstructor();
+	@Nullable
+	DotNetParameterList getParameterList();
+
+	@NotNull
+	DotNetParameter[] getParameters();
+
+	@NotNull
+	DotNetRuntimeType[] getParameterTypesForRuntime();
+
+	@Nullable
+	PsiElement getCodeBlock();
+
+	@Nullable
+	DotNetType getReturnType();
+
+	@NotNull
+	DotNetRuntimeType getReturnTypeForRuntime();
 }

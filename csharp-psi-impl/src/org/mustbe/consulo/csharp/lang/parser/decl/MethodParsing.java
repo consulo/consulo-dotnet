@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.parser.decl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.stmt.StatementParsing;
 import com.intellij.lang.PsiBuilder;
@@ -29,11 +30,19 @@ import lombok.val;
  */
 public class MethodParsing extends MemberWithBodyParsing
 {
+	public static enum Target
+	{
+		CONSTRUCTOR,
+		METHOD,
+		CONVERSION_METHOD
+	}
+
 	public static void parseMethodStartAtType(@NotNull CSharpBuilderWrapper builder, @NotNull PsiBuilder.Marker marker)
 	{
-		if(parseType(builder) != null)
+		TypeInfo typeInfo = parseType(builder);
+		if(typeInfo != null)
 		{
-			parseMethodStartAfterType(builder, marker, false);
+			parseMethodStartAfterType(builder, marker, typeInfo, Target.METHOD);
 		}
 		else
 		{
@@ -42,9 +51,10 @@ public class MethodParsing extends MemberWithBodyParsing
 		}
 	}
 
-	public static void parseMethodStartAfterType(@NotNull CSharpBuilderWrapper builder, @NotNull PsiBuilder.Marker marker, boolean constructor)
+	public static void parseMethodStartAfterType(@NotNull CSharpBuilderWrapper builder, @NotNull PsiBuilder.Marker marker,
+			@Nullable TypeInfo typeInfo, @NotNull Target target)
 	{
-		if(constructor)
+		if(target == Target.CONSTRUCTOR)
 		{
 			expect(builder, IDENTIFIER, "Name expected");
 		}
@@ -55,13 +65,26 @@ public class MethodParsing extends MemberWithBodyParsing
 				builder.advanceLexer();
 
 				IElementType tokenTypeGGLL = builder.getTokenTypeGGLL();
-				if(OVERLOADING_OPERATORS.contains(tokenTypeGGLL))
+
+				if(typeInfo != null && (typeInfo.nativeElementType == EXPLICIT_KEYWORD || typeInfo.nativeElementType == IMPLICIT_KEYWORD))
 				{
-					builder.advanceLexerGGLL();
+					if(parseType(builder) == null)
+					{
+						builder.error("Type expected");
+					}
+
+					target = Target.CONVERSION_METHOD;
 				}
 				else
 				{
-					builder.error("Operator name expected");
+					if(OVERLOADING_OPERATORS.contains(tokenTypeGGLL))
+					{
+						builder.advanceLexerGGLL();
+					}
+					else
+					{
+						builder.error("Operator name expected");
+					}
 				}
 			}
 			else
@@ -70,10 +93,10 @@ public class MethodParsing extends MemberWithBodyParsing
 			}
 		}
 
-		parseMethodStartAfterName(builder, marker, constructor);
+		parseMethodStartAfterName(builder, marker, target);
 	}
 
-	public static void parseMethodStartAfterName(@NotNull CSharpBuilderWrapper builder, @NotNull PsiBuilder.Marker marker, boolean constructor)
+	public static void parseMethodStartAfterName(@NotNull CSharpBuilderWrapper builder, @NotNull PsiBuilder.Marker marker, @NotNull Target target)
 	{
 		GenericParameterParsing.parseList(builder);
 
@@ -86,7 +109,7 @@ public class MethodParsing extends MemberWithBodyParsing
 			builder.error("'(' expected");
 		}
 
-		if(constructor)
+		if(target == Target.CONSTRUCTOR)
 		{
 			//TODO [VISTALL] base calls
 		}
@@ -107,9 +130,19 @@ public class MethodParsing extends MemberWithBodyParsing
 			}
 		}
 
-		marker.done(constructor ? CONSTRUCTOR_DECLARATION : METHOD_DECLARATION);
+		switch(target)
+		{
+			case CONSTRUCTOR:
+				marker.done(CONSTRUCTOR_DECLARATION);
+				break;
+			case METHOD:
+				marker.done(METHOD_DECLARATION);
+				break;
+			case CONVERSION_METHOD:
+				marker.done(CONVERSION_METHOD_DECLARATION);
+				break;
+		}
 	}
-
 
 	private static void parseParameterList(CSharpBuilderWrapper builder)
 	{

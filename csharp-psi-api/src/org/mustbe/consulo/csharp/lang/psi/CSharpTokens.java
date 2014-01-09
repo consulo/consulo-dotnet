@@ -66,6 +66,10 @@ public interface CSharpTokens extends TokenType
 
 	IElementType STATIC_KEYWORD = new IElementType("STATIC_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType IMPLICIT_KEYWORD = new IElementType("IMPLICIT_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType EXPLICIT_KEYWORD = new IElementType("EXPLICIT_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType PUBLIC_KEYWORD = new IElementType("PUBLIC_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType NAMESPACE_KEYWORD = new IElementType("NAMESPACE_KEYWORD", CSharpLanguage.INSTANCE);

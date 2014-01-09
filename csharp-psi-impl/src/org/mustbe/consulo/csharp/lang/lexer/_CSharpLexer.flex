@@ -143,6 +143,10 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"dynamic"                 { return CSharpTokens.DYNAMIC_KEYWORD; }
 
+	"explicit"                { return CSharpTokens.EXPLICIT_KEYWORD; }
+
+	"implicit"                { return CSharpTokens.IMPLICIT_KEYWORD; }
+
 // modifier tokens
 	"static"                  { return CSharpTokens.STATIC_KEYWORD; }
 

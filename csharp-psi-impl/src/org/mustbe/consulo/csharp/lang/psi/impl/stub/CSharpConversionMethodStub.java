@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub;
+
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 09.01.14
  */
-public interface DotNetConstructorDeclaration extends DotNetLikeMethodDeclaration
+public class CSharpConversionMethodStub extends CSharpMethodStub
 {
-	boolean isDeConstructor();
+	public CSharpConversionMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask)
+	{
+		super(parent, CSharpStubElements.CONVERSION_METHOD_DECLARATION, name, qname, modifierMask);
+	}
 }

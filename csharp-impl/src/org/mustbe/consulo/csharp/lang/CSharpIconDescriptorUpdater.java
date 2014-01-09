@@ -63,9 +63,9 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			return;
 		}
 
-		if(element instanceof DotNetMethodDeclaration)
+		if(element instanceof DotNetLikeMethodDeclaration)
 		{
-			iconDescriptor.setMainIcon(((DotNetMethodDeclaration) element).hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes
+			iconDescriptor.setMainIcon(((DotNetLikeMethodDeclaration) element).hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes
 					.AbstractMethod : AllIcons.Nodes.Method);
 
 			processModifierListOwner(element, iconDescriptor, flags);

@@ -42,6 +42,7 @@ import edu.arizona.cs.mbel.signature.FieldAttributes;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
+import edu.arizona.cs.mbel.signature.TypeSignature;
 import lombok.val;
 
 /**
@@ -83,6 +84,8 @@ public class StubToStringBuilder
 			put("op_LogicalNot", "!");
 			put("op_Increment", "++");
 			put("op_Decrement", "--");
+			put("op_Explicit", "implicit");
+			put("op_Implicit", "explicit");
 		}
 	};
 
@@ -146,8 +149,8 @@ public class StubToStringBuilder
 			{
 				if("Invoke".equals(methodDef.getName()))
 				{
-					MethodDef newMethodDef = new MethodDef(StubToStringUtil.getUserTypeDefName(typeDef), methodDef.getImplFlags(), methodDef.getFlags(),
-							methodDef.getSignature());
+					MethodDef newMethodDef = new MethodDef(StubToStringUtil.getUserTypeDefName(typeDef), methodDef.getImplFlags(),
+							methodDef.getFlags(), methodDef.getSignature());
 					for(GenericParamDef paramDef : typeDef.getGenericParams())
 					{
 						newMethodDef.addGenericParam(paramDef);
@@ -485,6 +488,7 @@ public class StubToStringBuilder
 			//builder.append("final "); //TODO [VISTALL] final  ? maybe sealed ?
 		}
 
+		TypeSignature parameterType = null;
 		if(name.equals(CONSTRUCTOR_NAME))
 		{
 			builder.append(StubToStringUtil.getUserTypeDefName(typeDef));
@@ -493,15 +497,34 @@ public class StubToStringBuilder
 		{
 			if(!accessor)
 			{
-				builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getType(), typeDef, methodDef)).append(" ");
-
+				boolean operator = false;
 				if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 				{
 					if(SPECIAL_METHOD_NAMES.containsKey(name))
 					{
-						builder.append("operator ");
+						operator = true;
 						name = SPECIAL_METHOD_NAMES.get(name);
 					}
+				}
+
+				if(operator && (name.equals("explicit") || name.equals("implicit")))
+				{
+					builder.append(name);
+					parameterType = methodDef.getSignature().getReturnType().getType();
+
+					// name is first parameter type
+					name = TypeToStringBuilder.typeToString(methodDef.getSignature().getParameters()[0].getType(), typeDef, methodDef);
+				}
+				else
+				{
+					builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getType(), typeDef, methodDef));
+				}
+
+				builder.append(" ");
+
+				if(operator)
+				{
+					builder.append("operator ");
 				}
 			}
 
@@ -510,9 +533,19 @@ public class StubToStringBuilder
 
 		if(!accessor)
 		{
-			processGenericParameterList(methodDef, builder);
+			// if conversion method
+			if(parameterType != null)
+			{
+				builder.append("(");
+				builder.append(TypeToStringBuilder.typeToString(parameterType, typeDef, methodDef));
+				builder.append(" p)");
+			}
+			else
+			{
+				processGenericParameterList(methodDef, builder);
 
-			processParameterList(typeDef, methodDef, methodDef.getSignature().getParameters(), builder);
+				processParameterList(typeDef, methodDef, methodDef.getSignature().getParameters(), builder);
+			}
 		}
 
 		return new LineStubBlock(builder.toString() + ";");

@@ -230,7 +230,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 				return parsePostfix(builder);
 			}
 
-			if(PREF_ARITHMETIC_OPS.contains(builder.getTokenType()) && !typeInfo.isNative)
+			if(PREF_ARITHMETIC_OPS.contains(builder.getTokenType()) && typeInfo.nativeElementType == null)
 			{
 				typeCast.rollbackTo();
 				return parsePostfix(builder);

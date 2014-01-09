@@ -97,17 +97,18 @@ public class DeclarationParsing extends SharingParsingHelpers
 			// MODIFIER_LIST IDENTIFIER LPAR -> CONSTRUCTOR
 			if(tokenType == IDENTIFIER && builder.lookAhead(1) == LPAR)
 			{
-				MethodParsing.parseMethodStartAfterType(builder, marker, true);
+				MethodParsing.parseMethodStartAfterType(builder, marker, null, MethodParsing.Target.CONSTRUCTOR);
 			}
 			else if(tokenType == TILDE)
 			{
 				builder.advanceLexer();
 
-				MethodParsing.parseMethodStartAfterType(builder, marker, true);
+				MethodParsing.parseMethodStartAfterType(builder, marker, null, MethodParsing.Target.CONSTRUCTOR);
 			}
 			else
 			{
-				if(parseType(builder) == null)
+				TypeInfo typeInfo = parseType(builder);
+				if(typeInfo == null)
 				{
 					if(builder.getTokenType() != null)
 					{
@@ -120,14 +121,14 @@ public class DeclarationParsing extends SharingParsingHelpers
 				}
 				else if(builder.getTokenType() == OPERATOR_KEYWORD)
 				{
-					MethodParsing.parseMethodStartAfterType(builder, marker, false);
+					MethodParsing.parseMethodStartAfterType(builder, marker, typeInfo, MethodParsing.Target.METHOD);
 				}
 				else if(expect(builder, IDENTIFIER, "Name expected"))
 				{
 					// MODIFIER_LIST TYPE IDENTIFIER LPAR -> METHOD
 					if(builder.getTokenType() == LPAR || builder.getTokenType() == LT)
 					{
-						MethodParsing.parseMethodStartAfterName(builder, marker, false);
+						MethodParsing.parseMethodStartAfterName(builder, marker, MethodParsing.Target.METHOD);
 					}
 					else
 					{

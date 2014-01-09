@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi;
+
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 09.01.14
  */
-public interface DotNetConstructorDeclaration extends DotNetLikeMethodDeclaration
+public interface CSharpConversionMethodDeclaration extends DotNetLikeMethodDeclaration
 {
-	boolean isDeConstructor();
+	/**
+	 * @return true if type equal implicit - if not method type is explicit
+	 */
+	boolean isImplicit();
 }

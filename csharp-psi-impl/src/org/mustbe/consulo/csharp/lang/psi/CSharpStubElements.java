@@ -16,15 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpConstructorStubElementType;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpEnumConstantStubElementType;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpEventElementType;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpFieldStubElementType;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpFileStubElementType;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpMethodStubElementType;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpNamespaceStubElementType;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpPropertyElementType;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpTypeStubElementType;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.*;
 import com.intellij.psi.tree.TokenSet;
 
 /**
@@ -38,14 +30,15 @@ public interface CSharpStubElements
 	CSharpTypeStubElementType TYPE_DECLARATION = new CSharpTypeStubElementType();
 	CSharpMethodStubElementType METHOD_DECLARATION = new CSharpMethodStubElementType();
 	CSharpConstructorStubElementType CONSTRUCTOR_DECLARATION = new CSharpConstructorStubElementType();
+	CSharpConversionMethodStubElementType CONVERSION_METHOD_DECLARATION = new CSharpConversionMethodStubElementType();
 	CSharpPropertyElementType PROPERTY_DECLARATION = new CSharpPropertyElementType();
 	CSharpEventElementType EVENT_DECLARATION = new CSharpEventElementType();
 	CSharpFieldStubElementType FIELD_DECLARATION = new CSharpFieldStubElementType();
 	CSharpEnumConstantStubElementType ENUM_CONSTANT_DECLARATION = new CSharpEnumConstantStubElementType();
 
-	TokenSet QUALIFIED_MEMBERS = TokenSet.create(CSharpStubElements.NAMESPACE_DECLARATION, CSharpStubElements.TYPE_DECLARATION,
-			CSharpStubElements.METHOD_DECLARATION, CSharpStubElements.CONSTRUCTOR_DECLARATION, CSharpStubElements.PROPERTY_DECLARATION,
-			CSharpStubElements.EVENT_DECLARATION, CSharpStubElements.FIELD_DECLARATION, CSharpStubElements.ENUM_CONSTANT_DECLARATION);
+	TokenSet QUALIFIED_MEMBERS = TokenSet.create(NAMESPACE_DECLARATION, TYPE_DECLARATION,
+			METHOD_DECLARATION, CONSTRUCTOR_DECLARATION, PROPERTY_DECLARATION,
+			EVENT_DECLARATION, FIELD_DECLARATION, ENUM_CONSTANT_DECLARATION, CONVERSION_METHOD_DECLARATION);
 
 	TokenSet QUALIFIED_MEMBERS_WITH_USING = TokenSet.orSet(QUALIFIED_MEMBERS, TokenSet.create(CSharpElements.USING_NAMESPACE_LIST));
 }

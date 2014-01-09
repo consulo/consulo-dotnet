@@ -17,19 +17,21 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpConstructorDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpConstructorStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
-import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpConstructorDeclarationImpl extends CSharpMethodDeclarationImpl implements DotNetConstructorDeclaration
+public class CSharpConstructorDeclarationImpl extends CSharpLikeMethodDeclarationImpl implements CSharpConstructorDeclaration
 {
 	public CSharpConstructorDeclarationImpl(@NotNull ASTNode node)
 	{
@@ -45,6 +47,13 @@ public class CSharpConstructorDeclarationImpl extends CSharpMethodDeclarationImp
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitConstructorDeclaration(this);
+	}
+
+	@Override
+	@Nullable
+	public PsiElement getNameIdentifier()
+	{
+		return findChildByType(CSharpTokens.IDENTIFIER);
 	}
 
 	@Override

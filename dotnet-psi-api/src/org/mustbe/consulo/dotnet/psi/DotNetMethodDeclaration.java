@@ -16,37 +16,15 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetMethodDeclaration extends DotNetModifierListOwner, DotNetQualifiedElement, PsiNameIdentifierOwner, DotNetGenericParameterListOwner
+public interface DotNetMethodDeclaration extends DotNetLikeMethodDeclaration, PsiNameIdentifierOwner
 {
 	boolean isDelegate();
 
 	boolean isOperator();
-
-	@Nullable
-	DotNetParameterList getParameterList();
-
-	@NotNull
-	DotNetParameter[] getParameters();
-
-	@NotNull
-	DotNetRuntimeType[] getParameterTypesForRuntime();
-
-	@Nullable
-	PsiElement getCodeBlock();
-
-	@Nullable
-	DotNetType getReturnType();
-
-	@NotNull
-	DotNetRuntimeType getReturnTypeForRuntime();
 }

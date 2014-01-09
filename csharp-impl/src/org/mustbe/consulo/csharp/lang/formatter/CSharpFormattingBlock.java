@@ -106,6 +106,7 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 		if(elementType == NAMESPACE_DECLARATION ||
 				elementType == TYPE_DECLARATION ||
 				elementType == METHOD_DECLARATION ||
+				elementType == CONVERSION_METHOD_DECLARATION ||
 				elementType == FIELD_DECLARATION ||
 				elementType == FIELD_OR_PROPERTY_SET ||
 				elementType == PROPERTY_DECLARATION ||

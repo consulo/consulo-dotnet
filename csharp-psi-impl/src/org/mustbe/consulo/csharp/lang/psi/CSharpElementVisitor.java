@@ -37,7 +37,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 
 	public void visitConstructorDeclaration(CSharpConstructorDeclarationImpl declaration)
 	{
-		visitMethodDeclaration(declaration);
+		visitElement(declaration);
 	}
 
 	public void visitMethodDeclaration(CSharpMethodDeclarationImpl methodDeclaration)
@@ -413,5 +413,10 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	public void visitEnumConstantDeclaration(CSharpEnumConstantDeclarationImpl cSharpEnumConstant)
 	{
 		visitElement(cSharpEnumConstant);
+	}
+
+	public void visitConversionMethodDeclaration(CSharpConversionMethodDeclarationImpl element)
+	{
+		visitElement(element);
 	}
 }
