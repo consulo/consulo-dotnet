@@ -17,11 +17,8 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -37,7 +34,7 @@ public class CSharpInheritUtil
 
 	public static boolean isParentOf(DotNetTypeDeclaration typeDeclaration, @NotNull String parentClass)
 	{
-		for(DotNetType dotNetType : typeDeclaration.getExtends())
+		/*for(DotNetType dotNetType : typeDeclaration.getExtends())
 		{
 			DotNetRuntimeType runtimeType = dotNetType.toRuntimeType();
 
@@ -54,7 +51,7 @@ public class CSharpInheritUtil
 					return true;
 				}
 			}
-		}
+		}  */
 		return false;
 	}
 }
