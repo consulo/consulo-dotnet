@@ -554,7 +554,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public boolean isReferenceTo(PsiElement element)
 	{
-		return resolve() == element;
+		PsiElement resolve = resolve();
+		if(element instanceof CSharpNamespaceAsElement && resolve instanceof CSharpNamespaceAsElement)
+		{
+			return Comparing.equal(((CSharpNamespaceAsElement) resolve).getQName() , ((CSharpNamespaceAsElement) element).getQName());
+		}
+		return resolve == element;
 	}
 
 	@NotNull
