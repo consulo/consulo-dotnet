@@ -29,6 +29,8 @@ import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -48,11 +50,6 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 	public Collection<AbstractTreeNode> modify(AbstractTreeNode abstractTreeNode, Collection<AbstractTreeNode> abstractTreeNodes, ViewSettings
 			settings)
 	{
-		if(!settings.isShowMembers())
-		{
-			return abstractTreeNodes;
-		}
-
 		List<AbstractTreeNode> nodes = new ArrayList<AbstractTreeNode>(abstractTreeNodes.size());
 		for(AbstractTreeNode treeNode : abstractTreeNodes)
 		{
@@ -96,12 +93,22 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 			{
 				return null;
 			}
-			return namespacesDeclarations[0];
+			DotNetNamedElement namespacesDeclaration = namespacesDeclarations[0];
+			if(Comparing.equal(FileUtil.getNameWithoutExtension(file.getName()), namespacesDeclaration.getName()))
+			{
+				return namespacesDeclaration;
+			}
+			return null;
 		}
 		else
 		{
-			return member;
+			if(Comparing.equal(FileUtil.getNameWithoutExtension(file.getName()), member.getName()))
+			{
+				return member;
+			}
 		}
+
+		return null;
 	}
 
 	@Nullable

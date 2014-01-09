@@ -22,9 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
-import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
@@ -49,6 +47,52 @@ public class CSharpElementTreeNode extends AbstractPsiBasedNode<DotNetNamedEleme
 	protected PsiElement extractPsiFromValue()
 	{
 		return getValue();
+	}
+
+	@Override
+	public int getWeight()
+	{
+		// namespace
+		// type
+		// field
+		// property
+		// event
+		// constructor
+		// method
+
+		DotNetNamedElement element = getValue();
+		if(element instanceof DotNetNamespaceDeclaration)
+		{
+			return 100;
+		}
+		else if(element instanceof DotNetTypeDeclaration)
+		{
+			return 200;
+		}
+		else if(element instanceof DotNetFieldDeclaration)
+		{
+			return 300;
+		}
+		else if(element instanceof DotNetPropertyDeclaration)
+		{
+			return 400;
+		}
+		else if(element instanceof DotNetEventDeclaration)
+		{
+			return 500;
+		}
+		else if(element instanceof DotNetConstructorDeclaration)
+		{
+			return 600;
+		}
+		else if(element instanceof DotNetLikeMethodDeclaration)
+		{
+			return 700;
+		}
+		else
+		{
+			return super.getWeight();
+		}
 	}
 
 	@Nullable
