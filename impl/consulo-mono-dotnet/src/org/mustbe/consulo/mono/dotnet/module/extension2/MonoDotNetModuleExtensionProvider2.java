@@ -22,17 +22,12 @@ import org.consulo.module.extension.ModuleExtensionProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.mono.dotnet.MonoDotNetIcons;
-import org.mustbe.consulo.roots.ContentFoldersSupport;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import com.intellij.openapi.module.Module;
 
 /**
  * @author VISTALL
  * @since 20.11.13.
  */
-@ContentFoldersSupport(value = {
-		ProductionContentFolderTypeProvider.class
-})
 public class MonoDotNetModuleExtensionProvider2 implements ModuleExtensionProvider<MonoDotNetModuleExtension2, MonoDotNetMutableModuleExtension2>
 {
 	@Nullable

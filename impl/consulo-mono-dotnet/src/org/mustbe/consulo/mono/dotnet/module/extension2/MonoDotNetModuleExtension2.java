@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
+import org.mustbe.consulo.roots.ContentFoldersSupport;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -30,6 +32,9 @@ import com.intellij.openapi.util.SystemInfo;
  * @author VISTALL
  * @since 20.11.13.
  */
+@ContentFoldersSupport(value = {
+		ProductionContentFolderTypeProvider.class
+})
 public class MonoDotNetModuleExtension2 extends DotNetModuleExtensionImpl<MonoDotNetModuleExtension2> implements
 		DotNetStructurableModuleExtension<MonoDotNetModuleExtension2>
 {
