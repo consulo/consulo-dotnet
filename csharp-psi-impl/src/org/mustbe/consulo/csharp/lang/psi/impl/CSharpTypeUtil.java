@@ -56,7 +56,7 @@ public class CSharpTypeUtil
 
 		PsiElement topElement = top.toPsiElement();
 		PsiElement targetElement = target.toPsiElement();
-		if(Comparing.equal(topElement, targetElement))
+		if(topElement != null && Comparing.equal(topElement, targetElement))
 		{
 			return true;
 		}
