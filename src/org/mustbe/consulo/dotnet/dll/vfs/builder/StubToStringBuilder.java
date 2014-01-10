@@ -301,6 +301,11 @@ public class StubToStringBuilder
 				}
 			}
 
+			if(StubToStringUtil.isInvisibleMember(name))
+			{
+				continue;
+			}
+
 			StubBlock stubBlock = processMethod(typeDef, methodDef, name, false, false);
 
 			parent.getBlocks().add(stubBlock);
