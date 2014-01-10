@@ -129,6 +129,13 @@ public abstract class CSharpLikeMethodDeclarationImpl extends CSharpStubMemberIm
 	}
 
 	@Override
+	public int getGenericParametersCount()
+	{
+		DotNetGenericParameterList genericParameterList = getGenericParameterList();
+		return genericParameterList == null ? 0 : genericParameterList.getGenericParametersCount();
+	}
+
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{

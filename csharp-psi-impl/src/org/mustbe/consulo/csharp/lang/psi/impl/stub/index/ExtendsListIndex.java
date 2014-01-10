@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi.stub.index;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 18.12.13.
+ * @since 10.01.14
  */
-public class MethodIndex extends StringStubIndexExtension<DotNetLikeMethodDeclaration>
+public class ExtendsListIndex extends StringStubIndexExtension<DotNetTypeList>
 {
-	public static MethodIndex getInstance()
+	public static ExtendsListIndex getInstance()
 	{
-		return StubIndexExtension.EP_NAME.findExtension(MethodIndex.class);
+		return StubIndexExtension.EP_NAME.findExtension(ExtendsListIndex.class);
 	}
 
 	@NotNull
 	@Override
-	public StubIndexKey<String, DotNetLikeMethodDeclaration> getKey()
+	public StubIndexKey<String, DotNetTypeList> getKey()
 	{
-		return DotNetIndexKeys.METHOD_INDEX;
+		return CSharpIndexKeys.EXTENDS_LIST_INDEX;
 	}
 }

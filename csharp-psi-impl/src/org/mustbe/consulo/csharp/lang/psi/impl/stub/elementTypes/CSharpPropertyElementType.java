@@ -19,8 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
-import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
-import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -29,7 +28,7 @@ import com.intellij.psi.stubs.IndexSink;
  * @author VISTALL
  * @since 21.12.13.
  */
-public class CSharpPropertyElementType extends CSharpVariableStubElementType<DotNetPropertyDeclaration>
+public class CSharpPropertyElementType extends CSharpVariableStubElementType<CSharpPropertyDeclarationImpl>
 {
 	public CSharpPropertyElementType()
 	{
@@ -37,13 +36,13 @@ public class CSharpPropertyElementType extends CSharpVariableStubElementType<Dot
 	}
 
 	@Override
-	public DotNetPropertyDeclaration createPsi(@NotNull ASTNode astNode)
+	public CSharpPropertyDeclarationImpl createPsi(@NotNull ASTNode astNode)
 	{
 		return new CSharpPropertyDeclarationImpl(astNode);
 	}
 
 	@Override
-	public DotNetPropertyDeclaration createPsi(@NotNull CSharpVariableStub cSharpPropertyStub)
+	public CSharpPropertyDeclarationImpl createPsi(@NotNull CSharpVariableStub<CSharpPropertyDeclarationImpl> cSharpPropertyStub)
 	{
 		return new CSharpPropertyDeclarationImpl(cSharpPropertyStub);
 	}
@@ -54,7 +53,7 @@ public class CSharpPropertyElementType extends CSharpVariableStubElementType<Dot
 		String name = cSharpPropertyStub.getName();
 		if(!StringUtil.isEmpty(name))
 		{
-			indexSink.occurrence(DotNetIndexKeys.PROPERTY_INDEX, name);
+			indexSink.occurrence(CSharpIndexKeys.PROPERTY_INDEX, name);
 		}
 	}
 }

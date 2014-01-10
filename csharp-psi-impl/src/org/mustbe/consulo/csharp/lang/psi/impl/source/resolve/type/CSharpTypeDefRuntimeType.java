@@ -16,11 +16,8 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
-import java.util.Collection;
-
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -35,12 +32,14 @@ public class CSharpTypeDefRuntimeType implements DotNetRuntimeType
 {
 	private final String myQualifiedName;
 	private final Project myProject;
+	private final int myGenericCount;
 	private final GlobalSearchScope myResolveScope;
 
-	public CSharpTypeDefRuntimeType(String qualifiedName, Project project, GlobalSearchScope resolveScope)
+	public CSharpTypeDefRuntimeType(String qualifiedName, Project project, int genericCount, GlobalSearchScope resolveScope)
 	{
 		myQualifiedName = qualifiedName;
 		myProject = project;
+		myGenericCount = genericCount;
 		myResolveScope = resolveScope;
 	}
 
@@ -69,8 +68,6 @@ public class CSharpTypeDefRuntimeType implements DotNetRuntimeType
 	@Override
 	public PsiElement toPsiElement()
 	{
-		Collection<DotNetTypeDeclaration> t = TypeByQNameIndex.getInstance().get(myQualifiedName, myProject, myResolveScope);
-
-		return t.isEmpty() ? null : t.iterator().next();
+		return DotNetPsiFacade.getInstance(myProject).findType(myQualifiedName, myResolveScope, myGenericCount);
 	}
 }

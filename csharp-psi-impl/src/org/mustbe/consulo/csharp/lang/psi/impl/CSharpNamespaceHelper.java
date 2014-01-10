@@ -18,8 +18,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
-import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -45,7 +45,7 @@ public class CSharpNamespaceHelper
 
 		val findFirstProcessor = new CommonProcessors.FindFirstProcessor<DotNetNamespaceDeclaration>();
 
-		StubIndex.getInstance().process(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName, project, globalSearchScope, findFirstProcessor);
+		StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName, project, globalSearchScope, findFirstProcessor);
 
 		if(findFirstProcessor.getFoundValue() != null)
 		{
@@ -62,7 +62,7 @@ public class CSharpNamespaceHelper
 				return qName2.startsWith(qName);
 			}
 		};
-		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, findFirstProcessor2, globalSearchScope,
+		StubIndex.getInstance().processAllKeys(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, findFirstProcessor2, globalSearchScope,
 				IdFilter.getProjectIdFilter(project, false));
 
 		if(findFirstProcessor2.getFoundValue() != null)

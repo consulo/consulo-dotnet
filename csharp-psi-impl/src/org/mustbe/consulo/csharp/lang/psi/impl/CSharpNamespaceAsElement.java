@@ -22,9 +22,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
-import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
-import org.mustbe.consulo.dotnet.psi.stub.index.NamespaceByQNameIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.NamespaceByQNameIndex;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
@@ -88,7 +88,7 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 	public DotNetNamespaceDeclaration findFirstNamespace()
 	{
 		val findFirstProcessor = new CommonProcessors.FindFirstProcessor<DotNetNamespaceDeclaration>();
-		StubIndex.getInstance().process(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, myQName, getProject(), mySearchScopes, findFirstProcessor);
+		StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, myQName, getProject(), mySearchScopes, findFirstProcessor);
 		if(findFirstProcessor.getFoundValue() != null)
 		{
 			return findFirstProcessor.getFoundValue();
@@ -103,7 +103,7 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 			}
 		};
 
-		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, findFirstProcessor2, mySearchScopes,
+		StubIndex.getInstance().processAllKeys(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, findFirstProcessor2, mySearchScopes,
 				IdFilter.getProjectIdFilter(getProject(), false));
 
 		if(findFirstProcessor2.getFoundValue() != null)
@@ -155,7 +155,7 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
 			@NotNull final PsiElement place)
 	{
-		return StubIndex.getInstance().process(DotNetIndexKeys.NAMESPACE_BY_QNAME_INDEX, getQName(), getProject(), mySearchScopes,
+		return StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, getQName(), getProject(), mySearchScopes,
 				new Processor<DotNetNamespaceDeclaration>()
 
 		{

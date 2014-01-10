@@ -14,32 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub.index;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import com.intellij.psi.stubs.StringStubIndexExtension;
+import com.intellij.psi.stubs.StubIndexExtension;
+import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 21.12.13.
  */
-@ArrayFactoryFields
-public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetModifierListOwner, DotNetGenericParameterListOwner,
-		PsiNameIdentifierOwner, DotNetMemberOwner
+public class FieldIndex extends StringStubIndexExtension<DotNetFieldDeclaration>
 {
-	boolean isInterface();
-
-	boolean isStruct();
-
-	boolean isEnum();
-
-	@Nullable
-	DotNetTypeList getExtendList();
+	public static FieldIndex getInstance()
+	{
+		return StubIndexExtension.EP_NAME.findExtension(FieldIndex.class);
+	}
 
 	@NotNull
-	DotNetType[] getExtends();
-
-	boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep);
+	@Override
+	public StubIndexKey<String, DotNetFieldDeclaration> getKey()
+	{
+		return CSharpIndexKeys.FIELD_INDEX;
+	}
 }

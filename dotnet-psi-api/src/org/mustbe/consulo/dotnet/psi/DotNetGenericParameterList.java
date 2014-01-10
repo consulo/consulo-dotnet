@@ -26,4 +26,6 @@ public interface DotNetGenericParameterList extends DotNetElement
 {
 	@NotNull
 	DotNetGenericParameter[] getParameters();
+
+	int getGenericParametersCount();
 }

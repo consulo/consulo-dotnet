@@ -18,19 +18,26 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeListStub;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.stubs.IStubElementType;
 
 /**
  * @author VISTALL
- * @since 04.12.13.
+ * @since 10.01.14
  */
-public class CSharpTypeListImpl extends CSharpElementImpl implements DotNetTypeList
+public class CSharpStubTypeListImpl extends CSharpStubElementImpl<CSharpTypeListStub> implements DotNetTypeList
 {
-	public CSharpTypeListImpl(@NotNull ASTNode node)
+	public CSharpStubTypeListImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpStubTypeListImpl(@NotNull CSharpTypeListStub stub, @NotNull IStubElementType<? extends CSharpTypeListStub, ?> nodeType)
+	{
+		super(stub, nodeType);
 	}
 
 	@Override

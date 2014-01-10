@@ -22,11 +22,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
-import org.mustbe.consulo.dotnet.psi.stub.index.EventIndex;
-import org.mustbe.consulo.dotnet.psi.stub.index.FieldIndex;
-import org.mustbe.consulo.dotnet.psi.stub.index.MethodIndex;
-import org.mustbe.consulo.dotnet.psi.stub.index.PropertyIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.EventIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.FieldIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.MethodIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.PropertyIndex;
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -80,10 +80,10 @@ public class CSharpSymbolNameContributor implements ChooseByNameContributorEx
 	@Override
 	public void processNames(@NotNull Processor<String> stringProcessor, @NotNull GlobalSearchScope searchScope, @Nullable IdFilter idFilter)
 	{
-		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.METHOD_INDEX, stringProcessor, searchScope, idFilter);
-		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.EVENT_INDEX, stringProcessor, searchScope, idFilter);
-		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.PROPERTY_INDEX, stringProcessor, searchScope, idFilter);
-		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.FIELD_INDEX, stringProcessor, searchScope, idFilter);
+		StubIndex.getInstance().processAllKeys(CSharpIndexKeys.METHOD_INDEX, stringProcessor, searchScope, idFilter);
+		StubIndex.getInstance().processAllKeys(CSharpIndexKeys.EVENT_INDEX, stringProcessor, searchScope, idFilter);
+		StubIndex.getInstance().processAllKeys(CSharpIndexKeys.PROPERTY_INDEX, stringProcessor, searchScope, idFilter);
+		StubIndex.getInstance().processAllKeys(CSharpIndexKeys.FIELD_INDEX, stringProcessor, searchScope, idFilter);
 	}
 
 	@Override
@@ -94,9 +94,9 @@ public class CSharpSymbolNameContributor implements ChooseByNameContributorEx
 		IdFilter idFilter = findSymbolParameters.getIdFilter();
 		GlobalSearchScope searchScope = findSymbolParameters.getSearchScope();
 
-		StubIndex.getInstance().process(DotNetIndexKeys.METHOD_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
-		StubIndex.getInstance().process(DotNetIndexKeys.EVENT_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
-		StubIndex.getInstance().process(DotNetIndexKeys.PROPERTY_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
-		StubIndex.getInstance().process(DotNetIndexKeys.FIELD_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
+		StubIndex.getInstance().process(CSharpIndexKeys.METHOD_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
+		StubIndex.getInstance().process(CSharpIndexKeys.EVENT_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
+		StubIndex.getInstance().process(CSharpIndexKeys.PROPERTY_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
+		StubIndex.getInstance().process(CSharpIndexKeys.FIELD_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
 	}
 }

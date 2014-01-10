@@ -26,7 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionI
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeByQNameIndex;
 import com.intellij.codeInsight.actions.OptimizeImportsProcessor;
 import com.intellij.codeInsight.hint.QuestionAction;
 import com.intellij.icons.AllIcons;

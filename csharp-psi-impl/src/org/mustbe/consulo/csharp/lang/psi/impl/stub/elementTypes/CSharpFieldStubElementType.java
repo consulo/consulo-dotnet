@@ -19,8 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
-import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -54,7 +54,7 @@ public class CSharpFieldStubElementType extends CSharpVariableStubElementType<Do
 		String name = cSharpFieldStub.getName();
 		if(!StringUtil.isEmpty(name))
 		{
-			indexSink.occurrence(DotNetIndexKeys.FIELD_INDEX, name);
+			indexSink.occurrence(CSharpIndexKeys.FIELD_INDEX, name);
 		}
 	}
 }

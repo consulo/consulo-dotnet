@@ -40,7 +40,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeR
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefRuntimeType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.*;
-import org.mustbe.consulo.dotnet.psi.stub.index.TypeByQNameIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
@@ -636,7 +636,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(resolve instanceof CSharpTypeDeclarationImpl)
 		{
-			return new CSharpTypeDefRuntimeType(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), getProject(), getResolveScope());
+			return new CSharpTypeDefRuntimeType(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), getProject(),
+					((CSharpTypeDeclarationImpl) resolve).getGenericParametersCount(), getResolveScope());
 		}
 		else if(resolve instanceof DotNetVariable)
 		{

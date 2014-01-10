@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi.stub.index;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 15.12.13.
+ * @since 21.12.13.
  */
-public class TypeByQNameIndex extends StringStubIndexExtension<DotNetTypeDeclaration>
+public class PropertyIndex extends StringStubIndexExtension<DotNetPropertyDeclaration>
 {
-	public static TypeByQNameIndex getInstance()
+	public static PropertyIndex getInstance()
 	{
-		return StubIndexExtension.EP_NAME.findExtension(TypeByQNameIndex.class);
+		return StubIndexExtension.EP_NAME.findExtension(PropertyIndex.class);
 	}
 
 	@NotNull
 	@Override
-	public StubIndexKey<String, DotNetTypeDeclaration> getKey()
+	public StubIndexKey<String, DotNetPropertyDeclaration> getKey()
 	{
-		return DotNetIndexKeys.TYPE_BY_QNAME_INDEX;
+		return CSharpIndexKeys.PROPERTY_INDEX;
 	}
 }

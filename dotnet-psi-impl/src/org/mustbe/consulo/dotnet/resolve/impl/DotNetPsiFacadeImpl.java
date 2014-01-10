@@ -25,7 +25,9 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.ArrayUtil;
 
 /**
  * @author VISTALL
@@ -37,9 +39,9 @@ public class DotNetPsiFacadeImpl extends DotNetPsiFacade
 
 	private final DotNetPsiFacade[] myFacades;
 
-	public DotNetPsiFacadeImpl()
+	public DotNetPsiFacadeImpl(@NotNull Project project)
 	{
-		myFacades = EP_NAME.getExtensions();
+		myFacades = EP_NAME.getExtensions(project);
 	}
 
 	@NotNull
@@ -68,5 +70,29 @@ public class DotNetPsiFacadeImpl extends DotNetPsiFacade
 			}
 		}
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public String[] getAllTypeNames()
+	{
+		List<String> list = new ArrayList<String>();
+		for(DotNetPsiFacade facade : myFacades)
+		{
+			Collections.addAll(list, facade.getAllTypeNames());
+		}
+		return ArrayUtil.toStringArray(list);
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeDeclaration[] getTypesByName(@NotNull String name, @NotNull GlobalSearchScope searchScope)
+	{
+		List<DotNetTypeDeclaration> list = new ArrayList<DotNetTypeDeclaration>();
+		for(DotNetPsiFacade facade : myFacades)
+		{
+			Collections.addAll(list, facade.getTypesByName(name, searchScope));
+		}
+		return list.isEmpty() ? DotNetTypeDeclaration.EMPTY_ARRAY : list.toArray(new DotNetTypeDeclaration[list.size()]);
 	}
 }

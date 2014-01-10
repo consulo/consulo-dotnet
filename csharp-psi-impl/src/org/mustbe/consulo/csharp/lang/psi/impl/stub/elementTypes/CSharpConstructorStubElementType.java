@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpConstructorDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpConstructorStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
-import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -87,7 +87,7 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 		String name = cSharpTypeStub.getName();
 		if(!StringUtil.isEmpty(name))
 		{
-			indexSink.occurrence(DotNetIndexKeys.METHOD_INDEX, name);
+			indexSink.occurrence(CSharpIndexKeys.METHOD_INDEX, name);
 		}
 	}
 }

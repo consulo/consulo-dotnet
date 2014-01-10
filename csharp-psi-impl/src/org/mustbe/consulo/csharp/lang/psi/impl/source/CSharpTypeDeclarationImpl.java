@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
+import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
@@ -29,8 +30,10 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -82,6 +85,13 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	{
 		DotNetGenericParameterList genericParameterList = getGenericParameterList();
 		return genericParameterList == null ? DotNetGenericParameter.EMPTY_ARRAY : genericParameterList.getParameters();
+	}
+
+	@Override
+	public int getGenericParametersCount()
+	{
+		DotNetGenericParameterList genericParameterList = getGenericParameterList();
+		return genericParameterList == null ? 0 : genericParameterList.getGenericParametersCount();
 	}
 
 	@NotNull
@@ -167,6 +177,20 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	}
 
 	@Override
+	public boolean isEquivalentTo(PsiElement another)
+	{
+		if(another instanceof DotNetTypeDeclaration)
+		{
+			return Comparing.equal(getPresentableQName(), ((DotNetTypeDeclaration) another).getPresentableQName()) && getGenericParametersCount() ==
+					((DotNetTypeDeclaration) another).getGenericParametersCount();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	@Override
 	public DotNetTypeList getExtendList()
 	{
 		return (DotNetTypeList) findChildByType(CSharpElements.EXTENDS_LIST);
@@ -178,5 +202,11 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	{
 		DotNetTypeList extendList = getExtendList();
 		return extendList == null ? DotNetType.EMPTY_ARRAY : extendList.getTypes();
+	}
+
+	@Override
+	public boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep)
+	{
+		return CSharpInheritUtil.isInherit(this, other, deep);
 	}
 }

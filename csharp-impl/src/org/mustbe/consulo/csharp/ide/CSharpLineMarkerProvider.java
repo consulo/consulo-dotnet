@@ -17,9 +17,10 @@
 package org.mustbe.consulo.csharp.ide;
 
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +28,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.search.searches.ClassInheritorsSearch;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
@@ -35,12 +37,13 @@ import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.PsiElementProcessor;
+import com.intellij.psi.search.PsiElementProcessorAdapter;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Function;
 import lombok.val;
@@ -68,29 +71,46 @@ public class CSharpLineMarkerProvider implements LineMarkerProvider, DumbAware
 			return;
 		}
 
-
 		for(PsiElement psiElement : elements)
 		{
 			if(psiElement.getParent() instanceof CSharpTypeDeclaration && psiElement.getNode().getElementType() == CSharpTokens.IDENTIFIER)
 			{
-				if(hasChild((CSharpTypeDeclaration) psiElement.getParent()))
+				CSharpTypeDeclaration parent = (CSharpTypeDeclaration) psiElement.getParent();
+				boolean b = hasChild(parent);
+				if(b)
 				{
-					val lineMarkerInfo = new LineMarkerInfo<PsiElement>(psiElement, psiElement.getTextRange(), AllIcons.Gutter.OverridenMethod,
-							Pass.UPDATE_ALL, new Function<PsiElement, String>()
+					val icon = parent.isInterface() ? AllIcons.Gutter.ImplementedMethod : AllIcons.Gutter.OverridenMethod;
+					val lineMarkerInfo = new LineMarkerInfo<PsiElement>(psiElement, psiElement.getTextRange(), icon, Pass.UPDATE_ALL,
+							new Function<PsiElement, String>()
 					{
 						@Override
 						public String fun(PsiElement element)
 						{
-							return "Class";
+							return "Searching for overriding";
 						}
 					}, new GutterIconNavigationHandler<PsiElement>()
 					{
 						@Override
 						public void navigate(MouseEvent mouseEvent, PsiElement element)
 						{
-							List<DotNetTypeDeclaration> children1 = findChildren((CSharpTypeDeclaration) element.getParent());
-							JBPopup popup = NavigationUtil.getPsiElementPopup(children1.toArray(new DotNetTypeDeclaration[children1.size()]),
-									"Open");
+							val typeDeclaration = (DotNetTypeDeclaration) element.getParent();
+							val collectProcessor = new PsiElementProcessor.CollectElements<DotNetTypeDeclaration>();
+							if(!ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									ClassInheritorsSearch.search(typeDeclaration,
+											true).forEach(new PsiElementProcessorAdapter<DotNetTypeDeclaration>(collectProcessor));
+								}
+							}, "Searching for overriding", true, typeDeclaration.getProject(), (JComponent) mouseEvent.getComponent()))
+							{
+								return;
+							}
+
+							DotNetTypeDeclaration[] inheritors = collectProcessor.toArray(DotNetTypeDeclaration.EMPTY_ARRAY);
+
+							JBPopup popup = NavigationUtil.getPsiElementPopup(inheritors, "Open types (" + inheritors.length + " items)");
 							popup.show(new RelativePoint(mouseEvent));
 						}
 					}, GutterIconRenderer.Alignment.LEFT
@@ -107,54 +127,7 @@ public class CSharpLineMarkerProvider implements LineMarkerProvider, DumbAware
 		{
 			return false;
 		}
-		val project = type.getProject();
 
-		val qName = type.getPresentableQName();
-
-		assert qName != null;
-
-		val useScope = type.getUseScope();
-		if(!(useScope instanceof GlobalSearchScope))
-		{
-			return false;
-		}
-		val ref = new Ref<Boolean>(Boolean.FALSE);
-	/*	StubIndex.getInstance().processAllKeys(DotNetIndexKeys.TYPE_INDEX, new Processor<String>()
-		{
-			@Override
-			public boolean process(String name)
-			{
-				StubIndex.getInstance().process(DotNetIndexKeys.TYPE_INDEX, name, project, (GlobalSearchScope) useScope, new Processor<DotNetTypeDeclaration>()
-				{
-					@Override
-					public boolean process(DotNetTypeDeclaration dotNetTypeDeclaration)
-					{
-						if(type == dotNetTypeDeclaration)
-						{
-							return true;
-						}
-						if(CSharpInheritUtil.isParentOf(dotNetTypeDeclaration, qName))
-						{
-							ref.set(Boolean.TRUE);
-							return false;
-						}
-						return true;
-					}
-				});
-
-				return !ref.get();
-			}
-		}, (GlobalSearchScope) useScope, IdFilter.getProjectIdFilter(project, false));
-
-		   */
-		return ref.get();
-	}
-
-	private static List<DotNetTypeDeclaration> findChildren(final CSharpTypeDeclaration type)
-	{
-		val list = new ArrayList<DotNetTypeDeclaration>();
-
-
-		return list;
+		return ClassInheritorsSearch.search(type, false).findFirst() != null;
 	}
 }

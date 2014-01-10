@@ -35,6 +35,7 @@ public interface CSharpStubElements
 	CSharpEventElementType EVENT_DECLARATION = new CSharpEventElementType();
 	CSharpFieldStubElementType FIELD_DECLARATION = new CSharpFieldStubElementType();
 	CSharpEnumConstantStubElementType ENUM_CONSTANT_DECLARATION = new CSharpEnumConstantStubElementType();
+	CSharpTypeListElementType EXTENDS_LIST = new CSharpTypeListElementType("EXTENDS_LIST");
 
 	TokenSet QUALIFIED_MEMBERS = TokenSet.create(NAMESPACE_DECLARATION, TYPE_DECLARATION,
 			METHOD_DECLARATION, CONSTRUCTOR_DECLARATION, PROPERTY_DECLARATION,

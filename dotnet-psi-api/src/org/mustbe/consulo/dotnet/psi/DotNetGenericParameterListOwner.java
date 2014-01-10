@@ -30,4 +30,6 @@ public interface DotNetGenericParameterListOwner extends DotNetElement
 
 	@NotNull
 	DotNetGenericParameter[] getGenericParameters();
+
+	int getGenericParametersCount();
 }

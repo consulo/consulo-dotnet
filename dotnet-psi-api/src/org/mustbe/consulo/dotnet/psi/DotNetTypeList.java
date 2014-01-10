@@ -26,4 +26,7 @@ public interface DotNetTypeList extends DotNetElement
 {
 	@NotNull
 	DotNetType[] getTypes();
+
+	@NotNull
+	String[] getTypeTexts();
 }

@@ -24,7 +24,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
-import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -93,13 +93,13 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 		String name = cSharpTypeStub.getName();
 		if(!StringUtil.isEmpty(name))
 		{
-			indexSink.occurrence(DotNetIndexKeys.TYPE_INDEX, name);
+			indexSink.occurrence(CSharpIndexKeys.TYPE_INDEX, name);
 
 			val parentQName = cSharpTypeStub.getParentQName();
 
-			indexSink.occurrence(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.getNamespaceForIndexing(parentQName));
+			indexSink.occurrence(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.getNamespaceForIndexing(parentQName));
 
-			indexSink.occurrence(DotNetIndexKeys.TYPE_BY_QNAME_INDEX, CSharpNamespaceHelper.getNameWithNamespaceForIndexing(parentQName, name));
+			indexSink.occurrence(CSharpIndexKeys.TYPE_BY_QNAME_INDEX, CSharpNamespaceHelper.getNameWithNamespaceForIndexing(parentQName, name));
 		}
 	}
 }

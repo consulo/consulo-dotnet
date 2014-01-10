@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.psi.PsiElementVisitor;
 
 /**
@@ -110,7 +111,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(value);
 	}
 
-	public void visitTypeList(CSharpTypeListImpl list)
+	public void visitTypeList(DotNetTypeList list)
 	{
 		visitElement(list);
 	}

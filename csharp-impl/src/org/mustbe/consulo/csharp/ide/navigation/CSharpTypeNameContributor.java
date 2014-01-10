@@ -20,10 +20,10 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
-import org.mustbe.consulo.dotnet.psi.stub.index.TypeIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeIndex;
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.GotoClassContributor;
 import com.intellij.navigation.NavigationItem;
@@ -59,7 +59,7 @@ public class CSharpTypeNameContributor implements ChooseByNameContributorEx, Got
 	@Override
 	public void processNames(@NotNull Processor<String> stringProcessor, @NotNull GlobalSearchScope searchScope, @Nullable IdFilter idFilter)
 	{
-		StubIndex.getInstance().processAllKeys(DotNetIndexKeys.TYPE_INDEX, stringProcessor, searchScope, idFilter);
+		StubIndex.getInstance().processAllKeys(CSharpIndexKeys.TYPE_INDEX, stringProcessor, searchScope, idFilter);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class CSharpTypeNameContributor implements ChooseByNameContributorEx, Got
 		Processor<DotNetTypeDeclaration> castVar = (Processor) navigationItemProcessor;
 		GlobalSearchScope searchScope = findSymbolParameters.getSearchScope();
 
-		StubIndex.getInstance().process(DotNetIndexKeys.TYPE_INDEX, name, project, searchScope, idFilter, castVar);
+		StubIndex.getInstance().process(CSharpIndexKeys.TYPE_INDEX, name, project, searchScope, idFilter, castVar);
 	}
 
 	@Nullable

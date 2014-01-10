@@ -22,10 +22,10 @@ import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.dotnet.psi.DotNetFile;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import org.mustbe.consulo.dotnet.psi.stub.index.DotNetIndexKeys;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
@@ -103,7 +103,7 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 			}
 		}
 
-		return StubIndex.getInstance().process(DotNetIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.ROOT, getProject(),
+		return StubIndex.getInstance().process(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.ROOT, getProject(),
 				getResolveScope(), new Processor<DotNetNamedElement>()
 
 		{

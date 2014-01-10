@@ -17,8 +17,11 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -52,6 +55,32 @@ public class CSharpInheritUtil
 				}
 			}
 		}  */
+		return false;
+	}
+
+	public static boolean isInherit(DotNetTypeDeclaration typeDeclaration, DotNetTypeDeclaration other, boolean deep)
+	{
+		for(DotNetType dotNetType : typeDeclaration.getExtends())
+		{
+			DotNetRuntimeType runtimeType = dotNetType.toRuntimeType();
+
+			PsiElement psiElement = runtimeType.toPsiElement();
+			if(psiElement instanceof CSharpTypeDeclaration)
+			{
+				if(psiElement.isEquivalentTo(other))
+				{
+					return true;
+				}
+
+				if(deep)
+				{
+					if(isInherit(typeDeclaration, (DotNetTypeDeclaration) psiElement, true))
+					{
+						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 }

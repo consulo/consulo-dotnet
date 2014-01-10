@@ -32,14 +32,14 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpPropertyDeclarationImpl extends CSharpStubVariableImpl<CSharpVariableStub<DotNetPropertyDeclaration>> implements DotNetPropertyDeclaration
+public class CSharpPropertyDeclarationImpl extends CSharpStubVariableImpl<CSharpVariableStub<CSharpPropertyDeclarationImpl>> implements DotNetPropertyDeclaration
 {
 	public CSharpPropertyDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public CSharpPropertyDeclarationImpl(@NotNull CSharpVariableStub<DotNetPropertyDeclaration> stub)
+	public CSharpPropertyDeclarationImpl(@NotNull CSharpVariableStub<CSharpPropertyDeclarationImpl> stub)
 	{
 		super(stub, CSharpStubElements.PROPERTY_DECLARATION);
 	}

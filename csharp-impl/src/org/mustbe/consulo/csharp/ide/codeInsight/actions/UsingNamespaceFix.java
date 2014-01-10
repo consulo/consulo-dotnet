@@ -26,8 +26,8 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatem
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
-import org.mustbe.consulo.dotnet.psi.stub.index.MethodIndex;
-import org.mustbe.consulo.dotnet.psi.stub.index.TypeIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.MethodIndex;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeIndex;
 import com.intellij.codeInsight.daemon.impl.ShowAutoImportPass;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.HighPriorityAction;

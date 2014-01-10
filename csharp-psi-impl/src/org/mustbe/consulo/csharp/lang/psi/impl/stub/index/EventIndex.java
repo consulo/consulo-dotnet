@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi.stub.index;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub.index;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
@@ -37,6 +37,6 @@ public class EventIndex extends StringStubIndexExtension<DotNetEventDeclaration>
 	@Override
 	public StubIndexKey<String, DotNetEventDeclaration> getKey()
 	{
-		return DotNetIndexKeys.EVENT_INDEX;
+		return CSharpIndexKeys.EVENT_INDEX;
 	}
 }

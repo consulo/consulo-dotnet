@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi.stub.index;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 21.12.13.
+ * @since 15.12.13.
  */
-public class FieldIndex extends StringStubIndexExtension<DotNetFieldDeclaration>
+public class NamespaceByQNameIndex extends StringStubIndexExtension<DotNetNamespaceDeclaration>
 {
-	public static FieldIndex getInstance()
+	public static NamespaceByQNameIndex getInstance()
 	{
-		return StubIndexExtension.EP_NAME.findExtension(FieldIndex.class);
+		return StubIndexExtension.EP_NAME.findExtension(NamespaceByQNameIndex.class);
 	}
 
 	@NotNull
 	@Override
-	public StubIndexKey<String, DotNetFieldDeclaration> getKey()
+	public StubIndexKey<String, DotNetNamespaceDeclaration> getKey()
 	{
-		return DotNetIndexKeys.FIELD_INDEX;
+		return CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX;
 	}
 }

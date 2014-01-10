@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.ide.presentation;
 
 import javax.swing.Icon;
 
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.ide.IconDescriptorUpdaters;
@@ -52,7 +53,12 @@ public class CSharpQualifiedElementPresentationProvider implements ItemPresentat
 		@Override
 		public String getLocationString()
 		{
-			return myDeclaration.getPresentableParentQName();
+			String presentableParentQName = myDeclaration.getPresentableParentQName();
+			if(StringUtils.isEmpty(presentableParentQName))
+			{
+				return null;
+			}
+			return "(" + presentableParentQName + ")";
 		}
 
 		@Nullable

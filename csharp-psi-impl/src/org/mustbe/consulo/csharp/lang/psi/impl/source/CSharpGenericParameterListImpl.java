@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import com.intellij.lang.ASTNode;
@@ -44,5 +45,20 @@ public class CSharpGenericParameterListImpl extends CSharpElementImpl implements
 	public DotNetGenericParameter[] getParameters()
 	{
 		return findChildrenByClass(DotNetGenericParameter.class);
+	}
+
+	@Override
+	public int getGenericParametersCount()
+	{
+		int count = 0;
+		for(ASTNode child = getNode().getFirstChildNode(); child != null; child = child.getTreeNext())
+		{
+			if(child.getElementType() == CSharpElements.GENERIC_PARAMETER)
+			{
+				count++;
+			}
+		}
+
+		return count;
 	}
 }
