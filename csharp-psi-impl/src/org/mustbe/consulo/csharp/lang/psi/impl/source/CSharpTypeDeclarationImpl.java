@@ -207,6 +207,6 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	@Override
 	public boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep)
 	{
-		return CSharpInheritUtil.isInherit(this, other, deep);
+		return CSharpInheritUtil.isInheritor(this, other, deep);
 	}
 }

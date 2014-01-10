@@ -224,8 +224,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 		else if(validResults.size() > 1)
 		{
-			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip
-					("'" + referenceElement.getText() + "' too many references").range(referenceElement).create();
+			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip("'" + referenceElement.getText() + "'" +
+					" too many references").range(referenceElement).create();
 
 			myHighlightInfoHolder.add(info);
 		}
@@ -245,8 +245,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			}
 			else
 			{
-				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip
-						("'" + referenceElement.getText() + "' .....").range(referenceElement).create();
+				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip("'" + referenceElement.getText()
+						+ "' .....").range(referenceElement).create();
 
 				myHighlightInfoHolder.add(info);
 			}
@@ -263,7 +263,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		TextAttributesKey key = null;
 		if(element instanceof CSharpTypeDeclarationImpl)
 		{
-			if(CSharpInheritUtil.isParentOf((DotNetTypeDeclaration) element, DotNetTypes.System_Attribute))
+			if(CSharpInheritUtil.isParent(DotNetTypes.System_Attribute, (DotNetTypeDeclaration) element, true))
 			{
 				key = CSharpHighlightKey.ATTRIBUTE_NAME;
 			}

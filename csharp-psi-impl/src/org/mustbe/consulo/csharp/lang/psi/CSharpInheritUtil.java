@@ -19,9 +19,11 @@ package org.mustbe.consulo.csharp.lang.psi;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -29,36 +31,22 @@ import com.intellij.psi.PsiElement;
  */
 public class CSharpInheritUtil
 {
-	public static boolean isParentOfOrSelf(CSharpTypeDeclaration typeDeclaration, @NotNull String parentClass)
+	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
-		String presentableQName = typeDeclaration.getPresentableQName();
-		return Comparing.equal(presentableQName, parentClass) || isParentOf(typeDeclaration, parentClass);
-	}
-
-	public static boolean isParentOf(DotNetTypeDeclaration typeDeclaration, @NotNull String parentClass)
-	{
-		/*for(DotNetType dotNetType : typeDeclaration.getExtends())
+		if(Comparing.equal(parentClass, typeDeclaration.getPresentableQName()))
 		{
-			DotNetRuntimeType runtimeType = dotNetType.toRuntimeType();
-
-			PsiElement psiElement = runtimeType.toPsiElement();
-			if(psiElement instanceof CSharpTypeDeclaration)
-			{
-				if(Comparing.equal(((CSharpTypeDeclaration) psiElement).getPresentableQName(), parentClass))
-				{
-					return true;
-				}
-
-				if(isParentOf((CSharpTypeDeclaration) psiElement, parentClass))
-				{
-					return true;
-				}
-			}
-		}  */
-		return false;
+			return true;
+		}
+		return isParent(parentClass, typeDeclaration, deep);
 	}
 
-	public static boolean isInherit(DotNetTypeDeclaration typeDeclaration, DotNetTypeDeclaration other, boolean deep)
+	public static boolean isParent(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
+	{
+		val type = DotNetPsiFacade.getInstance(typeDeclaration.getProject()).findType(parentClass, typeDeclaration.getResolveScope(), -1);
+		return type != null && typeDeclaration.isInheritor(type, deep);
+	}
+
+	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, DotNetTypeDeclaration other, boolean deep)
 	{
 		for(DotNetType dotNetType : typeDeclaration.getExtends())
 		{
@@ -74,7 +62,7 @@ public class CSharpInheritUtil
 
 				if(deep)
 				{
-					if(isInherit(typeDeclaration, (DotNetTypeDeclaration) psiElement, true))
+					if(isInheritor((DotNetTypeDeclaration) psiElement, other, true))
 					{
 						return true;
 					}

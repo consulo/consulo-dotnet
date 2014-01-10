@@ -65,8 +65,8 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 
 		if(element instanceof DotNetLikeMethodDeclaration)
 		{
-			iconDescriptor.setMainIcon(((DotNetLikeMethodDeclaration) element).hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes
-					.AbstractMethod : AllIcons.Nodes.Method);
+			iconDescriptor.setMainIcon(((DotNetLikeMethodDeclaration) element).hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes.AbstractMethod
+					: AllIcons.Nodes.Method);
 
 			processModifierListOwner(element, iconDescriptor, flags);
 		}
@@ -77,14 +77,13 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			CSharpTypeDeclaration typeDeclaration = (CSharpTypeDeclaration) element;
 			if(!DumbService.getInstance(element.getProject()).isDumb())
 			{
-				if(CSharpInheritUtil.isParentOf(typeDeclaration, DotNetTypes.System_Attribute))
+				if(CSharpInheritUtil.isParent(DotNetTypes.System_Attribute, typeDeclaration, true))
 				{
 					main = AllIcons.Nodes.Annotationtype;
 				}
-				else if(CSharpInheritUtil.isParentOfOrSelf(typeDeclaration, DotNetTypes.System_Exception))
+				else if(CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, typeDeclaration, true))
 				{
-					main = typeDeclaration.hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes.AbstractException : AllIcons.Nodes
-							.ExceptionClass;
+					main = typeDeclaration.hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes.AbstractException : AllIcons.Nodes.ExceptionClass;
 				}
 			}
 
@@ -181,14 +180,14 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			}
 		}
 
-		if(owner.hasModifier(DotNetModifier.SEALED) || owner.hasModifier(DotNetModifier.READONLY) || element instanceof DotNetVariable
-				&& ((DotNetVariable) element).isConstant())
+		if(owner.hasModifier(DotNetModifier.SEALED) || owner.hasModifier(DotNetModifier.READONLY) || element instanceof DotNetVariable && (
+				(DotNetVariable) element).isConstant())
 		{
 			iconDescriptor.addLayerIcon(AllIcons.Nodes.FinalMark);
 		}
 
-		if(element instanceof DotNetTypeDeclaration && CSharpRunUtil.hasEntryPoint((DotNetTypeDeclaration) element) ||
-				element instanceof DotNetMethodDeclaration && CSharpRunUtil.isEntryPoint((DotNetMethodDeclaration) element))
+		if(element instanceof DotNetTypeDeclaration && CSharpRunUtil.hasEntryPoint((DotNetTypeDeclaration) element) || element instanceof
+				DotNetMethodDeclaration && CSharpRunUtil.isEntryPoint((DotNetMethodDeclaration) element))
 		{
 			iconDescriptor.addLayerIcon(AllIcons.Nodes.RunnableMark);
 		}
