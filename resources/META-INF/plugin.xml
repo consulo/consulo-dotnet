@@ -51,6 +51,7 @@
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopier" />
 		<compiler.moduleScopeFactory implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompileModuleScopeFactory" />
 
+		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider" />
 
 		<resolveScopeEnlarger implementation="org.mustbe.consulo.csharp.lang.psi.impl.resolve.CSharpResolveScopeEnlarger" />
 

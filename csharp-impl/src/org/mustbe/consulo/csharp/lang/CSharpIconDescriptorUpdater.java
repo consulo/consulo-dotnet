@@ -26,11 +26,14 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.module.DotNetModuleUtil;
+import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
@@ -155,6 +158,13 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 
 			processModifierListOwner(element, iconDescriptor, flags);
 		}
+
+		DotNetStructurableModuleExtension extension = ModuleUtilCore.getExtension(element, DotNetStructurableModuleExtension.class);
+		if(extension != null && !DotNetModuleUtil.isUnderSourceRoot(element))
+		{
+			iconDescriptor.addLayerIcon(AllIcons.Nodes.ExcludedFromCompile);
+		}
+
 	}
 
 	private static void processModifierListOwner(PsiElement element, IconDescriptor iconDescriptor, int flags)

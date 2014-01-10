@@ -19,12 +19,16 @@ package org.mustbe.consulo.csharp.ide.actions;
 import java.text.ParseException;
 import java.util.Properties;
 
+import org.consulo.psi.PsiPackage;
+import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.CSharpIcons;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
+import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.CreateFileAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
 import com.intellij.ide.actions.CreateFromTemplateAction;
@@ -58,19 +62,53 @@ public class NewCSharpClassAction extends CreateFromTemplateAction<PsiFile>
 	protected boolean isAvailable(DataContext dataContext)
 	{
 		val module = LangDataKeys.MODULE.getData(dataContext);
+		if(module != null)
+		{
+			if(ModuleUtilCore.getExtension(module, DotNetStructurableModuleExtension.class) != null)
+			{
+				final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
+				if(view == null)
+				{
+					return false;
+				}
+
+				PsiDirectory orChooseDirectory = view.getOrChooseDirectory();
+				if(orChooseDirectory == null)
+				{
+					return false;
+				}
+				PsiPackage aPackage = PsiPackageManager.getInstance(module.getProject()).findPackage(orChooseDirectory,
+						DotNetStructurableModuleExtension.class);
+
+				if(aPackage == null)
+				{
+					return false;
+				}
+			}
+		}
 		return module != null && ModuleUtilCore.getExtension(module, CSharpModuleExtension.class) != null;
 	}
 
 	@Override
 	protected PsiFile createFile(String name, String templateName, PsiDirectory dir)
 	{
-		int index = name.lastIndexOf('.');
+		PsiPackage aPackage = PsiPackageManager.getInstance(dir.getProject()).findPackage(dir, DotNetStructurableModuleExtension.class);
 		String namespace = null;
-		if(index > 0)
+		if(aPackage != null)
 		{
-			namespace = name.substring(0, index);
-			name = name.substring(index + 1, name.length());
+			namespace = aPackage.getQualifiedName();
 		}
+		else
+		{
+			int index = name.lastIndexOf('.');
+
+			if(index > 0)
+			{
+				namespace = name.substring(0, index);
+				name = name.substring(index + 1, name.length());
+			}
+		}
+
 		val template = FileTemplateManager.getInstance().getInternalTemplate(templateName);
 		return createFileFromTemplate(name, namespace, template, dir);
 	}

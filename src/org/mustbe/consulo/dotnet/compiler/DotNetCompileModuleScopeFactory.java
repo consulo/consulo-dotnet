@@ -20,6 +20,7 @@ import org.consulo.compiler.impl.CompileModuleScopeFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import com.intellij.compiler.impl.FileIndexCompileScope;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -35,7 +36,7 @@ public class DotNetCompileModuleScopeFactory implements CompileModuleScopeFactor
 	public FileIndexCompileScope createScope(@NotNull Module module, boolean b)
 	{
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-		if(extension != null)
+		if(extension != null && !(extension instanceof DotNetStructurableModuleExtension))
 		{
 			return new DotNetModuleCompileScope(module, b);
 		}

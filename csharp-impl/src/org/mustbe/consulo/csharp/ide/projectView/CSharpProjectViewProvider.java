@@ -23,11 +23,14 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPsiUtilImpl;
+import org.mustbe.consulo.dotnet.module.DotNetModuleUtil;
+import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.PsiElement;
 
@@ -52,12 +55,27 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 		for(AbstractTreeNode treeNode : abstractTreeNodes)
 		{
 			Object value = treeNode.getValue();
+			loop:
 			if(value instanceof CSharpFileImpl)
 			{
 				DotNetNamedElement singleElement = CSharpPsiUtilImpl.findSingleElement((CSharpFileImpl) value);
 				if(singleElement != null)
 				{
-					nodes.add(new CSharpQElementTreeNode(singleElement, settings));
+					DotNetStructurableModuleExtension extension = ModuleUtilCore.getExtension(singleElement,
+							DotNetStructurableModuleExtension.class);
+					if(extension != null)
+					{
+						if(!DotNetModuleUtil.isUnderSourceRoot(singleElement))
+						{
+							break loop;
+						}
+
+						nodes.add(new CSharpElementTreeNode(singleElement, settings));
+					}
+					else
+					{
+						nodes.add(new CSharpQElementTreeNode(singleElement, settings));
+					}
 					continue;
 				}
 			}

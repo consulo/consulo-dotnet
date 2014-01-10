@@ -26,6 +26,12 @@
 		<moduleExtensionProvider key="mono-csharp" parent-key="mono-dotnet"
 								 implementationClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtensionProvider"/>
 
+		<moduleExtensionProvider key="mono-dotnet2"
+								 implementationClass="org.mustbe.consulo.mono.dotnet.module.extension2.MonoDotNetModuleExtensionProvider2" />
+
+		<moduleExtensionProvider key="mono-csharp2" parent-key="mono-dotnet2"
+								 implementationClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtensionProvider"/>
+
 		<sdkType implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType" />
 	</extensions>
 </idea-plugin>

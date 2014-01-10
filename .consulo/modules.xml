@@ -122,6 +122,7 @@
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="csharp-psi-impl" exported="" />
+        <orderEntry type="module" module-name="dotnet-impl" />
       </module>
       <module name="nemerle" dirurl="file://$PROJECT_DIR$/impl/nemerle">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />

@@ -23,7 +23,14 @@
 		<moduleExtensionProvider key="microsoft-dotnet"
 								 implementationClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtensionProvider" />
 
+		<moduleExtensionProvider key="microsoft-dotnet2"
+								 implementationClass="org.mustbe.consulo.microsoft.dotnet.module.extension2.MicrosoftDotNetModuleExtensionProvider2"
+				/>
+
 		<moduleExtensionProvider key="microsoft-csharp" parent-key="microsoft-dotnet"
+								 implementationClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtensionProvider"/>
+
+		<moduleExtensionProvider key="microsoft-csharp2" parent-key="microsoft-dotnet2"
 								 implementationClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtensionProvider"/>
 
 		<sdkType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
