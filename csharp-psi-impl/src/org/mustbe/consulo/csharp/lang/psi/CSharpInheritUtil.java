@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -29,6 +30,7 @@ import lombok.val;
  * @author VISTALL
  * @since 31.12.13.
  */
+@Logger
 public class CSharpInheritUtil
 {
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
@@ -62,6 +64,12 @@ public class CSharpInheritUtil
 				if(psiElement.isEquivalentTo(other))
 				{
 					return true;
+				}
+
+				if(psiElement == typeDeclaration)
+				{
+					LOGGER.warn("Type declaration " + ((CSharpTypeDeclaration) psiElement).getPresentableQName() + " have recursive extends?");
+					return false;
 				}
 
 				if(deep)
