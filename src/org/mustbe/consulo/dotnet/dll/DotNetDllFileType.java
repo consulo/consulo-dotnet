@@ -38,6 +38,13 @@ public class DotNetDllFileType extends ArchiveFileType
 	@Override
 	public String getName()
 	{
-		return "DLL";
+		return "DLL_ARCHIVE";
+	}
+
+	@NotNull
+	@Override
+	public String getDefaultExtension()
+	{
+		return "dll";
 	}
 }
