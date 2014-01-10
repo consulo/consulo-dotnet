@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.microsoft.csharp.module.extension;
+package org.mustbe.consulo.mono.csharp.module.extension;
 
 import javax.swing.JComponent;
 

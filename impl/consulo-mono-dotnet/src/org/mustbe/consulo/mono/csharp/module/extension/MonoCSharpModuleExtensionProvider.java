@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.mono.module.extension;
+package org.mustbe.consulo.mono.csharp.module.extension;
 
 import javax.swing.Icon;
 
 import org.consulo.module.extension.ModuleExtensionProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.mono.MonoDotNetIcons;
+import org.mustbe.consulo.mono.dotnet.MonoDotNetIcons;
 import com.intellij.openapi.module.Module;
 
 /**
  * @author VISTALL
- * @since 20.11.13.
+ * @since 26.11.13.
  */
-public class MonoDotNetModuleExtensionProvider implements ModuleExtensionProvider<MonoDotNetModuleExtension, MonoDotNetMutableModuleExtension>
+public class MonoCSharpModuleExtensionProvider implements ModuleExtensionProvider<MonoCSharpModuleExtension,MonoCSharpMutableModuleExtension>
 {
 	@Nullable
 	@Override
@@ -41,21 +41,20 @@ public class MonoDotNetModuleExtensionProvider implements ModuleExtensionProvide
 	@Override
 	public String getName()
 	{
-		return "Mono .NET";
+		return "C#";
 	}
 
 	@NotNull
 	@Override
-	public MonoDotNetModuleExtension createImmutable(@NotNull String s, @NotNull Module module)
+	public MonoCSharpModuleExtension createImmutable(@NotNull String s, @NotNull Module module)
 	{
-		return new MonoDotNetModuleExtension(s, module);
+		return new MonoCSharpModuleExtension(s, module);
 	}
 
 	@NotNull
 	@Override
-	public MonoDotNetMutableModuleExtension createMutable(@NotNull String s, @NotNull Module module, @NotNull MonoDotNetModuleExtension
-			dotNetModuleExtension)
+	public MonoCSharpMutableModuleExtension createMutable(@NotNull String s, @NotNull Module module, @NotNull MonoCSharpModuleExtension monoCSharpModuleExtension)
 	{
-		return new MonoDotNetMutableModuleExtension(s, module, dotNetModuleExtension);
+		return new MonoCSharpMutableModuleExtension(s, module, monoCSharpModuleExtension);
 	}
 }

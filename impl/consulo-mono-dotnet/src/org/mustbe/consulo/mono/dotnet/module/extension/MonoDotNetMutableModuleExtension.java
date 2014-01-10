@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.mono.module.extension;
+package org.mustbe.consulo.mono.dotnet.module.extension;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

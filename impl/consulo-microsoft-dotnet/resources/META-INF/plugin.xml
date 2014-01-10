@@ -23,6 +23,9 @@
 		<moduleExtensionProvider key="microsoft-dotnet"
 								 implementationClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtensionProvider" />
 
+		<moduleExtensionProvider key="microsoft-csharp" parent-key="microsoft-dotnet"
+								 implementationClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtensionProvider"/>
+
 		<sdkType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
 	</extensions>
 </idea-plugin>

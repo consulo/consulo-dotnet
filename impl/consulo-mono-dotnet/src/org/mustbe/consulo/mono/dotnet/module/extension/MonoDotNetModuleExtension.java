@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.mono.module.extension;
+package org.mustbe.consulo.mono.dotnet.module.extension;
 
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jdom.Element;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.DotNetVersion;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.mono.sdk.MonoSdkType;
+import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -33,8 +33,7 @@ import com.intellij.openapi.util.SystemInfo;
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MonoDotNetModuleExtension extends ModuleExtensionWithSdkImpl<MonoDotNetModuleExtension> implements
-		DotNetModuleExtension<MonoDotNetModuleExtension>
+public class MonoDotNetModuleExtension extends ModuleExtensionWithSdkImpl<MonoDotNetModuleExtension> implements DotNetModuleExtension<MonoDotNetModuleExtension>
 {
 	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 

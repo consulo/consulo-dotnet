@@ -32,6 +32,7 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="consulo-dotnet" />
         <orderEntry type="module" module-name="dotnet-api" />
+        <orderEntry type="module" module-name="csharp-impl" />
       </module>
       <module name="impl/consulo-mono-dotnet" dirurl="file://$PROJECT_DIR$/impl/consulo-mono-dotnet">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
@@ -46,6 +47,7 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="consulo-dotnet" />
         <orderEntry type="module" module-name="dotnet-api" />
+        <orderEntry type="module" module-name="csharp-impl" />
       </module>
       <module name="dotnet-asm" dirurl="file://$PROJECT_DIR$/dotnet-asm">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
@@ -57,32 +59,6 @@
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
-      </module>
-      <module name="impl/consulo-microsoft-csharp" dirurl="file://$PROJECT_DIR$/impl/consulo-microsoft-csharp">
-        <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
-        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
-        <orderEntry type="module" module-name="csharp-impl" />
-      </module>
-      <module name="impl/consulo-mono-csharp" dirurl="file://$PROJECT_DIR$/impl/consulo-mono-csharp">
-        <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
-        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="consulo-mono-dotnet" />
-        <orderEntry type="module" module-name="csharp-impl" />
       </module>
       <module name="dotnet-api" dirurl="file://$PROJECT_DIR$/dotnet-api">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />

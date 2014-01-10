@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.microsoft.csharp.module.extension;
+package org.mustbe.consulo.mono.csharp.module.extension;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;

@@ -48,6 +48,10 @@ public class CSharpInheritUtil
 
 	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, DotNetTypeDeclaration other, boolean deep)
 	{
+		if(typeDeclaration == other)
+		{
+			return false;
+		}
 		for(DotNetType dotNetType : typeDeclaration.getExtends())
 		{
 			DotNetRuntimeType runtimeType = dotNetType.toRuntimeType();

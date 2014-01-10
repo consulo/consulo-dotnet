@@ -21,8 +21,11 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<moduleExtensionProvider key="mono-dotnet"
-								 implementationClass="org.mustbe.consulo.dotnet.mono.module.extension.MonoDotNetModuleExtensionProvider" />
+								 implementationClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtensionProvider" />
 
-		<sdkType implementation="org.mustbe.consulo.dotnet.mono.sdk.MonoSdkType" />
+		<moduleExtensionProvider key="mono-csharp" parent-key="mono-dotnet"
+								 implementationClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtensionProvider"/>
+
+		<sdkType implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType" />
 	</extensions>
 </idea-plugin>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.mono;
+package org.mustbe.consulo.mono.dotnet;
 
 import javax.swing.Icon;
 
