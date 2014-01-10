@@ -14,30 +14,24 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.dotnet.resolve;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 10.01.14
  */
-@ArrayFactoryFields
-public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetModifierListOwner, DotNetGenericParameterListOwner,
-		PsiNameIdentifierOwner, DotNetMemberOwner
+@ProjectService
+public abstract class DotNetPsiFacade
 {
-	boolean isInterface();
-
-	boolean isStruct();
-
-	boolean isEnum();
+	@NotNull
+	public abstract DotNetTypeDeclaration[] findTypes(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount);
 
 	@Nullable
-	DotNetTypeList getExtendList();
-
-	@NotNull
-	DotNetType[] getExtends();
+	public abstract DotNetTypeDeclaration findType(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount);
 }

@@ -28,8 +28,15 @@
 		</component>
 	</application-components>
 
+	<extensionPoints>
+		<extensionPoint name="psi.facade" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade" />
+	</extensionPoints>
+
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetDllFileTypeFactory" />
+
+		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade"
+						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiFacadeImpl" />
 
 		<!--<packageViewHelper implementation="org.mustbe.consulo.dotnet.ide.projectView.DotNetPackageViewHelper" /> -->
 
