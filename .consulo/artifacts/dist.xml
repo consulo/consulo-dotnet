@@ -18,6 +18,7 @@
             <element id="module-output" name="csharp-psi-impl" />
             <element id="module-production-resource-output" name="csharp-psi-impl" />
             <element id="module-output" name="dotnet-psi-impl" />
+            <element id="module-output" name="dotnet-impl" />
           </element>
           <element id="zip-archive" name="dotnet-asm.jar">
             <element id="module-output" name="dotnet-asm" />
