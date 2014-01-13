@@ -30,6 +30,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEventDeclarationImpl
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
@@ -95,6 +96,10 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 		else if(element instanceof CSharpLocalVariable)
 		{
 			return "local variable";
+		}
+		else if(element instanceof DotNetGenericParameter)
+		{
+			return "generic parameter";
 		}
 		else if(element instanceof CSharpFieldDeclarationImpl)
 		{
