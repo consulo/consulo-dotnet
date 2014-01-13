@@ -69,7 +69,6 @@ public class DotNetArchiveFile implements ArchiveFile
 				continue;
 			}
 
-			String systemName = typeDef.getName();
 			String userName = StubToStringUtil.getUserTypeDefName(typeDef);
 
 			String path;
@@ -83,24 +82,16 @@ public class DotNetArchiveFile implements ArchiveFile
 				path = namespace.replace(".", "/") + "/" + userName + ".cs";
 			}
 
-			// when systemName contains `
-			if(systemName.length() != userName.length())
+			DotNetFileArchiveEntry fileWithSameName = duplicateMap.get(path);
+			if(fileWithSameName != null)
 			{
-				DotNetFileArchiveEntry fileWithSameName = duplicateMap.get(path);
-				if(fileWithSameName != null)
-				{
-					fileWithSameName.addTypeDef(typeDef);
-				}
-				else
-				{
-					DotNetFileArchiveEntry e = new DotNetFileArchiveEntry(typeDef, path, myLastModified);
-					fileList.add(e);
-					duplicateMap.put(path, e);
-				}
+				fileWithSameName.addTypeDef(typeDef);
 			}
 			else
 			{
-				fileList.add(new DotNetFileArchiveEntry(typeDef, path, myLastModified));
+				DotNetFileArchiveEntry e = new DotNetFileArchiveEntry(typeDef, path, myLastModified);
+				fileList.add(e);
+				duplicateMap.put(path, e);
 			}
 		}
 
