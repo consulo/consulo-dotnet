@@ -16,10 +16,9 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
-import gnu.trove.THashSet;
-
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +38,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  */
 public abstract class AbstractScopeProcessor extends UserDataHolderBase implements PsiScopeProcessor
 {
-	protected final Set<PsiElement> myElements = new THashSet<PsiElement>();
+	protected final List<PsiElement> myElements = new ArrayList<PsiElement>();
 
 	@Nullable
 	@Override

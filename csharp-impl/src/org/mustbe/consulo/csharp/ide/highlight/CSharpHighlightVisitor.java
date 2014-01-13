@@ -218,16 +218,9 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			}
 		}
 
-		if(validResults.size() == 1)
+		if(validResults.size() > 0)
 		{
 			highlightNamed(validResults.get(0), referenceElement);
-		}
-		else if(validResults.size() > 1)
-		{
-			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip("'" + referenceElement.getText() + "'" +
-					" too many references").range(referenceElement).create();
-
-			myHighlightInfoHolder.add(info);
 		}
 		else
 		{
