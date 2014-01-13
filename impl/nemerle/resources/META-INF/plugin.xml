@@ -20,6 +20,8 @@
 	<depends>org.mustbe.consulo.dotnet.core</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
+
 		<fileTypeFactory implementation="org.mustbe.consulo.nemerle.lang.NemerleFileFactory" />
 
 		<sdkType implementation="org.mustbe.consulo.nemerle.sdk.NemerleSdkType" />

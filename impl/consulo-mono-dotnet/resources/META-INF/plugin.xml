@@ -20,6 +20,8 @@
 	<depends>org.mustbe.consulo.dotnet.core</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
+
 		<moduleExtensionProvider key="mono-dotnet"
 								 implementationClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtensionProvider" />
 
