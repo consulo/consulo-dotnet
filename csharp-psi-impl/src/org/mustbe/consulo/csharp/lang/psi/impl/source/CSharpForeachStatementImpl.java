@@ -25,6 +25,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author VISTALL
@@ -50,9 +51,13 @@ public class CSharpForeachStatementImpl extends CSharpElementImpl implements Dot
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
-			place)
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
 	{
+		if(lastParent == null || !PsiTreeUtil.isAncestor(this, lastParent, false))
+		{
+			return true;
+		}
 		CSharpLocalVariable variable = getVariable();
 		if(variable != null)
 		{
