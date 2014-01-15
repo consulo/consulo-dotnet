@@ -50,6 +50,7 @@
 
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompiler"/>
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopier" />
+		<compiler.translatingHelper implementation="org.mustbe.consulo.dotnet.compiler.DotNetTranslatingCompilerFilesMonitorHelper" />
 		<compiler.moduleScopeFactory implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompileModuleScopeFactory" />
 
 		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider" />

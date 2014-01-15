@@ -34,6 +34,7 @@ import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -112,11 +113,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 		assert extension != null;
 
-		val exeFile = DotNetMacros.extract(module, false, extension.getTarget());
-		if(!new File(exeFile).exists())
-		{
-			throw new ExecutionException(exeFile + " is not exists");
-		}
+		val exeFile = DotNetMacros.extract(module, executor instanceof DefaultDebugExecutor, extension.getTarget());
 
 		val runCommandLine = extension.createRunCommandLine(exeFile);
 		return new RunProfileState()
@@ -125,6 +122,11 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 			@Override
 			public ExecutionResult execute(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException
 			{
+				if(!new File(exeFile).exists())
+				{
+					throw new ExecutionException(exeFile + " is not exists");
+				}
+
 				val builder = TextConsoleBuilderFactory.getInstance().createBuilder(executionEnvironment.getProject());
 
 				OSProcessHandler osProcessHandler = new OSProcessHandler(runCommandLine);
