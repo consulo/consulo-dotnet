@@ -47,6 +47,12 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 		return parameterList == null ? DotNetExpression.EMPTY_ARRAY : parameterList.getExpressions();
 	}
 
+	@NotNull
+	public DotNetExpression getCallExpression()
+	{
+		return findNotNullChildByClass(DotNetExpression.class);
+	}
+
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
@@ -57,6 +63,6 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		return getCallExpression().toTypeRef();
 	}
 }

@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 13.01.14
  */
+@Deprecated
 public interface DotNetGenericExtractor
 {
 	DotNetGenericExtractor EMPTY = new DotNetGenericExtractor()

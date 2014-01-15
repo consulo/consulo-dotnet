@@ -55,6 +55,10 @@ public class CSharpConstantExpressionImpl extends CSharpElementImpl implements D
 		{
 			return CSharpNativeTypeRef.STRING;
 		}
+		else if(elementType == CSharpTokens.CHARACTER_LITERAL)
+		{
+			return CSharpNativeTypeRef.CHAR;
+		}
 		else if(elementType == CSharpTokens.VERBATIM_STRING_LITERAL)
 		{
 			return CSharpNativeTypeRef.STRING;

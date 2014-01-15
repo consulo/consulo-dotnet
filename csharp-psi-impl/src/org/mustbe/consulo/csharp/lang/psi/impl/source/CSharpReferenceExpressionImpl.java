@@ -47,7 +47,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
@@ -351,18 +350,18 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case FIELD_OR_PROPERTY:
 				CSharpNewExpression newExpression = PsiTreeUtil.getParentOfType(this, CSharpNewExpression.class);
 				assert newExpression != null;
-				DotNetType newType = newExpression.getNewType();
-				if(newType == null)
+				DotNetTypeRef dotNetTypeRef = newExpression.toTypeRef();
+				if(dotNetTypeRef == DotNetTypeRef.ERROR_TYPE)
 				{
 					return Collections.emptyList();
 				}
-				PsiElement psiElement1 = newType.resolve();
+				PsiElement psiElement1 = dotNetTypeRef.resolve();
 				if(psiElement1 == null)
 				{
 					return Collections.emptyList();
 				}
 				ResolveState resolveState = ResolveState.initial();
-				resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, newType.getGenericExtractor());
+				resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, dotNetTypeRef.getGenericExtractor());
 
 				p = new MemberResolveScopeProcessor(Conditions.and(condition, new Condition<PsiNamedElement>()
 				{
@@ -426,16 +425,18 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	private Collection<PsiElement> processAnyMember(PsiElement qualifier, Condition<PsiNamedElement> condition, boolean incompleteCode)
 	{
 		PsiElement target = this;
-		DotNetGenericExtractor extractor = DotNetGenericExtractor.EMPTY;
+		DotNetRuntimeGenericExtractor extractor = DotNetRuntimeGenericExtractor.EMPTY;
 
-		if(qualifier instanceof DotNetReferenceExpression)
+		if(qualifier instanceof DotNetExpression)
 		{
-			val pair = resolveInfo(((DotNetReferenceExpression) qualifier).resolve());
+			DotNetTypeRef dotNetTypeRef = ((DotNetExpression) qualifier).toTypeRef();
 
-			if(pair.getFirst() != null)
+			PsiElement resolve = dotNetTypeRef.resolve();
+
+			if(resolve != null)
 			{
-				target = pair.getFirst();
-				extractor = pair.getSecond();
+				target = resolve;
+				extractor = dotNetTypeRef.getGenericExtractor();
 			}
 			else
 			{
@@ -613,33 +614,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return false;
 	}
 
-	@Nullable
-	public static DotNetType getType(PsiElement resolve)
-	{
-		if(resolve instanceof DotNetVariable)
-		{
-			return ((DotNetVariable) resolve).getType();
-		}
-		else if(resolve instanceof DotNetMethodDeclaration)
-		{
-			return ((DotNetMethodDeclaration) resolve).getReturnType();
-		}
-		return null;
-	}
-
-	public static Pair<PsiElement, DotNetGenericExtractor> resolveInfo(PsiElement element)
-	{
-		DotNetType type = getType(element);
-		if(type != null)
-		{
-			return Pair.create(type.resolve(), type.getGenericExtractor());
-		}
-		else
-		{
-			return Pair.create(element, DotNetGenericExtractor.EMPTY);
-		}
-	}
-
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
@@ -653,6 +627,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			return new CSharpTypeDefTypeRef(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), getProject(),
 					((CSharpTypeDeclarationImpl) resolve).getGenericParametersCount(), getResolveScope());
+		}
+		else if(resolve instanceof CSharpMethodDeclaration)
+		{
+			return ((CSharpMethodDeclaration) resolve).getReturnTypeRef();
 		}
 		else if(resolve instanceof DotNetVariable)
 		{

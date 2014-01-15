@@ -27,7 +27,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper.GenericUnwrapTool;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -35,6 +34,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
@@ -141,7 +141,7 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
-		DotNetGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
+		DotNetRuntimeGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
 
 		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
 		{
