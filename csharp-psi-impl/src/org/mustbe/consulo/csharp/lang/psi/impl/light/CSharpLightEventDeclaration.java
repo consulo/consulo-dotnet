@@ -14,35 +14,35 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.lang.psi.impl.light;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
-import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
-import com.intellij.lang.ASTNode;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
- * @since 04.12.13.
+ * @since 15.01.14
  */
-public class CSharpEventDeclarationImpl extends CSharpStubVariableImpl<CSharpVariableStub<DotNetEventDeclaration>> implements CSharpEventDeclaration
+public class CSharpLightEventDeclaration extends CSharpLightVariable<CSharpEventDeclaration> implements CSharpEventDeclaration
 {
-	public CSharpEventDeclarationImpl(@NotNull ASTNode node)
+	private final DotNetTypeRef myTypeRef;
+
+	public CSharpLightEventDeclaration(CSharpEventDeclaration original, DotNetTypeRef typeRef)
 	{
-		super(node);
+		super(original);
+		myTypeRef = typeRef;
 	}
 
-	public CSharpEventDeclarationImpl(@NotNull CSharpVariableStub<DotNetEventDeclaration> stub)
+	@NotNull
+	@Override
+	public DotNetTypeRef toTypeRef()
 	{
-		super(stub, CSharpStubElements.EVENT_DECLARATION);
+		return myTypeRef;
 	}
 
 	@Override
@@ -55,27 +55,27 @@ public class CSharpEventDeclarationImpl extends CSharpStubVariableImpl<CSharpVar
 	@Override
 	public DotNetXXXAccessor[] getAccessors()
 	{
-		return findChildrenByClass(DotNetXXXAccessor.class);
-	}
-
-	@Override
-	@NotNull
-	public DotNetType getType()
-	{
-		return findNotNullChildByClass(DotNetType.class);
-	}
-
-	@Nullable
-	@Override
-	public DotNetExpression getInitializer()
-	{
-		return null;
+		return myOriginal.getAccessors();
 	}
 
 	@NotNull
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
-		return findChildrenByClass(DotNetNamedElement.class);
+		return myOriginal.getMembers();
+	}
+
+	@Nullable
+	@Override
+	public String getPresentableParentQName()
+	{
+		return myOriginal.getPresentableParentQName();
+	}
+
+	@Nullable
+	@Override
+	public String getPresentableQName()
+	{
+		return myOriginal.getPresentableQName();
 	}
 }

@@ -19,19 +19,19 @@ package org.mustbe.consulo.csharp.ide.findUsage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.lexer.CSharpLexer;
+import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEventDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFieldDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPropertyDeclarationImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
@@ -81,15 +81,15 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 		{
 			return "namespace";
 		}
-		else if(element instanceof CSharpEventDeclarationImpl)
+		else if(element instanceof CSharpEventDeclaration)
 		{
 			return "event";
 		}
-		else if(element instanceof CSharpPropertyDeclarationImpl)
+		else if(element instanceof CSharpPropertyDeclaration)
 		{
 			return "property";
 		}
-		else if(element instanceof CSharpParameterImpl)
+		else if(element instanceof DotNetParameter)
 		{
 			return "parameter";
 		}
@@ -101,7 +101,7 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 		{
 			return "generic parameter";
 		}
-		else if(element instanceof CSharpFieldDeclarationImpl)
+		else if(element instanceof CSharpFieldDeclaration)
 		{
 			return "field";
 		}

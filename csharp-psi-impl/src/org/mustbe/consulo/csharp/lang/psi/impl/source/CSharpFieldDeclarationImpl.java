@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
@@ -34,7 +35,7 @@ import com.intellij.psi.util.PsiTreeUtil;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpFieldDeclarationImpl extends CSharpStubVariableImpl<CSharpVariableStub<DotNetFieldDeclaration>> implements DotNetFieldDeclaration
+public class CSharpFieldDeclarationImpl extends CSharpStubVariableImpl<CSharpVariableStub<DotNetFieldDeclaration>> implements CSharpFieldDeclaration
 {
 	public CSharpFieldDeclarationImpl(@NotNull ASTNode node)
 	{
@@ -60,7 +61,7 @@ public class CSharpFieldDeclarationImpl extends CSharpStubVariableImpl<CSharpVar
 		// int a, b
 		if(type == null && getNameIdentifier() != null)
 		{
-			CSharpFieldDeclarationImpl fieldDeclaration = PsiTreeUtil.getPrevSiblingOfType(this, CSharpFieldDeclarationImpl.class);
+			CSharpFieldDeclaration fieldDeclaration = PsiTreeUtil.getPrevSiblingOfType(this, CSharpFieldDeclaration.class);
 			assert fieldDeclaration != null;
 			return fieldDeclaration.getType();
 		}
@@ -74,7 +75,7 @@ public class CSharpFieldDeclarationImpl extends CSharpStubVariableImpl<CSharpVar
 		DotNetModifierList childByClass = findChildByClass(DotNetModifierList.class);
 		if(childByClass == null && getNameIdentifier() != null)
 		{
-			CSharpFieldDeclarationImpl fieldDeclaration = PsiTreeUtil.getPrevSiblingOfType(this, CSharpFieldDeclarationImpl.class);
+			CSharpFieldDeclaration fieldDeclaration = PsiTreeUtil.getPrevSiblingOfType(this, CSharpFieldDeclaration.class);
 			assert fieldDeclaration != null;
 			return fieldDeclaration.getModifierList();
 		}

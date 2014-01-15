@@ -17,11 +17,16 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightEventDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightParameter;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightParameterList;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericWrapperTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpPointerTypeRef;
@@ -68,6 +73,21 @@ public class GenericUnwrapTool
 			}
 
 			return (T) new CSharpLightMethodDeclaration(methodDeclaration, newReturnTypeRef, parameterList);
+		}
+		else if(namedElement instanceof CSharpPropertyDeclaration)
+		{
+			CSharpPropertyDeclaration e = (CSharpPropertyDeclaration) namedElement;
+			return (T) new CSharpLightPropertyDeclaration(e, exchangeTypeRefs(e.toTypeRef(), extractor, e));
+		}
+		else if(namedElement instanceof CSharpEventDeclaration)
+		{
+			CSharpEventDeclaration e = (CSharpEventDeclaration) namedElement;
+			return (T) new CSharpLightEventDeclaration(e, exchangeTypeRefs(e.toTypeRef(), extractor, e));
+		}
+		else if(namedElement instanceof CSharpFieldDeclaration)
+		{
+			CSharpFieldDeclaration e = (CSharpFieldDeclaration) namedElement;
+			return (T) new CSharpLightFieldDeclaration(e, exchangeTypeRefs(e.toTypeRef(), extractor, e));
 		}
 		return namedElement;
 	}

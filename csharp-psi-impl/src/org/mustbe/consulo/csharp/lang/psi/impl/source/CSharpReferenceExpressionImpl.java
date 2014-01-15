@@ -24,9 +24,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.CSharpLookupElementBuilder;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySet;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
+import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
@@ -371,7 +373,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					@Override
 					public boolean value(PsiNamedElement psiNamedElement)
 					{
-						return psiNamedElement instanceof CSharpFieldDeclarationImpl || psiNamedElement instanceof CSharpPropertyDeclarationImpl;
+						return psiNamedElement instanceof CSharpFieldDeclaration || psiNamedElement instanceof CSharpPropertyDeclaration;
 					}
 				}), incompleteCode);
 				CSharpResolveUtil.treeWalkUp(p, psiElement1, this, null, resolveState);

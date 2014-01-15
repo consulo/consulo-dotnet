@@ -22,11 +22,14 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -153,7 +156,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
-	public void visitFieldDeclaration(CSharpFieldDeclarationImpl declaration)
+	public void visitFieldDeclaration(DotNetFieldDeclaration declaration)
 	{
 		super.visitFieldDeclaration(declaration);
 
@@ -177,7 +180,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
-	public void visitPropertyDeclaration(CSharpPropertyDeclarationImpl declaration)
+	public void visitPropertyDeclaration(CSharpPropertyDeclaration declaration)
 	{
 		super.visitPropertyDeclaration(declaration);
 
@@ -185,7 +188,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
-	public void visitEventDeclaration(CSharpEventDeclarationImpl declaration)
+	public void visitEventDeclaration(CSharpEventDeclaration declaration)
 	{
 		super.visitEventDeclaration(declaration);
 
