@@ -59,9 +59,9 @@ public interface DotNetTypeRef
 
 		@NotNull
 		@Override
-		public DotNetRuntimeGenericExtractor getGenericExtractor()
+		public DotNetGenericExtractor getGenericExtractor()
 		{
-			return DotNetRuntimeGenericExtractor.EMPTY;
+			return DotNetGenericExtractor.EMPTY;
 		}
 	}
 
@@ -117,5 +117,5 @@ public interface DotNetTypeRef
 	PsiElement resolve();
 
 	@NotNull
-	DotNetRuntimeGenericExtractor getGenericExtractor();
+	DotNetGenericExtractor getGenericExtractor();
 }

@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
@@ -28,15 +32,24 @@ import org.mustbe.consulo.dotnet.psi.DotNetType;
  */
 public class CSharpGenericExtractor implements DotNetGenericExtractor
 {
-	public CSharpGenericExtractor(DotNetType[] arguments)
-	{
+	private Map<DotNetGenericParameter, DotNetTypeRef> myMap;
 
+	public CSharpGenericExtractor(DotNetGenericParameter[] genericParameters, DotNetTypeRef[] arguments)
+	{
+		myMap = new HashMap<DotNetGenericParameter, DotNetTypeRef>(genericParameters.length);
+		for(int i = 0; i < genericParameters.length; i++)
+		{
+			DotNetGenericParameter genericParameter = genericParameters[i];
+			DotNetTypeRef argument = arguments[i];
+
+			myMap.put(genericParameter, argument);
+		}
 	}
 
 	@Nullable
 	@Override
-	public DotNetType extract(@NotNull DotNetGenericParameter parameter)
+	public DotNetTypeRef extract(@NotNull DotNetGenericParameter parameter)
 	{
-		return null;
+		return myMap.get(parameter);
 	}
 }

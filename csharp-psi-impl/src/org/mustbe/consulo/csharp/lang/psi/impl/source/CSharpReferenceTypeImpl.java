@@ -17,14 +17,11 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -43,27 +40,12 @@ public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNet
 		visitor.visitReferenceType(this);
 	}
 
-	@Nullable
-	@Override
-	public PsiElement resolve()
-	{
-		DotNetReferenceExpression referenceExpression = getReferenceExpression();
-		return referenceExpression.resolve();
-	}
-
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
 		DotNetReferenceExpression referenceExpression = getReferenceExpression();
 		return referenceExpression.toTypeRef();
-	}
-
-	@NotNull
-	@Override
-	public DotNetGenericExtractor getGenericExtractor()
-	{
-		return DotNetGenericExtractor.EMPTY;
 	}
 
 	@NotNull

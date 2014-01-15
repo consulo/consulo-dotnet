@@ -18,9 +18,7 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -29,14 +27,6 @@ import com.intellij.psi.PsiElement;
 @ArrayFactoryFields
 public interface DotNetType extends DotNetElement
 {
-	@Nullable
-	@Deprecated
-	PsiElement resolve();
-
 	@NotNull
 	DotNetTypeRef toTypeRef();
-
-	@NotNull
-	@Deprecated
-	DotNetGenericExtractor getGenericExtractor();
 }

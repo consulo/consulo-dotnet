@@ -20,7 +20,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 
 /**
  * @author VISTALL
@@ -29,9 +30,9 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
 public class GenericUnwrapTool
 {
 	@SuppressWarnings("unchecked")
-	public static <T extends DotNetNamedElement> T extract(T namedElement, DotNetRuntimeGenericExtractor extractor)
+	public static <T extends DotNetNamedElement> T extract(T namedElement, DotNetGenericExtractor extractor)
 	{
-		if(extractor == DotNetRuntimeGenericExtractor.EMPTY)
+		if(extractor == DotNetGenericExtractor.EMPTY)
 		{
 			return namedElement;
 		}

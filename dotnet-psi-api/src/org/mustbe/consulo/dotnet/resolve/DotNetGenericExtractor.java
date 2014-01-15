@@ -24,9 +24,9 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
  * @author VISTALL
  * @since 13.01.14
  */
-public interface DotNetRuntimeGenericExtractor
+public interface DotNetGenericExtractor
 {
-	DotNetRuntimeGenericExtractor EMPTY = new DotNetRuntimeGenericExtractor()
+	DotNetGenericExtractor EMPTY = new DotNetGenericExtractor()
 	{
 		@Nullable
 		@Override

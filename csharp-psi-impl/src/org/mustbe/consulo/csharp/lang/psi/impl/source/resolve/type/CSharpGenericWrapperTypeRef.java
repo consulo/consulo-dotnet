@@ -20,7 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
 
@@ -94,19 +95,19 @@ public class CSharpGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 
 	@NotNull
 	@Override
-	public DotNetRuntimeGenericExtractor getGenericExtractor()
+	public DotNetGenericExtractor getGenericExtractor()
 	{
 		PsiElement psiElement = myInner.resolve();
 		if(!(psiElement instanceof DotNetGenericParameterListOwner))
 		{
-			return DotNetRuntimeGenericExtractor.EMPTY;
+			return DotNetGenericExtractor.EMPTY;
 		}
 
 		DotNetGenericParameter[] genericParameters = ((DotNetGenericParameterListOwner) psiElement).getGenericParameters();
 		if(genericParameters.length != myArguments.length)
 		{
-			return DotNetRuntimeGenericExtractor.EMPTY;
+			return DotNetGenericExtractor.EMPTY;
 		}
-		return new CSharpRuntimeGenericExtractor(genericParameters, myArguments);
+		return new CSharpGenericExtractor(genericParameters, myArguments);
 	}
 }

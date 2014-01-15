@@ -41,8 +41,9 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDef
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.dotnet.psi.*;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.*;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
@@ -425,7 +426,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	private Collection<PsiElement> processAnyMember(PsiElement qualifier, Condition<PsiNamedElement> condition, boolean incompleteCode)
 	{
 		PsiElement target = this;
-		DotNetRuntimeGenericExtractor extractor = DotNetRuntimeGenericExtractor.EMPTY;
+		DotNetGenericExtractor extractor = DotNetGenericExtractor.EMPTY;
 
 		if(qualifier instanceof DotNetExpression)
 		{
@@ -452,7 +453,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		MemberResolveScopeProcessor p = new MemberResolveScopeProcessor(condition, incompleteCode);
 
 		ResolveState resolveState = ResolveState.initial();
-		if(extractor != DotNetRuntimeGenericExtractor.EMPTY)
+		if(extractor != org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor.EMPTY)
 		{
 			resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
 		}

@@ -55,7 +55,7 @@ public class CSharpInheritUtil
 		}
 		for(DotNetType dotNetType : typeDeclaration.getExtends())
 		{
-			PsiElement psiElement = dotNetType.resolve();
+			PsiElement psiElement = dotNetType.toTypeRef().resolve();
 			if(psiElement instanceof CSharpTypeDeclaration)
 			{
 				if(psiElement.isEquivalentTo(other))

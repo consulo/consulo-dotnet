@@ -20,7 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
@@ -80,8 +81,8 @@ public class CSharpReferenceTypeByTextRef implements DotNetTypeRef
 
 	@NotNull
 	@Override
-	public DotNetRuntimeGenericExtractor getGenericExtractor()
+	public DotNetGenericExtractor getGenericExtractor()
 	{
-		return DotNetRuntimeGenericExtractor.EMPTY;
+		return DotNetGenericExtractor.EMPTY;
 	}
 }

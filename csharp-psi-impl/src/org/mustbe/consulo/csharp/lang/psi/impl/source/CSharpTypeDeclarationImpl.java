@@ -34,7 +34,8 @@ import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
@@ -141,7 +142,7 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
-		DotNetRuntimeGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
+		DotNetGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
 
 		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
 		{

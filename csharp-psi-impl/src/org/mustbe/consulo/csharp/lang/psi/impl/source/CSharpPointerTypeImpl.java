@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpPointerTypeRef;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetPointerType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -43,20 +42,6 @@ public class CSharpPointerTypeImpl extends CSharpElementImpl implements DotNetPo
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitPointerType(this);
-	}
-
-	@NotNull
-	@Override
-	public DotNetGenericExtractor getGenericExtractor()
-	{
-		return DotNetGenericExtractor.EMPTY;
-	}
-
-	@Nullable
-	@Override
-	public PsiElement resolve()
-	{
-		return null;
 	}
 
 	@NotNull
