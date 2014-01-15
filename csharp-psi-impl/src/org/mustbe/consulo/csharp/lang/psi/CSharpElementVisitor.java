@@ -40,7 +40,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(list);
 	}
 
-	public void visitConstructorDeclaration(CSharpConstructorDeclarationImpl declaration)
+	public void visitConstructorDeclaration(CSharpConstructorDeclaration declaration)
 	{
 		visitElement(declaration);
 	}

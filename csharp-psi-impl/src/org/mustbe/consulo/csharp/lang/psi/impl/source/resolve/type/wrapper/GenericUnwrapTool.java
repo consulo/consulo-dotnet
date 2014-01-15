@@ -17,10 +17,12 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpConstructorDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightConstructorDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightMethodDeclaration;
@@ -73,6 +75,29 @@ public class GenericUnwrapTool
 			}
 
 			return (T) new CSharpLightMethodDeclaration(methodDeclaration, newReturnTypeRef, parameterList);
+		}
+		else if(namedElement instanceof CSharpConstructorDeclaration)
+		{
+			CSharpConstructorDeclaration constructorDeclaration = (CSharpConstructorDeclaration) namedElement;
+
+			DotNetTypeRef newReturnTypeRef = exchangeTypeRefs(constructorDeclaration.getReturnTypeRef(), extractor, namedElement);
+
+			DotNetParameterList parameterList = constructorDeclaration.getParameterList();
+			if(parameterList != null)
+			{
+				DotNetParameter[] parameters = constructorDeclaration.getParameters();
+
+				DotNetParameter[] newParameters = new DotNetParameter[parameters.length];
+				for(int i = 0; i < parameters.length; i++)
+				{
+					DotNetParameter parameter = parameters[i];
+					newParameters[i] = new CSharpLightParameter(parameter, exchangeTypeRefs(parameter.toTypeRef(), extractor, parameter));
+				}
+
+				parameterList = new CSharpLightParameterList(parameterList, newParameters);
+			}
+
+			return (T) new CSharpLightConstructorDeclaration(constructorDeclaration, newReturnTypeRef, parameterList);
 		}
 		else if(namedElement instanceof CSharpPropertyDeclaration)
 		{
