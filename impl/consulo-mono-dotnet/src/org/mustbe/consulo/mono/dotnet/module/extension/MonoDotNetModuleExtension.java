@@ -44,13 +44,17 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName)
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, boolean debug)
 	{
 		Sdk sdk = getSdk();
 		assert sdk != null;
 
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(sdk.getHomePath() + "/../../../bin/mono" + (SystemInfo.isWindows ? ".exe" : ""));
+		if(debug)
+		{
+			commandLine.addParameter("--debug");
+		}
 		commandLine.addParameter(fileName);
 		return commandLine;
 	}

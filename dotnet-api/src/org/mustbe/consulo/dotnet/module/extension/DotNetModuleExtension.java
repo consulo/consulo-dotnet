@@ -35,5 +35,5 @@ public interface DotNetModuleExtension<T extends ModuleExtensionWithSdk<T>> exte
 	DotNetVersion getVersion();
 
 	@NotNull
-	GeneralCommandLine createRunCommandLine(@NotNull String fileName);
+	GeneralCommandLine createRunCommandLine(@NotNull String fileName, boolean debug);
 }

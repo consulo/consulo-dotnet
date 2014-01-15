@@ -113,9 +113,10 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 		assert extension != null;
 
-		val exeFile = DotNetMacros.extract(module, executor instanceof DefaultDebugExecutor, extension.getTarget());
+		boolean debug = executor instanceof DefaultDebugExecutor;
+		val exeFile = DotNetMacros.extract(module, debug, extension.getTarget());
 
-		val runCommandLine = extension.createRunCommandLine(exeFile);
+		val runCommandLine = extension.createRunCommandLine(exeFile, debug);
 		return new RunProfileState()
 		{
 			@Nullable

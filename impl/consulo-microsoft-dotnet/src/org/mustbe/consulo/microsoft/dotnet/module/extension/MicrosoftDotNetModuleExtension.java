@@ -42,7 +42,7 @@ public class MicrosoftDotNetModuleExtension extends DotNetModuleExtensionImpl<Mi
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName)
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, boolean debug)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(fileName);
