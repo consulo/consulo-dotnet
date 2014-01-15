@@ -71,7 +71,7 @@ public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNet
 	@Override
 	public DotNetGenericExtractor getGenericExtractor()
 	{
-		return null;
+		return DotNetGenericExtractor.EMPTY;
 	}
 
 	@Override

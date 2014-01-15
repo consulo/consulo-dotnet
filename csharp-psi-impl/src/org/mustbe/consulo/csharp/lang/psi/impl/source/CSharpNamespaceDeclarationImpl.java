@@ -16,8 +16,6 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
-import java.util.List;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -192,8 +190,7 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
-		List<PsiElement> childrenByType = findChildrenByType(CSharpStubElements.QUALIFIED_MEMBERS_WITH_USING);
-		for(PsiElement dotNetNamedElement : childrenByType)
+		for(PsiElement dotNetNamedElement : getStubOrPsiChildren(CSharpStubElements.QUALIFIED_MEMBERS_WITH_USING, PsiElement.ARRAY_FACTORY))
 		{
 			if(dotNetNamedElement instanceof CSharpUsingNamespaceListImpl)
 			{

@@ -59,7 +59,6 @@ public abstract class CSharpLikeMethodDeclarationImpl extends CSharpStubMemberIm
 	@Override
 	public DotNetParameterList getParameterList()
 	{
-
 		return getStubOrPsiChild(CSharpStubElements.PARAMETER_LIST);
 	}
 

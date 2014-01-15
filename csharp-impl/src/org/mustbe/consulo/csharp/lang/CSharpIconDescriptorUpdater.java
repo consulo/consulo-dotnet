@@ -20,12 +20,10 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.run.CSharpRunUtil;
-import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
-import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.module.DotNetModuleUtil;
 import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import org.mustbe.consulo.dotnet.psi.*;
@@ -80,11 +78,11 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			CSharpTypeDeclaration typeDeclaration = (CSharpTypeDeclaration) element;
 			if(!DumbService.getInstance(element.getProject()).isDumb())
 			{
-				if(CSharpInheritUtil.isParent(DotNetTypes.System_Attribute, typeDeclaration, true))
+				if(isAttribute(typeDeclaration))
 				{
 					main = AllIcons.Nodes.Annotationtype;
 				}
-				else if(CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, typeDeclaration, true))
+				else if(isException(typeDeclaration))
 				{
 					main = typeDeclaration.hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes.AbstractException : AllIcons.Nodes.ExceptionClass;
 				}
@@ -201,5 +199,17 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		{
 			iconDescriptor.addLayerIcon(AllIcons.Nodes.RunnableMark);
 		}
+	}
+
+	public static boolean isAttribute(CSharpTypeDeclaration declaration)
+	{
+		return false;
+		//return CSharpInheritUtil.isParent(DotNetTypes.System_Attribute, declaration, true);
+	}
+
+	public static boolean isException(CSharpTypeDeclaration declaration)
+	{
+		return false;
+	//	return CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, typeDeclaration, true)
 	}
 }

@@ -16,10 +16,12 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -27,8 +29,17 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class CSharpUsingNamespaceStatementStub extends StubBase<CSharpUsingNamespaceStatementImpl>
 {
-	public CSharpUsingNamespaceStatementStub(StubElement parent, IStubElementType elementType)
+	private StringRef myReferenceText;
+
+	public CSharpUsingNamespaceStatementStub(StubElement parent, IStubElementType elementType, StringRef referenceText)
 	{
 		super(parent, elementType);
+		myReferenceText = referenceText;
+	}
+
+	@Nullable
+	public String getReferenceText()
+	{
+		return StringRef.toString(myReferenceText);
 	}
 }

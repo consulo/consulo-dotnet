@@ -84,14 +84,14 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 				@Override
 				public String fun(DotNetParameter parameter)
 				{
-					return CSharpElementPresentationUtil.formatType(parameter.getType());
+					return /*CSharpElementPresentationUtil.formatType(parameter.getType())*/"Test";
 				}
 			}, ", ") + ")";
 
 			LookupElementBuilder builder = LookupElementBuilder.create(methodDeclaration);
 			builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
 
-			builder = builder.withTypeText(CSharpElementPresentationUtil.formatType(methodDeclaration.getReturnType()));
+		//	builder = builder.withTypeText(CSharpElementPresentationUtil.formatType(methodDeclaration.getReturnType()));
 			builder = builder.withTailText(parameterText, false);
 			builder = builder.withInsertHandler(new InsertHandler<LookupElement>()
 			{
@@ -118,7 +118,7 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 
 			builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
 
-			builder = builder.withTypeText(CSharpElementPresentationUtil.formatType(((DotNetVariable) element).getType()));
+			//builder = builder.withTypeText(CSharpElementPresentationUtil.formatType(((DotNetVariable) element).getType()));
 
 			return builder;
 		}

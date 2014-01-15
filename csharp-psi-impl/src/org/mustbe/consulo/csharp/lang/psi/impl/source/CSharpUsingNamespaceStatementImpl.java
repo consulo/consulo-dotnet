@@ -18,11 +18,16 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingNamespaceStatementStub;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.CharFilter;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -44,6 +49,31 @@ public class CSharpUsingNamespaceStatementImpl extends CSharpStubElementImpl<CSh
 		super(stub, CSharpStubElements.USING_NAMESPACE_STATEMENT);
 	}
 
+	@Nullable
+	public String getReferenceText()
+	{
+		CSharpUsingNamespaceStatementStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getReferenceText();
+		}
+
+		DotNetReferenceExpression namespaceReference = getNamespaceReference();
+		return namespaceReference == null ? null : namespaceReference.getText();
+	}
+
+	@Nullable
+	public CSharpNamespaceAsElement resolve()
+	{
+		String referenceText = getReferenceText();
+		if(referenceText == null)
+		{
+			return null;
+		}
+		String qName = StringUtil.strip(getText(), CharFilter.NOT_WHITESPACE_FILTER);
+		return CSharpNamespaceHelper.getNamespaceElementIfFind(getProject(), qName, getResolveScope());
+	}
+
 	public DotNetReferenceExpression getNamespaceReference()
 	{
 		return findChildByClass(DotNetReferenceExpression.class);
@@ -53,13 +83,11 @@ public class CSharpUsingNamespaceStatementImpl extends CSharpStubElementImpl<CSh
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{
-		DotNetReferenceExpression namespaceReference = getNamespaceReference();
-		if(namespaceReference == null)
+		CSharpNamespaceAsElement resolve = resolve();
+		if(resolve == null)
 		{
 			return true;
 		}
-
-		PsiElement resolve = namespaceReference.resolve();
 		return resolve == null || resolve.processDeclarations(processor, state, lastParent, place);
 	}
 

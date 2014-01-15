@@ -25,6 +25,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -54,20 +55,22 @@ public class CSharpUsingNamespaceStatementStubElementType extends CSharpAbstract
 	public CSharpUsingNamespaceStatementStub createStub(@NotNull CSharpUsingNamespaceStatementImpl cSharpUsingNamespaceStatement,
 			StubElement stubElement)
 	{
-		return new CSharpUsingNamespaceStatementStub(stubElement, this);
+		String referenceText = cSharpUsingNamespaceStatement.getReferenceText();
+		return new CSharpUsingNamespaceStatementStub(stubElement, this, StringRef.fromNullableString(referenceText));
 	}
 
 	@Override
-	public void serialize(@NotNull CSharpUsingNamespaceStatementStub cSharpUsingNamespaceStatementStub, @NotNull StubOutputStream stubOutputStream)
+	public void serialize(@NotNull CSharpUsingNamespaceStatementStub stub, @NotNull StubOutputStream stubOutputStream)
 			throws IOException
 	{
-
+		stubOutputStream.writeName(stub.getReferenceText());
 	}
 
 	@NotNull
 	@Override
 	public CSharpUsingNamespaceStatementStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
 	{
-		return new CSharpUsingNamespaceStatementStub(stubElement, this);
+		StringRef referenceText = stubInputStream.readName();
+		return new CSharpUsingNamespaceStatementStub(stubElement, this, referenceText);
 	}
 }

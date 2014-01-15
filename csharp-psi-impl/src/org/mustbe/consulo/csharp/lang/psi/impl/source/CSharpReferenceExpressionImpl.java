@@ -492,6 +492,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(parent instanceof CSharpUsingNamespaceStatementImpl)
 		{
+			assert true;
 			return ResolveToKind.NAMESPACE;
 		}
 		else if(parent instanceof CSharpAttributeImpl)
