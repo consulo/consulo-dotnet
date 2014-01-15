@@ -39,11 +39,9 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespa
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.dotnet.psi.*;
-import org.mustbe.consulo.dotnet.resolve.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
@@ -344,10 +342,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					return Collections.emptyList();
 				}
-				Collection<DotNetTypeDeclaration> dotNetTypeDeclarations = TypeByQNameIndex.getInstance().get(nativeRuntimeType
-						.getWrapperQualifiedClass(), getProject(), getResolveScope());
+				PsiElement resolve = nativeRuntimeType.resolve(getProject(), getResolveScope());
+				if(resolve == null)
+				{
+					return Collections.emptyList();
+				}
 
-				return dotNetTypeDeclarations;
+				return Collections.singletonList(resolve);
 			case FIELD_OR_PROPERTY:
 				CSharpNewExpression newExpression = PsiTreeUtil.getParentOfType(this, CSharpNewExpression.class);
 				assert newExpression != null;
@@ -356,13 +357,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					return Collections.emptyList();
 				}
-				PsiElement psiElement1 = dotNetTypeRef.resolve();
+				PsiElement psiElement1 = dotNetTypeRef.resolve(getProject(), getResolveScope());
 				if(psiElement1 == null)
 				{
 					return Collections.emptyList();
 				}
 				ResolveState resolveState = ResolveState.initial();
-				resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, dotNetTypeRef.getGenericExtractor());
+				resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, dotNetTypeRef.getGenericExtractor(getProject(), getResolveScope()));
 
 				p = new MemberResolveScopeProcessor(Conditions.and(condition, new Condition<PsiNamedElement>()
 				{
@@ -409,14 +410,14 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD:
 			case METHOD:
 			case ANY_MEMBER:
-				if(kind == ResolveToKind.METHOD)
+				/*if(kind == ResolveToKind.METHOD)
 				{
 					condition = Conditions.and(condition, ourMethodCondition);
 				}
 				else if(kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD)
 				{
 					condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);
-				}
+				}   */
 
 				return processAnyMember(qualifier, condition, incompleteCode);
 		}
@@ -432,12 +433,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			DotNetTypeRef dotNetTypeRef = ((DotNetExpression) qualifier).toTypeRef();
 
-			PsiElement resolve = dotNetTypeRef.resolve();
+			PsiElement resolve = dotNetTypeRef.resolve(getProject(), getResolveScope());
 
 			if(resolve != null)
 			{
 				target = resolve;
-				extractor = dotNetTypeRef.getGenericExtractor();
+				extractor = dotNetTypeRef.getGenericExtractor(getProject(), getResolveScope());
 			}
 			else
 			{
@@ -453,7 +454,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		MemberResolveScopeProcessor p = new MemberResolveScopeProcessor(condition, incompleteCode);
 
 		ResolveState resolveState = ResolveState.initial();
-		if(extractor != org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor.EMPTY)
+		if(extractor != DotNetGenericExtractor.EMPTY)
 		{
 			resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
 		}
@@ -622,12 +623,11 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		PsiElement resolve = resolve();
 		if(resolve instanceof CSharpNamespaceAsElement)
 		{
-			return new CSharpNamespaceDefTypeRef(((CSharpNamespaceAsElement) resolve).getQName(), getProject(), getResolveScope());
+			return new CSharpNamespaceDefTypeRef(((CSharpNamespaceAsElement) resolve).getQName());
 		}
 		else if(resolve instanceof CSharpTypeDeclarationImpl)
 		{
-			return new CSharpTypeDefTypeRef(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), getProject(),
-					((CSharpTypeDeclarationImpl) resolve).getGenericParametersCount(), getResolveScope());
+			return new CSharpTypeDefTypeRef(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), ((CSharpTypeDeclarationImpl) resolve).getGenericParametersCount());
 		}
 		else if(resolve instanceof CSharpMethodDeclaration)
 		{

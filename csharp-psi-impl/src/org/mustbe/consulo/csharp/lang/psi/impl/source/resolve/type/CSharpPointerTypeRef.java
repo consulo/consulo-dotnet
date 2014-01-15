@@ -18,7 +18,9 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -55,8 +57,8 @@ public class CSharpPointerTypeRef extends DotNetTypeRef.Adapter
 
 	@Nullable
 	@Override
-	public PsiElement resolve()
+	public PsiElement resolve(Project project, GlobalSearchScope scope)
 	{
-		return myInnerType.resolve();
+		return myInnerType.resolve(project, scope);
 	}
 }

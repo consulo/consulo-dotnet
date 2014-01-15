@@ -31,16 +31,12 @@ import com.intellij.psi.util.QualifiedName;
 public class CSharpTypeDefTypeRef extends DotNetTypeRef.Adapter
 {
 	private final String myQualifiedName;
-	private final Project myProject;
 	private final int myGenericCount;
-	private final GlobalSearchScope myResolveScope;
 
-	public CSharpTypeDefTypeRef(String qualifiedName, Project project, int genericCount, GlobalSearchScope resolveScope)
+	public CSharpTypeDefTypeRef(String qualifiedName, int genericCount)
 	{
 		myQualifiedName = qualifiedName;
-		myProject = project;
 		myGenericCount = genericCount;
-		myResolveScope = resolveScope;
 	}
 
 	@Nullable
@@ -60,8 +56,8 @@ public class CSharpTypeDefTypeRef extends DotNetTypeRef.Adapter
 
 	@Nullable
 	@Override
-	public PsiElement resolve()
+	public PsiElement resolve(Project project, GlobalSearchScope scope)
 	{
-		return DotNetPsiFacade.getInstance(myProject).findType(myQualifiedName, myResolveScope, myGenericCount);
+		return DotNetPsiFacade.getInstance(project).findType(myQualifiedName, scope, myGenericCount);
 	}
 }

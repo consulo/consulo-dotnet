@@ -45,11 +45,7 @@ public abstract class CSharpStubVariableImpl<S extends CSharpVariableStub<?>> ex
 	public boolean isConstant()
 	{
 		S stub = getStub();
-		if(stub != null)
-		{
-			return stub.isConstant();
-		}
-		return false;
+		return stub != null && stub.isConstant();
 	}
 
 	@NotNull

@@ -21,10 +21,11 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.QualifiedName;
 
 /**
@@ -74,14 +75,14 @@ public class CSharpReferenceTypeByTextRef implements DotNetTypeRef
 
 	@Nullable
 	@Override
-	public PsiElement resolve()
+	public PsiElement resolve(Project project, GlobalSearchScope scope)
 	{
-		return myType.getValue().toTypeRef().resolve();
+		return myType.getValue().toTypeRef().resolve(project, scope);
 	}
 
 	@NotNull
 	@Override
-	public DotNetGenericExtractor getGenericExtractor()
+	public DotNetGenericExtractor getGenericExtractor(Project project, GlobalSearchScope scope)
 	{
 		return DotNetGenericExtractor.EMPTY;
 	}

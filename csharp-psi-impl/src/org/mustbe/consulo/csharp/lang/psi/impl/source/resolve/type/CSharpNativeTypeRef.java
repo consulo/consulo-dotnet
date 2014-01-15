@@ -18,7 +18,11 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -72,6 +76,13 @@ public class CSharpNativeTypeRef extends DotNetTypeRef.Adapter
 	public boolean isNullable()
 	{
 		return false;
+	}
+
+	@Nullable
+	@Override
+	public PsiElement resolve(Project project, GlobalSearchScope scope)
+	{
+		return DotNetPsiFacade.getInstance(project).findType(myWrapperQualifiedClass, scope, 0);
 	}
 
 	@NotNull

@@ -21,9 +21,10 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -88,16 +89,16 @@ public class CSharpGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 
 	@Nullable
 	@Override
-	public PsiElement resolve()
+	public PsiElement resolve(Project project, GlobalSearchScope scope)
 	{
-		return myInner.resolve();
+		return myInner.resolve(project, scope);
 	}
 
 	@NotNull
 	@Override
-	public DotNetGenericExtractor getGenericExtractor()
+	public DotNetGenericExtractor getGenericExtractor(Project project, GlobalSearchScope scope)
 	{
-		PsiElement psiElement = myInner.resolve();
+		PsiElement psiElement = myInner.resolve(project, scope);
 		if(!(psiElement instanceof DotNetGenericParameterListOwner))
 		{
 			return DotNetGenericExtractor.EMPTY;

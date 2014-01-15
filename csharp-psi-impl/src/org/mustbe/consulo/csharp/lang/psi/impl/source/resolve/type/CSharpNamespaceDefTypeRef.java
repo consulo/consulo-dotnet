@@ -31,14 +31,10 @@ import com.intellij.psi.util.QualifiedName;
 public class CSharpNamespaceDefTypeRef extends DotNetTypeRef.Adapter
 {
 	private final String myQualifiedName;
-	private final Project myProject;
-	private final GlobalSearchScope myResolveScope;
 
-	public CSharpNamespaceDefTypeRef(String qualifiedName, Project project, GlobalSearchScope resolveScope)
+	public CSharpNamespaceDefTypeRef(String qualifiedName)
 	{
 		myQualifiedName = qualifiedName;
-		myProject = project;
-		myResolveScope = resolveScope;
 	}
 
 	@Nullable
@@ -58,8 +54,8 @@ public class CSharpNamespaceDefTypeRef extends DotNetTypeRef.Adapter
 
 	@Nullable
 	@Override
-	public PsiElement resolve()
+	public PsiElement resolve(Project project, GlobalSearchScope scope)
 	{
-		return CSharpNamespaceHelper.getNamespaceElementIfFind(myProject, myQualifiedName, myResolveScope);
+		return CSharpNamespaceHelper.getNamespaceElementIfFind(project, myQualifiedName, scope);
 	}
 }
