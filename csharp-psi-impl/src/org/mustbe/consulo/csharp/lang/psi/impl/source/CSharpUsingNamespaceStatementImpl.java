@@ -70,7 +70,7 @@ public class CSharpUsingNamespaceStatementImpl extends CSharpStubElementImpl<CSh
 		{
 			return null;
 		}
-		String qName = StringUtil.strip(getText(), CharFilter.NOT_WHITESPACE_FILTER);
+		String qName = StringUtil.strip(referenceText, CharFilter.NOT_WHITESPACE_FILTER);
 		return CSharpNamespaceHelper.getNamespaceElementIfFind(getProject(), qName, getResolveScope());
 	}
 
@@ -84,10 +84,7 @@ public class CSharpUsingNamespaceStatementImpl extends CSharpStubElementImpl<CSh
 			place)
 	{
 		CSharpNamespaceAsElement resolve = resolve();
-		if(resolve == null)
-		{
-			return true;
-		}
+
 		return resolve == null || resolve.processDeclarations(processor, state, lastParent, place);
 	}
 
