@@ -14,31 +14,26 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.lang.psi.impl.light;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpParameterListStub;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 15.01.14
  */
-public class CSharpParameterListImpl extends CSharpStubElementImpl<CSharpParameterListStub> implements DotNetParameterList
+public class CSharpLightParameterList extends CSharpLightElement<DotNetParameterList> implements DotNetParameterList
 {
-	public CSharpParameterListImpl(@NotNull ASTNode node)
-	{
-		super(node);
-	}
+	private DotNetParameter[] myParameters;
 
-	public CSharpParameterListImpl(@NotNull CSharpParameterListStub stub)
+	public CSharpLightParameterList(DotNetParameterList original, DotNetParameter[] parameters)
 	{
-		super(stub, CSharpStubElements.PARAMETER_LIST);
+		super(original);
+		myParameters = parameters;
 	}
 
 	@Override
@@ -51,7 +46,7 @@ public class CSharpParameterListImpl extends CSharpStubElementImpl<CSharpParamet
 	@Override
 	public DotNetParameter[] getParameters()
 	{
-		return getStubOrPsiChildren(CSharpStubElements.PARAMETER, DotNetParameter.ARRAY_FACTORY);
+		return myParameters;
 	}
 
 	@NotNull

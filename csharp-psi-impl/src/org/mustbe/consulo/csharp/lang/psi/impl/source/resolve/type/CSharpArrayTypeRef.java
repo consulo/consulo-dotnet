@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
@@ -44,5 +45,11 @@ public class CSharpArrayTypeRef extends DotNetTypeRef.Adapter
 	public String getQualifiedText()
 	{
 		return myInnerType.getQualifiedText() + "[]";
+	}
+
+	@NotNull
+	public DotNetTypeRef getInnerType()
+	{
+		return myInnerType;
 	}
 }

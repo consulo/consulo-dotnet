@@ -16,12 +16,22 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper;
 
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightMethodDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightParameter;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightParameterList;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericWrapperTypeRef;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpPointerTypeRef;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -36,23 +46,69 @@ public class GenericUnwrapTool
 		{
 			return namedElement;
 		}
-		/*if(namedElement instanceof CSharpMethodDeclaration)
+		if(namedElement instanceof CSharpMethodDeclaration)
 		{
-			return (T) new CSharpLightMethodDeclaration((CSharpMethodDeclaration) namedElement);
-		} */
+			CSharpMethodDeclaration methodDeclaration = (CSharpMethodDeclaration) namedElement;
+
+			DotNetTypeRef newReturnTypeRef = exchangeTypeRefs(methodDeclaration.getReturnTypeRef(), extractor, namedElement);
+
+			DotNetParameterList parameterList = methodDeclaration.getParameterList();
+			if(parameterList != null)
+			{
+				DotNetParameter[] parameters = methodDeclaration.getParameters();
+
+				DotNetParameter[] newParameters = new DotNetParameter[parameters.length];
+				for(int i = 0; i < parameters.length; i++)
+				{
+					DotNetParameter parameter = parameters[i];
+					newParameters[i] = new CSharpLightParameter(parameter, exchangeTypeRefs(parameter.toTypeRef(), extractor, parameter));
+				}
+
+				parameterList = new CSharpLightParameterList(parameterList, newParameters);
+			}
+
+			return (T) new CSharpLightMethodDeclaration(methodDeclaration, newReturnTypeRef, parameterList);
+		}
 		return namedElement;
 	}
 
-	public static DotNetType unwrapType(DotNetType type)
+	@NotNull
+	public static DotNetTypeRef exchangeTypeRefs(DotNetTypeRef typeRef, DotNetGenericExtractor extractor, PsiElement element)
 	{
-		type.accept(new CSharpElementVisitor()
+		if(typeRef instanceof CSharpGenericWrapperTypeRef)
 		{
-			@Override
-			public void visitReferenceType(DotNetReferenceType type)
+			CSharpGenericWrapperTypeRef wrapperTypeRef = (CSharpGenericWrapperTypeRef) typeRef;
+
+			DotNetTypeRef inner = exchangeTypeRefs(wrapperTypeRef.getInner(), extractor, element);
+			DotNetTypeRef[] oldArguments = wrapperTypeRef.getArguments();
+			DotNetTypeRef[] arguments = new DotNetTypeRef[oldArguments.length];
+			for(int i = 0; i < oldArguments.length; i++)
 			{
-				super.visitReferenceType(type);
+				DotNetTypeRef oldArgument = oldArguments[i];
+				arguments[i] = exchangeTypeRefs(oldArgument, extractor, element);
 			}
-		});
-		return null;
+			return new CSharpGenericWrapperTypeRef(inner, arguments);
+		}
+		else if(typeRef instanceof CSharpPointerTypeRef)
+		{
+			return new CSharpPointerTypeRef(exchangeTypeRefs(((CSharpPointerTypeRef) typeRef).getInnerType(), extractor, element));
+		}
+		else if(typeRef instanceof CSharpArrayTypeRef)
+		{
+			return new CSharpArrayTypeRef(exchangeTypeRefs(((CSharpArrayTypeRef) typeRef).getInnerType(), extractor, element));
+		}
+		else
+		{
+			PsiElement resolve = typeRef.resolve(element.getProject(), element.getResolveScope());
+			if(resolve instanceof DotNetGenericParameter)
+			{
+				DotNetTypeRef extractedTypeRef = extractor.extract((DotNetGenericParameter) resolve);
+				if(extractedTypeRef != null)
+				{
+					return extractedTypeRef;
+				}
+			}
+		}
+		return typeRef;
 	}
 }

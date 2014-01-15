@@ -19,19 +19,48 @@ package org.mustbe.consulo.csharp.lang.psi.impl.light;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.light.LightElement;
 
 /**
  * @author VISTALL
- * @since 13.01.14
+ * @since 15.01.14
  */
-public abstract class CSharpLightElement extends LightElement
+public abstract class CSharpLightElement<S extends PsiElement> extends LightElement
 {
-	protected CSharpLightElement(PsiManager manager)
+	protected final S myOriginal;
+
+	protected CSharpLightElement(S original)
 	{
-		super(manager, CSharpLanguage.INSTANCE);
+		super(original.getManager(), CSharpLanguage.INSTANCE);
+		myOriginal = original;
+	}
+
+	@Override
+	public PsiElement getParent()
+	{
+		return myOriginal.getParent();
+	}
+
+	@NotNull
+	@Override
+	public PsiElement getNavigationElement()
+	{
+		return myOriginal;
+	}
+
+	@Override
+	public PsiFile getContainingFile()
+	{
+		return myOriginal.getContainingFile();
+	}
+
+	@Override
+	public PsiElement getOriginalElement()
+	{
+		return myOriginal;
 	}
 
 	@Override

@@ -35,6 +35,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.AbstractScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericParameterTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespaceDefTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefTypeRef;
@@ -628,6 +629,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		else if(resolve instanceof CSharpTypeDeclarationImpl)
 		{
 			return new CSharpTypeDefTypeRef(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), ((CSharpTypeDeclarationImpl) resolve).getGenericParametersCount());
+		}
+		else if(resolve instanceof DotNetGenericParameter)
+		{
+			return new CSharpGenericParameterTypeRef((DotNetGenericParameter) resolve);
 		}
 		else if(resolve instanceof CSharpMethodDeclaration)
 		{

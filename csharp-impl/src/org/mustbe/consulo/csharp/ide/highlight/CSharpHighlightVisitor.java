@@ -169,7 +169,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
-	public void visitParameter(CSharpParameterImpl parameter)
+	public void visitParameter(DotNetParameter parameter)
 	{
 		super.visitParameter(parameter);
 

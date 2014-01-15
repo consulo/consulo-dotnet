@@ -65,6 +65,12 @@ public interface DotNetTypeRef
 		{
 			return DotNetGenericExtractor.EMPTY;
 		}
+
+		@Override
+		public String toString()
+		{
+			return getPresentableText();
+		}
 	}
 
 	DotNetTypeRef ERROR_TYPE = new Adapter()

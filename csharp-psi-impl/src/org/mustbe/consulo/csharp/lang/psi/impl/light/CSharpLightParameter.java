@@ -17,46 +17,34 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.light;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 13.01.14
+ * @since 15.01.14
  */
-public class CSharpLightMethodDeclaration extends CSharpLightLikeMethodDeclaration<CSharpMethodDeclaration> implements CSharpMethodDeclaration
+public class CSharpLightParameter extends CSharpLightVariable<DotNetParameter> implements DotNetParameter
 {
-	public CSharpLightMethodDeclaration(CSharpMethodDeclaration original, DotNetTypeRef returnTypeRef, DotNetParameterList parameterList)
+	private DotNetTypeRef myTypeRef;
+
+	public CSharpLightParameter(DotNetParameter original, DotNetTypeRef dotNetTypeRef)
 	{
-		super(original, returnTypeRef, parameterList);
+		super(original);
+		myTypeRef = dotNetTypeRef;
 	}
 
+	@NotNull
 	@Override
-	public boolean isDelegate()
+	public DotNetTypeRef toTypeRef()
 	{
-		return myOriginal.isDelegate();
-	}
-
-	@Override
-	public boolean isOperator()
-	{
-		return myOriginal.isOperator();
-	}
-
-	@Nullable
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return myOriginal.getNameIdentifier();
+		return myTypeRef;
 	}
 
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitMethodDeclaration(this);
+		visitor.visitParameter(this);
 	}
 }

@@ -16,8 +16,8 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -25,47 +25,34 @@ import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
- * @since 06.01.14.
+ * @since 15.01.14
  */
-public class CSharpPointerTypeRef extends DotNetTypeRef.Adapter
+public class CSharpGenericParameterTypeRef extends DotNetTypeRef.Adapter
 {
-	private final DotNetTypeRef myInnerType;
+	private final DotNetGenericParameter myGenericParameter;
 
-	public CSharpPointerTypeRef(DotNetTypeRef innerType)
+	public CSharpGenericParameterTypeRef(DotNetGenericParameter genericParameter)
 	{
-		myInnerType = innerType;
-	}
-
-	@Nullable
-	@Override
-	public String getPresentableText()
-	{
-		return myInnerType.getPresentableText() + "*";
-	}
-
-	@Nullable
-	@Override
-	public String getQualifiedText()
-	{
-		return myInnerType.getQualifiedText() + "*";
-	}
-
-	@Override
-	public boolean isNullable()
-	{
-		return myInnerType.isNullable();
+		myGenericParameter = genericParameter;
 	}
 
 	@Nullable
 	@Override
 	public PsiElement resolve(Project project, GlobalSearchScope scope)
 	{
-		return myInnerType.resolve(project, scope);
+		return myGenericParameter;
 	}
 
-	@NotNull
-	public DotNetTypeRef getInnerType()
+	@Override
+	public boolean isNullable()
 	{
-		return myInnerType;
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public String getPresentableText()
+	{
+		return myGenericParameter.getName();
 	}
 }

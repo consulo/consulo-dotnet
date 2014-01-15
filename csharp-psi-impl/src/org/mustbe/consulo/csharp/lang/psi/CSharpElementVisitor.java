@@ -17,6 +17,8 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.psi.PsiElementVisitor;
@@ -57,12 +59,12 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(declaration);
 	}
 
-	public void visitParameter(CSharpParameterImpl parameter)
+	public void visitParameter(DotNetParameter parameter)
 	{
 		visitElement(parameter);
 	}
 
-	public void visitParameterList(CSharpParameterListImpl list)
+	public void visitParameterList(DotNetParameterList list)
 	{
 		visitElement(list);
 	}

@@ -29,74 +29,46 @@ import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
  * @since 13.01.14
  */
-public abstract class CSharpLightLikeMethodDeclaration<S extends DotNetLikeMethodDeclaration> extends CSharpLightElement implements
+public abstract class CSharpLightLikeMethodDeclaration<S extends DotNetLikeMethodDeclaration> extends CSharpLightNamedElement<S> implements
 		DotNetLikeMethodDeclaration
 {
 	protected S myOriginal;
+	private final DotNetTypeRef myReturnTypeRef;
+	private final DotNetParameterList myParameterTypes;
 
-	public CSharpLightLikeMethodDeclaration(S original)
+	public CSharpLightLikeMethodDeclaration(S original, DotNetTypeRef returnTypeRef, DotNetParameterList parameterList)
 	{
-		super(original.getManager());
+		super(original);
 		myOriginal = original;
-	}
-
-	@Override
-	public PsiFile getContainingFile()
-	{
-		return myOriginal.getContainingFile();
-	}
-
-	@Override
-	public PsiElement getOriginalElement()
-	{
-		return myOriginal;
+		myReturnTypeRef = returnTypeRef;
+		myParameterTypes = parameterList;
 	}
 
 	@Nullable
 	@Override
 	public DotNetParameterList getParameterList()
 	{
-		return myOriginal.getParameterList();
-	}
-
-	@Override
-	public PsiElement getParent()
-	{
-		return myOriginal.getParent();
-	}
-
-	@NotNull
-	@Override
-	public PsiElement getNavigationElement()
-	{
-		return myOriginal;
-	}
-
-	@Override
-	public String getName()
-	{
-		return myOriginal.getName();
+		return myParameterTypes;
 	}
 
 	@NotNull
 	@Override
 	public DotNetParameter[] getParameters()
 	{
-		return myOriginal.getParameters();
+		return myParameterTypes.getParameters();
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeRef[] getParameterTypesForRuntime()
 	{
-		return myOriginal.getParameterTypesForRuntime();
+		return myParameterTypes.getParameterTypesForRuntime();
 	}
 
 	@Nullable
@@ -117,7 +89,7 @@ public abstract class CSharpLightLikeMethodDeclaration<S extends DotNetLikeMetho
 	@Override
 	public DotNetTypeRef getReturnTypeRef()
 	{
-		return myOriginal.getReturnTypeRef();
+		return myReturnTypeRef;
 	}
 
 	@Nullable

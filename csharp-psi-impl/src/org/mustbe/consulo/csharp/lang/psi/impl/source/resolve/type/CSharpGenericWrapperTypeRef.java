@@ -46,15 +46,15 @@ public class CSharpGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 	public String getPresentableText()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append(myInner.getPresentableText());
+		builder.append(getInner().getPresentableText());
 		builder.append("<");
-		for(int i = 0; i < myArguments.length; i++)
+		for(int i = 0; i < getArguments().length; i++)
 		{
 			if(i != 0)
 			{
 				builder.append(", ");
 			}
-			DotNetTypeRef argument = myArguments[i];
+			DotNetTypeRef argument = getArguments()[i];
 			builder.append(argument.getPresentableText());
 		}
 		builder.append(">");
@@ -66,15 +66,15 @@ public class CSharpGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 	public String getQualifiedText()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append(myInner.getQualifiedText());
+		builder.append(getInner().getQualifiedText());
 		builder.append("<");
-		for(int i = 0; i < myArguments.length; i++)
+		for(int i = 0; i < getArguments().length; i++)
 		{
 			if(i != 0)
 			{
 				builder.append(", ");
 			}
-			DotNetTypeRef argument = myArguments[i];
+			DotNetTypeRef argument = getArguments()[i];
 			builder.append(argument.getQualifiedText());
 		}
 		builder.append(">");
@@ -84,31 +84,41 @@ public class CSharpGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 	@Override
 	public boolean isNullable()
 	{
-		return myInner.isNullable();
+		return getInner().isNullable();
 	}
 
 	@Nullable
 	@Override
 	public PsiElement resolve(Project project, GlobalSearchScope scope)
 	{
-		return myInner.resolve(project, scope);
+		return getInner().resolve(project, scope);
 	}
 
 	@NotNull
 	@Override
 	public DotNetGenericExtractor getGenericExtractor(Project project, GlobalSearchScope scope)
 	{
-		PsiElement psiElement = myInner.resolve(project, scope);
+		PsiElement psiElement = getInner().resolve(project, scope);
 		if(!(psiElement instanceof DotNetGenericParameterListOwner))
 		{
 			return DotNetGenericExtractor.EMPTY;
 		}
 
 		DotNetGenericParameter[] genericParameters = ((DotNetGenericParameterListOwner) psiElement).getGenericParameters();
-		if(genericParameters.length != myArguments.length)
+		if(genericParameters.length != getArguments().length)
 		{
 			return DotNetGenericExtractor.EMPTY;
 		}
-		return new CSharpGenericExtractor(genericParameters, myArguments);
+		return new CSharpGenericExtractor(genericParameters, getArguments());
+	}
+
+	public DotNetTypeRef getInner()
+	{
+		return myInner;
+	}
+
+	public DotNetTypeRef[] getArguments()
+	{
+		return myArguments;
 	}
 }

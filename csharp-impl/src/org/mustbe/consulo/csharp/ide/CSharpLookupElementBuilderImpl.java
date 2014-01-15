@@ -21,8 +21,8 @@ import java.util.Collection;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.completion.CompletionData;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
@@ -77,14 +77,14 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 		if(element instanceof CSharpMethodDeclaration)
 		{
 			CSharpMethodDeclaration methodDeclaration = (CSharpMethodDeclaration) element;
-			DotNetParameter[] parameterTypes = methodDeclaration.getParameters();
+			DotNetTypeRef[] parameterTypes = methodDeclaration.getParameterTypesForRuntime();
 
-			String parameterText = "(" + StringUtil.join(parameterTypes, new Function<DotNetParameter, String>()
+			String parameterText = "(" + StringUtil.join(parameterTypes, new Function<DotNetTypeRef, String>()
 			{
 				@Override
-				public String fun(DotNetParameter parameter)
+				public String fun(DotNetTypeRef parameter)
 				{
-					return parameter.toTypeRef().getPresentableText();
+					return parameter.getPresentableText();
 				}
 			}, ", ") + ")";
 
