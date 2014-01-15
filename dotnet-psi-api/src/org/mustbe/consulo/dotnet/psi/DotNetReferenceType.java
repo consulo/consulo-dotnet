@@ -16,11 +16,17 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 13.12.13.
  */
 public interface DotNetReferenceType extends DotNetType
 {
+	@NotNull
+	String getReferenceText();
+
+	@NotNull
 	DotNetReferenceExpression getReferenceExpression();
 }

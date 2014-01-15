@@ -18,9 +18,9 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -42,8 +42,8 @@ public class CSharpIsExpressionImpl extends CSharpElementImpl implements DotNetE
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
-		return CSharpNativeRuntimeType.BOOL;
+		return CSharpNativeTypeRef.BOOL;
 	}
 }

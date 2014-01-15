@@ -14,35 +14,49 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 04.01.14.
+ * @since 06.01.14.
  */
-public class CSharpAssignmentExpressionImpl extends CSharpElementImpl implements DotNetExpression
+public class CSharpPointerTypeRef extends DotNetTypeRef.Adapter
 {
-	public CSharpAssignmentExpressionImpl(@NotNull ASTNode node)
+	private final DotNetTypeRef myInnerType;
+
+	public CSharpPointerTypeRef(DotNetTypeRef innerType)
 	{
-		super(node);
+		myInnerType = innerType;
+	}
+
+	@Nullable
+	@Override
+	public String getPresentableText()
+	{
+		return myInnerType.getPresentableText() + "*";
+	}
+
+	@Nullable
+	@Override
+	public String getQualifiedText()
+	{
+		return myInnerType.getQualifiedText() + "*";
 	}
 
 	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
+	public boolean isNullable()
 	{
-		visitor.visitAssignmentExpression(this);
+		return myInnerType.isNullable();
 	}
 
-	@NotNull
+	@Nullable
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public PsiElement resolve()
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		return myInnerType.resolve();
 	}
 }

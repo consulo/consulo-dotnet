@@ -26,9 +26,9 @@ import com.intellij.psi.PsiElement;
  * @since 16.12.13.
  */
 @ArrayFactoryFields
-public interface DotNetRuntimeType
+public interface DotNetTypeRef
 {
-	public class Adapter implements DotNetRuntimeType
+	public class Adapter implements DotNetTypeRef
 	{
 		@Nullable
 		@Override
@@ -52,7 +52,7 @@ public interface DotNetRuntimeType
 
 		@Nullable
 		@Override
-		public PsiElement toPsiElement()
+		public PsiElement resolve()
 		{
 			return null;
 		}
@@ -65,7 +65,7 @@ public interface DotNetRuntimeType
 		}
 	}
 
-	DotNetRuntimeType ERROR_TYPE = new Adapter()
+	DotNetTypeRef ERROR_TYPE = new Adapter()
 	{
 		@Nullable
 		@Override
@@ -75,7 +75,7 @@ public interface DotNetRuntimeType
 		}
 	};
 
-	DotNetRuntimeType UNKNOWN_TYPE = new Adapter()
+	DotNetTypeRef UNKNOWN_TYPE = new Adapter()
 	{
 		@Nullable
 		@Override
@@ -85,7 +85,7 @@ public interface DotNetRuntimeType
 		}
 	};
 
-	DotNetRuntimeType AUTO_TYPE = new Adapter()
+	DotNetTypeRef AUTO_TYPE = new Adapter()
 	{
 		@Nullable
 		@Override
@@ -95,7 +95,7 @@ public interface DotNetRuntimeType
 		}
 	};
 
-	DotNetRuntimeType NULL_TYPE = new Adapter()
+	DotNetTypeRef NULL_TYPE = new Adapter()
 	{
 		@Nullable
 		@Override
@@ -114,7 +114,7 @@ public interface DotNetRuntimeType
 	boolean isNullable();
 
 	@Nullable
-	PsiElement toPsiElement();
+	PsiElement resolve();
 
 	@NotNull
 	DotNetRuntimeGenericExtractor getGenericExtractor();

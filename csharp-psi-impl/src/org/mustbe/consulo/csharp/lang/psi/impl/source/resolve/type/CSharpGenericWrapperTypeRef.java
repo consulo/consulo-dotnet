@@ -21,19 +21,19 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 04.01.14.
  */
-public class CSharpGenericWrapperRuntimeType extends DotNetRuntimeType.Adapter
+public class CSharpGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 {
-	private final DotNetRuntimeType myInner;
-	private final DotNetRuntimeType[] myArguments;
+	private final DotNetTypeRef myInner;
+	private final DotNetTypeRef[] myArguments;
 
-	public CSharpGenericWrapperRuntimeType(DotNetRuntimeType inner, DotNetRuntimeType[] rArguments)
+	public CSharpGenericWrapperTypeRef(DotNetTypeRef inner, DotNetTypeRef[] rArguments)
 	{
 		myInner = inner;
 		myArguments = rArguments;
@@ -52,7 +52,7 @@ public class CSharpGenericWrapperRuntimeType extends DotNetRuntimeType.Adapter
 			{
 				builder.append(", ");
 			}
-			DotNetRuntimeType argument = myArguments[i];
+			DotNetTypeRef argument = myArguments[i];
 			builder.append(argument.getPresentableText());
 		}
 		builder.append(">");
@@ -72,7 +72,7 @@ public class CSharpGenericWrapperRuntimeType extends DotNetRuntimeType.Adapter
 			{
 				builder.append(", ");
 			}
-			DotNetRuntimeType argument = myArguments[i];
+			DotNetTypeRef argument = myArguments[i];
 			builder.append(argument.getQualifiedText());
 		}
 		builder.append(">");
@@ -87,16 +87,16 @@ public class CSharpGenericWrapperRuntimeType extends DotNetRuntimeType.Adapter
 
 	@Nullable
 	@Override
-	public PsiElement toPsiElement()
+	public PsiElement resolve()
 	{
-		return myInner.toPsiElement();
+		return myInner.resolve();
 	}
 
 	@NotNull
 	@Override
 	public DotNetRuntimeGenericExtractor getGenericExtractor()
 	{
-		PsiElement psiElement = myInner.toPsiElement();
+		PsiElement psiElement = myInner.resolve();
 		if(!(psiElement instanceof DotNetGenericParameterListOwner))
 		{
 			return DotNetRuntimeGenericExtractor.EMPTY;

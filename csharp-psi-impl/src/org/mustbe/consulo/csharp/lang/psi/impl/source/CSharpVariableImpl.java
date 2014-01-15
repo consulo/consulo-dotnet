@@ -19,7 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
@@ -31,7 +31,7 @@ import com.intellij.psi.util.CachedValuesManager;
  */
 public abstract class CSharpVariableImpl extends CSharpMemberImpl implements DotNetVariable
 {
-	private CachedValue<DotNetRuntimeType> myCachedValue;
+	private CachedValue<DotNetTypeRef> myCachedValue;
 
 	public CSharpVariableImpl(@NotNull ASTNode node)
 	{
@@ -40,17 +40,17 @@ public abstract class CSharpVariableImpl extends CSharpMemberImpl implements Dot
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
 		if(myCachedValue != null)
 		{
 			return myCachedValue.getValue();
 		}
-		myCachedValue = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<DotNetRuntimeType>()
+		myCachedValue = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<DotNetTypeRef>()
 		{
 			@Nullable
 			@Override
-			public Result<DotNetRuntimeType> compute()
+			public Result<DotNetTypeRef> compute()
 			{
 				return Result.createSingleDependency(CSharpPsiUtilImpl.toRuntimeType(CSharpVariableImpl.this), CSharpVariableImpl.this);
 			}

@@ -18,7 +18,7 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
@@ -30,7 +30,7 @@ public interface DotNetVariable extends PsiNameIdentifierOwner, DotNetNamedEleme
 	boolean isConstant();
 
 	@NotNull
-	DotNetRuntimeType toRuntimeType();
+	DotNetTypeRef toTypeRef();
 
 	@Nullable
 	DotNetType getType();

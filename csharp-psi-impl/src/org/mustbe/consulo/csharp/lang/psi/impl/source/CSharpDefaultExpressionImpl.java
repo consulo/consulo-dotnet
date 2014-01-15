@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -49,13 +49,13 @@ public class CSharpDefaultExpressionImpl extends CSharpElementImpl implements Do
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
 		DotNetType type = getType();
 		if(type == null)
 		{
-			return DotNetRuntimeType.ERROR_TYPE;
+			return DotNetTypeRef.ERROR_TYPE;
 		}
-		return type.toRuntimeType();
+		return type.toTypeRef();
 	}
 }

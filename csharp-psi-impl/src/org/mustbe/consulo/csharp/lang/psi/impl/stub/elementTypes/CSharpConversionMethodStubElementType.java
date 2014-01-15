@@ -23,6 +23,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpConversionMethodDecl
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpConversionMethodStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfoUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -30,6 +31,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -61,7 +63,8 @@ public class CSharpConversionMethodStubElementType extends CSharpAbstractStubEle
 		StringRef name = StringRef.fromNullableString(methodDeclaration.getName());
 		StringRef qname = StringRef.fromNullableString(methodDeclaration.getPresentableParentQName());
 		int modifierMask = MemberStub.getModifierMask(methodDeclaration);
-		return new CSharpConversionMethodStub(stubElement, name, qname, modifierMask);
+		val typeInfo = CSharpStubTypeInfoUtil.toStub(methodDeclaration.getReturnType());
+		return new CSharpConversionMethodStub(stubElement, name, qname, modifierMask, typeInfo);
 	}
 
 	@Override
@@ -70,6 +73,7 @@ public class CSharpConversionMethodStubElementType extends CSharpAbstractStubEle
 		stubOutputStream.writeName(cSharpTypeStub.getName());
 		stubOutputStream.writeName(cSharpTypeStub.getParentQName());
 		stubOutputStream.writeInt(cSharpTypeStub.getModifierMask());
+		cSharpTypeStub.getReturnType().writeTo(stubOutputStream);
 	}
 
 	@NotNull
@@ -79,7 +83,8 @@ public class CSharpConversionMethodStubElementType extends CSharpAbstractStubEle
 		StringRef name = stubInputStream.readName();
 		StringRef qname = stubInputStream.readName();
 		int modifierMask = stubInputStream.readInt();
-		return new CSharpConversionMethodStub(stubElement, name, qname, modifierMask);
+		val typeInfo = CSharpStubTypeInfoUtil.read(stubInputStream);
+		return new CSharpConversionMethodStub(stubElement, name, qname, modifierMask, typeInfo);
 	}
 
 	@Override

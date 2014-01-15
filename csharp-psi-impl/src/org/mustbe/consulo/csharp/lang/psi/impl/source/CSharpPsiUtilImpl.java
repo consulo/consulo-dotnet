@@ -23,7 +23,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
@@ -90,24 +90,24 @@ public class CSharpPsiUtilImpl
 	}
 
 	@NotNull
-	public static DotNetRuntimeType toRuntimeType(@NotNull DotNetVariable variable)
+	public static DotNetTypeRef toRuntimeType(@NotNull DotNetVariable variable)
 	{
 		DotNetType type = variable.getType();
 		if(type == null)
 		{
-			return DotNetRuntimeType.ERROR_TYPE;
+			return DotNetTypeRef.ERROR_TYPE;
 		}
 
-		DotNetRuntimeType runtimeType = type.toRuntimeType();
-		if(runtimeType == DotNetRuntimeType.AUTO_TYPE)
+		DotNetTypeRef runtimeType = type.toTypeRef();
+		if(runtimeType == DotNetTypeRef.AUTO_TYPE)
 		{
 			DotNetExpression initializer = variable.getInitializer();
 			if(initializer == null)
 			{
-				return DotNetRuntimeType.UNKNOWN_TYPE;
+				return DotNetTypeRef.UNKNOWN_TYPE;
 			}
 
-			return initializer.toRuntimeType();
+			return initializer.toTypeRef();
 		}
 		else
 		{

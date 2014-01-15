@@ -17,16 +17,13 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfoUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
 
 /**
  * @author VISTALL
@@ -34,8 +31,6 @@ import com.intellij.psi.util.CachedValuesManager;
  */
 public abstract class CSharpStubVariableImpl<S extends CSharpVariableStub<?>> extends CSharpStubMemberImpl<S> implements DotNetVariable
 {
-	private CachedValue<DotNetRuntimeType> myCachedValue;
-
 	public CSharpStubVariableImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -59,23 +54,15 @@ public abstract class CSharpStubVariableImpl<S extends CSharpVariableStub<?>> ex
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
-		if(myCachedValue != null)
+		S stub = getStub();
+		if(stub != null)
 		{
-			return myCachedValue.getValue();
+			return CSharpStubTypeInfoUtil.toTypeRef(stub.getTypeInfo(), this);
 		}
-		myCachedValue = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<DotNetRuntimeType>()
-		{
-			@Nullable
-			@Override
-			public Result<DotNetRuntimeType> compute()
-			{
-				DotNetType type = getType();
-				DotNetRuntimeType runtimeType = type == null ? DotNetRuntimeType.ERROR_TYPE : type.toRuntimeType();
-				return Result.createSingleDependency(runtimeType, CSharpStubVariableImpl.this);
-			}
-		}, false);
-		return myCachedValue.getValue();
+
+		DotNetType type = getType();
+		return type == null ? DotNetTypeRef.ERROR_TYPE : type.toTypeRef();
 	}
 }

@@ -19,10 +19,17 @@ package org.mustbe.consulo.csharp.lang.psi;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFragmentedFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.SingleRootFileViewProvider;
+import com.intellij.testFramework.LightVirtualFile;
 import lombok.val;
 
 /**
@@ -54,5 +61,18 @@ public class CSharpFileFactory
 
 		CSharpUsingNamespaceListImpl firstChild = (CSharpUsingNamespaceListImpl) fileFromText.getFirstChild();
 		return firstChild.getStatements()[0];
+	}
+
+	public static DotNetType createType(@NotNull PsiElement scope, @NotNull String typeText)
+	{
+		val clazz = "class _Dummy { " + typeText + " _dummy; }";
+
+		val virtualFile = new LightVirtualFile("dummy.cs", CSharpFileType.INSTANCE, clazz, System.currentTimeMillis());
+		val viewProvider = new SingleRootFileViewProvider(scope.getManager(), virtualFile, false);
+		val psiFile = new CSharpFragmentedFileImpl(viewProvider, scope);
+
+		DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) psiFile.getMembers()[0];
+		DotNetVariable dotNetNamedElement = (DotNetVariable) typeDeclaration.getMembers()[0];
+		return dotNetNamedElement.getType();
 	}
 }

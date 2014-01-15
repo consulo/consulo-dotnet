@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfo;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 
@@ -27,8 +28,9 @@ import com.intellij.util.io.StringRef;
  */
 public class CSharpConversionMethodStub extends CSharpMethodStub
 {
-	public CSharpConversionMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask)
+	public CSharpConversionMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask,
+			CSharpStubTypeInfo typeInfo)
 	{
-		super(parent, CSharpStubElements.CONVERSION_METHOD_DECLARATION, name, qname, modifierMask);
+		super(parent, CSharpStubElements.CONVERSION_METHOD_DECLARATION, name, qname, modifierMask, typeInfo);
 	}
 }

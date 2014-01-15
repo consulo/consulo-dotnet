@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpAbstractStubElementType;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
@@ -28,22 +29,24 @@ import com.intellij.util.io.StringRef;
  */
 public class CSharpVariableStub<V extends DotNetVariable> extends MemberStub<V>
 {
-	private boolean myConstant;
+	private final boolean myConstant;
+	private final CSharpStubTypeInfo myTypeInfo;
 
-	public CSharpVariableStub(
-			StubElement parent,
-			CSharpAbstractStubElementType<?, ?> elementType,
-			@Nullable StringRef name,
-			@Nullable StringRef namespaceQName,
-			int modifierMask,
-			boolean constant)
+	public CSharpVariableStub(StubElement parent, CSharpAbstractStubElementType<?, ?> elementType, @Nullable StringRef name,
+			@Nullable StringRef namespaceQName, int modifierMask, boolean constant, CSharpStubTypeInfo typeInfo)
 	{
 		super(parent, elementType, name, namespaceQName, modifierMask);
 		myConstant = constant;
+		myTypeInfo = typeInfo;
 	}
 
 	public boolean isConstant()
 	{
 		return myConstant;
+	}
+
+	public CSharpStubTypeInfo getTypeInfo()
+	{
+		return myTypeInfo;
 	}
 }

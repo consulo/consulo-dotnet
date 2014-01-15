@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -46,51 +46,51 @@ public class CSharpConstantExpressionImpl extends CSharpElementImpl implements D
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
 		PsiElement byType = findChildByType(CSharpTokenSets.CONSTANT_LITERALS);
 		assert byType != null;
 		IElementType elementType = byType.getNode().getElementType();
 		if(elementType == CSharpTokens.STRING_LITERAL)
 		{
-			return CSharpNativeRuntimeType.STRING;
+			return CSharpNativeTypeRef.STRING;
 		}
 		else if(elementType == CSharpTokens.VERBATIM_STRING_LITERAL)
 		{
-			return CSharpNativeRuntimeType.STRING;
+			return CSharpNativeTypeRef.STRING;
 		}
 		else if(elementType == CSharpTokens.UINTEGER_LITERAL)
 		{
-			return CSharpNativeRuntimeType.UINT;
+			return CSharpNativeTypeRef.UINT;
 		}
 		else if(elementType == CSharpTokens.ULONG_LITERAL)
 		{
-			return CSharpNativeRuntimeType.ULONG;
+			return CSharpNativeTypeRef.ULONG;
 		}
 		else if(elementType == CSharpTokens.INTEGER_LITERAL)
 		{
-			return CSharpNativeRuntimeType.INT;
+			return CSharpNativeTypeRef.INT;
 		}
 		else if(elementType == CSharpTokens.LONG_LITERAL)
 		{
-			return CSharpNativeRuntimeType.LONG;
+			return CSharpNativeTypeRef.LONG;
 		}
 		else if(elementType == CSharpTokens.FLOAT_LITERAL)
 		{
-			return CSharpNativeRuntimeType.FLOAT;
+			return CSharpNativeTypeRef.FLOAT;
 		}
 		else if(elementType == CSharpTokens.DOUBLE_LITERAL)
 		{
-			return CSharpNativeRuntimeType.DOUBLE;
+			return CSharpNativeTypeRef.DOUBLE;
 		}
 		else if(elementType == CSharpTokens.NULL_LITERAL)
 		{
-			return DotNetRuntimeType.NULL_TYPE;
+			return DotNetTypeRef.NULL_TYPE;
 		}
 		else if(elementType == CSharpTokens.BOOL_LITERAL)
 		{
-			return CSharpNativeRuntimeType.BOOL;
+			return CSharpNativeTypeRef.BOOL;
 		}
-		return DotNetRuntimeType.ERROR_TYPE;
+		return DotNetTypeRef.ERROR_TYPE;
 	}
 }

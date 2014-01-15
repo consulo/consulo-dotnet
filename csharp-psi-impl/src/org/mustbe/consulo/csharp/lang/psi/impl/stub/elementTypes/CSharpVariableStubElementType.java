@@ -22,11 +22,13 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfoUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -46,7 +48,8 @@ public abstract class CSharpVariableStubElementType<P extends DotNetVariable> ex
 		StringRef name = StringRef.fromNullableString(dotNetPropertyDeclaration.getName());
 		int modifierMask = MemberStub.getModifierMask(dotNetPropertyDeclaration);
 		boolean constant = dotNetPropertyDeclaration.isConstant();
-		return new CSharpVariableStub<P>(stubElement, this, name, null, modifierMask, constant);
+		val typeInfo = CSharpStubTypeInfoUtil.toStub(dotNetPropertyDeclaration.getType());
+		return new CSharpVariableStub<P>(stubElement, this, name, null, modifierMask, constant, typeInfo);
 	}
 
 	@Override
@@ -55,6 +58,7 @@ public abstract class CSharpVariableStubElementType<P extends DotNetVariable> ex
 		stubOutputStream.writeName(cSharpPropertyStub.getName());
 		stubOutputStream.writeInt(cSharpPropertyStub.getModifierMask());
 		stubOutputStream.writeBoolean(cSharpPropertyStub.isConstant());
+		cSharpPropertyStub.getTypeInfo().writeTo(stubOutputStream);
 	}
 
 	@NotNull
@@ -64,6 +68,7 @@ public abstract class CSharpVariableStubElementType<P extends DotNetVariable> ex
 		StringRef name = stubInputStream.readName();
 		int modifierMask = stubInputStream.readInt();
 		boolean constant = stubInputStream.readBoolean();
-		return new CSharpVariableStub<P>(stubElement, this, name, null, modifierMask, constant);
+		val typeInfo = CSharpStubTypeInfoUtil.read(stubInputStream);
+		return new CSharpVariableStub<P>(stubElement, this, name, null, modifierMask, constant, typeInfo);
 	}
 }

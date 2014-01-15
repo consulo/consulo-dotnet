@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
@@ -29,5 +29,5 @@ public interface DotNetParameterList extends DotNetElement
 	DotNetParameter[] getParameters();
 
 	@NotNull
-	DotNetRuntimeType[] getParameterTypesForRuntime();
+	DotNetTypeRef[] getParameterTypesForRuntime();
 }

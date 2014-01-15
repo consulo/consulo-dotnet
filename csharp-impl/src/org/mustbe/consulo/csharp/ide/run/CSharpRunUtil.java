@@ -21,7 +21,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.Comparing;
 
 /**
@@ -55,7 +55,7 @@ public class CSharpRunUtil
 		{
 			return false;
 		}
-		DotNetRuntimeType[] parameterTypesForRuntime = methodDeclaration.getParameterTypesForRuntime();
+		DotNetTypeRef[] parameterTypesForRuntime = methodDeclaration.getParameterTypesForRuntime();
 		if(parameterTypesForRuntime.length == 0)
 		{
 			return true;

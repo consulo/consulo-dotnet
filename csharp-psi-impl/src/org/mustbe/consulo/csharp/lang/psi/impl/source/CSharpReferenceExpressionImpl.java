@@ -35,14 +35,14 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.AbstractScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespaceDefRuntimeType;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefRuntimeType;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespaceDefTypeRef;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
@@ -136,7 +136,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public PsiElement getQualifier()
 	{
-		return findChildByClass(CSharpReferenceExpressionImpl.class);
+		return findChildByClass(DotNetExpression.class);
 	}
 
 	@Nullable
@@ -339,7 +339,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case NATIVE_TYPE_WRAPPER:
 				PsiElement nativeElement = findChildByType(CSharpTokenSets.NATIVE_TYPES);
 				assert nativeElement != null;
-				CSharpNativeRuntimeType nativeRuntimeType = CSharpNativeTypeImpl.ELEMENT_TYPE_TO_TYPE.get(nativeElement.getNode().getElementType());
+				CSharpNativeTypeRef nativeRuntimeType = CSharpNativeTypeImpl.ELEMENT_TYPE_TO_TYPE.get(nativeElement.getNode().getElementType());
 				if(nativeRuntimeType == null)
 				{
 					return Collections.emptyList();
@@ -642,22 +642,22 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
 		PsiElement resolve = resolve();
 		if(resolve instanceof CSharpNamespaceAsElement)
 		{
-			return new CSharpNamespaceDefRuntimeType(((CSharpNamespaceAsElement) resolve).getQName(), getProject(), getResolveScope());
+			return new CSharpNamespaceDefTypeRef(((CSharpNamespaceAsElement) resolve).getQName(), getProject(), getResolveScope());
 		}
 		else if(resolve instanceof CSharpTypeDeclarationImpl)
 		{
-			return new CSharpTypeDefRuntimeType(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), getProject(),
+			return new CSharpTypeDefTypeRef(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), getProject(),
 					((CSharpTypeDeclarationImpl) resolve).getGenericParametersCount(), getResolveScope());
 		}
 		else if(resolve instanceof DotNetVariable)
 		{
-			return ((DotNetVariable) resolve).toRuntimeType();
+			return ((DotNetVariable) resolve).toTypeRef();
 		}
-		return DotNetRuntimeType.ERROR_TYPE;
+		return DotNetTypeRef.ERROR_TYPE;
 	}
 }

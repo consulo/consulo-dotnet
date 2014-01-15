@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
@@ -31,15 +31,15 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
  */
 public class CSharpRuntimeGenericExtractor implements DotNetRuntimeGenericExtractor
 {
-	private Map<DotNetGenericParameter, DotNetRuntimeType> myMap;
+	private Map<DotNetGenericParameter, DotNetTypeRef> myMap;
 
-	public CSharpRuntimeGenericExtractor(DotNetGenericParameter[] genericParameters, DotNetRuntimeType[] arguments)
+	public CSharpRuntimeGenericExtractor(DotNetGenericParameter[] genericParameters, DotNetTypeRef[] arguments)
 	{
-		myMap = new HashMap<DotNetGenericParameter, DotNetRuntimeType>(genericParameters.length);
+		myMap = new HashMap<DotNetGenericParameter, DotNetTypeRef>(genericParameters.length);
 		for(int i = 0; i < genericParameters.length; i++)
 		{
 			DotNetGenericParameter genericParameter = genericParameters[i];
-			DotNetRuntimeType argument = arguments[i];
+			DotNetTypeRef argument = arguments[i];
 
 			myMap.put(genericParameter, argument);
 		}
@@ -47,7 +47,7 @@ public class CSharpRuntimeGenericExtractor implements DotNetRuntimeGenericExtrac
 
 	@Nullable
 	@Override
-	public DotNetRuntimeType extract(@NotNull DotNetGenericParameter parameter)
+	public DotNetTypeRef extract(@NotNull DotNetGenericParameter parameter)
 	{
 		return myMap.get(parameter);
 	}

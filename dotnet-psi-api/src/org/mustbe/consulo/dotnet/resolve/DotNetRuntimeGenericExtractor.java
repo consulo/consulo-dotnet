@@ -30,11 +30,11 @@ public interface DotNetRuntimeGenericExtractor
 	{
 		@Nullable
 		@Override
-		public DotNetRuntimeType extract(@NotNull DotNetGenericParameter parameter)
+		public DotNetTypeRef extract(@NotNull DotNetGenericParameter parameter)
 		{
 			return null;
 		}
 	};
 	@Nullable
-	DotNetRuntimeType extract(@NotNull DotNetGenericParameter parameter);
+	DotNetTypeRef extract(@NotNull DotNetGenericParameter parameter);
 }

@@ -22,7 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 
@@ -48,23 +48,15 @@ public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNet
 	public PsiElement resolve()
 	{
 		DotNetReferenceExpression referenceExpression = getReferenceExpression();
-		if(referenceExpression == null)
-		{
-			return null;
-		}
 		return referenceExpression.resolve();
 	}
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
 		DotNetReferenceExpression referenceExpression = getReferenceExpression();
-		if(referenceExpression == null)
-		{
-			return DotNetRuntimeType.ERROR_TYPE;
-		}
-		return referenceExpression.toRuntimeType();
+		return referenceExpression.toTypeRef();
 	}
 
 	@NotNull
@@ -74,9 +66,18 @@ public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNet
 		return DotNetGenericExtractor.EMPTY;
 	}
 
+	@NotNull
+	@Override
+	public String getReferenceText()
+	{
+		DotNetReferenceExpression referenceExpression = getReferenceExpression();
+		return referenceExpression.getText();
+	}
+
+	@NotNull
 	@Override
 	public DotNetReferenceExpression getReferenceExpression()
 	{
-		return findChildByClass(DotNetReferenceExpression.class);
+		return findNotNullChildByClass(DotNetReferenceExpression.class);
 	}
 }

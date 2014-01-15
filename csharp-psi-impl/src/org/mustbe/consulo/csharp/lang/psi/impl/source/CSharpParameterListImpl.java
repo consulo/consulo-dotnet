@@ -22,7 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpParameterListStub;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -61,18 +61,18 @@ public class CSharpParameterListImpl extends CSharpStubElementImpl<CSharpParamet
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType[] getParameterTypesForRuntime()
+	public DotNetTypeRef[] getParameterTypesForRuntime()
 	{
 		DotNetParameter[] parameters = getParameters();
 		if(parameters.length == 0)
 		{
-			return DotNetRuntimeType.EMPTY_ARRAY;
+			return DotNetTypeRef.EMPTY_ARRAY;
 		}
-		DotNetRuntimeType[] dotNetRuntimeTypes = new DotNetRuntimeType[parameters.length];
-		for(int i = 0; i < dotNetRuntimeTypes.length; i++)
+		DotNetTypeRef[] dotNetTypeRefs = new DotNetTypeRef[parameters.length];
+		for(int i = 0; i < dotNetTypeRefs.length; i++)
 		{
-			dotNetRuntimeTypes[i] = parameters[i].toRuntimeType();
+			dotNetTypeRefs[i] = parameters[i].toTypeRef();
 		}
-		return dotNetRuntimeTypes;
+		return dotNetTypeRefs;
 	}
 }

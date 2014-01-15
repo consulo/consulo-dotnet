@@ -25,11 +25,11 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -40,25 +40,27 @@ import com.intellij.psi.tree.IElementType;
  */
 public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNativeType
 {
-	public static final Map<IElementType, CSharpNativeRuntimeType> ELEMENT_TYPE_TO_TYPE = new HashMap<IElementType, CSharpNativeRuntimeType>()
+	public static final Map<IElementType, CSharpNativeTypeRef> ELEMENT_TYPE_TO_TYPE = new HashMap<IElementType, CSharpNativeTypeRef>()
 	{
 		{
-			put(CSharpTokens.BOOL_KEYWORD, CSharpNativeRuntimeType.BOOL);
-			put(CSharpTokens.DOUBLE_KEYWORD, CSharpNativeRuntimeType.DOUBLE);
-			put(CSharpTokens.FLOAT_KEYWORD, CSharpNativeRuntimeType.FLOAT);
-			put(CSharpTokens.CHAR_KEYWORD, CSharpNativeRuntimeType.CHAR);
-			put(CSharpTokens.OBJECT_KEYWORD, CSharpNativeRuntimeType.OBJECT);
-			put(CSharpTokens.STRING_KEYWORD, CSharpNativeRuntimeType.STRING);
-			put(CSharpTokens.SBYTE_KEYWORD, CSharpNativeRuntimeType.SBYTE);
-			put(CSharpTokens.BYTE_KEYWORD, CSharpNativeRuntimeType.BYTE);
-			put(CSharpTokens.INT_KEYWORD, CSharpNativeRuntimeType.INT);
-			put(CSharpTokens.UINT_KEYWORD, CSharpNativeRuntimeType.UINT);
-			put(CSharpTokens.LONG_KEYWORD, CSharpNativeRuntimeType.LONG);
-			put(CSharpTokens.ULONG_KEYWORD, CSharpNativeRuntimeType.ULONG);
-			put(CSharpTokens.VOID_KEYWORD, CSharpNativeRuntimeType.VOID);
-			put(CSharpTokens.SHORT_KEYWORD, CSharpNativeRuntimeType.SHORT);
-			put(CSharpTokens.USHORT_KEYWORD, CSharpNativeRuntimeType.USHORT);
-			put(CSharpTokens.DECIMAL_KEYWORD, CSharpNativeRuntimeType.DECIMAL);
+			put(CSharpTokens.BOOL_KEYWORD, CSharpNativeTypeRef.BOOL);
+			put(CSharpTokens.DOUBLE_KEYWORD, CSharpNativeTypeRef.DOUBLE);
+			put(CSharpTokens.FLOAT_KEYWORD, CSharpNativeTypeRef.FLOAT);
+			put(CSharpTokens.CHAR_KEYWORD, CSharpNativeTypeRef.CHAR);
+			put(CSharpTokens.OBJECT_KEYWORD, CSharpNativeTypeRef.OBJECT);
+			put(CSharpTokens.STRING_KEYWORD, CSharpNativeTypeRef.STRING);
+			put(CSharpTokens.SBYTE_KEYWORD, CSharpNativeTypeRef.SBYTE);
+			put(CSharpTokens.BYTE_KEYWORD, CSharpNativeTypeRef.BYTE);
+			put(CSharpTokens.INT_KEYWORD, CSharpNativeTypeRef.INT);
+			put(CSharpTokens.UINT_KEYWORD, CSharpNativeTypeRef.UINT);
+			put(CSharpTokens.LONG_KEYWORD, CSharpNativeTypeRef.LONG);
+			put(CSharpTokens.ULONG_KEYWORD, CSharpNativeTypeRef.ULONG);
+			put(CSharpTokens.VOID_KEYWORD, CSharpNativeTypeRef.VOID);
+			put(CSharpTokens.SHORT_KEYWORD, CSharpNativeTypeRef.SHORT);
+			put(CSharpTokens.USHORT_KEYWORD, CSharpNativeTypeRef.USHORT);
+			put(CSharpTokens.DECIMAL_KEYWORD, CSharpNativeTypeRef.DECIMAL);
+			put(CSharpTokens.IMPLICIT_KEYWORD, CSharpNativeTypeRef.IMPLICIT);
+			put(CSharpTokens.EXPLICIT_KEYWORD, CSharpNativeTypeRef.EXPLICIT);
 		}
 	};
 
@@ -90,19 +92,22 @@ public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNat
 			return null;
 		}
 
-		CSharpNativeRuntimeType cSharpNativeRuntimeType = ELEMENT_TYPE_TO_TYPE.get(elementType);
+		CSharpNativeTypeRef cSharpNativeRuntimeType = ELEMENT_TYPE_TO_TYPE.get(elementType);
 		return DotNetPsiFacade.getInstance(getProject()).findType(cSharpNativeRuntimeType.getWrapperQualifiedClass(), getResolveScope(), 0);
 	}
 
+	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
 		IElementType elementType = getTypeElement().getNode().getElementType();
 		if(elementType == CSharpSoftTokens.VAR_KEYWORD)
 		{
-			return DotNetRuntimeType.AUTO_TYPE;
+			return DotNetTypeRef.AUTO_TYPE;
 		}
-		return ELEMENT_TYPE_TO_TYPE.get(elementType);
+		CSharpNativeTypeRef cSharpNativeTypeRef = ELEMENT_TYPE_TO_TYPE.get(elementType);
+		assert cSharpNativeTypeRef != null : elementType.toString();
+		return cSharpNativeTypeRef;
 	}
 
 	@NotNull

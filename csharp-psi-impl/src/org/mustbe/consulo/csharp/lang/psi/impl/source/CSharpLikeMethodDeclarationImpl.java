@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfoUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
@@ -27,15 +28,12 @@ import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
 
 /**
  * @author VISTALL
@@ -43,8 +41,6 @@ import com.intellij.psi.util.CachedValuesManager;
  */
 public abstract class CSharpLikeMethodDeclarationImpl extends CSharpStubMemberImpl<CSharpMethodStub> implements DotNetLikeMethodDeclaration
 {
-	private CachedValue<DotNetRuntimeType> myCachedValue;
-
 	public CSharpLikeMethodDeclarationImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -72,10 +68,10 @@ public abstract class CSharpLikeMethodDeclarationImpl extends CSharpStubMemberIm
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType[] getParameterTypesForRuntime()
+	public DotNetTypeRef[] getParameterTypesForRuntime()
 	{
 		DotNetParameterList parameterList = getParameterList();
-		return parameterList == null ? DotNetRuntimeType.EMPTY_ARRAY : parameterList.getParameterTypesForRuntime();
+		return parameterList == null ? DotNetTypeRef.EMPTY_ARRAY : parameterList.getParameterTypesForRuntime();
 	}
 
 	@Nullable
@@ -94,24 +90,17 @@ public abstract class CSharpLikeMethodDeclarationImpl extends CSharpStubMemberIm
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType getReturnTypeForRuntime()
+	public DotNetTypeRef getReturnTypeRef()
 	{
-		if(myCachedValue != null)
+		CSharpMethodStub stub = getStub();
+		if(stub != null)
 		{
-			return myCachedValue.getValue();
+			return CSharpStubTypeInfoUtil.toTypeRef(stub.getReturnType(), this);
 		}
-		myCachedValue = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<DotNetRuntimeType>()
-		{
-			@Nullable
-			@Override
-			public Result<DotNetRuntimeType> compute()
-			{
-				DotNetType returnType = getReturnType();
-				DotNetRuntimeType runtimeType = returnType == null ? DotNetRuntimeType.ERROR_TYPE : returnType.toRuntimeType();
-				return Result.createSingleDependency(runtimeType, CSharpLikeMethodDeclarationImpl.this);
-			}
-		}, false);
-		return myCachedValue.getValue();
+
+		DotNetType type = getReturnType();
+		return type == null ? DotNetTypeRef.ERROR_TYPE : type.toTypeRef();
+
 	}
 
 	@Nullable

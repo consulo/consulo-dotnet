@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -48,13 +48,13 @@ public class CSharpParenthesesExpressionImpl extends CSharpElementImpl implement
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
 		DotNetExpression innerExpression = getInnerExpression();
 		if(innerExpression == null)
 		{
-			return DotNetRuntimeType.ERROR_TYPE;
+			return DotNetTypeRef.ERROR_TYPE;
 		}
-		return innerExpression.toRuntimeType();
+		return innerExpression.toTypeRef();
 	}
 }

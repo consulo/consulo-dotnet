@@ -22,7 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallExpression
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
@@ -50,8 +50,8 @@ public class MethodAcceptorImpl
 				DotNetExpression expression = expressions[i];
 				DotNetParameter parameter = parameters[i];
 
-				DotNetRuntimeType expressionType = expression.toRuntimeType();
-				DotNetRuntimeType parameterType = parameter.toRuntimeType();
+				DotNetTypeRef expressionType = expression.toTypeRef();
+				DotNetTypeRef parameterType = parameter.toTypeRef();
 
 				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType))
 				{

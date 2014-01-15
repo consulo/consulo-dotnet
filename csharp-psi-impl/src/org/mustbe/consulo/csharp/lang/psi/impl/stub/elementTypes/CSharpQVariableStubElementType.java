@@ -22,12 +22,14 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfoUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -48,7 +50,8 @@ public abstract class CSharpQVariableStubElementType<P extends DotNetVariable & 
 		StringRef namespaceQName = StringRef.fromNullableString(dotNetPropertyDeclaration.getPresentableParentQName());
 		int modifierMask = MemberStub.getModifierMask(dotNetPropertyDeclaration);
 		boolean constant = dotNetPropertyDeclaration.isConstant();
-		return new CSharpVariableStub<P>(stubElement, this, name, namespaceQName, modifierMask, constant);
+		val typeInfo = CSharpStubTypeInfoUtil.toStub(dotNetPropertyDeclaration.getType());
+		return new CSharpVariableStub<P>(stubElement, this, name, namespaceQName, modifierMask, constant, typeInfo);
 	}
 
 	@Override
@@ -58,6 +61,7 @@ public abstract class CSharpQVariableStubElementType<P extends DotNetVariable & 
 		stubOutputStream.writeName(cSharpPropertyStub.getParentQName());
 		stubOutputStream.writeInt(cSharpPropertyStub.getModifierMask());
 		stubOutputStream.writeBoolean(cSharpPropertyStub.isConstant());
+		cSharpPropertyStub.getTypeInfo().writeTo(stubOutputStream);
 	}
 
 	@NotNull
@@ -68,6 +72,7 @@ public abstract class CSharpQVariableStubElementType<P extends DotNetVariable & 
 		StringRef parentQName = stubInputStream.readName();
 		int modifierMask = stubInputStream.readInt();
 		boolean constant = stubInputStream.readBoolean();
-		return new CSharpVariableStub<P>(stubElement, this, name, parentQName, modifierMask, constant);
+		val typeInfo = CSharpStubTypeInfoUtil.read(stubInputStream);
+		return new CSharpVariableStub<P>(stubElement, this, name, parentQName, modifierMask, constant, typeInfo);
 	}
 }

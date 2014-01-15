@@ -27,7 +27,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
@@ -94,7 +94,7 @@ public abstract class CSharpLightLikeMethodDeclaration<S extends DotNetLikeMetho
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType[] getParameterTypesForRuntime()
+	public DotNetTypeRef[] getParameterTypesForRuntime()
 	{
 		return myOriginal.getParameterTypesForRuntime();
 	}
@@ -115,9 +115,9 @@ public abstract class CSharpLightLikeMethodDeclaration<S extends DotNetLikeMetho
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType getReturnTypeForRuntime()
+	public DotNetTypeRef getReturnTypeRef()
 	{
-		return myOriginal.getReturnTypeForRuntime();
+		return myOriginal.getReturnTypeRef();
 	}
 
 	@Nullable

@@ -84,14 +84,14 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 				@Override
 				public String fun(DotNetParameter parameter)
 				{
-					return /*CSharpElementPresentationUtil.formatType(parameter.getType())*/"Test";
+					return parameter.toTypeRef().getPresentableText();
 				}
 			}, ", ") + ")";
 
 			LookupElementBuilder builder = LookupElementBuilder.create(methodDeclaration);
 			builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
 
-		//	builder = builder.withTypeText(CSharpElementPresentationUtil.formatType(methodDeclaration.getReturnType()));
+			builder = builder.withTypeText(methodDeclaration.getReturnTypeRef().getPresentableText());
 			builder = builder.withTailText(parameterText, false);
 			builder = builder.withInsertHandler(new InsertHandler<LookupElement>()
 			{
@@ -113,12 +113,12 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 		}
 		else if(element instanceof DotNetVariable)
 		{
-			DotNetVariable typeDeclaration = (DotNetVariable) element;
-			LookupElementBuilder builder = LookupElementBuilder.create(typeDeclaration);
+			DotNetVariable dotNetVariable = (DotNetVariable) element;
+			LookupElementBuilder builder = LookupElementBuilder.create(dotNetVariable);
 
 			builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
 
-			//builder = builder.withTypeText(CSharpElementPresentationUtil.formatType(((DotNetVariable) element).getType()));
+			builder = builder.withTypeText(((DotNetVariable) element).toTypeRef().getPresentableText());
 
 			return builder;
 		}

@@ -17,9 +17,9 @@
 package org.mustbe.consulo.csharp.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 
@@ -37,14 +37,14 @@ public class CSharpTypeUtil
 	 * int - int type, ill 'target'
 	 * return false due it not be casted
 	 */
-	public static boolean isInheritable(@NotNull DotNetRuntimeType top, @NotNull DotNetRuntimeType target)
+	public static boolean isInheritable(@NotNull DotNetTypeRef top, @NotNull DotNetTypeRef target)
 	{
-		if(top == DotNetRuntimeType.ERROR_TYPE || target == DotNetRuntimeType.ERROR_TYPE)
+		if(top == DotNetTypeRef.ERROR_TYPE || target == DotNetTypeRef.ERROR_TYPE)
 		{
 			return false;
 		}
 
-		if(top == DotNetRuntimeType.NULL_TYPE && target.isNullable())
+		if(top == DotNetTypeRef.NULL_TYPE && target.isNullable())
 		{
 			return true;
 		}
@@ -54,16 +54,16 @@ public class CSharpTypeUtil
 			return true;
 		}
 
-		PsiElement topElement = top.toPsiElement();
-		PsiElement targetElement = target.toPsiElement();
+		PsiElement topElement = top.resolve();
+		PsiElement targetElement = target.resolve();
 		if(topElement != null && Comparing.equal(topElement, targetElement))
 		{
 			return true;
 		}
 
-		if(topElement instanceof DotNetTypeDeclaration && target instanceof CSharpNativeRuntimeType)
+		if(topElement instanceof DotNetTypeDeclaration && target instanceof CSharpNativeTypeRef)
 		{
-			if(Comparing.equal(((DotNetTypeDeclaration) topElement).getPresentableQName(), ((CSharpNativeRuntimeType) target)
+			if(Comparing.equal(((DotNetTypeDeclaration) topElement).getPresentableQName(), ((CSharpNativeTypeRef) target)
 					.getWrapperQualifiedClass()))
 			{
 				return true;

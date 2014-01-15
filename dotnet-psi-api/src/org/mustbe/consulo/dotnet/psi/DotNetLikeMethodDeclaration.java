@@ -18,7 +18,7 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -34,7 +34,7 @@ public interface DotNetLikeMethodDeclaration extends DotNetModifierListOwner, Do
 	DotNetParameter[] getParameters();
 
 	@NotNull
-	DotNetRuntimeType[] getParameterTypesForRuntime();
+	DotNetTypeRef[] getParameterTypesForRuntime();
 
 	@Nullable
 	PsiElement getCodeBlock();
@@ -43,5 +43,5 @@ public interface DotNetLikeMethodDeclaration extends DotNetModifierListOwner, Do
 	DotNetType getReturnType();
 
 	@NotNull
-	DotNetRuntimeType getReturnTypeForRuntime();
+	DotNetTypeRef getReturnTypeRef();
 }

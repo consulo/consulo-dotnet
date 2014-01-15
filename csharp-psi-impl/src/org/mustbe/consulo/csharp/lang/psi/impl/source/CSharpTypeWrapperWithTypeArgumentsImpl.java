@@ -19,12 +19,12 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericWrapperRuntimeType;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericWrapperTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeWrapperWithTypeArguments;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 
@@ -48,23 +48,23 @@ public class CSharpTypeWrapperWithTypeArgumentsImpl extends CSharpElementImpl im
 
 	@NotNull
 	@Override
-	public DotNetRuntimeType toRuntimeType()
+	public DotNetTypeRef toTypeRef()
 	{
 		DotNetType innerType = getInnerType();
 		DotNetType[] arguments = getArguments();
 		if(arguments.length == 0)
 		{
-			return innerType.toRuntimeType();
+			return innerType.toTypeRef();
 		}
 
-		DotNetRuntimeType[] rArguments = new DotNetRuntimeType[arguments.length];
+		DotNetTypeRef[] rArguments = new DotNetTypeRef[arguments.length];
 		for(int i = 0; i < arguments.length; i++)
 		{
 			DotNetType argument = arguments[i];
-			rArguments[i] = argument.toRuntimeType();
+			rArguments[i] = argument.toTypeRef();
 		}
 
-		return new CSharpGenericWrapperRuntimeType(innerType.toRuntimeType(), rArguments);
+		return new CSharpGenericWrapperTypeRef(innerType.toTypeRef(), rArguments);
 	}
 
 	@NotNull

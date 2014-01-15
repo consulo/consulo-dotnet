@@ -17,18 +17,17 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
-import com.intellij.psi.PsiElement;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
- * @since 06.01.14.
+ * @since 29.12.13.
  */
-public class CSharpPointerRuntimeType extends DotNetRuntimeType.Adapter
+public class CSharpArrayTypeRef extends DotNetTypeRef.Adapter
 {
-	private final DotNetRuntimeType myInnerType;
+	private final DotNetTypeRef myInnerType;
 
-	public CSharpPointerRuntimeType(DotNetRuntimeType innerType)
+	public CSharpArrayTypeRef(DotNetTypeRef innerType)
 	{
 		myInnerType = innerType;
 	}
@@ -37,26 +36,13 @@ public class CSharpPointerRuntimeType extends DotNetRuntimeType.Adapter
 	@Override
 	public String getPresentableText()
 	{
-		return myInnerType.getPresentableText() + "*";
+		return myInnerType.getPresentableText() + "[]";
 	}
 
 	@Nullable
 	@Override
 	public String getQualifiedText()
 	{
-		return myInnerType.getQualifiedText() + "*";
-	}
-
-	@Override
-	public boolean isNullable()
-	{
-		return myInnerType.isNullable();
-	}
-
-	@Nullable
-	@Override
-	public PsiElement toPsiElement()
-	{
-		return myInnerType.toPsiElement();
+		return myInnerType.getQualifiedText() + "[]";
 	}
 }

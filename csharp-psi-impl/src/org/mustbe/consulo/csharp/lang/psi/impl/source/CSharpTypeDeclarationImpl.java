@@ -168,8 +168,8 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 		/*
 		for(DotNetType dotNetType : getExtends())
 		{
-			DotNetRuntimeType runtimeType = dotNetType.toRuntimeType();
-			PsiElement psiElement = runtimeType.toPsiElement();
+			DotNetRuntimeType runtimeType = dotNetType.toTypeRef();
+			PsiElement psiElement = runtimeType.resolve();
 			if(psiElement == null)
 			{
 				continue;

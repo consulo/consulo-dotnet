@@ -18,7 +18,7 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
@@ -28,5 +28,5 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 public interface DotNetExpression extends DotNetElement
 {
 	@NotNull
-	DotNetRuntimeType toRuntimeType();
+	DotNetTypeRef toTypeRef();
 }

@@ -14,29 +14,36 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiElement;
+import java.io.IOException;
+
+import org.consulo.annotations.Immutable;
+import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 15.01.14
  */
-@ArrayFactoryFields
-public interface DotNetType extends DotNetElement
+public abstract class CSharpStubTypeInfo
 {
-	@Nullable
-	@Deprecated
-	PsiElement resolve();
+	public static enum Id
+	{
+		ERROR,
+		REF,
+		POINTER,
+		ARRAY,
+		GENERIC_WRAPPER,
+		NATIVE;
 
-	@NotNull
-	DotNetTypeRef toTypeRef();
+		@Immutable
+		public static final Id[] VALUES = values();
+	}
 
-	@NotNull
-	@Deprecated
-	DotNetGenericExtractor getGenericExtractor();
+	public abstract Id getId();
+
+	public void writeTo(StubOutputStream stubOutputStream)throws IOException
+	{
+		stubOutputStream.writeByte((byte) getId().ordinal());
+	}
 }

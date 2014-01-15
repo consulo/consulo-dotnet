@@ -14,35 +14,19 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
-
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub;
 
 /**
  * @author VISTALL
- * @since 29.12.13.
+ * @since 15.01.14
  */
-public class CSharpArrayRuntimeType extends DotNetRuntimeType.Adapter
+public class CSharpStubErrorInfoType extends CSharpStubTypeInfo
 {
-	private final DotNetRuntimeType myInnerType;
+	public static final CSharpStubErrorInfoType INSTANCE = new CSharpStubErrorInfoType();
 
-	public CSharpArrayRuntimeType(DotNetRuntimeType innerType)
-	{
-		myInnerType = innerType;
-	}
-
-	@Nullable
 	@Override
-	public String getPresentableText()
+	public Id getId()
 	{
-		return myInnerType.getPresentableText() + "[]";
-	}
-
-	@Nullable
-	@Override
-	public String getQualifiedText()
-	{
-		return myInnerType.getQualifiedText() + "[]";
+		return Id.ERROR;
 	}
 }

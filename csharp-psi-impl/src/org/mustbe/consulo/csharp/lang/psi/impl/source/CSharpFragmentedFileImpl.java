@@ -17,32 +17,36 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.lang.ASTNode;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiCodeFragment;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
- * @since 04.01.14.
+ * @since 28.11.13.
  */
-public class CSharpAssignmentExpressionImpl extends CSharpElementImpl implements DotNetExpression
+public class CSharpFragmentedFileImpl extends CSharpFileImpl implements PsiCodeFragment
 {
-	public CSharpAssignmentExpressionImpl(@NotNull ASTNode node)
+	private final PsiElement myOriginal;
+	private GlobalSearchScope myResolveScope;
+
+	public CSharpFragmentedFileImpl(@NotNull FileViewProvider viewProvider, PsiElement scope)
 	{
-		super(node);
+		super(viewProvider);
+		myOriginal = scope;
+		myResolveScope = scope.getResolveScope();
 	}
 
 	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
+	public void forceResolveScope(GlobalSearchScope searchScope)
 	{
-		visitor.visitAssignmentExpression(this);
+		myResolveScope = searchScope;
 	}
 
-	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public GlobalSearchScope getForcedResolveScope()
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		return myResolveScope;
 	}
 }
