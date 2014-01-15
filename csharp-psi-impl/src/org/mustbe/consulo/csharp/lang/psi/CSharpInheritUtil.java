@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import lombok.val;
@@ -56,9 +55,7 @@ public class CSharpInheritUtil
 		}
 		for(DotNetType dotNetType : typeDeclaration.getExtends())
 		{
-			DotNetRuntimeType runtimeType = dotNetType.toRuntimeType();
-
-			PsiElement psiElement = runtimeType.toPsiElement();
+			PsiElement psiElement = dotNetType.resolve();
 			if(psiElement instanceof CSharpTypeDeclaration)
 			{
 				if(psiElement.isEquivalentTo(other))

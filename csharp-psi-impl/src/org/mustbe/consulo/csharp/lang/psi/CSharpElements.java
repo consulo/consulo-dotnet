@@ -29,19 +29,17 @@ public interface CSharpElements
 {
 	IElementType NAMESPACE_DECLARATION = CSharpStubElements.NAMESPACE_DECLARATION;
 
-	IElementType USING_NAMESPACE_LIST = new IElementTypeAsPsiFactory("USING_NAMESPACE_LIST", CSharpLanguage.INSTANCE,
-			CSharpUsingNamespaceListImpl.class);
+	IElementType USING_NAMESPACE_LIST = CSharpStubElements.USING_NAMESPACE_LIST;
 
-	IElementType USING_NAMESPACE_STATEMENT = new IElementTypeAsPsiFactory("USING_NAMESPACE_STATEMENT", CSharpLanguage.INSTANCE,
-			CSharpUsingNamespaceStatementImpl.class);
+	IElementType USING_NAMESPACE_STATEMENT = CSharpStubElements.USING_NAMESPACE_STATEMENT;
 
 	IElementType METHOD_DECLARATION = CSharpStubElements.METHOD_DECLARATION;
 
 	IElementType CONSTRUCTOR_DECLARATION = CSharpStubElements.CONSTRUCTOR_DECLARATION;
 
-	IElementType PARAMETER_LIST = new IElementTypeAsPsiFactory("PARAMETER_LIST", CSharpLanguage.INSTANCE, CSharpParameterListImpl.class);
+	IElementType PARAMETER_LIST = CSharpStubElements.PARAMETER_LIST;
 
-	IElementType PARAMETER = new IElementTypeAsPsiFactory("PARAMETER", CSharpLanguage.INSTANCE, CSharpParameterImpl.class);
+	IElementType PARAMETER = CSharpStubElements.PARAMETER;
 
 	IElementType TYPE_DECLARATION = CSharpStubElements.TYPE_DECLARATION;
 
@@ -59,10 +57,9 @@ public interface CSharpElements
 
 	IElementType PROPERTY_DECLARATION = CSharpStubElements.PROPERTY_DECLARATION;
 
-	IElementType GENERIC_PARAMETER_LIST = new IElementTypeAsPsiFactory("GENERIC_PARAMETER_LIST", CSharpLanguage.INSTANCE,
-			CSharpGenericParameterListImpl.class);
+	IElementType GENERIC_PARAMETER_LIST = CSharpStubElements.GENERIC_PARAMETER_LIST;
 
-	IElementType GENERIC_PARAMETER = new IElementTypeAsPsiFactory("GENERIC_PARAMETER", CSharpLanguage.INSTANCE, CSharpGenericParameterImpl.class);
+	IElementType GENERIC_PARAMETER = CSharpStubElements.GENERIC_PARAMETER;
 
 	IElementType GENERIC_CONSTRAINT_LIST = new IElementTypeAsPsiFactory("GENERIC_CONSTRAINT_LIST", CSharpLanguage.INSTANCE,
 			CSharpGenericConstraintListImpl.class);

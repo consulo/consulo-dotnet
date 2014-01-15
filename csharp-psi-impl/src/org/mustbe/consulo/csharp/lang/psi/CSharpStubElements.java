@@ -36,6 +36,12 @@ public interface CSharpStubElements
 	CSharpFieldStubElementType FIELD_DECLARATION = new CSharpFieldStubElementType();
 	CSharpEnumConstantStubElementType ENUM_CONSTANT_DECLARATION = new CSharpEnumConstantStubElementType();
 	CSharpTypeListElementType EXTENDS_LIST = new CSharpTypeListElementType("EXTENDS_LIST");
+	CSharpParameterListStubElementType PARAMETER_LIST = new CSharpParameterListStubElementType();
+	CSharpParameterStubElementType PARAMETER = new CSharpParameterStubElementType();
+	CSharpUsingNamespaceListStubElementType USING_NAMESPACE_LIST = new CSharpUsingNamespaceListStubElementType();
+	CSharpUsingNamespaceStatementStubElementType USING_NAMESPACE_STATEMENT = new CSharpUsingNamespaceStatementStubElementType();
+	CSharpGenericParameterListStubElementType GENERIC_PARAMETER_LIST = new CSharpGenericParameterListStubElementType();
+	CSharpGenericParameterStubElementType GENERIC_PARAMETER = new CSharpGenericParameterStubElementType();
 
 	TokenSet QUALIFIED_MEMBERS = TokenSet.create(NAMESPACE_DECLARATION, TYPE_DECLARATION,
 			METHOD_DECLARATION, CONSTRUCTOR_DECLARATION, PROPERTY_DECLARATION,

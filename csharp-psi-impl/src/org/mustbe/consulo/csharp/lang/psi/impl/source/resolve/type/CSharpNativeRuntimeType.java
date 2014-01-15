@@ -19,13 +19,12 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 29.12.13.
  */
-public class CSharpNativeRuntimeType implements DotNetRuntimeType
+public class CSharpNativeRuntimeType extends DotNetRuntimeType.Adapter
 {
 	public static final CSharpNativeRuntimeType BOOL = new CSharpNativeRuntimeType("bool", "System.Boolean");
 	public static final CSharpNativeRuntimeType DOUBLE = new CSharpNativeRuntimeType("double", "System.Double");
@@ -71,13 +70,6 @@ public class CSharpNativeRuntimeType implements DotNetRuntimeType
 	public boolean isNullable()
 	{
 		return false;
-	}
-
-	@Nullable
-	@Override
-	public PsiElement toPsiElement()
-	{
-		return null;
 	}
 
 	@NotNull

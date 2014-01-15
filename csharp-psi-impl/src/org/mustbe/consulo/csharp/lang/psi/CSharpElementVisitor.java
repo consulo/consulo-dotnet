@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.psi.PsiElementVisitor;
 
@@ -41,7 +42,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(declaration);
 	}
 
-	public void visitMethodDeclaration(CSharpMethodDeclarationImpl methodDeclaration)
+	public void visitMethodDeclaration(CSharpMethodDeclaration methodDeclaration)
 	{
 		visitElement(methodDeclaration);
 	}
@@ -76,7 +77,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(declaration);
 	}
 
-	public void visitReferenceType(CSharpReferenceTypeImpl type)
+	public void visitReferenceType(DotNetReferenceType type)
 	{
 		visitElement(type);
 	}

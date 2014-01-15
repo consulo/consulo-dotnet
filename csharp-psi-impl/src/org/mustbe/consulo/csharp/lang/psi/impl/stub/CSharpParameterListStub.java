@@ -16,34 +16,28 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpAbstractStubElementType;
-import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 21.12.13.
+ * @since 15.01.14
  */
-public class CSharpVariableStub<V extends DotNetVariable> extends MemberStub<V>
+public class CSharpParameterListStub extends StubBase<DotNetParameterList>
 {
-	private boolean myConstant;
-
-	public CSharpVariableStub(
-			StubElement parent,
-			CSharpAbstractStubElementType<?, ?> elementType,
-			@Nullable StringRef name,
-			@Nullable StringRef namespaceQName,
-			int modifierMask,
-			boolean constant)
+	public CSharpParameterListStub(StubElement parent, IStubElementType elementType)
 	{
-		super(parent, elementType, name, namespaceQName, modifierMask);
-		myConstant = constant;
+		super(parent, elementType);
 	}
 
-	public boolean isConstant()
+	@NotNull
+	public DotNetParameter[] getParameters()
 	{
-		return myConstant;
+		return getChildrenByType(CSharpStubElements.PARAMETER, DotNetParameter.ARRAY_FACTORY);
 	}
 }

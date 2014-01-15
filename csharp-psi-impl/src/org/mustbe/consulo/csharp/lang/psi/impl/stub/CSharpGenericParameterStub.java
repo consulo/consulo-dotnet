@@ -17,33 +17,25 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpAbstractStubElementType;
-import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 21.12.13.
+ * @since 15.01.14
  */
-public class CSharpVariableStub<V extends DotNetVariable> extends MemberStub<V>
+public class CSharpGenericParameterStub extends MemberStub<DotNetGenericParameter>
 {
-	private boolean myConstant;
 
-	public CSharpVariableStub(
-			StubElement parent,
-			CSharpAbstractStubElementType<?, ?> elementType,
-			@Nullable StringRef name,
-			@Nullable StringRef namespaceQName,
-			int modifierMask,
-			boolean constant)
+	public CSharpGenericParameterStub(StubElement parent, @Nullable StringRef name, int modifierMask)
 	{
-		super(parent, elementType, name, namespaceQName, modifierMask);
-		myConstant = constant;
+		super(parent, CSharpStubElements.GENERIC_PARAMETER, name, null, modifierMask);
 	}
 
-	public boolean isConstant()
+	public CSharpGenericParameterStub(StubElement parent, @Nullable String name, int modifierMask)
 	{
-		return myConstant;
+		super(parent, CSharpStubElements.GENERIC_PARAMETER, name, null, modifierMask);
 	}
 }

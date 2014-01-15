@@ -17,11 +17,14 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -40,6 +43,18 @@ public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNet
 		visitor.visitReferenceType(this);
 	}
 
+	@Nullable
+	@Override
+	public PsiElement resolve()
+	{
+		DotNetReferenceExpression referenceExpression = getReferenceExpression();
+		if(referenceExpression == null)
+		{
+			return null;
+		}
+		return referenceExpression.resolve();
+	}
+
 	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
@@ -50,6 +65,13 @@ public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNet
 			return DotNetRuntimeType.ERROR_TYPE;
 		}
 		return referenceExpression.toRuntimeType();
+	}
+
+	@NotNull
+	@Override
+	public DotNetGenericExtractor getGenericExtractor()
+	{
+		return null;
 	}
 
 	@Override

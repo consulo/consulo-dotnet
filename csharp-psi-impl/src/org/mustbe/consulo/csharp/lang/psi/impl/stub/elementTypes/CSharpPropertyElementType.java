@@ -28,7 +28,7 @@ import com.intellij.psi.stubs.IndexSink;
  * @author VISTALL
  * @since 21.12.13.
  */
-public class CSharpPropertyElementType extends CSharpVariableStubElementType<CSharpPropertyDeclarationImpl>
+public class CSharpPropertyElementType extends CSharpQVariableStubElementType<CSharpPropertyDeclarationImpl>
 {
 	public CSharpPropertyElementType()
 	{

@@ -14,34 +14,47 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.lang.psi.impl.light;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpGenericParameterStub;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import com.intellij.lang.ASTNode;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 30.11.13.
+ * @since 13.01.14
  */
-public class CSharpGenericParameterImpl extends CSharpStubMemberImpl<CSharpGenericParameterStub> implements DotNetGenericParameter
+public class CSharpLightMethodDeclaration extends CSharpLightLikeMethodDeclaration<CSharpMethodDeclaration> implements CSharpMethodDeclaration
 {
-	public CSharpGenericParameterImpl(@NotNull ASTNode node)
+	public CSharpLightMethodDeclaration(CSharpMethodDeclaration original)
 	{
-		super(node);
+		super(original);
 	}
 
-	public CSharpGenericParameterImpl(@NotNull CSharpGenericParameterStub stub)
+	@Override
+	public boolean isDelegate()
 	{
-		super(stub, CSharpStubElements.GENERIC_PARAMETER);
+		return myOriginal.isDelegate();
+	}
+
+	@Override
+	public boolean isOperator()
+	{
+		return myOriginal.isOperator();
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getNameIdentifier()
+	{
+		return myOriginal.getNameIdentifier();
 	}
 
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitGenericParameter(this);
+		visitor.visitMethodDeclaration(this);
 	}
 }

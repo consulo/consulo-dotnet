@@ -28,7 +28,7 @@ import com.intellij.psi.stubs.IndexSink;
  * @author VISTALL
  * @since 08.01.13
  */
-public class CSharpEnumConstantStubElementType extends CSharpVariableStubElementType<CSharpEnumConstantDeclarationImpl>
+public class CSharpEnumConstantStubElementType extends CSharpQVariableStubElementType<CSharpEnumConstantDeclarationImpl>
 {
 	public CSharpEnumConstantStubElementType()
 	{

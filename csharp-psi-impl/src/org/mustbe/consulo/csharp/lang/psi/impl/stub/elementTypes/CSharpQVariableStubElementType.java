@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -30,12 +31,12 @@ import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 15.01.14.
+ * @since 07.01.14.
  */
-public abstract class CSharpVariableStubElementType<P extends DotNetVariable> extends
+public abstract class CSharpQVariableStubElementType<P extends DotNetVariable & DotNetQualifiedElement> extends
 		CSharpAbstractStubElementType<CSharpVariableStub<P>, P>
 {
-	public CSharpVariableStubElementType(@NotNull @NonNls String debugName)
+	public CSharpQVariableStubElementType(@NotNull @NonNls String debugName)
 	{
 		super(debugName);
 	}
@@ -44,15 +45,17 @@ public abstract class CSharpVariableStubElementType<P extends DotNetVariable> ex
 	public CSharpVariableStub<P> createStub(@NotNull P dotNetPropertyDeclaration, StubElement stubElement)
 	{
 		StringRef name = StringRef.fromNullableString(dotNetPropertyDeclaration.getName());
+		StringRef namespaceQName = StringRef.fromNullableString(dotNetPropertyDeclaration.getPresentableParentQName());
 		int modifierMask = MemberStub.getModifierMask(dotNetPropertyDeclaration);
 		boolean constant = dotNetPropertyDeclaration.isConstant();
-		return new CSharpVariableStub<P>(stubElement, this, name, null, modifierMask, constant);
+		return new CSharpVariableStub<P>(stubElement, this, name, namespaceQName, modifierMask, constant);
 	}
 
 	@Override
 	public void serialize(@NotNull CSharpVariableStub<P> cSharpPropertyStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(cSharpPropertyStub.getName());
+		stubOutputStream.writeName(cSharpPropertyStub.getParentQName());
 		stubOutputStream.writeInt(cSharpPropertyStub.getModifierMask());
 		stubOutputStream.writeBoolean(cSharpPropertyStub.isConstant());
 	}
@@ -62,8 +65,9 @@ public abstract class CSharpVariableStubElementType<P extends DotNetVariable> ex
 	public CSharpVariableStub<P> deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
 	{
 		StringRef name = stubInputStream.readName();
+		StringRef parentQName = stubInputStream.readName();
 		int modifierMask = stubInputStream.readInt();
 		boolean constant = stubInputStream.readBoolean();
-		return new CSharpVariableStub<P>(stubElement, this, name, null, modifierMask, constant);
+		return new CSharpVariableStub<P>(stubElement, this, name, parentQName, modifierMask, constant);
 	}
 }

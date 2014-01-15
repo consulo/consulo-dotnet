@@ -19,7 +19,9 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
@@ -33,6 +35,15 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 @Logger
 public class CSharpResolveUtil
 {
+	public static final KeyWithDefaultValue<DotNetGenericExtractor> EXTRACTOR_KEY = new KeyWithDefaultValue<DotNetGenericExtractor>("dot-net-extractor")
+	{
+		@Override
+		public DotNetGenericExtractor getDefaultValue()
+		{
+			return DotNetGenericExtractor.EMPTY;
+		}
+	};
+
 	public static boolean treeWalkUp(
 			@NotNull PsiScopeProcessor processor,
 			@NotNull PsiElement entrance,

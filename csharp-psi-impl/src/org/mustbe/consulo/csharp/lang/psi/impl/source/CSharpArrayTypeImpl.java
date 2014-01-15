@@ -17,12 +17,15 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayRuntimeType;
 import org.mustbe.consulo.dotnet.psi.DotNetArrayType;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -35,6 +38,13 @@ public class CSharpArrayTypeImpl extends CSharpElementImpl implements DotNetArra
 		super(node);
 	}
 
+	@Nullable
+	@Override
+	public PsiElement resolve()
+	{
+		return null;
+	}
+
 	@NotNull
 	@Override
 	public DotNetRuntimeType toRuntimeType()
@@ -42,6 +52,13 @@ public class CSharpArrayTypeImpl extends CSharpElementImpl implements DotNetArra
 		DotNetType innerType = getInnerType();
 
 		return new CSharpArrayRuntimeType(innerType.toRuntimeType());
+	}
+
+	@NotNull
+	@Override
+	public DotNetGenericExtractor getGenericExtractor()
+	{
+		return DotNetGenericExtractor.EMPTY;
 	}
 
 	@Override

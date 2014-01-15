@@ -29,7 +29,7 @@ import com.intellij.psi.stubs.IndexSink;
  * @author VISTALL
  * @since 21.12.13.
  */
-public class CSharpFieldStubElementType extends CSharpVariableStubElementType<DotNetFieldDeclaration>
+public class CSharpFieldStubElementType extends CSharpQVariableStubElementType<DotNetFieldDeclaration>
 {
 	public CSharpFieldStubElementType()
 	{

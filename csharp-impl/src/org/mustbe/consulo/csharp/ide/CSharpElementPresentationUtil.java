@@ -21,17 +21,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpArrayTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNativeTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPointerTypeImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeWrapperWithTypeArgumentsImpl;
-import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import lombok.val;
@@ -151,7 +142,7 @@ public class CSharpElementPresentationUtil
 		type.accept(new CSharpRecursiveElementVisitor()
 		{
 			@Override
-			public void visitReferenceType(CSharpReferenceTypeImpl type)
+			public void visitReferenceType(DotNetReferenceType type)
 			{
 				DotNetReferenceExpression referenceExpression = type.getReferenceExpression();
 				if(referenceExpression == null)
@@ -167,7 +158,7 @@ public class CSharpElementPresentationUtil
 			@Override
 			public void visitTypeWrapperWithTypeArguments(CSharpTypeWrapperWithTypeArgumentsImpl typeArguments)
 			{
-				super.visitTypeWrapperWithTypeArguments(typeArguments);
+				builder.append(formatType(typeArguments.getInnerType()));
 
 				DotNetType[] arguments = typeArguments.getArguments();
 				if(arguments.length > 0)

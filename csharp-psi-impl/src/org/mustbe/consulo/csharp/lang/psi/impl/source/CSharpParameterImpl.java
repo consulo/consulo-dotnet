@@ -19,6 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -28,11 +30,16 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpParameterImpl extends CSharpVariableImpl implements DotNetParameter
+public class CSharpParameterImpl extends CSharpStubVariableImpl<CSharpVariableStub<DotNetParameter>> implements DotNetParameter
 {
 	public CSharpParameterImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpParameterImpl(@NotNull CSharpVariableStub<DotNetParameter> stub)
+	{
+		super(stub, CSharpStubElements.PARAMETER);
 	}
 
 	@Override

@@ -20,11 +20,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericWrapperRuntimeType;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeWrapperWithTypeArguments;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -35,6 +37,13 @@ public class CSharpTypeWrapperWithTypeArgumentsImpl extends CSharpElementImpl im
 	public CSharpTypeWrapperWithTypeArgumentsImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@Nullable
+	@Override
+	public PsiElement resolve()
+	{
+		return getInnerType().resolve();
 	}
 
 	@NotNull
@@ -56,6 +65,13 @@ public class CSharpTypeWrapperWithTypeArgumentsImpl extends CSharpElementImpl im
 		}
 
 		return new CSharpGenericWrapperRuntimeType(innerType.toRuntimeType(), rArguments);
+	}
+
+	@NotNull
+	@Override
+	public DotNetGenericExtractor getGenericExtractor()
+	{
+		return new CSharpGenericExtractor(getArguments());
 	}
 
 	@Override

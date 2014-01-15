@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
@@ -58,7 +59,8 @@ public abstract class CSharpLikeMethodDeclarationImpl extends CSharpStubMemberIm
 	@Override
 	public DotNetParameterList getParameterList()
 	{
-		return findChildByClass(DotNetParameterList.class);
+
+		return getStubOrPsiChild(CSharpStubElements.PARAMETER_LIST);
 	}
 
 	@NotNull
@@ -117,7 +119,7 @@ public abstract class CSharpLikeMethodDeclarationImpl extends CSharpStubMemberIm
 	@Override
 	public DotNetGenericParameterList getGenericParameterList()
 	{
-		return findChildByClass(DotNetGenericParameterList.class);
+		return getStubOrPsiChild(CSharpStubElements.GENERIC_PARAMETER_LIST);
 	}
 
 	@NotNull

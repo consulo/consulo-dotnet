@@ -18,7 +18,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpGenericParameterListStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import com.intellij.lang.ASTNode;
@@ -27,11 +28,16 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 30.11.13.
  */
-public class CSharpGenericParameterListImpl extends CSharpElementImpl implements DotNetGenericParameterList
+public class CSharpGenericParameterListImpl extends CSharpStubElementImpl<CSharpGenericParameterListStub> implements DotNetGenericParameterList
 {
 	public CSharpGenericParameterListImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpGenericParameterListImpl(@NotNull CSharpGenericParameterListStub stub)
+	{
+		super(stub, CSharpStubElements.GENERIC_PARAMETER_LIST);
 	}
 
 	@Override
@@ -44,21 +50,12 @@ public class CSharpGenericParameterListImpl extends CSharpElementImpl implements
 	@Override
 	public DotNetGenericParameter[] getParameters()
 	{
-		return findChildrenByClass(DotNetGenericParameter.class);
+		return getStubOrPsiChildren(CSharpStubElements.GENERIC_PARAMETER, DotNetGenericParameter.ARRAY_FACTORY);
 	}
 
 	@Override
 	public int getGenericParametersCount()
 	{
-		int count = 0;
-		for(ASTNode child = getNode().getFirstChildNode(); child != null; child = child.getTreeNext())
-		{
-			if(child.getElementType() == CSharpElements.GENERIC_PARAMETER)
-			{
-				count++;
-			}
-		}
-
-		return count;
+		return getParameters().length;
 	}
 }

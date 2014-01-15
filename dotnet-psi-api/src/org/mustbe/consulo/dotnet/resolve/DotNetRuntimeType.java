@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.resolve;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
 
@@ -27,7 +28,44 @@ import com.intellij.psi.PsiElement;
 @ArrayFactoryFields
 public interface DotNetRuntimeType
 {
-	DotNetRuntimeType ERROR_TYPE = new DotNetRuntimeType()
+	public class Adapter implements DotNetRuntimeType
+	{
+		@Nullable
+		@Override
+		public String getPresentableText()
+		{
+			return null;
+		}
+
+		@Nullable
+		@Override
+		public String getQualifiedText()
+		{
+			return getPresentableText();
+		}
+
+		@Override
+		public boolean isNullable()
+		{
+			return true;
+		}
+
+		@Nullable
+		@Override
+		public PsiElement toPsiElement()
+		{
+			return null;
+		}
+
+		@NotNull
+		@Override
+		public DotNetRuntimeGenericExtractor getGenericExtractor()
+		{
+			return DotNetRuntimeGenericExtractor.EMPTY;
+		}
+	}
+
+	DotNetRuntimeType ERROR_TYPE = new Adapter()
 	{
 		@Nullable
 		@Override
@@ -35,29 +73,9 @@ public interface DotNetRuntimeType
 		{
 			return "<error>";
 		}
-
-		@Nullable
-		@Override
-		public String getQualifiedText()
-		{
-			return getPresentableText();
-		}
-
-		@Override
-		public boolean isNullable()
-		{
-			return true;
-		}
-
-		@Nullable
-		@Override
-		public PsiElement toPsiElement()
-		{
-			return null;
-		}
 	};
 
-	DotNetRuntimeType UNKNOWN_TYPE = new DotNetRuntimeType()
+	DotNetRuntimeType UNKNOWN_TYPE = new Adapter()
 	{
 		@Nullable
 		@Override
@@ -65,29 +83,9 @@ public interface DotNetRuntimeType
 		{
 			return "<unknown>";
 		}
-
-		@Nullable
-		@Override
-		public String getQualifiedText()
-		{
-			return getPresentableText();
-		}
-
-		@Override
-		public boolean isNullable()
-		{
-			return true;
-		}
-
-		@Nullable
-		@Override
-		public PsiElement toPsiElement()
-		{
-			return null;
-		}
 	};
 
-	DotNetRuntimeType AUTO_TYPE = new DotNetRuntimeType()
+	DotNetRuntimeType AUTO_TYPE = new Adapter()
 	{
 		@Nullable
 		@Override
@@ -95,55 +93,15 @@ public interface DotNetRuntimeType
 		{
 			return "var";
 		}
-
-		@Nullable
-		@Override
-		public String getQualifiedText()
-		{
-			return getPresentableText();
-		}
-
-		@Override
-		public boolean isNullable()
-		{
-			return true;
-		}
-
-		@Nullable
-		@Override
-		public PsiElement toPsiElement()
-		{
-			return null;
-		}
 	};
 
-	DotNetRuntimeType NULL_TYPE = new DotNetRuntimeType()
+	DotNetRuntimeType NULL_TYPE = new Adapter()
 	{
 		@Nullable
 		@Override
 		public String getPresentableText()
 		{
 			return "null";
-		}
-
-		@Nullable
-		@Override
-		public String getQualifiedText()
-		{
-			return getPresentableText();
-		}
-
-		@Override
-		public boolean isNullable()
-		{
-			return true;
-		}
-
-		@Nullable
-		@Override
-		public PsiElement toPsiElement()
-		{
-			return null;
 		}
 	};
 
@@ -157,4 +115,7 @@ public interface DotNetRuntimeType
 
 	@Nullable
 	PsiElement toPsiElement();
+
+	@NotNull
+	DotNetRuntimeGenericExtractor getGenericExtractor();
 }

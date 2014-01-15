@@ -14,35 +14,27 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
+package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 
 /**
  * @author VISTALL
- * @since 29.12.13.
+ * @since 13.01.14
  */
-public class CSharpArrayRuntimeType extends DotNetRuntimeType.Adapter
+public interface DotNetGenericExtractor
 {
-	private final DotNetRuntimeType myInnerType;
-
-	public CSharpArrayRuntimeType(DotNetRuntimeType innerType)
+	DotNetGenericExtractor EMPTY = new DotNetGenericExtractor()
 	{
-		myInnerType = innerType;
-	}
-
-	@Nullable
-	@Override
-	public String getPresentableText()
-	{
-		return myInnerType.getPresentableText() + "[]";
-	}
+		@Nullable
+		@Override
+		public DotNetType extract(@NotNull DotNetGenericParameter parameter)
+		{
+			return null;
+		}
+	};
 
 	@Nullable
-	@Override
-	public String getQualifiedText()
-	{
-		return myInnerType.getQualifiedText() + "[]";
-	}
+	DotNetType extract(@NotNull DotNetGenericParameter parameter);
 }

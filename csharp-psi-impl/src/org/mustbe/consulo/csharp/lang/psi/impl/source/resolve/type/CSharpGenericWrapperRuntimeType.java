@@ -16,7 +16,11 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
+import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.psi.PsiElement;
 
@@ -24,7 +28,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 04.01.14.
  */
-public class CSharpGenericWrapperRuntimeType implements DotNetRuntimeType
+public class CSharpGenericWrapperRuntimeType extends DotNetRuntimeType.Adapter
 {
 	private final DotNetRuntimeType myInner;
 	private final DotNetRuntimeType[] myArguments;
@@ -86,5 +90,23 @@ public class CSharpGenericWrapperRuntimeType implements DotNetRuntimeType
 	public PsiElement toPsiElement()
 	{
 		return myInner.toPsiElement();
+	}
+
+	@NotNull
+	@Override
+	public DotNetRuntimeGenericExtractor getGenericExtractor()
+	{
+		PsiElement psiElement = myInner.toPsiElement();
+		if(!(psiElement instanceof DotNetGenericParameterListOwner))
+		{
+			return DotNetRuntimeGenericExtractor.EMPTY;
+		}
+
+		DotNetGenericParameter[] genericParameters = ((DotNetGenericParameterListOwner) psiElement).getGenericParameters();
+		if(genericParameters.length != myArguments.length)
+		{
+			return DotNetRuntimeGenericExtractor.EMPTY;
+		}
+		return new CSharpRuntimeGenericExtractor(genericParameters, myArguments);
 	}
 }

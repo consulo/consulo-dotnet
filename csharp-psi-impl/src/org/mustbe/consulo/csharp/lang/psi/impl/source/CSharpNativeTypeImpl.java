@@ -20,12 +20,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeRuntimeType;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -71,6 +74,26 @@ public class CSharpNativeTypeImpl extends CSharpElementImpl implements DotNetNat
 	}
 
 	@NotNull
+	@Override
+	public DotNetGenericExtractor getGenericExtractor()
+	{
+		return DotNetGenericExtractor.EMPTY;
+	}
+
+	@Nullable
+	@Override
+	public PsiElement resolve()
+	{
+		IElementType elementType = getTypeElement().getNode().getElementType();
+		if(elementType == CSharpSoftTokens.VAR_KEYWORD)
+		{
+			return null;
+		}
+
+		CSharpNativeRuntimeType cSharpNativeRuntimeType = ELEMENT_TYPE_TO_TYPE.get(elementType);
+		return DotNetPsiFacade.getInstance(getProject()).findType(cSharpNativeRuntimeType.getWrapperQualifiedClass(), getResolveScope(), 0);
+	}
+
 	@Override
 	public DotNetRuntimeType toRuntimeType()
 	{

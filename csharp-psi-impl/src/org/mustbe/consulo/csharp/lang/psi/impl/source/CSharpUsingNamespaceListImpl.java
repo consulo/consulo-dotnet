@@ -19,6 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingNamespaceListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -30,17 +32,22 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpUsingNamespaceListImpl extends CSharpElementImpl
+public class CSharpUsingNamespaceListImpl extends CSharpStubElementImpl<CSharpUsingNamespaceListStub>
 {
 	public CSharpUsingNamespaceListImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
+	public CSharpUsingNamespaceListImpl(@NotNull CSharpUsingNamespaceListStub stub)
+	{
+		super(stub, CSharpStubElements.USING_NAMESPACE_LIST);
+	}
+
 	@NotNull
 	public CSharpUsingNamespaceStatementImpl[] getStatements()
 	{
-		return findChildrenByClass(CSharpUsingNamespaceStatementImpl.class);
+		return getStubOrPsiChildren(CSharpStubElements.USING_NAMESPACE_STATEMENT, CSharpUsingNamespaceStatementImpl.ARRAY_FACTORY);
 	}
 
 	public void addUsing(@NotNull String qName)
@@ -49,7 +56,7 @@ public class CSharpUsingNamespaceListImpl extends CSharpElementImpl
 
 		CSharpUsingNamespaceStatementImpl[] statements = getStatements();
 
-		CSharpUsingNamespaceStatementImpl last = statements[statements.length - 1];
+	//	CSharpUsingNamespaceStatementImpl last = statements[statements.length - 1];
 
 		LeafPsiElement leafPsiElement = new LeafPsiElement(TokenType.WHITE_SPACE, "\n");
 

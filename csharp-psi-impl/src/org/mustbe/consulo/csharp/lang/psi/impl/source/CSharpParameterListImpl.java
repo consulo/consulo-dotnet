@@ -18,6 +18,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpParameterListStub;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
@@ -27,11 +29,16 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpParameterListImpl extends CSharpElementImpl implements DotNetParameterList
+public class CSharpParameterListImpl extends CSharpStubElementImpl<CSharpParameterListStub> implements DotNetParameterList
 {
 	public CSharpParameterListImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpParameterListImpl(@NotNull CSharpParameterListStub stub)
+	{
+		super(stub, CSharpStubElements.PARAMETER_LIST);
 	}
 
 	@Override
@@ -44,6 +51,11 @@ public class CSharpParameterListImpl extends CSharpElementImpl implements DotNet
 	@Override
 	public DotNetParameter[] getParameters()
 	{
+		CSharpParameterListStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getChildrenByType(CSharpStubElements.PARAMETER, DotNetParameter.ARRAY_FACTORY);
+		}
 		return findChildrenByClass(DotNetParameter.class);
 	}
 

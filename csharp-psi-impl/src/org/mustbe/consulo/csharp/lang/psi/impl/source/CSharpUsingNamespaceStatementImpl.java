@@ -16,8 +16,11 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingNamespaceStatementStub;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -28,11 +31,17 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpUsingNamespaceStatementImpl extends CSharpElementImpl
+@ArrayFactoryFields
+public class CSharpUsingNamespaceStatementImpl extends CSharpStubElementImpl<CSharpUsingNamespaceStatementStub>
 {
 	public CSharpUsingNamespaceStatementImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpUsingNamespaceStatementImpl(@NotNull CSharpUsingNamespaceStatementStub stub)
+	{
+		super(stub, CSharpStubElements.USING_NAMESPACE_STATEMENT);
 	}
 
 	public DotNetReferenceExpression getNamespaceReference()

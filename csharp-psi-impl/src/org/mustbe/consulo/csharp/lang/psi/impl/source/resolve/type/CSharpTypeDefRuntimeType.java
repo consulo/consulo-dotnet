@@ -28,7 +28,7 @@ import com.intellij.psi.util.QualifiedName;
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpTypeDefRuntimeType implements DotNetRuntimeType
+public class CSharpTypeDefRuntimeType extends DotNetRuntimeType.Adapter
 {
 	private final String myQualifiedName;
 	private final Project myProject;
@@ -56,12 +56,6 @@ public class CSharpTypeDefRuntimeType implements DotNetRuntimeType
 	public String getQualifiedText()
 	{
 		return myQualifiedName;
-	}
-
-	@Override
-	public boolean isNullable()
-	{
-		return true;
 	}
 
 	@Nullable

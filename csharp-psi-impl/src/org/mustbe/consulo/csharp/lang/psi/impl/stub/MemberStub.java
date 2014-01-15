@@ -37,14 +37,14 @@ public class MemberStub<T extends DotNetNamedElement> extends NamedStubBase<T>
 	private StringRef myParentQName;
 	private int myModifierMask;
 
-	public MemberStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, @NotNull StringRef namespaceQName, int modifierMask)
+	public MemberStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, @Nullable StringRef namespaceQName, int modifierMask)
 	{
 		super(parent, elementType, name);
 		myParentQName = namespaceQName;
 		myModifierMask = modifierMask;
 	}
 
-	public MemberStub(StubElement parent, IStubElementType elementType, @Nullable String name, @NotNull StringRef namespaceQName, int modifierMask)
+	public MemberStub(StubElement parent, IStubElementType elementType, @Nullable String name, @Nullable StringRef namespaceQName, int modifierMask)
 	{
 		super(parent, elementType, name);
 		myParentQName = namespaceQName;

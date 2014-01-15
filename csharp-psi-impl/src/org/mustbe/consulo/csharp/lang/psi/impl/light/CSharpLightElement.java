@@ -14,34 +14,44 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.lang.psi.impl.light;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpGenericParameterStub;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.impl.light.LightElement;
 
 /**
  * @author VISTALL
- * @since 30.11.13.
+ * @since 13.01.14
  */
-public class CSharpGenericParameterImpl extends CSharpStubMemberImpl<CSharpGenericParameterStub> implements DotNetGenericParameter
+public abstract class CSharpLightElement extends LightElement
 {
-	public CSharpGenericParameterImpl(@NotNull ASTNode node)
+	protected CSharpLightElement(PsiManager manager)
 	{
-		super(node);
-	}
-
-	public CSharpGenericParameterImpl(@NotNull CSharpGenericParameterStub stub)
-	{
-		super(stub, CSharpStubElements.GENERIC_PARAMETER);
+		super(manager, CSharpLanguage.INSTANCE);
 	}
 
 	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
+	public void accept(@NotNull PsiElementVisitor visitor)
 	{
-		visitor.visitGenericParameter(this);
+		if(visitor instanceof CSharpElementVisitor)
+		{
+			accept((CSharpElementVisitor)visitor);
+		}
+		else
+		{
+			super.accept(visitor);
+		}
+	}
+
+	public abstract void accept(@NotNull CSharpElementVisitor visitor);
+
+	@Override
+	public String toString()
+	{
+		return getClass().getName();
 	}
 }

@@ -24,7 +24,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 06.01.14.
  */
-public class CSharpPointerRuntimeType implements DotNetRuntimeType
+public class CSharpPointerRuntimeType extends DotNetRuntimeType.Adapter
 {
 	private final DotNetRuntimeType myInnerType;
 

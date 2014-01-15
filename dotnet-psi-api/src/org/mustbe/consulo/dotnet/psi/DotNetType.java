@@ -18,7 +18,9 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -27,6 +29,11 @@ import org.mustbe.consulo.dotnet.resolve.DotNetRuntimeType;
 @ArrayFactoryFields
 public interface DotNetType extends DotNetElement
 {
-	@NotNull
+	@Nullable
+	PsiElement resolve();
+
 	DotNetRuntimeType toRuntimeType();
+
+	@NotNull
+	DotNetGenericExtractor getGenericExtractor();
 }

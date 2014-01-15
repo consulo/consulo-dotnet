@@ -16,34 +16,19 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.CSharpAbstractStubElementType;
-import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 21.12.13.
+ * @since 15.01.14
  */
-public class CSharpVariableStub<V extends DotNetVariable> extends MemberStub<V>
+public class CSharpUsingNamespaceStatementStub extends StubBase<CSharpUsingNamespaceStatementImpl>
 {
-	private boolean myConstant;
-
-	public CSharpVariableStub(
-			StubElement parent,
-			CSharpAbstractStubElementType<?, ?> elementType,
-			@Nullable StringRef name,
-			@Nullable StringRef namespaceQName,
-			int modifierMask,
-			boolean constant)
+	public CSharpUsingNamespaceStatementStub(StubElement parent, IStubElementType elementType)
 	{
-		super(parent, elementType, name, namespaceQName, modifierMask);
-		myConstant = constant;
-	}
-
-	public boolean isConstant()
-	{
-		return myConstant;
+		super(parent, elementType);
 	}
 }
