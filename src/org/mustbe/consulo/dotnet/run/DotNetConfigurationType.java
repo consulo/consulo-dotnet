@@ -16,6 +16,9 @@
 
 package org.mustbe.consulo.dotnet.run;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.module.extension.ModuleExtensionHelper;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.RunConfiguration;
@@ -39,6 +42,12 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 			public RunConfiguration createTemplateConfiguration(Project project)
 			{
 				return new DotNetConfiguration("Unnamed", new RunConfigurationModule(project), this);
+			}
+
+			@Override
+			public boolean isApplicable(@NotNull Project project)
+			{
+				return ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetModuleExtension.class);
 			}
 		});
 	}
