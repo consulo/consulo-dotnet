@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.compiler;
 
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
@@ -42,5 +43,11 @@ public class DotNetTranslatingCompilerFilesMonitorHelper implements TranslatingC
 			return null;
 		}
 		return ModuleRootManager.getInstance(module).getContentRoots();
+	}
+
+	@Override
+	public boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> extension)
+	{
+		return extension instanceof DotNetModuleExtension;
 	}
 }
