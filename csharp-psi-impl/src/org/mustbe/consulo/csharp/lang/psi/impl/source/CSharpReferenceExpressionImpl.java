@@ -607,7 +607,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			@Override
 			public boolean value(PsiNamedElement psiNamedElement)
 			{
-				return true;
+				return psiNamedElement.getName() != null;
 			}
 		}, true);
 		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(psiElements);
