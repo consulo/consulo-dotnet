@@ -104,6 +104,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType CONTINUE_KEYWORD = new IElementType("CONTINUE_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType DO_KEYWORD = new IElementType("DO_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType WHILE_KEYWORD = new IElementType("WHILE_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType RETURN_KEYWORD = new IElementType("RETURN_KEYWORD", CSharpLanguage.INSTANCE);

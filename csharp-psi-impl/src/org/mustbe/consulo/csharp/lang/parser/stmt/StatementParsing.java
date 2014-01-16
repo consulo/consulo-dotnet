@@ -86,6 +86,10 @@ public class StatementParsing extends SharingParsingHelpers
 
 			marker.done(CONTINUE_STATEMENT);
 		}
+		else if(tokenType == DO_KEYWORD)
+		{
+			parseDoWhileStatement(wrapper, marker);
+		}
 		else if(tokenType == RETURN_KEYWORD)
 		{
 			parseReturnStatement(wrapper, marker);
@@ -393,6 +397,29 @@ public class StatementParsing extends SharingParsingHelpers
 		expect(wrapper, SEMICOLON, "';' expected");
 
 		marker.done(RETURN_STATEMENT);
+	}
+
+	private static void parseDoWhileStatement(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker)
+	{
+		wrapper.advanceLexer();
+
+		if(wrapper.getTokenType() == LBRACE)
+		{
+			parseStatement(wrapper);
+		}
+		else
+		{
+			wrapper.error("'{' expected");
+		}
+
+		if(expect(wrapper, WHILE_KEYWORD, "'while' expected"))
+		{
+			parseExpressionInParenth(wrapper);
+
+			expect(wrapper, SEMICOLON, null);
+		}
+
+		marker.done(DO_WHILE_STATEMENT);
 	}
 
 	private static void parseStatementWithParenthesesExpression(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker, IElementType doneElement)

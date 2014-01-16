@@ -220,6 +220,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"return"                  { return CSharpTokens.RETURN_KEYWORD; }
 
+	"do"                      { return CSharpTokens.DO_KEYWORD; }
+
 	"while"                   { return CSharpTokens.WHILE_KEYWORD; }
 
 	"goto"                    { return CSharpTokens.GOTO_KEYWORD; }
