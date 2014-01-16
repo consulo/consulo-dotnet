@@ -80,8 +80,6 @@ public class GenericUnwrapTool
 		{
 			CSharpConstructorDeclaration constructorDeclaration = (CSharpConstructorDeclaration) namedElement;
 
-			DotNetTypeRef newReturnTypeRef = exchangeTypeRefs(constructorDeclaration.getReturnTypeRef(), extractor, namedElement);
-
 			DotNetParameterList parameterList = constructorDeclaration.getParameterList();
 			if(parameterList != null)
 			{
@@ -97,7 +95,7 @@ public class GenericUnwrapTool
 				parameterList = new CSharpLightParameterList(parameterList, newParameters);
 			}
 
-			return (T) new CSharpLightConstructorDeclaration(constructorDeclaration, newReturnTypeRef, parameterList);
+			return (T) new CSharpLightConstructorDeclaration(constructorDeclaration, null, parameterList);
 		}
 		else if(namedElement instanceof CSharpPropertyDeclaration)
 		{
