@@ -179,6 +179,10 @@ public class MSBaseDotNetCompilerOptionsBuilder implements  DotNetCompilerOption
 			addArgument("/reference:" + StringUtils.join(dependFiles, ","));
 		}
 
+		if(debug)
+		{
+			addArgument("/debug");
+		}
 		File tempFile = FileUtil.createTempFile("consulo-dotnet-rsp", ".rsp");
 		for(String argument : myArguments)
 		{
