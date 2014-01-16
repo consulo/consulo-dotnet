@@ -116,7 +116,14 @@ public class DotNetCompiler implements TranslatingCompiler
 			ProcessOutput processOutput = processHandler.runProcess();
 			for(String s : processOutput.getStdoutLines())
 			{
-				builder.addMessage(compileContext, module, s);
+				try
+				{
+					builder.addMessage(compileContext, module, s);
+				}
+				catch(Exception e)
+				{
+					LOGGER.error("Message with : " + s + " cant be parsed", e);
+				}
 			}
 		}
 		catch(Exception e)
