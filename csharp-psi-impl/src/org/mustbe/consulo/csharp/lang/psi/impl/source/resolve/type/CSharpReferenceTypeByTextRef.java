@@ -24,9 +24,9 @@ import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.QualifiedName;
 
 /**
  * @author VISTALL
@@ -56,8 +56,7 @@ public class CSharpReferenceTypeByTextRef implements DotNetTypeRef
 	@Override
 	public String getPresentableText()
 	{
-		QualifiedName qualifiedName = QualifiedName.fromDottedString(myText);
-		return qualifiedName.getLastComponent();
+		return StringUtil.getShortName(myText);
 	}
 
 	@Nullable

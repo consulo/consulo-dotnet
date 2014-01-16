@@ -23,9 +23,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.NamespaceByQNameIndex;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
@@ -35,7 +36,6 @@ import com.intellij.psi.impl.light.LightElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
-import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
@@ -182,8 +182,7 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 	@Override
 	public String getName()
 	{
-		QualifiedName qualifiedName = QualifiedName.fromDottedString(getQName());
-		return qualifiedName.getLastComponent();
+		return StringUtil.getShortName(getQName());
 	}
 
 	@Override

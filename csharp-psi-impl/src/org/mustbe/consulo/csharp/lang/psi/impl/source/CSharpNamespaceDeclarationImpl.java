@@ -23,7 +23,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
@@ -35,9 +34,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.IncorrectOperationException;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -91,15 +88,7 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 		}
 		else
 		{
-			if(presentableQName0.contains(CSharpNamespaceHelper.NAMESPACE_SEPARATOR))
-			{
-				val qualifiedName = QualifiedName.fromDottedString(presentableQName0);
-				return qualifiedName.getLastComponent();
-			}
-			else
-			{
-				return presentableQName0;
-			}
+			return StringUtil.getShortName(presentableQName0);
 		}
 	}
 
@@ -160,11 +149,7 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 			return null;
 		}
 
-		QualifiedName qualifiedName = QualifiedName.fromDottedString(fullQName);
-
-		QualifiedName qParent = qualifiedName.getParent();
-		assert qParent != null;
-		return qParent.toString();
+		return StringUtil.getPackageName(fullQName);
 	}
 
 	@Nullable
