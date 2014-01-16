@@ -17,15 +17,12 @@
 package org.mustbe.consulo.csharp.ide.completion;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.StandardPatterns;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ProcessingContext;
 
 /**
@@ -42,7 +39,7 @@ public class CSharpKeywordCompletionContributor extends CompletionContributor
 			protected void addCompletions(@NotNull CompletionParameters completionParameters, ProcessingContext processingContext,
 					@NotNull CompletionResultSet completionResultSet)
 			{
-				IElementType[] types = CSharpTokenSets.KEYWORDS.getTypes();
+				/*IElementType[] types = CSharpTokenSets.KEYWORDS.getTypes();
 				for(IElementType type : types)
 				{
 					String keyword = type.toString().replace("_KEYWORD", "").toLowerCase();
@@ -53,7 +50,7 @@ public class CSharpKeywordCompletionContributor extends CompletionContributor
 					LookupElementBuilder builder = LookupElementBuilder.create(keyword);
 					builder = builder.bold();
 					completionResultSet.addElement(builder);
-				}
+				}   */
 			}
 		});
 	}
