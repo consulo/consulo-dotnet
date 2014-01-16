@@ -67,11 +67,16 @@ public class DotNetMacros
 
 	public static String getModuleOutputDirUrl(@NotNull Module module, boolean debug)
 	{
-		ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 		String path = DotNetCompilerConfiguration.getInstance(module.getProject()).getOutputDir();
-		path = StringUtil.replace(path, MODULE_OUTPUT_DIR, compilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance
-				()));
+		return extractLikeWorkDir(module, path, debug, true);
+	}
 
+	public static String extractLikeWorkDir(@NotNull Module module, @NotNull String path, boolean debug, boolean url)
+	{
+		ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
+		String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
+
+		path = StringUtil.replace(path, MODULE_OUTPUT_DIR, url ? compilerOutputUrl : VfsUtil.urlToPath(compilerOutputUrl));
 		path = StringUtil.replace(path, CONFIGURATION, debug ? "debug" : "release");
 		path = StringUtil.replace(path, MODULE_NAME, module.getName());
 		return path;

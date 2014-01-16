@@ -22,6 +22,7 @@ import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.application.options.ModuleListCellRenderer;
+import com.intellij.execution.ui.CommonProgramParametersPanel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -40,6 +41,7 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 	private final Project myProject;
 
 	private JComboBox myModuleComboBox;
+	private CommonProgramParametersPanel myProgramParametersPanel;
 
 	public DotNetConfigurationEditor(Project project)
 	{
@@ -49,12 +51,14 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 	@Override
 	protected void resetEditorFrom(DotNetConfiguration runConfiguration)
 	{
+		myProgramParametersPanel.reset(runConfiguration);
 		myModuleComboBox.setSelectedItem(runConfiguration.getConfigurationModule().getModule());
 	}
 
 	@Override
 	protected void applyEditorTo(DotNetConfiguration runConfiguration) throws ConfigurationException
 	{
+		myProgramParametersPanel.applyTo(runConfiguration);
 		runConfiguration.getConfigurationModule().setModule((Module) myModuleComboBox.getSelectedItem());
 	}
 
@@ -62,6 +66,8 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 	@Override
 	protected JComponent createEditor()
 	{
+		myProgramParametersPanel = new CommonProgramParametersPanel();
+
 		myModuleComboBox = new JComboBox();
 		myModuleComboBox.setRenderer(new ModuleListCellRenderer());
 		for(val module : ModuleManager.getInstance(myProject).getModules())
@@ -75,6 +81,7 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 		FormBuilder formBuilder = FormBuilder.createFormBuilder();
 		formBuilder.addLabeledComponent("Module", myModuleComboBox);
 
-		return formBuilder.getPanel();
+		myProgramParametersPanel.add(formBuilder.getPanel());
+		return myProgramParametersPanel;
 	}
 }

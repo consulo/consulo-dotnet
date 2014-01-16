@@ -17,14 +17,18 @@
 package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.module.extension.ModuleExtensionHelper;
-import com.intellij.execution.configurations.ConfigurationFactory;
+import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -36,12 +40,28 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 	{
 		super("#DotNetConfigurationType", ".NET Application", "", AllIcons.RunConfigurations.Application);
 
-		addFactory(new ConfigurationFactory(this)
+		addFactory(new ConfigurationFactoryEx(this)
 		{
 			@Override
 			public RunConfiguration createTemplateConfiguration(Project project)
 			{
 				return new DotNetConfiguration("Unnamed", new RunConfigurationModule(project), this);
+			}
+
+			@Override
+			public void onNewConfigurationCreated(@NotNull RunConfiguration configuration)
+			{
+				DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
+
+				for(val o : ModuleManager.getInstance(configuration.getProject()).getModules())
+				{
+					if(ModuleUtilCore.getExtension(o, DotNetModuleExtension.class) != null)
+					{
+						dotNetConfiguration.setModule(o);
+						break;
+					}
+				}
+				dotNetConfiguration.setWorkingDirectory(DotNetCompilerConfiguration.getInstance(configuration.getProject()).getOutputDir());
 			}
 
 			@Override

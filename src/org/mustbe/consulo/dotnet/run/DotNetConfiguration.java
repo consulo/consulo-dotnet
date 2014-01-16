@@ -19,12 +19,15 @@ package org.mustbe.consulo.dotnet.run;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -46,14 +49,21 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.xmlb.XmlSerializer;
 import lombok.val;
 
 /**
  * @author VISTALL
  * @since 26.11.13.
  */
-public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurationModule>
+public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements CommonProgramRunConfigurationParameters
 {
+	private String myProgramParameters;
+	private String myWorkingDir = "";
+	private Map<String, String> myEnvsMap = Collections.emptyMap();
+	private boolean myPassParentEnvs;
+
 	public DotNetConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory)
 	{
 		super(name, configurationModule, factory);
@@ -83,6 +93,8 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	{
 		super.readExternal(element);
 		readModule(element);
+
+		XmlSerializer.deserializeInto(this, element);
 	}
 
 	@Override
@@ -90,6 +102,8 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	{
 		super.writeExternal(element);
 		writeModule(element);
+
+		XmlSerializer.serializeInto(this, element);
 	}
 
 	@NotNull
@@ -116,7 +130,16 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		boolean debug = executor instanceof DefaultDebugExecutor;
 		val exeFile = DotNetMacros.extract(module, debug, extension.getTarget());
 
+		DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();
 		val runCommandLine = extension.createRunCommandLine(exeFile, debug);
+		String programParameters = runProfile.getProgramParameters();
+		if(!StringUtil.isEmpty(programParameters))
+		{
+			runCommandLine.addParameters(StringUtil.split(programParameters, " "));
+		}
+		runCommandLine.setPassParentEnvironment(runProfile.isPassParentEnvs());
+		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
+		runCommandLine.setWorkDirectory(DotNetMacros.extractLikeWorkDir(module, runProfile.getWorkingDirectory(), debug, false));
 		return new RunProfileState()
 		{
 			@Nullable
@@ -137,5 +160,56 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 				return new DefaultExecutionResult(console, osProcessHandler);
 			}
 		};
+	}
+
+	@Override
+	public void setProgramParameters(@Nullable String s)
+	{
+		myProgramParameters = s;
+	}
+
+	@Nullable
+	@Override
+	public String getProgramParameters()
+	{
+		return myProgramParameters;
+	}
+
+	@Override
+	public void setWorkingDirectory(@Nullable String s)
+	{
+		myWorkingDir = s;
+	}
+
+	@Nullable
+	@Override
+	public String getWorkingDirectory()
+	{
+		return myWorkingDir;
+	}
+
+	@Override
+	public void setEnvs(@NotNull Map<String, String> map)
+	{
+		myEnvsMap = map;
+	}
+
+	@NotNull
+	@Override
+	public Map<String, String> getEnvs()
+	{
+		return myEnvsMap;
+	}
+
+	@Override
+	public void setPassParentEnvs(boolean b)
+	{
+		myPassParentEnvs = b;
+	}
+
+	@Override
+	public boolean isPassParentEnvs()
+	{
+		return myPassParentEnvs;
 	}
 }
