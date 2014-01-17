@@ -134,6 +134,11 @@ public class StatementParsing extends SharingParsingHelpers
 
 			marker.done(LOCAL_VARIABLE_DECLARATION_STATEMENT);
 		}
+		else if(tokenType == SEMICOLON)
+		{
+			wrapper.advanceLexer();
+			marker.done(EMPTY_STATEMENT);
+		}
 		else
 		{
 			if(tokenType == IDENTIFIER && wrapper.lookAhead(1) == COLON)
