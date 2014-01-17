@@ -29,6 +29,7 @@ import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
+import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.TranslatingCompiler;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -118,6 +119,7 @@ public class DotNetCompiler implements TranslatingCompiler
 			{
 				try
 				{
+					compileContext.addMessage(CompilerMessageCategory.INFORMATION, s, null,-1, -1);
 					builder.addMessage(compileContext, module, s);
 				}
 				catch(Exception e)
