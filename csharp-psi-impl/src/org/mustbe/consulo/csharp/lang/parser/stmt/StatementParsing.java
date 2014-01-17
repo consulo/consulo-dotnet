@@ -98,6 +98,10 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			parseReturnStatement(wrapper, marker);
 		}
+		else if(tokenType == THROW_KEYWORD)
+		{
+			parseThrowStatement(wrapper, marker);
+		}
 		else if(tokenType == FOREACH_KEYWORD)
 		{
 			parseForeach(wrapper, marker);
@@ -299,6 +303,18 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 
 		marker.done(LABELED_STATEMENT);
+	}
+
+	private static void parseThrowStatement(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker)
+	{
+		builder.advanceLexer();
+
+		if(ExpressionParsing.parse(builder) == null)
+		{
+			builder.error("Expression expected");
+		}
+		expect(builder, SEMICOLON, "';' expected");
+		marker.done(THROW_STATEMENT);
 	}
 
 	private static void parseForStatement(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker)

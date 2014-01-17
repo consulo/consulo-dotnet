@@ -230,6 +230,8 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"finally"                 { return CSharpTokens.FINALLY_KEYWORD; }
 
+	"throw"                   { return CSharpTokens.THROW_KEYWORD; }
+
 	"goto"                    { return CSharpTokens.GOTO_KEYWORD; }
 
 	"foreach"                 { return CSharpTokens.FOREACH_KEYWORD; }
