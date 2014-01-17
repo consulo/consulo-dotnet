@@ -100,6 +100,8 @@
 		<stubIndex implementation="org.mustbe.consulo.csharp.lang.psi.impl.stub.index.EventIndex"/>
 		<stubIndex implementation="org.mustbe.consulo.csharp.lang.psi.impl.stub.index.ExtendsListIndex"/>
 
+		<resolveScopeEnlarger implementation="org.mustbe.consulo.csharp.lang.psi.impl.resolve.CSharpResolveScopeEnlarger" />
+
 		<psi.treeChangePreprocessor implementation="org.mustbe.consulo.csharp.lang.psi.impl.CSharpPsiTreeChangePreprocessor"/>
 		<lang.psiStructureViewFactory language="C#" implementationClass="org.mustbe.consulo.csharp.ide.structureView.CSharpStructureViewFactory"/>
 		<lang.formatter language="C#" implementationClass="org.mustbe.consulo.csharp.lang.formatter.CSharpFormattingModelBuilder"/>

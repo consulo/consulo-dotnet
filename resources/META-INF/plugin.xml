@@ -56,8 +56,6 @@
 
 		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider" />
 
-		<resolveScopeEnlarger implementation="org.mustbe.consulo.csharp.lang.psi.impl.resolve.CSharpResolveScopeEnlarger" />
-
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"
 						serviceImplementation="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"/>
 	</extensions>
