@@ -19,8 +19,8 @@ package org.mustbe.consulo.dotnet.compiler;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -30,7 +30,8 @@ import com.intellij.openapi.vfs.VirtualFile;
  */
 public interface DotNetCompilerOptionsBuilder
 {
-	void addMessage(CompileContext compileContext, Module module, String line);
+	@Nullable
+	DotNetCompilerMessage convertToMessage(Module module, String line);
 
 	@NotNull
 	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, boolean debug) throws IOException;

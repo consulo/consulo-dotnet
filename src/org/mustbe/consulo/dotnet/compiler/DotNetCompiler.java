@@ -16,6 +16,9 @@
 
 package org.mustbe.consulo.dotnet.compiler;
 
+import java.nio.charset.Charset;
+import java.util.Arrays;
+
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
@@ -29,13 +32,15 @@ import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.TranslatingCompiler;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.problems.Problem;
+import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.util.Chunk;
 import lombok.val;
 
@@ -112,15 +117,29 @@ public class DotNetCompiler implements TranslatingCompiler
 			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, executor instanceof DefaultDebugExecutor);
 
 			val process = commandLine.createProcess();
-			val processHandler = new CapturingProcessHandler(process);
+			val processHandler = new CapturingProcessHandler(process, Charset.forName("UTF-8"));
 
 			ProcessOutput processOutput = processHandler.runProcess();
 			for(String s : processOutput.getStdoutLines())
 			{
 				try
 				{
-					compileContext.addMessage(CompilerMessageCategory.INFORMATION, s, null,-1, -1);
-					builder.addMessage(compileContext, module, s);
+					DotNetCompilerMessage m = builder.convertToMessage(module, s);
+					if(m == null)
+					{
+						continue;
+					}
+
+					String fileUrl = m.getFileUrl();
+					VirtualFile virtualFile = fileUrl == null ? null : VirtualFileManager.getInstance().findFileByUrl(fileUrl);
+					if(virtualFile != null)
+					{
+						Problem problem = WolfTheProblemSolver.getInstance(module.getProject()).convertToProblem(virtualFile, m.getLine(),
+								m.getColumn(), new String[]{m.getMessage()});
+						WolfTheProblemSolver.getInstance(module.getProject()).reportProblems(virtualFile, Arrays.<Problem>asList(problem));
+					}
+
+					compileContext.addMessage(m.getCategory(), m.getMessage(), m.getFileUrl(), m.getLine(), m.getColumn());
 				}
 				catch(Exception e)
 				{

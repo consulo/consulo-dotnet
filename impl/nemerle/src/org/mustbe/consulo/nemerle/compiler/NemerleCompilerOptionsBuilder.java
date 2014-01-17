@@ -23,13 +23,13 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.compiler.DotNetCompilerMessage;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerUtil;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.nemerle.module.extension.NemerleModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -52,9 +52,9 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 	}
 
 	@Override
-	public void addMessage(CompileContext compileContext, Module module, String line)
+	public DotNetCompilerMessage convertToMessage(Module module, String line)
 	{
-		compileContext.addMessage(CompilerMessageCategory.INFORMATION, line, null, -1, -1);
+		return new DotNetCompilerMessage(CompilerMessageCategory.INFORMATION, line, null, -1, -1);
 	}
 
 	@NotNull

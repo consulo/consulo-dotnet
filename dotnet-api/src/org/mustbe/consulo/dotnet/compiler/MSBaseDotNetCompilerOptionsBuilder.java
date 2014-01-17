@@ -19,7 +19,6 @@ package org.mustbe.consulo.dotnet.compiler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,7 +26,6 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -36,8 +34,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.problems.Problem;
-import com.intellij.problems.WolfTheProblemSolver;
 import lombok.val;
 
 /**
@@ -66,7 +62,7 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 	// src\Test.cs(7,42): error CS1002: ожидалась ;  [microsoft]
 	// C:\Users\VISTALL\\ConsuloProjects\\untitled30\mono-test\\Program.cs(7,17): error CS0117: error description [mono]
 	@Override
-	public void addMessage(CompileContext compileContext, Module module, String line)
+	public DotNetCompilerMessage convertToMessage(Module module, String line)
 	{
 		String[] split = line.split(": ");
 		if(split.length == 3)
@@ -104,9 +100,7 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 			int lineN = Integer.parseInt(lineAndColumn[0]);
 			int columnN = Integer.parseInt(lineAndColumn[1]);
 
-			notifyWolf(fileUrl, module, lineN, columnN, message);
-
-			compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", fileUrl, lineN, columnN);
+			return new DotNetCompilerMessage(category, message + " (" + idAndTypeArray[1] + ")", fileUrl, lineN, columnN);
 		}
 		else if(split.length == 2)
 		{
@@ -133,11 +127,10 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 				int lineN = Integer.parseInt(lineAndColumn[0]);
 				int columnN = Integer.parseInt(lineAndColumn[0]);
 
-				notifyWolf(fileUrl, module, lineN, columnN, message);
-
 				message = message.substring(1, message.length());
 				message = message.substring(0, message.length() - 1);
-				compileContext.addMessage(CompilerMessageCategory.INFORMATION, message, fileUrl, lineN, columnN);
+
+				return new DotNetCompilerMessage(CompilerMessageCategory.INFORMATION, message, fileUrl, lineN, columnN);
 			}
 			else
 			{
@@ -152,28 +145,13 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 					category = CompilerMessageCategory.WARNING;
 				}
 
-				compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", null, -1, -1);
+				return new DotNetCompilerMessage(category, message + " (" + idAndTypeArray[1] + ")", null, -1, -1);
 			}
 		}
 		else
 		{
-			compileContext.addMessage(CompilerMessageCategory.INFORMATION, line, null, -1, -1);
+			return new DotNetCompilerMessage(CompilerMessageCategory.INFORMATION, line, null, -1, -1);
 		}
-	}
-
-	private static void notifyWolf(String url, Module module, int line, int column, String... message)
-	{
-		if(url == null)
-		{
-			return;
-		}
-		final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(url);
-		if(virtualFile == null)
-		{
-			return;
-		}
-		Problem problem = WolfTheProblemSolver.getInstance(module.getProject()).convertToProblem(virtualFile, line, column, message);
-		WolfTheProblemSolver.getInstance(module.getProject()).reportProblems(virtualFile, Arrays.<Problem>asList(problem));
 	}
 
 	@Override
