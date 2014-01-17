@@ -136,7 +136,10 @@ public class DotNetCompiler implements TranslatingCompiler
 					{
 						Problem problem = WolfTheProblemSolver.getInstance(module.getProject()).convertToProblem(virtualFile, m.getLine(),
 								m.getColumn(), new String[]{m.getMessage()});
-						WolfTheProblemSolver.getInstance(module.getProject()).reportProblems(virtualFile, Arrays.<Problem>asList(problem));
+						if(problem != null)
+						{
+							WolfTheProblemSolver.getInstance(module.getProject()).reportProblems(virtualFile, Arrays.<Problem>asList(problem));
+						}
 					}
 
 					compileContext.addMessage(m.getCategory(), m.getMessage(), m.getFileUrl(), m.getLine(), m.getColumn());
