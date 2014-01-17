@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import lombok.val;
@@ -32,6 +33,17 @@ import lombok.val;
 @Logger
 public class CSharpInheritUtil
 {
+	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
+	{
+		PsiElement resolve = typeRef.resolve(element.getProject(), element.getResolveScope());
+		if(!(resolve instanceof DotNetTypeDeclaration))
+		{
+			return false;
+		}
+		DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) resolve;
+		return isParentOrSelf(parentClass, typeDeclaration, deep);
+	}
+
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
 		if(Comparing.equal(parentClass, typeDeclaration.getPresentableQName()))

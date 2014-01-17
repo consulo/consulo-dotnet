@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
@@ -29,12 +30,14 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
@@ -169,6 +172,27 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		super.visitEnumConstantDeclaration(declaration);
 
 		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
+	@Override
+	public void visitThrowStatement(CSharpThrowStatementImpl statement)
+	{
+		super.visitThrowStatement(statement);
+
+		DotNetExpression expression = statement.getExpression();
+		if(expression == null)
+		{
+			return;
+		}
+
+		DotNetTypeRef dotNetTypeRef = expression.toTypeRef();
+
+		if(!CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, dotNetTypeRef, statement, true))
+		{
+			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip(CSharpErrorBundle.message("the.type" +
+					".thrown.must.be.exception")).range(expression).create();
+			myHighlightInfoHolder.add(info);
+		}
 	}
 
 	@Override
