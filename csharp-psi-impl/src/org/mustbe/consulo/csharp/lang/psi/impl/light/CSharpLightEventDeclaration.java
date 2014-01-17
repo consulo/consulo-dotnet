@@ -23,6 +23,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -77,5 +78,17 @@ public class CSharpLightEventDeclaration extends CSharpLightVariable<CSharpEvent
 	public String getPresentableQName()
 	{
 		return myOriginal.getPresentableQName();
+	}
+
+	@Override
+	public PsiElement getLeftBrace()
+	{
+		return myOriginal.getLeftBrace();
+	}
+
+	@Override
+	public PsiElement getRightBrace()
+	{
+		return myOriginal.getRightBrace();
 	}
 }

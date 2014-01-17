@@ -21,12 +21,14 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -76,5 +78,17 @@ public class CSharpPropertyDeclarationImpl extends CSharpStubVariableImpl<CSharp
 	public DotNetNamedElement[] getMembers()
 	{
 		return findChildrenByClass(DotNetNamedElement.class);
+	}
+
+	@Override
+	public PsiElement getLeftBrace()
+	{
+		return findChildByType(CSharpTokens.LBRACE);
+	}
+
+	@Override
+	public PsiElement getRightBrace()
+	{
+		return findChildByType(CSharpTokens.RBRACE);
 	}
 }

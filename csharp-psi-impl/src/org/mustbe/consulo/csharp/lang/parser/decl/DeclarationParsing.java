@@ -115,7 +115,9 @@ public class DeclarationParsing extends SharingParsingHelpers
 						builder.error("Type expected " + builder.getTokenType());
 					}
 
-					modifierListBuilder.drop();
+
+					builder.error("Type expected");
+
 					marker.drop();
 					return false;
 				}

@@ -24,11 +24,15 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.macro.MacroActiveBlockInfo;
 import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import org.mustbe.consulo.csharp.lang.psi.CSharpBodyWithBraces;
+import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBodyImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
@@ -100,6 +104,30 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 			}
 
 			@Override
+			public void visitTypeDeclaration(CSharpTypeDeclarationImpl declaration)
+			{
+				super.visitTypeDeclaration(declaration);
+
+				addBodyWithBraces(foldingList, declaration);
+			}
+
+			@Override
+			public void visitPropertyDeclaration(CSharpPropertyDeclaration declaration)
+			{
+				super.visitPropertyDeclaration(declaration);
+
+				addBodyWithBraces(foldingList, declaration);
+			}
+
+			@Override
+			public void visitEventDeclaration(CSharpEventDeclaration declaration)
+			{
+				super.visitEventDeclaration(declaration);
+
+				addBodyWithBraces(foldingList, declaration);
+			}
+
+			@Override
 			public void visitUsingNamespaceList(CSharpUsingNamespaceListImpl list)
 			{
 				CSharpUsingNamespaceStatementImpl[] statements = list.getStatements();
@@ -162,7 +190,8 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		{
 			return "...";
 		}
-		else if(psi instanceof CSharpBlockStatementImpl)
+		else if(psi instanceof CSharpBlockStatementImpl || psi instanceof CSharpPropertyDeclaration || psi instanceof CSharpTypeDeclaration || psi
+				instanceof CSharpEventDeclaration)
 		{
 			return "{...}";
 		}

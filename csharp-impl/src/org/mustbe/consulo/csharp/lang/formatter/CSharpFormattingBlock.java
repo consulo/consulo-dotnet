@@ -111,6 +111,10 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 		{
 			return Wrap.createWrap(WrapType.ALWAYS, true);
 		}
+		else if(elementType == XXX_ACCESSOR)
+		{
+			return Wrap.createWrap(WrapType.ALWAYS, true);
+		}
 		return super.getWrap();
 	}
 

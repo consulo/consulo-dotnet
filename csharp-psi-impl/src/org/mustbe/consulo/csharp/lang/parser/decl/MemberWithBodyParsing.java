@@ -49,7 +49,9 @@ public class MemberWithBodyParsing extends SharingParsingHelpers
 	{
 		PsiBuilder.Marker marker = builder.mark();
 
-		parseModifierListWithAttributes(builder);
+		int currentOffset = builder.getCurrentOffset();
+		PsiBuilder.Marker modifierListMarker = parseModifierListWithAttributes(builder);
+		int offsetAfterModifierList = builder.getCurrentOffset();
 
 		builder.enableSoftKeywords(tokenSet);
 		boolean contains = tokenSet.contains(builder.getTokenType());
@@ -72,7 +74,16 @@ public class MemberWithBodyParsing extends SharingParsingHelpers
 		}
 		else
 		{
-			marker.drop();
+			if(currentOffset == offsetAfterModifierList)
+			{
+				modifierListMarker.drop();
+				marker.drop();
+			}
+			else
+			{
+				builder.error("Expected accessor name");
+				marker.drop();
+			}
 			marker = null;
 		}
 		return marker;
