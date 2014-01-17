@@ -224,6 +224,12 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 	"while"                   { return CSharpTokens.WHILE_KEYWORD; }
 
+	"try"                     { return CSharpTokens.TRY_KEYWORD; }
+
+	"catch"                   { return CSharpTokens.CATCH_KEYWORD; }
+
+	"finally"                 { return CSharpTokens.FINALLY_KEYWORD; }
+
 	"goto"                    { return CSharpTokens.GOTO_KEYWORD; }
 
 	"foreach"                 { return CSharpTokens.FOREACH_KEYWORD; }

@@ -114,6 +114,12 @@ public interface CSharpTokens extends TokenType
 
 	IElementType FOREACH_KEYWORD = new IElementType("FOREACH_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType TRY_KEYWORD = new IElementType("TRY_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType CATCH_KEYWORD = new IElementType("CATCH_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType FINALLY_KEYWORD = new IElementType("FINALLY_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType IN_KEYWORD = new IElementType("IN_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType OUT_KEYWORD = new IElementType("OUT_KEYWORD", CSharpLanguage.INSTANCE);

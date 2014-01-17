@@ -106,6 +106,18 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			parseYieldStatement(wrapper, marker);
 		}
+		else if(tokenType == TRY_KEYWORD)
+		{
+			parseTryStatement(wrapper, marker);
+		}
+		else if(tokenType == CATCH_KEYWORD)
+		{
+			parseCatchStatement(wrapper, marker);
+		}
+		else if(tokenType == FINALLY_KEYWORD)
+		{
+			parseFinallyStatement(wrapper, marker);
+		}
 		else if(tokenType == IF_KEYWORD)
 		{
 			parseIfStatement(wrapper, marker);
@@ -174,6 +186,102 @@ public class StatementParsing extends SharingParsingHelpers
 			}
 		}
 		return marker;
+	}
+
+	private static void parseTryStatement(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker)
+	{
+		builder.advanceLexer();
+
+		if(builder.getTokenType() == LBRACE)
+		{
+			parseStatement(builder);
+		}
+		else
+		{
+			builder.error("'{' expected");
+		}
+
+		boolean has = false;
+		while(builder.getTokenType() == CATCH_KEYWORD)
+		{
+			parseCatchStatement(builder, null);
+			has = true;
+		}
+
+		if(builder.getTokenType() == FINALLY_KEYWORD)
+		{
+			parseFinallyStatement(builder, null);
+			has = true;
+		}
+
+		if(!has)
+		{
+			builder.error("'catch' or 'finally' expected");
+		}
+		marker.done(TRY_STATEMENT);
+	}
+
+	private static void parseCatchStatement(@NotNull CSharpBuilderWrapper builder, @Nullable PsiBuilder.Marker marker)
+	{
+		PsiBuilder.Marker mark = null;
+		if(marker != null)
+		{
+			builder.error("'try' expected");
+			mark = marker;
+		}
+		else
+		{
+			mark = builder.mark();
+		}
+
+		builder.advanceLexer();
+
+		if(builder.getTokenType() == LPAR)
+		{
+			builder.advanceLexer();
+
+			FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(builder, builder.mark(), LOCAL_VARIABLE);
+
+			expect(builder, RPAR, "')' expected");
+		}
+
+		if(builder.getTokenType() == LBRACE)
+		{
+			parseStatement(builder);
+		}
+		else
+		{
+			builder.error("'{' expected");
+		}
+
+		mark.done(CATCH_STATEMENT);
+	}
+
+	private static void parseFinallyStatement(@NotNull CSharpBuilderWrapper builder, @Nullable PsiBuilder.Marker marker)
+	{
+		PsiBuilder.Marker mark = null;
+		if(marker != null)
+		{
+			builder.error("'try' expected");
+			mark = marker;
+		}
+		else
+		{
+			mark = builder.mark();
+		}
+
+		builder.advanceLexer();
+
+		if(builder.getTokenType() == LBRACE)
+		{
+			parseStatement(builder);
+		}
+		else
+		{
+			builder.error("'{' expected");
+		}
+
+		mark.done(FINALLY_STATEMENT);
 	}
 
 	private static void parseLabeledStatement(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker)
