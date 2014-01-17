@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.compiler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +36,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.problems.Problem;
+import com.intellij.problems.WolfTheProblemSolver;
 import lombok.val;
 
 /**
@@ -42,7 +45,7 @@ import lombok.val;
  * @since 26.11.13.
  */
 @Logger
-public class MSBaseDotNetCompilerOptionsBuilder implements  DotNetCompilerOptionsBuilder
+public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptionsBuilder
 {
 	private String myExecutable;
 	private Sdk mySdk;
@@ -97,8 +100,13 @@ public class MSBaseDotNetCompilerOptionsBuilder implements  DotNetCompilerOption
 				fileUrl = VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, fileUrl);
 			}
 
-			compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", fileUrl, Integer.parseInt(lineAndColumn[0]),
-					Integer.parseInt(lineAndColumn[1]));
+
+			int lineN = Integer.parseInt(lineAndColumn[0]);
+			int columnN = Integer.parseInt(lineAndColumn[1]);
+
+			notifyWolf(fileUrl, module, lineN, columnN, message);
+
+			compileContext.addMessage(category, message + " (" + idAndTypeArray[1] + ")", fileUrl, lineN, columnN);
 		}
 		else if(split.length == 2)
 		{
@@ -122,10 +130,14 @@ public class MSBaseDotNetCompilerOptionsBuilder implements  DotNetCompilerOption
 					fileUrl = VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, fileUrl);
 				}
 
+				int lineN = Integer.parseInt(lineAndColumn[0]);
+				int columnN = Integer.parseInt(lineAndColumn[0]);
+
+				notifyWolf(fileUrl, module, lineN, columnN, message);
+
 				message = message.substring(1, message.length());
 				message = message.substring(0, message.length() - 1);
-				compileContext.addMessage(CompilerMessageCategory.INFORMATION, message, fileUrl, Integer.parseInt(lineAndColumn[0]),
-						Integer.parseInt(lineAndColumn[1]));
+				compileContext.addMessage(CompilerMessageCategory.INFORMATION, message, fileUrl, lineN, columnN);
 			}
 			else
 			{
@@ -147,6 +159,21 @@ public class MSBaseDotNetCompilerOptionsBuilder implements  DotNetCompilerOption
 		{
 			compileContext.addMessage(CompilerMessageCategory.INFORMATION, line, null, -1, -1);
 		}
+	}
+
+	private static void notifyWolf(String url, Module module, int line, int column, String... message)
+	{
+		if(url == null)
+		{
+			return;
+		}
+		final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(url);
+		if(virtualFile == null)
+		{
+			return;
+		}
+		Problem problem = WolfTheProblemSolver.getInstance(module.getProject()).convertToProblem(virtualFile, line, column, message);
+		WolfTheProblemSolver.getInstance(module.getProject()).reportProblems(virtualFile, Arrays.<Problem>asList(problem));
 	}
 
 	@Override
