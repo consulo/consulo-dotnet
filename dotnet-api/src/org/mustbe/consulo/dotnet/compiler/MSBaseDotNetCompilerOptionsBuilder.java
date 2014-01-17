@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -40,6 +41,7 @@ import lombok.val;
  * @author VISTALL
  * @since 26.11.13.
  */
+@Logger
 public class MSBaseDotNetCompilerOptionsBuilder implements  DotNetCompilerOptionsBuilder
 {
 	private String myExecutable;
@@ -193,6 +195,9 @@ public class MSBaseDotNetCompilerOptionsBuilder implements  DotNetCompilerOption
 		{
 			FileUtil.appendToFile(tempFile, FileUtil.toSystemDependentName(result.getPath()) + "\n");
 		}
+
+		LOGGER.warn("Compiler def file: " + tempFile);
+		LOGGER.warn(FileUtil.loadFile(tempFile));
 
 		FileUtil.createParentDirs(new File(outputFile));
 
