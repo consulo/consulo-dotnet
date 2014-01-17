@@ -193,6 +193,8 @@ public interface CSharpElements
 
 	IElementType FOREACH_STATEMENT = new IElementTypeAsPsiFactory("FOREACH_STATEMENT", CSharpLanguage.INSTANCE, CSharpForeachStatementImpl.class);
 
+	IElementType FOR_STATEMENT = new IElementTypeAsPsiFactory("FOR_STATEMENT", CSharpLanguage.INSTANCE, CSharpForStatementImpl.class);
+
 	IElementType RETURN_STATEMENT = new IElementTypeAsPsiFactory("RETURN_STATEMENT", CSharpLanguage.INSTANCE, CSharpReturnStatementImpl.class);
 
 	IElementType YIELD_STATEMENT = new IElementTypeAsPsiFactory("YIELD_STATEMENT", CSharpLanguage.INSTANCE, CSharpYieldStatementImpl.class);

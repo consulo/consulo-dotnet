@@ -86,6 +86,10 @@ public class StatementParsing extends SharingParsingHelpers
 
 			marker.done(CONTINUE_STATEMENT);
 		}
+		else if(tokenType == FOR_KEYWORD)
+		{
+			parseForStatement(wrapper, marker);
+		}
 		else if(tokenType == DO_KEYWORD)
 		{
 			parseDoWhileStatement(wrapper, marker);
@@ -187,6 +191,50 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 
 		marker.done(LABELED_STATEMENT);
+	}
+
+	private static void parseForStatement(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker)
+	{
+		builder.advanceLexer();
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			if(builder.getTokenType() != SEMICOLON)
+			{
+				FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(builder, builder.mark(), LOCAL_VARIABLE);
+			}
+			else
+			{
+				builder.advanceLexer();
+			}
+
+			if(builder.getTokenType() != SEMICOLON)
+			{
+				ExpressionParsing.parse(builder);
+			}
+			else
+			{
+				builder.advanceLexer();
+
+				ExpressionParsing.parse(builder);
+			}
+
+			if(builder.getTokenType() != SEMICOLON)
+			{
+				ExpressionParsing.parse(builder);
+			}
+			else
+			{
+				builder.advanceLexer();
+
+				ExpressionParsing.parse(builder);
+			}
+
+			expect(builder, RPAR, "')' expected");
+		}
+
+		parseStatement(builder);
+
+		marker.done(FOR_STATEMENT);
 	}
 
 	private static void parseUsingOrFixed(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker, IElementType to)
