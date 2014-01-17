@@ -43,6 +43,9 @@ public class TypeSignatureParser implements SignatureConstants
 			case ELEMENT_TYPE_BOOLEAN:
 				buffer.get();
 				return TypeSignature.BOOLEAN;
+			case ELEMENT_TYPE_VOID:
+				buffer.get();
+				return TypeSignature.VOID;
 			case ELEMENT_TYPE_CHAR:
 				buffer.get();
 				return TypeSignature.CHAR;

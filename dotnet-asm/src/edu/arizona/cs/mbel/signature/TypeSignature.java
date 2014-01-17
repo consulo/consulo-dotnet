@@ -48,6 +48,7 @@ public class TypeSignature extends Signature
 	public static final TypeSignature R8 = new TypeSignature(ELEMENT_TYPE_R8);
 	public static final TypeSignature I = new TypeSignature(ELEMENT_TYPE_I);
 	public static final TypeSignature U = new TypeSignature(ELEMENT_TYPE_U);
+	public static final TypeSignature VOID = new TypeSignature(ELEMENT_TYPE_VOID);
 	public static final TypeSignature STRING = new TypeSignature(ELEMENT_TYPE_STRING);
 	public static final TypeSignature OBJECT = new TypeSignature(ELEMENT_TYPE_OBJECT);
 	////////////////////////////////////////////////////
