@@ -53,7 +53,7 @@ public class MethodAcceptorImpl
 				DotNetTypeRef expressionType = expression.toTypeRef();
 				DotNetTypeRef parameterType = parameter.toTypeRef();
 
-				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, expression.getProject(), expression.getResolveScope()))
+				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, expression))
 				{
 					return false;
 				}

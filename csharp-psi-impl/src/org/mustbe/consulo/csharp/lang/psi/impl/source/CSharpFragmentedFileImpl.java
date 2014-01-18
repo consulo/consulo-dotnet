@@ -19,7 +19,6 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiCodeFragment;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 
 /**
@@ -28,14 +27,11 @@ import com.intellij.psi.search.GlobalSearchScope;
  */
 public class CSharpFragmentedFileImpl extends CSharpFileImpl implements PsiCodeFragment
 {
-	private final PsiElement myOriginal;
 	private GlobalSearchScope myResolveScope;
 
-	public CSharpFragmentedFileImpl(@NotNull FileViewProvider viewProvider, PsiElement scope)
+	public CSharpFragmentedFileImpl(@NotNull FileViewProvider viewProvider)
 	{
 		super(viewProvider);
-		myOriginal = scope;
-		myResolveScope = scope.getResolveScope();
 	}
 
 	@Override

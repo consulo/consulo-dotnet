@@ -20,10 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -39,8 +37,7 @@ public class CSharpTypeUtil
 	 * int - int type, ill 'target'
 	 * return false due it not be casted
 	 */
-	public static boolean isInheritable(@NotNull DotNetTypeRef top, @NotNull DotNetTypeRef target, @NotNull Project project,
-			@NotNull GlobalSearchScope searchScope)
+	public static boolean isInheritable(@NotNull DotNetTypeRef top, @NotNull DotNetTypeRef target, @NotNull PsiElement scope)
 	{
 		if(top == DotNetTypeRef.ERROR_TYPE || target == DotNetTypeRef.ERROR_TYPE)
 		{
@@ -57,8 +54,8 @@ public class CSharpTypeUtil
 			return true;
 		}
 
-		PsiElement topElement = top.resolve(project, searchScope);
-		PsiElement targetElement = target.resolve(project, searchScope);
+		PsiElement topElement = top.resolve(scope);
+		PsiElement targetElement = target.resolve(scope);
 		if(topElement != null && Comparing.equal(topElement, targetElement))
 		{
 			return true;

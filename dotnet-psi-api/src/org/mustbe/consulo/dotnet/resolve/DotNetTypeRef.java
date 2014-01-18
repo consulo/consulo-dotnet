@@ -19,9 +19,7 @@ package org.mustbe.consulo.dotnet.resolve;
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -54,14 +52,14 @@ public interface DotNetTypeRef
 
 		@Nullable
 		@Override
-		public PsiElement resolve(Project project, GlobalSearchScope scope)
+		public PsiElement resolve(@NotNull PsiElement scope)
 		{
 			return null;
 		}
 
 		@NotNull
 		@Override
-		public DotNetGenericExtractor getGenericExtractor(Project project, GlobalSearchScope scope)
+		public DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope)
 		{
 			return DotNetGenericExtractor.EMPTY;
 		}
@@ -122,8 +120,8 @@ public interface DotNetTypeRef
 	boolean isNullable();
 
 	@Nullable
-	PsiElement resolve(Project project, GlobalSearchScope scope);
+	PsiElement resolve(@NotNull PsiElement scope);
 
 	@NotNull
-	DotNetGenericExtractor getGenericExtractor(Project project, GlobalSearchScope scope);
+	DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope);
 }

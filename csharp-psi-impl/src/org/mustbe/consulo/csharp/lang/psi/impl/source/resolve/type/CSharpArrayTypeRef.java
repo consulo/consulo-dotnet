@@ -18,7 +18,12 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -45,6 +50,29 @@ public class CSharpArrayTypeRef extends DotNetTypeRef.Adapter
 	public String getQualifiedText()
 	{
 		return myInnerType.getQualifiedText() + "[]";
+	}
+
+	@Nullable
+	@Override
+	public PsiElement resolve(@NotNull PsiElement scope)
+	{
+		Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(scope);
+		if(moduleForPsiElement == null)
+		{
+			return null;
+		}
+		return CSharpModuleTypeHelper.getInstance(moduleForPsiElement).getArrayType();
+	}
+
+	@NotNull
+	@Override
+	public DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope)
+	{
+		if(!(resolved instanceof DotNetGenericParameterListOwner))
+		{
+			return DotNetGenericExtractor.EMPTY;
+		}
+		return new CSharpGenericExtractor(((DotNetGenericParameterListOwner) resolved).getGenericParameters(), new DotNetTypeRef[]{getInnerType()});
 	}
 
 	@NotNull

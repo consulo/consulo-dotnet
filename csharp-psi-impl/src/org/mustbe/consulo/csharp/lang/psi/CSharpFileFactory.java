@@ -26,9 +26,10 @@ import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.SingleRootFileViewProvider;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightVirtualFile;
 import lombok.val;
 
@@ -63,16 +64,30 @@ public class CSharpFileFactory
 		return firstChild.getStatements()[0];
 	}
 
-	public static DotNetType createType(@NotNull PsiElement scope, @NotNull String typeText)
+	public static DotNetType createType(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String typeText)
 	{
 		val clazz = "class _Dummy { " + typeText + " _dummy; }";
 
-		val virtualFile = new LightVirtualFile("dummy.cs", CSharpFileType.INSTANCE, clazz, System.currentTimeMillis());
-		val viewProvider = new SingleRootFileViewProvider(scope.getManager(), virtualFile, false);
-		val psiFile = new CSharpFragmentedFileImpl(viewProvider, scope);
+		CSharpFragmentedFileImpl psiFile = createTypeDeclarationWithScope(project, scope, clazz);
 
 		DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) psiFile.getMembers()[0];
 		DotNetVariable dotNetNamedElement = (DotNetVariable) typeDeclaration.getMembers()[0];
 		return dotNetNamedElement.getType();
+	}
+
+	public static DotNetTypeDeclaration createTypeDeclaration(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
+	{
+		CSharpFragmentedFileImpl psiFile = createTypeDeclarationWithScope(project, scope, text);
+
+		return (DotNetTypeDeclaration) psiFile.getMembers()[0];
+	}
+
+	private static CSharpFragmentedFileImpl createTypeDeclarationWithScope(Project project, GlobalSearchScope scope, String clazz)
+	{
+		val virtualFile = new LightVirtualFile("dummy.cs", CSharpFileType.INSTANCE, clazz, System.currentTimeMillis());
+		val viewProvider = new SingleRootFileViewProvider(PsiManager.getInstance(project), virtualFile, false);
+		val psiFile = new CSharpFragmentedFileImpl(viewProvider);
+		psiFile.forceResolveScope(scope);
+		return psiFile;
 	}
 }

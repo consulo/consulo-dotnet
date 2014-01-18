@@ -16,13 +16,12 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -53,8 +52,8 @@ public class CSharpNamespaceDefTypeRef extends DotNetTypeRef.Adapter
 
 	@Nullable
 	@Override
-	public PsiElement resolve(Project project, GlobalSearchScope scope)
+	public PsiElement resolve(@NotNull PsiElement element)
 	{
-		return CSharpNamespaceHelper.getNamespaceElementIfFind(project, myQualifiedName, scope);
+		return CSharpNamespaceHelper.getNamespaceElementIfFind(element.getProject(), myQualifiedName, element.getResolveScope());
 	}
 }

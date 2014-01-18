@@ -22,9 +22,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -89,22 +87,21 @@ public class CSharpGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 
 	@Nullable
 	@Override
-	public PsiElement resolve(Project project, GlobalSearchScope scope)
+	public PsiElement resolve(@NotNull PsiElement element)
 	{
-		return getInner().resolve(project, scope);
+		return getInner().resolve(element);
 	}
 
 	@NotNull
 	@Override
-	public DotNetGenericExtractor getGenericExtractor(Project project, GlobalSearchScope scope)
+	public DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope)
 	{
-		PsiElement psiElement = getInner().resolve(project, scope);
-		if(!(psiElement instanceof DotNetGenericParameterListOwner))
+		if(!(resolved instanceof DotNetGenericParameterListOwner))
 		{
 			return DotNetGenericExtractor.EMPTY;
 		}
 
-		DotNetGenericParameter[] genericParameters = ((DotNetGenericParameterListOwner) psiElement).getGenericParameters();
+		DotNetGenericParameter[] genericParameters = ((DotNetGenericParameterListOwner) resolved).getGenericParameters();
 		if(genericParameters.length != getArguments().length)
 		{
 			return DotNetGenericExtractor.EMPTY;

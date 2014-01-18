@@ -142,7 +142,7 @@ public class GenericUnwrapTool
 		}
 		else
 		{
-			PsiElement resolve = typeRef.resolve(element.getProject(), element.getResolveScope());
+			PsiElement resolve = typeRef.resolve(element);
 			if(resolve instanceof DotNetGenericParameter)
 			{
 				DotNetTypeRef extractedTypeRef = extractor.extract((DotNetGenericParameter) resolve);

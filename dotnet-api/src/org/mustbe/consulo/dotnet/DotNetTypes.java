@@ -22,6 +22,7 @@ package org.mustbe.consulo.dotnet;
  */
 public interface DotNetTypes
 {
+	String System_Array = "System.Array";
 	String System_Attribute = "System.Attribute";
 	String System_Exception = "System.Exception";
 	String System_MulticastDelegate = "System.MulticastDelegate";

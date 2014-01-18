@@ -35,7 +35,7 @@ public class CSharpInheritUtil
 {
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
 	{
-		PsiElement resolve = typeRef.resolve(element.getProject(), element.getResolveScope());
+		PsiElement resolve = typeRef.resolve(element);
 		if(!(resolve instanceof DotNetTypeDeclaration))
 		{
 			return false;
@@ -67,7 +67,7 @@ public class CSharpInheritUtil
 		}
 		for(DotNetType dotNetType : typeDeclaration.getExtends())
 		{
-			PsiElement psiElement = dotNetType.toTypeRef().resolve(typeDeclaration.getProject(), typeDeclaration.getResolveScope());
+			PsiElement psiElement = dotNetType.toTypeRef().resolve(typeDeclaration);
 			if(psiElement instanceof CSharpTypeDeclaration)
 			{
 				if(psiElement.isEquivalentTo(other))

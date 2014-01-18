@@ -16,13 +16,12 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -55,8 +54,8 @@ public class CSharpTypeDefTypeRef extends DotNetTypeRef.Adapter
 
 	@Nullable
 	@Override
-	public PsiElement resolve(Project project, GlobalSearchScope scope)
+	public PsiElement resolve(@NotNull PsiElement scope)
 	{
-		return DotNetPsiFacade.getInstance(project).findType(myQualifiedName, scope, myGenericCount);
+		return DotNetPsiFacade.getInstance(scope.getProject()).findType(myQualifiedName, scope.getResolveScope(), myGenericCount);
 	}
 }

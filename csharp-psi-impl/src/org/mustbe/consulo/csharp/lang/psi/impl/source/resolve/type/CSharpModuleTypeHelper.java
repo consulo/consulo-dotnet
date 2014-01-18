@@ -16,42 +16,17 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
-import org.jetbrains.annotations.NotNull;
+import org.consulo.lombok.annotations.ModuleService;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiElement;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**
  * @author VISTALL
- * @since 15.01.14
+ * @since 18.01.14
  */
-public class CSharpGenericParameterTypeRef extends DotNetTypeRef.Adapter
+@ModuleService
+public abstract class CSharpModuleTypeHelper
 {
-	private final DotNetGenericParameter myGenericParameter;
-
-	public CSharpGenericParameterTypeRef(DotNetGenericParameter genericParameter)
-	{
-		myGenericParameter = genericParameter;
-	}
-
 	@Nullable
-	@Override
-	public PsiElement resolve(@NotNull PsiElement scope)
-	{
-		return myGenericParameter;
-	}
-
-	@Override
-	public boolean isNullable()
-	{
-		return false;
-	}
-
-	@Nullable
-	@Override
-	public String getPresentableText()
-	{
-		return myGenericParameter.getName();
-	}
+	public abstract DotNetTypeDeclaration getArrayType();
 }

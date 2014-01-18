@@ -345,7 +345,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					return Collections.emptyList();
 				}
-				PsiElement resolve = nativeRuntimeType.resolve(getProject(), getResolveScope());
+				PsiElement resolve = nativeRuntimeType.resolve(this);
 				if(resolve == null)
 				{
 					return Collections.emptyList();
@@ -360,13 +360,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					return Collections.emptyList();
 				}
-				PsiElement psiElement1 = dotNetTypeRef.resolve(getProject(), getResolveScope());
+				PsiElement psiElement1 = dotNetTypeRef.resolve(this);
 				if(psiElement1 == null)
 				{
 					return Collections.emptyList();
 				}
 				ResolveState resolveState = ResolveState.initial();
-				resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, dotNetTypeRef.getGenericExtractor(getProject(), getResolveScope()));
+				resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, dotNetTypeRef.getGenericExtractor(psiElement1, this));
 
 				p = new MemberResolveScopeProcessor(Conditions.and(condition, new Condition<PsiNamedElement>()
 				{
@@ -436,12 +436,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			DotNetTypeRef dotNetTypeRef = ((DotNetExpression) qualifier).toTypeRef();
 
-			PsiElement resolve = dotNetTypeRef.resolve(getProject(), getResolveScope());
+			PsiElement resolve = dotNetTypeRef.resolve(this);
 
 			if(resolve != null)
 			{
 				target = resolve;
-				extractor = dotNetTypeRef.getGenericExtractor(getProject(), getResolveScope());
+				extractor = dotNetTypeRef.getGenericExtractor(resolve, this);
 			}
 			else
 			{

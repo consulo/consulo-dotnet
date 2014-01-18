@@ -20,19 +20,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
  * @since 15.01.14
  */
-public class CSharpReferenceTypeByTextRef implements DotNetTypeRef
+public class CSharpReferenceTypeByTextRef extends DotNetTypeRef.Adapter
 {
 	private final String myText;
 
@@ -47,7 +44,7 @@ public class CSharpReferenceTypeByTextRef implements DotNetTypeRef
 			@Override
 			protected DotNetType compute()
 			{
-				return CSharpFileFactory.createType(owner, myText);
+				return CSharpFileFactory.createType(owner.getProject(), owner.getResolveScope(), myText);
 			}
 		};
 	}
@@ -66,23 +63,10 @@ public class CSharpReferenceTypeByTextRef implements DotNetTypeRef
 		return myType.getValue().toTypeRef().getQualifiedText();
 	}
 
-	@Override
-	public boolean isNullable()
-	{
-		return true;
-	}
-
 	@Nullable
 	@Override
-	public PsiElement resolve(Project project, GlobalSearchScope scope)
+	public PsiElement resolve(@NotNull PsiElement scope)
 	{
-		return myType.getValue().toTypeRef().resolve(project, scope);
-	}
-
-	@NotNull
-	@Override
-	public DotNetGenericExtractor getGenericExtractor(Project project, GlobalSearchScope scope)
-	{
-		return DotNetGenericExtractor.EMPTY;
+		return myType.getValue().toTypeRef().resolve(scope);
 	}
 }
