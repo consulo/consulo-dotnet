@@ -17,24 +17,19 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameterList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
- * @since 04.01.14.
+ * @since 19.01.14
  */
-public class CSharpLambdaExpressionImpl extends CSharpElementImpl implements DotNetExpression
+public class CSharpLambdaParameterListImpl extends CSharpElementImpl implements CSharpLambdaParameterList
 {
-	public CSharpLambdaExpressionImpl(@NotNull ASTNode node)
+	public CSharpLambdaParameterListImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -42,40 +37,30 @@ public class CSharpLambdaExpressionImpl extends CSharpElementImpl implements Dot
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitLambdaExpression(this);
+		visitor.visitLambdaParameterList(this);
 	}
 
-	@Nullable
-	public CSharpLambdaParameterList getParameterList()
-	{
-		return findChildByClass(CSharpLambdaParameterList.class);
-	}
-
+	@Override
 	@NotNull
 	public CSharpLambdaParameter[] getParameters()
 	{
-		CSharpLambdaParameterList parameterList = getParameterList();
-		return parameterList == null ? CSharpLambdaParameterImpl.EMPTY_ARRAY : parameterList.getParameters();
+		return findChildrenByClass(CSharpLambdaParameter.class);
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
-			@NotNull PsiElement place)
-	{
-		for(CSharpLambdaParameter parameter : getParameters())
-		{
-			if(!processor.execute(parameter, state))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
 	@NotNull
-	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef[] getParameterTypesForRuntime()
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		CSharpLambdaParameter[] parameters = getParameters();
+		if(parameters.length == 0)
+		{
+			return DotNetTypeRef.EMPTY_ARRAY;
+		}
+		DotNetTypeRef[] dotNetTypeRefs = new DotNetTypeRef[parameters.length];
+		for(int i = 0; i < dotNetTypeRefs.length; i++)
+		{
+			dotNetTypeRefs[i] = parameters[i].toTypeRef();
+		}
+		return dotNetTypeRefs;
 	}
 }

@@ -705,7 +705,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 			isLambda = true;
 			isTyped = false;
 		}
-		else if(nextToken1 == IDENTIFIER)
+		else
 		{
 			if(nextToken2 == COMMA || nextToken2 == RPAR && builder.lookAhead(3) == DARROW)
 			{
@@ -748,21 +748,17 @@ public class ExpressionParsing extends SharingParsingHelpers
 				isTyped = true;
 			}
 		}
-		else
-		{
-			isLambda = false;
-			isTyped = false;
-		}
 
 		return isLambda ? parseLambdaExpression(builder, isTyped, typeList) : null;
 	}
 
 	@Nullable
-	private static PsiBuilder.Marker parseLambdaExpression(final CSharpBuilderWrapper builder, final boolean typed, @Nullable final PsiBuilder.Marker typeList)
+	private static PsiBuilder.Marker parseLambdaExpression(final CSharpBuilderWrapper builder, final boolean typed,
+			@Nullable final PsiBuilder.Marker typeList)
 	{
-		final PsiBuilder.Marker start = typeList != null ? typeList.precede() : builder.mark();
+		val start = typeList != null ? typeList.precede() : builder.mark();
 
-		//myParser.getDeclarationParser().parseLambdaParameterList(builder, typed);
+		parseLambdaParameterList(builder, typed);
 
 		if(!expect(builder, DARROW, null))
 		{
@@ -787,6 +783,79 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		start.done(LAMBDA_EXPRESSION);
 		return start;
+	}
+
+	private static void parseLambdaParameterList(final CSharpBuilderWrapper builder, boolean typed)
+	{
+		val mark = builder.mark();
+
+		boolean lpar = expect(builder, LPAR, null);
+
+		if(!lpar || builder.getTokenType() != RPAR)
+		{
+			while(!builder.eof())
+			{
+				parseLambdaParameter(builder, typed);
+
+				if(builder.getTokenType() == COMMA)
+				{
+					builder.advanceLexer();
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+
+		if(lpar)
+		{
+			expect(builder, RPAR, "')' expected");
+		}
+
+		mark.done(LAMBDA_PARAMETER_LIST);
+	}
+
+	private static void parseLambdaParameter(CSharpBuilderWrapper builder, boolean typed)
+	{
+		val mark = builder.mark();
+
+		// typed
+		if(MODIFIERS.contains(builder.getTokenType()))
+		{
+			parseModifierList(builder);
+
+			if(parseType(builder) == null)
+			{
+				builder.error("Type expected");
+			}
+			else
+			{
+				expect(builder, IDENTIFIER, "Name expected");
+			}
+		}
+		else
+		{
+			IElementType iElementType = builder.lookAhead(1);
+			// not typed parameter
+			if(builder.getTokenType() == IDENTIFIER && (iElementType == COMMA || iElementType == RPAR || iElementType == DARROW))
+			{
+				builder.advanceLexer();
+			}
+			else
+			{
+				if(parseType(builder) == null)
+				{
+					builder.error("Type expected");
+				}
+				else
+				{
+					expect(builder, IDENTIFIER, "Name expected");
+				}
+			}
+		}
+
+		mark.done(LAMBDA_PARAMETER);
 	}
 
 	private static void emptyExpression(final PsiBuilder builder)

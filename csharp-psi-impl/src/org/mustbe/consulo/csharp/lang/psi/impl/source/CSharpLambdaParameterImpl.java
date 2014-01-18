@@ -16,41 +16,50 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 06.01.14.
+ * @since 19.01.14
  */
-public abstract class CSharpVariableImpl extends CSharpMemberImpl implements DotNetVariable
+@ArrayFactoryFields
+public class CSharpLambdaParameterImpl extends CSharpVariableImpl implements CSharpLambdaParameter
 {
-	public CSharpVariableImpl(@NotNull ASTNode node)
+	public CSharpLambdaParameterImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	@Nullable
 	@Override
-	public DotNetExpression getInitializer()
+	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		return findChildByClass(DotNetExpression.class);
+		visitor.visitLambdaParameter(this);
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return CSharpPsiUtilImpl.toRuntimeType(this);
+		DotNetType type = getType();
+		if(type == null)
+		{
+			return DotNetTypeRef.AUTO_TYPE;
+		}
+
+		return type.toTypeRef();
 	}
 
+	@Nullable
 	@Override
-	public boolean isConstant()
+	public DotNetType getType()
 	{
-		return false;
+		return findChildByClass(DotNetType.class);
 	}
 }

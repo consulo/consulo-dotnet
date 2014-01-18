@@ -459,4 +459,14 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(statement);
 	}
+
+	public void visitLambdaParameter(CSharpLambdaParameterImpl parameter)
+	{
+		visitElement(parameter);
+	}
+
+	public void visitLambdaParameterList(CSharpLambdaParameterListImpl list)
+	{
+		visitElement(list);
+	}
 }

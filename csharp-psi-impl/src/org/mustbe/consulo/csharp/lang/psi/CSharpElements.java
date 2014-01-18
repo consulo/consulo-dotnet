@@ -154,6 +154,10 @@ public interface CSharpElements
 
 	IElementType LAMBDA_EXPRESSION = new IElementTypeAsPsiFactory("LAMBDA_EXPRESSION", CSharpLanguage.INSTANCE, CSharpLambdaExpressionImpl.class);
 
+	IElementType LAMBDA_PARAMETER = new IElementTypeAsPsiFactory("LAMBDA_PARAMETER", CSharpLanguage.INSTANCE, CSharpLambdaParameterImpl.class);
+
+	IElementType LAMBDA_PARAMETER_LIST = new IElementTypeAsPsiFactory("LAMBDA_PARAMETER_LIST", CSharpLanguage.INSTANCE, CSharpLambdaParameterListImpl.class);
+
 	IElementType FIELD_OR_PROPERTY_SET = new IElementTypeAsPsiFactory("FIELD_OR_PROPERTY_SET", CSharpLanguage.INSTANCE,
 			CSharpFieldOrPropertySetImpl.class);
 
@@ -201,7 +205,8 @@ public interface CSharpElements
 
 	IElementType FINALLY_STATEMENT = new IElementTypeAsPsiFactory("FINALLY_STATEMENT", CSharpLanguage.INSTANCE, CSharpFinallyStatementImpl.class);
 
-	IElementType THROW_STATEMENT = new IElementTypeAsPsiFactory("THROW_STATEMENT_STATEMENT", CSharpLanguage.INSTANCE, CSharpThrowStatementImpl.class);
+	IElementType THROW_STATEMENT = new IElementTypeAsPsiFactory("THROW_STATEMENT_STATEMENT", CSharpLanguage.INSTANCE,
+			CSharpThrowStatementImpl.class);
 
 	IElementType RETURN_STATEMENT = new IElementTypeAsPsiFactory("RETURN_STATEMENT", CSharpLanguage.INSTANCE, CSharpReturnStatementImpl.class);
 

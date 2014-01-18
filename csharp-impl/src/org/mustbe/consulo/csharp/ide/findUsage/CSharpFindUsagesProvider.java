@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.lexer.CSharpLexer;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
@@ -88,6 +89,10 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 		else if(element instanceof CSharpPropertyDeclaration)
 		{
 			return "property";
+		}
+		else if(element instanceof CSharpLambdaParameter)
+		{
+			return "lambda parameter";
 		}
 		else if(element instanceof DotNetParameter)
 		{

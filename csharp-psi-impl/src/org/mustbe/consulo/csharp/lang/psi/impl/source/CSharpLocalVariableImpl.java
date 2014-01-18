@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -40,13 +39,6 @@ public class CSharpLocalVariableImpl extends CSharpVariableImpl implements CShar
 	public CSharpLocalVariableImpl(@NotNull ASTNode node)
 	{
 		super(node);
-	}
-
-	@Nullable
-	@Override
-	public DotNetExpression getInitializer()
-	{
-		return findChildByClass(DotNetExpression.class);
 	}
 
 	@Override
