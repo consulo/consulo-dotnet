@@ -25,12 +25,12 @@ import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.NamespaceByQNameIndex;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.impl.light.LightElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -47,7 +47,7 @@ import lombok.val;
  * @author VISTALL
  * @since 29.12.13.
  */
-public class CSharpNamespaceAsElement extends LightElement implements PsiNamedElement
+public class CSharpNamespaceAsElement extends LightElement implements DotNetQualifiedElement
 {
 	@NotNull
 	private final String myQName;
@@ -131,7 +131,7 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 
 		CSharpNamespaceAsElement that = (CSharpNamespaceAsElement) o;
 
-		if(!getQName().equals(that.getQName()))
+		if(!getPresentableQName().equals(that.getPresentableQName()))
 		{
 			return false;
 		}
@@ -146,7 +146,7 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 	@Override
 	public int hashCode()
 	{
-		int result = getQName().hashCode();
+		int result = getPresentableQName().hashCode();
 		result = 31 * result + mySearchScopes.hashCode();
 		return result;
 	}
@@ -155,7 +155,7 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
 			@NotNull final PsiElement place)
 	{
-		return StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, getQName(), getProject(), mySearchScopes,
+		return StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, getPresentableQName(), getProject(), mySearchScopes,
 				new Processor<DotNetNamespaceDeclaration>()
 
 		{
@@ -170,24 +170,32 @@ public class CSharpNamespaceAsElement extends LightElement implements PsiNamedEl
 	@Override
 	public String toString()
 	{
-		return "CSharpNamespaceAsElement: " + getQName();
-	}
-
-	@NotNull
-	public String getQName()
-	{
-		return myQName;
+		return "CSharpNamespaceAsElement: " + getPresentableQName();
 	}
 
 	@Override
 	public String getName()
 	{
-		return StringUtil.getShortName(getQName());
+		return StringUtil.getShortName(getPresentableQName());
 	}
 
 	@Override
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public String getPresentableParentQName()
+	{
+		return StringUtil.getPackageName(myQName);
+	}
+
+	@NotNull
+	@Override
+	public String getPresentableQName()
+	{
+		return myQName;
 	}
 }

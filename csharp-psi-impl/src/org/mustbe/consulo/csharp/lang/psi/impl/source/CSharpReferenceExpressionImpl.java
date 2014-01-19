@@ -587,7 +587,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		PsiElement resolve = resolve();
 		if(element instanceof CSharpNamespaceAsElement && resolve instanceof CSharpNamespaceAsElement)
 		{
-			return Comparing.equal(((CSharpNamespaceAsElement) resolve).getQName(), ((CSharpNamespaceAsElement) element).getQName());
+			return Comparing.equal(((CSharpNamespaceAsElement) resolve).getPresentableQName(), ((CSharpNamespaceAsElement) element).getPresentableQName());
 		}
 		return resolve == element;
 	}
@@ -626,7 +626,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		PsiElement resolve = resolve();
 		if(resolve instanceof CSharpNamespaceAsElement)
 		{
-			return new CSharpNamespaceDefTypeRef(((CSharpNamespaceAsElement) resolve).getQName());
+			return new CSharpNamespaceDefTypeRef(((CSharpNamespaceAsElement) resolve).getPresentableQName());
 		}
 		else if(resolve instanceof CSharpTypeDeclarationImpl)
 		{
