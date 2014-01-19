@@ -144,7 +144,7 @@ public class MethodParsing extends MemberWithBodyParsing
 		}
 	}
 
-	private static void parseParameterList(CSharpBuilderWrapper builder)
+	public static void parseParameterList(CSharpBuilderWrapper builder)
 	{
 		val mark = builder.mark();
 

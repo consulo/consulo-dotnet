@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import org.mustbe.consulo.csharp.lang.parser.decl.MethodParsing;
 import org.mustbe.consulo.csharp.lang.parser.stmt.StatementParsing;
 import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
@@ -624,6 +625,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 			return parseExpressionWithTypeInLParRPar(builder, null, SIZE_OF_EXPRESSION);
 		}
 
+		if(tokenType == DELEGATE_KEYWORD)
+		{
+			return parseAnonymMethodExpression(builder, null);
+		}
+
 		if(tokenType == LPAR)
 		{
 			final PsiBuilder.Marker lambda = parseLambdaAfterParenth(builder, null);
@@ -690,6 +696,29 @@ public class ExpressionParsing extends SharingParsingHelpers
 		}
 
 		return null;
+	}
+
+	private static PsiBuilder.Marker parseAnonymMethodExpression(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker m)
+	{
+		val marker = m == null ? builder.mark() : m;
+		builder.advanceLexer();
+
+		if(builder.getTokenType() == LPAR)
+		{
+			MethodParsing.parseParameterList(builder);
+		}
+
+		if(builder.getTokenType() == LBRACE)
+		{
+			StatementParsing.parse(builder);
+		}
+		else
+		{
+			builder.error("'{' expected");
+		}
+
+		marker.done(ANONYM_METHOD_EXPRESSION);
+		return marker;
 	}
 
 	@Nullable

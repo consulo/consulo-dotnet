@@ -154,9 +154,13 @@ public interface CSharpElements
 
 	IElementType LAMBDA_EXPRESSION = new IElementTypeAsPsiFactory("LAMBDA_EXPRESSION", CSharpLanguage.INSTANCE, CSharpLambdaExpressionImpl.class);
 
+	IElementType ANONYM_METHOD_EXPRESSION = new IElementTypeAsPsiFactory("ANONYM_EXPRESSION", CSharpLanguage.INSTANCE,
+			CSharpAnonymMethodExpressionImpl.class);
+
 	IElementType LAMBDA_PARAMETER = new IElementTypeAsPsiFactory("LAMBDA_PARAMETER", CSharpLanguage.INSTANCE, CSharpLambdaParameterImpl.class);
 
-	IElementType LAMBDA_PARAMETER_LIST = new IElementTypeAsPsiFactory("LAMBDA_PARAMETER_LIST", CSharpLanguage.INSTANCE, CSharpLambdaParameterListImpl.class);
+	IElementType LAMBDA_PARAMETER_LIST = new IElementTypeAsPsiFactory("LAMBDA_PARAMETER_LIST", CSharpLanguage.INSTANCE,
+			CSharpLambdaParameterListImpl.class);
 
 	IElementType FIELD_OR_PROPERTY_SET = new IElementTypeAsPsiFactory("FIELD_OR_PROPERTY_SET", CSharpLanguage.INSTANCE,
 			CSharpFieldOrPropertySetImpl.class);
