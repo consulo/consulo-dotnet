@@ -20,12 +20,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author VISTALL
@@ -71,6 +75,21 @@ public class CSharpEnumConstantDeclarationImpl extends CSharpStubVariableImpl<CS
 	public DotNetType getType()
 	{
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef toTypeRef()
+	{
+		DotNetTypeDeclaration parentOfType = PsiTreeUtil.getParentOfType(this, DotNetTypeDeclaration.class);
+		assert parentOfType != null;
+
+		DotNetType[] anExtends = parentOfType.getExtends();
+		if(anExtends.length > 0)
+		{
+			return anExtends[0].toTypeRef();
+		}
+		return new CSharpTypeDefTypeRef(parentOfType.getPresentableQName(), 0);
 	}
 
 	@Nullable

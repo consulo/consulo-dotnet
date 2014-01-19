@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.CSharpElementPresentationUtil;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
@@ -112,10 +111,6 @@ public class CSharpQElementTreeNode extends AbstractPsiBasedNode<DotNetNamedElem
 		if(value instanceof DotNetMethodDeclaration)
 		{
 			return CSharpElementPresentationUtil.formatMethod((DotNetMethodDeclaration) value);
-		}
-		else if(value instanceof CSharpEnumConstantDeclarationImpl)
-		{
-			return value.getName();
 		}
 		else if(value instanceof DotNetFieldDeclaration)
 		{
