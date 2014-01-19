@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.util.NotNullFunction;
@@ -65,20 +66,78 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 			{
 				if(isEnum)
 				{
-					if(!FieldOrPropertyParsing.parseFieldOrLocalVariableAtNameWithDone(builder, builder.mark(), ENUM_CONSTANT_DECLARATION))
+					if(!parseEnumConstant(builder))
 					{
 						break;
 					}
 				}
-				else if(!DeclarationParsing.parse(builder, macroesInfo, true))
+				else
 				{
-					break;
+					if(!DeclarationParsing.parse(builder, macroesInfo, true))
+					{
+						break;
+					}
 				}
 			}
-
 			expect(builder, RBRACE, "'}' expected");
 		}
 
 		marker.done(TYPE_DECLARATION);
+	}
+
+	private static boolean parseEnumConstant(CSharpBuilderWrapper builder)
+	{
+
+		PsiBuilder.Marker mark = builder.mark();
+
+		boolean nameExpected = false;
+		if(builder.getTokenType() == LBRACKET)
+		{
+			PsiBuilder.Marker modMark = builder.mark();
+			parseAttributeList(builder);
+			modMark.done(MODIFIER_LIST);
+
+			nameExpected = true;
+		}
+
+		if(builder.getTokenType() == IDENTIFIER)
+		{
+			builder.advanceLexer();
+
+			if(builder.getTokenType() == EQ)
+			{
+				builder.advanceLexer();
+
+				if(ExpressionParsing.parse(builder) == null)
+				{
+					builder.error("Expression expected");
+				}
+			}
+		}
+		else
+		{
+			if(builder.getTokenType() == COMMA || builder.getTokenType() == RBRACE)
+			{
+				if(nameExpected)
+				{
+					builder.error("Name expected");
+				}
+
+				mark.done(ENUM_CONSTANT_DECLARATION);
+				return false;
+			}
+		}
+
+		mark.done(ENUM_CONSTANT_DECLARATION);
+
+		if(builder.getTokenType() == COMMA)
+		{
+			builder.advanceLexer();
+		}
+		else
+		{
+			return false;
+		}
+		return true;
 	}
 }
