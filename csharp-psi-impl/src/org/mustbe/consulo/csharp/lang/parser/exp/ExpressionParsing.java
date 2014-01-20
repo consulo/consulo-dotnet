@@ -668,7 +668,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			if(builder.lookAhead(1) == DARROW)
 			{
-				return parseLambdaExpression(builder, false, null);
+				return parseLambdaExpression(builder, null);
 			}
 
 			val refExpr = builder.mark();
@@ -725,26 +725,22 @@ public class ExpressionParsing extends SharingParsingHelpers
 	private static PsiBuilder.Marker parseLambdaAfterParenth(final CSharpBuilderWrapper builder, @Nullable final PsiBuilder.Marker typeList)
 	{
 		final boolean isLambda;
-		final boolean isTyped;
 
 		final IElementType nextToken1 = builder.lookAhead(1);
 		final IElementType nextToken2 = builder.lookAhead(2);
 		if(nextToken1 == RPAR && nextToken2 == DARROW)
 		{
 			isLambda = true;
-			isTyped = false;
 		}
 		else
 		{
 			if(nextToken2 == COMMA || nextToken2 == RPAR && builder.lookAhead(3) == DARROW)
 			{
 				isLambda = true;
-				isTyped = false;
 			}
 			else if(nextToken2 == DARROW)
 			{
 				isLambda = false;
-				isTyped = false;
 			}
 			else
 			{
@@ -774,20 +770,18 @@ public class ExpressionParsing extends SharingParsingHelpers
 				marker.rollbackTo();
 
 				isLambda = arrow;
-				isTyped = true;
 			}
 		}
 
-		return isLambda ? parseLambdaExpression(builder, isTyped, typeList) : null;
+		return isLambda ? parseLambdaExpression(builder, typeList) : null;
 	}
 
 	@Nullable
-	private static PsiBuilder.Marker parseLambdaExpression(final CSharpBuilderWrapper builder, final boolean typed,
-			@Nullable final PsiBuilder.Marker typeList)
+	private static PsiBuilder.Marker parseLambdaExpression(final CSharpBuilderWrapper builder, @Nullable final PsiBuilder.Marker typeList)
 	{
 		val start = typeList != null ? typeList.precede() : builder.mark();
 
-		parseLambdaParameterList(builder, typed);
+		parseLambdaParameterList(builder);
 
 		if(!expect(builder, DARROW, null))
 		{
@@ -814,7 +808,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		return start;
 	}
 
-	private static void parseLambdaParameterList(final CSharpBuilderWrapper builder, boolean typed)
+	private static void parseLambdaParameterList(final CSharpBuilderWrapper builder)
 	{
 		val mark = builder.mark();
 
@@ -824,7 +818,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			while(!builder.eof())
 			{
-				parseLambdaParameter(builder, typed);
+				parseLambdaParameter(builder);
 
 				if(builder.getTokenType() == COMMA)
 				{
@@ -845,7 +839,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		mark.done(LAMBDA_PARAMETER_LIST);
 	}
 
-	private static void parseLambdaParameter(CSharpBuilderWrapper builder, boolean typed)
+	private static void parseLambdaParameter(CSharpBuilderWrapper builder)
 	{
 		val mark = builder.mark();
 
