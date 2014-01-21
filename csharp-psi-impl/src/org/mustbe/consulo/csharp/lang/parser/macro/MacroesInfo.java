@@ -16,11 +16,17 @@
 
 package org.mustbe.consulo.csharp.lang.parser.macro;
 
+import gnu.jel.CompiledExpression;
+import gnu.jel.DVMap;
+import gnu.jel.Evaluator;
+import gnu.jel.Library;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ContainerUtil;
@@ -37,10 +43,28 @@ public class MacroesInfo
 
 	private Set<String> myDefineList = new HashSet<String>(0);
 	private List<MacroActiveBlockInfo> myActiveBlockInfos = new ArrayList<MacroActiveBlockInfo>(0);
+	private Library myLibrary = new Library(null, new Class[]{MacroValueProvider.class}, null, new DVMap()
+	{
+		@Override
+		public String getTypeName(String s)
+		{
+			return "MacroValue";
+		}
+	}, null);
+
+	private MacroValueProvider myMacroValueProvider = new MacroValueProvider()
+	{
+
+		@Override
+		public boolean getMacroValueProperty(@NotNull String text)
+		{
+			return myDefineList.contains(text);
+		}
+	};
 
 	public MacroesInfo()
 	{
-		myDefineList.add("DEBUG"); //TODO [VISTALL] for tests
+		myDefineList.add("CONSULO_TEST"); //TODO [VISTALL] for tests
 	}
 
 	public void define(String val)
@@ -48,9 +72,17 @@ public class MacroesInfo
 		myDefineList.add(val);
 	}
 
-	public boolean isDefined(String val)
+	public boolean evaluate(String val)
 	{
-		return myDefineList.contains(val);
+		try
+		{
+			CompiledExpression compile = Evaluator.compile(val, myLibrary);
+			return compile.evaluate_boolean(new Object[]{myMacroValueProvider});
+		}
+		catch(Throwable throwable)
+		{
+			return false;
+		}
 	}
 
 	public void addActiveBlock(IElementType t, int currentOffset)

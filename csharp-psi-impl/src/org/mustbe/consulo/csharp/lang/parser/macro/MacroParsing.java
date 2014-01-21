@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.parser.macro;
 
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
 import lombok.val;
 
@@ -56,55 +57,57 @@ public class MacroParsing extends SharingParsingHelpers
 
 			builder.advanceLexer();
 
-			if(builder.getTokenType() == MACRO_VALUE)
+			boolean defined = false;
+			PsiBuilder.Marker parse = MacroExpressionParsing.parse(builder);
+			if(parse == null)
 			{
-				String tokenText = builder.getTokenText();
-				builder.advanceLexer();
-				if(macroesInfo.isDefined(tokenText))
-				{
-					macroesInfo.addActiveBlock(MACRO_IF_KEYWORD, currentOffset);
-
-					skipUntilStop(builder);
-					mark.done(MACRO_BLOCK_START);
-				}
-				else
-				{
-					skipUntilStop(builder);
-					mark.done(MACRO_BLOCK_START);
-
-					mark = mark.precede();
-
-					PsiBuilder.Marker marker = builder.mark();
-					while(!builder.eof())
-					{
-						if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
-						{
-							break;
-						}
-						builder.advanceLexer();
-					}
-					marker.done(MACRO_BODY);
-
-					if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
-					{
-						PsiBuilder.Marker endIfMarker = builder.mark();
-						builder.advanceLexer();
-						skipUntilStop(builder);
-						endIfMarker.done(MACRO_BLOCK_STOP);
-					}
-					else
-					{
-						builder.error("'#endif' expected");
-					}
-
-					mark.done(MACRO_BLOCK);
-				}
+				builder.error("Expression expected");
 			}
 			else
 			{
-				builder.error("Identifier expected");
-				skipUntilStop(builder);
+				LighterASTNode node = (LighterASTNode) parse;
+				CharSequence charSequence = builder.getOriginalText().subSequence(node.getStartOffset(), node.getEndOffset());
+				defined = macroesInfo.evaluate(charSequence.toString());
+			}
+
+			expect(builder, MACRO_STOP, null);
+
+			if(defined)
+			{
+				macroesInfo.addActiveBlock(MACRO_IF_KEYWORD, currentOffset);
+
 				mark.done(MACRO_BLOCK_START);
+			}
+			else
+			{
+				mark.done(MACRO_BLOCK_START);
+
+				mark = mark.precede();
+
+				PsiBuilder.Marker marker = builder.mark();
+				while(!builder.eof())
+				{
+					if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
+					{
+						break;
+					}
+					builder.advanceLexer();
+				}
+				marker.done(MACRO_BODY);
+
+				if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
+				{
+					PsiBuilder.Marker endIfMarker = builder.mark();
+					builder.advanceLexer();
+					skipUntilStop(builder);
+					endIfMarker.done(MACRO_BLOCK_STOP);
+				}
+				else
+				{
+					builder.error("'#endif' expected");
+				}
+
+				mark.done(MACRO_BLOCK);
 			}
 			return true;
 		}

@@ -23,6 +23,7 @@
           <element id="zip-archive" name="dotnet-asm.jar">
             <element id="module-output" name="dotnet-asm" />
           </element>
+          <element id="file-copy" path="$PROJECT_DIR$/csharp-psi-impl/lib/jel.jar" />
         </element>
       </element>
       <element id="directory" name="microsoft-dotnet">

@@ -17,6 +17,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 
 %state MACRO
 %state MACRO_ENTERED
+%state MACRO_EXPRESSION
 
 DIGIT=[0-9]
 LETTER=[a-z]|[A-Z]
@@ -68,7 +69,7 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 
 <MACRO>
 {
-	{MACRO_IF}           { yybegin(MACRO_ENTERED); return CSharpTokens.MACRO_IF_KEYWORD; }
+	{MACRO_IF}           { yybegin(MACRO_EXPRESSION); return CSharpTokens.MACRO_IF_KEYWORD; }
 
 	{MACRO_ENDIF}        { yybegin(MACRO_ENTERED); return CSharpTokens.MACRO_ENDIF_KEYWORD; }
 
@@ -88,6 +89,27 @@ MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 <MACRO_ENTERED>
 {
 	{IDENTIFIER}         { return CSharpTokens.MACRO_VALUE; }
+
+	{MACRO_NEW_LINE}     { yybegin(YYINITIAL); return CSharpTokens.MACRO_STOP; }
+
+	{MACRO_WHITE_SPACE}  { return CSharpTokens.WHITE_SPACE; }
+
+	.                    { return CSharpTokens.BAD_CHARACTER; }
+}
+
+<MACRO_EXPRESSION>
+{
+	"("                  { return CSharpTokens.LPAR; }
+
+	")"                  { return CSharpTokens.RPAR; }
+
+	"!"                  { return CSharpTokens.EXCL; }
+
+	"&&"                 { return CSharpTokens.ANDAND; }
+
+	"||"                 { return CSharpTokens.OROR; }
+
+	{IDENTIFIER}         { return CSharpTokens.IDENTIFIER; }
 
 	{MACRO_NEW_LINE}     { yybegin(YYINITIAL); return CSharpTokens.MACRO_STOP; }
 

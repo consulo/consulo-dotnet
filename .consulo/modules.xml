@@ -108,6 +108,15 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="csharp-psi-api" exported="" />
+        <orderEntry type="module-library">
+          <library>
+            <CLASSES>
+              <root url="jar://$MODULE_DIR$/lib/jel.jar!/" />
+            </CLASSES>
+            <DOCUMENTATION />
+            <SOURCES />
+          </library>
+        </orderEntry>
       </module>
       <module name="csharp/csharp-impl" dirurl="file://$PROJECT_DIR$/csharp-impl">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
