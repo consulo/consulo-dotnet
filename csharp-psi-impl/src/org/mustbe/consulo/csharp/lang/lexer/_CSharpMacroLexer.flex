@@ -42,11 +42,17 @@ MACRO_IF="#"{WHITE_SPACE}?"if"
 MACRO_ENDIF="#"{WHITE_SPACE}?"endif"
 MACRO_REGION="#"{WHITE_SPACE}?"region"
 MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
+MACRO_ELSE="#"{WHITE_SPACE}?"else"
+MACRO_ELIF="#"{WHITE_SPACE}?"elif"
 %%
 
 <MACRO>
 {
 	{MACRO_IF}           { yybegin(MACRO_EXPRESSION); return CSharpMacroTokens.MACRO_IF_KEYWORD; }
+
+	{MACRO_ELIF}         { yybegin(MACRO_EXPRESSION); return CSharpMacroTokens.MACRO_ELIF_KEYWORD; }
+
+	{MACRO_ELSE}         { yybegin(MACRO_ENTERED); return CSharpMacroTokens.MACRO_ELSE_KEYWORD; }
 
 	{MACRO_ENDIF}        { yybegin(MACRO_ENTERED); return CSharpMacroTokens.MACRO_ENDIF_KEYWORD; }
 
