@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.lexer;
+package org.mustbe.consulo.csharp.lang;
 
-import java.io.Reader;
-
-import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.tree.TokenSet;
+import com.intellij.lang.Language;
+import com.intellij.psi.templateLanguages.TemplateLanguage;
 
 /**
  * @author VISTALL
- * @since 22.11.13.
+ * @since 23.01.14
  */
-public class CSharpLexer extends MergingLexerAdapter
+public class CSharpMacroLanguage extends Language implements TemplateLanguage
 {
-	private static final TokenSet ourMergeSet = TokenSet.create(CSharpTemplateTokens.MACRO_FRAGMENT);
+	public static final CSharpMacroLanguage INSTANCE = new CSharpMacroLanguage();
 
-	public CSharpLexer()
+	private CSharpMacroLanguage()
 	{
-		super(new FlexAdapter(new _CSharpLexer((Reader) null)), ourMergeSet);
+		super("C#Macro");
 	}
 }

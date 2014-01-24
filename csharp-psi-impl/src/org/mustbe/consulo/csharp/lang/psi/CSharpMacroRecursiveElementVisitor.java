@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.lexer;
+package org.mustbe.consulo.csharp.lang.psi;
 
-import java.io.Reader;
-
-import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 22.11.13.
+ * @since 24.01.14
  */
-public class CSharpLexer extends MergingLexerAdapter
+public class CSharpMacroRecursiveElementVisitor extends CSharpMacroElementVisitor
 {
-	private static final TokenSet ourMergeSet = TokenSet.create(CSharpTemplateTokens.MACRO_FRAGMENT);
-
-	public CSharpLexer()
+	@Override
+	public void visitElement(PsiElement element)
 	{
-		super(new FlexAdapter(new _CSharpLexer((Reader) null)), ourMergeSet);
+		element.acceptChildren(this);
 	}
 }

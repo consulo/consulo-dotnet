@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang;
+package org.mustbe.consulo.csharp.lang.psi;
 
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.CSharpIcons;
+import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.fileTypes.TemplateLanguageFileType;
 
 /**
  * @author VISTALL
- * @since 22.11.13.
+ * @since 23.01.14
  */
-public class CSharpFileType extends LanguageFileType implements TemplateLanguageFileType
+public class CSharpInnerFileType extends LanguageFileType
 {
-	public static final CSharpFileType INSTANCE = new CSharpFileType();
+	public static final CSharpInnerFileType INSTANCE = new CSharpInnerFileType();
 
-	private CSharpFileType()
+	private CSharpInnerFileType()
 	{
-		super(CSharpLanguage.INSTANCE);
+		super(CSharpMacroLanguage.INSTANCE);
 	}
 
 	@NotNull

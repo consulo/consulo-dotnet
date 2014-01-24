@@ -22,6 +22,7 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.impl.PsiBuilderAdapter;
@@ -125,6 +126,11 @@ public class CSharpBuilderWrapper extends PsiBuilderAdapter
 				remapCurrentToken(elementType);
 				return elementType;
 			}
+		}
+		else if(tokenType == CSharpTemplateTokens.MACRO_FRAGMENT)
+		{
+			super.advanceLexer();
+			tokenType = getTokenType();
 		}
 		return tokenType;
 	}

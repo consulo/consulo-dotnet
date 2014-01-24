@@ -22,6 +22,7 @@ import org.mustbe.consulo.csharp.lang.parser.stmt.StatementParsing;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -49,9 +50,7 @@ public class MemberWithBodyParsing extends SharingParsingHelpers
 	{
 		PsiBuilder.Marker marker = builder.mark();
 
-		int currentOffset = builder.getCurrentOffset();
-		PsiBuilder.Marker modifierListMarker = parseModifierListWithAttributes(builder);
-		int offsetAfterModifierList = builder.getCurrentOffset();
+		val p  = parseModifierListWithAttributes(builder);
 
 		builder.enableSoftKeywords(tokenSet);
 		boolean contains = tokenSet.contains(builder.getTokenType());
@@ -74,9 +73,9 @@ public class MemberWithBodyParsing extends SharingParsingHelpers
 		}
 		else
 		{
-			if(currentOffset == offsetAfterModifierList)
+			if(p.getSecond())
 			{
-				modifierListMarker.drop();
+				p.getFirst().drop();
 				marker.drop();
 			}
 			else

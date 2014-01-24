@@ -33,6 +33,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 
 /**
  * @author VISTALL
@@ -55,38 +56,51 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 		for(AbstractTreeNode treeNode : abstractTreeNodes)
 		{
 			Object value = treeNode.getValue();
-			loop:
-			if(value instanceof CSharpFileImpl)
-			{
-				DotNetNamedElement singleElement = CSharpPsiUtilImpl.findSingleElement((CSharpFileImpl) value);
-				if(singleElement != null)
-				{
-					DotNetStructurableModuleExtension extension = ModuleUtilCore.getExtension(singleElement,
-							DotNetStructurableModuleExtension.class);
-					if(extension != null)
-					{
-						if(!DotNetModuleUtil.isUnderSourceRoot(singleElement))
-						{
-							break loop;
-						}
 
-						nodes.add(new CSharpElementTreeNode(singleElement, settings));
+			if(value instanceof PsiFile)
+			{
+				CSharpFileImpl cSharpFile = CSharpPsiUtilImpl.findCSharpFile((PsiFile) value);
+				if(cSharpFile != null)
+				{
+					DotNetNamedElement singleElement = CSharpPsiUtilImpl.findSingleElement(cSharpFile);
+					if(singleElement != null)
+					{
+						DotNetStructurableModuleExtension extension = ModuleUtilCore.getExtension(singleElement,
+								DotNetStructurableModuleExtension.class);
+						if(extension != null)
+						{
+							if(!DotNetModuleUtil.isUnderSourceRoot(singleElement))
+							{
+								continue;
+							}
+
+							nodes.add(new CSharpElementTreeNode(singleElement, settings));
+						}
+						else
+						{
+							nodes.add(new CSharpQElementTreeNode(singleElement, settings));
+						}
 					}
 					else
 					{
-						nodes.add(new CSharpQElementTreeNode(singleElement, settings));
+						nodes.add(new CSharpElementTreeNode(cSharpFile, settings));
 					}
-					continue;
 				}
-			}
-
-			if(value instanceof DotNetMemberOwner)
-			{
-				nodes.add(new CSharpElementTreeNode((DotNetMemberOwner) value, settings));
+				else
+				{
+					nodes.add(treeNode);
+				}
 			}
 			else
 			{
-				nodes.add(treeNode);
+				if(value instanceof DotNetMemberOwner)
+				{
+					nodes.add(new CSharpElementTreeNode((DotNetMemberOwner) value, settings));
+				}
+				else
+				{
+					nodes.add(treeNode);
+				}
 			}
 		}
 		return nodes;

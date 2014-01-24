@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.lexer;
+package org.mustbe.consulo.csharp.lang.psi;
 
-import java.io.Reader;
-
-import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.tree.TokenSet;
+import org.mustbe.consulo.csharp.lang.CSharpLanguage;
+import com.intellij.psi.templateLanguages.TemplateDataElementType;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
- * @since 22.11.13.
+ * @since 24.01.14
  */
-public class CSharpLexer extends MergingLexerAdapter
+public interface CSharpTemplateTokens
 {
-	private static final TokenSet ourMergeSet = TokenSet.create(CSharpTemplateTokens.MACRO_FRAGMENT);
+	IElementType MACRO_FRAGMENT = new IElementType("MACRO_FRAGMENT", CSharpLanguage.INSTANCE);
 
-	public CSharpLexer()
-	{
-		super(new FlexAdapter(new _CSharpLexer((Reader) null)), ourMergeSet);
-	}
+	IElementType OUTER_ELEMENT_TYPE = new IElementType("OUTER_ELEMENT_TYPE", CSharpLanguage.INSTANCE);
+
+	TemplateDataElementType TEMPLATE_DATA = new TemplateDataElementType("TEMPLATE_DATA", CSharpLanguage.INSTANCE, MACRO_FRAGMENT,
+			OUTER_ELEMENT_TYPE);
 }

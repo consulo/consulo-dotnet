@@ -174,16 +174,6 @@ public interface CSharpElements
 	IElementType LOCAL_VARIABLE_DECLARATION_STATEMENT = new IElementTypeAsPsiFactory("LOCAL_VARIABLE_DECLARATION_STATEMENT",
 			CSharpLanguage.INSTANCE, CSharpLocalVariableDeclarationStatementImpl.class);
 
-	IElementType MACRO_DEFINE = new IElementTypeAsPsiFactory("MACRO_DEFINE", CSharpLanguage.INSTANCE, CSharpMacroDefineImpl.class);
-
-	IElementType MACRO_BLOCK_START = new IElementTypeAsPsiFactory("MACRO_BLOCK_START", CSharpLanguage.INSTANCE, CSharpMacroBlockStartImpl.class);
-
-	IElementType MACRO_BLOCK = new IElementTypeAsPsiFactory("MACRO_BLOCK", CSharpLanguage.INSTANCE, CSharpMacroBlockImpl.class);
-
-	IElementType MACRO_BLOCK_STOP = new IElementTypeAsPsiFactory("MACRO_BLOCK_STOP", CSharpLanguage.INSTANCE, CSharpMacroBlockStopImpl.class);
-
-	IElementType MACRO_BODY = new IElementTypeAsPsiFactory("MACRO_BODY", CSharpLanguage.INSTANCE, CSharpMacroBodyImpl.class);
-
 	IElementType EXPRESSION_STATEMENT = new IElementTypeAsPsiFactory("EXPRESSION_STATEMENT", CSharpLanguage.INSTANCE,
 			CSharpExpressionStatementImpl.class);
 

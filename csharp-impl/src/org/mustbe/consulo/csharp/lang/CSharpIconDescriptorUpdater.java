@@ -35,6 +35,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.BitUtil;
@@ -59,7 +60,12 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		{
 			return;
 		}
-		FileType fileType = containingFile.getFileType();
+		VirtualFile virtualFile = containingFile.getVirtualFile();
+		if(virtualFile == null)
+		{
+			return;
+		}
+		FileType fileType = virtualFile.getFileType();
 		if(fileType != CSharpFileType.INSTANCE)
 		{
 			return;

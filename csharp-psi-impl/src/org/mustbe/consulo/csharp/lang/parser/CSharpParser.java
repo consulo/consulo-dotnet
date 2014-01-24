@@ -17,13 +17,14 @@
 package org.mustbe.consulo.csharp.lang.parser;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
 import org.mustbe.consulo.csharp.lang.parser.decl.DeclarationParsing;
-import org.mustbe.consulo.csharp.lang.parser.macro.MacroParsing;
 import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
+import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.tree.IElementType;
@@ -39,7 +40,14 @@ public class CSharpParser extends SharingParsingHelpers implements PsiParser
 	@Override
 	public ASTNode parse(@NotNull IElementType elementType, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
 	{
+		PsiFile data = builder.getUserDataUnprotected(FileContextUtil.CONTAINING_FILE_KEY);
+		assert data != null;
 
+		FileViewProvider viewProvider = data.getViewProvider();
+
+		PsiFile psi = viewProvider.getPsi(CSharpMacroLanguage.INSTANCE);
+
+		System.out.println(psi);
 		//builder.setDebugMode(true);
 		val builderWrapper = new CSharpBuilderWrapper(builder);
 
@@ -56,7 +64,7 @@ public class CSharpParser extends SharingParsingHelpers implements PsiParser
 
 		while(!builder.eof())
 		{
-			if(!MacroParsing.parse(builderWrapper, macroesInfo) && !DeclarationParsing.parse(builderWrapper, macroesInfo, false))
+			if(!DeclarationParsing.parse(builderWrapper, macroesInfo, false))
 			{
 				builder.advanceLexer();
 			}

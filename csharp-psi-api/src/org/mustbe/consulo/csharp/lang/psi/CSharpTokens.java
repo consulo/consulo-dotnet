@@ -250,6 +250,8 @@ public interface CSharpTokens extends TokenType
 
 	IElementType LONG_LITERAL = new IElementType("LONG_LITERAL", CSharpLanguage.INSTANCE);
 
+	IElementType NON_ACTIVE_SYMBOL = new IElementType("NON_ACTIVE_SYMBOL", CSharpLanguage.INSTANCE);
+
 	IElementType FLOAT_LITERAL = new IElementType("FLOAT_LITERAL", CSharpLanguage.INSTANCE);
 
 	IElementType DOUBLE_LITERAL = new IElementType("DOUBLE_LITERAL", CSharpLanguage.INSTANCE);
@@ -271,19 +273,4 @@ public interface CSharpTokens extends TokenType
 	IElementType VERBATIM_STRING_LITERAL = new IElementType("VERBATIM_STRING_LITERAL", CSharpLanguage.INSTANCE);
 
 	IElementType IDENTIFIER = new IElementType("IDENTIFIER", CSharpLanguage.INSTANCE);
-
-	// macros
-	IElementType MACRO_IF_KEYWORD = new IElementType("MACRO_IF_KEYWORD", CSharpLanguage.INSTANCE);
-
-	IElementType MACRO_ENDIF_KEYWORD = new IElementType("MACRO_ENDIF_KEYWORD", CSharpLanguage.INSTANCE);
-
-	IElementType MACRO_REGION_KEYWORD = new IElementType("MACRO_REGION_KEYWORD", CSharpLanguage.INSTANCE);
-
-	IElementType MACRO_ENDREGION_KEYWORD = new IElementType("MACRO_ENDREGION_KEYWORD", CSharpLanguage.INSTANCE);
-
-	IElementType MACRO_DEFINE_KEYWORD = new IElementType("MACRO_DEFINE_KEYWORD", CSharpLanguage.INSTANCE);
-
-	IElementType MACRO_VALUE = new IElementType("MACRO_VALUE", CSharpLanguage.INSTANCE);
-
-	IElementType MACRO_STOP = new IElementType("MACRO_STOP", CSharpLanguage.INSTANCE);
 }

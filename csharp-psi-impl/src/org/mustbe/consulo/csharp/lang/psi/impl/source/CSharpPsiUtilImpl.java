@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
@@ -28,6 +29,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
@@ -50,14 +52,9 @@ public class CSharpPsiUtilImpl
 
 
 	@Nullable
-	public static DotNetNamedElement findSingleElement(PsiFile file)
+	public static DotNetNamedElement findSingleElement(@NotNull CSharpFileImpl file)
 	{
-		if(!(file instanceof CSharpFileImpl))
-		{
-			return null;
-		}
-
-		DotNetNamedElement[] members = ((CSharpFileImpl) file).getMembers();
+		DotNetNamedElement[] members = file.getMembers();
 		if(members.length != 1)
 		{
 			return null;
@@ -87,6 +84,19 @@ public class CSharpPsiUtilImpl
 		}
 
 		return null;
+	}
+
+	@Nullable
+	public static CSharpFileImpl findCSharpFile(@NotNull PsiFile psiFile)
+	{
+		FileViewProvider viewProvider = psiFile.getViewProvider();
+
+		PsiFile psi = viewProvider.getPsi(CSharpLanguage.INSTANCE);
+		if(psi == null)
+		{
+			return null;
+		}
+		return (CSharpFileImpl) psi;
 	}
 
 	@NotNull

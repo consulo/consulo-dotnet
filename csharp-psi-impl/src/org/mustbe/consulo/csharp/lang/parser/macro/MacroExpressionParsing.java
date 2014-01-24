@@ -17,8 +17,9 @@
 package org.mustbe.consulo.csharp.lang.parser.macro;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElements;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroTokens;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -31,7 +32,7 @@ import lombok.val;
  *        Base on code from java plugin - class ExpressionParser
  *        License Apache 2, Copyright 2000-2013 JetBrains s.r.o
  */
-public class MacroExpressionParsing extends SharingParsingHelpers
+public class MacroExpressionParsing implements CSharpMacroTokens, CSharpMacroElements
 {
 	private enum ExprType
 	{
@@ -44,13 +45,13 @@ public class MacroExpressionParsing extends SharingParsingHelpers
 
 
 	@Nullable
-	public static PsiBuilder.Marker parse(final CSharpBuilderWrapper builder)
+	public static PsiBuilder.Marker parse(final PsiBuilder builder)
 	{
 		return parseExpression(builder, ExprType.CONDITIONAL_OR);
 	}
 
 	@Nullable
-	private static PsiBuilder.Marker parseExpression(final CSharpBuilderWrapper builder, final ExprType type)
+	private static PsiBuilder.Marker parseExpression(final PsiBuilder builder, final ExprType type)
 	{
 		switch(type)
 		{
@@ -70,7 +71,7 @@ public class MacroExpressionParsing extends SharingParsingHelpers
 	}
 
 	@Nullable
-	private static PsiBuilder.Marker parseUnary(final CSharpBuilderWrapper builder)
+	private static PsiBuilder.Marker parseUnary(final PsiBuilder builder)
 	{
 		final IElementType tokenType = builder.getTokenType();
 
@@ -95,7 +96,7 @@ public class MacroExpressionParsing extends SharingParsingHelpers
 	}
 
 	@Nullable
-	private static PsiBuilder.Marker parseBinary(final CSharpBuilderWrapper builder, final ExprType type, final TokenSet ops)
+	private static PsiBuilder.Marker parseBinary(final PsiBuilder builder, final ExprType type, final TokenSet ops)
 	{
 		PsiBuilder.Marker result = parseExpression(builder, type);
 		if(result == null)
@@ -104,7 +105,7 @@ public class MacroExpressionParsing extends SharingParsingHelpers
 		}
 		int operandCount = 1;
 
-		IElementType tokenType = builder.getTokenTypeGGLL();
+		IElementType tokenType = builder.getTokenType();
 		IElementType currentExprTokenType = tokenType;
 		while(true)
 		{
@@ -113,7 +114,7 @@ public class MacroExpressionParsing extends SharingParsingHelpers
 				break;
 			}
 
-			builder.advanceLexerGGLL();
+			builder.advanceLexer();
 
 			final PsiBuilder.Marker right = parseExpression(builder, type);
 			operandCount++;
@@ -140,7 +141,7 @@ public class MacroExpressionParsing extends SharingParsingHelpers
 	}
 
 	@Nullable
-	private static PsiBuilder.Marker parsePrimary(final CSharpBuilderWrapper builder)
+	private static PsiBuilder.Marker parsePrimary(final PsiBuilder builder)
 	{
 		PsiBuilder.Marker startMarker = builder.mark();
 
@@ -155,7 +156,7 @@ public class MacroExpressionParsing extends SharingParsingHelpers
 	}
 
 	@Nullable
-	private static PsiBuilder.Marker parsePrimaryExpressionStart(final CSharpBuilderWrapper builder)
+	private static PsiBuilder.Marker parsePrimaryExpressionStart(final PsiBuilder builder)
 	{
 		IElementType tokenType = builder.getTokenType();
 
@@ -180,7 +181,7 @@ public class MacroExpressionParsing extends SharingParsingHelpers
 				builder.error("Expression expected");
 			}
 
-			if(!expect(builder, RPAR, null))
+			if(!SharingParsingHelpers.expect(builder, RPAR, null))
 			{
 				if(inner != null)
 				{

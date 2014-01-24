@@ -17,33 +17,31 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroTokens;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpMacroBlockStopImpl extends CSharpElementImpl
+public class CSharpMacroBlockStopImpl extends CSharpMacroElementImpl
 {
 	public CSharpMacroBlockStopImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public IElementType findStopElementType()
+	public PsiElement getKeywordElement()
 	{
-		TokenSet tokenSet = TokenSet.create(CSharpTokens.MACRO_ENDIF_KEYWORD, CSharpTokens.MACRO_ENDREGION_KEYWORD);
-		PsiElement notNullChildByType = findNotNullChildByType(tokenSet);
-		return notNullChildByType.getNode().getElementType();
+		TokenSet tokenSet = TokenSet.create(CSharpMacroTokens.MACRO_ENDIF_KEYWORD, CSharpMacroTokens.MACRO_ENDREGION_KEYWORD);
+		return findNotNullChildByType(tokenSet);
 	}
 
 	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
+	public void accept(@NotNull CSharpMacroElementVisitor visitor)
 	{
 		visitor.visitMacroBlockStop(this);
 	}

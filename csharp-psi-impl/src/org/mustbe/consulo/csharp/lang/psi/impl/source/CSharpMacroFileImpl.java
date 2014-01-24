@@ -17,23 +17,27 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
-import com.intellij.lang.ASTNode;
+import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
+import org.mustbe.consulo.csharp.lang.psi.CSharpInnerFileType;
+import com.intellij.extapi.psi.PsiFileBase;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.psi.FileViewProvider;
 
 /**
  * @author VISTALL
- * @since 18.12.13.
+ * @since 23.01.14
  */
-public class CSharpMacroDefineImpl extends CSharpMacroElementImpl
+public class CSharpMacroFileImpl extends PsiFileBase
 {
-	public CSharpMacroDefineImpl(@NotNull ASTNode node)
+	public CSharpMacroFileImpl(@NotNull FileViewProvider viewProvider)
 	{
-		super(node);
+		super(viewProvider, CSharpMacroLanguage.INSTANCE);
 	}
 
+	@NotNull
 	@Override
-	public void accept(@NotNull CSharpMacroElementVisitor visitor)
+	public FileType getFileType()
 	{
-		visitor.visitMacroDefine(this);
+		return CSharpInnerFileType.INSTANCE;
 	}
 }

@@ -20,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import org.mustbe.consulo.csharp.lang.parser.UsingStatementParsing;
-import org.mustbe.consulo.csharp.lang.parser.macro.MacroParsing;
 import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.openapi.util.Pair;
 import com.intellij.util.NotNullFunction;
 import lombok.val;
 
@@ -40,24 +40,19 @@ public class DeclarationParsing extends SharingParsingHelpers
 			return false;
 		}
 
-		if(MacroParsing.parse(builder, macroesInfo))
-		{
-			return true;
-		}
+		PsiBuilder.Marker marker = builder.mark();
 
-		val marker = builder.mark();
-
-		val modifierListBuilder = parseWithSoftElements(new NotNullFunction<CSharpBuilderWrapper, PsiBuilder.Marker>()
+		Pair<PsiBuilder.Marker, Boolean> modifierListPair = parseWithSoftElements(new NotNullFunction<CSharpBuilderWrapper, Pair<PsiBuilder.Marker, Boolean>>()
 		{
 			@NotNull
 			@Override
-			public PsiBuilder.Marker fun(CSharpBuilderWrapper builderWrapper)
+			public Pair<PsiBuilder.Marker, Boolean> fun(CSharpBuilderWrapper builderWrapper)
 			{
 				return parseModifierListWithAttributes(builderWrapper);
 			}
 		}, builder, PARTIAL_KEYWORD, ASYNC_KEYWORD);
 
-		assert modifierListBuilder != null;
+		PsiBuilder.Marker modifierListMarker = modifierListPair.getFirst();
 
 		val tokenType = builder.getTokenType();
 		if(tokenType == NAMESPACE_KEYWORD)
@@ -110,13 +105,14 @@ public class DeclarationParsing extends SharingParsingHelpers
 				TypeInfo typeInfo = parseType(builder);
 				if(typeInfo == null)
 				{
-					if(builder.getTokenType() != null)
+					if(!modifierListPair.getSecond())
 					{
-						builder.error("Type expected " + builder.getTokenType());
+						builder.error("Type expected");
 					}
-
-
-					builder.error("Type expected");
+					else
+					{
+						modifierListMarker.drop();
+					}
 
 					marker.drop();
 					return false;
@@ -139,7 +135,7 @@ public class DeclarationParsing extends SharingParsingHelpers
 				}
 				else
 				{
-					modifierListBuilder.drop();
+					modifierListMarker.drop();
 					marker.drop();
 					return false;
 				}

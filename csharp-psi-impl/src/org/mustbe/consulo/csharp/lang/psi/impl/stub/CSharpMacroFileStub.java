@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.lexer;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
-import java.io.Reader;
-
-import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.tree.TokenSet;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroFileImpl;
+import com.intellij.psi.stubs.PsiFileStubImpl;
+import com.intellij.psi.tree.IStubFileElementType;
 
 /**
  * @author VISTALL
- * @since 22.11.13.
+ * @since 23.01.14
  */
-public class CSharpLexer extends MergingLexerAdapter
+public class CSharpMacroFileStub extends PsiFileStubImpl<CSharpMacroFileImpl>
 {
-	private static final TokenSet ourMergeSet = TokenSet.create(CSharpTemplateTokens.MACRO_FRAGMENT);
-
-	public CSharpLexer()
+	public CSharpMacroFileStub(CSharpMacroFileImpl file)
 	{
-		super(new FlexAdapter(new _CSharpLexer((Reader) null)), ourMergeSet);
+		super(file);
+	}
+
+	@Override
+	public IStubFileElementType getType()
+	{
+		return CSharpStubElements.MACRO_FILE;
 	}
 }

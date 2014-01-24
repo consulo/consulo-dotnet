@@ -4,6 +4,7 @@ import java.util.*;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
 
 %%
 
@@ -16,8 +17,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 %eof}
 
 %state MACRO
-%state MACRO_ENTERED
-%state MACRO_EXPRESSION
 
 DIGIT=[0-9]
 LETTER=[a-z]|[A-Z]
@@ -60,62 +59,15 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 MACRO_WHITE_SPACE=[ \t\f]+
 MACRO_NEW_LINE=\r\n|\n|\r
 
-MACRO_DEFINE="#"{WHITE_SPACE}?"define"
-MACRO_IF="#"{WHITE_SPACE}?"if"
-MACRO_ENDIF="#"{WHITE_SPACE}?"endif"
-MACRO_REGION="#"{WHITE_SPACE}?"region"
-MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
 %%
 
 <MACRO>
 {
-	{MACRO_IF}           { yybegin(MACRO_EXPRESSION); return CSharpTokens.MACRO_IF_KEYWORD; }
+	{MACRO_NEW_LINE}     { yybegin(YYINITIAL); return CSharpTemplateTokens.MACRO_FRAGMENT; }
 
-	{MACRO_ENDIF}        { yybegin(MACRO_ENTERED); return CSharpTokens.MACRO_ENDIF_KEYWORD; }
+	{MACRO_WHITE_SPACE}  {  return CSharpTemplateTokens.MACRO_FRAGMENT; }
 
-	{MACRO_DEFINE}       { yybegin(MACRO_ENTERED); return CSharpTokens.MACRO_DEFINE_KEYWORD; }
-
-	{MACRO_REGION}       { yybegin(MACRO_ENTERED); return CSharpTokens.MACRO_REGION_KEYWORD; }
-
-	{MACRO_ENDREGION}    { yybegin(MACRO_ENTERED); return CSharpTokens.MACRO_ENDREGION_KEYWORD; }
-
-	{MACRO_NEW_LINE}     { yybegin(YYINITIAL); return CSharpTokens.MACRO_STOP; }
-
-	{MACRO_WHITE_SPACE}  {  return CSharpTokens.WHITE_SPACE; }
-
-	.                    { return CSharpTokens.BAD_CHARACTER; }
-}
-
-<MACRO_ENTERED>
-{
-	{IDENTIFIER}         { return CSharpTokens.MACRO_VALUE; }
-
-	{MACRO_NEW_LINE}     { yybegin(YYINITIAL); return CSharpTokens.MACRO_STOP; }
-
-	{MACRO_WHITE_SPACE}  { return CSharpTokens.WHITE_SPACE; }
-
-	.                    { return CSharpTokens.BAD_CHARACTER; }
-}
-
-<MACRO_EXPRESSION>
-{
-	"("                  { return CSharpTokens.LPAR; }
-
-	")"                  { return CSharpTokens.RPAR; }
-
-	"!"                  { return CSharpTokens.EXCL; }
-
-	"&&"                 { return CSharpTokens.ANDAND; }
-
-	"||"                 { return CSharpTokens.OROR; }
-
-	{IDENTIFIER}         { return CSharpTokens.IDENTIFIER; }
-
-	{MACRO_NEW_LINE}     { yybegin(YYINITIAL); return CSharpTokens.MACRO_STOP; }
-
-	{MACRO_WHITE_SPACE}  { return CSharpTokens.WHITE_SPACE; }
-
-	.                    { return CSharpTokens.BAD_CHARACTER; }
+	.                    { return CSharpTemplateTokens.MACRO_FRAGMENT; }
 }
 
 <YYINITIAL>

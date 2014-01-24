@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.lexer;
+package org.mustbe.consulo.csharp.lang;
 
-import java.io.Reader;
-
-import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.tree.TokenSet;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.Language;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.FileViewProviderFactory;
+import com.intellij.psi.PsiManager;
 
 /**
  * @author VISTALL
- * @since 22.11.13.
+ * @since 23.01.14
  */
-public class CSharpLexer extends MergingLexerAdapter
+public class CSharpFileViewProviderFactory implements FileViewProviderFactory
 {
-	private static final TokenSet ourMergeSet = TokenSet.create(CSharpTemplateTokens.MACRO_FRAGMENT);
-
-	public CSharpLexer()
+	@Override
+	public FileViewProvider createFileViewProvider(@NotNull VirtualFile virtualFile, Language language, @NotNull PsiManager psiManager, boolean b)
 	{
-		super(new FlexAdapter(new _CSharpLexer((Reader) null)), ourMergeSet);
+		return new CSharpFileViewProvider(psiManager, virtualFile, b);
 	}
 }
