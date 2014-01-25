@@ -16,10 +16,15 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBinaryExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStopImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroDefineImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroParenthesesExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroPolyadicExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroPrefixExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroReferenceExpressionImpl;
 import com.intellij.psi.PsiElementVisitor;
 
 /**
@@ -48,4 +53,28 @@ public class CSharpMacroElementVisitor extends PsiElementVisitor
 		visitElement(block);
 	}
 
+	public void visitPrefixExpression(CSharpMacroPrefixExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitPolyadicExpression(CSharpMacroPolyadicExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitBinaryExpression(CSharpMacroBinaryExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitReferenceExpression(CSharpMacroReferenceExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
+
+	public void visitParenthesesExpression(CSharpMacroParenthesesExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
 }
