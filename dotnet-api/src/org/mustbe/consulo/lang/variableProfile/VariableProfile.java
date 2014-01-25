@@ -19,6 +19,7 @@ package org.mustbe.consulo.lang.variableProfile;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.consulo.annotations.Immutable;
 import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +52,13 @@ public class VariableProfile implements Named
 	public void removeVariable(@NotNull String variable)
 	{
 		myVariables.add(variable);
+	}
+
+	@NotNull
+	@Immutable
+	public List<String> getVariables()
+	{
+		return myVariables;
 	}
 
 	@NotNull

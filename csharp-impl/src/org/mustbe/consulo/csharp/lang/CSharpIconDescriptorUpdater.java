@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.run.CSharpRunUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
@@ -52,6 +53,11 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		if(element instanceof CSharpNamespaceAsElement)
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Package);
+			return;
+		}
+		else if(element instanceof CSharpMacroDefine)
+		{
+			iconDescriptor.setMainIcon(AllIcons.Nodes.Value);
 			return;
 		}
 

@@ -16,8 +16,13 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.CSharpLookupElementBuilder;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightMacroDefine;
@@ -128,7 +133,19 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 	@Override
 	public Object[] getVariants()
 	{
-		return new Object[0];
+		List<CSharpMacroDefine> list = new ArrayList<CSharpMacroDefine>();
+
+		DotNetModuleExtension extension = ModuleUtilCore.getExtension(this, DotNetModuleExtension.class);
+		if(extension != null)
+		{
+			for(String varName : extension.getCurrentProfile().getVariables())
+			{
+				list.add(new CSharpLightMacroDefine(extension.getModule(), varName));
+			}
+		}
+
+		Collections.addAll(list, ((CSharpMacroFileImpl) getContainingFile()).getDefines());
+		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(list);
 	}
 
 	@Override
