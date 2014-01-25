@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.DotNetVersion;
+import org.mustbe.consulo.lang.variableProfile.VariableProfile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -109,6 +110,15 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	public DotNetVersion getVersion()
 	{
 		return DotNetVersion.LAST;
+	}
+
+	@NotNull
+	@Override
+	public VariableProfile getCurrentProfile()
+	{
+		VariableProfile variableProfile = new VariableProfile("Current");
+		variableProfile.addVariable("CONSULO_TEST");
+		return variableProfile;
 	}
 
 	@Override

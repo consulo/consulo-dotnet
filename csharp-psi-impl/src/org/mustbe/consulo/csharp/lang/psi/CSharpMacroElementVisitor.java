@@ -20,7 +20,6 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBinaryExpressio
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStopImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroDefineImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroParenthesesExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroPolyadicExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroPrefixExpressionImpl;
@@ -33,7 +32,7 @@ import com.intellij.psi.PsiElementVisitor;
  */
 public class CSharpMacroElementVisitor extends PsiElementVisitor
 {
-	public void visitMacroDefine(CSharpMacroDefineImpl cSharpMacroDefine)
+	public void visitMacroDefine(CSharpMacroDefine cSharpMacroDefine)
 	{
 		visitElement(cSharpMacroDefine);
 	}

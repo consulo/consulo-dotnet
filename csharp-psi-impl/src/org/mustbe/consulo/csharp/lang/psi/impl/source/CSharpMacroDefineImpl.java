@@ -16,15 +16,22 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroTokens;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpMacroDefineImpl extends CSharpMacroElementImpl
+public class CSharpMacroDefineImpl extends CSharpMacroElementImpl implements CSharpMacroDefine, PsiNameIdentifierOwner
 {
 	public CSharpMacroDefineImpl(@NotNull ASTNode node)
 	{
@@ -35,5 +42,32 @@ public class CSharpMacroDefineImpl extends CSharpMacroElementImpl
 	public void accept(@NotNull CSharpMacroElementVisitor visitor)
 	{
 		visitor.visitMacroDefine(this);
+	}
+
+	@Override
+	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	{
+		return null;
+	}
+
+	@Override
+	public String getName()
+	{
+		PsiElement nameIdentifier = getNameIdentifier();
+		return nameIdentifier == null ? null : nameIdentifier.getText();
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getNameIdentifier()
+	{
+		return findChildByType(CSharpMacroTokens.MACRO_VALUE);
+	}
+
+	@Override
+	public int getTextOffset()
+	{
+		PsiElement nameIdentifier = getNameIdentifier();
+		return nameIdentifier == null ? super.getTextOffset() : nameIdentifier.getTextOffset();
 	}
 }

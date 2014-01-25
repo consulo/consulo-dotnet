@@ -20,6 +20,7 @@ import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.DotNetVersion;
+import org.mustbe.consulo.lang.variableProfile.VariableProfile;
 import com.intellij.execution.configurations.GeneralCommandLine;
 
 /**
@@ -36,4 +37,7 @@ public interface DotNetModuleExtension<T extends ModuleExtensionWithSdk<T>> exte
 
 	@NotNull
 	GeneralCommandLine createRunCommandLine(@NotNull String fileName, boolean debug);
+
+	@NotNull
+	VariableProfile getCurrentProfile();
 }

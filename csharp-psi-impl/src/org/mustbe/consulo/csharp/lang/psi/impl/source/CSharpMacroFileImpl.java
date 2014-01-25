@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInnerFileType;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
@@ -32,6 +33,12 @@ public class CSharpMacroFileImpl extends PsiFileBase
 	public CSharpMacroFileImpl(@NotNull FileViewProvider viewProvider)
 	{
 		super(viewProvider, CSharpMacroLanguage.INSTANCE);
+	}
+
+	@NotNull
+	public CSharpMacroDefine[] getDefines()
+	{
+		return findChildrenByClass(CSharpMacroDefine.class);
 	}
 
 	@NotNull

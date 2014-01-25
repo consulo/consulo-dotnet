@@ -79,11 +79,7 @@ public class CSharpLocalVariableImpl extends CSharpVariableImpl implements CShar
 	public int getTextOffset()
 	{
 		PsiElement nameIdentifier = getNameIdentifier();
-		if(nameIdentifier != null)
-		{
-			return nameIdentifier.getTextOffset();
-		}
-		return super.getTextOffset();
+		return nameIdentifier != null ? nameIdentifier.getTextOffset() : super.getTextOffset();
 	}
 
 	@Override

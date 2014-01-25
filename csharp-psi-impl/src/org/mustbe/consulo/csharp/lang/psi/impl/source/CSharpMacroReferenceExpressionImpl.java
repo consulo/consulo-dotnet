@@ -18,12 +18,19 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightMacroDefine;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -51,19 +58,44 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 	@Override
 	public PsiElement getElement()
 	{
-		return null;
+		return this;
 	}
 
 	@Override
 	public TextRange getRangeInElement()
 	{
-		return null;
+		PsiElement element = getElement();
+		return new TextRange(0, element.getTextLength());
 	}
 
 	@Nullable
 	@Override
 	public PsiElement resolve()
 	{
+		PsiFile containingFile = getContainingFile();
+		if(!(containingFile instanceof CSharpMacroFileImpl))
+		{
+			return null;
+		}
+
+		val text = getText();
+
+		DotNetModuleExtension extension = ModuleUtilCore.getExtension(containingFile, DotNetModuleExtension.class);
+		if(extension != null)
+		{
+			if(extension.getCurrentProfile().containsVariable(text))
+			{
+				return new CSharpLightMacroDefine(extension.getModule(), text);
+			}
+		}
+
+		for(CSharpMacroDefine macroDefine : ((CSharpMacroFileImpl) containingFile).getDefines())
+		{
+			if(Comparing.equal(text, macroDefine.getName()))
+			{
+				return macroDefine;
+			}
+		}
 		return null;
 	}
 
@@ -71,7 +103,7 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 	@Override
 	public String getCanonicalText()
 	{
-		return null;
+		return getText();
 	}
 
 	@Override
@@ -89,7 +121,7 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 	@Override
 	public boolean isReferenceTo(PsiElement element)
 	{
-		return false;
+		return resolve() == element;
 	}
 
 	@NotNull
