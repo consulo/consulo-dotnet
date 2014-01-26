@@ -19,7 +19,6 @@ package org.mustbe.consulo.csharp.lang.parser;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
 import org.mustbe.consulo.csharp.lang.parser.decl.DeclarationParsing;
-import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
@@ -47,24 +46,16 @@ public class CSharpParser extends SharingParsingHelpers implements PsiParser
 
 		PsiFile psi = viewProvider.getPsi(CSharpMacroLanguage.INSTANCE);
 
-		System.out.println(psi);
+
 		//builder.setDebugMode(true);
-		val builderWrapper = new CSharpBuilderWrapper(builder);
+		val builderWrapper = new CSharpBuilderWrapper(builder, psi);
 
 		val marker = builderWrapper.mark();
 
-		MacroesInfo macroesInfo = new MacroesInfo();
-
-		PsiFile psiFile = builder.getUserDataUnprotected(FileContextUtil.CONTAINING_FILE_KEY);
-		if(psiFile != null)
-		{
-			psiFile = psiFile.getOriginalFile();
-			psiFile.putUserData(MacroesInfo.MACROES_INFO_KEY, macroesInfo);
-		}
 
 		while(!builder.eof())
 		{
-			if(!DeclarationParsing.parse(builderWrapper, macroesInfo, false))
+			if(!DeclarationParsing.parse(builderWrapper, false))
 			{
 				builder.advanceLexer();
 			}

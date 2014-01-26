@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import org.mustbe.consulo.csharp.lang.parser.UsingStatementParsing;
-import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.openapi.util.Pair;
@@ -33,7 +32,7 @@ import lombok.val;
  */
 public class DeclarationParsing extends SharingParsingHelpers
 {
-	public static boolean parse(@NotNull CSharpBuilderWrapper builder, MacroesInfo macroesInfo, boolean inner)
+	public static boolean parse(@NotNull CSharpBuilderWrapper builder, boolean inner)
 	{
 		if(inner && builder.getTokenType() == RBRACE)
 		{
@@ -57,11 +56,11 @@ public class DeclarationParsing extends SharingParsingHelpers
 		val tokenType = builder.getTokenType();
 		if(tokenType == NAMESPACE_KEYWORD)
 		{
-			NamespaceDeclarationParsing.parse(builder, marker, macroesInfo);
+			NamespaceDeclarationParsing.parse(builder, marker);
 		}
 		else if(CSharpTokenSets.TYPE_DECLARATION_START.contains(tokenType))
 		{
-			TypeDeclarationParsing.parse(builder, marker, macroesInfo);
+			TypeDeclarationParsing.parse(builder, marker);
 		}
 		else if(tokenType == EVENT_KEYWORD)
 		{

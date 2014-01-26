@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
-import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.NotNullFunction;
@@ -31,7 +30,7 @@ import com.intellij.util.NotNullFunction;
  */
 public class TypeDeclarationParsing extends SharingParsingHelpers
 {
-	public static void parse(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, MacroesInfo macroesInfo)
+	public static void parse(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
 	{
 		boolean isEnum = builder.getTokenType() == ENUM_KEYWORD;
 
@@ -74,7 +73,7 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 				}
 				else
 				{
-					if(!DeclarationParsing.parse(builder, macroesInfo, true))
+					if(!DeclarationParsing.parse(builder, true))
 					{
 						break;
 					}

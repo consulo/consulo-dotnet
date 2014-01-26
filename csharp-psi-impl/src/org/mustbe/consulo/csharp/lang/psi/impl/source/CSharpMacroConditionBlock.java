@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.parser.macro;
-
-import org.jetbrains.annotations.NotNull;
+package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 /**
  * @author VISTALL
- * @since 21.01.14
+ * @since 26.01.14
  */
-public interface MacroValueProvider
+public interface CSharpMacroConditionBlock
 {
-	public abstract boolean getMacroValueProperty(@NotNull String text);
 }

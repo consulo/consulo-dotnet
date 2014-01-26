@@ -19,7 +19,6 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
-import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import com.intellij.lang.PsiBuilder;
 
 /**
@@ -28,7 +27,7 @@ import com.intellij.lang.PsiBuilder;
  */
 public class NamespaceDeclarationParsing extends SharingParsingHelpers
 {
-	public static void parse(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, MacroesInfo macroesInfo)
+	public static void parse(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
 	{
 		builder.advanceLexer();
 
@@ -41,7 +40,7 @@ public class NamespaceDeclarationParsing extends SharingParsingHelpers
 		{
 			while(!builder.eof() && builder.getTokenType() != RBRACE)
 			{
-				if(!DeclarationParsing.parse(builder, macroesInfo, true))
+				if(!DeclarationParsing.parse(builder, true))
 				{
 					break;
 				}
