@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
+import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import org.mustbe.consulo.csharp.lang.parser.stmt.StatementParsing;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
@@ -111,7 +112,12 @@ public class MethodParsing extends MemberWithBodyParsing
 
 		if(target == Target.CONSTRUCTOR)
 		{
-			//TODO [VISTALL] base calls
+			if(builder.getTokenType() == COLON)
+			{
+				builder.advanceLexer();
+
+				ExpressionParsing.parseConstructorSuperCall(builder);
+			}
 		}
 		else
 		{
