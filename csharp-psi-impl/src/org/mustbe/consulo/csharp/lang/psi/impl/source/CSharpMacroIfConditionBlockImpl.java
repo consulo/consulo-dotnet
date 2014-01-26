@@ -16,10 +16,24 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
+import com.intellij.lang.ASTNode;
+
 /**
  * @author VISTALL
  * @since 26.01.14
  */
-public interface CSharpMacroConditionBlock
+public class CSharpMacroIfConditionBlockImpl extends CSharpMacroElementImpl
 {
+	public CSharpMacroIfConditionBlockImpl(@NotNull ASTNode node)
+	{
+		super(node);
+	}
+
+	@Override
+	public void accept(@NotNull CSharpMacroElementVisitor visitor)
+	{
+		visitor.visitMacroIfConditionBlock(this);
+	}
 }

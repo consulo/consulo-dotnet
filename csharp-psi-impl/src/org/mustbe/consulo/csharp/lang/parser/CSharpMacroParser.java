@@ -22,11 +22,9 @@ public class CSharpMacroParser implements PsiParser
 
 		while(!builder.eof())
 		{
-			if(!MacroParsing.parse(builder))
-			{
-				builder.advanceLexer();
-			}
+			MacroParsing.parse(builder);
 		}
+
 		mark.done(elementType);
 		return builder.getTreeBuilt();
 	}

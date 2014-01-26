@@ -1,15 +1,7 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBinaryExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStopImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroDefineImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroPolyadicExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroPrefixExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroReferenceExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParenthesesExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IElementTypeAsPsiFactory;
 
@@ -21,6 +13,11 @@ public interface CSharpMacroElements
 {
 
 	IElementType MACRO_DEFINE = new IElementTypeAsPsiFactory("MACRO_DEFINE", CSharpMacroLanguage.INSTANCE, CSharpMacroDefineImpl.class);
+
+	IElementType MACRO_IF = new IElementTypeAsPsiFactory("MACRO_IF", CSharpMacroLanguage.INSTANCE, CSharpMacroIfImpl.class);
+
+	IElementType MACRO_IF_CONDITION_BLOCK = new IElementTypeAsPsiFactory("MACRO_IF_CONDITION_BLOCK", CSharpMacroLanguage.INSTANCE,
+			CSharpMacroIfConditionBlockImpl.class);
 
 	IElementType MACRO_BLOCK_START = new IElementTypeAsPsiFactory("MACRO_BLOCK_START", CSharpMacroLanguage.INSTANCE,
 			CSharpMacroBlockStartImpl.class);

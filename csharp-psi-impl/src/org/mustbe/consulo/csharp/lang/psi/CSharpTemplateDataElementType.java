@@ -46,7 +46,6 @@ import com.intellij.psi.impl.source.tree.TreeUtil;
 import com.intellij.psi.templateLanguages.ITemplateDataElementType;
 import com.intellij.psi.templateLanguages.OuterLanguageElementImpl;
 import com.intellij.psi.templateLanguages.SimpleTreePatcher;
-import com.intellij.psi.templateLanguages.TemplateBlackAndWhiteLexer;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
 import com.intellij.psi.templateLanguages.TreePatcher;
 import com.intellij.psi.tree.IElementType;
