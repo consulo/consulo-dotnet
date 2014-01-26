@@ -192,6 +192,31 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 				}
 			}
 		}
+
+
+		/*String presentableQName = getPresentableQName();
+		if(presentableQName == null)
+		{
+			return true;
+		}
+
+		String packageName = StringUtil.getPackageName(presentableQName);
+		while(!StringUtil.isEmpty(packageName))
+		{
+			val declarations = NamespaceByQNameIndex.getInstance().get(packageName, getProject(), getResolveScope());
+
+			for(DotNetNamespaceDeclaration dotNetNamespaceDeclaration : declarations)
+			{
+				if(!dotNetNamespaceDeclaration.processDeclarations(processor, state, lastParent, place))
+				{
+					return false;
+				}
+			}
+
+			packageName = StringUtil.getPackageName(packageName);
+		} */
+
+
 		return true;
 	}
 }

@@ -886,6 +886,31 @@ public class ExpressionParsing extends SharingParsingHelpers
 		emptyElement(builder, EMPTY_EXPRESSION);
 	}
 
+	public static void parseConstructorSuperCall(CSharpBuilderWrapper builder)
+	{
+		PsiBuilder.Marker marker = builder.mark();
+		if(THIS_OR_BASE.contains(builder.getTokenType()))
+		{
+			doneOneElement(builder, builder.getTokenType(), REFERENCE_EXPRESSION, null);
+
+			if(builder.getTokenType() == LPAR)
+			{
+				parseArgumentList(builder);
+			}
+			else
+			{
+				builder.error("'(' expected");
+			}
+
+			marker.done(CONSTRUCTOR_SUPER_CALL_EXPRESSION);
+		}
+		else
+		{
+			builder.error("Expected 'base' or 'this'");
+			marker.drop();
+		}
+	}
+
 	public static void parseParameterList(CSharpBuilderWrapper builder)
 	{
 		PsiBuilder.Marker mark = builder.mark();
