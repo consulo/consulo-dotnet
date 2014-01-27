@@ -33,12 +33,9 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class MonoDotNetMutableModuleExtension2 extends MonoDotNetModuleExtension2 implements MutableModuleExtensionWithSdk<MonoDotNetModuleExtension2>
 {
-	private MonoDotNetModuleExtension2 myOriginalModuleExtension;
-
-	public MonoDotNetMutableModuleExtension2(@NotNull String id, @NotNull Module module, @NotNull MonoDotNetModuleExtension2 originalModuleExtension)
+	public MonoDotNetMutableModuleExtension2(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
-		myOriginalModuleExtension = originalModuleExtension;
 	}
 
 	@Nullable
@@ -67,14 +64,8 @@ public class MonoDotNetMutableModuleExtension2 extends MonoDotNetModuleExtension
 	}
 
 	@Override
-	public boolean isModified()
+	public boolean isModified(@NotNull MonoDotNetModuleExtension2 extension2)
 	{
-		return isModifiedImpl(myOriginalModuleExtension);
-	}
-
-	@Override
-	public void commit()
-	{
-		myOriginalModuleExtension.commit(this);
+		return isModifiedImpl(extension2);
 	}
 }

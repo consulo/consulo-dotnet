@@ -53,8 +53,8 @@ public class MonoCSharpModuleExtensionProvider implements ModuleExtensionProvide
 
 	@NotNull
 	@Override
-	public MonoCSharpMutableModuleExtension createMutable(@NotNull String s, @NotNull Module module, @NotNull MonoCSharpModuleExtension monoCSharpModuleExtension)
+	public MonoCSharpMutableModuleExtension createMutable(@NotNull String s, @NotNull Module module)
 	{
-		return new MonoCSharpMutableModuleExtension(s, module, monoCSharpModuleExtension);
+		return new MonoCSharpMutableModuleExtension(s, module);
 	}
 }

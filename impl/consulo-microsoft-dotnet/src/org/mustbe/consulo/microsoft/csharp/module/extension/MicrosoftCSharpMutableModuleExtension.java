@@ -30,12 +30,9 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class MicrosoftCSharpMutableModuleExtension extends MicrosoftCSharpModuleExtension implements MutableModuleExtension<MicrosoftCSharpModuleExtension>
 {
-	private MicrosoftCSharpModuleExtension myOriginal;
-
-	public MicrosoftCSharpMutableModuleExtension(@NotNull String id, @NotNull Module module, @NotNull MicrosoftCSharpModuleExtension original)
+	public MicrosoftCSharpMutableModuleExtension(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
-		myOriginal = original;
 	}
 
 	@Nullable
@@ -52,14 +49,8 @@ public class MicrosoftCSharpMutableModuleExtension extends MicrosoftCSharpModule
 	}
 
 	@Override
-	public boolean isModified()
+	public boolean isModified(@NotNull MicrosoftCSharpModuleExtension moduleExtension)
 	{
-		return isModifiedImpl(myOriginal);
-	}
-
-	@Override
-	public void commit()
-	{
-		myOriginal.commit(this);
+		return isModifiedImpl(moduleExtension);
 	}
 }

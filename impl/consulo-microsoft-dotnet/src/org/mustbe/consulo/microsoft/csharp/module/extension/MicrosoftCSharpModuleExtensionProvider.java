@@ -53,9 +53,8 @@ public class MicrosoftCSharpModuleExtensionProvider implements ModuleExtensionPr
 
 	@NotNull
 	@Override
-	public MicrosoftCSharpMutableModuleExtension createMutable(@NotNull String s, @NotNull Module module, @NotNull MicrosoftCSharpModuleExtension
-			microsoftCSharpModuleExtension)
+	public MicrosoftCSharpMutableModuleExtension createMutable(@NotNull String s, @NotNull Module module)
 	{
-		return new MicrosoftCSharpMutableModuleExtension(s, module, microsoftCSharpModuleExtension);
+		return new MicrosoftCSharpMutableModuleExtension(s, module);
 	}
 }

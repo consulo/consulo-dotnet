@@ -53,9 +53,8 @@ public class MicrosoftDotNetModuleExtensionProvider2 implements ModuleExtensionP
 
 	@NotNull
 	@Override
-	public MicrosoftDotNetMutableModuleExtension2 createMutable(@NotNull String s, @NotNull Module module, @NotNull MicrosoftDotNetModuleExtension2
-			dotNetModuleExtension)
+	public MicrosoftDotNetMutableModuleExtension2 createMutable(@NotNull String s, @NotNull Module module)
 	{
-		return new MicrosoftDotNetMutableModuleExtension2(s, module, dotNetModuleExtension);
+		return new MicrosoftDotNetMutableModuleExtension2(s, module);
 	}
 }

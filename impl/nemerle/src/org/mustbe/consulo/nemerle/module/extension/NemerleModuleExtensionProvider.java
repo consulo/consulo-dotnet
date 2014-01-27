@@ -53,9 +53,8 @@ public class NemerleModuleExtensionProvider implements ModuleExtensionProvider<N
 
 	@NotNull
 	@Override
-	public NemerleMutableModuleExtension createMutable(@NotNull String s, @NotNull Module module, @NotNull NemerleModuleExtension
-			nemerleModuleExtension)
+	public NemerleMutableModuleExtension createMutable(@NotNull String s, @NotNull Module module)
 	{
-		return new NemerleMutableModuleExtension(s, module, nemerleModuleExtension);
+		return new NemerleMutableModuleExtension(s, module);
 	}
 }
