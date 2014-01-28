@@ -30,12 +30,10 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension implements MutableModuleExtension<MonoCSharpModuleExtension>
 {
-	private MonoCSharpModuleExtension myOriginal;
-
-	public MonoCSharpMutableModuleExtension(@NotNull String id, @NotNull Module module, @NotNull MonoCSharpModuleExtension original)
+	public MonoCSharpMutableModuleExtension(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
-		myOriginal = original;
+
 	}
 
 	@Nullable
@@ -52,14 +50,8 @@ public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension 
 	}
 
 	@Override
-	public boolean isModified()
+	public boolean isModified(@NotNull MonoCSharpModuleExtension extension)
 	{
-		return isModifiedImpl(myOriginal);
-	}
-
-	@Override
-	public void commit()
-	{
-		myOriginal.commit(this);
+		return isModifiedImpl(extension);
 	}
 }

@@ -53,9 +53,8 @@ public class MonoDotNetModuleExtensionProvider2 implements ModuleExtensionProvid
 
 	@NotNull
 	@Override
-	public MonoDotNetMutableModuleExtension2 createMutable(@NotNull String s, @NotNull Module module,
-			@NotNull MonoDotNetModuleExtension2 dotNetModuleExtension)
+	public MonoDotNetMutableModuleExtension2 createMutable(@NotNull String s, @NotNull Module module)
 	{
-		return new MonoDotNetMutableModuleExtension2(s, module, dotNetModuleExtension);
+		return new MonoDotNetMutableModuleExtension2(s, module);
 	}
 }

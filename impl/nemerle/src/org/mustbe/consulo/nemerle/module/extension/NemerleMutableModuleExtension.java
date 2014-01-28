@@ -33,12 +33,9 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class NemerleMutableModuleExtension extends NemerleModuleExtension implements MutableModuleExtensionWithSdk<NemerleModuleExtension>
 {
-	private final NemerleModuleExtension myNemerleModuleExtension;
-
-	public NemerleMutableModuleExtension(@NotNull String id, @NotNull Module module, NemerleModuleExtension nemerleModuleExtension)
+	public NemerleMutableModuleExtension(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
-		myNemerleModuleExtension = nemerleModuleExtension;
 	}
 
 	@NotNull
@@ -62,14 +59,8 @@ public class NemerleMutableModuleExtension extends NemerleModuleExtension implem
 	}
 
 	@Override
-	public boolean isModified()
+	public boolean isModified(@NotNull NemerleModuleExtension nemerleModuleExtension)
 	{
-		return isModifiedImpl(myNemerleModuleExtension);
-	}
-
-	@Override
-	public void commit()
-	{
-		myNemerleModuleExtension.commit(this);
+		return isModifiedImpl(nemerleModuleExtension);
 	}
 }

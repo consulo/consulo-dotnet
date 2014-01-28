@@ -34,13 +34,9 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModuleExtension implements
 		MutableModuleExtensionWithSdk<MicrosoftDotNetModuleExtension>
 {
-	private MicrosoftDotNetModuleExtension myOriginalModuleExtension;
-
-	public MicrosoftDotNetMutableModuleExtension(@NotNull String id, @NotNull Module module, @NotNull MicrosoftDotNetModuleExtension
-			originalModuleExtension)
+	public MicrosoftDotNetMutableModuleExtension(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
-		myOriginalModuleExtension = originalModuleExtension;
 	}
 
 	@NotNull
@@ -69,14 +65,8 @@ public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModule
 	}
 
 	@Override
-	public boolean isModified()
+	public boolean isModified(@NotNull MicrosoftDotNetModuleExtension extension)
 	{
-		return isModifiedImpl(myOriginalModuleExtension);
-	}
-
-	@Override
-	public void commit()
-	{
-		myOriginalModuleExtension.commit(this);
+		return isModifiedImpl(extension);
 	}
 }
