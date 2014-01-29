@@ -413,14 +413,14 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD:
 			case METHOD:
 			case ANY_MEMBER:
-				/*if(kind == ResolveToKind.METHOD)
+				if(kind == ResolveToKind.METHOD)
 				{
 					condition = Conditions.and(condition, ourMethodCondition);
 				}
 				else if(kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD)
 				{
 					condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);
-				}   */
+				}
 
 				return processAnyMember(qualifier, condition, incompleteCode);
 		}

@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Plugin" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin" singleton="true">
+    <option name="VM_PARAMETERS" value="-ea -Xmx1024m -Didea.is.internal=true -XX:MaxPermSize=512m" />
+    <option name="PROGRAM_PARAMETERS" value="" />
+    <java-sdk name="1.7" />
+    <consulo-sdk name="Consulo 1.SNAPSHOT" />
+    <artifact name="plugin" />
+    <predefined_log_file id="IDEA_LOG" enabled="true" />
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
+    <ConfigurationWrapper RunnerId="Debug" />
+    <method>
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="plugin" />
+      </option>
+    </method>
+  </configuration>
+</component>
