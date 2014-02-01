@@ -51,6 +51,9 @@
 		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetDllFileTypeFactory"/>
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 
+		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetLibraryRootDetector" />
+		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetXmlDocumentationRootDetector" />
+
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade"
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiFacadeImpl"/>
 
