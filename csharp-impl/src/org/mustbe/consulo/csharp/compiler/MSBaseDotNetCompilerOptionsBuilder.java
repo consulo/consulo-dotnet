@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerMessage;
@@ -37,6 +36,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -194,7 +194,7 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 		val dependFiles = DotNetCompilerUtil.collectDependencies(module, currentProfile, false, false);
 		if(!dependFiles.isEmpty())
 		{
-			addArgument("/reference:" + StringUtils.join(dependFiles, ","));
+			addArgument("/reference:" + StringUtil.join(dependFiles, ","));
 		}
 
 		MainConfigurationProfileEx profileEx = configurationProfile.getExtension(MainConfigurationProfileEx.KEY);
@@ -203,6 +203,13 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 		{
 			addArgument("/debug");
 		}
+
+		String defineVariables = StringUtil.join(profileEx.getVariables(), ";");
+		if(!StringUtil.isEmpty(defineVariables))
+		{
+			addArgument("/define:" + defineVariables);
+		}
+
 		File tempFile = FileUtil.createTempFile("consulo-dotnet-rsp", ".rsp");
 		for(String argument : myArguments)
 		{

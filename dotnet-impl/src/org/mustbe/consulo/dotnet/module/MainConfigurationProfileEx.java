@@ -18,6 +18,8 @@ package org.mustbe.consulo.dotnet.module;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -38,10 +40,18 @@ import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import org.mustbe.consulo.dotnet.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.ui.InputValidator;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.AnActionButton;
+import com.intellij.ui.AnActionButtonRunnable;
+import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBList;
 import lombok.val;
 
 /**
@@ -56,6 +66,7 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 	private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 	private DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 	private boolean myAllowDebugInfo;
+	private List<String> myVariables = new ArrayList<String>();
 
 	public MainConfigurationProfileEx(DotNetModuleExtension dotNetModuleExtension)
 	{
@@ -86,7 +97,7 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 		DotNetMutableModuleExtension<?> extension = modifiableRootModel.getExtension(DotNetMutableModuleExtension.class);
 		assert extension != null;
 
-		JPanel panel = new JPanel(new VerticalFlowLayout());
+		val panel = new JPanel(new VerticalFlowLayout());
 		panel.add(new ModuleExtensionWithSdkPanel(extension, runnable)
 		{
 			@NotNull
@@ -127,6 +138,76 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 			}
 		});
 		panel.add(comp2);
+
+		val dataModel = new CollectionListModel<String>(myVariables)
+		{
+			@Override
+			public int getSize()
+			{
+				return myVariables.size();
+			}
+
+			@Override
+			public String getElementAt(int index)
+			{
+				return myVariables.get(index);
+			}
+
+			@Override
+			public void add(final String element)
+			{
+				int i = myVariables.size();
+				myVariables.add(element);
+				fireIntervalAdded(this, i, i);
+			}
+
+			@Override
+			public void remove(@NotNull final String element)
+			{
+				int i = myVariables.indexOf(element);
+				myVariables.remove(element);
+				fireIntervalRemoved(this, i, i);
+			}
+
+			@Override
+			public void remove(int index)
+			{
+				myVariables.remove(index);
+				fireIntervalRemoved(this, index, index);
+			}
+		};
+
+		val variableList = new JBList(dataModel);
+		ToolbarDecorator variableDecorator = ToolbarDecorator.createDecorator(variableList);
+		variableDecorator.setAddAction(new AnActionButtonRunnable()
+		{
+			@Override
+			public void run(AnActionButton anActionButton)
+			{
+				String name = Messages.showInputDialog(panel, "Name", "Enter Variable Name", null, null, new InputValidator()
+				{
+					@Override
+					public boolean checkInput(String s)
+					{
+						return !myVariables.contains(s);
+					}
+
+					@Override
+					public boolean canClose(String s)
+					{
+						return true;
+					}
+				});
+
+				if(StringUtil.isEmpty(name))
+				{
+					return;
+				}
+
+				dataModel.add(name);
+			}
+		});
+		panel.add(variableDecorator.createPanel());
 		return panel;
 	}
 
@@ -138,6 +219,8 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 		profileEx.setAllowDebugInfo(myAllowDebugInfo);
 		profileEx.setTarget(myTarget);
 		profileEx.mySdkPointer.set(mySdkPointer.getModuleName(), mySdkPointer.getName());
+		profileEx.myVariables.clear();
+		profileEx.myVariables.addAll(myVariables);
 		return profileEx;
 	}
 
@@ -151,7 +234,15 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 	@Override
 	public boolean equalsEx(@NotNull MainConfigurationProfileEx ex)
 	{
-		return mySdkPointer.equals(ex.mySdkPointer) && myTarget.equals(ex.myTarget) && myAllowDebugInfo == ex.isAllowDebugInfo();
+		return mySdkPointer.equals(ex.mySdkPointer) &&
+				myTarget.equals(ex.myTarget) &&
+				myAllowDebugInfo == ex.isAllowDebugInfo() &&
+				myVariables.equals(ex.getVariables());
+	}
+
+	public List<String> getVariables()
+	{
+		return myVariables;
 	}
 
 	public boolean isAllowDebugInfo()

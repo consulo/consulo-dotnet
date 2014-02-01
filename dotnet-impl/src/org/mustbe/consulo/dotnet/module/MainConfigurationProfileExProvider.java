@@ -39,6 +39,10 @@ public class MainConfigurationProfileExProvider implements ConfigurationProfileE
 	{
 		MainConfigurationProfileEx mainConfigurationProfileEx = new MainConfigurationProfileEx(dotNetModuleExtension);
 		mainConfigurationProfileEx.setAllowDebugInfo(debug);
+		if(debug)
+		{
+			mainConfigurationProfileEx.getVariables().add("DEBUG");
+		}
 		return mainConfigurationProfileEx;
 	}
 }
