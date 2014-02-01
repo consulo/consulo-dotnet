@@ -80,6 +80,11 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 		mySdkPointer.fromXml(element);
 		myTarget = DotNetTarget.valueOf(element.getAttributeValue("target", DotNetTarget.EXECUTABLE.name()));
 		myAllowDebugInfo = Boolean.valueOf(element.getAttributeValue("debug", "false"));
+
+		for(Element defineElement : element.getChildren("define"))
+		{
+			myVariables.add(defineElement.getText());
+		}
 	}
 
 	@Override
@@ -88,6 +93,11 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 		mySdkPointer.toXml(element);
 		element.setAttribute("target", myTarget.name());
 		element.setAttribute("debug", Boolean.toString(myAllowDebugInfo));
+
+		for(String variable : myVariables)
+		{
+			element.addContent(new Element("define").setText(variable));
+		}
 	}
 
 	@Nullable
