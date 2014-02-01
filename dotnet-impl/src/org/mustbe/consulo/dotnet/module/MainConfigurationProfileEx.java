@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
 import org.consulo.module.extension.impl.SdkModuleInheritableNamedPointerImpl;
+import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,7 +87,15 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 		assert extension != null;
 
 		JPanel panel = new JPanel(new VerticalFlowLayout());
-		panel.add(new ModuleExtensionWithSdkPanel(extension, this, runnable));
+		panel.add(new ModuleExtensionWithSdkPanel(extension, runnable)
+		{
+			@NotNull
+			@Override
+			public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
+			{
+				return mySdkPointer;
+			}
+		});
 
 		val comp = new JComboBox(DotNetTarget.values());
 		comp.setRenderer(new ListCellRendererWrapper<DotNetTarget>()
