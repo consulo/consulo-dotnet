@@ -27,6 +27,8 @@ import org.mustbe.consulo.dotnet.compiler.DotNetCompilerMessage;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerUtil;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.nemerle.module.extension.NemerleModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -59,16 +61,18 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, boolean debug) throws IOException
+	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull ConfigurationProfile configurationProfile) throws IOException
 	{
 		Sdk sdk = ModuleUtilCore.getSdk(module, NemerleModuleExtension.class);
 		assert sdk != null;
 
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 
 		assert extension != null;
+
+		MainConfigurationProfileEx currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
 		String target = null;
-		switch(extension.getTarget())
+		switch(currentProfileEx.getTarget())
 		{
 			case EXECUTABLE:
 				target = "exe";
@@ -84,10 +88,10 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("-target:" + target);
-		String outputFile = DotNetMacros.extract(module, debug, extension.getTarget());
+		String outputFile = DotNetMacros.extract(module, configurationProfile);
 		arguments.add("-out:" + FileUtil.toSystemIndependentName(outputFile));
 
-		val dependFiles = DotNetCompilerUtil.collectDependencies(module, debug, true, false);
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, configurationProfile, true, false);
 		if(!dependFiles.isEmpty())
 		{
 			arguments.add("-reference:" + StringUtils.join(dependFiles, ","));

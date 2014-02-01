@@ -18,7 +18,8 @@ package org.mustbe.consulo.dotnet.compiler;
 
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.DotNetTarget;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.io.FileUtil;
@@ -40,12 +41,13 @@ public class DotNetMacros
 	public static final String OUTPUT_FILE_EXT = "${output-file-ext}";
 
 	@NotNull
-	public static String extract(@NotNull Module module, boolean debug, DotNetTarget target)
+	public static String extract(@NotNull Module module, ConfigurationProfile profile)
 	{
 		ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
+		MainConfigurationProfileEx mainConfigurationProfileEx = profile.getExtension(MainConfigurationProfileEx.KEY);
 		String fileExtension = null;
-		switch(target)
+		switch(mainConfigurationProfileEx.getTarget())
 		{
 			case EXECUTABLE:
 				fileExtension = "exe";
@@ -59,25 +61,25 @@ public class DotNetMacros
 		path = StringUtil.replace(path, MODULE_OUTPUT_DIR, compilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance
 				()));
 
-		path = StringUtil.replace(path, CONFIGURATION, debug ? "debug" : "release");
+		path = StringUtil.replace(path, CONFIGURATION, profile.getName());
 		path = StringUtil.replace(path, MODULE_NAME, module.getName());
 		path = StringUtil.replace(path, OUTPUT_FILE_EXT, fileExtension);
 		return FileUtil.toSystemDependentName(VfsUtil.urlToPath(path));
 	}
 
-	public static String getModuleOutputDirUrl(@NotNull Module module, boolean debug)
+	public static String getModuleOutputDirUrl(@NotNull Module module, ConfigurationProfile p)
 	{
 		String path = DotNetCompilerConfiguration.getInstance(module.getProject()).getOutputDir();
-		return extractLikeWorkDir(module, path, debug, true);
+		return extractLikeWorkDir(module, path, p, true);
 	}
 
-	public static String extractLikeWorkDir(@NotNull Module module, @NotNull String path, boolean debug, boolean url)
+	public static String extractLikeWorkDir(@NotNull Module module, @NotNull String path, ConfigurationProfile p, boolean url)
 	{
 		ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 		String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
 
 		path = StringUtil.replace(path, MODULE_OUTPUT_DIR, url ? compilerOutputUrl : VfsUtil.urlToPath(compilerOutputUrl));
-		path = StringUtil.replace(path, CONFIGURATION, debug ? "debug" : "release");
+		path = StringUtil.replace(path, CONFIGURATION, p.getName());
 		path = StringUtil.replace(path, MODULE_NAME, module.getName());
 		return path;
 	}

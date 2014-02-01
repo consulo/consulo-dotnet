@@ -18,6 +18,7 @@
         <orderEntry type="module" module-name="dotnet-api" />
         <orderEntry type="module" module-name="dotnet-psi-api" />
         <orderEntry type="module" module-name="dotnet-psi-impl" />
+        <orderEntry type="module" module-name="dotnet-impl" />
       </module>
       <module name="impl/consulo-microsoft-dotnet" dirurl="file://$PROJECT_DIR$/impl/consulo-microsoft-dotnet">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
@@ -145,6 +146,7 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="dotnet-api" />
+        <orderEntry type="module" module-name="dotnet-impl" />
       </module>
       <module name="dotnet-psi-impl" dirurl="file://$PROJECT_DIR$/dotnet-psi-impl">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />

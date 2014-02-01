@@ -16,24 +16,36 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
+import java.util.List;
+
+import org.consulo.annotations.Immutable;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.DotNetVersion;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfileEx;
+import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.openapi.util.Key;
 
 /**
  * @author VISTALL
  * @since 20.11.13.
  */
-public interface DotNetModuleExtension<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionWithSdk<T>
+public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends ModuleExtensionWithSdk<T>
 {
-	@NotNull
-	DotNetTarget getTarget();
-
 	@NotNull
 	DotNetVersion getVersion();
 
 	@NotNull
-	GeneralCommandLine createRunCommandLine(@NotNull String fileName, boolean debug);
+	GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationProfile configurationProfile, Executor executor);
+
+	@Immutable
+	List<ConfigurationProfile> getProfiles();
+
+	@NotNull
+	ConfigurationProfile getCurrentProfile();
+
+	@NotNull
+	<T extends ConfigurationProfileEx<T>> T getCurrentProfileEx(@NotNull Key<T> clazz);
 }

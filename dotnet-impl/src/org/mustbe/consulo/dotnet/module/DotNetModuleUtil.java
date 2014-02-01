@@ -16,11 +16,15 @@
 
 package org.mustbe.consulo.dotnet.module;
 
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.ModuleFileIndex;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 
@@ -44,5 +48,32 @@ public class DotNetModuleUtil
 		}
 		ModuleFileIndex fileIndex = ModuleRootManager.getInstance(moduleForPsiElement).getFileIndex();
 		return fileIndex.isInSourceContent(virtualFile) || fileIndex.isInTestSourceContent(virtualFile);
+	}
+
+	@Nullable
+	public static <T extends ConfigurationProfileEx<T>> T getProfileEx(@NotNull PsiElement element, @NotNull Key<T> key,
+			@NotNull Class<? extends ModuleExtension> clazz)
+	{
+		Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(element);
+		if(moduleForPsiElement == null)
+		{
+			return null;
+		}
+		return getProfileEx(moduleForPsiElement, key, clazz);
+	}
+
+	@Nullable
+	public static <T extends ConfigurationProfileEx<T>> T getProfileEx(@NotNull Module module, @NotNull Key<T> key,
+			@NotNull Class<? extends ModuleExtension> clazz)
+	{
+		ModuleExtension<?> extension = ModuleUtilCore.getExtension(module, clazz);
+		if(extension == null)
+		{
+			return null;
+		}
+
+		DotNetModuleExtension<?> dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		assert dotNetModuleExtension != null;
+		return dotNetModuleExtension.getCurrentProfileEx(key);
 	}
 }

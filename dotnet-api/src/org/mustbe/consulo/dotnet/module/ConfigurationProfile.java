@@ -14,27 +14,32 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.compiler;
+package org.mustbe.consulo.dotnet.module;
 
-import java.io.IOException;
+import java.util.Map;
 
+import org.consulo.annotations.Immutable;
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.util.Key;
 
 /**
  * @author VISTALL
- * @since 25.12.13.
+ * @since 01.02.14
  */
-public interface DotNetCompilerOptionsBuilder
+public interface ConfigurationProfile extends Named
 {
-	@Nullable
-	DotNetCompilerMessage convertToMessage(Module module, String line);
+	boolean isActive();
+
+	void setActive(boolean v);
 
 	@NotNull
-	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull ConfigurationProfile configurationProfile) throws
-			IOException;
+	<T extends ConfigurationProfileEx<T>> T getExtension(@NotNull Key<T> clazz);
+
+	@NotNull
+	@Immutable
+	Map<String, ConfigurationProfileEx<?>> getExtensions();
+
+	@NotNull
+	ConfigurationProfile clone();
 }

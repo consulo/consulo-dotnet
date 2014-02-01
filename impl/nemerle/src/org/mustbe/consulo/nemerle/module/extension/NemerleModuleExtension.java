@@ -19,6 +19,7 @@ package org.mustbe.consulo.nemerle.module.extension;
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import org.mustbe.consulo.nemerle.compiler.NemerleCompilerOptionsBuilder;
 import org.mustbe.consulo.nemerle.lang.NemerleFileType;
@@ -54,7 +55,7 @@ public class NemerleModuleExtension extends ModuleExtensionWithSdkImpl<NemerleMo
 
 	@NotNull
 	@Override
-	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk)
+	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk, ConfigurationProfile currentProfile)
 	{
 		return new NemerleCompilerOptionsBuilder(dotNetSdk);
 	}

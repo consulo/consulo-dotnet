@@ -18,13 +18,10 @@ package org.mustbe.consulo.microsoft.dotnet.module.extension2;
 
 import javax.swing.JComponent;
 
-import org.consulo.module.extension.MutableModuleExtensionWithSdk;
-import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTarget;
+import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
@@ -32,18 +29,11 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @since 20.11.13.
  */
 public class MicrosoftDotNetMutableModuleExtension2 extends MicrosoftDotNetModuleExtension2 implements
-		MutableModuleExtensionWithSdk<MicrosoftDotNetModuleExtension2>
+		DotNetMutableModuleExtension<MicrosoftDotNetModuleExtension2>
 {
 	public MicrosoftDotNetMutableModuleExtension2(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
-	}
-
-	@NotNull
-	@Override
-	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
-	{
-		return (MutableModuleInheritableNamedPointer<Sdk>) super.getInheritableSdk();
 	}
 
 	@Nullable
@@ -51,17 +41,6 @@ public class MicrosoftDotNetMutableModuleExtension2 extends MicrosoftDotNetModul
 	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
 		return createConfigurablePanelImpl(modifiableRootModel, runnable);
-	}
-
-	public void setTarget(DotNetTarget target)
-	{
-		myTarget = target;
-	}
-
-	@Override
-	public void setEnabled(boolean b)
-	{
-		myIsEnabled = b;
 	}
 
 	@Override

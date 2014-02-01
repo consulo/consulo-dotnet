@@ -21,12 +21,10 @@ import java.util.Arrays;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
-import com.intellij.compiler.options.CompileStepBeforeRun;
-import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.compiler.CompileContext;
@@ -101,7 +99,6 @@ public class DotNetCompiler implements TranslatingCompiler
 	@Override
 	public void compile(CompileContext compileContext, Chunk<Module> moduleChunk, VirtualFile[] virtualFiles, OutputSink outputSink)
 	{
-		Executor executor = compileContext.getCompileScope().getUserData(CompileStepBeforeRun.EXECUTOR);
 		Module module = moduleChunk.getNodes().iterator().next();
 
 		DotNetModuleLangExtension langDotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
@@ -110,11 +107,13 @@ public class DotNetCompiler implements TranslatingCompiler
 		assert dotNetModuleExtension != null;
 		assert langDotNetModuleExtension != null;
 
-		DotNetCompilerOptionsBuilder builder = langDotNetModuleExtension.createCompilerOptionsBuilder(dotNetModuleExtension.getSdk());
+		ConfigurationProfile currentProfile = dotNetModuleExtension.getCurrentProfile();
+
+		DotNetCompilerOptionsBuilder builder = langDotNetModuleExtension.createCompilerOptionsBuilder(dotNetModuleExtension.getSdk(), currentProfile);
 
 		try
 		{
-			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, executor instanceof DefaultDebugExecutor);
+			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, currentProfile);
 
 			val process = commandLine.createProcess();
 			val processHandler = new CapturingProcessHandler(process, Charset.forName("UTF-8"));

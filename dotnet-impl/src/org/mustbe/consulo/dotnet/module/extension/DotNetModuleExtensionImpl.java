@@ -16,92 +16,101 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JList;
-import javax.swing.JPanel;
 
-import org.consulo.module.extension.MutableModuleExtensionWithSdk;
-import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
-import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
+import org.consulo.module.extension.MutableModuleExtension;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
+import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetBundle;
-import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.DotNetVersion;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfileEx;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfileImpl;
+import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
+import org.mustbe.consulo.dotnet.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.ui.components.JBLabel;
-import lombok.val;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 
 /**
  * @author VISTALL
  * @since 10.01.14
  */
-public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionImpl<S>> extends ModuleExtensionWithSdkImpl<S> implements
+public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionImpl<S>> extends ModuleExtensionImpl<S> implements
 		DotNetModuleExtension<S>
 {
-	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
+	protected List<ConfigurationProfile> myProfiles = new ArrayList<ConfigurationProfile>(2);
 
 	public DotNetModuleExtensionImpl(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
 	}
 
+	@NotNull
+	protected abstract Class<? extends SdkType> getSdkTypeClass();
+
 	@Nullable
 	public JComponent createConfigurablePanelImpl(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		JPanel panel = new JPanel(new VerticalFlowLayout());
-		panel.add(new ModuleExtensionWithSdkPanel((MutableModuleExtensionWithSdk<?>) this, runnable));
-
-		val comp = new JComboBox(DotNetTarget.values());
-		comp.setRenderer(new ListCellRendererWrapper<DotNetTarget>()
-		{
-			@Override
-			public void customize(JList jList, DotNetTarget dotNetTarget, int i, boolean b, boolean b2)
-			{
-				setText(dotNetTarget.getDescription());
-			}
-		});
-		comp.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				myTarget = (DotNetTarget) comp.getSelectedItem();
-			}
-		});
-
-		panel.add(labeledLine(DotNetBundle.message("target.label"), comp));
-
-		return wrapToNorth(panel);
+		return new ConfigurationProfilePanel(modifiableRootModel, runnable, MainConfigurationProfileEx.KEY);
 	}
 
 	public boolean isModifiedImpl(S originExtension)
 	{
-		return super.isModifiedImpl(originExtension) || myTarget != originExtension.getTarget();
+		return myIsEnabled != originExtension.isEnabled() ||
+
+				!myProfiles.equals(originExtension.getProfiles());
 	}
 
-	private static JPanel labeledLine(String text, JComponent component)
+	public void setCurrentProfile(@NotNull String name)
 	{
-		JPanel targetPanel = new JPanel(new BorderLayout());
-		targetPanel.add(new JBLabel(text), BorderLayout.WEST);
-		targetPanel.add(component);
-		return targetPanel;
+		ConfigurationProfile profile = null;
+		for(ConfigurationProfile configurationProfile : myProfiles)
+		{
+			if(Comparing.equal(configurationProfile.getName(), name))
+			{
+				profile = configurationProfile;
+			}
+			configurationProfile.setActive(false);
+		}
+
+		if(profile != null)
+		{
+			profile.setActive(true);
+		}
+		else
+		{
+			myProfiles.get(0).setActive(true);
+		}
+	}
+
+	public void setEnabled(boolean b)
+	{
+		assert this instanceof MutableModuleExtension;
+
+		myIsEnabled = b;
+
+		if(myProfiles.isEmpty())
+		{
+			initDefaultProfiles();
+		}
 	}
 
 	@NotNull
 	@Override
-	public DotNetTarget getTarget()
+	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
-		return myTarget;
+		MainConfigurationProfileEx currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+		return currentProfileEx.getInheritableSdk();
 	}
 
 	@NotNull
@@ -112,11 +121,89 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	}
 
 	@Override
+	public List<ConfigurationProfile> getProfiles()
+	{
+		return myProfiles;
+	}
+
+	@Nullable
+	@Override
+	public Sdk getSdk()
+	{
+		MainConfigurationProfileEx currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+		return currentProfileEx.getInheritableSdk().get();
+	}
+
+	@Nullable
+	@Override
+	public String getSdkName()
+	{
+		MainConfigurationProfileEx currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+		return currentProfileEx.getInheritableSdk().getName();
+	}
+
+	@Nullable
+	@Override
+	public SdkType getSdkType()
+	{
+		return SdkType.findInstance(getSdkTypeClass());
+	}
+
+	@NotNull
+	@Override
+	public ConfigurationProfile getCurrentProfile()
+	{
+		for(ConfigurationProfile profile : myProfiles)
+		{
+			if(profile.isActive())
+			{
+				return profile;
+			}
+		}
+		return ConfigurationProfileImpl.NULL;
+	}
+
+	@NotNull
+	@Override
+	public <T extends ConfigurationProfileEx<T>> T getCurrentProfileEx(@NotNull Key<T> clazz)
+	{
+		ConfigurationProfile currentProfile = getCurrentProfile();
+		return currentProfile.getExtension(clazz);
+	}
+
+	@Override
 	protected void loadStateImpl(@NotNull Element element)
 	{
 		super.loadStateImpl(element);
 
-		myTarget = DotNetTarget.valueOf(element.getAttributeValue("target", DotNetTarget.EXECUTABLE.name()));
+		Element profiles = element.getChild("profiles");
+		if(profiles == null)
+		{
+			initDefaultProfiles();
+		}
+		else
+		{
+			for(Element childElement : profiles.getChildren())
+			{
+				String name = childElement.getAttributeValue("name");
+				boolean active = Boolean.valueOf(childElement.getAttributeValue("active", "false"));
+				ConfigurationProfileImpl profile = new ConfigurationProfileImpl(name, active);
+				profile.initDefaults(this);
+
+				for(Element profileExElement : childElement.getChildren("profile_ex"))
+				{
+					String key = profileExElement.getAttributeValue("key");
+
+					ConfigurationProfileEx configurationProfileEx = profile.getExtensions().get(key);
+					if(configurationProfileEx != null)
+					{
+						configurationProfileEx.loadState(profileExElement);
+					}
+				}
+
+				myProfiles.add(profile);
+			}
+		}
 	}
 
 	@Override
@@ -124,13 +211,49 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	{
 		super.getStateImpl(element);
 
-		element.setAttribute("target", myTarget.name());
+		Element profilesElement = new Element("profiles");
+		for(ConfigurationProfile profile : myProfiles)
+		{
+			Element profileElement = new Element("profile");
+			profileElement.setAttribute("name", profile.getName());
+			profileElement.setAttribute("active", Boolean.toString(profile.isActive()));
+
+			for(Map.Entry<String, ConfigurationProfileEx<?>> pair : profile.getExtensions().entrySet())
+			{
+				Element profileExElement = new Element("profile_ex");
+				profileExElement.setAttribute("key", pair.getKey());
+
+				pair.getValue().getState(profileExElement);
+
+				profileElement.addContent(profileExElement);
+			}
+
+			profilesElement.addContent(profileElement);
+		}
+
+		element.addContent(profilesElement);
+	}
+
+	protected void initDefaultProfiles()
+	{
+		ConfigurationProfileImpl release = new ConfigurationProfileImpl("Release", false);
+		release.initDefaults(this, false);
+		myProfiles.add(release);
+
+		ConfigurationProfileImpl debug = new ConfigurationProfileImpl("Debug", true);
+		debug.initDefaults(this, true);
+		myProfiles.add(debug);
 	}
 
 	@Override
 	public void commit(@NotNull S mutableModuleExtension)
 	{
 		super.commit(mutableModuleExtension);
-		myTarget = mutableModuleExtension.myTarget;
+
+		myProfiles.clear();
+		for(ConfigurationProfile configurationProfile : mutableModuleExtension.getProfiles())
+		{
+			myProfiles.add(configurationProfile.clone());
+		}
 	}
 }

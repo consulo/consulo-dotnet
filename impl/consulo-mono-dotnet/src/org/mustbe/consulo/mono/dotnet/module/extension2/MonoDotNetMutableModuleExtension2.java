@@ -18,20 +18,17 @@ package org.mustbe.consulo.mono.dotnet.module.extension2;
 
 import javax.swing.JComponent;
 
-import org.consulo.module.extension.MutableModuleExtensionWithSdk;
-import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTarget;
+import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MonoDotNetMutableModuleExtension2 extends MonoDotNetModuleExtension2 implements MutableModuleExtensionWithSdk<MonoDotNetModuleExtension2>
+public class MonoDotNetMutableModuleExtension2 extends MonoDotNetModuleExtension2 implements DotNetMutableModuleExtension<MonoDotNetModuleExtension2>
 {
 	public MonoDotNetMutableModuleExtension2(@NotNull String id, @NotNull Module module)
 	{
@@ -43,24 +40,6 @@ public class MonoDotNetMutableModuleExtension2 extends MonoDotNetModuleExtension
 	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
 		return createConfigurablePanelImpl(modifiableRootModel, runnable);
-	}
-
-	public void setTarget(DotNetTarget target)
-	{
-		myTarget = target;
-	}
-
-	@NotNull
-	@Override
-	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
-	{
-		return (MutableModuleInheritableNamedPointer<Sdk>) super.getInheritableSdk();
-	}
-
-	@Override
-	public void setEnabled(boolean b)
-	{
-		myIsEnabled = b;
 	}
 
 	@Override

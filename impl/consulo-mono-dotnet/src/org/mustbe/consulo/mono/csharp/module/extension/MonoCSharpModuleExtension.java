@@ -17,9 +17,11 @@
 package org.mustbe.consulo.mono.csharp.module.extension;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.compiler.MSBaseDotNetCompilerOptionsBuilder;
+import org.mustbe.consulo.csharp.module.CSharpConfigurationProfileEx;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
-import org.mustbe.consulo.dotnet.compiler.MSBaseDotNetCompilerOptionsBuilder;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 
@@ -36,10 +38,11 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 
 	@NotNull
 	@Override
-	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk)
+	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk, ConfigurationProfile currentProfile)
 	{
 		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(dotNetSdk);
-		if(isUnsafeEnabled())
+		CSharpConfigurationProfileEx extension = currentProfile.getExtension(CSharpConfigurationProfileEx.KEY);
+		if(extension.isAllowUnsafeCode())
 		{
 			optionsBuilder.addArgument("/unsafe");
 		}

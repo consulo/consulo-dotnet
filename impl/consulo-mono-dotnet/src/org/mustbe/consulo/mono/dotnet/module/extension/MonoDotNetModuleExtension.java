@@ -17,9 +17,12 @@
 package org.mustbe.consulo.mono.dotnet.module.extension;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
+import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -36,6 +39,7 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 		super(id, module);
 	}
 
+	@NotNull
 	@Override
 	protected Class<? extends SdkType> getSdkTypeClass()
 	{
@@ -44,14 +48,14 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, boolean debug)
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationProfile configurationProfile, Executor executor)
 	{
 		Sdk sdk = getSdk();
 		assert sdk != null;
 
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(sdk.getHomePath() + "/../../../bin/mono" + (SystemInfo.isWindows ? ".exe" : ""));
-		if(debug)
+		if(executor instanceof DefaultDebugExecutor)
 		{
 			commandLine.addParameter("--debug");
 		}

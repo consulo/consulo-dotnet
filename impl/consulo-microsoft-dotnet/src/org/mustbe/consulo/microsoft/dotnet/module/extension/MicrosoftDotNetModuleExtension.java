@@ -17,8 +17,10 @@
 package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
+import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -34,6 +36,7 @@ public class MicrosoftDotNetModuleExtension extends DotNetModuleExtensionImpl<Mi
 		super(id, module);
 	}
 
+	@NotNull
 	@Override
 	protected Class<? extends SdkType> getSdkTypeClass()
 	{
@@ -42,7 +45,7 @@ public class MicrosoftDotNetModuleExtension extends DotNetModuleExtensionImpl<Mi
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, boolean debug)
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationProfile configurationProfile, Executor executor)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(fileName);

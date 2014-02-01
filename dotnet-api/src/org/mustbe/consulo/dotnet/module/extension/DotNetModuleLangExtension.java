@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.module.extension;
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.projectRoots.Sdk;
 
@@ -32,5 +33,5 @@ public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T
 	LanguageFileType getFileType();
 
 	@NotNull
-	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk);
+	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk, ConfigurationProfile currentProfile);
 }

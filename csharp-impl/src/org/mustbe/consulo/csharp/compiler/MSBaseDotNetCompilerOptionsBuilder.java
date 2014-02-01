@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.compiler;
+package org.mustbe.consulo.csharp.compiler;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +24,12 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.compiler.DotNetCompilerMessage;
+import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
+import org.mustbe.consulo.dotnet.compiler.DotNetCompilerUtil;
+import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
@@ -156,13 +162,16 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 
 	@Override
 	@NotNull
-	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, boolean debug) throws IOException
+	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results,
+			@NotNull ConfigurationProfile configurationProfile) throws IOException
 	{
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 
 		assert extension != null;
+
+		MainConfigurationProfileEx currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
 		String target = null;
-		switch(extension.getTarget())
+		switch(currentProfileEx.getTarget())
 		{
 			case EXECUTABLE:
 				target = "exe";
@@ -172,21 +181,25 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 				break;
 		}
 
+		ConfigurationProfile currentProfile = extension.getCurrentProfile();
+
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(myExecutable);
 		commandLine.setWorkDirectory(module.getModuleDirPath());
 
 		addArgument("/target:" + target);
-		String outputFile = DotNetMacros.extract(module, debug, extension.getTarget());
+		String outputFile = DotNetMacros.extract(module, configurationProfile);
 		addArgument("/out:" + outputFile);
 
-		val dependFiles = DotNetCompilerUtil.collectDependencies(module, debug, false, false);
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, currentProfile, false, false);
 		if(!dependFiles.isEmpty())
 		{
 			addArgument("/reference:" + StringUtils.join(dependFiles, ","));
 		}
 
-		if(debug)
+		MainConfigurationProfileEx profileEx = configurationProfile.getExtension(MainConfigurationProfileEx.KEY);
+
+		if(profileEx.isAllowDebugInfo())
 		{
 			addArgument("/debug");
 		}
@@ -201,8 +214,8 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 			FileUtil.appendToFile(tempFile, FileUtil.toSystemDependentName(result.getPath()) + "\n");
 		}
 
-		LOGGER.warn("Compiler def file: " + tempFile);
-		LOGGER.warn(FileUtil.loadFile(tempFile));
+		MSBaseDotNetCompilerOptionsBuilder.LOGGER.warn("Compiler def file: " + tempFile);
+		MSBaseDotNetCompilerOptionsBuilder.LOGGER.warn(FileUtil.loadFile(tempFile));
 
 		FileUtil.createParentDirs(new File(outputFile));
 

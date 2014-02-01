@@ -92,12 +92,17 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				continue;
 			}
 
+			val dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+			assert dotNetModuleExtension != null;
+			val currentProfile = dotNetModuleExtension.getCurrentProfile();
+
 			val r = new ReadAction<Set<String>>()
 			{
 				@Override
 				protected void run(Result<Set<String>> listResult) throws Throwable
 				{
-					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, false, true, true));
+
+					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, currentProfile, true, true));
 				}
 			}.execute();
 
@@ -110,7 +115,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				{
 					continue;
 				}
-				itemList.add(new DotNetProcessingItem(fileByIoFile, module));
+				itemList.add(new DotNetProcessingItem(fileByIoFile, module, currentProfile));
 			}
 		}
 
@@ -128,7 +133,9 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 		List<ProcessingItem> items = new ArrayList<ProcessingItem>(processingItems.length);
 		for(ProcessingItem processingItem : processingItems)
 		{
-			String moduleOutputDirUrl = DotNetMacros.getModuleOutputDirUrl(((DotNetProcessingItem) processingItem).getTarget(), false);
+			DotNetProcessingItem dotNetProcessingItem = (DotNetProcessingItem) processingItem;
+			String moduleOutputDirUrl = DotNetMacros.getModuleOutputDirUrl(dotNetProcessingItem.getTarget(),
+					dotNetProcessingItem.getConfigurationProfile());
 
 			File copyFile = new File(VirtualFileManager.extractPath(moduleOutputDirUrl), processingItem.getFile().getName());
 
@@ -138,7 +145,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			{
 				FileUtil.copy(file, copyFile);
 
-				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null));
+				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null, null));
 			}
 			catch(IOException e)
 			{

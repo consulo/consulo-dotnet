@@ -14,27 +14,16 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.compiler;
+package org.mustbe.consulo.dotnet.module.extension;
 
-import java.io.IOException;
-
+import org.consulo.module.extension.MutableModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author VISTALL
- * @since 25.12.13.
+ * @since 01.02.14
  */
-public interface DotNetCompilerOptionsBuilder
+public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetModuleExtension<T>, MutableModuleExtensionWithSdk<T>
 {
-	@Nullable
-	DotNetCompilerMessage convertToMessage(Module module, String line);
-
-	@NotNull
-	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull ConfigurationProfile configurationProfile) throws
-			IOException;
+	void setCurrentProfile(@NotNull String currentProfile);
 }

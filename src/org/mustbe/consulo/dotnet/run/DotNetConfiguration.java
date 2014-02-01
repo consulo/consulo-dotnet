@@ -26,6 +26,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.DefaultExecutionResult;
@@ -37,7 +38,6 @@ import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -127,11 +127,12 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 		assert extension != null;
 
-		boolean debug = executor instanceof DefaultDebugExecutor;
-		val exeFile = DotNetMacros.extract(module, debug, extension.getTarget());
+		ConfigurationProfile currentProfile = extension.getCurrentProfile();
+
+		val exeFile = DotNetMacros.extract(module, currentProfile);
 
 		DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();
-		val runCommandLine = extension.createRunCommandLine(exeFile, debug);
+		val runCommandLine = extension.createRunCommandLine(exeFile, currentProfile, executor);
 		String programParameters = runProfile.getProgramParameters();
 		if(!StringUtil.isEmpty(programParameters))
 		{
@@ -139,7 +140,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		}
 		runCommandLine.setPassParentEnvironment(runProfile.isPassParentEnvs());
 		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
-		runCommandLine.setWorkDirectory(DotNetMacros.extractLikeWorkDir(module, runProfile.getWorkingDirectory(), debug, false));
+		runCommandLine.setWorkDirectory(DotNetMacros.extractLikeWorkDir(module, runProfile.getWorkingDirectory(), currentProfile, false));
 		return new RunProfileState()
 		{
 			@Nullable

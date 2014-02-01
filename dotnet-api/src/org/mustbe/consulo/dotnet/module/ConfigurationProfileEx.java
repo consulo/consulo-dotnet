@@ -14,27 +14,34 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.compiler;
+package org.mustbe.consulo.dotnet.module;
 
-import java.io.IOException;
+import javax.swing.JComponent;
 
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.util.Key;
 
 /**
  * @author VISTALL
- * @since 25.12.13.
+ * @since 01.02.14
  */
-public interface DotNetCompilerOptionsBuilder
+public interface ConfigurationProfileEx<T extends ConfigurationProfileEx<T>>
 {
+	@NotNull
+	Key<?> getKey();
+
+	boolean equalsEx(@NotNull T ex);
+
+	void loadState(Element element);
+
+	void getState(Element element);
+
 	@Nullable
-	DotNetCompilerMessage convertToMessage(Module module, String line);
+	JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable);
 
 	@NotNull
-	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull ConfigurationProfile configurationProfile) throws
-			IOException;
+	ConfigurationProfileEx<T> clone();
 }

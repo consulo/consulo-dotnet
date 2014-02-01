@@ -28,9 +28,10 @@
 		<allClassesSearch implementation="org.mustbe.consulo.csharp.lang.psi.impl.search.CSharpAllClassesSearchExecutor"/>
 		<directClassInheritorsSearch implementation="org.mustbe.consulo.csharp.lang.psi.impl.search.CSharpDirectInheritorsSearcherExecutor"/>
 		<psi.facade implementation="org.mustbe.consulo.csharp.lang.psi.impl.resolve.CSharpPsiFacadeImpl"/>
+		<configurationExProvider implementation="org.mustbe.consulo.csharp.module.CSharpConfigurationProfileExProvider" />
 	</extensions>
-	<extensions defaultExtensionNs="com.intellij">
 
+	<extensions defaultExtensionNs="com.intellij">
 		<internalFileTemplate name="CSharpClass"/>
 		<internalFileTemplate name="CSharpInterface"/>
 		<internalFileTemplate name="CSharpEnum"/>

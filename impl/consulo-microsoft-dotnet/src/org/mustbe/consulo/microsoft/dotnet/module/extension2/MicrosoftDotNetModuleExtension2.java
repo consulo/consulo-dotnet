@@ -17,11 +17,13 @@
 package org.mustbe.consulo.microsoft.dotnet.module.extension2;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import org.mustbe.consulo.roots.ContentFoldersSupport;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -41,6 +43,7 @@ public class MicrosoftDotNetModuleExtension2 extends DotNetModuleExtensionImpl<M
 		super(id, module);
 	}
 
+	@NotNull
 	@Override
 	protected Class<? extends SdkType> getSdkTypeClass()
 	{
@@ -49,7 +52,7 @@ public class MicrosoftDotNetModuleExtension2 extends DotNetModuleExtensionImpl<M
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, boolean debug)
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationProfile configurationProfile, Executor executor)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(fileName);

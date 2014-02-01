@@ -19,8 +19,8 @@
 	<name>.NET Core</name>
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
 
-	<xi:include href="/META-INF/CSharp.xml" xpointer="xpointer(/idea-plugin/*)" />
-	<xi:include href="/META-INF/CSharpInspections.xml" xpointer="xpointer(/idea-plugin/*)" />
+	<xi:include href="/META-INF/CSharp.xml" xpointer="xpointer(/idea-plugin/*)"/>
+	<xi:include href="/META-INF/CSharpInspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
 	<application-components>
 		<component>
@@ -30,31 +30,42 @@
 
 	<extensionPoints>
 		<extensionPoint name="psi.facade" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade" area="CONSULO_PROJECT"/>
+		<extensionPoint name="configurationExProvider" interface="org.mustbe.consulo.dotnet.module.ConfigurationProfileExProvider"/>
 
-		<extensionPoint name="classInheritorsSearch" interface="com.intellij.util.QueryExecutor" />
-		<extensionPoint name="directClassInheritorsSearch" interface="com.intellij.util.QueryExecutor" />
-		<extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor" />
+		<extensionPoint name="classInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
+		<extensionPoint name="directClassInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
+		<extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor"/>
 	</extensionPoints>
 
+	<project-components>
+		<component>
+			<implementation-class>org.mustbe.consulo.dotnet.ui.profile.ProfileWidgetRegistrator</implementation-class>
+		</component>
+	</project-components>
+
+	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
+		<configurationExProvider implementation="org.mustbe.consulo.dotnet.module.MainConfigurationProfileExProvider"/>
+	</extensions>
+
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetDllFileTypeFactory" />
-		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
+		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetDllFileTypeFactory"/>
+		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade"
-						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiFacadeImpl" />
+						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiFacadeImpl"/>
 
 		<!--<packageViewHelper implementation="org.mustbe.consulo.dotnet.ide.projectView.DotNetPackageViewHelper" /> -->
 
-		<consoleFilterProvider implementation="org.mustbe.consulo.dotnet.run.filters.DotNetConsoleFilterProvider" />
+		<consoleFilterProvider implementation="org.mustbe.consulo.dotnet.run.filters.DotNetConsoleFilterProvider"/>
 		<configurationType implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationType"/>
-		<programRunner implementation="org.mustbe.consulo.dotnet.run.DotNetDebuggerProgramRunner" />
+		<programRunner implementation="org.mustbe.consulo.dotnet.run.DotNetDebuggerProgramRunner"/>
 
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompiler"/>
-		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopier" />
-		<compiler.translatingHelper implementation="org.mustbe.consulo.dotnet.compiler.DotNetTranslatingCompilerFilesMonitorHelper" />
-		<compiler.moduleScopeFactory implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompileModuleScopeFactory" />
+		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopier"/>
+		<compiler.translatingHelper implementation="org.mustbe.consulo.dotnet.compiler.DotNetTranslatingCompilerFilesMonitorHelper"/>
+		<compiler.moduleScopeFactory implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompileModuleScopeFactory"/>
 
-		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider" />
+		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider"/>
 
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"
 						serviceImplementation="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"/>

@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.compiler;
-
-import java.io.IOException;
+package org.mustbe.consulo.dotnet.module;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import com.intellij.openapi.extensions.ExtensionPointName;
 
 /**
  * @author VISTALL
- * @since 25.12.13.
+ * @since 01.02.14
  */
-public interface DotNetCompilerOptionsBuilder
+public interface ConfigurationProfileExProvider
 {
-	@Nullable
-	DotNetCompilerMessage convertToMessage(Module module, String line);
+	ExtensionPointName<ConfigurationProfileExProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.configurationExProvider");
 
 	@NotNull
-	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull ConfigurationProfile configurationProfile) throws
-			IOException;
+	ConfigurationProfileEx createEx(@NotNull DotNetModuleExtension dotNetModuleExtension, @NotNull ConfigurationProfile profile);
+
+	@NotNull
+	ConfigurationProfileEx createExForDefaults(@NotNull DotNetModuleExtension dotNetModuleExtension, @NotNull ConfigurationProfile profile, boolean debug);
 }

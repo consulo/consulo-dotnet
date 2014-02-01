@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -42,7 +43,7 @@ import lombok.val;
 public class DotNetCompilerUtil
 {
 	@NotNull
-	public static Set<String> collectDependencies(@NotNull Module module, final boolean debug, final boolean toSystemInDepend,
+	public static Set<String> collectDependencies(@NotNull Module module, final ConfigurationProfile p, final boolean toSystemInDepend,
 			final boolean forDependCopy)
 	{
 		val list = new HashSet<String>();
@@ -115,7 +116,7 @@ public class DotNetCompilerUtil
 				DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(depModule, DotNetModuleExtension.class);
 				if(dependencyExtension != null)
 				{
-					String extract = DotNetMacros.extract(depModule, debug, dependencyExtension.getTarget());
+					String extract = DotNetMacros.extract(depModule, p);
 					if(toSystemInDepend)
 					{
 						list.add(FileUtil.toSystemIndependentName(extract));
@@ -128,7 +129,7 @@ public class DotNetCompilerUtil
 
 				if(forDependCopy)
 				{
-					Set<String> strings = collectDependencies(depModule, debug, toSystemInDepend, true);
+					Set<String> strings = collectDependencies(depModule, p, toSystemInDepend, true);
 					list.addAll(strings);
 				}
 				return null;
