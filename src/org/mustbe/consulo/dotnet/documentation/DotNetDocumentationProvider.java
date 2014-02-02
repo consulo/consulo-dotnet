@@ -162,8 +162,28 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		{
 			builder.append(((DotNetPropertyDeclaration) psiElement).toTypeRef().getPresentableText()).append(" ");
 		}
+		else if(psiElement instanceof DotNetLikeMethodDeclaration)
+		{
+			builder.append(((DotNetLikeMethodDeclaration) psiElement).getReturnTypeRef().getPresentableText()).append(" ");
+		}
 
-		builder.append(psiElement.getName()).append("</code><br><br>");
+		builder.append(psiElement.getName());
+
+		if(psiElement instanceof DotNetLikeMethodDeclaration)
+		{
+			builder.append("(");
+			builder.append(StringUtil.join(((DotNetLikeMethodDeclaration) psiElement).getParameters(), new Function<DotNetParameter, String>()
+			{
+				@Override
+				public String fun(DotNetParameter dotNetParameter)
+				{
+					return dotNetParameter.toTypeRef().getPresentableText() + " " + dotNetParameter.getName();
+				}
+			}, ", "));
+			builder.append(")");
+		}
+
+		builder.append("</code><br><br>");
 
 		XmlTag summaryElement = xmlTag.findFirstSubTag("summary");
 		if(summaryElement != null)
