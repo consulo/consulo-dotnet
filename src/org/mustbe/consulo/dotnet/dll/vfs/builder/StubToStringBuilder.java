@@ -504,7 +504,7 @@ public class StubToStringBuilder
 					parameterType = methodDef.getSignature().getReturnType().getType();
 
 					// name is first parameter type
-					name = TypeToStringBuilder.typeToString(methodDef.getSignature().getParameters()[0].getType(), typeDef, methodDef);
+					name = TypeToStringBuilder.typeToString(methodDef.getSignature().getParameters()[0].getInnerType(), typeDef, methodDef);
 				}
 				else
 				{
@@ -570,7 +570,7 @@ public class StubToStringBuilder
 			public String fun(ParameterSignature paramDef)
 			{
 				StringBuilder p = new StringBuilder();
-				p.append(TypeToStringBuilder.typeToString(paramDef.getType(), typeDef, methodDef));
+				p.append(TypeToStringBuilder.typeToString(paramDef.getInnerType(), typeDef, methodDef));
 				p.append(" ");
 				p.append(paramDef.getParameterInfo().getName());
 				return p.toString();

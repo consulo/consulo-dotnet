@@ -17,6 +17,7 @@
 package org.mustbe.consulo.microsoft.dotnet.sdk;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,16 +38,21 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
+import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.Consumer;
 import lombok.val;
 
@@ -118,11 +124,71 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	}
 
 	@Override
+	public void setupSdkPaths(Sdk sdk)
+	{
+		VirtualFile homeDirectory = sdk.getHomeDirectory();
+		assert homeDirectory != null;
+
+		File file = new File(homeDirectory.getPath(), "csc.rsp");
+		if(file.exists())
+		{
+			try
+			{
+				List<String> lines = FileUtil.loadLines(file);
+
+				List<String> libraries = new ArrayList<String>(lines.size());
+				libraries.add("mscorlib.dll");
+				for(String line : lines)
+				{
+					if(line.startsWith("/r:"))
+					{
+						libraries.add(line.substring(3, line.length()));
+					}
+				}
+
+				SdkModificator sdkModificator = sdk.getSdkModificator();
+
+				for(String orderDll : libraries)
+				{
+					VirtualFile dllVirtualFile = homeDirectory.findFileByRelativePath(orderDll);
+					if(dllVirtualFile == null)
+					{
+						continue;
+					}
+
+					VirtualFile rootForLocalFile = ArchiveVfsUtil.getJarRootForLocalFile(dllVirtualFile);
+					if(rootForLocalFile != null)
+					{
+						sdkModificator.addRoot(rootForLocalFile, OrderRootType.CLASSES);
+					}
+
+					String xmlFileUrl = homeDirectory.getUrl() + "/" + orderDll.substring(0, orderDll.length() - 3) + "xml";
+
+					VirtualFile docVirtualFile = VirtualFileManager.getInstance().refreshAndFindFileByUrl(xmlFileUrl);
+					if(docVirtualFile != null)
+					{
+						sdkModificator.addRoot(docVirtualFile, OrderRootType.DOCUMENTATION);
+					}
+				}
+				sdkModificator.commitChanges();
+			}
+			catch(IOException e)
+			{
+				super.setupSdkPaths(sdk);
+			}
+		}
+		else
+		{
+			super.setupSdkPaths(sdk);
+		}
+	}
+
+	@Override
 	public void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, final Consumer<Sdk> sdkCreatedCallback)
 	{
 		FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-		VirtualFile microNetVirtualFile = FileChooser.chooseFile(singleFolderDescriptor, null, LocalFileSystem.getInstance().findFileByIoFile(new File
-				(suggestHomePath())));
+		VirtualFile microNetVirtualFile = FileChooser.chooseFile(singleFolderDescriptor, null, LocalFileSystem.getInstance().findFileByIoFile(new
+				File(suggestHomePath())));
 		if(microNetVirtualFile == null)
 		{
 			return;

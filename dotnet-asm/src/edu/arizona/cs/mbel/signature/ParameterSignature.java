@@ -31,11 +31,11 @@ import edu.arizona.cs.mbel.mbel.TypeGroup;
  *
  * @author Michael Stepp
  */
-public class ParameterSignature extends Signature
+public class ParameterSignature extends TypeSignature
 {
 	private Vector customMods;   // CustomModifierSignatures
 	private TypeSignature type;
-	private byte elementType;
+
 	private ParameterInfo paramInfo;
    /* elementType:      meaning:
 	  TYPEONLY(==0)    just Type, no BYREF
@@ -51,13 +51,13 @@ public class ParameterSignature extends Signature
 	 */
 	public ParameterSignature(TypeSignature sig, boolean byref) throws SignatureException
 	{
+		super(byref ? ELEMENT_TYPE_BYREF : ELEMENT_TYPE_TYPEONLY);
 		customMods = new Vector(10);
 		type = sig;
 		if(type == null)
 		{
 			throw new SignatureException("ParameterSignature: Null type specified");
 		}
-		elementType = (byref ? ELEMENT_TYPE_BYREF : ELEMENT_TYPE_TYPEONLY);
 	}
 
 	/**
@@ -65,8 +65,8 @@ public class ParameterSignature extends Signature
 	 */
 	public ParameterSignature()
 	{
+		super(ELEMENT_TYPE_TYPEDBYREF);
 		customMods = new Vector(10);
-		elementType = ELEMENT_TYPE_TYPEDBYREF;
 	}
 
 	/**
@@ -148,23 +148,10 @@ public class ParameterSignature extends Signature
 
 		return sigs;
 	}
-
-	/**
-	 * Returns a status byte determining the type of parameter this is:
-	 * Value:                    Meaning:
-	 * ELEMENT_TYPE_TYPEONLY     Parameter is described by a TypeSignature
-	 * ELEMENT_TYPE_BYREF        Parameter is described by a TypeSignature, passed by reference
-	 * ELEMENT_TYPE_TYPEDBYREF   Parameter is typed by reference
-	 */
-	public byte getElementType()
-	{
-		return elementType;
-	}
-
 	/**
 	 * Getter method for the type of this parameter (can be null)
 	 */
-	public TypeSignature getType()
+	public TypeSignature getInnerType()
 	{
 		return type;
 	}

@@ -975,7 +975,7 @@ public class ClassEmitter
 			}
 			for(int i = 0; i < parameters.length; i++)
 			{
-				addParam(parameters[i].getParameterInfo(), i + 1, parameters[i].getType().getType());
+				addParam(parameters[i].getParameterInfo(), i + 1, parameters[i].getInnerType().getType());
 			}
 			methodTable.setFieldValue("ParamList", paramStart);
 		}

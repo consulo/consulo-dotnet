@@ -53,7 +53,7 @@ public class TypeSignature extends Signature
 	public static final TypeSignature OBJECT = new TypeSignature(ELEMENT_TYPE_OBJECT);
 	////////////////////////////////////////////////////
 
-	private byte elementType;
+	protected byte elementType;
 
 	/**
 	 * Constructor for simple types. Simple types are completely identified

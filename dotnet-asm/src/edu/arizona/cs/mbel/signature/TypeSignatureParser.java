@@ -116,6 +116,13 @@ public class TypeSignatureParser implements SignatureConstants
 					list.add(parse);
 				}
 				return new TypeSignatureWithGenericParameters(mainType, list);
+			case ELEMENT_TYPE_CMOD_OPT:
+			case ELEMENT_TYPE_CMOD_REQD:
+				return CustomModifierSignature.parse(buffer, group);
+			case ELEMENT_TYPE_BYREF:
+				return ParameterSignature.parse(buffer, group);
+			case ELEMENT_TYPE_PINNED:
+				return Constraint.parse(buffer);
 			default:
 				throw new IllegalArgumentException("Unknown element type: " + Integer.toHexString(data).toUpperCase());
 		}

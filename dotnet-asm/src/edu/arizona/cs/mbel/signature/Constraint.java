@@ -30,16 +30,14 @@ import edu.arizona.cs.mbel.emit.ClassEmitter;
  *
  * @author Michael Stepp
  */
-public class Constraint extends Signature
+public class Constraint extends TypeSignature
 {
-	private byte elementType;
-
 	/**
 	 * Makes a new Constraint (with type PINNED)
 	 */
 	public Constraint()
 	{
-		elementType = ELEMENT_TYPE_PINNED;
+		super(ELEMENT_TYPE_PINNED);
 	}
 
 	/**
@@ -57,14 +55,6 @@ public class Constraint extends Signature
 			return null;
 		}
 		return blob;
-	}
-
-	/**
-	 * Returns the type of constraint this is (as of now, always ELEMENT_TYPE_PINNED)
-	 */
-	public byte getElementType()
-	{
-		return elementType;
 	}
 
 	/**

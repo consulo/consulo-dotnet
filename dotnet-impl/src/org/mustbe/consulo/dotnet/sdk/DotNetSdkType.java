@@ -35,7 +35,7 @@ import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
  */
 public abstract class DotNetSdkType extends SdkType
 {
-	private static final String[] ORDER_DLLS = {"mscorlib.dll", "System.dll", "System.Core.dll"};
+	public static final String[] ORDER_DLLS = {"mscorlib.dll", "System.dll", "System.Core.dll"};
 
 	public DotNetSdkType(@NonNls String name)
 	{

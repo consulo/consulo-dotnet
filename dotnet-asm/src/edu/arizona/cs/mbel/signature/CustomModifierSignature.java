@@ -31,14 +31,13 @@ import edu.arizona.cs.mbel.metadata.TableConstants;
  *
  * @author Michael Stepp
  */
-public class CustomModifierSignature extends Signature
+public class CustomModifierSignature extends TypeSignature
 {
-	private byte elementType;
-	// either ELEMENT_TYPE_CMOD_OPT or ELEMENT_TYPE_CMOD_REQD
 	private AbstractTypeReference type;
 
-	private CustomModifierSignature()
+	private CustomModifierSignature(boolean optional)
 	{
+		super(optional ? ELEMENT_TYPE_CMOD_OPT : ELEMENT_TYPE_CMOD_REQD);
 	}
 
 	/**
@@ -49,7 +48,7 @@ public class CustomModifierSignature extends Signature
 	 */
 	public CustomModifierSignature(boolean optional, AbstractTypeReference ref) throws SignatureException
 	{
-		elementType = (optional ? ELEMENT_TYPE_CMOD_OPT : ELEMENT_TYPE_CMOD_REQD);
+		this(optional);
 		type = ref;
 		if(type == null)
 		{
@@ -66,14 +65,13 @@ public class CustomModifierSignature extends Signature
 	 */
 	public static CustomModifierSignature parse(ByteBuffer buffer, TypeGroup group)
 	{
-		CustomModifierSignature blob = new CustomModifierSignature();
-
 		byte data = buffer.get();
-		blob.elementType = data;
 		if(!(data == ELEMENT_TYPE_CMOD_REQD || data == ELEMENT_TYPE_CMOD_OPT))
 		{
 			return null;
 		}
+
+		CustomModifierSignature blob = new CustomModifierSignature(data == ELEMENT_TYPE_CMOD_OPT);
 
 		int token[] = parseTypeDefOrRefEncoded(buffer);
 
@@ -97,18 +95,9 @@ public class CustomModifierSignature extends Signature
 	}
 
 	/**
-	 * Return the type of custom modifier this is
-	 * (one of ELEMENT_TYPE_CMOD_OPT or ELEMENT_TYPE_CMOD_REQ)
-	 */
-	public byte getElementType()
-	{
-		return elementType;
-	}
-
-	/**
 	 * Returns the type associated with this custom modifier
 	 */
-	public AbstractTypeReference getType()
+	public AbstractTypeReference getInnerType()
 	{
 		return type;
 	}
