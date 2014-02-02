@@ -28,6 +28,6 @@ public class DotNetLibraryRootDetector extends FileTypeBasedRootFilter
 {
 	public DotNetLibraryRootDetector()
 	{
-		super(OrderRootType.CLASSES, true, DotNetDllFileType.INSTANCE, ".NET dll library");
+		super(OrderRootType.CLASSES, false, DotNetDllFileType.INSTANCE, ".NET library");
 	}
 }
