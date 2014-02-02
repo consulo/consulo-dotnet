@@ -20,9 +20,10 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.*;
-import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeDef;
+import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetNativeTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeDef;
+import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.documentation.DocumentationProvider;
@@ -40,6 +41,7 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -47,6 +49,8 @@ import com.intellij.util.Function;
  */
 public class DotNetDocumentationProvider implements DocumentationProvider
 {
+	private static final String TYPE_PREFIX = "type::";
+
 	@Nullable
 	@Override
 	public String getQuickNavigateInfo(PsiElement element, PsiElement element2)
@@ -160,11 +164,11 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		}
 		else if(psiElement instanceof DotNetPropertyDeclaration)
 		{
-			builder.append(((DotNetPropertyDeclaration) psiElement).toTypeRef().getPresentableText()).append(" ");
+			builder.append(generateLinksForType(((DotNetPropertyDeclaration) psiElement).toTypeRef(), psiElement)).append(" ");
 		}
 		else if(psiElement instanceof DotNetLikeMethodDeclaration)
 		{
-			builder.append(((DotNetLikeMethodDeclaration) psiElement).getReturnTypeRef().getPresentableText()).append(" ");
+			builder.append(generateLinksForType(((DotNetLikeMethodDeclaration) psiElement).getReturnTypeRef(), psiElement)).append(" ");
 		}
 
 		builder.append(psiElement.getName());
@@ -177,7 +181,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 				@Override
 				public String fun(DotNetParameter dotNetParameter)
 				{
-					return dotNetParameter.toTypeRef().getPresentableText() + " " + dotNetParameter.getName();
+					return generateLinksForType(dotNetParameter.toTypeRef(), dotNetParameter) + " " + dotNetParameter.getName();
 				}
 			}, ", "));
 			builder.append(")");
@@ -322,13 +326,13 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 
 	private String typeToDocName(PsiElement element, DotNetTypeRef typeRef)
 	{
-		if(typeRef instanceof DotNetArrayTypeDef)
+		if(typeRef instanceof DotNetArrayTypeRef)
 		{
-			return typeToDocName(element, ((DotNetArrayTypeDef) typeRef).getInnerType()) + "[]";
+			return typeToDocName(element, ((DotNetArrayTypeRef) typeRef).getInnerType()) + "[]";
 		}
-		else if(typeRef instanceof DotNetPointerTypeDef)
+		else if(typeRef instanceof DotNetPointerTypeRef)
 		{
-			return typeToDocName(element, ((DotNetPointerTypeDef) typeRef).getInnerType()) + "*";
+			return typeToDocName(element, ((DotNetPointerTypeRef) typeRef).getInnerType()) + "*";
 		}
 		else if(typeRef instanceof DotNetNativeTypeRef)
 		{
@@ -373,6 +377,73 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 	@Override
 	public PsiElement getDocumentationElementForLink(PsiManager psiManager, String s, PsiElement element)
 	{
+		if(s.startsWith(TYPE_PREFIX))
+		{
+			String qName = s.substring(TYPE_PREFIX.length(), s.length());
+
+			int genericCount = -1;
+			int indexOfG = qName.indexOf('`');
+			if(indexOfG != -1)
+			{
+				val oldQName = qName;
+
+				qName = oldQName.substring(0, indexOfG);
+				genericCount = Integer.parseInt(oldQName.substring(indexOfG + 1, oldQName.length()));
+			}
+			return DotNetPsiFacade.getInstance(element.getProject()).findType(qName, element.getResolveScope(), genericCount);
+		}
 		return null;
+	}
+
+	private static String generateLinksForType(DotNetTypeRef dotNetTypeRef, PsiElement element)
+	{
+		StringBuilder builder = new StringBuilder();
+		if(dotNetTypeRef instanceof DotNetArrayTypeRef)
+		{
+			builder.append(generateLinksForType(((DotNetArrayTypeRef) dotNetTypeRef).getInnerType(), element));
+			builder.append("[]");
+		}
+		else if(dotNetTypeRef instanceof DotNetPointerTypeRef)
+		{
+			builder.append(generateLinksForType(((DotNetPointerTypeRef) dotNetTypeRef).getInnerType(), element));
+			builder.append("*");
+		}
+		else if(dotNetTypeRef instanceof DotNetNativeTypeRef)
+		{
+			wrapToLink(dotNetTypeRef, ((DotNetNativeTypeRef) dotNetTypeRef).getWrapperQualifiedClass(), 0, builder);
+		}
+		else
+		{
+			PsiElement resolve = dotNetTypeRef.resolve(element);
+			if(resolve instanceof DotNetQualifiedElement)
+			{
+				if(resolve instanceof DotNetGenericParameterListOwner)
+				{
+					wrapToLink(dotNetTypeRef, ((DotNetQualifiedElement) resolve).getPresentableQName(), ((DotNetGenericParameterListOwner) resolve)
+							.getGenericParametersCount(), builder);
+				}
+				else
+				{
+					builder.append(((DotNetQualifiedElement) resolve).getName());
+				}
+			}
+			else
+			{
+				wrapToLink(dotNetTypeRef, "<unknown>", 0, builder);
+			}
+		}
+
+		return builder.toString();
+	}
+
+	private static void wrapToLink(DotNetTypeRef dotNetTypeRef, String qName, int genericCount, StringBuilder builder)
+	{
+		builder.append("<a href=\"psi_element://").append(TYPE_PREFIX);
+		builder.append(qName);
+		if(genericCount > 0)
+		{
+			builder.append("`").append(genericCount);
+		}
+		builder.append("\">").append(dotNetTypeRef.getPresentableText()).append("</a>");
 	}
 }

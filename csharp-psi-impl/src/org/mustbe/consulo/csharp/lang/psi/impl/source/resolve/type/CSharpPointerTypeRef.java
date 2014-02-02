@@ -18,7 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeDef;
+import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
 
@@ -26,7 +26,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 06.01.14.
  */
-public class CSharpPointerTypeRef extends DotNetTypeRef.Adapter implements DotNetPointerTypeDef
+public class CSharpPointerTypeRef extends DotNetTypeRef.Adapter implements DotNetPointerTypeRef
 {
 	private final DotNetTypeRef myInnerType;
 

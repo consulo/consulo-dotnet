@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * @author VISTALL
  * @since 02.02.14
  */
-public interface DotNetArrayTypeDef extends DotNetTypeRef
+public interface DotNetArrayTypeRef extends DotNetTypeRef
 {
 	@NotNull
 	DotNetTypeRef getInnerType();
