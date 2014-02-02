@@ -312,7 +312,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		}
 		else if(typeRef instanceof DotNetNativeTypeRef)
 		{
-			return typeRef.getPresentableText();
+			return ((DotNetNativeTypeRef) typeRef).getWrapperQualifiedClass();
 		}
 		else
 		{

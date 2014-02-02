@@ -16,10 +16,14 @@
 
 package org.mustbe.consulo.dotnet.resolve;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 02.02.14
  */
 public interface DotNetNativeTypeRef extends DotNetTypeRef
 {
+	@NotNull
+	String getWrapperQualifiedClass();
 }

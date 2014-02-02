@@ -84,6 +84,7 @@ public class CSharpNativeTypeRef extends DotNetTypeRef.Adapter implements DotNet
 		return DotNetPsiFacade.getInstance(scope.getProject()).findType(myWrapperQualifiedClass, scope.getResolveScope(), 0);
 	}
 
+	@Override
 	@NotNull
 	public String getWrapperQualifiedClass()
 	{
