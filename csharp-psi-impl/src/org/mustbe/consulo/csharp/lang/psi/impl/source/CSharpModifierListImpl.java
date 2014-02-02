@@ -17,7 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,17 +37,16 @@ import com.intellij.psi.tree.IElementType;
  */
 public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetModifierList
 {
-	private static final Map<DotNetModifier, IElementType> ourModifiers = new HashMap<DotNetModifier, IElementType>()
+	private static final Map<DotNetModifier, IElementType> ourModifiers = new LinkedHashMap<DotNetModifier, IElementType>()
 	{
 		{
-			put(DotNetModifier.STATIC, CSharpTokens.STATIC_KEYWORD);
 			put(DotNetModifier.PUBLIC, CSharpTokens.PUBLIC_KEYWORD);
 			put(DotNetModifier.PROTECTED, CSharpTokens.PROTECTED_KEYWORD);
 			put(DotNetModifier.PRIVATE, CSharpTokens.PRIVATE_KEYWORD);
-			put(DotNetModifier.SEALED, CSharpTokens.SEALED_KEYWORD);
-			put(DotNetModifier.READONLY, CSharpTokens.READONLY_KEYWORD);
-			put(DotNetModifier.ABSTRACT, CSharpTokens.ABSTRACT_KEYWORD);
 			put(DotNetModifier.STATIC, CSharpTokens.STATIC_KEYWORD);
+			put(DotNetModifier.SEALED, CSharpTokens.SEALED_KEYWORD);
+			put(DotNetModifier.ABSTRACT, CSharpTokens.ABSTRACT_KEYWORD);
+			put(DotNetModifier.READONLY, CSharpTokens.READONLY_KEYWORD);
 			put(DotNetModifier.UNSAFE, CSharpTokens.UNSAFE_KEYWORD);
 		}
 	};
