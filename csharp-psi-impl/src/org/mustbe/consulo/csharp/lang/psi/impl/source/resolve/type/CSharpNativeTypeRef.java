@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.resolve.DotNetNativeTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
@@ -26,7 +27,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 29.12.13.
  */
-public class CSharpNativeTypeRef extends DotNetTypeRef.Adapter
+public class CSharpNativeTypeRef extends DotNetTypeRef.Adapter implements DotNetNativeTypeRef
 {
 	public static final CSharpNativeTypeRef BOOL = new CSharpNativeTypeRef("bool", "System.Boolean");
 	public static final CSharpNativeTypeRef DOUBLE = new CSharpNativeTypeRef("double", "System.Double");

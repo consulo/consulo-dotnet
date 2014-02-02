@@ -18,6 +18,7 @@
 	<id>org.mustbe.consulo.dotnet.core</id>
 	<name>.NET Core</name>
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
+	<depends>com.intellij.xml</depends>
 
 	<xi:include href="/META-INF/CSharp.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/CSharpInspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
