@@ -27,7 +27,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockImpl;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Spacing;
@@ -131,7 +130,7 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 				elementType == PROPERTY_DECLARATION ||
 				elementType == XXX_ACCESSOR ||
 				elementType == EVENT_DECLARATION ||
-				elementType == MACRO_BLOCK ||
+			//	elementType == MACRO_BLOCK ||
 				elementType == USING_NAMESPACE_LIST ||
 				elementType == CONSTRUCTOR_DECLARATION)
 		{
@@ -158,7 +157,7 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 		{
 			return Indent.getNoneIndent();
 		}
-		else if(elementType == MACRO_BLOCK_START || elementType == MACRO_BLOCK_STOP)
+		/*else if(elementType == MACRO_BLOCK_START || elementType == MACRO_BLOCK_STOP)
 		{
 			PsiElement psi = getNode().getPsi();
 			if(psi.getParent() instanceof CSharpMacroBlockImpl)
@@ -166,7 +165,7 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 				return Indent.getNoneIndent();
 			}
 			return Indent.getNormalIndent();
-		}
+		} */
 		else
 		{
 			PsiElement psi = getNode().getPsi();

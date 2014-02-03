@@ -14,15 +14,26 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.parser.macro;
+package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
+import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 21.01.14
+ * @since 24.01.14
  */
-public interface MacroValueProvider
+public class CSharpMacroBinaryExpressionImpl extends CSharpMacroElementImpl implements CSharpMacroExpression
 {
-	public abstract boolean getMacroValueProperty(@NotNull String text);
+	public CSharpMacroBinaryExpressionImpl(@NotNull ASTNode node)
+	{
+		super(node);
+	}
+
+	@Override
+	public void accept(@NotNull CSharpMacroElementVisitor visitor)
+	{
+		visitor.visitBinaryExpression(this);
+	}
 }

@@ -22,12 +22,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.CSharpIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.TemplateLanguageFileType;
 
 /**
  * @author VISTALL
  * @since 22.11.13.
  */
-public class CSharpFileType extends LanguageFileType
+public class CSharpFileType extends LanguageFileType implements TemplateLanguageFileType
 {
 	public static final CSharpFileType INSTANCE = new CSharpFileType();
 

@@ -28,7 +28,14 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLocalVariableImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
@@ -44,7 +51,6 @@ import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -90,7 +96,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 	}
 
-	@Override
+/*	@Override
 	public void visitMacroBody(CSharpMacroBodyImpl block)
 	{
 		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(block).textAttributes(CodeInsightColors
@@ -100,8 +106,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	@Override
 	public void visitMacroBlockStart(CSharpMacroBlockStartImpl start)
 	{
-		PsiElement startElement = start.getStartElement();
-		if(startElement != null && startElement.getNode().getElementType() == CSharpTokens.MACRO_REGION_KEYWORD)
+		PsiElement startElement = start.getKeywordElement();
+		if(startElement != null && startElement.getNode().getElementType() == CSharpMacroTokens.MACRO_REGION_KEYWORD)
 		{
 			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(start).textAttributes(CSharpHighlightKey
 					.LINE_COMMENT).create());
@@ -112,12 +118,12 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	public void visitMacroBlockStop(CSharpMacroBlockStopImpl stop)
 	{
 		IElementType startElementType = stop.findStopElementType();
-		if(startElementType == CSharpTokens.MACRO_ENDREGION_KEYWORD)
+		if(startElementType == CSharpMacroTokens.MACRO_ENDREGION_KEYWORD)
 		{
 			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(stop).textAttributes(CSharpHighlightKey
 					.LINE_COMMENT).create());
 		}
-	}
+	}    */
 
 	@Override
 	public void visitGenericParameter(CSharpGenericParameterImpl parameter)

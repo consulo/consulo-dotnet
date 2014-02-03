@@ -21,8 +21,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.parser.macro.MacroActiveBlockInfo;
-import org.mustbe.consulo.csharp.lang.parser.macro.MacroesInfo;
 import org.mustbe.consulo.csharp.lang.psi.CSharpBodyWithBraces;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
@@ -30,8 +28,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBodyImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
@@ -43,7 +39,6 @@ import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 import lombok.val;
 
 /**
@@ -60,49 +55,8 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 
 		PsiElement psi = astNode.getPsi();
 
-		MacroesInfo temp = null;
-		val containingFile = psi.getContainingFile();
-		if(containingFile != null)
-		{
-			temp = containingFile.getUserData(MacroesInfo.MACROES_INFO_KEY);
-		}
-		if(temp == null)
-		{
-			temp = MacroesInfo.EMPTY;
-		}
-
-		val macroesInfo = temp;
 		psi.accept(new CSharpRecursiveElementVisitor()
 		{
-			@Override
-			public void visitMacroBlockStart(CSharpMacroBlockStartImpl start)
-			{
-				MacroActiveBlockInfo macroActiveBlockInfo = macroesInfo.findStartActiveBlock(start.getFirstChild().getTextOffset());
-				if(macroActiveBlockInfo == null || macroActiveBlockInfo.getStopOffset() == -1 || macroActiveBlockInfo.getElementType() !=
-						CSharpTokens.MACRO_REGION_KEYWORD)
-				{
-					return;
-				}
-				assert containingFile != null;
-				PsiElement elementAt = containingFile.findElementAt(macroActiveBlockInfo.getStopOffset());
-				// it ill return keyword #endregion of #endif
-
-				if(elementAt == null)
-				{
-					return;
-				}
-
-				PsiElement parent = elementAt.getParent();
-				foldingList.add(new FoldingDescriptor(start, new TextRange(start.getTextRange().getStartOffset(),
-						parent.getTextRange().getEndOffset())));
-			}
-
-			@Override
-			public void visitMacroBody(CSharpMacroBodyImpl block)
-			{
-				foldingList.add(new FoldingDescriptor(block, block.getTextRange()));
-			}
-
 			@Override
 			public void visitTypeDeclaration(CSharpTypeDeclarationImpl declaration)
 			{
@@ -195,32 +149,6 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		{
 			return "{...}";
 		}
-		else if(psi instanceof CSharpMacroBodyImpl)
-		{
-			return "<non active block>";
-		}
-		else if(psi instanceof CSharpMacroBlockStartImpl)
-		{
-			PsiElement startElement = ((CSharpMacroBlockStartImpl) psi).getStartElement();
-
-			PsiElement value = ((CSharpMacroBlockStartImpl) psi).getValue();
-			String valueText = value == null ? "<empty>" : value.getText();
-			if(startElement != null)
-			{
-				IElementType elementType = startElement.getNode().getElementType();
-				if(elementType == CSharpTokens.MACRO_IF_KEYWORD)
-				{
-					return "#if " + valueText;
-				}
-				else if(elementType == CSharpTokens.MACRO_REGION_KEYWORD)
-				{
-					String text = psi.getText();
-					String textOfMessage = text.substring(startElement.getTextLength(), text.length());
-					return textOfMessage.trim();
-				}
-			}
-			return "##";
-		}
 		return null;
 	}
 
@@ -229,10 +157,6 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 	{
 		PsiElement psi = astNode.getPsi();
 		if(psi instanceof CSharpUsingNamespaceListImpl)
-		{
-			return true;
-		}
-		else if(psi instanceof CSharpMacroBodyImpl)
 		{
 			return true;
 		}

@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.ide.highlight;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import com.intellij.lang.ASTNode;
+import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 
 /**
  * @author VISTALL
- * @since 18.12.13.
+ * @since 24.01.14
  */
-public class CSharpMacroBodyImpl extends CSharpElementImpl
+public class CSharpMacroSyntaxHighlighterFactory extends SingleLazyInstanceSyntaxHighlighterFactory
 {
-	public CSharpMacroBodyImpl(@NotNull ASTNode node)
-	{
-		super(node);
-	}
-
+	@NotNull
 	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
+	protected SyntaxHighlighter createHighlighter()
 	{
-		visitor.visitMacroBody(this);
+		return new CSharpMacroSyntaxHighlighter();
 	}
 }

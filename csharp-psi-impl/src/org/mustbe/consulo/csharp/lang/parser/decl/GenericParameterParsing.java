@@ -19,8 +19,9 @@ package org.mustbe.consulo.csharp.lang.parser.decl;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.NullableFunction;
+import com.intellij.util.NotNullFunction;
 import lombok.val;
 
 /**
@@ -76,16 +77,16 @@ public class GenericParameterParsing extends SharingParsingHelpers
 		boolean empty = true;
 		while(true)
 		{
-			val constraintMarker = parseWithSoftElements(new NullableFunction<CSharpBuilderWrapper, PsiBuilder.Marker>()
+			val p = parseWithSoftElements(new NotNullFunction<CSharpBuilderWrapper, Pair<PsiBuilder.Marker,Boolean>>()
 			{
 				@Override
-				public PsiBuilder.Marker fun(CSharpBuilderWrapper builderWrapper)
+				public Pair<PsiBuilder.Marker,Boolean> fun(CSharpBuilderWrapper builderWrapper)
 				{
-					return parseGenericConstraint(builderWrapper);
+					return new Pair<PsiBuilder.Marker, Boolean>(parseGenericConstraint(builderWrapper), Boolean.TRUE);
 				}
 			}, builder, WHERE_KEYWORD);
 
-			if(constraintMarker == null)
+			if(p.getFirst() == null)
 			{
 				break;
 			}

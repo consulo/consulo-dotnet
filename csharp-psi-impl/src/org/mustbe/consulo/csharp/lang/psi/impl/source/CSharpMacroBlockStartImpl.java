@@ -17,8 +17,9 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroTokens;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
@@ -27,7 +28,7 @@ import com.intellij.psi.tree.TokenSet;
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpMacroBlockStartImpl extends CSharpElementImpl
+public class CSharpMacroBlockStartImpl extends CSharpMacroElementImpl
 {
 	public CSharpMacroBlockStartImpl(@NotNull ASTNode node)
 	{
@@ -36,17 +37,17 @@ public class CSharpMacroBlockStartImpl extends CSharpElementImpl
 
 	public PsiElement getValue()
 	{
-		return findChildByType(CSharpTokens.MACRO_VALUE);
+		return findChildByClass(DotNetExpression.class);
 	}
 
-	public PsiElement getStartElement()
+	public PsiElement getKeywordElement()
 	{
-		TokenSet tokenSet = TokenSet.create(CSharpTokens.MACRO_IF_KEYWORD, CSharpTokens.MACRO_REGION_KEYWORD);
+		TokenSet tokenSet = TokenSet.create(CSharpMacroTokens.MACRO_IF_KEYWORD, CSharpMacroTokens.MACRO_REGION_KEYWORD);
 		return findNotNullChildByType(tokenSet);
 	}
 
 	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
+	public void accept(@NotNull CSharpMacroElementVisitor visitor)
 	{
 		visitor.visitMacroBlockStart(this);
 	}

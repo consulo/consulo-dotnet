@@ -17,22 +17,32 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpMacroBlockImpl extends CSharpElementImpl
+public class CSharpMacroBlockImpl extends CSharpMacroElementImpl
 {
 	public CSharpMacroBlockImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
+	public CSharpMacroBlockStartImpl getStartElement()
+	{
+		return findChildByClass(CSharpMacroBlockStartImpl.class);
+	}
+
+	public CSharpMacroBlockStopImpl getStopElement()
+	{
+		return findChildByClass(CSharpMacroBlockStopImpl.class);
+	}
+
 	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
+	public void accept(@NotNull CSharpMacroElementVisitor visitor)
 	{
 		visitor.visitMacroBlock(this);
 	}

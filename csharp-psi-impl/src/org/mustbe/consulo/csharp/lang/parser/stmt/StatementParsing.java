@@ -24,9 +24,10 @@ import org.mustbe.consulo.csharp.lang.parser.decl.FieldOrPropertyParsing;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import org.mustbe.consulo.csharp.lang.parser.exp.LinqParsing;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.NullableFunction;
+import com.intellij.util.NotNullFunction;
 import lombok.val;
 
 /**
@@ -39,15 +40,15 @@ public class StatementParsing extends SharingParsingHelpers
 
 	public static PsiBuilder.Marker parse(CSharpBuilderWrapper wrapper)
 	{
-		return parseWithSoftElements(new NullableFunction<CSharpBuilderWrapper, PsiBuilder.Marker>()
+		return parseWithSoftElements(new NotNullFunction<CSharpBuilderWrapper, Pair<PsiBuilder.Marker,Boolean>>()
 		{
-			@Nullable
+			@NotNull
 			@Override
-			public PsiBuilder.Marker fun(CSharpBuilderWrapper builderWrapper)
+			public Pair<PsiBuilder.Marker,Boolean> fun(CSharpBuilderWrapper builderWrapper)
 			{
-				return parseStatement(builderWrapper);
+				return new Pair<PsiBuilder.Marker, Boolean>(parseStatement(builderWrapper), Boolean.TRUE);
 			}
-		}, wrapper, BODY_SOFT_KEYWORDS);
+		}, wrapper, BODY_SOFT_KEYWORDS).getFirst();
 	}
 
 	private static PsiBuilder.Marker parseStatement(CSharpBuilderWrapper wrapper)

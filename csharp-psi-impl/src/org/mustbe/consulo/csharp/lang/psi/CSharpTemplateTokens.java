@@ -14,43 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.parser.macro;
+package org.mustbe.consulo.csharp.lang.psi;
 
+import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
- * @since 18.12.13.
+ * @since 24.01.14
  */
-public class MacroActiveBlockInfo
+public interface CSharpTemplateTokens
 {
-	private final IElementType myElementType;
-	private final int myStartOffset;
-	private int myStopOffset = -1;
+	IElementType MACRO_FRAGMENT = new IElementType("MACRO_FRAGMENT", CSharpLanguage.INSTANCE);
 
-	public MacroActiveBlockInfo(IElementType elementType, int startOffset)
-	{
-		myElementType = elementType;
-		myStartOffset = startOffset;
-	}
+	IElementType OUTER_ELEMENT_TYPE = new IElementType("OUTER_ELEMENT_TYPE", CSharpLanguage.INSTANCE);
 
-	public IElementType getElementType()
-	{
-		return myElementType;
-	}
-
-	public int getStartOffset()
-	{
-		return myStartOffset;
-	}
-
-	public int getStopOffset()
-	{
-		return myStopOffset;
-	}
-
-	public void setStopOffset(int stopOffset)
-	{
-		myStopOffset = stopOffset;
-	}
+	CSharpTemplateDataElementType TEMPLATE_DATA = new CSharpTemplateDataElementType("TEMPLATE_DATA", CSharpLanguage.INSTANCE, MACRO_FRAGMENT,
+			OUTER_ELEMENT_TYPE);
 }

@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.ide;
 
 import java.util.Collection;
 
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
@@ -120,6 +121,12 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 
 			builder = builder.withTypeText(((DotNetVariable) element).toTypeRef().getPresentableText());
 
+			return builder;
+		}
+		else if(element instanceof CSharpMacroDefine)
+		{
+			LookupElementBuilder builder = LookupElementBuilder.create((CSharpMacroDefine) element);
+			builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
 			return builder;
 		}
 		else if(element instanceof CSharpTypeDeclaration)

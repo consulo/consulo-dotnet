@@ -16,19 +16,22 @@
 
 package org.mustbe.consulo.csharp.lang.parser.macro;
 
-import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
-import com.intellij.lang.LighterASTNode;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElements;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroTokens;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.psi.tree.TokenSet;
 import lombok.val;
 
 /**
  * @author VISTALL
  * @since 18.12.13.
  */
-public class MacroParsing extends SharingParsingHelpers
+public class MacroParsing implements CSharpMacroTokens, CSharpMacroElements
 {
-	public static boolean parse(CSharpBuilderWrapper builder, MacroesInfo macroesInfo)
+	private static final TokenSet COND_STOPPERS = TokenSet.create(MACRO_ENDIF_KEYWORD, MACRO_ELSE_KEYWORD, MACRO_ELIF_KEYWORD);
+
+	public static boolean parse(PsiBuilder builder)
 	{
 		PsiBuilder.Marker mark = builder.mark();
 
@@ -39,8 +42,6 @@ public class MacroParsing extends SharingParsingHelpers
 
 			if(builder.getTokenType() == MACRO_VALUE)
 			{
-				String tokenText = builder.getTokenText();
-				macroesInfo.define(tokenText);
 				builder.advanceLexer();
 			}
 			else
@@ -53,85 +54,95 @@ public class MacroParsing extends SharingParsingHelpers
 		}
 		else if(token == MACRO_IF_KEYWORD)
 		{
-			val currentOffset = builder.getCurrentOffset();
+			PsiBuilder.Marker condBlock = builder.mark();
+
+			PsiBuilder.Marker startMarker = builder.mark();
 
 			builder.advanceLexer();
 
-			boolean defined = false;
 			PsiBuilder.Marker parse = MacroExpressionParsing.parse(builder);
 			if(parse == null)
 			{
 				builder.error("Expression expected");
 			}
+
+			SharingParsingHelpers.expect(builder, MACRO_STOP, null);
+			startMarker.done(MACRO_BLOCK_START);
+
+			parseAndDoneUntilCondStoppers(builder, condBlock);
+
+			while(!builder.eof())
+			{
+				if(builder.getTokenType() == MACRO_ELIF_KEYWORD)
+				{
+					parseElIf(builder, startMarker);
+				}
+				else if(builder.getTokenType() == MACRO_ELSE_KEYWORD)
+				{
+					parseElse(builder, startMarker);
+				}
+				else if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
+				{
+					break;
+				}
+				builder.advanceLexer();
+			}
+
+			if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
+			{
+				PsiBuilder.Marker endIfMarker = builder.mark();
+				builder.advanceLexer();
+
+				SharingParsingHelpers.expect(builder, MACRO_STOP, null);
+
+				endIfMarker.done(MACRO_BLOCK_STOP);
+			}
 			else
 			{
-				LighterASTNode node = (LighterASTNode) parse;
-				CharSequence charSequence = builder.getOriginalText().subSequence(node.getStartOffset(), node.getEndOffset());
-				defined = macroesInfo.evaluate(charSequence.toString());
+				builder.error("'#endif' expected");
 			}
 
-			expect(builder, MACRO_STOP, null);
+			mark.done(MACRO_IF);
 
-			if(defined)
-			{
-				macroesInfo.addActiveBlock(MACRO_IF_KEYWORD, currentOffset);
-
-				mark.done(MACRO_BLOCK_START);
-			}
-			else
-			{
-				mark.done(MACRO_BLOCK_START);
-
-				mark = mark.precede();
-
-				PsiBuilder.Marker marker = builder.mark();
-				while(!builder.eof())
-				{
-					if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
-					{
-						break;
-					}
-					builder.advanceLexer();
-				}
-				marker.done(MACRO_BODY);
-
-				if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
-				{
-					PsiBuilder.Marker endIfMarker = builder.mark();
-					builder.advanceLexer();
-					skipUntilStop(builder);
-					endIfMarker.done(MACRO_BLOCK_STOP);
-				}
-				else
-				{
-					builder.error("'#endif' expected");
-				}
-
-				mark.done(MACRO_BLOCK);
-			}
 			return true;
 		}
 		else if(token == MACRO_REGION_KEYWORD)
 		{
-			val currentOffset = builder.getCurrentOffset();
-
+			PsiBuilder.Marker startMarker = builder.mark();
 			builder.advanceLexer();
-
-			macroesInfo.addActiveBlock(MACRO_REGION_KEYWORD, currentOffset);
-
 			skipUntilStop(builder);
-			mark.done(MACRO_BLOCK_START);
+			startMarker.done(MACRO_BLOCK_START);
+
+			while(!builder.eof())
+			{
+				if(builder.getTokenType() == MACRO_ENDREGION_KEYWORD)
+				{
+					break;
+				}
+				builder.advanceLexer();
+			}
+
+			if(builder.getTokenType() == MACRO_ENDREGION_KEYWORD)
+			{
+				PsiBuilder.Marker endIfMarker = builder.mark();
+				builder.advanceLexer();
+				skipUntilStop(builder);
+				endIfMarker.done(MACRO_BLOCK_STOP);
+			}
+			else
+			{
+				builder.error("'#endregion' expected");
+			}
+
+			mark.done(MACRO_BLOCK);
+
 			return true;
 		}
 		else if(token == MACRO_ENDREGION_KEYWORD)
 		{
-			val currentOffset = builder.getCurrentOffset();
-
 			builder.advanceLexer();
-			if(macroesInfo.findStartActiveBlockForStop(MACRO_REGION_KEYWORD, currentOffset) == null)
-			{
-				builder.error("'#endregion' without '#region'");
-			}
+
+			builder.error("'#endregion' without '#region'");
 
 			skipUntilStop(builder);
 			mark.done(MACRO_BLOCK_STOP);
@@ -139,13 +150,8 @@ public class MacroParsing extends SharingParsingHelpers
 		}
 		else if(token == MACRO_ENDIF_KEYWORD)
 		{
-			val currentOffset = builder.getCurrentOffset();
-
 			builder.advanceLexer();
-			if(macroesInfo.findStartActiveBlockForStop(MACRO_IF_KEYWORD, currentOffset) == null)
-			{
-				builder.error("'#endif' without '#if'");
-			}
+			builder.error("'#endif' without '#if'");
 
 			skipUntilStop(builder);
 			mark.done(MACRO_BLOCK_STOP);
@@ -153,18 +159,86 @@ public class MacroParsing extends SharingParsingHelpers
 		}
 		else
 		{
+			builder.advanceLexer();
+
 			mark.drop();
 			return false;
 		}
 	}
 
-	private static void skipUntilStop(CSharpBuilderWrapper builder)
+	private static void parseElse(PsiBuilder builder, PsiBuilder.Marker parentMarker)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		PsiBuilder.Marker headerMarker = builder.mark();
+
+		if(parentMarker == null)
+		{
+			builder.error("#if block not opened");
+		}
+
+		SharingParsingHelpers.expect(builder, MACRO_STOP, null);
+
+		headerMarker.done(MACRO_BLOCK_START);
+
+		parseAndDoneUntilCondStoppers(builder, mark);
+	}
+
+	private static void parseAndDoneUntilCondStoppers(PsiBuilder builder, PsiBuilder.Marker marker)
+	{
+		while(!builder.eof())
+		{
+			if(COND_STOPPERS.contains(builder.getTokenType()))
+			{
+				break;
+			}
+
+			MacroParsing.parse(builder);
+		}
+
+		marker.done(MACRO_IF_CONDITION_BLOCK);
+	}
+
+	private static void parseElIf(PsiBuilder builder, PsiBuilder.Marker parentMarker)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		PsiBuilder.Marker headerMarker = builder.mark();
+
+		if(parentMarker == null)
+		{
+			builder.error("#if block not opened");
+		}
+
+		PsiBuilder.Marker parse = MacroExpressionParsing.parse(builder);
+		if(parse == null)
+		{
+			builder.error("Expression expected");
+		}
+
+		SharingParsingHelpers.expect(builder, MACRO_STOP, null);
+
+		headerMarker.done(MACRO_BLOCK_START);
+
+		while(!builder.eof())
+		{
+			if(COND_STOPPERS.contains(builder.getTokenType()))
+			{
+				break;
+			}
+
+			MacroParsing.parse(builder);
+		}
+
+		mark.done(MACRO_IF_CONDITION_BLOCK);
+	}
+
+	private static void skipUntilStop(PsiBuilder builder)
 	{
 		while(!builder.eof())
 		{
 			if(builder.getTokenType() == MACRO_STOP)
 			{
-				builder.remapCurrentToken(WHITE_SPACE);
 				builder.advanceLexer();
 				break;
 			}

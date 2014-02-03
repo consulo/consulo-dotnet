@@ -195,31 +195,6 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(expression);
 	}
 
-	public void visitMacroDefine(CSharpMacroDefineImpl cSharpMacroDefine)
-	{
-		visitElement(cSharpMacroDefine);
-	}
-
-	public void visitMacroBody(CSharpMacroBodyImpl block)
-	{
-		visitElement(block);
-	}
-
-	public void visitMacroBlockStart(CSharpMacroBlockStartImpl start)
-	{
-		visitElement(start);
-	}
-
-	public void visitMacroBlockStop(CSharpMacroBlockStopImpl stop)
-	{
-		visitElement(stop);
-	}
-
-	public void visitMacroBlock(CSharpMacroBlockImpl block)
-	{
-		visitElement(block);
-	}
-
 	public void visitAttributeList(CSharpAttributeListImpl list)
 	{
 		visitElement(list);

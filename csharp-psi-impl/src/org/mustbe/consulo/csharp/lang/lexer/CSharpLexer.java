@@ -18,16 +18,21 @@ package org.mustbe.consulo.csharp.lang.lexer;
 
 import java.io.Reader;
 
+import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
 import com.intellij.lexer.FlexAdapter;
+import com.intellij.lexer.MergingLexerAdapter;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
  * @since 22.11.13.
  */
-public class CSharpLexer extends FlexAdapter
+public class CSharpLexer extends MergingLexerAdapter
 {
+	private static final TokenSet ourMergeSet = TokenSet.create(CSharpTemplateTokens.MACRO_FRAGMENT);
+
 	public CSharpLexer()
 	{
-		super(new _CSharpLexer((Reader) null));
+		super(new FlexAdapter(new _CSharpLexer((Reader) null)), ourMergeSet);
 	}
 }

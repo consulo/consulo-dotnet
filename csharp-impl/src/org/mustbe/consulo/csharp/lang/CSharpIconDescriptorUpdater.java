@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.run.CSharpRunUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
@@ -35,6 +36,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.BitUtil;
@@ -53,13 +55,23 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Package);
 			return;
 		}
+		else if(element instanceof CSharpMacroDefine)
+		{
+			iconDescriptor.setMainIcon(AllIcons.Nodes.Value);
+			return;
+		}
 
 		PsiFile containingFile = element.getContainingFile();
 		if(containingFile == null)
 		{
 			return;
 		}
-		FileType fileType = containingFile.getFileType();
+		VirtualFile virtualFile = containingFile.getVirtualFile();
+		if(virtualFile == null)
+		{
+			return;
+		}
+		FileType fileType = virtualFile.getFileType();
 		if(fileType != CSharpFileType.INSTANCE)
 		{
 			return;

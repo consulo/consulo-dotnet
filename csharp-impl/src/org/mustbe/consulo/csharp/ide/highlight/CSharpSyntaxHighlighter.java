@@ -24,6 +24,7 @@ import org.mustbe.consulo.csharp.lang.lexer.CSharpLexer;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
@@ -45,6 +46,7 @@ public class CSharpSyntaxHighlighter extends SyntaxHighlighterBase
 		safeMap(ourKeys, CSharpTokenSets.KEYWORDS, CSharpHighlightKey.KEYWORD);
 		safeMap(ourKeys, CSharpTokens.INTEGER_LITERAL, CSharpHighlightKey.NUMBER);
 		safeMap(ourKeys, CSharpTokens.LONG_LITERAL, CSharpHighlightKey.NUMBER);
+		safeMap(ourKeys, CSharpTokens.NON_ACTIVE_SYMBOL, CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES);
 		safeMap(ourKeys, CSharpTokens.FLOAT_LITERAL, CSharpHighlightKey.NUMBER);
 		safeMap(ourKeys, CSharpTokens.DOUBLE_LITERAL, CSharpHighlightKey.NUMBER);
 		safeMap(ourKeys, CSharpTokens.DECIMAL_LITERAL, CSharpHighlightKey.NUMBER);
