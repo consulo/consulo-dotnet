@@ -85,7 +85,6 @@ public class MacroParsing implements CSharpMacroTokens, CSharpMacroElements
 				{
 					break;
 				}
-				builder.advanceLexer();
 			}
 
 			if(builder.getTokenType() == MACRO_ENDIF_KEYWORD)
@@ -177,6 +176,7 @@ public class MacroParsing implements CSharpMacroTokens, CSharpMacroElements
 			builder.error("#if block not opened");
 		}
 
+		builder.advanceLexer();
 		SharingParsingHelpers.expect(builder, MACRO_STOP, null);
 
 		headerMarker.done(MACRO_BLOCK_START);
@@ -209,6 +209,8 @@ public class MacroParsing implements CSharpMacroTokens, CSharpMacroElements
 		{
 			builder.error("#if block not opened");
 		}
+
+		builder.advanceLexer();
 
 		PsiBuilder.Marker parse = MacroExpressionParsing.parse(builder);
 		if(parse == null)

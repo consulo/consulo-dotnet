@@ -31,6 +31,12 @@ public class CSharpMacroIfImpl extends CSharpMacroElementImpl
 		super(node);
 	}
 
+	@NotNull
+	public CSharpMacroIfConditionBlockImpl[] getConditionBlocks()
+	{
+		return findChildrenByClass(CSharpMacroIfConditionBlockImpl.class);
+	}
+
 	@Override
 	public void accept(@NotNull CSharpMacroElementVisitor visitor)
 	{
