@@ -33,6 +33,7 @@ import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.ConfigurationProfileEx;
 import org.mustbe.consulo.dotnet.module.ConfigurationProfileImpl;
 import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
+import org.mustbe.consulo.dotnet.module.MainConfigurationProfileExImpl;
 import org.mustbe.consulo.dotnet.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -61,7 +62,7 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	@Nullable
 	public JComponent createConfigurablePanelImpl(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		return new ConfigurationProfilePanel(modifiableRootModel, runnable, MainConfigurationProfileEx.KEY);
+		return new ConfigurationProfilePanel(modifiableRootModel, runnable, MainConfigurationProfileExImpl.KEY);
 	}
 
 	public boolean isModifiedImpl(S originExtension)
@@ -109,7 +110,7 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	@Override
 	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
-		MainConfigurationProfileEx currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+		MainConfigurationProfileEx<?> currentProfileEx = getCurrentProfileEx(MainConfigurationProfileExImpl.KEY);
 		return currentProfileEx.getInheritableSdk();
 	}
 
@@ -130,7 +131,7 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	@Override
 	public Sdk getSdk()
 	{
-		MainConfigurationProfileEx currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+		MainConfigurationProfileEx<?> currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
 		return currentProfileEx.getInheritableSdk().get();
 	}
 
@@ -138,7 +139,7 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	@Override
 	public String getSdkName()
 	{
-		MainConfigurationProfileEx currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+		MainConfigurationProfileEx<?> currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
 		return currentProfileEx.getInheritableSdk().getName();
 	}
 

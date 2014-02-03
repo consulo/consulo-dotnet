@@ -58,9 +58,8 @@ import lombok.val;
  * @author VISTALL
  * @since 01.02.14
  */
-public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainConfigurationProfileEx>
+public class MainConfigurationProfileExImpl implements MainConfigurationProfileEx<MainConfigurationProfileExImpl>
 {
-	public static final Key<MainConfigurationProfileEx> KEY = Key.create("main");
 	private final DotNetModuleExtension myDotNetModuleExtension;
 
 	private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
@@ -68,7 +67,7 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 	private boolean myAllowDebugInfo;
 	private List<String> myVariables = new ArrayList<String>();
 
-	public MainConfigurationProfileEx(DotNetModuleExtension dotNetModuleExtension)
+	public MainConfigurationProfileExImpl(DotNetModuleExtension dotNetModuleExtension)
 	{
 		myDotNetModuleExtension = dotNetModuleExtension;
 		mySdkPointer = new SdkModuleInheritableNamedPointerImpl(dotNetModuleExtension.getModule().getProject(), dotNetModuleExtension.getId());
@@ -223,9 +222,9 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 
 	@NotNull
 	@Override
-	public ConfigurationProfileEx<MainConfigurationProfileEx> clone()
+	public ConfigurationProfileEx<MainConfigurationProfileExImpl> clone()
 	{
-		MainConfigurationProfileEx profileEx = new MainConfigurationProfileEx(myDotNetModuleExtension);
+		MainConfigurationProfileExImpl profileEx = new MainConfigurationProfileExImpl(myDotNetModuleExtension);
 		profileEx.setAllowDebugInfo(myAllowDebugInfo);
 		profileEx.setTarget(myTarget);
 		profileEx.mySdkPointer.set(mySdkPointer.getModuleName(), mySdkPointer.getName());
@@ -242,7 +241,7 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 	}
 
 	@Override
-	public boolean equalsEx(@NotNull MainConfigurationProfileEx ex)
+	public boolean equalsEx(@NotNull MainConfigurationProfileExImpl ex)
 	{
 		return mySdkPointer.equals(ex.mySdkPointer) &&
 				myTarget.equals(ex.myTarget) &&
@@ -250,11 +249,13 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 				myVariables.equals(ex.getVariables());
 	}
 
+	@Override
 	public List<String> getVariables()
 	{
 		return myVariables;
 	}
 
+	@Override
 	public boolean isAllowDebugInfo()
 	{
 		return myAllowDebugInfo;
@@ -265,6 +266,7 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 		myAllowDebugInfo = allowDebugInfo;
 	}
 
+	@Override
 	@NotNull
 	public DotNetTarget getTarget()
 	{
@@ -277,6 +279,7 @@ public class MainConfigurationProfileEx implements ConfigurationProfileEx<MainCo
 	}
 
 	@NotNull
+	@Override
 	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
 		return mySdkPointer;

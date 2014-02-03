@@ -26,6 +26,7 @@ import org.mustbe.consulo.csharp.ide.CSharpLookupElementBuilder;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightMacroDefine;
+import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -85,10 +86,11 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 
 		val text = getText();
 
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(containingFile, DotNetModuleExtension.class);
+		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(containingFile, DotNetModuleExtension.class);
 		if(extension != null)
 		{
-			if(extension.getCurrentProfile().containsVariable(text))
+			MainConfigurationProfileEx currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+			if(currentProfileEx.getVariables().contains(text))
 			{
 				return new CSharpLightMacroDefine(extension.getModule(), text);
 			}
@@ -135,10 +137,11 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 	{
 		List<CSharpMacroDefine> list = new ArrayList<CSharpMacroDefine>();
 
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(this, DotNetModuleExtension.class);
+		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(this, DotNetModuleExtension.class);
 		if(extension != null)
 		{
-			for(String varName : extension.getCurrentProfile().getVariables())
+			MainConfigurationProfileEx<?> currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+			for(String varName : currentProfileEx.getVariables())
 			{
 				list.add(new CSharpLightMacroDefine(extension.getModule(), varName));
 			}

@@ -29,7 +29,7 @@ public class MainConfigurationProfileExProvider implements ConfigurationProfileE
 	@Override
 	public ConfigurationProfileEx createEx(@NotNull DotNetModuleExtension dotNetModuleExtension, @NotNull ConfigurationProfile profile)
 	{
-		return new MainConfigurationProfileEx(dotNetModuleExtension);
+		return new MainConfigurationProfileExImpl(dotNetModuleExtension);
 	}
 
 	@NotNull
@@ -37,7 +37,7 @@ public class MainConfigurationProfileExProvider implements ConfigurationProfileE
 	public ConfigurationProfileEx createExForDefaults(@NotNull DotNetModuleExtension dotNetModuleExtension, @NotNull ConfigurationProfile profile,
 			boolean debug)
 	{
-		MainConfigurationProfileEx mainConfigurationProfileEx = new MainConfigurationProfileEx(dotNetModuleExtension);
+		MainConfigurationProfileExImpl mainConfigurationProfileEx = new MainConfigurationProfileExImpl(dotNetModuleExtension);
 		mainConfigurationProfileEx.setAllowDebugInfo(debug);
 		if(debug)
 		{

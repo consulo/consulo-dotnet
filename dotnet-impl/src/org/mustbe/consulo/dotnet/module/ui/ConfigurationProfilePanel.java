@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.ConfigurationProfileEx;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
+import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Key;
@@ -52,7 +52,7 @@ public class ConfigurationProfilePanel extends JPanel
 	public ConfigurationProfilePanel(ModifiableRootModel modifiableRootModel, Runnable runnable, Key<? extends ConfigurationProfileEx> key)
 	{
 		super(new BorderLayout());
-		final DotNetModuleExtensionImpl<?> extension = modifiableRootModel.getExtension(DotNetModuleExtensionImpl.class);
+		final DotNetMutableModuleExtension<?> extension = modifiableRootModel.getExtension(DotNetMutableModuleExtension.class);
 		assert extension != null;
 
 		val currentProfile = extension.getCurrentProfile();
