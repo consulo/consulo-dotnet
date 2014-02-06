@@ -16,12 +16,12 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
-import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
  * @author VISTALL
  * @since 26.01.14
  */
-public interface CSharpMacroDefine extends PsiNamedElement
+public interface CSharpMacroDefine extends PsiNameIdentifierOwner
 {
 }

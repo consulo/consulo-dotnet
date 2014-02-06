@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.light;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import com.intellij.openapi.module.Module;
@@ -90,6 +91,13 @@ public class CSharpLightMacroDefine extends LightElement implements CSharpMacroD
 
 	@Override
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	{
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getNameIdentifier()
 	{
 		return null;
 	}

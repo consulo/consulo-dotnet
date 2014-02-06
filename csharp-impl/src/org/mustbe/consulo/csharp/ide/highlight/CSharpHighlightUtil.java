@@ -17,9 +17,26 @@
 package org.mustbe.consulo.csharp.ide.highlight;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
+import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -38,7 +55,8 @@ public class CSharpHighlightUtil
 			if(parent instanceof DotNetXXXAccessor)
 			{
 				IElementType accessorType = ((DotNetXXXAccessor) parent).getAccessorType();
-				if(accessorType == CSharpSoftTokens.SET_KEYWORD && Comparing.equal(((CSharpLocalVariable) element).getName(), DotNetXXXAccessor.VALUE))
+				if(accessorType == CSharpSoftTokens.SET_KEYWORD && Comparing.equal(((CSharpLocalVariable) element).getName(),
+						DotNetXXXAccessor.VALUE))
 				{
 					return true;
 				}
@@ -46,5 +64,63 @@ public class CSharpHighlightUtil
 		}
 
 		return false;
+	}
+
+	public static void highlightNamed(@NotNull HighlightInfoHolder holder, @Nullable PsiElement element, @Nullable PsiElement target)
+	{
+		if(target == null)
+		{
+			return;
+		}
+
+		TextAttributesKey key = null;
+		if(element instanceof CSharpTypeDeclaration)
+		{
+			if(CSharpInheritUtil.isParent(DotNetTypes.System_Attribute, (DotNetTypeDeclaration) element, true))
+			{
+				key = CSharpHighlightKey.ATTRIBUTE_NAME;
+			}
+			else
+			{
+				key = CSharpHighlightKey.CLASS_NAME;
+			}
+		}
+		else if(element instanceof DotNetGenericParameter)
+		{
+			key = CSharpHighlightKey.GENERIC_PARAMETER_NAME;
+		}
+		else if(element instanceof DotNetParameter)
+		{
+			key = CSharpHighlightKey.PARAMETER;
+		}
+		else if(element instanceof DotNetMethodDeclaration)
+		{
+			key = ((DotNetMethodDeclaration) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
+					.INSTANCE_METHOD;
+		}
+		else if(element instanceof CSharpMacroDefine)
+		{
+			key = CSharpHighlightKey.INSTANCE_FIELD;       //TODO [VISTALL] new color
+		}
+		else if(element instanceof CSharpLocalVariable)
+		{
+			key = DefaultLanguageHighlighterColors.LOCAL_VARIABLE;
+		}
+		else if(element instanceof DotNetVariable)
+		{
+			key = ((DotNetVariable) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_FIELD : CSharpHighlightKey
+					.INSTANCE_FIELD;
+		}
+		else
+		{
+			return;
+		}
+
+		holder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes(key).create());
+		if(CSharpHighlightUtil.isGeneratedElement(element))
+		{
+			holder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes(EditorColors
+					.INJECTED_LANGUAGE_FRAGMENT).create());
+		}
 	}
 }

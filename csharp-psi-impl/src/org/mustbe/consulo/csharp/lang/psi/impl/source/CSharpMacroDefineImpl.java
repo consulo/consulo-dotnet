@@ -24,14 +24,13 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroTokens;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
  * @since 18.12.13.
  */
-public class CSharpMacroDefineImpl extends CSharpMacroElementImpl implements CSharpMacroDefine, PsiNameIdentifierOwner
+public class CSharpMacroDefineImpl extends CSharpMacroElementImpl implements CSharpMacroDefine
 {
 	public CSharpMacroDefineImpl(@NotNull ASTNode node)
 	{

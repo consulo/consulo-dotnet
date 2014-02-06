@@ -25,11 +25,9 @@ import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
-import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
@@ -40,12 +38,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
@@ -53,9 +46,6 @@ import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
@@ -199,8 +189,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 		if(!CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, dotNetTypeRef, statement, true))
 		{
-			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip(CSharpErrorBundle.message("the.type" +
-					".thrown.must.be.exception")).range(expression).create();
+			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip(CSharpErrorBundle.message("the.type"
+					+ ".thrown.must.be.exception")).range(expression).create();
 			myHighlightInfoHolder.add(info);
 		}
 	}
@@ -283,58 +273,9 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 	}
 
-	private void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
+	public void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
 	{
-		if(target == null)
-		{
-			return;
-		}
-
-		TextAttributesKey key = null;
-		if(element instanceof CSharpTypeDeclaration)
-		{
-			if(CSharpInheritUtil.isParent(DotNetTypes.System_Attribute, (DotNetTypeDeclaration) element, true))
-			{
-				key = CSharpHighlightKey.ATTRIBUTE_NAME;
-			}
-			else
-			{
-				key = CSharpHighlightKey.CLASS_NAME;
-			}
-		}
-		else if(element instanceof DotNetGenericParameter)
-		{
-			key = CSharpHighlightKey.GENERIC_PARAMETER_NAME;
-		}
-		else if(element instanceof DotNetParameter)
-		{
-			key = CSharpHighlightKey.PARAMETER;
-		}
-		else if(element instanceof DotNetMethodDeclaration)
-		{
-			key = ((DotNetMethodDeclaration) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
-					.INSTANCE_METHOD;
-		}
-		else if(element instanceof CSharpLocalVariable)
-		{
-			key = DefaultLanguageHighlighterColors.LOCAL_VARIABLE;
-		}
-		else if(element instanceof DotNetVariable)
-		{
-			key = ((DotNetVariable) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_FIELD : CSharpHighlightKey
-					.INSTANCE_FIELD;
-		}
-		else
-		{
-			return;
-		}
-
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes(key).create());
-		if(CSharpHighlightUtil.isGeneratedElement(element))
-		{
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes
-					(EditorColors.INJECTED_LANGUAGE_FRAGMENT).create());
-		}
+		CSharpHighlightUtil.highlightNamed(myHighlightInfoHolder, element, target);
 	}
 
 	@Override
