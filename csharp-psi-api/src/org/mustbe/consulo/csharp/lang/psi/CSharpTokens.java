@@ -180,6 +180,26 @@ public interface CSharpTokens extends TokenType
 
 	IElementType EQ = new IElementType("EQ", CSharpLanguage.INSTANCE);
 
+	IElementType ASTERISKEQ = new IElementType("ASTERISKEQ", CSharpLanguage.INSTANCE);
+
+	IElementType DIVEQ = new IElementType("DIVEQ", CSharpLanguage.INSTANCE);
+
+	IElementType PERCEQ = new IElementType("PERCEQ", CSharpLanguage.INSTANCE);
+
+	IElementType PLUSEQ = new IElementType("PLUSEQ", CSharpLanguage.INSTANCE);
+
+	IElementType MINUSEQ = new IElementType("MINUSEQ", CSharpLanguage.INSTANCE);
+
+	IElementType ANDEQ = new IElementType("ANDEQ", CSharpLanguage.INSTANCE);
+
+	IElementType OREQ = new IElementType("OREQ", CSharpLanguage.INSTANCE);
+
+	IElementType XOREQ = new IElementType("XOREQ", CSharpLanguage.INSTANCE);
+
+	IElementType LTLTEQ = new IElementType("LTLTEQ", CSharpLanguage.INSTANCE);
+
+	IElementType GTGTEQ = new IElementType("GTGTEQ", CSharpLanguage.INSTANCE);
+
 	IElementType COLON = new IElementType("COLON", CSharpLanguage.INSTANCE);
 
 	IElementType COLONCOLON = new IElementType("COLONCOLON", CSharpLanguage.INSTANCE);

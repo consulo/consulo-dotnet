@@ -237,6 +237,26 @@ MACRO_NEW_LINE=\r\n|\n|\r
 
 	")"                       { return CSharpTokens.RPAR; }
 
+	"*="                      { return CSharpTokens.ASTERISKEQ; }
+
+	"/="                      { return CSharpTokens.DIVEQ; }
+
+	"%="                      { return CSharpTokens.PERCEQ; }
+
+	"+="                      { return CSharpTokens.PLUSEQ; }
+
+	"-="                      { return CSharpTokens.MINUSEQ; }
+
+	"&="                      { return CSharpTokens.ANDEQ; }
+
+	"^="                      { return CSharpTokens.XOREQ; }
+
+	"|="                      { return CSharpTokens.OREQ; }
+
+	"<<="                     { return CSharpTokens.LTLTEQ; }
+
+	">>="                     { return CSharpTokens.GTGTEQ; }
+
 	"<="                      { return CSharpTokens.LTEQ; }
 
 	">="                      { return CSharpTokens.GTEQ; }

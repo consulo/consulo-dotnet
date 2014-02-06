@@ -36,8 +36,8 @@ public class ExpressionParsing extends SharingParsingHelpers
 		CONDITIONAL_OR, CONDITIONAL_AND, OR, XOR, AND, EQUALITY, RELATIONAL, SHIFT, ADDITIVE, MULTIPLICATIVE, UNARY, TYPE
 	}
 
-	private static final TokenSet ASSIGNMENT_OPS = TokenSet.create(EQ/*, ASTERISKEQ, DIVEQ, PERCEQ, PLUSEQ, MINUSEQ,
-			LTLTEQ, GTGTEQ, GTGTGTEQ, ANDEQ, OREQ, XOREQ*/);
+	private static final TokenSet ASSIGNMENT_OPS = TokenSet.create(EQ, ASTERISKEQ, DIVEQ, PERCEQ, PLUSEQ, MINUSEQ,
+			LTLTEQ, GTGTEQ, ANDEQ, OREQ, XOREQ);
 
 	private static final TokenSet CONDITIONAL_OR_OPS = TokenSet.create(OROR);
 	private static final TokenSet CONDITIONAL_AND_OPS = TokenSet.create(ANDAND);
