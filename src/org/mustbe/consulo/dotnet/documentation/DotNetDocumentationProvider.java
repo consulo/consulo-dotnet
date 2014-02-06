@@ -311,7 +311,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		}
 		else
 		{
-			String presentableParentQName = ((DotNetLikeMethodDeclaration) element).getPresentableParentQName();
+			String presentableParentQName = ((DotNetQualifiedElement) element).getPresentableParentQName();
 			if(StringUtil.isEmpty(presentableParentQName))
 			{
 				fullName = name;
