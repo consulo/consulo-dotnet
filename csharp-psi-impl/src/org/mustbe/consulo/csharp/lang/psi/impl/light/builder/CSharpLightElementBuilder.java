@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.light.builder;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.light.LightElement;
 
@@ -45,6 +46,12 @@ public abstract class CSharpLightElementBuilder<T extends CSharpLightElementBuil
 	{
 		myParent = parent;
 		return (T) this;
+	}
+
+	@Override
+	public PsiFile getContainingFile()
+	{
+		return myParent == null ? null : myParent.getContainingFile();
 	}
 
 	@Override

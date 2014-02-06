@@ -63,7 +63,6 @@ public class CSharpXXXAccessorImpl extends CSharpMemberImpl implements DotNetXXX
 			CSharpLightLocalVariableBuilder builder = new CSharpLightLocalVariableBuilder(propertyDeclaration)
 					.withName(VALUE)
 					.withParent(this)
-					.setConstant()
 					.withTypeRef(propertyDeclaration.toTypeRef());
 
 			if(!processor.execute(builder, state))
