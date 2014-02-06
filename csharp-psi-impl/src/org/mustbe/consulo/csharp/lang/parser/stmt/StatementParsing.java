@@ -436,7 +436,7 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			PsiBuilder.Marker varMarker = builder.mark();
 
-			if(parseType(builder) != null)
+			if(parseType(builder, BracketFailPolicy.NOTHING) != null)
 			{
 				expect(builder, IDENTIFIER, "Identifier expected");
 			}
@@ -622,7 +622,7 @@ public class StatementParsing extends SharingParsingHelpers
 			builder.advanceLexer();
 		}
 
-		TypeInfo typeMarker = parseType(builder);
+		TypeInfo typeMarker = parseType(builder, BracketFailPolicy.DROP);
 		if(typeMarker == null)
 		{
 			if(constToken)

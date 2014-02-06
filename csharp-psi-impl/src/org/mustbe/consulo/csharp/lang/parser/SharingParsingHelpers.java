@@ -48,6 +48,13 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		}
 	};
 
+	public static enum BracketFailPolicy
+	{
+		NOTHING,
+		DROP,
+		RETURN_BEFORE
+	}
+
 	public static class TypeInfo
 	{
 		public IElementType nativeElementType;
@@ -60,7 +67,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		boolean empty = true;
 		while(!builder.eof())
 		{
-			val marker = parseType(builder);
+			val marker = parseType(builder, BracketFailPolicy.NOTHING);
 			if(marker == null)
 			{
 				if(!empty)
@@ -84,7 +91,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		return empty;
 	}
 
-	protected static TypeInfo parseType(@NotNull CSharpBuilderWrapper builder)
+	protected static TypeInfo parseType(@NotNull CSharpBuilderWrapper builder, BracketFailPolicy bracketFailPolicy)
 	{
 		TypeInfo typeInfo = parseInnerType(builder);
 		if(typeInfo == null)
@@ -126,12 +133,41 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 
 		while(builder.getTokenType() == LBRACKET)
 		{
-			typeInfo = new TypeInfo();
+			PsiBuilder.Marker newMarker = marker.precede();
 
-			marker = marker.precede();
-			builder.advanceLexer();
-			expect(builder, RBRACKET, "']' expected");
-			marker.done(ARRAY_TYPE);
+			if(builder.lookAhead(1) == RBRACKET)
+			{
+				builder.advanceLexer();
+				builder.advanceLexer();
+
+				newMarker.done(ARRAY_TYPE);
+
+				typeInfo = new TypeInfo();
+				marker = newMarker;
+			}
+			else
+			{
+				switch(bracketFailPolicy)
+				{
+					case NOTHING:
+						builder.advanceLexer();  // advance [
+
+						builder.error("']' expected");
+						typeInfo = new TypeInfo();
+						newMarker.done(ARRAY_TYPE);
+
+						marker = newMarker;
+						break;
+					case DROP:
+						newMarker.drop();
+						marker.drop();
+						return null;
+					case RETURN_BEFORE:
+						newMarker.drop();
+						typeInfo.marker = marker;
+						return typeInfo;
+				}
+			}
 		}
 
 		while(builder.getTokenType() == MUL)

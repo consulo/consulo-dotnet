@@ -22,7 +22,6 @@ import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import org.mustbe.consulo.csharp.lang.parser.decl.MethodParsing;
 import org.mustbe.consulo.csharp.lang.parser.stmt.StatementParsing;
-import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
@@ -36,8 +35,8 @@ public class ExpressionParsing extends SharingParsingHelpers
 		CONDITIONAL_OR, CONDITIONAL_AND, OR, XOR, AND, EQUALITY, RELATIONAL, SHIFT, ADDITIVE, MULTIPLICATIVE, UNARY, TYPE
 	}
 
-	private static final TokenSet ASSIGNMENT_OPS = TokenSet.create(EQ, ASTERISKEQ, DIVEQ, PERCEQ, PLUSEQ, MINUSEQ,
-			LTLTEQ, GTGTEQ, ANDEQ, OREQ, XOREQ);
+	private static final TokenSet ASSIGNMENT_OPS = TokenSet.create(EQ, ASTERISKEQ, DIVEQ, PERCEQ, PLUSEQ, MINUSEQ, LTLTEQ, GTGTEQ, ANDEQ, OREQ,
+			XOREQ);
 
 	private static final TokenSet CONDITIONAL_OR_OPS = TokenSet.create(OROR);
 	private static final TokenSet CONDITIONAL_AND_OPS = TokenSet.create(ANDAND);
@@ -192,7 +191,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 				return parseUnary(builder);
 
 			case TYPE:
-				TypeInfo typeInfo = parseType(builder);
+				TypeInfo typeInfo = parseType(builder, BracketFailPolicy.NOTHING);
 				return typeInfo == null ? null : typeInfo.marker;
 			default:
 				assert false : "Unexpected type: " + type;
@@ -224,7 +223,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 			final PsiBuilder.Marker typeCast = builder.mark();
 			builder.advanceLexer();
 
-			val typeInfo = parseType(builder);
+			val typeInfo = parseType(builder, BracketFailPolicy.NOTHING);
 			if(typeInfo == null || !expect(builder, RPAR, null))
 			{
 				typeCast.rollbackTo();
@@ -848,7 +847,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			parseModifierList(builder);
 
-			if(parseType(builder) == null)
+			if(parseType(builder, BracketFailPolicy.NOTHING) == null)
 			{
 				builder.error("Type expected");
 			}
@@ -867,7 +866,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 			}
 			else
 			{
-				if(parseType(builder) == null)
+				if(parseType(builder, BracketFailPolicy.NOTHING) == null)
 				{
 					builder.error("Type expected");
 				}
@@ -979,35 +978,36 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		builder.advanceLexer();
 
-		IElementType elementType = null;
-		val typeMarker = parseType(builder);
+		val typeMarker = parseType(builder, BracketFailPolicy.RETURN_BEFORE);
 		if(typeMarker == null)
 		{
 			builder.error("Type expected");
 		}
-		else
+
+
+		while(builder.getTokenType() == LBRACKET)
 		{
-			elementType = ((LighterASTNode) typeMarker.marker).getTokenType();
+			PsiBuilder.Marker marker = builder.mark();
+			builder.advanceLexer();
+
+			PsiBuilder.Marker expMarker = parse(builder);
+			if(expMarker == null)
+			{
+				builder.error("Expression expected");
+			}
+
+			expect(builder, RBRACKET, "']' expected");
+			marker.done(ARRAY_ACCESS_EXPRESSION);
 		}
 
-		if(elementType == ARRAY_TYPE)
+		if(builder.getTokenType() == LPAR)
 		{
-			if(builder.getTokenType() == LBRACKET)
-			{
-
-			}
+			parseArgumentList(builder);
 		}
-		else
-		{
-			if(builder.getTokenType() == LPAR)
-			{
-				parseArgumentList(builder);
-			}
 
-			if(builder.getTokenType() == LBRACE)
-			{
-				parseFieldOrPropertySetBlock(builder);
-			}
+		if(builder.getTokenType() == LBRACE)
+		{
+			parseFieldOrPropertySetBlock(builder);
 		}
 
 		newExpr.done(NEW_EXPRESSION);
@@ -1074,7 +1074,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		if(expect(builder, LPAR, "'(' expected"))
 		{
-			if(parseType(builder) == null)
+			if(parseType(builder, BracketFailPolicy.NOTHING) == null)
 			{
 				builder.error("Type expected");
 			}
