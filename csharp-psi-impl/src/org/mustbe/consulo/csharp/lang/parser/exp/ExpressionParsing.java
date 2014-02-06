@@ -599,10 +599,10 @@ public class ExpressionParsing extends SharingParsingHelpers
 			return literal;
 		}
 
-	/*	if(tokenType == LBRACE)
+		if(tokenType == LBRACE)
 		{
-			return parseArrayInitializer(builder);
-		}      */
+			return parseArrayInitialization(builder);
+		}
 
 		if(tokenType == NEW_KEYWORD)
 		{
@@ -972,6 +972,13 @@ public class ExpressionParsing extends SharingParsingHelpers
 		}
 	}
 
+	private static enum AfterNewParsingTarget
+	{
+		NONE,
+		PROPERTY_SET_LIST,
+		ARRAY_INITIALIZATION
+	}
+
 	private static PsiBuilder.Marker parseNewExpression(CSharpBuilderWrapper builder, PsiBuilder.Marker mark)
 	{
 		PsiBuilder.Marker newExpr = (mark != null ? mark.precede() : builder.mark());
@@ -1005,13 +1012,77 @@ public class ExpressionParsing extends SharingParsingHelpers
 			parseArgumentList(builder);
 		}
 
-		if(builder.getTokenType() == LBRACE)
+		AfterNewParsingTarget target = getTarget(builder);
+		switch(target)
 		{
-			parseFieldOrPropertySetBlock(builder);
+			case NONE:
+				break;
+			case PROPERTY_SET_LIST:
+				parseFieldOrPropertySetBlock(builder);
+				break;
+			case ARRAY_INITIALIZATION:
+				parseArrayInitialization(builder);
+				break;
 		}
 
 		newExpr.done(NEW_EXPRESSION);
 		return newExpr;
+	}
+
+	private static AfterNewParsingTarget getTarget(CSharpBuilderWrapper builderWrapper)
+	{
+		if(builderWrapper.getTokenType() != LBRACE)
+		{
+			return AfterNewParsingTarget.NONE;
+		}
+
+		if(builderWrapper.lookAhead(1) == IDENTIFIER && builderWrapper.lookAhead(2) == EQ)
+		{
+			return AfterNewParsingTarget.PROPERTY_SET_LIST;
+		}
+		else
+		{
+			return AfterNewParsingTarget.ARRAY_INITIALIZATION;
+		}
+	}
+
+	private static PsiBuilder.Marker parseArrayInitialization(CSharpBuilderWrapper builderWrapper)
+	{
+		if(builderWrapper.getTokenType() != LBRACE)
+		{
+			return null;
+		}
+
+		PsiBuilder.Marker marker = builderWrapper.mark();
+
+		builderWrapper.advanceLexer();
+
+		while(!builderWrapper.eof())
+		{
+			if(builderWrapper.getTokenType() == RBRACE)
+			{
+				break;
+			}
+
+			PsiBuilder.Marker parse = ExpressionParsing.parse(builderWrapper);
+			if(parse == null)
+			{
+				builderWrapper.error("Expression expected");
+			}
+
+			if(builderWrapper.getTokenType() == COMMA)
+			{
+				builderWrapper.advanceLexer();
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		expect(builderWrapper, RBRACE, "'}' expected");
+		marker.done(ARRAY_INITIALIZATION_EXPRESSION);
+		return marker;
 	}
 
 	private static void parseFieldOrPropertySetBlock(CSharpBuilderWrapper builder)
