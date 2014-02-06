@@ -188,10 +188,10 @@ public class TableConstants
 			1,
 			1,
 			1,
-			2,
+			2,    //Implementation
 			3,
 			2,
-			1
+			1    //TypeOrMethodDef
 	};
 	private static final int[] MASKS = {
 			0x3,
@@ -203,10 +203,10 @@ public class TableConstants
 			0x1,
 			0x1,
 			0x1,
-			0x3,
+			0x3,   //Implementation
 			0x7,
 			0x3,
-			0x1
+			0x1    //TypeOrMethodDef
 	};
 
 	private int[] INDEX_BITS;

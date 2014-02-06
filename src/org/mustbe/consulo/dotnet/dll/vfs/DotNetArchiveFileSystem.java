@@ -19,6 +19,8 @@ package org.mustbe.consulo.dotnet.dll.vfs;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
 
 import org.consulo.lombok.annotations.Logger;
 import org.consulo.vfs.ArchiveFileSystemBase;
@@ -26,14 +28,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.DotNetDllFileType;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.impl.archive.ArchiveHandler;
 import com.intellij.openapi.vfs.impl.archive.ArchiveHandlerBase;
+import com.intellij.util.containers.EmptyIterator;
 import com.intellij.util.messages.MessageBus;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
-import edu.arizona.cs.mbel.parse.MSILParseException;
 import lombok.val;
 
 /**
@@ -71,16 +74,40 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 
 					return new DotNetArchiveFile(parser.parseModule(), mirrorFile.lastModified());
 				}
-				catch(MSILParseException e)
+				catch(Exception e)
 				{
-					LOGGER.warn(e.getMessage() + ": " + originalFile.getPath(), e);
-					return null;
+					LOGGER.warn(originalFile.getPath(), e);
 				}
-				catch(IOException e)
+
+				return new ArchiveFile()
 				{
-					LOGGER.warn(e.getMessage() + ": " + originalFile.getPath(), e);
-					return null;
-				}
+					@Nullable
+					@Override
+					public ArchiveEntry getEntry(String s)
+					{
+						return null;
+					}
+
+					@Nullable
+					@Override
+					public InputStream getInputStream(ArchiveEntry archiveEntry) throws IOException
+					{
+						return null;
+					}
+
+					@NotNull
+					@Override
+					public Iterator<? extends ArchiveEntry> entries()
+					{
+						return EmptyIterator.getInstance();
+					}
+
+					@Override
+					public int getSize()
+					{
+						return 0;
+					}
+				};
 			}
 		};
 	}

@@ -669,15 +669,15 @@ public class ModuleParser
 				long[] token = tc.parseCodedIndex(coded, TableConstants.Implementation);
 				if(token[0] == TableConstants.ExportedType)
 				{
-					exportedTypes[i].setExportedTypeRef(exportedTypes[longToIndex(token[1])]);
+					exportedTypes[i].setExportedTypeRef(getByLongIndex(exportedTypes, token[1]));
 				}
 				else if(token[0] == TableConstants.File)
 				{
-					exportedTypes[i].setFileReference(fileReferences[longToIndex(token[1])]);
+					exportedTypes[i].setFileReference(getByLongIndex(fileReferences, token[1]));
 				}
 				else if(token[0] == TableConstants.AssemblyRef)
 				{
-					exportedTypes[i].setAssemblyRefInfo(assemblyRefs[longToIndex(token[1])]);
+					exportedTypes[i].setAssemblyRefInfo(getByLongIndex(assemblyRefs, token[1]));
 				}
 				else
 				{
@@ -1018,15 +1018,15 @@ public class ModuleParser
 					long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRefOrSpec);
 					if(token[0] == TableConstants.TypeDef)
 					{
-						typeDefs[i].setSuperClass(typeDefs[longToIndex(token[1])]);
+						typeDefs[i].setSuperClass(getByLongIndex(typeDefs, token[1]));
 					}
 					else if(token[0] == TableConstants.TypeRef)
 					{
-						typeDefs[i].setSuperClass(typeRefs[longToIndex(token[1])]);
+						typeDefs[i].setSuperClass(getByLongIndex(typeRefs, token[1]));
 					}
 					else if(token[0] == TableConstants.TypeSpec)
 					{
-						typeDefs[i].setSuperClass(typeSpecs[longToIndex(token[1])]);
+						typeDefs[i].setSuperClass(getByLongIndex(typeSpecs, token[1]));
 					}
 					else
 					{
@@ -1184,15 +1184,15 @@ public class ModuleParser
 				long[] token = tc.parseCodedIndex(coded, TableConstants.TypeDefOrRefOrSpec);
 				if(token[0] == TableConstants.TypeDef)
 				{
-					handler = typeDefs[longToIndex(token[1])];
+					handler = getByLongIndex(typeDefs, token[1]);
 				}
 				else if(token[0] == TableConstants.TypeRef)
 				{
-					handler = typeRefs[longToIndex(token[1])];
+					handler = getByLongIndex(typeRefs, token[1]);
 				}
 				else if(token[0] == TableConstants.TypeSpec)
 				{
-					handler = typeSpecs[longToIndex(token[1])];
+					handler = getByLongIndex(typeSpecs, token[1]);
 				}
 				else
 				{
@@ -1493,11 +1493,11 @@ public class ModuleParser
 			long[] token = tc.parseCodedIndex(owner, TableConstants.TypeOrMethodDef);
 			if(token[0] == TableConstants.TypeDef)
 			{
-				paramOwner = typeDefs[(int) token[1] - 1];
+				paramOwner = getByLongIndex(typeDefs, token[1]);
 			}
 			else
 			{
-				paramOwner = methods[(int) token[1] - 1];
+				paramOwner = getByLongIndex(methods, token[1]);
 			}
 
 			GenericParamDef paramDef = new GenericParamDef(name, flags);
@@ -1522,24 +1522,29 @@ public class ModuleParser
 
 			long[] values = tc.parseCodedIndex(constraint, TableConstants.TypeDefOrRefOrSpec);
 
-			GenericParamDef paramDef = myGenericParams[longToIndex(parent)];
+			GenericParamDef paramDef = getByLongIndex(myGenericParams, parent);
 			assert paramDef != null : parent;
 			if(values[0] == TableConstants.TypeDef)
 			{
-				TypeDef value = typeDefs[longToIndex(values[1])];
+				TypeDef value = getByLongIndex(typeDefs, values[1]);
 				paramDef.addConstraint(value);
 			}
 			else if(values[1] == TableConstants.TypeRef)
 			{
-				TypeRef value = typeRefs[longToIndex(values[1])];
+				TypeRef value = getByLongIndex(typeRefs, values[1]);
+				paramDef.addConstraint(value);
+			}
+			else if(values[1] == TableConstants.TypeSpec)
+			{
+				TypeSpec value = getByLongIndex(typeSpecs, values[1]);
 				paramDef.addConstraint(value);
 			}
 		}
 	}
 
-	private static int longToIndex(long index)
+	private static <T> T getByLongIndex(T[] array, long index)
 	{
-		return (int) (index - 1);
+		return array[(int) (index - 1)];
 	}
 
 	private void buildMethodBodies() throws IOException, MSILParseException
@@ -1584,6 +1589,8 @@ public class ModuleParser
 				{
 					ca = new CustomAttribute(blob, (MethodDefOrRef) memberRefs[(int) token[1] - 1]);
 				}
+
+				assert ca != null;
 
 				coded = aRow.getCodedIndex("Parent");
 				token = tc.parseCodedIndex(coded, TableConstants.HasCustomAttribute);

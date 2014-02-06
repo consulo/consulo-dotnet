@@ -27,6 +27,7 @@ import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.dll.vfs.DotNetFileArchiveEntry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
@@ -89,6 +90,8 @@ public class StubToStringBuilder
 			put("op_Implicit", "explicit");
 		}
 	};
+
+	private static String[] KEYWORDS = new String[] {"event", "params"};
 
 	private static List<String> SKIPPED_SUPERTYPES = new ArrayList<String>()
 	{
@@ -562,7 +565,8 @@ public class StubToStringBuilder
 		}
 	}
 
-	private static void processParameterList(final TypeDef typeDef, final MethodDef methodDef, ParameterSignature[] owner, StringBuilder builder)
+	private static void processParameterList(final TypeDef typeDef, final MethodDef methodDef, final ParameterSignature[] owner,
+			StringBuilder builder)
 	{
 		String text = StringUtil.join(owner, new Function<ParameterSignature, String>()
 		{
@@ -572,11 +576,29 @@ public class StubToStringBuilder
 				StringBuilder p = new StringBuilder();
 				p.append(TypeToStringBuilder.typeToString(paramDef.getInnerType(), typeDef, methodDef));
 				p.append(" ");
-				p.append(paramDef.getParameterInfo().getName());
+				p.append(toValidName(paramDef.getParameterInfo().getName(), ArrayUtil.indexOf(owner, paramDef)));
 				return p.toString();
 			}
 		}, ", ");
 		builder.append("(").append(text).append(")");
+	}
+
+	/**
+	 * Sometimes - parameters name is C# keyword. Bytecode is allow - but C# parser dont. hat why need change name to valid
+	 * @param name
+	 * @param index
+	 * @return
+	 */
+	private static String toValidName(String name, int index)
+	{
+		if(ArrayUtil.contains(name, KEYWORDS))
+		{
+			return name + index;
+		}
+		else
+		{
+			return name;
+		}
 	}
 
 	private static void processGenericParameterList(GenericParamOwner owner, StringBuilder builder)
