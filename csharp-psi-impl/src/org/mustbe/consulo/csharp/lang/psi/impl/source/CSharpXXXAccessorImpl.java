@@ -17,12 +17,18 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.builder.CSharpLightLocalVariableBuilder;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author VISTALL
@@ -35,16 +41,49 @@ public class CSharpXXXAccessorImpl extends CSharpMemberImpl implements DotNetXXX
 		super(node);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(CSharpTokenSets.XXX_ACCESSOR_START);
+		return findNotNullChildByType(CSharpTokenSets.XXX_ACCESSOR_START);
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
+	{
+		if(getAccessorType() == CSharpSoftTokens.SET_KEYWORD)
+		{
+			CSharpPropertyDeclaration propertyDeclaration = PsiTreeUtil.getParentOfType(this, CSharpPropertyDeclaration.class);
+			if(propertyDeclaration == null)
+			{
+				return true;
+			}
+
+			CSharpLightLocalVariableBuilder builder = new CSharpLightLocalVariableBuilder(propertyDeclaration)
+					.withName(VALUE)
+					.withParent(this)
+					.setConstant()
+					.withTypeRef(propertyDeclaration.toTypeRef());
+
+			if(!processor.execute(builder, state))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitXXXAccessor(this);
+	}
+
+	@NotNull
+	@Override
+	public IElementType getAccessorType()
+	{
+		return getNameIdentifier().getNode().getElementType();
 	}
 }

@@ -25,20 +25,22 @@ import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLocalVariableImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -51,6 +53,8 @@ import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -287,7 +291,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 
 		TextAttributesKey key = null;
-		if(element instanceof CSharpTypeDeclarationImpl)
+		if(element instanceof CSharpTypeDeclaration)
 		{
 			if(CSharpInheritUtil.isParent(DotNetTypes.System_Attribute, (DotNetTypeDeclaration) element, true))
 			{
@@ -298,7 +302,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 				key = CSharpHighlightKey.CLASS_NAME;
 			}
 		}
-		else if(element instanceof CSharpGenericParameterImpl)
+		else if(element instanceof DotNetGenericParameter)
 		{
 			key = CSharpHighlightKey.GENERIC_PARAMETER_NAME;
 		}
@@ -311,9 +315,9 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			key = ((DotNetMethodDeclaration) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
 					.INSTANCE_METHOD;
 		}
-		else if(element instanceof CSharpLocalVariableImpl)
+		else if(element instanceof CSharpLocalVariable)
 		{
-			return;
+			key = DefaultLanguageHighlighterColors.LOCAL_VARIABLE;
 		}
 		else if(element instanceof DotNetVariable)
 		{
@@ -326,6 +330,11 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 
 		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes(key).create());
+		if(CSharpHighlightUtil.isGeneratedElement(element))
+		{
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes
+					(EditorColors.INJECTED_LANGUAGE_FRAGMENT).create());
+		}
 	}
 
 	@Override

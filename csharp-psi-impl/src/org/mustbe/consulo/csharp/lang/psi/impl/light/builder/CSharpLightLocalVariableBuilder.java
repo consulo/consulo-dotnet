@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.light.builder;
 
-import org.jetbrains.annotations.NotNull;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.tree.IElementType;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
+import com.intellij.lang.Language;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
- * Index Method
- * Property
- * Event
+ * @since 06.02.14
  */
-public interface DotNetXXXAccessor extends DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetNamedElement
+public class CSharpLightLocalVariableBuilder extends CSharpLightVariableBuilder<CSharpLightLocalVariableBuilder> implements CSharpLocalVariable
 {
-	String VALUE = "value";
+	public CSharpLightLocalVariableBuilder(Project manager, Language language)
+	{
+		super(manager, language);
+	}
 
-	@NotNull
-	IElementType getAccessorType();
+	public CSharpLightLocalVariableBuilder(PsiElement element)
+	{
+		super(element);
+	}
 }
