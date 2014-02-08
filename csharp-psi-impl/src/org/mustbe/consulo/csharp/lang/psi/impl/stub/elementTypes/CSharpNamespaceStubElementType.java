@@ -88,7 +88,7 @@ public class CSharpNamespaceStubElementType extends CSharpAbstractStubElementTyp
 
 			indexSink.occurrence(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, CSharpNamespaceHelper.getNameWithNamespaceForIndexing(parentQName, name));
 
-			indexSink.occurrence(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.getNamespaceForIndexing(parentQName));
+			//indexSink.occurrence(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.getNamespaceForIndexing(parentQName));
 		}
 	}
 }

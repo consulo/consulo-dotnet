@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.NamespaceByQNameIndex;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.openapi.project.Project;
@@ -52,13 +53,13 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetQual
 	@NotNull
 	private final String myQName;
 	@NotNull
-	private final GlobalSearchScope mySearchScopes;
+	private final GlobalSearchScope myScope;
 
-	public CSharpNamespaceAsElement(@NotNull Project project, @NotNull String qName, @NotNull GlobalSearchScope searchScopes)
+	public CSharpNamespaceAsElement(@NotNull Project project, @NotNull String qName, @NotNull GlobalSearchScope scope)
 	{
 		super(PsiManager.getInstance(project), CSharpLanguage.INSTANCE);
 		myQName = qName;
-		mySearchScopes = searchScopes;
+		myScope = scope;
 	}
 
 	@Nullable
@@ -88,7 +89,7 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetQual
 	public DotNetNamespaceDeclaration findFirstNamespace()
 	{
 		val findFirstProcessor = new CommonProcessors.FindFirstProcessor<DotNetNamespaceDeclaration>();
-		StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, myQName, getProject(), mySearchScopes, findFirstProcessor);
+		StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, myQName, getProject(), myScope, findFirstProcessor);
 		if(findFirstProcessor.getFoundValue() != null)
 		{
 			return findFirstProcessor.getFoundValue();
@@ -103,13 +104,13 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetQual
 			}
 		};
 
-		StubIndex.getInstance().processAllKeys(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, findFirstProcessor2, mySearchScopes,
+		StubIndex.getInstance().processAllKeys(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, findFirstProcessor2, myScope,
 				IdFilter.getProjectIdFilter(getProject(), false));
 
 		if(findFirstProcessor2.getFoundValue() != null)
 		{
 			Collection<DotNetNamespaceDeclaration> dotNetNamespaceDeclarations = NamespaceByQNameIndex.getInstance().get(findFirstProcessor2
-					.getFoundValue(), getProject(), mySearchScopes);
+					.getFoundValue(), getProject(), myScope);
 
 			return ContainerUtil.getFirstItem(dotNetNamespaceDeclarations);
 		}
@@ -135,7 +136,7 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetQual
 		{
 			return false;
 		}
-		if(!mySearchScopes.equals(that.mySearchScopes))
+		if(!myScope.equals(that.myScope))
 		{
 			return false;
 		}
@@ -147,7 +148,7 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetQual
 	public int hashCode()
 	{
 		int result = getPresentableQName().hashCode();
-		result = 31 * result + mySearchScopes.hashCode();
+		result = 31 * result + myScope.hashCode();
 		return result;
 	}
 
@@ -155,14 +156,14 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetQual
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
 			@NotNull final PsiElement place)
 	{
-		return StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, getPresentableQName(), getProject(), mySearchScopes,
-				new Processor<DotNetNamespaceDeclaration>()
+		return StubIndex.getInstance().process(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, getPresentableQName(), getProject(), myScope,
+				new Processor<DotNetNamedElement>()
 
 		{
 			@Override
-			public boolean process(DotNetNamespaceDeclaration dotNetNamespaceDeclaration)
+			public boolean process(DotNetNamedElement namedElement)
 			{
-				return dotNetNamespaceDeclaration.processDeclarations(processor, state, lastParent, place);
+				return processor.execute(namedElement, state);
 			}
 		});
 	}
@@ -197,5 +198,10 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetQual
 	public String getPresentableQName()
 	{
 		return myQName;
+	}
+
+	public GlobalSearchScope getScope()
+	{
+		return myScope;
 	}
 }

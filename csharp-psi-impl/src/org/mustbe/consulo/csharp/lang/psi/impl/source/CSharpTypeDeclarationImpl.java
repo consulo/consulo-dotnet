@@ -24,18 +24,13 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper.GenericUnwrapTool;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
@@ -142,8 +137,6 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
-		DotNetGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
-
 		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
 		{
 			if(!processor.execute(dotNetGenericParameter, state))
@@ -151,35 +144,6 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 				return false;
 			}
 		}
-
-		for(DotNetNamedElement namedElement : getMembers())
-		{
-			DotNetNamedElement extracted = GenericUnwrapTool.extract(namedElement, extractor);
-
-			if(!processor.execute(extracted, state))
-			{
-				return false;
-			}
-		}
-
-		if(!processor.execute(this, state))
-		{
-			return false;
-		}
-		/*
-		for(DotNetType dotNetType : getExtends())
-		{
-			DotNetRuntimeType runtimeType = dotNetType.toTypeRef();
-			PsiElement psiElement = runtimeType.resolve();
-			if(psiElement == null)
-			{
-				continue;
-			}
-			if(!psiElement.processDeclarations(processor, state, lastParent, place))
-			{
-				return false;
-			}
-		}  */
 
 		return true;
 	}

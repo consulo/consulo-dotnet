@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
@@ -32,6 +33,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * @author VISTALL
  * @since 28.11.13.
  */
+@ArrayFactoryFields
 public class CSharpUsingNamespaceListImpl extends CSharpStubElementImpl<CSharpUsingNamespaceListStub>
 {
 	public CSharpUsingNamespaceListImpl(@NotNull ASTNode node)

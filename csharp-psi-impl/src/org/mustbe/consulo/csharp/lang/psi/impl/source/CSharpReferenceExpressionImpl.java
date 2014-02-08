@@ -376,7 +376,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 						return psiNamedElement instanceof CSharpFieldDeclaration || psiNamedElement instanceof CSharpPropertyDeclaration;
 					}
 				}), incompleteCode);
-				CSharpResolveUtil.treeWalkUp(p, psiElement1, this, null, resolveState);
+				CSharpResolveUtil.walkChildren(p, psiElement1, this, null, resolveState);
 				return p.getElements();
 			case LABEL:
 				DotNetQualifiedElement parentOfType = PsiTreeUtil.getParentOfType(this, DotNetQualifiedElement.class);
@@ -462,7 +462,14 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
 		}
 
-		CSharpResolveUtil.treeWalkUp(p, target, this, null, resolveState);
+		if(target != this)
+		{
+			CSharpResolveUtil.walkChildren(p, target, this, null, resolveState);
+		}
+		else
+		{
+			CSharpResolveUtil.treeWalkUp(p, target, this, null, resolveState);
+		}
 		return p.getElements();
 	}
 

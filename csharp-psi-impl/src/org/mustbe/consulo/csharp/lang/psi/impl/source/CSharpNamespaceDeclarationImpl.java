@@ -23,6 +23,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpNamespaceStub;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
@@ -184,39 +185,9 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 					return false;
 				}
 			}
-			else
-			{
-				if(!processor.execute(dotNetNamedElement, state))
-				{
-					return false;
-				}
-			}
 		}
 
 
-		/*String presentableQName = getPresentableQName();
-		if(presentableQName == null)
-		{
-			return true;
-		}
-
-		String packageName = StringUtil.getPackageName(presentableQName);
-		while(!StringUtil.isEmpty(packageName))
-		{
-			val declarations = NamespaceByQNameIndex.getInstance().get(packageName, getProject(), getResolveScope());
-
-			for(DotNetNamespaceDeclaration dotNetNamespaceDeclaration : declarations)
-			{
-				if(!dotNetNamespaceDeclaration.processDeclarations(processor, state, lastParent, place))
-				{
-					return false;
-				}
-			}
-
-			packageName = StringUtil.getPackageName(packageName);
-		} */
-
-
-		return true;
+		return CSharpResolveUtil.walkChildren(processor, this, lastParent, place, state);
 	}
 }

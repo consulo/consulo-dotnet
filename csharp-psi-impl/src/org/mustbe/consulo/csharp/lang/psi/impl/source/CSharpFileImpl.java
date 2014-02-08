@@ -23,8 +23,7 @@ import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetFile;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
@@ -37,9 +36,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 
 /**
@@ -113,25 +110,9 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 					return false;
 				}
 			}
-			else
-			{
-				if(!processor.execute(psiElement, state))
-				{
-					return false;
-				}
-			}
 		}
 
-		return StubIndex.getInstance().process(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.ROOT, getProject(),
-				getResolveScope(), new Processor<DotNetNamedElement>()
-
-		{
-			@Override
-			public boolean process(DotNetNamedElement dotNetNamespaceDeclaration)
-			{
-				return processor.execute(dotNetNamespaceDeclaration, state);
-			}
-		});
+		return CSharpResolveUtil.walkChildren(processor, this, this, place, state);
 	}
 
 	@NotNull

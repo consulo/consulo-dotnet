@@ -76,6 +76,7 @@ public class CSharpArrayTypeRef extends DotNetTypeRef.Adapter implements DotNetA
 		return new CSharpGenericExtractor(((DotNetGenericParameterListOwner) resolved).getGenericParameters(), new DotNetTypeRef[]{getInnerType()});
 	}
 
+	@Override
 	@NotNull
 	public DotNetTypeRef getInnerType()
 	{
