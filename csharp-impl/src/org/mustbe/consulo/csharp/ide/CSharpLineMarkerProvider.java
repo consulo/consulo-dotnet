@@ -80,7 +80,7 @@ public class CSharpLineMarkerProvider implements LineMarkerProvider, DumbAware
 				if(b)
 				{
 					val icon = parent.isInterface() ? AllIcons.Gutter.ImplementedMethod : AllIcons.Gutter.OverridenMethod;
-					val lineMarkerInfo = new LineMarkerInfo<PsiElement>(psiElement, psiElement.getTextRange(), icon, Pass.UPDATE_ALL,
+					val lineMarkerInfo = new LineMarkerInfo<PsiElement>(psiElement, psiElement.getTextRange(), icon, Pass.UPDATE_OVERRIDEN_MARKERS,
 							new Function<PsiElement, String>()
 					{
 						@Override
