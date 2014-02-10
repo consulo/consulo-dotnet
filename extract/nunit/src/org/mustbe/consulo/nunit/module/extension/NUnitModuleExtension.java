@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.nunit.module.extension;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.Nullable;
+import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.nunit.bundle.NUnitBundleType;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.SdkType;
 
 /**
  * @author VISTALL
- * @since 19.12.13.
+ * @since 10.02.14
  */
-@ArrayFactoryFields
-public interface DotNetAttribute extends DotNetElement
+public class NUnitModuleExtension extends ModuleExtensionWithSdkImpl<NUnitModuleExtension>
 {
-	@Nullable
-	DotNetTypeDeclaration resolveToType();
+	public NUnitModuleExtension(@NotNull String id, @NotNull Module module)
+	{
+		super(id, module);
+	}
+
+	@Override
+	protected Class<? extends SdkType> getSdkTypeClass()
+	{
+		return NUnitBundleType.class;
+	}
 }

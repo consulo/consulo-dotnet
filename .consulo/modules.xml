@@ -14,12 +14,12 @@
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="dotnet-asm" />
-        <orderEntry type="module" module-name="dotnet-api" />
-        <orderEntry type="module" module-name="dotnet-psi-api" />
-        <orderEntry type="module" module-name="dotnet-psi-impl" />
-        <orderEntry type="module" module-name="dotnet-impl" />
-        <orderEntry type="module-library">
+        <orderEntry type="module" module-name="dotnet-asm" exported="" />
+        <orderEntry type="module" module-name="dotnet-api" exported="" />
+        <orderEntry type="module" module-name="dotnet-psi-api" exported="" />
+        <orderEntry type="module" module-name="dotnet-psi-impl" exported="" />
+        <orderEntry type="module" module-name="dotnet-impl" exported="" />
+        <orderEntry type="module-library" exported="">
           <library name="consulo:XML">
             <CLASSES>
               <root url="jar://$MODULE_DIR$/dep/xml/lib/jaxen-1.1.3.jar!/" />
@@ -183,6 +183,19 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="dotnet-api" exported="" />
+      </module>
+      <module name="nunit" dirurl="file://$PROJECT_DIR$/extract/nunit">
+        <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
+        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
+        <content url="file://$MODULE_DIR$">
+          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+        </content>
+        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
+        <orderEntry type="module-extension-sdk" extension-id="java" />
+        <orderEntry type="sourceFolder" forTests="false" />
+        <orderEntry type="module" module-name="consulo-dotnet" />
       </module>
     </modules>
   </component>

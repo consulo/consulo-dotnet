@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
-
-import org.consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.Nullable;
+package org.mustbe.consulo.nunit;
 
 /**
  * @author VISTALL
- * @since 19.12.13.
+ * @since 10.02.14
  */
-@ArrayFactoryFields
-public interface DotNetAttribute extends DotNetElement
+public interface NUnitTypes
 {
-	@Nullable
-	DotNetTypeDeclaration resolveToType();
+	String TestAttribute = "NUnit.Framework.TestAttribute";
 }

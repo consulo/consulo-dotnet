@@ -50,6 +50,14 @@
           </element>
         </element>
       </element>
+      <element id="directory" name="nunit">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="nunit.jar">
+            <element id="module-output" name="nunit" />
+            <element id="module-production-resource-output" name="nunit" />
+          </element>
+        </element>
+      </element>
     </root>
   </artifact>
 </component>

@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.nunit;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.Nullable;
+import javax.swing.Icon;
+
+import com.intellij.openapi.util.IconLoader;
 
 /**
  * @author VISTALL
- * @since 19.12.13.
+ * @since 10.02.14
  */
-@ArrayFactoryFields
-public interface DotNetAttribute extends DotNetElement
+public interface NUnitIcons
 {
-	@Nullable
-	DotNetTypeDeclaration resolveToType();
+	Icon NUnit = IconLoader.findIcon("/icons/nunit.png");
 }

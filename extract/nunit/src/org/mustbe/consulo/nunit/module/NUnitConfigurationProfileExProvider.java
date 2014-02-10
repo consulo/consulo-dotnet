@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
-
-import org.consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.Nullable;
+package org.mustbe.consulo.nunit.module;
 
 /**
  * @author VISTALL
- * @since 19.12.13.
+ * @since 10.02.14
  */
-@ArrayFactoryFields
-public interface DotNetAttribute extends DotNetElement
+public class NUnitConfigurationProfileExProvider //implements ConfigurationProfileExProvider
 {
-	@Nullable
-	DotNetTypeDeclaration resolveToType();
+/*	@NotNull
+	@Override
+	public ConfigurationProfileEx createEx(@NotNull DotNetModuleExtension dotNetModuleExtension, @NotNull ConfigurationProfile profile)
+	{
+		return new NUnitConfigurationProfileEx();
+	}
+
+	@NotNull
+	@Override
+	public ConfigurationProfileEx createExForDefaults(@NotNull DotNetModuleExtension dotNetModuleExtension, @NotNull ConfigurationProfile profile,
+			boolean debug)
+	{
+		return null;
+	} */
 }
