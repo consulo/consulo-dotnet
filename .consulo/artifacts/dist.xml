@@ -58,6 +58,14 @@
           </element>
         </element>
       </element>
+      <element id="directory" name="visual-studio">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="visual-studio.jar">
+            <element id="module-output" name="visual-studio" />
+            <element id="module-production-resource-output" name="visual-studio" />
+          </element>
+        </element>
+      </element>
     </root>
   </artifact>
 </component>
