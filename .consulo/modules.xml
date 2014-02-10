@@ -33,7 +33,7 @@
           </library>
         </orderEntry>
       </module>
-      <module name="impl/consulo-microsoft-dotnet" dirurl="file://$PROJECT_DIR$/impl/consulo-microsoft-dotnet">
+      <module name="impl/consulo-microsoft-dotnet" dirurl="file://$PROJECT_DIR$/extract/consulo-microsoft-dotnet">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
         <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
         <extension id="lombok" />
@@ -47,7 +47,7 @@
         <orderEntry type="module" module-name="csharp-impl" />
         <orderEntry type="module" module-name="dotnet-impl" />
       </module>
-      <module name="impl/consulo-mono-dotnet" dirurl="file://$PROJECT_DIR$/impl/consulo-mono-dotnet">
+      <module name="impl/consulo-mono-dotnet" dirurl="file://$PROJECT_DIR$/extract/consulo-mono-dotnet">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
         <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
         <extension id="lombok" />
@@ -147,7 +147,7 @@
         <orderEntry type="module" module-name="csharp-psi-impl" exported="" />
         <orderEntry type="module" module-name="dotnet-impl" />
       </module>
-      <module name="nemerle" dirurl="file://$PROJECT_DIR$/impl/nemerle">
+      <module name="nemerle" dirurl="file://$PROJECT_DIR$/extract/nemerle">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
         <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
         <extension id="lombok" />
