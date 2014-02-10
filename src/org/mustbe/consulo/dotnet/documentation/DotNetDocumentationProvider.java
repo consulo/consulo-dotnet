@@ -131,7 +131,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		String presentableParentQName = psiElement.getPresentableParentQName();
 		if(!StringUtil.isEmpty(presentableParentQName))
 		{
-			builder.append("<b><font size=\"2\">").append(presentableParentQName).append("</font></b>");
+			builder.append("<b><small>").append(presentableParentQName).append("</small></b>");
 			builder.append("<br>");
 		}
 
@@ -192,7 +192,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		XmlTag summaryElement = xmlTag.findFirstSubTag("summary");
 		if(summaryElement != null)
 		{
-			builder.append("<font size=\"4\"><b>").append("Summary").append("</b></font><br>");
+			builder.append("<b><big>").append("Summary").append("</big></b><br>");
 			builder.append(xmlTag.getSubTagText("summary"));
 		}
 		builder.append("</body></html>");
