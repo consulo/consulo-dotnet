@@ -1013,43 +1013,51 @@ public class ExpressionParsing extends SharingParsingHelpers
 		builder.advanceLexer();
 
 		val typeMarker = parseType(builder, BracketFailPolicy.RETURN_BEFORE);
-		if(typeMarker == null)
+		if(typeMarker != null)
 		{
-			builder.error("Type expected");
-		}
-
-
-		while(builder.getTokenType() == LBRACKET)
-		{
-			PsiBuilder.Marker marker = builder.mark();
-			builder.advanceLexer();
-
-			PsiBuilder.Marker expMarker = parse(builder);
-			if(expMarker == null)
+			while(builder.getTokenType() == LBRACKET)
 			{
-				builder.error("Expression expected");
+				PsiBuilder.Marker marker = builder.mark();
+				builder.advanceLexer();
+
+				PsiBuilder.Marker expMarker = parse(builder);
+				if(expMarker == null)
+				{
+					builder.error("Expression expected");
+				}
+
+				expect(builder, RBRACKET, "']' expected");
+				marker.done(ARRAY_ACCESS_EXPRESSION);
 			}
 
-			expect(builder, RBRACKET, "']' expected");
-			marker.done(ARRAY_ACCESS_EXPRESSION);
-		}
+			if(builder.getTokenType() == LPAR)
+			{
+				parseArgumentList(builder);
+			}
 
-		if(builder.getTokenType() == LPAR)
-		{
-			parseArgumentList(builder);
+			AfterNewParsingTarget target = getTarget(builder);
+			switch(target)
+			{
+				case NONE:
+					break;
+				case PROPERTY_SET_LIST:
+					parseFieldOrPropertySetBlock(builder);
+					break;
+				case ARRAY_INITIALIZATION:
+					parseArrayInitialization(builder);
+					break;
+			}
 		}
-
-		AfterNewParsingTarget target = getTarget(builder);
-		switch(target)
+		else
 		{
-			case NONE:
-				break;
-			case PROPERTY_SET_LIST:
+			if(builder.getTokenType() == LBRACE)
+			{
 				parseFieldOrPropertySetBlock(builder);
-				break;
-			case ARRAY_INITIALIZATION:
-				parseArrayInitialization(builder);
-				break;
+			}
+			else
+			{
+				builder.error("'{' expected");
+			}
 		}
 
 		newExpr.done(NEW_EXPRESSION);

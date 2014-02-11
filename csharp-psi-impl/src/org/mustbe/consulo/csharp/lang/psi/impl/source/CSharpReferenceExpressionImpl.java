@@ -507,7 +507,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(parent instanceof CSharpFieldOrPropertySet)
 		{
-			if(((CSharpFieldOrPropertySet) parent).getReferenceExpression() == this)
+			if(((CSharpFieldOrPropertySet) parent).getNameReferenceExpression() == this)
 			{
 				return ResolveToKind.FIELD_OR_PROPERTY;
 			}

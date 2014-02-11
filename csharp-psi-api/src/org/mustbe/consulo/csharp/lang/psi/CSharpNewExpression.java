@@ -28,4 +28,7 @@ public interface CSharpNewExpression extends DotNetExpression
 {
 	@Nullable
 	DotNetType getNewType();
+
+	@Nullable
+	CSharpFieldOrPropertySetBlock getFieldOrPropertySetBlock();
 }
