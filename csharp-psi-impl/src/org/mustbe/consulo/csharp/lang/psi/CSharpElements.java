@@ -100,6 +100,8 @@ public interface CSharpElements
 	IElementType CONSTRUCTOR_SUPER_CALL_EXPRESSION = new IElementTypeAsPsiFactory("CONSTRUCTOR_SUPER_CALL_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpMethodCallExpressionImpl.class);
 
+	IElementType CHECKED_EXPRESSION = new IElementTypeAsPsiFactory("CHECKED_EXPRESSION", CSharpLanguage.INSTANCE, CSharpCheckedExpressionImpl.class);
+
 	IElementType TYPE_OF_EXPRESSION = new IElementTypeAsPsiFactory("TYPE_OF_EXPRESSION", CSharpLanguage.INSTANCE, CSharpTypeOfExpressionImpl.class);
 
 	IElementType SIZE_OF_EXPRESSION = new IElementTypeAsPsiFactory("SIZE_OF_EXPRESSION", CSharpLanguage.INSTANCE, CSharpSizeOfExpressionImpl.class);
@@ -211,6 +213,8 @@ public interface CSharpElements
 			CSharpThrowStatementImpl.class);
 
 	IElementType RETURN_STATEMENT = new IElementTypeAsPsiFactory("RETURN_STATEMENT", CSharpLanguage.INSTANCE, CSharpReturnStatementImpl.class);
+
+	IElementType CHECKED_STATEMENT = new IElementTypeAsPsiFactory("CHECKED_STATEMENT", CSharpLanguage.INSTANCE, CSharpCheckedExpressionImpl.class);
 
 	IElementType YIELD_STATEMENT = new IElementTypeAsPsiFactory("YIELD_STATEMENT", CSharpLanguage.INSTANCE, CSharpYieldStatementImpl.class);
 

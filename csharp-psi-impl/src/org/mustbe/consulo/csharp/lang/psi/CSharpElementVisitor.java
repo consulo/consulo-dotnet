@@ -459,4 +459,14 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(statement);
 	}
+
+	public void visitCheckedStatement(CSharpCheckedStatementImpl statement)
+	{
+		visitElement(statement);
+	}
+
+	public void visitCheckedExpression(CSharpCheckedExpressionImpl expression)
+	{
+		visitElement(expression);
+	}
 }

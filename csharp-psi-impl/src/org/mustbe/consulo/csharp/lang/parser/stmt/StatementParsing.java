@@ -135,6 +135,10 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			parseStatementWithParenthesesExpression(wrapper, marker, WHILE_STATEMENT);
 		}
+		else if(tokenType == CHECKED_KEYWORD || tokenType == UNCHECKED_KEYWORD)
+		{
+			parseCheckedStatement(wrapper, marker);
+		}
 		else if(tokenType == USING_KEYWORD)
 		{
 			parseUsingOrFixed(wrapper, marker, USING_STATEMENT);
@@ -598,6 +602,31 @@ public class StatementParsing extends SharingParsingHelpers
 		}
 
 		marker.done(DO_WHILE_STATEMENT);
+	}
+
+	private static void parseCheckedStatement(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker)
+	{
+		if(wrapper.lookAhead(1) == LPAR)
+		{
+			ExpressionParsing.parse(wrapper);
+
+			marker.done(EXPRESSION_STATEMENT);
+		}
+		else
+		{
+			wrapper.advanceLexer();
+
+			if(wrapper.getTokenType() == LBRACE)
+			{
+				parseStatement(wrapper);
+			}
+			else
+			{
+				wrapper.error("'{' expected");
+			}
+
+			marker.done(CHECKED_STATEMENT);
+		}
 	}
 
 	private static void parseStatementWithParenthesesExpression(CSharpBuilderWrapper wrapper, PsiBuilder.Marker marker, IElementType doneElement)

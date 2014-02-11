@@ -33,7 +33,7 @@ ESCAPE_SEQUENCE=\\[^\r\n]
 SINGLE_VERBATIM_CHAR=[^\"]
 QUOTE_ESC_SEQ=\"\"
 VERBATIM_STRING_CHAR={SINGLE_VERBATIM_CHAR}|{QUOTE_ESC_SEQ}
-VERBATIM_STRING_LITERAL=@\"{VERBATIMSTRING_CHAR}*\"
+VERBATIM_STRING_LITERAL=@\"{VERBATIM_STRING_CHAR}*\"
 
 IDENTIFIER=[:jletter:] [:jletterdigit:]*
 
@@ -156,6 +156,10 @@ MACRO_NEW_LINE=\r\n|\n|\r
 	"sealed"                  { return CSharpTokens.SEALED_KEYWORD; }
 
 	"unsafe"                  { return CSharpTokens.UNSAFE_KEYWORD; }
+
+	"checked"                 { return CSharpTokens.CHECKED_KEYWORD; }
+
+	"unchecked"               { return CSharpTokens.UNCHECKED_KEYWORD; }
 
 	"virtual"                 { return CSharpTokens.VIRTUAL_KEYWORD; }
 

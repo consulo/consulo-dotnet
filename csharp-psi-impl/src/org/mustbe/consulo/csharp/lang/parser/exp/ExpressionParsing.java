@@ -624,6 +624,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 			return parseExpressionWithTypeInLParRPar(builder, null, SIZE_OF_EXPRESSION);
 		}
 
+		if(tokenType == CHECKED_KEYWORD || tokenType == UNCHECKED_KEYWORD)
+		{
+			return parseExpressionWithTypeInLParRPar(builder, null, CHECKED_EXPRESSION);
+		}
+
 		if(tokenType == DELEGATE_KEYWORD)
 		{
 			return parseAnonymMethodExpression(builder, null);
@@ -1138,7 +1143,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		}
 	}
 
-	private static PsiBuilder.Marker parseExpressionWithTypeInLParRPar(CSharpBuilderWrapper builder, PsiBuilder.Marker mark, IElementType to)
+	private static PsiBuilder.Marker parseExpressionWithExpressionInLParRPar(CSharpBuilderWrapper builder, PsiBuilder.Marker mark, IElementType to)
 	{
 		PsiBuilder.Marker newMarker = mark == null ? builder.mark() : mark.precede();
 		builder.advanceLexer();
@@ -1146,6 +1151,23 @@ public class ExpressionParsing extends SharingParsingHelpers
 		if(expect(builder, LPAR, "'(' expected"))
 		{
 			if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+			{
+				builder.error("Type expected");
+			}
+			expect(builder, RPAR, "')' expected");
+		}
+		newMarker.done(to);
+		return newMarker;
+	}
+
+	private static PsiBuilder.Marker parseExpressionWithTypeInLParRPar(CSharpBuilderWrapper builder, PsiBuilder.Marker mark, IElementType to)
+	{
+		PsiBuilder.Marker newMarker = mark == null ? builder.mark() : mark.precede();
+		builder.advanceLexer();
+
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			if(parse(builder) == null)
 			{
 				builder.error("Type expected");
 			}
