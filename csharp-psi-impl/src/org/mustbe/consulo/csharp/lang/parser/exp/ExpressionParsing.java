@@ -626,7 +626,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		if(tokenType == CHECKED_KEYWORD || tokenType == UNCHECKED_KEYWORD)
 		{
-			return parseExpressionWithTypeInLParRPar(builder, null, CHECKED_EXPRESSION);
+			return parseExpressionWithExpressionInLParRPar(builder, null, CHECKED_EXPRESSION);
 		}
 
 		if(tokenType == DELEGATE_KEYWORD)
@@ -1143,7 +1143,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		}
 	}
 
-	private static PsiBuilder.Marker parseExpressionWithExpressionInLParRPar(CSharpBuilderWrapper builder, PsiBuilder.Marker mark, IElementType to)
+	private static PsiBuilder.Marker parseExpressionWithTypeInLParRPar(CSharpBuilderWrapper builder, PsiBuilder.Marker mark, IElementType to)
 	{
 		PsiBuilder.Marker newMarker = mark == null ? builder.mark() : mark.precede();
 		builder.advanceLexer();
@@ -1160,7 +1160,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		return newMarker;
 	}
 
-	private static PsiBuilder.Marker parseExpressionWithTypeInLParRPar(CSharpBuilderWrapper builder, PsiBuilder.Marker mark, IElementType to)
+	private static PsiBuilder.Marker parseExpressionWithExpressionInLParRPar(CSharpBuilderWrapper builder, PsiBuilder.Marker mark, IElementType to)
 	{
 		PsiBuilder.Marker newMarker = mark == null ? builder.mark() : mark.precede();
 		builder.advanceLexer();
