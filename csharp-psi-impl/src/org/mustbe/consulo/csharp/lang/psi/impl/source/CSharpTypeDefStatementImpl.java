@@ -110,8 +110,15 @@ public class CSharpTypeDefStatementImpl extends CSharpStubElementImpl<CSharpType
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
-			place)
+	public int getTextOffset()
+	{
+		PsiElement nameIdentifier = getNameIdentifier();
+		return nameIdentifier == null ? super.getTextOffset() : nameIdentifier.getTextOffset();
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
 	{
 		if(!processor.execute(this, state))
 		{
