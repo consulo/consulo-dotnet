@@ -23,6 +23,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
@@ -38,9 +39,12 @@ public class DotNetPsiFacadeImpl extends DotNetPsiFacade
 	private static final ExtensionPointName<DotNetPsiFacade> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.psi.facade");
 
 	private final DotNetPsiFacade[] myFacades;
+	@NotNull
+	private final Project myProject;
 
 	public DotNetPsiFacadeImpl(@NotNull Project project)
 	{
+		myProject = project;
 		myFacades = EP_NAME.getExtensions(project);
 	}
 
@@ -94,5 +98,20 @@ public class DotNetPsiFacadeImpl extends DotNetPsiFacade
 			Collections.addAll(list, facade.getTypesByName(name, searchScope));
 		}
 		return list.isEmpty() ? DotNetTypeDeclaration.EMPTY_ARRAY : list.toArray(new DotNetTypeDeclaration[list.size()]);
+	}
+
+	@Override
+	public DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
+	{
+		List<DotNetNamespaceAsElement> list = new ArrayList<DotNetNamespaceAsElement>();
+		for(DotNetPsiFacade facade : myFacades)
+		{
+			DotNetNamespaceAsElement namespace = facade.findNamespace(qName, scope);
+			if(namespace != null)
+			{
+				list.add(namespace);
+			}
+		}
+		return list.isEmpty() ? null : new DotNetCompositeNamespaceAsElement(myProject, list.toArray(new DotNetNamespaceAsElement[list.size()]));
 	}
 }

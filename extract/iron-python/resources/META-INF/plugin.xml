@@ -1,0 +1,31 @@
+<idea-plugin version="2">
+	<id>org.mustbe.consulo.iron-python</id>
+	<name>IronRuby</name>
+	<category>Language Extension</category>
+	<depends>org.consulo.python</depends>
+	<depends>org.mustbe.consulo.microsoft.dotnet</depends>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+		<completion.contributor language="Python"
+								implementationClass="org.mustbe.consulo.ironPython.psi.impl.PyConstructorArgumentCompletionContributor"/>
+
+		<moduleExtensionProvider key="iron-python" parent-key="microsoft-dotnet"
+								 implementationClass="org.mustbe.consulo.ironPython.module.extension.IronPythonModuleExtensionProvider"/>
+
+		<moduleExtensionProvider key="iron-python2" parent-key="microsoft-dotnet2"
+								 implementationClass="org.mustbe.consulo.ironPython.module.extension.IronPythonModuleExtensionProvider"/>
+
+		<addTo.listOfElements name="pythonExtensions">iron-python</addTo.listOfElements>
+		<addTo.listOfElements name="pythonExtensions">iron-python2</addTo.listOfElements>
+	</extensions>
+
+	<extensions defaultExtensionNs="org.consulo.python">
+		<importResolver implementation="org.mustbe.consulo.ironPython.psi.impl.PyDotNetImportResolver"/>
+		<typeProvider implementation="org.mustbe.consulo.ironPython.psi.impl.PyDotNetTypeProvider"/>
+		<pySuperMethodsSearch implementation="org.mustbe.consulo.ironPython.psi.impl.PyDotNetSuperMethodsSearchExecutor"/>
+		<importCandidateProvider implementation="org.mustbe.consulo.ironPython.psi.impl.PyDotNetImportCandidateProvider"/>
+
+		<sdkFlavor implementation="org.mustbe.consulo.ironPython.sdk.flavors.IronPythonSdkFlavor"/>
+	</extensions>
+</idea-plugin>

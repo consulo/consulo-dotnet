@@ -66,6 +66,14 @@
           </element>
         </element>
       </element>
+      <element id="directory" name="iron-python">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="iron-python.jar">
+            <element id="module-output" name="iron-python" />
+            <element id="module-production-resource-output" name="iron-python" />
+          </element>
+        </element>
+      </element>
     </root>
   </artifact>
 </component>
