@@ -23,6 +23,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
@@ -85,7 +86,7 @@ public class CSharpHighlightUtil
 				key = CSharpHighlightKey.CLASS_NAME;
 			}
 		}
-		else if(element instanceof DotNetGenericParameter)
+		else if(element instanceof DotNetGenericParameter || element instanceof CSharpTypeDefStatementImpl)
 		{
 			key = CSharpHighlightKey.GENERIC_PARAMETER_NAME;
 		}

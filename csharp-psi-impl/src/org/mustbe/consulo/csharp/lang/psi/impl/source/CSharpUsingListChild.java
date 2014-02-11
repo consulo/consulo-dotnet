@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.stub;
+package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 15.01.14
+ * @since 11.02.14
  */
-public class CSharpUsingNamespaceListStub extends StubBase<CSharpUsingListImpl>
+@ArrayFactoryFields
+public interface CSharpUsingListChild extends DotNetElement
 {
-	public CSharpUsingNamespaceListStub(StubElement parent, IStubElementType elementType)
-	{
-		super(parent, elementType);
-	}
+	@Nullable
+	PsiElement getReferenceElement();
 }

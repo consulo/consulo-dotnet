@@ -32,31 +32,31 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpUsingNamespaceListImpl extends CSharpStubElementImpl<CSharpUsingNamespaceListStub>
+public class CSharpUsingListImpl extends CSharpStubElementImpl<CSharpUsingNamespaceListStub>
 {
-	public CSharpUsingNamespaceListImpl(@NotNull ASTNode node)
+	public CSharpUsingListImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public CSharpUsingNamespaceListImpl(@NotNull CSharpUsingNamespaceListStub stub)
+	public CSharpUsingListImpl(@NotNull CSharpUsingNamespaceListStub stub)
 	{
-		super(stub, CSharpStubElements.USING_NAMESPACE_LIST);
+		super(stub, CSharpStubElements.USING_LIST);
 	}
 
 	@NotNull
-	public CSharpUsingNamespaceStatementImpl[] getStatements()
+	public CSharpUsingListChild[] getStatements()
 	{
-		return getStubOrPsiChildren(CSharpStubElements.USING_NAMESPACE_STATEMENT, CSharpUsingNamespaceStatementImpl.ARRAY_FACTORY);
+		return getStubOrPsiChildren(CSharpStubElements.USING_CHILDREN, CSharpUsingListChild.ARRAY_FACTORY);
 	}
 
 	public void addUsing(@NotNull String qName)
 	{
 		CSharpUsingNamespaceStatementImpl newStatement = CSharpFileFactory.createUsingStatement(getProject(), qName);
 
-		CSharpUsingNamespaceStatementImpl[] statements = getStatements();
+		CSharpUsingListChild[] statements = getStatements();
 
-	//	CSharpUsingNamespaceStatementImpl last = statements[statements.length - 1];
+		//	CSharpUsingNamespaceStatementImpl last = statements[statements.length - 1];
 
 		LeafPsiElement leafPsiElement = new LeafPsiElement(TokenType.WHITE_SPACE, "\n");
 
@@ -66,12 +66,12 @@ public class CSharpUsingNamespaceListImpl extends CSharpStubElementImpl<CSharpUs
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
-			place)
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
 	{
-		for(CSharpUsingNamespaceStatementImpl cSharpUsingStatement : getStatements())
+		for(CSharpUsingListChild child : getStatements())
 		{
-			if(!cSharpUsingStatement.processDeclarations(processor, state, lastParent, place))
+			if(!child.processDeclarations(processor, state, lastParent, place))
 			{
 				return false;
 			}

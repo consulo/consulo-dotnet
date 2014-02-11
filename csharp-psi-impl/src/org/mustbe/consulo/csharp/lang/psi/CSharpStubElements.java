@@ -39,14 +39,17 @@ public interface CSharpStubElements
 	CSharpTypeListElementType EXTENDS_LIST = new CSharpTypeListElementType("EXTENDS_LIST");
 	CSharpParameterListStubElementType PARAMETER_LIST = new CSharpParameterListStubElementType();
 	CSharpParameterStubElementType PARAMETER = new CSharpParameterStubElementType();
-	CSharpUsingNamespaceListStubElementType USING_NAMESPACE_LIST = new CSharpUsingNamespaceListStubElementType();
+	CSharpUsingNamespaceListStubElementType USING_LIST = new CSharpUsingNamespaceListStubElementType();
 	CSharpUsingNamespaceStatementStubElementType USING_NAMESPACE_STATEMENT = new CSharpUsingNamespaceStatementStubElementType();
+	CSharpTypeDefStubElementType TYPE_DEF_STATEMENT = new CSharpTypeDefStubElementType();
 	CSharpGenericParameterListStubElementType GENERIC_PARAMETER_LIST = new CSharpGenericParameterListStubElementType();
 	CSharpGenericParameterStubElementType GENERIC_PARAMETER = new CSharpGenericParameterStubElementType();
+
+	TokenSet USING_CHILDREN = TokenSet.create(USING_NAMESPACE_STATEMENT, TYPE_DEF_STATEMENT);
 
 	TokenSet QUALIFIED_MEMBERS = TokenSet.create(NAMESPACE_DECLARATION, TYPE_DECLARATION,
 			METHOD_DECLARATION, CONSTRUCTOR_DECLARATION, PROPERTY_DECLARATION,
 			EVENT_DECLARATION, FIELD_DECLARATION, ENUM_CONSTANT_DECLARATION, CONVERSION_METHOD_DECLARATION);
 
-	TokenSet QUALIFIED_MEMBERS_WITH_USING = TokenSet.orSet(QUALIFIED_MEMBERS, TokenSet.create(USING_NAMESPACE_LIST));
+	TokenSet QUALIFIED_MEMBERS_WITH_USING = TokenSet.orSet(QUALIFIED_MEMBERS, TokenSet.create(USING_LIST));
 }

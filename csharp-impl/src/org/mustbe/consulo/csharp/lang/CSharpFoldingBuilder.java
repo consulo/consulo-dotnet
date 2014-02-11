@@ -29,10 +29,9 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListChild;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
@@ -82,17 +81,17 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 			}
 
 			@Override
-			public void visitUsingNamespaceList(CSharpUsingNamespaceListImpl list)
+			public void visitUsingNamespaceList(CSharpUsingListImpl list)
 			{
-				CSharpUsingNamespaceStatementImpl[] statements = list.getStatements();
+				CSharpUsingListChild[] statements = list.getStatements();
 				if(statements.length <= 1)
 				{
 					return;
 				}
 
-				CSharpUsingNamespaceStatementImpl statement = statements[0];
-				DotNetReferenceExpression namespaceReference = statement.getNamespaceReference();
-				if(namespaceReference == null)
+				CSharpUsingListChild statement = statements[0];
+				PsiElement refElement = statement.getReferenceElement();
+				if(refElement == null)
 				{
 					return;
 				}
@@ -140,7 +139,7 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 	public String getPlaceholderText(@NotNull ASTNode astNode)
 	{
 		PsiElement psi = astNode.getPsi();
-		if(psi instanceof CSharpUsingNamespaceListImpl)
+		if(psi instanceof CSharpUsingListImpl)
 		{
 			return "...";
 		}
@@ -156,7 +155,7 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 	public boolean isCollapsedByDefault(@NotNull ASTNode astNode)
 	{
 		PsiElement psi = astNode.getPsi();
-		if(psi instanceof CSharpUsingNamespaceListImpl)
+		if(psi instanceof CSharpUsingListImpl)
 		{
 			return true;
 		}

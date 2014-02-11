@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFragmentedFileImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -39,20 +39,20 @@ import lombok.val;
  */
 public class CSharpFileFactory
 {
-	public static CSharpUsingNamespaceListImpl createUsingList(@NotNull Project project, @NotNull String qName)
+	public static CSharpUsingListImpl createUsingList(@NotNull Project project, @NotNull String qName)
 	{
 		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE,
 				"using " + qName + ";");
 
-		return (CSharpUsingNamespaceListImpl) fileFromText.getFirstChild();
+		return (CSharpUsingListImpl) fileFromText.getFirstChild();
 	}
 
-	public static CSharpUsingNamespaceListImpl createUsingListFromText(@NotNull Project project, @NotNull String text)
+	public static CSharpUsingListImpl createUsingListFromText(@NotNull Project project, @NotNull String text)
 	{
 		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE,
 				text);
 
-		return (CSharpUsingNamespaceListImpl) fileFromText.getFirstChild();
+		return (CSharpUsingListImpl) fileFromText.getFirstChild();
 	}
 
 	public static CSharpUsingNamespaceStatementImpl createUsingStatement(@NotNull Project project, @NotNull String qName)
@@ -60,8 +60,8 @@ public class CSharpFileFactory
 		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE,
 				"using " + qName + ";");
 
-		CSharpUsingNamespaceListImpl firstChild = (CSharpUsingNamespaceListImpl) fileFromText.getFirstChild();
-		return firstChild.getStatements()[0];
+		CSharpUsingListImpl firstChild = (CSharpUsingListImpl) fileFromText.getFirstChild();
+		return (CSharpUsingNamespaceStatementImpl) firstChild.getStatements()[0];
 	}
 
 	public static DotNetType createType(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String typeText)

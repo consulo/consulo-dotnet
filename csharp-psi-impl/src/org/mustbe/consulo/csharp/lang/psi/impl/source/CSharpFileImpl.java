@@ -106,7 +106,7 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 
 		for(PsiElement psiElement : target)
 		{
-			if(psiElement instanceof CSharpUsingNamespaceListImpl)
+			if(psiElement instanceof CSharpUsingListImpl)
 			{
 				if(!psiElement.processDeclarations(processor, state, lastParent, place))
 				{

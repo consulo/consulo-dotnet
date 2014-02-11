@@ -35,7 +35,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitFile(file);
 	}
 
-	public void visitUsingNamespaceList(CSharpUsingNamespaceListImpl list)
+	public void visitUsingNamespaceList(CSharpUsingListImpl list)
 	{
 		visitElement(list);
 	}
@@ -453,5 +453,10 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	public void visitArrayInitializationExpression(CSharpArrayInitializationExpressionImpl expression)
 	{
 		visitElement(expression);
+	}
+
+	public void visitTypeDefStatement(CSharpTypeDefStatementImpl statement)
+	{
+		visitElement(statement);
 	}
 }
