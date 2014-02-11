@@ -116,6 +116,9 @@ public interface CSharpElements
 
 	IElementType NEW_EXPRESSION = new IElementTypeAsPsiFactory("NEW_EXPRESSION", CSharpLanguage.INSTANCE, CSharpNewExpressionImpl.class);
 
+	IElementType OUT_REF_WRAP_EXPRESSION = new IElementTypeAsPsiFactory("OUT_REF_WRAP_EXPRESSION", CSharpLanguage.INSTANCE,
+			CSharpOutRefWrapExpressionImpl.class);
+
 	IElementType CONDITIONAL_EXPRESSION = new IElementTypeAsPsiFactory("CONDITIONAL_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpConditionalExpressionImpl.class);
 

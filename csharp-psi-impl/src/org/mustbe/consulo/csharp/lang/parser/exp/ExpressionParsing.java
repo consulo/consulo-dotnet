@@ -634,6 +634,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 			return parseAnonymMethodExpression(builder, null);
 		}
 
+		if(tokenType == REF_KEYWORD || tokenType == OUT_KEYWORD)
+		{
+			return parseOutRefWrapExpression(builder);
+		}
+
 		if(tokenType == LPAR)
 		{
 			final PsiBuilder.Marker lambda = parseLambdaAfterParenth(builder, null);
@@ -700,6 +705,23 @@ public class ExpressionParsing extends SharingParsingHelpers
 		}
 
 		return null;
+	}
+
+	private static PsiBuilder.Marker parseOutRefWrapExpression(CSharpBuilderWrapper builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+		builder.advanceLexer();
+
+		if(builder.getTokenType() != IDENTIFIER)
+		{
+			builder.error("Identifier expected");
+		}
+		else
+		{
+			parse(builder);
+		}
+		mark.done(OUT_REF_WRAP_EXPRESSION);
+		return mark;
 	}
 
 	private static PsiBuilder.Marker parseAnonymMethodExpression(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker m)
