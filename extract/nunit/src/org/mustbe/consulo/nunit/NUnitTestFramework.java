@@ -20,16 +20,14 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
+import org.mustbe.consulo.dotnet.psi.DotNetAttributeUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension;
 import com.intellij.ide.fileTemplates.FileTemplateDescriptor;
 import com.intellij.lang.Language;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.testIntegration.TestFramework;
 import com.intellij.util.IncorrectOperationException;
@@ -142,20 +140,7 @@ public class NUnitTestFramework implements TestFramework
 
 		if(element instanceof DotNetMethodDeclaration)
 		{
-			DotNetModifierList modifierList = ((DotNetMethodDeclaration) element).getModifierList();
-			if(modifierList == null)
-			{
-				return false;
-			}
-			DotNetAttribute[] attributes = modifierList.getAttributes();
-			for(DotNetAttribute attribute : attributes)
-			{
-				DotNetTypeDeclaration typeDeclaration = attribute.resolveToType();
-				if(typeDeclaration != null && Comparing.equal(typeDeclaration.getPresentableQName(), NUnitTypes.TestAttribute))
-				{
-					return true;
-				}
-			}
+			return DotNetAttributeUtil.hasAttribute((DotNetModifierListOwner) element, NUnitTypes.TestAttribute);
 		}
 		return false;
 	}

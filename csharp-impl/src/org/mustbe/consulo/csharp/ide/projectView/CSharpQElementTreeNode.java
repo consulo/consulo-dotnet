@@ -23,14 +23,8 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.CSharpElementPresentationUtil;
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
-import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
@@ -103,6 +97,20 @@ public class CSharpQElementTreeNode extends AbstractPsiBasedNode<DotNetNamedElem
 		else
 		{
 			presentationData.setPresentableText(getPresentableText(qualifiedElement));
+		}
+	}
+
+	@Override
+	protected boolean isDeprecated()
+	{
+		DotNetNamedElement value = getValue();
+		if(value instanceof DotNetModifierListOwner)
+		{
+			return DotNetAttributeUtil.hasAttribute((DotNetModifierListOwner) value, DotNetTypes.System_ObsoleteAttribute);
+		}
+		else
+		{
+			return false;
 		}
 	}
 
