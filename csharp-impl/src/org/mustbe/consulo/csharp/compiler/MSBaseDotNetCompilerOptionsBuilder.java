@@ -233,6 +233,6 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 
 	public void setExecutableFromSdk(String executableFromSdk)
 	{
-		myExecutable = mySdk.getHomePath() + "\\" + executableFromSdk;
+		myExecutable = mySdk.getHomePath() + File.separatorChar + executableFromSdk;
 	}
 }

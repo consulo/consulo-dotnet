@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.util.SystemInfo;
 
 /**
  * @author VISTALL
@@ -47,7 +48,7 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 			optionsBuilder.addArgument("/unsafe");
 		}
 		optionsBuilder.addArgument("/nostdlib+");
-		optionsBuilder.setExecutableFromSdk("mcs.exe");
+		optionsBuilder.setExecutableFromSdk("/../../../bin/mcs" + (SystemInfo.isWindows ? ".bat" : ""));
 		return optionsBuilder;
 	}
 }

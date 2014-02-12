@@ -42,7 +42,6 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import lombok.val;
@@ -68,7 +67,7 @@ public class MonoSdkType extends DotNetSdkType
 	@Override
 	public boolean isValidSdkHome(String s)
 	{
-		return new File(s, "mcs.exe").exists();
+		return new File(s, "mscorlib.dll").exists();
 	}
 
 	@Nullable
@@ -82,14 +81,7 @@ public class MonoSdkType extends DotNetSdkType
 	public String suggestSdkName(String s, String s2)
 	{
 		File file = new File(s2);
-		if(file.getParent().equalsIgnoreCase("Framework64"))
-		{
-			return getPresentableName() + " " + file.getName() + "(64)";
-		}
-		else
-		{
-			return getPresentableName() + " " + file.getName();
-		}
+		return getPresentableName() + " " + file.getName();
 	}
 
 	@NotNull
@@ -109,7 +101,7 @@ public class MonoSdkType extends DotNetSdkType
 	@Override
 	public boolean supportsCustomCreateUI()
 	{
-		return SystemInfo.isWindows;
+		return true;
 	}
 
 	@Override
