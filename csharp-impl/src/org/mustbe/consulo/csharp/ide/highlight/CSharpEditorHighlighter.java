@@ -19,6 +19,9 @@ package org.mustbe.consulo.csharp.ide.highlight;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import com.intellij.lexer.Lexer;
+import com.intellij.lexer.StringLiteralLexer;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.LayerDescriptor;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
@@ -34,6 +37,25 @@ public class CSharpEditorHighlighter extends LayeredLexerEditorHighlighter
 	{
 		super(new CSharpSyntaxHighlighter(), colors);
 		registerLayer(CSharpTemplateTokens.MACRO_FRAGMENT, new LayerDescriptor(new CSharpMacroSyntaxHighlighter(), ""));
+		registerLayer(CSharpTokens.STRING_LITERAL, new LayerDescriptor(new CSharpSyntaxHighlighter()
+		{
+			@NotNull
+			@Override
+			public Lexer getHighlightingLexer()
+			{
+				return new StringLiteralLexer('\"', CSharpTokens.STRING_LITERAL);
+			}
+		}, ""));
+		registerLayer(CSharpTokens.CHARACTER_LITERAL, new LayerDescriptor(new CSharpSyntaxHighlighter()
+		{
+			@NotNull
+			@Override
+			public Lexer getHighlightingLexer()
+			{
+				return new StringLiteralLexer('\'', CSharpTokens.CHARACTER_LITERAL);
+			}
+		}, ""));
+
 	}
 
 }
