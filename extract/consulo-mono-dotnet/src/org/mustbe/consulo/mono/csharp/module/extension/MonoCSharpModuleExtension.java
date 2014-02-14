@@ -22,6 +22,7 @@ import org.mustbe.consulo.csharp.module.CSharpConfigurationProfileEx;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.SystemInfo;
@@ -48,7 +49,16 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 			optionsBuilder.addArgument("/unsafe");
 		}
 		optionsBuilder.addArgument("/nostdlib+");
-		optionsBuilder.setExecutableFromSdk("/../../../bin/mcs" + (SystemInfo.isWindows ? ".bat" : ""));
+
+		if(SystemInfo.isWindows)
+		{
+			optionsBuilder.setExecutableFromSdk("/../../../bin/mcs.bat");
+		}
+		else if(SystemInfo.isLinux)
+		{
+			optionsBuilder.setExecutable(MonoSdkType.LINUS_COMPILER);
+		}
+
 		return optionsBuilder;
 	}
 }

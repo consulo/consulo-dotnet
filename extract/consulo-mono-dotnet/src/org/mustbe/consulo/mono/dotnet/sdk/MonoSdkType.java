@@ -39,9 +39,11 @@ import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import lombok.val;
@@ -52,6 +54,8 @@ import lombok.val;
  */
 public class MonoSdkType extends DotNetSdkType
 {
+	public static final String LINUS_COMPILER = "/usr/bin/mcs";
+
 	public MonoSdkType()
 	{
 		super("MONO_DOTNET_SDK");
@@ -107,16 +111,38 @@ public class MonoSdkType extends DotNetSdkType
 	@Override
 	public void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, final Consumer<Sdk> sdkCreatedCallback)
 	{
-		FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-		VirtualFile monoDir = FileChooser.chooseFile(singleFolderDescriptor, null, null);
-		if(monoDir == null)
+		File monoLib = null;
+		if(SystemInfo.isLinux)
 		{
+			File file = new File(LINUS_COMPILER);
+			if(!file.exists())
+			{
+				Messages.showErrorDialog(parentComponent, "\'" + LINUS_COMPILER + "\' not found.");
+				return;
+			}
+			monoLib = new File("/usr/lib/mono");
+		}
+		else if(SystemInfo.isWindows)
+		{
+			FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+			VirtualFile monoDir = FileChooser.chooseFile(singleFolderDescriptor, null, null);
+			if(monoDir == null)
+			{
+				return;
+			}
+
+			monoLib = new File(monoDir.getPath(), "lib/mono");
+		}
+
+		if(monoLib == null)
+		{
+			Messages.showErrorDialog(parentComponent, "Current OS is not supported: " + SystemInfo.OS_NAME);
 			return;
 		}
 
-		File monoLib = new File(monoDir.getPath(), "lib/mono");
 		if(!monoLib.exists())
 		{
+			Messages.showErrorDialog(parentComponent, "File: " + monoLib.getAbsolutePath() + " is not exists.");
 			return;
 		}
 
