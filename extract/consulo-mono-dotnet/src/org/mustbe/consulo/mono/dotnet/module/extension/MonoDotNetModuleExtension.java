@@ -64,6 +64,10 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 		{
 			runFile = sdk.getHomePath() + "/../../../bin/mono.exe";
 		}
+		else if(SystemInfo.isMac)
+		{
+			runFile = sdk.getHomePath() + "/../../../bin/mono";
+		}
 		else if(SystemInfo.isLinux)
 		{
 			runFile = "/usr/bin/mono";

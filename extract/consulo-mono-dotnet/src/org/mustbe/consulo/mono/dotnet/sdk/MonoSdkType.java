@@ -122,7 +122,7 @@ public class MonoSdkType extends DotNetSdkType
 			}
 			monoLib = new File("/usr/lib/mono");
 		}
-		else if(SystemInfo.isWindows)
+		else if(SystemInfo.isWindows || SystemInfo.isMac)
 		{
 			FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
 			VirtualFile monoDir = FileChooser.chooseFile(singleFolderDescriptor, null, null);

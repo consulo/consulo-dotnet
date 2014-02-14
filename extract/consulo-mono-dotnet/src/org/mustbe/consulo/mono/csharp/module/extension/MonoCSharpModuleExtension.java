@@ -54,6 +54,10 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 		{
 			optionsBuilder.setExecutableFromSdk("/../../../bin/mcs.bat");
 		}
+		else if(SystemInfo.isMac)
+		{
+			optionsBuilder.setExecutableFromSdk("/../../../bin/mcs");
+		}
 		else if(SystemInfo.isLinux)
 		{
 			optionsBuilder.setExecutable(MonoSdkType.LINUS_COMPILER);
