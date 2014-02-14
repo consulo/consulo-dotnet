@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -40,10 +41,18 @@ public class CSharpMacroBlockStartImpl extends CSharpMacroElementImpl
 		return findChildByClass(DotNetExpression.class);
 	}
 
+	@NotNull
 	public PsiElement getKeywordElement()
 	{
-		TokenSet tokenSet = TokenSet.create(CSharpMacroTokens.MACRO_IF_KEYWORD, CSharpMacroTokens.MACRO_REGION_KEYWORD);
+		TokenSet tokenSet = TokenSet.create(CSharpMacroTokens.MACRO_IF_KEYWORD, CSharpMacroTokens.MACRO_REGION_KEYWORD,
+				CSharpMacroTokens.MACRO_ELIF_KEYWORD, CSharpMacroTokens.MACRO_ELSE_KEYWORD);
 		return findNotNullChildByType(tokenSet);
+	}
+
+	@Nullable
+	public PsiElement getStopElement()
+	{
+		return findChildByType(CSharpMacroTokens.MACRO_STOP);
 	}
 
 	@Override

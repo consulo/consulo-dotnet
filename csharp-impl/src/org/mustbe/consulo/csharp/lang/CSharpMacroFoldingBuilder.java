@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroRecursiveElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMacroTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStartImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroBlockStopImpl;
@@ -61,9 +62,24 @@ public class CSharpMacroFoldingBuilder implements FoldingBuilder
 					return;
 				}
 
+				if(startElement.getKeywordElement().getNode().getElementType() != CSharpMacroTokens.MACRO_REGION_KEYWORD)
+				{
+					return;
+				}
+
+				PsiElement stopElementStopElement = stopElement.getStopElement();
+				if(stopElementStopElement == null)
+				{
+					return;
+				}
+
 				PsiElement startElementKeywordElement = startElement.getKeywordElement();
-				foldingList.add(new FoldingDescriptor(block, new TextRange(startElementKeywordElement.getTextOffset(),
-						stopElement.getTextRange().getEndOffset())));
+				int textOffset = startElementKeywordElement.getTextOffset();
+				int textOffset1 = stopElementStopElement.getTextOffset();
+				if((textOffset1 - textOffset) > 0)
+				{
+					foldingList.add(new FoldingDescriptor(block, new TextRange(textOffset, textOffset1)));
+				}
 			}
 		});
 		return foldingList.toArray(new FoldingDescriptor[foldingList.size()]);

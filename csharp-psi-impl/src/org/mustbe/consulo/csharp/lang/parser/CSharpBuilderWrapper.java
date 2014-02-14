@@ -29,7 +29,6 @@ import com.intellij.lang.impl.PsiBuilderAdapter;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SingleRootFileViewProvider;
-import com.intellij.psi.impl.PsiTreeDebugBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 
@@ -179,9 +178,9 @@ public class CSharpBuilderWrapper extends PsiBuilderAdapter
 			}
 			parent = parent.getParent();
 		}    */
-		if(myMacroFile.getName().equals("Program.cs"))
+	//	if(myMacroFile.getName().equals("Program.cs"))
 		{
-			System.out.println(new PsiTreeDebugBuilder().psiToString(myMacroFile));
+			//System.out.println(new PsiTreeDebugBuilder().psiToString(myMacroFile));
 		}
 		return nonActive;
 	}
