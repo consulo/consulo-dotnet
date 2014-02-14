@@ -54,7 +54,7 @@ import lombok.val;
  */
 public class MonoSdkType extends DotNetSdkType
 {
-	public static final String LINUS_COMPILER = "/usr/bin/mcs";
+	public static final String LINUX_COMPILER = "/usr/bin/mcs";
 
 	public MonoSdkType()
 	{
@@ -114,10 +114,10 @@ public class MonoSdkType extends DotNetSdkType
 		File monoLib = null;
 		if(SystemInfo.isLinux)
 		{
-			File file = new File(LINUS_COMPILER);
+			File file = new File(LINUX_COMPILER);
 			if(!file.exists())
 			{
-				Messages.showErrorDialog(parentComponent, "\'" + LINUS_COMPILER + "\' not found.");
+				Messages.showErrorDialog(parentComponent, "\'" + LINUX_COMPILER + "\' not found.");
 				return;
 			}
 			monoLib = new File("/usr/lib/mono");

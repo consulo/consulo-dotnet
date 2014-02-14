@@ -60,7 +60,7 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 		}
 		else if(SystemInfo.isLinux)
 		{
-			optionsBuilder.setExecutable(MonoSdkType.LINUS_COMPILER);
+			optionsBuilder.setExecutable(MonoSdkType.LINUX_COMPILER);
 		}
 
 		return optionsBuilder;
