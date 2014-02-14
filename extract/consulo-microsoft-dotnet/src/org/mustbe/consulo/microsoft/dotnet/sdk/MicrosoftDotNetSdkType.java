@@ -156,7 +156,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 						continue;
 					}
 
-					VirtualFile rootForLocalFile = ArchiveVfsUtil.getJarRootForLocalFile(dllVirtualFile);
+					VirtualFile rootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(dllVirtualFile);
 					if(rootForLocalFile != null)
 					{
 						sdkModificator.addRoot(rootForLocalFile, OrderRootType.CLASSES);

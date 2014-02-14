@@ -77,7 +77,7 @@ public abstract class DotNetSdkType extends SdkType
 				continue;
 			}
 
-			VirtualFile jarRootForLocalFile = ArchiveVfsUtil.getJarRootForLocalFile(dllVirtualFile);
+			VirtualFile jarRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(dllVirtualFile);
 			if(jarRootForLocalFile == null)
 			{
 				continue;
