@@ -93,7 +93,10 @@ public class CSharpResolveUtil
 				DotNetType parentElementOfType = PsiTreeUtil.getParentOfType(entrance, DotNetType.class);
 				if(parentElementOfType == null)
 				{
-					return walkChildren(processor, scope, sender, maxScope, state);
+					if(!walkChildren(processor, scope, sender, maxScope, state))
+					{
+						return false;
+					}
 				}
 			}
 
