@@ -178,7 +178,7 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	{
 		for(PsiElement dotNetNamedElement : getStubOrPsiChildren(CSharpStubElements.QUALIFIED_MEMBERS_WITH_USING, PsiElement.ARRAY_FACTORY))
 		{
-			if(dotNetNamedElement instanceof CSharpUsingNamespaceListImpl)
+			if(dotNetNamedElement instanceof CSharpUsingListImpl)
 			{
 				if(!dotNetNamedElement.processDeclarations(processor, state, lastParent, place))
 				{

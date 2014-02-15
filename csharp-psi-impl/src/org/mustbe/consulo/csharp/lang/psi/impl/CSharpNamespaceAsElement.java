@@ -26,7 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.NamespaceByQNameIndex;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.Navigatable;
@@ -48,7 +48,7 @@ import lombok.val;
  * @author VISTALL
  * @since 29.12.13.
  */
-public class CSharpNamespaceAsElement extends LightElement implements DotNetQualifiedElement
+public class CSharpNamespaceAsElement extends LightElement implements DotNetNamespaceAsElement
 {
 	@NotNull
 	private final String myQName;

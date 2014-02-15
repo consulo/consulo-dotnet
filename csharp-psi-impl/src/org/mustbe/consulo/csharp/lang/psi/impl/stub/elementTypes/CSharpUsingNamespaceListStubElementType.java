@@ -19,7 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingNamespaceListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
@@ -30,7 +30,7 @@ import com.intellij.psi.stubs.StubOutputStream;
  * @author VISTALL
  * @since 15.01.14
  */
-public class CSharpUsingNamespaceListStubElementType extends CSharpAbstractStubElementType<CSharpUsingNamespaceListStub, CSharpUsingNamespaceListImpl>
+public class CSharpUsingNamespaceListStubElementType extends CSharpAbstractStubElementType<CSharpUsingNamespaceListStub, CSharpUsingListImpl>
 {
 	public CSharpUsingNamespaceListStubElementType()
 	{
@@ -38,19 +38,19 @@ public class CSharpUsingNamespaceListStubElementType extends CSharpAbstractStubE
 	}
 
 	@Override
-	public CSharpUsingNamespaceListImpl createPsi(@NotNull ASTNode astNode)
+	public CSharpUsingListImpl createPsi(@NotNull ASTNode astNode)
 	{
-		return new CSharpUsingNamespaceListImpl(astNode);
+		return new CSharpUsingListImpl(astNode);
 	}
 
 	@Override
-	public CSharpUsingNamespaceListImpl createPsi(@NotNull CSharpUsingNamespaceListStub cSharpUsingNamespaceListStub)
+	public CSharpUsingListImpl createPsi(@NotNull CSharpUsingNamespaceListStub cSharpUsingNamespaceListStub)
 	{
-		return new CSharpUsingNamespaceListImpl(cSharpUsingNamespaceListStub);
+		return new CSharpUsingListImpl(cSharpUsingNamespaceListStub);
 	}
 
 	@Override
-	public CSharpUsingNamespaceListStub createStub(@NotNull CSharpUsingNamespaceListImpl cSharpUsingNamespaceList, StubElement stubElement)
+	public CSharpUsingNamespaceListStub createStub(@NotNull CSharpUsingListImpl cSharpUsingNamespaceList, StubElement stubElement)
 	{
 		return new CSharpUsingNamespaceListStub(stubElement, this);
 	}

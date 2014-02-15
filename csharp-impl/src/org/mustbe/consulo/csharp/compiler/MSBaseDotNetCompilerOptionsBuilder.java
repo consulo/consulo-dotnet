@@ -231,8 +231,13 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 		return commandLine;
 	}
 
+	public void setExecutable(String executable)
+	{
+		myExecutable = executable;
+	}
+
 	public void setExecutableFromSdk(String executableFromSdk)
 	{
-		myExecutable = mySdk.getHomePath() + "\\" + executableFromSdk;
+		myExecutable = mySdk.getHomePath() + File.separatorChar + executableFromSdk;
 	}
 }

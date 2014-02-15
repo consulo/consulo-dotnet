@@ -79,7 +79,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		public boolean value(PsiNamedElement psiNamedElement)
 		{
 			return psiNamedElement instanceof CSharpTypeDeclaration || psiNamedElement instanceof CSharpGenericParameterImpl ||
-					psiNamedElement instanceof CSharpMethodDeclaration;
+					psiNamedElement instanceof CSharpMethodDeclaration || psiNamedElement instanceof CSharpTypeDefStatementImpl;
 		}
 	};
 
@@ -514,7 +514,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(parent instanceof CSharpFieldOrPropertySet)
 		{
-			if(((CSharpFieldOrPropertySet) parent).getReferenceExpression() == this)
+			if(((CSharpFieldOrPropertySet) parent).getNameReferenceExpression() == this)
 			{
 				return ResolveToKind.FIELD_OR_PROPERTY;
 			}
@@ -594,7 +594,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		PsiElement resolve = resolve();
 		if(element instanceof CSharpNamespaceAsElement && resolve instanceof CSharpNamespaceAsElement)
 		{
-			return Comparing.equal(((CSharpNamespaceAsElement) resolve).getPresentableQName(), ((CSharpNamespaceAsElement) element).getPresentableQName());
+			return Comparing.equal(((CSharpNamespaceAsElement) resolve).getPresentableQName(), ((CSharpNamespaceAsElement) element)
+					.getPresentableQName());
 		}
 		return resolve == element;
 	}
@@ -637,7 +638,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(resolve instanceof CSharpTypeDeclarationImpl)
 		{
-			return new CSharpTypeDefTypeRef(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(), ((CSharpTypeDeclarationImpl) resolve).getGenericParametersCount());
+			return new CSharpTypeDefTypeRef(((CSharpTypeDeclarationImpl) resolve).getPresentableQName(),
+					((CSharpTypeDeclarationImpl) resolve).getGenericParametersCount());
+		}
+		else if(resolve instanceof CSharpTypeDefStatementImpl)
+		{
+			return ((CSharpTypeDefStatementImpl) resolve).toTypeRef();
 		}
 		else if(resolve instanceof DotNetGenericParameter)
 		{

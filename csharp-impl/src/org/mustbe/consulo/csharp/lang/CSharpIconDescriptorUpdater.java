@@ -26,17 +26,16 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
 import org.mustbe.consulo.dotnet.module.DotNetModuleUtil;
 import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.BitUtil;
@@ -66,13 +65,8 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		{
 			return;
 		}
-		VirtualFile virtualFile = containingFile.getVirtualFile();
-		if(virtualFile == null)
-		{
-			return;
-		}
-		FileType fileType = virtualFile.getFileType();
-		if(fileType != CSharpFileType.INSTANCE)
+
+		if(containingFile.getFileType() != CSharpFileType.INSTANCE)
 		{
 			return;
 		}
@@ -125,7 +119,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 
 			processModifierListOwner(element, iconDescriptor, flags);
 		}
-		else if(element instanceof DotNetGenericParameter)
+		else if(element instanceof DotNetGenericParameter || element instanceof CSharpTypeDefStatementImpl)
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.TypeAlias);
 		}

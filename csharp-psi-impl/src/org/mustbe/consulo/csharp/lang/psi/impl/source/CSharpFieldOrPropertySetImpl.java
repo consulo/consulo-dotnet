@@ -17,10 +17,12 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySet;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -41,8 +43,20 @@ public class CSharpFieldOrPropertySetImpl extends CSharpElementImpl implements C
 
 	@NotNull
 	@Override
-	public DotNetExpression getReferenceExpression()
+	public DotNetExpression getNameReferenceExpression()
 	{
-		return findNotNullChildByClass(DotNetExpression.class);
+		return (DotNetExpression) getFirstChild();
+	}
+
+	@Nullable
+	@Override
+	public DotNetExpression getValueReferenceExpression()
+	{
+		PsiElement lastChild = getLastChild();
+		if(lastChild instanceof DotNetExpression && lastChild != getNameReferenceExpression())
+		{
+			return (DotNetExpression) lastChild;
+		}
+		return null;
 	}
 }

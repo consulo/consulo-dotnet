@@ -624,9 +624,19 @@ public class ExpressionParsing extends SharingParsingHelpers
 			return parseExpressionWithTypeInLParRPar(builder, null, SIZE_OF_EXPRESSION);
 		}
 
+		if(tokenType == CHECKED_KEYWORD || tokenType == UNCHECKED_KEYWORD)
+		{
+			return parseExpressionWithExpressionInLParRPar(builder, null, CHECKED_EXPRESSION);
+		}
+
 		if(tokenType == DELEGATE_KEYWORD)
 		{
 			return parseAnonymMethodExpression(builder, null);
+		}
+
+		if(tokenType == REF_KEYWORD || tokenType == OUT_KEYWORD)
+		{
+			return parseOutRefWrapExpression(builder);
 		}
 
 		if(tokenType == LPAR)
@@ -695,6 +705,23 @@ public class ExpressionParsing extends SharingParsingHelpers
 		}
 
 		return null;
+	}
+
+	private static PsiBuilder.Marker parseOutRefWrapExpression(CSharpBuilderWrapper builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+		builder.advanceLexer();
+
+		if(builder.getTokenType() != IDENTIFIER)
+		{
+			builder.error("Identifier expected");
+		}
+		else
+		{
+			parse(builder);
+		}
+		mark.done(OUT_REF_WRAP_EXPRESSION);
+		return mark;
 	}
 
 	private static PsiBuilder.Marker parseAnonymMethodExpression(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker m)
@@ -986,43 +1013,51 @@ public class ExpressionParsing extends SharingParsingHelpers
 		builder.advanceLexer();
 
 		val typeMarker = parseType(builder, BracketFailPolicy.RETURN_BEFORE);
-		if(typeMarker == null)
+		if(typeMarker != null)
 		{
-			builder.error("Type expected");
-		}
-
-
-		while(builder.getTokenType() == LBRACKET)
-		{
-			PsiBuilder.Marker marker = builder.mark();
-			builder.advanceLexer();
-
-			PsiBuilder.Marker expMarker = parse(builder);
-			if(expMarker == null)
+			while(builder.getTokenType() == LBRACKET)
 			{
-				builder.error("Expression expected");
+				PsiBuilder.Marker marker = builder.mark();
+				builder.advanceLexer();
+
+				PsiBuilder.Marker expMarker = parse(builder);
+				if(expMarker == null)
+				{
+					builder.error("Expression expected");
+				}
+
+				expect(builder, RBRACKET, "']' expected");
+				marker.done(ARRAY_ACCESS_EXPRESSION);
 			}
 
-			expect(builder, RBRACKET, "']' expected");
-			marker.done(ARRAY_ACCESS_EXPRESSION);
-		}
+			if(builder.getTokenType() == LPAR)
+			{
+				parseArgumentList(builder);
+			}
 
-		if(builder.getTokenType() == LPAR)
-		{
-			parseArgumentList(builder);
+			AfterNewParsingTarget target = getTarget(builder);
+			switch(target)
+			{
+				case NONE:
+					break;
+				case PROPERTY_SET_LIST:
+					parseFieldOrPropertySetBlock(builder);
+					break;
+				case ARRAY_INITIALIZATION:
+					parseArrayInitialization(builder);
+					break;
+			}
 		}
-
-		AfterNewParsingTarget target = getTarget(builder);
-		switch(target)
+		else
 		{
-			case NONE:
-				break;
-			case PROPERTY_SET_LIST:
+			if(builder.getTokenType() == LBRACE)
+			{
 				parseFieldOrPropertySetBlock(builder);
-				break;
-			case ARRAY_INITIALIZATION:
-				parseArrayInitialization(builder);
-				break;
+			}
+			else
+			{
+				builder.error("'{' expected");
+			}
 		}
 
 		newExpr.done(NEW_EXPRESSION);
@@ -1146,6 +1181,23 @@ public class ExpressionParsing extends SharingParsingHelpers
 		if(expect(builder, LPAR, "'(' expected"))
 		{
 			if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+			{
+				builder.error("Type expected");
+			}
+			expect(builder, RPAR, "')' expected");
+		}
+		newMarker.done(to);
+		return newMarker;
+	}
+
+	private static PsiBuilder.Marker parseExpressionWithExpressionInLParRPar(CSharpBuilderWrapper builder, PsiBuilder.Marker mark, IElementType to)
+	{
+		PsiBuilder.Marker newMarker = mark == null ? builder.mark() : mark.precede();
+		builder.advanceLexer();
+
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			if(parse(builder) == null)
 			{
 				builder.error("Type expected");
 			}

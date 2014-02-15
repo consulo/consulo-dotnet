@@ -134,6 +134,10 @@ public interface CSharpTokens extends TokenType
 
 	IElementType SEALED_KEYWORD = new IElementType("SEALED_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType CHECKED_KEYWORD = new IElementType("CHECKED_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType UNCHECKED_KEYWORD = new IElementType("UNCHECKED_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType UNSAFE_KEYWORD = new IElementType("UNSAFE_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType OVERRIDE_KEYWORD = new IElementType("OVERRIDE_KEYWORD", CSharpLanguage.INSTANCE);

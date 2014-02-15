@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,15 +32,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
-import edu.arizona.cs.mbel.mbel.Event;
-import edu.arizona.cs.mbel.mbel.Field;
-import edu.arizona.cs.mbel.mbel.GenericParamDef;
-import edu.arizona.cs.mbel.mbel.GenericParamOwner;
-import edu.arizona.cs.mbel.mbel.InterfaceImplementation;
-import edu.arizona.cs.mbel.mbel.MethodDef;
-import edu.arizona.cs.mbel.mbel.Property;
-import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.mbel.*;
+import edu.arizona.cs.mbel.signature.CustomAttributeOwner;
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
@@ -117,10 +111,12 @@ public class StubToStringBuilder
 			StubBlock typeBlock = processType(typeDef);
 			if(namespaceBlock != null)
 			{
+				namespaceBlock.getBlocks().addAll(processAttributes(typeDef));
 				namespaceBlock.getBlocks().add(typeBlock);
 			}
 			else
 			{
+				myRoots.addAll(processAttributes(typeDef));
 				myRoots.add(typeBlock);
 			}
 		}
@@ -239,7 +235,8 @@ public class StubToStringBuilder
 			{
 				if(isSet(field.getFlags(), FieldAttributes.Static))
 				{
-					parent.getBlocks().add(new LineStubBlock(field.getName() + ","));
+					parent.getBlocks().addAll(processAttributes(field));
+					parent.getBlocks().add(new LineStubBlock(field.getName() + ",\n"));
 				}
 			}
 			else
@@ -249,7 +246,7 @@ public class StubToStringBuilder
 					continue;
 				}
 				StubBlock stubBlock = processField(typeDef, field);
-
+				parent.getBlocks().addAll(processAttributes(field));
 				parent.getBlocks().add(stubBlock);
 			}
 		}
@@ -263,6 +260,7 @@ public class StubToStringBuilder
 		{
 			StubBlock stubBlock = processProperty(typeDef, property);
 
+			parent.getBlocks().addAll(processAttributes(property));
 			parent.getBlocks().add(stubBlock);
 		}
 
@@ -270,6 +268,7 @@ public class StubToStringBuilder
 		{
 			StubBlock stubBlock = processEvent(typeDef, event);
 
+			parent.getBlocks().addAll(processAttributes(event));
 			parent.getBlocks().add(stubBlock);
 		}
 
@@ -294,6 +293,8 @@ public class StubToStringBuilder
 			{
 				continue;
 			}
+
+			parent.getBlocks().addAll(processAttributes(methodDef));
 
 			StubBlock stubBlock = processMethod(typeDef, methodDef, name, false, false);
 
@@ -542,7 +543,7 @@ public class StubToStringBuilder
 			}
 		}
 
-		return new LineStubBlock(builder.toString() + ";");
+		return new LineStubBlock(builder.toString() + ";\n");
 	}
 
 	@NotNull
@@ -641,6 +642,34 @@ public class StubToStringBuilder
 		return new StubBlock("namespace " + namespace, null, BRACES);
 	}
 
+	private static List<LineStubBlock> processAttributes(CustomAttributeOwner owner)
+	{
+		CustomAttribute[] customAttributes = owner.getCustomAttributes();
+		if(customAttributes.length == 0)
+		{
+			return Collections.emptyList();
+		}
+
+		val list = new ArrayList<LineStubBlock>();
+		for(CustomAttribute customAttribute : customAttributes)
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.append("[");
+			MethodDefOrRef constructor = customAttribute.getConstructor();
+			String type = TypeToStringBuilder.toStringFromDefRefSpec(constructor.getParent(), null, null);
+			if(type.endsWith("Attribute"))
+			{
+				type = type.substring(0, type.length() - 9);
+			}
+			builder.append(type);
+			builder.append("]");
+
+			list.add(new LineStubBlock(builder.toString()));
+		}
+
+		return list;
+	}
+
 	@NotNull
 	public String gen()
 	{
@@ -695,7 +724,7 @@ public class StubToStringBuilder
 
 			builder.append(StringUtil.repeatSymbol('\t', index));
 			builder.append(indents[1]);
+			builder.append("\n");
 		}
-		builder.append('\n');
 	}
 }

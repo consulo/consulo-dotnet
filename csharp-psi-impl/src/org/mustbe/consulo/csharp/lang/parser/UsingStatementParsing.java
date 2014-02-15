@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.parser;
 
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.psi.tree.IElementType;
 import lombok.val;
 
 /**
@@ -26,7 +27,7 @@ import lombok.val;
  */
 public class UsingStatementParsing extends SharingParsingHelpers
 {
-	public static void parseUsingList(PsiBuilder builder, PsiBuilder.Marker marker)
+	public static void parseUsingList(CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
 	{
 		boolean empty = true;
 		while(builder.getTokenType() == USING_KEYWORD)
@@ -46,16 +47,32 @@ public class UsingStatementParsing extends SharingParsingHelpers
 		}
 	}
 
-	public static void parseUsing(PsiBuilder builder)
+	public static void parseUsing(CSharpBuilderWrapper builder)
 	{
 		val marker = builder.mark();
 
 		builder.advanceLexer();
 
-		ExpressionParsing.parseQualifiedReference(builder, null);
+		IElementType to = null;
+		if(builder.getTokenType() == IDENTIFIER && builder.lookAhead(1) == EQ)
+		{
+			builder.advanceLexer();
+			builder.advanceLexer();
+
+			if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+			{
+				builder.error("Type expected");
+			}
+			to = TYPE_DEF_STATEMENT;
+		}
+		else
+		{
+			ExpressionParsing.parseQualifiedReference(builder, null);
+			to = USING_NAMESPACE_STATEMENT;
+		}
 
 		expect(builder, SEMICOLON, "';' expected");
 
-		marker.done(USING_NAMESPACE_STATEMENT);
+		marker.done(to);
 	}
 }

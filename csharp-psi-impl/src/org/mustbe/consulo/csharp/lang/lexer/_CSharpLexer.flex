@@ -30,7 +30,10 @@ CHARACTER_LITERAL="'"([^\\\'\r\n]|{ESCAPE_SEQUENCE})*("'"|\\)?
 STRING_LITERAL=\"([^\\\"\r\n]|{ESCAPE_SEQUENCE})*(\"|\\)?
 ESCAPE_SEQUENCE=\\[^\r\n]
 
-VERBATIM_STRING_LITERAL=\@\"([^\\\"\"\r\n]|{ESCAPE_SEQUENCE}|\n)*(\"|\\)?
+SINGLE_VERBATIM_CHAR=[^\"]
+QUOTE_ESC_SEQ=\"\"
+VERBATIM_STRING_CHAR={SINGLE_VERBATIM_CHAR}|{QUOTE_ESC_SEQ}
+VERBATIM_STRING_LITERAL=@\"{VERBATIM_STRING_CHAR}*\"
 
 IDENTIFIER=[:jletter:] [:jletterdigit:]*
 
@@ -153,6 +156,10 @@ MACRO_NEW_LINE=\r\n|\n|\r
 	"sealed"                  { return CSharpTokens.SEALED_KEYWORD; }
 
 	"unsafe"                  { return CSharpTokens.UNSAFE_KEYWORD; }
+
+	"checked"                 { return CSharpTokens.CHECKED_KEYWORD; }
+
+	"unchecked"               { return CSharpTokens.UNCHECKED_KEYWORD; }
 
 	"virtual"                 { return CSharpTokens.VIRTUAL_KEYWORD; }
 

@@ -63,6 +63,12 @@ public abstract class DotNetPsiFacade
 			return DotNetTypeDeclaration.EMPTY_ARRAY;
 		}
 
+		@Override
+		public DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
+		{
+			return null;
+		}
+
 		@NotNull
 		protected DotNetTypeDeclaration[] toArray(@NotNull Collection<? extends DotNetTypeDeclaration> list)
 		{
@@ -81,4 +87,6 @@ public abstract class DotNetPsiFacade
 
 	@NotNull
 	public abstract DotNetTypeDeclaration[] getTypesByName(@NotNull String name, @NotNull GlobalSearchScope searchScope);
+
+	public abstract DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope);
 }

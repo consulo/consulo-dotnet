@@ -32,6 +32,8 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
@@ -41,6 +43,13 @@ import com.intellij.psi.PsiFile;
  */
 public class CSharpProjectViewProvider implements SelectableTreeStructureProvider, DumbAware
 {
+	private final Project myProject;
+
+	public CSharpProjectViewProvider(Project project)
+	{
+		myProject = project;
+	}
+
 	@Nullable
 	@Override
 	public PsiElement getTopLevelElement(PsiElement element)
@@ -52,6 +61,10 @@ public class CSharpProjectViewProvider implements SelectableTreeStructureProvide
 	public Collection<AbstractTreeNode> modify(AbstractTreeNode abstractTreeNode, Collection<AbstractTreeNode> abstractTreeNodes, ViewSettings
 			settings)
 	{
+		if(DumbService.isDumb(myProject))
+		{
+			return abstractTreeNodes;
+		}
 		List<AbstractTreeNode> nodes = new ArrayList<AbstractTreeNode>(abstractTreeNodes.size());
 		for(AbstractTreeNode treeNode : abstractTreeNodes)
 		{

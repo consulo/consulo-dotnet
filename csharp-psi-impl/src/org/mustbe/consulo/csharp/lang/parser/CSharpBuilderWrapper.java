@@ -178,6 +178,10 @@ public class CSharpBuilderWrapper extends PsiBuilderAdapter
 			}
 			parent = parent.getParent();
 		}    */
+	//	if(myMacroFile.getName().equals("Program.cs"))
+		{
+			//System.out.println(new PsiTreeDebugBuilder().psiToString(myMacroFile));
+		}
 		return nonActive;
 	}
 

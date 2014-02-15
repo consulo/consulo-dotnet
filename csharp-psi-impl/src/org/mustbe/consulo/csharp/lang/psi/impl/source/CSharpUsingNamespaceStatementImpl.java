@@ -37,7 +37,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * @since 28.11.13.
  */
 @ArrayFactoryFields
-public class CSharpUsingNamespaceStatementImpl extends CSharpStubElementImpl<CSharpUsingNamespaceStatementStub>
+public class CSharpUsingNamespaceStatementImpl extends CSharpStubElementImpl<CSharpUsingNamespaceStatementStub> implements CSharpUsingListChild
 {
 	public CSharpUsingNamespaceStatementImpl(@NotNull ASTNode node)
 	{
@@ -92,5 +92,12 @@ public class CSharpUsingNamespaceStatementImpl extends CSharpStubElementImpl<CSh
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitUsingNamespaceStatement(this);
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getReferenceElement()
+	{
+		return getNamespaceReference();
 	}
 }

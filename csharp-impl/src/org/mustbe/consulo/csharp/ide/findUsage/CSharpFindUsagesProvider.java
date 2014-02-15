@@ -30,6 +30,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -56,7 +57,7 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 	@Override
 	public boolean canFindUsagesFor(@NotNull PsiElement element)
 	{
-		return element instanceof DotNetNamedElement || element instanceof CSharpNamespaceAsElement;
+		return element instanceof DotNetNamedElement;
 	}
 
 	@Nullable
@@ -85,6 +86,10 @@ public class CSharpFindUsagesProvider implements FindUsagesProvider
 		else if(element instanceof CSharpEventDeclaration)
 		{
 			return "event";
+		}
+		else if(element instanceof CSharpTypeDefStatementImpl)
+		{
+			return "type def";
 		}
 		else if(element instanceof CSharpPropertyDeclaration)
 		{

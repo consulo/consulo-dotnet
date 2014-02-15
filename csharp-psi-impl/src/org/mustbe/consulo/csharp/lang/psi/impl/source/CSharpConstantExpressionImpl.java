@@ -48,20 +48,16 @@ public class CSharpConstantExpressionImpl extends CSharpElementImpl implements D
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		PsiElement byType = findChildByType(CSharpTokenSets.CONSTANT_LITERALS);
+		PsiElement byType = findChildByType(CSharpTokenSets.LITERALS);
 		assert byType != null;
 		IElementType elementType = byType.getNode().getElementType();
-		if(elementType == CSharpTokens.STRING_LITERAL)
+		if(elementType == CSharpTokens.STRING_LITERAL || elementType == CSharpTokens.VERBATIM_STRING_LITERAL)
 		{
 			return CSharpNativeTypeRef.STRING;
 		}
 		else if(elementType == CSharpTokens.CHARACTER_LITERAL)
 		{
 			return CSharpNativeTypeRef.CHAR;
-		}
-		else if(elementType == CSharpTokens.VERBATIM_STRING_LITERAL)
-		{
-			return CSharpNativeTypeRef.STRING;
 		}
 		else if(elementType == CSharpTokens.UINTEGER_LITERAL)
 		{

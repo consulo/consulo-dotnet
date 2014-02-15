@@ -1,0 +1,15 @@
+<idea-plugin>
+	<name>NUnit</name>
+	<depends>org.mustbe.consulo.dotnet.core</depends>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<testFramework implementation="org.mustbe.consulo.nunit.NUnitTestFramework"/>
+		<sdkType implementation="org.mustbe.consulo.nunit.bundle.NUnitBundleType"/>
+
+		<moduleExtensionProvider key="microsoft-nunit" parent-key="microsoft-dotnet"
+								 implementationClass="org.mustbe.consulo.nunit.module.extension.NUnitModuleExtensionProvider"/>
+
+		<moduleExtensionProvider key="microsoft-nunit2" parent-key="microsoft-dotnet2"
+								 implementationClass="org.mustbe.consulo.nunit.module.extension.NUnitModuleExtensionProvider"/>
+	</extensions>
+</idea-plugin>

@@ -17,9 +17,14 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -36,5 +41,28 @@ public class CSharpAttributeImpl extends CSharpElementImpl implements DotNetAttr
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitAttribute(this);
+	}
+
+	@Nullable
+	@Override
+	public DotNetTypeDeclaration resolveToType()
+	{
+		DotNetExpression childByClass = findChildByClass(DotNetExpression.class);
+		if(childByClass == null)
+		{
+			return null;
+		}
+		DotNetTypeRef dotNetTypeRef = childByClass.toTypeRef();
+
+		PsiElement resolve = dotNetTypeRef.resolve(this);
+		if(resolve instanceof DotNetTypeDeclaration)
+		{
+			return (DotNetTypeDeclaration) resolve;
+		}
+		else if(resolve != null)
+		{
+			return (DotNetTypeDeclaration) resolve.getParent();
+		}
+		return null;
 	}
 }

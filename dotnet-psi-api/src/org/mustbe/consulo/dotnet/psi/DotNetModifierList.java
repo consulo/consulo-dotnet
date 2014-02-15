@@ -30,6 +30,9 @@ public interface DotNetModifierList extends DotNetElement
 	@NotNull
 	DotNetModifier[] getModifiers();
 
+	@NotNull
+	DotNetAttribute[] getAttributes();
+
 	boolean hasModifier(@NotNull DotNetModifier modifier);
 
 	@Nullable

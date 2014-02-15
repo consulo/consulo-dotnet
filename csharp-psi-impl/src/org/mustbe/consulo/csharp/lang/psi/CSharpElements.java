@@ -29,9 +29,11 @@ public interface CSharpElements
 {
 	IElementType NAMESPACE_DECLARATION = CSharpStubElements.NAMESPACE_DECLARATION;
 
-	IElementType USING_NAMESPACE_LIST = CSharpStubElements.USING_NAMESPACE_LIST;
+	IElementType USING_NAMESPACE_LIST = CSharpStubElements.USING_LIST;
 
 	IElementType USING_NAMESPACE_STATEMENT = CSharpStubElements.USING_NAMESPACE_STATEMENT;
+
+	IElementType TYPE_DEF_STATEMENT = CSharpStubElements.TYPE_DEF_STATEMENT;
 
 	IElementType METHOD_DECLARATION = CSharpStubElements.METHOD_DECLARATION;
 
@@ -98,6 +100,8 @@ public interface CSharpElements
 	IElementType CONSTRUCTOR_SUPER_CALL_EXPRESSION = new IElementTypeAsPsiFactory("CONSTRUCTOR_SUPER_CALL_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpMethodCallExpressionImpl.class);
 
+	IElementType CHECKED_EXPRESSION = new IElementTypeAsPsiFactory("CHECKED_EXPRESSION", CSharpLanguage.INSTANCE, CSharpCheckedExpressionImpl.class);
+
 	IElementType TYPE_OF_EXPRESSION = new IElementTypeAsPsiFactory("TYPE_OF_EXPRESSION", CSharpLanguage.INSTANCE, CSharpTypeOfExpressionImpl.class);
 
 	IElementType SIZE_OF_EXPRESSION = new IElementTypeAsPsiFactory("SIZE_OF_EXPRESSION", CSharpLanguage.INSTANCE, CSharpSizeOfExpressionImpl.class);
@@ -111,6 +115,9 @@ public interface CSharpElements
 	IElementType AS_EXPRESSION = new IElementTypeAsPsiFactory("AS_EXPRESSION", CSharpLanguage.INSTANCE, CSharpAsExpressionImpl.class);
 
 	IElementType NEW_EXPRESSION = new IElementTypeAsPsiFactory("NEW_EXPRESSION", CSharpLanguage.INSTANCE, CSharpNewExpressionImpl.class);
+
+	IElementType OUT_REF_WRAP_EXPRESSION = new IElementTypeAsPsiFactory("OUT_REF_WRAP_EXPRESSION", CSharpLanguage.INSTANCE,
+			CSharpOutRefWrapExpressionImpl.class);
 
 	IElementType CONDITIONAL_EXPRESSION = new IElementTypeAsPsiFactory("CONDITIONAL_EXPRESSION", CSharpLanguage.INSTANCE,
 			CSharpConditionalExpressionImpl.class);
@@ -209,6 +216,8 @@ public interface CSharpElements
 			CSharpThrowStatementImpl.class);
 
 	IElementType RETURN_STATEMENT = new IElementTypeAsPsiFactory("RETURN_STATEMENT", CSharpLanguage.INSTANCE, CSharpReturnStatementImpl.class);
+
+	IElementType CHECKED_STATEMENT = new IElementTypeAsPsiFactory("CHECKED_STATEMENT", CSharpLanguage.INSTANCE, CSharpCheckedExpressionImpl.class);
 
 	IElementType YIELD_STATEMENT = new IElementTypeAsPsiFactory("YIELD_STATEMENT", CSharpLanguage.INSTANCE, CSharpYieldStatementImpl.class);
 

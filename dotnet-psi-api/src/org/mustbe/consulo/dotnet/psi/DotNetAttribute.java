@@ -16,10 +16,16 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 19.12.13.
  */
+@ArrayFactoryFields
 public interface DotNetAttribute extends DotNetElement
 {
+	@Nullable
+	DotNetTypeDeclaration resolveToType();
 }

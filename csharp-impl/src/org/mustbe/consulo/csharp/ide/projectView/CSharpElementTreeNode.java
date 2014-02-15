@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
@@ -120,6 +121,20 @@ public class CSharpElementTreeNode extends AbstractPsiBasedNode<DotNetNamedEleme
 		}
 
 		return Collections.emptyList();
+	}
+
+	@Override
+	protected boolean isDeprecated()
+	{
+		DotNetNamedElement value = getValue();
+		if(value instanceof DotNetModifierListOwner)
+		{
+			return DotNetAttributeUtil.hasAttribute((DotNetModifierListOwner) value, DotNetTypes.System_ObsoleteAttribute);
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	@Override

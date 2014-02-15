@@ -35,6 +35,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
@@ -172,6 +173,14 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		super.visitEnumConstantDeclaration(declaration);
 
 		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
+	@Override
+	public void visitTypeDefStatement(CSharpTypeDefStatementImpl statement)
+	{
+		super.visitTypeDefStatement(statement);
+
+		highlightNamed(statement, statement.getNameIdentifier());
 	}
 
 	@Override

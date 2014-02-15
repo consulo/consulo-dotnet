@@ -34,4 +34,5 @@ public interface DotNetTypes
 	String System_RuntimeType = "System.RuntimeType";
 	String System_String = "System.String";
 	String System_IDisposable = "System.IDisposable";
+	String System_ObsoleteAttribute = "System.ObsoleteAttribute";
 }

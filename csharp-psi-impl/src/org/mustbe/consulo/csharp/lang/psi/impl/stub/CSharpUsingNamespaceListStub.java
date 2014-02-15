@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
@@ -25,7 +25,7 @@ import com.intellij.psi.stubs.StubElement;
  * @author VISTALL
  * @since 15.01.14
  */
-public class CSharpUsingNamespaceListStub extends StubBase<CSharpUsingNamespaceListImpl>
+public class CSharpUsingNamespaceListStub extends StubBase<CSharpUsingListImpl>
 {
 	public CSharpUsingNamespaceListStub(StubElement parent, IStubElementType elementType)
 	{

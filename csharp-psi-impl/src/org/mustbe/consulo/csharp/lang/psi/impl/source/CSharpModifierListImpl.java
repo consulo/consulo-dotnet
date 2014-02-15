@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
+import org.mustbe.consulo.dotnet.psi.DotNetAttributeList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import com.intellij.lang.ASTNode;
@@ -59,6 +62,23 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitModifierList(this);
+	}
+
+	@NotNull
+	@Override
+	public DotNetAttribute[] getAttributes()
+	{
+		DotNetAttributeList[] childrenByClass = findChildrenByClass(DotNetAttributeList.class);
+		if(childrenByClass.length == 0)
+		{
+			return DotNetAttribute.EMPTY_ARRAY;
+		}
+		List<DotNetAttribute> attributes = new ArrayList<DotNetAttribute>();
+		for(DotNetAttributeList childrenByClas : childrenByClass)
+		{
+			Collections.addAll(attributes, childrenByClas.getAttributes());
+		}
+		return attributes.isEmpty() ? DotNetAttribute.EMPTY_ARRAY : attributes.toArray(new DotNetAttribute[attributes.size()]);
 	}
 
 	@NotNull
