@@ -38,5 +38,6 @@ public interface CSharpMacroElements
 	IElementType REFERENCE_EXPRESSION = new IElementTypeAsPsiFactory("REFERENCE_EXPRESSION", CSharpMacroLanguage.INSTANCE,
 			CSharpMacroReferenceExpressionImpl.class);
 
-	IElementType PARENTHESES_EXPRESSION = new IElementTypeAsPsiFactory("PARENTHESES_EXPRESSION", CSharpMacroLanguage.INSTANCE, CSharpParenthesesExpressionImpl.class);
+	IElementType PARENTHESES_EXPRESSION = new IElementTypeAsPsiFactory("PARENTHESES_EXPRESSION", CSharpMacroLanguage.INSTANCE,
+			CSharpMacroParenthesesExpressionImpl.class);
 }
