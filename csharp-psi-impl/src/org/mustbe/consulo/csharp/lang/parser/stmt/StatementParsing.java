@@ -40,11 +40,11 @@ public class StatementParsing extends SharingParsingHelpers
 
 	public static PsiBuilder.Marker parse(CSharpBuilderWrapper wrapper)
 	{
-		return parseWithSoftElements(new NotNullFunction<CSharpBuilderWrapper, Pair<PsiBuilder.Marker,Boolean>>()
+		return parseWithSoftElements(new NotNullFunction<CSharpBuilderWrapper, Pair<PsiBuilder.Marker, Boolean>>()
 		{
 			@NotNull
 			@Override
-			public Pair<PsiBuilder.Marker,Boolean> fun(CSharpBuilderWrapper builderWrapper)
+			public Pair<PsiBuilder.Marker, Boolean> fun(CSharpBuilderWrapper builderWrapper)
 			{
 				return new Pair<PsiBuilder.Marker, Boolean>(parseStatement(builderWrapper), Boolean.TRUE);
 			}
@@ -383,13 +383,9 @@ public class StatementParsing extends SharingParsingHelpers
 			expect(builder, RPAR, "')' expected");
 		}
 
-		if(builder.getTokenType() == LBRACE)
+		if(parseStatement(builder) == null)
 		{
-			parseStatement(builder);
-		}
-		else
-		{
-			builder.error("'{' expected");
+			builder.error("Statement expected");
 		}
 
 		marker.done(to);
