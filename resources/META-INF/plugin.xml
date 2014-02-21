@@ -42,6 +42,9 @@
 		<component>
 			<implementation-class>org.mustbe.consulo.dotnet.ui.profile.ProfileWidgetRegistrator</implementation-class>
 		</component>
+		<component>
+			<implementation-class>org.mustbe.consulo.dotnet.module.ModuleTopicsRegister</implementation-class>
+		</component>
 	</project-components>
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">

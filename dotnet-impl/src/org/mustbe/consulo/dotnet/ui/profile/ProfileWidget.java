@@ -23,11 +23,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JComponent;
 
@@ -37,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
@@ -49,20 +45,14 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -74,8 +64,6 @@ import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.openapi.wm.impl.status.TextPanel;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.util.FileContentUtil;
-import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
 
@@ -189,7 +177,6 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 						protected void run(Result<Object> objectResult) throws Throwable
 						{
 							modifiableModel.commit();
-							reParseFiles(moduleForFile);
 						}
 					}.execute();
 				}
@@ -202,54 +189,6 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 		Point at = new Point(0, -dimension.height);
 		popup.show(new RelativePoint(e.getComponent(), at));
 		Disposer.register(this, popup); // destroy popup on unexpected project close
-	}
-
-	private void reParseFiles(final Module module)
-	{
-		Task.Backgroundable task = new Task.Backgroundable(myProject, "Reparsing files", false)
-		{
-			@Override
-			public void run(@NotNull ProgressIndicator indicator)
-			{
-				final Collection<VirtualFile> files = new ArrayList<VirtualFile>();
-
-				val moduleRootManager = ModuleRootManager.getInstance(module);
-				val fileIndex = moduleRootManager.getFileIndex();
-				fileIndex.iterateContentUnderDirectory(module.getModuleDir(), new ContentIterator()
-				{
-					@Override
-					public boolean processFile(VirtualFile virtualFile)
-					{
-						Set<FileType> types = new HashSet<FileType>();
-						ModuleExtension[] extensions = moduleRootManager.getExtensions();
-						for(ModuleExtension extension : extensions)
-						{
-							if(extension instanceof DotNetModuleLangExtension)
-							{
-								types.add(((DotNetModuleLangExtension) extension).getFileType());
-							}
-						}
-
-						if(types.contains(virtualFile.getFileType()))
-						{
-							files.add(virtualFile);
-						}
-
-						return true;
-					}
-				});
-
-				ApplicationManager.getApplication().invokeAndWait(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						FileContentUtil.reparseFiles(myProject, files, true);
-					}
-				}, ModalityState.NON_MODAL);
-			}
-		};
-		ProgressManager.getInstance().run(task);
 	}
 
 	@NotNull
