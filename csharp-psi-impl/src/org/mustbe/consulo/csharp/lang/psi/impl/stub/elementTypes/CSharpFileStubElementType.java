@@ -160,6 +160,8 @@ public class CSharpFileStubElementType extends IStubFileElementType<CSharpFileSt
 				Queue<CSharpMacroIfConditionBlockImpl> queue = new ArrayDeque<CSharpMacroIfConditionBlockImpl>(conditionBlocks.length);
 				Collections.addAll(queue, conditionBlocks);
 
+				CSharpMacroIfConditionBlockImpl activeBlock = null;
+
 				boolean forceDisable = false;
 				CSharpMacroIfConditionBlockImpl block;
 				while((block = queue.poll()) != null)
@@ -184,6 +186,7 @@ public class CSharpFileStubElementType extends IStubFileElementType<CSharpFileSt
 							if(isDefined(text))
 							{
 								forceDisable = true;
+								activeBlock = block;
 							}
 							else
 							{
@@ -191,9 +194,16 @@ public class CSharpFileStubElementType extends IStubFileElementType<CSharpFileSt
 							}
 						}
 					}
+					else
+					{
+						activeBlock = block;
+					}
 				}
 
-				super.visitMacroIf(element);
+				if(activeBlock != null)
+				{
+					activeBlock.accept(this);
+				}
 			}
 
 			private void addTextRange(CSharpMacroBlockStartImpl start, Queue<CSharpMacroIfConditionBlockImpl> queue, CSharpMacroIfImpl macroIf,
