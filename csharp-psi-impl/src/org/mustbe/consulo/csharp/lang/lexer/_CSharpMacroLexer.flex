@@ -37,14 +37,15 @@ IDENTIFIER=[:jletter:] [:jletterdigit:]*
 MACRO_WHITE_SPACE=[ \t\f]+
 MACRO_NEW_LINE=\r\n|\n|\r
 
-MACRO_DEFINE="#"{WHITE_SPACE}?"define"
-MACRO_UNDEF="#"{WHITE_SPACE}?"undef"
-MACRO_IF="#"{WHITE_SPACE}?"if"
-MACRO_ENDIF="#"{WHITE_SPACE}?"endif"
-MACRO_REGION="#"{WHITE_SPACE}?"region"
-MACRO_ENDREGION="#"{WHITE_SPACE}?"endregion"
-MACRO_ELSE="#"{WHITE_SPACE}?"else"
-MACRO_ELIF="#"{WHITE_SPACE}?"elif"
+MACRO_START={MACRO_NEW_LINE}?{MACRO_WHITE_SPACE}?"#"
+MACRO_DEFINE={MACRO_START}"define"
+MACRO_UNDEF={MACRO_START}"undef"
+MACRO_IF={MACRO_START}"if"
+MACRO_ENDIF={MACRO_START}"endif"
+MACRO_REGION={MACRO_START}"region"
+MACRO_ENDREGION={MACRO_START}"endregion"
+MACRO_ELSE={MACRO_START}"else"
+MACRO_ELIF={MACRO_START}"elif"
 %%
 
 <MACRO>
@@ -106,9 +107,9 @@ MACRO_ELIF="#"{WHITE_SPACE}?"elif"
 
 <YYINITIAL>
 {
-	"#"
+	{MACRO_START}
 	{
-		yypushback(1);
+		yypushback(yylength());
 		yybegin(MACRO);
 	}
 

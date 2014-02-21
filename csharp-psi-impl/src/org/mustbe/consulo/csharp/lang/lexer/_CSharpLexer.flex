@@ -61,7 +61,7 @@ HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 MACRO_WHITE_SPACE=[ \t\f]+
 MACRO_NEW_LINE=\r\n|\n|\r
-
+MACRO_START={MACRO_NEW_LINE}?{MACRO_WHITE_SPACE}?"#"
 %%
 
 <MACRO>
@@ -75,9 +75,9 @@ MACRO_NEW_LINE=\r\n|\n|\r
 
 <YYINITIAL>
 {
-	"#"
+	{MACRO_START}
 	{
-		yypushback(1);
+		yypushback(yylength());
 		yybegin(MACRO);
 	}
 
