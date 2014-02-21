@@ -101,4 +101,10 @@ public class CSharpLightMacroDefine extends LightElement implements CSharpMacroD
 	{
 		return null;
 	}
+
+	@Override
+	public boolean isUnDef()
+	{
+		return false;
+	}
 }

@@ -16,9 +16,8 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +29,6 @@ import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -86,24 +84,37 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 
 		val text = getText();
 
+		Map<String, CSharpMacroDefine> map = new HashMap<String, CSharpMacroDefine>();
+
 		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(containingFile, DotNetModuleExtension.class);
 		if(extension != null)
 		{
-			MainConfigurationProfileEx currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
-			if(currentProfileEx.getVariables().contains(text))
+			MainConfigurationProfileEx<?> currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+			for(String var : currentProfileEx.getVariables())
 			{
-				return new CSharpLightMacroDefine(extension.getModule(), text);
+				map.put(var, new CSharpLightMacroDefine(extension.getModule(), text));
 			}
 		}
 
 		for(CSharpMacroDefine macroDefine : ((CSharpMacroFileImpl) containingFile).getDefines())
 		{
-			if(Comparing.equal(text, macroDefine.getName()))
+			String name = macroDefine.getName();
+			if(name == null)
 			{
-				return macroDefine;
+				continue;
+			}
+
+			if(macroDefine.isUnDef())
+			{
+				map.remove(name);
+			}
+			else
+			{
+				map.put(name, macroDefine);
 			}
 		}
-		return null;
+
+		return map.get(text);
 	}
 
 	@NotNull
@@ -135,7 +146,7 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 	@Override
 	public Object[] getVariants()
 	{
-		List<CSharpMacroDefine> list = new ArrayList<CSharpMacroDefine>();
+		Map<String, CSharpMacroDefine> map = new HashMap<String, CSharpMacroDefine>();
 
 		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(this, DotNetModuleExtension.class);
 		if(extension != null)
@@ -143,12 +154,30 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 			MainConfigurationProfileEx<?> currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
 			for(String varName : currentProfileEx.getVariables())
 			{
-				list.add(new CSharpLightMacroDefine(extension.getModule(), varName));
+				map.put(varName, new CSharpLightMacroDefine(extension.getModule(), varName));
 			}
 		}
 
-		Collections.addAll(list, ((CSharpMacroFileImpl) getContainingFile()).getDefines());
-		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(list);
+		for(CSharpMacroDefine macroDefine : ((CSharpMacroFileImpl) getContainingFile()).getDefines())
+		{
+			String name = macroDefine.getName();
+			if(name == null)
+			{
+				continue;
+			}
+
+			if(macroDefine.isUnDef())
+			{
+				map.remove(name);
+			}
+			else
+			{
+				map.put(name, macroDefine);
+			}
+		}
+
+
+		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(map.values());
 	}
 
 	@Override

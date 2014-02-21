@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.macro;
 
-import com.intellij.psi.PsiNameIdentifierOwner;
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 26.01.14
+ * @since 21.01.14
  */
-public interface CSharpMacroDefine extends PsiNameIdentifierOwner
+public class MacroValueProvider
 {
-	boolean isUnDef();
+	private final List<String> myVariables;
+
+	public MacroValueProvider(List<String> variables)
+	{
+		myVariables = variables;
+	}
+
+	public boolean getMacroValueProperty(@NotNull String text)
+	{
+		return myVariables.contains(text);
+	}
 }

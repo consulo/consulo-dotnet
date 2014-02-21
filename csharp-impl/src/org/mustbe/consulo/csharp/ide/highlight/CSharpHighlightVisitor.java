@@ -47,6 +47,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
@@ -74,6 +75,17 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
+	public void visitComment(PsiComment comment)
+	{
+		if(comment.getTokenType() == CSharpTokens.NON_ACTIVE_SYMBOL)
+		{
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(comment).textAttributes
+					(CSharpHighlightKey.DISABLED_BLOCK)
+					.create());
+		}
+	}
+
+	@Override
 	public void visitElement(PsiElement element)
 	{
 		IElementType elementType = element.getNode().getElementType();
@@ -90,35 +102,6 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			parent.accept(this);
 		}
 	}
-
-/*	@Override
-	public void visitMacroBody(CSharpMacroBodyImpl block)
-	{
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(block).textAttributes(CodeInsightColors
-				.NOT_USED_ELEMENT_ATTRIBUTES).create());
-	}
-
-	@Override
-	public void visitMacroBlockStart(CSharpMacroBlockStartImpl start)
-	{
-		PsiElement startElement = start.getKeywordElement();
-		if(startElement != null && startElement.getNode().getElementType() == CSharpMacroTokens.MACRO_REGION_KEYWORD)
-		{
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(start).textAttributes(CSharpHighlightKey
-					.LINE_COMMENT).create());
-		}
-	}
-
-	@Override
-	public void visitMacroBlockStop(CSharpMacroBlockStopImpl stop)
-	{
-		IElementType startElementType = stop.findStopElementType();
-		if(startElementType == CSharpMacroTokens.MACRO_ENDREGION_KEYWORD)
-		{
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(stop).textAttributes(CSharpHighlightKey
-					.LINE_COMMENT).create());
-		}
-	}    */
 
 	@Override
 	public void visitGenericParameter(CSharpGenericParameterImpl parameter)

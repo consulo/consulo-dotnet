@@ -38,6 +38,7 @@ MACRO_WHITE_SPACE=[ \t\f]+
 MACRO_NEW_LINE=\r\n|\n|\r
 
 MACRO_DEFINE="#"{WHITE_SPACE}?"define"
+MACRO_UNDEF="#"{WHITE_SPACE}?"undef"
 MACRO_IF="#"{WHITE_SPACE}?"if"
 MACRO_ENDIF="#"{WHITE_SPACE}?"endif"
 MACRO_REGION="#"{WHITE_SPACE}?"region"
@@ -57,6 +58,8 @@ MACRO_ELIF="#"{WHITE_SPACE}?"elif"
 	{MACRO_ENDIF}        { yybegin(MACRO_ENTERED); return CSharpMacroTokens.MACRO_ENDIF_KEYWORD; }
 
 	{MACRO_DEFINE}       { yybegin(MACRO_ENTERED); return CSharpMacroTokens.MACRO_DEFINE_KEYWORD; }
+
+	{MACRO_UNDEF}        { yybegin(MACRO_ENTERED); return CSharpMacroTokens.MACRO_UNDEF_KEYWORD; }
 
 	{MACRO_REGION}       { yybegin(MACRO_ENTERED); return CSharpMacroTokens.MACRO_REGION_KEYWORD; }
 

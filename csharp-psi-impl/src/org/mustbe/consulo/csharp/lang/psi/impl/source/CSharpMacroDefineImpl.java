@@ -69,4 +69,10 @@ public class CSharpMacroDefineImpl extends CSharpMacroElementImpl implements CSh
 		PsiElement nameIdentifier = getNameIdentifier();
 		return nameIdentifier == null ? super.getTextOffset() : nameIdentifier.getTextOffset();
 	}
+
+	@Override
+	public boolean isUnDef()
+	{
+		return findChildByType(CSharpMacroTokens.MACRO_UNDEF_KEYWORD) != null;
+	}
 }

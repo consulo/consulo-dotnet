@@ -17,10 +17,15 @@
 package org.mustbe.consulo.csharp.lang.lexer;
 
 import java.io.Reader;
+import java.util.Collections;
+import java.util.List;
 
 import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.MergingLexerAdapter;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 
 /**
@@ -29,10 +34,42 @@ import com.intellij.psi.tree.TokenSet;
  */
 public class CSharpLexer extends MergingLexerAdapter
 {
-	private static final TokenSet ourMergeSet = TokenSet.create(CSharpTemplateTokens.MACRO_FRAGMENT);
+	private static final TokenSet ourMergeSet = TokenSet.create(CSharpTemplateTokens.MACRO_FRAGMENT, CSharpTokens.NON_ACTIVE_SYMBOL);
+	private final List<TextRange> myRanges;
 
 	public CSharpLexer()
 	{
+		this(Collections.<TextRange>emptyList());
+	}
+
+	public CSharpLexer(List<TextRange> ranges)
+	{
 		super(new FlexAdapter(new _CSharpLexer((Reader) null)), ourMergeSet);
+		myRanges = ranges;
+	}
+
+	@Override
+	public IElementType getTokenType()
+	{
+		IElementType tokenType = super.getTokenType();
+		if(tokenType == null)
+		{
+			return null;
+		}
+
+		if(myRanges.isEmpty())
+		{
+			return tokenType;
+		}
+
+		for(int i = 0; i < myRanges.size(); i++)
+		{
+			TextRange textRange = myRanges.get(i);
+			if(textRange.contains(getTokenStart()))
+			{
+				return CSharpTokens.NON_ACTIVE_SYMBOL;
+			}
+		}
+		return tokenType;
 	}
 }

@@ -31,6 +31,12 @@ public class CSharpMacroIfConditionBlockImpl extends CSharpMacroElementImpl
 		super(node);
 	}
 
+	@NotNull
+	public CSharpMacroBlockStartImpl getDeclarationTag()
+	{
+		return findNotNullChildByClass(CSharpMacroBlockStartImpl.class);
+	}
+
 	@Override
 	public void accept(@NotNull CSharpMacroElementVisitor visitor)
 	{

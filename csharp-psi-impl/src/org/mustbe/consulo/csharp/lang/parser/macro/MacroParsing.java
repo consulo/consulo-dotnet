@@ -36,7 +36,7 @@ public class MacroParsing implements CSharpMacroTokens, CSharpMacroElements
 		PsiBuilder.Marker mark = builder.mark();
 
 		val token = builder.getTokenType();
-		if(token == MACRO_DEFINE_KEYWORD)
+		if(token == MACRO_DEFINE_KEYWORD || token == MACRO_UNDEF_KEYWORD)
 		{
 			builder.advanceLexer();
 
@@ -49,7 +49,7 @@ public class MacroParsing implements CSharpMacroTokens, CSharpMacroElements
 				builder.error("Identifier expected");
 			}
 			skipUntilStop(builder);
-			mark.done(MACRO_DEFINE);
+			mark.done(token == MACRO_UNDEF_KEYWORD ? MACRO_UNDEF : MACRO_DEFINE);
 			return true;
 		}
 		else if(token == MACRO_IF_KEYWORD)

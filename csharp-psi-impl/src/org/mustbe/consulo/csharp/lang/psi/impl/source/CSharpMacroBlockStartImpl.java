@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroTokens;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
@@ -36,9 +35,10 @@ public class CSharpMacroBlockStartImpl extends CSharpMacroElementImpl
 		super(node);
 	}
 
-	public PsiElement getValue()
+	@Nullable
+	public CSharpMacroExpression getValue()
 	{
-		return findChildByClass(DotNetExpression.class);
+		return findChildByClass(CSharpMacroExpression.class);
 	}
 
 	@NotNull
@@ -47,6 +47,11 @@ public class CSharpMacroBlockStartImpl extends CSharpMacroElementImpl
 		TokenSet tokenSet = TokenSet.create(CSharpMacroTokens.MACRO_IF_KEYWORD, CSharpMacroTokens.MACRO_REGION_KEYWORD,
 				CSharpMacroTokens.MACRO_ELIF_KEYWORD, CSharpMacroTokens.MACRO_ELSE_KEYWORD);
 		return findNotNullChildByType(tokenSet);
+	}
+
+	public boolean isElse()
+	{
+		return findChildByType(CSharpMacroTokens.MACRO_ELSE_KEYWORD) != null;
 	}
 
 	@Nullable

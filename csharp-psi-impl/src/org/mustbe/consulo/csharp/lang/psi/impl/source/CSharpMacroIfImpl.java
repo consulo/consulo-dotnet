@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
 import com.intellij.lang.ASTNode;
 
@@ -35,6 +36,12 @@ public class CSharpMacroIfImpl extends CSharpMacroElementImpl
 	public CSharpMacroIfConditionBlockImpl[] getConditionBlocks()
 	{
 		return findChildrenByClass(CSharpMacroIfConditionBlockImpl.class);
+	}
+
+	@Nullable
+	public CSharpMacroBlockStopImpl getCloseTag()
+	{
+		return findChildByClass(CSharpMacroBlockStopImpl.class);
 	}
 
 	@Override

@@ -40,6 +40,8 @@ public interface CSharpMacroTokens extends TokenType
 
 	IElementType MACRO_DEFINE_KEYWORD = new IElementType("MACRO_DEFINE_KEYWORD", CSharpMacroLanguage.INSTANCE);
 
+	IElementType MACRO_UNDEF_KEYWORD = new IElementType("MACRO_UNDEF_KEYWORD", CSharpMacroLanguage.INSTANCE);
+
 	IElementType MACRO_VALUE = new IElementType("MACRO_VALUE", CSharpMacroLanguage.INSTANCE);
 
 	IElementType MACRO_STOP = new IElementType("MACRO_STOP", CSharpMacroLanguage.INSTANCE);

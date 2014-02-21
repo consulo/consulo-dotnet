@@ -22,8 +22,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroReferenceExpressionImpl;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.psi.PsiElement;
@@ -65,15 +63,15 @@ public class CSharpMacroHighlightVisitor extends CSharpMacroElementVisitor imple
 		{
 			highlightNamed(resolve, expression.getElement());
 		}
-		else
-		{
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.UNUSED_SYMBOL).range(expression).create());
-		}
 	}
 
 	@Override
 	public void visitMacroDefine(CSharpMacroDefine cSharpMacroDefine)
 	{
+		if(cSharpMacroDefine.isUnDef())
+		{
+			return;
+		}
 		highlightNamed(cSharpMacroDefine, cSharpMacroDefine.getNameIdentifier());
 	}
 
