@@ -231,8 +231,14 @@ public class CSharpFileStubElementType extends IStubFileElementType<CSharpFileSt
 				}
 
 				PsiElement stopElement = start.getStopElement();
-				assert stopElement != null;
-				textRanges.add(new TextRange(stopElement.getTextRange().getEndOffset(), endOffset));
+				if(stopElement == null)
+				{
+					textRanges.add(new TextRange(start.getTextRange().getEndOffset(), endOffset));
+				}
+				else
+				{
+					textRanges.add(new TextRange(stopElement.getTextRange().getEndOffset(), endOffset));
+				}
 			}
 
 			private boolean isDefined(String text)
