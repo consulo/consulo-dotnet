@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
+import com.intellij.psi.templateLanguages.TemplateDataElementType;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -29,6 +30,6 @@ public interface CSharpTemplateTokens
 
 	IElementType OUTER_ELEMENT_TYPE = new IElementType("OUTER_ELEMENT_TYPE", CSharpLanguage.INSTANCE);
 
-	CSharpTemplateDataElementType TEMPLATE_DATA = new CSharpTemplateDataElementType("TEMPLATE_DATA", CSharpLanguage.INSTANCE, MACRO_FRAGMENT,
+	TemplateDataElementType TEMPLATE_DATA = new TemplateDataElementType("TEMPLATE_DATA", CSharpLanguage.INSTANCE, MACRO_FRAGMENT,
 			OUTER_ELEMENT_TYPE);
 }
