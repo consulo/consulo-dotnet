@@ -65,6 +65,10 @@ public class MonoSdkType extends DotNetSdkType
 	@Override
 	public String suggestHomePath()
 	{
+		if(SystemInfo.isMac)
+		{
+			return "/Library/Frameworks/Mono.framework/Home/";
+		}
 		return null;
 	}
 
