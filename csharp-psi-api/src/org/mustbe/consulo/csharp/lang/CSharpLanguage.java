@@ -22,7 +22,7 @@ import com.intellij.lang.LanguageVersion;
 
 /**
  * @author VISTALL
- * @since 22.11.13.
+ * @since 22.11.13
  */
 public class CSharpLanguage extends Language
 {
