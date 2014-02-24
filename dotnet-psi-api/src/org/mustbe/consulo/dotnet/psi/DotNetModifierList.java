@@ -35,6 +35,8 @@ public interface DotNetModifierList extends DotNetElement
 
 	boolean hasModifier(@NotNull DotNetModifier modifier);
 
+	boolean hasModifierInTree(@NotNull DotNetModifier modifier);
+
 	@Nullable
 	PsiElement getModifier(IElementType elementType);
 }
