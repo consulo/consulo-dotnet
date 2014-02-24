@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
+import com.intellij.openapi.vfs.LocalFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
@@ -129,7 +130,9 @@ public class MonoSdkType extends DotNetSdkType
 		else if(SystemInfo.isWindows || SystemInfo.isMac)
 		{
 			FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-			VirtualFile monoDir = FileChooser.chooseFile(singleFolderDescriptor, null, null);
+            val toSelectPath = suggestHomePath();
+            val toSelect = toSelectPath == null ? null : LocalFileSystem.getInstance().findFileByPath(toSelectPath);
+			VirtualFile monoDir = FileChooser.chooseFile(singleFolderDescriptor, null, toSelect);
 			if(monoDir == null)
 			{
 				return;
