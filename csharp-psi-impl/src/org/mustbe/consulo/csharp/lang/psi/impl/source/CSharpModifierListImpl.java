@@ -25,7 +25,9 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
@@ -86,11 +88,11 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 	public DotNetModifier[] getModifiers()
 	{
 		List<DotNetModifier> list = new ArrayList<DotNetModifier>();
-		for(Map.Entry<DotNetModifier, IElementType> entry : ourModifiers.entrySet())
+		for(DotNetModifier dotNetModifier : ourModifiers.keySet())
 		{
-			if(findChildByType(entry.getValue()) != null)
+			if(hasModifier(dotNetModifier))
 			{
-				list.add(entry.getKey());
+				list.add(dotNetModifier);
 			}
 		}
 		return list.toArray(new DotNetModifier[list.size()]);
@@ -98,6 +100,30 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	{
+		if(hasModifierInTree(modifier))
+		{
+			return true;
+		}
+
+		PsiElement parent = getParent();
+		switch(modifier)
+		{
+			case STATIC:
+				if(parent instanceof CSharpFieldDeclaration)
+				{
+					if(((CSharpFieldDeclaration) parent).isConstant() && parent.getParent() instanceof CSharpTypeDeclaration)
+					{
+						return true;
+					}
+				}
+				break;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean hasModifierInTree(@NotNull DotNetModifier modifier)
 	{
 		IElementType iElementType = ourModifiers.get(modifier);
 		return iElementType != null && findChildByType(iElementType) != null;

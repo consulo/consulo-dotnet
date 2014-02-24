@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 
@@ -40,9 +41,15 @@ public class CSharpTypeCastExpressionImpl extends CSharpElementImpl implements D
 	}
 
 	@NotNull
+	public DotNetType getType()
+	{
+		return findNotNullChildByClass(DotNetType.class);
+	}
+
+	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		return getType().toTypeRef();
 	}
 }
