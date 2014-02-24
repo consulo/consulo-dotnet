@@ -209,13 +209,26 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					return ResolveResult.EMPTY_ARRAY;
 				}
-				val text = StringUtil.strip(referenceName, CharFilter.NOT_WHITESPACE_FILTER) + "Attribute";
 				namedElementCondition = new Condition<PsiNamedElement>()
 				{
 					@Override
 					public boolean value(PsiNamedElement netNamedElement)
 					{
-						return Comparing.equal(text, netNamedElement.getName());
+						String candinateName = netNamedElement.getName();
+						if(candinateName == null)
+						{
+							return false;
+						}
+						if(Comparing.equal(referenceName, candinateName))
+						{
+							return true;
+						}
+
+						if(candinateName.endsWith("Attribute") && Comparing.equal(referenceName + "Attribute", netNamedElement.getName()))
+						{
+							return true;
+						}
+						return false;
 					}
 				};
 				break;
