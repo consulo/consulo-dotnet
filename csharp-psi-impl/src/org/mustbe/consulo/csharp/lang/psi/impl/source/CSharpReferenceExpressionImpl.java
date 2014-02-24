@@ -42,6 +42,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespa
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -105,6 +106,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		ANY_MEMBER,
 		FIELD_OR_PROPERTY,
 		THIS,
+		BASE,
 		LABEL
 	}
 
@@ -198,38 +200,48 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	private ResolveResult[] multiResolve0(boolean incompleteCode)
 	{
 		val kind = kind();
-		final String text;
+		Condition<PsiNamedElement> namedElementCondition;
 		switch(kind)
 		{
 			case ATTRIBUTE:
-				String referenceName = getReferenceName();
+				val referenceName = getReferenceName();
 				if(referenceName == null)
 				{
 					return ResolveResult.EMPTY_ARRAY;
 				}
-				text = StringUtil.strip(referenceName, CharFilter.NOT_WHITESPACE_FILTER) + "Attribute";
+				val text = StringUtil.strip(referenceName, CharFilter.NOT_WHITESPACE_FILTER) + "Attribute";
+				namedElementCondition = new Condition<PsiNamedElement>()
+				{
+					@Override
+					public boolean value(PsiNamedElement netNamedElement)
+					{
+						return Comparing.equal(text, netNamedElement.getName());
+					}
+				};
 				break;
 			case NATIVE_TYPE_WRAPPER:
 			case THIS:
-				text = "";
+			case BASE:
+				namedElementCondition = Conditions.alwaysTrue();
 				break;
 			default:
-				String referenceName2 = getReferenceName();
+				val referenceName2 = getReferenceName();
 				if(referenceName2 == null)
 				{
 					return ResolveResult.EMPTY_ARRAY;
 				}
-				text = StringUtil.strip(referenceName2, CharFilter.NOT_WHITESPACE_FILTER);
+				val text2 = StringUtil.strip(referenceName2, CharFilter.NOT_WHITESPACE_FILTER);
+				namedElementCondition = new Condition<PsiNamedElement>()
+				{
+					@Override
+					public boolean value(PsiNamedElement netNamedElement)
+					{
+						return Comparing.equal(text2, netNamedElement.getName());
+					}
+				};
 				break;
 		}
-		val psiElements = collectResults(kind, new Condition<PsiNamedElement>()
-		{
-			@Override
-			public boolean value(PsiNamedElement netNamedElement)
-			{
-				return Comparing.equal(text, netNamedElement.getName());
-			}
-		}, incompleteCode);
+		val psiElements = collectResults(kind, namedElementCondition, incompleteCode);
 
 		Condition<PsiElement> newCond = Conditions.alwaysTrue();
 		switch(kind)
@@ -318,6 +330,14 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				if(typeDeclaration != null)
 				{
 					return Collections.singletonList(typeDeclaration);
+				}
+				break;
+			case BASE:
+				DotNetTypeRef baseDotNetTypeRef = resolveBaseTypeRef();
+				PsiElement baseElement = baseDotNetTypeRef.resolve(this);
+				if(baseElement != null)
+				{
+					return Collections.singletonList(baseElement);
 				}
 				break;
 			case TYPE_PARAMETER_FROM_PARENT:
@@ -473,6 +493,37 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return p.getElements();
 	}
 
+	@NotNull
+	private DotNetTypeRef resolveBaseTypeRef()
+	{
+		DotNetTypeDeclaration typeDeclaration = PsiTreeUtil.getParentOfType(this, DotNetTypeDeclaration.class);
+		if(typeDeclaration == null)
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+
+		DotNetType[] anExtends = typeDeclaration.getExtends();
+		if(anExtends.length == 0)
+		{
+			return new CSharpTypeDefTypeRef(DotNetTypes.System_Object, 0);
+		}
+		else
+		{
+			for(DotNetType anExtend : anExtends)
+			{
+				DotNetTypeRef dotNetTypeRef = anExtend.toTypeRef();
+
+				PsiElement resolve = dotNetTypeRef.resolve(this);
+				if(resolve instanceof DotNetTypeDeclaration && !((DotNetTypeDeclaration) resolve).isInterface())
+				{
+					return dotNetTypeRef;
+				}
+			}
+
+			return new CSharpTypeDefTypeRef(DotNetTypes.System_Object, 0);
+		}
+	}
+
 	@Nullable
 	@Override
 	public PsiElement resolve()
@@ -484,8 +535,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@NotNull
 	private ResolveToKind kind()
 	{
-		PsiElement parent = getParent();
-		if(parent instanceof CSharpGenericConstraintImpl)
+		PsiElement tempElement = getParent();
+		if(tempElement instanceof CSharpGenericConstraintImpl)
 		{
 			DotNetGenericParameterListOwner parameterListOwner = PsiTreeUtil.getParentOfType(this, DotNetGenericParameterListOwner.class);
 			if(parameterListOwner == null)
@@ -495,31 +546,31 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 			return ResolveToKind.TYPE_PARAMETER_FROM_PARENT;
 		}
-		else if(parent instanceof CSharpNamespaceDeclarationImpl)
+		else if(tempElement instanceof CSharpNamespaceDeclarationImpl)
 		{
 			return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
 		}
-		else if(parent instanceof DotNetReferenceType)
+		else if(tempElement instanceof DotNetReferenceType)
 		{
 			return ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD;
 		}
-		else if(parent instanceof CSharpUsingNamespaceStatementImpl)
+		else if(tempElement instanceof CSharpUsingNamespaceStatementImpl)
 		{
 			assert true;
 			return ResolveToKind.NAMESPACE;
 		}
-		else if(parent instanceof CSharpAttributeImpl)
+		else if(tempElement instanceof CSharpAttributeImpl)
 		{
 			return ResolveToKind.ATTRIBUTE;
 		}
-		else if(parent instanceof CSharpFieldOrPropertySet)
+		else if(tempElement instanceof CSharpFieldOrPropertySet)
 		{
-			if(((CSharpFieldOrPropertySet) parent).getNameReferenceExpression() == this)
+			if(((CSharpFieldOrPropertySet) tempElement).getNameReferenceExpression() == this)
 			{
 				return ResolveToKind.FIELD_OR_PROPERTY;
 			}
 		}
-		else if(parent instanceof CSharpReferenceExpressionImpl)
+		else if(tempElement instanceof CSharpReferenceExpressionImpl)
 		{
 			CSharpNamespaceDeclarationImpl netNamespaceDeclaration = PsiTreeUtil.getParentOfType(this, CSharpNamespaceDeclarationImpl.class);
 			if(netNamespaceDeclaration != null)
@@ -546,25 +597,30 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return ResolveToKind.NAMESPACE;
 			}
 		}
-		else if(parent instanceof CSharpMethodCallExpressionImpl)
+		else if(tempElement instanceof CSharpMethodCallExpressionImpl)
 		{
 			return ResolveToKind.METHOD;
 		}
-		else if(parent instanceof CSharpGotoStatementImpl)
+		else if(tempElement instanceof CSharpGotoStatementImpl)
 		{
 			return ResolveToKind.LABEL;
 		}
 
-		PsiElement nativeElement = findChildByType(CSharpTokenSets.NATIVE_TYPES);
-		if(nativeElement != null)
+		tempElement = findChildByType(CSharpTokenSets.NATIVE_TYPES);
+		if(tempElement != null)
 		{
 			return ResolveToKind.NATIVE_TYPE_WRAPPER;
 		}
 
-		PsiElement childByType = findChildByType(CSharpTokens.THIS_KEYWORD);
-		if(childByType != null)
+		tempElement = findChildByType(CSharpTokens.THIS_KEYWORD);
+		if(tempElement != null)
 		{
 			return ResolveToKind.THIS;
+		}
+		tempElement = findChildByType(CSharpTokens.BASE_KEYWORD);
+		if(tempElement != null)
+		{
+			return ResolveToKind.BASE;
 		}
 		return ResolveToKind.ANY_MEMBER;
 	}
@@ -631,6 +687,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
+		ResolveToKind kind = kind();
+		switch(kind)
+		{
+			case BASE:
+				return resolveBaseTypeRef();
+		}
+
 		PsiElement resolve = resolve();
 		if(resolve instanceof CSharpNamespaceAsElement)
 		{
