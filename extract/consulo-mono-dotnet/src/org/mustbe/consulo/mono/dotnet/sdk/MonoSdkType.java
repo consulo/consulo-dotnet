@@ -57,6 +57,12 @@ public class MonoSdkType extends DotNetSdkType
 {
 	public static final String LINUX_COMPILER = "/usr/bin/mcs";
 
+	@NotNull
+	public static MonoSdkType getInstance()
+	{
+		return findInstance(MonoSdkType.class);
+	}
+
 	public MonoSdkType()
 	{
 		super("MONO_DOTNET_SDK");
