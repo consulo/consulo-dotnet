@@ -323,10 +323,8 @@ public class StatementParsing extends SharingParsingHelpers
 	{
 		builder.advanceLexer();
 
-		if(ExpressionParsing.parse(builder) == null)
-		{
-			builder.error("Expression expected");
-		}
+		ExpressionParsing.parse(builder);
+
 		expect(builder, SEMICOLON, "';' expected");
 		marker.done(THROW_STATEMENT);
 	}
