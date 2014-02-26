@@ -474,4 +474,14 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(expression);
 	}
+
+	public void visitSwitchStatement(CSharpSwitchStatementImpl statement)
+	{
+		visitElement(statement);
+	}
+
+	public void visitSwitchLabelStatement(CSharpSwitchLabelStatementImpl statement)
+	{
+		visitElement(statement);
+	}
 }

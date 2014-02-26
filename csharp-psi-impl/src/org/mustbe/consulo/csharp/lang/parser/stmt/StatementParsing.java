@@ -147,6 +147,15 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			parseUsingOrFixed(wrapper, marker, FIXED_STATEMENT);
 		}
+		else if(tokenType == CASE_KEYWORD ||
+				tokenType == DEFAULT_KEYWORD && wrapper.lookAhead(1) == COLON)  // accept with colon only, default can be expression
+		{
+			parseSwitchLabel(wrapper, marker, tokenType == CASE_KEYWORD);
+		}
+		else if(tokenType == SWITCH_KEYWORD)
+		{
+			parseSwitch(wrapper, marker);
+		}
 		else if(tokenType == CONST_KEYWORD)
 		{
 			PsiBuilder.Marker varMark = wrapper.mark();
@@ -364,6 +373,43 @@ public class StatementParsing extends SharingParsingHelpers
 		parseStatement(builder);
 
 		marker.done(FOR_STATEMENT);
+	}
+
+	private static void parseSwitch(@NotNull CSharpBuilderWrapper builder, PsiBuilder.Marker marker)
+	{
+		builder.advanceLexer();
+
+		if(!parseExpressionInParenth(builder))
+		{
+			builder.error("Expression expected");
+		}
+
+		if(builder.getTokenType() == LBRACE)
+		{
+			parseStatement(builder);
+		}
+		else
+		{
+			builder.error("'{' expected");
+		}
+		marker.done(SWITCH_STATEMENT);
+	}
+
+	private static void parseSwitchLabel(@NotNull CSharpBuilderWrapper builder, PsiBuilder.Marker marker, boolean caseLabel)
+	{
+		builder.advanceLexer();
+
+		if(caseLabel)
+		{
+			if(ExpressionParsing.parse(builder) == null)
+			{
+				builder.error("Expression expected");
+			}
+		}
+
+		expect(builder, COLON, "':' expected");
+
+		marker.done(SWITCH_LABEL_STATEMENT);
 	}
 
 	private static void parseUsingOrFixed(@NotNull CSharpBuilderWrapper builder, final PsiBuilder.Marker marker, IElementType to)

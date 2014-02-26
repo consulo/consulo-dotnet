@@ -193,6 +193,10 @@ MACRO_START={MACRO_NEW_LINE}?{MACRO_WHITE_SPACE}?"#"
 
 	"is"                      { return CSharpTokens.IS_KEYWORD; }
 
+	"switch"                  { return CSharpTokens.SWITCH_KEYWORD; }
+
+	"case"                    { return CSharpTokens.CASE_KEYWORD; }
+
 	"default"                 { return CSharpTokens.DEFAULT_KEYWORD; }
 
 	"as"                      { return CSharpTokens.AS_KEYWORD; }

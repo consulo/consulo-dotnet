@@ -120,6 +120,10 @@ public interface CSharpTokens extends TokenType
 
 	IElementType FINALLY_KEYWORD = new IElementType("FINALLY_KEYWORD", CSharpLanguage.INSTANCE);
 
+	IElementType SWITCH_KEYWORD = new IElementType("SWITCH_KEYWORD", CSharpLanguage.INSTANCE);
+
+	IElementType CASE_KEYWORD = new IElementType("CASE_KEYWORD", CSharpLanguage.INSTANCE);
+
 	IElementType THROW_KEYWORD = new IElementType("THROW_KEYWORD", CSharpLanguage.INSTANCE);
 
 	IElementType IN_KEYWORD = new IElementType("IN_KEYWORD", CSharpLanguage.INSTANCE);

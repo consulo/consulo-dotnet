@@ -212,6 +212,11 @@ public interface CSharpElements
 
 	IElementType FINALLY_STATEMENT = new IElementTypeAsPsiFactory("FINALLY_STATEMENT", CSharpLanguage.INSTANCE, CSharpFinallyStatementImpl.class);
 
+	IElementType SWITCH_STATEMENT = new IElementTypeAsPsiFactory("SWITCH_STATEMENT", CSharpLanguage.INSTANCE, CSharpSwitchStatementImpl.class);
+
+	IElementType SWITCH_LABEL_STATEMENT = new IElementTypeAsPsiFactory("SWITCH_LABEL_STATEMENT", CSharpLanguage.INSTANCE,
+			CSharpSwitchLabelStatementImpl.class);
+
 	IElementType THROW_STATEMENT = new IElementTypeAsPsiFactory("THROW_STATEMENT_STATEMENT", CSharpLanguage.INSTANCE,
 			CSharpThrowStatementImpl.class);
 
