@@ -36,5 +36,6 @@
 								 implementationClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtensionProvider"/>
 
 		<sdkType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
+		<bundledSdkProvider implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetBundledSdkProvider" />
 	</extensions>
 </idea-plugin>

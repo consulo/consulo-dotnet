@@ -62,6 +62,12 @@ import lombok.val;
  */
 public class MicrosoftDotNetSdkType extends DotNetSdkType
 {
+	@NotNull
+	public static MicrosoftDotNetSdkType getInstance()
+	{
+		return findInstance(MicrosoftDotNetSdkType.class);
+	}
+
 	public MicrosoftDotNetSdkType()
 	{
 		super("MICROSOFT_DOTNET_SDK");
@@ -93,9 +99,9 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	public String suggestSdkName(String s, String s2)
 	{
 		File file = new File(s2);
-		if(file.getParent().equalsIgnoreCase("Framework64"))
+		if(file.getParentFile().getName().equalsIgnoreCase("Framework64"))
 		{
-			return getPresentableName() + " " + file.getName() + "(64)";
+			return getPresentableName() + " " + file.getName() + " (64)";
 		}
 		else
 		{
@@ -196,6 +202,40 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 
 		File microNet = VfsUtil.virtualToIoFile(microNetVirtualFile);
 
+		List<Pair<String, File>> list = getValidSdkDirs(microNet);
+
+		val thisSdks = SdkTable.getInstance().getSdksOfType(this);
+		DefaultActionGroup actionGroup = new DefaultActionGroup();
+		for(val pair : list)
+		{
+			actionGroup.add(new AnAction(pair.getFirst())
+			{
+				@Override
+				public void actionPerformed(AnActionEvent anActionEvent)
+				{
+					val path = pair.getSecond();
+					val absolutePath = path.getAbsolutePath();
+
+					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MicrosoftDotNetSdkType.this, absolutePath, thisSdks);
+					SdkImpl sdk = new SdkImpl(uniqueSdkName, MicrosoftDotNetSdkType.this);
+					sdk.setVersionString(getVersionString(absolutePath));
+					sdk.setHomePath(absolutePath);
+
+					sdkCreatedCallback.consume(sdk);
+				}
+			});
+		}
+
+		DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
+
+		ListPopup choose = JBPopupFactory.getInstance().createActionGroupPopup("Choose", actionGroup, dataContext,
+				JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+
+		choose.showInCenterOf(parentComponent);
+	}
+
+	public List<Pair<String, File>> getValidSdkDirs(File microNet)
+	{
 		List<Pair<String, File>> list = new ArrayList<Pair<String, File>>();
 
 		File framework = new File(microNet, "Framework");
@@ -229,34 +269,6 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 				}
 			}
 		}
-
-		val thisSdks = SdkTable.getInstance().getSdksOfType(this);
-		DefaultActionGroup actionGroup = new DefaultActionGroup();
-		for(val pair : list)
-		{
-			actionGroup.add(new AnAction(pair.getFirst())
-			{
-				@Override
-				public void actionPerformed(AnActionEvent anActionEvent)
-				{
-					val path = pair.getSecond();
-					val absolutePath = path.getAbsolutePath();
-
-					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MicrosoftDotNetSdkType.this, absolutePath, thisSdks);
-					SdkImpl sdk = new SdkImpl(uniqueSdkName, MicrosoftDotNetSdkType.this);
-					sdk.setVersionString(getVersionString(absolutePath));
-					sdk.setHomePath(absolutePath);
-
-					sdkCreatedCallback.consume(sdk);
-				}
-			});
-		}
-
-		DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
-
-		ListPopup choose = JBPopupFactory.getInstance().createActionGroupPopup("Choose", actionGroup, dataContext,
-				JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
-
-		choose.showInCenterOf(parentComponent);
+		return list;
 	}
 }
