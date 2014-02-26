@@ -17,9 +17,15 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author VISTALL
@@ -36,5 +42,30 @@ public class CSharpCatchStatementImpl extends CSharpElementImpl implements DotNe
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitCatchStatement(this);
+	}
+
+	@Nullable
+	public CSharpLocalVariable getVariable()
+	{
+		return findChildByClass(CSharpLocalVariable.class);
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		if(lastParent == null || !PsiTreeUtil.isAncestor(this, lastParent, false))
+		{
+			return true;
+		}
+		CSharpLocalVariable variable = getVariable();
+		if(variable != null && variable.getNameIdentifier() != null)   // variable can be without name
+		{
+			if(!processor.execute(variable, state))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }

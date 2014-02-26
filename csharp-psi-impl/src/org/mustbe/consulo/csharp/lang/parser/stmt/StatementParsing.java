@@ -258,7 +258,19 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			builder.advanceLexer();
 
-			FieldOrPropertyParsing.parseFieldOrLocalVariableAtTypeWithDone(builder, builder.mark(), LOCAL_VARIABLE);
+			PsiBuilder.Marker varMarker = builder.mark();
+
+			if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+			{
+				builder.error("Type expected");
+				varMarker.drop();
+			}
+			else
+			{
+				expect(builder, IDENTIFIER, null);
+
+				varMarker.done(LOCAL_VARIABLE);
+			}
 
 			expect(builder, RPAR, "')' expected");
 		}
