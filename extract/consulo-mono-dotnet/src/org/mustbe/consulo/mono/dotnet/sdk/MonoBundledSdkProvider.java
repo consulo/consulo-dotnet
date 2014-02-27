@@ -16,15 +16,15 @@
 
 package org.mustbe.consulo.mono.dotnet.sdk;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.projectRoots.BundledSdkProvider;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.util.SystemInfo;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.util.ArrayList;
 
 /**
  * @author VISTALL
@@ -38,22 +38,37 @@ public class MonoBundledSdkProvider implements BundledSdkProvider
 	{
 		val monoSdkType = MonoSdkType.getInstance();
 		val list = new ArrayList<Sdk>();
+		File lib = null;
 		if(SystemInfo.isMac)
 		{
-			val lib = new File(monoSdkType.suggestHomePath(), "lib/mono");
-			for (File file : lib.listFiles())
+			lib = new File(monoSdkType.suggestHomePath(), "lib/mono");
+		}
+		else if(SystemInfo.isLinux)
+		{
+			File file = new File(MonoSdkType.LINUX_COMPILER);
+			if(file.exists())
 			{
-				if(monoSdkType.isValidSdkHome(file.getAbsolutePath()))
-				{
-					SdkImpl sdk = new SdkImpl(monoSdkType.suggestSdkName(null, file.getAbsolutePath()) + " " +
-							"(bundled)", monoSdkType);
-					sdk.setVersionString(file.getName());
-					sdk.setHomePath(file.getAbsolutePath());
+				lib = new File("/usr/lib/mono");
+			}
+		}
 
-					monoSdkType.setupSdkPaths(sdk);
+		if(lib == null || !lib.exists())
+		{
+			return Sdk.EMPTY_ARRAY;
+		}
 
-					list.add(sdk);
-				}
+		for (File file : lib.listFiles())
+		{
+			if(monoSdkType.isValidSdkHome(file.getAbsolutePath()))
+			{
+				SdkImpl sdk = new SdkImpl(monoSdkType.suggestSdkName(null, file.getAbsolutePath()) + " " +
+						"(bundled)", monoSdkType);
+				sdk.setVersionString(file.getName());
+				sdk.setHomePath(file.getAbsolutePath());
+
+				monoSdkType.setupSdkPaths(sdk);
+
+				list.add(sdk);
 			}
 		}
 		return list.toArray(new Sdk[list.size()]);
