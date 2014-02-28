@@ -581,9 +581,17 @@ public class StubToStringBuilder
 			public String fun(ParameterSignature paramDef)
 			{
 				StringBuilder p = new StringBuilder();
+				ParameterInfo parameterInfo = paramDef.getParameterInfo();
+				for(CustomAttribute customAttribute : parameterInfo.getCustomAttributes())
+				{
+					String fullName = customAttribute.getConstructor().getParent().getFullName();
+					if(Comparing.equal(fullName, "System.ParamArrayAttribute"))
+					{
+						p.append("params ");
+					}
+				}
 				p.append(TypeToStringBuilder.typeToString(paramDef.getInnerType(), typeDef, methodDef));
 				p.append(" ");
-				ParameterInfo parameterInfo = paramDef.getParameterInfo();
 				p.append(toValidName(parameterInfo.getName(), ArrayUtil.indexOf(owner, paramDef)));
 
 				if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
