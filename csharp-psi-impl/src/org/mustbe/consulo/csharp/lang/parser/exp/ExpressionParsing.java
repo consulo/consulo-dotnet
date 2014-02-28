@@ -1020,11 +1020,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 				PsiBuilder.Marker marker = builder.mark();
 				builder.advanceLexer();
 
-				PsiBuilder.Marker expMarker = parse(builder);
-				if(expMarker == null)
-				{
-					builder.error("Expression expected");
-				}
+				parse(builder);
 
 				expect(builder, RBRACKET, "']' expected");
 				marker.done(ARRAY_ACCESS_EXPRESSION);
