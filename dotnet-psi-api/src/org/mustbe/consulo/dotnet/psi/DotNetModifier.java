@@ -29,6 +29,7 @@ public enum DotNetModifier
 	SEALED,
 	READONLY,
 	UNSAFE,
+	PARAMS,
 	ABSTRACT;
 
 	private int myMask;
