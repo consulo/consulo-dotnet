@@ -13,9 +13,11 @@ public class Test
 {
 	public static void main(String[] args) throws Exception
 	{
-		ModuleParser moduleParser = new ModuleParser(new FileInputStream("C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\System.ServiceModel.dll"));
+		ModuleParser moduleParser = new ModuleParser(new FileInputStream("C:\\Users\\VISTALL\\Documents\\visual studio " +
+				"2010\\Projects\\ConsoleApplication1\\ConsoleApplication1\\bin\\Debug\\ConsoleApplication1.dll"));
 
 		Module module = moduleParser.parseModule();
 
+		System.out.println(module);
 	}
 }

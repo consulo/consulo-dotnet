@@ -16,12 +16,14 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
@@ -29,6 +31,7 @@ import org.mustbe.consulo.dotnet.dll.vfs.DotNetFileArchiveEntry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.BitUtil;
 import com.intellij.util.Function;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
@@ -36,6 +39,8 @@ import edu.arizona.cs.mbel.mbel.*;
 import edu.arizona.cs.mbel.signature.CustomAttributeOwner;
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
+import edu.arizona.cs.mbel.signature.ParamAttributes;
+import edu.arizona.cs.mbel.signature.ParameterInfo;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
 import edu.arizona.cs.mbel.signature.TypeSignature;
@@ -45,6 +50,7 @@ import lombok.val;
  * @author VISTALL
  * @since 12.12.13.
  */
+@Logger
 public class StubToStringBuilder
 {
 	private static final String CONSTRUCTOR_NAME = ".ctor";
@@ -577,11 +583,39 @@ public class StubToStringBuilder
 				StringBuilder p = new StringBuilder();
 				p.append(TypeToStringBuilder.typeToString(paramDef.getInnerType(), typeDef, methodDef));
 				p.append(" ");
-				p.append(toValidName(paramDef.getParameterInfo().getName(), ArrayUtil.indexOf(owner, paramDef)));
+				ParameterInfo parameterInfo = paramDef.getParameterInfo();
+				p.append(toValidName(parameterInfo.getName(), ArrayUtil.indexOf(owner, paramDef)));
+
+				if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
+				{
+					p.append(" = ");
+					p.append(toValue(paramDef.getInnerType(), parameterInfo.getDefaultValue()));
+				}
 				return p.toString();
 			}
 		}, ", ");
 		builder.append("(").append(text).append(")");
+	}
+
+	private static Object toValue(TypeSignature signature, byte[] value)
+	{
+		if(signature == TypeSignature.STRING)
+		{
+			try
+			{
+				return StringUtil.QUOTER.fun(new String(value, "UTF-8"));
+			}
+			catch(UnsupportedEncodingException e)
+			{
+				LOGGER.error(e);
+			}
+		}
+		else
+		{
+			LOGGER.error(signature);
+		}
+
+		return StringUtil.QUOTER.fun("error");
 	}
 
 	/**
