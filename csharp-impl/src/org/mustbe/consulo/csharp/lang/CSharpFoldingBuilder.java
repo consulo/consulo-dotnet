@@ -37,7 +37,10 @@ import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.tree.IElementType;
 import lombok.val;
 
 /**
@@ -117,11 +120,74 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 				}
 				addBodyWithBraces(foldingList, statement);
 			}
+
+			@Override
+			public void visitComment(PsiComment comment)
+			{
+				int start = comment.getStartOffsetInParent();
+
+				int end = 0;
+
+				IElementType tokenType = comment.getTokenType();
+				if(tokenType == CSharpTokens.BLOCK_COMMENT)
+				{
+					end = start + comment.getTextLength();
+				}
+				else
+				{
+					PsiElement prevSibling = comment.getPrevSibling();
+					if(isAcceptableComment(prevSibling, tokenType) || prevSibling != null && isAcceptableComment(prevSibling.getNextSibling(),
+							tokenType))
+					{
+						return;
+					}
+
+					PsiElement lastComment = findLastComment(comment, tokenType);
+					end = lastComment.getTextRange().getEndOffset();
+				}
+				foldingList.add(new FoldingDescriptor(comment, new TextRange(start, end)));
+			}
 		});
 		return foldingList.toArray(new FoldingDescriptor[foldingList.size()]);
 	}
 
-	private void addBodyWithBraces(List<FoldingDescriptor> list, CSharpBodyWithBraces bodyWithBraces)
+	private static PsiElement findLastComment(PsiElement element, IElementType elementType)
+	{
+		PsiElement target = element;
+		PsiElement nextSibling = element.getNextSibling();
+		while(nextSibling != null)
+		{
+			if(isAcceptableComment(nextSibling, elementType))
+			{
+				if(nextSibling instanceof PsiWhiteSpace)
+				{
+					target = nextSibling.getPrevSibling();
+				}
+				else
+				{
+					target = nextSibling;
+				}
+				nextSibling = nextSibling.getNextSibling();
+			}
+			else
+			{
+				return target;
+			}
+		}
+		return element;
+	}
+
+	private static boolean isAcceptableComment(PsiElement nextSibling, IElementType elementType)
+	{
+		if(nextSibling == null)
+		{
+			return false;
+		}
+		return nextSibling instanceof PsiWhiteSpace || (nextSibling instanceof PsiComment && ((PsiComment) nextSibling).getTokenType() ==
+				elementType);
+	}
+
+	private static void addBodyWithBraces(List<FoldingDescriptor> list, CSharpBodyWithBraces bodyWithBraces)
 	{
 		PsiElement leftBrace = bodyWithBraces.getLeftBrace();
 		PsiElement rightBrace = bodyWithBraces.getRightBrace();
@@ -148,6 +214,22 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		{
 			return "{...}";
 		}
+		else if(psi instanceof PsiComment)
+		{
+			IElementType tokenType = ((PsiComment) psi).getTokenType();
+			if(tokenType == CSharpTokens.LINE_DOC_COMMENT)
+			{
+				return "/// ...";
+			}
+			else if(tokenType == CSharpTokens.LINE_COMMENT)
+			{
+				return "// ...";
+			}
+			else if(tokenType == CSharpTokens.BLOCK_COMMENT)
+			{
+				return "/** ... */";
+			}
+		}
 		return null;
 	}
 
@@ -156,6 +238,10 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 	{
 		PsiElement psi = astNode.getPsi();
 		if(psi instanceof CSharpUsingListImpl)
+		{
+			return true;
+		}
+		else if(psi.getPrevSibling() == null)
 		{
 			return true;
 		}
