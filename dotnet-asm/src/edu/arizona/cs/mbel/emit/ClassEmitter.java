@@ -971,7 +971,7 @@ public class ClassEmitter
 			long paramStart = ParamCount;
 			if(method.getSignature().getReturnType().getParameterInfo() != null)
 			{
-				addParam(method.getSignature().getReturnType().getParameterInfo(), 0, method.getSignature().getReturnType().getType().getType());
+				addParam(method.getSignature().getReturnType().getParameterInfo(), 0, method.getSignature().getReturnType().getInnerType().getType());
 			}
 			for(int i = 0; i < parameters.length; i++)
 			{

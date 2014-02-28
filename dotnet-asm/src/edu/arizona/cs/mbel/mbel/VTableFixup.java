@@ -109,8 +109,8 @@ public class VTableFixup
 	}
 
 	/**
-	 * Tests one of the flags in getType;
-	 * Returns true iff getType() & COR_VTABLE_64BIT
+	 * Tests one of the flags in getInnerType;
+	 * Returns true iff getInnerType() & COR_VTABLE_64BIT
 	 */
 	public boolean is64Bit()
 	{

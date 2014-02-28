@@ -22,6 +22,7 @@ package edu.arizona.cs.mbel.signature;
 
 import java.util.Vector;
 
+import org.jetbrains.annotations.Nullable;
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
@@ -31,7 +32,7 @@ import edu.arizona.cs.mbel.mbel.TypeGroup;
  *
  * @author Michael Stepp
  */
-public class ReturnTypeSignature extends Signature
+public class ReturnTypeSignature extends Signature implements InnerTypeOwner
 {
 	private ParameterInfo paramInfo;
 	// Signature fields
@@ -174,7 +175,9 @@ public class ReturnTypeSignature extends Signature
 	/**
 	 * Returns the type signature for this return type (may be null)
 	 */
-	public TypeSignature getType()
+	@Nullable
+	@Override
+	public TypeSignature getInnerType()
 	{
 		return type;
 	}

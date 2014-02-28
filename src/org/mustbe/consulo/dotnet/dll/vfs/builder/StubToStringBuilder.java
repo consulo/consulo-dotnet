@@ -511,14 +511,14 @@ public class StubToStringBuilder
 				if(operator && (name.equals("explicit") || name.equals("implicit")))
 				{
 					builder.append(name);
-					parameterType = methodDef.getSignature().getReturnType().getType();
+					parameterType = methodDef.getSignature().getReturnType().getInnerType();
 
 					// name is first parameter type
 					name = TypeToStringBuilder.typeToString(methodDef.getSignature().getParameters()[0].getInnerType(), typeDef, methodDef);
 				}
 				else
 				{
-					builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getType(), typeDef, methodDef));
+					builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getInnerType(), typeDef, methodDef));
 				}
 
 				builder.append(" ");
@@ -578,10 +578,16 @@ public class StubToStringBuilder
 		String text = StringUtil.join(owner, new Function<ParameterSignature, String>()
 		{
 			@Override
-			public String fun(ParameterSignature paramDef)
+			public String fun(ParameterSignature parameterSignature)
 			{
+				TypeSignature signature = parameterSignature;
+				if(signature.getType() == 0)
+				{
+					signature = parameterSignature.getInnerType();
+				}
+
 				StringBuilder p = new StringBuilder();
-				ParameterInfo parameterInfo = paramDef.getParameterInfo();
+				ParameterInfo parameterInfo = parameterSignature.getParameterInfo();
 				for(CustomAttribute customAttribute : parameterInfo.getCustomAttributes())
 				{
 					String fullName = customAttribute.getConstructor().getParent().getFullName();
@@ -594,16 +600,18 @@ public class StubToStringBuilder
 				if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.Out))
 				{
 					p.append("out ");
+
+					signature = parameterSignature.getInnerType();
 				}
 
-				p.append(TypeToStringBuilder.typeToString(paramDef.getInnerType(), typeDef, methodDef));
+				p.append(TypeToStringBuilder.typeToString(signature, typeDef, methodDef));
 				p.append(" ");
-				p.append(toValidName(parameterInfo.getName(), ArrayUtil.indexOf(owner, paramDef)));
+				p.append(toValidName(parameterInfo.getName(), ArrayUtil.indexOf(owner, parameterSignature)));
 
 				if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
 				{
 					p.append(" = ");
-					p.append(toValue(paramDef.getInnerType(), parameterInfo.getDefaultValue()));
+					p.append(toValue(signature, parameterInfo.getDefaultValue()));
 				}
 				return p.toString();
 			}

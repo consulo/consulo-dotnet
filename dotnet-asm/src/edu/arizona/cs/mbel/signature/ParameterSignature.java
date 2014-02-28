@@ -22,6 +22,7 @@ package edu.arizona.cs.mbel.signature;
 
 import java.util.Vector;
 
+import org.jetbrains.annotations.Nullable;
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
@@ -31,7 +32,7 @@ import edu.arizona.cs.mbel.mbel.TypeGroup;
  *
  * @author Michael Stepp
  */
-public class ParameterSignature extends TypeSignature
+public class ParameterSignature extends TypeSignature implements InnerTypeOwner
 {
 	private Vector customMods;   // CustomModifierSignatures
 	private TypeSignature type;
@@ -151,6 +152,8 @@ public class ParameterSignature extends TypeSignature
 	/**
 	 * Getter method for the type of this parameter (can be null)
 	 */
+	@Override
+	@Nullable
 	public TypeSignature getInnerType()
 	{
 		return type;
@@ -161,6 +164,7 @@ public class ParameterSignature extends TypeSignature
 	 *
 	 * @param buffer the buffer to write to
 	 */
+	@Override
 	public void emit(ByteBuffer buffer, ClassEmitter emitter)
 	{
 		for(Object customMod : customMods)

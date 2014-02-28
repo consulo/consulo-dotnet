@@ -75,7 +75,7 @@ public class PyConstructorArgumentCompletionContributor extends CompletionContri
       else if (method.getName().startsWith("add") && method.getName().endsWith("Listener") && PsiType.VOID.equals(method.getReturnType())) {
         final PsiParameter[] parameters = method.getParameterList().getParameters();
         if (parameters.length == 1) {
-          final PsiType type = parameters[0].getType();
+          final PsiType type = parameters[0].getInnerType();
           if (type instanceof PsiClassType) {
             final PsiClass parameterClass = ((PsiClassType)type).resolve();
             if (parameterClass != null) {

@@ -22,6 +22,7 @@ import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.mbel.TypeSpec;
 import edu.arizona.cs.mbel.signature.ClassTypeSignature;
+import edu.arizona.cs.mbel.signature.InnerTypeOwner;
 import edu.arizona.cs.mbel.signature.PointerTypeSignature;
 import edu.arizona.cs.mbel.signature.SZArrayTypeSignature;
 import edu.arizona.cs.mbel.signature.SignatureConstants;
@@ -97,6 +98,10 @@ public class TypeToStringBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_U:
 				builder.append(DotNetTypes.System_UIntPtr);
+				break;
+			case ELEMENT_TYPE_BYREF:
+				builder.append("ref ");
+				builder.append(typeToString(((InnerTypeOwner) signature).getInnerType(), typeDef, memberDef));
 				break;
 			case ELEMENT_TYPE_PTR:
 				PointerTypeSignature pointerTypeSignature = (PointerTypeSignature) signature;
