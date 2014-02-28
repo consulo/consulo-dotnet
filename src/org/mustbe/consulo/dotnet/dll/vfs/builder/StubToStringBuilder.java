@@ -624,6 +624,10 @@ public class StubToStringBuilder
 				LOGGER.error(e);
 			}
 		}
+		else if(signature == TypeSignature.BOOLEAN)
+		{
+			return value[0] == 1;
+		}
 		else
 		{
 			LOGGER.error(signature);
