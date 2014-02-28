@@ -17,15 +17,11 @@
 package org.mustbe.consulo.csharp.lang.parser;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
 import org.mustbe.consulo.csharp.lang.parser.decl.DeclarationParsing;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.resolve.FileContextUtil;
 import com.intellij.psi.tree.IElementType;
 import lombok.val;
 
@@ -39,16 +35,8 @@ public class CSharpParser extends SharingParsingHelpers implements PsiParser
 	@Override
 	public ASTNode parse(@NotNull IElementType elementType, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
 	{
-		PsiFile data = builder.getUserDataUnprotected(FileContextUtil.CONTAINING_FILE_KEY);
-		assert data != null;
-
-		FileViewProvider viewProvider = data.getViewProvider();
-
-		PsiFile psi = viewProvider.getPsi(CSharpMacroLanguage.INSTANCE);
-
-
 		//builder.setDebugMode(true);
-		val builderWrapper = new CSharpBuilderWrapper(builder, psi);
+		val builderWrapper = new CSharpBuilderWrapper(builder);
 
 		val marker = builderWrapper.mark();
 

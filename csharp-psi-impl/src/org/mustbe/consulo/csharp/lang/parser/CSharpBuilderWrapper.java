@@ -26,9 +26,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.impl.PsiBuilderAdapter;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 
@@ -50,12 +47,10 @@ public class CSharpBuilderWrapper extends PsiBuilderAdapter
 	}
 
 	private TokenSet mySoftSet = TokenSet.EMPTY;
-	private PsiFile myMacroFile;
 
-	public CSharpBuilderWrapper(PsiBuilder delegate, PsiFile psi)
+	public CSharpBuilderWrapper(PsiBuilder delegate)
 	{
 		super(delegate);
-		myMacroFile = psi;
 	}
 
 	public void enableSoftKeywords(@NotNull TokenSet tokenSet)
@@ -127,11 +122,6 @@ public class CSharpBuilderWrapper extends PsiBuilderAdapter
 		{
 			return tokenType;
 		}
-		if(isNonActive())
-		{
-			remapCurrentToken(CSharpTokens.NON_ACTIVE_SYMBOL);
-			return CSharpTokens.NON_ACTIVE_SYMBOL;
-		}
 
 		if(tokenType == CSharpTokens.IDENTIFIER)
 		{
@@ -148,41 +138,6 @@ public class CSharpBuilderWrapper extends PsiBuilderAdapter
 			tokenType = getTokenType();
 		}
 		return tokenType;
-	}
-
-	private boolean isNonActive()
-	{
-		int currentOffset = getCurrentOffset();
-
-		if(myMacroFile == null)
-		{
-			return false;
-		}
-
-		// dont call myMacroFile.findElementAt - it ill throw stackoverflow
-		PsiElement elementAt = SingleRootFileViewProvider.findElementAt(myMacroFile, currentOffset);
-
-		if(elementAt == null)
-		{
-			return false;
-		}
-
-		boolean nonActive = false;
-
-	/*	PsiElement parent = elementAt.getParent();
-		while(parent != null)
-		{
-			if(parent instanceof PsiFile)
-			{
-				break;
-			}
-			parent = parent.getParent();
-		}    */
-	//	if(myMacroFile.getName().equals("Program.cs"))
-		{
-			//System.out.println(new PsiTreeDebugBuilder().psiToString(myMacroFile));
-		}
-		return nonActive;
 	}
 
 	@Override
