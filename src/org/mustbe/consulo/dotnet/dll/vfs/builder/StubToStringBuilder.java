@@ -590,6 +590,12 @@ public class StubToStringBuilder
 						p.append("params ");
 					}
 				}
+
+				if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.Out))
+				{
+					p.append("out ");
+				}
+
 				p.append(TypeToStringBuilder.typeToString(paramDef.getInnerType(), typeDef, methodDef));
 				p.append(" ");
 				p.append(toValidName(parameterInfo.getName(), ArrayUtil.indexOf(owner, paramDef)));
