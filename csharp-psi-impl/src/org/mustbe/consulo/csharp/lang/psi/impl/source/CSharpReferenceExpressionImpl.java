@@ -190,14 +190,14 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			@Override
 			public Result<ResolveResult[]> compute()
 			{
-				return Result.create(multiResolve0(false), PsiModificationTracker.MODIFICATION_COUNT);
+				return Result.create(multiResolve0(true), PsiModificationTracker.MODIFICATION_COUNT);
 			}
 		}, false);
 
 		return myValue.getValue();
 	}
 
-	private ResolveResult[] multiResolve0(boolean incompleteCode)
+	private ResolveResult[] multiResolve0(boolean named)
 	{
 		val kind = kind();
 		Condition<PsiNamedElement> namedElementCondition;
@@ -254,7 +254,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				};
 				break;
 		}
-		val psiElements = collectResults(kind, namedElementCondition, incompleteCode);
+		val psiElements = collectResults(kind, namedElementCondition, named);
 
 		Condition<PsiElement> newCond = Conditions.alwaysTrue();
 		switch(kind)
@@ -304,7 +304,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			boolean value = newCond.value(resolveResult);
 
-			if(!incompleteCode && value || incompleteCode)
+			if(!named && value || named)
 			{
 				list.add(new PsiElementResolveResult(resolveResult, value));
 			}
@@ -314,7 +314,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	}
 
 	private Collection<? extends PsiElement> collectResults(@NotNull ResolveToKind kind, Condition<PsiNamedElement> condition,
-			final boolean incompleteCode)
+			final boolean named)
 	{
 		if(!isValid())
 		{
@@ -408,7 +408,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					{
 						return psiNamedElement instanceof CSharpFieldDeclaration || psiNamedElement instanceof CSharpPropertyDeclaration;
 					}
-				}), incompleteCode);
+				}), named);
 				CSharpResolveUtil.walkChildren(p, psiElement1, this, null, resolveState);
 				return p.getElements();
 			case LABEL:
@@ -421,7 +421,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					{
 						return psiNamedElement instanceof CSharpLabeledStatementImpl;
 					}
-				}), incompleteCode);
+				}), named);
 				CSharpResolveUtil.treeWalkUp(p, this, this, parentOfType);
 				return p.getElements();
 			case NAMESPACE:
@@ -437,7 +437,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return Collections.<PsiElement>singletonList(new CSharpNamespaceAsElement(getProject(), qName2, getResolveScope()));
 			case ATTRIBUTE:
 				condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);
-				val resolveResults = processAnyMember(qualifier, condition, incompleteCode);
+				val resolveResults = processAnyMember(qualifier, condition, named);
 				if(resolveResults.size() != 1)
 				{
 					return resolveResults;
@@ -455,7 +455,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);
 				}
 
-				return processAnyMember(qualifier, condition, incompleteCode);
+				return processAnyMember(qualifier, condition, named);
 		}
 		return Collections.emptyList();
 	}
@@ -686,7 +686,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			{
 				return psiNamedElement.getName() != null;
 			}
-		}, true);
+		}, false);
 		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(psiElements);
 	}
 

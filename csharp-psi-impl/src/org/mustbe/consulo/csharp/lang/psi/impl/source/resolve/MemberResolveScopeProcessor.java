@@ -30,12 +30,12 @@ import com.intellij.psi.ResolveState;
 public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 {
 	private final Condition<PsiNamedElement> myCond;
-	private final boolean myIncomplete;
+	private final boolean myNamed;
 
-	public MemberResolveScopeProcessor(Condition<PsiNamedElement> condition, boolean incomplete)
+	public MemberResolveScopeProcessor(Condition<PsiNamedElement> condition, boolean named)
 	{
 		myCond = condition;
-		myIncomplete = incomplete;
+		myNamed = named;
 	}
 
 	@Override
@@ -46,6 +46,10 @@ public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 			if(myCond.value((DotNetNamedElement) element))
 			{
 				addElement(element);
+				if(myNamed)
+				{
+					return false;
+				}
 			}
 		}
 		return true;
