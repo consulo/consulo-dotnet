@@ -70,6 +70,11 @@ public class CSharpTypeUtil
 			}
 		}
 
+		if(topElement instanceof DotNetTypeDeclaration && targetElement instanceof DotNetTypeDeclaration)
+		{
+			return ((DotNetTypeDeclaration) topElement).isInheritor((DotNetTypeDeclaration) targetElement, true);
+		}
+
 
 		return false;
 	}
