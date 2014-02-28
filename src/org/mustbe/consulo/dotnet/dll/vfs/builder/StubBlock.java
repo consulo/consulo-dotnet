@@ -25,13 +25,13 @@ import java.util.List;
  */
 public class StubBlock
 {
-	private String myStartText;
-	private String myInnerText;
+	private CharSequence myStartText;
+	private CharSequence myInnerText;
 	private char[] myIndents;
 
 	private List<StubBlock> myBlocks = new ArrayList<StubBlock>(2);
 
-	public StubBlock(String startText, String innerText, char[] indents)
+	public StubBlock(CharSequence startText, CharSequence innerText, char[] indents)
 	{
 		myStartText = startText;
 		myInnerText = innerText;
@@ -48,12 +48,12 @@ public class StubBlock
 		return myIndents;
 	}
 
-	public String getStartText()
+	public CharSequence getStartText()
 	{
 		return myStartText;
 	}
 
-	public String getInnerText()
+	public CharSequence getInnerText()
 	{
 		return myInnerText;
 	}

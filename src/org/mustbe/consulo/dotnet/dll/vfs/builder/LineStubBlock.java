@@ -22,7 +22,7 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder;
  */
 public class LineStubBlock extends StubBlock
 {
-	public LineStubBlock(String startText)
+	public LineStubBlock(CharSequence startText)
 	{
 		super(startText, null, new char[0]);
 	}

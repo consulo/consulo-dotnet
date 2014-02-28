@@ -17,20 +17,25 @@
 package org.mustbe.consulo.dotnet.dll.vfs;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.StubToStringBuilder;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.util.SmartList;
+import com.intellij.util.text.CharArrayUtil;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 
 /**
  * @author VISTALL
  * @since 11.12.13.
  */
+@Logger
 public class DotNetFileArchiveEntry implements ArchiveEntry
 {
 	private final List<TypeDef> myTypeDefs;
@@ -44,8 +49,16 @@ public class DotNetFileArchiveEntry implements ArchiveEntry
 		protected byte[] compute()
 		{
 			StubToStringBuilder builder = new StubToStringBuilder(DotNetFileArchiveEntry.this);
-			String gen = builder.gen();
-			return gen.getBytes();
+			char[] chars = CharArrayUtil.fromSequence(builder.gen());
+			try
+			{
+				return CharArrayUtil.toByteArray(chars);
+			}
+			catch(IOException e)
+			{
+				LOGGER.error(e);
+				return ArrayUtils.EMPTY_BYTE_ARRAY;
+			}
 		}
 	};
 

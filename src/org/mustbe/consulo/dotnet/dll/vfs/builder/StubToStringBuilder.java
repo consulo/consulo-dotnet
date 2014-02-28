@@ -227,7 +227,7 @@ public class StubToStringBuilder
 			}, ", "));
 		}
 
-		StubBlock stubBlock = new StubBlock(builder.toString(), null, BRACES);
+		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
 		processMembers(typeDef, stubBlock);
 		return stubBlock;
 	}
@@ -322,8 +322,9 @@ public class StubToStringBuilder
 		builder.append(TypeToStringBuilder.typeToString(field.getSignature().getType(), typeDef, typeDef));
 		builder.append(" ");
 		builder.append(field.getName());
+		builder.append(";");
 
-		return new LineStubBlock(builder.toString() + ";");
+		return new LineStubBlock(builder);
 	}
 
 	private static StubBlock processProperty(TypeDef typeDef, Property property)
@@ -367,7 +368,7 @@ public class StubToStringBuilder
 		builder.append(" ");
 		builder.append(cutSuperName(property.getName()));
 
-		StubBlock stubBlock = new StubBlock(builder.toString(), null, BRACES);
+		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), getterStub);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), setterStub);
 
@@ -416,7 +417,7 @@ public class StubToStringBuilder
 		builder.append(" ");
 		builder.append(cutSuperName(event.getName()));
 
-		StubBlock stubBlock = new StubBlock(builder.toString(), null, BRACES);
+		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), addOnMethodStub);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), removeOnStub);
 
@@ -462,15 +463,18 @@ public class StubToStringBuilder
 
 		builder.append(getMethodAccess(methodDef).name().toLowerCase()).append(" ");
 
+		boolean canHaveBody = true;
 		if(delegate)
 		{
 			builder.append("delegate ");
+			canHaveBody = false;
 		}
 		else
 		{
 			if(isSet(methodDef.getFlags(), MethodAttributes.Abstract))
 			{
 				builder.append("abstract ");
+				canHaveBody = false;
 			}
 
 			if(isSet(methodDef.getFlags(), MethodAttributes.Static))
@@ -549,7 +553,9 @@ public class StubToStringBuilder
 			}
 		}
 
-		return new LineStubBlock(builder.toString() + ";\n");
+		builder.append(canHaveBody ? " { /* compiled code */ }" : ";").append("\n");
+
+		return new LineStubBlock(builder);
 	}
 
 	@NotNull
@@ -724,14 +730,14 @@ public class StubToStringBuilder
 			builder.append(type);
 			builder.append("]");
 
-			list.add(new LineStubBlock(builder.toString()));
+			list.add(new LineStubBlock(builder));
 		}
 
 		return list;
 	}
 
 	@NotNull
-	public String gen()
+	public CharSequence gen()
 	{
 		assert !myRoots.isEmpty();
 
@@ -749,7 +755,7 @@ public class StubToStringBuilder
 			processBlock(builder, stubBlock, 0);
 		}
 
-		return builder.toString();
+		return builder;
 	}
 
 	private static void processBlock(StringBuilder builder, StubBlock root, int index)
@@ -776,7 +782,7 @@ public class StubToStringBuilder
 				processBlock(builder, stubBlock, index + 1);
 			}
 
-			String innerText = root.getInnerText();
+			CharSequence innerText = root.getInnerText();
 			if(innerText != null)
 			{
 				builder.append(StringUtil.repeatSymbol('\t', index + 1)).append(innerText);
