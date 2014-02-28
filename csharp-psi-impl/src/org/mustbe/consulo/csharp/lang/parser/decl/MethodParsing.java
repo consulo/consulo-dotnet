@@ -191,6 +191,13 @@ public class MethodParsing extends MemberWithBodyParsing
 		{
 			expect(builder, IDENTIFIER, "Name expected");
 
+			if(expect(builder, EQ, null))
+			{
+				if(ExpressionParsing.parse(builder) == null)
+				{
+					builder.error("Expression expected.");
+				}
+			}
 			mark.done(PARAMETER);
 		}
 	}
