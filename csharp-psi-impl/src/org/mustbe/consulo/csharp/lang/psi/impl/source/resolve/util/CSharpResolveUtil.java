@@ -38,7 +38,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author VISTALL
@@ -86,18 +85,6 @@ public class CSharpResolveUtil
 			if(entrance != sender && scope instanceof PsiFile)
 			{
 				break;
-			}
-
-			if(scope instanceof DotNetTypeDeclaration)
-			{
-				DotNetType parentElementOfType = PsiTreeUtil.getParentOfType(entrance, DotNetType.class);
-				if(parentElementOfType == null)
-				{
-					if(!walkChildren(processor, scope, sender, maxScope, state))
-					{
-						return false;
-					}
-				}
 			}
 
 			if(!scope.processDeclarations(processor, state, prevParent, entrance))

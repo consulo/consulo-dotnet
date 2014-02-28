@@ -17,11 +17,13 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.builder.CSharpLightLocalVariableBuilder;
+import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -84,5 +86,12 @@ public class CSharpXXXAccessorImpl extends CSharpMemberImpl implements DotNetXXX
 	public IElementType getAccessorType()
 	{
 		return getNameIdentifier().getNode().getElementType();
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getCodeBlock()
+	{
+		return findChildByClass(DotNetStatement.class);
 	}
 }

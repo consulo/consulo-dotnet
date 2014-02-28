@@ -20,18 +20,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.CSharpLookupElementBuilder;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySet;
-import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
-import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.*;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.AbstractScopeProcessor;
@@ -72,6 +65,7 @@ import lombok.val;
  * @author VISTALL
  * @since 28.11.13.
  */
+@Logger
 public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements DotNetReferenceExpression, PsiPolyVariantReference
 {
 	private static final Condition<PsiNamedElement> ourTypeOrMethodOrGenericCondition = new Condition<PsiNamedElement>()
@@ -254,27 +248,27 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				};
 				break;
 		}
-		val psiElements = collectResults(kind, namedElementCondition, named);
 
-		Condition<PsiElement> newCond = Conditions.alwaysTrue();
+		Condition<PsiNamedElement> newCond = null;
 		switch(kind)
 		{
 			case METHOD:
-				newCond = new Condition<PsiElement>()
+				newCond = new Condition<PsiNamedElement>()
 				{
 					@Override
-					public boolean value(PsiElement psiNamedElement)
+					public boolean value(PsiNamedElement psiNamedElement)
 					{
 						return psiNamedElement instanceof CSharpMethodDeclaration && MethodAcceptorImpl.isAccepted(CSharpReferenceExpressionImpl
 								.this, (CSharpMethodDeclaration) psiNamedElement);
 					}
 				};
+
 				break;
 			case TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD:
-				newCond = new Condition<PsiElement>()
+				newCond = new Condition<PsiNamedElement>()
 				{
 					@Override
-					public boolean value(PsiElement element)
+					public boolean value(PsiNamedElement element)
 					{
 						if(element instanceof DotNetGenericParameterListOwner)
 						{
@@ -298,23 +292,24 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				break;
 		}
 
+		if(newCond != null)
+		{
+			namedElementCondition = Conditions.and(namedElementCondition, newCond);
+		}
+
+		val psiElements = collectResults(kind, namedElementCondition, named);
+
 		val list = new ArrayList<ResolveResult>(psiElements.size());
 
 		for(PsiElement resolveResult : psiElements)
 		{
-			boolean value = newCond.value(resolveResult);
-
-			if(!named && value || named)
-			{
-				list.add(new PsiElementResolveResult(resolveResult, value));
-			}
+			list.add(new PsiElementResolveResult(resolveResult, true));
 		}
 
 		return list.isEmpty() ? ResolveResult.EMPTY_ARRAY : list.toArray(new ResolveResult[list.size()]);
 	}
 
-	private Collection<? extends PsiElement> collectResults(@NotNull ResolveToKind kind, Condition<PsiNamedElement> condition,
-			final boolean named)
+	private Collection<? extends PsiElement> collectResults(@NotNull ResolveToKind kind, Condition<PsiNamedElement> condition, final boolean named)
 	{
 		if(!isValid())
 		{
@@ -436,13 +431,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				String qName2 = StringUtil.strip(getText(), CharFilter.NOT_WHITESPACE_FILTER);
 				return Collections.<PsiElement>singletonList(new CSharpNamespaceAsElement(getProject(), qName2, getResolveScope()));
 			case ATTRIBUTE:
-				condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);
+				/*condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);
 				val resolveResults = processAnyMember(qualifier, condition, named);
 				if(resolveResults.size() != 1)
 				{
 					return resolveResults;
 				}
-				return resolveResults; //TODO [VISTALL] resolve to constuctor
+				return resolveResults; //TODO [VISTALL] resolve to constuctor   */
 			case TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD:
 			case METHOD:
 			case ANY_MEMBER:
@@ -501,8 +496,64 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else
 		{
-			CSharpResolveUtil.treeWalkUp(p, target, this, null, resolveState);
+			PsiElement last = null;
+			PsiElement targetToWalkChildren = null;
+
+			PsiElement temp = getParent();
+			while(temp != null)
+			{
+				if(temp instanceof DotNetParameter)
+				{
+					last = this;
+					targetToWalkChildren = PsiTreeUtil.getParentOfType(temp, DotNetMethodDeclaration.class);
+					break;
+				}
+				else if(temp instanceof DotNetType)
+				{
+					last = null;
+					break;
+				}
+				else if(temp instanceof DotNetFieldDeclaration)
+				{
+					last = this;
+					targetToWalkChildren = temp.getParent();
+					break;
+				}
+				else if(temp instanceof DotNetXXXAccessor)
+				{
+					last = temp;
+					targetToWalkChildren = temp.getParent().getParent();
+					break;
+				}
+				else if(temp instanceof DotNetMethodDeclaration || temp instanceof CSharpConstructorDeclaration)
+				{
+					DotNetLikeMethodDeclaration netMethodDeclaration = (DotNetLikeMethodDeclaration) temp;
+					DotNetParameterList parameterList = netMethodDeclaration.getParameterList();
+					targetToWalkChildren = temp.getParent();
+					last = parameterList == null ? netMethodDeclaration.getCodeBlock() : parameterList;
+					break;
+				}
+				temp = temp.getParent();
+			}
+
+			if(!CSharpResolveUtil.treeWalkUp(p, target, this, last, resolveState))
+			{
+				return p.getElements();
+			}
+
+			if(last == null)
+			{
+				return p.getElements();
+			}
+
+			if(targetToWalkChildren == null)
+			{
+				LOGGER.warn(getText() + " " + last + " "  + kind());
+				return Collections.emptyList();
+			}
+			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, this, null, resolveState);
 		}
+
 		return p.getElements();
 	}
 

@@ -17,6 +17,8 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.tree.IElementType;
 
@@ -33,4 +35,7 @@ public interface DotNetXXXAccessor extends DotNetModifierListOwner, PsiNameIdent
 
 	@NotNull
 	IElementType getAccessorType();
+
+	@Nullable
+	PsiElement getCodeBlock();
 }
