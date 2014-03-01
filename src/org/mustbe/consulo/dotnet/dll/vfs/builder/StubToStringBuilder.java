@@ -747,7 +747,14 @@ public class StubToStringBuilder
 			list.add(new LineStubBlock(builder));
 		}
 
-		if(owner instanceof MethodDef)
+		if(owner instanceof TypeDef)
+		{
+			if((((TypeDef) owner).getFlags() & TypeAttributes.Serializable) == TypeAttributes.Serializable)
+			{
+				list.add(new LineStubBlock("[System.Serializable]"));
+			}
+		}
+		else if(owner instanceof MethodDef)
 		{
 			List<String> attributeValues = new ArrayList<String>();
 			int implFlags = ((MethodDef) owner).getImplFlags();
@@ -773,7 +780,7 @@ public class StubToStringBuilder
 						return "System.Reflection.MethodImplAttributes." + s;
 					}
 				}, " | ");
-				list.add(new LineStubBlock("[System.Runtime.CompilerServices.MethodImplAttribute(" + val + ")]"));
+				list.add(new LineStubBlock("[System.Runtime.CompilerServices.MethodImpl(" + val + ")]"));
 			}
 		}
 
