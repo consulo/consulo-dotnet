@@ -318,16 +318,10 @@ public class StatementParsing extends SharingParsingHelpers
 	{
 		builder.advanceLexer();
 		builder.advanceLexer();
-
-		if(builder.getTokenType() == LBRACE)
+		if(parseStatement(builder) == null)
 		{
-			parseStatement(builder);
+			builder.error("Statement expected");
 		}
-		else
-		{
-			builder.error("'{' expected");
-		}
-
 		marker.done(LABELED_STATEMENT);
 	}
 
