@@ -30,6 +30,7 @@ public interface CSharpStubElements
 	CSharpNamespaceStubElementType NAMESPACE_DECLARATION = new CSharpNamespaceStubElementType();
 	CSharpTypeStubElementType TYPE_DECLARATION = new CSharpTypeStubElementType();
 	CSharpMethodStubElementType METHOD_DECLARATION = new CSharpMethodStubElementType();
+	CSharpArrayMethodStubElementType ARRAY_METHOD_DECLARATION = new CSharpArrayMethodStubElementType();
 	CSharpConstructorStubElementType CONSTRUCTOR_DECLARATION = new CSharpConstructorStubElementType();
 	CSharpConversionMethodStubElementType CONVERSION_METHOD_DECLARATION = new CSharpConversionMethodStubElementType();
 	CSharpPropertyElementType PROPERTY_DECLARATION = new CSharpPropertyElementType();
@@ -49,7 +50,8 @@ public interface CSharpStubElements
 
 	TokenSet QUALIFIED_MEMBERS = TokenSet.create(NAMESPACE_DECLARATION, TYPE_DECLARATION,
 			METHOD_DECLARATION, CONSTRUCTOR_DECLARATION, PROPERTY_DECLARATION,
-			EVENT_DECLARATION, FIELD_DECLARATION, ENUM_CONSTANT_DECLARATION, CONVERSION_METHOD_DECLARATION);
+			EVENT_DECLARATION, FIELD_DECLARATION, ENUM_CONSTANT_DECLARATION, CONVERSION_METHOD_DECLARATION,
+			ARRAY_METHOD_DECLARATION);
 
 	TokenSet QUALIFIED_MEMBERS_WITH_USING = TokenSet.orSet(QUALIFIED_MEMBERS, TokenSet.create(USING_LIST));
 }

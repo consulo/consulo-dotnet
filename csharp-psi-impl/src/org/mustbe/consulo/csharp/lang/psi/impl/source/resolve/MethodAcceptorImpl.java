@@ -16,12 +16,11 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
-import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpTypeUtil;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpExpressionWithParameters;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
@@ -65,11 +64,9 @@ public class MethodAcceptorImpl
 
 	private static final MethodAcceptor[] ourAcceptors = new MethodAcceptor[] {new SimpleMethodAcceptor()};
 
-	public static boolean isAccepted(CSharpReferenceExpressionImpl ref, CSharpMethodDeclaration methodDeclaration)
+	public static boolean isAccepted(CSharpExpressionWithParameters parameterExpressionsOwner, DotNetParameterListOwner methodDeclaration)
 	{
-		CSharpMethodCallExpressionImpl parent = (CSharpMethodCallExpressionImpl) ref.getParent();
-
-		DotNetExpression[] parameterExpressions = parent.getParameterExpressions();
+		DotNetExpression[] parameterExpressions = parameterExpressionsOwner.getParameterExpressions();
 		DotNetParameter[] parameters = methodDeclaration.getParameters();
 		for(MethodAcceptor ourAcceptor : ourAcceptors)
 		{

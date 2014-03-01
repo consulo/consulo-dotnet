@@ -28,6 +28,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpArrayAccessExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
@@ -47,9 +48,11 @@ import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.ReferenceRange;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.tree.IElementType;
 import lombok.val;
@@ -79,9 +82,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	{
 		if(comment.getTokenType() == CSharpTokens.NON_ACTIVE_SYMBOL)
 		{
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(comment).textAttributes
-					(CSharpHighlightKey.DISABLED_BLOCK)
-					.create());
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(comment).textAttributes(CSharpHighlightKey
+					.DISABLED_BLOCK).create());
 		}
 	}
 
@@ -209,6 +211,26 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		super.visitEventDeclaration(declaration);
 
 		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
+	@Override
+	public void visitArrayAccessExpression(CSharpArrayAccessExpressionImpl expression)
+	{
+		super.visitArrayAccessExpression(expression);
+
+		PsiElement resolve = expression.resolve();
+		if(resolve == null)
+		{
+			List<TextRange> absoluteRanges = ReferenceRange.getAbsoluteRanges(expression);
+
+			for(TextRange textRange : absoluteRanges)
+			{
+				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip("Array method is not " +
+						"resolved").range(textRange).create();
+
+				myHighlightInfoHolder.add(info);
+			}
+		}
 	}
 
 	@Override

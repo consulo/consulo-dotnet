@@ -22,6 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightArrayMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightConstructorDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightFieldDeclaration;
@@ -32,6 +33,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightPropertyDeclarat
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericWrapperTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpPointerTypeRef;
+import org.mustbe.consulo.dotnet.psi.DotNetArrayMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -75,6 +77,29 @@ public class GenericUnwrapTool
 			}
 
 			return (T) new CSharpLightMethodDeclaration(methodDeclaration, newReturnTypeRef, parameterList);
+		}
+		else if(namedElement instanceof DotNetArrayMethodDeclaration)
+		{
+			DotNetArrayMethodDeclaration arrayMethodDeclaration = (DotNetArrayMethodDeclaration) namedElement;
+
+			DotNetTypeRef newReturnTypeRef = exchangeTypeRefs(arrayMethodDeclaration.getReturnTypeRef(), extractor, namedElement);
+
+			DotNetParameterList parameterList = arrayMethodDeclaration.getParameterList();
+			if(parameterList != null)
+			{
+				DotNetParameter[] parameters = arrayMethodDeclaration.getParameters();
+
+				DotNetParameter[] newParameters = new DotNetParameter[parameters.length];
+				for(int i = 0; i < parameters.length; i++)
+				{
+					DotNetParameter parameter = parameters[i];
+					newParameters[i] = new CSharpLightParameter(parameter, exchangeTypeRefs(parameter.toTypeRef(), extractor, parameter));
+				}
+
+				parameterList = new CSharpLightParameterList(parameterList, newParameters);
+			}
+
+			return (T) new CSharpLightArrayMethodDeclaration(arrayMethodDeclaration, newReturnTypeRef, parameterList);
 		}
 		else if(namedElement instanceof CSharpConstructorDeclaration)
 		{

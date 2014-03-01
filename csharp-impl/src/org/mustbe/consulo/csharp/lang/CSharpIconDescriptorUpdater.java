@@ -78,6 +78,13 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 
 			processModifierListOwner(element, iconDescriptor, flags);
 		}
+		else if(element instanceof DotNetArrayMethodDeclaration)
+		{
+			iconDescriptor.setMainIcon(((DotNetArrayMethodDeclaration) element).hasModifier(DotNetModifier.ABSTRACT) ? AllIcons.Nodes.AbstractMethod
+					: AllIcons.Nodes.Method);
+
+			processModifierListOwner(element, iconDescriptor, flags);
+		}
 		else if(element instanceof DotNetTypeDeclaration)
 		{
 			Icon main = null;

@@ -19,21 +19,19 @@ package org.mustbe.consulo.dotnet.psi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 09.01.14
+ * @since 01.03.14
  */
-public interface DotNetLikeMethodDeclaration extends DotNetModifierListOwner, DotNetQualifiedElement, DotNetGenericParameterListOwner,
-		DotNetParameterListOwner
+public interface DotNetParameterListOwner extends DotNetElement
 {
-	@Nullable
-	PsiElement getCodeBlock();
+	@NotNull
+	DotNetTypeRef[] getParameterTypesForRuntime();
 
 	@Nullable
-	DotNetType getReturnType();
+	DotNetParameterList getParameterList();
 
 	@NotNull
-	DotNetTypeRef getReturnTypeRef();
+	DotNetParameter[] getParameters();
 }

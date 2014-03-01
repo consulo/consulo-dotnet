@@ -27,7 +27,7 @@ import com.intellij.lang.ASTNode;
  * @author VISTALL
  * @since 16.12.13.
  */
-public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements DotNetExpression
+public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements DotNetExpression, CSharpExpressionWithParameters
 {
 	public CSharpMethodCallExpressionImpl(@NotNull ASTNode node)
 	{
@@ -40,6 +40,7 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 		return findChildByClass(CSharpMethodCallParameterListImpl.class);
 	}
 
+	@Override
 	@NotNull
 	public DotNetExpression[] getParameterExpressions()
 	{

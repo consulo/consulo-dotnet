@@ -383,13 +383,16 @@ public class StubToStringBuilder
 		builder.append(propertyModifier.name().toLowerCase()).append(" ");
 		builder.append(TypeToStringBuilder.typeToString(property.getSignature().getType(), typeDef, null));
 		builder.append(" ");
-		builder.append(cutSuperName(property.getName()));
 
 		if(parameterSignature != null)
 		{
-			builder.append("[");
+			builder.append("this [");
 			builder.append(getParameterText(parameterSignature, typeDef, null, 0));
 			builder.append("]");
+		}
+		else
+		{
+			builder.append(cutSuperName(property.getName()));
 		}
 
 		StubBlock stubBlock = new StubBlock(builder, null, BRACES);

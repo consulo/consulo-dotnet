@@ -103,7 +103,7 @@ public class MethodParsing extends MemberWithBodyParsing
 
 		if(builder.getTokenType() == LPAR)
 		{
-			parseParameterList(builder);
+			parseParameterList(builder, RPAR);
 		}
 		else
 		{
@@ -150,13 +150,13 @@ public class MethodParsing extends MemberWithBodyParsing
 		}
 	}
 
-	public static void parseParameterList(CSharpBuilderWrapper builder)
+	public static void parseParameterList(CSharpBuilderWrapper builder, IElementType end)
 	{
 		val mark = builder.mark();
 
 		builder.advanceLexer();
 
-		if(builder.getTokenType() != RPAR)
+		if(builder.getTokenType() != end)
 		{
 			while(!builder.eof())
 			{
@@ -173,7 +173,7 @@ public class MethodParsing extends MemberWithBodyParsing
 			}
 		}
 
-		expect(builder, RPAR, "')' expected");
+		expect(builder, end, "')' expected");
 		mark.done(PARAMETER_LIST);
 	}
 

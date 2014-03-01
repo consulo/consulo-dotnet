@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiElement;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 
 /**
  * @author VISTALL
- * @since 09.01.14
+ * @since 01.03.14
  */
-public interface DotNetLikeMethodDeclaration extends DotNetModifierListOwner, DotNetQualifiedElement, DotNetGenericParameterListOwner,
-		DotNetParameterListOwner
+public interface CSharpExpressionWithParameters
 {
-	@Nullable
-	PsiElement getCodeBlock();
-
-	@Nullable
-	DotNetType getReturnType();
-
 	@NotNull
-	DotNetTypeRef getReturnTypeRef();
+	DotNetExpression[] getParameterExpressions();
 }

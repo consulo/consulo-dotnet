@@ -68,6 +68,7 @@ public class CSharpModuleTypeHelperImpl extends CSharpModuleTypeHelper
 		String typeText =
 				"public class ArrayImpl<T> : System.Array" +
 				"{" +
+				"public T this[int index] { get; set; }" +
 				"}";
 
 		DotNetTypeDeclaration typeDeclaration = CSharpFileFactory.createTypeDeclaration(myModule.getProject(), searchScope, typeText);

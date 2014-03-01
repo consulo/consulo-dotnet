@@ -285,7 +285,7 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 		ParameterSignature[] arr = new ParameterSignature[params.size()];
 		for(int i = 0; i < arr.length; i++)
 		{
-			arr[i] = (ParameterSignature) params.get(i);
+			arr[i] = params.get(i);
 		}
 		return arr;
 	}

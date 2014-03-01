@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
+import org.mustbe.consulo.dotnet.psi.DotNetArrayMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
@@ -483,5 +484,10 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	public void visitSwitchLabelStatement(CSharpSwitchLabelStatementImpl statement)
 	{
 		visitElement(statement);
+	}
+
+	public void visitArrayMethodDeclaration(DotNetArrayMethodDeclaration methodDeclaration)
+	{
+		visitElement(methodDeclaration);
 	}
 }

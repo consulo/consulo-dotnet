@@ -123,6 +123,22 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		}
 	}
 
+	public static void parseArrayAfterThis(CSharpBuilderWrapper builderWrapper, PsiBuilder.Marker marker)
+	{
+		if(builderWrapper.getTokenType() == LBRACKET)
+		{
+			MethodParsing.parseParameterList(builderWrapper, RBRACKET);
+
+			parseAccessors(builderWrapper, XXX_ACCESSOR, PROPERTY_ACCESSOR_START);
+
+			marker.done(ARRAY_METHOD_DECLARATION);
+		}
+		else
+		{
+			builderWrapper.error("'[' expected");
+		}
+	}
+
 	public static void parseFieldOrPropertyAfterName(CSharpBuilderWrapper builderWrapper, PsiBuilder.Marker marker)
 	{
 		if(builderWrapper.getTokenType() == LBRACE)

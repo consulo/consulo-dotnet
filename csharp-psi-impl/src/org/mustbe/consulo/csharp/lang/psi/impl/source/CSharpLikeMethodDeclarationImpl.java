@@ -100,7 +100,6 @@ public abstract class CSharpLikeMethodDeclarationImpl extends CSharpStubMemberIm
 
 		DotNetType type = getReturnType();
 		return type == null ? DotNetTypeRef.ERROR_TYPE : type.toTypeRef();
-
 	}
 
 	@Nullable

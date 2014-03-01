@@ -120,6 +120,12 @@ public class DeclarationParsing extends SharingParsingHelpers
 				{
 					MethodParsing.parseMethodStartAfterType(builder, marker, typeInfo, MethodParsing.Target.METHOD);
 				}
+				else if(builder.getTokenType() == THIS_KEYWORD)
+				{
+					builder.advanceLexer();
+
+					FieldOrPropertyParsing.parseArrayAfterThis(builder, marker);
+				}
 				else if(expect(builder, IDENTIFIER, "Name expected"))
 				{
 					// MODIFIER_LIST TYPE IDENTIFIER LPAR -> METHOD
