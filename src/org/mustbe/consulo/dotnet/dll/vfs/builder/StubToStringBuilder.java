@@ -334,15 +334,30 @@ public class StubToStringBuilder
 		StubBlock getterStub = null;
 		StubBlock setterStub = null;
 
+		ParameterSignature parameterSignature = null;
 		MethodDef getter = property.getGetter();
 		if(getter != null)
 		{
 			getterStub = processMethod(typeDef, getter, "get", false, true);
+			ParameterSignature[] parameters = getter.getSignature().getParameters();
+			if(parameters.length == 1)
+			{
+				parameterSignature = parameters[0];
+			}
 		}
 		MethodDef setter = property.getSetter();
 		if(setter != null)
 		{
 			setterStub = processMethod(typeDef, setter, "set", false, true);
+
+			if(parameterSignature == null)
+			{
+				ParameterSignature[] parameters = setter.getSignature().getParameters();
+				if(parameters.length == 2)
+				{
+					parameterSignature = parameters[1];
+				}
+			}
 		}
 
 		AccessModifier propertyModifier = AccessModifier.INTERNAL;
@@ -369,6 +384,13 @@ public class StubToStringBuilder
 		builder.append(TypeToStringBuilder.typeToString(property.getSignature().getType(), typeDef, null));
 		builder.append(" ");
 		builder.append(cutSuperName(property.getName()));
+
+		if(parameterSignature != null)
+		{
+			builder.append("[");
+			builder.append(getParameterText(parameterSignature, typeDef, null, 0));
+			builder.append("]");
+		}
 
 		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), getterStub);
@@ -588,43 +610,48 @@ public class StubToStringBuilder
 			@Override
 			public String fun(ParameterSignature parameterSignature)
 			{
-				TypeSignature signature = parameterSignature;
-				if(signature.getType() == 0)
-				{
-					signature = parameterSignature.getInnerType();
-				}
-
-				StringBuilder p = new StringBuilder();
-				ParameterInfo parameterInfo = parameterSignature.getParameterInfo();
-				for(CustomAttribute customAttribute : parameterInfo.getCustomAttributes())
-				{
-					String fullName = customAttribute.getConstructor().getParent().getFullName();
-					if(Comparing.equal(fullName, "System.ParamArrayAttribute"))
-					{
-						p.append("params ");
-					}
-				}
-
-				if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.Out))
-				{
-					p.append("out ");
-
-					signature = parameterSignature.getInnerType();
-				}
-
-				p.append(TypeToStringBuilder.typeToString(signature, typeDef, methodDef));
-				p.append(" ");
-				p.append(toValidName(parameterInfo.getName(), ArrayUtil.indexOf(owner, parameterSignature)));
-
-				if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
-				{
-					p.append(" = ");
-					p.append(toValue(signature, parameterInfo.getDefaultValue()));
-				}
-				return p.toString();
+				return getParameterText(parameterSignature, typeDef, methodDef,  ArrayUtil.indexOf(owner, parameterSignature));
 			}
 		}, ", ");
 		builder.append("(").append(text).append(")");
+	}
+
+	private static String getParameterText(ParameterSignature parameterSignature, final TypeDef typeDef, final MethodDef methodDef, int index)
+	{
+		TypeSignature signature = parameterSignature;
+		if(signature.getType() == 0)
+		{
+			signature = parameterSignature.getInnerType();
+		}
+
+		StringBuilder p = new StringBuilder();
+		ParameterInfo parameterInfo = parameterSignature.getParameterInfo();
+		for(CustomAttribute customAttribute : parameterInfo.getCustomAttributes())
+		{
+			String fullName = customAttribute.getConstructor().getParent().getFullName();
+			if(Comparing.equal(fullName, "System.ParamArrayAttribute"))
+			{
+				p.append("params ");
+			}
+		}
+
+		if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.Out))
+		{
+			p.append("out ");
+
+			signature = parameterSignature.getInnerType();
+		}
+
+		p.append(TypeToStringBuilder.typeToString(signature, typeDef, methodDef));
+		p.append(" ");
+		p.append(toValidName(parameterInfo.getName(), index));
+
+		if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
+		{
+			p.append(" = ");
+			p.append(toValue(signature, parameterInfo.getDefaultValue()));
+		}
+		return p.toString();
 	}
 
 	private static Object toValue(TypeSignature signature, byte[] value)
