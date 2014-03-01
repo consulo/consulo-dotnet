@@ -323,7 +323,7 @@ public class StubToStringBuilder
 		builder.append(TypeToStringBuilder.typeToString(field.getSignature().getType(), typeDef, typeDef));
 		builder.append(" ");
 		builder.append(field.getName());
-		builder.append(";");
+		builder.append(";\n");
 
 		return new LineStubBlock(builder);
 	}
