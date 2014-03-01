@@ -40,6 +40,7 @@ import edu.arizona.cs.mbel.mbel.*;
 import edu.arizona.cs.mbel.signature.CustomAttributeOwner;
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
+import edu.arizona.cs.mbel.signature.MethodImplAttributes;
 import edu.arizona.cs.mbel.signature.ParamAttributes;
 import edu.arizona.cs.mbel.signature.ParameterInfo;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
@@ -709,6 +710,18 @@ public class StubToStringBuilder
 		return new StubBlock("namespace " + namespace, null, BRACES);
 	}
 
+	private static Object[][] ourMethodImplAttributes =
+			{
+					{MethodImplAttributes.ManagedMask, MethodImplAttributes.Unmanaged, "Unmanaged"},
+					{MethodImplAttributes.ForwardRef, MethodImplAttributes.ForwardRef, "ForwardRef"},
+					{MethodImplAttributes.PreserveSig, MethodImplAttributes.PreserveSig, "PreserveSig"},
+					{MethodImplAttributes.InternalCall, MethodImplAttributes.InternalCall, "InternalCall"},
+					{MethodImplAttributes.Synchronized, MethodImplAttributes.Synchronized, "Synchronized"},
+					{MethodImplAttributes.NoInlining, MethodImplAttributes.NoInlining, "NoInlining"},
+					{MethodImplAttributes.NoOptimization, MethodImplAttributes.NoOptimization, "NoOptimization"},
+					{MethodImplAttributes.MaxMethodImplVal, MethodImplAttributes.MaxMethodImplVal, "NoOptimization"},
+			};
+
 	private static List<LineStubBlock> processAttributes(CustomAttributeOwner owner)
 	{
 		CustomAttribute[] customAttributes = owner.getCustomAttributes();
@@ -732,6 +745,36 @@ public class StubToStringBuilder
 			builder.append("]");
 
 			list.add(new LineStubBlock(builder));
+		}
+
+		if(owner instanceof MethodDef)
+		{
+			List<String> attributeValues = new ArrayList<String>();
+			int implFlags = ((MethodDef) owner).getImplFlags();
+			for(Object[] methodImplAttribute : ourMethodImplAttributes)
+			{
+				int mask = (Integer) methodImplAttribute[0];
+				int value = (Integer) methodImplAttribute[1];
+				String field = (String) methodImplAttribute[2];
+
+				if((implFlags & mask) == value)
+				{
+					attributeValues.add(field);
+				}
+			}
+
+			if(!attributeValues.isEmpty())
+			{
+				String val = StringUtil.join(attributeValues, new Function<String, String>()
+				{
+					@Override
+					public String fun(String s)
+					{
+						return "System.Reflection.MethodImplAttributes." + s;
+					}
+				}, " | ");
+				list.add(new LineStubBlock("[System.Runtime.CompilerServices.MethodImplAttribute(" + val + ")]"));
+			}
 		}
 
 		return list;
