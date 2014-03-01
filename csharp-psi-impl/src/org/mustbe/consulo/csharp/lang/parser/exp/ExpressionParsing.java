@@ -731,7 +731,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		if(builder.getTokenType() == LPAR)
 		{
-			MethodParsing.parseParameterList(builder);
+			MethodParsing.parseParameterList(builder, RPAR);
 		}
 
 		if(builder.getTokenType() == LBRACE)
@@ -1017,13 +1017,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			while(builder.getTokenType() == LBRACKET)
 			{
-				PsiBuilder.Marker marker = builder.mark();
 				builder.advanceLexer();
 
 				parse(builder);
 
 				expect(builder, RBRACKET, "']' expected");
-				marker.done(ARRAY_ACCESS_EXPRESSION);
 			}
 
 			if(builder.getTokenType() == LPAR)
