@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
@@ -61,33 +62,45 @@ public class CSharpInheritUtil
 
 	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, DotNetTypeDeclaration other, boolean deep)
 	{
-		if(typeDeclaration == other)
+		if(typeDeclaration.isEquivalentTo(other))
 		{
-			return false;
+			return true;
 		}
-		for(DotNetType dotNetType : typeDeclaration.getExtends())
+		DotNetType[] anExtends = typeDeclaration.getExtends();
+		if(anExtends.length > 0)
 		{
-			PsiElement psiElement = dotNetType.toTypeRef().resolve(typeDeclaration);
-			if(psiElement instanceof CSharpTypeDeclaration)
+			for(DotNetType dotNetType : anExtends)
 			{
-				if(psiElement.isEquivalentTo(other))
+				PsiElement psiElement = dotNetType.toTypeRef().resolve(typeDeclaration);
+				if(psiElement instanceof CSharpTypeDeclaration)
 				{
-					return true;
-				}
-
-				if(psiElement == typeDeclaration)
-				{
-					LOGGER.warn("Type declaration " + ((CSharpTypeDeclaration) psiElement).getPresentableQName() + " have recursive extends?");
-					return false;
-				}
-
-				if(deep)
-				{
-					if(isInheritor((DotNetTypeDeclaration) psiElement, other, true))
+					if(psiElement.isEquivalentTo(other))
 					{
 						return true;
 					}
+
+					if(psiElement.isEquivalentTo(typeDeclaration))
+					{
+						return false;
+					}
+
+					if(deep)
+					{
+						if(isInheritor((DotNetTypeDeclaration) psiElement, other, true))
+						{
+							return true;
+						}
+					}
 				}
+			}
+		}
+		else
+		{
+			DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(typeDeclaration.getProject()).findType(DotNetTypes.System_Object,
+					typeDeclaration.getResolveScope(), -1);
+			if(type != null)
+			{
+				return !type.isEquivalentTo(typeDeclaration) && isInheritor(type, other, true);
 			}
 		}
 		return false;
