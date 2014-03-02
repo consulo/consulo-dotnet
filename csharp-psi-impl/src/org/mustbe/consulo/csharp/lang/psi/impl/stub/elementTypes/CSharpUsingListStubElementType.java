@@ -34,7 +34,7 @@ public class CSharpUsingListStubElementType extends CSharpAbstractStubElementTyp
 {
 	public CSharpUsingListStubElementType()
 	{
-		super("USING_NAMESPACE_LIST");
+		super("USING_LIST");
 	}
 
 	@Override
