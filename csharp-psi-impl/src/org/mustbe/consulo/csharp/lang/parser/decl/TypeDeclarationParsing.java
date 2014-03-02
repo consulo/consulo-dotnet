@@ -80,6 +80,7 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 				}
 			}
 			expect(builder, RBRACE, "'}' expected");
+			expect(builder, SEMICOLON, null);
 		}
 
 		marker.done(TYPE_DECLARATION);

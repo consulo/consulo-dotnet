@@ -47,6 +47,7 @@ public class NamespaceDeclarationParsing extends SharingParsingHelpers
 			}
 
 			expect(builder, RBRACE, "'}' expected");
+			expect(builder, SEMICOLON, null);
 		}
 
 		marker.done(NAMESPACE_DECLARATION);
