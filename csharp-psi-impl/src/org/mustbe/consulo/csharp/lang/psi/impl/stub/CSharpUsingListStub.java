@@ -25,9 +25,9 @@ import com.intellij.psi.stubs.StubElement;
  * @author VISTALL
  * @since 15.01.14
  */
-public class CSharpUsingNamespaceListStub extends StubBase<CSharpUsingListImpl>
+public class CSharpUsingListStub extends StubBase<CSharpUsingListImpl>
 {
-	public CSharpUsingNamespaceListStub(StubElement parent, IStubElementType elementType)
+	public CSharpUsingListStub(StubElement parent, IStubElementType elementType)
 	{
 		super(parent, elementType);
 	}

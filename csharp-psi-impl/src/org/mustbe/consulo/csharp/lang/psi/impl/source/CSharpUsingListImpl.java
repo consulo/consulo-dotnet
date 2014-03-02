@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingNamespaceListStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -32,14 +32,14 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpUsingListImpl extends CSharpStubElementImpl<CSharpUsingNamespaceListStub>
+public class CSharpUsingListImpl extends CSharpStubElementImpl<CSharpUsingListStub>
 {
 	public CSharpUsingListImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public CSharpUsingListImpl(@NotNull CSharpUsingNamespaceListStub stub)
+	public CSharpUsingListImpl(@NotNull CSharpUsingListStub stub)
 	{
 		super(stub, CSharpStubElements.USING_LIST);
 	}

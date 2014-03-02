@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingNamespaceListStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -30,9 +30,9 @@ import com.intellij.psi.stubs.StubOutputStream;
  * @author VISTALL
  * @since 15.01.14
  */
-public class CSharpUsingNamespaceListStubElementType extends CSharpAbstractStubElementType<CSharpUsingNamespaceListStub, CSharpUsingListImpl>
+public class CSharpUsingListStubElementType extends CSharpAbstractStubElementType<CSharpUsingListStub, CSharpUsingListImpl>
 {
-	public CSharpUsingNamespaceListStubElementType()
+	public CSharpUsingListStubElementType()
 	{
 		super("USING_NAMESPACE_LIST");
 	}
@@ -44,27 +44,27 @@ public class CSharpUsingNamespaceListStubElementType extends CSharpAbstractStubE
 	}
 
 	@Override
-	public CSharpUsingListImpl createPsi(@NotNull CSharpUsingNamespaceListStub cSharpUsingNamespaceListStub)
+	public CSharpUsingListImpl createPsi(@NotNull CSharpUsingListStub cSharpUsingListStub)
 	{
-		return new CSharpUsingListImpl(cSharpUsingNamespaceListStub);
+		return new CSharpUsingListImpl(cSharpUsingListStub);
 	}
 
 	@Override
-	public CSharpUsingNamespaceListStub createStub(@NotNull CSharpUsingListImpl cSharpUsingNamespaceList, StubElement stubElement)
+	public CSharpUsingListStub createStub(@NotNull CSharpUsingListImpl cSharpUsingNamespaceList, StubElement stubElement)
 	{
-		return new CSharpUsingNamespaceListStub(stubElement, this);
+		return new CSharpUsingListStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(@NotNull CSharpUsingNamespaceListStub cSharpUsingNamespaceListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull CSharpUsingListStub cSharpUsingListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
 	@NotNull
 	@Override
-	public CSharpUsingNamespaceListStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
+	public CSharpUsingListStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
 	{
-		return new CSharpUsingNamespaceListStub(stubElement, this);
+		return new CSharpUsingListStub(stubElement, this);
 	}
 }
