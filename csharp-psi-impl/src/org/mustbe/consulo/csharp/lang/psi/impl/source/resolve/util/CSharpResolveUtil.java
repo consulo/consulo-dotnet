@@ -32,6 +32,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -55,6 +56,7 @@ public class CSharpResolveUtil
 			return DotNetGenericExtractor.EMPTY;
 		}
 	};
+	public static final Key<PsiFile> SELF_FILE = Key.create("self.file");
 
 	public static boolean treeWalkUp(@NotNull PsiScopeProcessor processor, @NotNull PsiElement entrance, @NotNull PsiElement sender,
 			@Nullable PsiElement maxScope)
@@ -167,7 +169,9 @@ public class CSharpResolveUtil
 		}
 		else if(entrance instanceof CSharpNamespaceAsElement)
 		{
-			if(!entrance.processDeclarations(processor, state, maxScope, entrance))
+			ResolveState s = state.put(SELF_FILE, sender.getContainingFile());
+
+			if(!entrance.processDeclarations(processor, s, maxScope, entrance))
 			{
 				return false;
 			}
@@ -179,7 +183,7 @@ public class CSharpResolveUtil
 			}
 
 			CSharpNamespaceAsElement parentNamespace = new CSharpNamespaceAsElement(entrance.getProject(), pQName, entrance.getResolveScope());
-			return walkChildren(processor, parentNamespace, sender, maxScope, state);
+			return walkChildren(processor, parentNamespace, sender, maxScope, s);
 		}
 		else if(entrance instanceof DotNetNamespaceDeclaration)
 		{

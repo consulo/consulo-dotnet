@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.NamespaceByQNameIndex;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -156,9 +157,18 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetName
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
 			@NotNull final PsiElement place)
 	{
-		return StubIndex.getInstance().process(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, getPresentableQName(), getProject(), myScope,
-				new Processor<DotNetNamedElement>()
+		boolean process = StubIndex.getInstance().process(CSharpIndexKeys.USING_LIST_INDEX, getPresentableQName(), getProject(), myScope,
+				new Processor<CSharpUsingListImpl>()
+		{
+			@Override
+			public boolean process(CSharpUsingListImpl usingList)
+			{
+				return usingList.processDeclarations(processor, state, lastParent, place);
+			}
+		});
 
+		return process && StubIndex.getInstance().process(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, getPresentableQName(), getProject(),
+				myScope, new Processor<DotNetNamedElement>()
 		{
 			@Override
 			public boolean process(DotNetNamedElement namedElement)

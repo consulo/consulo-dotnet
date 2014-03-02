@@ -16,10 +16,13 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -27,8 +30,23 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class CSharpUsingListStub extends StubBase<CSharpUsingListImpl>
 {
-	public CSharpUsingListStub(StubElement parent, IStubElementType elementType)
+	private final StringRef myParentQName;
+
+	public CSharpUsingListStub(StubElement parent, IStubElementType elementType, @Nullable String parentQName)
 	{
 		super(parent, elementType);
+		myParentQName = StringRef.fromNullableString(parentQName);
+	}
+
+	public CSharpUsingListStub(StubElement parent, IStubElementType elementType, @NotNull StringRef parentQName)
+	{
+		super(parent, elementType);
+		myParentQName = parentQName;
+	}
+
+	@NotNull
+	public String getParentQName()
+	{
+		return StringRef.toString(myParentQName);
 	}
 }

@@ -19,12 +19,19 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingListStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -52,19 +59,41 @@ public class CSharpUsingListStubElementType extends CSharpAbstractStubElementTyp
 	@Override
 	public CSharpUsingListStub createStub(@NotNull CSharpUsingListImpl cSharpUsingNamespaceList, StubElement stubElement)
 	{
-		return new CSharpUsingListStub(stubElement, this);
+		String parentQName = null;
+		PsiElement parent = cSharpUsingNamespaceList.getParent();
+		if(parent instanceof PsiFile)
+		{
+			parentQName = CSharpNamespaceHelper.ROOT;
+		}
+		else if(parent instanceof DotNetQualifiedElement)
+		{
+			parentQName = ((DotNetQualifiedElement) parent).getPresentableQName();
+		}
+
+		if(parentQName == null)
+		{
+			parentQName = "<error>";
+		}
+		return new CSharpUsingListStub(stubElement, this, parentQName);
 	}
 
 	@Override
 	public void serialize(@NotNull CSharpUsingListStub cSharpUsingListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+		stubOutputStream.writeName(cSharpUsingListStub.getParentQName());
 	}
 
 	@NotNull
 	@Override
 	public CSharpUsingListStub deserialize(@NotNull StubInputStream stubInputStream, StubElement stubElement) throws IOException
 	{
-		return new CSharpUsingListStub(stubElement, this);
+		StringRef ref = stubInputStream.readName();
+		return new CSharpUsingListStub(stubElement, this, ref);
+	}
+
+	@Override
+	public void indexStub(@NotNull CSharpUsingListStub cSharpUsingListStub, @NotNull IndexSink indexSink)
+	{
+		indexSink.occurrence(CSharpIndexKeys.USING_LIST_INDEX, cSharpUsingListStub.getParentQName());
 	}
 }

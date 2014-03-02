@@ -20,9 +20,11 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpUsingListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
@@ -69,6 +71,12 @@ public class CSharpUsingListImpl extends CSharpStubElementImpl<CSharpUsingListSt
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{
+		PsiFile psiFile = state.get(CSharpResolveUtil.SELF_FILE);
+		if(psiFile != getContainingFile())
+		{
+			return true;
+		}
+
 		for(CSharpUsingListChild cSharpUsingStatement : getStatements())
 		{
 			if(!cSharpUsingStatement.processDeclarations(processor, state, lastParent, place))

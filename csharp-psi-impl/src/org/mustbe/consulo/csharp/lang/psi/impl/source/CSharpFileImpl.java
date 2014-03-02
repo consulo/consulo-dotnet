@@ -16,8 +16,6 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
-import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
@@ -29,7 +27,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.Condition;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -37,7 +34,6 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -81,37 +77,6 @@ public class CSharpFileImpl extends PsiFileBase implements DotNetFile
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
-		PsiElement[] target;
-		StubElement stub = getStub();
-		if(stub != null)
-		{
-			target = stub.getChildrenByType(CSharpStubElements.QUALIFIED_MEMBERS_WITH_USING, PsiElement.ARRAY_FACTORY);
-		}
-		else
-		{
-			// dont call getNode() for stub elements
-			List<PsiElement> filter = ContainerUtil.filter(getChildren(), new Condition<PsiElement>()
-			{
-				@Override
-				public boolean value(PsiElement element)
-				{
-					return CSharpStubElements.QUALIFIED_MEMBERS_WITH_USING.contains(element.getNode().getElementType());
-				}
-			});
-			target = filter.isEmpty() ? PsiElement.EMPTY_ARRAY : filter.toArray(new PsiElement[filter.size()]);
-		}
-
-		for(PsiElement psiElement : target)
-		{
-			if(psiElement instanceof CSharpUsingListImpl)
-			{
-				if(!psiElement.processDeclarations(processor, state, lastParent, place))
-				{
-					return false;
-				}
-			}
-		}
-
 		return CSharpResolveUtil.walkChildren(processor, this, this, place, state);
 	}
 

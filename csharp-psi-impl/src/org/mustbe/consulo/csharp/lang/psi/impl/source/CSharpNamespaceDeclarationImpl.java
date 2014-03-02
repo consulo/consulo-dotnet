@@ -176,18 +176,6 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
-		for(PsiElement dotNetNamedElement : getStubOrPsiChildren(CSharpStubElements.QUALIFIED_MEMBERS_WITH_USING, PsiElement.ARRAY_FACTORY))
-		{
-			if(dotNetNamedElement instanceof CSharpUsingListImpl)
-			{
-				if(!dotNetNamedElement.processDeclarations(processor, state, lastParent, place))
-				{
-					return false;
-				}
-			}
-		}
-
-
 		return CSharpResolveUtil.walkChildren(processor, this, lastParent, place, state);
 	}
 }
