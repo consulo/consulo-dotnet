@@ -43,6 +43,12 @@ public class CSharpElementTreeNode extends AbstractPsiBasedNode<DotNetNamedEleme
 		super(dotNetMemberOwner.getProject(), dotNetMemberOwner, viewSettings);
 	}
 
+	@Override
+	public boolean expandOnDoubleClick()
+	{
+		return false;
+	}
+
 	@Nullable
 	@Override
 	protected PsiElement extractPsiFromValue()
