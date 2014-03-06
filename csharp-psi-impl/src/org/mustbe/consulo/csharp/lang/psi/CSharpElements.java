@@ -45,6 +45,8 @@ public interface CSharpElements
 
 	IElementType TYPE_DECLARATION = CSharpStubElements.TYPE_DECLARATION;
 
+	IElementType DUMMY_DECLARATION = CSharpStubElements.DUMMY_DECLARATION;
+
 	IElementType EVENT_DECLARATION = CSharpStubElements.EVENT_DECLARATION;
 
 	IElementType CONVERSION_METHOD_DECLARATION = CSharpStubElements.CONVERSION_METHOD_DECLARATION;

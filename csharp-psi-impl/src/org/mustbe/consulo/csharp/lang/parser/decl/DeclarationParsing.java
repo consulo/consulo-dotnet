@@ -106,6 +106,11 @@ public class DeclarationParsing extends SharingParsingHelpers
 				{
 					if(!modifierListPair.getSecond())
 					{
+						if(!inner)
+						{
+							marker.done(DUMMY_DECLARATION);
+							return true;
+						}
 						builder.error("Type expected");
 					}
 					else

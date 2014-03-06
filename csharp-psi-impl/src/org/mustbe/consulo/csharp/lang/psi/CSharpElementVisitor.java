@@ -490,4 +490,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(methodDeclaration);
 	}
+
+	public void visitDummyDeclaration(CSharpDummyDeclarationImpl declaration)
+	{
+		visitElement(declaration);
+	}
 }
