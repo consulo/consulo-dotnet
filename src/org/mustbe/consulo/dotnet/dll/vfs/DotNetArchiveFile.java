@@ -32,6 +32,7 @@ import org.mustbe.consulo.dotnet.dll.vfs.builder.StubToStringUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;
+import edu.arizona.cs.mbel.mbel.AssemblyInfo;
 import edu.arizona.cs.mbel.mbel.Module;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import lombok.val;
@@ -54,12 +55,13 @@ public class DotNetArchiveFile implements ArchiveFile
 		myArchiveEntries = map();
 	}
 
+	@NotNull
 	private List<ArchiveEntry> map()
 	{
 		val typeDefs = myModule.getTypeDefs();
 		val fileList = new ArrayList<DotNetFileArchiveEntry>();
 
-		val duplicateMap = new HashMap<String, DotNetFileArchiveEntry>();
+		val duplicateMap = new HashMap<String, DotNetBaseFileArchiveEntry>();
 
 		// iterate type def add as files
 		for(TypeDef typeDef : typeDefs)
@@ -82,17 +84,23 @@ public class DotNetArchiveFile implements ArchiveFile
 				path = namespace.replace(".", "/") + "/" + userName + ".cs";
 			}
 
-			DotNetFileArchiveEntry fileWithSameName = duplicateMap.get(path);
+			DotNetBaseFileArchiveEntry fileWithSameName = duplicateMap.get(path);
 			if(fileWithSameName != null)
 			{
 				fileWithSameName.addTypeDef(typeDef);
 			}
 			else
 			{
-				DotNetFileArchiveEntry e = new DotNetFileArchiveEntry(typeDef, path, myLastModified);
+				DotNetBaseFileArchiveEntry e = new DotNetBaseFileArchiveEntry(typeDef, path, myLastModified);
 				fileList.add(e);
 				duplicateMap.put(path, e);
 			}
+		}
+
+		AssemblyInfo assemblyInfo = myModule.getAssemblyInfo();
+		if(assemblyInfo != null)
+		{
+			fileList.add(new DotNetAssemblyFileArchiveEntry(assemblyInfo, myLastModified));
 		}
 
 		// sort - at to head, files without namespaces
@@ -117,7 +125,7 @@ public class DotNetArchiveFile implements ArchiveFile
 
 		for(DotNetFileArchiveEntry fileEntry : fileList)
 		{
-			DotNetDirArchiveEntry dirEntry = creaNamespaceDirIfNeed(alreadyAddedNamespaces, fileEntry, myLastModified);
+			DotNetDirArchiveEntry dirEntry = createNamespaceDirIfNeed(alreadyAddedNamespaces, fileEntry, myLastModified);
 			if(dirEntry != null)
 			{
 				list.add(dirEntry);
@@ -128,7 +136,7 @@ public class DotNetArchiveFile implements ArchiveFile
 		return list;
 	}
 
-	private static DotNetDirArchiveEntry creaNamespaceDirIfNeed(List<String> defineList, DotNetFileArchiveEntry position, long lastModified)
+	private static DotNetDirArchiveEntry createNamespaceDirIfNeed(List<String> defineList, DotNetFileArchiveEntry position, long lastModified)
 	{
 		String namespace = position.getNamespace();
 		if(StringUtil.isEmpty(namespace))

@@ -16,104 +16,20 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.StubToStringBuilder;
-import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.ArchiveEntry;
-import com.intellij.util.SmartList;
-import com.intellij.util.text.CharArrayUtil;
-import edu.arizona.cs.mbel.mbel.TypeDef;
 
 /**
  * @author VISTALL
- * @since 11.12.13.
+ * @since 06.03.14
  */
-@Logger
-public class DotNetFileArchiveEntry implements ArchiveEntry
+public interface DotNetFileArchiveEntry extends ArchiveEntry
 {
-	private final List<TypeDef> myTypeDefs;
-	private final String myName;
-	private long myLastModified;
-
-	private NotNullLazyValue<byte[]> myArray = new NotNullLazyValue<byte[]>()
-	{
-		@NotNull
-		@Override
-		protected byte[] compute()
-		{
-			StubToStringBuilder builder = new StubToStringBuilder(DotNetFileArchiveEntry.this);
-			char[] chars = CharArrayUtil.fromSequence(builder.gen());
-			try
-			{
-				return CharArrayUtil.toByteArray(chars);
-			}
-			catch(IOException e)
-			{
-				LOGGER.error(e);
-				return ArrayUtils.EMPTY_BYTE_ARRAY;
-			}
-		}
-	};
-
-	public DotNetFileArchiveEntry(TypeDef typeDef, String name, long lastModified)
-	{
-		myTypeDefs = new SmartList<TypeDef>(typeDef);
-		myName = name;
-		myLastModified = lastModified;
-	}
-
-	public void addTypeDef(@NotNull TypeDef typeDef)
-	{
-		myTypeDefs.add(typeDef);
-	}
+	@NotNull
+	String getNamespace();
 
 	@NotNull
-	public List<TypeDef> getTypeDefs()
-	{
-		return myTypeDefs;
-	}
-
-	@Override
-	public String getName()
-	{
-		return myName;
-	}
-
-	@Override
-	public long getSize()
-	{
-		return myArray.getValue().length;
-	}
-
-	@Override
-	public long getTime()
-	{
-		return myLastModified;
-	}
-
-	@Override
-	public boolean isDirectory()
-	{
-		return false;
-	}
-
-	@NotNull
-	public String getNamespace()
-	{
-		assert !myTypeDefs.isEmpty();
-		return myTypeDefs.get(0).getNamespace();
-	}
-
-	@NotNull
-	public InputStream createInputStream()
-	{
-		return new ByteArrayInputStream(myArray.getValue());
-	}
+	InputStream createInputStream();
 }

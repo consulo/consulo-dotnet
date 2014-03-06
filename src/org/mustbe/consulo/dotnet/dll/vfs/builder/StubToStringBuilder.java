@@ -27,7 +27,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.dll.vfs.DotNetFileArchiveEntry;
+import org.mustbe.consulo.dotnet.dll.vfs.DotNetBaseFileArchiveEntry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiBundle;
@@ -106,7 +106,7 @@ public class StubToStringBuilder
 
 	private List<StubBlock> myRoots = new SmartList<StubBlock>();
 
-	public StubToStringBuilder(DotNetFileArchiveEntry archiveEntry)
+	public StubToStringBuilder(DotNetBaseFileArchiveEntry archiveEntry)
 	{
 		StubBlock namespaceBlock = processNamespace(archiveEntry.getNamespace());
 		if(namespaceBlock != null)
@@ -128,6 +128,11 @@ public class StubToStringBuilder
 				myRoots.add(typeBlock);
 			}
 		}
+	}
+
+	public StubToStringBuilder(AssemblyInfo assemblyInfo)
+	{
+		myRoots.addAll(processAttributes(assemblyInfo));
 	}
 
 	// System.MulticastDelegate
@@ -820,8 +825,6 @@ public class StubToStringBuilder
 	@NotNull
 	public CharSequence gen()
 	{
-		assert !myRoots.isEmpty();
-
 		StringBuilder builder = new StringBuilder();
 		builder.append(PsiBundle.message("psi.decompiled.text.header")).append('\n').append('\n');
 
