@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import lombok.val;
 
@@ -36,7 +37,23 @@ public class ModuleExtensionLayerUtil
 	{
 		val modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
-		for(ModuleExtension moduleExtension : modifiableModel.getExtensions())
+		setCurrentLayerNoCommit(modifiableModel, layer, clazz);
+
+		new WriteAction<Object>()
+		{
+			@Override
+			protected void run(Result<Object> objectResult) throws Throwable
+			{
+				modifiableModel.commit();
+			}
+		}.execute();
+	}
+
+	public static void setCurrentLayerNoCommit(@NotNull ModifiableRootModel modifiableRootModel,
+			@NotNull String layer,
+			@NotNull Class<? extends LayeredModuleExtension> clazz)
+	{
+		for(ModuleExtension moduleExtension : modifiableRootModel.getExtensions())
 		{
 			if(moduleExtension instanceof LayeredMutableModuleExtension)
 			{
@@ -47,14 +64,5 @@ public class ModuleExtensionLayerUtil
 				}
 			}
 		}
-
-		new WriteAction<Object>()
-		{
-			@Override
-			protected void run(Result<Object> objectResult) throws Throwable
-			{
-				modifiableModel.commit();
-			}
-		}.execute();
 	}
 }

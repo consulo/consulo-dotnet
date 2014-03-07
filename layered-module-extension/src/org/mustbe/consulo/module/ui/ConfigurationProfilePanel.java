@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
+import org.mustbe.consulo.module.extension.ModuleExtensionLayerUtil;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.AbstractCollectionComboBoxModel;
@@ -44,7 +45,8 @@ public class ConfigurationProfilePanel extends JPanel
 {
 	private final JPanel myConfigPane;
 
-	public ConfigurationProfilePanel(ModifiableRootModel modifiableRootModel, Runnable runnable, LayeredModuleExtension<?> moduleExtension)
+	public ConfigurationProfilePanel(final ModifiableRootModel modifiableRootModel, Runnable runnable,
+			final LayeredModuleExtension<?> moduleExtension)
 	{
 		super(new BorderLayout());
 
@@ -67,7 +69,7 @@ public class ConfigurationProfilePanel extends JPanel
 			{
 				val selectedItem = (String) comboBox.getSelectedItem();
 
-				//extension.setCurrentProfile(selectedItem.getName());
+				ModuleExtensionLayerUtil.setCurrentLayerNoCommit(modifiableRootModel, selectedItem, moduleExtension.getHeadClass());
 
 				setActive(selectedItem);
 			}
