@@ -17,7 +17,7 @@
 package org.mustbe.consulo.microsoft.dotnet.module.extension2;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
+import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;

@@ -17,7 +17,7 @@
 package org.mustbe.consulo.mono.dotnet.module.extension;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
+import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.execution.Executor;

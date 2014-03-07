@@ -26,7 +26,7 @@ import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
+import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;

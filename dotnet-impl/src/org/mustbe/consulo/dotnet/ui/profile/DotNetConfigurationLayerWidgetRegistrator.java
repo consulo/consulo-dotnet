@@ -16,40 +16,34 @@
 
 package org.mustbe.consulo.dotnet.ui.profile;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import com.intellij.openapi.components.AbstractProjectComponent;
+import org.mustbe.consulo.module.extension.LayeredModuleExtension;
+import org.mustbe.consulo.ui.profile.ConfigurationLayerWidgetRegistrator;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.WindowManager;
 
 /**
  * @author VISTALL
  * @since 31.01.14
  */
-public class ProfileWidgetRegistrator extends AbstractProjectComponent
+public class DotNetConfigurationLayerWidgetRegistrator extends ConfigurationLayerWidgetRegistrator
 {
-	private ProfileWidget myProfileWidget;
-
-	public ProfileWidgetRegistrator(Project project)
+	public DotNetConfigurationLayerWidgetRegistrator(Project project)
 	{
 		super(project);
 	}
 
+	@NotNull
 	@Override
-	public void projectOpened()
+	public String getPrefix()
 	{
-		StatusBar statusBar = WindowManager.getInstance().getIdeFrame(myProject).getStatusBar();
-
-		myProfileWidget = new ProfileWidget(myProject, ".NET", DotNetModuleExtension.class);
-
-		statusBar.addWidget(myProfileWidget, "after Position");
+		return ".NET";
 	}
 
+	@NotNull
 	@Override
-	public void projectClosed()
+	public Class<? extends LayeredModuleExtension> getExtensionClass()
 	{
-		StatusBar statusBar = WindowManager.getInstance().getIdeFrame(myProject).getStatusBar();
-
-		statusBar.removeWidget(myProfileWidget.ID());
+		return DotNetModuleExtension.class;
 	}
 }

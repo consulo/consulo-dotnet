@@ -84,6 +84,7 @@
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
+        <orderEntry type="module" module-name="layered-module-extension" exported="" />
       </module>
       <module name="dotnet-psi-api" dirurl="file://$PROJECT_DIR$/dotnet-psi-api">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
@@ -233,6 +234,17 @@
           </library>
         </orderEntry>
         <orderEntry type="module" module-name="consulo-dotnet" />
+      </module>
+      <module name="layered-module-extension" dirurl="file://$PROJECT_DIR$/layered-module-extension">
+        <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
+        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
+        <content url="file://$MODULE_DIR$">
+          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+        </content>
+        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
+        <orderEntry type="module-extension-sdk" extension-id="java" />
+        <orderEntry type="sourceFolder" forTests="false" />
       </module>
     </modules>
   </component>

@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.module.extension;
 
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
-import org.mustbe.consulo.dotnet.module.LayeredMutableModuleExtension;
+import org.mustbe.consulo.module.extension.LayeredMutableModuleExtension;
 
 /**
  * @author VISTALL

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.ui;
+package org.mustbe.consulo.module.ui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -26,8 +26,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
-import org.mustbe.consulo.dotnet.module.LayeredModuleExtension;
+import org.mustbe.consulo.module.extension.ConfigurationLayer;
+import org.mustbe.consulo.module.extension.LayeredModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.AbstractCollectionComboBoxModel;
@@ -42,7 +42,6 @@ import lombok.val;
  */
 public class ConfigurationProfilePanel extends JPanel
 {
-
 	private final JPanel myConfigPane;
 
 	public ConfigurationProfilePanel(ModifiableRootModel modifiableRootModel, Runnable runnable, LayeredModuleExtension<?> moduleExtension)
@@ -73,7 +72,6 @@ public class ConfigurationProfilePanel extends JPanel
 				setActive(selectedItem);
 			}
 		});
-
 
 		add(labeledLine("Profile: ", comboBox), BorderLayout.NORTH);
 

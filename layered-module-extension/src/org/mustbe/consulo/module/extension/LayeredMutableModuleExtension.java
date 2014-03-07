@@ -14,31 +14,22 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module;
+package org.mustbe.consulo.module.extension;
 
-import javax.swing.JComponent;
-
-import org.jdom.Element;
+import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.util.ListWithSelection;
 
 /**
  * @author VISTALL
- * @since 01.02.14
+ * @since 07.03.14
  */
-public interface ConfigurationLayer
+public interface LayeredMutableModuleExtension<T extends LayeredModuleExtension<T>> extends LayeredModuleExtension<T>,
+		MutableModuleExtension<T>
 {
-	void loadState(Element element);
-
-	void getState(Element element);
-
-	@Nullable
-	JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable);
-
-	@NotNull
-	ConfigurationLayer clone();
-
 	@Override
-	boolean equals(Object o);
+	@NotNull
+	ListWithSelection<String> getLayersList();
+
+	void setCurrentLayer(@NotNull String name);
 }

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module;
+package org.mustbe.consulo.module.extension;
 
-import org.consulo.module.extension.MutableModuleExtension;
+import org.consulo.annotations.Immutable;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.util.ListWithSelection;
 
@@ -24,12 +25,21 @@ import com.intellij.util.ListWithSelection;
  * @author VISTALL
  * @since 07.03.14
  */
-public interface LayeredMutableModuleExtension<T extends LayeredModuleExtension<T>> extends LayeredModuleExtension<T>,
-		MutableModuleExtension<T>
+public interface LayeredModuleExtension<T extends LayeredModuleExtension<T>> extends ModuleExtension<T>
 {
-	@Override
 	@NotNull
+	@Immutable
 	ListWithSelection<String> getLayersList();
 
-	void setCurrentLayer(@NotNull String name);
+	@NotNull
+	ConfigurationLayer getLayer(@NotNull String name);
+
+	@NotNull
+	ConfigurationLayer getCurrentLayer();
+
+	@NotNull
+	String getCurrentLayerName();
+
+	@NotNull
+	Class<? extends LayeredModuleExtension> getHeadClass();
 }

@@ -6,6 +6,7 @@ import org.consulo.annotations.InheritImmutable;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTarget;
+import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import com.intellij.openapi.projectRoots.Sdk;
 
 /**

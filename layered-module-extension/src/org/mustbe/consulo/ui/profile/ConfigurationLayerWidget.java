@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.ui.profile;
+package org.mustbe.consulo.ui.profile;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -30,8 +30,8 @@ import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.LayeredModuleExtension;
-import org.mustbe.consulo.dotnet.module.ModuleExtensionLayerUtil;
+import org.mustbe.consulo.module.extension.LayeredModuleExtension;
+import org.mustbe.consulo.module.extension.ModuleExtensionLayerUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -67,7 +67,7 @@ import lombok.val;
  * @author VISTALL
  * @since 31.01.14
  */
-public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarWidget
+public class ConfigurationLayerWidget extends EditorBasedWidget implements CustomStatusBarWidget
 {
 	@NotNull
 	private final TextPanel myComponent;
@@ -78,7 +78,7 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 
 	private boolean myActionEnabled;
 
-	public ProfileWidget(@NotNull Project project, @NotNull String prefix, @NotNull Class<? extends LayeredModuleExtension> clazz)
+	public ConfigurationLayerWidget(@NotNull Project project, @NotNull String prefix, @NotNull Class<? extends LayeredModuleExtension> clazz)
 	{
 		super(project);
 		myPrefix = prefix;
