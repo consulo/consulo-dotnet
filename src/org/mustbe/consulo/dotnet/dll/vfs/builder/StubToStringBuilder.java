@@ -17,7 +17,10 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,15 +40,7 @@ import com.intellij.util.Function;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import edu.arizona.cs.mbel.mbel.*;
-import edu.arizona.cs.mbel.signature.CustomAttributeOwner;
-import edu.arizona.cs.mbel.signature.FieldAttributes;
-import edu.arizona.cs.mbel.signature.MethodAttributes;
-import edu.arizona.cs.mbel.signature.MethodImplAttributes;
-import edu.arizona.cs.mbel.signature.ParamAttributes;
-import edu.arizona.cs.mbel.signature.ParameterInfo;
-import edu.arizona.cs.mbel.signature.ParameterSignature;
-import edu.arizona.cs.mbel.signature.TypeAttributes;
-import edu.arizona.cs.mbel.signature.TypeSignature;
+import edu.arizona.cs.mbel.signature.*;
 import lombok.val;
 
 /**
@@ -57,7 +52,6 @@ public class StubToStringBuilder
 {
 	private static final String CONSTRUCTOR_NAME = ".ctor";
 	private static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
-	private static final String ARRAY_PROPERTY_NAME = "Item";
 	private static final char[] BRACES = {
 			'{',
 			'}'
@@ -249,7 +243,17 @@ public class StubToStringBuilder
 				if(isSet(field.getFlags(), FieldAttributes.Static))
 				{
 					parent.getBlocks().addAll(processAttributes(field));
-					parent.getBlocks().add(new LineStubBlock(field.getName() + ",\n"));
+
+					StringBuilder builder = new StringBuilder();
+					builder.append(field.getName());
+					if(field.getDefaultValue() != null)
+					{
+						builder.append(" = ");
+						//TODO [VISTALL] better way to handle type
+						builder.append(toValue(TypeSignature.I4, typeDef, null, field.getDefaultValue()));
+					}
+					builder.append(",\n");
+					parent.getBlocks().add(new LineStubBlock(builder));
 				}
 			}
 			else
@@ -657,12 +661,12 @@ public class StubToStringBuilder
 		if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
 		{
 			p.append(" = ");
-			p.append(toValue(signature, parameterInfo.getDefaultValue()));
+			p.append(toValue(signature, typeDef, methodDef, parameterInfo.getDefaultValue()));
 		}
 		return p.toString();
 	}
 
-	private static Object toValue(TypeSignature signature, byte[] value)
+	private static Object toValue(TypeSignature signature, TypeDef typeDef, MethodDef methodDef, byte[] value)
 	{
 		if(signature == TypeSignature.STRING)
 		{
@@ -672,19 +676,54 @@ public class StubToStringBuilder
 			}
 			catch(UnsupportedEncodingException e)
 			{
-				LOGGER.error(e);
+				return StringUtil.QUOTER.fun(Arrays.toString(value));
 			}
 		}
 		else if(signature == TypeSignature.BOOLEAN)
 		{
 			return value[0] == 1;
 		}
-		else
+		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{
-			LOGGER.error(signature);
+			ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
+			AbstractTypeReference valueType = valueTypeSignature.getValueType();
+			if(valueType instanceof TypeDef)
+			{
+				if(((TypeDef) valueType).isEnum())
+				{
+					for(Field field : ((TypeDef) valueType).getFields())
+					{
+						if(isSet(field.getFlags(), FieldAttributes.Static) &&
+								field.getDefaultValue() != null && Arrays.equals(field.getDefaultValue(), value))
+						{
+							return TypeToStringBuilder.toStringFromDefRefSpec(valueType, typeDef, methodDef) + "." + field.getName();
+						}
+					}
+				}
+			}
+		}
+		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_GENERIC_INST || signature.getType() == SignatureConstants.ELEMENT_TYPE_CLASS)
+		{
+			if(wrap(value).getInt() == 0)
+			{
+				return "null";
+			}
+		}
+		else if(signature == TypeSignature.I4)
+		{
+			return wrap(value).getInt();
 		}
 
+		LOGGER.error(signature + " " + typeDef.getFullName() + "#" + methodDef.getName() + "(). Array: "+ Arrays.toString(value));
+
 		return StringUtil.QUOTER.fun("error");
+	}
+
+	private static ByteBuffer wrap(byte[] data)
+	{
+		ByteBuffer byteBuffer = ByteBuffer.wrap(data);
+		byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+		return byteBuffer;
 	}
 
 	/**
