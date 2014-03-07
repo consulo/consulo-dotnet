@@ -95,11 +95,24 @@ public abstract class LayeredModuleExtensionImpl<S extends LayeredModuleExtensio
 		myCurrentLayer = currentLayer;
 	}
 
+	public void removeLayer(@NotNull String layer)
+	{
+		myLayers.remove(layer);
+	}
+
 	@NotNull
 	public ConfigurationLayer addLayer(@NotNull String name)
 	{
 		ConfigurationLayer layer = createLayer();
 		myLayers.put(name, layer);
+		return layer;
+	}
+
+	@NotNull
+	public ConfigurationLayer copyLayer(@NotNull String oldName, @NotNull String name)
+	{
+		ConfigurationLayer layer = getLayer(oldName);
+		myLayers.put(name, layer = layer.clone());
 		return layer;
 	}
 

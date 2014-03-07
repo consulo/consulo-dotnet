@@ -18,22 +18,33 @@ package org.mustbe.consulo.module.ui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.List;
 
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.jetbrains.annotations.NotNull;
+import org.jdesktop.swingx.HorizontalLayout;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
 import org.mustbe.consulo.module.extension.ModuleExtensionLayerUtil;
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.AbstractCollectionComboBoxModel;
+import com.intellij.openapi.ui.InputValidator;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.IdeBorderFactory;
+import com.intellij.ui.MutableCollectionComboBoxModel;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.util.IconUtil;
+import com.intellij.util.ListWithSelection;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
 
@@ -52,15 +63,8 @@ public class ConfigurationProfilePanel extends JPanel
 
 		val layers = moduleExtension.getLayersList();
 
-		val comboBox = new ComboBox(new AbstractCollectionComboBoxModel(layers.getSelection())
-		{
-			@NotNull
-			@Override
-			protected List getItems()
-			{
-				return layers;
-			}
-		});
+		val model = new MutableCollectionComboBoxModel(layers, layers.getSelection());
+		val comboBox = new ComboBox(model);
 
 		comboBox.addItemListener(new ItemListener()
 		{
@@ -75,7 +79,123 @@ public class ConfigurationProfilePanel extends JPanel
 			}
 		});
 
-		add(labeledLine("Profile: ", comboBox), BorderLayout.NORTH);
+		val removePresentation = presentation("Remove", IconUtil.getRemoveIcon());
+		val removeUpdater = new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				removePresentation.setEnabled(comboBox.getItemCount() > 1);
+			}
+		};
+		removeUpdater.run();
+
+		JPanel panel = new JPanel(new HorizontalLayout());
+		panel.add(new ActionButton(new AnAction()
+		{
+			@Override
+			public void actionPerformed(AnActionEvent anActionEvent)
+			{
+				String newName = Messages.showInputDialog(moduleExtension.getModule().getProject(), "Name", null, Messages.getQuestionIcon(), null,
+						new InputValidator()
+				{
+					@Override
+					public boolean checkInput(String s)
+					{
+						return !model.contains(s);
+					}
+
+					@Override
+					public boolean canClose(String s)
+					{
+						return true;
+					}
+				});
+
+				if(newName != null)
+				{
+					ModuleExtensionLayerUtil.addLayerNoCommit(modifiableRootModel, newName, moduleExtension.getHeadClass());
+
+					ListWithSelection<String> layersList = moduleExtension.getLayersList();
+
+					model.update(layersList);
+
+					comboBox.setSelectedItem(newName);
+
+					ModuleExtensionLayerUtil.setCurrentLayerNoCommit(modifiableRootModel, newName, moduleExtension.getHeadClass());
+
+					removeUpdater.run();
+				}
+			}
+		}, presentation("Add", IconUtil.getAddIcon()), "ConfigurationProfilePanel.ComboBox", ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+
+		panel.add(new ActionButton(new AnAction()
+		{
+			@Override
+			public void actionPerformed(AnActionEvent anActionEvent)
+			{
+				String selectedItem = (String) comboBox.getSelectedItem();
+
+				ModuleExtensionLayerUtil.removeLayerNoCommit(modifiableRootModel, selectedItem, moduleExtension.getHeadClass());
+
+				ListWithSelection<String> layersList = moduleExtension.getLayersList();
+
+				model.update(layersList);
+
+				comboBox.setSelectedItem(layersList.get(0));
+
+				ModuleExtensionLayerUtil.setCurrentLayerNoCommit(modifiableRootModel, layersList.get(0), moduleExtension.getHeadClass());
+
+				removeUpdater.run();
+			}
+		}, removePresentation, "ConfigurationProfilePanel.ComboBox", ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+
+		panel.add(new ActionButton(new AnAction()
+		{
+			@Override
+			public void actionPerformed(AnActionEvent anActionEvent)
+			{
+				String oldSelected = (String) comboBox.getSelectedItem();
+				String newName = Messages.showInputDialog(moduleExtension.getModule().getProject(), "Name", null, Messages.getQuestionIcon(),
+						oldSelected, new InputValidator()
+				{
+					@Override
+					public boolean checkInput(String s)
+					{
+						return !model.contains(s);
+					}
+
+					@Override
+					public boolean canClose(String s)
+					{
+						return true;
+					}
+				});
+
+				if(newName != null)
+				{
+					ModuleExtensionLayerUtil.copyLayerNoCommit(modifiableRootModel, oldSelected, newName, moduleExtension.getHeadClass());
+
+					ListWithSelection<String> layersList = moduleExtension.getLayersList();
+
+					model.update(layersList);
+
+					comboBox.setSelectedItem(newName);
+
+					ModuleExtensionLayerUtil.setCurrentLayerNoCommit(modifiableRootModel, newName, moduleExtension.getHeadClass());
+
+					removeUpdater.run();
+				}
+			}
+
+		}, presentation("Copy", AllIcons.Actions.Copy), "ConfigurationProfilePanel.ComboBox", ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+
+		JPanel newPanel = new JPanel(new BorderLayout());
+		newPanel.setPreferredSize(new Dimension(-1, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE.height + 2));
+		newPanel.add(new JBLabel("Profile: "), BorderLayout.WEST);
+		newPanel.add(comboBox, BorderLayout.CENTER);
+		newPanel.add(panel, BorderLayout.EAST);
+		add(newPanel, BorderLayout.NORTH);
 
 		myConfigPane = new JPanel(new CardLayout());
 		myConfigPane.setBorder(IdeBorderFactory.createTitledBorder("Settings"));
@@ -92,6 +212,14 @@ public class ConfigurationProfilePanel extends JPanel
 		}
 
 		setActive(layers.getSelection());
+	}
+
+	private static Presentation presentation(String text, Icon icon)
+	{
+		Presentation presentation = new Presentation();
+		presentation.setText(text);
+		presentation.setIcon(icon);
+		return presentation;
 	}
 
 	public void setActive(final String configurationProfile)

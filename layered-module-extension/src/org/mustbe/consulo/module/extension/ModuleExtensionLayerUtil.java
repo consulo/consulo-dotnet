@@ -65,4 +65,56 @@ public class ModuleExtensionLayerUtil
 			}
 		}
 	}
+
+	public static void addLayerNoCommit(@NotNull ModifiableRootModel modifiableRootModel,
+			@NotNull String layer,
+			@NotNull Class<? extends LayeredModuleExtension> clazz)
+	{
+		for(ModuleExtension moduleExtension : modifiableRootModel.getExtensions())
+		{
+			if(moduleExtension instanceof LayeredMutableModuleExtension)
+			{
+				LayeredMutableModuleExtension<?> layeredMutableModuleExtension = (LayeredMutableModuleExtension) moduleExtension;
+				if(layeredMutableModuleExtension.getHeadClass().isAssignableFrom(clazz))
+				{
+					layeredMutableModuleExtension.addLayer(layer);
+				}
+			}
+		}
+	}
+
+	public static void copyLayerNoCommit(@NotNull ModifiableRootModel modifiableRootModel,
+			@NotNull String oldLayer,
+			@NotNull String layer,
+			@NotNull Class<? extends LayeredModuleExtension> clazz)
+	{
+		for(ModuleExtension moduleExtension : modifiableRootModel.getExtensions())
+		{
+			if(moduleExtension instanceof LayeredMutableModuleExtension)
+			{
+				LayeredMutableModuleExtension<?> layeredMutableModuleExtension = (LayeredMutableModuleExtension) moduleExtension;
+				if(layeredMutableModuleExtension.getHeadClass().isAssignableFrom(clazz))
+				{
+					layeredMutableModuleExtension.copyLayer(oldLayer, layer);
+				}
+			}
+		}
+	}
+
+	public static void removeLayerNoCommit(@NotNull ModifiableRootModel modifiableRootModel,
+			@NotNull String layer,
+			@NotNull Class<? extends LayeredModuleExtension> clazz)
+	{
+		for(ModuleExtension moduleExtension : modifiableRootModel.getExtensions())
+		{
+			if(moduleExtension instanceof LayeredMutableModuleExtension)
+			{
+				LayeredMutableModuleExtension<?> layeredMutableModuleExtension = (LayeredMutableModuleExtension) moduleExtension;
+				if(layeredMutableModuleExtension.getHeadClass().isAssignableFrom(clazz))
+				{
+					layeredMutableModuleExtension.removeLayer(layer);
+				}
+			}
+		}
+	}
 }

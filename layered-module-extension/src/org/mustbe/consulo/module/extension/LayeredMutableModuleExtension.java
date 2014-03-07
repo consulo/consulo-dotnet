@@ -32,4 +32,12 @@ public interface LayeredMutableModuleExtension<T extends LayeredModuleExtension<
 	ListWithSelection<String> getLayersList();
 
 	void setCurrentLayer(@NotNull String name);
+
+	void removeLayer(@NotNull String name);
+
+	@NotNull
+	ConfigurationLayer addLayer(@NotNull String name);
+
+	@NotNull
+	ConfigurationLayer copyLayer(@NotNull String original, @NotNull String name);
 }
