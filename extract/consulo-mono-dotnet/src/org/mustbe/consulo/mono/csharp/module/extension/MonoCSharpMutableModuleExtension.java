@@ -18,9 +18,9 @@ package org.mustbe.consulo.mono.csharp.module.extension;
 
 import javax.swing.JComponent;
 
-import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.module.extension.LayeredMutableModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
@@ -28,12 +28,11 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author VISTALL
  * @since 26.11.13.
  */
-public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension implements MutableModuleExtension<MonoCSharpModuleExtension>
+public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension implements LayeredMutableModuleExtension<MonoCSharpModuleExtension>
 {
 	public MonoCSharpMutableModuleExtension(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
-
 	}
 
 	@Nullable
@@ -41,12 +40,6 @@ public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension 
 	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
 		return createConfigurablePanelImpl(modifiableRootModel, runnable);
-	}
-
-	@Override
-	public void setEnabled(boolean b)
-	{
-		myIsEnabled = b;
 	}
 
 	@Override

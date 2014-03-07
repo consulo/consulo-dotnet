@@ -18,12 +18,16 @@ package org.mustbe.consulo.csharp.module.extension;
 
 import javax.swing.JComponent;
 
-import org.consulo.module.extension.impl.ModuleExtensionImpl;
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
+import org.mustbe.consulo.csharp.module.CSharpConfigurationLayer;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import org.mustbe.consulo.module.extension.ChildLayeredModuleExtensionImpl;
+import org.mustbe.consulo.module.extension.ConfigurationLayer;
+import org.mustbe.consulo.module.extension.LayeredModuleExtension;
+import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -32,7 +36,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author VISTALL
  * @since 15.12.13.
  */
-public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> extends ModuleExtensionImpl<T> implements
+public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> extends ChildLayeredModuleExtensionImpl<T> implements
 		DotNetModuleLangExtension<T>
 {
 	public CSharpModuleExtension(@NotNull String id, @NotNull Module module)
@@ -42,36 +46,27 @@ public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> 
 
 	protected JComponent createConfigurablePanelImpl(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		return null;
-		//return new ConfigurationProfilePanel(modifiableRootModel, runnable, CSharpConfigurationProfileEx.KEY);
-	}
-
-	protected boolean isModifiedImpl(T ex)
-	{
-		return myIsEnabled != ex.isEnabled();
+		return new ConfigurationProfilePanel(modifiableRootModel, runnable, this);
 	}
 
 	public boolean isAllowUnsafeCode()
 	{
-		return false; //TODO [VISTALL]
+		CSharpConfigurationLayer currentLayer = (CSharpConfigurationLayer) getCurrentLayer();
+		return currentLayer.isAllowUnsafeCode();
 	}
 
+	@NotNull
 	@Override
-	protected void loadStateImpl(@NotNull Element element)
+	public Class<? extends LayeredModuleExtension> getHeadClass()
 	{
-		super.loadStateImpl(element);
+		return DotNetModuleExtension.class;
 	}
 
+	@NotNull
 	@Override
-	protected void getStateImpl(@NotNull Element element)
+	protected ConfigurationLayer createLayer()
 	{
-		super.getStateImpl(element);
-	}
-
-	@Override
-	public void commit(@NotNull T mutableModuleExtension)
-	{
-		super.commit(mutableModuleExtension);
+		return new CSharpConfigurationLayer();
 	}
 
 	@NotNull
