@@ -246,11 +246,32 @@ public class StubToStringBuilder
 
 					StringBuilder builder = new StringBuilder();
 					builder.append(field.getName());
-					if(field.getDefaultValue() != null)
+					byte[] defaultValue = field.getDefaultValue();
+					if(defaultValue != null)
 					{
 						builder.append(" = ");
-						//TODO [VISTALL] better way to handle type
-						builder.append(toValue(TypeSignature.I4, typeDef, null, field.getDefaultValue()));
+						//TODO [VISTALL] find better way to handle type
+						if(defaultValue.length == 1)
+						{
+							builder.append(toValue(TypeSignature.I1, typeDef, null, defaultValue));
+						}
+						else if(defaultValue.length == 2)
+						{
+							builder.append(toValue(TypeSignature.I2, typeDef, null, defaultValue));
+						}
+						else if(defaultValue.length == 4)
+						{
+							builder.append(toValue(TypeSignature.I4, typeDef, null, defaultValue));
+						}
+						else if(defaultValue.length == 8)
+						{
+							builder.append(toValue(TypeSignature.I8, typeDef, null, defaultValue));
+						}
+						else
+						{
+							LOGGER.error("Wrong byte count: " + defaultValue.length + ": " + typeDef.getFullName() + "." + field.getName());
+							builder.append("0");
+						}
 					}
 					builder.append(",\n");
 					parent.getBlocks().add(new LineStubBlock(builder));
@@ -683,6 +704,22 @@ public class StubToStringBuilder
 		{
 			return value[0] == 1;
 		}
+		else if(signature == TypeSignature.I1)
+		{
+			return value[0];
+		}
+		else if(signature == TypeSignature.I2)
+		{
+			return wrap(value).getShort();
+		}
+		else if(signature == TypeSignature.I4)
+		{
+			return wrap(value).getInt();
+		}
+		else if(signature == TypeSignature.I8)
+		{
+			return wrap(value).getLong();
+		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{
 			ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
@@ -702,16 +739,14 @@ public class StubToStringBuilder
 				}
 			}
 		}
-		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_GENERIC_INST || signature.getType() == SignatureConstants.ELEMENT_TYPE_CLASS)
+		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_GENERIC_INST ||
+				signature.getType() == SignatureConstants.ELEMENT_TYPE_CLASS ||
+				signature.getType() == SignatureConstants.ELEMENT_TYPE_SZARRAY)
 		{
 			if(wrap(value).getInt() == 0)
 			{
 				return "null";
 			}
-		}
-		else if(signature == TypeSignature.I4)
-		{
-			return wrap(value).getInt();
 		}
 
 		LOGGER.error(signature + " " + typeDef.getFullName() + "#" + methodDef.getName() + "(). Array: "+ Arrays.toString(value));
