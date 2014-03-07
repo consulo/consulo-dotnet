@@ -25,10 +25,9 @@ import javax.swing.JPanel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfileEx;
+import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.Key;
 import com.intellij.ui.components.JBCheckBox;
 import lombok.val;
 
@@ -36,24 +35,9 @@ import lombok.val;
  * @author VISTALL
  * @since 01.02.14
  */
-public class CSharpConfigurationProfileEx implements ConfigurationProfileEx<CSharpConfigurationProfileEx>
+public class CSharpConfigurationLayer implements ConfigurationLayer
 {
-	public static final Key<CSharpConfigurationProfileEx> KEY = Key.create("csharp");
-
 	private boolean myAllowUnsafeCode;
-
-	@NotNull
-	@Override
-	public Key<?> getKey()
-	{
-		return KEY;
-	}
-
-	@Override
-	public boolean equalsEx(@NotNull CSharpConfigurationProfileEx ex)
-	{
-		return myAllowUnsafeCode == ex.isAllowUnsafeCode();
-	}
 
 	@Override
 	public void loadState(Element element)
@@ -85,11 +69,21 @@ public class CSharpConfigurationProfileEx implements ConfigurationProfileEx<CSha
 		return panel;
 	}
 
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj instanceof CSharpConfigurationLayer)
+		{
+			return myAllowUnsafeCode == ((CSharpConfigurationLayer) obj).isAllowUnsafeCode();
+		}
+		return false;
+	}
+
 	@NotNull
 	@Override
-	public ConfigurationProfileEx<CSharpConfigurationProfileEx> clone()
+	public ConfigurationLayer clone()
 	{
-		CSharpConfigurationProfileEx profileEx = new CSharpConfigurationProfileEx();
+		CSharpConfigurationLayer profileEx = new CSharpConfigurationLayer();
 		profileEx.setAllowUnsafeCode(myAllowUnsafeCode);
 		return profileEx;
 	}

@@ -35,6 +35,12 @@ public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModule
 		super(id, module);
 	}
 
+	@Override
+	public void setEnabled(boolean b)
+	{
+		myIsEnabled = b;
+	}
+
 	@Nullable
 	@Override
 	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)

@@ -22,19 +22,13 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.util.Key;
 
 /**
  * @author VISTALL
  * @since 01.02.14
  */
-public interface ConfigurationProfileEx<T extends ConfigurationProfileEx<T>>
+public interface ConfigurationLayer
 {
-	@NotNull
-	Key<?> getKey();
-
-	boolean equalsEx(@NotNull T ex);
-
 	void loadState(Element element);
 
 	void getState(Element element);
@@ -43,5 +37,8 @@ public interface ConfigurationProfileEx<T extends ConfigurationProfileEx<T>>
 	JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable);
 
 	@NotNull
-	ConfigurationProfileEx<T> clone();
+	ConfigurationLayer clone();
+
+	@Override
+	boolean equals(Object o);
 }

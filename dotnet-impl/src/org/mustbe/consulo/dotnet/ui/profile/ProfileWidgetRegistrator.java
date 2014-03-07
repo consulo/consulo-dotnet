@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.ui.profile;
 
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.StatusBar;
@@ -39,7 +40,7 @@ public class ProfileWidgetRegistrator extends AbstractProjectComponent
 	{
 		StatusBar statusBar = WindowManager.getInstance().getIdeFrame(myProject).getStatusBar();
 
-		myProfileWidget = new ProfileWidget(myProject);
+		myProfileWidget = new ProfileWidget(myProject, ".NET", DotNetModuleExtension.class);
 
 		statusBar.addWidget(myProfileWidget, "after Position");
 	}

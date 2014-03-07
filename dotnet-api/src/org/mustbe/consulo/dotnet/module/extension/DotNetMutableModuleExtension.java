@@ -17,13 +17,14 @@
 package org.mustbe.consulo.dotnet.module.extension;
 
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
-import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.LayeredMutableModuleExtension;
 
 /**
  * @author VISTALL
  * @since 01.02.14
  */
-public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetModuleExtension<T>, MutableModuleExtensionWithSdk<T>
+public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetModuleExtension<T>,
+		MutableModuleExtensionWithSdk<T>, LayeredMutableModuleExtension<T>
 {
-	void setCurrentProfile(@NotNull String currentProfile);
+
 }

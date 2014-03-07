@@ -17,7 +17,7 @@
 package org.mustbe.consulo.mono.dotnet.module.extension2;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension;
@@ -53,7 +53,8 @@ public class MonoDotNetModuleExtension2 extends DotNetModuleExtensionImpl<MonoDo
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationProfile configurationProfile, Executor executor)
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile,
+			Executor executor)
 	{
 		return MonoDotNetModuleExtension.createRunCommandLine0(fileName, configurationProfile, executor, getSdk());
 	}

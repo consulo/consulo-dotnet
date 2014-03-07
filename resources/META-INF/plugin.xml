@@ -31,7 +31,6 @@
 
 	<extensionPoints>
 		<extensionPoint name="psi.facade" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade" area="CONSULO_PROJECT"/>
-		<extensionPoint name="configurationExProvider" interface="org.mustbe.consulo.dotnet.module.ConfigurationProfileExProvider"/>
 
 		<extensionPoint name="classInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="directClassInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
@@ -46,10 +45,6 @@
 			<implementation-class>org.mustbe.consulo.dotnet.module.ModuleTopicsRegister</implementation-class>
 		</component>
 	</project-components>
-
-	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
-		<configurationExProvider implementation="org.mustbe.consulo.dotnet.module.MainConfigurationProfileExProvider"/>
-	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetDllFileTypeFactory"/>

@@ -21,7 +21,7 @@ import java.util.Arrays;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -101,19 +101,20 @@ public class DotNetCompiler implements TranslatingCompiler
 	{
 		Module module = moduleChunk.getNodes().iterator().next();
 
-		DotNetModuleLangExtension langDotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
-		DotNetModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		DotNetModuleLangExtension<?> langDotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
+		DotNetModuleExtension<?> dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 
 		assert dotNetModuleExtension != null;
 		assert langDotNetModuleExtension != null;
 
-		ConfigurationProfile currentProfile = dotNetModuleExtension.getCurrentProfile();
+		String layerName = dotNetModuleExtension.getCurrentLayerName();
 
-		DotNetCompilerOptionsBuilder builder = langDotNetModuleExtension.createCompilerOptionsBuilder(dotNetModuleExtension.getSdk(), currentProfile);
+		DotNetCompilerOptionsBuilder builder = langDotNetModuleExtension.createCompilerOptionsBuilder();
 
 		try
 		{
-			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, currentProfile);
+			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, layerName,
+					(MainConfigurationLayer) dotNetModuleExtension.getCurrentLayer());
 
 			val process = commandLine.createProcess();
 			val processHandler = new CapturingProcessHandler(process, Charset.forName("UTF-8"));

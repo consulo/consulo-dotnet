@@ -26,29 +26,25 @@ import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfileEx;
-import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
+import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.Key;
 import lombok.val;
 
 /**
  * @author VISTALL
  * @since 10.02.14
  */
-public class NUnitConfigurationProfileEx implements ConfigurationProfileEx<NUnitConfigurationProfileEx>
+public class NUnitConfigurationLayer implements ConfigurationLayer
 {
-	public static final Key<MainConfigurationProfileEx> KEY = Key.create("dotnet-unit");
-
 	private final NUnitModuleExtension myNUnitModuleExtension;
 
 	private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 
-	public NUnitConfigurationProfileEx(NUnitModuleExtension netModuleExtension)
+	public NUnitConfigurationLayer(NUnitModuleExtension netModuleExtension)
 	{
 		myNUnitModuleExtension = netModuleExtension;
 		mySdkPointer = new SdkModuleInheritableNamedPointerImpl(netModuleExtension.getModule().getProject(), netModuleExtension.getId());
@@ -89,24 +85,21 @@ public class NUnitConfigurationProfileEx implements ConfigurationProfileEx<NUnit
 
 	@NotNull
 	@Override
-	public NUnitConfigurationProfileEx clone()
+	public NUnitConfigurationLayer clone()
 	{
-		NUnitConfigurationProfileEx profileEx = new NUnitConfigurationProfileEx(myNUnitModuleExtension);
+		NUnitConfigurationLayer profileEx = new NUnitConfigurationLayer(myNUnitModuleExtension);
 		profileEx.mySdkPointer.set(mySdkPointer.getModuleName(), mySdkPointer.getName());
 		return profileEx;
 	}
 
-	@NotNull
 	@Override
-	public Key<?> getKey()
+	public boolean equals(Object obj)
 	{
-		return KEY;
-	}
-
-	@Override
-	public boolean equalsEx(@NotNull NUnitConfigurationProfileEx ex)
-	{
-		return mySdkPointer.equals(ex.mySdkPointer);
+		if(obj instanceof NUnitConfigurationLayer)
+		{
+			return mySdkPointer.equals(((NUnitConfigurationLayer) obj).mySdkPointer);
+		}
+		return false;
 	}
 
 	@NotNull

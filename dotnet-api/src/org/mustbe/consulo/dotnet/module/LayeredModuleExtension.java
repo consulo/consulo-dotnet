@@ -16,21 +16,30 @@
 
 package org.mustbe.consulo.dotnet.module;
 
+import org.consulo.annotations.Immutable;
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.util.ListWithSelection;
 
 /**
  * @author VISTALL
- * @since 01.02.14
+ * @since 07.03.14
  */
-public interface ConfigurationProfileExProvider
+public interface LayeredModuleExtension<T extends LayeredModuleExtension<T>> extends ModuleExtension<T>
 {
-	ExtensionPointName<ConfigurationProfileExProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.configurationExProvider");
+	@NotNull
+	@Immutable
+	ListWithSelection<String> getLayersList();
 
 	@NotNull
-	ConfigurationProfileEx createEx(@NotNull DotNetModuleExtension dotNetModuleExtension, @NotNull ConfigurationProfile profile);
+	ConfigurationLayer getLayer(@NotNull String name);
 
 	@NotNull
-	ConfigurationProfileEx createExForDefaults(@NotNull DotNetModuleExtension dotNetModuleExtension, @NotNull ConfigurationProfile profile, boolean debug);
+	ConfigurationLayer getCurrentLayer();
+
+	@NotNull
+	String getCurrentLayerName();
+
+	@NotNull
+	Class<? extends LayeredModuleExtension> getHeadClass();
 }

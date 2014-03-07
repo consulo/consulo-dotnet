@@ -23,8 +23,6 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.List;
 
 import javax.swing.JComponent;
 
@@ -32,9 +30,8 @@ import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
+import org.mustbe.consulo.dotnet.module.LayeredModuleExtension;
+import org.mustbe.consulo.dotnet.module.ModuleExtensionLayerUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -45,17 +42,15 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
@@ -64,6 +59,7 @@ import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.openapi.wm.impl.status.TextPanel;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.util.ListWithSelection;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
 
@@ -75,12 +71,18 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 {
 	@NotNull
 	private final TextPanel myComponent;
+	@NotNull
+	private final String myPrefix;
+	@NotNull
+	private final Class<? extends LayeredModuleExtension> myClazz;
 
 	private boolean myActionEnabled;
 
-	public ProfileWidget(@NotNull Project project)
+	public ProfileWidget(@NotNull Project project, @NotNull String prefix, @NotNull Class<? extends LayeredModuleExtension> clazz)
 	{
 		super(project);
+		myPrefix = prefix;
+		myClazz = clazz;
 
 		myComponent = new TextPanel()
 		{
@@ -121,7 +123,7 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 			@Override
 			public void afterExtensionChanged(@NotNull ModuleExtension<?> extension, @NotNull ModuleExtension<?> extension2)
 			{
-				if(extension instanceof DotNetModuleExtension)
+				if(myClazz.isAssignableFrom(extension.getClass()))
 				{
 					update();
 				}
@@ -138,17 +140,16 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 		DataContext dataContext = getContext();
 		DefaultActionGroup actionGroup = new DefaultActionGroup();
 
-		ConfigurationProfile currentProfile = getCurrentProfile();
-
-		List<ConfigurationProfile> profiles = getProfiles();
+		ListWithSelection<String> profiles = getLayers();
+		assert profiles != null;
 		for(val profile : profiles)
 		{
-			if(profile == currentProfile)
+			if(Comparing.equal(profile, profiles.getSelection()))
 			{
 				continue;
 			}
 
-			actionGroup.add(new AnAction(profile.getName())
+			actionGroup.add(new AnAction(profile)
 			{
 				@Override
 				public void actionPerformed(AnActionEvent anActionEvent)
@@ -164,21 +165,8 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 					{
 						return;
 					}
-					val modifiableModel = ModuleRootManager.getInstance(moduleForFile).getModifiableModel();
 
-					DotNetMutableModuleExtension extension = modifiableModel.getExtension(DotNetMutableModuleExtension.class);
-
-					assert extension != null;
-					extension.setCurrentProfile(profile.getName());
-
-					new WriteAction<Object>()
-					{
-						@Override
-						protected void run(Result<Object> objectResult) throws Throwable
-						{
-							modifiableModel.commit();
-						}
-					}.execute();
+					ModuleExtensionLayerUtil.setCurrentLayer(moduleForFile, profile, myClazz);
 				}
 			});
 		}
@@ -202,30 +190,16 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 								(), parent)));
 	}
 
-	@NotNull
-	private List<ConfigurationProfile> getProfiles()
-	{
-		VirtualFile file = getSelectedFile();
-		Project project = getProject();
-
-		Module moduleForFile = file == null || project == null ? null : ModuleUtilCore.findModuleForFile(file, project);
-		DotNetModuleExtension<?> dotNetModuleExtension = moduleForFile == null ? null : ModuleUtilCore.getExtension(moduleForFile,
-				DotNetModuleExtension.class);
-
-		return dotNetModuleExtension == null ? Collections.<ConfigurationProfile>emptyList() : dotNetModuleExtension.getProfiles();
-	}
-
 	@Nullable
-	private ConfigurationProfile getCurrentProfile()
+	private ListWithSelection<String> getLayers()
 	{
 		VirtualFile file = getSelectedFile();
 		Project project = getProject();
 
 		Module moduleForFile = file == null || project == null ? null : ModuleUtilCore.findModuleForFile(file, project);
-		DotNetModuleExtension<?> dotNetModuleExtension = moduleForFile == null ? null : ModuleUtilCore.getExtension(moduleForFile,
-				DotNetModuleExtension.class);
+		LayeredModuleExtension<?> headLayeredModuleExtension = moduleForFile == null ? null : ModuleUtilCore.getExtension(moduleForFile, myClazz);
 
-		return dotNetModuleExtension == null ? null : dotNetModuleExtension.getCurrentProfile();
+		return headLayeredModuleExtension == null ? null : headLayeredModuleExtension.getLayersList();
 	}
 
 	private void update()
@@ -240,18 +214,18 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 				String toolTipText = null;
 				String panelText = null;
 
-				ConfigurationProfile profile = getCurrentProfile();
-				if(profile != null)
+				ListWithSelection<String> profiles = getLayers();
+				if(profiles != null)
 				{
 					myActionEnabled = true;
 
-					toolTipText = "Profile: " + profile.getName();
-					panelText = ".NET: " + profile.getName();
+					toolTipText = "Profile: " + profiles.getSelection();
+					panelText = myPrefix + ": " + profiles.getSelection();
 					myComponent.setVisible(true);
 				}
 
-				myActionEnabled = profile != null;
-				myComponent.setVisible(profile != null);
+				myActionEnabled = profiles != null;
+				myComponent.setVisible(profiles != null);
 
 				myComponent.resetColor();
 
@@ -303,7 +277,7 @@ public class ProfileWidget extends EditorBasedWidget implements CustomStatusBarW
 	@Override
 	public String ID()
 	{
-		return "DotNetProfileWidget";
+		return myPrefix + "ProfileWidget";
 	}
 
 	@Nullable

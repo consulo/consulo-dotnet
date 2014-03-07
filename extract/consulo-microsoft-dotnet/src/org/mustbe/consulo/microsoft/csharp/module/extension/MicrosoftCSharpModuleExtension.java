@@ -17,13 +17,10 @@
 package org.mustbe.consulo.microsoft.csharp.module.extension;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.module.CSharpConfigurationProfileEx;
+import org.mustbe.consulo.csharp.compiler.MSBaseDotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
-import org.mustbe.consulo.csharp.compiler.MSBaseDotNetCompilerOptionsBuilder;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
 
 /**
  * @author VISTALL
@@ -38,14 +35,13 @@ public class MicrosoftCSharpModuleExtension extends CSharpModuleExtension<Micros
 
 	@NotNull
 	@Override
-	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder(@NotNull Sdk dotNetSdk, ConfigurationProfile currentProfile)
+	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder()
 	{
-		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(dotNetSdk);
+		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(this);
 		optionsBuilder.addArgument("/fullpaths");
 		optionsBuilder.addArgument("/utf8output");
 		optionsBuilder.addArgument("/nostdlib+");
-		CSharpConfigurationProfileEx extension = currentProfile.getExtension(CSharpConfigurationProfileEx.KEY);
-		if(extension.isAllowUnsafeCode())
+		if(isAllowUnsafeCode())
 		{
 			optionsBuilder.addArgument("/unsafe");
 		}

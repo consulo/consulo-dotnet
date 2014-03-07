@@ -17,7 +17,7 @@
 package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import com.intellij.execution.Executor;
@@ -45,7 +45,7 @@ public class MicrosoftDotNetModuleExtension extends DotNetModuleExtensionImpl<Mi
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationProfile configurationProfile, Executor executor)
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, Executor executor)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(fileName);

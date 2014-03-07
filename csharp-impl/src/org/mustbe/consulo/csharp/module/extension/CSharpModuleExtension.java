@@ -23,9 +23,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
-import org.mustbe.consulo.csharp.module.CSharpConfigurationProfileEx;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
-import org.mustbe.consulo.dotnet.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -44,12 +42,18 @@ public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> 
 
 	protected JComponent createConfigurablePanelImpl(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		return new ConfigurationProfilePanel(modifiableRootModel, runnable, CSharpConfigurationProfileEx.KEY);
+		return null;
+		//return new ConfigurationProfilePanel(modifiableRootModel, runnable, CSharpConfigurationProfileEx.KEY);
 	}
 
 	protected boolean isModifiedImpl(T ex)
 	{
 		return myIsEnabled != ex.isEnabled();
+	}
+
+	public boolean isAllowUnsafeCode()
+	{
+		return false; //TODO [VISTALL]
 	}
 
 	@Override

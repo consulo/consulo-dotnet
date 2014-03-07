@@ -7,16 +7,13 @@ import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.Key;
 
 /**
  * @author VISTALL
  * @since 03.02.14
  */
-public interface MainConfigurationProfileEx<T extends MainConfigurationProfileEx<T>> extends ConfigurationProfileEx<T>
+public interface MainConfigurationLayer extends ConfigurationLayer
 {
-	public static final Key<MainConfigurationProfileEx> KEY = Key.create("main");
-
 	@NotNull
 	DotNetTarget getTarget();
 

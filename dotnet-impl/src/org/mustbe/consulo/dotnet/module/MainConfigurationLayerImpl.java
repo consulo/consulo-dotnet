@@ -43,7 +43,6 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
@@ -58,7 +57,7 @@ import lombok.val;
  * @author VISTALL
  * @since 01.02.14
  */
-public class MainConfigurationProfileExImpl implements MainConfigurationProfileEx<MainConfigurationProfileExImpl>
+public class MainConfigurationLayerImpl implements MainConfigurationLayer
 {
 	private final DotNetModuleExtension myDotNetModuleExtension;
 
@@ -67,7 +66,7 @@ public class MainConfigurationProfileExImpl implements MainConfigurationProfileE
 	private boolean myAllowDebugInfo;
 	private List<String> myVariables = new ArrayList<String>();
 
-	public MainConfigurationProfileExImpl(DotNetModuleExtension dotNetModuleExtension)
+	public MainConfigurationLayerImpl(DotNetModuleExtension dotNetModuleExtension)
 	{
 		myDotNetModuleExtension = dotNetModuleExtension;
 		mySdkPointer = new SdkModuleInheritableNamedPointerImpl(dotNetModuleExtension.getModule().getProject(), dotNetModuleExtension.getId());
@@ -222,9 +221,9 @@ public class MainConfigurationProfileExImpl implements MainConfigurationProfileE
 
 	@NotNull
 	@Override
-	public ConfigurationProfileEx<MainConfigurationProfileExImpl> clone()
+	public ConfigurationLayer clone()
 	{
-		MainConfigurationProfileExImpl profileEx = new MainConfigurationProfileExImpl(myDotNetModuleExtension);
+		MainConfigurationLayerImpl profileEx = new MainConfigurationLayerImpl(myDotNetModuleExtension);
 		profileEx.setAllowDebugInfo(myAllowDebugInfo);
 		profileEx.setTarget(myTarget);
 		profileEx.mySdkPointer.set(mySdkPointer.getModuleName(), mySdkPointer.getName());
@@ -233,20 +232,18 @@ public class MainConfigurationProfileExImpl implements MainConfigurationProfileE
 		return profileEx;
 	}
 
-	@NotNull
 	@Override
-	public Key<?> getKey()
+	public boolean equals(Object obj)
 	{
-		return KEY;
-	}
-
-	@Override
-	public boolean equalsEx(@NotNull MainConfigurationProfileExImpl ex)
-	{
-		return mySdkPointer.equals(ex.mySdkPointer) &&
-				myTarget.equals(ex.myTarget) &&
-				myAllowDebugInfo == ex.isAllowDebugInfo() &&
-				myVariables.equals(ex.getVariables());
+		if(obj instanceof MainConfigurationLayerImpl)
+		{
+			MainConfigurationLayerImpl ex = (MainConfigurationLayerImpl) obj;
+			return mySdkPointer.equals(ex.mySdkPointer) &&
+					myTarget.equals(ex.myTarget) &&
+					myAllowDebugInfo == ex.isAllowDebugInfo() &&
+					myVariables.equals(ex.getVariables());
+		}
+		return false;
 	}
 
 	@Override

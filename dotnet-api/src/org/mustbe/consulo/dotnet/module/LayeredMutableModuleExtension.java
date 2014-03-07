@@ -16,30 +16,20 @@
 
 package org.mustbe.consulo.dotnet.module;
 
-import java.util.Map;
-
-import org.consulo.annotations.Immutable;
-import org.consulo.util.pointers.Named;
+import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.util.Key;
+import com.intellij.util.ListWithSelection;
 
 /**
  * @author VISTALL
- * @since 01.02.14
+ * @since 07.03.14
  */
-public interface ConfigurationProfile extends Named
+public interface LayeredMutableModuleExtension<T extends LayeredModuleExtension<T>> extends LayeredModuleExtension<T>,
+		MutableModuleExtension<T>
 {
-	boolean isActive();
-
-	void setActive(boolean v);
-
+	@Override
 	@NotNull
-	<T extends ConfigurationProfileEx<T>> T getExtension(@NotNull Key<T> clazz);
+	ListWithSelection<String> getLayersList();
 
-	@NotNull
-	@Immutable
-	Map<String, ConfigurationProfileEx<?>> getExtensions();
-
-	@NotNull
-	ConfigurationProfile clone();
+	void setCurrentLayer(@NotNull String name);
 }

@@ -18,7 +18,7 @@ package org.mustbe.consulo.dotnet.compiler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import com.intellij.openapi.compiler.EmptyValidityState;
 import com.intellij.openapi.compiler.FileProcessingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
@@ -33,13 +33,15 @@ public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingIt
 {
 	private final VirtualFile myVirtualFile;
 	private final Module myTarget;
-	private final ConfigurationProfile myConfigurationProfile;
+	private final String myLayerName;
+	private final MainConfigurationLayer myLayer;
 
-	public DotNetProcessingItem(VirtualFile virtualFile, Module target, ConfigurationProfile configurationProfile)
+	public DotNetProcessingItem(VirtualFile virtualFile, Module target, String layerName, MainConfigurationLayer layer)
 	{
 		myVirtualFile = virtualFile;
 		myTarget = target;
-		myConfigurationProfile = configurationProfile;
+		myLayerName = layerName;
+		myLayer = layer;
 	}
 
 	@NotNull
@@ -61,8 +63,13 @@ public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingIt
 		return myTarget;
 	}
 
-	public ConfigurationProfile getConfigurationProfile()
+	public String getLayerName()
 	{
-		return myConfigurationProfile;
+		return myLayerName;
+	}
+
+	public MainConfigurationLayer getLayer()
+	{
+		return myLayer;
 	}
 }

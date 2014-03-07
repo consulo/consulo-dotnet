@@ -33,6 +33,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -61,14 +62,19 @@ public class ModuleTopicsRegister extends AbstractProjectComponent
 			@Override
 			public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension)
 			{
+				if(DumbService.isDumb(myProject))
+				{
+					return;
+				}
 				if(!(oldExtension instanceof DotNetModuleExtension))
 				{
 					return;
 				}
-				MainConfigurationProfileEx<?> oldV = ((DotNetModuleExtension<?>) oldExtension).getCurrentProfileEx(MainConfigurationProfileEx.KEY);
-				MainConfigurationProfileEx<?> newV = ((DotNetModuleExtension<?>) newExtension).getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+				MainConfigurationLayer oldV = (MainConfigurationLayer) ((DotNetModuleExtension<?>) oldExtension).getCurrentLayer();
+				MainConfigurationLayer newV = (MainConfigurationLayer) ((DotNetModuleExtension<?>) newExtension).getCurrentLayer();
 
-				if(!Comparing.haveEqualElements(oldV.getVariables(), newV.getVariables()))
+				if(oldExtension.isEnabled() != newExtension.isEnabled() ||
+						!Comparing.haveEqualElements(oldV.getVariables(), newV.getVariables()))
 				{
 					reParseFiles(oldExtension.getModule());
 				}

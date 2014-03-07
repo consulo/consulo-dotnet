@@ -26,7 +26,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.DefaultExecutionResult;
@@ -123,16 +123,17 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 			throw new ExecutionException("Module is empty");
 		}
 
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 
 		assert extension != null;
 
-		ConfigurationProfile currentProfile = extension.getCurrentProfile();
+		String currentLayerName = extension.getCurrentLayerName();
+		MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
 
-		val exeFile = DotNetMacros.extract(module, currentProfile);
+		val exeFile = DotNetMacros.extract(module, currentLayerName, currentLayer);
 
 		DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();
-		val runCommandLine = extension.createRunCommandLine(exeFile, currentProfile, executor);
+		val runCommandLine = extension.createRunCommandLine(exeFile, currentLayer, executor);
 		String programParameters = runProfile.getProgramParameters();
 		if(!StringUtil.isEmpty(programParameters))
 		{
@@ -140,7 +141,8 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		}
 		runCommandLine.setPassParentEnvironment(runProfile.isPassParentEnvs());
 		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
-		runCommandLine.setWorkDirectory(DotNetMacros.extractLikeWorkDir(module, runProfile.getWorkingDirectory(), currentProfile, false));
+		runCommandLine.setWorkDirectory(DotNetMacros.extractLikeWorkDir(module, runProfile.getWorkingDirectory(), currentLayerName, currentLayer,
+				false));
 		return new RunProfileState()
 		{
 			@Nullable

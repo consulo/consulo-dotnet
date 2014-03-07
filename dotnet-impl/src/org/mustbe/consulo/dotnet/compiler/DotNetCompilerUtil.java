@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -43,7 +43,10 @@ import lombok.val;
 public class DotNetCompilerUtil
 {
 	@NotNull
-	public static Set<String> collectDependencies(@NotNull Module module, final ConfigurationProfile p, final boolean toSystemInDepend,
+	public static Set<String> collectDependencies(@NotNull Module module,
+			@NotNull final String layerName,
+			@NotNull final MainConfigurationLayer p,
+			final boolean toSystemInDepend,
 			final boolean forDependCopy)
 	{
 		val list = new HashSet<String>();
@@ -75,8 +78,8 @@ public class DotNetCompilerUtil
 			{
 				for(VirtualFile virtualFile : orderEntry.getFiles(OrderRootType.CLASSES))
 				{
-					VirtualFile virtualFileForJar = ArchiveVfsUtil.getVirtualFileForJar(virtualFile);
-					String path = null;
+					VirtualFile virtualFileForJar = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
+					String path;
 					if(virtualFileForJar != null)
 					{
 						path = virtualFileForJar.getPath();
@@ -116,7 +119,7 @@ public class DotNetCompilerUtil
 				DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(depModule, DotNetModuleExtension.class);
 				if(dependencyExtension != null)
 				{
-					String extract = DotNetMacros.extract(depModule, p);
+					String extract = DotNetMacros.extract(depModule, layerName, p);
 					if(toSystemInDepend)
 					{
 						list.add(FileUtil.toSystemIndependentName(extract));
@@ -129,7 +132,7 @@ public class DotNetCompilerUtil
 
 				if(forDependCopy)
 				{
-					Set<String> strings = collectDependencies(depModule, p, toSystemInDepend, true);
+					Set<String> strings = collectDependencies(depModule, layerName, p, toSystemInDepend, true);
 					list.addAll(strings);
 				}
 				return null;

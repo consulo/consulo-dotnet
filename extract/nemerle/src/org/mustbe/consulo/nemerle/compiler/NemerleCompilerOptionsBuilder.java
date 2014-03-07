@@ -27,8 +27,7 @@ import org.mustbe.consulo.dotnet.compiler.DotNetCompilerMessage;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerUtil;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
-import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.nemerle.module.extension.NemerleModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -46,11 +45,8 @@ import lombok.val;
  */
 public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuilder
 {
-	private Sdk myDotNetSdk;
-
-	public NemerleCompilerOptionsBuilder(Sdk dotNetSdk)
+	public NemerleCompilerOptionsBuilder()
 	{
-		myDotNetSdk = dotNetSdk;
 	}
 
 	@Override
@@ -61,7 +57,8 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull ConfigurationProfile configurationProfile) throws IOException
+	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull String layerName, @NotNull
+	MainConfigurationLayer dotNetLayer) throws IOException
 	{
 		Sdk sdk = ModuleUtilCore.getSdk(module, NemerleModuleExtension.class);
 		assert sdk != null;
@@ -70,9 +67,8 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 
 		assert extension != null;
 
-		MainConfigurationProfileEx currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
 		String target = null;
-		switch(currentProfileEx.getTarget())
+		switch(dotNetLayer.getTarget())
 		{
 			case EXECUTABLE:
 				target = "exe";
@@ -88,10 +84,10 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("-target:" + target);
-		String outputFile = DotNetMacros.extract(module, configurationProfile);
+		String outputFile = DotNetMacros.extract(module, layerName, dotNetLayer);
 		arguments.add("-out:" + FileUtil.toSystemIndependentName(outputFile));
 
-		val dependFiles = DotNetCompilerUtil.collectDependencies(module, configurationProfile, true, false);
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, layerName, dotNetLayer, true, false);
 		if(!dependFiles.isEmpty())
 		{
 			arguments.add("-reference:" + StringUtils.join(dependFiles, ","));

@@ -27,9 +27,9 @@ import org.mustbe.consulo.dotnet.compiler.DotNetCompilerMessage;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerUtil;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
-import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.module.Module;
@@ -53,6 +53,13 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 	private Sdk mySdk;
 
 	private final List<String> myArguments = new ArrayList<String>();
+
+	public MSBaseDotNetCompilerOptionsBuilder(DotNetModuleLangExtension<?> langExtension)
+	{
+		DotNetModuleExtension extension = ModuleUtilCore.getExtension(langExtension.getModule(), DotNetModuleExtension.class);
+		assert extension != null;
+		mySdk = extension.getSdk();
+	}
 
 	public MSBaseDotNetCompilerOptionsBuilder(Sdk sdk)
 	{
@@ -162,16 +169,15 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 
 	@Override
 	@NotNull
-	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results,
-			@NotNull ConfigurationProfile configurationProfile) throws IOException
+	public GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull String layerName,
+			@NotNull MainConfigurationLayer dotNetLayer) throws IOException
 	{
 		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 
 		assert extension != null;
 
-		MainConfigurationProfileEx currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
 		String target = null;
-		switch(currentProfileEx.getTarget())
+		switch(dotNetLayer.getTarget())
 		{
 			case EXECUTABLE:
 				target = "exe";
@@ -181,30 +187,27 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 				break;
 		}
 
-		ConfigurationProfile currentProfile = extension.getCurrentProfile();
 
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(myExecutable);
 		commandLine.setWorkDirectory(module.getModuleDirPath());
 
 		addArgument("/target:" + target);
-		String outputFile = DotNetMacros.extract(module, configurationProfile);
+		String outputFile = DotNetMacros.extract(module, layerName, dotNetLayer);
 		addArgument("/out:" + outputFile);
 
-		val dependFiles = DotNetCompilerUtil.collectDependencies(module, currentProfile, false, false);
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, layerName, dotNetLayer, false, false);
 		if(!dependFiles.isEmpty())
 		{
 			addArgument("/reference:" + StringUtil.join(dependFiles, ","));
 		}
 
-		MainConfigurationProfileEx profileEx = configurationProfile.getExtension(MainConfigurationProfileEx.KEY);
-
-		if(profileEx.isAllowDebugInfo())
+		if(dotNetLayer.isAllowDebugInfo())
 		{
 			addArgument("/debug");
 		}
 
-		String defineVariables = StringUtil.join(profileEx.getVariables(), ";");
+		String defineVariables = StringUtil.join(dotNetLayer.getVariables(), ";");
 		if(!StringUtil.isEmpty(defineVariables))
 		{
 			addArgument("/define:" + defineVariables);

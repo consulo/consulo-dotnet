@@ -21,9 +21,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFixedStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpModifierListImpl;
-import org.mustbe.consulo.csharp.module.CSharpConfigurationProfileEx;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
-import org.mustbe.consulo.dotnet.module.DotNetModuleUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
@@ -31,6 +29,7 @@ import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -56,15 +55,14 @@ public class UnsafeCodeInspection extends LocalInspectionTool
 					return;
 				}
 
-				CSharpConfigurationProfileEx profileEx = DotNetModuleUtil.getProfileEx(modifier, CSharpConfigurationProfileEx.KEY,
-						CSharpModuleExtension.class);
+				CSharpModuleExtension extension = ModuleUtilCore.getExtension(list, CSharpModuleExtension.class);
 
-				if(profileEx == null)
+				if(extension == null)
 				{
 					return;
 				}
 
-				if(!profileEx.isAllowUnsafeCode())
+				if(!extension.isAllowUnsafeCode())
 				{
 					holder.registerProblem(modifier, "Unsafe code is not allowed", ProblemHighlightType.GENERIC_ERROR, null,
 							LocalQuickFix.EMPTY_ARRAY);

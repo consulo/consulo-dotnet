@@ -25,8 +25,8 @@ import java.util.Queue;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
+import org.mustbe.consulo.csharp.lang.CSharpLanguageVersionImpl;
 import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
-import org.mustbe.consulo.csharp.lang.lexer.CSharpLexer;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
@@ -37,7 +37,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroIfConditionBloc
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroIfImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpFileStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.macro.MacroEvaluator;
-import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
@@ -46,7 +46,6 @@ import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.PsiParser;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
@@ -94,29 +93,33 @@ public class CSharpFileStubElementType extends IStubFileElementType<CSharpFileSt
 		final Project project = psi.getProject();
 		final Language languageForParser = getLanguageForParser(psi);
 		final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
-		final LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
+		final CSharpLanguageVersionImpl languageVersion = (CSharpLanguageVersionImpl) (tempLanguageVersion == null ? psi.getLanguageVersion() :
+				tempLanguageVersion);
 
 		FileViewProvider viewProvider = ((PsiFile) psi).getViewProvider();
 		PsiFile macroFile = viewProvider.getPsi(CSharpMacroLanguage.INSTANCE);
 		List<TextRange> textRanges = Collections.emptyList();
 		if(macroFile != null)
 		{
-			Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(((PsiFile) psi).getOriginalFile());
-			if(moduleForPsiElement != null)
+			DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(((PsiFile) psi).getOriginalFile(), DotNetModuleExtension.class);
+			if(extension != null)
 			{
-				DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(moduleForPsiElement, DotNetModuleExtension.class);
-				if(extension != null)
-				{
-					MainConfigurationProfileEx<?> currentProfileEx = extension.getCurrentProfileEx(MainConfigurationProfileEx.KEY);
-					textRanges = collectDisabledBlocks(macroFile, currentProfileEx.getVariables());
-				}
+				textRanges = collectDisabledBlocks(macroFile, extension);
 			}
 		}
 
-		final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, new CSharpLexer(textRanges), languageForParser,
+		final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, languageVersion.createLexer(textRanges),
+				languageForParser,
 				languageVersion, chameleon.getChars());
 		final PsiParser parser = LanguageParserDefinitions.INSTANCE.forLanguage(languageForParser).createParser(project, languageVersion);
 		return parser.parse(this, builder, languageVersion).getFirstChildNode();
+	}
+
+	@NotNull
+	public static List<TextRange> collectDisabledBlocks(PsiFile macroFile, DotNetModuleExtension extension)
+	{
+		MainConfigurationLayer currentProfileEx = (MainConfigurationLayer) extension.getCurrentLayer();
+		return collectDisabledBlocks(macroFile, currentProfileEx.getVariables());
 	}
 
 	private static List<TextRange> collectDisabledBlocks(PsiFile templateFile, final List<String> baseVariables)

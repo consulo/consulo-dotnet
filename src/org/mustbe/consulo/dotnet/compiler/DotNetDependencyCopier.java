@@ -26,6 +26,7 @@ import java.util.Set;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.application.ReadAction;
@@ -68,7 +69,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 			if(extension != null && extension.getSdk() == null)
 			{
-				throw new IllegalArgumentException("SDK for module " + module.getName() + " cant be empty");
+				throw new IllegalArgumentException("Sdk for module " + module.getName() + " cant be empty");
 			}
 		}
 		return true;
@@ -94,7 +95,8 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 
 			val dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 			assert dotNetModuleExtension != null;
-			val currentProfile = dotNetModuleExtension.getCurrentProfile();
+			val currentLayer = (MainConfigurationLayer) dotNetModuleExtension.getCurrentLayer();
+			val currentLayerName = dotNetModuleExtension.getCurrentLayerName();
 
 			val r = new ReadAction<Set<String>>()
 			{
@@ -102,7 +104,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				protected void run(Result<Set<String>> listResult) throws Throwable
 				{
 
-					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, currentProfile, true, true));
+					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, currentLayerName, currentLayer, true, true));
 				}
 			}.execute();
 
@@ -115,7 +117,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				{
 					continue;
 				}
-				itemList.add(new DotNetProcessingItem(fileByIoFile, module, currentProfile));
+				itemList.add(new DotNetProcessingItem(fileByIoFile, module, currentLayerName, currentLayer));
 			}
 		}
 
@@ -135,7 +137,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 		{
 			DotNetProcessingItem dotNetProcessingItem = (DotNetProcessingItem) processingItem;
 			String moduleOutputDirUrl = DotNetMacros.getModuleOutputDirUrl(dotNetProcessingItem.getTarget(),
-					dotNetProcessingItem.getConfigurationProfile());
+					dotNetProcessingItem.getLayerName(), dotNetProcessingItem.getLayer());
 
 			File copyFile = new File(VirtualFileManager.extractPath(moduleOutputDirUrl), processingItem.getFile().getName());
 
@@ -145,7 +147,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			{
 				FileUtil.copy(file, copyFile);
 
-				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null, null));
+				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null, null, null));
 			}
 			catch(IOException e)
 			{

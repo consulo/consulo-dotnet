@@ -43,6 +43,12 @@ public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension 
 	}
 
 	@Override
+	public void setEnabled(boolean b)
+	{
+		myIsEnabled = b;
+	}
+
+	@Override
 	public boolean isModified(@NotNull MonoDotNetModuleExtension extension)
 	{
 		return isModifiedImpl(extension);

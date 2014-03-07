@@ -44,6 +44,12 @@ public class MicrosoftDotNetMutableModuleExtension2 extends MicrosoftDotNetModul
 	}
 
 	@Override
+	public void setEnabled(boolean b)
+	{
+		myIsEnabled = b;
+	}
+
+	@Override
 	public boolean isModified(@NotNull MicrosoftDotNetModuleExtension2 extension2)
 	{
 		return isModifiedImpl(extension2);

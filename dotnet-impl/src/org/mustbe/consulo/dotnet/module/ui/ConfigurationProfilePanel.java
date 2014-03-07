@@ -23,19 +23,15 @@ import java.awt.event.ItemListener;
 import java.util.List;
 
 import javax.swing.JComponent;
-import javax.swing.JList;
 import javax.swing.JPanel;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfileEx;
-import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
+import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
+import org.mustbe.consulo.dotnet.module.LayeredModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.util.Key;
 import com.intellij.ui.AbstractCollectionComboBoxModel;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
@@ -49,29 +45,19 @@ public class ConfigurationProfilePanel extends JPanel
 
 	private final JPanel myConfigPane;
 
-	public ConfigurationProfilePanel(ModifiableRootModel modifiableRootModel, Runnable runnable, Key<? extends ConfigurationProfileEx> key)
+	public ConfigurationProfilePanel(ModifiableRootModel modifiableRootModel, Runnable runnable, LayeredModuleExtension<?> moduleExtension)
 	{
 		super(new BorderLayout());
-		final DotNetMutableModuleExtension<?> extension = modifiableRootModel.getExtension(DotNetMutableModuleExtension.class);
-		assert extension != null;
 
-		val currentProfile = extension.getCurrentProfile();
+		val layers = moduleExtension.getLayersList();
 
-		val comboBox = new ComboBox(new AbstractCollectionComboBoxModel(currentProfile)
+		val comboBox = new ComboBox(new AbstractCollectionComboBoxModel(layers.getSelection())
 		{
 			@NotNull
 			@Override
 			protected List getItems()
 			{
-				return extension.getProfiles();
-			}
-		});
-		comboBox.setRenderer(new ListCellRendererWrapper<ConfigurationProfile>()
-		{
-			@Override
-			public void customize(JList jList, ConfigurationProfile configurationProfile, int i, boolean b, boolean b2)
-			{
-				setText(configurationProfile.getName());
+				return layers;
 			}
 		});
 
@@ -80,9 +66,9 @@ public class ConfigurationProfilePanel extends JPanel
 			@Override
 			public void itemStateChanged(ItemEvent e)
 			{
-				val selectedItem = (ConfigurationProfile) comboBox.getSelectedItem();
+				val selectedItem = (String) comboBox.getSelectedItem();
 
-				extension.setCurrentProfile(selectedItem.getName());
+				//extension.setCurrentProfile(selectedItem.getName());
 
 				setActive(selectedItem);
 			}
@@ -96,26 +82,26 @@ public class ConfigurationProfilePanel extends JPanel
 
 		add(myConfigPane, BorderLayout.CENTER);
 
-		for(ConfigurationProfile profile : extension.getProfiles())
+		for(String profile : layers)
 		{
-			ConfigurationProfileEx profileEx = profile.getExtension(key);
+			ConfigurationLayer profileEx = moduleExtension.getLayer(profile);
 
 			JComponent component = profileEx.createConfigurablePanel(modifiableRootModel, runnable);
 
-			myConfigPane.add(component == null ? new JPanel() : component, profile.getName());
+			myConfigPane.add(component == null ? new JPanel() : component, profile);
 		}
 
-		setActive(currentProfile);
+		setActive(layers.getSelection());
 	}
 
-	public void setActive(final ConfigurationProfile configurationProfile)
+	public void setActive(final String configurationProfile)
 	{
 		UIUtil.invokeLaterIfNeeded(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				((CardLayout)myConfigPane.getLayout()).show(myConfigPane, configurationProfile.getName());
+				((CardLayout) myConfigPane.getLayout()).show(myConfigPane, configurationProfile);
 			}
 		});
 	}

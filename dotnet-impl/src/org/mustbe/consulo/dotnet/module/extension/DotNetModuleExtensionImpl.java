@@ -16,31 +16,29 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.JComponent;
 
-import org.consulo.module.extension.MutableModuleExtension;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetVersion;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfile;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfileEx;
-import org.mustbe.consulo.dotnet.module.ConfigurationProfileImpl;
-import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
-import org.mustbe.consulo.dotnet.module.MainConfigurationProfileExImpl;
+import org.mustbe.consulo.dotnet.module.ConfigurationLayer;
+import org.mustbe.consulo.dotnet.module.LayeredModuleExtension;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayerImpl;
 import org.mustbe.consulo.dotnet.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
+import com.intellij.util.ListWithSelection;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -49,11 +47,18 @@ import com.intellij.openapi.util.Key;
 public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionImpl<S>> extends ModuleExtensionImpl<S> implements
 		DotNetModuleExtension<S>
 {
-	protected List<ConfigurationProfile> myProfiles = new ArrayList<ConfigurationProfile>(2);
+	protected Map<String, ConfigurationLayer> myLayers = new LinkedHashMap<String, ConfigurationLayer>();
+	protected String myCurrentLayer;
 
 	public DotNetModuleExtensionImpl(@NotNull String id, @NotNull Module module)
 	{
 		super(id, module);
+
+		addLayer("Release");
+
+		MainConfigurationLayerImpl debug = (MainConfigurationLayerImpl) addLayer(myCurrentLayer = "Debug");
+		debug.getVariables().add("DEBUG");
+		debug.setAllowDebugInfo(true);
 	}
 
 	@NotNull
@@ -62,55 +67,35 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	@Nullable
 	public JComponent createConfigurablePanelImpl(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		return new ConfigurationProfilePanel(modifiableRootModel, runnable, MainConfigurationProfileExImpl.KEY);
+		return new ConfigurationProfilePanel(modifiableRootModel, runnable, this);
 	}
 
 	public boolean isModifiedImpl(S originExtension)
 	{
 		return myIsEnabled != originExtension.isEnabled() ||
-
-				!myProfiles.equals(originExtension.getProfiles());
+				!Comparing.equal(myCurrentLayer, originExtension.myCurrentLayer) ||
+				!myLayers.equals(originExtension.myLayers);
 	}
 
-	public void setCurrentProfile(@NotNull String name)
+	@NotNull
+	@Override
+	public String getCurrentLayerName()
 	{
-		ConfigurationProfile profile = null;
-		for(ConfigurationProfile configurationProfile : myProfiles)
-		{
-			if(Comparing.equal(configurationProfile.getName(), name))
-			{
-				profile = configurationProfile;
-			}
-			configurationProfile.setActive(false);
-		}
-
-		if(profile != null)
-		{
-			profile.setActive(true);
-		}
-		else
-		{
-			myProfiles.get(0).setActive(true);
-		}
+		return myCurrentLayer;
 	}
 
-	public void setEnabled(boolean b)
+	@NotNull
+	@Override
+	public Class<? extends LayeredModuleExtension> getHeadClass()
 	{
-		assert this instanceof MutableModuleExtension;
-
-		myIsEnabled = b;
-
-		if(myProfiles.isEmpty())
-		{
-			initDefaultProfiles();
-		}
+		return DotNetModuleExtension.class;
 	}
 
 	@NotNull
 	@Override
 	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
-		MainConfigurationProfileEx<?> currentProfileEx = getCurrentProfileEx(MainConfigurationProfileExImpl.KEY);
+		MainConfigurationLayer currentProfileEx = (MainConfigurationLayer) getCurrentLayer();
 		return currentProfileEx.getInheritableSdk();
 	}
 
@@ -121,17 +106,11 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 		return DotNetVersion.LAST;
 	}
 
-	@Override
-	public List<ConfigurationProfile> getProfiles()
-	{
-		return myProfiles;
-	}
-
 	@Nullable
 	@Override
 	public Sdk getSdk()
 	{
-		MainConfigurationProfileEx<?> currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+		MainConfigurationLayer currentProfileEx = (MainConfigurationLayer) getCurrentLayer();
 		return currentProfileEx.getInheritableSdk().get();
 	}
 
@@ -139,7 +118,7 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	@Override
 	public String getSdkName()
 	{
-		MainConfigurationProfileEx<?> currentProfileEx = getCurrentProfileEx(MainConfigurationProfileEx.KEY);
+		MainConfigurationLayer currentProfileEx = (MainConfigurationLayer) getCurrentLayer();
 		return currentProfileEx.getInheritableSdk().getName();
 	}
 
@@ -152,24 +131,28 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 
 	@NotNull
 	@Override
-	public ConfigurationProfile getCurrentProfile()
+	public ConfigurationLayer getCurrentLayer()
 	{
-		for(ConfigurationProfile profile : myProfiles)
-		{
-			if(profile.isActive())
-			{
-				return profile;
-			}
-		}
-		return ConfigurationProfileImpl.NULL;
+		return myLayers.get(myCurrentLayer);
+	}
+
+	public void setCurrentLayer(@NotNull String currentLayer)
+	{
+		myCurrentLayer = currentLayer;
 	}
 
 	@NotNull
 	@Override
-	public <T extends ConfigurationProfileEx<T>> T getCurrentProfileEx(@NotNull Key<T> clazz)
+	public ConfigurationLayer getLayer(@NotNull String name)
 	{
-		ConfigurationProfile currentProfile = getCurrentProfile();
-		return currentProfile.getExtension(clazz);
+		return myLayers.get(name);
+	}
+
+	@NotNull
+	@Override
+	public ListWithSelection<String> getLayersList()
+	{
+		return new ListWithSelection<String>(myLayers.keySet(), myCurrentLayer);
 	}
 
 	@Override
@@ -178,31 +161,27 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 		super.loadStateImpl(element);
 
 		Element profiles = element.getChild("profiles");
-		if(profiles == null)
+		if(profiles != null)
 		{
-			initDefaultProfiles();
-		}
-		else
-		{
+			myLayers.clear();
+
 			for(Element childElement : profiles.getChildren())
 			{
 				String name = childElement.getAttributeValue("name");
 				boolean active = Boolean.valueOf(childElement.getAttributeValue("active", "false"));
-				ConfigurationProfileImpl profile = new ConfigurationProfileImpl(name, active);
-				profile.initDefaults(this);
-
-				for(Element profileExElement : childElement.getChildren("profile_ex"))
+				if(active)
 				{
-					String key = profileExElement.getAttributeValue("key");
-
-					ConfigurationProfileEx configurationProfileEx = profile.getExtensions().get(key);
-					if(configurationProfileEx != null)
-					{
-						configurationProfileEx.loadState(profileExElement);
-					}
+					myCurrentLayer = name;
 				}
 
-				myProfiles.add(profile);
+				ConfigurationLayer layer = addLayer(name);
+
+				layer.loadState(childElement);
+			}
+
+			if(myCurrentLayer == null)
+			{
+				myCurrentLayer = ContainerUtil.getFirstItem(myLayers.keySet());
 			}
 		}
 	}
@@ -213,21 +192,15 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 		super.getStateImpl(element);
 
 		Element profilesElement = new Element("profiles");
-		for(ConfigurationProfile profile : myProfiles)
+		for(Map.Entry<String, ConfigurationLayer> entry : myLayers.entrySet())
 		{
 			Element profileElement = new Element("profile");
-			profileElement.setAttribute("name", profile.getName());
-			profileElement.setAttribute("active", Boolean.toString(profile.isActive()));
+			String name = entry.getKey();
+			profileElement.setAttribute("name", name);
+			profileElement.setAttribute("active", Boolean.toString(name.equals(myCurrentLayer)));
 
-			for(Map.Entry<String, ConfigurationProfileEx<?>> pair : profile.getExtensions().entrySet())
-			{
-				Element profileExElement = new Element("profile_ex");
-				profileExElement.setAttribute("key", pair.getKey());
-
-				pair.getValue().getState(profileExElement);
-
-				profileElement.addContent(profileExElement);
-			}
+			ConfigurationLayer value = entry.getValue();
+			value.getState(profileElement);
 
 			profilesElement.addContent(profileElement);
 		}
@@ -235,15 +208,18 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 		element.addContent(profilesElement);
 	}
 
-	protected void initDefaultProfiles()
+	@NotNull
+	protected ConfigurationLayer createLayer()
 	{
-		ConfigurationProfileImpl release = new ConfigurationProfileImpl("Release", false);
-		release.initDefaults(this, false);
-		myProfiles.add(release);
+		return new MainConfigurationLayerImpl(this);
+	}
 
-		ConfigurationProfileImpl debug = new ConfigurationProfileImpl("Debug", true);
-		debug.initDefaults(this, true);
-		myProfiles.add(debug);
+	@NotNull
+	public ConfigurationLayer addLayer(@NotNull String name)
+	{
+		ConfigurationLayer layer = createLayer();
+		myLayers.put(name, layer);
+		return layer;
 	}
 
 	@Override
@@ -251,10 +227,11 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	{
 		super.commit(mutableModuleExtension);
 
-		myProfiles.clear();
-		for(ConfigurationProfile configurationProfile : mutableModuleExtension.getProfiles())
+		myCurrentLayer = mutableModuleExtension.myCurrentLayer;
+		myLayers.clear();
+		for(Map.Entry<String, ConfigurationLayer> entry : mutableModuleExtension.myLayers.entrySet())
 		{
-			myProfiles.add(configurationProfile.clone());
+			myLayers.put(entry.getKey(), entry.getValue().clone());
 		}
 	}
 }
