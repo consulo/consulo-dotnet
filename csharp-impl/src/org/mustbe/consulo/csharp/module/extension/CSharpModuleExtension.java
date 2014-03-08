@@ -29,7 +29,6 @@ import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
 import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
@@ -39,14 +38,14 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> extends ChildLayeredModuleExtensionImpl<T> implements
 		DotNetModuleLangExtension<T>
 {
-	public CSharpModuleExtension(@NotNull String id, @NotNull Module module)
+	public CSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}
 
-	protected JComponent createConfigurablePanelImpl(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
+	protected JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
 	{
-		return new ConfigurationProfilePanel(modifiableRootModel, runnable, this);
+		return new ConfigurationProfilePanel(myRootModel, runnable, this);
 	}
 
 	public boolean isAllowUnsafeCode()

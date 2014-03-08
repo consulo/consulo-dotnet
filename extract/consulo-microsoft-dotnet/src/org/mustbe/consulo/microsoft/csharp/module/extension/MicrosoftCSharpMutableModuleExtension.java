@@ -30,16 +30,16 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class MicrosoftCSharpMutableModuleExtension extends MicrosoftCSharpModuleExtension implements LayeredMutableModuleExtension<MicrosoftCSharpModuleExtension>
 {
-	public MicrosoftCSharpMutableModuleExtension(@NotNull String id, @NotNull Module module)
+	public MicrosoftCSharpMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
+	public JComponent createConfigurablePanel(@Nullable Runnable runnable)
 	{
-		return createConfigurablePanelImpl(modifiableRootModel, runnable);
+		return createConfigurablePanelImpl(runnable);
 	}
 
 	@Override

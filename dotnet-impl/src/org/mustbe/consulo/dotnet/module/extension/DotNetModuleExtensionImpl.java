@@ -25,10 +25,9 @@ import org.mustbe.consulo.dotnet.DotNetVersion;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayerImpl;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
+import org.mustbe.consulo.module.extension.LayeredModuleExtension;
 import org.mustbe.consulo.module.extension.LayeredModuleExtensionImpl;
 import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
-import org.mustbe.consulo.module.extension.LayeredModuleExtension;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -40,7 +39,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionImpl<S>> extends LayeredModuleExtensionImpl<S> implements
 		DotNetModuleExtension<S>
 {
-	public DotNetModuleExtensionImpl(@NotNull String id, @NotNull Module module)
+	public DotNetModuleExtensionImpl(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}
@@ -67,9 +66,9 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	}
 
 	@Nullable
-	public JComponent createConfigurablePanelImpl(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
+	public JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
 	{
-		return new ConfigurationProfilePanel(modifiableRootModel, runnable, this);
+		return new ConfigurationProfilePanel(myRootModel, runnable, this);
 	}
 
 	@NotNull

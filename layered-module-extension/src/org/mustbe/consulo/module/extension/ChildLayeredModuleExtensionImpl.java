@@ -17,8 +17,7 @@
 package org.mustbe.consulo.module.extension;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.util.ListWithSelection;
 
 /**
@@ -27,7 +26,7 @@ import com.intellij.util.ListWithSelection;
  */
 public abstract class ChildLayeredModuleExtensionImpl<S extends LayeredModuleExtensionImpl<S>> extends LayeredModuleExtensionImpl<S>
 {
-	public ChildLayeredModuleExtensionImpl(@NotNull String id, @NotNull Module module)
+	public ChildLayeredModuleExtensionImpl(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}
@@ -38,7 +37,7 @@ public abstract class ChildLayeredModuleExtensionImpl<S extends LayeredModuleExt
 
 		if(myIsEnabled)
 		{
-			LayeredModuleExtension<?> extension = ModuleUtilCore.getExtension(getModule(), getHeadClass());
+			LayeredModuleExtension<?> extension = myRootModel.getExtension(getHeadClass());
 			assert extension != null;
 			ListWithSelection<String> layersList = extension.getLayersList();
 			for(String s : layersList)

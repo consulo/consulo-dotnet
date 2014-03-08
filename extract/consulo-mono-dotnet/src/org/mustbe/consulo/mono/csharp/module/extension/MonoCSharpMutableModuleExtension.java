@@ -21,7 +21,6 @@ import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.module.extension.LayeredMutableModuleExtension;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
@@ -30,16 +29,16 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension implements LayeredMutableModuleExtension<MonoCSharpModuleExtension>
 {
-	public MonoCSharpMutableModuleExtension(@NotNull String id, @NotNull Module module)
+	public MonoCSharpMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
+	public JComponent createConfigurablePanel(@Nullable Runnable runnable)
 	{
-		return createConfigurablePanelImpl(modifiableRootModel, runnable);
+		return createConfigurablePanelImpl(runnable);
 	}
 
 	@Override

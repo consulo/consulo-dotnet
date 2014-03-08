@@ -22,7 +22,7 @@ import java.util.Map;
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.module.Module;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ListWithSelection;
 import com.intellij.util.containers.ContainerUtil;
@@ -37,7 +37,7 @@ public abstract class LayeredModuleExtensionImpl<S extends LayeredModuleExtensio
 	protected Map<String, ConfigurationLayer> myLayers = new LinkedHashMap<String, ConfigurationLayer>();
 	protected String myCurrentLayer;
 
-	public LayeredModuleExtensionImpl(@NotNull String id, @NotNull Module module)
+	public LayeredModuleExtensionImpl(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 
