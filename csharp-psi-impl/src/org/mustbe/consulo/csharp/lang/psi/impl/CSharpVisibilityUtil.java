@@ -32,6 +32,7 @@ public class CSharpVisibilityUtil
 		if(isVisible(target, place))
 		{
 			//TODO [VISTALL] static
+			return true;
 		}
 
 		//TODO [VISTALL] create implementation
