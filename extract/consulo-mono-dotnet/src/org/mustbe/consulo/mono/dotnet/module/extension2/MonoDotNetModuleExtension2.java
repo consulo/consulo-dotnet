@@ -26,8 +26,8 @@ import org.mustbe.consulo.roots.ContentFoldersSupport;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
  * @author VISTALL
@@ -39,7 +39,7 @@ import com.intellij.openapi.projectRoots.SdkType;
 public class MonoDotNetModuleExtension2 extends DotNetModuleExtensionImpl<MonoDotNetModuleExtension2> implements
 		DotNetStructurableModuleExtension<MonoDotNetModuleExtension2>
 {
-	public MonoDotNetModuleExtension2(@NotNull String id, @NotNull Module module)
+	public MonoDotNetModuleExtension2(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}

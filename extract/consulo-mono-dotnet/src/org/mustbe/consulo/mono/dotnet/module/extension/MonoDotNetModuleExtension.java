@@ -23,9 +23,9 @@ import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.SystemInfo;
 
 /**
@@ -34,9 +34,9 @@ import com.intellij.openapi.util.SystemInfo;
  */
 public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDotNetModuleExtension>
 {
-	public MonoDotNetModuleExtension(@NotNull String id, @NotNull Module module)
+	public MonoDotNetModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel)
 	{
-		super(id, module);
+		super(id, rootModel);
 	}
 
 	@NotNull

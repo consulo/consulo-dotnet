@@ -3,8 +3,8 @@ package org.mustbe.consulo.ironPython.module.extension;
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.consulo.python.module.extension.PyModuleExtension;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.jetbrains.python.sdk.PythonSdkType;
 
 /**
@@ -14,7 +14,7 @@ import com.jetbrains.python.sdk.PythonSdkType;
 public class IronPythonModuleExtension extends ModuleExtensionWithSdkImpl<IronPythonModuleExtension> implements
 		PyModuleExtension<IronPythonModuleExtension>
 {
-	public IronPythonModuleExtension(@NotNull String id, @NotNull Module module)
+	public IronPythonModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}

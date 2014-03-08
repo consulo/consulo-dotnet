@@ -23,17 +23,30 @@
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
 
 		<moduleExtensionProvider key="microsoft-dotnet"
-								 implementationClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtensionProvider" />
+								 name="Microsoft .NET"
+								 icon="/icons/dotnet.png"
+								 immutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension"
+								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />
 
 		<moduleExtensionProvider key="microsoft-dotnet2"
-								 implementationClass="org.mustbe.consulo.microsoft.dotnet.module.extension2.MicrosoftDotNetModuleExtensionProvider2"
-				/>
+								 name="Microsoft .NET (Structable)"
+								 icon="/icons/dotnet.png"
+								 immutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension"
+								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />
 
-		<moduleExtensionProvider key="microsoft-csharp" parent-key="microsoft-dotnet"
-								 implementationClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtensionProvider"/>
+		<moduleExtensionProvider key="microsoft-csharp"
+								 parentKey="microsoft-dotnet"
+								 name="C#"
+								 icon="/icons/dotnet.png"
+								 immutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtension"
+								 mutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpMutableModuleExtension"/>
 
-		<moduleExtensionProvider key="microsoft-csharp2" parent-key="microsoft-dotnet2"
-								 implementationClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtensionProvider"/>
+		<moduleExtensionProvider key="microsoft-csharp2"
+								 parentKey="microsoft-dotnet2"
+								 name="C#"
+								 icon="/icons/dotnet.png"
+								 immutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtension"
+								 mutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpMutableModuleExtension"/>
 
 		<sdkType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
 		<bundledSdkProvider implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetBundledSdkProvider" />

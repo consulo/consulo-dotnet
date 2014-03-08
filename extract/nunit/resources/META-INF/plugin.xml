@@ -6,10 +6,18 @@
 		<testFramework implementation="org.mustbe.consulo.nunit.NUnitTestFramework"/>
 		<sdkType implementation="org.mustbe.consulo.nunit.bundle.NUnitBundleType"/>
 
-		<moduleExtensionProvider key="microsoft-nunit" parent-key="microsoft-dotnet"
-								 implementationClass="org.mustbe.consulo.nunit.module.extension.NUnitModuleExtensionProvider"/>
+		<moduleExtensionProvider key="microsoft-nunit"
+								 parentKey="microsoft-dotnet"
+								 name="NUnit"
+								 icon="/icons/nunit.png"
+								 immutableClass="org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension"
+								 mutableClass="org.mustbe.consulo.nunit.module.extension.NUnitMutableModuleExtension"/>
 
-		<moduleExtensionProvider key="microsoft-nunit2" parent-key="microsoft-dotnet2"
-								 implementationClass="org.mustbe.consulo.nunit.module.extension.NUnitModuleExtensionProvider"/>
+		<moduleExtensionProvider key="microsoft-nunit2"
+								 parentKey="microsoft-dotnet2"
+								 name="NUnit"
+								 icon="/icons/nunit.png"
+								 immutableClass="org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension"
+								 mutableClass="org.mustbe.consulo.nunit.module.extension.NUnitMutableModuleExtension"/>
 	</extensions>
 </idea-plugin>

@@ -21,7 +21,6 @@ import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
@@ -30,7 +29,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModuleExtension implements DotNetMutableModuleExtension<MicrosoftDotNetModuleExtension>
 {
-	public MicrosoftDotNetMutableModuleExtension(@NotNull String id, @NotNull Module module)
+	public MicrosoftDotNetMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}
@@ -43,9 +42,9 @@ public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModule
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
+	public JComponent createConfigurablePanel(@Nullable Runnable runnable)
 	{
-		return createConfigurablePanelImpl(modifiableRootModel, runnable);
+		return createConfigurablePanelImpl(runnable);
 	}
 
 	@Override
