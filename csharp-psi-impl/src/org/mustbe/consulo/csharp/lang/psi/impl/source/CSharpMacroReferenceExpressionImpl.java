@@ -177,7 +177,7 @@ public class CSharpMacroReferenceExpressionImpl extends CSharpMacroElementImpl i
 		}
 
 
-		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(map.values());
+		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(this, map.values());
 	}
 
 	@Override

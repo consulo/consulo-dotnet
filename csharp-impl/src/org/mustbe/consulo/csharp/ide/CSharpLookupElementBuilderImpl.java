@@ -16,8 +16,14 @@
 
 package org.mustbe.consulo.csharp.ide;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
@@ -33,6 +39,7 @@ import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.proximity.PsiProximityComparator;
 import com.intellij.util.Function;
 
 /**
@@ -41,13 +48,19 @@ import com.intellij.util.Function;
  */
 public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 {
+	@NotNull
 	@Override
-	public LookupElement[] buildToLookupElements(PsiElement[] arguments)
+	public LookupElement[] buildToLookupElements(@Nullable PsiElement sender, @NotNull PsiElement[] arguments)
 	{
 		if(arguments.length == 0)
 		{
 			return LookupElement.EMPTY_ARRAY;
 		}
+		if(sender != null)
+		{
+			Arrays.sort(arguments, new PsiProximityComparator(sender));
+		}
+
 		LookupElement[] array = new LookupElement[arguments.length];
 		for(int i = 0; i < arguments.length; i++)
 		{
@@ -57,19 +70,36 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 		return array;
 	}
 
+	@NotNull
 	@Override
-	public LookupElement[] buildToLookupElements(Collection<? extends PsiElement> arguments)
+	@SuppressWarnings("unchecked")
+	public LookupElement[] buildToLookupElements(@Nullable PsiElement sender, @NotNull Collection<? extends PsiElement> arguments)
 	{
 		if(arguments.isEmpty())
 		{
 			return LookupElement.EMPTY_ARRAY;
 		}
-		int i = 0;
-		LookupElement[] array = new LookupElement[arguments.size()];
-		for(PsiElement argument : arguments)
+		List<? extends PsiElement> elements;
+		if(arguments instanceof List)
 		{
-			array[i++] = buildLookupElement(argument);
+			elements = (List<? extends PsiElement>)arguments;
 		}
+		else
+		{
+			elements = new ArrayList<PsiElement>(arguments);
+		}
+
+		if(sender != null)
+		{
+			Collections.sort(elements, new PsiProximityComparator(sender));
+		}
+
+		LookupElement[] array = new LookupElement[arguments.size()];
+		for(int i = 0; i < array.length; i++)
+		{
+			array[i] = buildLookupElement(elements.get(i));
+		}
+
 		return array;
 	}
 

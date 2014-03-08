@@ -776,7 +776,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return psiNamedElement.getName() != null;
 			}
 		}, this, false);
-		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(psiElements);
+		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(this, psiElements);
 	}
 
 	@Override
