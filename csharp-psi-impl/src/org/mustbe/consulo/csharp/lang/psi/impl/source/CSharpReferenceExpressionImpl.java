@@ -27,6 +27,7 @@ import org.mustbe.consulo.csharp.ide.CSharpLookupElementBuilder;
 import org.mustbe.consulo.csharp.lang.psi.*;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpVisibilityUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.AbstractScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
@@ -776,7 +777,9 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return psiNamedElement.getName() != null
 						&& !(psiNamedElement instanceof CSharpConstructorDeclaration)
 						&& !(psiNamedElement instanceof CSharpMethodDeclaration && ((CSharpMethodDeclaration) psiNamedElement).isOperator())
-						&& !(psiNamedElement instanceof CSharpArrayMethodDeclarationImpl);
+						&& !(psiNamedElement instanceof CSharpArrayMethodDeclarationImpl)
+						&& (psiNamedElement instanceof DotNetModifierListOwner &&
+						CSharpVisibilityUtil.isVisibleForCompletion((DotNetModifierListOwner) psiNamedElement, CSharpReferenceExpressionImpl.this));
 			}
 		}, this, false);
 		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(this, psiElements);
