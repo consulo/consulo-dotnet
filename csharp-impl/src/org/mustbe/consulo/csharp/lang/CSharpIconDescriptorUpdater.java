@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.ide.assemblyInfo.CSharpAssemblyConstants;
 import org.mustbe.consulo.csharp.ide.run.CSharpRunUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
@@ -68,6 +69,12 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 
 		if(containingFile.getFileType() != CSharpFileType.INSTANCE)
 		{
+			return;
+		}
+
+		if(CSharpAssemblyConstants.FileName.equals(containingFile.getName()))
+		{
+			iconDescriptor.setMainIcon(AllIcons.FileTypes.Config);
 			return;
 		}
 

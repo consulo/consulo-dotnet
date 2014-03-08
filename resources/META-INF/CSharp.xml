@@ -22,6 +22,9 @@
 		<action id="CSharp.File" class="org.mustbe.consulo.csharp.ide.actions.NewCSharpFileAction">
 			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
 		</action>
+		<action id="CSharp.AssemblyFile" class="org.mustbe.consulo.csharp.ide.actions.NewCSharpAssemblyFileAction">
+			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="CSharp.File"/>
+		</action>
 	</actions>
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
@@ -36,6 +39,9 @@
 		<internalFileTemplate name="CSharpEnum"/>
 		<internalFileTemplate name="CSharpStruct"/>
 		<internalFileTemplate name="CSharpFile"/>
+		<internalFileTemplate name="CSharpAssemblyFile"/>
+
+		<eapDescriptor implementation="org.mustbe.consulo.csharp.ide.assemblyInfo.CSharpAssemblyFileEditorProvider$EapDescriptor" />
 
 		<applicationService serviceInterface="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionHelper"
 							serviceImplementation="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionHelperImpl"/>
@@ -114,6 +120,7 @@
 		<problemFileHighlightFilter implementation="org.mustbe.consulo.csharp.ide.codeInsight.problems.CSharpFileProblemHighlightFilter" />
 		<editorHighlighterProvider filetype="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpEditorHighlighterProvider" />
 
+		<fileEditorProvider implementation="org.mustbe.consulo.csharp.ide.assemblyInfo.CSharpAssemblyFileEditorProvider" />
 		<psi.treeChangePreprocessor implementation="org.mustbe.consulo.csharp.lang.psi.impl.CSharpPsiTreeChangePreprocessor"/>
 		<lang.psiStructureViewFactory language="C#" implementationClass="org.mustbe.consulo.csharp.ide.structureView.CSharpStructureViewFactory"/>
 		<lang.formatter language="C#" implementationClass="org.mustbe.consulo.csharp.lang.formatter.CSharpFormattingModelBuilder"/>
