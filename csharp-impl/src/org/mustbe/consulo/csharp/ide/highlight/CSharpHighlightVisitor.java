@@ -49,7 +49,6 @@ import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ReferenceRange;
@@ -75,16 +74,6 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	public void visit(@NotNull PsiElement element)
 	{
 		element.accept(this);
-	}
-
-	@Override
-	public void visitComment(PsiComment comment)
-	{
-		if(comment.getTokenType() == CSharpTokens.NON_ACTIVE_SYMBOL)
-		{
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(comment).textAttributes(CSharpHighlightKey
-					.DISABLED_BLOCK).create());
-		}
 	}
 
 	@Override

@@ -56,6 +56,6 @@ public interface CSharpHighlightKey
 			DefaultLanguageHighlighterColors.BLOCK_COMMENT);
 	TextAttributesKey LINE_COMMENT = TextAttributesKey.createTextAttributesKey(CSharpLanguage.INSTANCE,
 			DefaultLanguageHighlighterColors.LINE_COMMENT);
-	TextAttributesKey DISABLED_BLOCK = TextAttributesKey.createTextAttributesKey("CSHARP_DISABLED_BLOCK", new TextAttributes(null, Gray._235, null,
+	TextAttributesKey DISABLED_BLOCK = TextAttributesKey.createTextAttributesKey("CSHARP_DISABLED_BLOCK", new TextAttributes(null, Gray._240, null,
 			null, Font.PLAIN));
 }
