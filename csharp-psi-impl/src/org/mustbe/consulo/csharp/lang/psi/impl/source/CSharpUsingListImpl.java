@@ -72,16 +72,20 @@ public class CSharpUsingListImpl extends CSharpStubElementImpl<CSharpUsingListSt
 			place)
 	{
 		PsiFile psiFile = state.get(CSharpResolveUtil.SELF_FILE);
-		if(psiFile != getContainingFile())
+		if(psiFile == null)
 		{
 			return true;
 		}
+		PsiFile containingFile = getContainingFile();
 
-		for(CSharpUsingListChild cSharpUsingStatement : getStatements())
+		if(psiFile.equals(containingFile) || psiFile.getOriginalFile().equals(containingFile))
 		{
-			if(!cSharpUsingStatement.processDeclarations(processor, state, lastParent, place))
+			for(CSharpUsingListChild cSharpUsingStatement : getStatements())
 			{
-				return false;
+				if(!cSharpUsingStatement.processDeclarations(processor, state, lastParent, place))
+				{
+					return false;
+				}
 			}
 		}
 
