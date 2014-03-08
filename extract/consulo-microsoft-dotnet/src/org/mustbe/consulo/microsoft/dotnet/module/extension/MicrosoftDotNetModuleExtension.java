@@ -22,8 +22,8 @@ import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
  * @author VISTALL
@@ -31,7 +31,7 @@ import com.intellij.openapi.projectRoots.SdkType;
  */
 public class MicrosoftDotNetModuleExtension extends DotNetModuleExtensionImpl<MicrosoftDotNetModuleExtension>
 {
-	public MicrosoftDotNetModuleExtension(@NotNull String id, @NotNull Module module)
+	public MicrosoftDotNetModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}

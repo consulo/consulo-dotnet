@@ -27,7 +27,6 @@ import org.mustbe.consulo.csharp.module.CSharpConfigurationProfileEx;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import org.mustbe.consulo.dotnet.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
@@ -37,14 +36,14 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> extends ModuleExtensionImpl<T> implements
 		DotNetModuleLangExtension<T>
 {
-	public CSharpModuleExtension(@NotNull String id, @NotNull Module module)
+	public CSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel)
 	{
-		super(id, module);
+		super(id, rootModel);
 	}
 
-	protected JComponent createConfigurablePanelImpl(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
+	protected JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
 	{
-		return new ConfigurationProfilePanel(modifiableRootModel, runnable, CSharpConfigurationProfileEx.KEY);
+		return new ConfigurationProfilePanel(myRootModel, runnable, CSharpConfigurationProfileEx.KEY);
 	}
 
 	protected boolean isModifiedImpl(T ex)

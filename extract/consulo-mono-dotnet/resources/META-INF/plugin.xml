@@ -20,21 +20,35 @@
 	<depends>org.mustbe.consulo.dotnet.core</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
+		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 
 		<moduleExtensionProvider key="mono-dotnet"
-								 implementationClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtensionProvider" />
+								 name="Mono .NET"
+								 icon="/icons/mono.png"
+								 immutableClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension"
+								 mutableClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetMutableModuleExtension"/>
 
-		<moduleExtensionProvider key="mono-csharp" parent-key="mono-dotnet"
-								 implementationClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtensionProvider"/>
+		<moduleExtensionProvider key="mono-csharp"
+								 parentKey="mono-dotnet"
+								 name="C#"
+								 icon="/icons/mono.png"
+								 immutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtension"
+								 mutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpMutableModuleExtension"/>
 
 		<moduleExtensionProvider key="mono-dotnet2"
-								 implementationClass="org.mustbe.consulo.mono.dotnet.module.extension2.MonoDotNetModuleExtensionProvider2" />
+								 name="Mono .NET (Structurable)"
+								 icon="/icons/mono.png"
+								 immutableClass="org.mustbe.consulo.mono.dotnet.module.extension2.MonoDotNetModuleExtension2"
+								 mutableClass="org.mustbe.consulo.mono.dotnet.module.extension2.MonoDotNetMutableModuleExtension2"/>
 
-		<moduleExtensionProvider key="mono-csharp2" parent-key="mono-dotnet2"
-								 implementationClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtensionProvider"/>
+		<moduleExtensionProvider key="mono-csharp2"
+								 parentKey="mono-dotnet2"
+								 name="C#"
+								 icon="/icons/mono.png"
+								 immutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtension"
+								 mutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpMutableModuleExtension"/>
 
-		<sdkType implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType" />
-		<bundledSdkProvider implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoBundledSdkProvider" />
+		<sdkType implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType"/>
+		<bundledSdkProvider implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoBundledSdkProvider"/>
 	</extensions>
 </idea-plugin>

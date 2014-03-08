@@ -23,7 +23,6 @@ import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
@@ -33,7 +32,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class NUnitMutableModuleExtension extends NUnitModuleExtension implements MutableModuleExtensionWithSdk<NUnitModuleExtension>
 {
-	public NUnitMutableModuleExtension(@NotNull String id, @NotNull Module module)
+	public NUnitMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}
@@ -47,7 +46,7 @@ public class NUnitMutableModuleExtension extends NUnitModuleExtension implements
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
+	public JComponent createConfigurablePanel(@Nullable Runnable runnable)
 	{
 		return wrapToNorth(new ModuleExtensionWithSdkPanel(this,runnable));
 	}

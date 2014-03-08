@@ -19,8 +19,8 @@ package org.mustbe.consulo.nunit.module.extension;
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.nunit.bundle.NUnitBundleType;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
  * @author VISTALL
@@ -28,7 +28,7 @@ import com.intellij.openapi.projectRoots.SdkType;
  */
 public class NUnitModuleExtension extends ModuleExtensionWithSdkImpl<NUnitModuleExtension>
 {
-	public NUnitModuleExtension(@NotNull String id, @NotNull Module module)
+	public NUnitModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}

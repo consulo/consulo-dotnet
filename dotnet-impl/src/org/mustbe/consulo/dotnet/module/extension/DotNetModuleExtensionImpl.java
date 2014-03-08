@@ -35,7 +35,6 @@ import org.mustbe.consulo.dotnet.module.ConfigurationProfileImpl;
 import org.mustbe.consulo.dotnet.module.MainConfigurationProfileEx;
 import org.mustbe.consulo.dotnet.module.MainConfigurationProfileExImpl;
 import org.mustbe.consulo.dotnet.module.ui.ConfigurationProfilePanel;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -51,18 +50,18 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 {
 	protected List<ConfigurationProfile> myProfiles = new ArrayList<ConfigurationProfile>(2);
 
-	public DotNetModuleExtensionImpl(@NotNull String id, @NotNull Module module)
+	public DotNetModuleExtensionImpl(@NotNull String id, @NotNull ModifiableRootModel rootModel)
 	{
-		super(id, module);
+		super(id, rootModel);
 	}
 
 	@NotNull
 	protected abstract Class<? extends SdkType> getSdkTypeClass();
 
 	@Nullable
-	public JComponent createConfigurablePanelImpl(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
+	public JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
 	{
-		return new ConfigurationProfilePanel(modifiableRootModel, runnable, MainConfigurationProfileExImpl.KEY);
+		return new ConfigurationProfilePanel(myRootModel, runnable, MainConfigurationProfileExImpl.KEY);
 	}
 
 	public boolean isModifiedImpl(S originExtension)

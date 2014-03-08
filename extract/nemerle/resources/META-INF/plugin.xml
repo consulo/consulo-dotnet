@@ -26,13 +26,19 @@
 
 		<sdkType implementation="org.mustbe.consulo.nemerle.sdk.NemerleSdkType" />
 
-		<moduleExtensionProvider key="microsoft-nemerle" parent-key="microsoft-dotnet"
-								 implementationClass="org.mustbe.consulo.nemerle.module.extension.NemerleModuleExtensionProvider"
-				/>
+		<moduleExtensionProvider key="microsoft-nemerle"
+								 parentKey="microsoft-dotnet"
+								 name="Nemerle"
+								 icon="/icons/nemerle.png"
+								 immutableClass="org.mustbe.consulo.nemerle.module.extension.NemerleModuleExtension"
+								 mutableClass="org.mustbe.consulo.nemerle.module.extension.NemerleMutableModuleExtension" />
 
-		<moduleExtensionProvider key="mono-nemerle" parent-key="mono-dotnet"
-								 implementationClass="org.mustbe.consulo.nemerle.module.extension.NemerleModuleExtensionProvider"
-				/>
+		<moduleExtensionProvider key="mono-nemerle"
+								 parentKey="mono-dotnet"
+								 name="Nemerle"
+								 icon="/icons/nemerle.png"
+								 immutableClass="org.mustbe.consulo.nemerle.module.extension.NemerleModuleExtension"
+								 mutableClass="org.mustbe.consulo.nemerle.module.extension.NemerleMutableModuleExtension" />
 
 		<lang.parserDefinition language="NEMERLE" implementationClass="org.mustbe.consulo.nemerle.lang.NemerleParserDefinition" />
 	</extensions>
