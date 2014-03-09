@@ -23,7 +23,7 @@
 			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
 		</action>
 		<action id="CSharp.AssemblyFile" class="org.mustbe.consulo.csharp.ide.actions.NewCSharpAssemblyFileAction">
-			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="CSharp.File"/>
+			<add-to-group group-id="NewGroup" />
 		</action>
 	</actions>
 

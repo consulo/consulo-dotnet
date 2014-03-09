@@ -23,10 +23,10 @@ import org.apache.velocity.runtime.parser.ParseException;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.CSharpIcons;
 import org.mustbe.consulo.csharp.ide.assemblyInfo.CSharpAssemblyConstants;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.CreateFileAction;
 import com.intellij.ide.fileTemplates.FileTemplate;
@@ -61,7 +61,7 @@ public class NewCSharpAssemblyFileAction extends AnAction
 {
 	public NewCSharpAssemblyFileAction()
 	{
-		super(null, null, CSharpIcons.FileType);
+		super(null, null, AllIcons.FileTypes.Config);
 	}
 
 	@Override
