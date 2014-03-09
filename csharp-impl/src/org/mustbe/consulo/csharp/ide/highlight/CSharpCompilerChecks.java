@@ -44,7 +44,7 @@ import com.intellij.util.Processor;
  */
 public interface CSharpCompilerChecks
 {
-	SimpleCompilerCheck<CSharpThrowStatementImpl> CS0155 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<CSharpThrowStatementImpl>()
+	CompilerCheck<CSharpThrowStatementImpl> CS0155 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<CSharpThrowStatementImpl>()
 	{
 		@Override
 		public boolean process(CSharpThrowStatementImpl statement)
@@ -61,7 +61,7 @@ public interface CSharpCompilerChecks
 		}
 	});
 
-	SimpleCompilerCheck<DotNetParameter> CS0231 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<DotNetParameter>()
+	CompilerCheck<DotNetParameter> CS0231 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<DotNetParameter>()
 	{
 		@Override
 		public boolean process(DotNetParameter dotNetParameter)
@@ -79,7 +79,7 @@ public interface CSharpCompilerChecks
 		}
 	});
 
-	SimpleCompilerCheck<DotNetParameter> CS1737 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<DotNetParameter>()
+	CompilerCheck<DotNetParameter> CS1737 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<DotNetParameter>()
 	{
 		@Override
 		public boolean process(DotNetParameter dotNetParameter)
