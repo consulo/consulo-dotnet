@@ -23,6 +23,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -57,6 +58,27 @@ public enum CSharpCompilerCheck
 					if(!CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, dotNetTypeRef, statement, true))
 					{
 						holder.add(create(element));
+					}
+				}
+			},
+	CS0231(HighlightInfoType.ERROR)
+			{
+				@Override
+				public void accept(@NotNull PsiElement element, @NotNull HighlightInfoHolder holder)
+				{
+					DotNetParameter parameter = (DotNetParameter) element;
+					if(!parameter.hasModifier(DotNetModifier.PARAMS))
+					{
+						return;
+					}
+
+					DotNetParameterList parent = (DotNetParameterList) parameter.getParent();
+
+					DotNetParameter[] parameters = parent.getParameters();
+
+					if(ArrayUtil.getLastElement(parameters) != parameter)
+					{
+						holder.add(create(parameter));
 					}
 				}
 			},
