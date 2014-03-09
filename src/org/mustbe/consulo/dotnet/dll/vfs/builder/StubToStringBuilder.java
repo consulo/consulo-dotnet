@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -719,6 +720,22 @@ public class StubToStringBuilder
 		else if(signature == TypeSignature.I8)
 		{
 			return wrap(value).getLong();
+		}
+		else if(signature == TypeSignature.U1)
+		{
+			return value[0] & 0xFF;
+		}
+		else if(signature == TypeSignature.U2)
+		{
+			return wrap(value).getShort() & 0xFFFF;
+		}
+		else if(signature == TypeSignature.U4)
+		{
+			return wrap(value).getInt() & 0xFFFFFFFFL;
+		}
+		else if(signature == TypeSignature.U8)
+		{
+			return new BigInteger(value).toString();
 		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{
