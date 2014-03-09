@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.ide.highlight;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.PropertyKey;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
@@ -133,5 +134,11 @@ public class CSharpHighlightUtil
 			holder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes(EditorColors
 					.INJECTED_LANGUAGE_FRAGMENT).create());
 		}
+	}
+
+	@Nullable
+	public static HighlightInfo createError(PsiElement element, @PropertyKey(resourceBundle = "messages.CSharpErrorBundle") String b)
+	{
+		return HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip(b).range(element).create();
 	}
 }
