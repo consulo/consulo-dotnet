@@ -241,7 +241,7 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		{
 			return true;
 		}
-		else if(psi.getPrevSibling() == null)
+		else if(psi instanceof PsiComment && psi.getPrevSibling() == null)
 		{
 			return true;
 		}
