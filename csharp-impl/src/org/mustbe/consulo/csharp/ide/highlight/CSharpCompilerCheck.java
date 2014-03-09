@@ -23,11 +23,16 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.util.ArrayUtil;
 
 /**
  * @author VISTALL
@@ -54,6 +59,30 @@ public enum CSharpCompilerCheck
 						holder.add(create(element));
 					}
 				}
+			},
+	CS1737(HighlightInfoType.ERROR)
+			{
+				@Override
+				public void accept(@NotNull PsiElement element, @NotNull HighlightInfoHolder holder)
+				{
+					DotNetParameter parameter = (DotNetParameter) element;
+					if(parameter.getInitializer() == null)
+					{
+						return;
+					}
+
+					DotNetParameterList parent = (DotNetParameterList) parameter.getParent();
+
+					DotNetParameter[] parameters = parent.getParameters();
+
+					int i = ArrayUtil.indexOf(parameters, parameter);
+
+					DotNetParameter nextParameter = ArrayUtil2.safeGet(parameters, i + 1);
+					if(nextParameter != null && nextParameter.getInitializer() == null)
+					{
+						holder.add(create(parameter));
+					}
+				}
 			};
 
 	private final HighlightInfoType myType;
@@ -61,6 +90,17 @@ public enum CSharpCompilerCheck
 	CSharpCompilerCheck(HighlightInfoType type)
 	{
 		myType = type;
+	}
+
+	@Nullable
+	protected HighlightInfo createNamed(PsiNameIdentifierOwner element)
+	{
+		PsiElement nameIdentifier = element.getNameIdentifier();
+		if(nameIdentifier == null)
+		{
+			nameIdentifier = element;
+		}
+		return HighlightInfo.newHighlightInfo(myType).descriptionAndTooltip(CSharpErrorBundle.message(name())).range(nameIdentifier).create();
 	}
 
 	@Nullable

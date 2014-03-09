@@ -166,6 +166,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		super.visitParameter(parameter);
 
 		highlightNamed(parameter, parameter.getNameIdentifier());
+
+		process(parameter, CSharpCompilerCheck.CS1737);
 	}
 
 	@Override

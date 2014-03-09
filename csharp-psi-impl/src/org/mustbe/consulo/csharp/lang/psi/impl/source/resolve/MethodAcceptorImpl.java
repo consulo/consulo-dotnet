@@ -22,6 +22,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 
 /**
  * @author VISTALL
@@ -74,7 +75,7 @@ public class MethodAcceptorImpl
 
 			for(int i = 0; i < parameters.length; i++)
 			{
-				DotNetExpression expression = i < expressions.length ? expressions[i] : null;
+				DotNetExpression expression = ArrayUtil2.safeGet(expressions, i);
 				DotNetParameter parameter = parameters[i];
 
 				// if expression no found - but parameter have default value - it value
