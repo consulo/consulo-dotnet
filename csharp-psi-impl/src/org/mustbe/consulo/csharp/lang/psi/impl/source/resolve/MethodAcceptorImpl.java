@@ -62,7 +62,46 @@ public class MethodAcceptorImpl
 		}
 	}
 
-	private static final MethodAcceptor[] ourAcceptors = new MethodAcceptor[] {new SimpleMethodAcceptor()};
+	private static class MethodAcceptorWithDefaultValues implements MethodAcceptor
+	{
+		@Override
+		public boolean isAccepted(DotNetExpression[] expressions, DotNetParameter[] parameters)
+		{
+			if(expressions.length >= parameters.length)
+			{
+				return false;
+			}
+
+			for(int i = 0; i < parameters.length; i++)
+			{
+				DotNetExpression expression = i < expressions.length ? expressions[i] : null;
+				DotNetParameter parameter = parameters[i];
+
+				// if expression no found - but parameter have default value - it value
+				if(expression == null && parameter.getInitializer() != null)
+				{
+					continue;
+				}
+
+				if(expression == null)
+				{
+					return false;
+				}
+
+				DotNetTypeRef expressionType = expression.toTypeRef();
+				DotNetTypeRef parameterType = parameter.toTypeRef();
+
+				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, expression))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+	}
+
+	private static final MethodAcceptor[] ourAcceptors = new MethodAcceptor[] {new SimpleMethodAcceptor(), new MethodAcceptorWithDefaultValues()};
 
 	public static boolean isAccepted(CSharpExpressionWithParameters parameterExpressionsOwner, DotNetParameterListOwner methodDeclaration)
 	{
