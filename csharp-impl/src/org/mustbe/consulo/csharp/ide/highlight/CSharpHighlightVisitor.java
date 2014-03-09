@@ -18,9 +18,11 @@ package org.mustbe.consulo.csharp.ide.highlight;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
@@ -32,9 +34,9 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
@@ -86,6 +88,18 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			PsiElement parent = element.getParent();
 
 			parent.accept(this);
+		}
+
+		if(element instanceof DotNetElement)
+		{
+			for(Map.Entry<CompilerCheck<PsiElement>, Class<?>> compilerCheckClassEntry : CSharpCompilerChecks.ourValues.entrySet())
+			{
+				if(compilerCheckClassEntry.getValue().isAssignableFrom(element.getClass()))
+				{
+					CompilerCheck<PsiElement> key = compilerCheckClassEntry.getKey();
+					key.add(element, myHighlightInfoHolder);
+				}
+			}
 		}
 	}
 
@@ -153,22 +167,11 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
-	public void visitThrowStatement(CSharpThrowStatementImpl statement)
-	{
-		super.visitThrowStatement(statement);
-
-		process(statement, CSharpCompilerCheck.CS0155);
-	}
-
-	@Override
 	public void visitParameter(DotNetParameter parameter)
 	{
 		super.visitParameter(parameter);
 
 		highlightNamed(parameter, parameter.getNameIdentifier());
-
-		process(parameter, CSharpCompilerCheck.CS0231);
-		process(parameter, CSharpCompilerCheck.CS1737);
 	}
 
 	@Override
@@ -264,11 +267,6 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	public void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
 	{
 		CSharpHighlightUtil.highlightNamed(myHighlightInfoHolder, element, target);
-	}
-
-	private void process(PsiElement element, CSharpCompilerCheck check)
-	{
-		check.accept(element, myHighlightInfoHolder);
 	}
 
 	@Override
