@@ -780,7 +780,9 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 						&& !(psiNamedElement instanceof CSharpMethodDeclaration && ((CSharpMethodDeclaration) psiNamedElement).isOperator())
 						&& !(psiNamedElement instanceof CSharpArrayMethodDeclarationImpl)
 						&& (psiNamedElement instanceof DotNetModifierListOwner &&
-						CSharpVisibilityUtil.isVisibleForCompletion((DotNetModifierListOwner) psiNamedElement, CSharpReferenceExpressionImpl.this));
+						CSharpVisibilityUtil.isVisibleForCompletion((DotNetModifierListOwner) psiNamedElement,
+								CSharpReferenceExpressionImpl.this)) ||
+						psiNamedElement instanceof CSharpLocalVariable;
 			}
 		}, this, false);
 		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(this, psiElements);
