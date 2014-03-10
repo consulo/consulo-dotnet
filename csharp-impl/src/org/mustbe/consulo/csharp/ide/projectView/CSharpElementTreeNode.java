@@ -22,38 +22,22 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.AbstractPsiBasedNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 09.12.13.
  */
-public class CSharpElementTreeNode extends AbstractPsiBasedNode<DotNetNamedElement>
+public class CSharpElementTreeNode extends CSharpAbstractElementTreeNode<DotNetNamedElement>
 {
 	public CSharpElementTreeNode(DotNetNamedElement dotNetMemberOwner, ViewSettings viewSettings)
 	{
 		super(dotNetMemberOwner.getProject(), dotNetMemberOwner, viewSettings);
-	}
-
-	@Override
-	public boolean expandOnDoubleClick()
-	{
-		return false;
-	}
-
-	@Nullable
-	@Override
-	protected PsiElement extractPsiFromValue()
-	{
-		return getValue();
 	}
 
 	@Override
@@ -127,20 +111,6 @@ public class CSharpElementTreeNode extends AbstractPsiBasedNode<DotNetNamedEleme
 		}
 
 		return Collections.emptyList();
-	}
-
-	@Override
-	protected boolean isDeprecated()
-	{
-		DotNetNamedElement value = getValue();
-		if(value instanceof DotNetModifierListOwner)
-		{
-			return DotNetAttributeUtil.hasAttribute((DotNetModifierListOwner) value, DotNetTypes.System_ObsoleteAttribute);
-		}
-		else
-		{
-			return false;
-		}
 	}
 
 	@Override

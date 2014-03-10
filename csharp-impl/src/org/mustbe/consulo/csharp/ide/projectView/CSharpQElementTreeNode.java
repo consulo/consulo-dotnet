@@ -23,40 +23,31 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.CSharpElementPresentationUtil;
-import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.psi.*;
+import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.AbstractPsiBasedNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 
 /**
  * @author VISTALL
  * @since 09.12.13.
  */
-public class CSharpQElementTreeNode extends AbstractPsiBasedNode<DotNetNamedElement>
+public class CSharpQElementTreeNode extends CSharpAbstractElementTreeNode<DotNetNamedElement>
 {
 	public CSharpQElementTreeNode(DotNetNamedElement dotNetMemberOwner, ViewSettings viewSettings)
 	{
 		super(dotNetMemberOwner.getProject(), dotNetMemberOwner, viewSettings);
-	}
-
-	@Override
-	public boolean expandOnDoubleClick()
-	{
-		return false;
-	}
-
-	@Nullable
-	@Override
-	protected PsiElement extractPsiFromValue()
-	{
-		return getValue();
 	}
 
 	@Nullable
@@ -103,20 +94,6 @@ public class CSharpQElementTreeNode extends AbstractPsiBasedNode<DotNetNamedElem
 		else
 		{
 			presentationData.setPresentableText(getPresentableText(qualifiedElement));
-		}
-	}
-
-	@Override
-	protected boolean isDeprecated()
-	{
-		DotNetNamedElement value = getValue();
-		if(value instanceof DotNetModifierListOwner)
-		{
-			return DotNetAttributeUtil.hasAttribute((DotNetModifierListOwner) value, DotNetTypes.System_ObsoleteAttribute);
-		}
-		else
-		{
-			return false;
 		}
 	}
 
