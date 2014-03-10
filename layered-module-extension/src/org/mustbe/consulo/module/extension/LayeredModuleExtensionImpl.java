@@ -47,7 +47,7 @@ public abstract class LayeredModuleExtensionImpl<S extends LayeredModuleExtensio
 	private void intLayers()
 	{
 		init(false, addLayer("Release"));
-		init(false, addLayer(myCurrentLayer = "Debug"));
+		init(true, addLayer(myCurrentLayer = "Debug"));
 	}
 
 	protected void init(boolean debug, @NotNull ConfigurationLayer layer)
