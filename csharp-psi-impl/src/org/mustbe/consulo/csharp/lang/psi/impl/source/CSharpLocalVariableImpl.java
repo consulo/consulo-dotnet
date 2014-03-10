@@ -85,8 +85,7 @@ public class CSharpLocalVariableImpl extends CSharpVariableImpl implements CShar
 	@Override
 	public String getName()
 	{
-		PsiElement nameIdentifier = getNameIdentifier();
-		return nameIdentifier != null ? nameIdentifier.getText() : null;
+		return CSharpPsiUtilImpl.getNameWithoutAt(this);
 	}
 
 	@Nullable

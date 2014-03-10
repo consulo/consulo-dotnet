@@ -119,8 +119,7 @@ public abstract class CSharpStubMemberImpl<S extends MemberStub<?>> extends CSha
 		{
 			return stub.getName();
 		}
-		PsiElement nameIdentifier = getNameIdentifier();
-		return nameIdentifier == null ? null : nameIdentifier.getText();
+		return CSharpPsiUtilImpl.getNameWithoutAt(this);
 	}
 
 	@Override

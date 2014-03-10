@@ -145,7 +145,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	public String getReferenceName()
 	{
 		PsiElement referenceElement = getReferenceElement();
-		return referenceElement == null ? null : referenceElement.getText();
+		return referenceElement == null ? null : CSharpPsiUtilImpl.getNameWithoutAt(referenceElement.getText());
 	}
 
 	@Override

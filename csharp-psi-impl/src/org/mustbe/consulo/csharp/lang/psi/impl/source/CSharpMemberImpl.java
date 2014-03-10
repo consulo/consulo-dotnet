@@ -70,8 +70,7 @@ public abstract class CSharpMemberImpl extends CSharpElementImpl implements PsiN
 	@Override
 	public String getName()
 	{
-		PsiElement nameIdentifier = getNameIdentifier();
-		return nameIdentifier == null ? null : nameIdentifier.getText();
+		return CSharpPsiUtilImpl.getNameWithoutAt(this);
 	}
 
 	@Override

@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
  * @author VISTALL
@@ -39,6 +40,32 @@ import com.intellij.psi.PsiFile;
  */
 public class CSharpPsiUtilImpl
 {
+	@Nullable
+	public static String getNameWithoutAt(@NotNull PsiNameIdentifierOwner element)
+	{
+		PsiElement nameIdentifier = element.getNameIdentifier();
+		if(nameIdentifier == null)
+		{
+			return null;
+		}
+		return getNameWithoutAt(nameIdentifier.getText());
+	}
+
+	@NotNull
+	public static String getNameWithoutAt(@NotNull String oldName)
+	{
+		if(oldName.isEmpty())
+		{
+			return oldName;
+		}
+
+		if(oldName.charAt(0) == '@')
+		{
+			return oldName.substring(1, oldName.length());
+		}
+		return oldName;
+	}
+
 	public static boolean isCompiledElement(@NotNull PsiElement psi)
 	{
 		PsiFile containingFile = psi.getContainingFile();
@@ -49,7 +76,6 @@ public class CSharpPsiUtilImpl
 		VirtualFile virtualFile = containingFile.getVirtualFile();
 		return virtualFile != null && ProjectFileIndex.SERVICE.getInstance(psi.getProject()).isInLibraryClasses(virtualFile);
 	}
-
 
 	@Nullable
 	public static DotNetNamedElement findSingleElement(@NotNull CSharpFileImpl file)

@@ -678,7 +678,7 @@ public class StubToStringBuilder
 
 		p.append(TypeToStringBuilder.typeToString(signature, typeDef, methodDef));
 		p.append(" ");
-		p.append(toValidName(parameterInfo.getName(), index));
+		p.append(toValidName(parameterInfo.getName()));
 
 		if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
 		{
@@ -779,21 +779,11 @@ public class StubToStringBuilder
 	}
 
 	/**
-	 * Sometimes - parameters name is C# keyword. Bytecode is allow - but C# parser dont. hat why need change name to valid
-	 * @param name
-	 * @param index
-	 * @return
+	 * Sometimes - parameters name is C# keyword. Bytecode is allow - but C# parser dont. what why need change name to valid
 	 */
-	private static String toValidName(String name, int index)
+	private static String toValidName(String name)
 	{
-		if(ArrayUtil.contains(name, KEYWORDS))
-		{
-			return name + index;
-		}
-		else
-		{
-			return name;
-		}
+		return ArrayUtil.contains(name, KEYWORDS) ? "@" + name : name;
 	}
 
 	private static void processGenericParameterList(GenericParamOwner owner, StringBuilder builder)
