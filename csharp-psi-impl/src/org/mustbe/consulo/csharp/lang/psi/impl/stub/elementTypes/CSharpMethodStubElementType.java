@@ -102,8 +102,6 @@ public class CSharpMethodStubElementType extends CSharpAbstractStubElementType<C
 			val parentQName = cSharpTypeStub.getParentQName();
 
 			indexSink.occurrence(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.getNamespaceForIndexing(parentQName));
-
-			indexSink.occurrence(CSharpIndexKeys.METHOD_BY_QNAME_INDEX, CSharpNamespaceHelper.getNameWithNamespaceForIndexing(parentQName, name));
 		}
 	}
 }
