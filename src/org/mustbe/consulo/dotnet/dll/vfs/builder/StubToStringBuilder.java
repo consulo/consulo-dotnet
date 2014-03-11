@@ -763,6 +763,14 @@ public class StubToStringBuilder
 		{
 			return StringUtil.SINGLE_QUOTER.fun(String.valueOf(wrap(value).getChar()));
 		}
+		else if(signature == TypeSignature.R4)
+		{
+			return wrap(value).getFloat();
+		}
+		else if(signature == TypeSignature.R8)
+		{
+			return wrap(value).getDouble();
+		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{
 			ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
