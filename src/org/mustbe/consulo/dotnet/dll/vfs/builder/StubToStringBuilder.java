@@ -360,6 +360,13 @@ public class StubToStringBuilder
 		builder.append(TypeToStringBuilder.typeToString(field.getSignature().getType(), typeDef, typeDef));
 		builder.append(" ");
 		builder.append(field.getName());
+
+		byte[] defaultValue = field.getDefaultValue();
+		if(defaultValue != null)
+		{
+			builder.append(" = ");
+			builder.append(toValue(field.getSignature().getType(), typeDef, null, defaultValue));
+		}
 		builder.append(";\n");
 
 		return new LineStubBlock(builder);
@@ -752,6 +759,10 @@ public class StubToStringBuilder
 		{
 			return new BigInteger(value).toString();
 		}
+		else if(signature == TypeSignature.CHAR)
+		{
+			return StringUtil.SINGLE_QUOTER.fun(String.valueOf(wrap(value).getChar()));
+		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{
 			ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
@@ -770,6 +781,7 @@ public class StubToStringBuilder
 					}
 				}
 			}
+			return "valueType" + valueType.getClass();
 		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_GENERIC_INST ||
 				signature.getType() == SignatureConstants.ELEMENT_TYPE_CLASS ||
@@ -781,7 +793,9 @@ public class StubToStringBuilder
 			}
 		}
 
-		LOGGER.error(signature + " " + typeDef.getFullName() + "#" + methodDef.getName() + "(). Array: " + Arrays.toString(value));
+		LOGGER.error(signature + " " + typeDef.getFullName() + "#" + (methodDef == null ? null : methodDef.getName()) + "(). Array: " + Arrays
+				.toString
+				(value));
 
 		return StringUtil.QUOTER.fun("error");
 	}
