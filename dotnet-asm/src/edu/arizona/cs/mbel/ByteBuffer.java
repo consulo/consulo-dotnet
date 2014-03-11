@@ -136,6 +136,17 @@ public class ByteBuffer
 		value &= 0xFFFF;
 		return value;
 	}
+	/**
+	 * Returns a 2-byte unsigned little-endian integer, starting at the current position.
+	 * Advances the current position by 2 (see get())
+	 */
+	public int getShort()
+	{
+		int value = (get() & 0xFF);
+		value |= (get() & 0xFF) << 8;
+		value &= 0xFFFF;
+		return value;
+	}
 
 	/**
 	 * Returns a 4-byte unsigned little-endian integer, starting at the current position.
@@ -151,22 +162,15 @@ public class ByteBuffer
 		return value;
 	}
 
-	public int getCompressedUInt32()
+	public byte[] get(int len)
 	{
-		int first = get() & 0xFF;
-		if((first & 0x80) == 0)
+		byte[] array = new byte[len];
+		for(int i = 0; i < len; i++)
 		{
-			return first;
+			array[i] = get();
 		}
-
-		if((first & 0x40) == 0)
-		{
-			return ((first & ~0x80) << 8) | (get() & 0xFF);
-		}
-
-		return ((first & ~0xc0) << 24) | (get() & 0xFF) << 16 | (get() & 0xFF) << 8 | (get() & 0xFF);
+		return array;
 	}
-
 
 	/**
 	 * Returns the byte stored in this ByteBuffer at the current position.

@@ -29,7 +29,7 @@ import edu.arizona.cs.mbel.emit.ClassEmitter;
  *
  * @author Michael Stepp
  */
-abstract class Signature implements SignatureConstants
+public abstract class Signature implements SignatureConstants
 {
 	/**
 	 * Write this signature in binary format to the given buffer

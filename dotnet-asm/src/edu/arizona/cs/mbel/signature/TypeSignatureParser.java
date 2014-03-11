@@ -94,7 +94,7 @@ public class TypeSignatureParser implements SignatureConstants
 			case ELEMENT_TYPE_MVAR:
 			case ELEMENT_TYPE_VAR:
 				buffer.get();
-				return new XGenericTypeSignature(data, buffer.getCompressedUInt32());
+				return new XGenericTypeSignature(data, Signature.readCodedInteger(buffer));
 			case ELEMENT_TYPE_TYPEDBYREF:
 				return TypeSignature.OBJECT;
 			case ELEMENT_TYPE_PTR:
@@ -108,7 +108,7 @@ public class TypeSignatureParser implements SignatureConstants
 			case ELEMENT_TYPE_GENERIC_INST:
 				buffer.get();
 				TypeSignature mainType = parse(buffer, group);
-				int size = buffer.getCompressedUInt32();
+				int size = Signature.readCodedInteger(buffer);
 				List<TypeSignature> list = new ArrayList<TypeSignature>(size);
 				for(int i = 0; i < size; i++)
 				{
