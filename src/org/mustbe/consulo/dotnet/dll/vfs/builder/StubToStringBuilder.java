@@ -117,12 +117,12 @@ public class StubToStringBuilder
 			StubBlock typeBlock = processType(typeDef);
 			if(namespaceBlock != null)
 			{
-				namespaceBlock.getBlocks().addAll(processAttributes(typeDef, null, null, null));
+				namespaceBlock.getBlocks().addAll(processAttributes(typeDef, null, null, null, null));
 				namespaceBlock.getBlocks().add(typeBlock);
 			}
 			else
 			{
-				myRoots.addAll(processAttributes(typeDef, null, null, null));
+				myRoots.addAll(processAttributes(typeDef, null, null, null, null));
 				myRoots.add(typeBlock);
 			}
 		}
@@ -130,7 +130,7 @@ public class StubToStringBuilder
 
 	public StubToStringBuilder(AssemblyInfo assemblyInfo)
 	{
-		myRoots.addAll(processAttributes(assemblyInfo, null, null, "assembly"));
+		myRoots.addAll(processAttributes(assemblyInfo, null, null, "assembly", null));
 	}
 
 	// System.MulticastDelegate
@@ -151,7 +151,7 @@ public class StubToStringBuilder
 					{
 						newMethodDef.addGenericParam(paramDef);
 					}
-					return processMethod(typeDef, newMethodDef, newMethodDef.getName(), true, false);
+					return processMethod(typeDef, newMethodDef, newMethodDef.getName(), true, false, false);
 				}
 
 			}
@@ -248,7 +248,7 @@ public class StubToStringBuilder
 			{
 				if(isSet(field.getFlags(), FieldAttributes.Static))
 				{
-					parent.getBlocks().addAll(processAttributes(field, typeDef, null, null));
+					parent.getBlocks().addAll(processAttributes(field, typeDef, null, null, null));
 
 					StringBuilder builder = new StringBuilder();
 					builder.append(field.getName());
@@ -290,7 +290,7 @@ public class StubToStringBuilder
 					continue;
 				}
 				StubBlock stubBlock = processField(typeDef, field);
-				parent.getBlocks().addAll(processAttributes(field, typeDef, null, null));
+				parent.getBlocks().addAll(processAttributes(field, typeDef, null, null, null));
 				parent.getBlocks().add(stubBlock);
 			}
 		}
@@ -304,7 +304,7 @@ public class StubToStringBuilder
 		{
 			StubBlock stubBlock = processProperty(typeDef, property);
 
-			parent.getBlocks().addAll(processAttributes(property, typeDef, null, null));
+			parent.getBlocks().addAll(processAttributes(property, typeDef, null, null, null));
 			parent.getBlocks().add(stubBlock);
 		}
 
@@ -312,7 +312,7 @@ public class StubToStringBuilder
 		{
 			StubBlock stubBlock = processEvent(typeDef, event);
 
-			parent.getBlocks().addAll(processAttributes(event, typeDef, null, null));
+			parent.getBlocks().addAll(processAttributes(event, typeDef, null, null, null));
 			parent.getBlocks().add(stubBlock);
 		}
 
@@ -338,9 +338,11 @@ public class StubToStringBuilder
 				continue;
 			}
 
-			parent.getBlocks().addAll(processAttributes(methodDef, typeDef, methodDef, null));
+			ProcessAttributesCallback callback = new ProcessAttributesCallback();
 
-			StubBlock stubBlock = processMethod(typeDef, methodDef, name, false, false);
+			parent.getBlocks().addAll(processAttributes(methodDef, typeDef, methodDef, null, callback));
+
+			StubBlock stubBlock = processMethod(typeDef, methodDef, name, false, false, callback.extension);
 
 			parent.getBlocks().add(stubBlock);
 		}
@@ -381,7 +383,7 @@ public class StubToStringBuilder
 		MethodDef getter = property.getGetter();
 		if(getter != null)
 		{
-			getterStub = processMethod(typeDef, getter, "get", false, true);
+			getterStub = processMethod(typeDef, getter, "get", false, true, false);
 			ParameterSignature[] parameters = getter.getSignature().getParameters();
 			if(parameters.length == 1)
 			{
@@ -391,7 +393,7 @@ public class StubToStringBuilder
 		MethodDef setter = property.getSetter();
 		if(setter != null)
 		{
-			setterStub = processMethod(typeDef, setter, "set", false, true);
+			setterStub = processMethod(typeDef, setter, "set", false, true, false);
 
 			if(parameterSignature == null)
 			{
@@ -430,7 +432,7 @@ public class StubToStringBuilder
 		if(parameterSignature != null)
 		{
 			builder.append("this [");
-			builder.append(getParameterText(parameterSignature, typeDef, null, 0));
+			builder.append(getParameterText(parameterSignature, typeDef, null, false, 0));
 			builder.append("]");
 		}
 		else
@@ -453,12 +455,12 @@ public class StubToStringBuilder
 		MethodDef addOnMethod = event.getAddOnMethod();
 		if(addOnMethod != null)
 		{
-			addOnMethodStub = processMethod(typeDef, addOnMethod, "add", false, true);
+			addOnMethodStub = processMethod(typeDef, addOnMethod, "add", false, true, false);
 		}
 		MethodDef removeOnMethod = event.getRemoveOnMethod();
 		if(removeOnMethod != null)
 		{
-			removeOnStub = processMethod(typeDef, removeOnMethod, "remove", false, true);
+			removeOnStub = processMethod(typeDef, removeOnMethod, "remove", false, true, false);
 		}
 
 		AccessModifier propertyModifier = AccessModifier.INTERNAL;
@@ -527,7 +529,7 @@ public class StubToStringBuilder
 	}
 
 	@NotNull
-	private static StubBlock processMethod(TypeDef typeDef, MethodDef methodDef, String name, boolean delegate, boolean accessor)
+	private static StubBlock processMethod(TypeDef typeDef, MethodDef methodDef, String name, boolean delegate, boolean accessor, boolean extension)
 	{
 		StringBuilder builder = new StringBuilder();
 
@@ -624,7 +626,7 @@ public class StubToStringBuilder
 			{
 				processGenericParameterList(methodDef, builder);
 
-				processParameterList(typeDef, methodDef, methodDef.getSignature().getParameters(), builder);
+				processParameterList(typeDef, methodDef, methodDef.getSignature().getParameters(), extension, builder);
 
 				if(!methodDef.getGenericParams().isEmpty())
 				{
@@ -659,20 +661,22 @@ public class StubToStringBuilder
 	}
 
 	private static void processParameterList(final TypeDef typeDef, final MethodDef methodDef, final ParameterSignature[] owner,
-			StringBuilder builder)
+			final boolean extension, StringBuilder builder)
 	{
 		String text = StringUtil.join(owner, new Function<ParameterSignature, String>()
 		{
 			@Override
 			public String fun(ParameterSignature parameterSignature)
 			{
-				return getParameterText(parameterSignature, typeDef, methodDef, ArrayUtil.indexOf(owner, parameterSignature));
+				return
+						getParameterText(parameterSignature, typeDef, methodDef, extension, ArrayUtil.indexOf(owner, parameterSignature));
 			}
 		}, ", ");
 		builder.append("(").append(text).append(")");
 	}
 
-	private static String getParameterText(ParameterSignature parameterSignature, final TypeDef typeDef, final MethodDef methodDef, int index)
+	private static String getParameterText(ParameterSignature parameterSignature, final TypeDef typeDef, final MethodDef methodDef,
+			boolean extension, int index)
 	{
 		TypeSignature signature = parameterSignature;
 		if(signature.getType() == 0)
@@ -689,6 +693,11 @@ public class StubToStringBuilder
 			{
 				p.append("params ");
 			}
+		}
+
+		if(index == 0 && extension)
+		{
+			p.append("this ");
 		}
 
 		if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.Out))
@@ -802,8 +811,7 @@ public class StubToStringBuilder
 		}
 
 		LOGGER.error(signature + " " + typeDef.getFullName() + "#" + (methodDef == null ? null : methodDef.getName()) + "(). Array: " + Arrays
-				.toString
-				(value));
+				.toString(value));
 
 		return StringUtil.QUOTER.fun("error");
 	}
@@ -965,7 +973,13 @@ public class StubToStringBuilder
 			},
 	};
 
-	private static List<LineStubBlock> processAttributes(CustomAttributeOwner owner, TypeDef typeDef, MethodDef methodDef, String forceTarget)
+	static class ProcessAttributesCallback
+	{
+		public boolean extension;
+	}
+
+	private static List<LineStubBlock> processAttributes(CustomAttributeOwner owner, TypeDef typeDef, MethodDef methodDef, String forceTarget,
+			ProcessAttributesCallback callback)
 	{
 		CustomAttribute[] customAttributes = owner.getCustomAttributes();
 		if(customAttributes.length == 0)
@@ -976,6 +990,17 @@ public class StubToStringBuilder
 		val list = new ArrayList<LineStubBlock>();
 		for(CustomAttribute customAttribute : customAttributes)
 		{
+			MethodDefOrRef constructor = customAttribute.getConstructor();
+			String type = TypeToStringBuilder.toStringFromDefRefSpec(constructor.getParent(), typeDef, methodDef);
+			if(Comparing.equal(type, DotNetTypes.System_Runtime_CompilerServices_ExtensionAttribute))
+			{
+				if(callback != null)
+				{
+					callback.extension = true;
+				}
+				continue;
+			}
+
 			StringBuilder builder = new StringBuilder();
 			builder.append("[");
 			if(forceTarget != null)
@@ -983,8 +1008,6 @@ public class StubToStringBuilder
 				builder.append(forceTarget);
 				builder.append(": ");
 			}
-			MethodDefOrRef constructor = customAttribute.getConstructor();
-			String type = TypeToStringBuilder.toStringFromDefRefSpec(constructor.getParent(), null, null);
 			if(type.endsWith("Attribute"))
 			{
 				type = type.substring(0, type.length() - 9);

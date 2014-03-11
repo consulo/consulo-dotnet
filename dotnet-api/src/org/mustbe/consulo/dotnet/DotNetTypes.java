@@ -35,4 +35,5 @@ public interface DotNetTypes
 	String System_String = "System.String";
 	String System_IDisposable = "System.IDisposable";
 	String System_ObsoleteAttribute = "System.ObsoleteAttribute";
+	String System_Runtime_CompilerServices_ExtensionAttribute = "System.Runtime.CompilerServices.ExtensionAttribute";
 }
