@@ -17,10 +17,12 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -40,9 +42,34 @@ public class CSharpNullCoalescingExpressionImpl extends CSharpElementImpl implem
 	}
 
 	@NotNull
+	public DotNetExpression getCondition()
+	{
+		return (DotNetExpression) getFirstChild();
+	}
+
+	@Nullable
+	public DotNetExpression getResult()
+	{
+		PsiElement[] children = getChildren();
+		for(PsiElement child : children)
+		{
+			if(child == getCondition())
+			{
+				continue;
+			}
+			if(child instanceof DotNetExpression)
+			{
+				return (DotNetExpression) child;
+			}
+		}
+		return null;
+	}
+
+	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		DotNetExpression condition = getCondition();
+		return condition.toTypeRef();
 	}
 }
