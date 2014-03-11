@@ -23,6 +23,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySet;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySetBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpQualifiedTypeRef;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -30,6 +32,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -64,7 +67,15 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 
 			return myAnonymType == null ? DotNetTypeRef.ERROR_TYPE : myAnonymType;
 		}
-		return type.toTypeRef();
+		else
+		{
+			DotNetTypeRef typeRef = type.toTypeRef();
+			for(PsiElement ignored : findChildrenByType(CSharpTokens.LBRACKET))
+			{
+				typeRef = new CSharpArrayTypeRef(typeRef);
+			}
+			return typeRef;
+		}
 	}
 
 	private DotNetTypeRef createAnonymType()
