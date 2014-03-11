@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.dotnet.library;
 
-import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.FileTypeBasedRootFilter;
 
@@ -28,6 +28,6 @@ public class DotNetXmlDocumentationRootDetector extends FileTypeBasedRootFilter
 {
 	public DotNetXmlDocumentationRootDetector()
 	{
-		super(OrderRootType.DOCUMENTATION, false, StdFileTypes.XML, ".NET xml documentation");
+		super(OrderRootType.DOCUMENTATION, false, XmlFileType.INSTANCE, ".NET xml documentation");
 	}
 }

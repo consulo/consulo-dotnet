@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.roots.ContentFolderScopes;
 import com.intellij.compiler.impl.FileIndexCompileScope;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileType;
@@ -195,7 +196,7 @@ public class DotNetModuleCompileScope extends FileIndexCompileScope
 		if(candidateModule != null && myScopeModules.contains(candidateModule))
 		{
 			val moduleRootManager = ModuleRootManager.getInstance(candidateModule);
-			val excludeRootUrls = moduleRootManager.getExcludeRootUrls();
+			val excludeRootUrls = moduleRootManager.getContentFolderUrls(ContentFolderScopes.excluded());
 			for(String excludeRootUrl : excludeRootUrls)
 			{
 				if(isUrlUnderRoot(url, excludeRootUrl))
