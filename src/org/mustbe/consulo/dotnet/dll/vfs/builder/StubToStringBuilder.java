@@ -992,7 +992,7 @@ public class StubToStringBuilder
 		{
 			MethodDefOrRef constructor = customAttribute.getConstructor();
 			String type = TypeToStringBuilder.toStringFromDefRefSpec(constructor.getParent(), typeDef, methodDef);
-			if(Comparing.equal(type, DotNetTypes.System_Runtime_CompilerServices_ExtensionAttribute))
+			if(Comparing.equal(type, "System.Runtime.CompilerServices.ExtensionAttribute"))
 			{
 				if(callback != null)
 				{
