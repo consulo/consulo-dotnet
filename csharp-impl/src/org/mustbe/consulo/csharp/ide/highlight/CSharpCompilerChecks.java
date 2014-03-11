@@ -23,8 +23,10 @@ import java.util.Map;
 
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheckEx;
+import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheckForWithNameArgument;
 import org.mustbe.consulo.csharp.ide.highlight.check.SimpleCompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -76,6 +78,29 @@ public interface CSharpCompilerChecks
 			DotNetParameter[] parameters = parent.getParameters();
 
 			return ArrayUtil.getLastElement(parameters) != dotNetParameter;
+		}
+	});
+
+	CompilerCheck<CSharpMethodDeclaration> CS1100 = CompilerCheckForWithNameArgument.of(HighlightInfoType.ERROR, new Processor<CSharpMethodDeclaration>()
+	{
+		@Override
+		public boolean process(CSharpMethodDeclaration methodDeclaration)
+		{
+			DotNetParameter[] parameters = methodDeclaration.getParameters();
+			for(int i = 0; i < parameters.length; i++)
+			{
+				DotNetParameter parameter = parameters[i];
+				if(i == 0)
+				{
+					continue;
+				}
+
+				if(parameter.hasModifier(DotNetModifier.THIS))
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 	});
 

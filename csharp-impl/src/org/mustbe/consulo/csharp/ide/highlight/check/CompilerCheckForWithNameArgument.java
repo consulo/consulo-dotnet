@@ -18,37 +18,41 @@ package org.mustbe.consulo.csharp.ide.highlight.check;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
- * @since 09.03.14
+ * @since 11.03.14
  */
-public class SimpleCompilerCheck<T extends PsiElement> extends AbstractCompilerCheck<T>
+public class CompilerCheckForWithNameArgument<T extends DotNetNamedElement & PsiNameIdentifierOwner> extends AbstractCompilerCheck<T>
 {
 	@NotNull
-	public static <T extends PsiElement> CompilerCheck<T> of(@NotNull HighlightInfoType type, @NotNull Processor<T> processor)
+	public static <T extends DotNetNamedElement & PsiNameIdentifierOwner> CompilerCheck<T> of(@NotNull HighlightInfoType type,
+			@NotNull Processor<T> processor)
 	{
-		return new SimpleCompilerCheck<T>(type, processor);
+		return new CompilerCheckForWithNameArgument<T>(type, processor);
 	}
 
-	public SimpleCompilerCheck(HighlightInfoType type, Processor<T> processor)
+	public CompilerCheckForWithNameArgument(HighlightInfoType type, Processor<T> processor)
 	{
 		super(type, processor);
 	}
 
 	@Override
-	protected TextRange makeRange(@NotNull T element)
+	protected String makeMessage(@NotNull T element)
 	{
-		return element.getTextRange();
+		return CSharpErrorBundle.message(myId, element.getName());
 	}
 
 	@Override
-	protected String makeMessage(@NotNull PsiElement element)
+	protected TextRange makeRange(@NotNull T element)
 	{
-		return CSharpErrorBundle.message(myId);
+		PsiElement nameIdentifier = element.getNameIdentifier();
+		return nameIdentifier == null ? element.getTextRange() : nameIdentifier.getTextRange();
 	}
 }
