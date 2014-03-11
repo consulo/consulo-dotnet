@@ -26,6 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.BitUtil;
 
 /**
  * @author VISTALL
@@ -63,12 +64,22 @@ public class CSharpMethodDeclarationImpl extends CSharpLikeMethodDeclarationImpl
 	@Override
 	public boolean isDelegate()
 	{
+		CSharpMethodStub stub = getStub();
+		if(stub != null)
+		{
+			return BitUtil.isSet(stub.getOtherModifierMask(), CSharpMethodStub.DELEGATE_MASK);
+		}
 		return findChildByType(CSharpTokens.DELEGATE_KEYWORD) != null;
 	}
 
 	@Override
 	public boolean isOperator()
 	{
+		CSharpMethodStub stub = getStub();
+		if(stub != null)
+		{
+			return BitUtil.isSet(stub.getOtherModifierMask(), CSharpMethodStub.OPERATOR_MASK);
+		}
 		return findChildByType(CSharpTokens.OPERATOR_KEYWORD) != null;
 	}
 }

@@ -29,8 +29,9 @@ import com.intellij.util.io.StringRef;
 public class CSharpConversionMethodStub extends CSharpMethodStub
 {
 	public CSharpConversionMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask,
+			int otherModifierMask,
 			CSharpStubTypeInfo typeInfo)
 	{
-		super(parent, CSharpStubElements.CONVERSION_METHOD_DECLARATION, name, qname, modifierMask, typeInfo);
+		super(parent, CSharpStubElements.CONVERSION_METHOD_DECLARATION, name, qname, modifierMask, otherModifierMask, typeInfo);
 	}
 }

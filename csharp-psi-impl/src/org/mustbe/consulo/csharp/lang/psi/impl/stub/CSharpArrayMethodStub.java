@@ -34,7 +34,7 @@ public class CSharpArrayMethodStub extends MemberStub<DotNetArrayMethodDeclarati
 
 	public CSharpArrayMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask, CSharpStubTypeInfo returnType)
 	{
-		super(parent, CSharpStubElements.ARRAY_METHOD_DECLARATION, name, qname, modifierMask);
+		super(parent, CSharpStubElements.ARRAY_METHOD_DECLARATION, name, qname, modifierMask, 0);
 		myReturnType = returnType;
 	}
 

@@ -64,7 +64,7 @@ public class CSharpConversionMethodStubElementType extends CSharpAbstractStubEle
 		StringRef qname = StringRef.fromNullableString(methodDeclaration.getPresentableParentQName());
 		int modifierMask = MemberStub.getModifierMask(methodDeclaration);
 		val typeInfo = CSharpStubTypeInfoUtil.toStub(methodDeclaration.getReturnType());
-		return new CSharpConversionMethodStub(stubElement, name, qname, modifierMask, typeInfo);
+		return new CSharpConversionMethodStub(stubElement, name, qname, modifierMask, 0, typeInfo);
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class CSharpConversionMethodStubElementType extends CSharpAbstractStubEle
 		StringRef qname = stubInputStream.readName();
 		int modifierMask = stubInputStream.readInt();
 		val typeInfo = CSharpStubTypeInfoUtil.read(stubInputStream);
-		return new CSharpConversionMethodStub(stubElement, name, qname, modifierMask, typeInfo);
+		return new CSharpConversionMethodStub(stubElement, name, qname, modifierMask, 0, typeInfo);
 	}
 
 	@Override

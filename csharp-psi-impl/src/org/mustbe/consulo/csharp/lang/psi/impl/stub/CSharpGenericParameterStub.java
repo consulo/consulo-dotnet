@@ -31,11 +31,11 @@ public class CSharpGenericParameterStub extends MemberStub<DotNetGenericParamete
 
 	public CSharpGenericParameterStub(StubElement parent, @Nullable StringRef name, int modifierMask)
 	{
-		super(parent, CSharpStubElements.GENERIC_PARAMETER, name, null, modifierMask);
+		super(parent, CSharpStubElements.GENERIC_PARAMETER, name, null, modifierMask, 0);
 	}
 
 	public CSharpGenericParameterStub(StubElement parent, @Nullable String name, int modifierMask)
 	{
-		super(parent, CSharpStubElements.GENERIC_PARAMETER, name, null, modifierMask);
+		super(parent, CSharpStubElements.GENERIC_PARAMETER, name, null, modifierMask, 0);
 	}
 }

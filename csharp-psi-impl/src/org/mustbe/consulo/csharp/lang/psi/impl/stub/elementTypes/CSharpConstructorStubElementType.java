@@ -60,7 +60,7 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 		StringRef name = StringRef.fromNullableString(methodDeclaration.getName());
 		StringRef qname = StringRef.fromNullableString(methodDeclaration.getPresentableParentQName());
 		int modifierMask = MemberStub.getModifierMask(methodDeclaration);
-		return new CSharpConstructorStub(stubElement, name, qname, modifierMask);
+		return new CSharpConstructorStub(stubElement, name, qname, modifierMask, 0);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class CSharpConstructorStubElementType extends CSharpAbstractStubElementT
 		StringRef name = stubInputStream.readName();
 		StringRef qname = stubInputStream.readName();
 		int modifierMask = stubInputStream.readInt();
-		return new CSharpConstructorStub(stubElement, name, qname, modifierMask);
+		return new CSharpConstructorStub(stubElement, name, qname, modifierMask, 0);
 	}
 
 	@Override

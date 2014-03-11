@@ -34,21 +34,25 @@ import com.intellij.util.io.StringRef;
  */
 public class MemberStub<T extends DotNetNamedElement> extends NamedStubBase<T>
 {
-	private StringRef myParentQName;
-	private int myModifierMask;
+	private final StringRef myParentQName;
+	private final int myModifierMask;
+	private final int myOtherModifierMask;
 
-	public MemberStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, @Nullable StringRef namespaceQName, int modifierMask)
+	public MemberStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, @Nullable StringRef namespaceQName, int modifierMask, int otherModifierMask)
 	{
 		super(parent, elementType, name);
 		myParentQName = namespaceQName;
 		myModifierMask = modifierMask;
+		myOtherModifierMask = otherModifierMask;
 	}
 
-	public MemberStub(StubElement parent, IStubElementType elementType, @Nullable String name, @Nullable StringRef namespaceQName, int modifierMask)
+	public MemberStub(StubElement parent, IStubElementType elementType, @Nullable String name, @Nullable StringRef namespaceQName, int modifierMask,
+			int otherModifierMask)
 	{
 		super(parent, elementType, name);
 		myParentQName = namespaceQName;
 		myModifierMask = modifierMask;
+		myOtherModifierMask = otherModifierMask;
 	}
 
 	@Nullable
@@ -65,6 +69,11 @@ public class MemberStub<T extends DotNetNamedElement> extends NamedStubBase<T>
 	public int getModifierMask()
 	{
 		return myModifierMask;
+	}
+
+	public int getOtherModifierMask()
+	{
+		return myOtherModifierMask;
 	}
 
 	public static int getModifierMask(@NotNull DotNetModifierListOwner list)

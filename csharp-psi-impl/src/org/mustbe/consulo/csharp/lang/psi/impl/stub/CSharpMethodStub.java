@@ -31,18 +31,22 @@ import com.intellij.util.io.StringRef;
  */
 public class CSharpMethodStub extends MemberStub<CSharpMethodDeclaration>
 {
+	public static final int OPERATOR_MASK = 1 << 0;
+	public static final int DELEGATE_MASK = 1 << 1;
+
 	private final CSharpStubTypeInfo myReturnType;
 
-	public CSharpMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask, CSharpStubTypeInfo returnType)
+	public CSharpMethodStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask, int otherModifierMask,
+			CSharpStubTypeInfo returnType)
 	{
-		super(parent, CSharpStubElements.METHOD_DECLARATION, name, qname, modifierMask);
+		super(parent, CSharpStubElements.METHOD_DECLARATION, name, qname, modifierMask, otherModifierMask);
 		myReturnType = returnType;
 	}
 
 	public CSharpMethodStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, StringRef qname, int modifierMask,
-			CSharpStubTypeInfo returnType)
+			int otherModifierMask, CSharpStubTypeInfo returnType)
 	{
-		super(parent, elementType, name, qname, modifierMask);
+		super(parent, elementType, name, qname, modifierMask, otherModifierMask);
 		myReturnType = returnType;
 	}
 
@@ -50,5 +54,19 @@ public class CSharpMethodStub extends MemberStub<CSharpMethodDeclaration>
 	public CSharpStubTypeInfo getReturnType()
 	{
 		return myReturnType;
+	}
+
+	public static int getOtherModifierMask(@NotNull CSharpMethodDeclaration methodDeclaration)
+	{
+		int i = 0;
+		if(methodDeclaration.isOperator())
+		{
+			i |= OPERATOR_MASK;
+		}
+		if(methodDeclaration.isOperator())
+		{
+			i |= DELEGATE_MASK;
+		}
+		return i;
 	}
 }

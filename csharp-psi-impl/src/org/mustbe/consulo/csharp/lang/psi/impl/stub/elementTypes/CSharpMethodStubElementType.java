@@ -64,8 +64,9 @@ public class CSharpMethodStubElementType extends CSharpAbstractStubElementType<C
 		StringRef name = StringRef.fromNullableString(methodDeclaration.getName());
 		StringRef parentQName = StringRef.fromNullableString(methodDeclaration.getPresentableParentQName());
 		int modifierMask = MemberStub.getModifierMask(methodDeclaration);
+		int otherModifierMask = CSharpMethodStub.getOtherModifierMask(methodDeclaration);
 		val typeInfo = CSharpStubTypeInfoUtil.toStub(methodDeclaration.getReturnType());
-		return new CSharpMethodStub(stubElement, name, parentQName, modifierMask, typeInfo);
+		return new CSharpMethodStub(stubElement, name, parentQName, modifierMask, otherModifierMask, typeInfo);
 	}
 
 	@Override
@@ -74,6 +75,7 @@ public class CSharpMethodStubElementType extends CSharpAbstractStubElementType<C
 		stubOutputStream.writeName(cSharpTypeStub.getName());
 		stubOutputStream.writeName(cSharpTypeStub.getParentQName());
 		stubOutputStream.writeInt(cSharpTypeStub.getModifierMask());
+		stubOutputStream.writeInt(cSharpTypeStub.getOtherModifierMask());
 		cSharpTypeStub.getReturnType().writeTo(stubOutputStream);
 	}
 
@@ -84,8 +86,9 @@ public class CSharpMethodStubElementType extends CSharpAbstractStubElementType<C
 		StringRef name = stubInputStream.readName();
 		StringRef qname = stubInputStream.readName();
 		int modifierMask = stubInputStream.readInt();
+		int otherModifierMask = stubInputStream.readInt();
 		val typeInfo = CSharpStubTypeInfoUtil.read(stubInputStream);
-		return new CSharpMethodStub(stubElement, name, qname, modifierMask, typeInfo);
+		return new CSharpMethodStub(stubElement, name, qname, modifierMask, otherModifierMask, typeInfo);
 	}
 
 	@Override

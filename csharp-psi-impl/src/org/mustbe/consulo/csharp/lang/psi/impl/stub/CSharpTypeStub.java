@@ -37,7 +37,7 @@ public class CSharpTypeStub extends MemberStub<CSharpTypeDeclaration>
 
 	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef parentQName, int modifierMask, byte type)
 	{
-		super(parent, CSharpStubElements.TYPE_DECLARATION, name, parentQName, modifierMask);
+		super(parent, CSharpStubElements.TYPE_DECLARATION, name, parentQName, modifierMask, 0);
 		myType = type;
 	}
 
