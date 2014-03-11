@@ -108,6 +108,11 @@ public class ByteBuffer
 		return last;
 	}
 
+	public boolean canRead()
+	{
+		return position < getCapacity();
+	}
+
 	/**
 	 * Returns the byte stored in this ByteBuffer at the current position.
 	 * Advances the current position by 1.
@@ -136,15 +141,20 @@ public class ByteBuffer
 		value &= 0xFFFF;
 		return value;
 	}
-	/**
-	 * Returns a 2-byte unsigned little-endian integer, starting at the current position.
-	 * Advances the current position by 2 (see get())
-	 */
+
 	public int getShort()
 	{
 		int value = (get() & 0xFF);
 		value |= (get() & 0xFF) << 8;
-		value &= 0xFFFF;
+		return value;
+	}
+
+	public int getInt()
+	{
+		int value = (get() & 0xFF);
+		value |= (get() & 0xFF) << 8;
+		value |= (get() & 0xFF) << 16;
+		value |= (get() & 0xFF) << 24;
 		return value;
 	}
 

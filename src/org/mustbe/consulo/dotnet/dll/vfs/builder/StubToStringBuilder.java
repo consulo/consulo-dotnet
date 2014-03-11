@@ -117,12 +117,12 @@ public class StubToStringBuilder
 			StubBlock typeBlock = processType(typeDef);
 			if(namespaceBlock != null)
 			{
-				namespaceBlock.getBlocks().addAll(processAttributes(typeDef));
+				namespaceBlock.getBlocks().addAll(processAttributes(typeDef, null, null, null));
 				namespaceBlock.getBlocks().add(typeBlock);
 			}
 			else
 			{
-				myRoots.addAll(processAttributes(typeDef));
+				myRoots.addAll(processAttributes(typeDef, null, null, null));
 				myRoots.add(typeBlock);
 			}
 		}
@@ -130,7 +130,7 @@ public class StubToStringBuilder
 
 	public StubToStringBuilder(AssemblyInfo assemblyInfo)
 	{
-		myRoots.addAll(processAttributes(assemblyInfo));
+		myRoots.addAll(processAttributes(assemblyInfo, null, null, "assembly"));
 	}
 
 	// System.MulticastDelegate
@@ -248,7 +248,7 @@ public class StubToStringBuilder
 			{
 				if(isSet(field.getFlags(), FieldAttributes.Static))
 				{
-					parent.getBlocks().addAll(processAttributes(field));
+					parent.getBlocks().addAll(processAttributes(field, typeDef, null, null));
 
 					StringBuilder builder = new StringBuilder();
 					builder.append(field.getName());
@@ -290,7 +290,7 @@ public class StubToStringBuilder
 					continue;
 				}
 				StubBlock stubBlock = processField(typeDef, field);
-				parent.getBlocks().addAll(processAttributes(field));
+				parent.getBlocks().addAll(processAttributes(field, typeDef, null, null));
 				parent.getBlocks().add(stubBlock);
 			}
 		}
@@ -304,7 +304,7 @@ public class StubToStringBuilder
 		{
 			StubBlock stubBlock = processProperty(typeDef, property);
 
-			parent.getBlocks().addAll(processAttributes(property));
+			parent.getBlocks().addAll(processAttributes(property, typeDef, null, null));
 			parent.getBlocks().add(stubBlock);
 		}
 
@@ -312,7 +312,7 @@ public class StubToStringBuilder
 		{
 			StubBlock stubBlock = processEvent(typeDef, event);
 
-			parent.getBlocks().addAll(processAttributes(event));
+			parent.getBlocks().addAll(processAttributes(event, typeDef, null, null));
 			parent.getBlocks().add(stubBlock);
 		}
 
@@ -338,7 +338,7 @@ public class StubToStringBuilder
 				continue;
 			}
 
-			parent.getBlocks().addAll(processAttributes(methodDef));
+			parent.getBlocks().addAll(processAttributes(methodDef, typeDef, methodDef, null));
 
 			StubBlock stubBlock = processMethod(typeDef, methodDef, name, false, false);
 
@@ -900,19 +900,50 @@ public class StubToStringBuilder
 		return new StubBlock("namespace " + namespace, null, BRACES);
 	}
 
-	private static Object[][] ourMethodImplAttributes =
+	private static Object[][] ourMethodImplAttributes = {
 			{
-					{MethodImplAttributes.ManagedMask, MethodImplAttributes.Unmanaged, "Unmanaged"},
-					{MethodImplAttributes.ForwardRef, MethodImplAttributes.ForwardRef, "ForwardRef"},
-					{MethodImplAttributes.PreserveSig, MethodImplAttributes.PreserveSig, "PreserveSig"},
-					{MethodImplAttributes.InternalCall, MethodImplAttributes.InternalCall, "InternalCall"},
-					{MethodImplAttributes.Synchronized, MethodImplAttributes.Synchronized, "Synchronized"},
-					{MethodImplAttributes.NoInlining, MethodImplAttributes.NoInlining, "NoInlining"},
-					{MethodImplAttributes.NoOptimization, MethodImplAttributes.NoOptimization, "NoOptimization"},
-					{MethodImplAttributes.MaxMethodImplVal, MethodImplAttributes.MaxMethodImplVal, "NoOptimization"},
-			};
+					MethodImplAttributes.ManagedMask,
+					MethodImplAttributes.Unmanaged,
+					"Unmanaged"
+			},
+			{
+					MethodImplAttributes.ForwardRef,
+					MethodImplAttributes.ForwardRef,
+					"ForwardRef"
+			},
+			{
+					MethodImplAttributes.PreserveSig,
+					MethodImplAttributes.PreserveSig,
+					"PreserveSig"
+			},
+			{
+					MethodImplAttributes.InternalCall,
+					MethodImplAttributes.InternalCall,
+					"InternalCall"
+			},
+			{
+					MethodImplAttributes.Synchronized,
+					MethodImplAttributes.Synchronized,
+					"Synchronized"
+			},
+			{
+					MethodImplAttributes.NoInlining,
+					MethodImplAttributes.NoInlining,
+					"NoInlining"
+			},
+			{
+					MethodImplAttributes.NoOptimization,
+					MethodImplAttributes.NoOptimization,
+					"NoOptimization"
+			},
+			{
+					MethodImplAttributes.MaxMethodImplVal,
+					MethodImplAttributes.MaxMethodImplVal,
+					"NoOptimization"
+			},
+	};
 
-	private static List<LineStubBlock> processAttributes(CustomAttributeOwner owner)
+	private static List<LineStubBlock> processAttributes(CustomAttributeOwner owner, TypeDef typeDef, MethodDef methodDef, String forceTarget)
 	{
 		CustomAttribute[] customAttributes = owner.getCustomAttributes();
 		if(customAttributes.length == 0)
@@ -925,6 +956,11 @@ public class StubToStringBuilder
 		{
 			StringBuilder builder = new StringBuilder();
 			builder.append("[");
+			if(forceTarget != null)
+			{
+				builder.append(forceTarget);
+				builder.append(": ");
+			}
 			MethodDefOrRef constructor = customAttribute.getConstructor();
 			String type = TypeToStringBuilder.toStringFromDefRefSpec(constructor.getParent(), null, null);
 			if(type.endsWith("Attribute"))
@@ -932,6 +968,13 @@ public class StubToStringBuilder
 				type = type.substring(0, type.length() - 9);
 			}
 			builder.append(type);
+			String value = processAttributeValue(customAttribute, typeDef, methodDef);
+			if(!value.isEmpty())
+			{
+				builder.append("(");
+				builder.append(value);
+				builder.append(")");
+			}
 			builder.append("]");
 
 			list.add(new LineStubBlock(builder));
@@ -975,6 +1018,162 @@ public class StubToStringBuilder
 		}
 
 		return list;
+	}
+
+	private static String processAttributeValue(@NotNull CustomAttribute customAttribute, TypeDef typeDef, MethodDef methodDef)
+	{
+		byte[] signature = customAttribute.getSignature();
+		if(signature.length == 0)
+		{
+			return "";
+		}
+		edu.arizona.cs.mbel.ByteBuffer byteBuffer = new edu.arizona.cs.mbel.ByteBuffer(signature);
+		if(byteBuffer.getShort() != 1)
+		{
+			throw new IllegalArgumentException("Not one");
+		}
+
+		ParameterSignature[] parameterSignatures;
+		MethodDefOrRef constructor = customAttribute.getConstructor();
+		if(constructor instanceof MethodDef)
+		{
+			parameterSignatures = ((MethodDef) constructor).getSignature().getParameters();
+		}
+		else if(constructor instanceof MethodRef)
+		{
+			parameterSignatures = ((MethodRef) constructor).getCallsiteSignature().getParameters();
+		}
+		else
+		{
+			throw new IllegalArgumentException(constructor.getClass().getName());
+		}
+
+		List<String> appender = new ArrayList<String>();
+		for(ParameterSignature parameterSignature : parameterSignatures)
+		{
+			TypeSignature innerType = parameterSignature.getInnerType();
+			assert innerType != null;
+
+			appender.add(getValueOfAttributeFromBlob(typeDef, methodDef, byteBuffer, innerType));
+		}
+
+		if(byteBuffer.canRead())
+		{
+			int named = byteBuffer.getShort();
+			if(named != 0)
+			{
+				/*if(named < Byte.MAX_VALUE)
+				{
+					System.out.println("error");
+					named = 0;
+				}
+				for(int i = 0; i < named; i++)
+				{
+					int kind = byteBuffer.get();
+					TypeSignature typeSignature = TypeSignatureParser.parse(byteBuffer, null);
+					String name = getUtf8(byteBuffer);
+					System.out.println(name);
+				}  */
+				/*
+				var kind = ReadByte ();
+			var type = ReadCustomAttributeFieldOrPropType ();
+			var name = ReadUTF8String ();
+
+			Collection<CustomAttributeNamedArgument> container;
+			switch (kind) {
+			case 0x53:
+				container = GetCustomAttributeNamedArgumentCollection (ref fields);
+				break;
+			case 0x54:
+				container = GetCustomAttributeNamedArgumentCollection (ref properties);
+				break;
+			default:
+				throw new NotSupportedException ();
+			} */
+			}
+		}
+		return StringUtil.join(appender, ", ");
+	}
+
+	private static String getValueOfAttributeFromBlob(TypeDef typeDef, MethodDef methodDef, edu.arizona.cs.mbel.ByteBuffer byteBuffer,
+			TypeSignature innerType)
+	{
+		if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_SZARRAY)
+		{
+			return "arrayError";
+		}
+		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_BOOLEAN)
+		{
+			return String.valueOf(byteBuffer.get() == 1);
+		}
+		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_I4)
+		{
+			return String.valueOf(byteBuffer.getInt());
+		}
+		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_U4)
+		{
+			return String.valueOf(byteBuffer.getDWORD());
+		}
+		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
+		{
+			int valueIndex = byteBuffer.getInt();
+
+			ValueTypeSignature valueTypeSignature = (ValueTypeSignature) innerType;
+			AbstractTypeReference valueType = valueTypeSignature.getValueType();
+			if(valueType instanceof TypeDef)
+			{
+				if(((TypeDef) valueType).isEnum())
+				{
+					for(Field field : ((TypeDef) valueType).getFields())
+					{
+						if(isSet(field.getFlags(), FieldAttributes.Static) &&
+								field.getDefaultValue() != null && wrap(field.getDefaultValue()).getInt() == valueIndex)
+						{
+							return TypeToStringBuilder.toStringFromDefRefSpec(valueType, typeDef, methodDef) + "." + field.getName();
+						}
+					}
+				}
+			}
+
+			return "errorELEMENT_TYPE_VALUETYPE";
+		}
+		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_STRING)
+		{
+			return "@" + StringUtil.QUOTER.fun(getUtf8(byteBuffer));
+		}
+		else
+		{
+			return "unknown_type_" + innerType.getType();
+		}
+	}
+
+	private static String getUtf8(edu.arizona.cs.mbel.ByteBuffer byteBuffer)
+	{
+		byte b = byteBuffer.get();
+		if(b == 0xFF)
+		{
+			return "";
+		}
+		else
+		{
+			byteBuffer.back();
+			int size = Signature.readCodedInteger(byteBuffer);
+			if(size == 0)
+			{
+				return "";
+			}
+			else
+			{
+				try
+				{
+					return new String(byteBuffer.get(size), "UTF-8");
+				}
+				catch(UnsupportedEncodingException e)
+				{
+					return "UnsupportedEncodingException:string";
+				}
+			}
+		}
 	}
 
 	@NotNull
