@@ -72,8 +72,11 @@ public interface CSharpElements
 
 	IElementType GENERIC_CONSTRAINT = new IElementTypeAsPsiFactory("GENERIC_CONSTRAINT", CSharpLanguage.INSTANCE, CSharpGenericConstraintImpl.class);
 
-	IElementType NEW_GENERIC_CONSTRAINT_VALUE = new IElementTypeAsPsiFactory("NEW_GENERIC_CONSTRAINT_VALUE", CSharpLanguage.INSTANCE,
-			CSharpNewGenericConstraintValueImpl.class);
+	IElementType GENERIC_CONSTRAINT_KEYWORD_VALUE = new IElementTypeAsPsiFactory("GENERIC_CONSTRAINT_KEYWORD_VALUE", CSharpLanguage.INSTANCE,
+			CSharpGenericConstraintKeywordValueImpl.class);
+
+	IElementType GENERIC_CONSTRAINT_TYPE_VALUE = new IElementTypeAsPsiFactory("GENERIC_CONSTRAINT_TYPE_VALUE", CSharpLanguage.INSTANCE,
+			CSharpGenericConstraintTypeValueImpl.class);
 
 	IElementType REFERENCE_TYPE = new IElementTypeAsPsiFactory("REFERENCE_TYPE", CSharpLanguage.INSTANCE, CSharpReferenceTypeImpl.class);
 

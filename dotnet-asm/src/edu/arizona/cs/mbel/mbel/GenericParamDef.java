@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 23.11.13.
@@ -27,6 +29,12 @@ public class GenericParamDef
 			myConstraints = new ArrayList<Object>(2);   //TypeRef or TypeDef
 		}
 		myConstraints.add(typeDef);
+	}
+
+	@NotNull
+	public List<Object> getConstraints()
+	{
+		return myConstraints;
 	}
 
 	public String getName()

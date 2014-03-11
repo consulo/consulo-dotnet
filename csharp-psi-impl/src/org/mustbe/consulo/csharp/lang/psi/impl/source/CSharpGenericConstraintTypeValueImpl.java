@@ -23,11 +23,11 @@ import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 30.11.13.
+ * @since 11.03.14
  */
-public class CSharpNewGenericConstraintValueImpl extends CSharpElementImpl implements CSharpGenericConstraintValue
+public class CSharpGenericConstraintTypeValueImpl extends CSharpElementImpl implements CSharpGenericConstraintValue
 {
-	public CSharpNewGenericConstraintValueImpl(@NotNull ASTNode node)
+	public CSharpGenericConstraintTypeValueImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
@@ -35,6 +35,6 @@ public class CSharpNewGenericConstraintValueImpl extends CSharpElementImpl imple
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitNewGenericConstraintValue(this);
+		visitor.visitGenericConstraintTypeValue(this);
 	}
 }

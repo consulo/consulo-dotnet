@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.parser.decl;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.parser.CSharpBuilderWrapper;
 import org.mustbe.consulo.csharp.lang.parser.SharingParsingHelpers;
 import com.intellij.lang.PsiBuilder;
@@ -79,6 +80,7 @@ public class GenericParameterParsing extends SharingParsingHelpers
 		{
 			val p = parseWithSoftElements(new NotNullFunction<CSharpBuilderWrapper, Pair<PsiBuilder.Marker,Boolean>>()
 			{
+				@NotNull
 				@Override
 				public Pair<PsiBuilder.Marker,Boolean> fun(CSharpBuilderWrapper builderWrapper)
 				{
@@ -119,25 +121,31 @@ public class GenericParameterParsing extends SharingParsingHelpers
 		builder.advanceLexer();
 
 		doneOneElement(builder, IDENTIFIER, REFERENCE_EXPRESSION, "Identifier expected");
-		expect(builder, COLON, "Identifier expected");
-
-		PsiBuilder.Marker value = builder.mark();
-		IElementType doneElement = null;
-		if(builder.getTokenType() == NEW_KEYWORD)
+		if(expect(builder, COLON, "Colon expected"))
 		{
-			builder.advanceLexer();
-			expect(builder, LPAR, "'(' expected");
-			expect(builder, RPAR, "')' expected");
+			PsiBuilder.Marker value = builder.mark();
+			IElementType doneElement = null;
+			if(builder.getTokenType() == CLASS_KEYWORD || builder.getTokenType() == STRUCT_KEYWORD || builder.getTokenType() == NEW_KEYWORD)
+			{
+				boolean newKeyword = builder.getTokenType() == NEW_KEYWORD;
+				builder.advanceLexer();
+				if(newKeyword)
+				{
+					expect(builder, LPAR, "'(' expected");
+					expect(builder, RPAR, "')' expected");
+				}
 
-			doneElement = NEW_GENERIC_CONSTRAINT_VALUE;
-		}
+				doneElement = GENERIC_CONSTRAINT_KEYWORD_VALUE;
+			}
+			else
+			{
+				if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+				{
+					builder.error("Type expected");
+				}
+				doneElement = GENERIC_CONSTRAINT_TYPE_VALUE;
+			}
 
-		if(doneElement == null)
-		{
-			value.drop();
-		}
-		else
-		{
 			value.done(doneElement);
 		}
 

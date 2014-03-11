@@ -88,7 +88,10 @@ public class StubToStringBuilder
 		}
 	};
 
-	private static String[] KEYWORDS = new String[] {"event", "params"};
+	private static String[] KEYWORDS = new String[]{
+			"event",
+			"params"
+	};
 
 	private static List<String> SKIPPED_SUPERTYPES = new ArrayList<String>()
 	{
@@ -228,6 +231,8 @@ public class StubToStringBuilder
 				}
 			}, ", "));
 		}
+
+		processGenericConstraintList(typeDef, builder, typeDef, null);
 
 		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
 		processMembers(typeDef, stubBlock);
@@ -602,12 +607,22 @@ public class StubToStringBuilder
 				builder.append("(");
 				builder.append(TypeToStringBuilder.typeToString(parameterType, typeDef, methodDef));
 				builder.append(" p)");
+
+				if(!methodDef.getGenericParams().isEmpty())
+				{
+					processGenericConstraintList(typeDef, builder, typeDef, null);
+				}
 			}
 			else
 			{
 				processGenericParameterList(methodDef, builder);
 
 				processParameterList(typeDef, methodDef, methodDef.getSignature().getParameters(), builder);
+
+				if(!methodDef.getGenericParams().isEmpty())
+				{
+					processGenericConstraintList(typeDef, builder, typeDef, null);
+				}
 			}
 		}
 
@@ -644,7 +659,7 @@ public class StubToStringBuilder
 			@Override
 			public String fun(ParameterSignature parameterSignature)
 			{
-				return getParameterText(parameterSignature, typeDef, methodDef,  ArrayUtil.indexOf(owner, parameterSignature));
+				return getParameterText(parameterSignature, typeDef, methodDef, ArrayUtil.indexOf(owner, parameterSignature));
 			}
 		}, ", ");
 		builder.append("(").append(text).append(")");
@@ -766,7 +781,7 @@ public class StubToStringBuilder
 			}
 		}
 
-		LOGGER.error(signature + " " + typeDef.getFullName() + "#" + methodDef.getName() + "(). Array: "+ Arrays.toString(value));
+		LOGGER.error(signature + " " + typeDef.getFullName() + "#" + methodDef.getName() + "(). Array: " + Arrays.toString(value));
 
 		return StringUtil.QUOTER.fun("error");
 	}
@@ -803,6 +818,65 @@ public class StubToStringBuilder
 			}
 		}, ", ");
 		builder.append("<").append(text).append(">");
+	}
+
+	private static void processGenericConstraintList(GenericParamOwner owner, StringBuilder builder, final TypeDef typeDef,
+			final MethodDef methodDef)
+	{
+		List<GenericParamDef> genericParams = owner.getGenericParams();
+		if(genericParams.isEmpty())
+		{
+			return;
+		}
+
+		String join = StringUtil.join(genericParams, new Function<GenericParamDef, String>()
+		{
+			@Override
+			public String fun(GenericParamDef genericParamDef)
+			{
+				List<String> list = processGenericConstraint(genericParamDef, typeDef, methodDef);
+				if(list == null)
+				{
+					return "";
+				}
+				StringBuilder b = new StringBuilder();
+				for(int i = 0; i < list.size(); i++)
+				{
+					if(i != 0)
+					{
+						b.append(" ");
+					}
+					String s = list.get(i);
+					b.append("where ").append(genericParamDef.getName()).append(" : ").append(s);
+				}
+				return b.toString();
+			}
+		}, " ");
+
+		if(!join.isEmpty())
+		{
+			builder.append(" ").append(join);
+		}
+	}
+
+	private static List<String> processGenericConstraint(GenericParamDef paramDef, TypeDef typeDef, MethodDef methodDef)
+	{
+		List<String> list = new SmartList<String>();
+		if(BitUtil.isSet(paramDef.getFlags(), GenericParamAttributes.DefaultConstructorConstraint))
+		{
+			list.add("new()");
+		}
+
+		for(Object o : paramDef.getConstraints())
+		{
+			String e = TypeToStringBuilder.toStringFromDefRefSpec(o, typeDef, methodDef);
+			if(e.equals("System.ValueType"))
+			{
+				e = "struct";
+			}
+			list.add(e);
+		}
+		return list;
 	}
 
 	private static boolean isSet(long value, int mod)
