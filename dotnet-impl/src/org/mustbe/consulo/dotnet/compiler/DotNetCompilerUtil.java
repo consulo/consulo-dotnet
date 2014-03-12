@@ -43,11 +43,8 @@ import lombok.val;
 public class DotNetCompilerUtil
 {
 	@NotNull
-	public static Set<String> collectDependencies(@NotNull Module module,
-			@NotNull final String layerName,
-			@NotNull final MainConfigurationLayer p,
-			final boolean toSystemInDepend,
-			final boolean forDependCopy)
+	public static Set<String> collectDependencies(@NotNull Module module, @NotNull final String layerName, @NotNull final MainConfigurationLayer p,
+			final boolean toSystemInDepend, final boolean forDependCopy)
 	{
 		val list = new HashSet<String>();
 		val processed = new HashSet<Module>();
@@ -119,7 +116,9 @@ public class DotNetCompilerUtil
 				DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(depModule, DotNetModuleExtension.class);
 				if(dependencyExtension != null)
 				{
-					String extract = DotNetMacros.extract(depModule, layerName, p);
+					String depCurrentLayerName = dependencyExtension.getCurrentLayerName();
+					MainConfigurationLayer depCurrentLayer = (MainConfigurationLayer) dependencyExtension.getCurrentLayer();
+					String extract = DotNetMacros.extract(depModule, depCurrentLayerName, depCurrentLayer);
 					if(toSystemInDepend)
 					{
 						list.add(FileUtil.toSystemIndependentName(extract));
@@ -128,13 +127,14 @@ public class DotNetCompilerUtil
 					{
 						list.add(extract);
 					}
+
+					if(forDependCopy)
+					{
+						Set<String> strings = collectDependencies(depModule, depCurrentLayerName, depCurrentLayer, toSystemInDepend, true);
+						list.addAll(strings);
+					}
 				}
 
-				if(forDependCopy)
-				{
-					Set<String> strings = collectDependencies(depModule, layerName, p, toSystemInDepend, true);
-					list.addAll(strings);
-				}
 				return null;
 			}
 		}, null);
