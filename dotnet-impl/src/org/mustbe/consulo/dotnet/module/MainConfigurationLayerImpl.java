@@ -126,6 +126,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 				setText(dotNetTarget.getDescription());
 			}
 		});
+		comp.setSelectedItem(myTarget);
 		comp.addActionListener(new ActionListener()
 		{
 			@Override
