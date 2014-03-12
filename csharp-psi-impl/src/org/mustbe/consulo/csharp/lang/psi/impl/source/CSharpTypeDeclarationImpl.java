@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
@@ -131,6 +132,12 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 			return stub.getType() == CSharpTypeStub.ENUM;
 		}
 		return findChildByType(CSharpTokens.ENUM_KEYWORD) != null;
+	}
+
+	@Override
+	public boolean isInheritAllowed()
+	{
+		return !hasModifier(CSharpModifier.SEALED);
 	}
 
 	@Override

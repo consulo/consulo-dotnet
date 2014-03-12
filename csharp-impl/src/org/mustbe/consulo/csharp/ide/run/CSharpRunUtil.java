@@ -17,8 +17,8 @@
 package org.mustbe.consulo.csharp.ide.run;
 
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -46,7 +46,7 @@ public class CSharpRunUtil
 
 	public static boolean isEntryPoint(DotNetMethodDeclaration methodDeclaration)
 	{
-		if(!methodDeclaration.hasModifier(DotNetModifier.STATIC))
+		if(!methodDeclaration.hasModifier(CSharpModifier.STATIC))
 		{
 			return false;
 		}

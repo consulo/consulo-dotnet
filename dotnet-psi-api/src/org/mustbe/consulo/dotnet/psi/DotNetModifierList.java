@@ -28,14 +28,14 @@ import com.intellij.psi.tree.IElementType;
 public interface DotNetModifierList extends DotNetElement
 {
 	@NotNull
-	DotNetModifier[] getModifiers();
+	DotNetModifierWithMask[] getModifiers();
 
 	@NotNull
 	DotNetAttribute[] getAttributes();
 
-	boolean hasModifier(@NotNull DotNetModifier modifier);
+	boolean hasModifier(@NotNull DotNetModifierWithMask modifier);
 
-	boolean hasModifierInTree(@NotNull DotNetModifier modifier);
+	boolean hasModifierInTree(@NotNull DotNetModifierWithMask modifier);
 
 	@Nullable
 	PsiElement getModifier(IElementType elementType);

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface DotNetModifierListOwner extends DotNetElement
 {
-	boolean hasModifier(@NotNull DotNetModifier modifier);
+	boolean hasModifier(@NotNull DotNetModifierWithMask modifier);
 
 	@Nullable
 	DotNetModifierList getModifierList();

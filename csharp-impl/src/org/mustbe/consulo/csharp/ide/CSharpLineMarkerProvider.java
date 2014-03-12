@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.search.searches.ClassInheritorsSearch;
 import com.intellij.codeHighlighting.Pass;
@@ -123,7 +123,7 @@ public class CSharpLineMarkerProvider implements LineMarkerProvider, DumbAware
 
 	private static boolean hasChild(final CSharpTypeDeclaration type)
 	{
-		if(type.hasModifier(DotNetModifier.SEALED))
+		if(type.hasModifier(CSharpModifier.SEALED))
 		{
 			return false;
 		}

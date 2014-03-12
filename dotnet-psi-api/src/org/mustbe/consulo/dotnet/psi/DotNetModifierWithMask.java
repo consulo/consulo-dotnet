@@ -16,32 +16,13 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.PsiNameIdentifierOwner;
-
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 12.03.14
  */
-@ArrayFactoryFields
-public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetModifierListOwner, DotNetGenericParameterListOwner,
-		PsiNameIdentifierOwner, DotNetMemberOwner
+public interface DotNetModifierWithMask
 {
-	boolean isInterface();
+	String name();
 
-	boolean isStruct();
-
-	boolean isEnum();
-
-	boolean isInheritAllowed();
-
-	@Nullable
-	DotNetTypeList getExtendList();
-
-	@NotNull
-	DotNetType[] getExtends();
-
-	boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep);
+	int mask();
 }

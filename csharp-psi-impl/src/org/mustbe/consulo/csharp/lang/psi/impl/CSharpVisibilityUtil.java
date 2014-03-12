@@ -17,7 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import com.intellij.psi.PsiElement;
 
@@ -40,7 +40,7 @@ public class CSharpVisibilityUtil
 	}
 	public static boolean isVisible(@NotNull DotNetModifierListOwner target, @NotNull PsiElement place)
 	{
-		if(target.hasModifier(DotNetModifier.PUBLIC))
+		if(target.hasModifier(CSharpModifier.PUBLIC))
 		{
 			return true;
 		}

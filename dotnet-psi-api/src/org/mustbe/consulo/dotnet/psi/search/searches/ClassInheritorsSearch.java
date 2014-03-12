@@ -24,7 +24,6 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import com.intellij.openapi.application.ApplicationManager;
@@ -332,7 +331,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 			@Override
 			public Boolean compute()
 			{
-				return Boolean.valueOf(baseClass.hasModifier(DotNetModifier.SEALED));
+				return !baseClass.isInheritAllowed();
 			}
 		});
 	}

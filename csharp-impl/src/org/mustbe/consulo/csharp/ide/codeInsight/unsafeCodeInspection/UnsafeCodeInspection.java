@@ -22,7 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFixedStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpModifierListImpl;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.codeInspection.LocalInspectionTool;
@@ -78,7 +78,7 @@ public class UnsafeCodeInspection extends LocalInspectionTool
 					return;
 				}
 
-				if(!((DotNetModifierListOwner) qualifiedElement).hasModifier(DotNetModifier.UNSAFE))
+				if(!((DotNetModifierListOwner) qualifiedElement).hasModifier(CSharpModifier.UNSAFE))
 				{
 					PsiElement fixedElement = statement.getFixedElement();
 

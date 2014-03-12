@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi;
+
+import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 
 /**
 * @author VISTALL
 * @since 06.01.14.
 */
-public enum DotNetModifier
+public enum CSharpModifier implements DotNetModifierWithMask
 {
 	PUBLIC,
 	PRIVATE,
@@ -35,11 +37,12 @@ public enum DotNetModifier
 
 	private int myMask;
 
-	DotNetModifier()
+	CSharpModifier()
 	{
 		myMask = 1 << ordinal();
 	}
 
+	@Override
 	public int mask()
 	{
 		return myMask;

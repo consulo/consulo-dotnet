@@ -18,9 +18,9 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.NamedStubBase;
@@ -61,7 +61,7 @@ public class MemberStub<T extends DotNetNamedElement> extends NamedStubBase<T>
 		return StringRef.toString(myParentQName);
 	}
 
-	public boolean hasModifier(DotNetModifier modifier)
+	public boolean hasModifier(DotNetModifierWithMask modifier)
 	{
 		return BitUtil.isSet(myModifierMask, modifier.mask());
 	}
@@ -84,8 +84,8 @@ public class MemberStub<T extends DotNetNamedElement> extends NamedStubBase<T>
 			return 0;
 		}
 		int val = 0;
-		DotNetModifier[] modifierElementTypes = modifierList.getModifiers();
-		for(DotNetModifier netModifier : modifierElementTypes)
+		DotNetModifierWithMask[] modifierElementTypes = modifierList.getModifiers();
+		for(DotNetModifierWithMask netModifier : modifierElementTypes)
 		{
 			val |= netModifier.mask();
 		}

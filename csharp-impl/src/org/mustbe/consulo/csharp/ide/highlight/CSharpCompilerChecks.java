@@ -29,8 +29,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -68,7 +68,7 @@ public interface CSharpCompilerChecks
 		@Override
 		public boolean process(DotNetParameter dotNetParameter)
 		{
-			if(!dotNetParameter.hasModifier(DotNetModifier.PARAMS))
+			if(!dotNetParameter.hasModifier(CSharpModifier.PARAMS))
 			{
 				return false;
 			}
@@ -95,7 +95,7 @@ public interface CSharpCompilerChecks
 					continue;
 				}
 
-				if(parameter.hasModifier(DotNetModifier.THIS))
+				if(parameter.hasModifier(CSharpModifier.THIS))
 				{
 					return true;
 				}

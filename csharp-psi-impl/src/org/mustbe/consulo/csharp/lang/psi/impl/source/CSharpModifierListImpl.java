@@ -26,12 +26,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeList;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -42,19 +43,19 @@ import com.intellij.psi.tree.IElementType;
  */
 public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetModifierList
 {
-	private static final Map<DotNetModifier, IElementType> ourModifiers = new LinkedHashMap<DotNetModifier, IElementType>()
+	private static final Map<CSharpModifier, IElementType> ourModifiers = new LinkedHashMap<CSharpModifier, IElementType>()
 	{
 		{
-			put(DotNetModifier.PUBLIC, CSharpTokens.PUBLIC_KEYWORD);
-			put(DotNetModifier.PROTECTED, CSharpTokens.PROTECTED_KEYWORD);
-			put(DotNetModifier.PRIVATE, CSharpTokens.PRIVATE_KEYWORD);
-			put(DotNetModifier.STATIC, CSharpTokens.STATIC_KEYWORD);
-			put(DotNetModifier.SEALED, CSharpTokens.SEALED_KEYWORD);
-			put(DotNetModifier.ABSTRACT, CSharpTokens.ABSTRACT_KEYWORD);
-			put(DotNetModifier.READONLY, CSharpTokens.READONLY_KEYWORD);
-			put(DotNetModifier.UNSAFE, CSharpTokens.UNSAFE_KEYWORD);
-			put(DotNetModifier.PARAMS, CSharpTokens.PARAMS_KEYWORD);
-			put(DotNetModifier.THIS, CSharpTokens.THIS_KEYWORD);
+			put(CSharpModifier.PUBLIC, CSharpTokens.PUBLIC_KEYWORD);
+			put(CSharpModifier.PROTECTED, CSharpTokens.PROTECTED_KEYWORD);
+			put(CSharpModifier.PRIVATE, CSharpTokens.PRIVATE_KEYWORD);
+			put(CSharpModifier.STATIC, CSharpTokens.STATIC_KEYWORD);
+			put(CSharpModifier.SEALED, CSharpTokens.SEALED_KEYWORD);
+			put(CSharpModifier.ABSTRACT, CSharpTokens.ABSTRACT_KEYWORD);
+			put(CSharpModifier.READONLY, CSharpTokens.READONLY_KEYWORD);
+			put(CSharpModifier.UNSAFE, CSharpTokens.UNSAFE_KEYWORD);
+			put(CSharpModifier.PARAMS, CSharpTokens.PARAMS_KEYWORD);
+			put(CSharpModifier.THIS, CSharpTokens.THIS_KEYWORD);
 		}
 	};
 	public CSharpModifierListImpl(@NotNull ASTNode node)
@@ -87,29 +88,34 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 
 	@NotNull
 	@Override
-	public DotNetModifier[] getModifiers()
+	public CSharpModifier[] getModifiers()
 	{
-		List<DotNetModifier> list = new ArrayList<DotNetModifier>();
-		for(DotNetModifier dotNetModifier : ourModifiers.keySet())
+		List<CSharpModifier> list = new ArrayList<CSharpModifier>();
+		for(CSharpModifier CSharpModifier : ourModifiers.keySet())
 		{
-			if(hasModifier(dotNetModifier))
+			if(hasModifier(CSharpModifier))
 			{
-				list.add(dotNetModifier);
+				list.add(CSharpModifier);
 			}
 		}
-		return list.toArray(new DotNetModifier[list.size()]);
+		return list.toArray(new CSharpModifier[list.size()]);
 	}
 
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	public boolean hasModifier(@NotNull DotNetModifierWithMask modifier)
 	{
 		if(hasModifierInTree(modifier))
 		{
 			return true;
 		}
 
+		if(!(modifier instanceof CSharpModifier))
+		{
+			return false;
+		}
+		CSharpModifier cSharpModifier = (CSharpModifier) modifier;
 		PsiElement parent = getParent();
-		switch(modifier)
+		switch(cSharpModifier)
 		{
 			case STATIC:
 				if(parent instanceof CSharpFieldDeclaration)
@@ -125,7 +131,7 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 	}
 
 	@Override
-	public boolean hasModifierInTree(@NotNull DotNetModifier modifier)
+	public boolean hasModifierInTree(@NotNull DotNetModifierWithMask modifier)
 	{
 		IElementType iElementType = ourModifiers.get(modifier);
 		return iElementType != null && findChildByType(iElementType) != null;

@@ -26,10 +26,10 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -100,7 +100,7 @@ public class CSharpHighlightUtil
 		}
 		else if(element instanceof DotNetMethodDeclaration)
 		{
-			key = ((DotNetMethodDeclaration) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
+			key = ((DotNetMethodDeclaration) element).hasModifier(CSharpModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
 					.INSTANCE_METHOD;
 		}
 		else if(element instanceof CSharpMacroDefine)
@@ -113,7 +113,7 @@ public class CSharpHighlightUtil
 		}
 		else if(element instanceof DotNetVariable)
 		{
-			key = ((DotNetVariable) element).hasModifier(DotNetModifier.STATIC) ? CSharpHighlightKey.STATIC_FIELD : CSharpHighlightKey
+			key = ((DotNetVariable) element).hasModifier(CSharpModifier.STATIC) ? CSharpHighlightKey.STATIC_FIELD : CSharpHighlightKey
 					.INSTANCE_FIELD;
 		}
 		else
