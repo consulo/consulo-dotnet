@@ -57,9 +57,6 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import lombok.val;
@@ -172,10 +169,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public ResolveResult[] multiResolve(final boolean incompleteCode)
 	{
-		if(incompleteCode)
-		{
+		//if(incompleteCode)
+		//{
 			return multiResolve0(true);
-		}
+		/*}
 
 		if(myValue != null)
 		{
@@ -192,7 +189,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			}
 		}, false);
 
-		return myValue.getValue();
+		return myValue.getValue();  */
 	}
 
 	private ResolveResult[] multiResolve0(boolean named)
@@ -544,8 +541,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			{
 				if(temp instanceof DotNetParameter)
 				{
-					last = element;
 					targetToWalkChildren = PsiTreeUtil.getParentOfType(temp, DotNetMethodDeclaration.class);
+					last = targetToWalkChildren;
 					break;
 				}
 				else if(temp instanceof DotNetType)
@@ -567,10 +564,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}
 				else if(temp instanceof DotNetMethodDeclaration || temp instanceof CSharpConstructorDeclaration)
 				{
-					DotNetLikeMethodDeclaration netMethodDeclaration = (DotNetLikeMethodDeclaration) temp;
-					DotNetParameterList parameterList = netMethodDeclaration.getParameterList();
 					targetToWalkChildren = temp.getParent();
-					last = parameterList == null ? netMethodDeclaration.getCodeBlock() : parameterList;
+					last = targetToWalkChildren;
 					break;
 				}
 				temp = temp.getParent();
