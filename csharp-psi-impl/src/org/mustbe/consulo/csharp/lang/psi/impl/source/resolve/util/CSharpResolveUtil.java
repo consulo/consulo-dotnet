@@ -116,8 +116,9 @@ public class CSharpResolveUtil
 	}
 
 	public static boolean walkChildren(@NotNull final PsiScopeProcessor processor, @NotNull final PsiElement entrance,
-			@NotNull final PsiElement sender, @Nullable PsiElement maxScope, @NotNull final ResolveState state)
+			@NotNull final PsiElement sender, @Nullable PsiElement maxScope, @NotNull ResolveState state)
 	{
+		state = state.put(SELF_FILE, sender.getContainingFile());
 		if(entrance instanceof DotNetTypeDeclaration)
 		{
 			DotNetGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
@@ -169,9 +170,7 @@ public class CSharpResolveUtil
 		}
 		else if(entrance instanceof CSharpNamespaceAsElement)
 		{
-			ResolveState s = state.put(SELF_FILE, sender.getContainingFile());
-
-			if(!entrance.processDeclarations(processor, s, maxScope, entrance))
+			if(!entrance.processDeclarations(processor, state, maxScope, entrance))
 			{
 				return false;
 			}
@@ -183,7 +182,7 @@ public class CSharpResolveUtil
 			}
 
 			CSharpNamespaceAsElement parentNamespace = new CSharpNamespaceAsElement(entrance.getProject(), pQName, entrance.getResolveScope());
-			return walkChildren(processor, parentNamespace, sender, maxScope, s);
+			return walkChildren(processor, parentNamespace, sender, maxScope, state);
 		}
 		else if(entrance instanceof DotNetNamespaceDeclaration)
 		{

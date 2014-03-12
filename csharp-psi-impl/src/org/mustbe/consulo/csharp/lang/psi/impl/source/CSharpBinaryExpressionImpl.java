@@ -17,10 +17,13 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpBinaryExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -39,10 +42,40 @@ public class CSharpBinaryExpressionImpl extends CSharpElementImpl implements CSh
 		visitor.visitBinaryExpression(this);
 	}
 
+	@Nullable
+	public DotNetExpression getLeftExpression()
+	{
+		return findChildByClass(DotNetExpression.class);
+	}
+
+	@NotNull
+	public CSharpOperatorReferenceImpl getOperatorElement()
+	{
+		return findNotNullChildByClass(CSharpOperatorReferenceImpl.class);
+	}
+
+	@Nullable
+	public DotNetExpression getRightExpression()
+	{
+		PsiElement operatorElement = getOperatorElement();
+		PsiElement nextSibling = operatorElement.getNextSibling();
+		while(nextSibling != null)
+		{
+			if(nextSibling instanceof DotNetExpression)
+			{
+				return (DotNetExpression) nextSibling;
+			}
+			nextSibling = nextSibling.getNextSibling();
+		}
+		return null;
+	}
+
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		CSharpOperatorReferenceImpl operatorElement = getOperatorElement();
+
+		return CSharpReferenceExpressionImpl.toTypeRef(operatorElement.resolve());
 	}
 }

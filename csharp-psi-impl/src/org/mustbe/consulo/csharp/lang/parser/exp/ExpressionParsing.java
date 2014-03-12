@@ -298,7 +298,9 @@ public class ExpressionParsing extends SharingParsingHelpers
 				break;
 			}
 
+			PsiBuilder.Marker mark = builder.mark();
 			builder.advanceLexerGGLL();
+			mark.done(OPERATOR_REFERENCE);
 
 			final PsiBuilder.Marker right = parseExpression(builder, type);
 			operandCount++;
@@ -338,10 +340,12 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			final IElementType toCreate;
 			final ExprType toParse;
+			boolean operatorReference = false;
 			if(RELATIONAL_OPS.contains(tokenType))
 			{
 				toCreate = BINARY_EXPRESSION;
 				toParse = ExprType.SHIFT;
+				operatorReference = true;
 			}
 			else if(tokenType == IS_KEYWORD)
 			{
@@ -359,7 +363,16 @@ public class ExpressionParsing extends SharingParsingHelpers
 			}
 
 			final PsiBuilder.Marker expression = left.precede();
-			builder.advanceLexerGGLL();
+			if(operatorReference)
+			{
+				PsiBuilder.Marker mark = builder.mark();
+				builder.advanceLexerGGLL();
+				mark.done(OPERATOR_REFERENCE);
+			}
+			else
+			{
+				builder.advanceLexerGGLL();
+			}
 
 			final PsiBuilder.Marker right = parseExpression(builder, toParse);
 			if(right == null)

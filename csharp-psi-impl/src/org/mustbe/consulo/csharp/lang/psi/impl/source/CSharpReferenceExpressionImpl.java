@@ -801,6 +801,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 
 		PsiElement resolve = resolve();
+		return toTypeRef(resolve);
+	}
+
+	@NotNull
+	public static DotNetTypeRef toTypeRef(@Nullable PsiElement resolve)
+	{
 		if(resolve instanceof CSharpNamespaceAsElement)
 		{
 			return new CSharpNamespaceDefTypeRef(((CSharpNamespaceAsElement) resolve).getPresentableQName());

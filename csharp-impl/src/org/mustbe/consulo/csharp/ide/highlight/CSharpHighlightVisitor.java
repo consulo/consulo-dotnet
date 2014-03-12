@@ -28,14 +28,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpArrayAccessExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -188,6 +181,24 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		super.visitEventDeclaration(declaration);
 
 		highlightNamed(declaration, declaration.getNameIdentifier());
+	}
+
+	@Override
+	public void visitOperatorReference(CSharpOperatorReferenceImpl referenceExpression)
+	{
+		super.visitOperatorReference(referenceExpression);
+
+		PsiElement resolve = referenceExpression.resolve();
+
+		if(resolve == null && !referenceExpression.isSoft())
+		{
+			PsiElement element = referenceExpression.getElement();
+
+			HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip("Operator is not resolved").range
+					(element).create();
+
+			myHighlightInfoHolder.add(info);
+		}
 	}
 
 	@Override

@@ -500,4 +500,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(declaration);
 	}
+
+	public void visitOperatorReference(CSharpOperatorReferenceImpl referenceExpression)
+	{
+		visitElement(referenceExpression);
+	}
 }
