@@ -37,6 +37,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroIfConditionBloc
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMacroIfImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpFileStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.elementTypes.macro.MacroEvaluator;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.lang.ASTNode;
@@ -54,6 +55,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
+import com.intellij.psi.impl.source.CharTableImpl;
 import com.intellij.psi.stubs.DefaultStubBuilder;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -65,6 +67,11 @@ import com.intellij.psi.tree.IStubFileElementType;
  */
 public class CSharpFileStubElementType extends IStubFileElementType<CSharpFileStub>
 {
+	static
+	{
+		CharTableImpl.addStringsFromClassToStatics(DotNetTypes.class);
+	}
+
 	public CSharpFileStubElementType()
 	{
 		super("CSHARP_FILE", CSharpLanguage.INSTANCE);
