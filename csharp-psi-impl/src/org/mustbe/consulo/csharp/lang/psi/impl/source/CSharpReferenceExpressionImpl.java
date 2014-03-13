@@ -71,6 +71,8 @@ import lombok.val;
 @Logger
 public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements DotNetReferenceExpression, PsiPolyVariantReference
 {
+	public static final String AttributeSuffix = "Attribute";
+
 	private static final Condition<PsiNamedElement> ourTypeOrMethodOrGenericCondition = new Condition<PsiNamedElement>()
 	{
 		@Override
@@ -237,7 +239,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 							return true;
 						}
 
-						if(candinateName.endsWith("Attribute") && Comparing.equal(referenceName + "Attribute", netNamedElement.getName()))
+						if(candinateName.endsWith(AttributeSuffix) && Comparing.equal(referenceName + AttributeSuffix, netNamedElement.getName()))
 						{
 							return true;
 						}
@@ -635,7 +637,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	}
 
 	@NotNull
-	private ResolveToKind kind()
+	public ResolveToKind kind()
 	{
 		PsiElement tempElement = getParent();
 		if(tempElement instanceof CSharpGenericConstraintImpl)

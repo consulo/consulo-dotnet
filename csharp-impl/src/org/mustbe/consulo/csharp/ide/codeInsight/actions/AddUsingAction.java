@@ -17,16 +17,18 @@
 package org.mustbe.consulo.csharp.ide.codeInsight.actions;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
+
+import javax.swing.Icon;
 
 import org.consulo.lombok.annotations.Logger;
 import org.mustbe.consulo.csharp.ide.codeInsight.CSharpCodeInsightSettings;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeByQNameIndex;
 import com.intellij.codeInsight.actions.OptimizeImportsProcessor;
 import com.intellij.codeInsight.hint.QuestionAction;
 import com.intellij.icons.AllIcons;
@@ -45,7 +47,9 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiParserFacade;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -57,9 +61,9 @@ public class AddUsingAction implements QuestionAction
 	private final Editor myEditor;
 	private final Project myProject;
 	private final CSharpReferenceExpressionImpl myRef;
-	private final List<String> myElements;
+	private final Set<String> myElements;
 
-	public AddUsingAction(Editor editor, CSharpReferenceExpressionImpl ref, List<String> q)
+	public AddUsingAction(Editor editor, CSharpReferenceExpressionImpl ref, Set<String> q)
 	{
 		myEditor = editor;
 		myRef = ref;
@@ -88,12 +92,18 @@ public class AddUsingAction implements QuestionAction
 
 		if(myElements.size() == 1)
 		{
-			execute0(myElements.get(0));
+			execute0(ContainerUtil.getFirstItem(myElements));
 		}
 		else
 		{
-			BaseListPopupStep<String> step = new BaseListPopupStep<String>(DotNetBundle.message("add.using"), myElements, AllIcons.Nodes.Package)
+			BaseListPopupStep<String> step = new BaseListPopupStep<String>(DotNetBundle.message("add.using"), ArrayUtil.toStringArray(myElements))
 			{
+				@Override
+				public Icon getIconFor(String aValue)
+				{
+					return AllIcons.Nodes.Package;
+				}
+
 				@Override
 				public PopupStep onChosen(final String selectedValue, boolean finalChoice)
 				{

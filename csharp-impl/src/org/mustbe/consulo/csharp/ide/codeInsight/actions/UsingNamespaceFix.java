@@ -16,28 +16,36 @@
 
 package org.mustbe.consulo.csharp.ide.codeInsight.actions;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
-import org.mustbe.consulo.dotnet.DotNetBundle;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.MethodIndex;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeIndex;
+import org.mustbe.consulo.dotnet.DotNetBundle;
+import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.codeInsight.daemon.impl.ShowAutoImportPass;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.HighPriorityAction;
 import com.intellij.codeInspection.HintAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.containers.ArrayListSet;
 import lombok.val;
 
 /**
@@ -68,7 +76,7 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 			return PopupResult.NOT_AVAILABLE;
 		}
 
-		List<String> q = collectAvailableNamespaces();
+		Set<String> q = collectAvailableNamespaces();
 		if(q.isEmpty())
 		{
 			return PopupResult.NOT_AVAILABLE;
@@ -82,44 +90,92 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 		return PopupResult.SHOW_HIT;
 	}
 
-	private List<String> collectAvailableNamespaces()
+	private Set<String> collectAvailableNamespaces()
 	{
 		if(myRef.getQualifier() != null || myRef.getParent() instanceof CSharpUsingNamespaceStatementImpl || !myRef.isValid())
 		{
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 
-		val list = new ArrayList<String>();
-
 		String referenceName = myRef.getReferenceName();
-		val types = TypeIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
+		if(StringUtil.isEmpty(referenceName))
+		{
+			return Collections.emptySet();
+		}
+		assert referenceName != null;
 
-		for(val type : types)
+		val list = new ArrayListSet<String>();
+
+		Collection<DotNetTypeDeclaration> tempTypes;
+		Collection<DotNetLikeMethodDeclaration> tempMethods;
+		val kind = myRef.kind();
+		switch(kind)
+		{
+			case ATTRIBUTE:
+				val cond = new Condition<DotNetTypeDeclaration>()
+				{
+					@Override
+					public boolean value(DotNetTypeDeclaration typeDeclaration)
+					{
+						return CSharpInheritUtil.isParent(DotNetTypes.System_Attribute, typeDeclaration, true);
+					}
+				};
+				// if attribute endwith Attribute - collect only with
+				if(referenceName.endsWith(CSharpReferenceExpressionImpl.AttributeSuffix))
+				{
+					tempTypes = TypeIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
+
+					collect(list, tempTypes, cond);
+				}
+				else
+				{
+					tempTypes = TypeIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
+
+					collect(list, tempTypes, cond);
+
+					tempTypes = TypeIndex.getInstance().get(referenceName + CSharpReferenceExpressionImpl.AttributeSuffix, myRef.getProject(),
+							myRef.getResolveScope());
+
+					collect(list, tempTypes, cond);
+				}
+				break;
+			default:
+				tempTypes = TypeIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
+
+				collect(list, tempTypes, Conditions.<DotNetTypeDeclaration>alwaysTrue());
+
+				tempMethods = MethodIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
+
+				collect(list, tempMethods, new Condition<DotNetLikeMethodDeclaration>()
+				{
+					@Override
+					public boolean value(DotNetLikeMethodDeclaration method)
+					{
+						return (method.getParent() instanceof DotNetNamespaceDeclaration || method.getParent() instanceof PsiFile) && method
+								instanceof DotNetMethodDeclaration && ((DotNetMethodDeclaration) method).isDelegate();
+					}
+				});
+				break;
+		}
+		return list;
+	}
+
+	private static <T extends DotNetQualifiedElement> void collect(Set<String> namespaces, Collection<T> element, Condition<T> condition)
+	{
+		for(val type : element)
 		{
 			String presentableParentQName = type.getPresentableParentQName();
 			if(StringUtil.isEmpty(presentableParentQName))
 			{
 				continue;
 			}
-			list.add(presentableParentQName);
-		}
 
-		val methods = MethodIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
-
-		for(val method : methods)
-		{
-			if((method.getParent() instanceof DotNetNamespaceDeclaration || method.getParent() instanceof PsiFile) && method instanceof
-					DotNetMethodDeclaration && ((DotNetMethodDeclaration) method).isDelegate())
+			if(!condition.value(type))
 			{
-				String presentableParentQName = method.getPresentableParentQName();
-				if(StringUtil.isEmpty(presentableParentQName))
-				{
-					continue;
-				}
-				list.add(presentableParentQName);
+				continue;
 			}
+			namespaces.add(presentableParentQName);
 		}
-		return list;
 	}
 
 	@Override
