@@ -167,6 +167,7 @@ public class CSharpResolveUtil
 					}
 				}
 			}
+			return walkChildren(processor, entrance.getParent(), sender, maxScope, state);
 		}
 		else if(entrance instanceof CSharpNamespaceAsElement)
 		{
