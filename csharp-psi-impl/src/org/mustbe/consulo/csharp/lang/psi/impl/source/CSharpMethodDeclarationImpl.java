@@ -26,6 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpMethodStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.BitUtil;
 
 /**
@@ -81,5 +82,17 @@ public class CSharpMethodDeclarationImpl extends CSharpLikeMethodDeclarationImpl
 			return BitUtil.isSet(stub.getOtherModifierMask(), CSharpMethodStub.OPERATOR_MASK);
 		}
 		return findChildByType(CSharpTokens.OPERATOR_KEYWORD) != null;
+	}
+
+	@Nullable
+	@Override
+	public IElementType getOperatorElementType()
+	{
+		if(isOperator())
+		{
+			PsiElement childByType = findChildByType(CSharpTokenSets.OVERLOADING_OPERATORS);
+			return childByType == null ? null : childByType.getNode().getElementType();
+		}
+		return null;
 	}
 }

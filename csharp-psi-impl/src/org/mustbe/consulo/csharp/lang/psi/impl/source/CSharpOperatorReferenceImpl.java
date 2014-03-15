@@ -19,17 +19,19 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
-import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpOperatorHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import lombok.val;
 
@@ -73,51 +75,88 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 	@Override
 	public PsiElement resolve()
 	{
+		Object o = resolve0();
+		if(o instanceof PsiElement)
+		{
+			return (PsiElement) o;
+		}
+		return null;
+	}
+
+	private Object resolve0()
+	{
 		PsiElement parent = getParent();
 		if(parent instanceof CSharpBinaryExpressionImpl)
 		{
-			val typeRefs = getTypeRefs();
-			val dotNetPsiFacade = DotNetPsiFacade.getInstance(getProject());
+			//TODO [search in methods]
 
-			if(isAny(typeRefs, DotNetTypes.System_String))
+			DotNetTypeRef returnTypeInStubs = findReturnTypeInStubs();
+			if(returnTypeInStubs != null)
 			{
-				return dotNetPsiFacade.findType(DotNetTypes.System_String, getResolveScope(), -1);
-			}
-
-			if(typeRefs.length == 1)
-			{
-				return null;
-			}
-
-			if(isAll(typeRefs, CSharpNativeTypeRef.LONG))
-			{
-				return dotNetPsiFacade.findType(CSharpNativeTypeRef.LONG.getWrapperQualifiedClass(), getResolveScope(), -1);
-			}
-
-			if(isAll(typeRefs, CSharpNativeTypeRef.INT))
-			{
-				return dotNetPsiFacade.findType(CSharpNativeTypeRef.INT.getWrapperQualifiedClass(), getResolveScope(), -1);
+				return returnTypeInStubs;
 			}
 		}
 		return null;
 	}
 
-	private static boolean isAll(@NotNull DotNetTypeRef[] typeRefs, @NotNull String qName)
+	@NotNull
+	public DotNetTypeRef resolveToTypeRef()
 	{
-		return Comparing.equal(typeRefs[0].getQualifiedText(), qName) && Comparing.equal(typeRefs[1].getQualifiedText(), qName);
-	}
-
-	private static boolean isAll(@NotNull DotNetTypeRef[] typeRefs, @NotNull CSharpNativeTypeRef t)
-	{
-		return Comparing.equal(typeRefs[0].getQualifiedText(), t.getQualifiedText()) && Comparing.equal(typeRefs[1].getQualifiedText(),
-				t.getQualifiedText());
-	}
-
-	private static boolean isAny(@NotNull DotNetTypeRef[] typeRefs, @NotNull String qName)
-	{
-		for(DotNetTypeRef typeRef : typeRefs)
+		Object o = resolve0();
+		if(o instanceof DotNetTypeRef)
 		{
-			if(Comparing.equal(typeRef.getQualifiedText(), qName))
+			return (DotNetTypeRef) o;
+		}
+		else if(o instanceof PsiElement)
+		{
+			return CSharpReferenceExpressionImpl.toTypeRef((PsiElement) o);
+		}
+		return DotNetTypeRef.ERROR_TYPE;
+	}
+
+	private DotNetTypeRef findReturnTypeInStubs()
+	{
+		CSharpOperatorHelper operatorHelper = CSharpOperatorHelper.getInstance(getProject());
+
+		DotNetTypeDeclaration stubOperatorType = operatorHelper.getStubOperatorType();
+
+		for(DotNetNamedElement dotNetNamedElement : stubOperatorType.getMembers())
+		{
+			if(!isAccepted(this, dotNetNamedElement))
+			{
+				continue;
+			}
+
+			if(MethodAcceptorImpl.isAccepted(this, (CSharpMethodDeclaration) dotNetNamedElement))
+			{
+				return ((CSharpMethodDeclaration) dotNetNamedElement).getReturnTypeRef();
+			}
+		}
+		return null;
+	}
+
+	private static boolean isAccepted(CSharpOperatorReferenceImpl reference, PsiElement element)
+	{
+		if(!(element instanceof CSharpMethodDeclaration))
+		{
+			return false;
+		}
+		val methodDeclaration = (CSharpMethodDeclaration) element;
+		if(!methodDeclaration.isOperator())
+		{
+			return false;
+		}
+
+		IElementType elementType = reference.getOperator().getNode().getElementType();
+		PsiElement parent = reference.getParent();
+		if(parent instanceof CSharpBinaryExpressionImpl)
+		{
+			if(methodDeclaration.getParameters().length != 2)
+			{
+				return false;
+			}
+
+			if(methodDeclaration.getOperatorElementType() == elementType)
 			{
 				return true;
 			}
@@ -163,11 +202,8 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 		PsiElement parent = getParent();
 		if(parent instanceof CSharpBinaryExpressionImpl)
 		{
-			DotNetTypeRef[] typeRefs = getTypeRefs();
-			if(isAny(typeRefs, DotNetTypes.System_String))
-			{
-				return true;
-			}
+
+			return findReturnTypeInStubs() != null;
 		}
 		return false;
 	}

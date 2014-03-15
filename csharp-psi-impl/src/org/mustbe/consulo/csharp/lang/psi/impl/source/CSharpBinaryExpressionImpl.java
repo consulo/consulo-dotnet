@@ -76,6 +76,6 @@ public class CSharpBinaryExpressionImpl extends CSharpElementImpl implements CSh
 	{
 		CSharpOperatorReferenceImpl operatorElement = getOperatorElement();
 
-		return CSharpReferenceExpressionImpl.toTypeRef(operatorElement.resolve());
+		return operatorElement.resolveToTypeRef();
 	}
 }

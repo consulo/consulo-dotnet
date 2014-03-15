@@ -23,6 +23,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -45,6 +46,13 @@ public class CSharpLightMethodDeclaration extends CSharpLightLikeMethodDeclarati
 	public boolean isOperator()
 	{
 		return myOriginal.isOperator();
+	}
+
+	@Nullable
+	@Override
+	public IElementType getOperatorElementType()
+	{
+		return myOriginal.getOperatorElementType();
 	}
 
 	@Nullable

@@ -31,8 +31,8 @@
 		<moduleExtensionProvider key="microsoft-dotnet2"
 								 name="Microsoft .NET (Structable)"
 								 icon="/icons/dotnet.png"
-								 immutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension"
-								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />
+								 immutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension2.MicrosoftDotNetModuleExtension2"
+								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension2.MicrosoftDotNetMutableModuleExtension2" />
 
 		<moduleExtensionProvider key="microsoft-csharp"
 								 parentKey="microsoft-dotnet"

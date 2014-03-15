@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
-import org.jetbrains.annotations.Nullable;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.tree.IElementType;
+import org.consulo.lombok.annotations.ProjectService;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 15.03.14
  */
-public interface DotNetMethodDeclaration extends DotNetLikeMethodDeclaration, PsiNameIdentifierOwner
+@ProjectService
+public abstract class CSharpOperatorHelper
 {
-	boolean isDelegate();
-
-	boolean isOperator();
-
-	@Nullable
-	IElementType getOperatorElementType();
+	@NotNull
+	public abstract DotNetTypeDeclaration getStubOperatorType();
 }
