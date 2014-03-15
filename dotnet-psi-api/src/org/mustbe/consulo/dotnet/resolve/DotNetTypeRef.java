@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.resolve;
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -103,6 +104,13 @@ public interface DotNetTypeRef
 
 	DotNetTypeRef NULL_TYPE = new Adapter()
 	{
+		@Nullable
+		@Override
+		public PsiElement resolve(@NotNull PsiElement scope)
+		{
+			return DotNetPsiFacade.getInstance(scope.getProject()).findType(DotNetTypes.System_Object, scope.getResolveScope(), 0);
+		}
+
 		@Nullable
 		@Override
 		public String getPresentableText()

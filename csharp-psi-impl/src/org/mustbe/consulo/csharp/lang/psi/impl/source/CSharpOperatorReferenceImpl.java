@@ -21,7 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpOperatorHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -116,6 +118,12 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 
 	private DotNetTypeRef findReturnTypeInStubs()
 	{
+		IElementType elementType = getOperator().getNode().getElementType();
+		if(elementType == CSharpTokenSets.OROR || elementType == CSharpTokens.ANDAND)
+		{
+			return CSharpNativeTypeRef.BOOL;
+		}
+
 		CSharpOperatorHelper operatorHelper = CSharpOperatorHelper.getInstance(getProject());
 
 		DotNetTypeDeclaration stubOperatorType = operatorHelper.getStubOperatorType();
