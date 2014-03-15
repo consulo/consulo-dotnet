@@ -52,6 +52,7 @@
 
 		<syntaxHighlighter key="C#" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpSyntaxHighlighter"/>
 		<syntaxHighlighter key="C#Macro" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpMacroSyntaxHighlighter"/>
+		<copyright.updater filetype="C#" implementationClass="org.mustbe.consulo.csharp.ide.copyright.CSharpUpdateCopyrightsProvider" />
 		<highlightVisitor implementation="org.mustbe.consulo.csharp.ide.highlight.CSharpHighlightVisitor"/>
 		<highlightVisitor implementation="org.mustbe.consulo.csharp.ide.highlight.CSharpMacroHighlightVisitor"/>
 		<externalAnnotator language="C#Macro" implementationClass="org.mustbe.consulo.csharp.ide.highlight.CSharpNonActiveAnnotator" />
