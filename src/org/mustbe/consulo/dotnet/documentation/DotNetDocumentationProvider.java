@@ -61,13 +61,13 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 	@Override
 	public String getQuickNavigateInfo(PsiElement element, PsiElement element2)
 	{
-		if(element instanceof DotNetLocalVariable)
-		{
-			return generateQuickLocalVariableInfo((DotNetLocalVariable) element);
-		}
-		else if(element instanceof DotNetTypeDeclaration)
+		if(element instanceof DotNetTypeDeclaration)
 		{
 			return generateQuickTypeDeclarationInfo((DotNetTypeDeclaration) element);
+		}
+		else if(element instanceof DotNetVariable)
+		{
+			return generateQuickVariableInfo((DotNetVariable) element);
 		}
 		else if(element instanceof DotNetMethodDeclaration)
 		{
@@ -98,10 +98,11 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		return builder.toString();
 	}
 
-	private static String generateQuickLocalVariableInfo(DotNetLocalVariable element)
+	private static String generateQuickVariableInfo(DotNetVariable element)
 	{
 		StringBuilder builder = new StringBuilder();
 
+		appendModifiers(element, builder);
 		builder.append(generateLinksForType(element.toTypeRef(), element));
 		builder.append(" ");
 		builder.append(element.getName());
@@ -110,8 +111,8 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		{
 			builder.append(" = ");
 			builder.append(initializer.getText());
-			builder.append(";");
 		}
+		builder.append(";");
 		return builder.toString();
 	}
 
