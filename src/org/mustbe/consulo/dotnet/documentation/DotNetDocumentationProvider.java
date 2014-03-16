@@ -16,8 +16,12 @@
 
 package org.mustbe.consulo.dotnet.documentation;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
@@ -34,14 +38,13 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import lombok.val;
@@ -183,7 +186,6 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 
 		String docQName = getDocName(element);
 
-		PsiManager manager = PsiManager.getInstance(element.getProject());
 		for(OrderEntry orderEntry : orderEntriesForFile)
 		{
 			for(VirtualFile docVirtualFile : orderEntry.getFiles(OrderRootType.DOCUMENTATION))
@@ -193,21 +195,21 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 					continue;
 				}
 
-				PsiFile psiFile = manager.findFile(docVirtualFile);
-				if(psiFile instanceof XmlFile)
+				try
 				{
-					XmlTag rootTag = ((XmlFile) psiFile).getRootTag();
+					Document document = JDOMUtil.loadDocument(docVirtualFile.getInputStream());
+					val rootTag = document.getRootElement();
 					if(rootTag == null)
 					{
 						continue;
 					}
 
-					XmlTag membersTag = rootTag.findFirstSubTag("members");
+					val membersTag = rootTag.getChild("members");
 
 					if(membersTag != null)
 					{
-						XmlTag[] members = membersTag.findSubTags("member");
-						for(XmlTag member : members)
+						val members = membersTag.getChildren("member");
+						for(val member : members)
 						{
 							String name = member.getAttributeValue("name");
 							if(Comparing.equal(docQName, name))
@@ -217,12 +219,20 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 						}
 					}
 				}
+				catch(JDOMException e)
+				{
+					e.printStackTrace();
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 		return null;
 	}
 
-	private String generate(XmlTag xmlTag, DotNetQualifiedElement psiElement)
+	private String generate(Element xmlTag, DotNetQualifiedElement psiElement)
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("<html><body>");
@@ -272,11 +282,11 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 
 		builder.append("</code><br><br>");
 
-		XmlTag summaryElement = xmlTag.findFirstSubTag("summary");
+		val summaryElement = xmlTag.getChild("summary");
 		if(summaryElement != null)
 		{
 			builder.append("<b><big>").append("Summary").append("</big></b><br>");
-			builder.append(xmlTag.getSubTagText("summary"));
+			builder.append(xmlTag.getChildText("summary"));
 		}
 		builder.append("</body></html>");
 		return builder.toString();
