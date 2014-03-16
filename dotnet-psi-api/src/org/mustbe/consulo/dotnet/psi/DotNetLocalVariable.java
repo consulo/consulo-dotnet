@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
-
-import org.mustbe.consulo.dotnet.psi.DotNetLocalVariable;
+package org.mustbe.consulo.dotnet.psi;
 
 /**
  * @author VISTALL
- * @since 16.12.13.
+ * @since 16.03.14
  */
-public interface CSharpLocalVariable extends DotNetLocalVariable
+public interface DotNetLocalVariable extends DotNetVariable
 {
-
 }

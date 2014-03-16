@@ -27,8 +27,11 @@ import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.documentation.DocumentationProvider;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -55,7 +58,103 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 	@Override
 	public String getQuickNavigateInfo(PsiElement element, PsiElement element2)
 	{
+		if(element instanceof DotNetLocalVariable)
+		{
+			return generateQuickLocalVariableInfo((DotNetLocalVariable) element);
+		}
+		else if(element instanceof DotNetTypeDeclaration)
+		{
+			return generateQuickTypeDeclarationInfo((DotNetTypeDeclaration) element);
+		}
+		else if(element instanceof DotNetMethodDeclaration)
+		{
+			return generateQuickMethodDeclarationInfo((DotNetMethodDeclaration) element);
+		}
 		return null;
+	}
+
+	private static String generateQuickMethodDeclarationInfo(DotNetMethodDeclaration element)
+	{
+		StringBuilder builder = new StringBuilder();
+
+		appendModifiers(element, builder);
+
+		builder.append(generateLinksForType(element.getReturnTypeRef(), element));
+		builder.append(" ");
+		builder.append(element.getName());
+		builder.append("(");
+		builder.append(StringUtil.join(element.getParameters(), new Function<DotNetParameter, String>()
+		{
+			@Override
+			public String fun(DotNetParameter dotNetParameter)
+			{
+				return generateLinksForType(dotNetParameter.toTypeRef(), dotNetParameter) + " " + dotNetParameter.getName();
+			}
+		}, ", "));
+		builder.append(")");
+		return builder.toString();
+	}
+
+	private static String generateQuickLocalVariableInfo(DotNetLocalVariable element)
+	{
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(generateLinksForType(element.toTypeRef(), element));
+		builder.append(" ");
+		builder.append(element.getName());
+		DotNetExpression initializer = element.getInitializer();
+		if(initializer != null)
+		{
+			builder.append(" = ");
+			builder.append(initializer.getText());
+			builder.append(";");
+		}
+		return builder.toString();
+	}
+
+	private static String generateQuickTypeDeclarationInfo(DotNetTypeDeclaration element)
+	{
+		StringBuilder builder = new StringBuilder();
+
+		PsiFile containingFile = element.getContainingFile();
+		final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
+		VirtualFile vFile = containingFile.getVirtualFile();
+		if(vFile != null && (fileIndex.isInLibrarySource(vFile) || fileIndex.isInLibraryClasses(vFile)))
+		{
+			final List<OrderEntry> orderEntries = fileIndex.getOrderEntriesForFile(vFile);
+			if(orderEntries.size() > 0)
+			{
+				final OrderEntry orderEntry = orderEntries.get(0);
+				builder.append("[").append(StringUtil.escapeXml(orderEntry.getPresentableName())).append("] ");
+			}
+		}
+		else
+		{
+			final Module module = ModuleUtil.findModuleForPsiElement(containingFile);
+			if(module != null)
+			{
+				builder.append('[').append(module.getName()).append("] ");
+			}
+		}
+
+		String presentableParentQName = element.getPresentableParentQName();
+		if(!StringUtil.isEmpty(presentableParentQName))
+		{
+			builder.append(presentableParentQName);
+		}
+
+		if(builder.length() > 0)
+		{
+			builder.append("<br>");
+		}
+
+		appendModifiers(element, builder);
+
+		appendTypeDeclarationType(element, builder);
+
+		builder.append(" ").append(element.getName());
+
+		return builder.toString();
 	}
 
 	@Nullable
@@ -143,23 +242,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 
 		if(psiElement instanceof DotNetTypeDeclaration)
 		{
-			DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) psiElement;
-			if(typeDeclaration.isInterface())
-			{
-				builder.append("interface");
-			}
-			else if(typeDeclaration.isEnum())
-			{
-				builder.append("enum");
-			}
-			else if(typeDeclaration.isStruct())
-			{
-				builder.append("struct");
-			}
-			else
-			{
-				builder.append("class");
-			}
+			appendTypeDeclarationType((DotNetTypeDeclaration) psiElement, builder);
 			builder.append(" ");
 		}
 		else if(psiElement instanceof DotNetPropertyDeclaration)
@@ -199,7 +282,27 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		return builder.toString();
 	}
 
-	private void appendModifiers(DotNetModifierListOwner owner, StringBuilder builder)
+	private static void appendTypeDeclarationType(DotNetTypeDeclaration psiElement, StringBuilder builder)
+	{
+		if(psiElement.isInterface())
+		{
+			builder.append("interface");
+		}
+		else if(psiElement.isEnum())
+		{
+			builder.append("enum");
+		}
+		else if(psiElement.isStruct())
+		{
+			builder.append("struct");
+		}
+		else
+		{
+			builder.append("class");
+		}
+	}
+
+	private static void appendModifiers(DotNetModifierListOwner owner, StringBuilder builder)
 	{
 		DotNetModifierList modifierList = owner.getModifierList();
 		if(modifierList == null)
@@ -398,7 +501,11 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 	private static String generateLinksForType(DotNetTypeRef dotNetTypeRef, PsiElement element)
 	{
 		StringBuilder builder = new StringBuilder();
-		if(dotNetTypeRef instanceof DotNetArrayTypeRef)
+		if(dotNetTypeRef == DotNetTypeRef.AUTO_TYPE)
+		{
+			builder.append("var");
+		}
+		else if(dotNetTypeRef instanceof DotNetArrayTypeRef)
 		{
 			builder.append(generateLinksForType(((DotNetArrayTypeRef) dotNetTypeRef).getInnerType(), element));
 			builder.append("[]");
