@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.StubToStringBuilder;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.SmartList;
 import com.intellij.util.text.CharArrayUtil;
@@ -47,7 +47,7 @@ public class DotNetBaseFileArchiveEntry implements DotNetFileArchiveEntry
 		@Override
 		protected byte[] compute()
 		{
-			StubToStringBuilder builder = new StubToStringBuilder(DotNetBaseFileArchiveEntry.this);
+			XStubBuilder builder = new XStubBuilder(DotNetBaseFileArchiveEntry.this);
 			char[] chars = CharArrayUtil.fromSequence(builder.gen());
 			try
 			{

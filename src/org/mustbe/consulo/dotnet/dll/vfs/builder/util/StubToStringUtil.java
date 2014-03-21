@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.dll.vfs.builder;
+package org.mustbe.consulo.dotnet.dll.vfs.builder.util;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteOrder;
 
 import com.intellij.openapi.util.text.StringUtil;
+import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.signature.Signature;
 
 /**
  * @author VISTALL
@@ -27,6 +32,52 @@ public class StubToStringUtil
 {
 	public static final char GENERIC_MARKER_IN_NAME = '`';
 	private static final char[] ILLEGAL_CHARS = new char[] {'{', '}', '<', '>', '='};
+
+	public static boolean isSet(long value, int mod)
+	{
+		return (value & mod) == mod;
+	}
+
+	public static boolean isSet(long value, int mod, int v)
+	{
+		return (value & mod) == v;
+	}
+
+	public static java.nio.ByteBuffer wrap(byte[] data)
+	{
+		java.nio.ByteBuffer byteBuffer = java.nio.ByteBuffer.wrap(data);
+		byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+		return byteBuffer;
+	}
+
+	public static String getUtf8(ByteBuffer byteBuffer)
+	{
+		byte b = byteBuffer.get();
+		if(b == 0xFF)
+		{
+			return "";
+		}
+		else
+		{
+			byteBuffer.back();
+			int size = Signature.readCodedInteger(byteBuffer);
+			if(size == 0)
+			{
+				return "";
+			}
+			else
+			{
+				try
+				{
+					return new String(byteBuffer.get(size), "UTF-8");
+				}
+				catch(UnsupportedEncodingException e)
+				{
+					return "UnsupportedEncodingException:string";
+				}
+			}
+		}
+	}
 
 	public static String getUserTypeDefName(TypeDef typeDef)
 	{

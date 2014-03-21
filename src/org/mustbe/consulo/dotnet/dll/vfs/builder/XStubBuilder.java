@@ -18,11 +18,8 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +29,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.dll.vfs.DotNetBaseFileArchiveEntry;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.StubToStringUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiBundle;
@@ -49,7 +50,7 @@ import lombok.val;
  * @since 12.12.13.
  */
 @Logger
-public class StubToStringBuilder
+public class XStubBuilder
 {
 	private static final String CONSTRUCTOR_NAME = ".ctor";
 	private static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
@@ -104,7 +105,7 @@ public class StubToStringBuilder
 
 	private List<StubBlock> myRoots = new SmartList<StubBlock>();
 
-	public StubToStringBuilder(DotNetBaseFileArchiveEntry archiveEntry)
+	public XStubBuilder(DotNetBaseFileArchiveEntry archiveEntry)
 	{
 		StubBlock namespaceBlock = processNamespace(archiveEntry.getNamespace());
 		if(namespaceBlock != null)
@@ -117,20 +118,20 @@ public class StubToStringBuilder
 			StubBlock typeBlock = processType(typeDef);
 			if(namespaceBlock != null)
 			{
-				namespaceBlock.getBlocks().addAll(processAttributes(typeDef, null, null, null, null));
+				namespaceBlock.getBlocks().addAll(AttributeStubBuilder.processAttributes(typeDef, null, null, null, null));
 				namespaceBlock.getBlocks().add(typeBlock);
 			}
 			else
 			{
-				myRoots.addAll(processAttributes(typeDef, null, null, null, null));
+				myRoots.addAll(AttributeStubBuilder.processAttributes(typeDef, null, null, null, null));
 				myRoots.add(typeBlock);
 			}
 		}
 	}
 
-	public StubToStringBuilder(AssemblyInfo assemblyInfo)
+	public XStubBuilder(AssemblyInfo assemblyInfo)
 	{
-		myRoots.addAll(processAttributes(assemblyInfo, null, null, "assembly", null));
+		myRoots.addAll(AttributeStubBuilder.processAttributes(assemblyInfo, null, null, "assembly", null));
 	}
 
 	// System.MulticastDelegate
@@ -138,7 +139,7 @@ public class StubToStringBuilder
 	@NotNull
 	private static StubBlock processType(final TypeDef typeDef)
 	{
-		String superSuperClassFullName = TypeToStringBuilder.toStringFromDefRefSpec(typeDef.getSuperClass(), typeDef, null);
+		String superSuperClassFullName = TypeSignatureStubBuilder.toStringFromDefRefSpec(typeDef.getSuperClass(), typeDef, null);
 		if(Comparing.equal(DotNetTypes.System_MulticastDelegate, superSuperClassFullName))
 		{
 			for(MethodDef methodDef : typeDef.getMethods())
@@ -159,7 +160,7 @@ public class StubToStringBuilder
 		}
 
 		StringBuilder builder = new StringBuilder();
-		if(isSet(typeDef.getFlags(), TypeAttributes.VisibilityMask, TypeAttributes.Public))
+		if(StubToStringUtil.isSet(typeDef.getFlags(), TypeAttributes.VisibilityMask, TypeAttributes.Public))
 		{
 			builder.append("public ");
 		}
@@ -168,12 +169,12 @@ public class StubToStringBuilder
 			builder.append("internal ");
 		}
 
-		if(isSet(typeDef.getFlags(), TypeAttributes.Sealed))
+		if(StubToStringUtil.isSet(typeDef.getFlags(), TypeAttributes.Sealed))
 		{
 			builder.append("sealed ");
 		}
 
-		if(isSet(typeDef.getFlags(), TypeAttributes.Abstract))
+		if(StubToStringUtil.isSet(typeDef.getFlags(), TypeAttributes.Abstract))
 		{
 			builder.append("abstract ");
 		}
@@ -186,7 +187,7 @@ public class StubToStringBuilder
 		{
 			builder.append("struct ");
 		}
-		else if(isSet(typeDef.getFlags(), TypeAttributes.Interface))
+		else if(StubToStringUtil.isSet(typeDef.getFlags(), TypeAttributes.Interface))
 		{
 			builder.append("interface ");
 		}
@@ -221,11 +222,11 @@ public class StubToStringBuilder
 				{
 					if(o instanceof AbstractTypeReference)
 					{
-						return TypeToStringBuilder.toStringFromDefRefSpec(o, typeDef, null);
+						return TypeSignatureStubBuilder.toStringFromDefRefSpec(o, typeDef, null);
 					}
 					else if(o instanceof InterfaceImplementation)
 					{
-						return TypeToStringBuilder.toStringFromDefRefSpec(((InterfaceImplementation) o).getInterface(), typeDef, null);
+						return TypeSignatureStubBuilder.toStringFromDefRefSpec(((InterfaceImplementation) o).getInterface(), typeDef, null);
 					}
 					return null;
 				}
@@ -246,9 +247,9 @@ public class StubToStringBuilder
 		{
 			if(isEnum)
 			{
-				if(isSet(field.getFlags(), FieldAttributes.Static))
+				if(StubToStringUtil.isSet(field.getFlags(), FieldAttributes.Static))
 				{
-					parent.getBlocks().addAll(processAttributes(field, typeDef, null, null, null));
+					parent.getBlocks().addAll(AttributeStubBuilder.processAttributes(field, typeDef, null, null, null));
 
 					StringBuilder builder = new StringBuilder();
 					builder.append(field.getName());
@@ -275,7 +276,7 @@ public class StubToStringBuilder
 						}
 						else
 						{
-							LOGGER.error("Wrong byte count: " + defaultValue.length + ": " + typeDef.getFullName() + "." + field.getName());
+							XStubBuilder.LOGGER.error("Wrong byte count: " + defaultValue.length + ": " + typeDef.getFullName() + "." + field.getName());
 							builder.append("0");
 						}
 					}
@@ -290,7 +291,7 @@ public class StubToStringBuilder
 					continue;
 				}
 				StubBlock stubBlock = processField(typeDef, field);
-				parent.getBlocks().addAll(processAttributes(field, typeDef, null, null, null));
+				parent.getBlocks().addAll(AttributeStubBuilder.processAttributes(field, typeDef, null, null, null));
 				parent.getBlocks().add(stubBlock);
 			}
 		}
@@ -304,7 +305,7 @@ public class StubToStringBuilder
 		{
 			StubBlock stubBlock = processProperty(typeDef, property);
 
-			parent.getBlocks().addAll(processAttributes(property, typeDef, null, null, null));
+			parent.getBlocks().addAll(AttributeStubBuilder.processAttributes(property, typeDef, null, null, null));
 			parent.getBlocks().add(stubBlock);
 		}
 
@@ -312,7 +313,7 @@ public class StubToStringBuilder
 		{
 			StubBlock stubBlock = processEvent(typeDef, event);
 
-			parent.getBlocks().addAll(processAttributes(event, typeDef, null, null, null));
+			parent.getBlocks().addAll(AttributeStubBuilder.processAttributes(event, typeDef, null, null, null));
 			parent.getBlocks().add(stubBlock);
 		}
 
@@ -320,7 +321,7 @@ public class StubToStringBuilder
 		{
 			String name = cutSuperName(methodDef.getName());
 
-			if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
+			if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 			{
 				// dont show properties methods
 				if(name.startsWith("get_") ||
@@ -338,9 +339,9 @@ public class StubToStringBuilder
 				continue;
 			}
 
-			ProcessAttributesCallback callback = new ProcessAttributesCallback();
+			AttributeStubBuilder.ProcessAttributesCallback callback = new AttributeStubBuilder.ProcessAttributesCallback();
 
-			parent.getBlocks().addAll(processAttributes(methodDef, typeDef, methodDef, null, callback));
+			parent.getBlocks().addAll(AttributeStubBuilder.processAttributes(methodDef, typeDef, methodDef, null, callback));
 
 			StubBlock stubBlock = processMethod(typeDef, methodDef, name, false, false, callback.extension);
 
@@ -354,12 +355,12 @@ public class StubToStringBuilder
 		builder.append(getFieldAccess(field).name().toLowerCase());
 		builder.append(" ");
 
-		if(isSet(field.getFlags(), FieldAttributes.Static))
+		if(StubToStringUtil.isSet(field.getFlags(), FieldAttributes.Static))
 		{
 			builder.append("static ");
 		}
 
-		builder.append(TypeToStringBuilder.typeToString(field.getSignature().getType(), typeDef, typeDef));
+		builder.append(TypeSignatureStubBuilder.typeToString(field.getSignature().getType(), typeDef, typeDef));
 		builder.append(" ");
 		builder.append(field.getName());
 
@@ -405,7 +406,7 @@ public class StubToStringBuilder
 			}
 		}
 
-		AccessModifier propertyModifier = AccessModifier.INTERNAL;
+		XStubUtil propertyModifier = XStubUtil.INTERNAL;
 
 		if(getter == null && setter != null)
 		{
@@ -426,7 +427,7 @@ public class StubToStringBuilder
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(propertyModifier.name().toLowerCase()).append(" ");
-		builder.append(TypeToStringBuilder.typeToString(property.getSignature().getType(), typeDef, null));
+		builder.append(TypeSignatureStubBuilder.typeToString(property.getSignature().getType(), typeDef, null));
 		builder.append(" ");
 
 		if(parameterSignature != null)
@@ -463,7 +464,7 @@ public class StubToStringBuilder
 			removeOnStub = processMethod(typeDef, removeOnMethod, "remove", false, true, false);
 		}
 
-		AccessModifier propertyModifier = AccessModifier.INTERNAL;
+		XStubUtil propertyModifier = XStubUtil.INTERNAL;
 
 		if(addOnMethod == null && removeOnMethod != null)
 		{
@@ -485,7 +486,7 @@ public class StubToStringBuilder
 
 		builder.append(propertyModifier.name().toLowerCase()).append(" ");
 		builder.append("event ");
-		builder.append(TypeToStringBuilder.toStringFromDefRefSpec(event.getEventType(), typeDef, null));
+		builder.append(TypeSignatureStubBuilder.toStringFromDefRefSpec(event.getEventType(), typeDef, null));
 		builder.append(" ");
 		builder.append(cutSuperName(event.getName()));
 
@@ -496,35 +497,35 @@ public class StubToStringBuilder
 		return stubBlock;
 	}
 
-	private static AccessModifier getFieldAccess(Field methodDef)
+	private static XStubUtil getFieldAccess(Field methodDef)
 	{
-		if(isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Public))
+		if(StubToStringUtil.isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Public))
 		{
-			return AccessModifier.PUBLIC;
+			return XStubUtil.PUBLIC;
 		}
-		else if(isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Private))
+		else if(StubToStringUtil.isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Private))
 		{
-			return AccessModifier.PRIVATE;
+			return XStubUtil.PRIVATE;
 		}
 		else
 		{
-			return AccessModifier.INTERNAL;
+			return XStubUtil.INTERNAL;
 		}
 	}
 
-	private static AccessModifier getMethodAccess(MethodDef methodDef)
+	private static XStubUtil getMethodAccess(MethodDef methodDef)
 	{
-		if(isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Public))
+		if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Public))
 		{
-			return AccessModifier.PUBLIC;
+			return XStubUtil.PUBLIC;
 		}
-		else if(isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Private))
+		else if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Private))
 		{
-			return AccessModifier.PRIVATE;
+			return XStubUtil.PRIVATE;
 		}
 		else
 		{
-			return AccessModifier.INTERNAL;
+			return XStubUtil.INTERNAL;
 		}
 	}
 
@@ -543,24 +544,24 @@ public class StubToStringBuilder
 		}
 		else
 		{
-			if(isSet(methodDef.getFlags(), MethodAttributes.Abstract))
+			if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.Abstract))
 			{
 				builder.append("abstract ");
 				canHaveBody = false;
 			}
 
-			if(isSet(methodDef.getFlags(), MethodAttributes.Static))
+			if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.Static))
 			{
 				builder.append("static ");
 			}
 
-			if(isSet(methodDef.getFlags(), MethodAttributes.Virtual))
+			if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.Virtual))
 			{
 				builder.append("virtual ");
 			}
 		}
 
-		if(isSet(methodDef.getFlags(), MethodAttributes.Final))
+		if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.Final))
 		{
 			//builder.append("final "); //TODO [VISTALL] final  ? maybe sealed ?
 		}
@@ -575,7 +576,7 @@ public class StubToStringBuilder
 			if(!accessor)
 			{
 				boolean operator = false;
-				if(isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
+				if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 				{
 					if(SPECIAL_METHOD_NAMES.containsKey(name))
 					{
@@ -590,11 +591,11 @@ public class StubToStringBuilder
 					parameterType = methodDef.getSignature().getReturnType().getInnerType();
 
 					// name is first parameter type
-					name = TypeToStringBuilder.typeToString(methodDef.getSignature().getParameters()[0].getInnerType(), typeDef, methodDef);
+					name = TypeSignatureStubBuilder.typeToString(methodDef.getSignature().getParameters()[0].getInnerType(), typeDef, methodDef);
 				}
 				else
 				{
-					builder.append(TypeToStringBuilder.typeToString(methodDef.getSignature().getReturnType().getInnerType(), typeDef, methodDef));
+					builder.append(TypeSignatureStubBuilder.typeToString(methodDef.getSignature().getReturnType().getInnerType(), typeDef, methodDef));
 				}
 
 				builder.append(" ");
@@ -614,7 +615,7 @@ public class StubToStringBuilder
 			if(parameterType != null)
 			{
 				builder.append("(");
-				builder.append(TypeToStringBuilder.typeToString(parameterType, typeDef, methodDef));
+				builder.append(TypeSignatureStubBuilder.typeToString(parameterType, typeDef, methodDef));
 				builder.append(" p)");
 
 				if(!methodDef.getGenericParams().isEmpty())
@@ -660,23 +661,22 @@ public class StubToStringBuilder
 		}
 	}
 
-	private static void processParameterList(final TypeDef typeDef, final MethodDef methodDef, final ParameterSignature[] owner,
-			final boolean extension, StringBuilder builder)
+	private static void processParameterList(
+			final TypeDef typeDef, final MethodDef methodDef, final ParameterSignature[] owner, final boolean extension, StringBuilder builder)
 	{
 		String text = StringUtil.join(owner, new Function<ParameterSignature, String>()
 		{
 			@Override
 			public String fun(ParameterSignature parameterSignature)
 			{
-				return
-						getParameterText(parameterSignature, typeDef, methodDef, extension, ArrayUtil.indexOf(owner, parameterSignature));
+				return getParameterText(parameterSignature, typeDef, methodDef, extension, ArrayUtil.indexOf(owner, parameterSignature));
 			}
 		}, ", ");
 		builder.append("(").append(text).append(")");
 	}
 
-	private static String getParameterText(ParameterSignature parameterSignature, final TypeDef typeDef, final MethodDef methodDef,
-			boolean extension, int index)
+	private static String getParameterText(
+			ParameterSignature parameterSignature, final TypeDef typeDef, final MethodDef methodDef, boolean extension, int index)
 	{
 		TypeSignature signature = parameterSignature;
 		if(signature.getType() == 0)
@@ -707,7 +707,7 @@ public class StubToStringBuilder
 			signature = parameterSignature.getInnerType();
 		}
 
-		p.append(TypeToStringBuilder.typeToString(signature, typeDef, methodDef));
+		p.append(TypeSignatureStubBuilder.typeToString(signature, typeDef, methodDef));
 		p.append(" ");
 		p.append(toValidName(parameterInfo.getName()));
 
@@ -742,15 +742,15 @@ public class StubToStringBuilder
 		}
 		else if(signature == TypeSignature.I2)
 		{
-			return wrap(value).getShort();
+			return StubToStringUtil.wrap(value).getShort();
 		}
 		else if(signature == TypeSignature.I4)
 		{
-			return wrap(value).getInt();
+			return StubToStringUtil.wrap(value).getInt();
 		}
 		else if(signature == TypeSignature.I8)
 		{
-			return wrap(value).getLong();
+			return StubToStringUtil.wrap(value).getLong();
 		}
 		else if(signature == TypeSignature.U1)
 		{
@@ -758,11 +758,11 @@ public class StubToStringBuilder
 		}
 		else if(signature == TypeSignature.U2)
 		{
-			return wrap(value).getShort() & 0xFFFF;
+			return StubToStringUtil.wrap(value).getShort() & 0xFFFF;
 		}
 		else if(signature == TypeSignature.U4)
 		{
-			return wrap(value).getInt() & 0xFFFFFFFFL;
+			return StubToStringUtil.wrap(value).getInt() & 0xFFFFFFFFL;
 		}
 		else if(signature == TypeSignature.U8)
 		{
@@ -770,15 +770,15 @@ public class StubToStringBuilder
 		}
 		else if(signature == TypeSignature.CHAR)
 		{
-			return StringUtil.SINGLE_QUOTER.fun(String.valueOf(wrap(value).getChar()));
+			return StringUtil.SINGLE_QUOTER.fun(String.valueOf(StubToStringUtil.wrap(value).getChar()));
 		}
 		else if(signature == TypeSignature.R4)
 		{
-			return wrap(value).getFloat();
+			return StubToStringUtil.wrap(value).getFloat();
 		}
 		else if(signature == TypeSignature.R8)
 		{
-			return wrap(value).getDouble();
+			return StubToStringUtil.wrap(value).getDouble();
 		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{
@@ -790,10 +790,10 @@ public class StubToStringBuilder
 				{
 					for(Field field : ((TypeDef) valueType).getFields())
 					{
-						if(isSet(field.getFlags(), FieldAttributes.Static) &&
+						if(StubToStringUtil.isSet(field.getFlags(), FieldAttributes.Static) &&
 								field.getDefaultValue() != null && Arrays.equals(field.getDefaultValue(), value))
 						{
-							return TypeToStringBuilder.toStringFromDefRefSpec(valueType, typeDef, methodDef) + "." + field.getName();
+							return TypeSignatureStubBuilder.toStringFromDefRefSpec(valueType, typeDef, methodDef) + "." + field.getName();
 						}
 					}
 				}
@@ -804,23 +804,16 @@ public class StubToStringBuilder
 				signature.getType() == SignatureConstants.ELEMENT_TYPE_CLASS ||
 				signature.getType() == SignatureConstants.ELEMENT_TYPE_SZARRAY)
 		{
-			if(wrap(value).getInt() == 0)
+			if(StubToStringUtil.wrap(value).getInt() == 0)
 			{
 				return "null";
 			}
 		}
 
-		LOGGER.error(signature + " " + typeDef.getFullName() + "#" + (methodDef == null ? null : methodDef.getName()) + "(). Array: " + Arrays
+		XStubBuilder.LOGGER.error(signature + " " + typeDef.getFullName() + "#" + (methodDef == null ? null : methodDef.getName()) + "(). Array: " + Arrays
 				.toString(value));
 
 		return StringUtil.QUOTER.fun("error");
-	}
-
-	private static ByteBuffer wrap(byte[] data)
-	{
-		ByteBuffer byteBuffer = ByteBuffer.wrap(data);
-		byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-		return byteBuffer;
 	}
 
 	/**
@@ -850,8 +843,8 @@ public class StubToStringBuilder
 		builder.append("<").append(text).append(">");
 	}
 
-	private static void processGenericConstraintList(GenericParamOwner owner, StringBuilder builder, final TypeDef typeDef,
-			final MethodDef methodDef)
+	private static void processGenericConstraintList(
+			GenericParamOwner owner, StringBuilder builder, final TypeDef typeDef, final MethodDef methodDef)
 	{
 		List<GenericParamDef> genericParams = owner.getGenericParams();
 		if(genericParams.isEmpty())
@@ -899,7 +892,7 @@ public class StubToStringBuilder
 
 		for(Object o : paramDef.getConstraints())
 		{
-			String e = TypeToStringBuilder.toStringFromDefRefSpec(o, typeDef, methodDef);
+			String e = TypeSignatureStubBuilder.toStringFromDefRefSpec(o, typeDef, methodDef);
 			if(e.equals("System.ValueType"))
 			{
 				e = "struct";
@@ -907,16 +900,6 @@ public class StubToStringBuilder
 			list.add(e);
 		}
 		return list;
-	}
-
-	private static boolean isSet(long value, int mod)
-	{
-		return (value & mod) == mod;
-	}
-
-	private static boolean isSet(long value, int mod, int v)
-	{
-		return (value & mod) == v;
 	}
 
 	@Nullable
@@ -928,297 +911,6 @@ public class StubToStringBuilder
 		}
 
 		return new StubBlock("namespace " + namespace, null, BRACES);
-	}
-
-	private static Object[][] ourMethodImplAttributes = {
-			{
-					MethodImplAttributes.ManagedMask,
-					MethodImplAttributes.Unmanaged,
-					"Unmanaged"
-			},
-			{
-					MethodImplAttributes.ForwardRef,
-					MethodImplAttributes.ForwardRef,
-					"ForwardRef"
-			},
-			{
-					MethodImplAttributes.PreserveSig,
-					MethodImplAttributes.PreserveSig,
-					"PreserveSig"
-			},
-			{
-					MethodImplAttributes.InternalCall,
-					MethodImplAttributes.InternalCall,
-					"InternalCall"
-			},
-			{
-					MethodImplAttributes.Synchronized,
-					MethodImplAttributes.Synchronized,
-					"Synchronized"
-			},
-			{
-					MethodImplAttributes.NoInlining,
-					MethodImplAttributes.NoInlining,
-					"NoInlining"
-			},
-			{
-					MethodImplAttributes.NoOptimization,
-					MethodImplAttributes.NoOptimization,
-					"NoOptimization"
-			},
-			{
-					MethodImplAttributes.MaxMethodImplVal,
-					MethodImplAttributes.MaxMethodImplVal,
-					"NoOptimization"
-			},
-	};
-
-	static class ProcessAttributesCallback
-	{
-		public boolean extension;
-	}
-
-	private static List<LineStubBlock> processAttributes(CustomAttributeOwner owner, TypeDef typeDef, MethodDef methodDef, String forceTarget,
-			ProcessAttributesCallback callback)
-	{
-		CustomAttribute[] customAttributes = owner.getCustomAttributes();
-		if(customAttributes.length == 0)
-		{
-			return Collections.emptyList();
-		}
-
-		val list = new ArrayList<LineStubBlock>();
-		for(CustomAttribute customAttribute : customAttributes)
-		{
-			MethodDefOrRef constructor = customAttribute.getConstructor();
-			String type = TypeToStringBuilder.toStringFromDefRefSpec(constructor.getParent(), typeDef, methodDef);
-			if(Comparing.equal(type, "System.Runtime.CompilerServices.ExtensionAttribute"))
-			{
-				if(callback != null)
-				{
-					callback.extension = true;
-				}
-				continue;
-			}
-
-			StringBuilder builder = new StringBuilder();
-			builder.append("[");
-			if(forceTarget != null)
-			{
-				builder.append(forceTarget);
-				builder.append(": ");
-			}
-			if(type.endsWith("Attribute"))
-			{
-				type = type.substring(0, type.length() - 9);
-			}
-			builder.append(type);
-			String value = processAttributeValue(customAttribute, typeDef, methodDef);
-			if(!value.isEmpty())
-			{
-				builder.append("(");
-				builder.append(value);
-				builder.append(")");
-			}
-			builder.append("]");
-
-			list.add(new LineStubBlock(builder));
-		}
-
-		if(owner instanceof TypeDef)
-		{
-			if((((TypeDef) owner).getFlags() & TypeAttributes.Serializable) == TypeAttributes.Serializable)
-			{
-				list.add(new LineStubBlock("[System.Serializable]"));
-			}
-		}
-		else if(owner instanceof MethodDef)
-		{
-			List<String> attributeValues = new ArrayList<String>();
-			int implFlags = ((MethodDef) owner).getImplFlags();
-			for(Object[] methodImplAttribute : ourMethodImplAttributes)
-			{
-				int mask = (Integer) methodImplAttribute[0];
-				int value = (Integer) methodImplAttribute[1];
-				String field = (String) methodImplAttribute[2];
-
-				if((implFlags & mask) == value)
-				{
-					attributeValues.add(field);
-				}
-			}
-
-			if(!attributeValues.isEmpty())
-			{
-				String val = StringUtil.join(attributeValues, new Function<String, String>()
-				{
-					@Override
-					public String fun(String s)
-					{
-						return "System.Reflection.MethodImplAttributes." + s;
-					}
-				}, " | ");
-				list.add(new LineStubBlock("[System.Runtime.CompilerServices.MethodImpl(" + val + ")]"));
-			}
-		}
-
-		return list;
-	}
-
-	private static String processAttributeValue(@NotNull CustomAttribute customAttribute, TypeDef typeDef, MethodDef methodDef)
-	{
-		byte[] signature = customAttribute.getSignature();
-		if(signature.length == 0)
-		{
-			return "";
-		}
-		edu.arizona.cs.mbel.ByteBuffer byteBuffer = new edu.arizona.cs.mbel.ByteBuffer(signature);
-		if(byteBuffer.getShort() != 1)
-		{
-			throw new IllegalArgumentException("Not one");
-		}
-
-		ParameterSignature[] parameterSignatures;
-		MethodDefOrRef constructor = customAttribute.getConstructor();
-		if(constructor instanceof MethodDef)
-		{
-			parameterSignatures = ((MethodDef) constructor).getSignature().getParameters();
-		}
-		else if(constructor instanceof MethodRef)
-		{
-			parameterSignatures = ((MethodRef) constructor).getCallsiteSignature().getParameters();
-		}
-		else
-		{
-			throw new IllegalArgumentException(constructor.getClass().getName());
-		}
-
-		List<String> appender = new ArrayList<String>();
-		for(ParameterSignature parameterSignature : parameterSignatures)
-		{
-			TypeSignature innerType = parameterSignature.getInnerType();
-			assert innerType != null;
-
-			appender.add(getValueOfAttributeFromBlob(typeDef, methodDef, byteBuffer, innerType));
-		}
-
-		if(byteBuffer.canRead())
-		{
-			int named = byteBuffer.getShort();
-			if(named != 0)
-			{
-				/*if(named < Byte.MAX_VALUE)
-				{
-					System.out.println("error");
-					named = 0;
-				}
-				for(int i = 0; i < named; i++)
-				{
-					int kind = byteBuffer.get();
-					TypeSignature typeSignature = TypeSignatureParser.parse(byteBuffer, null);
-					String name = getUtf8(byteBuffer);
-					System.out.println(name);
-				}  */
-				/*
-				var kind = ReadByte ();
-			var type = ReadCustomAttributeFieldOrPropType ();
-			var name = ReadUTF8String ();
-
-			Collection<CustomAttributeNamedArgument> container;
-			switch (kind) {
-			case 0x53:
-				container = GetCustomAttributeNamedArgumentCollection (ref fields);
-				break;
-			case 0x54:
-				container = GetCustomAttributeNamedArgumentCollection (ref properties);
-				break;
-			default:
-				throw new NotSupportedException ();
-			} */
-			}
-		}
-		return StringUtil.join(appender, ", ");
-	}
-
-	private static String getValueOfAttributeFromBlob(TypeDef typeDef, MethodDef methodDef, edu.arizona.cs.mbel.ByteBuffer byteBuffer,
-			TypeSignature innerType)
-	{
-		if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_SZARRAY)
-		{
-			return "arrayError";
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_BOOLEAN)
-		{
-			return String.valueOf(byteBuffer.get() == 1);
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_I4)
-		{
-			return String.valueOf(byteBuffer.getInt());
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_U4)
-		{
-			return String.valueOf(byteBuffer.getDWORD());
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
-		{
-			int valueIndex = byteBuffer.getInt();
-
-			ValueTypeSignature valueTypeSignature = (ValueTypeSignature) innerType;
-			AbstractTypeReference valueType = valueTypeSignature.getValueType();
-			if(valueType instanceof TypeDef)
-			{
-				if(((TypeDef) valueType).isEnum())
-				{
-					for(Field field : ((TypeDef) valueType).getFields())
-					{
-						if(isSet(field.getFlags(), FieldAttributes.Static) &&
-								field.getDefaultValue() != null && wrap(field.getDefaultValue()).getInt() == valueIndex)
-						{
-							return TypeToStringBuilder.toStringFromDefRefSpec(valueType, typeDef, methodDef) + "." + field.getName();
-						}
-					}
-				}
-			}
-
-			return "errorELEMENT_TYPE_VALUETYPE";
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_STRING)
-		{
-			return "@" + StringUtil.QUOTER.fun(getUtf8(byteBuffer));
-		}
-		else
-		{
-			return "unknown_type_" + innerType.getType();
-		}
-	}
-
-	private static String getUtf8(edu.arizona.cs.mbel.ByteBuffer byteBuffer)
-	{
-		byte b = byteBuffer.get();
-		if(b == 0xFF)
-		{
-			return "";
-		}
-		else
-		{
-			byteBuffer.back();
-			int size = Signature.readCodedInteger(byteBuffer);
-			if(size == 0)
-			{
-				return "";
-			}
-			else
-			{
-				try
-				{
-					return new String(byteBuffer.get(size), "UTF-8");
-				}
-				catch(UnsupportedEncodingException e)
-				{
-					return "UnsupportedEncodingException:string";
-				}
-			}
-		}
 	}
 
 	@NotNull

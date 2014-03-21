@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import org.consulo.lombok.annotations.Logger;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.StubToStringUtil;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.mbel.TypeSpec;
@@ -36,7 +37,7 @@ import edu.arizona.cs.mbel.signature.XGenericTypeSignature;
  * @since 12.12.13.
  */
 @Logger
-public class TypeToStringBuilder implements SignatureConstants
+public class TypeSignatureStubBuilder implements SignatureConstants
 {
 	public static String typeToString(TypeSignature signature, GenericParamOwner typeDef, GenericParamOwner memberDef)
 	{

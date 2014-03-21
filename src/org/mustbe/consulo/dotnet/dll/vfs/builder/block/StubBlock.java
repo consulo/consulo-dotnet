@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.dll.vfs.builder;
+package org.mustbe.consulo.dotnet.dll.vfs.builder.block;
 
 import java.util.ArrayList;
 import java.util.List;

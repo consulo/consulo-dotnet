@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.dll.vfs.builder;
+package org.mustbe.consulo.dotnet.dll.vfs.builder.util;
 
 /**
  * @author VISTALL
  * @since 13.12.13.
  */
-public enum AccessModifier
+public enum XStubUtil
 {
 	PRIVATE,
 	PUBLIC,

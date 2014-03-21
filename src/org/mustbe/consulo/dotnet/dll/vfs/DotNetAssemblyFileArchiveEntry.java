@@ -23,7 +23,7 @@ import java.io.InputStream;
 import org.apache.commons.lang.ArrayUtils;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.StubToStringBuilder;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.text.CharArrayUtil;
 import edu.arizona.cs.mbel.mbel.AssemblyInfo;
@@ -46,7 +46,7 @@ public class DotNetAssemblyFileArchiveEntry implements DotNetFileArchiveEntry
 		@Override
 		protected byte[] compute()
 		{
-			StubToStringBuilder builder = new StubToStringBuilder(myAssemblyInfo);
+			XStubBuilder builder = new XStubBuilder(myAssemblyInfo);
 			char[] chars = CharArrayUtil.fromSequence(builder.gen());
 			try
 			{
