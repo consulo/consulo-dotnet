@@ -16,16 +16,9 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.util.text.CharArrayUtil;
 import edu.arizona.cs.mbel.mbel.AssemblyInfo;
 
 /**
@@ -33,74 +26,22 @@ import edu.arizona.cs.mbel.mbel.AssemblyInfo;
  * @since 11.12.13.
  */
 @Logger
-public class DotNetAssemblyFileArchiveEntry implements DotNetFileArchiveEntry
+public class DotNetAssemblyFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 {
 	public static final String AssemblyInfo = "AssemblyInfo.cs";
 
 	private final AssemblyInfo myAssemblyInfo;
-	private long myLastModified;
-
-	private NotNullLazyValue<byte[]> myArray = new NotNullLazyValue<byte[]>()
-	{
-		@NotNull
-		@Override
-		protected byte[] compute()
-		{
-			XStubBuilder builder = new XStubBuilder(myAssemblyInfo);
-			char[] chars = CharArrayUtil.fromSequence(builder.gen());
-			try
-			{
-				return CharArrayUtil.toByteArray(chars);
-			}
-			catch(IOException e)
-			{
-				LOGGER.error(e);
-				return ArrayUtils.EMPTY_BYTE_ARRAY;
-			}
-		}
-	};
 
 	public DotNetAssemblyFileArchiveEntry(edu.arizona.cs.mbel.mbel.AssemblyInfo assemblyInfo, long lastModified)
 	{
+		super(AssemblyInfo, lastModified);
 		myAssemblyInfo = assemblyInfo;
-		myLastModified = lastModified;
 	}
 
-	@Override
-	public String getName()
-	{
-		return AssemblyInfo;
-	}
-
-	@Override
-	public long getSize()
-	{
-		return myArray.getValue().length;
-	}
-
-	@Override
-	public long getTime()
-	{
-		return myLastModified;
-	}
-
-	@Override
-	public boolean isDirectory()
-	{
-		return false;
-	}
-
-	@Override
 	@NotNull
-	public String getNamespace()
-	{
-		return "";
-	}
-
 	@Override
-	@NotNull
-	public InputStream createInputStream()
+	public XStubBuilder createBuilder()
 	{
-		return new ByteArrayInputStream(myArray.getValue());
+		return new XStubBuilder(myAssemblyInfo);
 	}
 }

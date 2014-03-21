@@ -28,11 +28,10 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.dll.vfs.DotNetBaseFileArchiveEntry;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.StubToStringUtil;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiBundle;
@@ -105,15 +104,15 @@ public class XStubBuilder
 
 	private List<StubBlock> myRoots = new SmartList<StubBlock>();
 
-	public XStubBuilder(DotNetBaseFileArchiveEntry archiveEntry)
+	public XStubBuilder(String namespace, List<TypeDef> typeDefs)
 	{
-		StubBlock namespaceBlock = processNamespace(archiveEntry.getNamespace());
+		StubBlock namespaceBlock = processNamespace(namespace);
 		if(namespaceBlock != null)
 		{
 			myRoots.add(namespaceBlock);
 		}
 
-		for(TypeDef typeDef : archiveEntry.getTypeDefs())
+		for(TypeDef typeDef : typeDefs)
 		{
 			StubBlock typeBlock = processType(typeDef);
 			if(namespaceBlock != null)

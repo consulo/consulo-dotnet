@@ -16,18 +16,12 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
-import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.SmartList;
-import com.intellij.util.text.CharArrayUtil;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 
 /**
@@ -35,37 +29,14 @@ import edu.arizona.cs.mbel.mbel.TypeDef;
  * @since 11.12.13.
  */
 @Logger
-public class DotNetBaseFileArchiveEntry implements DotNetFileArchiveEntry
+public class DotNetBaseFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 {
 	private final List<TypeDef> myTypeDefs;
-	private final String myName;
-	private long myLastModified;
-
-	private NotNullLazyValue<byte[]> myArray = new NotNullLazyValue<byte[]>()
-	{
-		@NotNull
-		@Override
-		protected byte[] compute()
-		{
-			XStubBuilder builder = new XStubBuilder(DotNetBaseFileArchiveEntry.this);
-			char[] chars = CharArrayUtil.fromSequence(builder.gen());
-			try
-			{
-				return CharArrayUtil.toByteArray(chars);
-			}
-			catch(IOException e)
-			{
-				DotNetBaseFileArchiveEntry.LOGGER.error(e);
-				return ArrayUtils.EMPTY_BYTE_ARRAY;
-			}
-		}
-	};
 
 	public DotNetBaseFileArchiveEntry(TypeDef typeDef, String name, long lastModified)
 	{
+		super(name, lastModified);
 		myTypeDefs = new SmartList<TypeDef>(typeDef);
-		myName = name;
-		myLastModified = lastModified;
 	}
 
 	public void addTypeDef(@NotNull TypeDef typeDef)
@@ -80,30 +51,6 @@ public class DotNetBaseFileArchiveEntry implements DotNetFileArchiveEntry
 	}
 
 	@Override
-	public String getName()
-	{
-		return myName;
-	}
-
-	@Override
-	public long getSize()
-	{
-		return myArray.getValue().length;
-	}
-
-	@Override
-	public long getTime()
-	{
-		return myLastModified;
-	}
-
-	@Override
-	public boolean isDirectory()
-	{
-		return false;
-	}
-
-	@Override
 	@NotNull
 	public String getNamespace()
 	{
@@ -111,10 +58,10 @@ public class DotNetBaseFileArchiveEntry implements DotNetFileArchiveEntry
 		return myTypeDefs.get(0).getNamespace();
 	}
 
-	@Override
 	@NotNull
-	public InputStream createInputStream()
+	@Override
+	public XStubBuilder createBuilder()
 	{
-		return new ByteArrayInputStream(myArray.getValue());
+		return new XStubBuilder(getNamespace(), myTypeDefs);
 	}
 }

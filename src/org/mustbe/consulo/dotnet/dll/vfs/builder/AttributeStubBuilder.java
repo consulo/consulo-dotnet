@@ -85,7 +85,11 @@ public class AttributeStubBuilder
 	}
 
 	public static List<LineStubBlock> processAttributes(
-			CustomAttributeOwner owner, TypeDef typeDef, MethodDef methodDef, String forceTarget, ProcessAttributesCallback callback)
+			CustomAttributeOwner owner,
+			TypeDef typeDef,
+			MethodDef methodDef,
+			String forceTarget,
+			ProcessAttributesCallback callback)
 	{
 		CustomAttribute[] customAttributes = owner.getCustomAttributes();
 		if(customAttributes.length == 0)
@@ -247,7 +251,10 @@ public class AttributeStubBuilder
 	}
 
 	private static String getValueOfAttributeFromBlob(
-			TypeDef typeDef, MethodDef methodDef, ByteBuffer byteBuffer, TypeSignature innerType)
+			TypeDef typeDef,
+			MethodDef methodDef,
+			ByteBuffer byteBuffer,
+			TypeSignature innerType)
 	{
 		if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_SZARRAY)
 		{
@@ -267,8 +274,9 @@ public class AttributeStubBuilder
 		}
 		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_CLASS)
 		{
-			long dword = byteBuffer.getDWORD();
-			return String.valueOf("typeOf_" + dword);
+			//TypeSignature parse = TypeSignatureParser.parse(byteBuffer, null);
+
+			return String.valueOf("typeOf(unsupported)");
 		}
 		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{

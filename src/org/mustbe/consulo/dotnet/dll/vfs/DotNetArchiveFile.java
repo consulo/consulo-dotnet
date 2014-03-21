@@ -33,7 +33,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;
 import edu.arizona.cs.mbel.mbel.AssemblyInfo;
-import edu.arizona.cs.mbel.mbel.Module;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import lombok.val;
 
@@ -43,14 +43,14 @@ import lombok.val;
  */
 public class DotNetArchiveFile implements ArchiveFile
 {
-	private Module myModule;
+	private ModuleParser myModuleParser;
 	private long myLastModified;
 
 	private final List<ArchiveEntry> myArchiveEntries;
 
-	public DotNetArchiveFile(Module module, long l)
+	public DotNetArchiveFile(ModuleParser moduleParser, long l)
 	{
-		myModule = module;
+		myModuleParser = moduleParser;
 		myLastModified = l;
 		myArchiveEntries = map();
 	}
@@ -58,7 +58,7 @@ public class DotNetArchiveFile implements ArchiveFile
 	@NotNull
 	private List<ArchiveEntry> map()
 	{
-		val typeDefs = myModule.getTypeDefs();
+		val typeDefs = myModuleParser.getTypeDefs();
 		val fileList = new ArrayList<DotNetFileArchiveEntry>();
 
 		val duplicateMap = new HashMap<String, DotNetBaseFileArchiveEntry>();
@@ -97,7 +97,7 @@ public class DotNetArchiveFile implements ArchiveFile
 			}
 		}
 
-		AssemblyInfo assemblyInfo = myModule.getAssemblyInfo();
+		AssemblyInfo assemblyInfo = myModuleParser.getAssemblyInfo();
 		if(assemblyInfo != null)
 		{
 			fileList.add(new DotNetAssemblyFileArchiveEntry(assemblyInfo, myLastModified));

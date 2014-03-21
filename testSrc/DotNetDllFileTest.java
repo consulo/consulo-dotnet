@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import org.mustbe.consulo.dotnet.dll.vfs.DotNetArchiveFile;
 import com.intellij.openapi.vfs.ArchiveEntry;
-import edu.arizona.cs.mbel.mbel.Module;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 
 /**
@@ -17,9 +16,7 @@ public class DotNetDllFileTest
 	{
 		ModuleParser moduleParser = new ModuleParser(new FileInputStream("C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\System.Core.dll"));
 
-		Module module = moduleParser.parseModule();
-
-		DotNetArchiveFile archiveFile = new DotNetArchiveFile(module, 0);
+		DotNetArchiveFile archiveFile = new DotNetArchiveFile(moduleParser, 0);
 
 		Iterator<? extends ArchiveEntry> entries = archiveFile.entries();
 		while(entries.hasNext())
