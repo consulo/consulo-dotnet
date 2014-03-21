@@ -23,7 +23,6 @@ package edu.arizona.cs.mbel.signature;
 import java.util.Vector;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -133,33 +132,4 @@ public class FieldSignature extends StandAloneSignature implements CallingConven
 	{
 		return type;
 	}
-
-	/**
-	 * Writes this signature out to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(FIELD);
-		for(Object customMod : customMods)
-		{
-			((CustomModifierSignature) customMod).emit(buffer, emitter);
-		}
-		type.emit(buffer, emitter);
-	}
-
-/*
-   public void output(){
-      System.out.print("FieldSignature[FIELD");
-      for (int i=0;i<customMods.size();i++){
-         System.out.print(',');
-         ((CustomModifierSignature)customMods.get(i)).output();
-      }
-
-      System.out.print(",");
-      type.output();
-      System.out.print("]");
-   }
-*/
 }

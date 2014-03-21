@@ -24,7 +24,6 @@ import java.io.InputStream;
 
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.MSILInputStream;
-import edu.arizona.cs.mbel.instructions.LoadableType;
 import edu.arizona.cs.mbel.metadata.GenericTable;
 import edu.arizona.cs.mbel.metadata.TableConstants;
 import edu.arizona.cs.mbel.parse.MSILParseException;
@@ -38,7 +37,7 @@ import edu.arizona.cs.mbel.signature.*;
  *
  * @author Michael Stepp
  */
-public class ModuleParser
+public class ModuleParser extends BaseCustomAttributeOwner
 {
 	private PEModule pe_module;
 	private GenericTable[][] tables;
@@ -60,7 +59,6 @@ public class ModuleParser
 	private TypeGroup group = null;
 	private ManifestResource[] mresources = null;
 	private AssemblyInfo assemblyInfo = null;
-	private Module module = null;
 	private MemberRef[] memberRefs = null;
 	private EntryPoint entryPoint = null;
 	private AssemblyRefInfo[] assemblyRefs = null;
@@ -68,6 +66,12 @@ public class ModuleParser
 	private ModuleRefInfo[] moduleRefs = null;
 	private DeclSecurity[] declSecurities = null;
 	private StandAloneSignature[] standAloneSigs = null;
+
+	private int Generation;
+	private String Name;
+	private byte[] Mvid;                // GUID
+	private byte[] EncID;               // GUID
+	private byte[] EncBaseID;           // GUID
 
 	/**
 	 * Makes a ClassParser that uses the given input stream.
@@ -79,6 +83,7 @@ public class ModuleParser
 		pe_module = new PEModule(in);
 		tc = pe_module.metadata.parseTableConstants(in);
 		tables = tc.getTables();
+		parse();
 	}
 
 	/**
@@ -101,41 +106,6 @@ public class ModuleParser
 		if(type == TableConstants.StandAloneSig)
 		{
 			return (MethodSignature) standAloneSigs[(int) tokrow - 1];
-		}
-		return null;
-	}
-
-	/**
-	 * Returns an implementer of LoadableType given the token from a ldtoken instruction
-	 */
-	public LoadableType getLoadableType(long token)
-	{
-		long type = (token >> 24) & 0xFFL;
-		long tokrow = (token & 0xFFFFFFL);
-
-		if(type == TableConstants.TypeDef)
-		{
-			return typeDefs[(int) tokrow - 1];
-		}
-		else if(type == TableConstants.TypeRef)
-		{
-			return typeRefs[(int) tokrow - 1];
-		}
-		else if(type == TableConstants.TypeSpec)
-		{
-			return typeSpecs[(int) tokrow - 1];
-		}
-		else if(type == TableConstants.Method)
-		{
-			return methods[(int) tokrow - 1];
-		}
-		else if(type == TableConstants.Field)
-		{
-			return fields[(int) tokrow - 1];
-		}
-		else if(type == TableConstants.MemberRef)
-		{
-			return memberRefs[(int) tokrow - 1];
 		}
 		return null;
 	}
@@ -264,7 +234,7 @@ public class ModuleParser
 	 * It will parse the various structures in the most convenient order possible, all of which
 	 * are either accessible from the Module, or are unimportant and discarded.
 	 */
-	public Module parseModule() throws IOException, MSILParseException
+	private void parse() throws IOException, MSILParseException
 	{
 		// REMEMBER!!! ALL TOKEN VALUES ARE 1-BASED INDICES!!!!
 
@@ -312,16 +282,11 @@ public class ModuleParser
 		buildGenericParamConstraints();
 		buildEntryPoint();
 		buildStandAloneSigs();
-		//TODO [VISTALL] disabled. Code bodies we dont needed
-		// buildMethodBodies();
 
 		setCustomAttributes();
 
-		buildVTableFixups();
 
 		pe_module.bufferSections(in);
-
-		return module;
 	}
    
    /*
@@ -496,8 +461,6 @@ public class ModuleParser
 			long flags = ass.getConstant("Flags").longValue();
 
 			assemblyInfo = new AssemblyInfo(hash, maj, min, bn, rn, flags, publicKey, name, culture);
-
-			module.setAssemblyInfo(assemblyInfo);
 		}
 	}
 
@@ -537,11 +500,10 @@ public class ModuleParser
 			byte[] encid = mod.getGUID("EncID");
 			byte[] encbaseid = mod.getGUID("EncBaseID");
 
-			module = new Module(pe_module, name);
-			module.setGeneration(generation);
-			module.setMvidGUID(mvid);
-			module.setEncIdGUID(encid);
-			module.setEncBaseIdGUID(encbaseid);
+			Generation = generation;
+			Mvid = mvid;
+			EncID = encid;
+			EncBaseID = encbaseid;
 		}
 	}
 
@@ -570,12 +532,10 @@ public class ModuleParser
 		if(type == TableConstants.Method)
 		{
 			entryPoint = new EntryPoint(methods[(int) getMethod(tokrow) - 1]);
-			module.setEntryPoint(entryPoint);
 		}
 		else if(type == TableConstants.File)
 		{
 			entryPoint = new EntryPoint(fileReferences[(int) tokrow - 1]);
-			module.setEntryPoint(entryPoint);
 		}
 	}
 
@@ -593,7 +553,6 @@ public class ModuleParser
 				byte[] hashValue = table[i].getBlob("HashValue");
 
 				fileReferences[i] = new FileReference(flags, name, hashValue);
-				module.addFileReference(fileReferences[i]);
 			}
 		}
 	}
@@ -638,8 +597,6 @@ public class ModuleParser
 						mresources[i] = res;
 					}
 				}
-
-				module.addManifestResource(mresources[i]);
 			}
 		}
 	}
@@ -858,9 +815,7 @@ public class ModuleParser
 				long flags = row[i].getConstant("Flags").longValue();
 
 				typeDefs[i] = new TypeDef(ns, name, flags);
-				module.addTypeDef(typeDefs[i]);
 			}
-			// still need to add fields and methods, and extends field
 		}
 	}
 
@@ -1547,25 +1502,6 @@ public class ModuleParser
 		return array[(int) (index - 1)];
 	}
 
-	private void buildMethodBodies() throws IOException, MSILParseException
-	{
-		// build method bodies (last!)
-		if(tables[TableConstants.Method] != null)
-		{
-			GenericTable[] row = tables[TableConstants.Method];
-			for(int i = 0; i < row.length; i++)
-			{
-				long implflags = row[i].getConstant("ImplFlags").intValue();
-				long RVA = row[i].getConstant("RVA").longValue();
-				if(RVA != 0 && (implflags & MethodDef.CodeTypeMask) == MethodDef.IL)
-				{
-					in.seek(in.getFilePointer(RVA));
-					MethodBody body = new MethodBody(this);
-					methods[i].setMethodBody(body);
-				}
-			}
-		}
-	}
 
 	private void setCustomAttributes()
 	{
@@ -1625,7 +1561,7 @@ public class ModuleParser
 				}
 				else if(token[0] == TableConstants.Module)
 				{
-					module.addCustomAttribute(ca);
+					addCustomAttribute(ca);
 				}
 				else if(token[0] == TableConstants.DeclSecurity)
 				{
@@ -1675,23 +1611,13 @@ public class ModuleParser
 		}
 	}
 
-	private void buildVTableFixups() throws IOException
+	public AssemblyInfo getAssemblyInfo()
 	{
-		long VirtualAddress = pe_module.cliHeader.VTableFixups.VirtualAddress;
-		long Size = pe_module.cliHeader.VTableFixups.Size;
+		return assemblyInfo;
+	}
 
-		// parse VTableFixups
-		if(VirtualAddress != 0 && Size != 0)
-		{
-			long length = Size / VTableFixup.STRUCT_SIZE;
-			long fp = in.getFilePointer(VirtualAddress);
-			VTableFixup temp = null;
-			for(int i = 0; i < length; i++)
-			{
-				in.seek(fp + i * VTableFixup.STRUCT_SIZE);
-				temp = new VTableFixup(this);
-				module.addVTableFixup(temp);
-			}
-		}
+	public TypeDef[] getTypeDefs()
+	{
+		return typeDefs;
 	}
 }

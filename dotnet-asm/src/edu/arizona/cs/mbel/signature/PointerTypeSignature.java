@@ -23,7 +23,6 @@ package edu.arizona.cs.mbel.signature;
 import java.util.Vector;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -171,36 +170,4 @@ public class PointerTypeSignature extends TypeSpecSignature
 		}
 		return sigs;
 	}
-
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(ELEMENT_TYPE_PTR);
-		for(Object customMod : customMods)
-		{
-			((CustomModifierSignature) customMod).emit(buffer, emitter);
-		}
-		if(type == null)
-		{
-			buffer.put(ELEMENT_TYPE_VOID);
-		}
-		else
-		{
-			type.emit(buffer, emitter);
-		}
-	}
-
-/*   
-   public void output(){
-      System.out.print("PointerTypeSignature[");
-      for (int i=0;i<customMods.size();i++){
-         ((CustomModifierSignature)customMods.get(i)).output();
-         System.out.print(",");
-      }
-      if (type==null)
-         System.out.print("VOID");
-      else
-         type.output();
-      System.out.print("]");
-   }
-*/
 }

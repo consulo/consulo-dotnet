@@ -2,7 +2,6 @@ package dontnet.asm.test;
 
 import java.io.FileInputStream;
 
-import edu.arizona.cs.mbel.mbel.Module;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 
 /**
@@ -16,8 +15,7 @@ public class Test
 		ModuleParser moduleParser = new ModuleParser(new FileInputStream("C:\\Users\\VISTALL\\Documents\\visual studio " +
 				"2010\\Projects\\ConsoleApplication1\\ConsoleApplication1\\bin\\Debug\\ConsoleApplication1.dll"));
 
-		Module module = moduleParser.parseModule();
 
-		System.out.println(module);
+		System.out.println(moduleParser);
 	}
 }

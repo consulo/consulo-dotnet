@@ -21,7 +21,6 @@
 package edu.arizona.cs.mbel.signature;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -83,18 +82,4 @@ public class FunctionPointerTypeSignature extends TypeSpecSignature
 	{
 		return methodSig;
 	}
-
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(ELEMENT_TYPE_FNPTR);
-		methodSig.emit(buffer, emitter);
-	}
-   
-/*
-   public void output(){
-      System.out.print("FunctionPointerTypeSignature[");
-      methodSig.output();
-      System.out.print("]");
-   }
-*/
 }

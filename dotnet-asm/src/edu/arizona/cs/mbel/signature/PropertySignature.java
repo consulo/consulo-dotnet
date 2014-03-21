@@ -23,7 +23,6 @@ package edu.arizona.cs.mbel.signature;
 import java.util.Vector;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -176,32 +175,4 @@ public class PropertySignature extends Signature implements CallingConvention
 		index = Math.min(index, params.size());
 		params.insertElementAt(param, index);
 	}
-
-	/**
-	 * Write out this signature to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(PROPERTY);
-		buffer.put(encodeInteger(params.size()));
-		type.emit(buffer, emitter);
-		for(Object param : params)
-		{
-			((ParameterSignature) param).emit(buffer, emitter);
-		}
-	}
-
-/*
-   public void output(){
-      System.out.print("PropertySignature[PROPERTY," + params.size() + ",");
-      type.output();
-      for (int i=0;i<params.size();i++){
-         System.out.print(",");
-         ((ParameterSignature)params.get(i)).output();
-      }
-      System.out.print("]");
-   }
-*/
 }

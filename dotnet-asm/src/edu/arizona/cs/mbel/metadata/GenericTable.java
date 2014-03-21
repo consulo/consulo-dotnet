@@ -26,9 +26,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.intellij.openapi.util.text.StringUtil;
-import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.MSILInputStream;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 
 /**
  * This class is used as a generic construct to hold the data from any arbitrary metadata table.
@@ -292,77 +290,6 @@ public class GenericTable
 
 		data.put(fieldName, obj);
 		return true;
-	}
-   
-   /*
-   public void output(){
-      System.out.print(name + "Table:{");
-      if (data!=null)
-      for (int i=0;i<fieldNames.length;i++){
-         System.out.print("\n  "+fieldNames[i] + " = ");
-         if (data==null)
-            System.out.print(types[i]);
-         else{
-            Object obj = data.get(fieldNames[i]);
-            if (obj instanceof byte[])
-               System.out.print(BlobStream.blobToString((byte[])obj));
-            else if (obj instanceof String)
-               System.out.print("\"" + obj + "\"");
-            else 
-               System.out.print(obj);
-         }
-      }
-      System.out.print("\n}");
-   }
-   */
-
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		for(int i = 0; i < fieldNames.length; i++)
-		{
-			if(types[i].startsWith("1"))
-			{
-				Number n = (Number) data.get(fieldNames[i]);
-				buffer.put(n.intValue());
-			}
-			else if(types[i].startsWith("2"))
-			{
-				Number n = (Number) data.get(fieldNames[i]);
-				buffer.putWORD(n.intValue());
-			}
-			else if(types[i].startsWith("4"))
-			{
-				Number n = (Number) data.get(fieldNames[i]);
-				buffer.putDWORD(n.longValue());
-			}
-			else if(types[i].startsWith("S"))
-			{
-				Number n = (Number) data.get(fieldNames[i]);
-				emitter.putStringsToken(buffer, n);
-			}
-			else if(types[i].startsWith("B"))
-			{
-				Number n = (Number) data.get(fieldNames[i]);
-				emitter.putBlobToken(buffer, n);
-			}
-			else if(types[i].startsWith("G"))
-			{
-				Number n = (Number) data.get(fieldNames[i]);
-				emitter.putGUIDToken(buffer, n);
-			}
-			else if(types[i].startsWith("T"))
-			{
-				int type = Integer.parseInt(types[i].substring(2));
-				Number n = (Number) data.get(fieldNames[i]);
-				emitter.putTableIndex(buffer, type, n);
-			}
-			else if(types[i].startsWith("C"))
-			{
-				int type = Integer.parseInt(types[i].substring(2));
-				Number n = (Number) data.get(fieldNames[i]);
-				emitter.putCodedIndex(buffer, type, n);
-			}
-		}
 	}
 
 	public boolean equals(Object o)

@@ -50,7 +50,7 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	////////////////////////////////////
 	private long Flags;
 	//////////////////////////
-	private Module parent;
+
 	private ClassLayout classLayout;
 	private Object superClass;
 	private DeclSecurity security;
@@ -159,19 +159,6 @@ public class TypeDef extends TypeRef implements HasSecurity, TypeAttributes, Gen
 	public void setFlags(long flags)
 	{
 		Flags = flags;
-	}
-
-	/**
-	 * Returns the Module in which this TypeDef is defined
-	 */
-	public Module getParent()
-	{
-		return parent;
-	}
-
-	protected void setParent(Module mod)
-	{
-		parent = mod;
 	}
 
 	/**

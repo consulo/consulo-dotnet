@@ -23,7 +23,6 @@ package edu.arizona.cs.mbel.signature;
 import java.util.Vector;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -131,30 +130,4 @@ public class LocalVarList extends StandAloneSignature implements CallingConventi
 	{
 		localVars.remove(v);
 	}
-
-	/**
-	 * Write out this signature to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(LOCAL_SIG);
-		buffer.put(encodeInteger(localVars.size()));
-		for(Object localVar : localVars)
-		{
-			((LocalVar) localVar).emit(buffer, emitter);
-		}
-	}
-
-/*
-   public void output(){
-      System.out.print("LocalVarListSignature[LOCAL_SIG," + localVars.size());
-      for (int i=0;i<localVars.size();i++){
-         System.out.print(",");
-         ((LocalVar)localVars.get(i)).output();
-      }
-      System.out.print("]");
-   }
-*/
 }

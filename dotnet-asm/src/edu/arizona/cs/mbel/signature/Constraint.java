@@ -21,7 +21,6 @@
 package edu.arizona.cs.mbel.signature;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 
 /**
  * This class decsribes a constraint on a local var.
@@ -55,16 +54,6 @@ public class Constraint extends TypeSignature
 			return null;
 		}
 		return blob;
-	}
-
-	/**
-	 * Writes this signature out to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(elementType);
 	}
 
 	public String toString()

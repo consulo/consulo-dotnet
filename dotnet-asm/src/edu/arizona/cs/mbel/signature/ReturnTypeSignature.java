@@ -24,7 +24,6 @@ import java.util.Vector;
 
 import org.jetbrains.annotations.Nullable;
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -195,56 +194,4 @@ public class ReturnTypeSignature extends Signature implements InnerTypeOwner
 
 		return sigs;
 	}
-
-	/**
-	 * Write this signature out to the given buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		for(Object customMod : customMods)
-		{
-			((CustomModifierSignature) customMod).emit(buffer, emitter);
-		}
-		if(elementType == ELEMENT_TYPE_BYREF)
-		{
-			buffer.put(ELEMENT_TYPE_BYREF);
-			type.emit(buffer, emitter);
-		}
-		else if(elementType == ELEMENT_TYPE_TYPEONLY)
-		{
-			type.emit(buffer, emitter);
-		}
-		else if(elementType == ELEMENT_TYPE_TYPEDBYREF)
-		{
-			buffer.put(ELEMENT_TYPE_TYPEDBYREF);
-		}
-		else if(elementType == ELEMENT_TYPE_VOID)
-		{
-			buffer.put(ELEMENT_TYPE_VOID);
-		}
-	}
-
-/*
-   public void output(){
-      System.out.print("ReturnTypeSignature[");
-      for (int i=0;i<customMods.size();i++){
-         ((CustomModifierSignature)customMods.get(i)).output();
-         System.out.print(',');
-      }
-
-      if (elementType==ELEMENT_TYPE_TYPEONLY){
-         type.output();
-      }else if (elementType == ELEMENT_TYPE_BYREF){
-         System.out.print("BYREF,");
-         type.output();
-      }else if (elementType == ELEMENT_TYPE_TYPEDBYREF){
-         System.out.print("TYPEDBYREF");
-      }else{
-         System.out.print("VOID");
-      }
-      System.out.print("]");
-   }
-*/
 }

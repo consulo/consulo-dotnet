@@ -23,7 +23,6 @@ package edu.arizona.cs.mbel.signature;
 import java.util.Vector;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -328,49 +327,4 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 	{
 		returnType = rType;
 	}
-
-	/**
-	 * Write this signature out to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(flags);
-		byte[] count = encodeInteger(params.size());
-		buffer.put(count);
-		returnType.emit(buffer, emitter);
-		for(int i = 0; i < params.size(); i++)
-		{
-			if(i == requiredParamCount)
-			{
-				buffer.put(ELEMENT_TYPE_SENTINEL);
-			}
-			((ParameterSignature) params.get(i)).emit(buffer, emitter);
-		}
-	}
-   
-/*
-   public void output(){
-      System.out.print("MethodSignature[");
-      if ((flags & HASTHIS)!=0){
-         System.out.print("HASTHIS,");
-         if ((flags&EXPLICITTHIS)!=0)
-            System.out.print("EXPLICITTHIS,");
-      }
-
-      String[] CALLCONV = {"DEFAULT,", "C,", "STDCALL,", "THISCALL,", "FASTCALL,", "VARARG,"};
-      System.out.print(CALLCONV[flags&0x7]);
-      System.out.print(params.size() + ",");
-
-      returnType.output();
-      for (int i=0;i<params.size();i++){
-         if (i==requiredParamCount)
-            System.out.print(",SENTINEL");
-         System.out.print(",");
-         ((ParameterSignature)params.get(i)).output();
-      }
-      System.out.print("]");
-   }
-*/
 }

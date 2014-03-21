@@ -25,15 +25,9 @@ import java.util.List;
 
 import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
-import edu.arizona.cs.mbel.instructions.CALL;
-import edu.arizona.cs.mbel.instructions.InstructionList;
-import edu.arizona.cs.mbel.instructions.LDARG;
-import edu.arizona.cs.mbel.instructions.RET;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
 import edu.arizona.cs.mbel.signature.MethodImplAttributes;
 import edu.arizona.cs.mbel.signature.MethodSignature;
-import edu.arizona.cs.mbel.signature.ReturnTypeSignature;
-import edu.arizona.cs.mbel.signature.SignatureException;
 
 /**
  * This class represents a .NET Method. Not all methods will have a MethodBody. A method may
@@ -48,7 +42,6 @@ public class MethodDef extends MethodDefOrRef implements MethodAttributes,
 
 	private int ImplFlags;
 	private int Flags;
-	private MethodBody body;
 	private MethodSemantics semantics;
 	private ImplementationMap implMap;
 	private DeclSecurity security;
@@ -56,39 +49,6 @@ public class MethodDef extends MethodDefOrRef implements MethodAttributes,
 	private long methodRVA = -1L;
 
 	private List<GenericParamDef> myGenericParamDefs = Collections.emptyList();
-
-	/**
-	 * This method will create a default constructor for any object. The constructor
-	 * takes no arguments, has no local vars, and does nothing more than call Object.ctor().
-	 * Of course, this should only be used by classes that directly extend System.Object.
-	 * The access modifier for this Method will be Public.
-	 */
-	public static MethodDef makeDefaultConstructor()
-	{
-		MethodDef ctor = null;
-		MethodRef super_ctor = null;
-		try
-		{
-			MethodSignature callsitesig = new MethodSignature(new ReturnTypeSignature(ReturnTypeSignature.ELEMENT_TYPE_VOID), null);
-			super_ctor = new MethodRef(".ctor", AssemblyTypeRef.OBJECT, callsitesig);
-
-			ctor = new MethodDef(".ctor", 0, (MethodDef.Public | MethodDef.HideBySig | MethodDef.SpecialName | MethodDef.RTSpecialName),
-					new MethodSignature(new ReturnTypeSignature(ReturnTypeSignature.ELEMENT_TYPE_VOID), null));
-		}
-		catch(SignatureException se)
-		{
-		}
-
-		MethodBody body = new MethodBody(true, 1, null);
-		ctor.setMethodBody(body);
-
-		InstructionList ilist = body.getInstructionList();
-		ilist.append(new LDARG(LDARG.LDARG_0));
-		ilist.append(new CALL(super_ctor));
-		ilist.append(new RET());
-
-		return ctor;
-	}
 
 	/**
 	 * Makes a Method with the given name, implementation flags, method flags, signature, and parent type
@@ -234,23 +194,6 @@ public class MethodDef extends MethodDefOrRef implements MethodAttributes,
 			return;
 		}
 		super.setParent(ref);
-	}
-
-	/**
-	 * Returns the Method body of this Method (if any)
-	 */
-	public MethodBody getMethodBody()
-	{
-		return body;
-	}
-
-	/**
-	 * Sets the methodbody of this method.
-	 * Passing null removes the method body.
-	 */
-	public void setMethodBody(MethodBody mb)
-	{
-		body = mb;
 	}
 
 	/**

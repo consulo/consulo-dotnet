@@ -21,7 +21,6 @@
 package edu.arizona.cs.mbel.signature;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 
 /**
  * Superclass of all signature types. This inheritance hierarchy is just for
@@ -31,13 +30,6 @@ import edu.arizona.cs.mbel.emit.ClassEmitter;
  */
 public abstract class Signature implements SignatureConstants
 {
-	/**
-	 * Write this signature in binary format to the given buffer
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public abstract void emit(ByteBuffer buffer, ClassEmitter emitter);
-
 	/**
 	 * Parses a PackedLen coded integer from the given buffer
 	 *

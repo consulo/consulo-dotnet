@@ -21,7 +21,6 @@
 package edu.arizona.cs.mbel.signature;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -101,24 +100,4 @@ public class ArrayTypeSignature extends TypeSpecSignature
 	{
 		return arrayShape;
 	}
-
-	/**
-	 * Writes this signature to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(ELEMENT_TYPE_ARRAY);
-		elementTypeSignature.emit(buffer, emitter);
-		arrayShape.emit(buffer, emitter);
-	}
-   
-/*
-   public void output(){
-      System.out.print("ArrayTypeSignature[");
-      elementTypeSignature.output();
-      System.out.print(", "+arrayShape+"]");
-   }
-*/
 }

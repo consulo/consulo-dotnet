@@ -21,7 +21,6 @@
 package edu.arizona.cs.mbel.signature;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 import edu.arizona.cs.mbel.metadata.TableConstants;
@@ -92,14 +91,6 @@ public class ValueTypeSignature extends TypeSignature
 		return blob;
 	}
 
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(ELEMENT_TYPE_VALUETYPE);
-		long token = emitter.getTypeToken(valueType);
-		byte[] data = makeTypeDefOrRefEncoded((int) ((token >> 24) & 0xFF), (int) (token & 0xFFFFFF));
-		buffer.put(data);
-	}
-
 	/**
 	 * Getter method for the ValueType reference
 	 */
@@ -107,12 +98,4 @@ public class ValueTypeSignature extends TypeSignature
 	{
 		return valueType;
 	}
-   
-/*
-   public void output(){
-      System.out.print("ValueTypeSignature[ValueType=");
-      valueType.output();
-      System.out.print("]");
-   }
-*/
 }

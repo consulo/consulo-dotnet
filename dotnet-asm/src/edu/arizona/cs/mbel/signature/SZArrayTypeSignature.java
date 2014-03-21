@@ -23,7 +23,6 @@ package edu.arizona.cs.mbel.signature;
 import java.util.Vector;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -135,26 +134,4 @@ public class SZArrayTypeSignature extends TypeSpecSignature
 	{
 		return elementTypeSignature;
 	}
-
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(ELEMENT_TYPE_SZARRAY);
-		for(Object customMod : customMods)
-		{
-			((CustomModifierSignature) customMod).emit(buffer, emitter);
-		}
-		elementTypeSignature.emit(buffer, emitter);
-	}
-   
-/*
-   public void output(){
-      System.out.print("SZArrayTypeSignature[");
-      for (int i=0;i<customMods.size();i++){
-         ((CustomModifierSignature)customMods.get(i)).output();
-         System.out.print(',');
-      }
-      elementTypeSignature.output();
-      System.out.print("]");
-   }
-*/
 }

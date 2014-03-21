@@ -20,9 +20,6 @@
 
 package edu.arizona.cs.mbel.signature;
 
-import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
-
 /**
  * This class represents the description of variables types
  * that are used in the mbel Fields. The primitive types are singletons
@@ -73,22 +70,6 @@ public class TypeSignature extends Signature
 	{
 		return elementType;
 	}
-
-	/**
-	 * Writes this type back to its binary equivalent, into a ByteBuffer.
-	 *
-	 * @param buffer the buffer into which the signature will be written
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(elementType);
-	}
-
-/*
-   public void output(){
-      System.out.print(this);
-   }
-*/
 
 	public String toString()
 	{

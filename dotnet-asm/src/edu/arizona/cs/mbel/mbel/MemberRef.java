@@ -19,7 +19,6 @@
 
 package edu.arizona.cs.mbel.mbel;
 
-import edu.arizona.cs.mbel.instructions.LoadableType;
 import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
 
 /**
@@ -29,7 +28,7 @@ import edu.arizona.cs.mbel.signature.BaseCustomAttributeOwner;
  *
  * @author Michael Stepp
  */
-public abstract class MemberRef extends BaseCustomAttributeOwner implements LoadableType
+public abstract class MemberRef extends BaseCustomAttributeOwner
 {
 	private long MemberRefRID = -1L;
 	private String Name; // field or method name

@@ -21,7 +21,6 @@
 package edu.arizona.cs.mbel.signature;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 
 /**
  * This class describes the shape of a general array
@@ -127,26 +126,6 @@ public class ArrayShapeSignature extends Signature
 	public int[] getLowerBounds()
 	{
 		return loBounds;
-	}
-
-	/**
-	 * Writes this signature out to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to read from
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(encodeInteger(rank));
-		buffer.put(encodeInteger(sizes.length));
-		for(int size : sizes)
-		{
-			buffer.put(encodeInteger(size));
-		}
-		buffer.put(encodeInteger(loBounds.length));
-		for(int loBound : loBounds)
-		{
-			buffer.put(encodeInteger(loBound));
-		}
 	}
 
 	public String toString()

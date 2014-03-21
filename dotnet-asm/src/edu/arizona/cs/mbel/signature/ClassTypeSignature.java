@@ -21,7 +21,6 @@
 package edu.arizona.cs.mbel.signature;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 import edu.arizona.cs.mbel.metadata.TableConstants;
@@ -98,20 +97,4 @@ public class ClassTypeSignature extends TypeSignature
 	{
 		return classType;
 	}
-
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(ELEMENT_TYPE_CLASS);
-		long token = emitter.getTypeToken(classType);
-		byte[] data = makeTypeDefOrRefEncoded((int) ((token >> 24) & 0xFF), (int) (token & 0xFFFFFF));
-		buffer.put(data);
-	}
-   
-/*
-   public void output(){
-      System.out.print("ClassTypeSignature[");
-      classType.output();
-      System.out.print("]");
-   }
-*/
 }

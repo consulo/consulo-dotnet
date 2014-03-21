@@ -21,7 +21,6 @@
 package edu.arizona.cs.mbel.signature;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 
 /**
  * This class describes .NET field marshalling information
@@ -179,29 +178,5 @@ public class MarshalSignature extends Signature implements MarshalSignatureConst
 	public int numElements()
 	{
 		return numElem;
-	}
-
-	/**
-	 * Write this signature to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		if(isArray())
-		{
-			buffer.put(type);
-			buffer.put(arrayElemType);
-			byte[] code = encodeInteger(paramNum);
-			buffer.put(code);
-			code = encodeInteger(elemMult);
-			buffer.put(code);
-			code = encodeInteger(numElem);
-			buffer.put(code);
-		}
-		else
-		{
-			buffer.put(type);
-		}
 	}
 }

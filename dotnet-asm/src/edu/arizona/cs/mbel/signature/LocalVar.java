@@ -23,7 +23,6 @@ package edu.arizona.cs.mbel.signature;
 import java.util.Vector;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
 /**
@@ -152,35 +151,4 @@ public class LocalVar extends Signature
 	{
 		return type;
 	}
-
-	/**
-	 * Writes this signature to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		for(Object constraint : constraints)
-		{
-			((Constraint) constraint).emit(buffer, emitter);
-		}
-		if(byref)
-		{
-			buffer.put(ELEMENT_TYPE_BYREF);
-		}
-		type.emit(buffer, emitter);
-	}
-   
-/*
-   public void output(){
-      System.out.print("LocalVar[");
-      for (int i=0;i<constraints.size();i++){
-         System.out.print(constraints.get(i) + ",");
-      }
-      if (byref)
-         System.out.print("BYREF,");
-      type.output();
-      System.out.print("]");
-   }
-*/
 }

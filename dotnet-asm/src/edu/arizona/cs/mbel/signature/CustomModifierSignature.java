@@ -21,7 +21,6 @@
 package edu.arizona.cs.mbel.signature;
 
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.emit.ClassEmitter;
 import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 import edu.arizona.cs.mbel.metadata.TableConstants;
@@ -101,30 +100,4 @@ public class CustomModifierSignature extends TypeSignature
 	{
 		return type;
 	}
-
-	/**
-	 * Writes this signature out to a buffer in raw binary form
-	 *
-	 * @param buffer the buffer to write to
-	 */
-	public void emit(ByteBuffer buffer, ClassEmitter emitter)
-	{
-		buffer.put(elementType);
-		long token = emitter.getTypeToken(type);
-		byte[] data = makeTypeDefOrRefEncoded((int) ((token >> 24) & 0xFF), (int) (token & 0xFFFFFF));
-		buffer.put(data);
-	}
-
-/*
-   public void output(){
-      System.out.print("CustomModifierSignature[");
-      if (elementType==ELEMENT_TYPE_CMOD_REQD){
-         System.out.print("CMOD_REQD,");
-      }else{
-         System.out.print("CMOD_OPT,");
-      }
-      type.output();
-      System.out.print("]");
-   }
-*/
 }
