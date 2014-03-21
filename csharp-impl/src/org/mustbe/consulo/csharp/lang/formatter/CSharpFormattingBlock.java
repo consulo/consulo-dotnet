@@ -16,89 +16,42 @@
 
 package org.mustbe.consulo.csharp.lang.formatter;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTemplateTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
-import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
-import com.intellij.formatting.Spacing;
 import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
+import com.intellij.formatting.templateLanguages.DataLanguageBlockWrapper;
+import com.intellij.formatting.templateLanguages.TemplateLanguageBlock;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.formatter.common.AbstractBlock;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.codeInsight.CommentUtilCore;
 import lombok.val;
 
 /**
  * @author VISTALL
  * @since 15.12.13.
  */
-public class CSharpFormattingBlock extends AbstractBlock implements CSharpElements, CSharpTokens, CSharpTokenSets
+public class CSharpFormattingBlock extends TemplateLanguageBlock implements CSharpElements, CSharpTokens, CSharpTokenSets
 {
-	public CSharpFormattingBlock(@NotNull ASTNode node)
+	public CSharpFormattingBlock(
+			@NotNull CSharpFormattingModelBuilder blockFactory,
+			@NotNull CodeStyleSettings settings,
+			@NotNull ASTNode node,
+			@Nullable List<DataLanguageBlockWrapper> foreignChildren)
 	{
-		super(node, null, null);
-	}
-
-	@Override
-	protected List<Block> buildChildren()
-	{
-		val psi = getNode().getPsi();
-		val elementType = getNode().getElementType();
-		val list = new ArrayList<Block>();
-
-		addBlocks(list);
-
-		return list.isEmpty() ? Collections.<Block>emptyList() : list;
-	}
-
-	private void addBlocks(ArrayList<Block> list)
-	{
-		ASTNode[] children = getNode().getChildren(null);
-		for(val it : children)
-		{
-			IElementType elementType = it.getElementType();
-			if(elementType == WHITE_SPACE || it.getPsi() instanceof PsiErrorElement)
-			{
-				continue;
-			}
-
-			if(KEYWORDS.contains(elementType) ||
-					elementType == IDENTIFIER ||
-					elementType == REFERENCE_EXPRESSION ||
-					elementType == MODIFIER_LIST ||
-					elementType == LBRACE ||
-					elementType == RBRACE ||
-					CSharpTokenSets.LITERALS.contains(elementType) ||
-					CSharpTokenSets.COMMENTS.contains(elementType))
-			{
-				if(elementType == MODIFIER_LIST)
-				{
-					ASTNode[] c = it.getChildren(MODIFIERS);
-					if(c.length == 0)
-					{
-						continue;
-					}
-				}
-
-				list.add(new CSharpFormattingLeafBlock(it));
-			}
-			else
-			{
-				list.add(new CSharpFormattingBlock(it));
-			}
-		}
+		super(blockFactory, settings, node, foreignChildren);
 	}
 
 	@Nullable
@@ -131,7 +84,6 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 				elementType == PROPERTY_DECLARATION ||
 				elementType == XXX_ACCESSOR ||
 				elementType == EVENT_DECLARATION ||
-			//	elementType == MACRO_BLOCK ||
 				elementType == USING_NAMESPACE_LIST ||
 				elementType == CONSTRUCTOR_DECLARATION)
 		{
@@ -145,6 +97,10 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 		else if(elementType == LBRACE || elementType == RBRACE)
 		{
 			return Indent.getNoneIndent();
+		}
+		else if(CommentUtilCore.isComment(getNode()))
+		{
+			return Indent.getNormalIndent();
 		}
 		else if(elementType == MODIFIER_LIST)
 		{
@@ -183,23 +139,17 @@ public class CSharpFormattingBlock extends AbstractBlock implements CSharpElemen
 	@Override
 	protected Indent getChildIndent()
 	{
-		if(getNode().getElementType() == CSharpStubElements.FILE)
+		val elementType = getNode().getElementType();
+		if(elementType == CSharpStubElements.FILE)
 		{
 			return Indent.getNoneIndent();
 		}
 		return Indent.getNormalIndent();
 	}
 
-	@Nullable
 	@Override
-	public Spacing getSpacing(@Nullable Block block, @NotNull Block block2)
+	protected IElementType getTemplateTextElementType()
 	{
-		return null;
-	}
-
-	@Override
-	public boolean isLeaf()
-	{
-		return false;
+		return CSharpTemplateTokens.MACRO_FRAGMENT;
 	}
 }

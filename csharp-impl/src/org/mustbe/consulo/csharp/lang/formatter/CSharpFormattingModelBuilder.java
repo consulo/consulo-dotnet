@@ -16,42 +16,32 @@
 
 package org.mustbe.consulo.csharp.lang.formatter;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.CSharpLanguage;
-import com.intellij.formatting.FormattingModel;
-import com.intellij.formatting.FormattingModelBuilder;
-import com.intellij.formatting.FormattingModelProvider;
+import com.intellij.formatting.Alignment;
+import com.intellij.formatting.Wrap;
+import com.intellij.formatting.templateLanguages.DataLanguageBlockWrapper;
+import com.intellij.formatting.templateLanguages.TemplateLanguageBlock;
+import com.intellij.formatting.templateLanguages.TemplateLanguageFormattingModelBuilder;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 
 /**
  * @author VISTALL
  * @since 15.12.13.
  */
-public class CSharpFormattingModelBuilder implements FormattingModelBuilder
+public class CSharpFormattingModelBuilder extends TemplateLanguageFormattingModelBuilder
 {
-	@NotNull
 	@Override
-	public FormattingModel createModel(PsiElement psiElement, CodeStyleSettings codeStyleSettings)
+	public TemplateLanguageBlock createTemplateLanguageBlock(
+			@NotNull ASTNode node,
+			@Nullable Wrap wrap,
+			@Nullable Alignment alignment,
+			@Nullable List<DataLanguageBlockWrapper> foreignChildren,
+			@NotNull CodeStyleSettings codeStyleSettings)
 	{
-		ASTNode node = psiElement.getNode();
-		assert node != null;
-		PsiFile containingFile = psiElement.getContainingFile().getViewProvider().getPsi(CSharpLanguage.INSTANCE);
-		assert containingFile != null : psiElement.getContainingFile();
-		ASTNode fileNode = containingFile.getNode();
-		assert fileNode != null;
-		CSharpFormattingBlock block = new CSharpFormattingBlock(fileNode);
-		return FormattingModelProvider.createFormattingModelForPsiFile(containingFile, block, codeStyleSettings);
-	}
-
-	@Nullable
-	@Override
-	public TextRange getRangeAffectingIndent(PsiFile psiFile, int i, ASTNode astNode)
-	{
-		return null;
+		return new CSharpFormattingBlock(this, codeStyleSettings, node, foreignChildren);
 	}
 }
