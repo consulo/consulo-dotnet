@@ -33,6 +33,12 @@ public class CSharpLanguage extends Language
 		super("C#");
 	}
 
+	@Override
+	public boolean isCaseSensitive()
+	{
+		return true;
+	}
+
 	@NotNull
 	@Override
 	protected LanguageVersion[] findVersions()
