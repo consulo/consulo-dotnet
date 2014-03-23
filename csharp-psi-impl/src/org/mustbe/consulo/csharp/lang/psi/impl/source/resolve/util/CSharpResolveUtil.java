@@ -118,7 +118,6 @@ public class CSharpResolveUtil
 	public static boolean walkChildren(@NotNull final PsiScopeProcessor processor, @NotNull final PsiElement entrance,
 			@NotNull final PsiElement sender, @Nullable PsiElement maxScope, @NotNull ResolveState state)
 	{
-		state = state.put(SELF_FILE, sender.getContainingFile());
 		if(entrance instanceof DotNetTypeDeclaration)
 		{
 			DotNetGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
@@ -146,7 +145,7 @@ public class CSharpResolveUtil
 					if(resolve != null && resolve != entrance)
 					{
 						DotNetGenericExtractor genericExtractor = dotNetTypeRef.getGenericExtractor(resolve, entrance);
-						ResolveState newState = state.put(EXTRACTOR_KEY, genericExtractor);
+						ResolveState newState = ResolveState.initial().put(EXTRACTOR_KEY, genericExtractor);
 
 						if(!walkChildren(processor, resolve, sender, maxScope, newState))
 						{

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
@@ -28,6 +29,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -107,7 +109,7 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 		CSharpTypeStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.getType() == CSharpTypeStub.INTERFACE;
+			return stub.isInterface();
 		}
 		return findChildByType(CSharpTokens.INTERFACE_KEYWORD) != null;
 	}
@@ -118,7 +120,7 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 		CSharpTypeStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.getType() == CSharpTypeStub.STRUCT;
+			return stub.isStruct();
 		}
 		return findChildByType(CSharpTokens.STRUCT_KEYWORD) != null;
 	}
@@ -129,7 +131,7 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 		CSharpTypeStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.getType() == CSharpTypeStub.ENUM;
+			return stub.isEnum();
 		}
 		return findChildByType(CSharpTokens.ENUM_KEYWORD) != null;
 	}
@@ -187,5 +189,28 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	public boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep)
 	{
 		return CSharpInheritUtil.isInheritor(this, other, deep);
+	}
+
+	@Override
+	public boolean haveExtensions()
+	{
+		CSharpTypeStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.hasExtensions();
+		}
+
+		for(DotNetQualifiedElement qualifiedElement : getMembers())
+		{
+			if(qualifiedElement instanceof CSharpMethodDeclaration)
+			{
+				DotNetParameter[] parameters = ((CSharpMethodDeclaration) qualifiedElement).getParameters();
+				if(parameters.length > 0 && parameters[0].hasModifier(CSharpModifier.THIS))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

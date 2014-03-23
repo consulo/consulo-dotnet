@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.BitUtil;
 import com.intellij.util.io.StringRef;
 
 /**
@@ -28,41 +29,51 @@ import com.intellij.util.io.StringRef;
  */
 public class CSharpTypeStub extends MemberStub<CSharpTypeDeclaration>
 {
-	public static final byte TYPE = 0;
-	public static final byte STRUCT = 1;
-	public static final byte INTERFACE = 1;
-	public static final byte ENUM = 2;
+	public static final int HAVE_EXTENSIONS = 1 << 0;
+	public static final int INTERFACE = 1 << 1;
+	public static final int STRUCT = 1 << 2;
+	public static final int ENUM = 1 << 3;
 
-	private final byte myType;
-
-	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef parentQName, int modifierMask, byte type)
+	public CSharpTypeStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef parentQName, int modifierMask, int otherMask)
 	{
-		super(parent, CSharpStubElements.TYPE_DECLARATION, name, parentQName, modifierMask, 0);
-		myType = type;
+		super(parent, CSharpStubElements.TYPE_DECLARATION, name, parentQName, modifierMask, otherMask);
 	}
 
-	public byte getType()
+	public static int getOtherModifiers(CSharpTypeDeclaration typeDeclaration)
 	{
-		return myType;
-	}
-
-	public static byte getType(CSharpTypeDeclaration typeDeclaration)
-	{
+		int mask = 0;
 		if(typeDeclaration.isInterface())
 		{
-			return INTERFACE;
+			mask |= INTERFACE;
 		}
 		else if(typeDeclaration.isEnum())
 		{
-			return ENUM;
+			mask |= ENUM;
 		}
 		else if(typeDeclaration.isStruct())
 		{
-			return STRUCT;
+			mask |= STRUCT;
 		}
-		else
-		{
-			return TYPE;
-		}
+		return mask;
+	}
+
+	public boolean isInterface()
+	{
+		return BitUtil.isSet(getOtherModifierMask(), INTERFACE);
+	}
+
+	public boolean isEnum()
+	{
+		return BitUtil.isSet(getOtherModifierMask(), ENUM);
+	}
+
+	public boolean isStruct()
+	{
+		return BitUtil.isSet(getOtherModifierMask(), STRUCT);
+	}
+
+	public boolean hasExtensions()
+	{
+		return BitUtil.isSet(getOtherModifierMask(), HAVE_EXTENSIONS);
 	}
 }

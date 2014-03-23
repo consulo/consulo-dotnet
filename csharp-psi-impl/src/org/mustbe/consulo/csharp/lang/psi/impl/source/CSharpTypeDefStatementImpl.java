@@ -134,6 +134,7 @@ public class CSharpTypeDefStatementImpl extends CSharpStubElementImpl<CSharpType
 
 		DotNetGenericExtractor extractor = dotNetTypeRef.getGenericExtractor(resolve, this);
 
-		return resolve.processDeclarations(processor, state.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor), lastParent, place);
+		ResolveState initial = ResolveState.initial();
+		return resolve.processDeclarations(processor, initial.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor), lastParent, place);
 	}
 }

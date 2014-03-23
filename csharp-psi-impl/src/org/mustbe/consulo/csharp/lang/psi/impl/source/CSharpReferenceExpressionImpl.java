@@ -410,6 +410,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}
 				ResolveState resolveState = ResolveState.initial();
 				resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, dotNetTypeRef.getGenericExtractor(psiElement1, element));
+				resolveState = resolveState.put(CSharpResolveUtil.SELF_FILE, element.getContainingFile());
 
 				p = new MemberResolveScopeProcessor(Conditions.and(condition, new Condition<PsiNamedElement>()
 				{
@@ -419,6 +420,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 						return psiNamedElement instanceof CSharpFieldDeclaration || psiNamedElement instanceof CSharpPropertyDeclaration;
 					}
 				}), named);
+
 				CSharpResolveUtil.walkChildren(p, psiElement1, element, null, resolveState);
 				return p.getElements();
 			case LABEL:
@@ -503,10 +505,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		MemberResolveScopeProcessor p = new MemberResolveScopeProcessor(condition, incompleteCode);
 
 		ResolveState resolveState = ResolveState.initial();
-		if(extractor != DotNetGenericExtractor.EMPTY)
-		{
-			resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
-		}
+		resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
+		resolveState = resolveState.put(CSharpResolveUtil.SELF_FILE, element.getContainingFile());
 
 		if(target != element)
 		{

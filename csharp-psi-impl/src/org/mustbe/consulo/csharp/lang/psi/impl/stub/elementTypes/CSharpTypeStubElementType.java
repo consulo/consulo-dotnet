@@ -63,8 +63,8 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 		StringRef name = StringRef.fromNullableString(cSharpTypeDeclaration.getName());
 		StringRef parentQName = StringRef.fromNullableString(cSharpTypeDeclaration.getPresentableParentQName());
 		int modifierMask = MemberStub.getModifierMask(cSharpTypeDeclaration);
-		byte type = CSharpTypeStub.getType(cSharpTypeDeclaration);
-		return new CSharpTypeStub(stubElement, name, parentQName, modifierMask, type);
+		int otherModifierMask = CSharpTypeStub.getOtherModifiers(cSharpTypeDeclaration);
+		return new CSharpTypeStub(stubElement, name, parentQName, modifierMask, otherModifierMask);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 		stubOutputStream.writeName(cSharpTypeStub.getName());
 		stubOutputStream.writeName(cSharpTypeStub.getParentQName());
 		stubOutputStream.writeInt(cSharpTypeStub.getModifierMask());
-		stubOutputStream.writeByte(cSharpTypeStub.getType());
+		stubOutputStream.writeInt(cSharpTypeStub.getOtherModifierMask());
 	}
 
 	@NotNull
@@ -83,8 +83,8 @@ public class CSharpTypeStubElementType extends CSharpAbstractStubElementType<CSh
 		StringRef name = stubInputStream.readName();
 		StringRef parentQName = stubInputStream.readName();
 		int modifierMask = stubInputStream.readInt();
-		byte type = stubInputStream.readByte();
-		return new CSharpTypeStub(stubElement, name, parentQName, modifierMask, type);
+		int otherModifierMask = stubInputStream.readInt();
+		return new CSharpTypeStub(stubElement, name, parentQName, modifierMask, otherModifierMask);
 	}
 
 	@Override
