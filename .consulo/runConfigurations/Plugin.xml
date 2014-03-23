@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Plugin" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin" singleton="true">
-    <option name="VM_PARAMETERS" value="-ea -Xmx1024m -Didea.is.internal=true -XX:MaxPermSize=512m" />
+    <option name="VM_PARAMETERS" value="-ea -Xmx2048m -Didea.is.internal=true -XX:MaxPermSize=715m" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <java-sdk name="1.7" />
     <consulo-sdk name="Consulo 1.SNAPSHOT" />

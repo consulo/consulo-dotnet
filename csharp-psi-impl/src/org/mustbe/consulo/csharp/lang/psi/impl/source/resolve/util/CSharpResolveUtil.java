@@ -56,7 +56,7 @@ public class CSharpResolveUtil
 			return DotNetGenericExtractor.EMPTY;
 		}
 	};
-	public static final Key<PsiFile> SELF_FILE = Key.create("self.file");
+	public static final Key<PsiFile> CONTAINS_FILE = Key.create("contains.file");
 
 	public static boolean treeWalkUp(@NotNull PsiScopeProcessor processor, @NotNull PsiElement entrance, @NotNull PsiElement sender,
 			@Nullable PsiElement maxScope)
@@ -166,7 +166,6 @@ public class CSharpResolveUtil
 					}
 				}
 			}
-			return walkChildren(processor, entrance.getParent(), sender, maxScope, state);
 		}
 		else if(entrance instanceof CSharpNamespaceAsElement)
 		{
@@ -182,7 +181,10 @@ public class CSharpResolveUtil
 			}
 
 			CSharpNamespaceAsElement parentNamespace = new CSharpNamespaceAsElement(entrance.getProject(), pQName, entrance.getResolveScope());
-			return walkChildren(processor, parentNamespace, sender, maxScope, state);
+			if(!walkChildren(processor, parentNamespace, sender, maxScope, state))
+			{
+				return false;
+			}
 		}
 		else if(entrance instanceof DotNetNamespaceDeclaration)
 		{
@@ -193,7 +195,10 @@ public class CSharpResolveUtil
 			}
 			CSharpNamespaceAsElement parentNamespace = new CSharpNamespaceAsElement(entrance.getProject(), presentableQName,
 					entrance.getResolveScope());
-			return walkChildren(processor, parentNamespace, sender, maxScope, state);
+			if(!walkChildren(processor, parentNamespace, sender, maxScope, state))
+			{
+				return false;
+			}
 		}
 		else if(entrance instanceof PsiFile)
 		{
@@ -202,6 +207,7 @@ public class CSharpResolveUtil
 			return walkChildren(processor, parentNamespace, sender, maxScope, state);
 		}
 
-		return true;
+		PsiFile psiFile = state.get(CONTAINS_FILE);
+		return psiFile == null || walkChildren(processor, psiFile, sender, maxScope, state.put(CONTAINS_FILE, psiFile));
 	}
 }
