@@ -224,8 +224,8 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 			FileUtil.appendToFile(tempFile, FileUtil.toSystemDependentName(result.getPath()) + "\n");
 		}
 
-		MSBaseDotNetCompilerOptionsBuilder.LOGGER.warn("Compiler def file: " + tempFile);
-		MSBaseDotNetCompilerOptionsBuilder.LOGGER.warn(FileUtil.loadFile(tempFile));
+		//LOGGER.warn("Compiler def file: " + tempFile);
+		//LOGGER.warn(FileUtil.loadFile(tempFile));
 
 		FileUtil.createParentDirs(new File(outputFile));
 
