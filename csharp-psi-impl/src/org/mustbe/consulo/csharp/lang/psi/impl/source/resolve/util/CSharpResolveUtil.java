@@ -208,6 +208,6 @@ public class CSharpResolveUtil
 		}
 
 		PsiFile psiFile = state.get(CONTAINS_FILE);
-		return psiFile == null || walkChildren(processor, psiFile, sender, maxScope, state.put(CONTAINS_FILE, psiFile));
+		return psiFile == null || walkChildren(processor, psiFile, sender, maxScope, state);
 	}
 }
