@@ -37,7 +37,10 @@ import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.BitUtil;
@@ -182,6 +185,13 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		DotNetStructurableModuleExtension extension = ModuleUtilCore.getExtension(element, DotNetStructurableModuleExtension.class);
 		if(extension != null && !DotNetModuleUtil.isUnderSourceRoot(element))
 		{
+			ProjectFileIndex fileIndex = ProjectRootManager.getInstance(containingFile.getProject()).getFileIndex();
+			VirtualFile virtualFile = containingFile.getVirtualFile();
+			assert virtualFile != null;
+			if(fileIndex.isInLibraryClasses(virtualFile) || fileIndex.isInLibrarySource(virtualFile))
+			{
+				return;
+			}
 			iconDescriptor.addLayerIcon(AllIcons.Nodes.ExcludedFromCompile);
 		}
 
