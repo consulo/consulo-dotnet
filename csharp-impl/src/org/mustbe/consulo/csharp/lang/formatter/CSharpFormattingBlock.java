@@ -73,6 +73,12 @@ public class CSharpFormattingBlock extends TemplateLanguageBlock implements CSha
 	@Override
 	public Indent getIndent()
 	{
+		PsiElement psiElement = getNode().getPsi().getParent();
+		if(psiElement instanceof PsiFile)
+		{
+			return Indent.getNoneIndent();
+		}
+
 		val elementType = getNode().getElementType();
 		if(elementType == NAMESPACE_DECLARATION ||
 				elementType == TYPE_DECLARATION ||
@@ -87,11 +93,6 @@ public class CSharpFormattingBlock extends TemplateLanguageBlock implements CSha
 				elementType == USING_NAMESPACE_LIST ||
 				elementType == CONSTRUCTOR_DECLARATION)
 		{
-			PsiElement psiElement = getNode().getPsi().getParent();
-			if(psiElement instanceof PsiFile)
-			{
-				return Indent.getNoneIndent();
-			}
 			return Indent.getNormalIndent();
 		}
 		else if(elementType == LBRACE || elementType == RBRACE)
