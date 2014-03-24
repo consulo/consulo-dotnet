@@ -16,13 +16,18 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpTypeUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpExpressionWithParameters;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -32,13 +37,13 @@ public class MethodAcceptorImpl
 {
 	private static interface MethodAcceptor
 	{
-		boolean isAccepted(DotNetExpression[] expressions, DotNetParameter[] parameters);
+		boolean isAccepted(@NotNull CSharpExpressionWithParameters scope, DotNetExpression[] expressions, DotNetParameter[] parameters);
 	}
 
 	private static class SimpleMethodAcceptor implements MethodAcceptor
 	{
 		@Override
-		public boolean isAccepted(DotNetExpression[] expressions, DotNetParameter[] parameters)
+		public boolean isAccepted(@NotNull CSharpExpressionWithParameters scope, DotNetExpression[] expressions, DotNetParameter[] parameters)
 		{
 			if(expressions.length != parameters.length)
 			{
@@ -53,7 +58,7 @@ public class MethodAcceptorImpl
 				DotNetTypeRef expressionType = expression.toTypeRef();
 				DotNetTypeRef parameterType = parameter.toTypeRef();
 
-				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, expression))
+				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, scope))
 				{
 					return false;
 				}
@@ -66,7 +71,7 @@ public class MethodAcceptorImpl
 	private static class MethodAcceptorWithDefaultValues implements MethodAcceptor
 	{
 		@Override
-		public boolean isAccepted(DotNetExpression[] expressions, DotNetParameter[] parameters)
+		public boolean isAccepted(@NotNull CSharpExpressionWithParameters scope, DotNetExpression[] expressions, DotNetParameter[] parameters)
 		{
 			if(expressions.length >= parameters.length)
 			{
@@ -92,7 +97,7 @@ public class MethodAcceptorImpl
 				DotNetTypeRef expressionType = expression.toTypeRef();
 				DotNetTypeRef parameterType = parameter.toTypeRef();
 
-				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, expression))
+				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, scope))
 				{
 					return false;
 				}
@@ -102,15 +107,57 @@ public class MethodAcceptorImpl
 		}
 	}
 
-	private static final MethodAcceptor[] ourAcceptors = new MethodAcceptor[] {new SimpleMethodAcceptor(), new MethodAcceptorWithDefaultValues()};
-
-	public static boolean isAccepted(CSharpExpressionWithParameters parameterExpressionsOwner, DotNetParameterListOwner methodDeclaration)
+	private static class MethodAcceptorForExtensions implements MethodAcceptor
 	{
-		DotNetExpression[] parameterExpressions = parameterExpressionsOwner.getParameterExpressions();
+		@Override
+		public boolean isAccepted(@NotNull CSharpExpressionWithParameters scope, DotNetExpression[] expressions, DotNetParameter[] parameters)
+		{
+			if(parameters.length == 0 || !parameters[0].hasModifier(CSharpModifier.THIS))
+			{
+				return false;
+			}
+			if(scope instanceof CSharpMethodCallExpressionImpl)
+			{
+				DotNetExpression callExpression = ((CSharpMethodCallExpressionImpl) scope).getCallExpression();
+				if(callExpression instanceof CSharpReferenceExpressionImpl)
+				{
+					PsiElement qualifier = ((CSharpReferenceExpressionImpl) callExpression).getQualifier();
+					if(!(qualifier instanceof DotNetExpression))
+					{
+						return false;
+					}
+
+					DotNetExpression[] newExpressions = new DotNetExpression[expressions.length + 1];
+					newExpressions[0] = (DotNetExpression) qualifier;
+					System.arraycopy(expressions, 0, newExpressions, 1, expressions.length);
+
+					return MethodAcceptorImpl.isAccepted(new DelegateExpressionWithParameters(scope, newExpressions), parameters);
+				}
+			}
+			return false;
+		}
+	}
+
+	private static final MethodAcceptor[] ourAcceptors = new MethodAcceptor[]{
+			new SimpleMethodAcceptor(),
+			new MethodAcceptorWithDefaultValues(),
+			new MethodAcceptorForExtensions()
+	};
+
+	public static boolean isAccepted(CSharpExpressionWithParameters scope, DotNetParameterListOwner methodDeclaration)
+	{
 		DotNetParameter[] parameters = methodDeclaration.getParameters();
+
+		return isAccepted(scope, parameters);
+	}
+
+	public static boolean isAccepted(CSharpExpressionWithParameters scope, DotNetParameter[] parameters)
+	{
+		DotNetExpression[] parameterExpressions = scope.getParameterExpressions();
+
 		for(MethodAcceptor ourAcceptor : ourAcceptors)
 		{
-			if(ourAcceptor.isAccepted(parameterExpressions, parameters))
+			if(ourAcceptor.isAccepted(scope, parameterExpressions, parameters))
 			{
 				return true;
 			}

@@ -17,13 +17,14 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 
 /**
  * @author VISTALL
  * @since 01.03.14
  */
-public interface CSharpExpressionWithParameters
+public interface CSharpExpressionWithParameters extends DotNetElement
 {
 	@NotNull
 	DotNetExpression[] getParameterExpressions();
