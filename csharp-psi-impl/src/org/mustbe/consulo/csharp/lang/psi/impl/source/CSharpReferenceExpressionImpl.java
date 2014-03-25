@@ -796,16 +796,46 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			kind = ResolveToKind.ANY_MEMBER;
 		}
 
+		val finalKind = kind;
+
 		ResolveResult[] psiElements = collectResults(kind, new Condition<PsiNamedElement>()
 		{
 			@Override
-			public boolean value(PsiNamedElement psiNamedElement)
+			public boolean value(PsiNamedElement e)
 			{
-				return psiNamedElement.getName() != null && !(psiNamedElement instanceof CSharpConstructorDeclaration) && !(psiNamedElement
-						instanceof CSharpMethodDeclaration && ((CSharpMethodDeclaration) psiNamedElement).isOperator()) && !(psiNamedElement
-						instanceof CSharpArrayMethodDeclarationImpl) && (psiNamedElement instanceof DotNetModifierListOwner && CSharpVisibilityUtil
-						.isVisibleForCompletion((DotNetModifierListOwner) psiNamedElement, CSharpReferenceExpressionImpl.this)) || psiNamedElement
-						instanceof CSharpLocalVariable;
+				if(e.getName() == null)
+				{
+					return false;
+				}
+				if(finalKind == ResolveToKind.METHOD && e instanceof CSharpMethodDeclaration && ((CSharpMethodDeclaration) e).isDelegate())
+				{
+					return false;
+				}
+				if(e instanceof CSharpLocalVariable)
+				{
+					return true;
+				}
+				if(e instanceof CSharpConstructorDeclaration)
+				{
+					return false;
+				}
+				if(e instanceof CSharpMethodDeclaration && ((CSharpMethodDeclaration) e).isOperator())
+				{
+					return false;
+				}
+				if(e instanceof CSharpArrayMethodDeclarationImpl)
+				{
+					return false;
+				}
+
+				if(e instanceof DotNetModifierListOwner)
+				{
+					if(!CSharpVisibilityUtil.isVisibleForCompletion((DotNetModifierListOwner) e, CSharpReferenceExpressionImpl.this))
+					{
+						return false;
+					}
+				}
+				return true;
 			}
 		}, this, false);
 		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(this, psiElements);
