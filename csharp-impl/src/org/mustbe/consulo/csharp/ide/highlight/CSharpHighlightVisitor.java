@@ -29,6 +29,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.result.ExtensionMethodResolveResult;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -44,6 +45,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.ReferenceRange;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.BitUtil;
 import lombok.val;
 
 /**
@@ -232,14 +234,14 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 
 		ResolveResult[] r = expression.multiResolve(true);
-		List<PsiElement> validResults = new ArrayList<PsiElement>();
+		List<ResolveResult> validResults = new ArrayList<ResolveResult>();
 		List<PsiElement> invalidResults = new ArrayList<PsiElement>();
 
 		for(ResolveResult resolveResult : r)
 		{
 			if(resolveResult.isValidResult())
 			{
-				validResults.add(resolveResult.getElement());
+				validResults.add(resolveResult);
 			}
 			else
 			{
@@ -249,7 +251,13 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 		if(validResults.size() > 0)
 		{
-			highlightNamed(validResults.get(0), referenceElement);
+			ResolveResult resolveResult = validResults.get(0);
+			int flags = 0;
+			if(resolveResult instanceof ExtensionMethodResolveResult)
+			{
+				flags = BitUtil.set(flags, CSharpHighlightUtil.EXTENSION_CALL, true);
+			}
+			highlightNamed(resolveResult.getElement(), referenceElement, flags);
 		}
 		else
 		{
@@ -274,7 +282,12 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 	public void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
 	{
-		CSharpHighlightUtil.highlightNamed(myHighlightInfoHolder, element, target);
+		highlightNamed(element, target, 0);
+	}
+
+	public void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target, int flags)
+	{
+		CSharpHighlightUtil.highlightNamed(myHighlightInfoHolder, element, target, flags);
 	}
 
 	@Override

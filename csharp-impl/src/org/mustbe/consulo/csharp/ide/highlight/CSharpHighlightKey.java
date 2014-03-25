@@ -42,6 +42,8 @@ public interface CSharpHighlightKey
 			DefaultLanguageHighlighterColors.INSTANCE_FIELD);
 	TextAttributesKey STATIC_METHOD = TextAttributesKey.createTextAttributesKey(CSharpLanguage.INSTANCE,
 			DefaultLanguageHighlighterColors.STATIC_METHOD);
+	TextAttributesKey EXTENSION_METHOD = TextAttributesKey.createTextAttributesKey("CSHARP_EXTENSION_METHOD",
+			DefaultLanguageHighlighterColors.LABEL);
 	TextAttributesKey INSTANCE_METHOD = TextAttributesKey.createTextAttributesKey(CSharpLanguage.INSTANCE,
 			DefaultLanguageHighlighterColors.INSTANCE_METHOD);
 	TextAttributesKey PARAMETER = TextAttributesKey.createTextAttributesKey(CSharpLanguage.INSTANCE,
