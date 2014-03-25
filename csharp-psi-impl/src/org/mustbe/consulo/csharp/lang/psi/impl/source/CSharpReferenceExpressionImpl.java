@@ -35,6 +35,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespa
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
@@ -55,8 +56,13 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
+import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.QualifiedName;
+import com.intellij.util.CommonProcessors;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.Processor;
+import com.intellij.util.indexing.IdFilter;
 import lombok.val;
 
 /**
@@ -313,7 +319,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	}
 
 	private static <T extends PsiQualifiedReference & PsiElement> ResolveResult[] collectResults(
-			@NotNull ResolveToKind kind, Condition<PsiNamedElement> condition, T element, final boolean named)
+			@NotNull ResolveToKind kind, Condition<PsiNamedElement> condition, final T element, final boolean named)
 	{
 		if(!element.isValid())
 		{
@@ -426,14 +432,64 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				CSharpResolveUtil.treeWalkUp(p, element, element, parentOfType);
 				return p.toResolveResults();
 			case NAMESPACE:
-				String qName = StringUtil.strip(element.getText(), CharFilter.NOT_WHITESPACE_FILTER);
-				CSharpNamespaceAsElement aPackage = CSharpNamespaceHelper.getNamespaceElementIfFind(element.getProject(), qName,
-						element.getResolveScope());
-				if(aPackage == null)
+				if(named)
 				{
-					return ResolveResult.EMPTY_ARRAY;
+					String qName = StringUtil.strip(element.getText(), CharFilter.NOT_WHITESPACE_FILTER);
+					val aPackage = CSharpNamespaceHelper.getNamespaceElementIfFind(element.getProject(), qName, element.getResolveScope());
+
+					if(aPackage == null)
+					{
+						return ResolveResult.EMPTY_ARRAY;
+					}
+					return new ResolveResult[]{new PsiElementResolveResult(aPackage)};
 				}
-				return new ResolveResult[]{new PsiElementResolveResult(aPackage)};
+				else
+				{
+					String parent = null;
+					if(qualifier != null)
+					{
+						parent = StringUtil.strip(qualifier.getText(), CharFilter.NOT_WHITESPACE_FILTER);
+					}
+					else
+					{
+						parent = CSharpNamespaceHelper.ROOT;
+					}
+					val findFirstProcessor = new CommonProcessors.FindFirstProcessor<DotNetNamespaceDeclaration>();
+
+					StubIndex.getInstance().processElements(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, parent, element.getProject(),
+							element.getResolveScope(), DotNetNamespaceDeclaration.class, findFirstProcessor);
+
+					if(findFirstProcessor.getFoundValue() != null)
+					{
+						val elements = new ArrayList<ResolveResult>();
+
+						val parentQName = QualifiedName.fromDottedString(parent);
+						StubIndex.getInstance().processAllKeys(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, new Processor<String>()
+						{
+							@Override
+							public boolean process(String qName)
+							{
+								QualifiedName childQName = QualifiedName.fromDottedString(qName);
+								if(childQName.matchesPrefix(parentQName) && parentQName.getComponentCount() == (childQName.getComponentCount() - 1))
+								{
+									val namespaceAsElement = new CSharpNamespaceAsElement(element.getProject(), qName, element.getResolveScope());
+									if(!namespaceAsElement.isValid())
+									{
+										return true;
+									}
+									elements.add(new PsiElementResolveResult(namespaceAsElement));
+								}
+								return true;
+							}
+						}, element.getResolveScope(), IdFilter.getProjectIdFilter(element.getProject(), false));
+
+						return elements.isEmpty() ? ResolveResult.EMPTY_ARRAY : elements.toArray(new ResolveResult[elements.size()]);
+					}
+					else
+					{
+						return ResolveResult.EMPTY_ARRAY;
+					}
+				}
 			case NAMESPACE_WITH_CREATE_OPTION:
 				String qName2 = StringUtil.strip(element.getText(), CharFilter.NOT_WHITESPACE_FILTER);
 				CSharpNamespaceAsElement namespaceAsElement = new CSharpNamespaceAsElement(element.getProject(), qName2, element.getResolveScope());
@@ -465,11 +521,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	}
 
 	private static <T extends PsiQualifiedReference & PsiElement> ResolveResult[] processAnyMember(
-			PsiElement qualifier,
-			Condition<PsiNamedElement> condition,
-			T element,
-			ResolveToKind kind,
-			boolean incompleteCode)
+			PsiElement qualifier, Condition<PsiNamedElement> condition, T element, ResolveToKind kind, boolean incompleteCode)
 	{
 		PsiElement target = element;
 		DotNetGenericExtractor extractor = DotNetGenericExtractor.EMPTY;
@@ -630,7 +682,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(tempElement instanceof CSharpUsingNamespaceStatementImpl)
 		{
-			assert true;
 			return ResolveToKind.NAMESPACE;
 		}
 		else if(tempElement instanceof CSharpAttributeImpl)
