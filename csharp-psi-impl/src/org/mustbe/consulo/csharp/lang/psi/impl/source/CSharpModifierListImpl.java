@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
+import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
@@ -56,6 +57,7 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 			put(CSharpModifier.UNSAFE, CSharpTokens.UNSAFE_KEYWORD);
 			put(CSharpModifier.PARAMS, CSharpTokens.PARAMS_KEYWORD);
 			put(CSharpModifier.THIS, CSharpTokens.THIS_KEYWORD);
+			put(CSharpModifier.PARTIAL, CSharpSoftTokens.PARTIAL_KEYWORD);
 		}
 	};
 	public CSharpModifierListImpl(@NotNull ASTNode node)

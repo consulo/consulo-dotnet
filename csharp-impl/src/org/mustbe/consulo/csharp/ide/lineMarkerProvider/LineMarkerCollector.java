@@ -14,38 +14,19 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.ide.lineMarkerProvider;
 
-import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
+import java.util.Collection;
+
+import org.jetbrains.annotations.NotNull;
+import com.intellij.codeInsight.daemon.LineMarkerInfo;
+import com.intellij.psi.PsiElement;
 
 /**
-* @author VISTALL
-* @since 06.01.14.
-*/
-public enum CSharpModifier implements DotNetModifierWithMask
+ * @author VISTALL
+ * @since 25.03.14
+ */
+public interface LineMarkerCollector
 {
-	PUBLIC,
-	PRIVATE,
-	PROTECTED,
-	STATIC,
-	SEALED,
-	READONLY,
-	UNSAFE,
-	PARAMS,
-	THIS,
-	ABSTRACT,
-	PARTIAL;
-
-	private int myMask;
-
-	CSharpModifier()
-	{
-		myMask = 1 << ordinal();
-	}
-
-	@Override
-	public int mask()
-	{
-		return myMask;
-	}
+	void collect(PsiElement psiElement, @NotNull Collection<LineMarkerInfo> lineMarkerInfos);
 }

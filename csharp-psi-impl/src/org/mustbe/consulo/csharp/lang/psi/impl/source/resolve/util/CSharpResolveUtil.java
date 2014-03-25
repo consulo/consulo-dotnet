@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper.GenericUnwrapTool;
@@ -39,6 +40,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.ArrayUtil;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -124,20 +127,55 @@ public class CSharpResolveUtil
 			DotNetGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
 
 			DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) entrance;
-			for(DotNetNamedElement namedElement : typeDeclaration.getMembers())
-			{
-				DotNetNamedElement extracted = GenericUnwrapTool.extract(namedElement, extractor);
 
-				if(!processor.execute(extracted, state))
+			DotNetType[] superTypes = DotNetType.EMPTY_ARRAY;
+
+			if(typeDeclaration.hasModifier(CSharpModifier.PARTIAL))
+			{
+				val types = DotNetPsiFacade.getInstance(entrance.getProject()).findTypes(typeDeclaration.getPresentableQName(),
+						entrance.getResolveScope(), typeDeclaration.getGenericParametersCount());
+
+				for(val type : types)
 				{
-					return false;
+					if(!type.hasModifier(CSharpModifier.PARTIAL))
+					{
+						continue;
+					}
+
+					for(DotNetType dotNetType : type.getExtends())
+					{
+						superTypes = ArrayUtil.append(superTypes, dotNetType, DotNetType.ARRAY_FACTORY);
+					}
+
+					for(DotNetNamedElement namedElement : type.getMembers())
+					{
+						DotNetNamedElement extracted = GenericUnwrapTool.extract(namedElement, extractor);
+
+						if(!processor.execute(extracted, state))
+						{
+							return false;
+						}
+					}
 				}
 			}
-
-			DotNetType[] anExtends = typeDeclaration.getExtends();
-			if(anExtends.length > 0)
+			else
 			{
-				for(DotNetType anExtend : anExtends)
+				for(DotNetNamedElement namedElement : typeDeclaration.getMembers())
+				{
+					DotNetNamedElement extracted = GenericUnwrapTool.extract(namedElement, extractor);
+
+					if(!processor.execute(extracted, state))
+					{
+						return false;
+					}
+				}
+
+				superTypes = typeDeclaration.getExtends();
+			}
+
+			if(superTypes.length > 0)
+			{
+				for(DotNetType anExtend : superTypes)
 				{
 					DotNetTypeRef dotNetTypeRef = anExtend.toTypeRef();
 
