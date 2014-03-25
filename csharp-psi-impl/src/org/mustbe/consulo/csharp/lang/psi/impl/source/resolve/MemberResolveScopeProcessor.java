@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.result.ExtensionMethodResolveResult;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
@@ -50,7 +51,7 @@ public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 				{
 					if(myCond.value(dotNetNamedElement))
 					{
-						addElement(dotNetNamedElement);
+						add(new ExtensionMethodResolveResult(dotNetNamedElement));
 						if(myNamed)
 						{
 							return false;

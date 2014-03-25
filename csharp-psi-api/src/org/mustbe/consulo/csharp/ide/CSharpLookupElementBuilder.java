@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveResult;
 
 /**
  * @author VISTALL
@@ -33,6 +34,9 @@ public abstract class CSharpLookupElementBuilder
 {
 	@NotNull
 	public abstract LookupElement[] buildToLookupElements(@Nullable PsiElement sender, @NotNull PsiElement[] arguments);
+
+	@NotNull
+	public abstract LookupElement[] buildToLookupElements(@Nullable PsiElement sender, @NotNull ResolveResult[] arguments);
 
 	@NotNull
 	public abstract LookupElement[] buildToLookupElements(@Nullable PsiElement sender, @NotNull Collection<? extends PsiElement> arguments);

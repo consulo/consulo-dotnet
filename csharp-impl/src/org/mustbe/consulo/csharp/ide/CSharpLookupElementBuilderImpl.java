@@ -39,6 +39,7 @@ import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveResult;
 import com.intellij.psi.util.proximity.PsiProximityComparator;
 import com.intellij.util.Function;
 
@@ -66,6 +67,26 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 		{
 			PsiElement argument = arguments[i];
 			array[i] = buildLookupElement(argument);
+		}
+		return array;
+	}
+
+	@NotNull
+	@Override
+	public LookupElement[] buildToLookupElements(@Nullable PsiElement sender, @NotNull ResolveResult[] arguments)
+	{
+		if(arguments.length == 0)
+		{
+			return LookupElement.EMPTY_ARRAY;
+		}
+
+		//FIXME [VISTALL] sorter?
+
+		LookupElement[] array = new LookupElement[arguments.length];
+		for(int i = 0; i < arguments.length; i++)
+		{
+			ResolveResult argument = arguments[i];
+			array[i] = buildLookupElement(argument.getElement());
 		}
 		return array;
 	}
