@@ -41,6 +41,7 @@ import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
@@ -469,6 +470,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 							@Override
 							public boolean process(String qName)
 							{
+								ProgressIndicatorProvider.checkCanceled();
+
 								QualifiedName childQName = QualifiedName.fromDottedString(qName);
 								if(childQName.matchesPrefix(parentQName) && parentQName.getComponentCount() == (childQName.getComponentCount() - 1))
 								{
@@ -566,6 +569,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			PsiElement temp = element.getParent();
 			while(temp != null)
 			{
+				ProgressIndicatorProvider.checkCanceled();
+
 				if(temp instanceof DotNetParameter)
 				{
 					targetToWalkChildren = PsiTreeUtil.getParentOfType(temp, DotNetMethodDeclaration.class);

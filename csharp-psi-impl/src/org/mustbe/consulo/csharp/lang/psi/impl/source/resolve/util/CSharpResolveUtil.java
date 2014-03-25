@@ -118,6 +118,7 @@ public class CSharpResolveUtil
 	public static boolean walkChildren(@NotNull final PsiScopeProcessor processor, @NotNull final PsiElement entrance,
 			@NotNull final PsiElement sender, @Nullable PsiElement maxScope, @NotNull ResolveState state)
 	{
+		ProgressIndicatorProvider.checkCanceled();
 		if(entrance instanceof DotNetTypeDeclaration)
 		{
 			DotNetGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
