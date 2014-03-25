@@ -260,10 +260,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 				myHighlightInfoHolder.add(info);
 
-				if(expression.getQualifier() == null)
-				{
-					UnresolvedReferenceQuickFixProvider.registerReferenceFixes(expression, new QuickFixActionRegistrarImpl(info));
-				}
+				UnresolvedReferenceQuickFixProvider.registerReferenceFixes(expression, new QuickFixActionRegistrarImpl(info));
 			}
 			else
 			{

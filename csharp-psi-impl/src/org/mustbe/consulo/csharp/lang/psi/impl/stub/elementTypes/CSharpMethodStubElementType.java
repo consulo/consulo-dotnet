@@ -32,6 +32,7 @@ import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.BitUtil;
 import com.intellij.util.io.StringRef;
 import lombok.val;
 
@@ -102,6 +103,11 @@ public class CSharpMethodStubElementType extends CSharpAbstractStubElementType<C
 			val parentQName = cSharpTypeStub.getParentQName();
 
 			indexSink.occurrence(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, CSharpNamespaceHelper.getNamespaceForIndexing(parentQName));
+
+			if(BitUtil.isSet(cSharpTypeStub.getOtherModifierMask(), CSharpMethodStub.EXTENSION_MASK))
+			{
+				indexSink.occurrence(CSharpIndexKeys.EXTENSION_METHOD_INDEX, name);
+			}
 		}
 	}
 }

@@ -29,10 +29,10 @@ import com.intellij.psi.PsiElement;
  */
 public class DelegateExpressionWithParameters extends ASTDelegatePsiElement implements CSharpExpressionWithParameters
 {
-	private final CSharpExpressionWithParameters myDelegate;
+	private final PsiElement myDelegate;
 	private final DotNetExpression[] myExpressions;
 
-	public DelegateExpressionWithParameters(CSharpExpressionWithParameters delegate, DotNetExpression[] expressions)
+	public DelegateExpressionWithParameters(PsiElement delegate, DotNetExpression[] expressions)
 	{
 		myDelegate = delegate;
 		myExpressions = expressions;

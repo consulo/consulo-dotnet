@@ -22,12 +22,17 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.DelegateExpressionWithParameters;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.ExtensionMethodIndex;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.MethodIndex;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeIndex;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
@@ -76,7 +81,7 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 			return PopupResult.NOT_AVAILABLE;
 		}
 
-		Set<String> q = collectAvailableNamespaces();
+		Set<String> q = collectAllAvailableNamespaces();
 		if(q.isEmpty())
 		{
 			return PopupResult.NOT_AVAILABLE;
@@ -90,21 +95,29 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 		return PopupResult.SHOW_HIT;
 	}
 
-	private Set<String> collectAvailableNamespaces()
+	private Set<String> collectAllAvailableNamespaces()
 	{
-		if(myRef.getQualifier() != null || myRef.getParent() instanceof CSharpUsingNamespaceStatementImpl || !myRef.isValid())
+		if(myRef.getParent() instanceof CSharpUsingNamespaceStatementImpl || !myRef.isValid())
 		{
 			return Collections.emptySet();
 		}
-
 		String referenceName = myRef.getReferenceName();
 		if(StringUtil.isEmpty(referenceName))
 		{
 			return Collections.emptySet();
 		}
-		assert referenceName != null;
+		Set<String> q = new ArrayListSet<String>();
+		collectAvailableNamespaces(q, referenceName);
+		collectAvailableNamespacesForMethodExtensions(q, referenceName);
+		return q;
+	}
 
-		val list = new ArrayListSet<String>();
+	private void collectAvailableNamespaces(Set<String> set, String referenceName)
+	{
+		if(myRef.getQualifier() != null)
+		{
+			return;
+		}
 
 		Collection<DotNetTypeDeclaration> tempTypes;
 		Collection<DotNetLikeMethodDeclaration> tempMethods;
@@ -125,28 +138,28 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 				{
 					tempTypes = TypeIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
 
-					collect(list, tempTypes, cond);
+					collect(set, tempTypes, cond);
 				}
 				else
 				{
 					tempTypes = TypeIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
 
-					collect(list, tempTypes, cond);
+					collect(set, tempTypes, cond);
 
 					tempTypes = TypeIndex.getInstance().get(referenceName + CSharpReferenceExpressionImpl.AttributeSuffix, myRef.getProject(),
 							myRef.getResolveScope());
 
-					collect(list, tempTypes, cond);
+					collect(set, tempTypes, cond);
 				}
 				break;
 			default:
 				tempTypes = TypeIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
 
-				collect(list, tempTypes, Conditions.<DotNetTypeDeclaration>alwaysTrue());
+				collect(set, tempTypes, Conditions.<DotNetTypeDeclaration>alwaysTrue());
 
 				tempMethods = MethodIndex.getInstance().get(referenceName, myRef.getProject(), myRef.getResolveScope());
 
-				collect(list, tempMethods, new Condition<DotNetLikeMethodDeclaration>()
+				collect(set, tempMethods, new Condition<DotNetLikeMethodDeclaration>()
 				{
 					@Override
 					public boolean value(DotNetLikeMethodDeclaration method)
@@ -157,7 +170,44 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 				});
 				break;
 		}
-		return list;
+	}
+
+	private void collectAvailableNamespacesForMethodExtensions(Set<String> set, String referenceName)
+	{
+		PsiElement qualifier = myRef.getQualifier();
+		if(qualifier == null)
+		{
+			return;
+		}
+
+		PsiElement parent = myRef.getParent();
+		if(!(parent instanceof CSharpMethodCallExpressionImpl))
+		{
+			return;
+		}
+
+		DotNetExpression[] parameterExpressions = ((CSharpMethodCallExpressionImpl) parent).getParameterExpressions();
+
+		DotNetExpression[] newExpressions = new DotNetExpression[parameterExpressions.length + 1];
+		newExpressions[0] = (DotNetExpression) qualifier;
+		System.arraycopy(parameterExpressions, 0, newExpressions, 1, parameterExpressions.length);
+
+		val delegatedExpression = new DelegateExpressionWithParameters(myRef, newExpressions);
+
+		Collection<DotNetLikeMethodDeclaration> list = ExtensionMethodIndex.getInstance().get(referenceName,
+				myRef.getProject(), myRef.getResolveScope());
+
+		for(DotNetLikeMethodDeclaration possibleMethod : list)
+		{
+			if(MethodAcceptorImpl.isAccepted(delegatedExpression, possibleMethod))
+			{
+				PsiElement parentOfMethod = possibleMethod.getParent();
+				if(parentOfMethod instanceof DotNetQualifiedElement)
+				{
+					set.add(((DotNetQualifiedElement) parentOfMethod).getPresentableParentQName());
+				}
+			}
+		}
 	}
 
 	private static <T extends DotNetQualifiedElement> void collect(Set<String> namespaces, Collection<T> element, Condition<T> condition)
@@ -201,7 +251,7 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 	@Override
 	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile psiFile)
 	{
-		return !collectAvailableNamespaces().isEmpty();
+		return !collectAllAvailableNamespaces().isEmpty();
 	}
 
 	@Override

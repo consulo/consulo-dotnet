@@ -37,6 +37,7 @@ public interface CSharpIndexKeys
 
 	StubIndexKey<String, DotNetNamespaceDeclaration> NAMESPACE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("csharp.namespace.by.qname.index");
 	StubIndexKey<String, DotNetLikeMethodDeclaration> METHOD_INDEX = StubIndexKey.createIndexKey("csharp.method.index");
+	StubIndexKey<String, DotNetLikeMethodDeclaration> EXTENSION_METHOD_INDEX = StubIndexKey.createIndexKey("csharp.extension.method.index");
 	StubIndexKey<String, DotNetTypeDeclaration> TYPE_INDEX = StubIndexKey.createIndexKey("csharp.type.index");
 	StubIndexKey<String, DotNetTypeDeclaration> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("csharp.type.by.qname.index");
 
