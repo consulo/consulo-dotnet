@@ -63,7 +63,7 @@ public class CSharpMethodStub extends MemberStub<CSharpMethodDeclaration>
 		{
 			i |= OPERATOR_MASK;
 		}
-		if(methodDeclaration.isOperator())
+		if(methodDeclaration.isDelegate())
 		{
 			i |= DELEGATE_MASK;
 		}
