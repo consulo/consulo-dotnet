@@ -797,7 +797,7 @@ public class XStubBuilder
 					}
 				}
 			}
-			return "valueType" + valueType.getClass();
+			return "unsupported";
 		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_GENERIC_INST ||
 				signature.getType() == SignatureConstants.ELEMENT_TYPE_CLASS ||
