@@ -285,9 +285,10 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		highlightNamed(element, target, 0);
 	}
 
-	public void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target, int flags)
+	@Nullable
+	public HighlightInfo highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target, int flags)
 	{
-		CSharpHighlightUtil.highlightNamed(myHighlightInfoHolder, element, target, flags);
+		return CSharpHighlightUtil.highlightNamed(myHighlightInfoHolder, element, target, flags);
 	}
 
 	@Override

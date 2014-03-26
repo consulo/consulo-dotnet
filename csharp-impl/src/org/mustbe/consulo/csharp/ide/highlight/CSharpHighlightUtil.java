@@ -74,11 +74,12 @@ public class CSharpHighlightUtil
 		return false;
 	}
 
-	public static void highlightNamed(@NotNull HighlightInfoHolder holder, @Nullable PsiElement element, @Nullable PsiElement target, int flags)
+	@Nullable
+	public static HighlightInfo highlightNamed(@NotNull HighlightInfoHolder holder, @Nullable PsiElement element, @Nullable PsiElement target, int flags)
 	{
 		if(target == null)
 		{
-			return;
+			return null;
 		}
 
 		TextAttributesKey key = null;
@@ -128,10 +129,11 @@ public class CSharpHighlightUtil
 		}
 		else
 		{
-			return;
+			return null;
 		}
 
-		holder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes(key).create());
+		HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes(key).create();
+		holder.add(info);
 		if(element instanceof DotNetModifierListOwner && DotNetAttributeUtil.hasAttribute((DotNetModifierListOwner) element,
 				DotNetTypes.System_ObsoleteAttribute))
 		{
@@ -144,6 +146,7 @@ public class CSharpHighlightUtil
 			holder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(target).textAttributes(EditorColors
 					.INJECTED_LANGUAGE_FRAGMENT).create());
 		}
+		return info;
 	}
 
 	@Nullable
