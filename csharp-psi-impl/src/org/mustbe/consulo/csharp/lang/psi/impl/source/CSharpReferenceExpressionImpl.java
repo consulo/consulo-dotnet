@@ -406,7 +406,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}
 				ResolveState resolveState = ResolveState.initial();
 				resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, dotNetTypeRef.getGenericExtractor(psiElement1, element));
-				resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
 
 				p = new MemberResolveScopeProcessor(Conditions.and(condition, new Condition<PsiNamedElement>()
 				{
@@ -555,7 +554,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 		ResolveState resolveState = ResolveState.initial();
 		resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
-		resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
 
 		if(target != element)
 		{
@@ -563,6 +561,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else
 		{
+			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
 			PsiElement last = null;
 			PsiElement targetToWalkChildren = null;
 
