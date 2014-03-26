@@ -370,7 +370,7 @@ public class XStubBuilder
 			builder.append("static ");
 		}
 
-		builder.append(TypeSignatureStubBuilder.typeToString(field.getSignature().getType(), typeDef, typeDef));
+		TypeSignatureStubBuilder.typeToString(builder, field.getSignature().getType(), typeDef, typeDef);
 		builder.append(" ");
 		builder.append(toValidName(field.getName()));
 
@@ -443,7 +443,7 @@ public class XStubBuilder
 		{
 			builder.append("static ");
 		}
-		builder.append(TypeSignatureStubBuilder.typeToString(property.getSignature().getType(), typeDef, null));
+		TypeSignatureStubBuilder.typeToString(builder, property.getSignature().getType(), typeDef, null);
 		builder.append(" ");
 
 		if(parameterSignature != null)
@@ -607,11 +607,14 @@ public class XStubBuilder
 					parameterType = methodDef.getSignature().getReturnType().getInnerType();
 
 					// name is first parameter type
-					name = TypeSignatureStubBuilder.typeToString(methodDef.getSignature().getParameters()[0].getInnerType(), typeDef, methodDef);
+					StringBuilder temp = new StringBuilder();
+					TypeSignatureStubBuilder.typeToString(temp, methodDef.getSignature().getParameters()[0].getInnerType(), typeDef, methodDef);
+					name = temp.toString();
 				}
 				else
 				{
-					builder.append(TypeSignatureStubBuilder.typeToString(methodDef.getSignature().getReturnType().getInnerType(), typeDef, methodDef));
+					TypeSignatureStubBuilder.typeToString(builder, methodDef.getSignature().getReturnType().getInnerType(), typeDef,
+							methodDef);
 				}
 
 				builder.append(" ");
@@ -631,7 +634,7 @@ public class XStubBuilder
 			if(parameterType != null)
 			{
 				builder.append("(");
-				builder.append(TypeSignatureStubBuilder.typeToString(parameterType, typeDef, methodDef));
+				TypeSignatureStubBuilder.typeToString(builder, parameterType, typeDef, methodDef);
 				builder.append(" p)");
 
 				if(!methodDef.getGenericParams().isEmpty())
@@ -723,7 +726,7 @@ public class XStubBuilder
 			signature = parameterSignature.getInnerType();
 		}
 
-		p.append(TypeSignatureStubBuilder.typeToString(signature, typeDef, methodDef));
+		TypeSignatureStubBuilder.typeToString(p, signature, typeDef, methodDef);
 		p.append(" ");
 		p.append(toValidName(parameterInfo.getName()));
 

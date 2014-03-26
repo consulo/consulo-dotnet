@@ -39,13 +39,13 @@ import edu.arizona.cs.mbel.signature.XGenericTypeSignature;
 @Logger
 public class TypeSignatureStubBuilder implements SignatureConstants
 {
-	public static String typeToString(TypeSignature signature, GenericParamOwner typeDef, GenericParamOwner memberDef)
+	public static void typeToString(StringBuilder builder, TypeSignature signature, GenericParamOwner typeDef, GenericParamOwner memberDef)
 	{
 		if(signature == null)
 		{
-			return "void";
+			builder.append("void");
+			return;
 		}
-		StringBuilder builder = new StringBuilder();
 		byte type = signature.getType();
 		switch(type)
 		{
@@ -102,16 +102,16 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_BYREF:
 				builder.append("ref ");
-				builder.append(typeToString(((InnerTypeOwner) signature).getInnerType(), typeDef, memberDef));
+				typeToString(builder, ((InnerTypeOwner) signature).getInnerType(), typeDef, memberDef);
 				break;
 			case ELEMENT_TYPE_PTR:
 				PointerTypeSignature pointerTypeSignature = (PointerTypeSignature) signature;
-				builder.append(typeToString(pointerTypeSignature.getPointerType(), typeDef, memberDef));
+				typeToString(builder, pointerTypeSignature.getPointerType(), typeDef, memberDef);
 				builder.append("*");
 				break;
 			case ELEMENT_TYPE_SZARRAY:
 				SZArrayTypeSignature szArrayTypeSignature = (SZArrayTypeSignature)signature;
-				builder.append(typeToString(szArrayTypeSignature.getElementType(), typeDef, memberDef));
+				typeToString(builder, szArrayTypeSignature.getElementType(), typeDef, memberDef);
 				builder.append("[]");
 				break;
 			case ELEMENT_TYPE_CLASS:
@@ -120,7 +120,7 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_GENERIC_INST:
 				TypeSignatureWithGenericParameters mainTypeSignature = (TypeSignatureWithGenericParameters) signature;
-				builder.append(typeToString(mainTypeSignature.getSignature(), typeDef, memberDef));
+				typeToString(builder, mainTypeSignature.getSignature(), typeDef, memberDef);
 				if(!mainTypeSignature.getGenericArguments().isEmpty())
 				{
 					builder.append("<");
@@ -130,7 +130,7 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 						{
 							builder.append(", ");
 						}
-						builder.append(typeToString(mainTypeSignature.getGenericArguments().get(i), typeDef, memberDef));
+						typeToString(builder, mainTypeSignature.getGenericArguments().get(i), typeDef, memberDef);
 					}
 					builder.append(">");
 				}
@@ -153,7 +153,6 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 				builder.append("UNK").append(Integer.toHexString(type).toUpperCase());
 				break;
 		}
-		return builder.toString();
 	}
 
 	public static String toStringFromDefRefSpec(Object o, GenericParamOwner typeDef, GenericParamOwner methodDef)
@@ -168,7 +167,9 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 		}
 		else if(o instanceof TypeSpec)
 		{
-			return typeToString(((TypeSpec) o).getSignature(), typeDef, methodDef);
+			StringBuilder builder = new StringBuilder();
+			typeToString(builder, ((TypeSpec) o).getSignature(), typeDef, methodDef);
+			return builder.toString();
 		}
 		else
 		{
