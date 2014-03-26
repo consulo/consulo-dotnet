@@ -21,6 +21,7 @@ package edu.arizona.cs.mbel.mbel;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.arizona.cs.mbel.ByteBuffer;
@@ -722,7 +723,7 @@ public class ModuleParser extends BaseCustomAttributeOwner
 			// add params DONE!
 			for(int i = 0; i < row.length; i++)
 			{
-				ParameterSignature[] pSigs = methods[i].getSignature().getParameters();
+				List<ParameterSignature> pSigs = methods[i].getSignature().getParameters();
 
 				long startI = row[i].getTableIndex("ParamList");
 				if(!(startI == 0 || tables[TableConstants.Param] == null || startI > tables[TableConstants.Param].length))
@@ -748,7 +749,7 @@ public class ModuleParser extends BaseCustomAttributeOwner
 						else
 						{
 							params[(int) getParam(j) - 1] = new ParameterInfo(name, flags);
-							pSigs[seq - 1].setParameterInfo(params[(int) getParam(j) - 1]);
+							pSigs.get(seq - 1).setParameterInfo(params[(int) getParam(j) - 1]);
 						}
 					}
 				}

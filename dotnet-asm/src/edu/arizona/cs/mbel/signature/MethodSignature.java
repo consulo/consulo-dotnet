@@ -20,8 +20,11 @@
 
 package edu.arizona.cs.mbel.signature;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
+import org.consulo.annotations.Immutable;
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.mbel.TypeGroup;
 
@@ -36,7 +39,7 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 	private int requiredParamCount;
 	// number of params before SENTINEL
 	private ReturnTypeSignature returnType;
-	private Vector<ParameterSignature> params;
+	private List<ParameterSignature> params;
 
 	private MethodSignature()
 	{
@@ -57,12 +60,12 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 		flags = (byte) ((hasthis ? HASTHIS : 0) | (explicitthis ? EXPLICITTHIS : 0) | VARARG);
 		if(requiredParams == null)
 		{
-			params = new Vector<ParameterSignature>();
+			params = new ArrayList<ParameterSignature>();
 			requiredParamCount = 0;
 		}
 		else
 		{
-			params = new Vector<ParameterSignature>(requiredParams.length + 10);
+			params = new ArrayList<ParameterSignature>(requiredParams.length + 10);
 			for(ParameterSignature requiredParam : requiredParams)
 			{
 				if(requiredParam == null)
@@ -279,31 +282,11 @@ public class MethodSignature extends StandAloneSignature implements CallingConve
 	 *
 	 * @return an array of parameter signature, in order (will never be null, but may have 0 length)
 	 */
-	public ParameterSignature[] getParameters()
+	@Immutable
+	public List<ParameterSignature> getParameters()
 	{
-		ParameterSignature[] arr = new ParameterSignature[params.size()];
-		for(int i = 0; i < arr.length; i++)
-		{
-			arr[i] = params.get(i);
-		}
-		return arr;
+		return params;
 	}
-
-	/**
-	 * Inserts a parameter in the parameter list of this method
-	 * (if index<0, parameter is inserted at the front of the list.
-	 * if index>length, the parameter is inserted at the end)
-	 *
-	 * @param sig   the parameter signature to insert
-	 * @param index the position at which to insert the parameter (0-based)
-	 */
-	public void insertParameter(ParameterSignature sig, int index)
-	{
-		index = Math.max(0, index);
-		index = Math.min(index, params.size());
-		params.insertElementAt(sig, index);
-	}
-
 	/**
 	 * Removes a parameter from this method signature (comparison by reference)
 	 */

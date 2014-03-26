@@ -189,7 +189,7 @@ public class AttributeStubBuilder
 			throw new IllegalArgumentException("Not one");
 		}
 
-		ParameterSignature[] parameterSignatures;
+		List<ParameterSignature> parameterSignatures;
 		MethodDefOrRef constructor = customAttribute.getConstructor();
 		if(constructor instanceof MethodDef)
 		{

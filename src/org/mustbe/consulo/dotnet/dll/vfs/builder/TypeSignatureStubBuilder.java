@@ -155,6 +155,26 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 		}
 	}
 
+	public static void toStringFromDefRefSpec(StringBuilder builder, Object o, GenericParamOwner typeDef, GenericParamOwner methodDef)
+	{
+		if(o == null)
+		{
+			return;
+		}
+		else if(o instanceof TypeRef)
+		{
+			builder.append(((TypeRef) o).getFullName());
+		}
+		else if(o instanceof TypeSpec)
+		{
+			typeToString(builder, ((TypeSpec) o).getSignature(), typeDef, methodDef);
+		}
+		else
+		{
+			throw new IllegalArgumentException(o.toString());
+		}
+	}
+
 	public static String toStringFromDefRefSpec(Object o, GenericParamOwner typeDef, GenericParamOwner methodDef)
 	{
 		if(o == null)
