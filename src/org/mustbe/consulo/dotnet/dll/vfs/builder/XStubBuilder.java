@@ -417,14 +417,16 @@ public class XStubBuilder
 		}
 
 		XStubModifier propertyModifier = XStubModifier.INTERNAL;
-
+		boolean isStatic = false;
 		if(getter == null && setter != null)
 		{
 			propertyModifier = getMethodAccess(setter);
+			isStatic = BitUtil.isSet(setter.getFlags(), MethodAttributes.Static);
 		}
 		else if(getter != null && setter == null)
 		{
 			propertyModifier = getMethodAccess(getter);
+			isStatic = BitUtil.isSet(getter.getFlags(), MethodAttributes.Static);
 		}
 		else
 		{
@@ -437,6 +439,10 @@ public class XStubBuilder
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(propertyModifier.name().toLowerCase()).append(" ");
+		if(isStatic)
+		{
+			builder.append("static ");
+		}
 		builder.append(TypeSignatureStubBuilder.typeToString(property.getSignature().getType(), typeDef, null));
 		builder.append(" ");
 
