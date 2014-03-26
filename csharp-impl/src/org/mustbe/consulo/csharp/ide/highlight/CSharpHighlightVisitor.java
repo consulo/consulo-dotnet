@@ -38,7 +38,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImp
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.result.ExtensionMethodResolveResult;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -55,7 +55,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.ReferenceRange;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.BitUtil;
 import lombok.val;
 
 /**
@@ -244,14 +243,14 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 
 		ResolveResult[] r = expression.multiResolve(true);
-		List<ResolveResult> validResults = new ArrayList<ResolveResult>();
+		List<PsiElement> validResults = new ArrayList<PsiElement>();
 		List<PsiElement> invalidResults = new ArrayList<PsiElement>();
 
 		for(ResolveResult resolveResult : r)
 		{
 			if(resolveResult.isValidResult())
 			{
-				validResults.add(resolveResult);
+				validResults.add(resolveResult.getElement());
 			}
 			else
 			{
@@ -261,20 +260,12 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 		if(validResults.size() > 0)
 		{
-			ResolveResult resolveResult = validResults.get(0);
-			int flags = 0;
-			if(resolveResult instanceof ExtensionMethodResolveResult)
+			PsiElement element = validResults.get(0);
+			HighlightInfo highlightInfo = highlightNamed(element, referenceElement);
+
+			if(highlightInfo != null && CSharpResolveUtil.isExtensionWrapper(element))
 			{
-				flags = BitUtil.set(flags, CSharpHighlightUtil.EXTENSION_CALL, true);
-				HighlightInfo highlightInfo = highlightNamed(resolveResult.getElement(), referenceElement, flags);
-				if(highlightInfo != null)
-				{
-					QuickFixAction.registerQuickFixAction(highlightInfo, FlipExtensionMethodCall.INSTANCE);
-				}
-			}
-			else
-			{
-				highlightNamed(resolveResult.getElement(), referenceElement, flags);
+				QuickFixAction.registerQuickFixAction(highlightInfo, FlipExtensionMethodCall.INSTANCE);
 			}
 		}
 		else
@@ -301,13 +292,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	@Nullable
 	public HighlightInfo highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
 	{
-		return highlightNamed(element, target, 0);
-	}
-
-	@Nullable
-	public HighlightInfo highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target, int flags)
-	{
-		return CSharpHighlightUtil.highlightNamed(myHighlightInfoHolder, element, target, flags);
+		return CSharpHighlightUtil.highlightNamed(myHighlightInfoHolder, element, target);
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpVisibilityUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.AbstractScopeProcessor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.ExtensionResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericParameterTypeRef;
@@ -45,6 +46,7 @@ import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
@@ -557,50 +559,35 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 		if(target != element)
 		{
-			CSharpResolveUtil.walkChildren(p, target, element, null, resolveState);
+			if(!CSharpResolveUtil.walkChildren(p, target, element, null, resolveState))
+			{
+				return p.toResolveResults();
+			}
+
+
+			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, kind);
+
+			PsiElement targetToWalkChildren = resolveLayers.getSecond();
+
+			// walk for extensions
+			ExtensionResolveScopeProcessor p2 = new ExtensionResolveScopeProcessor(condition, incompleteCode);
+			p2.merge(p);
+
+			resolveState = ResolveState.initial();
+			resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
+			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
+
+			CSharpResolveUtil.walkChildren(p2, targetToWalkChildren, element, null, resolveState);
+			return p2.toResolveResults();
 		}
 		else
 		{
 			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
-			PsiElement last = null;
-			PsiElement targetToWalkChildren = null;
 
-			PsiElement temp = element.getParent();
-			while(temp != null)
-			{
-				ProgressIndicatorProvider.checkCanceled();
+			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, kind);
 
-				if(temp instanceof DotNetParameter)
-				{
-					targetToWalkChildren = PsiTreeUtil.getParentOfType(temp, DotNetMethodDeclaration.class);
-					last = targetToWalkChildren;
-					break;
-				}
-				else if(temp instanceof DotNetType)
-				{
-					last = null;
-					break;
-				}
-				else if(temp instanceof DotNetFieldDeclaration)
-				{
-					last = element;
-					targetToWalkChildren = temp.getParent();
-					break;
-				}
-				else if(temp instanceof DotNetXXXAccessor)
-				{
-					last = temp;
-					targetToWalkChildren = temp.getParent().getParent();
-					break;
-				}
-				else if(temp instanceof DotNetMethodDeclaration || temp instanceof CSharpConstructorDeclaration)
-				{
-					targetToWalkChildren = temp.getParent();
-					last = targetToWalkChildren;
-					break;
-				}
-				temp = temp.getParent();
-			}
+			PsiElement last = resolveLayers.getFirst();
+			PsiElement targetToWalkChildren = resolveLayers.getSecond();
 
 			if(!CSharpResolveUtil.treeWalkUp(p, target, element, last, resolveState))
 			{
@@ -612,15 +599,82 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return p.toResolveResults();
 			}
 
-			if(targetToWalkChildren == null)
-			{
-				LOGGER.warn(element.getText() + " " + last + " " + kind);
-				return ResolveResult.EMPTY_ARRAY;
-			}
 			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, element, null, resolveState);
+			return p.toResolveResults();
+		}
+	}
+
+	private static Pair<PsiElement, PsiElement> getResolveLayers(PsiElement element, ResolveToKind kind)
+	{
+		PsiElement last = null;
+		PsiElement targetToWalkChildren = null;
+
+		PsiElement temp = element.getParent();
+		while(temp != null)
+		{
+			ProgressIndicatorProvider.checkCanceled();
+
+			if(temp instanceof DotNetParameter)
+			{
+				targetToWalkChildren = PsiTreeUtil.getParentOfType(temp, DotNetMethodDeclaration.class);
+				last = targetToWalkChildren;
+				break;
+			}
+			else if(temp instanceof DotNetType)
+			{
+				DotNetStatement statement = PsiTreeUtil.getParentOfType(temp, DotNetStatement.class);
+				if(statement == null)
+				{
+					DotNetModifierListOwner modifierListOwner = PsiTreeUtil.getParentOfType(temp, DotNetModifierListOwner.class);
+					if(modifierListOwner != null)
+					{
+						last = temp;
+						targetToWalkChildren = modifierListOwner.getParent();
+						break;
+					}
+				}
+			}
+			else if(temp instanceof CSharpAttributeImpl)
+			{
+				last = temp;
+				targetToWalkChildren = PsiTreeUtil.getParentOfType(temp, DotNetModifierListOwner.class);
+			}
+			else if(temp instanceof CSharpMethodCallParameterListImpl)
+			{
+				DotNetAttribute attribute = PsiTreeUtil.getParentOfType(temp, DotNetAttribute.class);
+				if(attribute != null)
+				{
+					last = attribute;
+					targetToWalkChildren = PsiTreeUtil.getParentOfType(attribute, DotNetModifierListOwner.class);
+					break;
+				}
+			}
+			else if(temp instanceof DotNetFieldDeclaration)
+			{
+				last = element;
+				targetToWalkChildren = temp.getParent();
+				break;
+			}
+			else if(temp instanceof DotNetXXXAccessor)
+			{
+				last = temp;
+				targetToWalkChildren = temp.getParent().getParent();
+				break;
+			}
+			else if(temp instanceof DotNetLikeMethodDeclaration)
+			{
+				last = temp;
+				targetToWalkChildren = temp.getParent();
+				break;
+			}
+			temp = temp.getParent();
 		}
 
-		return p.toResolveResults();
+		if(targetToWalkChildren == null)
+		{
+			LOGGER.error(element.getText() + " " + last + " " + kind + " " + element.getParent() + " " + element.getContainingFile().getName());
+		}
+		return Pair.create(last, targetToWalkChildren);
 	}
 
 	@NotNull

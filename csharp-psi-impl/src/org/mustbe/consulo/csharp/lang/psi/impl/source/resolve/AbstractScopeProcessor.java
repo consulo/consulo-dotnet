@@ -61,6 +61,11 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 		}
 	}
 
+	public void merge(AbstractScopeProcessor processor)
+	{
+		myElements.addAll(processor.myElements);
+	}
+
 	@NotNull
 	public ResolveResult[] toResolveResults()
 	{

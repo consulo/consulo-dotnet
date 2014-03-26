@@ -28,6 +28,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.completion.CompletionData;
@@ -145,6 +146,10 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 
 			builder = builder.withTypeText(methodDeclaration.getReturnTypeRef().getPresentableText());
 			builder = builder.withTailText(parameterText, false);
+			if(CSharpResolveUtil.isExtensionWrapper(methodDeclaration))
+			{
+				builder = builder.withItemTextUnderlined(true);
+			}
 			builder = builder.withInsertHandler(new InsertHandler<LookupElement>()
 			{
 				@Override

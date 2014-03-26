@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper.GenericUnwrapTool;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -248,5 +249,10 @@ public class CSharpResolveUtil
 
 		PsiFile psiFile = state.get(CONTAINS_FILE);
 		return psiFile == null || walkChildren(processor, psiFile, sender, maxScope, state);
+	}
+
+	public static boolean isExtensionWrapper(@NotNull PsiElement element)
+	{
+		return element instanceof CSharpLightMethodDeclaration && ((CSharpLightMethodDeclaration) element).isExtensionWrapper();
 	}
 }

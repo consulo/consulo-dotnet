@@ -26,6 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
@@ -45,7 +46,6 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.BitUtil;
 
 /**
  * @author VISTALL
@@ -53,8 +53,6 @@ import com.intellij.util.BitUtil;
  */
 public class CSharpHighlightUtil
 {
-	public static final int EXTENSION_CALL = 1 << 0;
-
 	public static boolean isGeneratedElement(@NotNull PsiElement element)
 	{
 		if(element instanceof CSharpLocalVariable)
@@ -75,7 +73,7 @@ public class CSharpHighlightUtil
 	}
 
 	@Nullable
-	public static HighlightInfo highlightNamed(@NotNull HighlightInfoHolder holder, @Nullable PsiElement element, @Nullable PsiElement target, int flags)
+	public static HighlightInfo highlightNamed(@NotNull HighlightInfoHolder holder, @Nullable PsiElement element, @Nullable PsiElement target)
 	{
 		if(target == null)
 		{
@@ -104,7 +102,7 @@ public class CSharpHighlightUtil
 		}
 		else if(element instanceof DotNetMethodDeclaration)
 		{
-			if(BitUtil.isSet(flags, EXTENSION_CALL))
+			if(CSharpResolveUtil.isExtensionWrapper(element))
 			{
 				key = CSharpHighlightKey.EXTENSION_METHOD;
 			}
