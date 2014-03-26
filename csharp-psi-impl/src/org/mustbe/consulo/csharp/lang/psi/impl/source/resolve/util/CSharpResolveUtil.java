@@ -24,6 +24,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper.GenericUnwrapTool;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -57,6 +58,15 @@ public class CSharpResolveUtil
 		public DotNetGenericExtractor getDefaultValue()
 		{
 			return DotNetGenericExtractor.EMPTY;
+		}
+	};
+	public static final KeyWithDefaultValue<Boolean> TYPE_RESOLVING = new KeyWithDefaultValue<Boolean>
+			("type-resolving")
+	{
+		@Override
+		public Boolean getDefaultValue()
+		{
+			return Boolean.FALSE;
 		}
 	};
 	public static final Key<PsiFile> CONTAINS_FILE = Key.create("contains.file");
@@ -130,6 +140,8 @@ public class CSharpResolveUtil
 
 			DotNetType[] superTypes = DotNetType.EMPTY_ARRAY;
 
+			Boolean typeResolving = state.get(TYPE_RESOLVING);
+
 			if(typeDeclaration.hasModifier(CSharpModifier.PARTIAL))
 			{
 				val types = DotNetPsiFacade.getInstance(entrance.getProject()).findTypes(typeDeclaration.getPresentableQName(),
@@ -147,6 +159,17 @@ public class CSharpResolveUtil
 						superTypes = ArrayUtil.append(superTypes, dotNetType, DotNetType.ARRAY_FACTORY);
 					}
 
+					if(typeResolving)
+					{
+						for(DotNetGenericParameter parameter : type.getGenericParameters())
+						{
+							if(!processor.execute(parameter, state))
+							{
+								return false;
+							}
+						}
+					}
+
 					for(DotNetNamedElement namedElement : type.getMembers())
 					{
 						DotNetNamedElement extracted = GenericUnwrapTool.extract(namedElement, extractor);
@@ -160,6 +183,17 @@ public class CSharpResolveUtil
 			}
 			else
 			{
+				if(typeResolving)
+				{
+					for(DotNetGenericParameter parameter : typeDeclaration.getGenericParameters())
+					{
+						if(!processor.execute(parameter, state))
+						{
+							return false;
+						}
+					}
+				}
+
 				for(DotNetNamedElement namedElement : typeDeclaration.getMembers())
 				{
 					DotNetNamedElement extracted = GenericUnwrapTool.extract(namedElement, extractor);

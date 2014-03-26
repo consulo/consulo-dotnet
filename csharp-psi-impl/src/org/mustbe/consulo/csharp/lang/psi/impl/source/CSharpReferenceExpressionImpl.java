@@ -583,6 +583,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		else
 		{
 			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
+			if(kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD)
+			{
+				resolveState = resolveState.put(CSharpResolveUtil.TYPE_RESOLVING, Boolean.TRUE);
+			}
 
 			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, kind);
 
@@ -628,7 +632,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					DotNetModifierListOwner modifierListOwner = PsiTreeUtil.getParentOfType(temp, DotNetModifierListOwner.class);
 					if(modifierListOwner != null)
 					{
-						last = temp;
+						last = modifierListOwner;
 						targetToWalkChildren = modifierListOwner.getParent();
 						break;
 					}
