@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.lineMarkerProvider.LineMarkerCollector;
 import org.mustbe.consulo.csharp.ide.lineMarkerProvider.OverrideTypeCollector;
 import org.mustbe.consulo.csharp.ide.lineMarkerProvider.PartialTypeCollector;
+import org.mustbe.consulo.csharp.ide.lineMarkerProvider.RecursiveCallCollector;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.openapi.application.ApplicationManager;
@@ -37,7 +38,11 @@ import com.intellij.psi.PsiElement;
  */
 public class CSharpLineMarkerProvider implements LineMarkerProvider, DumbAware
 {
-	private static final LineMarkerCollector[] ourCollectors = {new OverrideTypeCollector(), new PartialTypeCollector()};
+	private static final LineMarkerCollector[] ourCollectors = {
+			new OverrideTypeCollector(),
+			new PartialTypeCollector(),
+			new RecursiveCallCollector()
+	};
 
 	@Nullable
 	@Override
