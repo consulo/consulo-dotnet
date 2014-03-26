@@ -24,10 +24,12 @@ import javax.swing.Icon;
 import org.consulo.lombok.annotations.Logger;
 import org.mustbe.consulo.csharp.ide.codeInsight.CSharpCodeInsightSettings;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeByQNameIndex;
 import org.mustbe.consulo.dotnet.DotNetBundle;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.codeInsight.actions.OptimizeImportsProcessor;
 import com.intellij.codeInsight.hint.QuestionAction;
@@ -140,9 +142,11 @@ public class AddUsingAction implements QuestionAction
 		{
 			((CSharpUsingListImpl) elementForBeforeAdd).addUsing(qName);
 		}
-		else if(elementForBeforeAdd instanceof PsiFile)
+		else if(elementForBeforeAdd instanceof CSharpFileImpl)
 		{
-			PsiElement firstChild = elementForBeforeAdd.getFirstChild();
+			DotNetQualifiedElement[] members = ((CSharpFileImpl) elementForBeforeAdd).getMembers();
+
+			PsiElement firstChild = members.length > 0 ? members[0] : elementForBeforeAdd.getFirstChild();
 
 			assert firstChild != null;
 
