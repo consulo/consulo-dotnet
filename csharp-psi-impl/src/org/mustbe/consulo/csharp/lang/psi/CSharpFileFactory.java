@@ -18,10 +18,12 @@ package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFragmentedFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
@@ -49,8 +51,7 @@ public class CSharpFileFactory
 
 	public static CSharpUsingListImpl createUsingListFromText(@NotNull Project project, @NotNull String text)
 	{
-		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE,
-				text);
+		val fileFromText = (CSharpFileImpl) PsiFileFactory.getInstance(project).createFileFromText("dummy.cs", CSharpFileType.INSTANCE, text);
 
 		return (CSharpUsingListImpl) fileFromText.getFirstChild();
 	}
@@ -73,6 +74,21 @@ public class CSharpFileFactory
 		DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) psiFile.getMembers()[0];
 		DotNetVariable dotNetNamedElement = (DotNetVariable) typeDeclaration.getMembers()[0];
 		return dotNetNamedElement.getType();
+	}
+
+	public static DotNetStatement createLocalVariableStatement(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
+	{
+		val clazz = "class _Dummy { " +
+				"void test() {" +
+				text +
+				"}" +
+				" }";
+
+		CSharpFragmentedFileImpl psiFile = createTypeDeclarationWithScope(project, scope, clazz);
+
+		DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) psiFile.getMembers()[0];
+		CSharpMethodDeclaration dotNetNamedElement = (CSharpMethodDeclaration) typeDeclaration.getMembers()[0];
+		return ((CSharpBlockStatementImpl)dotNetNamedElement.getCodeBlock()).getStatements()[0];
 	}
 
 	public static DotNetTypeDeclaration createTypeDeclaration(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)

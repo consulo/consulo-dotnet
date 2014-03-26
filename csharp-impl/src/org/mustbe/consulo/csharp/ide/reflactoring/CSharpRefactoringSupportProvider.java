@@ -16,8 +16,11 @@
 
 package org.mustbe.consulo.csharp.ide.reflactoring;
 
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.reflactoring.introduceVariable.CSharpIntroduceVariableHandler;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.psi.PsiElement;
+import com.intellij.refactoring.RefactoringActionHandler;
 
 /**
  * @author VISTALL
@@ -25,6 +28,13 @@ import com.intellij.psi.PsiElement;
  */
 public class CSharpRefactoringSupportProvider extends RefactoringSupportProvider
 {
+	@Nullable
+	@Override
+	public RefactoringActionHandler getIntroduceVariableHandler()
+	{
+		return new CSharpIntroduceVariableHandler();
+	}
+
 	@Override
 	public boolean isSafeDeleteAvailable(PsiElement element)
 	{
