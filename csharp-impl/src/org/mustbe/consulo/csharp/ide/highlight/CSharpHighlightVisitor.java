@@ -22,13 +22,22 @@ import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.codeInsight.actions.FlipExtensionMethodCall;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.*;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpArrayAccessExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.result.ExtensionMethodResolveResult;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
@@ -37,6 +46,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
+import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
 import com.intellij.openapi.util.TextRange;
@@ -256,8 +266,16 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			if(resolveResult instanceof ExtensionMethodResolveResult)
 			{
 				flags = BitUtil.set(flags, CSharpHighlightUtil.EXTENSION_CALL, true);
+				HighlightInfo highlightInfo = highlightNamed(resolveResult.getElement(), referenceElement, flags);
+				if(highlightInfo != null)
+				{
+					QuickFixAction.registerQuickFixAction(highlightInfo, FlipExtensionMethodCall.INSTANCE);
+				}
 			}
-			highlightNamed(resolveResult.getElement(), referenceElement, flags);
+			else
+			{
+				highlightNamed(resolveResult.getElement(), referenceElement, flags);
+			}
 		}
 		else
 		{
@@ -280,9 +298,10 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 	}
 
-	public void highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
+	@Nullable
+	public HighlightInfo highlightNamed(@Nullable PsiElement element, @Nullable PsiElement target)
 	{
-		highlightNamed(element, target, 0);
+		return highlightNamed(element, target, 0);
 	}
 
 	@Nullable
