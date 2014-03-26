@@ -20,6 +20,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
 import edu.arizona.cs.mbel.mbel.AssemblyInfo;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
 
 /**
  * @author VISTALL
@@ -32,9 +33,9 @@ public class DotNetAssemblyFileArchiveEntry extends DotNetAbstractFileArchiveEnt
 
 	private final AssemblyInfo myAssemblyInfo;
 
-	public DotNetAssemblyFileArchiveEntry(edu.arizona.cs.mbel.mbel.AssemblyInfo assemblyInfo, long lastModified)
+	public DotNetAssemblyFileArchiveEntry(ModuleParser moduleParser, edu.arizona.cs.mbel.mbel.AssemblyInfo assemblyInfo, long lastModified)
 	{
-		super(AssemblyInfo, lastModified);
+		super(moduleParser, AssemblyInfo, lastModified);
 		myAssemblyInfo = assemblyInfo;
 	}
 

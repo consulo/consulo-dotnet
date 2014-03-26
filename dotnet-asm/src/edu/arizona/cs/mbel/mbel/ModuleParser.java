@@ -21,6 +21,7 @@ package edu.arizona.cs.mbel.mbel;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.MSILInputStream;
@@ -72,6 +73,8 @@ public class ModuleParser extends BaseCustomAttributeOwner
 	private byte[] Mvid;                // GUID
 	private byte[] EncID;               // GUID
 	private byte[] EncBaseID;           // GUID
+
+	private AtomicBoolean myParsed = new AtomicBoolean(false);
 
 	/**
 	 * Makes a ClassParser that uses the given input stream.
@@ -234,18 +237,27 @@ public class ModuleParser extends BaseCustomAttributeOwner
 	 * It will parse the various structures in the most convenient order possible, all of which
 	 * are either accessible from the Module, or are unimportant and discarded.
 	 */
-	private void parse() throws IOException, MSILParseException
+	private void parse() throws IOException,  MSILParseException
 	{
-		// REMEMBER!!! ALL TOKEN VALUES ARE 1-BASED INDICES!!!!
+		buildAssemblyInfo();
+		buildTypeDefs();
+	}
+
+	public void parseNext() throws IOException
+	{
+		if(myParsed.getAndSet(true))
+		{
+			return;
+		}
 
 		buildModule();
 		buildModuleRefs();
-		buildAssemblyInfo();
+
 		buildAssemblyRefs();
 		buildFileReferences();
 		buildManifestResources();
 		buildExportedTypes();
-		buildTypeDefs();
+
 		buildTypeRefs();
 		buildTypeSpecs();
 		setSuperClasses();

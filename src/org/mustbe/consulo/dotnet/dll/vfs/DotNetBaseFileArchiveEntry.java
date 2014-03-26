@@ -22,6 +22,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
 import com.intellij.util.SmartList;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 
 /**
@@ -33,9 +34,9 @@ public class DotNetBaseFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 {
 	private final List<TypeDef> myTypeDefs;
 
-	public DotNetBaseFileArchiveEntry(TypeDef typeDef, String name, long lastModified)
+	public DotNetBaseFileArchiveEntry(ModuleParser moduleParser, TypeDef typeDef, String name, long lastModified)
 	{
-		super(name, lastModified);
+		super(moduleParser, name, lastModified);
 		myTypeDefs = new SmartList<TypeDef>(typeDef);
 	}
 

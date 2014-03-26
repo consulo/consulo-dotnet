@@ -91,7 +91,7 @@ public class DotNetArchiveFile implements ArchiveFile
 			}
 			else
 			{
-				DotNetBaseFileArchiveEntry e = new DotNetBaseFileArchiveEntry(typeDef, path, myLastModified);
+				DotNetBaseFileArchiveEntry e = new DotNetBaseFileArchiveEntry(myModuleParser, typeDef, path, myLastModified);
 				fileList.add(e);
 				duplicateMap.put(path, e);
 			}
@@ -100,7 +100,7 @@ public class DotNetArchiveFile implements ArchiveFile
 		AssemblyInfo assemblyInfo = myModuleParser.getAssemblyInfo();
 		if(assemblyInfo != null)
 		{
-			fileList.add(new DotNetAssemblyFileArchiveEntry(assemblyInfo, myLastModified));
+			fileList.add(new DotNetAssemblyFileArchiveEntry(myModuleParser, assemblyInfo, myLastModified));
 		}
 
 		// sort - at to head, files without namespaces

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.text.CharArrayUtil;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
 
 /**
  * @author VISTALL
@@ -18,6 +19,7 @@ import com.intellij.util.text.CharArrayUtil;
 @Logger
 public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiveEntry
 {
+	private final ModuleParser myModuleParser;
 	private final String myName;
 	private long myLastModified;
 
@@ -27,6 +29,14 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 		@Override
 		protected byte[] compute()
 		{
+			try
+			{
+				myModuleParser.parseNext();
+			}
+			catch(IOException ignored)
+			{
+				//
+			}
 			XStubBuilder builder = createBuilder();
 			char[] chars = CharArrayUtil.fromSequence(builder.gen());
 			try
@@ -41,8 +51,9 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 		}
 	};
 
-	public DotNetAbstractFileArchiveEntry(String name, long lastModified)
+	public DotNetAbstractFileArchiveEntry(ModuleParser moduleParser, String name, long lastModified)
 	{
+		myModuleParser = moduleParser;
 		myName = name;
 		myLastModified = lastModified;
 	}
