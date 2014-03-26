@@ -21,6 +21,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightParameterList;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
@@ -52,7 +53,7 @@ public class ExtensionResolveScopeProcessor extends AbstractScopeProcessor
 		{
 			for(DotNetNamedElement dotNetNamedElement : ((CSharpTypeDeclaration) element).getMembers())
 			{
-				if(myCond.value(dotNetNamedElement))
+				if(CSharpMethodImplUtil.isExtensionMethod(dotNetNamedElement) && myCond.value(dotNetNamedElement))
 				{
 					add(new PsiElementResolveResult(transform((CSharpMethodDeclaration) dotNetNamedElement)));
 					if(myNamed)

@@ -19,10 +19,9 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfo;
-import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
@@ -70,8 +69,7 @@ public class CSharpMethodStub extends MemberStub<CSharpMethodDeclaration>
 		{
 			i |= DELEGATE_MASK;
 		}
-		DotNetParameter[] parameters = methodDeclaration.getParameters();
-		if(parameters.length > 0 && parameters[0].hasModifier(CSharpModifier.THIS))
+		if(CSharpMethodImplUtil.isExtensionMethod(methodDeclaration))
 		{
 			i |= EXTENSION_MASK;
 		}

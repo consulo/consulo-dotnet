@@ -38,7 +38,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImp
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -263,7 +263,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			PsiElement element = validResults.get(0);
 			HighlightInfo highlightInfo = highlightNamed(element, referenceElement);
 
-			if(highlightInfo != null && CSharpResolveUtil.isExtensionWrapper(element))
+			if(highlightInfo != null && CSharpMethodImplUtil.isExtensionWrapper(element))
 			{
 				QuickFixAction.registerQuickFixAction(highlightInfo, FlipExtensionMethodCall.INSTANCE);
 			}

@@ -26,7 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
@@ -102,7 +102,7 @@ public class CSharpHighlightUtil
 		}
 		else if(element instanceof DotNetMethodDeclaration)
 		{
-			if(CSharpResolveUtil.isExtensionWrapper(element))
+			if(CSharpMethodImplUtil.isExtensionWrapper(element))
 			{
 				key = CSharpHighlightKey.EXTENSION_METHOD;
 			}
