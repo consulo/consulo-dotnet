@@ -98,9 +98,11 @@ public class XStubUtil
 			case '\f':
 				return "\\f";
 			case '\'':
+				return "\\\'";
 			case '"':
+				return "\\\"";
 			case '\\':
-				return "\\";
+				return "\\\\";
 		}
 		return a;
 	}
