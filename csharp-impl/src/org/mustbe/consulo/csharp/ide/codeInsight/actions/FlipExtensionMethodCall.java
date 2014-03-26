@@ -33,7 +33,7 @@ public class FlipExtensionMethodCall extends PsiElementBaseIntentionAction
 
 	public FlipExtensionMethodCall()
 	{
-		setText("Flit Extension Method Call");
+		setText("Flip extension call");
 	}
 
 	@Override
