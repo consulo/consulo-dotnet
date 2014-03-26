@@ -17,7 +17,6 @@
 package org.mustbe.consulo.microsoft.dotnet.sdk;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,21 +37,16 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
-import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.Consumer;
 import lombok.val;
 
@@ -141,7 +135,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 		VirtualFile homeDirectory = sdk.getHomeDirectory();
 		assert homeDirectory != null;
 
-		File file = new File(homeDirectory.getPath(), "csc.rsp");
+	/*	File file = new File(homeDirectory.getPath(), "csc.rsp");
 		if(file.exists())
 		{
 			try
@@ -189,7 +183,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 				super.setupSdkPaths(sdk);
 			}
 		}
-		else
+		else */
 		{
 			super.setupSdkPaths(sdk);
 		}
