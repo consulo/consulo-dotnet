@@ -864,7 +864,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					return false;
 				}
-				if(finalKind == ResolveToKind.METHOD && e instanceof CSharpMethodDeclaration && ((CSharpMethodDeclaration) e).isDelegate())
+				if(e instanceof CSharpMethodDeclaration && ((CSharpMethodDeclaration) e).isDelegate())
 				{
 					return false;
 				}

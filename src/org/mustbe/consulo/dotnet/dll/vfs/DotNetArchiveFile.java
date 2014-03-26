@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.util.StubToStringUtil;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;
@@ -66,12 +66,12 @@ public class DotNetArchiveFile implements ArchiveFile
 		// iterate type def add as files
 		for(TypeDef typeDef : typeDefs)
 		{
-			if(StubToStringUtil.isInvisibleMember(typeDef.getName()))
+			if(XStubUtil.isInvisibleMember(typeDef.getName()))
 			{
 				continue;
 			}
 
-			String userName = StubToStringUtil.getUserTypeDefName(typeDef);
+			String userName = XStubUtil.getUserTypeDefName(typeDef);
 
 			String path;
 			String namespace = typeDef.getNamespace();

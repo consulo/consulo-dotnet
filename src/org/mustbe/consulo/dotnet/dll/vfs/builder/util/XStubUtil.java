@@ -16,14 +16,119 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs.builder.util;
 
+import java.io.UnsupportedEncodingException;
+
+import com.intellij.openapi.util.text.StringUtil;
+import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.signature.Signature;
+
 /**
  * @author VISTALL
  * @since 13.12.13.
  */
-public enum XStubUtil
+public class XStubUtil
 {
-	PRIVATE,
-	PUBLIC,
-	INTERNAL,
-	PROTECTED
+	public static final char GENERIC_MARKER_IN_NAME = '`';
+	private static final char[] ILLEGAL_CHARS = new char[] {'{', '}', '<', '>', '='};
+
+	public static boolean isSet(long value, int mod)
+	{
+		return (value & mod) == mod;
+	}
+
+	public static boolean isSet(long value, int mod, int v)
+	{
+		return (value & mod) == v;
+	}
+
+	public static String getUtf8(ByteBuffer byteBuffer)
+	{
+		byte b = byteBuffer.get();
+		if(b == 0xFF)
+		{
+			return "";
+		}
+		else
+		{
+			byteBuffer.back();
+			int size = Signature.readCodedInteger(byteBuffer);
+			if(size == 0)
+			{
+				return "";
+			}
+			else
+			{
+				try
+				{
+					return convertTo(new String(byteBuffer.get(size), "UTF-8"));
+				}
+				catch(UnsupportedEncodingException e)
+				{
+					return "UnsupportedEncodingException";
+				}
+			}
+		}
+	}
+
+
+
+	public static String convertTo(String old)
+	{
+		char[] chars = old.toCharArray();
+		StringBuilder builder = new StringBuilder(chars.length);
+		for(int i = 0; i < chars.length; i++)
+		{
+			char aChar = chars[i];
+			builder.append(toValidStringSymbol(aChar));
+		}
+		return builder.capacity() == old.length() ? old : builder.toString();
+	}
+
+	public static Object toValidStringSymbol(char a)
+	{
+		switch(a)
+		{
+			case '\n':
+				return "\\n";
+			case '\r':
+				return "\\r";
+			case '\t':
+				return "\\t";
+			case '\f':
+				return "\\f";
+			case '\'':
+			case '"':
+			case '\\':
+				return "\\";
+		}
+		return a;
+	}
+
+	public static String getUserTypeDefName(TypeDef typeDef)
+	{
+		return getUserTypeDefName(typeDef.getName());
+	}
+
+	public static String getUserTypeDefName(String name)
+	{
+		int i = name.lastIndexOf(GENERIC_MARKER_IN_NAME);
+		if(i > 0)
+		{
+			name = name.substring(0, i);
+		}
+		return name;
+	}
+
+	public static boolean isInvisibleMember(String name)
+	{
+		for(char illegalChar : ILLEGAL_CHARS)
+		{
+			if(StringUtil.containsChar(name, illegalChar))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

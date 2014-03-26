@@ -30,7 +30,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.util.StubToStringUtil;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XByteUtil;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubModifier;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -90,7 +91,17 @@ public class XStubBuilder
 
 	private static String[] KEYWORDS = new String[]{
 			"event",
-			"params"
+			"params",
+			"break",
+			"continue",
+			"lock",
+			"explicit",
+			"this",
+			"abstract",
+			"sealed",
+			"object",
+			"case",
+			"finally",
 	};
 
 	private static List<String> SKIPPED_SUPERTYPES = new ArrayList<String>()
@@ -145,7 +156,7 @@ public class XStubBuilder
 			{
 				if("Invoke".equals(methodDef.getName()))
 				{
-					MethodDef newMethodDef = new MethodDef(StubToStringUtil.getUserTypeDefName(typeDef), methodDef.getImplFlags(),
+					MethodDef newMethodDef = new MethodDef(XStubUtil.getUserTypeDefName(typeDef), methodDef.getImplFlags(),
 							methodDef.getFlags(), methodDef.getSignature());
 					for(GenericParamDef paramDef : typeDef.getGenericParams())
 					{
@@ -159,7 +170,7 @@ public class XStubBuilder
 		}
 
 		StringBuilder builder = new StringBuilder();
-		if(StubToStringUtil.isSet(typeDef.getFlags(), TypeAttributes.VisibilityMask, TypeAttributes.Public))
+		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.VisibilityMask, TypeAttributes.Public))
 		{
 			builder.append("public ");
 		}
@@ -168,12 +179,12 @@ public class XStubBuilder
 			builder.append("internal ");
 		}
 
-		if(StubToStringUtil.isSet(typeDef.getFlags(), TypeAttributes.Sealed))
+		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.Sealed))
 		{
 			builder.append("sealed ");
 		}
 
-		if(StubToStringUtil.isSet(typeDef.getFlags(), TypeAttributes.Abstract))
+		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.Abstract))
 		{
 			builder.append("abstract ");
 		}
@@ -186,7 +197,7 @@ public class XStubBuilder
 		{
 			builder.append("struct ");
 		}
-		else if(StubToStringUtil.isSet(typeDef.getFlags(), TypeAttributes.Interface))
+		else if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.Interface))
 		{
 			builder.append("interface ");
 		}
@@ -194,7 +205,7 @@ public class XStubBuilder
 		{
 			builder.append("class ");
 		}
-		builder.append(StubToStringUtil.getUserTypeDefName(typeDef));
+		builder.append(XStubUtil.getUserTypeDefName(typeDef));
 
 		processGenericParameterList(typeDef, builder);
 
@@ -246,7 +257,7 @@ public class XStubBuilder
 		{
 			if(isEnum)
 			{
-				if(StubToStringUtil.isSet(field.getFlags(), FieldAttributes.Static))
+				if(XStubUtil.isSet(field.getFlags(), FieldAttributes.Static))
 				{
 					parent.getBlocks().addAll(AttributeStubBuilder.processAttributes(field, typeDef, null, null, null));
 
@@ -285,7 +296,7 @@ public class XStubBuilder
 			}
 			else
 			{
-				if(StubToStringUtil.isInvisibleMember(field.getName()))
+				if(XStubUtil.isInvisibleMember(field.getName()))
 				{
 					continue;
 				}
@@ -320,7 +331,7 @@ public class XStubBuilder
 		{
 			String name = cutSuperName(methodDef.getName());
 
-			if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
+			if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 			{
 				// dont show properties methods
 				if(name.startsWith("get_") ||
@@ -333,7 +344,7 @@ public class XStubBuilder
 				}
 			}
 
-			if(StubToStringUtil.isInvisibleMember(name))
+			if(XStubUtil.isInvisibleMember(name))
 			{
 				continue;
 			}
@@ -354,14 +365,14 @@ public class XStubBuilder
 		builder.append(getFieldAccess(field).name().toLowerCase());
 		builder.append(" ");
 
-		if(StubToStringUtil.isSet(field.getFlags(), FieldAttributes.Static))
+		if(XStubUtil.isSet(field.getFlags(), FieldAttributes.Static))
 		{
 			builder.append("static ");
 		}
 
 		builder.append(TypeSignatureStubBuilder.typeToString(field.getSignature().getType(), typeDef, typeDef));
 		builder.append(" ");
-		builder.append(field.getName());
+		builder.append(toValidName(field.getName()));
 
 		byte[] defaultValue = field.getDefaultValue();
 		if(defaultValue != null)
@@ -405,7 +416,7 @@ public class XStubBuilder
 			}
 		}
 
-		XStubUtil propertyModifier = XStubUtil.INTERNAL;
+		XStubModifier propertyModifier = XStubModifier.INTERNAL;
 
 		if(getter == null && setter != null)
 		{
@@ -463,7 +474,7 @@ public class XStubBuilder
 			removeOnStub = processMethod(typeDef, removeOnMethod, "remove", false, true, false);
 		}
 
-		XStubUtil propertyModifier = XStubUtil.INTERNAL;
+		XStubModifier propertyModifier = XStubModifier.INTERNAL;
 
 		if(addOnMethod == null && removeOnMethod != null)
 		{
@@ -496,35 +507,35 @@ public class XStubBuilder
 		return stubBlock;
 	}
 
-	private static XStubUtil getFieldAccess(Field methodDef)
+	private static XStubModifier getFieldAccess(Field methodDef)
 	{
-		if(StubToStringUtil.isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Public))
+		if(XStubUtil.isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Public))
 		{
-			return XStubUtil.PUBLIC;
+			return XStubModifier.PUBLIC;
 		}
-		else if(StubToStringUtil.isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Private))
+		else if(XStubUtil.isSet(methodDef.getFlags(), FieldAttributes.FieldAccessMask, FieldAttributes.Private))
 		{
-			return XStubUtil.PRIVATE;
+			return XStubModifier.PRIVATE;
 		}
 		else
 		{
-			return XStubUtil.INTERNAL;
+			return XStubModifier.INTERNAL;
 		}
 	}
 
-	private static XStubUtil getMethodAccess(MethodDef methodDef)
+	private static XStubModifier getMethodAccess(MethodDef methodDef)
 	{
-		if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Public))
+		if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Public))
 		{
-			return XStubUtil.PUBLIC;
+			return XStubModifier.PUBLIC;
 		}
-		else if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Private))
+		else if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.MemberAccessMask, MethodAttributes.Private))
 		{
-			return XStubUtil.PRIVATE;
+			return XStubModifier.PRIVATE;
 		}
 		else
 		{
-			return XStubUtil.INTERNAL;
+			return XStubModifier.INTERNAL;
 		}
 	}
 
@@ -543,24 +554,24 @@ public class XStubBuilder
 		}
 		else
 		{
-			if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.Abstract))
+			if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.Abstract))
 			{
 				builder.append("abstract ");
 				canHaveBody = false;
 			}
 
-			if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.Static))
+			if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.Static))
 			{
 				builder.append("static ");
 			}
 
-			if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.Virtual))
+			if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.Virtual))
 			{
 				builder.append("virtual ");
 			}
 		}
 
-		if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.Final))
+		if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.Final))
 		{
 			//builder.append("final "); //TODO [VISTALL] final  ? maybe sealed ?
 		}
@@ -568,14 +579,14 @@ public class XStubBuilder
 		TypeSignature parameterType = null;
 		if(name.equals(CONSTRUCTOR_NAME))
 		{
-			builder.append(StubToStringUtil.getUserTypeDefName(typeDef));
+			builder.append(XStubUtil.getUserTypeDefName(typeDef));
 		}
 		else
 		{
 			if(!accessor)
 			{
 				boolean operator = false;
-				if(StubToStringUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
+				if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 				{
 					if(SPECIAL_METHOD_NAMES.containsKey(name))
 					{
@@ -724,7 +735,7 @@ public class XStubBuilder
 		{
 			try
 			{
-				return StringUtil.QUOTER.fun(new String(value, "UTF-8"));
+				return StringUtil.QUOTER.fun(XStubUtil.convertTo(new String(value, "UTF-8")));
 			}
 			catch(UnsupportedEncodingException e)
 			{
@@ -741,15 +752,15 @@ public class XStubBuilder
 		}
 		else if(signature == TypeSignature.I2)
 		{
-			return StubToStringUtil.wrap(value).getShort();
+			return XByteUtil.getShort(value);
 		}
 		else if(signature == TypeSignature.I4)
 		{
-			return StubToStringUtil.wrap(value).getInt();
+			return XByteUtil.getInt(value);
 		}
 		else if(signature == TypeSignature.I8)
 		{
-			return StubToStringUtil.wrap(value).getLong();
+			return XByteUtil.getLong(value);
 		}
 		else if(signature == TypeSignature.U1)
 		{
@@ -757,11 +768,11 @@ public class XStubBuilder
 		}
 		else if(signature == TypeSignature.U2)
 		{
-			return StubToStringUtil.wrap(value).getShort() & 0xFFFF;
+			return XByteUtil.getShort(value) & 0xFFFF;
 		}
 		else if(signature == TypeSignature.U4)
 		{
-			return StubToStringUtil.wrap(value).getInt() & 0xFFFFFFFFL;
+			return XByteUtil.getInt(value) & 0xFFFFFFFFL;
 		}
 		else if(signature == TypeSignature.U8)
 		{
@@ -769,15 +780,15 @@ public class XStubBuilder
 		}
 		else if(signature == TypeSignature.CHAR)
 		{
-			return StringUtil.SINGLE_QUOTER.fun(String.valueOf(StubToStringUtil.wrap(value).getChar()));
+			return StringUtil.SINGLE_QUOTER.fun(String.valueOf(XStubUtil.toValidStringSymbol(XByteUtil.getChar(value))));
 		}
 		else if(signature == TypeSignature.R4)
 		{
-			return StubToStringUtil.wrap(value).getFloat();
+			return Float.intBitsToFloat(XByteUtil.getInt(value));
 		}
 		else if(signature == TypeSignature.R8)
 		{
-			return StubToStringUtil.wrap(value).getDouble();
+			return Double.longBitsToDouble(XByteUtil.getLong(value));
 		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{
@@ -789,7 +800,7 @@ public class XStubBuilder
 				{
 					for(Field field : ((TypeDef) valueType).getFields())
 					{
-						if(StubToStringUtil.isSet(field.getFlags(), FieldAttributes.Static) &&
+						if(XStubUtil.isSet(field.getFlags(), FieldAttributes.Static) &&
 								field.getDefaultValue() != null && Arrays.equals(field.getDefaultValue(), value))
 						{
 							return TypeSignatureStubBuilder.toStringFromDefRefSpec(valueType, typeDef, methodDef) + "." + field.getName();
@@ -803,7 +814,7 @@ public class XStubBuilder
 				signature.getType() == SignatureConstants.ELEMENT_TYPE_CLASS ||
 				signature.getType() == SignatureConstants.ELEMENT_TYPE_SZARRAY)
 		{
-			if(StubToStringUtil.wrap(value).getInt() == 0)
+			if(XByteUtil.getInt(value) == 0)
 			{
 				return "null";
 			}

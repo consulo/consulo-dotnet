@@ -18,7 +18,7 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import org.consulo.lombok.annotations.Logger;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.util.StubToStringUtil;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.mbel.TypeSpec;
@@ -116,7 +116,7 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_CLASS:
 				ClassTypeSignature typeSignature = (ClassTypeSignature) signature;
-				builder.append(StubToStringUtil.getUserTypeDefName(typeSignature.getClassType().getFullName()));
+				builder.append(XStubUtil.getUserTypeDefName(typeSignature.getClassType().getFullName()));
 				break;
 			case ELEMENT_TYPE_GENERIC_INST:
 				TypeSignatureWithGenericParameters mainTypeSignature = (TypeSignatureWithGenericParameters) signature;
@@ -147,7 +147,7 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_VALUETYPE:
 				ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
-				builder.append(StubToStringUtil.getUserTypeDefName(valueTypeSignature.getValueType().getFullName()));
+				builder.append(XStubUtil.getUserTypeDefName(valueTypeSignature.getValueType().getFullName()));
 				break;
 			default:
 				builder.append("UNK").append(Integer.toHexString(type).toUpperCase());

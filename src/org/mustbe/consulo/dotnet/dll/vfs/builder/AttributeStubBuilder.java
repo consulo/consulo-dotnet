@@ -7,7 +7,8 @@ import java.util.List;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.util.StubToStringUtil;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XByteUtil;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
@@ -276,7 +277,7 @@ public class AttributeStubBuilder
 		{
 			//TypeSignature parse = TypeSignatureParser.parse(byteBuffer, null);
 
-			return String.valueOf("typeOf(unsupported)");
+			return String.valueOf("typeof(unsupported)");
 		}
 		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{
@@ -290,8 +291,8 @@ public class AttributeStubBuilder
 				{
 					for(Field field : ((TypeDef) valueType).getFields())
 					{
-						if(StubToStringUtil.isSet(field.getFlags(), FieldAttributes.Static) &&
-								field.getDefaultValue() != null && StubToStringUtil.wrap(field.getDefaultValue()).getInt() == valueIndex)
+						if(XStubUtil.isSet(field.getFlags(), FieldAttributes.Static) &&
+								field.getDefaultValue() != null && XByteUtil.getInt(field.getDefaultValue()) == valueIndex)
 						{
 							return TypeSignatureStubBuilder.toStringFromDefRefSpec(valueType, typeDef, methodDef) + "." + field.getName();
 						}
@@ -303,7 +304,7 @@ public class AttributeStubBuilder
 		}
 		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_STRING)
 		{
-			return "@" + StringUtil.QUOTER.fun(StubToStringUtil.getUtf8(byteBuffer));
+			return StringUtil.QUOTER.fun(XStubUtil.getUtf8(byteBuffer));
 		}
 		else
 		{
