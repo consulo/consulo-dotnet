@@ -191,7 +191,7 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	}
 
 	@Override
-	public boolean haveExtensions()
+	public boolean hasExtensions()
 	{
 		CSharpTypeStub stub = getStub();
 		if(stub != null)

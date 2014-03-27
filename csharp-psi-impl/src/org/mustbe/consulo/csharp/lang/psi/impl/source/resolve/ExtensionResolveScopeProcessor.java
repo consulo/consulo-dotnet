@@ -49,7 +49,7 @@ public class ExtensionResolveScopeProcessor extends AbstractScopeProcessor
 	@Override
 	public boolean execute(@NotNull PsiElement element, ResolveState state)
 	{
-		if(element instanceof CSharpTypeDeclaration && ((CSharpTypeDeclaration) element).haveExtensions())
+		if(element instanceof CSharpTypeDeclaration && ((CSharpTypeDeclaration) element).hasExtensions())
 		{
 			for(DotNetNamedElement dotNetNamedElement : ((CSharpTypeDeclaration) element).getMembers())
 			{
