@@ -282,6 +282,7 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="visual-studio" />
         <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
+        <orderEntry type="module" module-name="csharp-impl" />
       </module>
     </modules>
   </component>

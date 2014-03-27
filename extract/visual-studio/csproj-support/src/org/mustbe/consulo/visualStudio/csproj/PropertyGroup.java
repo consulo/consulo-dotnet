@@ -19,20 +19,17 @@ package org.mustbe.consulo.visualStudio.csproj;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author VISTALL
  * @since 27.03.14
  */
 public class PropertyGroup
 {
-	private String myName;
-	private Map<String, Object> myData = new HashMap<String, Object>();
+	private final Map<String, Object> myData = new HashMap<String, Object>();
 
-	public PropertyGroup(@NotNull String name)
+	public void putAll(Map<String, Object> map)
 	{
-		myName = name;
+		myData.putAll(map);
 	}
 
 	public void put(String key, Object value)
@@ -40,8 +37,15 @@ public class PropertyGroup
 		myData.put(key, value);
 	}
 
-	public String getName()
+	@SuppressWarnings("unchecked")
+	public <T> T get(String key, T defaultValue)
 	{
-		return myName;
+		Object o = myData.get(key);
+		return o == null ? defaultValue : (T) o;
+	}
+
+	public Map<String, Object> get()
+	{
+		return myData;
 	}
 }

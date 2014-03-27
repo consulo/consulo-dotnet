@@ -86,7 +86,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	@Override
 	public String getVersionString(String s)
 	{
-		return removeFirstChar(new File(s));
+		return removeFirstCharIfIsV(new File(s));
 	}
 
 	@Override
@@ -95,17 +95,21 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 		File file = new File(s2);
 		if(file.getParentFile().getName().equalsIgnoreCase("Framework64"))
 		{
-			return getPresentableName() + " " + removeFirstChar(file) + " (x64)";
+			return getPresentableName() + " " + removeFirstCharIfIsV(file) + " (x64)";
 		}
 		else
 		{
-			return getPresentableName() + " " + removeFirstChar(file);
+			return getPresentableName() + " " + removeFirstCharIfIsV(file);
 		}
 	}
 
-	private static String removeFirstChar(File file)
+	public static String removeFirstCharIfIsV(File file)
 	{
-		String name = file.getName();
+		return removeFirstCharIfIsV(file.getName());
+	}
+
+	public static String removeFirstCharIfIsV(String name)
+	{
 		return name.charAt(0) == 'v' ? name.substring(1, name.length()) : name;
 	}
 
@@ -248,7 +252,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 				{
 					if(isValidSdkHome(file.getAbsolutePath()))
 					{
-						list.add(new Pair<String, File>(removeFirstChar(file), file));
+						list.add(new Pair<String, File>(removeFirstCharIfIsV(file), file));
 					}
 				}
 			}
@@ -264,7 +268,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 				{
 					if(isValidSdkHome(file.getAbsolutePath()))
 					{
-						list.add(new Pair<String, File>(removeFirstChar(file) + " (x64)", file));
+						list.add(new Pair<String, File>(removeFirstCharIfIsV(file) + " (x64)", file));
 					}
 				}
 			}
