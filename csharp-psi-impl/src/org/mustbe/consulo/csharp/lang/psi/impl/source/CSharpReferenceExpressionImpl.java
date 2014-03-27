@@ -853,8 +853,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			kind = ResolveToKind.ANY_MEMBER;
 		}
 
-		val finalKind = kind;
-
 		ResolveResult[] psiElements = collectResults(kind, new Condition<PsiNamedElement>()
 		{
 			@Override
