@@ -81,8 +81,7 @@ public class CSharpIntroduceVariableHandler implements RefactoringActionHandler
 
 			builder.append(dotNetTypeRef.getPresentableText()).append(" b = ").append(expression.getText()).append(";");
 
-			val localVariableStatement = CSharpFileFactory.createLocalVariableStatement(project, expression.getResolveScope(),
-					builder.toString());
+			val localVariableStatement = CSharpFileFactory.createStatement(project, expression.getResolveScope(), builder.toString());
 
 			val temp = expression;
 			new WriteCommandAction<Object>(project, RefactoringBundle.message("introduce.variable.title"), file)

@@ -76,7 +76,7 @@ public class CSharpFileFactory
 		return dotNetNamedElement.getType();
 	}
 
-	public static DotNetStatement createLocalVariableStatement(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
+	public static DotNetStatement createStatement(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
 	{
 		val clazz = "class _Dummy { " +
 				"void test() {" +

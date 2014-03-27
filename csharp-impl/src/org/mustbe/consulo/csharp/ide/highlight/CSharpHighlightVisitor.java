@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.ide.codeInsight.actions.FlipExtensionMethodCall;
+import org.mustbe.consulo.csharp.ide.codeInsight.actions.ConvertToNormalCallFix;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
@@ -265,7 +265,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 			if(highlightInfo != null && CSharpMethodImplUtil.isExtensionWrapper(element))
 			{
-				QuickFixAction.registerQuickFixAction(highlightInfo, FlipExtensionMethodCall.INSTANCE);
+				QuickFixAction.registerQuickFixAction(highlightInfo, ConvertToNormalCallFix.INSTANCE);
 			}
 		}
 		else
