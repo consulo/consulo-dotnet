@@ -176,6 +176,6 @@ public class CSharpNamespaceDeclarationImpl extends CSharpStubElementImpl<CSharp
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
-		return CSharpResolveUtil.walkChildren(processor, this, lastParent, place, state);
+		return CSharpResolveUtil.walkChildren(processor, this, false, place, state);
 	}
 }

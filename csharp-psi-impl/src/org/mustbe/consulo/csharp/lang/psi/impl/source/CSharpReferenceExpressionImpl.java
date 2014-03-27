@@ -418,7 +418,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					}
 				}), named);
 
-				CSharpResolveUtil.walkChildren(p, psiElement1, element, null, resolveState);
+				CSharpResolveUtil.walkChildren(p, psiElement1, false, null, resolveState);
 				return p.toResolveResults();
 			case LABEL:
 				DotNetQualifiedElement parentOfType = PsiTreeUtil.getParentOfType(element, DotNetQualifiedElement.class);
@@ -559,7 +559,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 		if(target != element)
 		{
-			if(!CSharpResolveUtil.walkChildren(p, target, element, null, resolveState))
+			if(!CSharpResolveUtil.walkChildren(p, target, false, null, resolveState))
 			{
 				return p.toResolveResults();
 			}
@@ -577,16 +577,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
 			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
 
-			CSharpResolveUtil.walkChildren(p2, targetToWalkChildren, element, null, resolveState);
+			CSharpResolveUtil.walkChildren(p2, targetToWalkChildren, false, null, resolveState);
 			return p2.toResolveResults();
 		}
 		else
 		{
 			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
-			if(kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD)
-			{
-				resolveState = resolveState.put(CSharpResolveUtil.TYPE_RESOLVING, Boolean.TRUE);
-			}
 
 			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, kind);
 
@@ -603,7 +599,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return p.toResolveResults();
 			}
 
-			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, element, null, resolveState);
+			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD, null, resolveState);
 			return p.toResolveResults();
 		}
 	}
