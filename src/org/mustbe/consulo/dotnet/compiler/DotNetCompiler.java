@@ -30,6 +30,7 @@ import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
+import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.TranslatingCompiler;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -132,7 +133,7 @@ public class DotNetCompiler implements TranslatingCompiler
 
 					String fileUrl = m.getFileUrl();
 					VirtualFile virtualFile = fileUrl == null ? null : VirtualFileManager.getInstance().findFileByUrl(fileUrl);
-					if(virtualFile != null)
+					if(virtualFile != null && m.getCategory() == CompilerMessageCategory.ERROR)
 					{
 						Problem problem = WolfTheProblemSolver.getInstance(module.getProject()).convertToProblem(virtualFile, m.getLine(),
 								m.getColumn(), new String[]{m.getMessage()});
