@@ -74,7 +74,6 @@ public class CsProjProcessor implements VisualStudioProjectProcessor
 
 			for(Element propertyGroup : rootElement.getChildren())
 			{
-				System.out.println(propertyGroup.getName());
 				if(!"PropertyGroup".equals(propertyGroup.getName()))
 				{
 					continue;
