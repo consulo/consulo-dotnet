@@ -65,6 +65,8 @@
           <element id="zip-archive" name="visual-studio.jar">
             <element id="module-output" name="visual-studio" />
             <element id="module-production-resource-output" name="visual-studio" />
+            <element id="module-output" name="csproj-support" />
+            <element id="module-production-resource-output" name="csproj-support" />
           </element>
         </element>
       </element>
