@@ -177,7 +177,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 
 		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("target.label"), comp));
 
-		val comp2 = new JBCheckBox("Generate debug information?", myAllowDebugInfo);
+		val comp2 = new JBCheckBox(DotNetBundle.message("generate.debug.info.label"), myAllowDebugInfo);
 		comp2.addActionListener(new ActionListener()
 		{
 			@Override
@@ -233,7 +233,10 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 			@Override
 			public void run(AnActionButton anActionButton)
 			{
-				String name = Messages.showInputDialog(panel, "Name", "Enter Variable Name", null, null, new InputValidator()
+				String name = Messages.showInputDialog(panel, DotNetBundle.message("new.variable.message"),
+						DotNetBundle.message("new.variable.title"), null,
+						null,
+						new InputValidator()
 				{
 					@Override
 					public boolean checkInput(String s)
