@@ -177,7 +177,6 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 
 		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("target.label"), comp));
 
-
 		val comp2 = new JBCheckBox("Generate debug information?", myAllowDebugInfo);
 		comp2.addActionListener(new ActionListener()
 		{
