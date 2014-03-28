@@ -36,6 +36,11 @@ import lombok.val;
  */
 public class DotNetConfigurationType extends ConfigurationTypeBase
 {
+	public static DotNetConfigurationType getInstance()
+	{
+		return CONFIGURATION_TYPE_EP.findExtension(DotNetConfigurationType.class);
+	}
+
 	public DotNetConfigurationType()
 	{
 		super("#DotNetConfigurationType", ".NET Application", "", AllIcons.RunConfigurations.Application);
