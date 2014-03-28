@@ -42,6 +42,11 @@ import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
  */
 public class NUnitBundleType extends SdkType
 {
+	public static SdkType getInstance()
+	{
+		return EP_NAME.findExtension(NUnitBundleType.class);
+	}
+
 	public NUnitBundleType()
 	{
 		super("NUNIT_BUNDLE");

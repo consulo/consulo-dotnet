@@ -16,9 +16,20 @@
 
 package org.mustbe.consulo.nunit.module.extension;
 
-import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import javax.swing.JComponent;
+
+import org.consulo.module.extension.ModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.module.extension.ChildLayeredModuleExtensionImpl;
+import org.mustbe.consulo.module.extension.ConfigurationLayer;
+import org.mustbe.consulo.module.extension.LayeredModuleExtension;
+import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import org.mustbe.consulo.nunit.bundle.NUnitBundleType;
+import org.mustbe.consulo.nunit.module.NUnitConfigurationLayer;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
@@ -26,16 +37,61 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author VISTALL
  * @since 10.02.14
  */
-public class NUnitModuleExtension extends ModuleExtensionWithSdkImpl<NUnitModuleExtension>
+public class NUnitModuleExtension extends ChildLayeredModuleExtensionImpl<NUnitModuleExtension> implements ModuleExtensionWithSdk<NUnitModuleExtension>
 {
 	public NUnitModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}
 
-	@Override
-	protected Class<? extends SdkType> getSdkTypeClass()
+	@Nullable
+	public JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
 	{
-		return NUnitBundleType.class;
+		return new ConfigurationProfilePanel(myRootModel, runnable, this);
+	}
+
+	@NotNull
+	@Override
+	public Class<? extends LayeredModuleExtension> getHeadClass()
+	{
+		return DotNetModuleExtension.class;
+	}
+
+	@NotNull
+	@Override
+	protected ConfigurationLayer createLayer()
+	{
+		return new NUnitConfigurationLayer(this);
+	}
+
+	@NotNull
+	@Override
+	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
+	{
+		NUnitConfigurationLayer currentProfileEx = (NUnitConfigurationLayer) getCurrentLayer();
+		return currentProfileEx.getInheritableSdk();
+	}
+
+	@Nullable
+	@Override
+	public Sdk getSdk()
+	{
+		NUnitConfigurationLayer currentProfileEx = (NUnitConfigurationLayer) getCurrentLayer();
+		return currentProfileEx.getInheritableSdk().get();
+	}
+
+	@Nullable
+	@Override
+	public String getSdkName()
+	{
+		NUnitConfigurationLayer currentProfileEx = (NUnitConfigurationLayer) getCurrentLayer();
+		return currentProfileEx.getInheritableSdk().getName();
+	}
+
+	@Nullable
+	@Override
+	public SdkType getSdkType()
+	{
+		return NUnitBundleType.getInstance();
 	}
 }

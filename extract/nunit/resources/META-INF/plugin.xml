@@ -5,6 +5,7 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<testFramework implementation="org.mustbe.consulo.nunit.NUnitTestFramework"/>
 		<sdkType implementation="org.mustbe.consulo.nunit.bundle.NUnitBundleType"/>
+		<configurationType implementation="org.mustbe.consulo.nunit.run.NUnitConfigurationType" />
 
 		<moduleExtensionProvider key="microsoft-nunit"
 								 parentKey="microsoft-dotnet"

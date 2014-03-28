@@ -27,8 +27,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
-import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension;
+import org.mustbe.consulo.nunit.module.extension.NUnitMutableModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -40,14 +40,13 @@ import lombok.val;
  */
 public class NUnitConfigurationLayer implements ConfigurationLayer
 {
-	private final NUnitModuleExtension myNUnitModuleExtension;
-
+	private final NUnitModuleExtension myModuleExtension;
 	private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 
-	public NUnitConfigurationLayer(NUnitModuleExtension netModuleExtension)
+	public NUnitConfigurationLayer(NUnitModuleExtension moduleExtension)
 	{
-		myNUnitModuleExtension = netModuleExtension;
-		mySdkPointer = new SdkModuleInheritableNamedPointerImpl(netModuleExtension.getModule().getProject(), netModuleExtension.getId());
+		myModuleExtension = moduleExtension;
+		mySdkPointer = new SdkModuleInheritableNamedPointerImpl(moduleExtension.getProject(), moduleExtension.getId());
 	}
 
 	@Override
@@ -66,9 +65,8 @@ public class NUnitConfigurationLayer implements ConfigurationLayer
 	@Override
 	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		DotNetMutableModuleExtension<?> extension = modifiableRootModel.getExtension(DotNetMutableModuleExtension.class);
+		NUnitMutableModuleExtension extension = modifiableRootModel.getExtension(NUnitMutableModuleExtension.class);
 		assert extension != null;
-
 		val panel = new JPanel(new VerticalFlowLayout());
 		panel.add(new ModuleExtensionWithSdkPanel(extension, runnable)
 		{
@@ -87,7 +85,7 @@ public class NUnitConfigurationLayer implements ConfigurationLayer
 	@Override
 	public NUnitConfigurationLayer clone()
 	{
-		NUnitConfigurationLayer profileEx = new NUnitConfigurationLayer(myNUnitModuleExtension);
+		NUnitConfigurationLayer profileEx = new NUnitConfigurationLayer(myModuleExtension);
 		profileEx.mySdkPointer.set(mySdkPointer.getModuleName(), mySdkPointer.getName());
 		return profileEx;
 	}
