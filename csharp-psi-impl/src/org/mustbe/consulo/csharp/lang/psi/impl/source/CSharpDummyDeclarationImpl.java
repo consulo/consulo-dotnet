@@ -17,16 +17,18 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpDummyDefStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 
 /**
  * @author VISTALL
  * @since 06.03.14
  */
-public class CSharpDummyDeclarationImpl extends CSharpStubElementImpl<CSharpDummyDefStub>
+public class CSharpDummyDeclarationImpl extends CSharpStubMemberImpl<CSharpDummyDefStub>
 {
 	public static final String DUMMY = "<dummy>";
 
@@ -44,6 +46,13 @@ public class CSharpDummyDeclarationImpl extends CSharpStubElementImpl<CSharpDumm
 	public String getName()
 	{
 		return DUMMY;
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getNameIdentifier()
+	{
+		return null;
 	}
 
 	@Override

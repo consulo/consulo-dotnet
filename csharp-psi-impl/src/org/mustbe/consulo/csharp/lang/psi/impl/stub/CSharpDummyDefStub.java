@@ -18,17 +18,16 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpDummyDeclarationImpl;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 
 /**
  * @author VISTALL
  * @since 06.03.14
  */
-public class CSharpDummyDefStub extends StubBase<CSharpDummyDeclarationImpl>
+public class CSharpDummyDefStub extends MemberStub<CSharpDummyDeclarationImpl>
 {
 	public CSharpDummyDefStub(StubElement parent, IStubElementType elementType)
 	{
-		super(parent, elementType);
+		super(parent, elementType, (String) null, null, 0, 0);
 	}
 }
