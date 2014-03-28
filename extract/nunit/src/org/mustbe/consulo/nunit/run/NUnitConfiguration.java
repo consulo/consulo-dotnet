@@ -23,8 +23,6 @@ import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
@@ -34,9 +32,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.psi.util.QualifiedName;
 import lombok.val;
 
 /**
@@ -120,47 +116,12 @@ public class NUnitConfiguration extends ModuleBasedConfiguration<RunConfiguratio
 				val testsOutputConsoleView = new NUnitTestsOutputConsoleView(env, console, rootTestProxy);
 
 				OSProcessHandler osProcessHandler = new OSProcessHandler(commandLine);
-				osProcessHandler.addProcessListener(new ProcessAdapter()
-				{
-					@Override
-					public void onTextAvailable(ProcessEvent event, Key outputType)
-					{
-						String prefix = "***** ";
-						String text = event.getText();
-						if(text.startsWith(prefix))
-						{
-							String testName = text.substring(prefix.length(), text.length()).trim();
-							QualifiedName qualifiedName = QualifiedName.fromDottedString(testName);
-
-							SMTestProxy proxy = rootTestProxy;
-							for(String name : qualifiedName.getComponents())
-							{
-								proxy = getOrCreateProxy(proxy, name);
-							}
-
-							testsOutputConsoleView.getResultsPanel().getTreeBuilder().queueUpdate();
-						}
-					}
-				});
+				osProcessHandler.addProcessListener(new NUnitProcessAdapter(rootTestProxy, testsOutputConsoleView));
 
 				console.attachToProcess(osProcessHandler);
 
 				return new DefaultExecutionResult(testsOutputConsoleView, osProcessHandler);
 			}
 		};
-	}
-
-	private static SMTestProxy getOrCreateProxy(SMTestProxy proxy, String name)
-	{
-		for(SMTestProxy smTestProxy : proxy.getChildren())
-		{
-			if(smTestProxy.getName().equals(name))
-			{
-				return smTestProxy;
-			}
-		}
-		SMTestProxy temp = new SMTestProxy(name, false, null);
-		proxy.addChild(temp);
-		return temp;
 	}
 }
