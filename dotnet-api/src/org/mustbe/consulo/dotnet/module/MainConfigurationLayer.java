@@ -20,6 +20,12 @@ public interface MainConfigurationLayer extends ConfigurationLayer
 
 	boolean isAllowDebugInfo();
 
+	@NotNull
+	String getFileName();
+
+	@NotNull
+	String getOutputDir();
+
 	@InheritImmutable
 	List<String> getVariables();
 

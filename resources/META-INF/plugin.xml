@@ -70,8 +70,5 @@
 		<compiler.moduleScopeFactory implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompileModuleScopeFactory"/>
 
 		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider"/>
-
-		<projectService serviceInterface="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"
-						serviceImplementation="org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration"/>
 	</extensions>
 </idea-plugin>

@@ -55,7 +55,7 @@ public class DotNetMacros
 				break;
 		}
 
-		String path = DotNetCompilerConfiguration.getInstance(module.getProject()).getOutputFile();
+		String path = currentLayer.getOutputDir() + "/" + currentLayer.getFileName();
 		path = StringUtil.replace(path, MODULE_OUTPUT_DIR, compilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance
 				()));
 
@@ -67,8 +67,7 @@ public class DotNetMacros
 
 	public static String getModuleOutputDirUrl(@NotNull Module module, String name, MainConfigurationLayer p)
 	{
-		String path = DotNetCompilerConfiguration.getInstance(module.getProject()).getOutputDir();
-		return extractLikeWorkDir(module, path, name, p, true);
+		return extractLikeWorkDir(module, p.getOutputDir(), name, p, true);
 	}
 
 	public static String extractLikeWorkDir(@NotNull Module module, @NotNull String path, @NotNull String name, MainConfigurationLayer p,

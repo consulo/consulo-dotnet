@@ -17,13 +17,13 @@
 package org.mustbe.consulo.dotnet.run;
 
 import org.mustbe.consulo.dotnet.DotNetTarget;
-import org.mustbe.consulo.dotnet.compiler.DotNetCompilerConfiguration;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.actions.RunConfigurationProducer;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 
@@ -47,11 +47,12 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 			return false;
 		}
 
-		Module moduleForRun = getModuleForRun(context);
+		Pair<Module, String> moduleForRun = getModuleForRun(context);
 		if(moduleForRun != null)
 		{
-			configuration.setModule(moduleForRun);
-			configuration.setWorkingDirectory(DotNetCompilerConfiguration.getInstance(configuration.getProject()).getOutputDir());
+			configuration.setName(moduleForRun.getFirst().getName());
+			configuration.setModule(moduleForRun.getFirst());
+			configuration.setWorkingDirectory(moduleForRun.getSecond());
 			return true;
 		}
 		return false;
@@ -60,16 +61,16 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 	@Override
 	public boolean isConfigurationFromContext(DotNetConfiguration configuration, ConfigurationContext context)
 	{
-		Module moduleForRun = getModuleForRun(context);
+		Pair<Module, String> moduleForRun = getModuleForRun(context);
 		if(moduleForRun == null)
 		{
 			return false;
 		}
 
-		return configuration.getConfigurationModule().getModule() == moduleForRun;
+		return configuration.getConfigurationModule().getModule() == moduleForRun.getFirst();
 	}
 
-	private Module getModuleForRun(ConfigurationContext configurationContext)
+	private Pair<Module, String> getModuleForRun(ConfigurationContext configurationContext)
 	{
 		Module module = configurationContext.getModule();
 		if(module == null)
@@ -82,7 +83,7 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 			MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
 			if(currentLayer.getTarget() == DotNetTarget.EXECUTABLE)
 			{
-				return module;
+				return Pair.create(module, currentLayer.getOutputDir());
 			}
 			return null;
 		}

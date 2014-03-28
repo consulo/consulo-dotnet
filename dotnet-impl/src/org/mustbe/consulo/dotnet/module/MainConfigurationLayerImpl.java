@@ -21,10 +21,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
 
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
@@ -35,12 +35,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.DotNetTarget;
-import org.mustbe.consulo.module.extension.ConfigurationLayer;
+import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
+import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -48,10 +50,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.CollectionListModel;
+import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
+import com.intellij.ui.components.JBTextField;
 import lombok.val;
 
 /**
@@ -60,12 +64,17 @@ import lombok.val;
  */
 public class MainConfigurationLayerImpl implements MainConfigurationLayer
 {
+	private static final String DEFAULT_FILE_NAME = DotNetMacros.MODULE_NAME + "." + DotNetMacros.OUTPUT_FILE_EXT;
+	private static final String DEFAULT_OUTPUT_DIR = DotNetMacros.MODULE_OUTPUT_DIR;
+
 	private final DotNetModuleExtension myDotNetModuleExtension;
 
 	private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 	private DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 	private boolean myAllowDebugInfo;
 	private List<String> myVariables = new ArrayList<String>();
+	private String myFileName = DEFAULT_FILE_NAME;
+	private String myOutputDirectory = DEFAULT_OUTPUT_DIR;
 
 	public MainConfigurationLayerImpl(DotNetModuleExtension dotNetModuleExtension)
 	{
@@ -79,6 +88,8 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 		mySdkPointer.fromXml(element);
 		myTarget = DotNetTarget.valueOf(element.getAttributeValue("target", DotNetTarget.EXECUTABLE.name()));
 		myAllowDebugInfo = Boolean.valueOf(element.getAttributeValue("debug", "false"));
+		myFileName = element.getAttributeValue("file-name", DEFAULT_FILE_NAME);
+		myOutputDirectory = element.getAttributeValue("output-dir", DEFAULT_OUTPUT_DIR);
 
 		for(Element defineElement : element.getChildren("define"))
 		{
@@ -92,6 +103,8 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 		mySdkPointer.toXml(element);
 		element.setAttribute("target", myTarget.name());
 		element.setAttribute("debug", Boolean.toString(myAllowDebugInfo));
+		element.setAttribute("file-name", myFileName);
+		element.setAttribute("output-dir", myOutputDirectory);
 
 		for(String variable : myVariables)
 		{
@@ -117,7 +130,33 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 			}
 		});
 
-		val comp = new JComboBox(DotNetTarget.values());
+		val fileNameField = new JBTextField(getFileName());
+		fileNameField.getEmptyText().setText(DEFAULT_FILE_NAME);
+		fileNameField.getDocument().addDocumentListener(new DocumentAdapter()
+		{
+			@Override
+			protected void textChanged(DocumentEvent documentEvent)
+			{
+				myFileName = fileNameField.getText();
+			}
+		});
+
+		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("file.label"), fileNameField));
+
+		val outputDirectoryField = new JBTextField(getOutputDir());
+		outputDirectoryField.getEmptyText().setText(DEFAULT_OUTPUT_DIR);
+		outputDirectoryField.getDocument().addDocumentListener(new DocumentAdapter()
+		{
+			@Override
+			protected void textChanged(DocumentEvent documentEvent)
+			{
+				myOutputDirectory = outputDirectoryField.getText();
+			}
+		});
+
+		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("output.dir.label"), outputDirectoryField));
+
+		val comp = new ComboBox(DotNetTarget.values());
 		comp.setRenderer(new ListCellRendererWrapper<DotNetTarget>()
 		{
 			@Override
@@ -137,6 +176,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 		});
 
 		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("target.label"), comp));
+
 
 		val comp2 = new JBCheckBox("Generate debug information?", myAllowDebugInfo);
 		comp2.addActionListener(new ActionListener()
@@ -231,6 +271,8 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 		profileEx.mySdkPointer.set(mySdkPointer.getModuleName(), mySdkPointer.getName());
 		profileEx.myVariables.clear();
 		profileEx.myVariables.addAll(myVariables);
+		profileEx.myFileName = getFileName();
+		profileEx.myOutputDirectory = getOutputDir();
 		return profileEx;
 	}
 
@@ -243,7 +285,9 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 			return mySdkPointer.equals(ex.mySdkPointer) &&
 					myTarget.equals(ex.myTarget) &&
 					myAllowDebugInfo == ex.isAllowDebugInfo() &&
-					myVariables.equals(ex.getVariables());
+					myVariables.equals(ex.getVariables()) &&
+					getFileName().equals(ex.getFileName()) &&
+					getOutputDir().equals(ex.getOutputDir());
 		}
 		return false;
 	}
@@ -258,6 +302,20 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 	public boolean isAllowDebugInfo()
 	{
 		return myAllowDebugInfo;
+	}
+
+	@NotNull
+	@Override
+	public String getFileName()
+	{
+		return StringUtil.notNullize(myFileName, DEFAULT_FILE_NAME);
+	}
+
+	@NotNull
+	@Override
+	public String getOutputDir()
+	{
+		return StringUtil.notNullize(myOutputDirectory, DEFAULT_OUTPUT_DIR);
 	}
 
 	public void setAllowDebugInfo(boolean allowDebugInfo)
