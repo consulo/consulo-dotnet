@@ -29,7 +29,7 @@ import com.intellij.util.io.StringRef;
  */
 public class CSharpTypeStub extends MemberStub<CSharpTypeDeclaration>
 {
-	public static final int HAVE_EXTENSIONS = 1 << 0;
+	public static final int HAS_EXTENSIONS = 1 << 0;
 	public static final int INTERFACE = 1 << 1;
 	public static final int STRUCT = 1 << 2;
 	public static final int ENUM = 1 << 3;
@@ -54,6 +54,10 @@ public class CSharpTypeStub extends MemberStub<CSharpTypeDeclaration>
 		{
 			mask |= STRUCT;
 		}
+		else if(typeDeclaration.hasExtensions())
+		{
+			mask |= HAS_EXTENSIONS;
+		}
 		return mask;
 	}
 
@@ -74,6 +78,6 @@ public class CSharpTypeStub extends MemberStub<CSharpTypeDeclaration>
 
 	public boolean hasExtensions()
 	{
-		return BitUtil.isSet(getOtherModifierMask(), HAVE_EXTENSIONS);
+		return BitUtil.isSet(getOtherModifierMask(), HAS_EXTENSIONS);
 	}
 }
