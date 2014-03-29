@@ -116,7 +116,7 @@ public class NUnitConfiguration extends ModuleBasedConfiguration<RunConfiguratio
 				val testsOutputConsoleView = new NUnitTestsOutputConsoleView(env, console, rootTestProxy);
 
 				OSProcessHandler osProcessHandler = new OSProcessHandler(commandLine);
-				osProcessHandler.addProcessListener(new NUnitProcessAdapter(rootTestProxy, testsOutputConsoleView));
+				osProcessHandler.addProcessListener(new NUnitProcessAdapter(module, rootTestProxy, testsOutputConsoleView));
 
 				console.attachToProcess(osProcessHandler);
 

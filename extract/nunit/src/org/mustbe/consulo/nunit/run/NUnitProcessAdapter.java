@@ -16,15 +16,31 @@
 
 package org.mustbe.consulo.nunit.run;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import com.intellij.execution.Location;
+import com.intellij.execution.PsiLocation;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
+import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.application.Result;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.QualifiedName;
+import com.intellij.testIntegration.TestLocationProvider;
 import com.intellij.util.ui.UIUtil;
 
 /**
@@ -36,13 +52,15 @@ public class NUnitProcessAdapter extends ProcessAdapter
 	private static final String TEST_STARTED = "***** ";
 	private static final Pattern RESULT_PATTERN = Pattern.compile("(\\d+)\\) ([\\s\\w]+) : ([\\s\\w\\W]+)");
 
+	private final Module myModule;
 	private final SMTestProxy.SMRootTestProxy myRootTestProxy;
 	private final NUnitTestsOutputConsoleView myTestsOutputConsoleView;
 
 	private boolean myResults;
 
-	public NUnitProcessAdapter(SMTestProxy.SMRootTestProxy rootTestProxy, NUnitTestsOutputConsoleView testsOutputConsoleView)
+	public NUnitProcessAdapter(Module module, SMTestProxy.SMRootTestProxy rootTestProxy, NUnitTestsOutputConsoleView testsOutputConsoleView)
 	{
+		myModule = module;
 		myRootTestProxy = rootTestProxy;
 		myTestsOutputConsoleView = testsOutputConsoleView;
 		rootTestProxy.setStarted();
@@ -63,6 +81,21 @@ public class NUnitProcessAdapter extends ProcessAdapter
 			{
 				String name = components.get(i);
 				proxy = getOrCreateProxy(proxy, name, components.size() - 1 == i);
+			}
+
+			final PsiLocation<?> location = findLocation(qualifiedName);
+			if(location != null)
+			{
+				proxy.setLocator(new TestLocationProvider()
+				{
+					@NotNull
+					@Override
+					public List<Location> getLocation(
+							@NotNull String protocolId, @NotNull String locationData, Project project)
+					{
+						return Collections.<Location>singletonList(location);
+					}
+				});
 			}
 
 			myTestsOutputConsoleView.getResultsPanel().getTreeBuilder().queueUpdate();
@@ -119,6 +152,37 @@ public class NUnitProcessAdapter extends ProcessAdapter
 				myTestsOutputConsoleView.getResultsPanel().getTreeBuilder().queueUpdate();
 			}
 		});
+	}
+
+	public PsiLocation<?> findLocation(final QualifiedName qualifiedName)
+	{
+		return new ReadAction<PsiLocation<?>>()
+		{
+			@Override
+			protected void run(Result<PsiLocation<?>> psiLocationResult) throws Throwable
+			{
+				QualifiedName parent = qualifiedName.getParent();
+				String lastComponent = qualifiedName.getLastComponent();
+
+				DotNetModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(myModule, DotNetModuleExtension.class);
+
+				assert dotNetModuleExtension != null;
+
+				DotNetTypeDeclaration[] types = DotNetPsiFacade.getInstance(myModule.getProject()).findTypes(parent.toString(),
+						dotNetModuleExtension.getScopeForResolving(true), 0);
+
+				for(DotNetTypeDeclaration type : types)
+				{
+					for(DotNetNamedElement dotNetNamedElement : type.getMembers())
+					{
+						if(dotNetNamedElement instanceof DotNetMethodDeclaration && lastComponent.equals(dotNetNamedElement.getName()))
+						{
+							psiLocationResult.setResult(new PsiLocation<PsiElement>(myModule.getProject(), myModule, dotNetNamedElement));
+						}
+					}
+				}
+			}
+		}.execute().getResultObject();
 	}
 
 	private static void setFinished(SMTestProxy proxy)

@@ -31,6 +31,8 @@ import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.GlobalSearchScopes;
 
 /**
  * @author VISTALL
@@ -55,6 +57,20 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 			MainConfigurationLayerImpl d = (MainConfigurationLayerImpl) layer;
 			d.getVariables().add("DEBUG");
 			d.setAllowDebugInfo(true);
+		}
+	}
+
+	@NotNull
+	@Override
+	public GlobalSearchScope getScopeForResolving(boolean test)
+	{
+		if(this instanceof DotNetStructurableModuleExtension)
+		{
+			return GlobalSearchScope.moduleRuntimeScope(getModule(), test);
+		}
+		else
+		{
+			return GlobalSearchScopes.directoryScope(getProject(), getModule().getModuleDir(), true);
 		}
 	}
 
