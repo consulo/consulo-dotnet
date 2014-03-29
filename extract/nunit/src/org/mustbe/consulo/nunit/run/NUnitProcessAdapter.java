@@ -16,12 +16,11 @@
 
 package org.mustbe.consulo.nunit.run;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -39,8 +38,8 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.QualifiedName;
-import com.intellij.testIntegration.TestLocationProvider;
 import com.intellij.util.ui.UIUtil;
 
 /**
@@ -80,22 +79,9 @@ public class NUnitProcessAdapter extends ProcessAdapter
 			for(int i = 0; i < components.size(); i++)
 			{
 				String name = components.get(i);
-				proxy = getOrCreateProxy(proxy, name, components.size() - 1 == i);
-			}
 
-			final PsiLocation<?> location = findLocation(qualifiedName);
-			if(location != null)
-			{
-				proxy.setLocator(new TestLocationProvider()
-				{
-					@NotNull
-					@Override
-					public List<Location> getLocation(
-							@NotNull String protocolId, @NotNull String locationData, Project project)
-					{
-						return Collections.<Location>singletonList(location);
-					}
-				});
+				boolean isLastElement = components.size() - 1 == i;
+				proxy = getOrCreateProxy(proxy, name, isLastElement, isLastElement ? findLocation(qualifiedName) : null);
 			}
 
 			myTestsOutputConsoleView.getResultsPanel().getTreeBuilder().queueUpdate();
@@ -119,7 +105,7 @@ public class NUnitProcessAdapter extends ProcessAdapter
 					SMTestProxy temp = myRootTestProxy;
 					for(String s : qualifiedName.getComponents())
 					{
-						temp = getOrCreateProxy(temp, s, false);
+						temp = getOrCreateProxy(temp, s, false, null);
 					}
 
 					temp.setFinished();
@@ -198,7 +184,7 @@ public class NUnitProcessAdapter extends ProcessAdapter
 		}
 	}
 
-	private static SMTestProxy getOrCreateProxy(SMTestProxy proxy, String name, boolean last)
+	private static SMTestProxy getOrCreateProxy(SMTestProxy proxy, String name, boolean last, final Location location)
 	{
 		for(SMTestProxy smTestProxy : proxy.getChildren())
 		{
@@ -207,7 +193,15 @@ public class NUnitProcessAdapter extends ProcessAdapter
 				return smTestProxy;
 			}
 		}
-		SMTestProxy temp = new SMTestProxy(name, !last, null);
+		SMTestProxy temp = new SMTestProxy(name, !last, null)
+		{
+			@Nullable
+			@Override
+			public Location getLocation(Project project, GlobalSearchScope searchScope)
+			{
+				return location;
+			}
+		};
 		temp.setStarted();
 		proxy.addChild(temp);
 		return temp;

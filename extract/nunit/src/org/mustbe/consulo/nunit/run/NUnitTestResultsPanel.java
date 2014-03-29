@@ -1,8 +1,6 @@
 package org.mustbe.consulo.nunit.run;
 
 import javax.swing.JComponent;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreePath;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -12,14 +10,16 @@ import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.execution.testframework.TestTreeView;
 import com.intellij.execution.testframework.sm.SMRunnerUtil;
+import com.intellij.execution.testframework.sm.runner.SMTRunnerTreeBuilder;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerTreeStructure;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.execution.testframework.sm.runner.ui.TestTreeRenderer;
+import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
 import com.intellij.execution.testframework.ui.AbstractTestTreeBuilder;
 import com.intellij.execution.testframework.ui.TestResultsPanel;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 
 /**
  * @author VISTALL
@@ -29,7 +29,7 @@ public class NUnitTestResultsPanel extends TestResultsPanel implements TestFrame
 {
 	private final SMTestProxy myRoot;
 	private TestTreeView myTestTreeView;
-	private NUnitTreeBuilder myTreeBuilder;
+	private SMTRunnerTreeBuilder myTreeBuilder;
 	private Project myProject;
 
 	public NUnitTestResultsPanel(
@@ -49,26 +49,13 @@ public class NUnitTestResultsPanel extends TestResultsPanel implements TestFrame
 	@Override
 	protected JComponent createTestTreeView()
 	{
-		myTestTreeView = new TestTreeView()
-		{
-			@Override
-			protected TreeCellRenderer getRenderer(TestConsoleProperties testConsoleProperties)
-			{
-				return new TestTreeRenderer(testConsoleProperties);
-			}
-
-			@Override
-			public AbstractTestProxy getSelectedTest(@NotNull TreePath treePath)
-			{
-				return null;
-			}
-		};
+		myTestTreeView = new SMTRunnerTestTreeView();
 		myTestTreeView.setLargeModel(true);
 		myTestTreeView.attachToModel(this);
 
 		SMTRunnerTreeStructure structure = new SMTRunnerTreeStructure(myProject, myRoot);
-		myTreeBuilder = new NUnitTreeBuilder(myTestTreeView, structure);
-
+		myTreeBuilder = new SMTRunnerTreeBuilder(myTestTreeView, structure);
+		Disposer.register(this, myTreeBuilder);
 		return myTestTreeView;
 	}
 

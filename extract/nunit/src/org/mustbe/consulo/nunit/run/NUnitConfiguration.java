@@ -113,6 +113,7 @@ public class NUnitConfiguration extends ModuleBasedConfiguration<RunConfiguratio
 				ConsoleView console = builder.getConsole();
 
 				val rootTestProxy = new SMTestProxy.SMRootTestProxy();
+				rootTestProxy.setStarted();
 				val testsOutputConsoleView = new NUnitTestsOutputConsoleView(env, console, rootTestProxy);
 
 				OSProcessHandler osProcessHandler = new OSProcessHandler(commandLine);
