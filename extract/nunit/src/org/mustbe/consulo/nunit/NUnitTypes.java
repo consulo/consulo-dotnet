@@ -23,4 +23,5 @@ package org.mustbe.consulo.nunit;
 public interface NUnitTypes
 {
 	String TestAttribute = "NUnit.Framework.TestAttribute";
+	String TestFixtureAttribute = "NUnit.Framework.TestFixtureAttribute";
 }

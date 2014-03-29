@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension;
 import com.intellij.ide.fileTemplates.FileTemplateDescriptor;
 import com.intellij.lang.Language;
@@ -75,6 +76,16 @@ public class NUnitTestFramework implements TestFramework
 	@Override
 	public boolean isTestClass(@NotNull PsiElement element)
 	{
+		NUnitModuleExtension extension = ModuleUtilCore.getExtension(element, NUnitModuleExtension.class);
+		if(extension == null)
+		{
+			return false;
+		}
+
+		if(element instanceof DotNetTypeDeclaration)
+		{
+			return DotNetAttributeUtil.hasAttribute((DotNetTypeDeclaration) element, NUnitTypes.TestFixtureAttribute);
+		}
 		return false;
 	}
 
