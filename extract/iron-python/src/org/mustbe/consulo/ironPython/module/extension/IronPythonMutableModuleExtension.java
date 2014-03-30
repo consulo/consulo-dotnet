@@ -3,11 +3,8 @@ package org.mustbe.consulo.ironPython.module.extension;
 import javax.swing.JComponent;
 
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
-import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
-import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
@@ -25,7 +22,7 @@ public class IronPythonMutableModuleExtension extends IronPythonModuleExtension 
 	@Override
 	public JComponent createConfigurablePanel(@Nullable Runnable runnable)
 	{
-		return wrapToNorth(new ModuleExtensionWithSdkPanel(this, runnable));
+		return createConfigurablePanelImpl(runnable);
 	}
 
 	@Override
@@ -38,12 +35,5 @@ public class IronPythonMutableModuleExtension extends IronPythonModuleExtension 
 	public boolean isModified(@NotNull IronPythonModuleExtension extension)
 	{
 		return isModifiedImpl(extension);
-	}
-
-	@NotNull
-	@Override
-	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
-	{
-		return (MutableModuleInheritableNamedPointer<Sdk>) super.getInheritableSdk();
 	}
 }
