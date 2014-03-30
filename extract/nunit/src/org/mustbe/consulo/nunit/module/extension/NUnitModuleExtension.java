@@ -44,11 +44,7 @@ public class NUnitModuleExtension extends ChildLayeredModuleExtensionImpl<NUnitM
 		super(id, module);
 	}
 
-	@Nullable
-	public JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
-	{
-		return new ConfigurationProfilePanel(myRootModel, runnable, this);
-	}
+
 
 	@NotNull
 	@Override

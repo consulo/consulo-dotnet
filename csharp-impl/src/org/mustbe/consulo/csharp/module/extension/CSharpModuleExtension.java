@@ -16,10 +16,7 @@
 
 package org.mustbe.consulo.csharp.module.extension;
 
-import javax.swing.JComponent;
-
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.module.CSharpConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
@@ -27,7 +24,6 @@ import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import org.mustbe.consulo.module.extension.ChildLayeredModuleExtensionImpl;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
-import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
@@ -41,11 +37,6 @@ public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> 
 	public CSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
-	}
-
-	protected JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
-	{
-		return new ConfigurationProfilePanel(myRootModel, runnable, this);
 	}
 
 	public boolean isAllowUnsafeCode()

@@ -19,9 +19,13 @@ package org.mustbe.consulo.module.extension;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.swing.JComponent;
+
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ListWithSelection;
@@ -48,6 +52,12 @@ public abstract class LayeredModuleExtensionImpl<S extends LayeredModuleExtensio
 	{
 		init(false, addLayer("Release"));
 		init(true, addLayer(myCurrentLayer = "Debug"));
+	}
+
+	@Nullable
+	public JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
+	{
+		return new ConfigurationProfilePanel(myRootModel, runnable, this);
 	}
 
 	protected void init(boolean debug, @NotNull ConfigurationLayer layer)

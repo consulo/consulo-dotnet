@@ -16,8 +16,6 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
-import javax.swing.JComponent;
-
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +25,6 @@ import org.mustbe.consulo.dotnet.module.MainConfigurationLayerImpl;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
 import org.mustbe.consulo.module.extension.LayeredModuleExtensionImpl;
-import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -79,12 +76,6 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	protected ConfigurationLayer createLayer()
 	{
 		return new MainConfigurationLayerImpl(this);
-	}
-
-	@Nullable
-	public JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
-	{
-		return new ConfigurationProfilePanel(myRootModel, runnable, this);
 	}
 
 	@NotNull

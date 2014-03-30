@@ -16,7 +16,11 @@
 
 package org.mustbe.consulo.module.extension;
 
+import javax.swing.JComponent;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.util.ListWithSelection;
 
