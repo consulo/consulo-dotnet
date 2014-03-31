@@ -166,7 +166,5 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 	@Override
 	public void processOutdatedItem(CompileContext compileContext, String s, @Nullable ValidityState validityState)
 	{
-		System.out.println("processOutdatedItem " + s);
-		//FileUtil.delete(new File(s));
 	}
 }
