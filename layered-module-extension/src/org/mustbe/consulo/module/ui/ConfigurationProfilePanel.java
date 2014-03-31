@@ -27,6 +27,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.jdesktop.swingx.HorizontalLayout;
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
 import org.mustbe.consulo.module.extension.ModuleExtensionLayerUtil;
@@ -56,7 +57,7 @@ public class ConfigurationProfilePanel extends JPanel
 {
 	private final JPanel myConfigPane;
 
-	public ConfigurationProfilePanel(final ModifiableRootModel modifiableRootModel, Runnable runnable,
+	public ConfigurationProfilePanel(@NotNull final ModifiableRootModel modifiableRootModel, @NotNull Runnable runnable,
 			final LayeredModuleExtension<?> moduleExtension)
 	{
 		super(new BorderLayout());

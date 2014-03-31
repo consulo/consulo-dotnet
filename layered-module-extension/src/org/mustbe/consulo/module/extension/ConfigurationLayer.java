@@ -34,7 +34,7 @@ public interface ConfigurationLayer
 	void getState(Element element);
 
 	@Nullable
-	JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable);
+	JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @NotNull Runnable runnable);
 
 	@NotNull
 	ConfigurationLayer clone();

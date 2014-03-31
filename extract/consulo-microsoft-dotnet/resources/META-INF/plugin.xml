@@ -28,21 +28,8 @@
 								 immutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension"
 								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />
 
-		<moduleExtensionProvider key="microsoft-dotnet2"
-								 name="Microsoft .NET (Structable)"
-								 icon="/icons/dotnet.png"
-								 immutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension2.MicrosoftDotNetModuleExtension2"
-								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension2.MicrosoftDotNetMutableModuleExtension2" />
-
 		<moduleExtensionProvider key="microsoft-csharp"
 								 parentKey="microsoft-dotnet"
-								 name="C#"
-								 icon="/icons/dotnet.png"
-								 immutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtension"
-								 mutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpMutableModuleExtension"/>
-
-		<moduleExtensionProvider key="microsoft-csharp2"
-								 parentKey="microsoft-dotnet2"
 								 name="C#"
 								 icon="/icons/dotnet.png"
 								 immutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtension"

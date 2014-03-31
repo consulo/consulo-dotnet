@@ -72,6 +72,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 	private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 	private DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 	private boolean myAllowDebugInfo;
+	private boolean myAllowSourceRoots;
 	private List<String> myVariables = new ArrayList<String>();
 	private String myFileName = DEFAULT_FILE_NAME;
 	private String myOutputDirectory = DEFAULT_OUTPUT_DIR;
@@ -88,6 +89,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 		mySdkPointer.fromXml(element);
 		myTarget = DotNetTarget.valueOf(element.getAttributeValue("target", DotNetTarget.EXECUTABLE.name()));
 		myAllowDebugInfo = Boolean.valueOf(element.getAttributeValue("debug", "false"));
+		myAllowSourceRoots = Boolean.valueOf(element.getAttributeValue("allow-source-roots", "false"));
 		myFileName = element.getAttributeValue("file-name", DEFAULT_FILE_NAME);
 		myOutputDirectory = element.getAttributeValue("output-dir", DEFAULT_OUTPUT_DIR);
 
@@ -103,6 +105,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 		mySdkPointer.toXml(element);
 		element.setAttribute("target", myTarget.name());
 		element.setAttribute("debug", Boolean.toString(myAllowDebugInfo));
+		element.setAttribute("allow-source-roots", Boolean.toString(myAllowSourceRoots));
 		element.setAttribute("file-name", myFileName);
 		element.setAttribute("output-dir", myOutputDirectory);
 
@@ -114,7 +117,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
+	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @NotNull final Runnable runnable)
 	{
 		DotNetMutableModuleExtension<?> extension = modifiableRootModel.getExtension(DotNetMutableModuleExtension.class);
 		assert extension != null;
@@ -177,16 +180,28 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 
 		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("target.label"), comp));
 
-		val comp2 = new JBCheckBox(DotNetBundle.message("generate.debug.info.label"), myAllowDebugInfo);
-		comp2.addActionListener(new ActionListener()
+		val debugCombobox = new JBCheckBox(DotNetBundle.message("generate.debug.info.label"), myAllowDebugInfo);
+		debugCombobox.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				myAllowDebugInfo = comp2.isSelected();
+				myAllowDebugInfo = debugCombobox.isSelected();
 			}
 		});
-		panel.add(comp2);
+		panel.add(debugCombobox);
+
+		val allowSourceRootsBox = new JBCheckBox(DotNetBundle.message("allow.source.roots.label"), myAllowSourceRoots);
+		allowSourceRootsBox.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				myAllowSourceRoots = allowSourceRootsBox.isSelected();
+				runnable.run();
+			}
+		});
+		panel.add(allowSourceRootsBox);
 
 		val dataModel = new CollectionListModel<String>(myVariables)
 		{
@@ -269,6 +284,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 	{
 		MainConfigurationLayerImpl profileEx = new MainConfigurationLayerImpl(myDotNetModuleExtension);
 		profileEx.setAllowDebugInfo(myAllowDebugInfo);
+		profileEx.myAllowSourceRoots = myAllowSourceRoots;
 		profileEx.setTarget(myTarget);
 		profileEx.mySdkPointer.set(mySdkPointer.getModuleName(), mySdkPointer.getName());
 		profileEx.myVariables.clear();
@@ -287,6 +303,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 			return mySdkPointer.equals(ex.mySdkPointer) &&
 					myTarget.equals(ex.myTarget) &&
 					myAllowDebugInfo == ex.isAllowDebugInfo() &&
+					myAllowSourceRoots == ex.isAllowSourceRoots() &&
 					myVariables.equals(ex.getVariables()) &&
 					getFileName().equals(ex.getFileName()) &&
 					getOutputDir().equals(ex.getOutputDir());
@@ -304,6 +321,12 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 	public boolean isAllowDebugInfo()
 	{
 		return myAllowDebugInfo;
+	}
+
+	@Override
+	public boolean isAllowSourceRoots()
+	{
+		return myAllowSourceRoots;
 	}
 
 	@NotNull

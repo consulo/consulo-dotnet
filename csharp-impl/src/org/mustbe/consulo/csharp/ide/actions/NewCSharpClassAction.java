@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.CSharpIcons;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
-import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IdeView;
@@ -64,7 +64,8 @@ public class NewCSharpClassAction extends CreateFromTemplateAction<PsiFile>
 		val module = LangDataKeys.MODULE.getData(dataContext);
 		if(module != null)
 		{
-			if(ModuleUtilCore.getExtension(module, DotNetStructurableModuleExtension.class) != null)
+			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+			if(extension != null && extension.isAllowSourceRoots())
 			{
 				final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
 				if(view == null)
@@ -78,7 +79,7 @@ public class NewCSharpClassAction extends CreateFromTemplateAction<PsiFile>
 					return false;
 				}
 				PsiPackage aPackage = PsiPackageManager.getInstance(module.getProject()).findPackage(orChooseDirectory,
-						DotNetStructurableModuleExtension.class);
+						DotNetModuleExtension.class);
 
 				if(aPackage == null)
 				{
@@ -92,7 +93,7 @@ public class NewCSharpClassAction extends CreateFromTemplateAction<PsiFile>
 	@Override
 	protected PsiFile createFile(String name, String templateName, PsiDirectory dir)
 	{
-		PsiPackage aPackage = PsiPackageManager.getInstance(dir.getProject()).findPackage(dir, DotNetStructurableModuleExtension.class);
+		PsiPackage aPackage = PsiPackageManager.getInstance(dir.getProject()).findPackage(dir, DotNetModuleExtension.class);
 		String namespace = null;
 		if(aPackage != null)
 		{

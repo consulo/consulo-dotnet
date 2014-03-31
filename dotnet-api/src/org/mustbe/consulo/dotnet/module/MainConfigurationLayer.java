@@ -20,6 +20,8 @@ public interface MainConfigurationLayer extends ConfigurationLayer
 
 	boolean isAllowDebugInfo();
 
+	boolean isAllowSourceRoots();
+
 	@NotNull
 	String getFileName();
 

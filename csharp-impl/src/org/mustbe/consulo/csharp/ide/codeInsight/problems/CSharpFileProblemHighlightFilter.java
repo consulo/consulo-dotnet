@@ -17,7 +17,6 @@
 package org.mustbe.consulo.csharp.ide.codeInsight.problems;
 
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -53,7 +52,7 @@ public class CSharpFileProblemHighlightFilter implements Condition<VirtualFile>
 			return false;
 		}
 
-		if(!(extension instanceof DotNetStructurableModuleExtension))
+		if(!extension.isAllowSourceRoots())
 		{
 			return true;
 		}

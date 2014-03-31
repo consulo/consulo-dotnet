@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.compiler;
+package org.mustbe.consulo.dotnet.module;
 
-import org.consulo.compiler.impl.CompileModuleScopeFactory;
+import java.util.Set;
+
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import com.intellij.compiler.impl.FileIndexCompileScope;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import org.mustbe.consulo.roots.ContentFolderSupportPatcher;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
  * @author VISTALL
- * @since 20.12.13.
+ * @since 31.03.14
  */
-public class DotNetCompileModuleScopeFactory implements CompileModuleScopeFactory
+public class DotNetContentFolderSupportPatcher implements ContentFolderSupportPatcher
 {
-	@Nullable
 	@Override
-	public FileIndexCompileScope createScope(@NotNull Module module, boolean b)
+	public void patch(@NotNull ModifiableRootModel model, @NotNull Set<ContentFolderTypeProvider> set)
 	{
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-		if(extension != null && !extension.isAllowSourceRoots())
+		DotNetModuleExtension extension = model.getExtension(DotNetModuleExtension.class);
+		if(extension != null && extension.isAllowSourceRoots())
 		{
-			return new DotNetModuleCompileScope(module, b);
+			set.add(ProductionContentFolderTypeProvider.getInstance());
 		}
-		return null;
 	}
 }

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.assemblyInfo.CSharpAssemblyConstants;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
-import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.CreateFileAction;
@@ -144,7 +144,8 @@ public class NewCSharpAssemblyFileAction extends AnAction
 		val module = LangDataKeys.MODULE.getData(dataContext);
 		if(module != null)
 		{
-			if(ModuleUtilCore.getExtension(module, DotNetStructurableModuleExtension.class) != null)
+			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+			if(extension != null && extension.isAllowSourceRoots())
 			{
 				return false;
 			}

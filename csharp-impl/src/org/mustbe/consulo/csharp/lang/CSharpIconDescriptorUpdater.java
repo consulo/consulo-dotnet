@@ -30,7 +30,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
 import org.mustbe.consulo.dotnet.module.DotNetModuleUtil;
-import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.psi.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
@@ -182,8 +182,8 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			processModifierListOwner(element, iconDescriptor, flags);
 		}
 
-		DotNetStructurableModuleExtension extension = ModuleUtilCore.getExtension(element, DotNetStructurableModuleExtension.class);
-		if(extension != null && !DotNetModuleUtil.isUnderSourceRoot(element))
+		DotNetModuleExtension extension = ModuleUtilCore.getExtension(element, DotNetModuleExtension.class);
+		if(extension != null && extension.isAllowSourceRoots() && !DotNetModuleUtil.isUnderSourceRoot(element))
 		{
 			ProjectFileIndex fileIndex = ProjectRootManager.getInstance(containingFile.getProject()).getFileIndex();
 			VirtualFile virtualFile = containingFile.getVirtualFile();

@@ -18,7 +18,7 @@ package org.mustbe.consulo.csharp.ide.actions;
 
 import org.mustbe.consulo.csharp.CSharpIcons;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
-import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -45,7 +45,8 @@ public class NewCSharpFileAction extends CreateFileFromTemplateAction
 		val module = LangDataKeys.MODULE.getData(dataContext);
 		if(module != null)
 		{
-			if(ModuleUtilCore.getExtension(module, DotNetStructurableModuleExtension.class) != null)
+			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+			if(extension != null && extension.isAllowSourceRoots())
 			{
 				return false;
 			}

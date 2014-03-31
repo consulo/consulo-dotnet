@@ -55,7 +55,7 @@ public abstract class LayeredModuleExtensionImpl<S extends LayeredModuleExtensio
 	}
 
 	@Nullable
-	public JComponent createConfigurablePanelImpl(@Nullable Runnable runnable)
+	public JComponent createConfigurablePanelImpl(@NotNull Runnable runnable)
 	{
 		return new ConfigurationProfilePanel(myRootModel, runnable, this);
 	}

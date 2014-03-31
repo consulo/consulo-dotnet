@@ -61,7 +61,7 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	@Override
 	public GlobalSearchScope getScopeForResolving(boolean test)
 	{
-		if(this instanceof DotNetStructurableModuleExtension)
+		if(isAllowSourceRoots())
 		{
 			return GlobalSearchScope.moduleRuntimeScope(getModule(), test);
 		}
@@ -69,6 +69,13 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 		{
 			return GlobalSearchScopes.directoryScope(getProject(), getModule().getModuleDir(), true);
 		}
+	}
+
+	@Override
+	public boolean isAllowSourceRoots()
+	{
+		MainConfigurationLayer currentProfileEx = (MainConfigurationLayer) getCurrentLayer();
+		return currentProfileEx.isAllowSourceRoots();
 	}
 
 	@NotNull

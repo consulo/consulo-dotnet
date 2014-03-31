@@ -31,6 +31,8 @@ import com.intellij.psi.search.GlobalSearchScope;
  */
 public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends ModuleExtensionWithSdk<T>, LayeredModuleExtension<T>
 {
+	boolean isAllowSourceRoots();
+
 	@NotNull
 	DotNetVersion getVersion();
 

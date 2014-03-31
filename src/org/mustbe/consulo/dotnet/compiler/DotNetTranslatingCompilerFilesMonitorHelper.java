@@ -20,7 +20,6 @@ import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
 import com.intellij.compiler.impl.TranslatingCompilerFilesMonitorHelper;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -38,7 +37,7 @@ public class DotNetTranslatingCompilerFilesMonitorHelper implements TranslatingC
 	public VirtualFile[] getRootsForModule(@NotNull Module module)
 	{
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-		if(extension == null || extension instanceof DotNetStructurableModuleExtension)
+		if(extension == null || extension.isAllowSourceRoots())
 		{
 			return null;
 		}

@@ -21,7 +21,7 @@ import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.psi.impl.DotNetPackage;
 import com.intellij.psi.PsiManager;
 
@@ -31,11 +31,10 @@ import com.intellij.psi.PsiManager;
  */
 public class DotNetPackageSupportProvider implements PsiPackageSupportProvider
 {
-	@NotNull
 	@Override
-	public Class<? extends ModuleExtension> getSupportedModuleExtensionClass()
+	public boolean isSupported(@NotNull ModuleExtension moduleExtension)
 	{
-		return DotNetStructurableModuleExtension.class;
+		return moduleExtension instanceof DotNetModuleExtension && ((DotNetModuleExtension) moduleExtension).isAllowSourceRoots();
 	}
 
 	@NotNull

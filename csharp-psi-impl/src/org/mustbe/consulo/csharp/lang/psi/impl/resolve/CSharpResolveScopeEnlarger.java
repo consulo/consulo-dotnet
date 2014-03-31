@@ -19,7 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.resolve;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
-import org.mustbe.consulo.dotnet.module.extension.DotNetStructurableModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -43,8 +43,8 @@ public class CSharpResolveScopeEnlarger extends ResolveScopeEnlarger
 			Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
 			if(moduleForFile != null)
 			{
-				DotNetStructurableModuleExtension extension = ModuleUtilCore.getExtension(moduleForFile, DotNetStructurableModuleExtension.class);
-				if(extension != null)
+				DotNetModuleExtension extension = ModuleUtilCore.getExtension(moduleForFile, DotNetModuleExtension.class);
+				if(extension != null && extension.isAllowSourceRoots())
 				{
 					return null;
 				}

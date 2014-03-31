@@ -35,19 +35,6 @@
 								 immutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtension"
 								 mutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpMutableModuleExtension"/>
 
-		<moduleExtensionProvider key="mono-dotnet2"
-								 name="Mono .NET (Structurable)"
-								 icon="/icons/mono.png"
-								 immutableClass="org.mustbe.consulo.mono.dotnet.module.extension2.MonoDotNetModuleExtension2"
-								 mutableClass="org.mustbe.consulo.mono.dotnet.module.extension2.MonoDotNetMutableModuleExtension2"/>
-
-		<moduleExtensionProvider key="mono-csharp2"
-								 parentKey="mono-dotnet2"
-								 name="C#"
-								 icon="/icons/mono.png"
-								 immutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtension"
-								 mutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpMutableModuleExtension"/>
-
 		<sdkType implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType"/>
 		<bundledSdkProvider implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoBundledSdkProvider"/>
 	</extensions>
