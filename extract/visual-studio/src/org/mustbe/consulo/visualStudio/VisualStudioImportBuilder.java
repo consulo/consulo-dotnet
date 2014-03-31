@@ -95,7 +95,6 @@ public class VisualStudioImportBuilder extends ProjectImportBuilder<Object>
 		assert solutionFile != null;
 
 		VirtualFile parent = solutionFile.getParent();
-		String parentPath = parent.getPath();
 
 		List<Module> modules = new ArrayList<Module>();
 

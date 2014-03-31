@@ -21,7 +21,6 @@ import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.module.extension.LayeredMutableModuleExtension;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
@@ -37,7 +36,7 @@ public class MicrosoftCSharpMutableModuleExtension extends MicrosoftCSharpModule
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@Nullable Runnable runnable)
+	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
 	{
 		return createConfigurablePanelImpl(runnable);
 	}

@@ -46,7 +46,7 @@ public class NemerleMutableModuleExtension extends NemerleModuleExtension implem
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@Nullable Runnable runnable)
+	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
 	{
 		return wrapToNorth(new ModuleExtensionWithSdkPanel(this, runnable));
 	}

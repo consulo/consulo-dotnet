@@ -42,7 +42,7 @@ public class NUnitMutableModuleExtension extends NUnitModuleExtension implements
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@Nullable Runnable runnable)
+	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
 	{
 		return createConfigurablePanelImpl(runnable);
 	}

@@ -63,10 +63,10 @@ public class IronPythonModuleExtension extends ChildLayeredModuleExtensionImpl<I
 		return currentProfileEx.getInheritableSdk().getName();
 	}
 
-	@Nullable
+	@NotNull
 	@Override
-	public SdkType getSdkType()
+	public Class<? extends SdkType> getSdkTypeClass()
 	{
-		return PythonSdkType.getInstance();
+		return PythonSdkType.class;
 	}
 }

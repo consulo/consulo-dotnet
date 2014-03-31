@@ -79,10 +79,10 @@ public class NUnitModuleExtension extends ChildLayeredModuleExtensionImpl<NUnitM
 		return currentProfileEx.getInheritableSdk().getName();
 	}
 
-	@Nullable
+	@NotNull
 	@Override
-	public SdkType getSdkType()
+	public Class<? extends SdkType> getSdkTypeClass()
 	{
-		return NUnitBundleType.getInstance();
+		return NUnitBundleType.class;
 	}
 }
