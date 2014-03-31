@@ -13,12 +13,5 @@
 								 icon="/icons/nunit.png"
 								 immutableClass="org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension"
 								 mutableClass="org.mustbe.consulo.nunit.module.extension.NUnitMutableModuleExtension"/>
-
-		<moduleExtensionProvider key="microsoft-nunit2"
-								 parentKey="microsoft-dotnet2"
-								 name="NUnit"
-								 icon="/icons/nunit.png"
-								 immutableClass="org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension"
-								 mutableClass="org.mustbe.consulo.nunit.module.extension.NUnitMutableModuleExtension"/>
 	</extensions>
 </idea-plugin>

@@ -17,15 +17,7 @@
 								 immutableClass="org.mustbe.consulo.ironPython.module.extension.IronPythonModuleExtension"
 								 mutableClass="org.mustbe.consulo.ironPython.module.extension.IronPythonMutableModuleExtension"/>
 
-		<moduleExtensionProvider key="iron-python2"
-								 parentKey="microsoft-dotnet2"
-								 icon="/icons/dotnet.png"
-								 name="IronPython"
-								 immutableClass="org.mustbe.consulo.ironPython.module.extension.IronPythonModuleExtension"
-								 mutableClass="org.mustbe.consulo.ironPython.module.extension.IronPythonMutableModuleExtension"/>
-
 		<addTo.listOfElements name="pythonExtensions">iron-python</addTo.listOfElements>
-		<addTo.listOfElements name="pythonExtensions">iron-python2</addTo.listOfElements>
 	</extensions>
 
 	<extensions defaultExtensionNs="org.consulo.python">
