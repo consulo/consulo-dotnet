@@ -38,8 +38,9 @@ public class NemerleModuleExtension extends ModuleExtensionWithSdkImpl<NemerleMo
 		super(id, module);
 	}
 
+	@NotNull
 	@Override
-	protected Class<? extends SdkType> getSdkTypeClass()
+	public Class<? extends SdkType> getSdkTypeClass()
 	{
 		return NemerleSdkType.class;
 	}

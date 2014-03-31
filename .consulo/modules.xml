@@ -295,6 +295,10 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="sourceFolder" forTests="false" />
+        <orderEntry type="module" module-name="dotnet-impl" />
+        <orderEntry type="module" module-name="csharp-impl" />
+        <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
+        <orderEntry type="module" module-name="consulo-mono-dotnet" />
       </module>
     </modules>
   </component>

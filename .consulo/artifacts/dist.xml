@@ -78,6 +78,14 @@
           </element>
         </element>
       </element>
+      <element id="directory" name="x-dotnet">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="x-dotnet.jar">
+            <element id="module-output" name="x-dotnet" />
+            <element id="module-production-resource-output" name="x-dotnet" />
+          </element>
+        </element>
+      </element>
     </root>
   </artifact>
 </component>

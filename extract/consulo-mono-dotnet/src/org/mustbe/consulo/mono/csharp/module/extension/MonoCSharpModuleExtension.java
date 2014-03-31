@@ -39,8 +39,14 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 	@Override
 	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder()
 	{
-		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(this);
-		if(isAllowUnsafeCode())
+		return createCompilerOptionsBuilderImpl(this);
+	}
+
+	@NotNull
+	public static DotNetCompilerOptionsBuilder createCompilerOptionsBuilderImpl(CSharpModuleExtension<?> extension)
+	{
+		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(extension);
+		if(extension.isAllowUnsafeCode())
 		{
 			optionsBuilder.addArgument("/unsafe");
 		}

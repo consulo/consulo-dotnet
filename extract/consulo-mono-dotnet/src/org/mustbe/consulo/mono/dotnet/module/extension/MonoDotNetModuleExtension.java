@@ -41,7 +41,7 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 
 	@NotNull
 	@Override
-	protected Class<? extends SdkType> getSdkTypeClass()
+	public Class<? extends SdkType> getSdkTypeClass()
 	{
 		return MonoSdkType.class;
 	}
@@ -50,12 +50,12 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 	@Override
 	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, Executor executor)
 	{
-		return createRunCommandLine0(fileName, configurationProfile, executor, getSdk());
+		return createRunCommandLineImpl(fileName, configurationProfile, executor, getSdk());
 	}
 
 	@NotNull
-	public static GeneralCommandLine createRunCommandLine0(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile,
-			@NotNull Executor executor, @NotNull Sdk sdk)
+	public static GeneralCommandLine createRunCommandLineImpl(
+			@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, @NotNull Executor executor, @NotNull Sdk sdk)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 

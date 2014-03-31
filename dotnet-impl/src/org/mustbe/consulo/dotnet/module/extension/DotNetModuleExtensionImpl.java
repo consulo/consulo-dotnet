@@ -26,7 +26,6 @@ import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
 import org.mustbe.consulo.module.extension.LayeredModuleExtensionImpl;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopes;
@@ -42,9 +41,6 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	{
 		super(id, module);
 	}
-
-	@NotNull
-	protected abstract Class<? extends SdkType> getSdkTypeClass();
 
 	@Override
 	protected void init(boolean debug, @NotNull ConfigurationLayer layer)
@@ -121,12 +117,5 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	{
 		MainConfigurationLayer currentProfileEx = (MainConfigurationLayer) getCurrentLayer();
 		return currentProfileEx.getInheritableSdk().getName();
-	}
-
-	@Nullable
-	@Override
-	public SdkType getSdkType()
-	{
-		return SdkType.findInstance(getSdkTypeClass());
 	}
 }

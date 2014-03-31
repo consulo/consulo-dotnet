@@ -37,11 +37,17 @@ public class MicrosoftCSharpModuleExtension extends CSharpModuleExtension<Micros
 	@Override
 	public DotNetCompilerOptionsBuilder createCompilerOptionsBuilder()
 	{
-		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(this);
+		return createCompilerOptionsBuilderImpl(this);
+	}
+
+	@NotNull
+	public static DotNetCompilerOptionsBuilder createCompilerOptionsBuilderImpl(CSharpModuleExtension<?> extension)
+	{
+		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(extension);
 		optionsBuilder.addArgument("/fullpaths");
 		optionsBuilder.addArgument("/utf8output");
 		optionsBuilder.addArgument("/nostdlib+");
-		if(isAllowUnsafeCode())
+		if(extension.isAllowUnsafeCode())
 		{
 			optionsBuilder.addArgument("/unsafe");
 		}
