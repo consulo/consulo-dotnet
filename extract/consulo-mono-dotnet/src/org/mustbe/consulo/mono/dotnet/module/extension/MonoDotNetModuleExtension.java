@@ -79,6 +79,7 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 		if(executor instanceof DefaultDebugExecutor)
 		{
 			commandLine.addParameter("--debug");
+			commandLine.addParameter("--debugger-agent=transport=dt_socket,address=127.0.0.1:10110,suspend=y,server=n");
 		}
 		commandLine.addParameter(fileName);
 		return commandLine;

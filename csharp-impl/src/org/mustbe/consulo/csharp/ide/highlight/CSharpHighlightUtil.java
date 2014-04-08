@@ -114,7 +114,7 @@ public class CSharpHighlightUtil
 		}
 		else if(element instanceof CSharpMacroDefine)
 		{
-			key = CSharpHighlightKey.INSTANCE_FIELD;       //TODO [VISTALL] new color
+			key = CSharpHighlightKey.MACRO_VARIABLE;
 		}
 		else if(element instanceof CSharpLocalVariable)
 		{
