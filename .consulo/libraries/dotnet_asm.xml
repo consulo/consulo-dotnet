@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="dotnet-asm">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/dotnet-asm.jar!/" />
+    </CLASSES>
+    <DOCUMENTATION />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/libSrc/dotnet-asm-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

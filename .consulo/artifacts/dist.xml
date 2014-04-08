@@ -22,10 +22,8 @@
             <element id="module-output" name="layered-module-extension" />
             <element id="module-output" name="csharp-spellchecker" />
           </element>
-          <element id="zip-archive" name="dotnet-asm.jar">
-            <element id="module-output" name="dotnet-asm" />
-          </element>
           <element id="file-copy" path="$PROJECT_DIR$/csharp-psi-impl/lib/jel.jar" />
+          <element id="library" level="project" name="dotnet-asm" />
         </element>
       </element>
       <element id="directory" name="microsoft-dotnet">
