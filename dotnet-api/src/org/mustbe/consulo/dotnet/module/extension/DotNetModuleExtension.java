@@ -18,10 +18,11 @@ package org.mustbe.consulo.dotnet.module.extension;
 
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetVersion;
+import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
-import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.psi.search.GlobalSearchScope;
 
@@ -37,7 +38,8 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	DotNetVersion getVersion();
 
 	@NotNull
-	GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, Executor executor);
+	GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile,
+			@Nullable DebugConnectionInfo d);
 
 	@NotNull
 	GlobalSearchScope getScopeForResolving(boolean test);

@@ -26,6 +26,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
+import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
@@ -38,6 +39,7 @@ import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -132,8 +134,14 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 		val exeFile = DotNetMacros.extract(module, currentLayerName, currentLayer);
 
+		DebugConnectionInfo debugConnectionInfo = null;
+		if(executor instanceof DefaultDebugExecutor)
+		{
+			debugConnectionInfo = new DebugConnectionInfo("127.0.0.1", -1, false);
+		}
+
 		DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();
-		val runCommandLine = extension.createRunCommandLine(exeFile, currentLayer, executor);
+		val runCommandLine = extension.createRunCommandLine(exeFile, currentLayer, debugConnectionInfo);
 		String programParameters = runProfile.getProgramParameters();
 		if(!StringUtil.isEmpty(programParameters))
 		{

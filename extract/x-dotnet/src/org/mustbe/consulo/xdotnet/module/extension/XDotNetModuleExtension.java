@@ -17,6 +17,7 @@
 package org.mustbe.consulo.xdotnet.module.extension;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension;
@@ -24,7 +25,6 @@ import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
-import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -51,18 +51,18 @@ public class XDotNetModuleExtension extends DotNetModuleExtensionImpl<XDotNetMod
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, Executor executor)
+	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, DebugConnectionInfo d)
 	{
 		Sdk sdk = getSdk();
 		assert sdk != null;
 		SdkTypeId sdkType = sdk.getSdkType();
 		if(sdkType instanceof MicrosoftDotNetSdkType)
 		{
-			return MicrosoftDotNetModuleExtension.createRunCommandLineImpl(fileName, configurationProfile, executor, sdk);
+			return MicrosoftDotNetModuleExtension.createRunCommandLineImpl(fileName, configurationProfile, d, sdk);
 		}
 		else if(sdkType instanceof MonoSdkType)
 		{
-			return MonoDotNetModuleExtension.createRunCommandLineImpl(fileName, configurationProfile, executor, sdk);
+			return MonoDotNetModuleExtension.createRunCommandLineImpl(fileName, configurationProfile, d, sdk);
 		}
 		throw  new IllegalArgumentException(sdkType.getName());
 	}

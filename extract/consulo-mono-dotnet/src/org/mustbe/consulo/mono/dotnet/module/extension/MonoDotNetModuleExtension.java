@@ -17,12 +17,12 @@
 package org.mustbe.consulo.mono.dotnet.module.extension;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.module.extension.ConfigurationLayer;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
+import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
-import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -48,14 +48,17 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, Executor executor)
+	public GeneralCommandLine createRunCommandLine(
+			@NotNull String fileName,
+			@NotNull ConfigurationLayer configurationProfile,
+			@Nullable DebugConnectionInfo d)
 	{
-		return createRunCommandLineImpl(fileName, configurationProfile, executor, getSdk());
+		return createRunCommandLineImpl(fileName, configurationProfile, d, getSdk());
 	}
 
 	@NotNull
 	public static GeneralCommandLine createRunCommandLineImpl(
-			@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, @NotNull Executor executor, @NotNull Sdk sdk)
+			@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, @Nullable DebugConnectionInfo d, @NotNull Sdk sdk)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 
@@ -76,12 +79,29 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 		assert runFile != null : SystemInfo.OS_NAME;
 
 		commandLine.setExePath(runFile);
-		if(executor instanceof DefaultDebugExecutor)
+		if(d != null)
 		{
 			commandLine.addParameter("--debug");
-			//commandLine.addParameter("--debugger-agent=transport=dt_socket,address=127.0.0.1:10110,suspend=y,server=n");
+			commandLine.addParameter(generateParameterForRun(d));
 		}
 		commandLine.addParameter(fileName);
 		return commandLine;
+	}
+
+	private static String generateParameterForRun(@NotNull DebugConnectionInfo debugConnectionInfo)
+	{
+		StringBuilder builder = new StringBuilder("--debugger-agent=transport=dt_socket,address=");
+		builder.append(debugConnectionInfo.getHost());
+		builder.append(":");
+		builder.append(debugConnectionInfo.getPort());
+		if(debugConnectionInfo.isServer())
+		{
+			builder.append(",suspend=y,server=n");
+		}
+		else
+		{
+			builder.append(",suspend=n,server=y");
+		}
+		return builder.toString();
 	}
 }
