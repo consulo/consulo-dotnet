@@ -26,19 +26,14 @@ import java.net.ServerSocket;
 public class DebugConnectionInfo
 {
 	private final String myHost;
-	private int myPort;
+	private final int myPort;
 	private final boolean myServer;
 
 	public DebugConnectionInfo(String host, int port, boolean server)
 	{
 		myHost = host;
-		myPort = port;
 		myServer = server;
-	}
-
-	public int getPort()
-	{
-		if(myPort == -1)
+		if(port == -1)
 		{
 			try
 			{
@@ -49,6 +44,14 @@ public class DebugConnectionInfo
 				throw new IllegalArgumentException(e);
 			}
 		}
+		else
+		{
+			myPort = port;
+		}
+	}
+
+	public int getPort()
+	{
 		return myPort;
 	}
 
