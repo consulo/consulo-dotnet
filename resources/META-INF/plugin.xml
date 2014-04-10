@@ -33,6 +33,7 @@
 	<extensionPoints>
 		<extensionPoint name="psi.facade" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade" area="CONSULO_PROJECT"/>
 
+		<extensionPoint name="debugger.provider" interface="org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider" />
 		<extensionPoint name="classInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="directClassInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor"/>
@@ -65,6 +66,8 @@
 		<configurationType implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationType"/>
 		<runConfigurationProducer implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationProducer"/>
 		<programRunner implementation="org.mustbe.consulo.dotnet.run.DotNetDebuggerProgramRunner"/>
+
+		<xdebugger.breakpointType implementation="org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType" />
 
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompiler"/>
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopier"/>

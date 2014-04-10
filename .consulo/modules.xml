@@ -137,6 +137,7 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="csharp-psi-impl" exported="" />
         <orderEntry type="module" module-name="dotnet-impl" />
+        <orderEntry type="module" module-name="dotnet-debugger-api" />
       </module>
       <module name="impl/nemerle" dirurl="file://$PROJECT_DIR$/extract/nemerle">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
@@ -288,6 +289,28 @@
         <orderEntry type="module" module-name="csharp-impl" />
         <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
         <orderEntry type="module" module-name="consulo-mono-dotnet" />
+      </module>
+      <module name="dotnet-debugger-api" dirurl="file://$PROJECT_DIR$/dotnet-debugger-api">
+        <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
+        <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <content url="file://$MODULE_DIR$">
+          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+        </content>
+        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
+        <orderEntry type="module-extension-sdk" extension-id="java" />
+        <orderEntry type="sourceFolder" forTests="false" />
+      </module>
+      <module name="dotnet-debugger-impl" dirurl="file://$PROJECT_DIR$/dotnet-debugger-impl">
+        <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
+        <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <content url="file://$MODULE_DIR$">
+          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+        </content>
+        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
+        <orderEntry type="module-extension-sdk" extension-id="java" />
+        <orderEntry type="sourceFolder" forTests="false" />
+        <orderEntry type="library" name="mono-soft-debugging" level="project" />
+        <orderEntry type="module" module-name="dotnet-debugger-api" />
       </module>
     </modules>
   </component>
