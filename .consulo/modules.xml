@@ -311,6 +311,7 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="library" name="mono-soft-debugging" level="project" />
         <orderEntry type="module" module-name="dotnet-debugger-api" />
+        <orderEntry type="module" module-name="dotnet-impl" />
       </module>
     </modules>
   </component>

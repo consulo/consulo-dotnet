@@ -17,14 +17,21 @@
 package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebugProcess;
 import com.intellij.execution.ExecutionException;
+import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.DefaultProgramRunner;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.xdebugger.XDebugProcess;
+import com.intellij.xdebugger.XDebugProcessStarter;
+import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XDebuggerManager;
 
 /**
  * @author VISTALL
@@ -41,9 +48,22 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 
 	@Override
 	protected RunContentDescriptor doExecute(
-			Project project, RunProfileState state, RunContentDescriptor contentToReuse, ExecutionEnvironment env) throws ExecutionException
+			Project project, final RunProfileState state, RunContentDescriptor contentToReuse, final ExecutionEnvironment env) throws
+			ExecutionException
 	{
-		return super.doExecute(project, state, contentToReuse, env);
+		assert state instanceof DotNetRunProfileState;
+		FileDocumentManager.getInstance().saveAllDocuments();
+		final XDebugSession debugSession = XDebuggerManager.getInstance(project).startSession(this, env, contentToReuse, new XDebugProcessStarter()
+		{
+			@NotNull
+			@Override
+			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
+			{
+				final ExecutionResult result = state.execute(env.getExecutor(), DotNetDebuggerProgramRunner.this);
+				return new DotNetDebugProcess(session, result, (DotNetRunProfileState) state);
+			}
+		});
+		return debugSession.getRunContentDescriptor();
 	}
 
 	@Override
