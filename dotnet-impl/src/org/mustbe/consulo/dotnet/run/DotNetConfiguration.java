@@ -16,7 +16,6 @@
 
 package org.mustbe.consulo.dotnet.run;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,9 +29,7 @@ import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
@@ -40,11 +37,7 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -151,26 +144,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
 		runCommandLine.setWorkDirectory(DotNetMacros.extractLikeWorkDir(module, runProfile.getWorkingDirectory(), currentLayerName, currentLayer,
 				false));
-		return new RunProfileState()
-		{
-			@Nullable
-			@Override
-			public ExecutionResult execute(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException
-			{
-				if(!new File(exeFile).exists())
-				{
-					throw new ExecutionException(exeFile + " is not exists");
-				}
-
-				val builder = TextConsoleBuilderFactory.getInstance().createBuilder(executionEnvironment.getProject());
-
-				OSProcessHandler osProcessHandler = new OSProcessHandler(runCommandLine);
-
-				ConsoleView console = builder.getConsole();
-				console.attachToProcess(osProcessHandler);
-				return new DefaultExecutionResult(console, osProcessHandler);
-			}
-		};
+		return new DotNetRunProfileState(exeFile, executionEnvironment, runCommandLine, debugConnectionInfo);
 	}
 
 	@Override

@@ -17,9 +17,14 @@
 package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.DefaultProgramRunner;
+import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.openapi.project.Project;
 
 /**
  * @author VISTALL
@@ -32,6 +37,13 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 	public String getRunnerId()
 	{
 		return ".NETDebugger";
+	}
+
+	@Override
+	protected RunContentDescriptor doExecute(
+			Project project, RunProfileState state, RunContentDescriptor contentToReuse, ExecutionEnvironment env) throws ExecutionException
+	{
+		return super.doExecute(project, state, contentToReuse, env);
 	}
 
 	@Override
