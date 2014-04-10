@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.run.DotNetRunProfileState;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
@@ -27,11 +28,14 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
+import mono.debugger.VirtualMachine;
 
 /**
  * @author VISTALL
@@ -40,12 +44,17 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 public class DotNetDebugProcess extends XDebugProcess
 {
 	private final ExecutionResult myResult;
+	private final DebugConnectionInfo myDebugConnectionInfo;
+	private DotNetDebugThread myDebugThread;
 
 	public DotNetDebugProcess(XDebugSession session, ExecutionResult result, DotNetRunProfileState state)
 	{
 		super(session);
 		myResult = result;
 		session.setPauseActionSupported(true);
+		myDebugConnectionInfo = state.getDebugConnectionInfo();
+		myDebugThread = new DotNetDebugThread(session, myDebugConnectionInfo);
+		myDebugThread.start();
 	}
 
 	@Nullable
@@ -85,6 +94,45 @@ public class DotNetDebugProcess extends XDebugProcess
 	}
 
 	@Override
+	public void startPausing()
+	{
+		myDebugThread.addCommand(new Processor<VirtualMachine>()
+		{
+			@Override
+			public boolean process(VirtualMachine virtualMachine)
+			{
+				virtualMachine.suspend();
+				getSession().positionReached(new DotNetSuspendContext(virtualMachine));
+				return false;
+			}
+		});
+	}
+
+	@Override
+	public void resume()
+	{
+		myDebugThread.addCommand(new Processor<VirtualMachine>()
+		{
+			@Override
+			public boolean process(VirtualMachine virtualMachine)
+			{
+				virtualMachine.resume();
+				return false;
+			}
+		});
+	}
+
+	@Override
+	public String getCurrentStateMessage()
+	{
+		if(myDebugThread.isConnected())
+		{
+			return "Connected to " + myDebugConnectionInfo.getHost() + ":" + myDebugConnectionInfo.getPort();
+		}
+		return XDebuggerBundle.message("debugger.state.message.disconnected");
+	}
+
+	@Override
 	public void startStepOver()
 	{
 
@@ -105,13 +153,7 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public void stop()
 	{
-
-	}
-
-	@Override
-	public void resume()
-	{
-
+		myDebugThread.setStop();
 	}
 
 	@Override

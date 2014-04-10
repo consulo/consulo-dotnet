@@ -130,7 +130,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		DebugConnectionInfo debugConnectionInfo = null;
 		if(executor instanceof DefaultDebugExecutor)
 		{
-			debugConnectionInfo = new DebugConnectionInfo("127.0.0.1", -1, true);
+			debugConnectionInfo = new DebugConnectionInfo("127.0.0.1", -1, false);
 		}
 
 		DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();

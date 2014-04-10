@@ -96,11 +96,11 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 		builder.append(debugConnectionInfo.getPort());
 		if(debugConnectionInfo.isServer())
 		{
-			builder.append(",suspend=y,server=n");
+			builder.append(",suspend=n,server=y");
 		}
 		else
 		{
-			builder.append(",suspend=n,server=y");
+			builder.append(",suspend=y,server=n");
 		}
 		return builder.toString();
 	}
