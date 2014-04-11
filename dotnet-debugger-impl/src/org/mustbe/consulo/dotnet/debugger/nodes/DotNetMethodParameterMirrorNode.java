@@ -1,4 +1,6 @@
-package org.mustbe.consulo.dotnet.debugger;
+package org.mustbe.consulo.dotnet.debugger.nodes;
+
+import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,60 +16,27 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XNavigatable;
-import com.intellij.xdebugger.frame.XValueNode;
-import com.intellij.xdebugger.frame.XValuePlace;
-import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
-import mono.debugger.PrimitiveValueMirror;
 import mono.debugger.StackFrameMirror;
+import mono.debugger.TypeMirror;
 import mono.debugger.Value;
 
 /**
  * @author VISTALL
  * @since 11.04.14
  */
-public class DotNetMethodParameterMirrorNode extends XNamedValue
+public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirrorNode
 {
-	private final Value myValue;
 	private final MethodParameterMirror myParameter;
 	private final StackFrameMirror myFrame;
-	private final Project myProject;
 
 	public DotNetMethodParameterMirrorNode(MethodParameterMirror parameter, StackFrameMirror frame, Project project)
 	{
-		super(parameter.name());
+		super(parameter.name(), project);
 		myParameter = parameter;
 		myFrame = frame;
-		myProject = project;
-		myValue = frame.parameterValue(parameter);
-	}
-
-	@Override
-	public boolean canNavigateToTypeSource()
-	{
-		return true;
-	}
-
-	@Override
-	public void computeTypeSourcePosition(@NotNull XNavigatable navigatable)
-	{
-		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(myProject).findType(myParameter.type().qualifiedName(),
-				GlobalSearchScope.allScope(myProject), -1);
-
-		if(type == null)
-		{
-			return;
-		}
-		PsiElement nameIdentifier = type.getNameIdentifier();
-		if(nameIdentifier == null)
-		{
-			return;
-		}
-		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(type.getContainingFile().getVirtualFile(),
-				nameIdentifier.getTextOffset()));
 	}
 
 	@Override
@@ -127,33 +96,24 @@ public class DotNetMethodParameterMirrorNode extends XNamedValue
 		}
 	}
 
+	@NotNull
 	@Override
-	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
+	public TypeMirror getTypeOfVariable()
 	{
-		xValueNode.setPresentation(AllIcons.Nodes.Parameter, new XValuePresentation()
-		{
-			@Nullable
-			@Override
-			public String getType()
-			{
-				return myParameter.type().qualifiedName();
-			}
+		return myParameter.type();
+	}
 
-			@Override
-			public void renderValue(@NotNull XValueTextRenderer xValueTextRenderer)
-			{
-				if(myValue != null)
-				{
-					if(myValue instanceof PrimitiveValueMirror)
-					{
-						xValueTextRenderer.renderNumericValue(String.valueOf(((PrimitiveValueMirror) myValue).value()));
-					}
-				}
-				else
-				{
-					xValueTextRenderer.renderComment("error");
-				}
-			}
-		}, true);
+	@NotNull
+	@Override
+	public Icon getIconForVariable()
+	{
+		return AllIcons.Nodes.Parameter;
+	}
+
+	@Nullable
+	@Override
+	public Value<?> getValueOfVariable()
+	{
+		return myFrame.parameterValue(myParameter);
 	}
 }
