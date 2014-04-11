@@ -105,11 +105,11 @@ public class DotNetDebugThread extends Thread
 					{
 						stoppedAlready = true;
 
-						mySession.positionReached(new DotNetSuspendContext(myVirtualMachine, eventSet.eventThread()));
+						mySession.positionReached(new DotNetSuspendContext(myVirtualMachine, mySession.getProject(), eventSet.eventThread()));
 					}
 				}
 			}
-			catch(InterruptedException e)
+			catch(Exception e)
 			{
 				//
 			}

@@ -5,6 +5,7 @@ import java.io.File;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredTextContainer;
@@ -26,10 +27,12 @@ import mono.debugger.StackFrameMirror;
 public class DotNetStackFrame extends XStackFrame
 {
 	private final StackFrameMirror myFrame;
+	private final Project myProject;
 
-	public DotNetStackFrame(StackFrameMirror frame)
+	public DotNetStackFrame(StackFrameMirror frame, Project project)
 	{
 		myFrame = frame;
+		myProject = project;
 	}
 
 	@Nullable
@@ -86,7 +89,7 @@ public class DotNetStackFrame extends XStackFrame
 		XValueChildrenList parameterValues = new XValueChildrenList();
 		for(MethodParameterMirror parameter : parameters)
 		{
-			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(parameter, myFrame);
+			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(parameter, myFrame, myProject);
 
 			parameterValues.add(parameterMirrorNode);
 		}
