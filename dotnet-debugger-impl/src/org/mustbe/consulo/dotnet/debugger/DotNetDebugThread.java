@@ -28,6 +28,9 @@ import com.intellij.xdebugger.XDebugSession;
 import mono.debugger.SocketListeningConnector;
 import mono.debugger.VirtualMachine;
 import mono.debugger.connect.Connector;
+import mono.debugger.event.EventQueue;
+import mono.debugger.event.EventSet;
+import mono.debugger.request.EventRequest;
 
 /**
  * @author VISTALL
@@ -89,6 +92,26 @@ public class DotNetDebugThread extends Thread
 			while((processor = myQueue.poll()) != null)
 			{
 				processor.process(myVirtualMachine);
+			}
+
+			boolean stoppedAlready = false;
+			EventQueue eventQueue = myVirtualMachine.eventQueue();
+			EventSet eventSet;
+			try
+			{
+				while((eventSet = eventQueue.remove()) != null)
+				{
+					if(!stoppedAlready && eventSet.suspendPolicy() == EventRequest.SUSPEND_ALL)
+					{
+						stoppedAlready = true;
+
+						mySession.positionReached(new DotNetSuspendContext(myVirtualMachine, eventSet.eventThread()));
+					}
+				}
+			}
+			catch(InterruptedException e)
+			{
+				//
 			}
 
 			try

@@ -31,14 +31,24 @@ import mono.debugger.VirtualMachine;
 public class DotNetSuspendContext extends XSuspendContext
 {
 	private XExecutionStack[] myXExecutionStacks;
+	private XExecutionStack myActivateStack;
 
-	public DotNetSuspendContext(VirtualMachine virtualMachine)
+	public DotNetSuspendContext(VirtualMachine virtualMachine, ThreadMirror active)
 	{
 		List<ThreadMirror> threadMirrors = virtualMachine.allThreads();
 		myXExecutionStacks = new XExecutionStack[threadMirrors.size()];
 		for(int i = 0; i < myXExecutionStacks.length; i++)
 		{
-			myXExecutionStacks[i] = new DotNetExecutionStack(threadMirrors.get(i));
+			ThreadMirror threadMirror = threadMirrors.get(i);
+			myXExecutionStacks[i] = new DotNetExecutionStack(threadMirror);
+			if(active != null && threadMirror.id() == active.id())
+			{
+				myActivateStack = myXExecutionStacks[i];
+			}
+		}
+		if(myActivateStack == null)
+		{
+			myActivateStack = myXExecutionStacks[0];
 		}
 	}
 
@@ -46,7 +56,7 @@ public class DotNetSuspendContext extends XSuspendContext
 	@Override
 	public XExecutionStack getActiveExecutionStack()
 	{
-		return myXExecutionStacks[0];
+		return myActivateStack;
 	}
 
 	@Override

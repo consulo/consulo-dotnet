@@ -313,6 +313,7 @@
         <orderEntry type="library" name="mono-soft-debugging" level="project" />
         <orderEntry type="module" module-name="dotnet-debugger-api" />
         <orderEntry type="module" module-name="dotnet-impl" />
+        <orderEntry type="module" module-name="dotnet-psi-api" />
       </module>
     </modules>
   </component>

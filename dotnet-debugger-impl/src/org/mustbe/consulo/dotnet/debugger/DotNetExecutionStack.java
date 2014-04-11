@@ -16,9 +16,14 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
+import mono.debugger.IncompatibleThreadStateException;
+import mono.debugger.StackFrameMirror;
 import mono.debugger.ThreadMirror;
 
 /**
@@ -27,9 +32,12 @@ import mono.debugger.ThreadMirror;
  */
 public class DotNetExecutionStack extends XExecutionStack
 {
+	private final ThreadMirror myThreadMirror;
+
 	public DotNetExecutionStack(ThreadMirror threadMirror)
 	{
 		super(threadMirror.name());
+		myThreadMirror = threadMirror;
 	}
 
 	@Nullable
@@ -42,6 +50,19 @@ public class DotNetExecutionStack extends XExecutionStack
 	@Override
 	public void computeStackFrames(int i, XStackFrameContainer xStackFrameContainer)
 	{
-
+		try
+		{
+			List<StackFrameMirror> frames = myThreadMirror.frames();
+			List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>(frames.size());
+			for(StackFrameMirror frame : frames)
+			{
+				stackFrames.add(new DotNetStackFrame(frame));
+			}
+			xStackFrameContainer.addStackFrames(stackFrames, true);
+		}
+		catch(IncompatibleThreadStateException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
