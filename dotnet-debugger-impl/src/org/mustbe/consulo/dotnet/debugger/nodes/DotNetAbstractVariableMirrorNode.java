@@ -108,6 +108,6 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 					});
 				}
 			}
-		}, true);
+		}, false);
 	}
 }

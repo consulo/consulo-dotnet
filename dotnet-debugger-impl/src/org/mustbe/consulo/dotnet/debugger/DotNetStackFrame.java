@@ -5,6 +5,7 @@ import java.io.File;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -19,7 +20,9 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import mono.debugger.Location;
 import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
+import mono.debugger.ObjectValueMirror;
 import mono.debugger.StackFrameMirror;
+import mono.debugger.Value;
 
 /**
  * @author VISTALL
@@ -85,15 +88,21 @@ public class DotNetStackFrame extends XStackFrame
 	{
 		MethodMirror method = myFrame.location().method();
 
+		XValueChildrenList childrenList = new XValueChildrenList();
+		Value value = myFrame.thisObject();
+		if(value instanceof ObjectValueMirror)
+		{
+			childrenList.add(new DotNetObjectValueMirrorNode(myProject, (ObjectValueMirror) value));
+		}
+
 		MethodParameterMirror[] parameters = method.parameters();
 
-		XValueChildrenList parameterValues = new XValueChildrenList();
 		for(MethodParameterMirror parameter : parameters)
 		{
 			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(parameter, myFrame, myProject);
 
-			parameterValues.add(parameterMirrorNode);
+			childrenList.add(parameterMirrorNode);
 		}
-		node.addChildren(parameterValues, true);
+		node.addChildren(childrenList, true);
 	}
 }
