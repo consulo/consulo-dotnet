@@ -99,7 +99,7 @@ public class DotNetDebugThread extends Thread
 			EventSet eventSet;
 			try
 			{
-				while((eventSet = eventQueue.remove()) != null)
+				while((eventSet = eventQueue.remove(100)) != null)
 				{
 					if(!stoppedAlready && eventSet.suspendPolicy() == EventRequest.SUSPEND_ALL)
 					{
@@ -116,7 +116,7 @@ public class DotNetDebugThread extends Thread
 
 			try
 			{
-				Thread.sleep(100L);
+				Thread.sleep(100);
 			}
 			catch(InterruptedException e)
 			{
