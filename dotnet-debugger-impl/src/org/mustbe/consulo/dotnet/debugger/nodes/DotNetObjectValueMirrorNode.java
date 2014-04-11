@@ -61,7 +61,7 @@ public class DotNetObjectValueMirrorNode extends XNamedValue
 	@Override
 	public void computePresentation(@NotNull XValueNode node, @NotNull XValuePlace place)
 	{
-		node.setPresentation(AllIcons.Debugger.Value, new XValuePresentation()
+		node.setPresentation(myObjectValueMirror == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value, new XValuePresentation()
 		{
 			@NotNull
 			@Override
