@@ -3,6 +3,7 @@ package org.mustbe.consulo.dotnet.debugger.nodes;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.frame.XCompositeNode;
@@ -21,13 +22,17 @@ import mono.debugger.TypeMirror;
  */
 public class DotNetObjectValueMirrorNode extends XNamedValue
 {
+	@NotNull
 	private final Project myProject;
+	@NotNull
+	private final TypeMirror myTypeMirror;
 	private final ObjectValueMirror myObjectValueMirror;
 
-	public DotNetObjectValueMirrorNode(Project project, ObjectValueMirror objectValueMirror)
+	public DotNetObjectValueMirrorNode(@NotNull Project project, @NotNull TypeMirror typeMirror, @Nullable ObjectValueMirror objectValueMirror)
 	{
-		super("this");
+		super(objectValueMirror == null ? "static" : "this");
 		myProject = project;
+		myTypeMirror = typeMirror;
 		myObjectValueMirror = objectValueMirror;
 	}
 
@@ -36,12 +41,10 @@ public class DotNetObjectValueMirrorNode extends XNamedValue
 	{
 		XValueChildrenList childrenList = new XValueChildrenList();
 
-		TypeMirror type = myObjectValueMirror.type();
-		assert type != null;
-		List<FieldMirror> fieldMirrors = type.fieldsDeep();
+		List<FieldMirror> fieldMirrors = myTypeMirror.fieldsDeep();
 		for(FieldMirror fieldMirror : fieldMirrors)
 		{
-			childrenList.add(new DotNetFieldMirrorNode(fieldMirror, myProject, myObjectValueMirror));
+			childrenList.add(new DotNetFieldMirrorNode(fieldMirror, myProject, fieldMirror.isStatic() ? null : myObjectValueMirror));
 		}
 		node.addChildren(childrenList, true);
 	}
@@ -51,6 +54,13 @@ public class DotNetObjectValueMirrorNode extends XNamedValue
 	{
 		node.setPresentation(AllIcons.Debugger.Value, new XValuePresentation()
 		{
+			@NotNull
+			@Override
+			public String getSeparator()
+			{
+				return "";
+			}
+
 			@Override
 			public void renderValue(@NotNull XValueTextRenderer renderer)
 			{

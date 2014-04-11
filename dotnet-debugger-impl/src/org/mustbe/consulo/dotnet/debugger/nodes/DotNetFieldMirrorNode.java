@@ -20,7 +20,7 @@ public class DotNetFieldMirrorNode extends DotNetAbstractVariableMirrorNode
 	private final FieldMirror myFieldMirror;
 	private final ObjectValueMirror myObjectValueMirror;
 
-	public DotNetFieldMirrorNode(FieldMirror fieldMirror, @NotNull Project project, ObjectValueMirror objectValueMirror)
+	public DotNetFieldMirrorNode(FieldMirror fieldMirror, @NotNull Project project, @Nullable ObjectValueMirror objectValueMirror)
 	{
 		super(fieldMirror.name(), project);
 		myFieldMirror = fieldMirror;

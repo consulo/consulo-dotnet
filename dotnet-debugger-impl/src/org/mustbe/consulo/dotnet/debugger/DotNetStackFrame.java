@@ -22,6 +22,7 @@ import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.StackFrameMirror;
+import mono.debugger.TypeMirror;
 import mono.debugger.Value;
 
 /**
@@ -53,7 +54,7 @@ public class DotNetStackFrame extends XStackFrame
 		{
 			return null;
 		}
-		return XDebuggerUtil.getInstance().createPosition(fileByPath, myFrame.location().lineNumber());
+		return XDebuggerUtil.getInstance().createPosition(fileByPath, myFrame.location().lineNumber() - 1);
 	}
 
 	@Override
@@ -92,7 +93,13 @@ public class DotNetStackFrame extends XStackFrame
 		Value value = myFrame.thisObject();
 		if(value instanceof ObjectValueMirror)
 		{
-			childrenList.add(new DotNetObjectValueMirrorNode(myProject, (ObjectValueMirror) value));
+			TypeMirror type = value.type();
+			assert type != null;
+			childrenList.add(new DotNetObjectValueMirrorNode(myProject, type, (ObjectValueMirror) value));
+		}
+		else
+		{
+			childrenList.add(new DotNetObjectValueMirrorNode(myProject, myFrame.location().declaringType(), null));
 		}
 
 		MethodParameterMirror[] parameters = method.parameters();

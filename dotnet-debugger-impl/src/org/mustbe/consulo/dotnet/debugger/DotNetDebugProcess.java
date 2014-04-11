@@ -201,7 +201,7 @@ public class DotNetDebugProcess extends XDebugProcess
 							int index = -1;
 							for(Method_GetDebugInfo.Entry entry : process.entries)
 							{
-								if(entry.line == lineBreakpoint.getLine())
+								if(entry.line == (lineBreakpoint.getLine() + 1))
 								{
 									index = entry.offset;
 									break;
