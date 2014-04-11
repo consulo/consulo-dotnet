@@ -41,10 +41,19 @@ public class DotNetObjectValueMirrorNode extends XNamedValue
 	{
 		XValueChildrenList childrenList = new XValueChildrenList();
 
+		if(myObjectValueMirror != null)
+		{
+			childrenList.add(new DotNetObjectValueMirrorNode(myProject, myTypeMirror, null));
+		}
+
 		List<FieldMirror> fieldMirrors = myTypeMirror.fieldsDeep();
 		for(FieldMirror fieldMirror : fieldMirrors)
 		{
-			childrenList.add(new DotNetFieldMirrorNode(fieldMirror, myProject, fieldMirror.isStatic() ? null : myObjectValueMirror));
+			if(!fieldMirror.isStatic() && myObjectValueMirror == null)
+			{
+				continue;
+			}
+			childrenList.add(new DotNetFieldOrPropertyMirrorNode(fieldMirror, myProject, fieldMirror.isStatic() ? null : myObjectValueMirror));
 		}
 		node.addChildren(childrenList, true);
 	}
