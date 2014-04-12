@@ -114,6 +114,6 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 	@Override
 	public Value<?> getValueOfVariable()
 	{
-		return myFrame.parameterValue(myParameter);
+		return myFrame.localOrParameterValue(myParameter);
 	}
 }

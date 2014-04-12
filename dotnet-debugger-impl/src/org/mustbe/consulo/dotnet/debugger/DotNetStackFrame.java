@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
 import com.intellij.icons.AllIcons;
@@ -17,6 +18,7 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
+import mono.debugger.LocalVariableMirror;
 import mono.debugger.Location;
 import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
@@ -109,6 +111,14 @@ public class DotNetStackFrame extends XStackFrame
 			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(parameter, myFrame, myProject);
 
 			childrenList.add(parameterMirrorNode);
+		}
+
+		LocalVariableMirror[] locals = method.locals(myFrame.location().codeIndex());
+		for(LocalVariableMirror local : locals)
+		{
+			DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(local, myFrame, myProject);
+
+			childrenList.add(localVariableMirrorNode);
 		}
 		node.addChildren(childrenList, true);
 	}
