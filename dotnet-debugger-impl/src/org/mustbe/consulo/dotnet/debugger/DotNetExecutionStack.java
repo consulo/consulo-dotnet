@@ -47,6 +47,15 @@ public class DotNetExecutionStack extends XExecutionStack
 	@Override
 	public XStackFrame getTopFrame()
 	{
+		/*try
+		{
+			StackFrameMirror frame = myThreadMirror.frame(0);
+			return new DotNetStackFrame(frame, myProject);
+		}
+		catch(IncompatibleThreadStateException e)
+		{
+			//
+		} */
 		return null;
 	}
 

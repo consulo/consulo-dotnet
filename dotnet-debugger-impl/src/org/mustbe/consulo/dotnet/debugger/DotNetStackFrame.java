@@ -60,6 +60,13 @@ public class DotNetStackFrame extends XStackFrame
 	}
 
 	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof DotNetStackFrame && ((DotNetStackFrame) obj).myFrame.id() == myFrame.id() && ((DotNetStackFrame) obj).myFrame.thread()
+				.id() == myFrame.thread().id();
+	}
+
+	@Override
 	public void customizePresentation(ColoredTextContainer component)
 	{
 		component.setIcon(AllIcons.Nodes.Method);
