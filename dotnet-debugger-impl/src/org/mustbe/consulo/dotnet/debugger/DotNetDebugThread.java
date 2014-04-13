@@ -16,15 +16,24 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.Computable;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import lombok.val;
 import mono.debugger.SocketListeningConnector;
 import mono.debugger.VirtualMachine;
 import mono.debugger.connect.Connector;
@@ -40,6 +49,7 @@ import mono.debugger.request.EventRequest;
 public class DotNetDebugThread extends Thread
 {
 	private final XDebugSession mySession;
+	private final XDebuggerManager myDebuggerManager;
 	private final DebugConnectionInfo myDebugConnectionInfo;
 	private boolean myStop;
 
@@ -52,6 +62,7 @@ public class DotNetDebugThread extends Thread
 		super("DotNetDebugThread: " + new Random().nextInt());
 		mySession = session;
 		myDebugConnectionInfo = debugConnectionInfo;
+		myDebuggerManager = XDebuggerManager.getInstance(session.getProject());
 	}
 
 	public void setStop()
@@ -83,7 +94,23 @@ public class DotNetDebugThread extends Thread
 		}
 		else
 		{
-			throw new IllegalArgumentException();
+		}
+
+		if(myVirtualMachine == null)
+		{
+			return;
+		}
+
+		for(val breakpoint : getOurBreakpoints())
+		{
+			val type = (DotNetAbstractBreakpointType) breakpoint.getType();
+
+			EventRequest eventRequest = type.createEventRequest(mySession.getProject(), myVirtualMachine, breakpoint);
+			if(eventRequest == null)
+			{
+				continue;
+			}
+			eventRequest.enable();
 		}
 
 		while(!myStop)
@@ -124,6 +151,19 @@ public class DotNetDebugThread extends Thread
 			}
 		}
 
+	}
+
+	@NotNull
+	public Collection<? extends XLineBreakpoint<XBreakpointProperties>> getOurBreakpoints()
+	{
+		return ApplicationManager.getApplication().runReadAction(new Computable<Collection<? extends XLineBreakpoint<XBreakpointProperties>>>()
+		{
+			@Override
+			public Collection<? extends XLineBreakpoint<XBreakpointProperties>> compute()
+			{
+				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetAbstractBreakpointType.class);
+			}
+		});
 	}
 
 	public void addCommand(Processor<VirtualMachine> processor)

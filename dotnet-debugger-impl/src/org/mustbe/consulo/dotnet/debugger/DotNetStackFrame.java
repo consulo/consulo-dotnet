@@ -18,6 +18,7 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
+import mono.debugger.AbsentInformationException;
 import mono.debugger.LocalVariableMirror;
 import mono.debugger.Location;
 import mono.debugger.MethodMirror;
@@ -99,16 +100,23 @@ public class DotNetStackFrame extends XStackFrame
 		MethodMirror method = myFrame.location().method();
 
 		XValueChildrenList childrenList = new XValueChildrenList();
-		Value value = myFrame.thisObject();
-		if(value instanceof ObjectValueMirror)
+
+		try
 		{
-			TypeMirror type = value.type();
-			assert type != null;
-			childrenList.add(new DotNetObjectValueMirrorNode(myProject, type, (ObjectValueMirror) value));
+			Value value = myFrame.thisObject();
+			if(value instanceof ObjectValueMirror)
+			{
+				TypeMirror type = value.type();
+				assert type != null;
+				childrenList.add(new DotNetObjectValueMirrorNode(myProject, type, (ObjectValueMirror) value));
+			}
+			else
+			{
+				childrenList.add(new DotNetObjectValueMirrorNode(myProject, myFrame.location().declaringType(), null));
+			}
 		}
-		else
+		catch(AbsentInformationException e)
 		{
-			childrenList.add(new DotNetObjectValueMirrorNode(myProject, myFrame.location().declaringType(), null));
 		}
 
 		MethodParameterMirror[] parameters = method.parameters();

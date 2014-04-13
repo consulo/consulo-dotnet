@@ -33,6 +33,15 @@ import mono.debugger.ValueVisitor;
  */
 public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 {
+	/*private XValueModifier myValueModifier = new XValueModifier()
+	{
+		@Override
+		public void setValue(@NotNull String expression, @NotNull XModificationCallback callback)
+		{
+
+		}
+	}; */
+
 	@NotNull
 	protected final Project myProject;
 
@@ -50,6 +59,13 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 
 	@Nullable
 	public abstract Value<?> getValueOfVariable();
+
+	/*@Nullable
+	@Override
+	public XValueModifier getModifier()
+	{
+		return myValueModifier;
+	}  */
 
 	@Override
 	public boolean canNavigateToTypeSource()
