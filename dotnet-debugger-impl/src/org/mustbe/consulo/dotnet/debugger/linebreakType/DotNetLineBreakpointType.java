@@ -14,6 +14,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiDocumentManager;
@@ -142,14 +143,29 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		{
 			return null;
 		}
-		TypeMirror[] types = virtualMachine.findTypes(((DotNetTypeDeclaration) parent).getPresentableQName(), false);
+		TypeMirror[] types = virtualMachine.findTypesBySourcePath(fileByUrl.getPath(), SystemInfo.isFileSystemCaseSensitive);
 		if(types.length == 0)
 		{
 			return null;
 		}
 
+		String thisClassName = ((DotNetTypeDeclaration) parent).getPresentableQName();
+
+		TypeMirror mirror = null;
+		for(TypeMirror type : types)
+		{
+			if(Comparing.equal(type.qualifiedName(), thisClassName))
+			{
+				mirror = type;
+				break;
+			}
+		}
+
+		if(mirror == null)
+		{
+			return null;
+		}
 		MethodMirror targetMirror = null;
-		TypeMirror mirror = types[0];
 		for(MethodMirror methodMirror : mirror.methods())
 		{
 			if(isValidMethodMirror(methodDeclaration, methodMirror))
