@@ -58,6 +58,7 @@ public class DotNetDebugThread extends Thread
 {
 	private final XDebugSession mySession;
 	private final XDebuggerManager myDebuggerManager;
+	private final DotNetDebugProcess myDebugProcess;
 	private final DebugConnectionInfo myDebugConnectionInfo;
 	private boolean myStop;
 
@@ -65,10 +66,11 @@ public class DotNetDebugThread extends Thread
 
 	private Queue<Processor<VirtualMachine>> myQueue = new ConcurrentLinkedDeque<Processor<VirtualMachine>>();
 
-	public DotNetDebugThread(XDebugSession session, DebugConnectionInfo debugConnectionInfo)
+	public DotNetDebugThread(XDebugSession session, DotNetDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo)
 	{
 		super("DotNetDebugThread: " + new Random().nextInt());
 		mySession = session;
+		myDebugProcess = debugProcess;
 		myDebugConnectionInfo = debugConnectionInfo;
 		myDebuggerManager = XDebuggerManager.getInstance(session.getProject());
 	}
@@ -128,7 +130,10 @@ public class DotNetDebugThread extends Thread
 			Processor<VirtualMachine> processor;
 			while((processor = myQueue.poll()) != null)
 			{
-				processor.process(myVirtualMachine);
+				if(processor.process(myVirtualMachine))
+				{
+					myVirtualMachine.resume();
+				}
 			}
 
 			boolean stoppedAlready = false;
@@ -153,6 +158,7 @@ public class DotNetDebugThread extends Thread
 					{
 						stoppedAlready = true;
 
+						myDebugProcess.setPausedEventSet(eventSet);
 						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location);
 						if(xLineBreakpoint != null)
 						{

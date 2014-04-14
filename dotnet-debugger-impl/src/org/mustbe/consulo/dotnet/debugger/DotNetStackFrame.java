@@ -137,4 +137,10 @@ public class DotNetStackFrame extends XStackFrame
 		}
 		node.addChildren(childrenList, true);
 	}
+
+	@NotNull
+	public StackFrameMirror getFrame()
+	{
+		return myFrame;
+	}
 }

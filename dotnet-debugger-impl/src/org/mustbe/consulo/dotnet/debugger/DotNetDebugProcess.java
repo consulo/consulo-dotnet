@@ -36,7 +36,11 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
+import lombok.val;
+import mono.debugger.ThreadMirror;
 import mono.debugger.VirtualMachine;
+import mono.debugger.event.EventSet;
+import mono.debugger.request.StepRequest;
 
 /**
  * @author VISTALL
@@ -48,13 +52,15 @@ public class DotNetDebugProcess extends XDebugProcess
 	private final DebugConnectionInfo myDebugConnectionInfo;
 	private DotNetDebugThread myDebugThread;
 
+	private EventSet myPausedEventSet;
+
 	public DotNetDebugProcess(XDebugSession session, ExecutionResult result, DotNetRunProfileState state)
 	{
 		super(session);
 		myResult = result;
 		session.setPauseActionSupported(true);
 		myDebugConnectionInfo = state.getDebugConnectionInfo();
-		myDebugThread = new DotNetDebugThread(session, myDebugConnectionInfo);
+		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo);
 		myDebugThread.start();
 	}
 
@@ -118,13 +124,13 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public void resume()
 	{
+		myPausedEventSet = null;
 		myDebugThread.addCommand(new Processor<VirtualMachine>()
 		{
 			@Override
 			public boolean process(VirtualMachine virtualMachine)
 			{
-				virtualMachine.resume();
-				return false;
+				return true;
 			}
 		});
 	}
@@ -142,24 +148,50 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public void startStepOver()
 	{
-
+		stepRequest(StepRequest.StepDepth.Over);
 	}
 
 	@Override
 	public void startStepInto()
 	{
-
+		stepRequest(StepRequest.StepDepth.Into);
 	}
 
 	@Override
 	public void startStepOut()
 	{
+		stepRequest(StepRequest.StepDepth.Out);
+	}
 
+	private void stepRequest(final StepRequest.StepDepth stepDepth)
+	{
+		if(myPausedEventSet == null)
+		{
+			return;
+		}
+		final ThreadMirror threadMirror = myPausedEventSet.eventThread();
+		if(threadMirror == null)
+		{
+			return;
+		}
+
+		myDebugThread.addCommand(new Processor<VirtualMachine>()
+		{
+			@Override
+			public boolean process(VirtualMachine virtualMachine)
+			{
+				val eventRequestManager = virtualMachine.eventRequestManager();
+				val stepRequest = eventRequestManager.createStepRequest(threadMirror, StepRequest.StepSize.Min, stepDepth);
+				stepRequest.enable();
+				return true;
+			}
+		});
 	}
 
 	@Override
 	public void stop()
 	{
+		myPausedEventSet = null;
 		myDebugThread.setStop();
 		myDebugThread.normalizeBreakpoints();
 	}
@@ -168,5 +200,10 @@ public class DotNetDebugProcess extends XDebugProcess
 	public void runToPosition(@NotNull XSourcePosition xSourcePosition)
 	{
 
+	}
+
+	public void setPausedEventSet(EventSet pausedEventSet)
+	{
+		myPausedEventSet = pausedEventSet;
 	}
 }
