@@ -33,48 +33,44 @@ import mono.debugger.ThreadMirror;
  */
 public class DotNetExecutionStack extends XExecutionStack
 {
-	private final ThreadMirror myThreadMirror;
-	private final Project myProject;
+	private DotNetStackFrame myTopFrame;
+	private List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
 
 	public DotNetExecutionStack(ThreadMirror threadMirror, Project project)
 	{
 		super(threadMirror.name());
-		myThreadMirror = threadMirror;
-		myProject = project;
+
+		try
+		{
+			List<StackFrameMirror> frames = threadMirror.frames();
+
+			for(StackFrameMirror frame : frames)
+			{
+				if(myTopFrame == null)
+				{
+					myTopFrame = new DotNetStackFrame(frame, project);
+					continue;
+				}
+
+				stackFrames.add(new DotNetStackFrame(frame, project));
+			}
+		}
+		catch(IncompatibleThreadStateException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Nullable
 	@Override
 	public XStackFrame getTopFrame()
 	{
-		/*try
-		{
-			StackFrameMirror frame = myThreadMirror.frame(0);
-			return new DotNetStackFrame(frame, myProject);
-		}
-		catch(IncompatibleThreadStateException e)
-		{
-			//
-		} */
-		return null;
+		return myTopFrame;
 	}
 
 	@Override
 	public void computeStackFrames(int i, XStackFrameContainer xStackFrameContainer)
 	{
-		try
-		{
-			List<StackFrameMirror> frames = myThreadMirror.frames();
-			List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>(frames.size());
-			for(StackFrameMirror frame : frames)
-			{
-				stackFrames.add(new DotNetStackFrame(frame, myProject));
-			}
-			xStackFrameContainer.addStackFrames(stackFrames, true);
-		}
-		catch(IncompatibleThreadStateException e)
-		{
-			e.printStackTrace();
-		}
+		xStackFrameContainer.addStackFrames(stackFrames, true);
 	}
 }
