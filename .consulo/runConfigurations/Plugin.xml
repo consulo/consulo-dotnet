@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Plugin" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin" singleton="true">
-    <option name="VM_PARAMETERS" value="-ea -Xmx4050m -Didea.is.internal=true -XX:MaxPermSize=715m" />
+  <configuration default="false" name="Plugin" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Consulo In Sandbox" singleton="true">
+    <option name="VM_PARAMETERS" value="-Xms2G -Xmx2G -XX:MaxPermSize=1G -XX:ReservedCodeCacheSize=64m -XX:+UseCodeCacheFlushing -ea -XX:+HeapDumpOnOutOfMemoryError" />
     <option name="PROGRAM_PARAMETERS" value="" />
-    <java-sdk name="1.7" />
+    <java-sdk name="1.6" />
     <consulo-sdk name="Consulo 1.SNAPSHOT" />
     <artifact name="plugin" />
     <predefined_log_file id="IDEA_LOG" enabled="true" />
@@ -16,10 +16,8 @@
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
-    <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Debug" />
-    <ConfigurationWrapper RunnerId="Run" />
     <method>
       <option name="BuildArtifacts" enabled="true">
         <artifact name="plugin" />

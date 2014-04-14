@@ -26,6 +26,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.util.Processor;
@@ -108,8 +109,10 @@ public class DotNetDebugThread extends Thread
 			EventRequest eventRequest = type.createEventRequest(mySession.getProject(), myVirtualMachine, breakpoint);
 			if(eventRequest == null)
 			{
+				myDebuggerManager.getBreakpointManager().updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
 				continue;
 			}
+			myDebuggerManager.getBreakpointManager().updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
 			eventRequest.enable();
 		}
 
@@ -151,6 +154,14 @@ public class DotNetDebugThread extends Thread
 			}
 		}
 
+	}
+
+	public void normalizeBreakpoints()
+	{
+		for(XLineBreakpoint<XBreakpointProperties> lineBreakpoint : getOurBreakpoints())
+		{
+			myDebuggerManager.getBreakpointManager().updateBreakpointPresentation(lineBreakpoint, null, null);
+		}
 	}
 
 	@NotNull

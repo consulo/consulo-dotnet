@@ -161,6 +161,7 @@ public class DotNetDebugProcess extends XDebugProcess
 	public void stop()
 	{
 		myDebugThread.setStop();
+		myDebugThread.normalizeBreakpoints();
 	}
 
 	@Override
