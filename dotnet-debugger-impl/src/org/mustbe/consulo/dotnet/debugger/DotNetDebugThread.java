@@ -24,22 +24,29 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import lombok.val;
+import mono.debugger.Location;
 import mono.debugger.SocketListeningConnector;
 import mono.debugger.VirtualMachine;
 import mono.debugger.connect.Connector;
+import mono.debugger.event.Event;
 import mono.debugger.event.EventQueue;
 import mono.debugger.event.EventSet;
+import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequest;
 
 /**
@@ -131,11 +138,31 @@ public class DotNetDebugThread extends Thread
 			{
 				while((eventSet = eventQueue.remove(100)) != null)
 				{
+					Location location = null;
+
+					for(Event event : eventSet)
+					{
+						EventRequest request = event.request();
+						if(request instanceof BreakpointRequest)
+						{
+							location = ((BreakpointRequest) request).location();
+						}
+					}
+
 					if(!stoppedAlready && eventSet.suspendPolicy() == EventRequest.SUSPEND_ALL)
 					{
 						stoppedAlready = true;
 
-						mySession.positionReached(new DotNetSuspendContext(myVirtualMachine, mySession.getProject(), eventSet.eventThread()));
+						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location);
+						if(xLineBreakpoint != null)
+						{
+							mySession.breakpointReached(xLineBreakpoint, null, new DotNetSuspendContext(myVirtualMachine, mySession.getProject(),
+									eventSet.eventThread()));
+						}
+						else
+						{
+							mySession.positionReached(new DotNetSuspendContext(myVirtualMachine, mySession.getProject(), eventSet.eventThread()));
+						}
 					}
 				}
 			}
@@ -154,6 +181,33 @@ public class DotNetDebugThread extends Thread
 			}
 		}
 
+	}
+
+	@Nullable
+	private XLineBreakpoint<?> resolveToBreakpoint(@Nullable Location location)
+	{
+		if(location == null)
+		{
+			return null;
+		}
+		String sourcePath = location.sourcePath();
+		if(sourcePath == null)
+		{
+			return null;
+		}
+		VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(sourcePath);
+		if(fileByPath == null)
+		{
+			return null;
+		}
+
+		XLineBreakpoint<XBreakpointProperties> breakpointAtLine = myDebuggerManager.getBreakpointManager().findBreakpointAtLine
+				(DotNetLineBreakpointType.getInstance(), fileByPath, location.lineNumber() - 1); // .net asm - 1 index based, consulo - 0 based
+		if(breakpointAtLine == null)
+		{
+			return null;
+		}
+		return breakpointAtLine;
 	}
 
 	public void normalizeBreakpoints()

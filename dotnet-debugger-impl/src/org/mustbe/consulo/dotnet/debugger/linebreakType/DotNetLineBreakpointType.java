@@ -39,6 +39,12 @@ import mono.debugger.request.EventRequestManager;
  */
 public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 {
+	@NotNull
+	public static DotNetLineBreakpointType getInstance()
+	{
+		return EXTENSION_POINT_NAME.findExtension(DotNetLineBreakpointType.class);
+	}
+
 	public DotNetLineBreakpointType()
 	{
 		super("dotnet-linebreapoint", ".NET Line Breakpoint", new XDebuggerEditorsProviderBase()
