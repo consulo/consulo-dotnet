@@ -148,22 +148,22 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public void startStepOver()
 	{
-		stepRequest(StepRequest.StepDepth.Over);
+		stepRequest(StepRequest.StepDepth.Over, StepRequest.StepSize.Line);
 	}
 
 	@Override
 	public void startStepInto()
 	{
-		stepRequest(StepRequest.StepDepth.Into);
+		stepRequest(StepRequest.StepDepth.Into, StepRequest.StepSize.Min);
 	}
 
 	@Override
 	public void startStepOut()
 	{
-		stepRequest(StepRequest.StepDepth.Out);
+		stepRequest(StepRequest.StepDepth.Out, StepRequest.StepSize.Min);
 	}
 
-	private void stepRequest(final StepRequest.StepDepth stepDepth)
+	private void stepRequest(final StepRequest.StepDepth stepDepth, final StepRequest.StepSize stepSize)
 	{
 		if(myPausedEventSet == null)
 		{
@@ -181,7 +181,7 @@ public class DotNetDebugProcess extends XDebugProcess
 			public boolean process(VirtualMachine virtualMachine)
 			{
 				val eventRequestManager = virtualMachine.eventRequestManager();
-				val stepRequest = eventRequestManager.createStepRequest(threadMirror, StepRequest.StepSize.Min, stepDepth);
+				val stepRequest = eventRequestManager.createStepRequest(threadMirror, stepSize, stepDepth);
 				stepRequest.enable();
 				return true;
 			}
