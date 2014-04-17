@@ -16,6 +16,9 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.consulo.lombok.annotations.Logger;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
@@ -39,6 +42,25 @@ import edu.arizona.cs.mbel.signature.XGenericTypeSignature;
 @Logger
 public class TypeSignatureStubBuilder implements SignatureConstants
 {
+	private static final Map<String, String> REPLACE_MAP = new HashMap<String, String>()
+	{
+		{
+			put("System.Boolean", "bool");
+			put("System.Double", "double");
+			put("System.Float", "float");
+			put("System.Char", "char");
+			put("System.SByte", "sbyte");
+			put("System.Byte", "byte");
+			put("System.Int32", "int");
+			put("System.UInt32", "uint");
+			put("System.Int64", "long");
+			put("System.UInt64", "ulong");
+			put("System.Int16", "short");
+			put("System.UInt16", "ushort");
+			put("System.Decimal", "decimal");
+		}
+	};
+
 	public static void typeToString(StringBuilder builder, TypeSignature signature, GenericParamOwner typeDef, GenericParamOwner memberDef)
 	{
 		if(signature == null)
@@ -110,13 +132,19 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 				builder.append("*");
 				break;
 			case ELEMENT_TYPE_SZARRAY:
-				SZArrayTypeSignature szArrayTypeSignature = (SZArrayTypeSignature)signature;
+				SZArrayTypeSignature szArrayTypeSignature = (SZArrayTypeSignature) signature;
 				typeToString(builder, szArrayTypeSignature.getElementType(), typeDef, memberDef);
 				builder.append("[]");
 				break;
 			case ELEMENT_TYPE_CLASS:
 				ClassTypeSignature typeSignature = (ClassTypeSignature) signature;
-				builder.append(XStubUtil.getUserTypeDefName(typeSignature.getClassType().getFullName()));
+				String className = XStubUtil.getUserTypeDefName(typeSignature.getClassType().getFullName());
+				String replaceValue = REPLACE_MAP.get(className);
+				if(replaceValue != null)
+				{
+					className = replaceValue;
+				}
+				builder.append(className);
 				break;
 			case ELEMENT_TYPE_GENERIC_INST:
 				TypeSignatureWithGenericParameters mainTypeSignature = (TypeSignatureWithGenericParameters) signature;
@@ -157,11 +185,7 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 
 	public static void toStringFromDefRefSpec(StringBuilder builder, Object o, GenericParamOwner typeDef, GenericParamOwner methodDef)
 	{
-		if(o == null)
-		{
-			return;
-		}
-		else if(o instanceof TypeRef)
+		if(o instanceof TypeRef)
 		{
 			builder.append(((TypeRef) o).getFullName());
 		}
