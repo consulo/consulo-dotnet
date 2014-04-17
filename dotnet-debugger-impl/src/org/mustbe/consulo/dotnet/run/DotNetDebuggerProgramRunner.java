@@ -19,7 +19,6 @@ package org.mustbe.consulo.dotnet.run;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugProcess;
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultDebugExecutor;
@@ -59,8 +58,9 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			@Override
 			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
 			{
-				final ExecutionResult result = state.execute(env.getExecutor(), DotNetDebuggerProgramRunner.this);
-				return new DotNetDebugProcess(session, result, (DotNetRunProfileState) state);
+				DotNetDebugProcess process = new DotNetDebugProcess(session, (DotNetRunProfileState) state);
+				process.setExecutionResult(state.execute(env.getExecutor(), DotNetDebuggerProgramRunner.this));
+				return process;
 			}
 		});
 		return debugSession.getRunContentDescriptor();

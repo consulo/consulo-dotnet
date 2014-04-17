@@ -48,20 +48,24 @@ import mono.debugger.request.StepRequest;
  */
 public class DotNetDebugProcess extends XDebugProcess
 {
-	private final ExecutionResult myResult;
+	private ExecutionResult myResult;
 	private final DebugConnectionInfo myDebugConnectionInfo;
 	private DotNetDebugThread myDebugThread;
 
 	private EventSet myPausedEventSet;
 
-	public DotNetDebugProcess(XDebugSession session, ExecutionResult result, DotNetRunProfileState state)
+	public DotNetDebugProcess(XDebugSession session, DotNetRunProfileState state)
 	{
 		super(session);
-		myResult = result;
 		session.setPauseActionSupported(true);
 		myDebugConnectionInfo = state.getDebugConnectionInfo();
 		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo);
 		myDebugThread.start();
+	}
+
+	public void setExecutionResult(ExecutionResult executionResult)
+	{
+		myResult = executionResult;
 	}
 
 	@Nullable
