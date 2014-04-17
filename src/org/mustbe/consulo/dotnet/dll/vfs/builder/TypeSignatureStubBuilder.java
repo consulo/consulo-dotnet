@@ -45,19 +45,19 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 	private static final Map<String, String> REPLACE_MAP = new HashMap<String, String>()
 	{
 		{
-			put("System.Boolean", "bool");
-			put("System.Double", "double");
-			put("System.Float", "float");
-			put("System.Char", "char");
-			put("System.SByte", "sbyte");
-			put("System.Byte", "byte");
-			put("System.Int32", "int");
-			put("System.UInt32", "uint");
-			put("System.Int64", "long");
-			put("System.UInt64", "ulong");
-			put("System.Int16", "short");
-			put("System.UInt16", "ushort");
-			put("System.Decimal", "decimal");
+			put("System.Boolean", "bool?");
+			put("System.Double", "double?");
+			put("System.Float", "float?");
+			put("System.Char", "char?");
+			put("System.SByte", "sbyte?");
+			put("System.Byte", "byte?");
+			put("System.Int32", "int?");
+			put("System.UInt32", "uint?");
+			put("System.Int64", "long?");
+			put("System.UInt64", "ulong?");
+			put("System.Int16", "short?");
+			put("System.UInt16", "ushort?");
+			put("System.Decimal", "decimal?");
 		}
 	};
 
