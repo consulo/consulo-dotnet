@@ -154,13 +154,13 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public void startStepInto()
 	{
-		stepRequest(StepRequest.StepDepth.Into, StepRequest.StepSize.Min);
+		stepRequest(StepRequest.StepDepth.Into, StepRequest.StepSize.Line);
 	}
 
 	@Override
 	public void startStepOut()
 	{
-		stepRequest(StepRequest.StepDepth.Out, StepRequest.StepSize.Min);
+		stepRequest(StepRequest.StepDepth.Out, StepRequest.StepSize.Line);
 	}
 
 	private void stepRequest(final StepRequest.StepDepth stepDepth, final StepRequest.StepSize stepSize)
