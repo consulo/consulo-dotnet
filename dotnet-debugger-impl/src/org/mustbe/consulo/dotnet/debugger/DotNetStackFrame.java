@@ -115,7 +115,7 @@ public class DotNetStackFrame extends XStackFrame
 				childrenList.add(new DotNetObjectValueMirrorNode(myProject, myFrame.location().declaringType(), null));
 			}
 		}
-		catch(AbsentInformationException e)
+		catch(AbsentInformationException ignored)
 		{
 		}
 
@@ -128,12 +128,18 @@ public class DotNetStackFrame extends XStackFrame
 			childrenList.add(parameterMirrorNode);
 		}
 
-		LocalVariableMirror[] locals = method.locals(myFrame.location().codeIndex());
-		for(LocalVariableMirror local : locals)
+		try
 		{
-			DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(local, myFrame, myProject);
+			LocalVariableMirror[] locals = method.locals(myFrame.location().codeIndex());
+			for(LocalVariableMirror local : locals)
+			{
+				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(local, myFrame, myProject);
 
-			childrenList.add(localVariableMirrorNode);
+				childrenList.add(localVariableMirrorNode);
+			}
+		}
+		catch(IllegalArgumentException ignored)
+		{
 		}
 		node.addChildren(childrenList, true);
 	}
