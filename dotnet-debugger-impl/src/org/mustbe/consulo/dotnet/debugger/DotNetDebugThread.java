@@ -48,6 +48,7 @@ import mono.debugger.event.EventQueue;
 import mono.debugger.event.EventSet;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequest;
+import mono.debugger.request.StepRequest;
 
 /**
  * @author VISTALL
@@ -151,6 +152,11 @@ public class DotNetDebugThread extends Thread
 						if(request instanceof BreakpointRequest)
 						{
 							location = ((BreakpointRequest) request).location();
+						}
+
+						if(request instanceof StepRequest)
+						{
+							request.disable();
 						}
 					}
 
