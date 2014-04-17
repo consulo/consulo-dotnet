@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpArrayTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNativeTypeImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNullableTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPointerTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeWrapperWithTypeArgumentsImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
@@ -94,6 +95,8 @@ public class CSharpStubTypeInfoUtil
 				return new CSharpStubGenericWrapperTypeInfo(stubInputStream);
 			case NATIVE:
 				return new CSharpStubNativeTypeInfo(stubInputStream);
+			case NULLABLE:
+				return new CSharpStubNullableTypeInfo(stubInputStream);
 			case ERROR:
 				return CSharpStubErrorInfoType.INSTANCE;
 			default:
@@ -115,6 +118,12 @@ public class CSharpStubTypeInfoUtil
 			public void visitPointerType(CSharpPointerTypeImpl type)
 			{
 				ref.set(new CSharpStubPointerTypeInfo(toStub(type.getInnerType())));
+			}
+
+			@Override
+			public void visitNullableType(CSharpNullableTypeImpl type)
+			{
+				ref.set(new CSharpStubNullableTypeInfo(toStub(type.getInnerType())));
 			}
 
 			@Override
@@ -167,6 +176,16 @@ public class CSharpStubTypeInfoUtil
 			case POINTER:
 				CSharpStubPointerTypeInfo pointerTypeInfo = (CSharpStubPointerTypeInfo) typeInfo;
 				return new CSharpPointerTypeRef(toTypeRef(pointerTypeInfo.getInnerType(), element));
+			case NULLABLE:
+				CSharpStubNullableTypeInfo nullableTypeInfo = (CSharpStubNullableTypeInfo) typeInfo;
+				return new DotNetTypeRef.Delegate(toTypeRef(nullableTypeInfo.getInnerType(), element))
+				{
+					@Override
+					public boolean isNullable()
+					{
+						return true;
+					}
+				};
 			case ARRAY:
 				CSharpStubArrayTypeInfo arrayTypeInfo = (CSharpStubArrayTypeInfo) typeInfo;
 				return new CSharpArrayTypeRef(toTypeRef(arrayTypeInfo.getInnerType(), element));

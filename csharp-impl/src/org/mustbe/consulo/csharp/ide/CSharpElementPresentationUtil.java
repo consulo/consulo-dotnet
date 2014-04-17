@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpArrayTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNativeTypeImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNullableTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPointerTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeWrapperWithTypeArgumentsImpl;
 import org.mustbe.consulo.dotnet.psi.*;
@@ -186,14 +187,21 @@ public class CSharpElementPresentationUtil
 			@Override
 			public void visitPointerType(CSharpPointerTypeImpl type)
 			{
-				super.visitPointerType(type);
+				builder.append(formatType(type.getInnerType()));
 				builder.append("*");
+			}
+
+			@Override
+			public void visitNullableType(CSharpNullableTypeImpl type)
+			{
+				builder.append(formatType(type.getInnerType()));
+				builder.append("?");
 			}
 
 			@Override
 			public void visitArrayType(CSharpArrayTypeImpl type)
 			{
-				super.visitArrayType(type);
+				builder.append(formatType(type.getInnerType()));
 				builder.append("[]");
 			}
 		});

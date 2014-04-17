@@ -18,33 +18,43 @@ package org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub;
 
 import java.io.IOException;
 
-import org.consulo.annotations.Immutable;
+import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author VISTALL
- * @since 15.01.14
+ * @since 17.04.14
  */
-public abstract class CSharpStubTypeInfo
+public class CSharpStubNullableTypeInfo extends CSharpStubTypeInfo
 {
-	public static enum Id
-	{
-		ERROR,
-		REF,
-		POINTER,
-		ARRAY,
-		GENERIC_WRAPPER,
-		NATIVE,
-		NULLABLE;
+	private final CSharpStubTypeInfo myInnerType;
 
-		@Immutable
-		public static final Id[] VALUES = values();
+	public CSharpStubNullableTypeInfo(CSharpStubTypeInfo innerType)
+	{
+		myInnerType = innerType;
 	}
 
-	public abstract Id getId();
-
-	public void writeTo(StubOutputStream stubOutputStream)throws IOException
+	public CSharpStubNullableTypeInfo(StubInputStream inputStream) throws IOException
 	{
-		stubOutputStream.writeByte((byte) getId().ordinal());
+		myInnerType = CSharpStubTypeInfoUtil.read(inputStream);
+	}
+
+	@Override
+	public void writeTo(StubOutputStream stubOutputStream) throws IOException
+	{
+		super.writeTo(stubOutputStream);
+
+		myInnerType.writeTo(stubOutputStream);
+	}
+
+	public CSharpStubTypeInfo getInnerType()
+	{
+		return myInnerType;
+	}
+
+	@Override
+	public Id getId()
+	{
+		return Id.NULLABLE;
 	}
 }

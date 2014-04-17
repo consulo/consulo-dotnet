@@ -72,6 +72,56 @@ public interface DotNetTypeRef
 		}
 	}
 
+	public class Delegate implements DotNetTypeRef
+	{
+		private final DotNetTypeRef myTypeRef;
+
+		public Delegate(DotNetTypeRef typeRef)
+		{
+			myTypeRef = typeRef;
+		}
+
+		@Nullable
+		@Override
+		public String getPresentableText()
+		{
+			return myTypeRef.getPresentableText();
+		}
+
+		@Nullable
+		@Override
+		public String getQualifiedText()
+		{
+			return myTypeRef.getQualifiedText();
+		}
+
+		@Override
+		public boolean isNullable()
+		{
+			return myTypeRef.isNullable();
+		}
+
+		@Nullable
+		@Override
+		public PsiElement resolve(@NotNull PsiElement scope)
+		{
+			return myTypeRef.resolve(scope);
+		}
+
+		@NotNull
+		@Override
+		public DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope)
+		{
+			return myTypeRef.getGenericExtractor(resolved, scope);
+		}
+
+		@Override
+		public String toString()
+		{
+			return myTypeRef.toString();
+		}
+	}
+
 	DotNetTypeRef ERROR_TYPE = new Adapter()
 	{
 		@Nullable

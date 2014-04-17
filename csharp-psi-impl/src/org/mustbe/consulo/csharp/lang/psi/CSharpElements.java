@@ -82,6 +82,8 @@ public interface CSharpElements
 
 	IElementType POINTER_TYPE = new IElementTypeAsPsiFactory("POINTER_TYPE", CSharpLanguage.INSTANCE, CSharpPointerTypeImpl.class);
 
+	IElementType NULLABLE_TYPE = new IElementTypeAsPsiFactory("NULLABLE_TYPE", CSharpLanguage.INSTANCE, CSharpNullableTypeImpl.class);
+
 	IElementType NATIVE_TYPE = new IElementTypeAsPsiFactory("NATIVE_TYPE", CSharpLanguage.INSTANCE, CSharpNativeTypeImpl.class);
 
 	IElementType ARRAY_TYPE = new IElementTypeAsPsiFactory("ARRAY_TYPE", CSharpLanguage.INSTANCE, CSharpArrayTypeImpl.class);
