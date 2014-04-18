@@ -9,8 +9,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
@@ -24,7 +22,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 import mono.debugger.Location;
 import mono.debugger.LocationImpl;
 import mono.debugger.MethodMirror;
@@ -48,22 +45,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 
 	public DotNetLineBreakpointType()
 	{
-		super("dotnet-linebreapoint", ".NET Line Breakpoint", new XDebuggerEditorsProviderBase()
-		{
-			@Override
-			protected PsiFile createExpressionCodeFragment(
-					@NotNull Project project, @NotNull String s, @Nullable PsiElement element, boolean b)
-			{
-				return null;
-			}
-
-			@NotNull
-			@Override
-			public FileType getFileType()
-			{
-				return PlainTextFileType.INSTANCE;
-			}
-		});
+		super("dotnet-linebreapoint", ".NET Line Breakpoint", null);
 	}
 
 	@Override

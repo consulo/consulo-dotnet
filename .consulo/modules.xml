@@ -314,6 +314,7 @@
         <orderEntry type="module" module-name="dotnet-debugger-api" />
         <orderEntry type="module" module-name="dotnet-impl" />
         <orderEntry type="module" module-name="dotnet-psi-api" />
+        <orderEntry type="module" module-name="csharp-psi-impl" />
       </module>
     </modules>
   </component>

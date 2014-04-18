@@ -51,4 +51,10 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	{
 		return myFieldOrPropertyMirror.value(myObjectValueMirror);
 	}
+
+	@Override
+	public void setValueForVariable(@NotNull Value<?> value)
+	{
+
+	}
 }

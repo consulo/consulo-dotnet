@@ -7,9 +7,11 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import mono.debugger.LocalVariableMirror;
+import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.StackFrameMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.Value;
+import mono.debugger.util.ImmutablePair;
 
 /**
  * @author VISTALL
@@ -46,5 +48,12 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 	public Value<?> getValueOfVariable()
 	{
 		return myFrame.localOrParameterValue(myLocal);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void setValueForVariable(@NotNull Value<?> value)
+	{
+		myFrame.setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(myLocal, value));
 	}
 }

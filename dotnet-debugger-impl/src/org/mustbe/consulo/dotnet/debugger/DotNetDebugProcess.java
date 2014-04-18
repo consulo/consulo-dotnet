@@ -18,15 +18,17 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.CSharpFileType;
+import org.mustbe.consulo.csharp.lang.psi.CSharpExpressionFragmentFactory;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.run.DotNetRunProfileState;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugProcess;
@@ -34,8 +36,8 @@ import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
+import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 import lombok.val;
 import mono.debugger.ThreadMirror;
 import mono.debugger.VirtualMachine;
@@ -92,20 +94,22 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public XDebuggerEditorsProvider getEditorsProvider()
 	{
-		return new XDebuggerEditorsProviderBase()
+		return new XDebuggerEditorsProvider()
 		{
-			@Override
-			protected PsiFile createExpressionCodeFragment(
-					@NotNull Project project, @NotNull String s, @Nullable PsiElement element, boolean b)
-			{
-				return null;
-			}
-
 			@NotNull
 			@Override
 			public FileType getFileType()
 			{
-				return PlainTextFileType.INSTANCE;
+				return CSharpFileType.INSTANCE;
+			}
+
+			@NotNull
+			@Override
+			public Document createDocument(
+					@NotNull Project project, @NotNull String text, @Nullable XSourcePosition sourcePosition, @NotNull EvaluationMode mode)
+			{
+				PsiFile expressionFragment = CSharpExpressionFragmentFactory.createExpressionFragment(project, text);
+				return PsiDocumentManager.getInstance(project).getDocument(expressionFragment);
 			}
 		};
 	}

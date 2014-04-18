@@ -17,11 +17,13 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNavigatable;
+import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
 import mono.debugger.StackFrameMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.Value;
+import mono.debugger.util.ImmutablePair;
 
 /**
  * @author VISTALL
@@ -115,5 +117,12 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 	public Value<?> getValueOfVariable()
 	{
 		return myFrame.localOrParameterValue(myParameter);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void setValueForVariable(@NotNull Value<?> value)
+	{
+		myFrame.setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(myParameter, value));
 	}
 }

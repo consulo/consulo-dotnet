@@ -6,9 +6,12 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.xdebugger.XDebuggerUtil;
@@ -16,9 +19,11 @@ import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XNavigatable;
 import com.intellij.xdebugger.frame.XValueChildrenList;
+import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import mono.debugger.AppDomainMirror;
 import mono.debugger.FieldMirror;
 import mono.debugger.NumberValueMirror;
 import mono.debugger.ObjectValueMirror;
@@ -33,14 +38,50 @@ import mono.debugger.ValueVisitor;
  */
 public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 {
-	/*private XValueModifier myValueModifier = new XValueModifier()
+	private XValueModifier myValueModifier = new XValueModifier()
 	{
 		@Override
 		public void setValue(@NotNull String expression, @NotNull XModificationCallback callback)
 		{
+			TypeMirror typeOfVariable = getTypeOfVariable();
 
+			AppDomainMirror appDomainMirror = typeOfVariable.virtualMachine().rootAppDomain();
+
+			if(isString())
+			{
+				expression = StringUtil.unescapeStringCharacters(expression);
+
+				StringValueMirror stringValueMirror = appDomainMirror.createString(expression);
+
+				try
+				{
+					setValueForVariable(stringValueMirror);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+
+				callback.valueModified();
+			}
 		}
-	}; */
+
+		@Override
+		@Nullable
+		public String getInitialValueEditorText()
+		{
+			Value<?> valueOfVariable = getValueOfVariable();
+			if(valueOfVariable == null)
+			{
+				return null;
+			}
+			if(isString())
+			{
+				return StringUtil.QUOTER.fun(String.valueOf(valueOfVariable.value()));
+			}
+			return null;
+		}
+	};
 
 	@NotNull
 	protected final Project myProject;
@@ -49,6 +90,12 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 	{
 		super(name);
 		myProject = project;
+	}
+
+	public boolean isString()
+	{
+		TypeMirror typeOfVariable = getTypeOfVariable();
+		return Comparing.equal(typeOfVariable.qualifiedName(), DotNetTypes.System_String);
 	}
 
 	@NotNull
@@ -60,12 +107,18 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 	@Nullable
 	public abstract Value<?> getValueOfVariable();
 
-	/*@Nullable
+	public abstract void setValueForVariable(@NotNull Value<?> value);
+
+	@Nullable
 	@Override
 	public XValueModifier getModifier()
 	{
-		return myValueModifier;
-	}  */
+		if(isString())
+		{
+			return myValueModifier;
+		}
+		return null;
+	}
 
 	@Override
 	public boolean canNavigateToTypeSource()
@@ -105,8 +158,8 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 	@Override
 	public void computeTypeSourcePosition(@NotNull XNavigatable navigatable)
 	{
-		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(myProject).findType(getTypeOfVariable().qualifiedName(),
-				GlobalSearchScope.allScope(myProject), -1);
+		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(myProject).findType(getTypeOfVariable().qualifiedName(), GlobalSearchScope.allScope
+				(myProject), -1);
 
 		if(type == null)
 		{
