@@ -315,6 +315,7 @@
         <orderEntry type="module" module-name="dotnet-impl" />
         <orderEntry type="module" module-name="dotnet-psi-api" />
         <orderEntry type="module" module-name="csharp-psi-impl" />
+        <orderEntry type="library" name="dotnet-asm" level="project" />
       </module>
     </modules>
   </component>

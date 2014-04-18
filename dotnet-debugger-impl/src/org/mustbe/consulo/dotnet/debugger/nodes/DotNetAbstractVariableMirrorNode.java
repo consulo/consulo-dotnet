@@ -1,6 +1,8 @@
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Icon;
 
@@ -23,8 +25,10 @@ import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import edu.arizona.cs.mbel.signature.SignatureConstants;
 import mono.debugger.AppDomainMirror;
 import mono.debugger.FieldMirror;
+import mono.debugger.NoObjectValue;
 import mono.debugger.NumberValueMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.StringValueMirror;
@@ -47,23 +51,43 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 
 			AppDomainMirror appDomainMirror = typeOfVariable.virtualMachine().rootAppDomain();
 
+			Value<?> setValue = null;
 			if(isString())
 			{
-				expression = StringUtil.unescapeStringCharacters(expression);
+				if(expression.equals("null"))
+				{
+					setValue = new NoObjectValue(typeOfVariable.virtualMachine());
+				}
+				else
+				{
+					expression = StringUtil.unescapeStringCharacters(expression);
 
-				StringValueMirror stringValueMirror = appDomainMirror.createString(expression);
+					setValue = appDomainMirror.createString(expression);
+				}
+			}
+			else
+			{
+				Byte tag = NUMBER_TYPES.get(typeOfVariable.qualifiedName());
+				if(tag != null)
+				{
+					setValue = appDomainMirror.createBoxValue(tag, Double.parseDouble(expression));
+				}
+			}
+
+			if(setValue != null)
+			{
 
 				try
 				{
-					setValueForVariable(stringValueMirror);
+					setValueForVariable(setValue);
 				}
 				catch(Exception e)
 				{
 					e.printStackTrace();
 				}
-
-				callback.valueModified();
 			}
+
+			callback.valueModified();
 		}
 
 		@Override
@@ -75,16 +99,28 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 			{
 				return null;
 			}
+			String valueOfString = String.valueOf(valueOfVariable.value());
 			if(isString())
 			{
-				return StringUtil.QUOTER.fun(String.valueOf(valueOfVariable.value()));
+				return StringUtil.QUOTER.fun(valueOfString);
 			}
-			return null;
+			if(valueOfVariable instanceof NoObjectValue)
+			{
+				return "null";
+			}
+			return valueOfString;
 		}
 	};
 
 	@NotNull
 	protected final Project myProject;
+
+	private static final Map<String, Byte> NUMBER_TYPES = new HashMap<String, Byte>()
+	{
+		{
+			put(DotNetTypes.System_Int32, SignatureConstants.ELEMENT_TYPE_I4);
+		}
+	};
 
 	public DotNetAbstractVariableMirrorNode(@NotNull String name, @NotNull Project project)
 	{
@@ -113,7 +149,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 	@Override
 	public XValueModifier getModifier()
 	{
-		if(isString())
+		if(isString() || NUMBER_TYPES.containsKey(getTypeOfVariable().qualifiedName()))
 		{
 			return myValueModifier;
 		}
