@@ -36,7 +36,7 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 
 	public DotNetMethodParameterMirrorNode(MethodParameterMirror parameter, StackFrameMirror frame, Project project)
 	{
-		super(parameter.name(), project);
+		super(parameter.name(), project, frame.thread());
 		myParameter = parameter;
 		myFrame = frame;
 	}

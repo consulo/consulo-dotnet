@@ -108,11 +108,11 @@ public class DotNetStackFrame extends XStackFrame
 			{
 				TypeMirror type = value.type();
 				assert type != null;
-				childrenList.add(new DotNetObjectValueMirrorNode(myProject, type, (ObjectValueMirror) value));
+				childrenList.add(new DotNetObjectValueMirrorNode(myProject, myFrame.thread(), type, (ObjectValueMirror) value));
 			}
 			else
 			{
-				childrenList.add(new DotNetObjectValueMirrorNode(myProject, myFrame.location().declaringType(), null));
+				childrenList.add(new DotNetObjectValueMirrorNode(myProject, myFrame.thread(), myFrame.location().declaringType(), null));
 			}
 		}
 		catch(AbsentInformationException ignored)

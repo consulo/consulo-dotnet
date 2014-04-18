@@ -28,6 +28,13 @@ import mono.debugger.*;
  */
 public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirrorNode
 {
+	private static final Map<String, Byte> PRIMITIVE_TYPES = new HashMap<String, Byte>()
+	{
+		{
+			put(DotNetTypes.System_Int32, SignatureConstants.ELEMENT_TYPE_I4);
+		}
+	};
+
 	private XValueModifier myValueModifier = new XValueModifier()
 	{
 		@Override
@@ -102,16 +109,13 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		}
 	};
 
-	private static final Map<String, Byte> PRIMITIVE_TYPES = new HashMap<String, Byte>()
-	{
-		{
-			put(DotNetTypes.System_Int32, SignatureConstants.ELEMENT_TYPE_I4);
-		}
-	};
+	@NotNull
+	private final ThreadMirror myThreadMirror;
 
-	public DotNetAbstractVariableMirrorNode(@NotNull String name, @NotNull Project project)
+	public DotNetAbstractVariableMirrorNode(@NotNull String name, @NotNull Project project, @NotNull ThreadMirror threadMirror)
 	{
 		super(name, project);
+		myThreadMirror = threadMirror;
 	}
 
 	public boolean isString()
@@ -160,7 +164,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 		XValueChildrenList childrenList = new XValueChildrenList();
 
-		childrenList.add(new DotNetObjectValueMirrorNode(myProject, type, null));
+		childrenList.add(new DotNetObjectValueMirrorNode(myProject, myThreadMirror, type, null));
 
 		List<FieldMirror> fieldMirrors = type.fieldsDeep();
 		for(FieldMirror fieldMirror : fieldMirrors)
@@ -169,7 +173,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 			{
 				continue;
 			}
-			childrenList.add(new DotNetFieldOrPropertyMirrorNode(fieldMirror, myProject, (ObjectValueMirror) valueOfVariable));
+			childrenList.add(new DotNetFieldOrPropertyMirrorNode(fieldMirror, myProject, myThreadMirror, (ObjectValueMirror) valueOfVariable));
 		}
 		node.addChildren(childrenList, true);
 	}

@@ -24,7 +24,7 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 
 	public DotNetLocalVariableMirrorNode(LocalVariableMirror local, StackFrameMirror frame, Project project)
 	{
-		super(local.name(), project);
+		super(local.name(), project, frame.thread());
 		myLocal = local;
 		myFrame = frame;
 	}

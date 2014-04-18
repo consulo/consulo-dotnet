@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import mono.debugger.FieldOrPropertyMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.PropertyMirror;
+import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.Value;
 
@@ -24,9 +25,10 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	public DotNetFieldOrPropertyMirrorNode(
 			FieldOrPropertyMirror fieldOrPropertyMirror,
 			@NotNull Project project,
+			@NotNull ThreadMirror threadMirror,
 			@Nullable ObjectValueMirror objectValueMirror)
 	{
-		super(fieldOrPropertyMirror.name(), project);
+		super(fieldOrPropertyMirror.name(), project, threadMirror);
 		myFieldOrPropertyMirror = fieldOrPropertyMirror;
 		myObjectValueMirror = objectValueMirror;
 	}
