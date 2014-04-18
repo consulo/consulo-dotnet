@@ -94,8 +94,6 @@ public class DotNetDebugThread extends Thread
 			try
 			{
 				myVirtualMachine = l.accept(argumentMap);
-				myVirtualMachine.eventRequestManager().createAppDomainCreate().enable();
-				myVirtualMachine.eventRequestManager().createAppDomainUnload().enable();
 				myVirtualMachine.resume();
 			}
 			catch(Exception e)
