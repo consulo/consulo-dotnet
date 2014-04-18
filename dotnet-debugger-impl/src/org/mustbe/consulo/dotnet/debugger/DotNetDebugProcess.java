@@ -118,6 +118,8 @@ public class DotNetDebugProcess extends XDebugProcess
 						}
 						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
 						eventRequest.enable();
+						breakpoint.putUserData(DotNetDebugThread.EVENT_REQUEST, eventRequest);
+
 						return false;
 					}
 				});
@@ -126,7 +128,11 @@ public class DotNetDebugProcess extends XDebugProcess
 			@Override
 			public void unregisterBreakpoint(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint, boolean temporary)
 			{
-
+				EventRequest eventRequest = breakpoint.getUserData(DotNetDebugThread.EVENT_REQUEST);
+				if(eventRequest != null)
+				{
+					eventRequest.disable();
+				}
 			}
 		}};
 	}

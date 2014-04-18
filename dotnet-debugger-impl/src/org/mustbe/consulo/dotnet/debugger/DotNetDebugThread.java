@@ -30,6 +30,7 @@ import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
@@ -55,6 +56,8 @@ import mono.debugger.request.StepRequest;
 @Logger
 public class DotNetDebugThread extends Thread
 {
+	public static Key<EventRequest> EVENT_REQUEST = Key.create("event-request-for-line-breakpoint");
+
 	private final XDebugSession mySession;
 	private final XDebuggerManager myDebuggerManager;
 	private final DotNetDebugProcess myDebugProcess;
@@ -210,6 +213,8 @@ public class DotNetDebugThread extends Thread
 	{
 		for(XLineBreakpoint<XBreakpointProperties> lineBreakpoint : getOurBreakpoints())
 		{
+			lineBreakpoint.putUserData(EVENT_REQUEST, null);
+
 			myDebuggerManager.getBreakpointManager().updateBreakpointPresentation(lineBreakpoint, null, null);
 		}
 	}
