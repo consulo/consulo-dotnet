@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -38,7 +37,6 @@ import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import lombok.val;
 import mono.debugger.Location;
 import mono.debugger.SocketListeningConnector;
 import mono.debugger.VirtualMachine;
@@ -96,6 +94,8 @@ public class DotNetDebugThread extends Thread
 			try
 			{
 				myVirtualMachine = l.accept(argumentMap);
+				myVirtualMachine.eventRequestManager().createAppDomainCreate().enable();
+				myVirtualMachine.eventRequestManager().createAppDomainUnload().enable();
 				myVirtualMachine.resume();
 			}
 			catch(Exception e)
@@ -110,24 +110,6 @@ public class DotNetDebugThread extends Thread
 		if(myVirtualMachine == null)
 		{
 			return;
-		}
-
-		for(val breakpoint : getOurBreakpoints())
-		{
-			if(!breakpoint.isEnabled())
-			{
-				continue;
-			}
-			val type = (DotNetAbstractBreakpointType) breakpoint.getType();
-
-			EventRequest eventRequest = type.createEventRequest(mySession.getProject(), myVirtualMachine, breakpoint);
-			if(eventRequest == null)
-			{
-				myDebuggerManager.getBreakpointManager().updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
-				continue;
-			}
-			myDebuggerManager.getBreakpointManager().updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
-			eventRequest.enable();
 		}
 
 		while(!myStop)

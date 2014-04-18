@@ -20,11 +20,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.psi.CSharpExpressionFragmentFactory;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.run.DotNetRunProfileState;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -34,14 +36,18 @@ import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
+import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
+import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import lombok.val;
 import mono.debugger.ThreadMirror;
 import mono.debugger.VirtualMachine;
 import mono.debugger.event.EventSet;
+import mono.debugger.request.EventRequest;
 import mono.debugger.request.StepRequest;
 
 /**
@@ -87,7 +93,42 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public XBreakpointHandler<?>[] getBreakpointHandlers()
 	{
-		return new XBreakpointHandler[]{};
+		return new XBreakpointHandler[]{new XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>(DotNetAbstractBreakpointType.class)
+		{
+
+			@Override
+			public void registerBreakpoint(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
+			{
+				val project = getSession().getProject();
+				val debuggerManager = XDebuggerManager.getInstance(project);
+				val breakpointManager = debuggerManager.getBreakpointManager();
+
+				myDebugThread.addCommand(new Processor<VirtualMachine>()
+				{
+					@Override
+					public boolean process(VirtualMachine virtualMachine)
+					{
+						val type = (DotNetAbstractBreakpointType) breakpoint.getType();
+
+						EventRequest eventRequest = type.createEventRequest(project, virtualMachine, breakpoint);
+						if(eventRequest == null)
+						{
+							breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
+							return false;
+						}
+						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
+						eventRequest.enable();
+						return false;
+					}
+				});
+			}
+
+			@Override
+			public void unregisterBreakpoint(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint, boolean temporary)
+			{
+
+			}
+		}};
 	}
 
 	@NotNull

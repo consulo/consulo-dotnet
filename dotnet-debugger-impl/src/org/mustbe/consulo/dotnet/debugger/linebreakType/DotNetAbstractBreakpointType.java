@@ -17,8 +17,7 @@ import mono.debugger.request.EventRequest;
  */
 public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBase
 {
-	public DotNetAbstractBreakpointType(
-			@NonNls @NotNull String id, @Nls @NotNull String title, @Nullable XDebuggerEditorsProvider editorsProvider)
+	public DotNetAbstractBreakpointType(@NonNls @NotNull String id, @Nls @NotNull String title, @Nullable XDebuggerEditorsProvider editorsProvider)
 	{
 		super(id, title, editorsProvider);
 	}
