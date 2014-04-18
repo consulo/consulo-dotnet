@@ -93,48 +93,63 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public XBreakpointHandler<?>[] getBreakpointHandlers()
 	{
-		return new XBreakpointHandler[]{new XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>(DotNetAbstractBreakpointType.class)
-		{
-
-			@Override
-			public void registerBreakpoint(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
-			{
-				val project = getSession().getProject();
-				val debuggerManager = XDebuggerManager.getInstance(project);
-				val breakpointManager = debuggerManager.getBreakpointManager();
-
-				myDebugThread.addCommand(new Processor<VirtualMachine>()
+		return new XBreakpointHandler[]{
+				new XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>(DotNetAbstractBreakpointType.class)
 				{
+
 					@Override
-					public boolean process(VirtualMachine virtualMachine)
+					public void registerBreakpoint(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
 					{
-						val type = (DotNetAbstractBreakpointType) breakpoint.getType();
+						val project = getSession().getProject();
+						val debuggerManager = XDebuggerManager.getInstance(project);
+						val breakpointManager = debuggerManager.getBreakpointManager();
 
-						EventRequest eventRequest = type.createEventRequest(project, virtualMachine, breakpoint);
-						if(eventRequest == null)
+						myDebugThread.addCommand(new Processor<VirtualMachine>()
 						{
-							breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
-							return false;
-						}
-						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
-						eventRequest.enable();
-						breakpoint.putUserData(DotNetDebugThread.EVENT_REQUEST, eventRequest);
+							@Override
+							public boolean process(VirtualMachine virtualMachine)
+							{
+								val type = (DotNetAbstractBreakpointType) breakpoint.getType();
 
-						return false;
+								EventRequest eventRequest = type.createEventRequest(project, virtualMachine, breakpoint);
+								if(eventRequest == null)
+								{
+									breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
+									return false;
+								}
+								breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
+								eventRequest.enable();
+								breakpoint.putUserData(DotNetDebugThread.EVENT_REQUEST, eventRequest);
+
+								return false;
+							}
+						});
 					}
-				});
-			}
 
-			@Override
-			public void unregisterBreakpoint(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint, boolean temporary)
-			{
-				EventRequest eventRequest = breakpoint.getUserData(DotNetDebugThread.EVENT_REQUEST);
-				if(eventRequest != null)
-				{
-					eventRequest.disable();
+					@Override
+					public void unregisterBreakpoint(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint, final boolean temporary)
+					{
+						myDebugThread.addCommand(new Processor<VirtualMachine>()
+						{
+							@Override
+							public boolean process(VirtualMachine virtualMachine)
+							{
+								EventRequest eventRequest = breakpoint.getUserData(DotNetDebugThread.EVENT_REQUEST);
+								if(eventRequest != null)
+								{
+									eventRequest.disable();
+								}
+
+								if(!temporary)
+								{
+									virtualMachine.eventRequestManager().deleteEventRequest(eventRequest);
+								}
+								return false;
+							}
+						});
+					}
 				}
-			}
-		}};
+		};
 	}
 
 	@NotNull
