@@ -37,7 +37,9 @@ public class DebugConnectionInfo
 		{
 			try
 			{
-				myPort = new ServerSocket(0).getLocalPort();
+				ServerSocket serverSocket = new ServerSocket(0);
+				myPort = serverSocket.getLocalPort();
+				serverSocket.close();
 			}
 			catch(IOException e)
 			{
