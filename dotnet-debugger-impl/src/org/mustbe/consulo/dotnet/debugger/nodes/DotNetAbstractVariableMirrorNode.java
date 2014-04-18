@@ -46,7 +46,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 				}
 				else
 				{
-					expression = StringUtil.unescapeStringCharacters(expression);
+					expression = StringUtil.unquoteString(expression);
 
 					setValue = appDomainMirror.createString(expression);
 				}
