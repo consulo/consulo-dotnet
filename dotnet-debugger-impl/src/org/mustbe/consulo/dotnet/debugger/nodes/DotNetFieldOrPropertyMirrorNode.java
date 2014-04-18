@@ -23,7 +23,7 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	private final ObjectValueMirror myObjectValueMirror;
 
 	public DotNetFieldOrPropertyMirrorNode(
-			FieldOrPropertyMirror fieldOrPropertyMirror,
+			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
 			@NotNull Project project,
 			@NotNull ThreadMirror threadMirror,
 			@Nullable ObjectValueMirror objectValueMirror)
@@ -51,12 +51,12 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	@Override
 	public Value<?> getValueOfVariable()
 	{
-		return myFieldOrPropertyMirror.value(myObjectValueMirror);
+		return myFieldOrPropertyMirror.value(myThreadMirror, myObjectValueMirror);
 	}
 
 	@Override
 	public void setValueForVariable(@NotNull Value<?> value)
 	{
-		myFieldOrPropertyMirror.setValue(myObjectValueMirror, value);
+		myFieldOrPropertyMirror.setValue(myThreadMirror, myObjectValueMirror, value);
 	}
 }

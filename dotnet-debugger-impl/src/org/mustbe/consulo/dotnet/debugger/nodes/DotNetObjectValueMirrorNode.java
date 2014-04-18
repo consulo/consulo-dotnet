@@ -13,7 +13,7 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
-import mono.debugger.FieldMirror;
+import mono.debugger.FieldOrPropertyMirror;
 import mono.debugger.InvokeFlags;
 import mono.debugger.MethodMirror;
 import mono.debugger.ObjectValueMirror;
@@ -80,8 +80,8 @@ public class DotNetObjectValueMirrorNode extends AbstractTypedMirrorNode
 	{
 		XValueChildrenList childrenList = new XValueChildrenList();
 
-		List<FieldMirror> fieldMirrors = myTypeMirror.fieldsDeep();
-		for(FieldMirror fieldMirror : fieldMirrors)
+		List<FieldOrPropertyMirror> fieldMirrors = myTypeMirror.fieldAndProperties(true);
+		for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
 		{
 			if(!fieldMirror.isStatic() && myObjectValueMirror == null)
 			{

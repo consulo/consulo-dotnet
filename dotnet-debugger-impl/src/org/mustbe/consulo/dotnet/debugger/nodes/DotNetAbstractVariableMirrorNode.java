@@ -49,7 +49,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 			{
 				if(expression.equals("null"))
 				{
-					setValue = new NoObjectValue(typeOfVariable.virtualMachine());
+					setValue = new NoObjectValueMirror(typeOfVariable.virtualMachine());
 				}
 				else
 				{
@@ -101,7 +101,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 			{
 				return StringUtil.QUOTER.fun(valueOfString);
 			}
-			if(valueOfVariable instanceof NoObjectValue)
+			if(valueOfVariable instanceof NoObjectValueMirror)
 			{
 				return "null";
 			}
@@ -110,7 +110,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	};
 
 	@NotNull
-	private final ThreadMirror myThreadMirror;
+	protected final ThreadMirror myThreadMirror;
 
 	public DotNetAbstractVariableMirrorNode(@NotNull String name, @NotNull Project project, @NotNull ThreadMirror threadMirror)
 	{
@@ -166,8 +166,8 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 		childrenList.add(new DotNetObjectValueMirrorNode(myProject, myThreadMirror, type, null));
 
-		List<FieldMirror> fieldMirrors = type.fieldsDeep();
-		for(FieldMirror fieldMirror : fieldMirrors)
+		List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
+		for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
 		{
 			if(fieldMirror.isStatic())
 			{
