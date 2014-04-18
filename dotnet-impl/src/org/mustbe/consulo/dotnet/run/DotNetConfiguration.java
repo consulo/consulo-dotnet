@@ -115,12 +115,15 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		val module = getConfigurationModule().getModule();
 		if(module == null)
 		{
-			throw new ExecutionException("Module is empty");
+			throw new ExecutionException("Module is null");
 		}
 
 		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 
-		assert extension != null;
+		if(extension == null)
+		{
+			throw new ExecutionException("Module don't have .NET extension");
+		}
 
 		String currentLayerName = extension.getCurrentLayerName();
 		MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
