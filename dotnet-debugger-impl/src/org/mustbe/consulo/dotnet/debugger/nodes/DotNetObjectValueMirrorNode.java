@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
@@ -20,7 +19,7 @@ import mono.debugger.TypeMirror;
  * @author VISTALL
  * @since 11.04.14
  */
-public class DotNetObjectValueMirrorNode extends XNamedValue
+public class DotNetObjectValueMirrorNode extends AbstractTypedMirrorNode
 {
 	@NotNull
 	private final Project myProject;
@@ -30,7 +29,7 @@ public class DotNetObjectValueMirrorNode extends XNamedValue
 
 	public DotNetObjectValueMirrorNode(@NotNull Project project, @NotNull TypeMirror typeMirror, @Nullable ObjectValueMirror objectValueMirror)
 	{
-		super(objectValueMirror == null ? "static" : "this");
+		super(objectValueMirror == null ? "static" : "this", project);
 		myProject = project;
 		myTypeMirror = typeMirror;
 		myObjectValueMirror = objectValueMirror;
@@ -58,17 +57,29 @@ public class DotNetObjectValueMirrorNode extends XNamedValue
 	{
 		node.setPresentation(myObjectValueMirror == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value, new XValuePresentation()
 		{
-			@NotNull
+			@Nullable
 			@Override
-			public String getSeparator()
+			public String getType()
 			{
-				return "";
+				TypeMirror typeOfVariable = getTypeOfVariable();
+				return typeOfVariable.qualifiedName();
 			}
 
 			@Override
 			public void renderValue(@NotNull XValueTextRenderer renderer)
 			{
+				if(myObjectValueMirror != null)
+				{
+					renderer.renderValue("ToString()");
+				}
 			}
 		}, true);
+	}
+
+	@NotNull
+	@Override
+	public TypeMirror getTypeOfVariable()
+	{
+		return myObjectValueMirror == null ? myTypeMirror : myObjectValueMirror.type();
 	}
 }

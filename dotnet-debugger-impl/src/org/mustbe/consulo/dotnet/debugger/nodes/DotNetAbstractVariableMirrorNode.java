@@ -9,18 +9,11 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XNamedValue;
-import com.intellij.xdebugger.frame.XNavigatable;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
@@ -33,7 +26,7 @@ import mono.debugger.*;
  * @author VISTALL
  * @since 11.04.14
  */
-public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
+public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirrorNode
 {
 	private XValueModifier myValueModifier = new XValueModifier()
 	{
@@ -109,9 +102,6 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 		}
 	};
 
-	@NotNull
-	protected final Project myProject;
-
 	private static final Map<String, Byte> PRIMITIVE_TYPES = new HashMap<String, Byte>()
 	{
 		{
@@ -121,8 +111,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 
 	public DotNetAbstractVariableMirrorNode(@NotNull String name, @NotNull Project project)
 	{
-		super(name);
-		myProject = project;
+		super(name, project);
 	}
 
 	public boolean isString()
@@ -136,9 +125,6 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 		TypeMirror typeOfVariable = getTypeOfVariable();
 		return Comparing.equal(typeOfVariable.qualifiedName(), DotNetTypes.System_Boolean);
 	}
-
-	@NotNull
-	public abstract TypeMirror getTypeOfVariable();
 
 	@NotNull
 	public abstract Icon getIconForVariable();
@@ -157,12 +143,6 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 			return myValueModifier;
 		}
 		return null;
-	}
-
-	@Override
-	public boolean canNavigateToTypeSource()
-	{
-		return true;
 	}
 
 	@Override
@@ -192,25 +172,6 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 			childrenList.add(new DotNetFieldOrPropertyMirrorNode(fieldMirror, myProject, (ObjectValueMirror) valueOfVariable));
 		}
 		node.addChildren(childrenList, true);
-	}
-
-	@Override
-	public void computeTypeSourcePosition(@NotNull XNavigatable navigatable)
-	{
-		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(myProject).findType(getTypeOfVariable().qualifiedName(), GlobalSearchScope.allScope
-				(myProject), -1);
-
-		if(type == null)
-		{
-			return;
-		}
-		PsiElement nameIdentifier = type.getNameIdentifier();
-		if(nameIdentifier == null)
-		{
-			return;
-		}
-		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(type.getContainingFile().getVirtualFile(),
-				nameIdentifier.getTextOffset()));
 	}
 
 	@Override
