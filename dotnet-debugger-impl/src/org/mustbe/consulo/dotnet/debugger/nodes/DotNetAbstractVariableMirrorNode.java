@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -26,15 +27,7 @@ import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import edu.arizona.cs.mbel.signature.SignatureConstants;
-import mono.debugger.AppDomainMirror;
-import mono.debugger.FieldMirror;
-import mono.debugger.NoObjectValue;
-import mono.debugger.NumberValueMirror;
-import mono.debugger.ObjectValueMirror;
-import mono.debugger.StringValueMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
-import mono.debugger.ValueVisitor;
+import mono.debugger.*;
 
 /**
  * @author VISTALL
@@ -65,9 +58,13 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 					setValue = appDomainMirror.createString(expression);
 				}
 			}
+			else if(isBoolean())
+			{
+				setValue = new BooleanValueMirror(typeOfVariable.virtualMachine(), Boolean.valueOf(expression));
+			}
 			else
 			{
-				Byte tag = NUMBER_TYPES.get(typeOfVariable.qualifiedName());
+				Byte tag = PRIMITIVE_TYPES.get(typeOfVariable.qualifiedName());
 				if(tag != null)
 				{
 					setValue = new NumberValueMirror(typeOfVariable.virtualMachine(), tag, Double.parseDouble(expression));
@@ -115,7 +112,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 	@NotNull
 	protected final Project myProject;
 
-	private static final Map<String, Byte> NUMBER_TYPES = new HashMap<String, Byte>()
+	private static final Map<String, Byte> PRIMITIVE_TYPES = new HashMap<String, Byte>()
 	{
 		{
 			put(DotNetTypes.System_Int32, SignatureConstants.ELEMENT_TYPE_I4);
@@ -134,6 +131,12 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 		return Comparing.equal(typeOfVariable.qualifiedName(), DotNetTypes.System_String);
 	}
 
+	public boolean isBoolean()
+	{
+		TypeMirror typeOfVariable = getTypeOfVariable();
+		return Comparing.equal(typeOfVariable.qualifiedName(), DotNetTypes.System_Boolean);
+	}
+
 	@NotNull
 	public abstract TypeMirror getTypeOfVariable();
 
@@ -149,7 +152,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 	@Override
 	public XValueModifier getModifier()
 	{
-		if(isString() || NUMBER_TYPES.containsKey(getTypeOfVariable().qualifiedName()))
+		if(isString() || PRIMITIVE_TYPES.containsKey(getTypeOfVariable().qualifiedName()) || isBoolean())
 		{
 			return myValueModifier;
 		}
@@ -214,7 +217,19 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
 		final Value<?> valueOfVariable = getValueOfVariable();
-		xValueNode.setPresentation(getIconForVariable(), new XValuePresentation()
+
+		Icon icon = null;
+		if(PRIMITIVE_TYPES.containsKey(getTypeOfVariable().qualifiedName()) || isBoolean())
+		{
+			icon = AllIcons.Debugger.Db_primitive;
+		}
+
+		if(icon == null)
+		{
+			icon = getIconForVariable();
+		}
+
+		xValueNode.setPresentation(icon, new XValuePresentation()
 		{
 			@Nullable
 			@Override
@@ -238,6 +253,12 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 						public void visitStringValue(@NotNull StringValueMirror value, @NotNull String mainValue)
 						{
 							xValueTextRenderer.renderStringValue(mainValue);
+						}
+
+						@Override
+						public void visitBooleanValue(@NotNull BooleanValueMirror value, @NotNull Boolean mainValue)
+						{
+							xValueTextRenderer.renderKeywordValue(String.valueOf(mainValue));
 						}
 
 						@Override
