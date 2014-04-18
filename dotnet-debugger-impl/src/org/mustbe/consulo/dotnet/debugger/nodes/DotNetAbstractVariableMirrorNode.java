@@ -70,7 +70,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends XNamedValue
 				Byte tag = NUMBER_TYPES.get(typeOfVariable.qualifiedName());
 				if(tag != null)
 				{
-					setValue = appDomainMirror.createBoxValue(tag, Double.parseDouble(expression));
+					setValue = new NumberValueMirror(typeOfVariable.virtualMachine(), tag, Double.parseDouble(expression));
 				}
 			}
 
