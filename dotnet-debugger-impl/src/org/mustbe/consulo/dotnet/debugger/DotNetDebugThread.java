@@ -114,6 +114,10 @@ public class DotNetDebugThread extends Thread
 
 		for(val breakpoint : getOurBreakpoints())
 		{
+			if(!breakpoint.isEnabled())
+			{
+				continue;
+			}
 			val type = (DotNetAbstractBreakpointType) breakpoint.getType();
 
 			EventRequest eventRequest = type.createEventRequest(mySession.getProject(), myVirtualMachine, breakpoint);
