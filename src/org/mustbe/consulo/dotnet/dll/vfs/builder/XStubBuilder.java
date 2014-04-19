@@ -52,8 +52,6 @@ import lombok.val;
 @Logger
 public class XStubBuilder
 {
-	private static final String CONSTRUCTOR_NAME = ".ctor";
-	private static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
 	private static final char[] BRACES = {
 			'{',
 			'}'
@@ -330,7 +328,7 @@ public class XStubBuilder
 
 		for(MethodDef methodDef : typeDef.getMethods())
 		{
-			String name = cutSuperName(methodDef.getName());
+			String name = XStubUtil.cutSuperTypeName(methodDef.getName());
 
 			if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 			{
@@ -339,7 +337,7 @@ public class XStubBuilder
 						name.startsWith("set_") ||
 						name.startsWith("add_") ||
 						name.startsWith("remove_") ||
-						name.equals(STATIC_CONSTRUCTOR_NAME))
+						name.equals(XStubUtil.STATIC_CONSTRUCTOR_NAME))
 				{
 					continue;
 				}
@@ -459,7 +457,7 @@ public class XStubBuilder
 		}
 		else
 		{
-			builder.append(cutSuperName(property.getName()));
+			builder.append(XStubUtil.cutSuperTypeName(property.getName()));
 		}
 
 		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
@@ -509,7 +507,7 @@ public class XStubBuilder
 		builder.append("event ");
 		builder.append(TypeSignatureStubBuilder.toStringFromDefRefSpec(event.getEventType(), typeDef, null));
 		builder.append(' ');
-		builder.append(cutSuperName(event.getName()));
+		builder.append(XStubUtil.cutSuperTypeName(event.getName()));
 
 		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), addOnMethodStub);
@@ -588,7 +586,7 @@ public class XStubBuilder
 		}
 
 		TypeSignature parameterType = null;
-		if(name.equals(CONSTRUCTOR_NAME))
+		if(name.equals(XStubUtil.CONSTRUCTOR_NAME))
 		{
 			builder.append(XStubUtil.getUserTypeDefName(typeDef));
 		}
@@ -662,26 +660,6 @@ public class XStubBuilder
 		builder.append(canHaveBody ? " { /* compiled code */ }" : ";").append("\n");
 
 		return new LineStubBlock(builder);
-	}
-
-	@NotNull
-	private static String cutSuperName(@NotNull String name)
-	{
-		if(name.equals(CONSTRUCTOR_NAME))
-		{
-			return CONSTRUCTOR_NAME;
-		}
-		else if(StringUtil.containsChar(name, '.'))
-		{
-			// method override(implement) from superclass, cut owner of super method
-			val dotIndex = name.lastIndexOf('.');
-			name = name.substring(dotIndex + 1, name.length());
-			return name;
-		}
-		else
-		{
-			return name;
-		}
 	}
 
 	private static void processParameterList(

@@ -18,10 +18,12 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder.util;
 
 import java.io.UnsupportedEncodingException;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.util.text.StringUtil;
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import edu.arizona.cs.mbel.signature.Signature;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -29,6 +31,9 @@ import edu.arizona.cs.mbel.signature.Signature;
  */
 public class XStubUtil
 {
+	public static final String CONSTRUCTOR_NAME = ".ctor";
+	public static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
+
 	public static final char GENERIC_MARKER_IN_NAME = '`';
 	private static final char[] ILLEGAL_CHARS = new char[] {'{', '}', '<', '>', '='};
 
@@ -71,7 +76,25 @@ public class XStubUtil
 		}
 	}
 
-
+	@NotNull
+	public static String cutSuperTypeName(@NotNull String name)
+	{
+		if(name.equals(CONSTRUCTOR_NAME) || name.equals(STATIC_CONSTRUCTOR_NAME))
+		{
+			return name;
+		}
+		else if(StringUtil.containsChar(name, '.'))
+		{
+			// method override(implement) from superclass, cut owner of super method
+			val dotIndex = name.lastIndexOf('.');
+			name = name.substring(dotIndex + 1, name.length());
+			return name;
+		}
+		else
+		{
+			return name;
+		}
+	}
 
 	public static String convertTo(String old)
 	{
