@@ -5,6 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -108,8 +109,7 @@ public class DotNetObjectValueMirrorNode extends AbstractTypedMirrorNode
 			@Override
 			public String getType()
 			{
-				TypeMirror typeOfVariable = getTypeOfVariable();
-				return typeOfVariable.qualifiedName();
+				return DotNetVirtualMachineUtil.formatNameWithGeneric(getTypeOfVariable());
 			}
 
 			@Override

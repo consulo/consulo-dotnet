@@ -89,7 +89,7 @@ public class DotNetStackFrame extends XStackFrame
 		builder.append(":");
 		builder.append(location.columnNumber());
 		builder.append(", ");
-		builder.append(location.method().declaringType().qualifiedName());
+		builder.append(DotNetVirtualMachineUtil.formatNameWithGeneric(location.method().declaringType()));
 
 		component.append(builder.toString(), SimpleTextAttributes.GRAY_ATTRIBUTES);
 	}

@@ -17,6 +17,8 @@
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import com.intellij.openapi.project.Project;
@@ -48,9 +50,7 @@ public abstract class AbstractTypedMirrorNode extends XNamedValue
 	@Override
 	public void computeTypeSourcePosition(@NotNull XNavigatable navigatable)
 	{
-		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(myProject).findType(getTypeOfVariable().qualifiedName(),
-				GlobalSearchScope.allScope(myProject), -1);
-
+		DotNetTypeDeclaration type = findTypeByQualifiedName(getTypeOfVariable());
 		if(type == null)
 		{
 			return;
@@ -62,6 +62,22 @@ public abstract class AbstractTypedMirrorNode extends XNamedValue
 		}
 		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(type.getContainingFile().getVirtualFile(),
 				nameIdentifier.getTextOffset()));
+	}
+
+	@Nullable
+	public DotNetTypeDeclaration findTypeByQualifiedName(@NotNull TypeMirror typeMirror)
+	{
+		String qualifiedName = typeMirror.originalQualifiedName();
+		int index = qualifiedName.indexOf(XStubUtil.GENERIC_MARKER_IN_NAME);
+
+		int genericCount = 0;
+		if(index != -1)
+		{
+			genericCount = Integer.parseInt(qualifiedName.substring(index + 1, qualifiedName.length()));
+			qualifiedName = qualifiedName.substring(0, index);
+		}
+
+		return DotNetPsiFacade.getInstance(myProject).findType(qualifiedName, GlobalSearchScope.allScope(myProject), genericCount);
 	}
 
 	@Override

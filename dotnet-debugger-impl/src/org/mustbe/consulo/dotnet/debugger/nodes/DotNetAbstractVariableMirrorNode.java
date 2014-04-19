@@ -9,6 +9,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -193,7 +194,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 			@Override
 			public String getType()
 			{
-				return getTypeOfVariable().qualifiedName();
+				return DotNetVirtualMachineUtil.formatNameWithGeneric(getTypeOfVariable());
 			}
 
 			@Override

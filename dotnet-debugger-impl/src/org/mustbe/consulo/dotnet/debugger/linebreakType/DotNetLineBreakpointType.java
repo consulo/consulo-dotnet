@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
+import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
@@ -179,10 +179,10 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	private TypeMirror findTypeMirror(VirtualMachine virtualMachine, VirtualFile virtualFile, DotNetTypeDeclaration parent)
 	{
 		virtualMachine.eventRequestManager().createAppDomainCreate().enable();
-		val vmQualifiedName = toVMQualifiedName(parent);
+		val vmQualifiedName = DotNetVirtualMachineUtil.toVMQualifiedName(parent);
 		if(virtualMachine.isAtLeastVersion(2, 9))
 		{
-			TypeMirror[] typesByQualifiedName = virtualMachine.findTypesByQualifiedName(toVMQualifiedName(parent), false);
+			TypeMirror[] typesByQualifiedName = virtualMachine.findTypesByQualifiedName(vmQualifiedName, false);
 			return typesByQualifiedName.length == 0 ? null : typesByQualifiedName[0];
 		}
 		else if(virtualMachine.isAtLeastVersion(2, 7))
@@ -193,7 +193,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 				@Override
 				public boolean value(TypeMirror typeMirror)
 				{
-					return Comparing.equal(typeMirror.qualifiedName(), vmQualifiedName);
+					return Comparing.equal(typeMirror.originalQualifiedName(), vmQualifiedName);
 				}
 			});
 		}
@@ -230,17 +230,6 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
 		val exeFile = DotNetMacros.extract(extension.getModule(), currentLayerName, currentLayer);
 		return new File(exeFile);
-	}
-
-	private static String toVMQualifiedName(DotNetTypeDeclaration qualifiedElement)
-	{
-		String presentableQName = qualifiedElement.getPresentableQName();
-		int genericParametersCount = qualifiedElement.getGenericParametersCount();
-		if(genericParametersCount > 0)
-		{
-			presentableQName = presentableQName + XStubUtil.GENERIC_MARKER_IN_NAME + genericParametersCount;
-		}
-		return presentableQName;
 	}
 
 	private boolean isValidMethodMirror(DotNetMethodDeclaration methodDeclaration, MethodMirror methodMirror)
