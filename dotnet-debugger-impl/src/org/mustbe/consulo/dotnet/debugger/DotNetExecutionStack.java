@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
 import mono.debugger.IncompatibleThreadStateException;
@@ -36,7 +35,7 @@ public class DotNetExecutionStack extends XExecutionStack
 	private DotNetStackFrame myTopFrame;
 	private List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
 
-	public DotNetExecutionStack(ThreadMirror threadMirror, Project project)
+	public DotNetExecutionStack(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
 	{
 		super(threadMirror.name());
 
@@ -48,11 +47,11 @@ public class DotNetExecutionStack extends XExecutionStack
 			{
 				if(myTopFrame == null)
 				{
-					myTopFrame = new DotNetStackFrame(frame, project);
+					myTopFrame = new DotNetStackFrame(debuggerContext, frame);
 					continue;
 				}
 
-				stackFrames.add(new DotNetStackFrame(frame, project));
+				stackFrames.add(new DotNetStackFrame(debuggerContext, frame));
 			}
 		}
 		catch(IncompatibleThreadStateException e)

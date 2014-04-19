@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Key;
@@ -62,18 +63,20 @@ public class DotNetDebugThread extends Thread
 	private final XDebuggerManager myDebuggerManager;
 	private final DotNetDebugProcess myDebugProcess;
 	private final DebugConnectionInfo myDebugConnectionInfo;
+	private final RunProfile myRunProfile;
 	private boolean myStop;
 
 	private VirtualMachine myVirtualMachine;
 
 	private Queue<Processor<VirtualMachine>> myQueue = new ConcurrentLinkedDeque<Processor<VirtualMachine>>();
 
-	public DotNetDebugThread(XDebugSession session, DotNetDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo)
+	public DotNetDebugThread(XDebugSession session, DotNetDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
 	{
 		super("DotNetDebugThread: " + new Random().nextInt());
 		mySession = session;
 		myDebugProcess = debugProcess;
 		myDebugConnectionInfo = debugConnectionInfo;
+		myRunProfile = runProfile;
 		myDebuggerManager = XDebuggerManager.getInstance(session.getProject());
 	}
 
@@ -153,14 +156,14 @@ public class DotNetDebugThread extends Thread
 
 						myDebugProcess.setPausedEventSet(eventSet);
 						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location);
+						DotNetDebugContext debugContext = createDebugContext();
 						if(xLineBreakpoint != null)
 						{
-							mySession.breakpointReached(xLineBreakpoint, null, new DotNetSuspendContext(myVirtualMachine, mySession.getProject(),
-									eventSet.eventThread()));
+							mySession.breakpointReached(xLineBreakpoint, null, new DotNetSuspendContext(debugContext, eventSet.eventThread()));
 						}
 						else
 						{
-							mySession.positionReached(new DotNetSuspendContext(myVirtualMachine, mySession.getProject(), eventSet.eventThread()));
+							mySession.positionReached(new DotNetSuspendContext(debugContext, eventSet.eventThread()));
 						}
 					}
 				}
@@ -180,6 +183,13 @@ public class DotNetDebugThread extends Thread
 			}
 		}
 
+	}
+
+	@NotNull
+	public DotNetDebugContext createDebugContext()
+	{
+		assert myVirtualMachine != null;
+		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile);
 	}
 
 	@Nullable

@@ -19,11 +19,9 @@ package org.mustbe.consulo.dotnet.debugger;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XSuspendContext;
 import mono.debugger.ThreadMirror;
-import mono.debugger.VirtualMachine;
 
 /**
  * @author VISTALL
@@ -31,19 +29,17 @@ import mono.debugger.VirtualMachine;
  */
 public class DotNetSuspendContext extends XSuspendContext
 {
-	private final Project myProject;
 	private XExecutionStack[] myXExecutionStacks;
 	private XExecutionStack myActivateStack;
 
-	public DotNetSuspendContext(VirtualMachine virtualMachine, Project project, ThreadMirror active)
+	public DotNetSuspendContext(DotNetDebugContext debuggerContext, ThreadMirror active)
 	{
-		myProject = project;
-		List<ThreadMirror> threadMirrors = virtualMachine.allThreads();
+		List<ThreadMirror> threadMirrors = debuggerContext.getVirtualMachine().allThreads();
 		myXExecutionStacks = new XExecutionStack[threadMirrors.size()];
 		for(int i = 0; i < myXExecutionStacks.length; i++)
 		{
 			ThreadMirror threadMirror = threadMirrors.get(i);
-			myXExecutionStacks[i] = new DotNetExecutionStack(threadMirror, myProject);
+			myXExecutionStacks[i] = new DotNetExecutionStack(debuggerContext, threadMirror);
 			if(active != null && threadMirror.id() == active.id())
 			{
 				myActivateStack = myXExecutionStacks[i];

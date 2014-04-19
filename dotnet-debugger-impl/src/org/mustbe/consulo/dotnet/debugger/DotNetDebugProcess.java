@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpoint
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.run.DotNetRunProfileState;
 import com.intellij.execution.ExecutionResult;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.icons.AllIcons;
@@ -62,12 +63,12 @@ public class DotNetDebugProcess extends XDebugProcess
 
 	private EventSet myPausedEventSet;
 
-	public DotNetDebugProcess(XDebugSession session, DotNetRunProfileState state)
+	public DotNetDebugProcess(XDebugSession session, DotNetRunProfileState state, RunProfile runProfile)
 	{
 		super(session);
 		session.setPauseActionSupported(true);
 		myDebugConnectionInfo = state.getDebugConnectionInfo();
-		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo);
+		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo, runProfile);
 		myDebugThread.start();
 	}
 
@@ -185,7 +186,7 @@ public class DotNetDebugProcess extends XDebugProcess
 			public boolean process(VirtualMachine virtualMachine)
 			{
 				virtualMachine.suspend();
-				getSession().positionReached(new DotNetSuspendContext(virtualMachine, getSession().getProject(), null));
+				getSession().positionReached(new DotNetSuspendContext(myDebugThread.createDebugContext(), null));
 				return false;
 			}
 		});

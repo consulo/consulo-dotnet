@@ -8,7 +8,6 @@ import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredTextContainer;
@@ -34,13 +33,13 @@ import mono.debugger.Value;
  */
 public class DotNetStackFrame extends XStackFrame
 {
+	private final DotNetDebugContext myDebuggerContext;
 	private final StackFrameMirror myFrame;
-	private final Project myProject;
 
-	public DotNetStackFrame(StackFrameMirror frame, Project project)
+	public DotNetStackFrame(DotNetDebugContext debuggerContext, StackFrameMirror frame)
 	{
+		myDebuggerContext = debuggerContext;
 		myFrame = frame;
-		myProject = project;
 	}
 
 	@Nullable
@@ -108,11 +107,11 @@ public class DotNetStackFrame extends XStackFrame
 			{
 				TypeMirror type = value.type();
 				assert type != null;
-				childrenList.add(new DotNetObjectValueMirrorNode(myProject, myFrame.thread(), type, (ObjectValueMirror) value));
+				childrenList.add(new DotNetObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), type, (ObjectValueMirror) value));
 			}
 			else
 			{
-				childrenList.add(new DotNetObjectValueMirrorNode(myProject, myFrame.thread(), myFrame.location().declaringType(), null));
+				childrenList.add(new DotNetObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), myFrame.location().declaringType(), null));
 			}
 		}
 		catch(AbsentInformationException ignored)
@@ -123,7 +122,7 @@ public class DotNetStackFrame extends XStackFrame
 
 		for(MethodParameterMirror parameter : parameters)
 		{
-			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(parameter, myFrame, myProject);
+			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(myDebuggerContext, parameter, myFrame);
 
 			childrenList.add(parameterMirrorNode);
 		}
@@ -133,7 +132,7 @@ public class DotNetStackFrame extends XStackFrame
 			LocalVariableMirror[] locals = method.locals(myFrame.location().codeIndex());
 			for(LocalVariableMirror local : locals)
 			{
-				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(local, myFrame, myProject);
+				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(myDebuggerContext, local, myFrame);
 
 				childrenList.add(localVariableMirrorNode);
 			}

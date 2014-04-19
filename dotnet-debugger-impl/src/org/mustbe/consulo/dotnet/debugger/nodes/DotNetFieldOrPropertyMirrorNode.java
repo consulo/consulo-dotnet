@@ -4,8 +4,8 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
 import mono.debugger.FieldOrPropertyMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.PropertyMirror;
@@ -23,12 +23,12 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	private final ObjectValueMirror myObjectValueMirror;
 
 	public DotNetFieldOrPropertyMirrorNode(
+			@NotNull DotNetDebugContext debuggerContext,
 			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
-			@NotNull Project project,
 			@NotNull ThreadMirror threadMirror,
 			@Nullable ObjectValueMirror objectValueMirror)
 	{
-		super(fieldOrPropertyMirror.name(), project, threadMirror);
+		super(debuggerContext, fieldOrPropertyMirror.name(), threadMirror);
 		myFieldOrPropertyMirror = fieldOrPropertyMirror;
 		myObjectValueMirror = objectValueMirror;
 	}

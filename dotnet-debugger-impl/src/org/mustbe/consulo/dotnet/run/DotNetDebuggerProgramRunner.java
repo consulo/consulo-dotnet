@@ -58,7 +58,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			@Override
 			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
 			{
-				DotNetDebugProcess process = new DotNetDebugProcess(session, (DotNetRunProfileState) state);
+				DotNetDebugProcess process = new DotNetDebugProcess(session, (DotNetRunProfileState) state, env.getRunProfile());
 				process.setExecutionResult(state.execute(env.getExecutor(), DotNetDebuggerProgramRunner.this));
 				return process;
 			}

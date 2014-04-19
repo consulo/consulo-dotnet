@@ -4,8 +4,8 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
 import mono.debugger.LocalVariableMirror;
 import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.StackFrameMirror;
@@ -22,9 +22,9 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 	private final LocalVariableMirror myLocal;
 	private final StackFrameMirror myFrame;
 
-	public DotNetLocalVariableMirrorNode(LocalVariableMirror local, StackFrameMirror frame, Project project)
+	public DotNetLocalVariableMirrorNode(DotNetDebugContext debuggerContext, LocalVariableMirror local, StackFrameMirror frame)
 	{
-		super(local.name(), project, frame.thread());
+		super(debuggerContext, local.name(), frame.thread());
 		myLocal = local;
 		myFrame = frame;
 	}

@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
@@ -31,7 +31,7 @@ import mono.debugger.Value;
 public class DotNetObjectValueMirrorNode extends AbstractTypedMirrorNode
 {
 	@NotNull
-	private final Project myProject;
+	private final DotNetDebugContext myDebuggerContext;
 	@NotNull
 	private final ThreadMirror myThreadMirror;
 	@NotNull
@@ -41,13 +41,13 @@ public class DotNetObjectValueMirrorNode extends AbstractTypedMirrorNode
 	private String myToStringValue;
 
 	public DotNetObjectValueMirrorNode(
-			@NotNull Project project,
+			@NotNull DotNetDebugContext debuggerContext,
 			@NotNull ThreadMirror threadMirror,
 			@NotNull TypeMirror typeMirror,
 			@Nullable ObjectValueMirror objectValueMirror)
 	{
-		super(objectValueMirror == null ? "static" : "this", project);
-		myProject = project;
+		super(debuggerContext, objectValueMirror == null ? "static" : "this");
+		myDebuggerContext = debuggerContext;
 		myThreadMirror = threadMirror;
 		myTypeMirror = typeMirror;
 		myObjectValueMirror = objectValueMirror;
@@ -94,7 +94,7 @@ public class DotNetObjectValueMirrorNode extends AbstractTypedMirrorNode
 			{
 				continue;
 			}
-			childrenList.add(new DotNetFieldOrPropertyMirrorNode(fieldMirror, myProject, myThreadMirror,
+			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebuggerContext, fieldMirror, myThreadMirror,
 					fieldMirror.isStatic() ? null : myObjectValueMirror));
 		}
 		node.addChildren(childrenList, true);

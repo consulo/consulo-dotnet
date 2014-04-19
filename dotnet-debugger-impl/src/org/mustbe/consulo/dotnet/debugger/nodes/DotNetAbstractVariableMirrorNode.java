@@ -9,8 +9,8 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
@@ -112,9 +112,9 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@NotNull
 	protected final ThreadMirror myThreadMirror;
 
-	public DotNetAbstractVariableMirrorNode(@NotNull String name, @NotNull Project project, @NotNull ThreadMirror threadMirror)
+	public DotNetAbstractVariableMirrorNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull ThreadMirror threadMirror)
 	{
-		super(name, project);
+		super(debuggerContext, name);
 		myThreadMirror = threadMirror;
 	}
 
@@ -152,19 +152,19 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		final Value<?> valueOfVariable = getValueOfVariable();
-		if(!(valueOfVariable instanceof ObjectValueMirror))
+		final Value<?> value = getValueOfVariable();
+		if(!(value instanceof ObjectValueMirror))
 		{
 			return;
 		}
 
-		TypeMirror type = valueOfVariable.type();
+		TypeMirror type = value.type();
 
 		assert type != null;
 
 		XValueChildrenList childrenList = new XValueChildrenList();
 
-		childrenList.add(new DotNetObjectValueMirrorNode(myProject, myThreadMirror, type, null));
+		childrenList.add(new DotNetObjectValueMirrorNode(myDebugContext, myThreadMirror, type, null));
 
 		List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
 		for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
@@ -178,7 +178,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 			{
 				continue;
 			}
-			childrenList.add(new DotNetFieldOrPropertyMirrorNode(fieldMirror, myProject, myThreadMirror, (ObjectValueMirror) valueOfVariable));
+			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldMirror, myThreadMirror, (ObjectValueMirror) value));
 		}
 		node.addChildren(childrenList, true);
 	}

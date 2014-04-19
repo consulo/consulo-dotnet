@@ -4,16 +4,14 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNavigatable;
@@ -34,9 +32,9 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 	private final MethodParameterMirror myParameter;
 	private final StackFrameMirror myFrame;
 
-	public DotNetMethodParameterMirrorNode(MethodParameterMirror parameter, StackFrameMirror frame, Project project)
+	public DotNetMethodParameterMirrorNode(DotNetDebugContext debuggerContext, MethodParameterMirror parameter, StackFrameMirror frame)
 	{
-		super(parameter.name(), project, frame.thread());
+		super(debuggerContext, parameter.name(), frame.thread());
 		myParameter = parameter;
 		myFrame = frame;
 	}
@@ -46,8 +44,7 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 	{
 		MethodMirror method = myFrame.location().method();
 
-		DotNetTypeDeclaration[] types = DotNetPsiFacade.getInstance(myProject).findTypes(method.declaringType().qualifiedName(),
-				GlobalSearchScope.allScope(myProject), -1);
+		DotNetTypeDeclaration[] types = findTypesByQualifiedName(method.declaringType());
 
 		if(types.length == 0)
 		{
