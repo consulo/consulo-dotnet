@@ -6,11 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
@@ -232,9 +232,15 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		return new File(exeFile);
 	}
 
-	private static String toVMQualifiedName(DotNetQualifiedElement qualifiedElement)
+	private static String toVMQualifiedName(DotNetTypeDeclaration qualifiedElement)
 	{
-		return qualifiedElement.getPresentableQName(); //FIXME [VISTALL] with generic it ill be different?
+		String presentableQName = qualifiedElement.getPresentableQName();
+		int genericParametersCount = qualifiedElement.getGenericParametersCount();
+		if(genericParametersCount > 0)
+		{
+			presentableQName = presentableQName + XStubUtil.GENERIC_MARKER_IN_NAME + genericParametersCount;
+		}
+		return presentableQName;
 	}
 
 	private boolean isValidMethodMirror(DotNetMethodDeclaration methodDeclaration, MethodMirror methodMirror)
