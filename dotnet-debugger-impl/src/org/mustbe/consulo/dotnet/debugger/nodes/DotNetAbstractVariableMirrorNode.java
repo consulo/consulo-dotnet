@@ -172,6 +172,11 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 			{
 				continue;
 			}
+
+			if(fieldMirror instanceof PropertyMirror && ((PropertyMirror) fieldMirror).isArrayProperty())
+			{
+				continue;
+			}
 			childrenList.add(new DotNetFieldOrPropertyMirrorNode(fieldMirror, myProject, myThreadMirror, (ObjectValueMirror) valueOfVariable));
 		}
 		node.addChildren(childrenList, true);

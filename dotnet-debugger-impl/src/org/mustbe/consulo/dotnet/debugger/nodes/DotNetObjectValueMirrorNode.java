@@ -17,6 +17,7 @@ import mono.debugger.FieldOrPropertyMirror;
 import mono.debugger.InvokeFlags;
 import mono.debugger.MethodMirror;
 import mono.debugger.ObjectValueMirror;
+import mono.debugger.PropertyMirror;
 import mono.debugger.StringValueMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
@@ -84,6 +85,11 @@ public class DotNetObjectValueMirrorNode extends AbstractTypedMirrorNode
 		for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
 		{
 			if(!fieldMirror.isStatic() && myObjectValueMirror == null)
+			{
+				continue;
+			}
+
+			if(fieldMirror instanceof PropertyMirror && ((PropertyMirror) fieldMirror).isArrayProperty())
 			{
 				continue;
 			}
