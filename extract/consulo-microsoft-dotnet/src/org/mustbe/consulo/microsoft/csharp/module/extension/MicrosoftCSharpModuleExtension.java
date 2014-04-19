@@ -44,6 +44,7 @@ public class MicrosoftCSharpModuleExtension extends CSharpModuleExtension<Micros
 	public static DotNetCompilerOptionsBuilder createCompilerOptionsBuilderImpl(CSharpModuleExtension<?> extension)
 	{
 		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(extension);
+		optionsBuilder.addArgument("/nologo");
 		optionsBuilder.addArgument("/fullpaths");
 		optionsBuilder.addArgument("/utf8output");
 		optionsBuilder.addArgument("/nostdlib+");

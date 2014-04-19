@@ -50,6 +50,7 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 		{
 			optionsBuilder.addArgument("/unsafe");
 		}
+		optionsBuilder.addArgument("/nologo");
 		optionsBuilder.addArgument("/nostdlib+");
 
 		if(SystemInfo.isWindows)
