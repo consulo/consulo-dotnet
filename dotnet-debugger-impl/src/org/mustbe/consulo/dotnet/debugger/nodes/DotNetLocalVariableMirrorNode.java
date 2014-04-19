@@ -40,7 +40,17 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 	@Override
 	public Icon getIconForVariable()
 	{
-		return AllIcons.Nodes.Variable;
+		Icon icon = null;
+		if(PRIMITIVE_TYPES.containsKey(getTypeOfVariable().qualifiedName()) || isBoolean())
+		{
+			icon = AllIcons.Debugger.Db_primitive;
+		}
+
+		if(icon == null)
+		{
+			icon = AllIcons.Nodes.Variable;
+		}
+		return icon;
 	}
 
 	@Nullable

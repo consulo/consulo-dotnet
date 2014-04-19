@@ -9,7 +9,6 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -28,7 +27,7 @@ import mono.debugger.*;
  */
 public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirrorNode
 {
-	private static final Map<String, Byte> PRIMITIVE_TYPES = new HashMap<String, Byte>()
+	public static final Map<String, Byte> PRIMITIVE_TYPES = new HashMap<String, Byte>()
 	{
 		{
 			put(DotNetTypes.System_Int32, SignatureConstants.ELEMENT_TYPE_I4);
@@ -183,18 +182,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	{
 		final Value<?> valueOfVariable = getValueOfVariable();
 
-		Icon icon = null;
-		if(PRIMITIVE_TYPES.containsKey(getTypeOfVariable().qualifiedName()) || isBoolean())
-		{
-			icon = AllIcons.Debugger.Db_primitive;
-		}
-
-		if(icon == null)
-		{
-			icon = getIconForVariable();
-		}
-
-		xValueNode.setPresentation(icon, new XValuePresentation()
+		xValueNode.setPresentation(getIconForVariable(), new XValuePresentation()
 		{
 			@Nullable
 			@Override
