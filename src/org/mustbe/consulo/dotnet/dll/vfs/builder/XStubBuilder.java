@@ -34,6 +34,7 @@ import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XByteUtil;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubModifier;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiBundle;
 import com.intellij.util.ArrayUtil;
@@ -160,7 +161,7 @@ public class XStubBuilder
 					{
 						newMethodDef.addGenericParam(paramDef);
 					}
-					return processMethod(typeDef, newMethodDef, newMethodDef.getName(), true, false, false);
+					return processMethod(typeDef, newMethodDef, newMethodDef.getName(), DELEGATE);
 				}
 
 			}
@@ -328,7 +329,8 @@ public class XStubBuilder
 
 		for(MethodDef methodDef : typeDef.getMethods())
 		{
-			String name = XStubUtil.cutSuperTypeName(methodDef.getName());
+			Ref<Boolean> overrideCallback = Ref.create(Boolean.FALSE);
+			String name = XStubUtil.cutSuperTypeName(methodDef.getName(), overrideCallback);
 
 			if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 			{
@@ -352,7 +354,16 @@ public class XStubBuilder
 
 			parent.getBlocks().addAll(AttributeStubBuilder.processAttributes(methodDef, typeDef, methodDef, null, callback));
 
-			StubBlock stubBlock = processMethod(typeDef, methodDef, name, false, false, callback.extension);
+			int flags = 0;
+			if(callback.extension)
+			{
+				flags = BitUtil.set(flags, EXTENSION, true);
+			}
+			if(Boolean.TRUE.equals(overrideCallback.get()))
+			{
+				flags = BitUtil.set(flags, OVERRIDE, true);
+			}
+			StubBlock stubBlock = processMethod(typeDef, methodDef, name, flags);
 
 			parent.getBlocks().add(stubBlock);
 		}
@@ -397,7 +408,7 @@ public class XStubBuilder
 		MethodDef getter = property.getGetter();
 		if(getter != null)
 		{
-			getterStub = processMethod(typeDef, getter, "get", false, true, false);
+			getterStub = processMethod(typeDef, getter, "get", ACCESSOR);
 			List<ParameterSignature> parameters = getter.getSignature().getParameters();
 			if(parameters.size() == 1)
 			{
@@ -407,7 +418,7 @@ public class XStubBuilder
 		MethodDef setter = property.getSetter();
 		if(setter != null)
 		{
-			setterStub = processMethod(typeDef, setter, "set", false, true, false);
+			setterStub = processMethod(typeDef, setter, "set", ACCESSOR);
 
 			if(parameterSignature == null)
 			{
@@ -452,12 +463,12 @@ public class XStubBuilder
 		if(parameterSignature != null)
 		{
 			builder.append("this [");
-			getParameterText(builder, parameterSignature, typeDef, null, false, 0);
+			processParameterText(builder, parameterSignature, typeDef, null, 0, 0);
 			builder.append("]");
 		}
 		else
 		{
-			builder.append(XStubUtil.cutSuperTypeName(property.getName()));
+			builder.append(XStubUtil.cutSuperTypeName(property.getName(), null));
 		}
 
 		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
@@ -475,12 +486,12 @@ public class XStubBuilder
 		MethodDef addOnMethod = event.getAddOnMethod();
 		if(addOnMethod != null)
 		{
-			addOnMethodStub = processMethod(typeDef, addOnMethod, "add", false, true, false);
+			addOnMethodStub = processMethod(typeDef, addOnMethod, "add", ACCESSOR);
 		}
 		MethodDef removeOnMethod = event.getRemoveOnMethod();
 		if(removeOnMethod != null)
 		{
-			removeOnStub = processMethod(typeDef, removeOnMethod, "remove", false, true, false);
+			removeOnStub = processMethod(typeDef, removeOnMethod, "remove", ACCESSOR);
 		}
 
 		XStubModifier propertyModifier = XStubModifier.INTERNAL;
@@ -507,7 +518,7 @@ public class XStubBuilder
 		builder.append("event ");
 		builder.append(TypeSignatureStubBuilder.toStringFromDefRefSpec(event.getEventType(), typeDef, null));
 		builder.append(' ');
-		builder.append(XStubUtil.cutSuperTypeName(event.getName()));
+		builder.append(XStubUtil.cutSuperTypeName(event.getName(), null));
 
 		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
 		ContainerUtil.addIfNotNull(stubBlock.getBlocks(), addOnMethodStub);
@@ -548,15 +559,20 @@ public class XStubBuilder
 		}
 	}
 
+	private static int DELEGATE = 1 << 0;
+	private static int ACCESSOR = 1 << 1;
+	private static int EXTENSION = 1 << 2;
+	private static int OVERRIDE = 1 << 3;
+
 	@NotNull
-	private static StubBlock processMethod(TypeDef typeDef, MethodDef methodDef, String name, boolean delegate, boolean accessor, boolean extension)
+	private static StubBlock processMethod(TypeDef typeDef, MethodDef methodDef, String name, int flags)
 	{
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(getMethodAccess(methodDef).name().toLowerCase()).append(' ');
 
 		boolean canHaveBody = true;
-		if(delegate)
+		if(BitUtil.isSet(flags, DELEGATE))
 		{
 			builder.append("delegate ");
 			canHaveBody = false;
@@ -572,6 +588,11 @@ public class XStubBuilder
 			if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.Static))
 			{
 				builder.append("static ");
+			}
+
+			if(BitUtil.isSet(flags, OVERRIDE))
+			{
+				builder.append("override ");
 			}
 
 			if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.Virtual))
@@ -592,7 +613,7 @@ public class XStubBuilder
 		}
 		else
 		{
-			if(!accessor)
+			if(!BitUtil.isSet(flags, ACCESSOR))
 			{
 				boolean operator = false;
 				if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
@@ -630,7 +651,7 @@ public class XStubBuilder
 			builder.append(name);
 		}
 
-		if(!accessor)
+		if(!BitUtil.isSet(flags, ACCESSOR))
 		{
 			// if conversion method
 			if(parameterType != null)
@@ -648,7 +669,7 @@ public class XStubBuilder
 			{
 				processGenericParameterList(methodDef, builder);
 
-				processParameterList(typeDef, methodDef, methodDef.getSignature().getParameters(), extension, builder);
+				processParameterList(typeDef, methodDef, methodDef.getSignature().getParameters(), flags, builder);
 
 				if(!methodDef.getGenericParams().isEmpty())
 				{
@@ -666,7 +687,7 @@ public class XStubBuilder
 			final TypeDef typeDef,
 			final MethodDef methodDef,
 			final List<ParameterSignature> owner,
-			final boolean extension,
+			final int flags,
 			StringBuilder builder)
 	{
 		builder.append("(");
@@ -675,20 +696,15 @@ public class XStubBuilder
 			@Override
 			public Void fun(StringBuilder builder, ParameterSignature parameterSignature)
 			{
-				getParameterText(builder, parameterSignature, typeDef, methodDef, extension, owner.indexOf(parameterSignature));
+				processParameterText(builder, parameterSignature, typeDef, methodDef, flags, owner.indexOf(parameterSignature));
 				return null;
 			}
 		}, ", ");
 		builder.append(")");
 	}
 
-	private static void getParameterText(
-			StringBuilder p,
-			ParameterSignature parameterSignature,
-			final TypeDef typeDef,
-			final MethodDef methodDef,
-			boolean extension,
-			int index)
+	private static void processParameterText(
+			StringBuilder p, ParameterSignature parameterSignature, final TypeDef typeDef, final MethodDef methodDef, int flags, int index)
 	{
 		TypeSignature signature = parameterSignature;
 		if(signature.getType() == 0)
@@ -706,7 +722,7 @@ public class XStubBuilder
 			}
 		}
 
-		if(index == 0 && extension)
+		if(index == 0 && BitUtil.isSet(flags, EXTENSION))
 		{
 			p.append("this ");
 		}

@@ -19,6 +19,8 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder.util;
 import java.io.UnsupportedEncodingException;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import edu.arizona.cs.mbel.ByteBuffer;
 import edu.arizona.cs.mbel.mbel.TypeDef;
@@ -77,7 +79,7 @@ public class XStubUtil
 	}
 
 	@NotNull
-	public static String cutSuperTypeName(@NotNull String name)
+	public static String cutSuperTypeName(@NotNull String name, @Nullable Ref<Boolean> callback)
 	{
 		if(name.equals(CONSTRUCTOR_NAME) || name.equals(STATIC_CONSTRUCTOR_NAME))
 		{
@@ -88,6 +90,10 @@ public class XStubUtil
 			// method override(implement) from superclass, cut owner of super method
 			val dotIndex = name.lastIndexOf('.');
 			name = name.substring(dotIndex + 1, name.length());
+			if(callback != null)
+			{
+				callback.set(Boolean.TRUE);
+			}
 			return name;
 		}
 		else
