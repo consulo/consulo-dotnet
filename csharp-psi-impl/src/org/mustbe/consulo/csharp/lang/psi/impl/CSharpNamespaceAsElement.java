@@ -90,7 +90,8 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetName
 	public DotNetNamespaceDeclaration findFirstNamespace()
 	{
 		val findFirstProcessor = new CommonProcessors.FindFirstProcessor<DotNetNamespaceDeclaration>();
-		StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, myQName, getProject(), myScope, findFirstProcessor);
+		StubIndex.getInstance().processElements(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, myQName, getProject(), myScope,
+				DotNetNamespaceDeclaration.class, findFirstProcessor);
 		if(findFirstProcessor.getFoundValue() != null)
 		{
 			return findFirstProcessor.getFoundValue();
@@ -154,11 +155,14 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetName
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
+	public boolean processDeclarations(
+			@NotNull final PsiScopeProcessor processor,
+			@NotNull final ResolveState state,
+			final PsiElement lastParent,
 			@NotNull final PsiElement place)
 	{
-		boolean process = StubIndex.getInstance().process(CSharpIndexKeys.USING_LIST_INDEX, getPresentableQName(), getProject(), myScope,
-				new Processor<CSharpUsingListImpl>()
+		boolean process = StubIndex.getInstance().processElements(CSharpIndexKeys.USING_LIST_INDEX, getPresentableQName(), getProject(), myScope,
+				CSharpUsingListImpl.class, new Processor<CSharpUsingListImpl>()
 		{
 			@Override
 			public boolean process(CSharpUsingListImpl usingList)
@@ -167,8 +171,8 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetName
 			}
 		});
 
-		return process && StubIndex.getInstance().process(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, getPresentableQName(), getProject(),
-				myScope, new Processor<DotNetNamedElement>()
+		return process && StubIndex.getInstance().processElements(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, getPresentableQName(),
+				getProject(), myScope, DotNetNamedElement.class, new Processor<DotNetNamedElement>()
 		{
 			@Override
 			public boolean process(DotNetNamedElement namedElement)

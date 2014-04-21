@@ -27,6 +27,10 @@ import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.EventIndex;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.FieldIndex;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.MethodIndex;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.PropertyIndex;
+import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -87,16 +91,20 @@ public class CSharpSymbolNameContributor implements ChooseByNameContributorEx
 	}
 
 	@Override
-	public void processElementsWithName(@NotNull String name, @NotNull Processor<NavigationItem> navigationItemProcessor, @NotNull FindSymbolParameters
-			findSymbolParameters)
+	public void processElementsWithName(
+			@NotNull String name, @NotNull Processor<NavigationItem> navigationItemProcessor, @NotNull FindSymbolParameters findSymbolParameters)
 	{
 		Project project = findSymbolParameters.getProject();
 		IdFilter idFilter = findSymbolParameters.getIdFilter();
 		GlobalSearchScope searchScope = findSymbolParameters.getSearchScope();
 
-		StubIndex.getInstance().process(CSharpIndexKeys.METHOD_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
-		StubIndex.getInstance().process(CSharpIndexKeys.EVENT_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
-		StubIndex.getInstance().process(CSharpIndexKeys.PROPERTY_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
-		StubIndex.getInstance().process(CSharpIndexKeys.FIELD_INDEX, name, project, searchScope, idFilter, (Processor) navigationItemProcessor);
+		StubIndex.getInstance().processElements(CSharpIndexKeys.METHOD_INDEX, name, project, searchScope, idFilter,
+				DotNetLikeMethodDeclaration.class, (Processor) navigationItemProcessor);
+		StubIndex.getInstance().processElements(CSharpIndexKeys.EVENT_INDEX, name, project, searchScope, idFilter,
+				DotNetEventDeclaration.class,  (Processor) navigationItemProcessor);
+		StubIndex.getInstance().processElements(CSharpIndexKeys.PROPERTY_INDEX, name, project, searchScope, idFilter,
+				DotNetPropertyDeclaration.class, (Processor) navigationItemProcessor);
+		StubIndex.getInstance().processElements(CSharpIndexKeys.FIELD_INDEX, name, project, searchScope, idFilter,
+				DotNetFieldDeclaration.class, (Processor) navigationItemProcessor);
 	}
 }

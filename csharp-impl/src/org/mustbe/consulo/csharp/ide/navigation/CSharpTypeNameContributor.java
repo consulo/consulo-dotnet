@@ -71,7 +71,7 @@ public class CSharpTypeNameContributor implements ChooseByNameContributorEx, Got
 		Processor<DotNetTypeDeclaration> castVar = (Processor) navigationItemProcessor;
 		GlobalSearchScope searchScope = findSymbolParameters.getSearchScope();
 
-		StubIndex.getInstance().process(CSharpIndexKeys.TYPE_INDEX, name, project, searchScope, idFilter, castVar);
+		StubIndex.getInstance().processElements(CSharpIndexKeys.TYPE_INDEX, name, project, searchScope, idFilter, DotNetTypeDeclaration.class, castVar);
 	}
 
 	@Nullable

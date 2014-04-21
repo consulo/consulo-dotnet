@@ -45,7 +45,8 @@ public class CSharpNamespaceHelper
 
 		val findFirstProcessor = new CommonProcessors.FindFirstProcessor<DotNetNamespaceDeclaration>();
 
-		StubIndex.getInstance().process(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName, project, globalSearchScope, findFirstProcessor);
+		StubIndex.getInstance().processElements(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, qName, project, globalSearchScope,
+				DotNetNamespaceDeclaration.class, findFirstProcessor);
 
 		if(findFirstProcessor.getFoundValue() != null)
 		{
