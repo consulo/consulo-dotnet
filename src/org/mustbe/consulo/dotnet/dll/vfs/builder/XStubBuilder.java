@@ -618,11 +618,9 @@ public class XStubBuilder
 				boolean operator = false;
 				if(XStubUtil.isSet(methodDef.getFlags(), MethodAttributes.SpecialName))
 				{
-					if(SPECIAL_METHOD_NAMES.containsKey(name))
-					{
-						operator = true;
-						name = SPECIAL_METHOD_NAMES.get(name);
-					}
+					String newName = SPECIAL_METHOD_NAMES.get(name);
+					operator = newName != null;
+					name = newName != null ? newName : name;
 				}
 
 				if(operator && (name.equals("explicit") || name.equals("implicit")))
