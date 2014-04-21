@@ -844,13 +844,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public Object[] getVariants()
 	{
-		ResolveToKind kind = kind();
-		if(kind == ResolveToKind.NATIVE_TYPE_WRAPPER)
-		{
-			kind = ResolveToKind.ANY_MEMBER;
-		}
-
-		ResolveResult[] psiElements = collectResults(kind, new Condition<PsiNamedElement>()
+		ResolveResult[] psiElements = collectResults(ResolveToKind.ANY_MEMBER, new Condition<PsiNamedElement>()
 		{
 			@Override
 			public boolean value(PsiNamedElement e)
@@ -863,7 +857,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					return false;
 				}
-				if(e instanceof CSharpLocalVariable)
+				if(e instanceof CSharpLocalVariable || e instanceof DotNetParameter)
 				{
 					return true;
 				}
