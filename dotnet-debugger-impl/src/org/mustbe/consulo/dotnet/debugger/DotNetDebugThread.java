@@ -46,6 +46,7 @@ import mono.debugger.connect.Connector;
 import mono.debugger.event.Event;
 import mono.debugger.event.EventQueue;
 import mono.debugger.event.EventSet;
+import mono.debugger.event.VMStartEvent;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequest;
 import mono.debugger.request.StepRequest;
@@ -100,15 +101,6 @@ public class DotNetDebugThread extends Thread
 			try
 			{
 				myVirtualMachine = l.accept(argumentMap);
-				ApplicationManager.getApplication().runReadAction(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						mySession.initBreakpoints();
-					}
-				});
-				myVirtualMachine.resume();
 			}
 			catch(Exception e)
 			{
@@ -155,6 +147,19 @@ public class DotNetDebugThread extends Thread
 						if(request instanceof StepRequest)
 						{
 							request.disable();
+						}
+
+						if(event instanceof VMStartEvent)
+						{
+							ApplicationManager.getApplication().runReadAction(new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									mySession.initBreakpoints();
+								}
+							});
+							myVirtualMachine.resume();
 						}
 					}
 
