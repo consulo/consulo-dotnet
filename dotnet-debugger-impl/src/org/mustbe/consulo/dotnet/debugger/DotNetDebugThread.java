@@ -39,6 +39,7 @@ import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import mono.debugger.EventKind;
 import mono.debugger.Location;
 import mono.debugger.SocketListeningConnector;
 import mono.debugger.VirtualMachine;
@@ -46,7 +47,7 @@ import mono.debugger.connect.Connector;
 import mono.debugger.event.Event;
 import mono.debugger.event.EventQueue;
 import mono.debugger.event.EventSet;
-import mono.debugger.event.VMStartEvent;
+import mono.debugger.event.VMDeathEvent;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequest;
 import mono.debugger.request.StepRequest;
@@ -106,6 +107,38 @@ public class DotNetDebugThread extends Thread
 			{
 				//
 			}
+
+			myVirtualMachine.enableEvents(EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,
+					EventKind.USER_BREAK, EventKind.USER_LOG);
+
+			if(myVirtualMachine.isAtLeastVersion(2, 9))
+			{
+			}
+			else
+			{
+				myVirtualMachine.enableEvents(EventKind.TYPE_LOAD);
+			}
+
+			try
+			{
+				myVirtualMachine.eventQueue().remove();  //Wait VMStart
+
+				myVirtualMachine.resume();
+				ApplicationManager.getApplication().runReadAction(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						mySession.initBreakpoints();
+					}
+				});
+				processCommands();
+			}
+			catch(InterruptedException e)
+			{
+				e.printStackTrace();
+				return;
+			}
 		}
 		else
 		{
@@ -142,18 +175,10 @@ public class DotNetDebugThread extends Thread
 							request.disable();
 						}
 
-						if(event instanceof VMStartEvent)
+						if(event instanceof VMDeathEvent)
 						{
-							myVirtualMachine.resume();
-							ApplicationManager.getApplication().runReadAction(new Runnable()
-							{
-								@Override
-								public void run()
-								{
-									mySession.initBreakpoints();
-								}
-							});
-							processCommands();
+							myStop = true;
+							return;
 						}
 					}
 
