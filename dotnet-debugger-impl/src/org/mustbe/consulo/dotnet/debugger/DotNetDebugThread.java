@@ -100,6 +100,14 @@ public class DotNetDebugThread extends Thread
 			try
 			{
 				myVirtualMachine = l.accept(argumentMap);
+				ApplicationManager.getApplication().runReadAction(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						mySession.initBreakpoints();
+					}
+				});
 				myVirtualMachine.resume();
 			}
 			catch(Exception e)
