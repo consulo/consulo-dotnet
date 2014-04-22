@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.psi.CSharpExpressionFragmentFactory;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.run.DotNetRunProfileState;
 import com.intellij.execution.ExecutionResult;
@@ -96,7 +96,7 @@ public class DotNetDebugProcess extends XDebugProcess
 	public XBreakpointHandler<?>[] getBreakpointHandlers()
 	{
 		return new XBreakpointHandler[]{
-				new XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>(DotNetAbstractBreakpointType.class)
+				new XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>(DotNetLineBreakpointType.class)
 				{
 
 					@Override
@@ -111,7 +111,7 @@ public class DotNetDebugProcess extends XDebugProcess
 							@Override
 							public boolean process(VirtualMachine virtualMachine)
 							{
-								val type = (DotNetAbstractBreakpointType) breakpoint.getType();
+								val type = (DotNetLineBreakpointType) breakpoint.getType();
 
 								EventRequest eventRequest = type.createEventRequest(project, virtualMachine, breakpoint);
 								if(eventRequest == null)
@@ -142,7 +142,7 @@ public class DotNetDebugProcess extends XDebugProcess
 									eventRequest.disable();
 								}
 
-								if(!temporary)
+								if(eventRequest != null)
 								{
 									virtualMachine.eventRequestManager().deleteEventRequest(eventRequest);
 								}
