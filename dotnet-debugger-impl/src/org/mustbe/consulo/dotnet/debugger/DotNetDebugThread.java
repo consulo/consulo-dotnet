@@ -118,14 +118,7 @@ public class DotNetDebugThread extends Thread
 
 		while(!myStop)
 		{
-			Processor<VirtualMachine> processor;
-			while((processor = myQueue.poll()) != null)
-			{
-				if(processor.process(myVirtualMachine))
-				{
-					myVirtualMachine.resume();
-				}
-			}
+			processCommands();
 
 			boolean stoppedAlready = false;
 			EventQueue eventQueue = myVirtualMachine.eventQueue();
@@ -151,6 +144,7 @@ public class DotNetDebugThread extends Thread
 
 						if(event instanceof VMStartEvent)
 						{
+							myVirtualMachine.resume();
 							ApplicationManager.getApplication().runReadAction(new Runnable()
 							{
 								@Override
@@ -159,7 +153,7 @@ public class DotNetDebugThread extends Thread
 									mySession.initBreakpoints();
 								}
 							});
-							myVirtualMachine.resume();
+							processCommands();
 						}
 					}
 
@@ -196,6 +190,18 @@ public class DotNetDebugThread extends Thread
 			}
 		}
 
+	}
+
+	private void processCommands()
+	{
+		Processor<VirtualMachine> processor;
+		while((processor = myQueue.poll()) != null)
+		{
+			if(processor.process(myVirtualMachine))
+			{
+				myVirtualMachine.resume();
+			}
+		}
 	}
 
 	@NotNull
