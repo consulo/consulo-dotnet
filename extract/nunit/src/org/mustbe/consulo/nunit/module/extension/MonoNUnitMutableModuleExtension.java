@@ -19,37 +19,50 @@ package org.mustbe.consulo.nunit.module.extension;
 import javax.swing.JComponent;
 
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
  * @author VISTALL
- * @since 10.02.14
+ * @since 23.04.14
  */
-public class NUnitMutableModuleExtension extends NUnitModuleExtension implements MutableModuleExtensionWithSdk<NUnitModuleExtension>
+public class MonoNUnitMutableModuleExtension extends MonoNUnitModuleExtension implements MutableModuleExtensionWithSdk<MonoNUnitModuleExtension>
 {
-	public NUnitMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
+	public MonoNUnitMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel)
 	{
-		super(id, module);
+		super(id, rootModel);
 	}
 
+	@NotNull
 	@Override
-	public void setEnabled(boolean b)
+	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
-		myIsEnabled = b;
+		return (MutableModuleInheritableNamedPointer<Sdk>) super.getInheritableSdk();
 	}
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
+	public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck)
 	{
-		return createConfigurablePanelImpl(runnable);
+		return null;
 	}
 
 	@Override
-	public boolean isModified(@NotNull NUnitModuleExtension extension)
+	public void setEnabled(boolean val)
 	{
-		return isModifiedImpl(extension);
+		myIsEnabled = val;
+		if(val)
+		{
+			myRootModel.addModuleExtensionSdkEntry(this);
+		}
+	}
+
+	@Override
+	public boolean isModified(@NotNull MonoNUnitModuleExtension originalExtension)
+	{
+		return isEnabled() != originalExtension.isEnabled();
 	}
 }

@@ -85,26 +85,37 @@ public class NUnitConfiguration extends ModuleBasedConfiguration<RunConfiguratio
 	@Override
 	public RunProfileState getState(@NotNull Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException
 	{
+		val runProfile = (NUnitConfiguration) env.getRunProfile();
+
+		val module = runProfile.getConfigurationModule().getModule();
+		if(module == null)
+		{
+			throw new ExecutionException("Module is null");
+		}
+
+		final DotNetModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		if(dotNetModuleExtension == null)
+		{
+			throw new ExecutionException(".NET module extension is not set");
+		}
+		final NUnitModuleExtension nUnitModuleExtension = ModuleUtilCore.getExtension(module, NUnitModuleExtension.class);
+		if(nUnitModuleExtension == null)
+		{
+			throw new ExecutionException("MUnit module extension is not set");
+		}
+
 		return new RunProfileState()
 		{
 			@Nullable
 			@Override
 			public ExecutionResult execute(Executor executor, @NotNull ProgramRunner runner) throws ExecutionException
 			{
-				NUnitConfiguration runProfile = (NUnitConfiguration) env.getRunProfile();
-
-				Module module = runProfile.getConfigurationModule().getModule();
-
-				DotNetModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-				NUnitModuleExtension nUnitModuleExtension = ModuleUtilCore.getExtension(module, NUnitModuleExtension.class);
-
 				String currentLayerName = dotNetModuleExtension.getCurrentLayerName();
 				MainConfigurationLayer currentLayer = (MainConfigurationLayer) dotNetModuleExtension.getCurrentLayer();
 
 				val exeFile = DotNetMacros.extract(module, currentLayerName, currentLayer);
 
-				GeneralCommandLine commandLine = new GeneralCommandLine();
-				commandLine.setExePath(nUnitModuleExtension.getSdk().getHomePath() + "/bin/nunit-console.exe");
+				GeneralCommandLine commandLine = nUnitModuleExtension.createCommandLine();
 				commandLine.addParameter(exeFile);
 				commandLine.addParameter("/nologo");
 				commandLine.addParameter("/labels");

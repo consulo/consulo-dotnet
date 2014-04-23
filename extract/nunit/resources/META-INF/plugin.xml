@@ -1,6 +1,8 @@
 <idea-plugin>
 	<name>NUnit</name>
 	<depends>org.mustbe.consulo.dotnet.core</depends>
+	<depends optional="true">org.mustbe.consulo.dotnet.mono</depends>
+	<depends optional="true">org.mustbe.consulo.microsoft.dotnet</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<testFramework implementation="org.mustbe.consulo.nunit.NUnitTestFramework"/>
@@ -11,7 +13,14 @@
 								 parentKey="microsoft-dotnet"
 								 name="NUnit"
 								 icon="/icons/nunit.png"
-								 immutableClass="org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension"
-								 mutableClass="org.mustbe.consulo.nunit.module.extension.NUnitMutableModuleExtension"/>
+								 immutableClass="org.mustbe.consulo.nunit.module.extension.MicrosoftNUnitModuleExtension"
+								 mutableClass="org.mustbe.consulo.nunit.module.extension.MicrosoftNUnitMutableModuleExtension"/>
+		<moduleExtensionProvider key="mono-nunit"
+								 parentKey="mono-dotnet"
+								 name="NUnit"
+								 icon="/icons/nunit.png"
+								 immutableClass="org.mustbe.consulo.nunit.module.extension.MonoNUnitModuleExtension"
+								 mutableClass="org.mustbe.consulo.nunit.module.extension.MonoNUnitMutableModuleExtension"/>
+
 	</extensions>
 </idea-plugin>

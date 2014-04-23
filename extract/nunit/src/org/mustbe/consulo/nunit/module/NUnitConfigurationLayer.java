@@ -27,8 +27,8 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
-import org.mustbe.consulo.nunit.module.extension.NUnitModuleExtension;
-import org.mustbe.consulo.nunit.module.extension.NUnitMutableModuleExtension;
+import org.mustbe.consulo.nunit.module.extension.MicrosoftNUnitModuleExtension;
+import org.mustbe.consulo.nunit.module.extension.MicrosoftNUnitMutableModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -40,10 +40,10 @@ import lombok.val;
  */
 public class NUnitConfigurationLayer implements ConfigurationLayer
 {
-	private final NUnitModuleExtension myModuleExtension;
+	private final MicrosoftNUnitModuleExtension myModuleExtension;
 	private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
 
-	public NUnitConfigurationLayer(NUnitModuleExtension moduleExtension)
+	public NUnitConfigurationLayer(MicrosoftNUnitModuleExtension moduleExtension)
 	{
 		myModuleExtension = moduleExtension;
 		mySdkPointer = new SdkModuleInheritableNamedPointerImpl(moduleExtension.getProject(), moduleExtension.getId());
@@ -65,7 +65,7 @@ public class NUnitConfigurationLayer implements ConfigurationLayer
 	@Override
 	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @Nullable Runnable runnable)
 	{
-		NUnitMutableModuleExtension extension = modifiableRootModel.getExtension(NUnitMutableModuleExtension.class);
+		MicrosoftNUnitMutableModuleExtension extension = modifiableRootModel.getExtension(MicrosoftNUnitMutableModuleExtension.class);
 		assert extension != null;
 		val panel = new JPanel(new VerticalFlowLayout());
 		panel.add(new ModuleExtensionWithSdkPanel(extension, runnable)

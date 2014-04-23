@@ -188,6 +188,8 @@
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="consulo-dotnet" />
+        <orderEntry type="module" module-name="consulo-mono-dotnet" />
+        <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
       </module>
       <module name="impl/visual-studio" dirurl="file://$PROJECT_DIR$/extract/visual-studio">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
