@@ -148,6 +148,7 @@ public class DotNetCompiler implements TranslatingCompiler
 				catch(Exception e)
 				{
 					LOGGER.error("Message with : " + s + " cant be parsed", e);
+					compileContext.addMessage(CompilerMessageCategory.ERROR, s, null, -1, -1);
 				}
 			}
 		}
