@@ -17,9 +17,11 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.consulo.lombok.annotations.Logger;
@@ -28,29 +30,40 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.application.Result;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import lombok.val;
 import mono.debugger.EventKind;
 import mono.debugger.Location;
 import mono.debugger.SocketListeningConnector;
+import mono.debugger.SuspendPolicy;
+import mono.debugger.TypeMirror;
 import mono.debugger.VirtualMachine;
 import mono.debugger.connect.Connector;
 import mono.debugger.event.Event;
 import mono.debugger.event.EventQueue;
 import mono.debugger.event.EventSet;
+import mono.debugger.event.TypeLoadEvent;
 import mono.debugger.event.VMDeathEvent;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequest;
 import mono.debugger.request.StepRequest;
+import mono.debugger.request.TypeLoadRequest;
 
 /**
  * @author VISTALL
@@ -68,9 +81,9 @@ public class DotNetDebugThread extends Thread
 	private final RunProfile myRunProfile;
 	private boolean myStop;
 
-	private VirtualMachine myVirtualMachine;
-
 	private Queue<Processor<VirtualMachine>> myQueue = new ConcurrentLinkedDeque<Processor<VirtualMachine>>();
+
+	private VirtualMachine myVirtualMachine;
 
 	public DotNetDebugThread(XDebugSession session, DotNetDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
 	{
@@ -85,11 +98,13 @@ public class DotNetDebugThread extends Thread
 	public void setStop()
 	{
 		myStop = true;
+		myVirtualMachine = null;
 	}
 
 	@Override
 	public void run()
 	{
+		VirtualMachine virtualMachine = null;
 		if(!myDebugConnectionInfo.isServer())
 		{
 			SocketListeningConnector l = new SocketListeningConnector();
@@ -101,38 +116,41 @@ public class DotNetDebugThread extends Thread
 
 			try
 			{
-				myVirtualMachine = l.accept(argumentMap);
+				virtualMachine = l.accept(argumentMap);
+				myVirtualMachine = virtualMachine;
 			}
 			catch(Exception e)
 			{
+				e.printStackTrace();
 				//
 			}
 
-			myVirtualMachine.enableEvents(EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,
+			if(virtualMachine == null)
+			{
+				return;
+			}
+
+			virtualMachine.enableEvents(EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,
 					EventKind.USER_BREAK, EventKind.USER_LOG);
 
-			if(myVirtualMachine.isAtLeastVersion(2, 9))
+			TypeLoadRequest typeLoad = virtualMachine.eventRequestManager().createTypeLoad();
+			if(virtualMachine.isAtLeastVersion(2, 9))
 			{
+				Set<String> files = new HashSet<String>();
+				Collection<? extends XLineBreakpoint<XBreakpointProperties>> ourBreakpoints = getOurBreakpoints();
+				for(final XLineBreakpoint<XBreakpointProperties> ourBreakpoint : ourBreakpoints)
+				{
+					files.add(ourBreakpoint.getPresentableFilePath());
+				}
+
+				typeLoad.addSourceFileFilter(ArrayUtil.toStringArray(files));
 			}
-			else
-			{
-				myVirtualMachine.enableEvents(EventKind.TYPE_LOAD);
-			}
+			typeLoad.enable();
 
 			try
 			{
-				myVirtualMachine.eventQueue().remove();  //Wait VMStart
-
-				myVirtualMachine.resume();
-				ApplicationManager.getApplication().runReadAction(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						mySession.initBreakpoints();
-					}
-				});
-				processCommands();
+				virtualMachine.eventQueue().remove();  //Wait VMStart
+				virtualMachine.resume();
 			}
 			catch(InterruptedException e)
 			{
@@ -144,25 +162,26 @@ public class DotNetDebugThread extends Thread
 		{
 		}
 
-		if(myVirtualMachine == null)
+		if(virtualMachine == null)
 		{
 			return;
 		}
 
 		while(!myStop)
 		{
-			processCommands();
+			processCommands(virtualMachine);
 
 			boolean stoppedAlready = false;
-			EventQueue eventQueue = myVirtualMachine.eventQueue();
+			EventQueue eventQueue = virtualMachine.eventQueue();
 			EventSet eventSet;
 			try
 			{
-				while((eventSet = eventQueue.remove(100)) != null)
+				l:
+				while((eventSet = eventQueue.remove(50)) != null)
 				{
 					Location location = null;
 
-					for(Event event : eventSet)
+					for(final Event event : eventSet)
 					{
 						EventRequest request = event.request();
 						if(request instanceof BreakpointRequest)
@@ -175,6 +194,12 @@ public class DotNetDebugThread extends Thread
 							request.disable();
 						}
 
+						if(event instanceof TypeLoadEvent)
+						{
+							insertBreakpoints(virtualMachine, ((TypeLoadEvent) event).typeMirror());
+							continue l;
+						}
+
 						if(event instanceof VMDeathEvent)
 						{
 							myStop = true;
@@ -182,7 +207,7 @@ public class DotNetDebugThread extends Thread
 						}
 					}
 
-					if(!stoppedAlready && eventSet.suspendPolicy() == EventRequest.SUSPEND_ALL)
+					if(!stoppedAlready && eventSet.suspendPolicy() == SuspendPolicy.ALL)
 					{
 						stoppedAlready = true;
 
@@ -207,24 +232,63 @@ public class DotNetDebugThread extends Thread
 
 			try
 			{
-				Thread.sleep(100);
+				Thread.sleep(50);
 			}
 			catch(InterruptedException e)
 			{
 				//
 			}
 		}
-
 	}
 
-	private void processCommands()
+	private void insertBreakpoints(final VirtualMachine virtualMachine, final TypeMirror typeMirror)
+	{
+		new ReadAction<Object>()
+		{
+			@Override
+			protected void run(Result<Object> objectResult) throws Throwable
+			{
+				DotNetDebugContext debugContext = createDebugContext();
+
+				DotNetTypeDeclaration[] qualifiedNameImpl = DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, debugContext);
+				if(qualifiedNameImpl.length == 0)
+				{
+					return;
+				}
+
+				Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = getOurBreakpoints();
+				for(DotNetTypeDeclaration dotNetTypeDeclaration : qualifiedNameImpl)
+				{
+					VirtualFile typeVirtualFile = dotNetTypeDeclaration.getContainingFile().getVirtualFile();
+
+					for(final XLineBreakpoint<XBreakpointProperties> breakpoint : breakpoints)
+					{
+						VirtualFile lineBreakpoint = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
+						if(!Comparing.equal(typeVirtualFile, lineBreakpoint))
+						{
+							continue;
+						}
+
+						val type = (DotNetLineBreakpointType) breakpoint.getType();
+
+						type.createRequest(mySession.getProject(), virtualMachine, breakpoint, null);
+
+					}
+				}
+
+				virtualMachine.resume();
+			}
+		}.execute();
+	}
+
+	private void processCommands(VirtualMachine virtualMachine)
 	{
 		Processor<VirtualMachine> processor;
 		while((processor = myQueue.poll()) != null)
 		{
-			if(processor.process(myVirtualMachine))
+			if(processor.process(virtualMachine))
 			{
-				myVirtualMachine.resume();
+				virtualMachine.resume();
 			}
 		}
 	}
@@ -284,6 +348,15 @@ public class DotNetDebugThread extends Thread
 				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetAbstractBreakpointType.class);
 			}
 		});
+	}
+
+	public void processAnyway(Processor<VirtualMachine> processor)
+	{
+		if(myVirtualMachine == null)
+		{
+			return;
+		}
+		processor.process(myVirtualMachine);
 	}
 
 	public void addCommand(Processor<VirtualMachine> processor)

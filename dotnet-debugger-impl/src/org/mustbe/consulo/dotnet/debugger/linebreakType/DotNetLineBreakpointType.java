@@ -5,6 +5,7 @@ import java.io.File;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebugThread;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
@@ -12,13 +13,12 @@ import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -31,6 +31,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import lombok.val;
 import mono.debugger.AssemblyMirror;
@@ -80,11 +82,29 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		return false;
 	}
 
-	@Nullable
 	@Override
-	public EventRequest createEventRequest(@NotNull Project project, @NotNull VirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint)
+	public boolean createRequest(
+			@NotNull Project project, @NotNull VirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint, @Nullable TypeMirror typeMirror)
 	{
-		Location location = findLocation(project, virtualMachine, breakpoint);
+		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
+
+		EventRequest eventRequest = createEventRequest(project, virtualMachine, breakpoint, typeMirror);
+		if(eventRequest == null)
+		{
+			breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
+			return false;
+		}
+		breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
+		eventRequest.enable();
+		breakpoint.putUserData(DotNetDebugThread.EVENT_REQUEST, eventRequest);
+		return true;
+	}
+
+	@Nullable
+	public EventRequest createEventRequest(
+			@NotNull Project project, @NotNull VirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint, TypeMirror typeMirror)
+	{
+		Location location = findLocationImpl(project, virtualMachine, breakpoint, typeMirror);
 		if(location == null)
 		{
 			return null;
@@ -93,19 +113,8 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		return eventRequestManager.createBreakpointRequest(location);
 	}
 
-	public Location findLocation(final Project project, final VirtualMachine virtualMachine, final XLineBreakpoint<?> lineBreakpoint)
-	{
-		return ApplicationManager.getApplication().runReadAction(new Computable<Location>()
-		{
-			@Override
-			public Location compute()
-			{
-				return findLocationImpl(project, virtualMachine, lineBreakpoint);
-			}
-		});
-	}
-
-	public Location findLocationImpl(Project project, VirtualMachine virtualMachine, XLineBreakpoint<?> lineBreakpoint)
+	public Location findLocationImpl(
+			Project project, VirtualMachine virtualMachine, XLineBreakpoint<?> lineBreakpoint, @Nullable TypeMirror typeMirror)
 	{
 		VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(lineBreakpoint.getFileUrl());
 		if(fileByUrl == null)
@@ -138,7 +147,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			return null;
 		}
 
-		TypeMirror mirror = findTypeMirror(virtualMachine, fileByUrl, (DotNetTypeDeclaration) parent);
+		TypeMirror mirror = typeMirror == null ? findTypeMirror(virtualMachine, fileByUrl, (DotNetTypeDeclaration) parent) : typeMirror;
 
 		if(mirror == null)
 		{

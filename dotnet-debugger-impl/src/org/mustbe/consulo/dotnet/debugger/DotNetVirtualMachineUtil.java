@@ -3,6 +3,8 @@ package org.mustbe.consulo.dotnet.debugger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import com.intellij.openapi.project.Project;
 import mono.debugger.TypeMirror;
 
 /**
@@ -11,6 +13,23 @@ import mono.debugger.TypeMirror;
  */
 public class DotNetVirtualMachineUtil
 {
+	@NotNull
+	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
+	{
+		String qualifiedName = typeMirror.originalQualifiedName();
+		int index = qualifiedName.indexOf(XStubUtil.GENERIC_MARKER_IN_NAME);
+
+		int genericCount = 0;
+		if(index != -1)
+		{
+			genericCount = Integer.parseInt(qualifiedName.substring(index + 1, qualifiedName.length()));
+			qualifiedName = qualifiedName.substring(0, index);
+		}
+
+		Project project = debugContext.getProject();
+		return DotNetPsiFacade.getInstance(project).findTypes(qualifiedName, debugContext.getResolveScope(), genericCount);
+	}
+
 	@NotNull
 	public static String toVMQualifiedName(DotNetTypeDeclaration qualifiedElement)
 	{

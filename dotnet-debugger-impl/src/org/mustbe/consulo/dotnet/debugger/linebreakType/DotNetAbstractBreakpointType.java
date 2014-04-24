@@ -8,8 +8,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointTypeBase;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import mono.debugger.TypeMirror;
 import mono.debugger.VirtualMachine;
-import mono.debugger.request.EventRequest;
 
 /**
  * @author VISTALL
@@ -22,9 +22,6 @@ public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBa
 		super(id, title, editorsProvider);
 	}
 
-	@Nullable
-	public abstract EventRequest createEventRequest(
-			@NotNull Project project,
-			@NotNull VirtualMachine virtualMachine,
-			@NotNull XLineBreakpoint breakpoint);
+	public abstract boolean createRequest(
+			@NotNull Project project, @NotNull VirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint, TypeMirror typeMirror);
 }
