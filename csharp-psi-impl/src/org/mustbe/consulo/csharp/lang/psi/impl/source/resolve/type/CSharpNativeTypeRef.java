@@ -31,7 +31,7 @@ public class CSharpNativeTypeRef extends DotNetTypeRef.Adapter implements DotNet
 {
 	public static final CSharpNativeTypeRef BOOL = new CSharpNativeTypeRef("bool", "System.Boolean");
 	public static final CSharpNativeTypeRef DOUBLE = new CSharpNativeTypeRef("double", "System.Double");
-	public static final CSharpNativeTypeRef FLOAT = new CSharpNativeTypeRef("float", "System.Float");
+	public static final CSharpNativeTypeRef FLOAT = new CSharpNativeTypeRef("float", "System.Single");
 	public static final CSharpNativeTypeRef CHAR = new CSharpNativeTypeRef("char", "System.Char");
 	public static final CSharpNativeTypeRef OBJECT = new CSharpNativeTypeRef("object", "System.Object");
 	public static final CSharpNativeTypeRef STRING = new CSharpNativeTypeRef("string", "System.String");
