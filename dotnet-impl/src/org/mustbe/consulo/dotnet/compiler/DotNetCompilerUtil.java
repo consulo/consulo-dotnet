@@ -32,6 +32,7 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import lombok.val;
@@ -86,14 +87,7 @@ public class DotNetCompilerUtil
 						path = virtualFile.getPath();
 					}
 
-					if(toSystemInDepend)
-					{
-						list.add(FileUtil.toSystemIndependentName(path));
-					}
-					else
-					{
-						list.add(path);
-					}
+					add(list, toSystemInDepend, path);
 				}
 			}
 
@@ -119,15 +113,7 @@ public class DotNetCompilerUtil
 					String depCurrentLayerName = dependencyExtension.getCurrentLayerName();
 					MainConfigurationLayer depCurrentLayer = (MainConfigurationLayer) dependencyExtension.getCurrentLayer();
 					String extract = DotNetMacros.extract(depModule, depCurrentLayerName, depCurrentLayer);
-					if(toSystemInDepend)
-					{
-						list.add(FileUtil.toSystemIndependentName(extract));
-					}
-					else
-					{
-						list.add(extract);
-					}
-
+					add(list, toSystemInDepend, extract);
 					if(forDependCopy)
 					{
 						Set<String> strings = collectDependencies(depModule, depCurrentLayerName, depCurrentLayer, toSystemInDepend, true);
@@ -140,5 +126,15 @@ public class DotNetCompilerUtil
 		}, null);
 
 		return list;
+	}
+
+	private static void add(Set<String> list, boolean toSystemInDepend, String extract)
+	{
+		if(toSystemInDepend)
+		{
+			extract = FileUtil.toSystemIndependentName(extract);
+		}
+
+		list.add(StringUtil.QUOTER.fun(extract));
 	}
 }
