@@ -147,7 +147,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		}
 
 		val vmQualifiedName = DotNetVirtualMachineUtil.toVMQualifiedName(typeDeclaration);
-		if(typeMirror != null && !Comparing.equal(vmQualifiedName, typeMirror.qualifiedName()))
+		if(typeMirror != null && !Comparing.equal(vmQualifiedName, typeMirror.originalQualifiedName()))
 		{
 			return WRONG_TYPE;
 		}
