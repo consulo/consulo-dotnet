@@ -4,18 +4,13 @@ import java.io.File;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugThread;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
@@ -23,11 +18,9 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -121,7 +114,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			return null;
 		}
 
-		PsiElement psiElement = findPsiElement(project, fileByUrl, lineBreakpoint.getLine());
+		PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(project, fileByUrl, lineBreakpoint.getLine());
 		if(psiElement == null)
 		{
 			return null;
@@ -201,7 +194,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		{
 			AssemblyMirror[] assemblies = virtualMachine.rootAppDomain().assemblies();
 
-			File outputFile = getOutputFile(parent);
+			File outputFile = DotNetDebuggerUtil.getOutputFile(parent);
 			if(outputFile == null)
 			{
 				return null;
@@ -217,43 +210,5 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			}
 			return null;
 		}
-	}
-
-	private static File getOutputFile(PsiElement element)
-	{
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(element, DotNetModuleExtension.class);
-		if(extension == null)
-		{
-			return null;
-		}
-		String currentLayerName = extension.getCurrentLayerName();
-		MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
-		val exeFile = DotNetMacros.extract(extension.getModule(), currentLayerName, currentLayer);
-		return new File(exeFile);
-	}
-
-	@Nullable
-	protected PsiElement findPsiElement(@NotNull final Project project, @NotNull final VirtualFile file, final int line)
-	{
-
-		final Document doc = FileDocumentManager.getInstance().getDocument(file);
-		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(doc);
-		if(psi == null)
-		{
-			return null;
-		}
-
-		int offset = doc.getLineStartOffset(line);
-		int endOffset = doc.getLineEndOffset(line);
-		for(int i = offset + 1; i < endOffset; i++)
-		{
-			PsiElement el = psi.findElementAt(i);
-			if(el != null && !(el instanceof PsiWhiteSpace))
-			{
-				return el;
-			}
-		}
-
-		return null;
 	}
 }

@@ -5,18 +5,19 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
-import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
+import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterListOwner;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNavigatable;
 import mono.debugger.LocalVariableOrParameterMirror;
-import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
 import mono.debugger.StackFrameMirror;
 import mono.debugger.TypeMirror;
@@ -42,57 +43,48 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 	@Override
 	public void computeSourcePosition(@NotNull XNavigatable navigatable)
 	{
-		MethodMirror method = myFrame.location().method();
-
-		DotNetTypeDeclaration[] types = findTypesByQualifiedName(method.declaringType());
-
-		if(types.length == 0)
+		String sourcePath = myFrame.location().sourcePath();
+		if(sourcePath == null)
+		{
+			return;
+		}
+		VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(sourcePath);
+		if(fileByPath == null)
+		{
+			return;
+		}
+		PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(myDebugContext.getProject(), fileByPath, myFrame.location().lineNumber() - 1);
+		if(psiElement == null)
+		{
+			return;
+		}
+		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(psiElement, DotNetCodeBlockOwner.class);
+		if(codeBlockOwner == null)
 		{
 			return;
 		}
 
-		MethodParameterMirror[] parameterMirrors = method.parameters();
-		for(DotNetTypeDeclaration type : types)
+		// search parameterlist owner
+		DotNetParameterListOwner parameterListOwner = PsiTreeUtil.getParentOfType(codeBlockOwner, DotNetParameterListOwner.class, false);
+		if(parameterListOwner == null)
 		{
-			for(DotNetNamedElement dotNetNamedElement : type.getMembers())
-			{
-				if(!(dotNetNamedElement instanceof DotNetLikeMethodDeclaration))
-				{
-					continue;
-				}
-
-				if(!Comparing.equal(dotNetNamedElement.getName(), method.name()))
-				{
-					continue;
-				}
-
-				if(((DotNetLikeMethodDeclaration) dotNetNamedElement).getGenericParametersCount() != method.genericParameterCount())
-				{
-					continue;
-				}
-
-				DotNetParameter[] parameters = ((DotNetLikeMethodDeclaration) dotNetNamedElement).getParameters();
-
-				if(parameters.length != parameterMirrors.length)
-				{
-					continue;
-				}
-
-				//TODO [VISTALL] better validation
-
-				int i1 = ArrayUtil.indexOf(parameterMirrors, myParameter);
-
-				DotNetParameter parameter = parameters[i1];
-				PsiElement nameIdentifier = parameter.getNameIdentifier();
-				if(nameIdentifier == null)
-				{
-					return;
-				}
-				navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(parameter.getContainingFile().getVirtualFile(),
-						nameIdentifier.getTextOffset()));
-				return;
-			}
+			return;
 		}
+
+		DotNetParameter[] psiParameters = parameterListOwner.getParameters();
+
+		MethodParameterMirror[] parameterMirrors = myFrame.location().method().parameters();
+
+		int i1 = ArrayUtil.indexOf(parameterMirrors, myParameter);
+
+		DotNetParameter parameter = psiParameters[i1];
+		PsiElement nameIdentifier = parameter.getNameIdentifier();
+		if(nameIdentifier == null)
+		{
+			return;
+		}
+		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(parameter.getContainingFile().getVirtualFile(),
+				nameIdentifier.getTextOffset()));
 	}
 
 	@NotNull
