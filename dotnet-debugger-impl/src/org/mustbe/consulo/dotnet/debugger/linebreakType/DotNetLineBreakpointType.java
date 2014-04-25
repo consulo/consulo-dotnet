@@ -14,6 +14,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -34,7 +35,7 @@ import mono.debugger.MethodMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.VirtualMachine;
 import mono.debugger.protocol.Method_GetDebugInfo;
-import mono.debugger.request.EventRequest;
+import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequestManager;
 
 /**
@@ -43,6 +44,16 @@ import mono.debugger.request.EventRequestManager;
  */
 public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 {
+	enum BreakpointResult
+	{
+		INVALID,
+		WRONG_TYPE,
+		OK
+	}
+
+	private static final Pair<BreakpointResult, Location> INVALID = Pair.create(BreakpointResult.INVALID, null);
+	private static final Pair<BreakpointResult, Location> WRONG_TYPE = Pair.create(BreakpointResult.WRONG_TYPE, null);
+
 	@NotNull
 	public static DotNetLineBreakpointType getInstance()
 	{
@@ -80,75 +91,78 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	{
 		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
-		EventRequest eventRequest = createEventRequest(project, virtualMachine, breakpoint, typeMirror);
-		if(eventRequest == null)
+		Pair<BreakpointResult, Location> pair = findLocationImpl(project, virtualMachine, breakpoint, typeMirror);
+		switch(pair.getFirst())
 		{
-			breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
-			return false;
+			case WRONG_TYPE:
+				return false;
+			default:
+			case INVALID:
+				breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
+				return false;
+			case OK:
+				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+				BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(pair.getSecond());
+				breakpointRequest.enable();
+
+				breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
+				breakpoint.putUserData(DotNetDebugThread.EVENT_REQUEST, breakpointRequest);
+				return true;
 		}
-		breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
-		eventRequest.enable();
-		breakpoint.putUserData(DotNetDebugThread.EVENT_REQUEST, eventRequest);
-		return true;
 	}
 
-	@Nullable
-	public EventRequest createEventRequest(
-			@NotNull Project project, @NotNull VirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint, TypeMirror typeMirror)
-	{
-		Location location = findLocationImpl(project, virtualMachine, breakpoint, typeMirror);
-		if(location == null)
-		{
-			return null;
-		}
-		EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-		return eventRequestManager.createBreakpointRequest(location);
-	}
-
-	public Location findLocationImpl(
+	@NotNull
+	public Pair<BreakpointResult, Location> findLocationImpl(
 			Project project, VirtualMachine virtualMachine, XLineBreakpoint<?> lineBreakpoint, @Nullable TypeMirror typeMirror)
 	{
 		VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(lineBreakpoint.getFileUrl());
 		if(fileByUrl == null)
 		{
-			return null;
+			return INVALID;
 		}
 
 		PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(project, fileByUrl, lineBreakpoint.getLine());
 		if(psiElement == null)
 		{
-			return null;
+			return INVALID;
 		}
 		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(psiElement, DotNetCodeBlockOwner.class, false);
 		if(codeBlockOwner == null)
 		{
-			return null;
+			return INVALID;
 		}
 		PsiElement codeBlock = codeBlockOwner.getCodeBlock();
 		if(codeBlock == null)
 		{
-			return null;
+			return INVALID;
 		}
 		if(!PsiTreeUtil.isAncestor(codeBlock, psiElement, false))
 		{
-			return null;
+			return INVALID;
 		}
 		DotNetTypeDeclaration typeDeclaration = PsiTreeUtil.getParentOfType(codeBlockOwner, DotNetTypeDeclaration.class);
 		if(typeDeclaration == null)
 		{
-			return null;
+			return INVALID;
 		}
 
-		TypeMirror mirror = typeMirror == null ? findTypeMirror(virtualMachine, fileByUrl, typeDeclaration) : typeMirror;
+		val vmQualifiedName = DotNetVirtualMachineUtil.toVMQualifiedName(typeDeclaration);
+		if(typeMirror != null && !Comparing.equal(vmQualifiedName, typeMirror.qualifiedName()))
+		{
+			return WRONG_TYPE;
+		}
+
+		TypeMirror mirror = typeMirror == null ? findTypeMirror(vmQualifiedName, virtualMachine, fileByUrl, typeDeclaration) : typeMirror;
 
 		if(mirror == null)
 		{
-			return null;
+			return INVALID;
 		}
 
 		MethodMirror targetMirror = null;
 		int index = -1;
-		highLoop:for(MethodMirror methodMirror : mirror.methods())
+		highLoop:
+		for(MethodMirror methodMirror : mirror.methods())
 		{
 			for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
 			{
@@ -163,16 +177,16 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 
 		if(targetMirror == null)
 		{
-			return null;
+			return INVALID;
 		}
 
-		return new LocationImpl(virtualMachine, targetMirror, index);
+		return Pair.<BreakpointResult, Location>create(BreakpointResult.OK, new LocationImpl(virtualMachine, targetMirror, index));
 	}
 
-	private TypeMirror findTypeMirror(VirtualMachine virtualMachine, VirtualFile virtualFile, DotNetTypeDeclaration parent)
+	private TypeMirror findTypeMirror(final String vmQualifiedName, VirtualMachine virtualMachine, VirtualFile virtualFile,
+			DotNetTypeDeclaration parent)
 	{
-		virtualMachine.eventRequestManager().createAppDomainCreate().enable();
-		val vmQualifiedName = DotNetVirtualMachineUtil.toVMQualifiedName(parent);
+
 		if(virtualMachine.isAtLeastVersion(2, 9))
 		{
 			TypeMirror[] typesByQualifiedName = virtualMachine.findTypesByQualifiedName(vmQualifiedName, false);
