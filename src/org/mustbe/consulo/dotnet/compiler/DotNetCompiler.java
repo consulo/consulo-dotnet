@@ -151,6 +151,11 @@ public class DotNetCompiler implements TranslatingCompiler
 					compileContext.addMessage(CompilerMessageCategory.ERROR, s, null, -1, -1);
 				}
 			}
+			for(String s : processOutput.getStderrLines())
+			{
+				compileContext.addMessage(CompilerMessageCategory.ERROR, s, null, -1, -1);
+			}
+			compileContext.addMessage(CompilerMessageCategory.INFORMATION, "Exit code: " + processOutput.getExitCode(), null, -1, -1);
 		}
 		catch(Exception e)
 		{
