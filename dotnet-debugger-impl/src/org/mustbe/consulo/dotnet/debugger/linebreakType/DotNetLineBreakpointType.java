@@ -140,13 +140,13 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		{
 			return null;
 		}
-		PsiElement parent = codeBlockOwner.getParent();
-		if(!(parent instanceof DotNetTypeDeclaration))
+		DotNetTypeDeclaration typeDeclaration = PsiTreeUtil.getParentOfType(codeBlockOwner, DotNetTypeDeclaration.class);
+		if(typeDeclaration == null)
 		{
 			return null;
 		}
 
-		TypeMirror mirror = typeMirror == null ? findTypeMirror(virtualMachine, fileByUrl, (DotNetTypeDeclaration) parent) : typeMirror;
+		TypeMirror mirror = typeMirror == null ? findTypeMirror(virtualMachine, fileByUrl, typeDeclaration) : typeMirror;
 
 		if(mirror == null)
 		{
