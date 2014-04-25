@@ -16,21 +16,15 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
- * Index Method
- * Property
- * Event
+ * @since 25.04.14
  */
-public interface DotNetXXXAccessor extends DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetNamedElement, DotNetCodeBlockOwner
+public interface DotNetCodeBlockOwner extends DotNetElement
 {
-	String VALUE = "value";
-
-	@NotNull
-	IElementType getAccessorType();
+	@Nullable
+	PsiElement getCodeBlock();
 }
