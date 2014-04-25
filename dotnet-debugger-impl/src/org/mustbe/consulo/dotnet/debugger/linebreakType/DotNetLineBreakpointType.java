@@ -10,8 +10,7 @@ import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
@@ -127,12 +126,12 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		{
 			return null;
 		}
-		DotNetMethodDeclaration methodDeclaration = PsiTreeUtil.getParentOfType(psiElement, DotNetMethodDeclaration.class, false);
-		if(methodDeclaration == null)
+		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(psiElement, DotNetCodeBlockOwner.class, false);
+		if(codeBlockOwner == null)
 		{
 			return null;
 		}
-		PsiElement codeBlock = methodDeclaration.getCodeBlock();
+		PsiElement codeBlock = codeBlockOwner.getCodeBlock();
 		if(codeBlock == null)
 		{
 			return null;
@@ -141,7 +140,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		{
 			return null;
 		}
-		PsiElement parent = methodDeclaration.getParent();
+		PsiElement parent = codeBlockOwner.getParent();
 		if(!(parent instanceof DotNetTypeDeclaration))
 		{
 			return null;
@@ -155,12 +154,17 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		}
 
 		MethodMirror targetMirror = null;
-		for(MethodMirror methodMirror : mirror.methods())
+		int index = -1;
+		highLoop:for(MethodMirror methodMirror : mirror.methods())
 		{
-			if(isValidMethodMirror(methodDeclaration, methodMirror))
+			for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
 			{
-				targetMirror = methodMirror;
-				break;
+				if(entry.line == (lineBreakpoint.getLine() + 1))
+				{
+					targetMirror = methodMirror;
+					index = entry.offset;
+					break highLoop;
+				}
 			}
 		}
 
@@ -169,19 +173,6 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			return null;
 		}
 
-		int index = -1;
-		for(Method_GetDebugInfo.Entry entry : targetMirror.debugInfo())
-		{
-			if(entry.line == (lineBreakpoint.getLine() + 1))
-			{
-				index = entry.offset;
-				break;
-			}
-		}
-		if(index == -1)
-		{
-			return null;
-		}
 		return new LocationImpl(virtualMachine, targetMirror, index);
 	}
 
@@ -239,21 +230,6 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
 		val exeFile = DotNetMacros.extract(extension.getModule(), currentLayerName, currentLayer);
 		return new File(exeFile);
-	}
-
-	private boolean isValidMethodMirror(DotNetMethodDeclaration methodDeclaration, MethodMirror methodMirror)
-	{
-		if(methodMirror.genericParameterCount() != methodDeclaration.getGenericParametersCount())
-		{
-			return false;
-		}
-		DotNetParameter[] parameters = methodDeclaration.getParameters();
-		if(parameters.length != methodMirror.parameters().length)
-		{
-			return false;
-		}
-		//TODO [VISTALL]
-		return Comparing.equal(methodDeclaration.getName(), methodMirror.name());
 	}
 
 	@Nullable
