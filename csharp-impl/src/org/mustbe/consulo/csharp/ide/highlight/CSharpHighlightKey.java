@@ -16,13 +16,9 @@
 
 package org.mustbe.consulo.csharp.ide.highlight;
 
-import java.awt.Font;
-
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.ui.Gray;
 
 /**
  * @author VISTALL
@@ -60,6 +56,5 @@ public interface CSharpHighlightKey
 			DefaultLanguageHighlighterColors.BLOCK_COMMENT);
 	TextAttributesKey LINE_COMMENT = TextAttributesKey.createTextAttributesKey(CSharpLanguage.INSTANCE,
 			DefaultLanguageHighlighterColors.LINE_COMMENT);
-	TextAttributesKey DISABLED_BLOCK = TextAttributesKey.createTextAttributesKey("CSHARP_DISABLED_BLOCK", new TextAttributes(null, Gray._240, null,
-			null, Font.PLAIN));
+	TextAttributesKey DISABLED_BLOCK = TextAttributesKey.createTextAttributesKey("CSHARP_DISABLED_BLOCK");
 }

@@ -42,6 +42,10 @@
 		<internalFileTemplate name="CSharpFile"/>
 		<internalFileTemplate name="CSharpAssemblyFile"/>
 
+		<additionalTextAttributes scheme="Darcula" file="/colorScheme/CSharpDarcula.xml" />
+		<additionalTextAttributes scheme="Default" file="/colorScheme/CSharpDefault.xml" />
+		<additionalTextAttributes scheme="Consulo Light" file="/colorScheme/CSharpDefault.xml" />
+
 		<eapDescriptor implementation="org.mustbe.consulo.csharp.ide.assemblyInfo.CSharpAssemblyFileEditorProvider$EapDescriptor" />
 
 		<applicationService serviceInterface="org.mustbe.consulo.csharp.lang.CSharpLanguageVersionHelper"
