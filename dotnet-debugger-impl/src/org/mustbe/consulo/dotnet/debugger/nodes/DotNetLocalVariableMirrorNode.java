@@ -10,6 +10,7 @@ import mono.debugger.LocalVariableMirror;
 import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.StackFrameMirror;
 import mono.debugger.TypeMirror;
+import mono.debugger.TypeTag;
 import mono.debugger.Value;
 import mono.debugger.util.ImmutablePair;
 
@@ -41,7 +42,8 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 	public Icon getIconForVariable()
 	{
 		Icon icon = null;
-		if(PRIMITIVE_TYPES.containsKey(getTypeOfVariable().qualifiedName()) || isBoolean())
+		TypeTag typeTag = typeTag();
+		if(typeTag != null && typeTag != TypeTag.String)
 		{
 			icon = AllIcons.Debugger.Db_primitive;
 		}

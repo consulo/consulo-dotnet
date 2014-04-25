@@ -1,17 +1,13 @@
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
@@ -19,7 +15,6 @@ import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
-import edu.arizona.cs.mbel.signature.SignatureConstants;
 import mono.debugger.*;
 
 /**
@@ -28,47 +23,46 @@ import mono.debugger.*;
  */
 public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirrorNode
 {
-	public static final Map<String, Byte> PRIMITIVE_TYPES = new HashMap<String, Byte>()
-	{
-		{
-			put(DotNetTypes.System_Int32, SignatureConstants.ELEMENT_TYPE_I4);
-		}
-	};
-
 	private XValueModifier myValueModifier = new XValueModifier()
 	{
 		@Override
 		public void setValue(@NotNull String expression, @NotNull XModificationCallback callback)
 		{
 			TypeMirror typeOfVariable = getTypeOfVariable();
+			VirtualMachine virtualMachine = typeOfVariable.virtualMachine();
 
-			AppDomainMirror appDomainMirror = typeOfVariable.virtualMachine().rootAppDomain();
+			TypeTag typeTag = typeTag();
+			assert typeTag != null;
+
+			AppDomainMirror appDomainMirror = virtualMachine.rootAppDomain();
 
 			Value<?> setValue = null;
-			if(isString())
+			switch(typeTag)
 			{
-				if(expression.equals("null"))
-				{
-					setValue = new NoObjectValueMirror(typeOfVariable.virtualMachine());
-				}
-				else
-				{
-					expression = StringUtil.unquoteString(expression);
+				case String:
+					if(expression.equals("null"))
+					{
+						setValue = new NoObjectValueMirror(virtualMachine);
+					}
+					else
+					{
+						expression = StringUtil.unquoteString(expression);
 
-					setValue = appDomainMirror.createString(expression);
-				}
-			}
-			else if(isBoolean())
-			{
-				setValue = new BooleanValueMirror(typeOfVariable.virtualMachine(), Boolean.valueOf(expression));
-			}
-			else
-			{
-				Byte tag = PRIMITIVE_TYPES.get(typeOfVariable.qualifiedName());
-				if(tag != null)
-				{
-					setValue = new NumberValueMirror(typeOfVariable.virtualMachine(), tag, Double.parseDouble(expression));
-				}
+						setValue = appDomainMirror.createString(expression);
+					}
+					break;
+				case Char:
+					String chars = StringUtil.unquoteString(expression);
+					if(chars.length() == 1)
+					{
+						setValue = new CharValueMirror(virtualMachine, chars.charAt(0));
+					}
+					break;
+				case Boolean:
+					setValue = new BooleanValueMirror(virtualMachine, Boolean.valueOf(expression));
+					break;
+				default:
+					break;
 			}
 
 			if(setValue != null)
@@ -96,14 +90,23 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 			{
 				return null;
 			}
-			String valueOfString = String.valueOf(valueOfVariable.value());
-			if(isString())
-			{
-				return StringUtil.QUOTER.fun(valueOfString);
-			}
+
 			if(valueOfVariable instanceof NoObjectValueMirror)
 			{
 				return "null";
+			}
+
+			String valueOfString = String.valueOf(valueOfVariable.value());
+			TypeTag typeTag = typeTag();
+			assert typeTag != null;
+
+			if(typeTag == TypeTag.String)
+			{
+				return StringUtil.QUOTER.fun(valueOfString);
+			}
+			else if(typeTag == TypeTag.Char)
+			{
+				return StringUtil.SINGLE_QUOTER.fun(valueOfString);
 			}
 			return valueOfString;
 		}
@@ -118,16 +121,11 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		myThreadMirror = threadMirror;
 	}
 
-	public boolean isString()
+	@Nullable
+	public TypeTag typeTag()
 	{
 		TypeMirror typeOfVariable = getTypeOfVariable();
-		return Comparing.equal(typeOfVariable.qualifiedName(), DotNetTypes.System_String);
-	}
-
-	public boolean isBoolean()
-	{
-		TypeMirror typeOfVariable = getTypeOfVariable();
-		return Comparing.equal(typeOfVariable.qualifiedName(), DotNetTypes.System_Boolean);
+		return TypeTag.byType(typeOfVariable.qualifiedName());
 	}
 
 	@NotNull
@@ -142,7 +140,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@Override
 	public XValueModifier getModifier()
 	{
-		if(isString() || PRIMITIVE_TYPES.containsKey(getTypeOfVariable().qualifiedName()) || isBoolean())
+		if(typeTag() != null)
 		{
 			return myValueModifier;
 		}
@@ -212,6 +210,12 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 						public void visitStringValue(@NotNull StringValueMirror value, @NotNull String mainValue)
 						{
 							xValueTextRenderer.renderStringValue(mainValue);
+						}
+
+						@Override
+						public void visitCharValue(@NotNull CharValueMirror valueMirror, @NotNull Character mainValue)
+						{
+							xValueTextRenderer.renderCharValue(String.valueOf(mainValue));
 						}
 
 						@Override
