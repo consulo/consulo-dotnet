@@ -30,6 +30,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		public void setValue(@NotNull String expression, @NotNull XModificationCallback callback)
 		{
 			TypeMirror typeOfVariable = getTypeOfVariable();
+			assert typeOfVariable != null;
 			VirtualMachine virtualMachine = typeOfVariable.virtualMachine();
 
 			TypeTag typeTag = typeTag();

@@ -87,7 +87,7 @@ public class DotNetArrayValueMirrorNode extends DotNetAbstractVariableMirrorNode
 	@Override
 	public void setValueForVariable(@NotNull Value<?> value)
 	{
-		//TODO [VISTALL] set values
+		myArrayValueMirror.set(myIndex, value);
 	}
 
 	@Nullable
