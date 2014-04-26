@@ -150,33 +150,41 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		final Value<?> value = getValueOfVariable();
-		if(!(value instanceof ObjectValueMirror))
-		{
-			return;
-		}
-
-		TypeMirror type = value.type();
-
-		assert type != null;
-
 		XValueChildrenList childrenList = new XValueChildrenList();
 
-		childrenList.add(new DotNetObjectValueMirrorNode(myDebugContext, myThreadMirror, type, null));
-
-		List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
-		for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
+		TypeMirror typeOfVariable = getTypeOfVariable();
+		if(typeOfVariable.isArray())
 		{
-			if(fieldMirror.isStatic())
+
+		}
+		else
+		{
+			final Value<?> value = getValueOfVariable();
+			if(!(value instanceof ObjectValueMirror))
 			{
-				continue;
+				return;
 			}
 
-			if(fieldMirror instanceof PropertyMirror && ((PropertyMirror) fieldMirror).isArrayProperty())
+			TypeMirror type = value.type();
+
+			assert type != null;
+
+			childrenList.add(new DotNetObjectValueMirrorNode(myDebugContext, myThreadMirror, type, null));
+
+			List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
+			for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
 			{
-				continue;
+				if(fieldMirror.isStatic())
+				{
+					continue;
+				}
+
+				if(fieldMirror instanceof PropertyMirror && ((PropertyMirror) fieldMirror).isArrayProperty())
+				{
+					continue;
+				}
+				childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldMirror, myThreadMirror, (ObjectValueMirror) value));
 			}
-			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldMirror, myThreadMirror, (ObjectValueMirror) value));
 		}
 		node.addChildren(childrenList, true);
 	}
@@ -232,6 +240,6 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 					});
 				}
 			}
-		}, valueOfVariable instanceof ObjectValueMirror);
+		}, valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror);
 	}
 }
