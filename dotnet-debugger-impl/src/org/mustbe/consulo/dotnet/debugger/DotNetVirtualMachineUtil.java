@@ -16,7 +16,7 @@ public class DotNetVirtualMachineUtil
 	@NotNull
 	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
 	{
-		String qualifiedName = typeMirror.originalQualifiedName();
+		String qualifiedName = typeMirror.qualifiedName();
 		int index = qualifiedName.indexOf(XStubUtil.GENERIC_MARKER_IN_NAME);
 
 		int genericCount = 0;
@@ -60,7 +60,7 @@ public class DotNetVirtualMachineUtil
 			return;
 		}
 
-		builder.append(XStubUtil.getUserTypeDefName(typeMirror.originalQualifiedName())); // cut to `
+		builder.append(XStubUtil.getUserTypeDefName(typeMirror.qualifiedName())); // cut to `
 		builder.append("<");
 		TypeMirror[] typeMirrors = typeMirror.genericArguments();
 		for(int i = 0; i < typeMirrors.length; i++)
