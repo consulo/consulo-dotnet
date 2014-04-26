@@ -54,6 +54,10 @@ public class MethodAcceptorImpl
 			{
 				DotNetExpression expression = expressions[i];
 				DotNetParameter parameter = parameters[i];
+				if(expression == null)
+				{
+					return false;
+				}
 
 				DotNetTypeRef expressionType = expression.toTypeRef();
 				DotNetTypeRef parameterType = parameter.toTypeRef();
