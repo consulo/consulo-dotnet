@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -41,13 +42,15 @@ public abstract class AbstractTypedMirrorNode extends XNamedValue
 		myDebugContext = debugContext;
 	}
 
-	@NotNull
+	@Nullable
 	public abstract TypeMirror getTypeOfVariable();
 
 	@Override
 	public void computeTypeSourcePosition(@NotNull XNavigatable navigatable)
 	{
-		DotNetTypeDeclaration[] types = findTypesByQualifiedName(getTypeOfVariable());
+		TypeMirror typeOfVariable = getTypeOfVariable();
+		assert typeOfVariable != null;
+		DotNetTypeDeclaration[] types = findTypesByQualifiedName(typeOfVariable);
 		if(types.length == 0)
 		{
 			return;
@@ -71,6 +74,6 @@ public abstract class AbstractTypedMirrorNode extends XNamedValue
 	@Override
 	public boolean canNavigateToTypeSource()
 	{
-		return true;
+		return getTypeOfVariable() != null;
 	}
 }

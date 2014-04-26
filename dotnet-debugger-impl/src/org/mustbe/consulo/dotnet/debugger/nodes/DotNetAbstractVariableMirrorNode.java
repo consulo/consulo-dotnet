@@ -15,6 +15,7 @@ import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import lombok.val;
 import mono.debugger.*;
 
 /**
@@ -125,6 +126,10 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	public TypeTag typeTag()
 	{
 		TypeMirror typeOfVariable = getTypeOfVariable();
+		if(typeOfVariable == null)
+		{
+			return null;
+		}
 		return TypeTag.byType(typeOfVariable.qualifiedName());
 	}
 
@@ -150,16 +155,32 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		XValueChildrenList childrenList = new XValueChildrenList();
+		val typeOfVariable = getTypeOfVariable();
+		if(typeOfVariable == null)
+		{
+			return;
+		}
 
-		TypeMirror typeOfVariable = getTypeOfVariable();
+		XValueChildrenList childrenList = new XValueChildrenList();
+		val value = getValueOfVariable();
 		if(typeOfVariable.isArray())
 		{
+			ArrayValueMirror arrayValueMirror = (ArrayValueMirror) value;
+			if(arrayValueMirror == null)
+			{
+				return;
+			}
+			int length = arrayValueMirror.length();
+			int min = Math.min(length, 100);
+			for(int i = 0; i < min; i++)
+			{
+				String name = getName() + "[" + i + "]";
 
+				childrenList.add(new DotNetArrayValueMirrorNode(myDebugContext, name, myThreadMirror, arrayValueMirror, i));
+			}
 		}
 		else
 		{
-			final Value<?> value = getValueOfVariable();
 			if(!(value instanceof ObjectValueMirror))
 			{
 				return;
@@ -200,7 +221,12 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 			@Override
 			public String getType()
 			{
-				return DotNetVirtualMachineUtil.formatNameWithGeneric(getTypeOfVariable());
+				TypeMirror typeOfVariable = getTypeOfVariable();
+				if(typeOfVariable == null)
+				{
+					return null;
+				}
+				return DotNetVirtualMachineUtil.formatNameWithGeneric(typeOfVariable);
 			}
 
 			@Override
@@ -221,6 +247,19 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 						}
 
 						@Override
+						public void visitArrayValue(@NotNull ArrayValueMirror value)
+						{
+							StringBuilder builder = new StringBuilder();
+							builder.append("{");
+							String type = DotNetVirtualMachineUtil.formatNameWithGeneric(value.type());
+							builder.append(type.replaceFirst("\\[\\]", "[" + value.length() + "]"));
+							builder.append("@");
+							builder.append(value.object().address());
+							builder.append("}");
+							xValueTextRenderer.renderValue(builder.toString());
+						}
+
+						@Override
 						public void visitCharValue(@NotNull CharValueMirror valueMirror, @NotNull Character mainValue)
 						{
 							xValueTextRenderer.renderCharValue(String.valueOf(mainValue));
@@ -236,6 +275,12 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 						public void visitNumberValue(@NotNull NumberValueMirror value, @NotNull Number mainValue)
 						{
 							xValueTextRenderer.renderNumericValue(String.valueOf(mainValue));
+						}
+
+						@Override
+						public void visitNoObjectValue(@NotNull NoObjectValueMirror value)
+						{
+							xValueTextRenderer.renderKeywordValue("null");
 						}
 					});
 				}
