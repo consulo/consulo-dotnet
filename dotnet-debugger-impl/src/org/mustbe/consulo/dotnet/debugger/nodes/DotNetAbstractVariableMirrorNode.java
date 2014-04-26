@@ -63,6 +63,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 					setValue = new BooleanValueMirror(virtualMachine, Boolean.valueOf(expression));
 					break;
 				default:
+					setValue = new NumberValueMirror(virtualMachine,typeTag.getTag(), Double.parseDouble(expression));
 					break;
 			}
 
