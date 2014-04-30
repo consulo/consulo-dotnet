@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.parser.exp.ExpressionParsing;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
+import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lang.LighterASTNode;
@@ -62,12 +63,12 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		public PsiBuilder.Marker marker;
 	}
 
-	protected static boolean parseTypeList(@NotNull CSharpBuilderWrapper builder)
+	protected static boolean parseTypeList(@NotNull CSharpBuilderWrapper builder, boolean varSupport)
 	{
 		boolean empty = true;
 		while(!builder.eof())
 		{
-			val marker = parseType(builder, BracketFailPolicy.NOTHING);
+			val marker = parseType(builder, BracketFailPolicy.NOTHING, varSupport);
 			if(marker == null)
 			{
 				if(!empty)
@@ -91,9 +92,9 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		return empty;
 	}
 
-	protected static TypeInfo parseType(@NotNull CSharpBuilderWrapper builder, BracketFailPolicy bracketFailPolicy)
+	protected static TypeInfo parseType(@NotNull CSharpBuilderWrapper builder, BracketFailPolicy bracketFailPolicy, boolean varSupport)
 	{
-		TypeInfo typeInfo = parseInnerType(builder);
+		TypeInfo typeInfo = parseInnerType(builder, varSupport);
 		if(typeInfo == null)
 		{
 			return null;
@@ -110,7 +111,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 
 			PsiBuilder.Marker mark = builder.mark();
 			builder.advanceLexer();
-			if(parseTypeList(builder))
+			if(parseTypeList(builder, varSupport))
 			{
 				builder.error("Type expected");
 			}
@@ -196,12 +197,20 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		return typeInfo;
 	}
 
-	private static TypeInfo parseInnerType(@NotNull CSharpBuilderWrapper builder)
+	private static TypeInfo parseInnerType(@NotNull CSharpBuilderWrapper builder, boolean varSupport)
 	{
 		TypeInfo typeInfo = new TypeInfo();
 
 		PsiBuilder.Marker marker = builder.mark();
+		if(varSupport)
+		{
+			builder.enableSoftKeyword(CSharpSoftTokens.VAR_KEYWORD);
+		}
 		IElementType tokenType = builder.getTokenType();
+		if(varSupport)
+		{
+			builder.disableSoftKeyword(CSharpSoftTokens.VAR_KEYWORD);
+		}
 
 		typeInfo.marker = marker;
 		if(CSharpTokenSets.NATIVE_TYPES.contains(tokenType))

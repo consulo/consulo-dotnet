@@ -29,7 +29,7 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 {
 	public static void parseFieldOrLocalVariableAtTypeWithDone(CSharpBuilderWrapper builder, PsiBuilder.Marker marker, IElementType to)
 	{
-		if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+		if(parseType(builder, BracketFailPolicy.NOTHING, false) == null)
 		{
 			builder.error("Type expected");
 
@@ -44,7 +44,7 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 	public static PsiBuilder.Marker parseFieldOrLocalVariableAtTypeWithRollback(CSharpBuilderWrapper builder, PsiBuilder.Marker marker,
 		IElementType to)
 	{
-		if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+		if(parseType(builder, BracketFailPolicy.NOTHING, false) == null)
 		{
 			builder.error("Type expected");
 

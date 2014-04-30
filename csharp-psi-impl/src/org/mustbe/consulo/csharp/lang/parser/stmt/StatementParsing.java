@@ -36,7 +36,7 @@ import lombok.val;
  */
 public class StatementParsing extends SharingParsingHelpers
 {
-	private static final TokenSet BODY_SOFT_KEYWORDS = TokenSet.orSet(TokenSet.create(VAR_KEYWORD, YIELD_KEYWORD), LinqParsing.LINQ_KEYWORDS);
+	private static final TokenSet BODY_SOFT_KEYWORDS = TokenSet.orSet(TokenSet.create(YIELD_KEYWORD), LinqParsing.LINQ_KEYWORDS);
 
 	public static PsiBuilder.Marker parse(CSharpBuilderWrapper wrapper)
 	{
@@ -260,7 +260,7 @@ public class StatementParsing extends SharingParsingHelpers
 
 			PsiBuilder.Marker varMarker = builder.mark();
 
-			if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+			if(parseType(builder, BracketFailPolicy.NOTHING, false) == null)
 			{
 				builder.error("Type expected");
 				varMarker.drop();
@@ -486,7 +486,7 @@ public class StatementParsing extends SharingParsingHelpers
 		{
 			PsiBuilder.Marker varMarker = builder.mark();
 
-			if(parseType(builder, BracketFailPolicy.NOTHING) != null)
+			if(parseType(builder, BracketFailPolicy.NOTHING, true) != null)
 			{
 				expect(builder, IDENTIFIER, "Identifier expected");
 			}
@@ -697,7 +697,7 @@ public class StatementParsing extends SharingParsingHelpers
 			builder.advanceLexer();
 		}
 
-		TypeInfo typeMarker = parseType(builder, BracketFailPolicy.DROP);
+		TypeInfo typeMarker = parseType(builder, BracketFailPolicy.DROP, true);
 		if(typeMarker == null)
 		{
 			if(constToken)

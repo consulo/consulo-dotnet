@@ -51,7 +51,7 @@ public class TypeDeclarationParsing extends SharingParsingHelpers
 					PsiBuilder.Marker mark = builderWrapper.mark();
 					builderWrapper.advanceLexer();  // colon
 
-					parseTypeList(builderWrapper);
+					parseTypeList(builderWrapper, false);
 					mark.done(EXTENDS_LIST);
 					return new Pair<PsiBuilder.Marker, Boolean>(mark, Boolean.FALSE);
 				}

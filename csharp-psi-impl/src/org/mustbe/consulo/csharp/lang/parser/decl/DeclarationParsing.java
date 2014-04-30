@@ -101,7 +101,7 @@ public class DeclarationParsing extends SharingParsingHelpers
 			}
 			else
 			{
-				TypeInfo typeInfo = parseType(builder, BracketFailPolicy.NOTHING);
+				TypeInfo typeInfo = parseType(builder, BracketFailPolicy.NOTHING, false);
 				if(typeInfo == null)
 				{
 					if(!modifierListPair.getSecond())

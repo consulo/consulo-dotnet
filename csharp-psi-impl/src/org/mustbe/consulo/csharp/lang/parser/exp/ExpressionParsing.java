@@ -191,7 +191,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 				return parseUnary(builder);
 
 			case TYPE:
-				TypeInfo typeInfo = parseType(builder, BracketFailPolicy.NOTHING);
+				TypeInfo typeInfo = parseType(builder, BracketFailPolicy.NOTHING, false);
 				return typeInfo == null ? null : typeInfo.marker;
 			default:
 				assert false : "Unexpected type: " + type;
@@ -223,7 +223,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 			final PsiBuilder.Marker typeCast = builder.mark();
 			builder.advanceLexer();
 
-			val typeInfo = parseType(builder, BracketFailPolicy.NOTHING);
+			val typeInfo = parseType(builder, BracketFailPolicy.NOTHING, false);
 			if(typeInfo == null || !expect(builder, RPAR, null))
 			{
 				typeCast.rollbackTo();
@@ -887,7 +887,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			parseModifierList(builder);
 
-			if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+			if(parseType(builder, BracketFailPolicy.NOTHING, false) == null)
 			{
 				builder.error("Type expected");
 			}
@@ -906,7 +906,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 			}
 			else
 			{
-				if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+				if(parseType(builder, BracketFailPolicy.NOTHING, false) == null)
 				{
 					builder.error("Type expected");
 				}
@@ -1025,7 +1025,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		builder.advanceLexer();
 
-		val typeMarker = parseType(builder, BracketFailPolicy.RETURN_BEFORE);
+		val typeMarker = parseType(builder, BracketFailPolicy.RETURN_BEFORE, false);
 		if(typeMarker != null)
 		{
 			while(builder.getTokenType() == LBRACKET)
@@ -1187,7 +1187,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		if(expect(builder, LPAR, "'(' expected"))
 		{
-			if(parseType(builder, BracketFailPolicy.NOTHING) == null)
+			if(parseType(builder, BracketFailPolicy.NOTHING, false) == null)
 			{
 				builder.error("Type expected");
 			}
