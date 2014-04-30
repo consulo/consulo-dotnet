@@ -23,7 +23,7 @@ LETTER=[a-z]|[A-Z]
 WHITE_SPACE=[ \n\r\t\f]+
 SINGLE_LINE_COMMENT="/""/"[^\r\n]*
 SINGLE_LINE_DOC_COMMENT="/""/""/"[^\r\n]*
-MULTI_LINE_STYLE_COMMENT=("/*"[^"*"]{COMMENT_TAIL})|"/*"
+MULTI_LINE_STYLE_COMMENT=("/*"{COMMENT_TAIL})|"/*"
 
 COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 CHARACTER_LITERAL="'"([^\\\'\r\n]|{ESCAPE_SEQUENCE})*("'"|\\)?
