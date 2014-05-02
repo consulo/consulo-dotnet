@@ -266,29 +266,7 @@ public class XStubBuilder
 					if(defaultValue != null)
 					{
 						builder.append(" = ");
-						//TODO [VISTALL] find better way to handle type
-						if(defaultValue.length == 1)
-						{
-							builder.append(toValue(TypeSignature.I1, typeDef, null, defaultValue));
-						}
-						else if(defaultValue.length == 2)
-						{
-							builder.append(toValue(TypeSignature.I2, typeDef, null, defaultValue));
-						}
-						else if(defaultValue.length == 4)
-						{
-							builder.append(toValue(TypeSignature.I4, typeDef, null, defaultValue));
-						}
-						else if(defaultValue.length == 8)
-						{
-							builder.append(toValue(TypeSignature.I8, typeDef, null, defaultValue));
-						}
-						else
-						{
-							XStubBuilder.LOGGER.error("Wrong byte count: " + defaultValue.length + ": " + typeDef.getFullName() + "." + field
-									.getName());
-							builder.append("0");
-						}
+						builder.append(fromByteArray(typeDef, field.getName(), defaultValue));
 					}
 					builder.append(",\n");
 					parent.getBlocks().add(new LineStubBlock(builder));
@@ -810,7 +788,7 @@ public class XStubBuilder
 		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
 		{
-			ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
+			/*ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
 			AbstractTypeReference valueType = valueTypeSignature.getValueType();
 			if(valueType instanceof TypeDef)
 			{
@@ -825,8 +803,8 @@ public class XStubBuilder
 						}
 					}
 				}
-			}
-			return "unsupported";
+			}   */
+			return fromByteArray(typeDef, methodDef == null ? "" : methodDef.getName(), value);
 		}
 		else if(signature.getType() == SignatureConstants.ELEMENT_TYPE_GENERIC_INST ||
 				signature.getType() == SignatureConstants.ELEMENT_TYPE_CLASS ||
@@ -842,6 +820,32 @@ public class XStubBuilder
 				Arrays.toString(value));
 
 		return StringUtil.QUOTER.fun("error");
+	}
+
+	//TODO [VISTALL] find better way to handle type
+	private static Object fromByteArray(TypeDef typeDef, String debugName, byte[] defaultValue)
+	{
+		if(defaultValue.length == 1)
+		{
+			return toValue(TypeSignature.I1, typeDef, null, defaultValue);
+		}
+		else if(defaultValue.length == 2)
+		{
+			return toValue(TypeSignature.I2, typeDef, null, defaultValue);
+		}
+		else if(defaultValue.length == 4)
+		{
+			return toValue(TypeSignature.I4, typeDef, null, defaultValue);
+		}
+		else if(defaultValue.length == 8)
+		{
+			return toValue(TypeSignature.I8, typeDef, null, defaultValue);
+		}
+		else
+		{
+			XStubBuilder.LOGGER.error("Wrong byte count: " + defaultValue.length + ": " + typeDef.getFullName() + "." + debugName);
+			return "0";
+		}
 	}
 
 	private static void processGenericParameterList(GenericParamOwner owner, StringBuilder builder)
