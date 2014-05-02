@@ -22,11 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpConversionMethodDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpConversionMethodStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
-import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfoUtil;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -85,15 +82,5 @@ public class CSharpConversionMethodStubElementType extends CSharpAbstractStubEle
 		int modifierMask = stubInputStream.readInt();
 		val typeInfo = CSharpStubTypeInfoUtil.read(stubInputStream);
 		return new CSharpConversionMethodStub(stubElement, name, qname, modifierMask, 0, typeInfo);
-	}
-
-	@Override
-	public void indexStub(@NotNull CSharpConversionMethodStub cSharpTypeStub, @NotNull IndexSink indexSink)
-	{
-		String name = cSharpTypeStub.getName();
-		if(!StringUtil.isEmpty(name))
-		{
-			indexSink.occurrence(CSharpIndexKeys.METHOD_INDEX, name);
-		}
 	}
 }
