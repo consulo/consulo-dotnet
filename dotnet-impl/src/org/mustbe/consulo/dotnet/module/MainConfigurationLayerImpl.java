@@ -45,6 +45,7 @@ import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptorUpdaters;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.ComboBox;
@@ -52,6 +53,7 @@ import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.AnActionButton;
@@ -66,6 +68,7 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
+import com.intellij.util.ui.UIUtil;
 import lombok.val;
 
 /**
@@ -133,9 +136,9 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@NotNull ModifiableRootModel modifiableRootModel, @NotNull final Runnable runnable)
+	public JComponent createConfigurablePanel(@NotNull final ModifiableRootModel modifiableRootModel, @NotNull final Runnable runnable)
 	{
-		DotNetMutableModuleExtension<?> extension = modifiableRootModel.getExtension(DotNetMutableModuleExtension.class);
+		final DotNetMutableModuleExtension<?> extension = modifiableRootModel.getExtension(DotNetMutableModuleExtension.class);
 		assert extension != null;
 
 		val panel = new JPanel(new VerticalFlowLayout());
@@ -196,38 +199,21 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 
 		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("target.label"), comp));
 
-		DotNetPsiFacade dotNetPsiFacade = DotNetPsiFacade.getInstance(modifiableRootModel.getProject());
-
-		DotNetTypeDeclaration selectedType = null;
-		List<Object> typeDeclarations = new ArrayList<Object>();
-		typeDeclarations.add(null);
-
-		String[] allTypeNames = dotNetPsiFacade.getAllTypeNames();
-		for(String allTypeName : allTypeNames)
-		{
-			DotNetTypeDeclaration type = dotNetPsiFacade.findType(allTypeName, extension.getScopeForResolving(false), 0);
-			if(type != null && DotNetRunUtil.hasEntryPoint(type))
-			{
-				typeDeclarations.add(type);
-				if(myMainType != null && Comparing.equal(myMainType, type.getPresentableQName()))
-				{
-					selectedType = type;
-				}
-			}
-		}
-
-		if(myMainType != null && selectedType == null)
-		{
-			typeDeclarations.add(myMainType);
-		}
-
-		CollectionComboBoxModel model = new CollectionComboBoxModel(typeDeclarations);
+		final List<Object> items = new ArrayList<Object>();
+		final CollectionComboBoxModel model = new CollectionComboBoxModel(items);
 		val mainClassList = new ComboBox(model);
+		mainClassList.setEnabled(false);
 		mainClassList.setRenderer(new ColoredListCellRenderer()
 		{
 			@Override
 			protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus)
 			{
+				if(!mainClassList.isEnabled())
+				{
+					append(value.toString());
+					return;
+				}
+
 				if(value instanceof DotNetTypeDeclaration)
 				{
 					setIcon(IconDescriptorUpdaters.getIcon((PsiElement) value, 0));
@@ -249,6 +235,11 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				if(!mainClassList.isEnabled())
+				{
+					return;
+				}
+
 				Object selectedItem = mainClassList.getSelectedItem();
 				if(selectedItem instanceof DotNetTypeDeclaration)
 				{
@@ -265,17 +256,81 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 			}
 		});
 
-		if(myMainType != null)
+		items.add("loading");
+		model.setSelectedItem(items.get(0));
+		model.update();
+
+		ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
 		{
-			if(selectedType != null)
+			@Override
+			public void run()
 			{
-				mainClassList.setSelectedItem(selectedType);
+				final DotNetPsiFacade dotNetPsiFacade = DotNetPsiFacade.getInstance(modifiableRootModel.getProject());
+
+				final Ref<DotNetTypeDeclaration> selected = Ref.create();
+				final List<Object> newItems = new ArrayList<Object>();
+				newItems.add(null);
+
+				ApplicationManager.getApplication().runReadAction(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						String[] allTypeNames = dotNetPsiFacade.getAllTypeNames();
+						for(String allTypeName : allTypeNames)
+						{
+							DotNetTypeDeclaration[] types = dotNetPsiFacade.getTypesByName(allTypeName, extension.getScopeForResolving(false));
+							for(DotNetTypeDeclaration type : types)
+							{
+								if(type != null && type.getGenericParametersCount() == 0 && DotNetRunUtil.hasEntryPoint(type))
+								{
+									newItems.add(type);
+									if(myMainType != null && Comparing.equal(myMainType, type.getPresentableQName()))
+									{
+										selected.set(type);
+									}
+								}
+							}
+						}
+					}
+				});
+
+				UIUtil.invokeLaterIfNeeded(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						DotNetTypeDeclaration selectedType = selected.get();
+						if(myMainType != null && selectedType == null)
+						{
+							newItems.add(myMainType);
+						}
+
+						items.clear();
+						items.addAll(newItems);
+
+						if(myMainType != null)
+						{
+							if(selectedType != null)
+							{
+								model.setSelectedItem(selectedType);
+							}
+							else
+							{
+								model.setSelectedItem(myMainType);
+							}
+						}
+						else
+						{
+							model.setSelectedItem(null);
+						}
+
+						mainClassList.setEnabled(true);
+						model.update();
+					}
+				});
 			}
-			else
-			{
-				mainClassList.setSelectedItem(myMainType);
-			}
-		}
+		});
 
 		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("main.type.label"), mainClassList));
 
