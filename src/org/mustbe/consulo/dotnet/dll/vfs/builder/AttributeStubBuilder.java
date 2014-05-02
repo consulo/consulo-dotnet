@@ -7,27 +7,22 @@ import java.util.List;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XByteUtil;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
 import edu.arizona.cs.mbel.mbel.CustomAttribute;
-import edu.arizona.cs.mbel.mbel.Field;
 import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
 import edu.arizona.cs.mbel.mbel.MethodRef;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import edu.arizona.cs.mbel.signature.CustomAttributeOwner;
-import edu.arizona.cs.mbel.signature.FieldAttributes;
 import edu.arizona.cs.mbel.signature.MethodImplAttributes;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
 import edu.arizona.cs.mbel.signature.SignatureConstants;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
 import edu.arizona.cs.mbel.signature.TypeSignature;
-import edu.arizona.cs.mbel.signature.ValueTypeSignature;
 import lombok.val;
 
 /**
@@ -86,11 +81,7 @@ public class AttributeStubBuilder
 	}
 
 	public static List<LineStubBlock> processAttributes(
-			CustomAttributeOwner owner,
-			TypeDef typeDef,
-			MethodDef methodDef,
-			String forceTarget,
-			ProcessAttributesCallback callback)
+			CustomAttributeOwner owner, TypeDef typeDef, MethodDef methodDef, String forceTarget, ProcessAttributesCallback callback)
 	{
 		CustomAttribute[] customAttributes = owner.getCustomAttributes();
 		if(customAttributes.length == 0)
@@ -252,63 +243,53 @@ public class AttributeStubBuilder
 	}
 
 	private static String getValueOfAttributeFromBlob(
-			TypeDef typeDef,
-			MethodDef methodDef,
-			ByteBuffer byteBuffer,
-			TypeSignature innerType)
+			TypeDef typeDef, MethodDef methodDef, ByteBuffer byteBuffer, TypeSignature innerType)
 	{
-		if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_SZARRAY)
+		switch(innerType.getType())
 		{
-			return "arrayError";
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_BOOLEAN)
-		{
-			return String.valueOf(byteBuffer.get() == 1);
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_I4)
-		{
-			return String.valueOf(byteBuffer.getInt());
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_U4)
-		{
-			return String.valueOf(byteBuffer.getDWORD());
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_CLASS)
-		{
-			//TypeSignature parse = TypeSignatureParser.parse(byteBuffer, null);
+			case SignatureConstants.ELEMENT_TYPE_SZARRAY:
+				return "arrayError";
+			case SignatureConstants.ELEMENT_TYPE_BOOLEAN:
+				return String.valueOf(byteBuffer.get() == 1);
+			case SignatureConstants.ELEMENT_TYPE_I1:
+				return String.valueOf(byteBuffer.get());
+			case SignatureConstants.ELEMENT_TYPE_U1:
+				return String.valueOf(byteBuffer.get() & 0xFF);
+			case SignatureConstants.ELEMENT_TYPE_I2:
+				return String.valueOf(byteBuffer.getShort());
+			case SignatureConstants.ELEMENT_TYPE_U2:
+				return String.valueOf(byteBuffer.getShort() & 0xFFFF);
+			case SignatureConstants.ELEMENT_TYPE_I4:
+				return String.valueOf(byteBuffer.getInt());
+			case SignatureConstants.ELEMENT_TYPE_U4:
+				return String.valueOf(byteBuffer.getDWORD());
+			case SignatureConstants.ELEMENT_TYPE_CLASS:
+				return String.valueOf("typeof(unsupported)");
+			case SignatureConstants.ELEMENT_TYPE_VALUETYPE:
+				int valueIndex = byteBuffer.getInt();
 
-			return String.valueOf("typeof(unsupported)");
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_VALUETYPE)
-		{
-			int valueIndex = byteBuffer.getInt();
-
-			ValueTypeSignature valueTypeSignature = (ValueTypeSignature) innerType;
-			AbstractTypeReference valueType = valueTypeSignature.getValueType();
-			if(valueType instanceof TypeDef)
-			{
-				if(((TypeDef) valueType).isEnum())
+				/*ValueTypeSignature valueTypeSignature = (ValueTypeSignature) innerType;
+				AbstractTypeReference valueType = valueTypeSignature.getValueType();
+				if(valueType instanceof TypeDef)
 				{
-					for(Field field : ((TypeDef) valueType).getFields())
+					if(((TypeDef) valueType).isEnum())
 					{
-						if(XStubUtil.isSet(field.getFlags(), FieldAttributes.Static) &&
-								field.getDefaultValue() != null && XByteUtil.getInt(field.getDefaultValue()) == valueIndex)
+						for(Field field : ((TypeDef) valueType).getFields())
 						{
-							return TypeSignatureStubBuilder.toStringFromDefRefSpec(valueType, typeDef, methodDef) + "." + field.getName();
+							if(XStubUtil.isSet(field.getFlags(), FieldAttributes.Static) &&
+									field.getDefaultValue() != null && XByteUtil.getInt(field.getDefaultValue()) == valueIndex)
+							{
+								return TypeSignatureStubBuilder.toStringFromDefRefSpec(valueType, typeDef, methodDef) + "." + field.getName();
+							}
 						}
 					}
-				}
-			}
+				} */
 
-			return "errorELEMENT_TYPE_VALUETYPE";
-		}
-		else if(innerType.getType() == SignatureConstants.ELEMENT_TYPE_STRING)
-		{
-			return StringUtil.QUOTER.fun(XStubUtil.getUtf8(byteBuffer));
-		}
-		else
-		{
-			return "unknown_type_" + innerType.getType();
+				return String.valueOf(valueIndex);
+			case SignatureConstants.ELEMENT_TYPE_STRING:
+				return StringUtil.QUOTER.fun(XStubUtil.getUtf8(byteBuffer));
+			default:
+				return "unknown_type_" + innerType.getType();
 		}
 	}
 }
