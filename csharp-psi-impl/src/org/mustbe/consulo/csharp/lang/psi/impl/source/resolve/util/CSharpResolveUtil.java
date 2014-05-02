@@ -28,9 +28,6 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper.GenericUnwrapTool;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -253,19 +250,9 @@ public class CSharpResolveUtil
 			boolean typeResolving)
 	{
 
-		if(!processGenericIfTypeResolving(processor, typeDeclaration, state, typeResolving))
-		{
-			return false;
-		}
-
 		for(DotNetNamedElement namedElement : typeDeclaration.getMembers())
 		{
 			DotNetNamedElement extracted = GenericUnwrapTool.extract(namedElement, genericExtractor);
-
-			if(!processGenericIfTypeResolving(processor, typeDeclaration, state, typeResolving))
-			{
-				return false;
-			}
 
 			if(!processor.execute(extracted, state))
 			{
@@ -278,27 +265,6 @@ public class CSharpResolveUtil
 			supers.add(dotNetType.toTypeRef());
 		}
 
-		return true;
-	}
-
-	private static boolean processGenericIfTypeResolving(
-			@NotNull final PsiScopeProcessor processor, DotNetElement element, ResolveState state, boolean typeResolving)
-	{
-		if(!typeResolving)
-		{
-			return true;
-		}
-
-		if(element instanceof DotNetGenericParameterListOwner)
-		{
-			for(DotNetGenericParameter parameter : ((DotNetGenericParameterListOwner) element).getGenericParameters())
-			{
-				if(!processor.execute(parameter, state))
-				{
-					return false;
-				}
-			}
-		}
 		return true;
 	}
 }

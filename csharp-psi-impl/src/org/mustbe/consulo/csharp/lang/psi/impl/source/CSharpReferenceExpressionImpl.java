@@ -58,7 +58,6 @@ import com.intellij.psi.PsiQualifiedReference;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.QualifiedName;
@@ -176,15 +175,17 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public ResolveResult[] multiResolve(final boolean incompleteCode)
 	{
-		return ResolveCache.getInstance(getProject()).resolveWithCaching(this, new ResolveCache.PolyVariantResolver<CSharpReferenceExpressionImpl>()
+		/*return ResolveCache.getInstance(getProject()).resolveWithCaching(this,
+		new ResolveCache.PolyVariantResolver<CSharpReferenceExpressionImpl>()
 		{
 			@NotNull
 			@Override
 			public ResolveResult[] resolve(@NotNull CSharpReferenceExpressionImpl cSharpReferenceExpression, boolean incompleteCode)
 			{
-				return multiResolve0(true); //TODO [VISTALL] incomplete handle
-			}
-		}, true, incompleteCode);
+				*/
+		return multiResolve0(true); //TODO [VISTALL] incomplete handle
+			/*}
+		}, true, incompleteCode); */
 	}
 
 	private ResolveResult[] multiResolve0(boolean named)
@@ -565,7 +566,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			}
 
 
-			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, kind);
+			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, false);
 
 			PsiElement targetToWalkChildren = resolveLayers.getSecond();
 
@@ -584,7 +585,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
 
-			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, kind);
+			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, false);
 
 			PsiElement last = resolveLayers.getFirst();
 			PsiElement targetToWalkChildren = resolveLayers.getSecond();
@@ -599,17 +600,18 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return p.toResolveResults();
 			}
 
-			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD, null, resolveState);
+			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD, null,
+					resolveState);
 			return p.toResolveResults();
 		}
 	}
 
-	private static Pair<PsiElement, PsiElement> getResolveLayers(PsiElement element, ResolveToKind kind)
+	private static Pair<PsiElement, PsiElement> getResolveLayers(PsiElement element, boolean strict)
 	{
 		PsiElement last = null;
 		PsiElement targetToWalkChildren = null;
 
-		PsiElement temp = element.getParent();
+		PsiElement temp = strict ? element : element.getParent();
 		while(temp != null)
 		{
 			ProgressIndicatorProvider.checkCanceled();
@@ -619,19 +621,21 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				DotNetStatement statement = PsiTreeUtil.getParentOfType(temp, DotNetStatement.class);
 				if(statement == null)
 				{
-					PsiElement modifierListOwner = PsiTreeUtil.getParentOfType(temp, DotNetModifierListOwner.class);
-					if(modifierListOwner != null)
+					PsiElement listOwner = PsiTreeUtil.getParentOfType(temp, DotNetModifierListOwner.class);
+					if(listOwner != null)
 					{
-						if(modifierListOwner instanceof DotNetParameter)
-						{
-							modifierListOwner = PsiTreeUtil.getParentOfType(modifierListOwner, DotNetParameterListOwner.class);
-							assert modifierListOwner != null;
-						}
-						last = modifierListOwner;
-						targetToWalkChildren = modifierListOwner.getParent();
+						Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(listOwner, true);
+						last = resolveLayers.getFirst();
+						targetToWalkChildren = resolveLayers.getSecond();
 						break;
 					}
 				}
+			}
+			else if(temp instanceof DotNetParameter)
+			{
+				targetToWalkChildren = PsiTreeUtil.getParentOfType(temp, DotNetParameterListOwner.class);
+				assert targetToWalkChildren != null;
+				last = targetToWalkChildren.getParent();
 			}
 			else if(temp instanceof CSharpAttributeImpl)
 			{
@@ -650,7 +654,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			}
 			else if(temp instanceof DotNetFieldDeclaration)
 			{
-				last = element;
+				last = element.getParent();
 				targetToWalkChildren = temp.getParent();
 				break;
 			}
@@ -661,6 +665,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				break;
 			}
 			else if(temp instanceof DotNetLikeMethodDeclaration)
+			{
+				last = temp.getParent();
+				targetToWalkChildren = temp.getParent();
+				break;
+			}
+			else if(temp instanceof DotNetTypeDeclaration)
 			{
 				last = temp;
 				targetToWalkChildren = temp.getParent();

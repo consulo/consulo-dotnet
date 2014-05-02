@@ -145,14 +145,13 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
-		/*for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
+		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
 		{
 			if(!processor.execute(dotNetGenericParameter, state))
 			{
 				return false;
 			}
 		}
-		  */
 		return true;
 	}
 
