@@ -111,6 +111,11 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 			return true;
 		}
 
+		if(modifier == DotNetModifierWithMask.STATIC)
+		{
+			modifier = CSharpModifier.STATIC;
+		}
+
 		if(!(modifier instanceof CSharpModifier))
 		{
 			return false;
@@ -135,6 +140,16 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 	@Override
 	public boolean hasModifierInTree(@NotNull DotNetModifierWithMask modifier)
 	{
+		if(modifier == DotNetModifierWithMask.STATIC)
+		{
+			modifier = CSharpModifier.STATIC;
+		}
+
+		if(!(modifier instanceof CSharpModifier))
+		{
+			return false;
+		}
+
 		IElementType iElementType = ourModifiers.get(modifier);
 		return iElementType != null && findChildByType(iElementType) != null;
 	}

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.ide.run;
+package org.mustbe.consulo.dotnet;
 
-import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -28,7 +27,7 @@ import com.intellij.openapi.util.Comparing;
  * @author VISTALL
  * @since 04.01.14.
  */
-public class CSharpRunUtil
+public class DotNetRunUtil
 {
 	private static final String STRING_ARRAY = DotNetTypes.System_String + "[]";
 
@@ -46,7 +45,7 @@ public class CSharpRunUtil
 
 	public static boolean isEntryPoint(DotNetMethodDeclaration methodDeclaration)
 	{
-		if(!methodDeclaration.hasModifier(CSharpModifier.STATIC))
+		if(!methodDeclaration.hasModifier(DotNetModifierWithMask.STATIC))
 		{
 			return false;
 		}

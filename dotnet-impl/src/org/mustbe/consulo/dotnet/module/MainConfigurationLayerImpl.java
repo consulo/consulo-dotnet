@@ -34,24 +34,34 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetBundle;
+import org.mustbe.consulo.dotnet.DotNetRunUtil;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.ui.ConfigurationProfilePanel;
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiElement;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
+import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
@@ -73,6 +83,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 	private DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 	private boolean myAllowDebugInfo;
 	private boolean myAllowSourceRoots;
+	private String myMainType;
 	private List<String> myVariables = new ArrayList<String>();
 	private String myFileName = DEFAULT_FILE_NAME;
 	private String myOutputDirectory = DEFAULT_OUTPUT_DIR;
@@ -92,6 +103,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 		myAllowSourceRoots = Boolean.valueOf(element.getAttributeValue("allow-source-roots", "false"));
 		myFileName = element.getAttributeValue("file-name", DEFAULT_FILE_NAME);
 		myOutputDirectory = element.getAttributeValue("output-dir", DEFAULT_OUTPUT_DIR);
+		myMainType = element.getAttributeValue("main-class");
 
 		for(Element defineElement : element.getChildren("define"))
 		{
@@ -108,6 +120,10 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 		element.setAttribute("allow-source-roots", Boolean.toString(myAllowSourceRoots));
 		element.setAttribute("file-name", myFileName);
 		element.setAttribute("output-dir", myOutputDirectory);
+		if(myMainType != null)
+		{
+			element.setAttribute("main-class", myMainType);
+		}
 
 		for(String variable : myVariables)
 		{
@@ -180,6 +196,89 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 
 		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("target.label"), comp));
 
+		DotNetPsiFacade dotNetPsiFacade = DotNetPsiFacade.getInstance(modifiableRootModel.getProject());
+
+		DotNetTypeDeclaration selectedType = null;
+		List<Object> typeDeclarations = new ArrayList<Object>();
+		typeDeclarations.add(null);
+
+		String[] allTypeNames = dotNetPsiFacade.getAllTypeNames();
+		for(String allTypeName : allTypeNames)
+		{
+			DotNetTypeDeclaration type = dotNetPsiFacade.findType(allTypeName, extension.getScopeForResolving(false), 0);
+			if(type != null && DotNetRunUtil.hasEntryPoint(type))
+			{
+				typeDeclarations.add(type);
+				if(myMainType != null && Comparing.equal(myMainType, type.getPresentableQName()))
+				{
+					selectedType = type;
+				}
+			}
+		}
+
+		if(myMainType != null && selectedType == null)
+		{
+			typeDeclarations.add(myMainType);
+		}
+
+		CollectionComboBoxModel model = new CollectionComboBoxModel(typeDeclarations);
+		val mainClassList = new ComboBox(model);
+		mainClassList.setRenderer(new ColoredListCellRenderer()
+		{
+			@Override
+			protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus)
+			{
+				if(value instanceof DotNetTypeDeclaration)
+				{
+					setIcon(IconDescriptorUpdaters.getIcon((PsiElement) value, 0));
+					append(((DotNetTypeDeclaration) value).getPresentableQName());
+				}
+				else if(value instanceof String)
+				{
+					setIcon(AllIcons.Toolbar.Unknown);
+					append((String) value, SimpleTextAttributes.ERROR_ATTRIBUTES);
+				}
+				else
+				{
+					append("<none>");
+				}
+			}
+		});
+		mainClassList.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				Object selectedItem = mainClassList.getSelectedItem();
+				if(selectedItem instanceof DotNetTypeDeclaration)
+				{
+					myMainType = ((DotNetTypeDeclaration) selectedItem).getPresentableQName();
+				}
+				else if(selectedItem instanceof String)
+				{
+					myMainType = (String) selectedItem;
+				}
+				else
+				{
+					myMainType = null;
+				}
+			}
+		});
+
+		if(myMainType != null)
+		{
+			if(selectedType != null)
+			{
+				mainClassList.setSelectedItem(selectedType);
+			}
+			else
+			{
+				mainClassList.setSelectedItem(myMainType);
+			}
+		}
+
+		panel.add(ConfigurationProfilePanel.labeledLine(DotNetBundle.message("main.type.label"), mainClassList));
+
 		val debugCombobox = new JBCheckBox(DotNetBundle.message("generate.debug.info.label"), myAllowDebugInfo);
 		debugCombobox.addActionListener(new ActionListener()
 		{
@@ -249,9 +348,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 			public void run(AnActionButton anActionButton)
 			{
 				String name = Messages.showInputDialog(panel, DotNetBundle.message("new.variable.message"),
-						DotNetBundle.message("new.variable.title"), null,
-						null,
-						new InputValidator()
+						DotNetBundle.message("new.variable.title"), null, null, new InputValidator()
 				{
 					@Override
 					public boolean checkInput(String s)
@@ -290,6 +387,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 		profileEx.myVariables.clear();
 		profileEx.myVariables.addAll(myVariables);
 		profileEx.myFileName = getFileName();
+		profileEx.myMainType = myMainType;
 		profileEx.myOutputDirectory = getOutputDir();
 		return profileEx;
 	}
@@ -305,6 +403,7 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 					myAllowDebugInfo == ex.isAllowDebugInfo() &&
 					myAllowSourceRoots == ex.isAllowSourceRoots() &&
 					myVariables.equals(ex.getVariables()) &&
+					myMainType.equals(ex.myMainType) &&
 					getFileName().equals(ex.getFileName()) &&
 					getOutputDir().equals(ex.getOutputDir());
 		}
@@ -321,6 +420,13 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 	public boolean isAllowDebugInfo()
 	{
 		return myAllowDebugInfo;
+	}
+
+	@Nullable
+	@Override
+	public String getMainType()
+	{
+		return myMainType;
 	}
 
 	@Override

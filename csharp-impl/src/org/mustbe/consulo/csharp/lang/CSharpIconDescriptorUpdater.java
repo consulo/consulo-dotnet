@@ -20,7 +20,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.assemblyInfo.CSharpAssemblyConstants;
-import org.mustbe.consulo.csharp.ide.run.CSharpRunUtil;
+import org.mustbe.consulo.dotnet.DotNetRunUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
@@ -231,8 +231,8 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 			iconDescriptor.addLayerIcon(AllIcons.Nodes.FinalMark);
 		}
 
-		if(element instanceof DotNetTypeDeclaration && CSharpRunUtil.hasEntryPoint((DotNetTypeDeclaration) element) || element instanceof
-				DotNetMethodDeclaration && CSharpRunUtil.isEntryPoint((DotNetMethodDeclaration) element))
+		if(element instanceof DotNetTypeDeclaration && DotNetRunUtil.hasEntryPoint((DotNetTypeDeclaration) element) || element instanceof
+				DotNetMethodDeclaration && DotNetRunUtil.isEntryPoint((DotNetMethodDeclaration) element))
 		{
 			iconDescriptor.addLayerIcon(AllIcons.Nodes.RunnableMark);
 		}

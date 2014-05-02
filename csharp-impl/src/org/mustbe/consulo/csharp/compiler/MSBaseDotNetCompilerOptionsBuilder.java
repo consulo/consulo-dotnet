@@ -213,6 +213,12 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 			addArgument("/define:" + defineVariables);
 		}
 
+		String mainType = dotNetLayer.getMainType();
+		if(!StringUtil.isEmpty(mainType))
+		{
+			addArgument("/main:" + mainType);
+		}
+
 		File tempFile = FileUtil.createTempFile("consulo-dotnet-rsp", ".rsp");
 		for(String argument : myArguments)
 		{

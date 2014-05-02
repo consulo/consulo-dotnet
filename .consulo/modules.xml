@@ -175,6 +175,7 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="dotnet-api" exported="" />
+        <orderEntry type="module" module-name="dotnet-psi-api" />
       </module>
       <module name="impl/nunit" dirurl="file://$PROJECT_DIR$/extract/nunit">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
