@@ -210,7 +210,6 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 			{
 				if(!mainClassList.isEnabled())
 				{
-					append(value.toString());
 					return;
 				}
 
@@ -256,8 +255,6 @@ public class MainConfigurationLayerImpl implements MainConfigurationLayer
 			}
 		});
 
-		items.add("loading");
-		model.setSelectedItem(items.get(0));
 		model.update();
 
 		ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
