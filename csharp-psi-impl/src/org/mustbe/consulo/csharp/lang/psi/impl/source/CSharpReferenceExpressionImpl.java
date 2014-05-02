@@ -614,20 +614,19 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			ProgressIndicatorProvider.checkCanceled();
 
-			if(temp instanceof DotNetParameter)
-			{
-				targetToWalkChildren = PsiTreeUtil.getParentOfType(temp, DotNetMethodDeclaration.class);
-				last = targetToWalkChildren;
-				break;
-			}
-			else if(temp instanceof DotNetType)
+			if(temp instanceof DotNetType)
 			{
 				DotNetStatement statement = PsiTreeUtil.getParentOfType(temp, DotNetStatement.class);
 				if(statement == null)
 				{
-					DotNetModifierListOwner modifierListOwner = PsiTreeUtil.getParentOfType(temp, DotNetModifierListOwner.class);
+					PsiElement modifierListOwner = PsiTreeUtil.getParentOfType(temp, DotNetModifierListOwner.class);
 					if(modifierListOwner != null)
 					{
+						if(modifierListOwner instanceof DotNetParameter)
+						{
+							modifierListOwner = PsiTreeUtil.getParentOfType(modifierListOwner, DotNetParameterListOwner.class);
+							assert modifierListOwner != null;
+						}
 						last = modifierListOwner;
 						targetToWalkChildren = modifierListOwner.getParent();
 						break;
