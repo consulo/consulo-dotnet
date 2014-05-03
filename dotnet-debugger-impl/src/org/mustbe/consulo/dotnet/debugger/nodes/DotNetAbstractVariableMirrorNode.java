@@ -22,8 +22,10 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
@@ -250,11 +252,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 			@Override
 			public void renderValue(@NotNull final XValueTextRenderer xValueTextRenderer)
 			{
-				if(valueOfVariable == null)
-				{
-					xValueTextRenderer.renderKeywordValue("null?");
-				}
-				else
+				if(valueOfVariable != null)
 				{
 					valueOfVariable.accept(new ValueVisitor.Adapter()
 					{
@@ -262,6 +260,40 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 						public void visitStringValue(@NotNull StringValueMirror value, @NotNull String mainValue)
 						{
 							xValueTextRenderer.renderStringValue(mainValue);
+						}
+
+						@Override
+						public void visitObjectValue(@NotNull ObjectValueMirror value)
+						{
+							TypeMirror type = value.type();
+							if(type == null)
+							{
+								return;
+							}
+							MethodMirror toString = type.findMethodByName("ToString", true);
+							if(toString == null)
+							{
+								return;
+							}
+
+							String toStringValue = null;
+							String qTypeOfValue = toString.declaringType().qualifiedName();
+							if(Comparing.equal(qTypeOfValue, DotNetTypes.System_Object))
+							{
+								toStringValue = "{" + qTypeOfValue + "@" + value.address() + "}";
+							}
+							else
+							{
+								Value<?> invoke = toString.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, value);
+								if(invoke instanceof StringValueMirror)
+								{
+									toStringValue = ((StringValueMirror) invoke).value();
+								}
+							}
+							if(toStringValue != null)
+							{
+								xValueTextRenderer.renderValue(toStringValue);
+							}
 						}
 
 						@Override
