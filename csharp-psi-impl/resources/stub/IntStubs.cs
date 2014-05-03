@@ -16,11 +16,25 @@
 
 public static class IntStubs
 {
+	// --------------------------------------------------------------
+	// +
+	// --------------------------------------------------------------
+
 	// int + int = int
 	public static int operator +(int param1, int param2)
 	{
 		return 0;
 	}
+
+	// int + long = long
+	public static long operator +(int param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// &
+	// --------------------------------------------------------------
 
 	// int & int = int
 	public static int operator &(int param1, int param2)
@@ -28,11 +42,31 @@ public static class IntStubs
 		return 0;
 	}
 
+	// int & long = long
+	public static long operator &(int param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// %
+	// --------------------------------------------------------------
+
 	// int % int = int
 	public static int operator %(int param1, int param2)
 	{
 		return 0;
 	}
+
+	// int % long = int
+	public static int operator %(int param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// |
+	// --------------------------------------------------------------
 
 	// int | int = int
 	public static int operator |(int param1, int param2)
@@ -40,11 +74,31 @@ public static class IntStubs
 		return 0;
 	}
 
+	// int | long = long
+	public static int operator |(int param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// -
+	// --------------------------------------------------------------
+
 	// int - int = int
 	public static int operator -(int param1, int param2)
 	{
 		return 0;
 	}
+
+	// int - long = long
+	public static int operator -(int param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// *
+	// --------------------------------------------------------------
 
 	// int * int = int
 	public static int operator *(int param1, int param2)
@@ -52,33 +106,89 @@ public static class IntStubs
 		return 0;
 	}
 
+	// int * long = long
+	public static int operator *(int param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// /
+	// --------------------------------------------------------------
+
 	// int / int = int
 	public static int operator /(int param1, int param2)
 	{
 		return 0;
 	}
 
-	// int > int = bool
-	public static bool operator >(int param1, int param2)
+	// int / long = long
+	public static int operator /(int param1, long param2)
 	{
 		return 0;
 	}
 
+	// --------------------------------------------------------------
+	// >
+	// --------------------------------------------------------------
+
 	// int > int = bool
+	public static bool operator >(int param1, int param2)
+	{
+		return false;
+	}
+
+	// int > long = bool
+	public static int operator >(int param1, long param2)
+	{
+		return false;
+	}
+
+	// --------------------------------------------------------------
+	// >=
+	// --------------------------------------------------------------
+
+	// int >= int = bool
 	public static bool operator >=(int param1, int param2)
 	{
-		return 0;
+		return false;
 	}
+
+	// int >= long = bool
+	public static int operator >=(int param1, long param2)
+	{
+		return false;
+	}
+
+	// --------------------------------------------------------------
+	// <
+	// --------------------------------------------------------------
 
 	// int < int = bool
 	public static bool operator <(int param1, int param2)
 	{
-		return 0;
+		return false;
 	}
+
+	// int < long = bool
+	public static int operator <(int param1, long param2)
+	{
+		return false;
+	}
+
+	// --------------------------------------------------------------
+	// <=
+	// --------------------------------------------------------------
 
 	// int <= int = bool
 	public static bool operator <=(int param1, int param2)
 	{
-		return 0;
+		return false;
+	}
+
+	// int <= long = bool
+	public static int operator <=(int param1, long param2)
+	{
+		return false;
 	}
 }
