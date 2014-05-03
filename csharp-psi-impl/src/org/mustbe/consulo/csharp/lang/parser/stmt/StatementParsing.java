@@ -369,6 +369,13 @@ public class StatementParsing extends SharingParsingHelpers
 				builder.advanceLexer();
 
 				ExpressionParsing.parse(builder);
+
+				while(builder.getTokenType() == COMMA)
+				{
+					builder.advanceLexer();
+
+					ExpressionParsing.parse(builder);
+				}
 			}
 
 			expect(builder, RPAR, "')' expected");
