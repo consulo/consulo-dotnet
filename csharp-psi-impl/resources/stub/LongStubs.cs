@@ -16,8 +16,28 @@
 
 public static class LongStubs
 {
+	// --------------------------------------------------------------
+	// +
+	// --------------------------------------------------------------
+
+	// long + int = long
+	public static long operator +(long param1, int param2)
+	{
+		return 0;
+	}
+
 	// long + long = long
 	public static long operator +(long param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// &
+	// --------------------------------------------------------------
+
+	// long & int = long
+	public static long operator +(long param1, int param2)
 	{
 		return 0;
 	}
@@ -28,14 +48,38 @@ public static class LongStubs
 		return 0;
 	}
 
+	// --------------------------------------------------------------
+	// %
+	// --------------------------------------------------------------
+
 	// long % long = long
-	public static int operator %(long param1, long param2)
+	public static long operator %(long param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// |
+	// --------------------------------------------------------------
+
+	// long | int = long
+	public static long operator |(long param1, int param2)
 	{
 		return 0;
 	}
 
 	// long | long = long
-	public static int operator |(long param1, long param2)
+	public static long operator |(long param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// -
+	// --------------------------------------------------------------
+
+	// long - int = long
+	public static long operator |(long param1, int param2)
 	{
 		return 0;
 	}
@@ -46,8 +90,28 @@ public static class LongStubs
 		return 0;
 	}
 
+	// --------------------------------------------------------------
+	// *
+	// --------------------------------------------------------------
+
+	// long * int = long
+	public static long operator *(long param1, int param2)
+	{
+		return 0;
+	}
+
 	// long * long = long
 	public static long operator *(long param1, long param2)
+	{
+		return 0;
+	}
+
+	// --------------------------------------------------------------
+	// /
+	// --------------------------------------------------------------
+
+	// long / int = long
+	public static long operator /(long param1, int param2)
 	{
 		return 0;
 	}
@@ -58,27 +122,67 @@ public static class LongStubs
 		return 0;
 	}
 
-	// long > long = bool
-	public static bool operator >(long param1, long param2)
+	// --------------------------------------------------------------
+	// >
+	// --------------------------------------------------------------
+
+	// long > int = bool
+	public static bool operator >(long param1, int param2)
 	{
-		return 0;
+		return false;
 	}
 
 	// long > long = bool
+	public static bool operator >(long param1, long param2)
+	{
+		return false;
+	}
+
+	// --------------------------------------------------------------
+	// >=
+	// --------------------------------------------------------------
+
+	// long >= int = bool
+	public static bool operator >=(long param1, int param2)
+	{
+		return false;
+	}
+
+	// long >= long = bool
 	public static bool operator >=(long param1, long param2)
 	{
-		return 0;
+		return false;
+	}
+
+	// --------------------------------------------------------------
+	// <
+	// --------------------------------------------------------------
+
+	// long < int = bool
+	public static bool operator <(long param1, int param2)
+	{
+		return false;
 	}
 
 	// long < long = bool
 	public static bool operator <(long param1, long param2)
 	{
-		return 0;
+		return false;
+	}
+
+	// --------------------------------------------------------------
+	// <=
+	// --------------------------------------------------------------
+
+	// long <= int = bool
+	public static bool operator <=(long param1, int param2)
+	{
+		return false;
 	}
 
 	// long <= long = bool
 	public static bool operator <=(long param1, long param2)
 	{
-		return 0;
+		return false;
 	}
 }
