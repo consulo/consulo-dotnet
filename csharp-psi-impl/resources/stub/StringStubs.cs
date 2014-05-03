@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
-
-import java.util.List;
-
-import org.consulo.lombok.annotations.ProjectService;
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-
-/**
- * @author VISTALL
- * @since 15.03.14
- */
-@ProjectService
-public abstract class CSharpOperatorHelper
+public static class StringStubs
 {
-	@NotNull
-	public abstract List<DotNetNamedElement> getStubMembers();
+	// string + object = string
+	public static string operator +(string param1, object param2)
+	{
+		return "";
+	}
+
+	// object + string = string
+	public static string operator +(object param1, string param2)
+	{
+		return "";
+	}
 }

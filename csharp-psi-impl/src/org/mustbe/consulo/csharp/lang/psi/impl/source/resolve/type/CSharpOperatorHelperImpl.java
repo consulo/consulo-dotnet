@@ -18,9 +18,14 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
@@ -32,8 +37,16 @@ import com.intellij.psi.search.GlobalSearchScope;
  */
 public class CSharpOperatorHelperImpl extends CSharpOperatorHelper
 {
+	private static String[] ourStubs = new String[]
+	{
+		"/stub/ObjectStubs.cs",
+		"/stub/StringStubs.cs",
+		"/stub/ByteStubs.cs",
+		"/stub/ShortStubs.cs",
+		"/stub/IntStubs.cs",
+		"/stub/LongStubs.cs",
+	};
 	private final Project myProject;
-	private DotNetTypeDeclaration myTypeDeclaration;
 
 	public CSharpOperatorHelperImpl(Project project)
 	{
@@ -42,25 +55,28 @@ public class CSharpOperatorHelperImpl extends CSharpOperatorHelper
 
 	@NotNull
 	@Override
-	public DotNetTypeDeclaration getStubOperatorType()
+	@LazyInstance
+	public List<DotNetNamedElement> getStubMembers()
 	{
-		if(myTypeDeclaration == null)
+		List<DotNetNamedElement> list = new ArrayList<DotNetNamedElement>();
+		for(String stub : ourStubs)
 		{
-			InputStream resourceAsStream = getClass().getResourceAsStream("/stub/Operators.cs");
+			InputStream resourceAsStream = getClass().getResourceAsStream(stub);
 			if(resourceAsStream == null)
 			{
-				throw new Error("Possible broken build. '/stub/Operators.cs' not found");
+				throw new Error("Possible broken build. '" + stub + "' not found");
 			}
 			try
 			{
 				String text = FileUtil.loadTextAndClose(resourceAsStream);
-				myTypeDeclaration = CSharpFileFactory.createTypeDeclaration(myProject, GlobalSearchScope.allScope(myProject), text);
+				DotNetTypeDeclaration declaration = CSharpFileFactory.createTypeDeclaration(myProject, GlobalSearchScope.allScope(myProject), text);
+				Collections.addAll(list, declaration.getMembers());
 			}
 			catch(IOException e)
 			{
-				throw new Error("Possible broken build. '/stub/Operators.cs' not found", e);
+				throw new Error("Possible broken build. '" + stub + "' not found");
 			}
 		}
-		return myTypeDeclaration;
+		return list;
 	}
 }

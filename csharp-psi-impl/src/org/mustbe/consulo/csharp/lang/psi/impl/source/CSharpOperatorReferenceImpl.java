@@ -27,7 +27,6 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeT
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpOperatorHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
@@ -126,9 +125,7 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 
 		CSharpOperatorHelper operatorHelper = CSharpOperatorHelper.getInstance(getProject());
 
-		DotNetTypeDeclaration stubOperatorType = operatorHelper.getStubOperatorType();
-
-		for(DotNetNamedElement dotNetNamedElement : stubOperatorType.getMembers())
+		for(DotNetNamedElement dotNetNamedElement : operatorHelper.getStubMembers())
 		{
 			if(!isAccepted(this, dotNetNamedElement))
 			{
