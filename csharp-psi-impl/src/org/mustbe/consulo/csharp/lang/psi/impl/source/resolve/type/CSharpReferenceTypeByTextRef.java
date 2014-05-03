@@ -16,12 +16,12 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 
@@ -32,21 +32,19 @@ import com.intellij.psi.PsiElement;
 public class CSharpReferenceTypeByTextRef extends DotNetTypeRef.Adapter
 {
 	private final String myText;
-
-	private NotNullLazyValue<DotNetType> myType;
+	private final PsiElement myOwner;
 
 	public CSharpReferenceTypeByTextRef(final String text, final PsiElement owner)
 	{
 		myText = text;
-		myType = new NotNullLazyValue<DotNetType>()
-		{
-			@NotNull
-			@Override
-			protected DotNetType compute()
-			{
-				return CSharpFileFactory.createType(owner.getProject(), owner.getResolveScope(), myText);
-			}
-		};
+		myOwner = owner;
+	}
+
+	@NotNull
+	@LazyInstance
+	private DotNetType getType()
+	{
+		return CSharpFileFactory.createType(myOwner.getProject(), myOwner.getResolveScope(), myText);
 	}
 
 	@Nullable
@@ -60,13 +58,13 @@ public class CSharpReferenceTypeByTextRef extends DotNetTypeRef.Adapter
 	@Override
 	public String getQualifiedText()
 	{
-		return myType.getValue().toTypeRef().getQualifiedText();
+		return getType().toTypeRef().getQualifiedText();
 	}
 
 	@Nullable
 	@Override
 	public PsiElement resolve(@NotNull PsiElement scope)
 	{
-		return myType.getValue().toTypeRef().resolve(scope);
+		return getType().toTypeRef().resolve(scope);
 	}
 }
