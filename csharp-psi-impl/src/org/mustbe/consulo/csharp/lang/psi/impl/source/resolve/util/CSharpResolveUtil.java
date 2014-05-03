@@ -170,7 +170,11 @@ public class CSharpResolveUtil
 
 			if(superTypes.isEmpty())
 			{
-				superTypes.add(new CSharpTypeDefTypeRef(DotNetTypes.System_Object, 0));
+				String defaultSuperType = getDefaultSuperType(typeDeclaration);
+				if(defaultSuperType != null)
+				{
+					superTypes.add(new CSharpTypeDefTypeRef(defaultSuperType, 0));
+				}
 			}
 
 			for(DotNetTypeRef dotNetTypeRef : superTypes)
@@ -239,6 +243,28 @@ public class CSharpResolveUtil
 
 		PsiFile psiFile = state.get(CONTAINS_FILE);
 		return psiFile == null || walkChildren(processor, psiFile, typeResolving, maxScope, state);
+	}
+
+	@Nullable
+	public static String getDefaultSuperType(@NotNull DotNetTypeDeclaration typeDeclaration)
+	{
+		String presentableQName = typeDeclaration.getPresentableQName();
+		if(Comparing.equal(presentableQName, DotNetTypes.System_Object))
+		{
+			return null;
+		}
+		if(typeDeclaration.isStruct())
+		{
+			return DotNetTypes.System_ValueType;
+		}
+		else if(typeDeclaration.isEnum())
+		{
+			return DotNetTypes.System_Enum;
+		}
+		else
+		{
+			return DotNetTypes.System_Object;
+		}
 	}
 
 	private static boolean processTypeDeclaration(

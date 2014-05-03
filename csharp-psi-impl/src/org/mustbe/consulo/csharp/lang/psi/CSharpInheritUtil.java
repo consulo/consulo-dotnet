@@ -18,7 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
@@ -96,8 +96,14 @@ public class CSharpInheritUtil
 		}
 		else
 		{
-			DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(typeDeclaration.getProject()).findType(DotNetTypes.System_Object,
-					typeDeclaration.getResolveScope(), -1);
+			String defaultSuperType = CSharpResolveUtil.getDefaultSuperType(typeDeclaration);
+			if(defaultSuperType == null)
+			{
+				return false;
+			}
+
+			DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(typeDeclaration.getProject()).findType(defaultSuperType,
+					typeDeclaration.getResolveScope(), 0);
 			if(type != null)
 			{
 				return !type.isEquivalentTo(typeDeclaration) && isInheritor(type, other, true);

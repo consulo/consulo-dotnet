@@ -40,6 +40,7 @@ public class CSharpOperatorHelperImpl extends CSharpOperatorHelper
 	private static String[] ourStubs = new String[]
 	{
 		"/stub/ObjectStubs.cs",
+		"/stub/EnumStubs.cs",
 		"/stub/StringStubs.cs",
 		"/stub/ByteStubs.cs",
 		"/stub/ShortStubs.cs",
