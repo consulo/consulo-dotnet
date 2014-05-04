@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
@@ -96,7 +97,7 @@ public class CSharpHighlightUtil
 		{
 			key = CSharpHighlightKey.GENERIC_PARAMETER_NAME;
 		}
-		else if(element instanceof DotNetParameter)
+		else if(element instanceof DotNetParameter || element instanceof CSharpLambdaParameter)
 		{
 			key = CSharpHighlightKey.PARAMETER;
 		}
