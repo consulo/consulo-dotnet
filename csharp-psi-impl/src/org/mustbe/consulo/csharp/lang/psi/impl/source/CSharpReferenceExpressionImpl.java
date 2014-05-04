@@ -866,7 +866,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					return false;
 				}
-				if(e instanceof CSharpLocalVariable || e instanceof DotNetParameter)
+				if(e instanceof CSharpLocalVariable || e instanceof DotNetParameter || e instanceof CSharpLambdaParameter)
 				{
 					return true;
 				}
