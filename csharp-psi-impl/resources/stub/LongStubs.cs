@@ -26,6 +26,12 @@ public static class LongStubs
 		return 0;
 	}
 
+	// + long = long
+	public static long operator +(long param1)
+	{
+		return 0;
+	}
+
 	// long + long = long
 	public static long operator +(long param1, long param2)
 	{
@@ -80,6 +86,12 @@ public static class LongStubs
 
 	// long - int = long
 	public static long operator |(long param1, int param2)
+	{
+		return 0;
+	}
+
+	// - long = long
+	public static long operator -(long param1, long param2)
 	{
 		return 0;
 	}

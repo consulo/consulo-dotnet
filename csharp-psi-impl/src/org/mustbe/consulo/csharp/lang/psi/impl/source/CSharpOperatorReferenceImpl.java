@@ -88,7 +88,7 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 	private Object resolve0()
 	{
 		PsiElement parent = getParent();
-		if(parent instanceof CSharpBinaryExpressionImpl)
+		if(parent instanceof CSharpBinaryExpressionImpl || parent instanceof CSharpPrefixExpressionImpl)
 		{
 			//TODO [search in methods]
 
@@ -154,18 +154,10 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 		}
 
 		IElementType elementType = reference.getOperator().getNode().getElementType();
-		PsiElement parent = reference.getParent();
-		if(parent instanceof CSharpBinaryExpressionImpl)
-		{
-			if(methodDeclaration.getParameters().length != 2)
-			{
-				return false;
-			}
 
-			if(methodDeclaration.getOperatorElementType() == elementType)
-			{
-				return true;
-			}
+		if(methodDeclaration.getOperatorElementType() == elementType)
+		{
+			return true;
 		}
 		return false;
 	}
@@ -206,9 +198,8 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 	public boolean isSoft()
 	{
 		PsiElement parent = getParent();
-		if(parent instanceof CSharpBinaryExpressionImpl)
+		if(parent instanceof CSharpBinaryExpressionImpl || parent instanceof CSharpPrefixExpressionImpl)
 		{
-
 			return findReturnTypeInStubs() != null;
 		}
 		return false;
@@ -244,6 +235,14 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 					leftExpression,
 					rightExpression
 			};
+		}
+		else if(parent instanceof CSharpPrefixExpressionImpl)
+		{
+			DotNetExpression expression = ((CSharpPrefixExpressionImpl) parent).getExpression();
+			if(expression != null)
+			{
+				return new DotNetExpression[] {expression};
+			}
 		}
 		return DotNetExpression.EMPTY_ARRAY;
 	}

@@ -20,6 +20,12 @@ public static class IntStubs
 	// +
 	// --------------------------------------------------------------
 
+	// + int = int
+	public static int operator +(int param1)
+	{
+		return 0;
+	}
+
 	// int + int = int
 	public static int operator +(int param1, int param2)
 	{
@@ -83,6 +89,12 @@ public static class IntStubs
 	// --------------------------------------------------------------
 	// -
 	// --------------------------------------------------------------
+
+	// - int = int
+	public static int operator -(int param1)
+	{
+		return 0;
+	}
 
 	// int - int = int
 	public static int operator -(int param1, int param2)

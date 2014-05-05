@@ -207,7 +207,9 @@ public class ExpressionParsing extends SharingParsingHelpers
 		if(PREFIX_OPS.contains(tokenType))
 		{
 			final PsiBuilder.Marker unary = builder.mark();
+			PsiBuilder.Marker operatorMark = builder.mark();
 			builder.advanceLexer();
+			operatorMark.done(OPERATOR_REFERENCE);
 
 			final PsiBuilder.Marker operand = parseUnary(builder);
 			if(operand == null)
