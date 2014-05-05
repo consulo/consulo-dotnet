@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,14 @@ import com.intellij.util.containers.ContainerUtil;
  */
 public abstract class AbstractScopeProcessor extends UserDataHolderBase implements PsiScopeProcessor
 {
+	private static final Comparator<ResolveResultWithWeight> ourWeightComparator = new Comparator<ResolveResultWithWeight>()
+	{
+		@Override
+		public int compare(ResolveResultWithWeight o1, ResolveResultWithWeight o2)
+		{
+			return o2.getWeight() - o1.getWeight();
+		}
+	};
 	protected final List<ResolveResultWithWeight> myElements = new ArrayList<ResolveResultWithWeight>();
 
 	@Nullable
@@ -48,7 +57,7 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 		myElements.add(resolveResult);
 	}
 
-	public void addElement(PsiElement element)
+	public void addElement(PsiElement element, int weight)
 	{
 		if(element instanceof DotNetNamespaceDeclaration)
 		{
@@ -56,7 +65,7 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 		}
 		else
 		{
-			myElements.add(new ResolveResultWithWeight(element));
+			myElements.add(new ResolveResultWithWeight(element, weight));
 		}
 	}
 
@@ -72,7 +81,10 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 		{
 			return ResolveResultWithWeight.EMPTY_ARRAY;
 		}
-		return ContainerUtil.toArray(myElements, ResolveResultWithWeight.ARRAY_FACTORY);
+
+		ResolveResultWithWeight[] resultWithWeights = ContainerUtil.toArray(myElements, ResolveResultWithWeight.ARRAY_FACTORY);
+		ContainerUtil.sort(resultWithWeights, ourWeightComparator);
+		return resultWithWeights;
 	}
 
 	@Override

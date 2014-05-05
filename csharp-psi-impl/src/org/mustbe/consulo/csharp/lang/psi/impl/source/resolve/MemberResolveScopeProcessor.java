@@ -29,12 +29,14 @@ import com.intellij.psi.ResolveState;
  */
 public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 {
-	private final Condition<PsiNamedElement> myCond;
+	private final Condition<PsiNamedElement> myNameCondition;
+	private final WeightProcessor<PsiNamedElement> myWeightProcessor;
 	private final boolean myNamed;
 
-	public MemberResolveScopeProcessor(Condition<PsiNamedElement> condition, boolean named)
+	public MemberResolveScopeProcessor(Condition<PsiNamedElement> condition, WeightProcessor<PsiNamedElement> weightProcessor, boolean named)
 	{
-		myCond = condition;
+		myNameCondition = condition;
+		myWeightProcessor = weightProcessor;
 		myNamed = named;
 	}
 
@@ -43,10 +45,11 @@ public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 	{
 		if(element instanceof DotNetNamedElement)
 		{
-			if(myCond.value((DotNetNamedElement) element))
+			if(myNameCondition.value((PsiNamedElement) element))
 			{
-				addElement(element);
-				if(myNamed)
+				int weight = myWeightProcessor.getWeight((PsiNamedElement) element);
+				addElement(element, weight);
+				if(weight == WeightProcessor.MAX_WEIGHT && myNamed)
 				{
 					return false;
 				}

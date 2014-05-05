@@ -32,6 +32,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.ExtensionResolveSc
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.ResolveResultWithWeight;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.WeightProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericParameterTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNamespaceDefTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
@@ -211,6 +212,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			boolean named, final ResolveToKind kind, final CSharpExpressionWithParameters parameters, final T e)
 	{
 		Condition<PsiNamedElement> namedElementCondition;
+		@SuppressWarnings("unchecked")
+		WeightProcessor<PsiNamedElement> weightProcessor = WeightProcessor.MAXIMUM;
 		switch(kind)
 		{
 			case ATTRIBUTE:
@@ -266,45 +269,50 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				break;
 		}
 
-		Condition<PsiNamedElement> newCond = null;
 		switch(kind)
 		{
 			case METHOD:
-				newCond = new Condition<PsiNamedElement>()
+				weightProcessor = new WeightProcessor<PsiNamedElement>()
 				{
 					@Override
-					public boolean value(PsiNamedElement psiNamedElement)
+					public int getWeight(@NotNull PsiNamedElement psiNamedElement)
 					{
 						if(psiNamedElement instanceof DotNetVariable)
 						{
 							PsiElement localVariableType = ((DotNetVariable) psiNamedElement).toTypeRef(true).resolve(e);
 							if(localVariableType instanceof DotNetMethodDeclaration)
 							{
-								return MethodAcceptorImpl.isAccepted(parameters,(CSharpMethodDeclaration) localVariableType);
+								return MethodAcceptorImpl.calcAcceptableWeight(parameters, (CSharpMethodDeclaration) localVariableType);
 							}
 						}
-						return psiNamedElement instanceof DotNetMethodDeclaration && MethodAcceptorImpl.isAccepted(parameters,
-								(CSharpMethodDeclaration) psiNamedElement);
+						else if(psiNamedElement instanceof DotNetMethodDeclaration)
+						{
+							return MethodAcceptorImpl.calcAcceptableWeight(parameters, (CSharpMethodDeclaration) psiNamedElement);
+						}
+						return 0;
 					}
 				};
 
 				break;
 			case ARRAY_METHOD:
-				newCond = new Condition<PsiNamedElement>()
+				weightProcessor = new WeightProcessor<PsiNamedElement>()
 				{
 					@Override
-					public boolean value(PsiNamedElement psiNamedElement)
+					public int getWeight(@NotNull PsiNamedElement psiNamedElement)
 					{
-						return psiNamedElement instanceof DotNetArrayMethodDeclaration && MethodAcceptorImpl.isAccepted(parameters,
-								(DotNetArrayMethodDeclaration) psiNamedElement);
+						if(!(psiNamedElement instanceof DotNetArrayMethodDeclaration))
+						{
+							return 0;
+						}
+						return MethodAcceptorImpl.calcAcceptableWeight(parameters,(DotNetArrayMethodDeclaration) psiNamedElement);
 					}
 				};
 				break;
 			case TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD:
-				newCond = new Condition<PsiNamedElement>()
+				weightProcessor = new WeightProcessor<PsiNamedElement>()
 				{
 					@Override
-					public boolean value(PsiNamedElement element)
+					public int getWeight(@NotNull PsiNamedElement element)
 					{
 						if(element instanceof DotNetGenericParameterListOwner)
 						{
@@ -312,32 +320,32 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 							if(referenceType.getParent() instanceof DotNetTypeWrapperWithTypeArguments)
 							{
 								DotNetType[] arguments = ((DotNetTypeWrapperWithTypeArguments) referenceType.getParent()).getArguments();
-								return arguments.length == ((DotNetGenericParameterListOwner) element).getGenericParameters().length;
+								return arguments.length == ((DotNetGenericParameterListOwner) element).getGenericParameters().length ? MAX_WEIGHT
+										: 1;
 							}
 							else
 							{
-								return true;
+								return MAX_WEIGHT;
 							}
 						}
 						else
 						{
-							return true;
+							return MAX_WEIGHT;
 						}
 					}
 				};
 				break;
 		}
 
-		if(newCond != null)
-		{
-			namedElementCondition = Conditions.and(namedElementCondition, newCond);
-		}
-
-		return collectResults(kind, namedElementCondition, e, named);
+		return collectResults(kind, namedElementCondition, weightProcessor, e, named);
 	}
 
 	private static <T extends PsiQualifiedReference & PsiElement> ResolveResultWithWeight[] collectResults(
-			@NotNull ResolveToKind kind, Condition<PsiNamedElement> condition, final T element, final boolean named)
+			@NotNull ResolveToKind kind,
+			@NotNull Condition<PsiNamedElement> condition,
+			@NotNull WeightProcessor<PsiNamedElement> weightProcessor,
+			final T element,
+			final boolean named)
 	{
 		if(!element.isValid())
 		{
@@ -431,7 +439,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					{
 						return psiNamedElement instanceof CSharpFieldDeclaration || psiNamedElement instanceof CSharpPropertyDeclaration;
 					}
-				}), named);
+				}), weightProcessor, named);
 
 				CSharpResolveUtil.walkChildren(p, psiElement1, false, null, resolveState);
 				return p.toResolveResults();
@@ -445,7 +453,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					{
 						return psiNamedElement instanceof CSharpLabeledStatementImpl;
 					}
-				}), named);
+				}), weightProcessor, named);
 				CSharpResolveUtil.treeWalkUp(p, element, element, parentOfType);
 				return p.toResolveResults();
 			case NAMESPACE:
@@ -478,7 +486,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 					if(findFirstProcessor.getFoundValue() != null)
 					{
-						val elements = new ArrayList<ResolveResult>();
+						val elements = new ArrayList<ResolveResultWithWeight>();
 
 						val parentQName = QualifiedName.fromDottedString(parent);
 						StubIndex.getInstance().processAllKeys(CSharpIndexKeys.NAMESPACE_BY_QNAME_INDEX, new Processor<String>()
@@ -496,13 +504,13 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 									{
 										return true;
 									}
-									elements.add(new PsiElementResolveResult(namespaceAsElement));
+									elements.add(new ResolveResultWithWeight(namespaceAsElement));
 								}
 								return true;
 							}
 						}, element.getResolveScope(), IdFilter.getProjectIdFilter(element.getProject(), false));
 
-						return elements.isEmpty() ? ResolveResultWithWeight.EMPTY_ARRAY : elements.toArray(new ResolveResultWithWeight[elements.size()]);
+						return ContainerUtil.toArray(elements, ResolveResultWithWeight.ARRAY_FACTORY);
 					}
 					else
 					{
@@ -530,13 +538,18 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);
 				}
 
-				return processAnyMember(qualifier, condition, element, kind, named);
+				return processAnyMember(qualifier, condition, weightProcessor, element, kind, named);
 		}
 		return ResolveResultWithWeight.EMPTY_ARRAY;
 	}
 
 	private static <T extends PsiQualifiedReference & PsiElement> ResolveResultWithWeight[] processAnyMember(
-			PsiElement qualifier, Condition<PsiNamedElement> condition, T element, ResolveToKind kind, boolean incompleteCode)
+			PsiElement qualifier,
+			Condition<PsiNamedElement> condition,
+			WeightProcessor<PsiNamedElement> weightProcessor,
+			T element,
+			ResolveToKind kind,
+			boolean incompleteCode)
 	{
 		PsiElement target = element;
 		DotNetGenericExtractor extractor = DotNetGenericExtractor.EMPTY;
@@ -563,7 +576,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			return ResolveResultWithWeight.EMPTY_ARRAY;
 		}
 
-		MemberResolveScopeProcessor p = new MemberResolveScopeProcessor(condition, incompleteCode);
+		MemberResolveScopeProcessor p = new MemberResolveScopeProcessor(condition, weightProcessor, incompleteCode);
 
 		ResolveState resolveState = ResolveState.initial();
 		resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
@@ -581,7 +594,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			PsiElement targetToWalkChildren = resolveLayers.getSecond();
 
 			// walk for extensions
-			ExtensionResolveScopeProcessor p2 = new ExtensionResolveScopeProcessor(condition, incompleteCode);
+			ExtensionResolveScopeProcessor p2 = new ExtensionResolveScopeProcessor(condition, weightProcessor, incompleteCode);
 			p2.merge(p);
 
 			resolveState = ResolveState.initial();
@@ -908,7 +921,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}
 				return true;
 			}
-		}, this, false);
+		}, WeightProcessor.MAXIMUM, this, false);
 		return CSharpLookupElementBuilder.getInstance(getProject()).buildToLookupElements(this, psiElements);
 	}
 

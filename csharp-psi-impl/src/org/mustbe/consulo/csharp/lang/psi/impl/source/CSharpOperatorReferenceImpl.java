@@ -23,6 +23,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.WeightProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpOperatorHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -132,7 +133,7 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 				continue;
 			}
 
-			if(MethodAcceptorImpl.isAccepted(this, (CSharpMethodDeclaration) dotNetNamedElement))
+			if(MethodAcceptorImpl.calcAcceptableWeight(this, (CSharpMethodDeclaration) dotNetNamedElement) == WeightProcessor.MAX_WEIGHT)
 			{
 				return ((CSharpMethodDeclaration) dotNetNamedElement).getReturnTypeRef();
 			}

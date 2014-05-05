@@ -27,5 +27,14 @@ public interface WeightProcessor<T extends PsiElement>
 {
 	int MAX_WEIGHT = Integer.MAX_VALUE;
 
+	WeightProcessor MAXIMUM = new WeightProcessor()
+	{
+		@Override
+		public int getWeight(@NotNull PsiElement element)
+		{
+			return MAX_WEIGHT;
+		}
+	};
+
 	int getWeight(@NotNull T element);
 }

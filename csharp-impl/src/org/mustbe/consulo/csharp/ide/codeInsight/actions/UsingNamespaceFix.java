@@ -27,6 +27,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionI
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.DelegateExpressionWithParameters;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.WeightProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.ExtensionMethodIndex;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.MethodIndex;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.TypeIndex;
@@ -199,7 +200,7 @@ public class UsingNamespaceFix implements HintAction, HighPriorityAction
 
 		for(DotNetLikeMethodDeclaration possibleMethod : list)
 		{
-			if(MethodAcceptorImpl.isAccepted(delegatedExpression, possibleMethod))
+			if(MethodAcceptorImpl.calcAcceptableWeight(delegatedExpression, possibleMethod) == WeightProcessor.MAX_WEIGHT)
 			{
 				PsiElement parentOfMethod = possibleMethod.getParent();
 				if(parentOfMethod instanceof DotNetQualifiedElement)

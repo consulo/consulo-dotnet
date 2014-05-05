@@ -37,49 +37,56 @@ public class MethodAcceptorImpl
 {
 	private static interface MethodAcceptor
 	{
-		boolean isAccepted(@NotNull CSharpExpressionWithParameters scope, DotNetExpression[] expressions, DotNetParameter[] parameters);
+		int calcAcceptableWeight(@NotNull CSharpExpressionWithParameters scope, DotNetExpression[] expressions, DotNetParameter[] parameters);
 	}
 
 	private static class SimpleMethodAcceptor implements MethodAcceptor
 	{
 		@Override
-		public boolean isAccepted(@NotNull CSharpExpressionWithParameters scope, DotNetExpression[] expressions, DotNetParameter[] parameters)
+		public int calcAcceptableWeight(
+				@NotNull CSharpExpressionWithParameters scope,
+				DotNetExpression[] expressions,
+				DotNetParameter[] parameters)
 		{
 			if(expressions.length != parameters.length)
 			{
-				return false;
+				return 0;
 			}
 
+			int weight = 0;
 			for(int i = 0; i < expressions.length; i++)
 			{
 				DotNetExpression expression = expressions[i];
 				DotNetParameter parameter = parameters[i];
 				if(expression == null)
 				{
-					return false;
+					return weight;
 				}
 
 				DotNetTypeRef expressionType = expression.toTypeRef(false);
 				DotNetTypeRef parameterType = parameter.toTypeRef(false);
 
-				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, scope))
+				if(CSharpTypeUtil.isInheritable(expressionType, parameterType, scope))
 				{
-					return false;
+					weight ++;
 				}
 			}
 
-			return true;
+			return weight == expressions.length ? WeightProcessor.MAX_WEIGHT : weight;
 		}
 	}
 
 	private static class MethodAcceptorWithDefaultValues implements MethodAcceptor
 	{
 		@Override
-		public boolean isAccepted(@NotNull CSharpExpressionWithParameters scope, DotNetExpression[] expressions, DotNetParameter[] parameters)
+		public int calcAcceptableWeight(
+				@NotNull CSharpExpressionWithParameters scope,
+				DotNetExpression[] expressions,
+				DotNetParameter[] parameters)
 		{
 			if(expressions.length >= parameters.length)
 			{
-				return false;
+				return 0;
 			}
 
 			for(int i = 0; i < parameters.length; i++)
@@ -95,7 +102,7 @@ public class MethodAcceptorImpl
 
 				if(expression == null)
 				{
-					return false;
+					return 0;
 				}
 
 				DotNetTypeRef expressionType = expression.toTypeRef(false);
@@ -103,22 +110,25 @@ public class MethodAcceptorImpl
 
 				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, scope))
 				{
-					return false;
+					return 0;
 				}
 			}
 
-			return true;
+			return WeightProcessor.MAX_WEIGHT;
 		}
 	}
 
 	private static class MethodAcceptorForExtensions implements MethodAcceptor
 	{
 		@Override
-		public boolean isAccepted(@NotNull CSharpExpressionWithParameters scope, DotNetExpression[] expressions, DotNetParameter[] parameters)
+		public int calcAcceptableWeight(
+				@NotNull CSharpExpressionWithParameters scope,
+				DotNetExpression[] expressions,
+				DotNetParameter[] parameters)
 		{
 			if(parameters.length == 0 || !parameters[0].hasModifier(CSharpModifier.THIS))
 			{
-				return false;
+				return 0;
 			}
 			if(scope instanceof CSharpMethodCallExpressionImpl)
 			{
@@ -128,17 +138,17 @@ public class MethodAcceptorImpl
 					PsiElement qualifier = ((CSharpReferenceExpressionImpl) callExpression).getQualifier();
 					if(!(qualifier instanceof DotNetExpression))
 					{
-						return false;
+						return 0;
 					}
 
 					DotNetExpression[] newExpressions = new DotNetExpression[expressions.length + 1];
 					newExpressions[0] = (DotNetExpression) qualifier;
 					System.arraycopy(expressions, 0, newExpressions, 1, expressions.length);
 
-					return MethodAcceptorImpl.isAccepted(new DelegateExpressionWithParameters(scope, newExpressions), parameters);
+					return MethodAcceptorImpl.calcAcceptableWeight(new DelegateExpressionWithParameters(scope, newExpressions), parameters);
 				}
 			}
-			return false;
+			return 0;
 		}
 	}
 
@@ -148,24 +158,30 @@ public class MethodAcceptorImpl
 			new MethodAcceptorForExtensions()
 	};
 
-	public static boolean isAccepted(CSharpExpressionWithParameters scope, DotNetParameterListOwner methodDeclaration)
+	public static int calcAcceptableWeight(CSharpExpressionWithParameters scope, DotNetParameterListOwner methodDeclaration)
 	{
 		DotNetParameter[] parameters = methodDeclaration.getParameters();
 
-		return isAccepted(scope, parameters);
+		return calcAcceptableWeight(scope, parameters);
 	}
 
-	public static boolean isAccepted(CSharpExpressionWithParameters scope, DotNetParameter[] parameters)
+	public static int calcAcceptableWeight(CSharpExpressionWithParameters scope, DotNetParameter[] parameters)
 	{
 		DotNetExpression[] parameterExpressions = scope.getParameterExpressions();
 
+		int weight = 0;
 		for(MethodAcceptor ourAcceptor : ourAcceptors)
 		{
-			if(ourAcceptor.isAccepted(scope, parameterExpressions, parameters))
+			int calculatedWeight = ourAcceptor.calcAcceptableWeight(scope, parameterExpressions, parameters);
+			if(calculatedWeight == WeightProcessor.MAX_WEIGHT)
 			{
-				return true;
+				return WeightProcessor.MAX_WEIGHT;
+			}
+			else
+			{
+				weight += calculatedWeight;
 			}
 		}
-		return false;
+		return weight;
 	}
 }

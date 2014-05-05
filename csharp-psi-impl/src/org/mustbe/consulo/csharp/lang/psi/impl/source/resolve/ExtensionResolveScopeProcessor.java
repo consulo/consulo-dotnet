@@ -37,11 +37,13 @@ import com.intellij.psi.ResolveState;
 public class ExtensionResolveScopeProcessor extends AbstractScopeProcessor
 {
 	private final Condition<PsiNamedElement> myCond;
+	private final WeightProcessor<PsiNamedElement> myWeightProcessor;
 	private final boolean myNamed;
 
-	public ExtensionResolveScopeProcessor(Condition<PsiNamedElement> condition, boolean named)
+	public ExtensionResolveScopeProcessor(Condition<PsiNamedElement> condition, WeightProcessor<PsiNamedElement> weightProcessor, boolean named)
 	{
 		myCond = condition;
+		myWeightProcessor = weightProcessor;
 		myNamed = named;
 	}
 
@@ -52,13 +54,16 @@ public class ExtensionResolveScopeProcessor extends AbstractScopeProcessor
 		{
 			for(DotNetNamedElement dotNetNamedElement : ((CSharpTypeDeclaration) element).getMembers())
 			{
-				if(CSharpMethodImplUtil.isExtensionMethod(dotNetNamedElement) && myCond.value(dotNetNamedElement))
+				if(!myCond.value(dotNetNamedElement) || !CSharpMethodImplUtil.isExtensionMethod(dotNetNamedElement))
 				{
-					add(new ResolveResultWithWeight(transform((CSharpMethodDeclaration) dotNetNamedElement)));
-					if(myNamed)
-					{
-						return false;
-					}
+					continue;
+				}
+
+				int weight = myWeightProcessor.getWeight(dotNetNamedElement);
+				add(new ResolveResultWithWeight(transform((CSharpMethodDeclaration) dotNetNamedElement), weight));
+				if(weight == WeightProcessor.MAX_WEIGHT && myNamed)
+				{
+					return false;
 				}
 			}
 		}

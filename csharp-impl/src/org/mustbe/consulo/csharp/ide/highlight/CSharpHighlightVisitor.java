@@ -16,7 +16,6 @@
 
 package org.mustbe.consulo.csharp.ide.highlight;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +37,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImp
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.ResolveResultWithWeight;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
@@ -242,25 +242,13 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			return;
 		}
 
-		ResolveResult[] r = expression.multiResolve(true);
-		List<PsiElement> validResults = new ArrayList<PsiElement>();
-		List<PsiElement> invalidResults = new ArrayList<PsiElement>();
+		ResolveResult[] resolveResults = expression.multiResolve(true);
 
-		for(ResolveResult resolveResult : r)
-		{
-			if(resolveResult.isValidResult())
-			{
-				validResults.add(resolveResult.getElement());
-			}
-			else
-			{
-				invalidResults.add(resolveResult.getElement());
-			}
-		}
+		ResolveResult goodResult = resolveResults.length > 0 && ((ResolveResultWithWeight)resolveResults[0]).isGoodResult() ? resolveResults[0] : null;
 
-		if(validResults.size() > 0)
+		if(goodResult != null)
 		{
-			PsiElement element = validResults.get(0);
+			PsiElement element = goodResult.getElement();
 			HighlightInfo highlightInfo = highlightNamed(element, referenceElement);
 
 			if(highlightInfo != null && CSharpMethodImplUtil.isExtensionWrapper(element))
@@ -270,7 +258,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 		}
 		else
 		{
-			if(invalidResults.isEmpty())
+			if(resolveResults.length == 0)
 			{
 				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).descriptionAndTooltip("'" + referenceElement
 						.getText() + "' is not resolved").range(referenceElement).create();
