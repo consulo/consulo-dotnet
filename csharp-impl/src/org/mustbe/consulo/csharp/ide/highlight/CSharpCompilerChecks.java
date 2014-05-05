@@ -29,6 +29,7 @@ import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheckEx;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheckForWithNameArgument;
 import org.mustbe.consulo.csharp.ide.highlight.check.SimpleCompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
@@ -36,6 +37,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpTypeUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpAssignmentExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
@@ -143,6 +145,35 @@ public interface CSharpCompilerChecks
 			return !CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, dotNetTypeRef, statement, true);
 		}
 	});
+
+	CompilerCheck<CSharpLocalVariable> CS0815 = new SimpleCompilerCheck<CSharpLocalVariable>(HighlightInfoType.ERROR, new Processor<CSharpLocalVariable>()
+	{
+		@Override
+		public boolean process(CSharpLocalVariable cSharpLocalVariable)
+		{
+			DotNetTypeRef dotNetTypeRef = cSharpLocalVariable.toTypeRef(false);
+			if(dotNetTypeRef == DotNetTypeRef.AUTO_TYPE)
+			{
+				DotNetExpression initializer = cSharpLocalVariable.getInitializer();
+				if(initializer == null)
+				{
+					return false;
+				}
+				DotNetTypeRef initializerType = initializer.toTypeRef(false);
+				return initializerType instanceof CSharpLambdaTypeRef;
+			}
+			return false;
+		}
+	})
+	{
+		@Override
+		protected TextRange makeRange(@NotNull CSharpLocalVariable element)
+		{
+			DotNetExpression initializer = element.getInitializer();
+			assert initializer != null;
+			return initializer.getTextRange();
+		}
+	};
 
 	CompilerCheck<DotNetParameter> CS0231 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<DotNetParameter>()
 	{
