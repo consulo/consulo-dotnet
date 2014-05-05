@@ -19,12 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.psi.DotNetVariable;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
@@ -123,31 +119,5 @@ public class CSharpPsiUtilImpl
 			return null;
 		}
 		return (CSharpFileImpl) psi;
-	}
-
-	@NotNull
-	public static DotNetTypeRef toRuntimeType(@NotNull DotNetVariable variable)
-	{
-		DotNetType type = variable.getType();
-		if(type == null)
-		{
-			return DotNetTypeRef.ERROR_TYPE;
-		}
-
-		DotNetTypeRef runtimeType = type.toTypeRef();
-		if(runtimeType == DotNetTypeRef.AUTO_TYPE)
-		{
-			DotNetExpression initializer = variable.getInitializer();
-			if(initializer == null)
-			{
-				return DotNetTypeRef.UNKNOWN_TYPE;
-			}
-
-			return initializer.toTypeRef();
-		}
-		else
-		{
-			return runtimeType;
-		}
 	}
 }

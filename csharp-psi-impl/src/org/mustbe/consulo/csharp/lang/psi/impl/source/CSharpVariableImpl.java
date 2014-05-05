@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
@@ -45,7 +46,27 @@ public abstract class CSharpVariableImpl extends CSharpMemberImpl implements Dot
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolve)
 	{
-		return CSharpPsiUtilImpl.toRuntimeType(this);
+		DotNetType type = getType();
+		if(type == null)
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+
+		DotNetTypeRef runtimeType = type.toTypeRef();
+		if(resolve && runtimeType == DotNetTypeRef.AUTO_TYPE)
+		{
+			DotNetExpression initializer = getInitializer();
+			if(initializer == null)
+			{
+				return DotNetTypeRef.UNKNOWN_TYPE;
+			}
+
+			return initializer.toTypeRef();
+		}
+		else
+		{
+			return runtimeType;
+		}
 	}
 
 	@Override
