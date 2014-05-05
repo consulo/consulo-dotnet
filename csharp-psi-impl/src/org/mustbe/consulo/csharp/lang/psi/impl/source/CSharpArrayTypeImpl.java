@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetArrayType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -46,7 +47,7 @@ public class CSharpArrayTypeImpl extends CSharpElementImpl implements DotNetArra
 
 	public int getDimensions()
 	{
-		return 0; //TODO [VISTALL] size
+		return findChildrenByType(CSharpTokenSets.COMMA).size();
 	}
 
 	@Override
