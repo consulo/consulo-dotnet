@@ -21,9 +21,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.ArrayUtil;
 
 /**
  * @author VISTALL
@@ -50,7 +55,7 @@ public class CSharpLambdaParameterImpl extends CSharpVariableImpl implements CSh
 		DotNetType type = getType();
 		if(type == null)
 		{
-			return DotNetTypeRef.AUTO_TYPE;
+			return resolveType();
 		}
 
 		return type.toTypeRef();
@@ -61,5 +66,39 @@ public class CSharpLambdaParameterImpl extends CSharpVariableImpl implements CSh
 	public DotNetType getType()
 	{
 		return findChildByClass(DotNetType.class);
+	}
+
+	@NotNull
+	private DotNetTypeRef resolveType()
+	{
+		CSharpLambdaExpressionImpl lambdaExpression = PsiTreeUtil.getParentOfType(this, CSharpLambdaExpressionImpl.class);
+		if(lambdaExpression == null)
+		{
+			return DotNetTypeRef.UNKNOWN_TYPE;
+		}
+
+		CSharpLambdaParameter[] parameters = ((CSharpLambdaParameterListImpl)getParent()).getParameters();
+
+		PsiElement parent = lambdaExpression.getParent();
+		if(parent instanceof DotNetVariable)
+		{
+			DotNetVariable variable = (DotNetVariable) parent;
+			if(variable.getInitializer() != lambdaExpression)
+			{
+				return DotNetTypeRef.UNKNOWN_TYPE;
+			}
+			DotNetTypeRef leftTypeRef = variable.toTypeRef();
+			if(!(leftTypeRef instanceof CSharpLambdaTypeRef))
+			{
+				return DotNetTypeRef.UNKNOWN_TYPE;
+			}
+			DotNetTypeRef[] leftTypeParameters = ((CSharpLambdaTypeRef) leftTypeRef).getParameterTypes();
+			return leftTypeParameters[ArrayUtil.indexOf(parameters, this)];
+		}
+		else if(parent instanceof CSharpMethodCallExpressionImpl)
+		{
+
+		}
+		return DotNetTypeRef.UNKNOWN_TYPE;
 	}
 }
