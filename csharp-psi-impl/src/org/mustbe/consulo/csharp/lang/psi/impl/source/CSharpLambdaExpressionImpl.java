@@ -82,7 +82,7 @@ public class CSharpLambdaExpressionImpl extends CSharpElementImpl implements Dot
 		for(int i = 0; i < parameters.length; i++)
 		{
 			CSharpLambdaParameter parameter = parameters[i];
-			typeRefs[i] = parameter.toTypeRef(true);
+			typeRefs[i] = parameter.toTypeRef(resolveFromParent);
 		}
 		return new CSharpLambdaTypeRef(null, typeRefs, DotNetTypeRef.AUTO_TYPE);
 	}
