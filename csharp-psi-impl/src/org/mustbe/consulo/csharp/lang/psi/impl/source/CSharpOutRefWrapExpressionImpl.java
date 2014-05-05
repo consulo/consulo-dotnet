@@ -29,7 +29,7 @@ public class CSharpOutRefWrapExpressionImpl extends CSharpElementImpl implements
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		DotNetExpression innerExpression = getInnerExpression();
-		return innerExpression == null ? DotNetTypeRef.ERROR_TYPE : innerExpression.toTypeRef(true);
+		return innerExpression == null ? DotNetTypeRef.ERROR_TYPE : innerExpression.toTypeRef(resolveFromParent);
 	}
 
 	@Nullable
