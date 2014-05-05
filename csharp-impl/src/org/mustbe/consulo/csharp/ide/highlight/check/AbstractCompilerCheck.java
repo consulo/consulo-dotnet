@@ -41,10 +41,16 @@ public abstract class AbstractCompilerCheck<T extends PsiElement> implements Com
 		myProcessor = processor;
 	}
 
+	public boolean accept(@NotNull T element)
+	{
+		assert myProcessor != null;
+		return myProcessor.process(element);
+	}
+
 	@Override
 	public void add(@NotNull T element, @NotNull HighlightInfoHolder holder)
 	{
-		if(myProcessor.process(element))
+		if(accept(element))
 		{
 			String message = makeMessage(element);
 			if(ApplicationManager.getApplication().isInternal())

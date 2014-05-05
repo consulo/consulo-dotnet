@@ -21,21 +21,31 @@ import java.lang.reflect.ParameterizedType;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
+import org.mustbe.consulo.csharp.ide.highlight.check.AbstractCompilerCheck;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheckEx;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheckForWithNameArgument;
 import org.mustbe.consulo.csharp.ide.highlight.check.SimpleCompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpTypeUtil;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpAssignmentExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
@@ -46,6 +56,77 @@ import com.intellij.util.Processor;
  */
 public interface CSharpCompilerChecks
 {
+	AbstractCompilerCheck<PsiElement> CS0029 = new AbstractCompilerCheck<PsiElement>(HighlightInfoType.ERROR, null)
+	{
+		@Override
+		public boolean accept(@NotNull PsiElement element)
+		{
+			Pair<DotNetTypeRef, DotNetTypeRef> resolve = resolve(element);
+			if(resolve == null)
+			{
+				return false;
+			}
+			if(resolve.getFirst() == DotNetTypeRef.AUTO_TYPE)
+			{
+				return false;
+			}
+			return !CSharpTypeUtil.isInheritable(resolve.getSecond(), resolve.getFirst(), element);
+		}
+
+		@Override
+		protected String makeMessage(@NotNull PsiElement element)
+		{
+			Pair<DotNetTypeRef, DotNetTypeRef> resolve = resolve(element);
+			if(resolve == null)
+			{
+				return null;
+			}
+			return CSharpErrorBundle.message(myId, resolve.getSecond().getQualifiedText(), resolve.getFirst().getQualifiedText());
+		}
+
+		private Pair<DotNetTypeRef, DotNetTypeRef> resolve(PsiElement element)
+		{
+			if(element instanceof DotNetVariable)
+			{
+				DotNetExpression initializer = ((DotNetVariable) element).getInitializer();
+				if(initializer == null)
+				{
+					return null;
+				}
+				return Pair.create(((DotNetVariable) element).toTypeRef(false), initializer.toTypeRef(false));
+			}
+			else if(element instanceof CSharpAssignmentExpressionImpl)
+			{
+				CSharpOperatorReferenceImpl operatorElement = ((CSharpAssignmentExpressionImpl) element).getOperatorElement();
+				if(operatorElement.getOperator().getNode().getElementType() != CSharpTokens.EQ)
+				{
+					return null;
+				}
+				DotNetExpression[] expressions = ((CSharpAssignmentExpressionImpl) element).getExpressions();
+				if(expressions.length != 2)
+				{
+					return null;
+				}
+				return Pair.create(expressions[0].toTypeRef(false), expressions[1].toTypeRef(false));
+			}
+			return null;
+		}
+
+		@Override
+		protected TextRange makeRange(@NotNull PsiElement element)
+		{
+			if(element instanceof CSharpAssignmentExpressionImpl)
+			{
+				return ((CSharpAssignmentExpressionImpl) element).getExpressions()[1].getTextRange();
+			}
+			else if(element instanceof DotNetVariable)
+			{
+				return ((DotNetVariable) element).getInitializer().getTextRange();
+			}
+			throw new IllegalArgumentException();
+		}
+	};
+
 	CompilerCheck<CSharpThrowStatementImpl> CS0155 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<CSharpThrowStatementImpl>()
 	{
 		@Override
