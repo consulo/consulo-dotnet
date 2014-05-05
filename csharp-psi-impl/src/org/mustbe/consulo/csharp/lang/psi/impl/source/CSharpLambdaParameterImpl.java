@@ -22,6 +22,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -87,18 +89,41 @@ public class CSharpLambdaParameterImpl extends CSharpVariableImpl implements CSh
 			{
 				return DotNetTypeRef.UNKNOWN_TYPE;
 			}
-			DotNetTypeRef leftTypeRef = variable.toTypeRef(false);
-			if(!(leftTypeRef instanceof CSharpLambdaTypeRef))
+			return fromVariable(variable, parameters);
+		}
+		else if(parent instanceof CSharpMethodCallParameterListImpl)
+		{
+			CSharpMethodCallExpressionImpl methodCallExpression = (CSharpMethodCallExpressionImpl) parent.getParent();
+			DotNetExpression callExpression = methodCallExpression.getCallExpression();
+			if(!(callExpression instanceof CSharpReferenceExpressionImpl))
 			{
 				return DotNetTypeRef.UNKNOWN_TYPE;
 			}
-			DotNetTypeRef[] leftTypeParameters = ((CSharpLambdaTypeRef) leftTypeRef).getParameterTypes();
-			return leftTypeParameters[ArrayUtil.indexOf(parameters, this)];
-		}
-		else if(parent instanceof CSharpMethodCallExpressionImpl)
-		{
+			PsiElement resolve = ((CSharpReferenceExpressionImpl) callExpression).resolve();
+			if(!(resolve instanceof DotNetLikeMethodDeclaration))
+			{
+				return DotNetTypeRef.UNKNOWN_TYPE;
+			}
+			DotNetExpression[] parameterExpressions = methodCallExpression.getParameterExpressions();
+			int index = ArrayUtil.indexOf(parameterExpressions, lambdaExpression);
+			if(index == -1)
+			{
+				return DotNetTypeRef.UNKNOWN_TYPE;
+			}
 
+			return fromVariable(((DotNetLikeMethodDeclaration) resolve).getParameters()[index], parameters);
 		}
 		return DotNetTypeRef.UNKNOWN_TYPE;
+	}
+
+	private DotNetTypeRef fromVariable(DotNetVariable variable, CSharpLambdaParameter[] parameters)
+	{
+		DotNetTypeRef leftTypeRef = variable.toTypeRef(false);
+		if(!(leftTypeRef instanceof CSharpLambdaTypeRef))
+		{
+			return DotNetTypeRef.UNKNOWN_TYPE;
+		}
+		DotNetTypeRef[] leftTypeParameters = ((CSharpLambdaTypeRef) leftTypeRef).getParameterTypes();
+		return leftTypeParameters[ArrayUtil.indexOf(parameters, this)];
 	}
 }
