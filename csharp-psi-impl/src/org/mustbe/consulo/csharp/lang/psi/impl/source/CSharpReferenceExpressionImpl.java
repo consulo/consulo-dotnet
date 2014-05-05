@@ -86,16 +86,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 	};
 
-	private static final Condition<PsiNamedElement> ourMethodCondition = new Condition<PsiNamedElement>()
-	{
-		@Override
-		public boolean value(PsiNamedElement psiNamedElement)
-		{
-			return psiNamedElement instanceof CSharpMethodDeclaration;
-		}
-	};
-
-
 	public static enum ResolveToKind
 	{
 		TYPE_PARAMETER_FROM_PARENT,
@@ -269,7 +259,16 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					@Override
 					public boolean value(PsiNamedElement psiNamedElement)
 					{
-						return psiNamedElement instanceof CSharpMethodDeclaration && MethodAcceptorImpl.isAccepted(parameters,
+						String text = psiNamedElement.getText();
+						if(psiNamedElement instanceof CSharpLocalVariable)
+						{
+							PsiElement localVariableType = ((CSharpLocalVariable) psiNamedElement).toTypeRef().resolve(e);
+							if(localVariableType instanceof DotNetMethodDeclaration)
+							{
+								return MethodAcceptorImpl.isAccepted(parameters,(CSharpMethodDeclaration) localVariableType);
+							}
+						}
+						return psiNamedElement instanceof DotNetMethodDeclaration && MethodAcceptorImpl.isAccepted(parameters,
 								(CSharpMethodDeclaration) psiNamedElement);
 					}
 				};
@@ -511,11 +510,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case METHOD:
 			case ARRAY_METHOD:
 			case ANY_MEMBER:
-				if(kind == ResolveToKind.METHOD)
-				{
-					condition = Conditions.and(condition, ourMethodCondition);
-				}
-				else if(kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD)
+				if(kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD)
 				{
 					condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);
 				}

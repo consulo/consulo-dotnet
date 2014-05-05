@@ -18,10 +18,13 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -45,7 +48,14 @@ public class CSharpReferenceTypeImpl extends CSharpElementImpl implements DotNet
 	public DotNetTypeRef toTypeRef()
 	{
 		DotNetReferenceExpression referenceExpression = getReferenceExpression();
-		return referenceExpression.toTypeRef();
+
+		PsiElement resolve = referenceExpression.resolve();
+		if(resolve instanceof DotNetLikeMethodDeclaration)
+		{
+			DotNetLikeMethodDeclaration methodDeclaration = (DotNetLikeMethodDeclaration) resolve;
+			return new CSharpLambdaTypeRef(resolve, methodDeclaration.getParameterTypesForRuntime(), methodDeclaration.getReturnTypeRef());
+		}
+		return CSharpReferenceExpressionImpl.toTypeRef(resolve);
 	}
 
 	@NotNull
