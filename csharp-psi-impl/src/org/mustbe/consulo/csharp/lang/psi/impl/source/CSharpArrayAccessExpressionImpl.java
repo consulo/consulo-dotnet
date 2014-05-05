@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,7 @@ import com.intellij.psi.PsiQualifiedReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -127,19 +129,6 @@ public class CSharpArrayAccessExpressionImpl extends CSharpElementImpl implement
 		return getQualifier().getText();
 	}
 
-	@Nullable
-	public DotNetExpression getParameterValue()
-	{
-		for(PsiElement element : getChildren())
-		{
-			if(element != getFirstChild() && element instanceof DotNetExpression)
-			{
-				return (DotNetExpression) element;
-			}
-		}
-		return null;
-	}
-
 	@NotNull
 	@Override
 	public String getCanonicalText()
@@ -182,6 +171,14 @@ public class CSharpArrayAccessExpressionImpl extends CSharpElementImpl implement
 	@Override
 	public DotNetExpression[] getParameterExpressions()
 	{
-		return new DotNetExpression[]{getParameterValue()};
+		List<DotNetExpression> list = new ArrayList<DotNetExpression>(2);
+		for(PsiElement element : getChildren())
+		{
+			if(element != getFirstChild() && element instanceof DotNetExpression)
+			{
+				list.add((DotNetExpression) element);
+			}
+		}
+		return ContainerUtil.toArray(list, DotNetExpression.ARRAY_FACTORY);
 	}
 }

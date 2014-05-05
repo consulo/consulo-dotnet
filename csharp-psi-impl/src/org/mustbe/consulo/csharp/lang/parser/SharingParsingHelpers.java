@@ -136,6 +136,23 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		{
 			PsiBuilder.Marker newMarker = marker.precede();
 
+			if(builder.lookAhead(1) == COMMA)
+			{
+				builder.advanceLexer();  // advance [
+
+				while(builder.getTokenType() == COMMA)
+				{
+					builder.advanceLexer();
+				}
+
+				expect(builder, RBRACKET, "']' expected");
+				newMarker.done(ARRAY_TYPE);
+
+				typeInfo = new TypeInfo();
+				marker = newMarker;
+				continue;
+			}
+
 			if(builder.lookAhead(1) == RBRACKET)
 			{
 				builder.advanceLexer();

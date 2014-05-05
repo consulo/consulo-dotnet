@@ -508,30 +508,37 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 				builder.advanceLexer();
 
-				{
-					final PsiBuilder.Marker arrayAccess = expr.precede();
+				final PsiBuilder.Marker arrayAccess = expr.precede();
 
+				while(true)
+				{
 					final PsiBuilder.Marker index = parse(builder);
 					if(index == null)
 					{
 						builder.error("Expression expected");
-						arrayAccess.done(ARRAY_ACCESS_EXPRESSION);
-						startMarker.drop();
-						return arrayAccess;
 					}
 
-					if(builder.getTokenType() != RBRACKET)
+					if(builder.getTokenType() != COMMA)
 					{
-						builder.error("']' expected");
-						arrayAccess.done(ARRAY_ACCESS_EXPRESSION);
-						startMarker.drop();
-						return arrayAccess;
+						break;
 					}
-					builder.advanceLexer();
-
-					arrayAccess.done(ARRAY_ACCESS_EXPRESSION);
-					expr = arrayAccess;
+					else
+					{
+						builder.advanceLexer();
+					}
 				}
+
+				if(builder.getTokenType() != RBRACKET)
+				{
+					builder.error("']' expected");
+					arrayAccess.done(ARRAY_ACCESS_EXPRESSION);
+					startMarker.drop();
+					return arrayAccess;
+				}
+				builder.advanceLexer();
+
+				arrayAccess.done(ARRAY_ACCESS_EXPRESSION);
+				expr = arrayAccess;
 			}
 			else
 			{
@@ -1038,7 +1045,18 @@ public class ExpressionParsing extends SharingParsingHelpers
 			{
 				builder.advanceLexer();
 
-				parse(builder);
+				while(true)
+				{
+					parse(builder);
+					if(builder.getTokenType() != COMMA)
+					{
+						break;
+					}
+					else
+					{
+						builder.advanceLexer();
+					}
+				}
 
 				expect(builder, RBRACKET, "']' expected");
 			}
