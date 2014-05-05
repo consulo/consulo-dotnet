@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -52,6 +53,32 @@ public class CSharpTypeUtil
 		if(top.equals(target))
 		{
 			return true;
+		}
+
+		if(top instanceof CSharpLambdaTypeRef && target instanceof CSharpLambdaTypeRef)
+		{
+			DotNetTypeRef[] targetParameters = ((CSharpLambdaTypeRef) target).getParameterTypes();
+			DotNetTypeRef[] topParameters = ((CSharpLambdaTypeRef) top).getParameterTypes();
+			if(topParameters.length != targetParameters.length)
+			{
+				return false;
+			}
+			for(int i = 0; i < targetParameters.length; i++)
+			{
+				DotNetTypeRef targetParameter = targetParameters[i];
+				DotNetTypeRef topParameter = topParameters[i];
+				if(topParameter == DotNetTypeRef.AUTO_TYPE)
+				{
+					continue;
+				}
+				if(!isInheritable(topParameter, targetParameter, scope))
+				{
+					return false;
+				}
+			}
+			DotNetTypeRef targetReturnType = ((CSharpLambdaTypeRef) target).getReturnType();
+			DotNetTypeRef topReturnType = ((CSharpLambdaTypeRef) top).getReturnType();
+			return topReturnType == DotNetTypeRef.AUTO_TYPE || isInheritable(topReturnType, targetReturnType, scope);
 		}
 
 		PsiElement topElement = top.resolve(scope);

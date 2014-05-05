@@ -33,11 +33,23 @@ public class CSharpLambdaTypeRef implements DotNetTypeRef
 	private final DotNetTypeRef[] myParameterTypes;
 	private final DotNetTypeRef myReturnType;
 
-	public CSharpLambdaTypeRef(PsiElement target, DotNetTypeRef[] parameterTypes, DotNetTypeRef returnType)
+	public CSharpLambdaTypeRef(@Nullable PsiElement target, @NotNull DotNetTypeRef[] parameterTypes, @NotNull DotNetTypeRef returnType)
 	{
 		myTarget = target;
 		myParameterTypes = parameterTypes;
 		myReturnType = returnType;
+	}
+
+	@NotNull
+	public DotNetTypeRef getReturnType()
+	{
+		return myReturnType;
+	}
+
+	@NotNull
+	public DotNetTypeRef[] getParameterTypes()
+	{
+		return myParameterTypes;
 	}
 
 	@Nullable
