@@ -88,7 +88,9 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 	private Object resolve0()
 	{
 		PsiElement parent = getParent();
-		if(parent instanceof CSharpBinaryExpressionImpl || parent instanceof CSharpPrefixExpressionImpl)
+		if(parent instanceof CSharpBinaryExpressionImpl ||
+				parent instanceof CSharpPrefixExpressionImpl ||
+				parent instanceof CSharpPostfixExpressionImpl)
 		{
 			//TODO [search in methods]
 
@@ -198,7 +200,7 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 	public boolean isSoft()
 	{
 		PsiElement parent = getParent();
-		if(parent instanceof CSharpBinaryExpressionImpl || parent instanceof CSharpPrefixExpressionImpl)
+		if(parent instanceof CSharpBinaryExpressionImpl || parent instanceof CSharpPrefixExpressionImpl || parent instanceof CSharpPostfixExpressionImpl)
 		{
 			return findReturnTypeInStubs() != null;
 		}
@@ -239,6 +241,14 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 		else if(parent instanceof CSharpPrefixExpressionImpl)
 		{
 			DotNetExpression expression = ((CSharpPrefixExpressionImpl) parent).getExpression();
+			if(expression != null)
+			{
+				return new DotNetExpression[] {expression};
+			}
+		}
+		else if(parent instanceof CSharpPostfixExpressionImpl)
+		{
+			DotNetExpression expression = ((CSharpPostfixExpressionImpl) parent).getExpression();
 			if(expression != null)
 			{
 				return new DotNetExpression[] {expression};

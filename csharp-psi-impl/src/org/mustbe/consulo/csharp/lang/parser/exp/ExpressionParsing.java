@@ -273,7 +273,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 		while(POSTFIX_OPS.contains(builder.getTokenType()))
 		{
 			final PsiBuilder.Marker postfix = operand.precede();
+
+			PsiBuilder.Marker operatorMark = builder.mark();
 			builder.advanceLexer();
+			operatorMark.done(OPERATOR_REFERENCE);
+
 			postfix.done(POSTFIX_EXPRESSION);
 			operand = postfix;
 		}

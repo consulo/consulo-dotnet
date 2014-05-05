@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -40,9 +41,23 @@ public class CSharpPostfixExpressionImpl extends CSharpElementImpl implements Do
 	}
 
 	@NotNull
+	public CSharpOperatorReferenceImpl getOperatorElement()
+	{
+		return findNotNullChildByClass(CSharpOperatorReferenceImpl.class);
+	}
+
+	@Nullable
+	public DotNetExpression getExpression()
+	{
+		return findChildByClass(DotNetExpression.class);
+	}
+
+	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		CSharpOperatorReferenceImpl operatorElement = getOperatorElement();
+
+		return operatorElement.resolveToTypeRef();
 	}
 }
