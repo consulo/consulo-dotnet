@@ -65,7 +65,11 @@ public class CSharpLambdaTypeRef implements DotNetTypeRef
 			}
 		}
 		builder.append(")");
-		if(myReturnType != AUTO_TYPE)
+		if(myReturnType == AUTO_TYPE)
+		{
+			builder.append("?");
+		}
+		else
 		{
 			builder.append(" => ").append(myReturnType.getPresentableText());
 		}
@@ -85,10 +89,22 @@ public class CSharpLambdaTypeRef implements DotNetTypeRef
 			{
 				builder.append(", ");
 			}
-			builder.append(myParameterTypes[i].getQualifiedText());
+			DotNetTypeRef parameterType = myParameterTypes[i];
+			if(parameterType == AUTO_TYPE)
+			{
+				builder.append("?");
+			}
+			else
+			{
+				builder.append(myParameterTypes[i].getQualifiedText());
+			}
 		}
 		builder.append(")");
-		if(myReturnType != AUTO_TYPE)
+		if(myReturnType == AUTO_TYPE)
+		{
+			builder.append("?");
+		}
+		else
 		{
 			builder.append(" => ").append(myReturnType.getQualifiedText());
 		}
