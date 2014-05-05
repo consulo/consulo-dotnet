@@ -58,6 +58,7 @@ import com.intellij.psi.PsiQualifiedReference;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.QualifiedName;
@@ -165,17 +166,15 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public ResolveResult[] multiResolve(final boolean incompleteCode)
 	{
-		/*return ResolveCache.getInstance(getProject()).resolveWithCaching(this,
-		new ResolveCache.PolyVariantResolver<CSharpReferenceExpressionImpl>()
+		return ResolveCache.getInstance(getProject()).resolveWithCaching(this, new ResolveCache.PolyVariantResolver<CSharpReferenceExpressionImpl>()
 		{
 			@NotNull
 			@Override
 			public ResolveResult[] resolve(@NotNull CSharpReferenceExpressionImpl cSharpReferenceExpression, boolean incompleteCode)
 			{
-				*/
-		return multiResolve0(true); //TODO [VISTALL] incomplete handle
-			/*}
-		}, true, incompleteCode); */
+				return multiResolve0(true); //TODO [VISTALL] incomplete handle
+			}
+		}, true, incompleteCode);
 	}
 
 	private ResolveResult[] multiResolve0(boolean named)
