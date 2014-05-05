@@ -502,4 +502,36 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 			return false;
 		}
 	}
+
+	public static boolean expectGGLL(CSharpBuilderWrapper builder, IElementType elementType, String message)
+	{
+		if(builder.getTokenTypeGGLL() == elementType)
+		{
+			builder.advanceLexerGGLL();
+			return true;
+		}
+		else
+		{
+			if(message != null)
+			{
+				builder.error(message);
+			}
+			return false;
+		}
+	}
+
+	protected static boolean doneOneElementGGLL(CSharpBuilderWrapper builder, IElementType elementType, IElementType to, String message)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+		if(expectGGLL(builder, elementType, message))
+		{
+			mark.done(to);
+			return true;
+		}
+		else
+		{
+			mark.drop();
+			return false;
+		}
+	}
 }

@@ -188,7 +188,7 @@ public interface CSharpTokens extends TokenType
 
 	IElementType EQ = new IElementType("EQ", CSharpLanguage.INSTANCE);
 
-	IElementType ASTERISKEQ = new IElementType("ASTERISKEQ", CSharpLanguage.INSTANCE);
+	IElementType MULEQ = new IElementType("MULEQ", CSharpLanguage.INSTANCE);
 
 	IElementType DIVEQ = new IElementType("DIVEQ", CSharpLanguage.INSTANCE);
 

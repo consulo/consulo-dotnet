@@ -248,7 +248,7 @@ MACRO_START={MACRO_NEW_LINE}?{MACRO_WHITE_SPACE}?"#"
 
 	")"                       { return CSharpTokens.RPAR; }
 
-	"*="                      { return CSharpTokens.ASTERISKEQ; }
+	"*="                      { return CSharpTokens.MULEQ; }
 
 	"/="                      { return CSharpTokens.DIVEQ; }
 

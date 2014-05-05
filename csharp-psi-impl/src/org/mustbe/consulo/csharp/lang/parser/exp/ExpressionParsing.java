@@ -35,9 +35,6 @@ public class ExpressionParsing extends SharingParsingHelpers
 		CONDITIONAL_OR, CONDITIONAL_AND, OR, XOR, AND, EQUALITY, RELATIONAL, SHIFT, ADDITIVE, MULTIPLICATIVE, UNARY, TYPE
 	}
 
-	private static final TokenSet ASSIGNMENT_OPS = TokenSet.create(EQ, ASTERISKEQ, DIVEQ, PERCEQ, PLUSEQ, MINUSEQ, LTLTEQ, GTGTEQ, ANDEQ, OREQ,
-			XOREQ);
-
 	private static final TokenSet CONDITIONAL_OR_OPS = TokenSet.create(OROR);
 	private static final TokenSet CONDITIONAL_AND_OPS = TokenSet.create(ANDAND);
 	private static final TokenSet OR_OPS = TokenSet.create(OR);
@@ -74,10 +71,11 @@ public class ExpressionParsing extends SharingParsingHelpers
 
 		final IElementType tokenType = builder.getTokenTypeGGLL();
 
-		if(ASSIGNMENT_OPS.contains(tokenType) && tokenType != null)
+		if(ASSIGNMENT_OPERATORS.contains(tokenType) && tokenType != null)
 		{
 			final PsiBuilder.Marker assignment = left.precede();
-			builder.advanceLexerGGLL();
+
+			doneOneElementGGLL(builder, tokenType, OPERATOR_REFERENCE, null);
 
 			final PsiBuilder.Marker right = parse(builder);
 			if(right == null)
@@ -207,9 +205,8 @@ public class ExpressionParsing extends SharingParsingHelpers
 		if(PREFIX_OPS.contains(tokenType))
 		{
 			final PsiBuilder.Marker unary = builder.mark();
-			PsiBuilder.Marker operatorMark = builder.mark();
-			builder.advanceLexer();
-			operatorMark.done(OPERATOR_REFERENCE);
+
+			doneOneElementGGLL(builder, tokenType, OPERATOR_REFERENCE, null);
 
 			final PsiBuilder.Marker operand = parseUnary(builder);
 			if(operand == null)
@@ -274,9 +271,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			final PsiBuilder.Marker postfix = operand.precede();
 
-			PsiBuilder.Marker operatorMark = builder.mark();
-			builder.advanceLexer();
-			operatorMark.done(OPERATOR_REFERENCE);
+			doneOneElementGGLL(builder, builder.getTokenType(), OPERATOR_REFERENCE, null);
 
 			postfix.done(POSTFIX_EXPRESSION);
 			operand = postfix;
@@ -304,9 +299,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 				break;
 			}
 
-			PsiBuilder.Marker mark = builder.mark();
-			builder.advanceLexerGGLL();
-			mark.done(OPERATOR_REFERENCE);
+			doneOneElementGGLL(builder, tokenType, OPERATOR_REFERENCE, null);
 
 			final PsiBuilder.Marker right = parseExpression(builder, type);
 			operandCount++;
@@ -371,9 +364,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 			final PsiBuilder.Marker expression = left.precede();
 			if(operatorReference)
 			{
-				PsiBuilder.Marker mark = builder.mark();
-				builder.advanceLexerGGLL();
-				mark.done(OPERATOR_REFERENCE);
+				doneOneElementGGLL(builder, builder.getTokenTypeGGLL(), OPERATOR_REFERENCE, null);
 			}
 			else
 			{

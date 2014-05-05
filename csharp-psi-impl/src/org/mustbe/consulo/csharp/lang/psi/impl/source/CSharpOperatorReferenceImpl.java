@@ -16,6 +16,9 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
@@ -34,6 +37,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 import lombok.val;
 
@@ -43,6 +47,25 @@ import lombok.val;
  */
 public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements PsiReference, CSharpExpressionWithParameters
 {
+	private static final TokenSet ourMergeSet = TokenSet.orSet(CSharpTokenSets.OVERLOADING_OPERATORS, CSharpTokenSets.ASSIGNMENT_OPERATORS);
+
+	private static final Map<IElementType, IElementType> ourAssignmentOperatorMap = new HashMap<IElementType, IElementType>()
+	{
+		{
+			put(CSharpTokens.MULEQ, CSharpTokens.MUL);
+			put(CSharpTokens.PLUSEQ, CSharpTokens.PLUS);
+			put(CSharpTokens.MINUSEQ, CSharpTokens.MINUS);
+			put(CSharpTokens.DIVEQ, CSharpTokens.DIV);
+			put(CSharpTokens.GTEQ, CSharpTokens.GT);
+			put(CSharpTokens.LTEQ, CSharpTokens.LT);
+			put(CSharpTokens.GTGTEQ, CSharpTokens.GTGT);
+			put(CSharpTokens.LTLTEQ, CSharpTokens.LTLT);
+			put(CSharpTokens.ANDEQ, CSharpTokens.AND);
+			put(CSharpTokens.OREQ, CSharpTokens.OR);
+			put(CSharpTokens.XOREQ, CSharpTokens.XOR);
+		}
+	};
+
 	public CSharpOperatorReferenceImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -70,7 +93,7 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 	@NotNull
 	public PsiElement getOperator()
 	{
-		return findNotNullChildByFilter(CSharpTokenSets.OVERLOADING_OPERATORS);
+		return findNotNullChildByFilter(ourMergeSet);
 	}
 
 	@Nullable
@@ -89,6 +112,7 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 	{
 		PsiElement parent = getParent();
 		if(parent instanceof CSharpBinaryExpressionImpl ||
+				parent instanceof CSharpAssignmentExpressionImpl ||
 				parent instanceof CSharpPrefixExpressionImpl ||
 				parent instanceof CSharpPostfixExpressionImpl)
 		{
@@ -125,6 +149,10 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 		{
 			return CSharpNativeTypeRef.BOOL;
 		}
+		if(elementType == CSharpTokenSets.EQ)
+		{
+			return CSharpNativeTypeRef.VOID;
+		}
 
 		CSharpOperatorHelper operatorHelper = CSharpOperatorHelper.getInstance(getProject());
 
@@ -157,11 +185,14 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 
 		IElementType elementType = reference.getOperator().getNode().getElementType();
 
-		if(methodDeclaration.getOperatorElementType() == elementType)
+		// normalize
+		IElementType normalized = ourAssignmentOperatorMap.get(elementType);
+		if(normalized != null)
 		{
-			return true;
+			elementType = normalized;
 		}
-		return false;
+
+		return methodDeclaration.getOperatorElementType() == elementType;
 	}
 
 	@NotNull
@@ -200,7 +231,10 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 	public boolean isSoft()
 	{
 		PsiElement parent = getParent();
-		if(parent instanceof CSharpBinaryExpressionImpl || parent instanceof CSharpPrefixExpressionImpl || parent instanceof CSharpPostfixExpressionImpl)
+		if(parent instanceof CSharpBinaryExpressionImpl ||
+				parent instanceof CSharpPrefixExpressionImpl ||
+				parent instanceof CSharpAssignmentExpressionImpl ||
+				parent instanceof CSharpPostfixExpressionImpl)
 		{
 			return findReturnTypeInStubs() != null;
 		}
@@ -253,6 +287,10 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 			{
 				return new DotNetExpression[] {expression};
 			}
+		}
+		else if(parent instanceof CSharpAssignmentExpressionImpl)
+		{
+			return ((CSharpAssignmentExpressionImpl) parent).getExpressions();
 		}
 		return DotNetExpression.EMPTY_ARRAY;
 	}
