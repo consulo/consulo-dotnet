@@ -53,11 +53,7 @@ public class MonoNUnitMutableModuleExtension extends MonoNUnitModuleExtension im
 	@Override
 	public void setEnabled(boolean val)
 	{
-		myIsEnabled = val;
-		if(val)
-		{
-			myRootModel.addModuleExtensionSdkEntry(this);
-		}
+		setEnabledImpl(val);
 	}
 
 	@Override

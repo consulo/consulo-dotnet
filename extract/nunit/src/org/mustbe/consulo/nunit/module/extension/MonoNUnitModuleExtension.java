@@ -16,12 +16,10 @@
 
 package org.mustbe.consulo.nunit.module.extension;
 
-import org.consulo.module.extension.ModuleInheritableNamedPointer;
-import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.mono.csharp.module.extension.InnerMonoModuleExtension;
 import org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension;
 import org.mustbe.consulo.nunit.bundle.NUnitBundleType;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -38,52 +36,15 @@ import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
  * @author VISTALL
  * @since 23.04.14
  */
-public class MonoNUnitModuleExtension extends ModuleExtensionImpl<MonoNUnitModuleExtension> implements NUnitModuleExtension<MonoNUnitModuleExtension>
+public class MonoNUnitModuleExtension extends InnerMonoModuleExtension<MonoNUnitModuleExtension> implements NUnitModuleExtension<MonoNUnitModuleExtension>
 {
-	private ModuleInheritableNamedPointer<Sdk> myPointer;
-
-	private Sdk myParentSdk;
-
-	private Sdk myLazySdk;
-
 	public MonoNUnitModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel)
 	{
 		super(id, rootModel);
-		myPointer = new DummyModuleInheritableNamedPointer<Sdk>()
-		{
-			@Override
-			public Sdk get()
-			{
-				return MonoNUnitModuleExtension.this.get();
-			}
-		};
 	}
 
-	private Sdk get()
-	{
-		DotNetModuleExtension extension = myRootModel.getExtension(DotNetModuleExtension.class);
-		assert extension != null;
-
-		Sdk parentSdk = extension.getSdk();
-		if(parentSdk != myParentSdk)
-		{
-			myLazySdk = null;
-		}
-
-		if(myLazySdk == null)
-		{
-			myParentSdk = parentSdk;
-			if(myParentSdk == null)
-			{
-				return null;
-			}
-			myLazySdk = createSdk(myParentSdk.getHomeDirectory());
-		}
-		return myLazySdk;
-	}
-
-
-	private Sdk createSdk(VirtualFile virtualFile)
+	@Override
+	protected Sdk createSdk(VirtualFile virtualFile)
 	{
 		SdkImpl sdk = new SdkImpl("Mono NUnit", NUnitBundleType.getInstance());
 		sdk.setHomePath(virtualFile.getPath());
@@ -114,30 +75,9 @@ public class MonoNUnitModuleExtension extends ModuleExtensionImpl<MonoNUnitModul
 
 	@NotNull
 	@Override
-	public ModuleInheritableNamedPointer<Sdk> getInheritableSdk()
-	{
-		return myPointer;
-	}
-
-	@Nullable
-	@Override
-	public Sdk getSdk()
-	{
-		return getInheritableSdk().get();
-	}
-
-	@Nullable
-	@Override
-	public String getSdkName()
-	{
-		return getInheritableSdk().getName();
-	}
-
-	@NotNull
-	@Override
 	public Class<? extends SdkType> getSdkTypeClass()
 	{
-		return SdkType.class;
+		return NUnitBundleType.class;
 	}
 
 	@NotNull

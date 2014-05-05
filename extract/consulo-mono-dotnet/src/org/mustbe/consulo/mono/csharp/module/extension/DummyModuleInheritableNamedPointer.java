@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.nunit.module.extension;
+package org.mustbe.consulo.mono.csharp.module.extension;
 
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
