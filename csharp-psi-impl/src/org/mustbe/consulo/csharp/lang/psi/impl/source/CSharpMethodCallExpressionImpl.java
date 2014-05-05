@@ -19,9 +19,12 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -64,6 +67,21 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
-		return getCallExpression().toTypeRef(resolveFromParent);
+		DotNetExpression callExpression = getCallExpression();
+
+		if(callExpression instanceof CSharpReferenceExpressionImpl)
+		{
+			PsiElement resolve = ((CSharpReferenceExpressionImpl) callExpression).resolve();
+			if(resolve instanceof DotNetVariable)
+			{
+				DotNetTypeRef dotNetTypeRef = ((DotNetVariable) resolve).toTypeRef(false);
+				if(dotNetTypeRef instanceof CSharpLambdaTypeRef)
+				{
+					return ((CSharpLambdaTypeRef) dotNetTypeRef).getReturnType();
+				}
+			}
+			return CSharpReferenceExpressionImpl.toTypeRef(resolve);
+		}
+		return callExpression.toTypeRef(resolveFromParent);
 	}
 }
