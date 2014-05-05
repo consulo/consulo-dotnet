@@ -91,7 +91,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 			@Override
 			public String fun(DotNetParameter dotNetParameter)
 			{
-				return generateLinksForType(dotNetParameter.toTypeRef(), dotNetParameter) + " " + dotNetParameter.getName();
+				return generateLinksForType(dotNetParameter.toTypeRef(true), dotNetParameter) + " " + dotNetParameter.getName();
 			}
 		}, ", "));
 		builder.append(")");
@@ -103,7 +103,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		StringBuilder builder = new StringBuilder();
 
 		appendModifiers(element, builder);
-		builder.append(generateLinksForType(element.toTypeRef(), element));
+		builder.append(generateLinksForType(element.toTypeRef(true), element));
 		builder.append(" ");
 		builder.append(element.getName());
 		DotNetExpression initializer = element.getInitializer();
@@ -258,7 +258,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		}
 		else if(psiElement instanceof DotNetPropertyDeclaration)
 		{
-			builder.append(generateLinksForType(((DotNetPropertyDeclaration) psiElement).toTypeRef(), psiElement)).append(" ");
+			builder.append(generateLinksForType(((DotNetPropertyDeclaration) psiElement).toTypeRef(true), psiElement)).append(" ");
 		}
 		else if(psiElement instanceof DotNetLikeMethodDeclaration)
 		{
@@ -275,7 +275,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 				@Override
 				public String fun(DotNetParameter dotNetParameter)
 				{
-					return generateLinksForType(dotNetParameter.toTypeRef(), dotNetParameter) + " " + dotNetParameter.getName();
+					return generateLinksForType(dotNetParameter.toTypeRef(true), dotNetParameter) + " " + dotNetParameter.getName();
 				}
 			}, ", "));
 			builder.append(")");
@@ -400,7 +400,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 					@Override
 					public String fun(DotNetParameter dotNetParameter)
 					{
-						DotNetTypeRef dotNetTypeRef = dotNetParameter.toTypeRef();
+						DotNetTypeRef dotNetTypeRef = dotNetParameter.toTypeRef(true);
 
 						return typeToDocName(dotNetParameter, dotNetTypeRef);
 					}

@@ -63,7 +63,7 @@ public abstract class CSharpLightVariableBuilder<T extends CSharpLightVariableBu
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolve)
 	{
 		return myTypeRef;
 	}

@@ -83,7 +83,7 @@ public class CSharpElementPresentationUtil
 		StringBuilder builder = new StringBuilder();
 		builder.append(fieldDeclaration.getName());
 		builder.append(":");
-		builder.append(fieldDeclaration.toTypeRef().getPresentableText());
+		builder.append(fieldDeclaration.toTypeRef(true).getPresentableText());
 		return builder.toString();
 	}
 
@@ -102,7 +102,7 @@ public class CSharpElementPresentationUtil
 				@Override
 				public String fun(DotNetParameter parameter)
 				{
-					return parameter.getName() + ":" + parameter.toTypeRef().getPresentableText();
+					return parameter.getName() + ":" + parameter.toTypeRef(true).getPresentableText();
 				}
 			}, ", "));
 			builder.append(")");

@@ -66,7 +66,7 @@ public class CSharpParameterListImpl extends CSharpStubElementImpl<CSharpParamet
 		DotNetTypeRef[] dotNetTypeRefs = new DotNetTypeRef[parameters.length];
 		for(int i = 0; i < dotNetTypeRefs.length; i++)
 		{
-			dotNetTypeRefs[i] = parameters[i].toTypeRef();
+			dotNetTypeRefs[i] = parameters[i].toTypeRef(true);
 		}
 		return dotNetTypeRefs;
 	}

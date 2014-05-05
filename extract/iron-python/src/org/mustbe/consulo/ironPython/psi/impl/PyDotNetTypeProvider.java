@@ -66,7 +66,7 @@ public class PyDotNetTypeProvider extends PyTypeProviderBase
 		}
 		if(referenceTarget instanceof DotNetVariable)
 		{
-			return asPyType(((DotNetVariable) referenceTarget).toTypeRef(), referenceTarget);
+			return asPyType(((DotNetVariable) referenceTarget).toTypeRef(true), referenceTarget);
 		}
 		return null;
 	}
@@ -108,7 +108,7 @@ public class PyDotNetTypeProvider extends PyTypeProviderBase
 					int javaIndex = method.hasModifier(CSharpModifier.STATIC) ? index : index - 1; // adjust for 'self' parameter
 					if(javaIndex < psiParameters.length)
 					{
-						DotNetTypeRef paramType = psiParameters[javaIndex].toTypeRef();
+						DotNetTypeRef paramType = psiParameters[javaIndex].toTypeRef(true);
 						PsiElement resolve = paramType.resolve(psiElement);
 						if(resolve instanceof DotNetTypeDeclaration)
 						{

@@ -43,7 +43,7 @@ public abstract class CSharpVariableImpl extends CSharpMemberImpl implements Dot
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolve)
 	{
 		return CSharpPsiUtilImpl.toRuntimeType(this);
 	}

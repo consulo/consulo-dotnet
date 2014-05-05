@@ -175,7 +175,7 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 
 			builder = builder.withIcon(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
 
-			builder = builder.withTypeText(((DotNetVariable) element).toTypeRef().getPresentableText());
+			builder = builder.withTypeText(((DotNetVariable) element).toTypeRef(true).getPresentableText());
 
 			return builder;
 		}

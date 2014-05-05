@@ -37,7 +37,7 @@ public class CSharpLightParameter extends CSharpLightVariable<DotNetParameter> i
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolve)
 	{
 		return myTypeRef;
 	}

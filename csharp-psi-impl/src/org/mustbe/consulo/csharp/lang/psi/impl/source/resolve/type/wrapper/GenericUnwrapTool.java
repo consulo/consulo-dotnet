@@ -73,7 +73,7 @@ public class GenericUnwrapTool
 				for(int i = 0; i < parameters.length; i++)
 				{
 					DotNetParameter parameter = parameters[i];
-					newParameters[i] = new CSharpLightParameter(parameter, exchangeTypeRefs(parameter.toTypeRef(), extractor, parameter));
+					newParameters[i] = new CSharpLightParameter(parameter, exchangeTypeRefs(parameter.toTypeRef(true), extractor, parameter));
 				}
 
 				parameterList = new CSharpLightParameterList(parameterList, newParameters);
@@ -96,7 +96,7 @@ public class GenericUnwrapTool
 				for(int i = 0; i < parameters.length; i++)
 				{
 					DotNetParameter parameter = parameters[i];
-					newParameters[i] = new CSharpLightParameter(parameter, exchangeTypeRefs(parameter.toTypeRef(), extractor, parameter));
+					newParameters[i] = new CSharpLightParameter(parameter, exchangeTypeRefs(parameter.toTypeRef(true), extractor, parameter));
 				}
 
 				parameterList = new CSharpLightParameterList(parameterList, newParameters);
@@ -117,7 +117,7 @@ public class GenericUnwrapTool
 				for(int i = 0; i < parameters.length; i++)
 				{
 					DotNetParameter parameter = parameters[i];
-					newParameters[i] = new CSharpLightParameter(parameter, exchangeTypeRefs(parameter.toTypeRef(), extractor, parameter));
+					newParameters[i] = new CSharpLightParameter(parameter, exchangeTypeRefs(parameter.toTypeRef(true), extractor, parameter));
 				}
 
 				parameterList = new CSharpLightParameterList(parameterList, newParameters);
@@ -128,17 +128,17 @@ public class GenericUnwrapTool
 		else if(namedElement instanceof CSharpPropertyDeclaration)
 		{
 			CSharpPropertyDeclaration e = (CSharpPropertyDeclaration) namedElement;
-			return (T) new CSharpLightPropertyDeclaration(e, exchangeTypeRefs(e.toTypeRef(), extractor, e));
+			return (T) new CSharpLightPropertyDeclaration(e, exchangeTypeRefs(e.toTypeRef(true), extractor, e));
 		}
 		else if(namedElement instanceof CSharpEventDeclaration)
 		{
 			CSharpEventDeclaration e = (CSharpEventDeclaration) namedElement;
-			return (T) new CSharpLightEventDeclaration(e, exchangeTypeRefs(e.toTypeRef(), extractor, e));
+			return (T) new CSharpLightEventDeclaration(e, exchangeTypeRefs(e.toTypeRef(true), extractor, e));
 		}
 		else if(namedElement instanceof CSharpFieldDeclaration)
 		{
 			CSharpFieldDeclaration e = (CSharpFieldDeclaration) namedElement;
-			return (T) new CSharpLightFieldDeclaration(e, exchangeTypeRefs(e.toTypeRef(), extractor, e));
+			return (T) new CSharpLightFieldDeclaration(e, exchangeTypeRefs(e.toTypeRef(true), extractor, e));
 		}
 		return namedElement;
 	}

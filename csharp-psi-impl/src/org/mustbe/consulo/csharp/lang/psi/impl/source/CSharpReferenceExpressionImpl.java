@@ -260,7 +260,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					{
 						if(psiNamedElement instanceof DotNetVariable)
 						{
-							PsiElement localVariableType = ((DotNetVariable) psiNamedElement).toTypeRef().resolve(e);
+							PsiElement localVariableType = ((DotNetVariable) psiNamedElement).toTypeRef(true).resolve(e);
 							if(localVariableType instanceof DotNetMethodDeclaration)
 							{
 								return MethodAcceptorImpl.isAccepted(parameters,(CSharpMethodDeclaration) localVariableType);
@@ -935,7 +935,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(resolve instanceof DotNetVariable)
 		{
-			return ((DotNetVariable) resolve).toTypeRef();
+			return ((DotNetVariable) resolve).toTypeRef(true);
 		}
 		return DotNetTypeRef.ERROR_TYPE;
 	}
