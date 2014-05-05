@@ -41,6 +41,7 @@ public class CSharpOperatorHelperImpl extends CSharpOperatorHelper
 	{
 		"/stub/ObjectStubs.cs",
 		"/stub/EnumStubs.cs",
+		"/stub/BoolStubs.cs",
 		"/stub/StringStubs.cs",
 		"/stub/ByteStubs.cs",
 		"/stub/ShortStubs.cs",
