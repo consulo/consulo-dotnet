@@ -55,7 +55,7 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		DotNetType type = getNewType();
 		if(type == null)
@@ -99,7 +99,7 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 				}
 				else
 				{
-					builder.append(valueReferenceExpression.toTypeRef().getQualifiedText());
+					builder.append(valueReferenceExpression.toTypeRef(true).getQualifiedText());
 				}
 				builder.append(" ");
 				builder.append(nameReferenceExpression.getText());

@@ -41,7 +41,7 @@ public class CSharpLightPropertyDeclaration extends CSharpLightVariable<CSharpPr
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef(boolean resolve)
+	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
 		return myTypeRef;
 	}

@@ -41,7 +41,7 @@ public class CSharpLightEventDeclaration extends CSharpLightVariable<CSharpEvent
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef(boolean resolve)
+	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
 		return myTypeRef;
 	}

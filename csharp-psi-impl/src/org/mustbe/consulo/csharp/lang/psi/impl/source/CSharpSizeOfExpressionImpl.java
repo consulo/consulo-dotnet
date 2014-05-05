@@ -42,7 +42,7 @@ public class CSharpSizeOfExpressionImpl extends CSharpElementImpl implements Dot
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return CSharpNativeTypeRef.INT;
 	}

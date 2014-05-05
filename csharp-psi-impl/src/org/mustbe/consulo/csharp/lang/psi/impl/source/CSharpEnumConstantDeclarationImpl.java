@@ -80,7 +80,7 @@ public class CSharpEnumConstantDeclarationImpl extends CSharpStubVariableImpl<CS
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef(boolean resolve)
+	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
 		DotNetTypeDeclaration parentOfType = PsiTreeUtil.getParentOfType(this, DotNetTypeDeclaration.class);
 		assert parentOfType != null;

@@ -47,7 +47,7 @@ public class CSharpLinqExpressionImpl extends CSharpElementImpl implements DotNe
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return DotNetTypeRef.ERROR_TYPE;
 	}

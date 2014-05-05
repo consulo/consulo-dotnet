@@ -75,7 +75,7 @@ public class CSharpLambdaExpressionImpl extends CSharpElementImpl implements Dot
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		CSharpLambdaParameter[] parameters = getParameters();
 		DotNetTypeRef[] typeRefs = new DotNetTypeRef[parameters.length];

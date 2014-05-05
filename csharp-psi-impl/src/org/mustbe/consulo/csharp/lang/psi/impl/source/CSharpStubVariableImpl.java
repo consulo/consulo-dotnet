@@ -50,7 +50,7 @@ public abstract class CSharpStubVariableImpl<S extends CSharpVariableStub<?>> ex
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef(boolean resolve)
+	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
 		S stub = getStub();
 		if(stub != null)

@@ -41,7 +41,7 @@ public class CSharpPrefixExpressionImpl extends CSharpElementImpl implements Dot
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return DotNetTypeRef.ERROR_TYPE;
 	}

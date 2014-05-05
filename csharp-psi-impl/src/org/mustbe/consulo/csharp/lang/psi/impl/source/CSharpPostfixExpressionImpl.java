@@ -41,7 +41,7 @@ public class CSharpPostfixExpressionImpl extends CSharpElementImpl implements Do
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return DotNetTypeRef.ERROR_TYPE;
 	}

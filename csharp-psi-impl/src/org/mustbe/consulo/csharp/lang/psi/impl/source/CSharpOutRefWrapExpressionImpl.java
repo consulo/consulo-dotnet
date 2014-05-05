@@ -26,10 +26,10 @@ public class CSharpOutRefWrapExpressionImpl extends CSharpElementImpl implements
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		DotNetExpression innerExpression = getInnerExpression();
-		return innerExpression == null ? DotNetTypeRef.ERROR_TYPE : innerExpression.toTypeRef();
+		return innerExpression == null ? DotNetTypeRef.ERROR_TYPE : innerExpression.toTypeRef(true);
 	}
 
 	@Nullable

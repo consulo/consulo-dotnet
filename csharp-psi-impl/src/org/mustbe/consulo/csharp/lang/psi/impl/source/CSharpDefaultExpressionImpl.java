@@ -49,7 +49,7 @@ public class CSharpDefaultExpressionImpl extends CSharpElementImpl implements Do
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		DotNetType type = getType();
 		if(type == null)

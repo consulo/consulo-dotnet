@@ -48,13 +48,13 @@ public class CSharpParenthesesExpressionImpl extends CSharpElementImpl implement
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		DotNetExpression innerExpression = getInnerExpression();
 		if(innerExpression == null)
 		{
 			return DotNetTypeRef.ERROR_TYPE;
 		}
-		return innerExpression.toTypeRef();
+		return innerExpression.toTypeRef(true);
 	}
 }

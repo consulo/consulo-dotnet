@@ -50,7 +50,7 @@ public class CSharpLambdaParameterImpl extends CSharpVariableImpl implements CSh
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef(boolean resolve)
+	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
 		DotNetType type = getType();
 		if(type == null)

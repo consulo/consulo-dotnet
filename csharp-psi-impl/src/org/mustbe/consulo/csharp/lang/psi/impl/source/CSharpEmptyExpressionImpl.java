@@ -41,7 +41,7 @@ public class CSharpEmptyExpressionImpl extends CSharpElementImpl implements DotN
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return DotNetTypeRef.ERROR_TYPE;
 	}

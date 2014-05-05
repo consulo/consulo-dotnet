@@ -57,7 +57,7 @@ public interface CSharpCompilerChecks
 				return false;
 			}
 
-			DotNetTypeRef dotNetTypeRef = expression.toTypeRef();
+			DotNetTypeRef dotNetTypeRef = expression.toTypeRef(true);
 
 			return !CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, dotNetTypeRef, statement, true);
 		}

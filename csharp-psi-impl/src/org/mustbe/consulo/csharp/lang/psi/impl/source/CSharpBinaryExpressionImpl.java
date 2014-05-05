@@ -72,7 +72,7 @@ public class CSharpBinaryExpressionImpl extends CSharpElementImpl implements CSh
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		CSharpOperatorReferenceImpl operatorElement = getOperatorElement();
 

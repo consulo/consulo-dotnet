@@ -42,7 +42,7 @@ public class CSharpIsExpressionImpl extends CSharpElementImpl implements DotNetE
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return CSharpNativeTypeRef.BOOL;
 	}

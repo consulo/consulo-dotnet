@@ -54,7 +54,7 @@ public class CSharpArrayAccessExpressionImpl extends CSharpElementImpl implement
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		PsiElement resolve = resolve();
 		if(resolve instanceof DotNetArrayMethodDeclaration)

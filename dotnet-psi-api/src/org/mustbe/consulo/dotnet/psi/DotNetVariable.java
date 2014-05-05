@@ -30,7 +30,7 @@ public interface DotNetVariable extends PsiNameIdentifierOwner, DotNetNamedEleme
 	boolean isConstant();
 
 	@NotNull
-	DotNetTypeRef toTypeRef(boolean resolve);
+	DotNetTypeRef toTypeRef(boolean resolveFromInitializer);
 
 	@Nullable
 	DotNetType getType();

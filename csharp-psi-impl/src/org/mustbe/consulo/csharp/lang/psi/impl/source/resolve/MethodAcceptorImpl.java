@@ -59,7 +59,7 @@ public class MethodAcceptorImpl
 					return false;
 				}
 
-				DotNetTypeRef expressionType = expression.toTypeRef();
+				DotNetTypeRef expressionType = expression.toTypeRef(true);
 				DotNetTypeRef parameterType = parameter.toTypeRef(true);
 
 				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, scope))
@@ -98,7 +98,7 @@ public class MethodAcceptorImpl
 					return false;
 				}
 
-				DotNetTypeRef expressionType = expression.toTypeRef();
+				DotNetTypeRef expressionType = expression.toTypeRef(true);
 				DotNetTypeRef parameterType = parameter.toTypeRef(true);
 
 				if(!CSharpTypeUtil.isInheritable(expressionType, parameterType, scope))

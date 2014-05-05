@@ -28,5 +28,5 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 public interface DotNetExpression extends DotNetElement
 {
 	@NotNull
-	DotNetTypeRef toTypeRef();
+	DotNetTypeRef toTypeRef(boolean resolveFromParent);
 }

@@ -41,7 +41,7 @@ public class CSharpConditionalExpressionImpl extends CSharpElementImpl implement
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return DotNetTypeRef.ERROR_TYPE;
 	}

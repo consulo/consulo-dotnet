@@ -67,7 +67,7 @@ public class CSharpIntroduceVariableHandler implements RefactoringActionHandler
 			}
 		}
 
-		DotNetTypeRef dotNetTypeRef = expression.toTypeRef();
+		DotNetTypeRef dotNetTypeRef = expression.toTypeRef(true);
 		if(dotNetTypeRef == CSharpNativeTypeRef.VOID)
 		{
 			CommonRefactoringUtil.showErrorHint(project, editor, "Expression type is 'void'", RefactoringBundle.message("introduce.variable.title"),

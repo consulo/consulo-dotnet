@@ -67,9 +67,9 @@ public class CSharpNullCoalescingExpressionImpl extends CSharpElementImpl implem
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		DotNetExpression condition = getCondition();
-		return condition.toTypeRef();
+		return condition.toTypeRef(true);
 	}
 }

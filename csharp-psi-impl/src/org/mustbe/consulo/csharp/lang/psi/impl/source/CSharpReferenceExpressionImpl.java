@@ -394,7 +394,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			case FIELD_OR_PROPERTY:
 				CSharpNewExpression newExpression = PsiTreeUtil.getParentOfType(element, CSharpNewExpression.class);
 				assert newExpression != null;
-				DotNetTypeRef dotNetTypeRef = newExpression.toTypeRef();
+				DotNetTypeRef dotNetTypeRef = newExpression.toTypeRef(true);
 				if(dotNetTypeRef == DotNetTypeRef.ERROR_TYPE)
 				{
 					return ResolveResult.EMPTY_ARRAY;
@@ -526,7 +526,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 		if(qualifier instanceof DotNetExpression)
 		{
-			DotNetTypeRef dotNetTypeRef = ((DotNetExpression) qualifier).toTypeRef();
+			DotNetTypeRef dotNetTypeRef = ((DotNetExpression) qualifier).toTypeRef(true);
 
 			PsiElement resolve = dotNetTypeRef.resolve(element);
 
@@ -897,7 +897,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		ResolveToKind kind = kind();
 		switch(kind)

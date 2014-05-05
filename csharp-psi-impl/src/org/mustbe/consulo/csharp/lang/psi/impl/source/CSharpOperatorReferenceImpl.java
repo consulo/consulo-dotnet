@@ -221,7 +221,7 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 		for(int i = 0; i < parameterExpressions.length; i++)
 		{
 			DotNetExpression parameterExpression = parameterExpressions[i];
-			typeRefs[i] = parameterExpression.toTypeRef();
+			typeRefs[i] = parameterExpression.toTypeRef(true);
 		}
 		return typeRefs;
 	}

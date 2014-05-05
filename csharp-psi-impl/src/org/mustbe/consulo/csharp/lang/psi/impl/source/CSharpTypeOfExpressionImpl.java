@@ -43,7 +43,7 @@ public class CSharpTypeOfExpressionImpl extends CSharpElementImpl implements Dot
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return new CSharpTypeDefTypeRef(DotNetTypes.System_RuntimeType, 0);
 	}

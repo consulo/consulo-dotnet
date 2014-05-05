@@ -52,7 +52,7 @@ public class CSharpAttributeImpl extends CSharpElementImpl implements DotNetAttr
 		{
 			return null;
 		}
-		DotNetTypeRef dotNetTypeRef = childByClass.toTypeRef();
+		DotNetTypeRef dotNetTypeRef = childByClass.toTypeRef(true);
 
 		PsiElement resolve = dotNetTypeRef.resolve(this);
 		if(resolve instanceof DotNetTypeDeclaration)

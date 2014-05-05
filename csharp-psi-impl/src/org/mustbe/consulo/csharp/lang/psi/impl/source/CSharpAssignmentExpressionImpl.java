@@ -41,7 +41,7 @@ public class CSharpAssignmentExpressionImpl extends CSharpElementImpl implements
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return DotNetTypeRef.ERROR_TYPE;
 	}

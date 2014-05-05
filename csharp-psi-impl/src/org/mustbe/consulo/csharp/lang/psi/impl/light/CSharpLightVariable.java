@@ -47,7 +47,7 @@ public abstract class CSharpLightVariable<S extends DotNetVariable> extends CSha
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef(boolean resolve)
+	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
 		return myOriginal.toTypeRef(true);
 	}

@@ -48,7 +48,7 @@ public class CSharpTypeCastExpressionImpl extends CSharpElementImpl implements D
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return getType().toTypeRef();
 	}

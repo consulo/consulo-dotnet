@@ -49,7 +49,7 @@ public class CSharpAsExpressionImpl extends CSharpElementImpl implements DotNetE
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		DotNetType type = getType();
 		if(type == null)

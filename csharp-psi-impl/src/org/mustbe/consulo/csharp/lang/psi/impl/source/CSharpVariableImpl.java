@@ -44,7 +44,7 @@ public abstract class CSharpVariableImpl extends CSharpMemberImpl implements Dot
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef(boolean resolve)
+	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
 		DotNetType type = getType();
 		if(type == null)
@@ -53,7 +53,7 @@ public abstract class CSharpVariableImpl extends CSharpMemberImpl implements Dot
 		}
 
 		DotNetTypeRef runtimeType = type.toTypeRef();
-		if(resolve && runtimeType == DotNetTypeRef.AUTO_TYPE)
+		if(resolveFromInitializer && runtimeType == DotNetTypeRef.AUTO_TYPE)
 		{
 			DotNetExpression initializer = getInitializer();
 			if(initializer == null)
@@ -61,7 +61,7 @@ public abstract class CSharpVariableImpl extends CSharpMemberImpl implements Dot
 				return DotNetTypeRef.UNKNOWN_TYPE;
 			}
 
-			return initializer.toTypeRef();
+			return initializer.toTypeRef(true);
 		}
 		else
 		{

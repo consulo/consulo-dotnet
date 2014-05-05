@@ -62,8 +62,8 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
-		return getCallExpression().toTypeRef();
+		return getCallExpression().toTypeRef(true);
 	}
 }
