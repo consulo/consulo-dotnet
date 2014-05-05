@@ -17,9 +17,12 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.CSharpTypeUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -39,10 +42,58 @@ public class CSharpConditionalExpressionImpl extends CSharpElementImpl implement
 		visitor.visitConditionalExpression(this);
 	}
 
+	private DotNetExpression[] getExpressions()
+	{
+		return findChildrenByClass(DotNetExpression.class);
+	}
+
+	@NotNull
+	public DotNetExpression getCondition()
+	{
+		return ArrayUtil2.safeGet(getExpressions(), 0);
+	}
+
+	@Nullable
+	public DotNetExpression getTrueExpression()
+	{
+		return ArrayUtil2.safeGet(getExpressions(), 1);
+	}
+
+	@Nullable
+	public DotNetExpression getFalseExpression()
+	{
+		return ArrayUtil2.safeGet(getExpressions(), 2);
+	}
+
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		DotNetExpression trueExpression = getTrueExpression();
+		DotNetExpression falseExpression = getFalseExpression();
+		if(falseExpression == null && trueExpression != null)
+		{
+			return trueExpression.toTypeRef(resolveFromParent);
+		}
+		if(trueExpression == null && falseExpression == null)
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+
+		if(trueExpression == null)
+		{
+			return falseExpression.toTypeRef(resolveFromParent);
+		}
+
+		DotNetTypeRef trueType = trueExpression.toTypeRef(resolveFromParent);
+		DotNetTypeRef falseType = falseExpression.toTypeRef(resolveFromParent);
+		if(CSharpTypeUtil.isInheritable(falseType, trueType, this))
+		{
+			return trueType;
+		}
+		else
+		{
+			return falseType;
+		}
 	}
 }
