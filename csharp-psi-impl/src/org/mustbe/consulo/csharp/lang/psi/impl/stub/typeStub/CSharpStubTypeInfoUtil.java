@@ -136,7 +136,7 @@ public class CSharpStubTypeInfoUtil
 			@Override
 			public void visitArrayType(CSharpArrayTypeImpl type)
 			{
-				ref.set(new CSharpStubArrayTypeInfo(toStub(type.getInnerType())));
+				ref.set(new CSharpStubArrayTypeInfo(toStub(type.getInnerType()), type.getDimensions()));
 			}
 
 			@Override
@@ -188,7 +188,7 @@ public class CSharpStubTypeInfoUtil
 				};
 			case ARRAY:
 				CSharpStubArrayTypeInfo arrayTypeInfo = (CSharpStubArrayTypeInfo) typeInfo;
-				return new CSharpArrayTypeRef(toTypeRef(arrayTypeInfo.getInnerType(), element));
+				return new CSharpArrayTypeRef(toTypeRef(arrayTypeInfo.getInnerType(), element), arrayTypeInfo.getDimensions());
 			case GENERIC_WRAPPER:
 				CSharpStubGenericWrapperTypeInfo genericWrapperTypeInfo = (CSharpStubGenericWrapperTypeInfo) typeInfo;
 				CSharpStubTypeInfo[] arguments = genericWrapperTypeInfo.getArguments();

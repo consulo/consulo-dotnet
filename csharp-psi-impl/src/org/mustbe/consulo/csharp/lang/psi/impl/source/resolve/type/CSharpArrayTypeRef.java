@@ -33,24 +33,42 @@ import com.intellij.psi.PsiElement;
 public class CSharpArrayTypeRef extends DotNetTypeRef.Adapter implements DotNetArrayTypeRef
 {
 	private final DotNetTypeRef myInnerType;
+	private final int myDimensions;
 
-	public CSharpArrayTypeRef(DotNetTypeRef innerType)
+	public CSharpArrayTypeRef(DotNetTypeRef innerType, int dimensions)
 	{
 		myInnerType = innerType;
+		myDimensions = dimensions;
 	}
 
 	@Nullable
 	@Override
 	public String getPresentableText()
 	{
-		return myInnerType.getPresentableText() + "[]";
+		StringBuilder builder = new StringBuilder();
+		builder.append(myInnerType.getPresentableText());
+		builder.append("[");
+		for(int i = 0; i < myDimensions; i++)
+		{
+			builder.append(",");
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	@Nullable
 	@Override
 	public String getQualifiedText()
 	{
-		return myInnerType.getQualifiedText() + "[]";
+		StringBuilder builder = new StringBuilder();
+		builder.append(myInnerType.getQualifiedText());
+		builder.append("[");
+		for(int i = 0; i < myDimensions; i++)
+		{
+			builder.append(",");
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	@Nullable
@@ -62,7 +80,7 @@ public class CSharpArrayTypeRef extends DotNetTypeRef.Adapter implements DotNetA
 		{
 			return null;
 		}
-		return CSharpModuleTypeHelper.getInstance(moduleForPsiElement).getArrayType();
+		return CSharpModuleTypeHelper.getInstance(moduleForPsiElement).getArrayType(myDimensions);
 	}
 
 	@NotNull
@@ -81,5 +99,10 @@ public class CSharpArrayTypeRef extends DotNetTypeRef.Adapter implements DotNetA
 	public DotNetTypeRef getInnerType()
 	{
 		return myInnerType;
+	}
+
+	public int getDimensions()
+	{
+		return myDimensions;
 	}
 }

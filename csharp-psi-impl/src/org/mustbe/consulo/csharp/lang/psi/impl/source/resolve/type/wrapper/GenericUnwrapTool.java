@@ -53,8 +53,8 @@ public class GenericUnwrapTool
 	@SuppressWarnings("unchecked")
 	public static <T extends DotNetNamedElement> T extract(T namedElement, DotNetGenericExtractor extractor)
 	{
-		if(extractor == DotNetGenericExtractor.EMPTY ||
-				namedElement instanceof DotNetModifierListOwner && ((DotNetModifierListOwner) namedElement).hasModifier(CSharpModifier.STATIC))
+		if(extractor == DotNetGenericExtractor.EMPTY || namedElement instanceof DotNetModifierListOwner && ((DotNetModifierListOwner) namedElement)
+				.hasModifier(CSharpModifier.STATIC))
 		{
 			return namedElement;
 		}
@@ -166,7 +166,8 @@ public class GenericUnwrapTool
 		}
 		else if(typeRef instanceof CSharpArrayTypeRef)
 		{
-			return new CSharpArrayTypeRef(exchangeTypeRefs(((CSharpArrayTypeRef) typeRef).getInnerType(), extractor, element));
+			CSharpArrayTypeRef arrayType = (CSharpArrayTypeRef) typeRef;
+			return new CSharpArrayTypeRef(exchangeTypeRefs(arrayType.getInnerType(), extractor, element), arrayType.getDimensions());
 		}
 		else
 		{

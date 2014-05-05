@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
+import gnu.trove.TIntObjectHashMap;
+
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.dotnet.DotNetTypes;
@@ -35,7 +37,7 @@ public class CSharpModuleTypeHelperImpl extends CSharpModuleTypeHelper
 {
 	private Module myModule;
 
-	private DotNetTypeDeclaration myArrayTypeDeclaration;
+	private final TIntObjectHashMap<DotNetTypeDeclaration> myArrayTypes = new TIntObjectHashMap<DotNetTypeDeclaration>();
 
 	public CSharpModuleTypeHelperImpl(Module module)
 	{
@@ -45,34 +47,43 @@ public class CSharpModuleTypeHelperImpl extends CSharpModuleTypeHelper
 			@Override
 			public void rootsChanged(ModuleRootEvent event)
 			{
-				myArrayTypeDeclaration = null;
+				myArrayTypes.clone();
 			}
 		});
 	}
 
 	@Nullable
 	@Override
-	public DotNetTypeDeclaration getArrayType()
+	public DotNetTypeDeclaration getArrayType(int dimensions)
 	{
-		if(myArrayTypeDeclaration != null)
+		DotNetTypeDeclaration declaration = myArrayTypes.get(dimensions);
+		if(declaration == null)
 		{
-			return myArrayTypeDeclaration;
+			GlobalSearchScope searchScope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(myModule);
+			DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(myModule.getProject()).findType(DotNetTypes.System_Array, searchScope, 0);
+			if(type == null)
+			{
+				return null;
+			}
+
+			StringBuilder builder = new StringBuilder();
+			builder.append("public class ArrayImpl<T> : System.Array");
+			builder.append("{");
+			builder.append("public T this[int index");
+			for(int i = 0; i < dimensions; i++)
+			{
+				builder.append(", int index").append(i);
+			}
+			builder.append("] { get; set; }");
+			builder.append("}");
+
+			DotNetTypeDeclaration typeDeclaration = CSharpFileFactory.createTypeDeclaration(myModule.getProject(), searchScope, builder.toString());
+			myArrayTypes.put(dimensions, typeDeclaration);
+			return typeDeclaration;
 		}
-		GlobalSearchScope searchScope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(myModule);
-		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(myModule.getProject()).findType(DotNetTypes.System_Array, searchScope, 0);
-		if(type == null)
+		else
 		{
-			return null;
+			return declaration;
 		}
-
-		String typeText =
-				"public class ArrayImpl<T> : System.Array" +
-				"{" +
-				"public T this[int index] { get; set; }" +
-				"}";
-
-		DotNetTypeDeclaration typeDeclaration = CSharpFileFactory.createTypeDeclaration(myModule.getProject(), searchScope, typeText);
-		myArrayTypeDeclaration = typeDeclaration;
-		return typeDeclaration;
 	}
 }

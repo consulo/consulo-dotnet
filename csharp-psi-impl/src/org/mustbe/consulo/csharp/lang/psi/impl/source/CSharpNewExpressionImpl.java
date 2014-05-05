@@ -72,7 +72,7 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 			DotNetTypeRef typeRef = type.toTypeRef();
 			for(PsiElement ignored : findChildrenByType(CSharpTokens.LBRACKET))
 			{
-				typeRef = new CSharpArrayTypeRef(typeRef);
+				typeRef = new CSharpArrayTypeRef(typeRef, 0);
 			}
 			return typeRef;
 		}

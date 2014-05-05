@@ -28,15 +28,18 @@ import com.intellij.psi.stubs.StubOutputStream;
 public class CSharpStubArrayTypeInfo extends CSharpStubTypeInfo
 {
 	private final CSharpStubTypeInfo myInnerType;
+	private final int myDimensions;
 
-	public CSharpStubArrayTypeInfo(CSharpStubTypeInfo inner)
+	public CSharpStubArrayTypeInfo(CSharpStubTypeInfo inner, int dimensions)
 	{
 		myInnerType = inner;
+		myDimensions = dimensions;
 	}
 
 	public CSharpStubArrayTypeInfo(StubInputStream stubInputStream) throws IOException
 	{
 		myInnerType = CSharpStubTypeInfoUtil.read(stubInputStream);
+		myDimensions = stubInputStream.readVarInt();
 	}
 
 	@Override
@@ -45,6 +48,7 @@ public class CSharpStubArrayTypeInfo extends CSharpStubTypeInfo
 		super.writeTo(stubOutputStream);
 
 		myInnerType.writeTo(stubOutputStream);
+		stubOutputStream.writeVarInt(myDimensions);
 	}
 
 	public CSharpStubTypeInfo getInnerType()
@@ -56,5 +60,10 @@ public class CSharpStubArrayTypeInfo extends CSharpStubTypeInfo
 	public Id getId()
 	{
 		return Id.ARRAY;
+	}
+
+	public int getDimensions()
+	{
+		return myDimensions;
 	}
 }

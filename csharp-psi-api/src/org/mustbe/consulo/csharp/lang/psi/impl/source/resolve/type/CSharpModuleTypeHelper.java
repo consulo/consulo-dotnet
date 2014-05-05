@@ -28,5 +28,5 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 public abstract class CSharpModuleTypeHelper
 {
 	@Nullable
-	public abstract DotNetTypeDeclaration getArrayType();
+	public abstract DotNetTypeDeclaration getArrayType(int dimensions);
 }
