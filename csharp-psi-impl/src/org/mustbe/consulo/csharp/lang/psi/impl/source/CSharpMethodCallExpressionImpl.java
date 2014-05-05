@@ -64,6 +64,6 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
-		return getCallExpression().toTypeRef(true);
+		return getCallExpression().toTypeRef(resolveFromParent);
 	}
 }
