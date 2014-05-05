@@ -19,8 +19,11 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -30,7 +33,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * @author VISTALL
  * @since 19.01.14
  */
-public class CSharpAnonymMethodExpressionImpl extends CSharpElementImpl
+public class CSharpAnonymMethodExpressionImpl extends CSharpElementImpl implements DotNetExpression
 {
 	public CSharpAnonymMethodExpressionImpl(@NotNull ASTNode node)
 	{
@@ -68,5 +71,19 @@ public class CSharpAnonymMethodExpressionImpl extends CSharpElementImpl
 			}
 		}
 		return true;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
+	{
+		DotNetParameter[] parameters = getParameters();
+		DotNetTypeRef[] typeRefs = new DotNetTypeRef[parameters.length];
+		for(int i = 0; i < parameters.length; i++)
+		{
+			DotNetParameter parameter = parameters[i];
+			typeRefs[i] = parameter.toTypeRef(false);
+		}
+		return new CSharpLambdaTypeRef(null, typeRefs, DotNetTypeRef.AUTO_TYPE);
 	}
 }
