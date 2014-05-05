@@ -22,6 +22,12 @@ public static class ByteStubs
 		return 0;
 	}
 
+	// ++ byte = byte
+	public static byte operator ++(byte param1)
+	{
+		return 0;
+	}
+
 	// byte + byte = byte
 	public static byte operator +(byte param1, byte param2)
 	{
@@ -47,6 +53,12 @@ public static class ByteStubs
 	}
 
 	// - byte = byte
+	public static byte operator -(byte param1)
+	{
+		return 0;
+	}
+
+	// -- byte = byte
 	public static byte operator -(byte param1)
 	{
 		return 0;

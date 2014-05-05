@@ -22,6 +22,12 @@ public static class ShortStubs
 		return 0;
 	}
 
+	// ++ short = short
+	public static short operator ++(short param1)
+	{
+		return 0;
+	}
+
 	// short + short = short
 	public static short operator +(short param1, short param2)
 	{
@@ -48,6 +54,12 @@ public static class ShortStubs
 
 	// - short = short
 	public static short operator -(short param1)
+	{
+		return 0;
+	}
+
+	// -- short = short
+	public static short operator --(short param1)
 	{
 		return 0;
 	}

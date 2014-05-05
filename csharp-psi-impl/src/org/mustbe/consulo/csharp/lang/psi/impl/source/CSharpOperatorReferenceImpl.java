@@ -70,7 +70,7 @@ public class CSharpOperatorReferenceImpl extends CSharpElementImpl implements Ps
 	@NotNull
 	public PsiElement getOperator()
 	{
-		return findNotNullChildByFilter(CSharpTokenSets.BINARY_OPERATORS);
+		return findNotNullChildByFilter(CSharpTokenSets.OVERLOADING_OPERATORS);
 	}
 
 	@Nullable
