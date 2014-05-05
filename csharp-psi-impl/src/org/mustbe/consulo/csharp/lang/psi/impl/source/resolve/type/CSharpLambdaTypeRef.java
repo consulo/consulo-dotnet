@@ -126,7 +126,7 @@ public class CSharpLambdaTypeRef implements DotNetTypeRef
 	@Override
 	public boolean isNullable()
 	{
-		return false;
+		return true;
 	}
 
 	@Nullable
