@@ -55,6 +55,6 @@ public class CSharpParenthesesExpressionImpl extends CSharpElementImpl implement
 		{
 			return DotNetTypeRef.ERROR_TYPE;
 		}
-		return innerExpression.toTypeRef(true);
+		return innerExpression.toTypeRef(resolveFromParent);
 	}
 }
