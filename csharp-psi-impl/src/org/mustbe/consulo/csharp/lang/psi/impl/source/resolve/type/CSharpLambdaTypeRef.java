@@ -67,7 +67,7 @@ public class CSharpLambdaTypeRef implements DotNetTypeRef
 		builder.append(")");
 		if(myReturnType == AUTO_TYPE)
 		{
-			builder.append("?");
+			builder.append(" => ?");
 		}
 		else
 		{
@@ -102,7 +102,7 @@ public class CSharpLambdaTypeRef implements DotNetTypeRef
 		builder.append(")");
 		if(myReturnType == AUTO_TYPE)
 		{
-			builder.append("?");
+			builder.append(" => ?");
 		}
 		else
 		{
