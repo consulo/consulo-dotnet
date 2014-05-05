@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameterList;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
@@ -76,6 +77,13 @@ public class CSharpLambdaExpressionImpl extends CSharpElementImpl implements Dot
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		CSharpLambdaParameter[] parameters = getParameters();
+		DotNetTypeRef[] typeRefs = new DotNetTypeRef[parameters.length];
+		for(int i = 0; i < parameters.length; i++)
+		{
+			CSharpLambdaParameter parameter = parameters[i];
+			typeRefs[i] = parameter.toTypeRef();
+		}
+		return new CSharpLambdaTypeRef(null, typeRefs, DotNetTypeRef.AUTO_TYPE);
 	}
 }

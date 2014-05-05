@@ -259,10 +259,9 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					@Override
 					public boolean value(PsiNamedElement psiNamedElement)
 					{
-						String text = psiNamedElement.getText();
-						if(psiNamedElement instanceof CSharpLocalVariable)
+						if(psiNamedElement instanceof DotNetVariable)
 						{
-							PsiElement localVariableType = ((CSharpLocalVariable) psiNamedElement).toTypeRef().resolve(e);
+							PsiElement localVariableType = ((DotNetVariable) psiNamedElement).toTypeRef().resolve(e);
 							if(localVariableType instanceof DotNetMethodDeclaration)
 							{
 								return MethodAcceptorImpl.isAccepted(parameters,(CSharpMethodDeclaration) localVariableType);
