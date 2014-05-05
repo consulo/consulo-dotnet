@@ -27,7 +27,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 
@@ -55,7 +54,7 @@ public class ExtensionResolveScopeProcessor extends AbstractScopeProcessor
 			{
 				if(CSharpMethodImplUtil.isExtensionMethod(dotNetNamedElement) && myCond.value(dotNetNamedElement))
 				{
-					add(new PsiElementResolveResult(transform((CSharpMethodDeclaration) dotNetNamedElement)));
+					add(new ResolveResultWithWeight(transform((CSharpMethodDeclaration) dotNetNamedElement)));
 					if(myNamed)
 					{
 						return false;

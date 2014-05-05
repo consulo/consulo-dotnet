@@ -25,9 +25,8 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.ResolveResult;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  */
 public abstract class AbstractScopeProcessor extends UserDataHolderBase implements PsiScopeProcessor
 {
-	protected final List<ResolveResult> myElements = new ArrayList<ResolveResult>();
+	protected final List<ResolveResultWithWeight> myElements = new ArrayList<ResolveResultWithWeight>();
 
 	@Nullable
 	@Override
@@ -44,7 +43,7 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 		return getUserData(tKey);
 	}
 
-	public void add(ResolveResult resolveResult)
+	public void add(ResolveResultWithWeight resolveResult)
 	{
 		myElements.add(resolveResult);
 	}
@@ -57,7 +56,7 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 		}
 		else
 		{
-			myElements.add(new PsiElementResolveResult(element, element.isValid()));
+			myElements.add(new ResolveResultWithWeight(element));
 		}
 	}
 
@@ -67,13 +66,13 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 	}
 
 	@NotNull
-	public ResolveResult[] toResolveResults()
+	public ResolveResultWithWeight[] toResolveResults()
 	{
 		if(myElements.isEmpty())
 		{
-			return ResolveResult.EMPTY_ARRAY;
+			return ResolveResultWithWeight.EMPTY_ARRAY;
 		}
-		return myElements.toArray(new ResolveResult[myElements.size()]);
+		return ContainerUtil.toArray(myElements, ResolveResultWithWeight.ARRAY_FACTORY);
 	}
 
 	@Override
