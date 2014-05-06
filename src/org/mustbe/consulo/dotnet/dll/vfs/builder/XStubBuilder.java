@@ -934,7 +934,7 @@ public class XStubBuilder
 		for(Object o : paramDef.getConstraints())
 		{
 			String e = TypeSignatureStubBuilder.toStringFromDefRefSpec(o, typeDef, methodDef);
-			if(e.equals("System.ValueType"))
+			if(e.equals(DotNetTypes.System_ValueType))
 			{
 				e = "struct";
 			}
