@@ -96,6 +96,8 @@ public class XStubBuilder
 			"lock",
 			"explicit",
 			"this",
+			"in",
+			"out",
 			"abstract",
 			"sealed",
 			"object",
@@ -689,39 +691,50 @@ public class XStubBuilder
 		}
 
 		ParameterInfo parameterInfo = parameterSignature.getParameterInfo();
-		for(CustomAttribute customAttribute : parameterInfo.getCustomAttributes())
+		if(parameterInfo != null)
 		{
-			String fullName = customAttribute.getConstructor().getParent().getFullName();
-			if(Comparing.equal(fullName, "System.ParamArrayAttribute"))
+			for(CustomAttribute customAttribute : parameterInfo.getCustomAttributes())
 			{
-				p.append("params ");
+				String fullName = customAttribute.getConstructor().getParent().getFullName();
+				if(Comparing.equal(fullName, "System.ParamArrayAttribute"))
+				{
+					p.append("params ");
+				}
 			}
-		}
 
-		if(index == 0 && BitUtil.isSet(flags, EXTENSION))
-		{
-			p.append("this ");
-		}
+			if(index == 0 && BitUtil.isSet(flags, EXTENSION))
+			{
+				p.append("this ");
+			}
 
-		if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.Out))
-		{
-			p.append("out ");
+			if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.Out))
+			{
+				p.append("out ");
 
-			signature = parameterSignature.getInnerType();
+				signature = parameterSignature.getInnerType();
+			}
 		}
 
 		TypeSignatureStubBuilder.typeToString(p, signature, typeDef, methodDef);
 		p.append(' ');
-		if(ArrayUtil.contains(parameterInfo.getName(), KEYWORDS))
-		{
-			p.append('@');
-		}
-		p.append(parameterInfo.getName());
 
-		if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
+		if(parameterInfo != null)
 		{
-			p.append(" = ");
-			p.append(toValue(signature, typeDef, methodDef, parameterInfo.getDefaultValue()));
+			if(ArrayUtil.contains(parameterInfo.getName(), KEYWORDS))
+			{
+				p.append('@');
+			}
+			p.append(parameterInfo.getName());
+
+			if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
+			{
+				p.append(" = ");
+				p.append(toValue(signature, typeDef, methodDef, parameterInfo.getDefaultValue()));
+			}
+		}
+		else
+		{
+			p.append("p").append(index);
 		}
 	}
 

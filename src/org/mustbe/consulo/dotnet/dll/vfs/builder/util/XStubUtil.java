@@ -37,7 +37,7 @@ public class XStubUtil
 	public static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
 
 	public static final char GENERIC_MARKER_IN_NAME = '`';
-	private static final char[] ILLEGAL_CHARS = new char[] {'{', '}', '<', '>', '='};
+	private static final char[] ILLEGAL_CHARS = new char[] {'{', '}', '<', '>', '=', '\\', '/'};
 
 	public static boolean isSet(long value, int mod)
 	{
