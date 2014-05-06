@@ -449,7 +449,12 @@ public class XStubBuilder
 		}
 		else
 		{
-			builder.append(XStubUtil.cutSuperTypeName(property.getName(), null));
+			String str = XStubUtil.cutSuperTypeName(property.getName(), null);
+			if(ArrayUtil.contains(str, KEYWORDS))
+			{
+				builder.append('@');
+			}
+			builder.append(str);
 		}
 
 		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
