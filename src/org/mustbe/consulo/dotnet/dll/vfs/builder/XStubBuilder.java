@@ -100,6 +100,7 @@ public class XStubBuilder
 			"out",
 			"abstract",
 			"sealed",
+			"lock",
 			"object",
 			"case",
 			"finally",
