@@ -5,7 +5,7 @@ import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -38,10 +38,9 @@ public abstract class InnerMonoModuleExtension<T extends InnerMonoModuleExtensio
 
 	private Sdk get()
 	{
-		DotNetModuleExtension extension = myRootModel.getExtension(DotNetModuleExtension.class);
-		assert extension != null;
+		MonoDotNetModuleExtension extension = myRootModel.getExtensionWithoutCheck(MonoDotNetModuleExtension.class);
 
-		Sdk parentSdk = extension.getSdk();
+		Sdk parentSdk = !extension.isEnabled() ? null : extension.getSdk();
 		if(parentSdk != myParentSdk)
 		{
 			myLazySdk = null;
