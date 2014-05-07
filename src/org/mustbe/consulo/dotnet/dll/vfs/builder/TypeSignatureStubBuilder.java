@@ -138,13 +138,13 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_CLASS:
 				ClassTypeSignature typeSignature = (ClassTypeSignature) signature;
-				String className = XStubUtil.getUserTypeDefName(typeSignature.getClassType().getFullName());
+				String className = typeSignature.getClassType().getFullName();
 				String replaceValue = REPLACE_MAP.get(className);
 				if(replaceValue != null)
 				{
 					className = replaceValue;
 				}
-				builder.append(className);
+				XStubUtil.appendDottedValidName(builder, className);
 				break;
 			case ELEMENT_TYPE_GENERIC_INST:
 				TypeSignatureWithGenericParameters mainTypeSignature = (TypeSignatureWithGenericParameters) signature;
@@ -175,7 +175,7 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_VALUETYPE:
 				ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
-				builder.append(XStubUtil.getUserTypeDefName(valueTypeSignature.getValueType().getFullName()));
+				XStubUtil.appendDottedValidName(builder, valueTypeSignature.getValueType().getFullName());
 				break;
 			default:
 				builder.append("UNK").append(Integer.toHexString(type).toUpperCase());
@@ -187,7 +187,7 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 	{
 		if(o instanceof TypeRef)
 		{
-			builder.append(((TypeRef) o).getFullName());
+			XStubUtil.appendTypeRefFullName(builder, ((TypeRef) o));
 		}
 		else if(o instanceof TypeSpec)
 		{
@@ -199,7 +199,7 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 		}
 	}
 
-	public static String toStringFromDefRefSpec(Object o, GenericParamOwner typeDef, GenericParamOwner methodDef)
+	public static CharSequence toCharSequenceFromDefRefSpec(Object o, GenericParamOwner typeDef, GenericParamOwner methodDef)
 	{
 		if(o == null)
 		{
@@ -207,13 +207,15 @@ public class TypeSignatureStubBuilder implements SignatureConstants
 		}
 		else if(o instanceof TypeRef)
 		{
-			return ((TypeRef) o).getFullName();
+			StringBuilder builder = new StringBuilder();
+			XStubUtil.appendTypeRefFullName(builder, ((TypeRef) o));
+			return builder;
 		}
 		else if(o instanceof TypeSpec)
 		{
 			StringBuilder builder = new StringBuilder();
 			typeToString(builder, ((TypeSpec) o).getSignature(), typeDef, methodDef);
-			return builder.toString();
+			return builder;
 		}
 		else
 		{

@@ -76,7 +76,7 @@ public class DotNetVirtualMachineUtil
 			return;
 		}
 
-		builder.append(XStubUtil.getUserTypeDefName(typeMirror.qualifiedName())); // cut to `
+		builder.append(XStubUtil.cutGenericMarker(typeMirror.qualifiedName())); // cut to `
 		builder.append("<");
 		TypeMirror[] typeMirrors = typeMirror.genericArguments();
 		for(int i = 0; i < typeMirrors.length; i++)

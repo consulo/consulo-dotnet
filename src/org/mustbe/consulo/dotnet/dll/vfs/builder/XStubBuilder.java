@@ -37,13 +37,20 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiBundle;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.PairFunction;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import edu.arizona.cs.mbel.mbel.*;
-import edu.arizona.cs.mbel.signature.*;
+import edu.arizona.cs.mbel.signature.FieldAttributes;
+import edu.arizona.cs.mbel.signature.GenericParamAttributes;
+import edu.arizona.cs.mbel.signature.MethodAttributes;
+import edu.arizona.cs.mbel.signature.ParamAttributes;
+import edu.arizona.cs.mbel.signature.ParameterInfo;
+import edu.arizona.cs.mbel.signature.ParameterSignature;
+import edu.arizona.cs.mbel.signature.SignatureConstants;
+import edu.arizona.cs.mbel.signature.TypeAttributes;
+import edu.arizona.cs.mbel.signature.TypeSignature;
 import lombok.val;
 
 /**
@@ -86,24 +93,6 @@ public class XStubBuilder
 			put("op_Explicit", "implicit");
 			put("op_Implicit", "explicit");
 		}
-	};
-
-	private static String[] KEYWORDS = new String[]{
-			"event",
-			"params",
-			"break",
-			"continue",
-			"lock",
-			"explicit",
-			"this",
-			"in",
-			"out",
-			"abstract",
-			"sealed",
-			"lock",
-			"object",
-			"case",
-			"finally",
 	};
 
 	private static List<String> SKIPPED_SUPERTYPES = new ArrayList<String>()
@@ -151,14 +140,15 @@ public class XStubBuilder
 	@NotNull
 	private static StubBlock processType(final TypeDef typeDef)
 	{
-		String superSuperClassFullName = TypeSignatureStubBuilder.toStringFromDefRefSpec(typeDef.getSuperClass(), typeDef, null);
+		CharSequence superSuperClassFullName = TypeSignatureStubBuilder.toCharSequenceFromDefRefSpec(typeDef.getSuperClass(), typeDef, null);
 		if(Comparing.equal(DotNetTypes.System_MulticastDelegate, superSuperClassFullName))
 		{
 			for(MethodDef methodDef : typeDef.getMethods())
 			{
 				if("Invoke".equals(methodDef.getName()))
 				{
-					MethodDef newMethodDef = new MethodDef(XStubUtil.getUserTypeDefName(typeDef), methodDef.getImplFlags(), methodDef.getFlags(),
+					MethodDef newMethodDef = new MethodDef(XStubUtil.cutGenericMarker(typeDef.getName()), methodDef.getImplFlags(),
+							methodDef.getFlags(),
 							methodDef.getSignature());
 					for(GenericParamDef paramDef : typeDef.getGenericParams())
 					{
@@ -207,7 +197,8 @@ public class XStubBuilder
 		{
 			builder.append("class ");
 		}
-		builder.append(XStubUtil.getUserTypeDefName(typeDef));
+
+		XStubUtil.appendValidName(builder, typeDef.getName());
 
 		processGenericParameterList(typeDef, builder);
 
@@ -363,11 +354,7 @@ public class XStubBuilder
 
 		TypeSignatureStubBuilder.typeToString(builder, field.getSignature().getType(), typeDef, typeDef);
 		builder.append(' ');
-		if(ArrayUtil.contains(field.getName(), KEYWORDS))
-		{
-			builder.append('@');
-		}
-		builder.append(field.getName());
+		XStubUtil.appendValidName(builder, field.getName());
 
 		byte[] defaultValue = field.getDefaultValue();
 		if(defaultValue != null)
@@ -450,11 +437,8 @@ public class XStubBuilder
 		else
 		{
 			String str = XStubUtil.cutSuperTypeName(property.getName(), null);
-			if(ArrayUtil.contains(str, KEYWORDS))
-			{
-				builder.append('@');
-			}
-			builder.append(str);
+
+			XStubUtil.appendValidName(builder, str);
 		}
 
 		StubBlock stubBlock = new StubBlock(builder, null, BRACES);
@@ -502,7 +486,7 @@ public class XStubBuilder
 
 		builder.append(propertyModifier.name().toLowerCase()).append(' ');
 		builder.append("event ");
-		builder.append(TypeSignatureStubBuilder.toStringFromDefRefSpec(event.getEventType(), typeDef, null));
+		TypeSignatureStubBuilder.toStringFromDefRefSpec(builder, event.getEventType(), typeDef, null);
 		builder.append(' ');
 		builder.append(XStubUtil.cutSuperTypeName(event.getName(), null));
 
@@ -595,7 +579,7 @@ public class XStubBuilder
 		TypeSignature parameterType = null;
 		if(name.equals(XStubUtil.CONSTRUCTOR_NAME))
 		{
-			builder.append(XStubUtil.getUserTypeDefName(typeDef));
+			XStubUtil.appendValidName(builder, typeDef.getName());
 		}
 		else
 		{
@@ -726,11 +710,7 @@ public class XStubBuilder
 
 		if(parameterInfo != null)
 		{
-			if(ArrayUtil.contains(parameterInfo.getName(), KEYWORDS))
-			{
-				p.append('@');
-			}
-			p.append(parameterInfo.getName());
+			XStubUtil.appendValidName(p, parameterInfo.getName());
 
 			if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
 			{
@@ -908,7 +888,7 @@ public class XStubBuilder
 				@Override
 				public Void fun(StringBuilder builder, GenericParamDef genericParamDef)
 				{
-					List<String> list = processGenericConstraint(genericParamDef, typeDef, methodDef);
+					List<CharSequence> list = processGenericConstraint(genericParamDef, typeDef, methodDef);
 					if(list == null)
 					{
 						return null;
@@ -920,7 +900,7 @@ public class XStubBuilder
 						{
 							builder.append(' ');
 						}
-						String s = list.get(i);
+						CharSequence s = list.get(i);
 						builder.append("where ").append(genericParamDef.getName()).append(" : ").append(s);
 					}
 					return null;
@@ -929,9 +909,9 @@ public class XStubBuilder
 		}
 	}
 
-	private static List<String> processGenericConstraint(GenericParamDef paramDef, TypeDef typeDef, MethodDef methodDef)
+	private static List<CharSequence> processGenericConstraint(GenericParamDef paramDef, TypeDef typeDef, MethodDef methodDef)
 	{
-		List<String> list = new SmartList<String>();
+		List<CharSequence> list = new SmartList<CharSequence>();
 		if(BitUtil.isSet(paramDef.getFlags(), GenericParamAttributes.DefaultConstructorConstraint))
 		{
 			list.add("new()");
@@ -939,8 +919,8 @@ public class XStubBuilder
 
 		for(Object o : paramDef.getConstraints())
 		{
-			String e = TypeSignatureStubBuilder.toStringFromDefRefSpec(o, typeDef, methodDef);
-			if(e.equals(DotNetTypes.System_ValueType))
+			CharSequence e = TypeSignatureStubBuilder.toCharSequenceFromDefRefSpec(o, typeDef, methodDef);
+			if(Comparing.equal(e, DotNetTypes.System_ValueType))
 			{
 				e = "struct";
 			}
@@ -957,7 +937,9 @@ public class XStubBuilder
 			return null;
 		}
 
-		return new StubBlock("namespace " + namespace, null, BRACES);
+		StringBuilder builder = new StringBuilder("namespace ");
+		XStubUtil.appendDottedValidName(builder, namespace);
+		return new StubBlock(builder, null, BRACES);
 	}
 
 	@NotNull
@@ -1016,7 +998,7 @@ public class XStubBuilder
 		}
 	}
 
-	private static <T> void join(StringBuilder builder, List<T> list, PairFunction<StringBuilder, T, Void> function, String dem)
+	public static <T> void join(StringBuilder builder, List<T> list, PairFunction<StringBuilder, T, Void> function, String dem)
 	{
 		for(int i = 0; i < list.size(); i++)
 		{

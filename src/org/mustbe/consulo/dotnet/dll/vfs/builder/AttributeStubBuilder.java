@@ -93,7 +93,7 @@ public class AttributeStubBuilder
 		for(CustomAttribute customAttribute : customAttributes)
 		{
 			MethodDefOrRef constructor = customAttribute.getConstructor();
-			String type = TypeSignatureStubBuilder.toStringFromDefRefSpec(constructor.getParent(), typeDef, methodDef);
+			CharSequence type = TypeSignatureStubBuilder.toCharSequenceFromDefRefSpec(constructor.getParent(), typeDef, methodDef);
 			if(Comparing.equal(type, "System.Runtime.CompilerServices.ExtensionAttribute"))
 			{
 				if(callback != null)
@@ -110,9 +110,9 @@ public class AttributeStubBuilder
 				builder.append(forceTarget);
 				builder.append(": ");
 			}
-			if(type.endsWith("Attribute"))
+			if(StringUtil.endsWith(type, "Attribute"))
 			{
-				type = type.substring(0, type.length() - 9);
+				type = type.subSequence(0, type.length() - 9);
 			}
 			builder.append(type);
 			String value = processAttributeValue(customAttribute, typeDef, methodDef);

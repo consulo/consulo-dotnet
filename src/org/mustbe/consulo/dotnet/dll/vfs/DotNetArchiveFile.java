@@ -71,7 +71,7 @@ public class DotNetArchiveFile implements ArchiveFile
 				continue;
 			}
 
-			String userName = XStubUtil.getUserTypeDefName(typeDef);
+			String userName = XStubUtil.cutGenericMarker(typeDef.getName());
 
 			String path;
 			String namespace = typeDef.getNamespace();

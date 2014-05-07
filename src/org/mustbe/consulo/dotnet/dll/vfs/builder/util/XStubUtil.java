@@ -20,10 +20,15 @@ import java.io.UnsupportedEncodingException;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.util.QualifiedName;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
+import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.signature.Signature;
 import lombok.val;
 
@@ -38,6 +43,25 @@ public class XStubUtil
 
 	public static final char GENERIC_MARKER_IN_NAME = '`';
 	private static final char[] ILLEGAL_CHARS = new char[] {'{', '}', '<', '>', '=', '\\', '/'};
+
+	public static String[] KEYWORDS = new String[]{
+			"event",
+			"params",
+			"break",
+			"continue",
+			"lock",
+			"explicit",
+			"this",
+			"in",
+			"out",
+			"abstract",
+			"sealed",
+			"lock",
+			"object",
+			"case",
+			"finally",
+			"internal",
+	};
 
 	public static boolean isSet(long value, int mod)
 	{
@@ -136,12 +160,7 @@ public class XStubUtil
 		return a;
 	}
 
-	public static String getUserTypeDefName(TypeDef typeDef)
-	{
-		return getUserTypeDefName(typeDef.getName());
-	}
-
-	public static String getUserTypeDefName(String name)
+	public static String cutGenericMarker(String name)
 	{
 		int i = name.lastIndexOf(GENERIC_MARKER_IN_NAME);
 		if(i > 0)
@@ -161,5 +180,81 @@ public class XStubUtil
 			}
 		}
 		return false;
+	}
+
+	public static void appendValidName(StringBuilder builder, String name)
+	{
+		if(ArrayUtil.contains(name, KEYWORDS))
+		{
+			builder.append('@');
+		}
+
+		int index = name.indexOf(GENERIC_MARKER_IN_NAME);
+		if(index != -1)
+		{
+			builder.append(name, 0, index);
+		}
+		else
+		{
+			builder.append(name);
+		}
+	}
+
+	/**
+	 * Method for ignore {@link AbstractTypeReference#getFullName()} - dont create twice StringBuilder
+	 * @param builder
+	 * @param typeRef
+	 */
+	public static void appendTypeRefFullName(StringBuilder builder, TypeRef typeRef)
+	{
+		String namespace = typeRef.getNamespace();
+		String name = typeRef.getName();
+		if(!StringUtil.isEmpty(namespace))
+		{
+			appendDottedValidName(builder, namespace);
+			builder.append('.');
+		}
+		appendValidName(builder, name);
+	}
+
+	public static void appendDottedValidName(StringBuilder builder, String dottedName)
+	{
+		boolean containsIllegal = false;
+		for(String s : KEYWORDS)
+		{
+			if(StringUtil.contains(dottedName, s))
+			{
+				containsIllegal = true;
+				break;
+			}
+		}
+
+		if(containsIllegal)
+		{
+			QualifiedName qualifiedName = QualifiedName.fromDottedString(dottedName);
+
+			XStubBuilder.join(builder, qualifiedName.getComponents(), new PairFunction<StringBuilder, String, Void>()
+			{
+				@Nullable
+				@Override
+				public Void fun(StringBuilder t, String v)
+				{
+					appendValidName(t, v);
+					return null;
+				}
+			}, ".");
+		}
+		else
+		{
+			int index = dottedName.indexOf(GENERIC_MARKER_IN_NAME);
+			if(index != -1)
+			{
+				builder.append(dottedName, 0, index);
+			}
+			else
+			{
+				builder.append(dottedName);
+			}
+		}
 	}
 }
