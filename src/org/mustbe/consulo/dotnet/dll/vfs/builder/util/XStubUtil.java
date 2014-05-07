@@ -219,42 +219,17 @@ public class XStubUtil
 
 	public static void appendDottedValidName(StringBuilder builder, String dottedName)
 	{
-		boolean containsIllegal = false;
-		for(String s : KEYWORDS)
-		{
-			if(StringUtil.contains(dottedName, s))
-			{
-				containsIllegal = true;
-				break;
-			}
-		}
+		QualifiedName qualifiedName = QualifiedName.fromDottedString(dottedName);
 
-		if(containsIllegal)
+		XStubBuilder.join(builder, qualifiedName.getComponents(), new PairFunction<StringBuilder, String, Void>()
 		{
-			QualifiedName qualifiedName = QualifiedName.fromDottedString(dottedName);
-
-			XStubBuilder.join(builder, qualifiedName.getComponents(), new PairFunction<StringBuilder, String, Void>()
+			@Nullable
+			@Override
+			public Void fun(StringBuilder t, String v)
 			{
-				@Nullable
-				@Override
-				public Void fun(StringBuilder t, String v)
-				{
-					appendValidName(t, v);
-					return null;
-				}
-			}, ".");
-		}
-		else
-		{
-			int index = dottedName.indexOf(GENERIC_MARKER_IN_NAME);
-			if(index != -1)
-			{
-				builder.append(dottedName, 0, index);
+				appendValidName(t, v);
+				return null;
 			}
-			else
-			{
-				builder.append(dottedName);
-			}
-		}
+		}, ".");
 	}
 }
