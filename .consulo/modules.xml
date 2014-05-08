@@ -20,7 +20,7 @@
         <orderEntry type="module" module-name="dotnet-psi-impl" exported="" />
         <orderEntry type="module" module-name="dotnet-impl" exported="" />
         <orderEntry type="library" exploded="" name="dotnet-asm" level="project" />
-        <orderEntry type="module-library">
+        <orderEntry type="module-library" exported="">
           <library name="consulo:XML">
             <CLASSES>
               <root url="jar://$MODULE_DIR$/dep/xml/lib/jsr173_1.0_api.jar!/" />
