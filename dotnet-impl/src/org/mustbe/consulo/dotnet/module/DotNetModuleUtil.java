@@ -23,6 +23,7 @@ import com.intellij.openapi.roots.ModuleFileIndex;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 
 /**
  * @author VISTALL
@@ -37,7 +38,12 @@ public class DotNetModuleUtil
 		{
 			return false;
 		}
-		VirtualFile virtualFile = element.getContainingFile().getVirtualFile();
+		PsiFile containingFile = element.getContainingFile();
+		if(containingFile == null)
+		{
+			return false;
+		}
+		VirtualFile virtualFile = containingFile.getVirtualFile();
 		if(virtualFile == null)
 		{
 			return false;
