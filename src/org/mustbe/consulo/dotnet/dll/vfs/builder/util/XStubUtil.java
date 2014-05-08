@@ -51,6 +51,7 @@ public class XStubUtil
 			"continue",
 			"lock",
 			"explicit",
+			"implicit",
 			"this",
 			"in",
 			"out",

@@ -595,7 +595,7 @@ public class XStubBuilder
 
 				if(operator && (name.equals("explicit") || name.equals("implicit")))
 				{
-					XStubUtil.appendValidName(builder, name);
+					builder.append(name);
 					parameterType = methodDef.getSignature().getReturnType().getInnerType();
 
 					// name is first parameter type
