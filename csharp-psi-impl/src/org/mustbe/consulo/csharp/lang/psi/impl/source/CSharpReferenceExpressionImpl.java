@@ -54,7 +54,6 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiQualifiedReference;
@@ -392,12 +391,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}
 
 				DotNetGenericParameter[] genericParameters = parameterListOwner.getGenericParameters();
-				val list = new ArrayList<ResolveResult>(genericParameters.length);
+				val list = new ArrayList<ResolveResultWithWeight>(genericParameters.length);
 				for(val o : genericParameters)
 				{
 					if(condition.value(o))
 					{
-						list.add(new PsiElementResolveResult(o));
+						list.add(new ResolveResultWithWeight(o));
 					}
 				}
 				return list.isEmpty() ? ResolveResultWithWeight.EMPTY_ARRAY : list.toArray(new ResolveResultWithWeight[list.size()]);
