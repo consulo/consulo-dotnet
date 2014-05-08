@@ -623,7 +623,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				return p.toResolveResults();
 			}
 
-			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, kind == ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD, null,
+			boolean typeResolving = kind != ResolveToKind.METHOD;
+			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, typeResolving, null,
 					resolveState);
 			return p.toResolveResults();
 		}

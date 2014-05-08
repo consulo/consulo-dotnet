@@ -171,13 +171,39 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetName
 			}
 		});
 
-		return process && StubIndex.getInstance().processElements(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, getPresentableQName(),
+		if(!process)
+		{
+			return false;
+		}
+		process = StubIndex.getInstance().processElements(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, getPresentableQName(),
 				getProject(), myScope, DotNetNamedElement.class, new Processor<DotNetNamedElement>()
 		{
 			@Override
 			public boolean process(DotNetNamedElement namedElement)
 			{
+				if(namedElement instanceof DotNetNamespaceDeclaration)
+				{
+					return true;
+				}
 				return processor.execute(namedElement, state);
+			}
+		});
+		if(!process)
+		{
+			return false;
+		}
+		return StubIndex.getInstance().processElements(CSharpIndexKeys.MEMBER_BY_NAMESPACE_QNAME_INDEX, getPresentableQName(),
+				getProject(), myScope, DotNetNamedElement.class, new Processor<DotNetNamedElement>()
+		{
+			@Override
+			public boolean process(DotNetNamedElement namedElement)
+			{
+				if(namedElement instanceof DotNetNamespaceDeclaration)
+				{
+					val e = new CSharpNamespaceAsElement(getProject(), ((DotNetNamespaceDeclaration) namedElement).getPresentableQName(), myScope);
+					return processor.execute(e, state);
+				}
+				return true;
 			}
 		});
 	}
