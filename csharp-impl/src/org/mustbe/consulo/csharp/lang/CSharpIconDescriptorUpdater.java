@@ -20,7 +20,6 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.assemblyInfo.CSharpAssemblyConstants;
-import org.mustbe.consulo.dotnet.DotNetRunUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
@@ -29,6 +28,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLabeledStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
+import org.mustbe.consulo.dotnet.DotNetRunUtil;
 import org.mustbe.consulo.dotnet.module.DotNetModuleUtil;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.psi.*;
@@ -173,9 +173,10 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		}
 
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(element, DotNetModuleExtension.class);
-		if(containingFile != null && extension != null && extension.isAllowSourceRoots() && !DotNetModuleUtil.isUnderSourceRoot(element))
+		if(containingFile != null && containingFile.getFileType() == CSharpFileType.INSTANCE && extension != null && extension.isAllowSourceRoots()
+				&& !DotNetModuleUtil.isUnderSourceRoot(element))
 		{
-			ProjectFileIndex fileIndex = ProjectRootManager.getInstance(containingFile.getProject()).getFileIndex();
+			ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
 			VirtualFile virtualFile = containingFile.getVirtualFile();
 			assert virtualFile != null;
 			if(fileIndex.isInLibraryClasses(virtualFile) || fileIndex.isInLibrarySource(virtualFile))
@@ -237,6 +238,6 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 	public static boolean isException(CSharpTypeDeclaration declaration)
 	{
 		return false;
-	//	return CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, typeDeclaration, true)
+		//	return CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, typeDeclaration, true)
 	}
 }
