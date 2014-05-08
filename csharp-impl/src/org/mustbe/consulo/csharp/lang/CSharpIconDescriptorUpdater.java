@@ -66,17 +66,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		}
 
 		PsiFile containingFile = element.getContainingFile();
-		if(containingFile == null)
-		{
-			return;
-		}
-
-		if(containingFile.getFileType() != CSharpFileType.INSTANCE)
-		{
-			return;
-		}
-
-		if(CSharpAssemblyConstants.FileName.equals(containingFile.getName()))
+		if(containingFile != null && CSharpAssemblyConstants.FileName.equals(containingFile.getName()))
 		{
 			iconDescriptor.setMainIcon(AllIcons.FileTypes.Config);
 			return;
