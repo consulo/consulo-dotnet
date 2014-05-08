@@ -103,7 +103,7 @@ public class CSharpAnonymTypeRef extends DotNetTypeRef.Adapter
 				fieldBuilder.withTypeRef(valueReferenceExpression.toTypeRef(true));
 			}
 			fieldBuilder.addModifier(CSharpModifier.PUBLIC);
-			fieldBuilder.withName(nameReferenceExpression.getText());
+			fieldBuilder.withNameIdentifier(nameReferenceExpression);
 			fieldBuilder.setNavigationElement(nameReferenceExpression);
 			builder.addMember(fieldBuilder);
 		}

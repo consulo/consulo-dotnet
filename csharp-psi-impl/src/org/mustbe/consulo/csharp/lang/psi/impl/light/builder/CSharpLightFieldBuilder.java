@@ -36,6 +36,7 @@ import com.intellij.psi.PsiElement;
 public class CSharpLightFieldBuilder extends CSharpLightVariableBuilder<CSharpLightFieldBuilder> implements CSharpFieldDeclaration
 {
 	private List<DotNetModifierWithMask> myModifiers = new ArrayList<DotNetModifierWithMask>();
+	private PsiElement myNameIdentifier;
 
 	public CSharpLightFieldBuilder(PsiElement element)
 	{
@@ -69,6 +70,36 @@ public class CSharpLightFieldBuilder extends CSharpLightVariableBuilder<CSharpLi
 			return getName();
 		}
 		return parentQName + "." + getName();
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getNameIdentifier()
+	{
+		return myNameIdentifier;
+	}
+
+	@Override
+	public int getTextOffset()
+	{
+		PsiElement nameIdentifier = getNameIdentifier();
+		return nameIdentifier == null ? super.getTextOffset() : nameIdentifier.getTextOffset();
+	}
+
+	@Override
+	public String getName()
+	{
+		PsiElement nameIdentifier = getNameIdentifier();
+		if(nameIdentifier != null)
+		{
+			return nameIdentifier.getText();
+		}
+		return super.getName();
+	}
+
+	public void withNameIdentifier(@NotNull PsiElement element)
+	{
+		myNameIdentifier = element;
 	}
 
 	@Override
