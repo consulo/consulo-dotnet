@@ -93,7 +93,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	{
 		TYPE_PARAMETER_FROM_PARENT,
 		NAMESPACE,
-		NAMESPACE_WITH_CREATE_OPTION,
+		SOFT_NAMESPACE,
 		METHOD,
 		ATTRIBUTE,
 		NATIVE_TYPE_WRAPPER,
@@ -516,7 +516,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 						return ResolveResultWithWeight.EMPTY_ARRAY;
 					}
 				}
-			case NAMESPACE_WITH_CREATE_OPTION:
+			case SOFT_NAMESPACE:
 				String qName2 = StringUtil.strip(element.getText(), CharFilter.NOT_WHITESPACE_FILTER);
 				CSharpNamespaceAsElement namespaceAsElement = new CSharpNamespaceAsElement(element.getProject(), qName2, element.getResolveScope());
 				return new ResolveResultWithWeight[]{new ResolveResultWithWeight(namespaceAsElement)};
@@ -771,7 +771,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(tempElement instanceof CSharpNamespaceDeclarationImpl)
 		{
-			return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+			return ResolveToKind.SOFT_NAMESPACE;
 		}
 		else if(tempElement instanceof DotNetReferenceType)
 		{
@@ -800,7 +800,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				DotNetReferenceExpression namespaceReference = netNamespaceDeclaration.getNamespaceReference();
 				if(namespaceReference != null && PsiTreeUtil.isAncestor(namespaceReference, this, false))
 				{
-					return ResolveToKind.NAMESPACE_WITH_CREATE_OPTION;
+					return ResolveToKind.SOFT_NAMESPACE;
 				}
 			}
 
