@@ -54,6 +54,7 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	private List<DotNetQualifiedElement> myMembers = new ArrayList<DotNetQualifiedElement>();
 	private List<DotNetModifierWithMask> myModifiers = new ArrayList<DotNetModifierWithMask>();
 	private Type myType = Type.DEFAULT;
+	private String myParentQName;
 
 	public CSharpLightTypeDeclarationBuilder(Project manager, Language language)
 	{
@@ -178,7 +179,7 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	@Override
 	public String getPresentableParentQName()
 	{
-		return null;
+		return myParentQName;
 	}
 
 	@Nullable
@@ -193,6 +194,11 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	public PsiElement getNameIdentifier()
 	{
 		return null;
+	}
+
+	public void withParentQName(String parentQName)
+	{
+		myParentQName = parentQName;
 	}
 
 	public void addModifier(DotNetModifierWithMask modifierWithMask)
