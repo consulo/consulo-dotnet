@@ -22,11 +22,12 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
@@ -42,8 +43,17 @@ import com.intellij.util.containers.ContainerUtil;
 public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBuilder<CSharpLightTypeDeclarationBuilder> implements
 		CSharpTypeDeclaration
 {
-	private List<DotNetNamedElement> myMembers = new ArrayList<DotNetNamedElement>();
+	public enum Type
+	{
+		DEFAULT,
+		STRUCT,
+		ENUM,
+		INTERFACE
+	}
+
+	private List<DotNetQualifiedElement> myMembers = new ArrayList<DotNetQualifiedElement>();
 	private List<DotNetModifierWithMask> myModifiers = new ArrayList<DotNetModifierWithMask>();
+	private Type myType = Type.DEFAULT;
 
 	public CSharpLightTypeDeclarationBuilder(Project manager, Language language)
 	{
@@ -58,6 +68,13 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	@Override
 	public boolean hasExtensions()
 	{
+		for(DotNetQualifiedElement qualifiedElement : getMembers())
+		{
+			if(CSharpMethodImplUtil.isExtensionMethod(qualifiedElement))
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -76,19 +93,19 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	@Override
 	public boolean isInterface()
 	{
-		return false;
+		return myType == Type.INTERFACE;
 	}
 
 	@Override
 	public boolean isStruct()
 	{
-		return false;
+		return myType == Type.STRUCT;
 	}
 
 	@Override
 	public boolean isEnum()
 	{
-		return false;
+		return myType == Type.ENUM;
 	}
 
 	@Override
@@ -139,9 +156,9 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 
 	@NotNull
 	@Override
-	public DotNetNamedElement[] getMembers()
+	public DotNetQualifiedElement[] getMembers()
 	{
-		return ContainerUtil.toArray(myMembers, DotNetNamedElement.ARRAY_FACTORY);
+		return ContainerUtil.toArray(myMembers, DotNetQualifiedElement.ARRAY_FACTORY);
 	}
 
 	@Override
@@ -183,7 +200,12 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 		myModifiers.add(modifierWithMask);
 	}
 
-	public void addMember(@NotNull DotNetNamedElement element)
+	public void withType(Type type)
+	{
+		myType = type;
+	}
+
+	public void addMember(@NotNull DotNetQualifiedElement element)
 	{
 		if(element instanceof CSharpLightElementBuilder)
 		{

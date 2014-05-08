@@ -59,7 +59,7 @@ public class CSharpAnonymTypeRef extends DotNetTypeRef.Adapter
 	public String getPresentableText()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("{ ");
+		builder.append("{");
 		for(int i = 0; i < mySets.length; i++)
 		{
 			if(i != 0)
@@ -69,7 +69,7 @@ public class CSharpAnonymTypeRef extends DotNetTypeRef.Adapter
 			CSharpFieldOrPropertySet set = mySets[i];
 			builder.append(set.getNameReferenceExpression().getText());
 		}
-		builder.append(" }");
+		builder.append("}");
 		return builder.toString();
 	}
 
@@ -85,6 +85,7 @@ public class CSharpAnonymTypeRef extends DotNetTypeRef.Adapter
 		CSharpLightTypeDeclarationBuilder builder = new CSharpLightTypeDeclarationBuilder(project, CSharpLanguage.INSTANCE);
 		builder.addModifier(CSharpModifier.PUBLIC);
 		builder.withParent(myContainingFile);
+		builder.withType(CSharpLightTypeDeclarationBuilder.Type.STRUCT);
 
 		for(CSharpFieldOrPropertySet set : mySets)
 		{
