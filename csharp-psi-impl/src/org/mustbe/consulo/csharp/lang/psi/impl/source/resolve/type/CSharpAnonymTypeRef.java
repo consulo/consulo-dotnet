@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySet;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
-import org.mustbe.consulo.csharp.lang.psi.impl.light.builder.CSharpLightFieldBuilder;
+import org.mustbe.consulo.csharp.lang.psi.impl.light.builder.CSharpLightFieldDeclarationBuilder;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.builder.CSharpLightTypeDeclarationBuilder;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -92,7 +92,7 @@ public class CSharpAnonymTypeRef extends DotNetTypeRef.Adapter
 			DotNetExpression nameReferenceExpression = set.getNameReferenceExpression();
 			DotNetExpression valueReferenceExpression = set.getValueReferenceExpression();
 
-			CSharpLightFieldBuilder fieldBuilder = new CSharpLightFieldBuilder(project, CSharpLanguage.INSTANCE);
+			CSharpLightFieldDeclarationBuilder fieldBuilder = new CSharpLightFieldDeclarationBuilder(project, CSharpLanguage.INSTANCE);
 
 			if(valueReferenceExpression == null)
 			{

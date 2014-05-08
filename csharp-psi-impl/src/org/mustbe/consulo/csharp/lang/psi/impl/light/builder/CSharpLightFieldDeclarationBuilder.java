@@ -33,17 +33,18 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 08.05.14
  */
-public class CSharpLightFieldBuilder extends CSharpLightVariableBuilder<CSharpLightFieldBuilder> implements CSharpFieldDeclaration
+public class CSharpLightFieldDeclarationBuilder extends CSharpLightVariableBuilder<CSharpLightFieldDeclarationBuilder> implements
+		CSharpFieldDeclaration
 {
 	private List<DotNetModifierWithMask> myModifiers = new ArrayList<DotNetModifierWithMask>();
 	private PsiElement myNameIdentifier;
 
-	public CSharpLightFieldBuilder(PsiElement element)
+	public CSharpLightFieldDeclarationBuilder(PsiElement element)
 	{
 		super(element);
 	}
 
-	public CSharpLightFieldBuilder(Project manager, Language language)
+	public CSharpLightFieldDeclarationBuilder(Project manager, Language language)
 	{
 		super(manager, language);
 	}
