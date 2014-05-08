@@ -17,13 +17,16 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joou.Unsigned;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetConstantExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 
@@ -31,7 +34,7 @@ import com.intellij.psi.tree.IElementType;
  * @author VISTALL
  * @since 16.12.13.
  */
-public class CSharpConstantExpressionImpl extends CSharpElementImpl implements DotNetExpression
+public class CSharpConstantExpressionImpl extends CSharpElementImpl implements DotNetConstantExpression
 {
 	public CSharpConstantExpressionImpl(@NotNull ASTNode node)
 	{
@@ -92,5 +95,62 @@ public class CSharpConstantExpressionImpl extends CSharpElementImpl implements D
 			return CSharpNativeTypeRef.BOOL;
 		}
 		return DotNetTypeRef.ERROR_TYPE;
+	}
+
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		PsiElement byType = findChildByType(CSharpTokenSets.LITERALS);
+		assert byType != null;
+		IElementType elementType = byType.getNode().getElementType();
+		String text = getText();
+		if(elementType == CSharpTokens.STRING_LITERAL)
+		{
+			return StringUtil.unquoteString(text);
+		}
+		else if(elementType == CSharpTokens.VERBATIM_STRING_LITERAL)
+		{
+			return getText(); //TODO [VISTALL] unquote @ "" and escape \n \t
+		}
+		else if(elementType == CSharpTokens.CHARACTER_LITERAL)
+		{
+			return StringUtil.unquoteString(text).charAt(0);
+		}
+		else if(elementType == CSharpTokens.UINTEGER_LITERAL)
+		{
+			text = text.substring(0, text.length() - 1); //cut U
+			return Unsigned.uint(text);
+		}
+		else if(elementType == CSharpTokens.ULONG_LITERAL)
+		{
+			text = text.substring(0, text.length() - 2); //cut UL
+			return Unsigned.ulong(text);
+		}
+		else if(elementType == CSharpTokens.INTEGER_LITERAL)
+		{
+			return Integer.parseInt(text);
+		}
+		else if(elementType == CSharpTokens.LONG_LITERAL)
+		{
+			return Long.parseLong(text);
+		}
+		else if(elementType == CSharpTokens.FLOAT_LITERAL)
+		{
+			return Float.parseFloat(text);
+		}
+		else if(elementType == CSharpTokens.DOUBLE_LITERAL)
+		{
+			return Double.parseDouble(text);
+		}
+		else if(elementType == CSharpTokens.NULL_LITERAL)
+		{
+			return null;
+		}
+		else if(elementType == CSharpTokens.BOOL_LITERAL)
+		{
+			return Boolean.parseBoolean(text);
+		}
+		throw new IllegalArgumentException(elementType.toString());
 	}
 }
