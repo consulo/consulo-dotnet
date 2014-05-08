@@ -186,7 +186,7 @@ public class CSharpResolveUtil
 					DotNetGenericExtractor genericExtractor = dotNetTypeRef.getGenericExtractor(resolve, entrance);
 					ResolveState newState = ResolveState.initial().put(EXTRACTOR_KEY, genericExtractor);
 
-					if(!walkChildren(processor, resolve, typeResolving, maxScope, newState))
+					if(!walkChildren(processor, resolve, false, maxScope, newState))
 					{
 						return false;
 					}
