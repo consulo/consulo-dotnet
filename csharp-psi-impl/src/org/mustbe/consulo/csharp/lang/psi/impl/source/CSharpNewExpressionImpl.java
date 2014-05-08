@@ -24,6 +24,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySetBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpAnonymTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpQualifiedTypeRef;
 import org.mustbe.consulo.dotnet.DotNetTypes;
@@ -40,8 +41,6 @@ import com.intellij.psi.PsiElement;
  */
 public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharpNewExpression
 {
-	private DotNetTypeRef myAnonymType;
-
 	public CSharpNewExpressionImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -60,12 +59,12 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 		DotNetType type = getNewType();
 		if(type == null)
 		{
-			if(myAnonymType == null)
+			CSharpFieldOrPropertySetBlock fieldOrPropertySetBlock = getFieldOrPropertySetBlock();
+			if(fieldOrPropertySetBlock == null)
 			{
-				myAnonymType = createAnonymType();
+				return DotNetTypeRef.ERROR_TYPE;
 			}
-
-			return myAnonymType == null ? DotNetTypeRef.ERROR_TYPE : myAnonymType;
+			return new CSharpAnonymTypeRef(getContainingFile(), fieldOrPropertySetBlock.getSets());
 		}
 		else
 		{

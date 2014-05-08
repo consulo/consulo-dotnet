@@ -16,12 +16,14 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import com.intellij.psi.PsiNamedElement;
 
 /**
  * @author VISTALL
  * @since 09.12.13.
  */
+@ArrayFactoryFields
 public interface DotNetNamedElement extends DotNetElement, PsiNamedElement
 {
 }
