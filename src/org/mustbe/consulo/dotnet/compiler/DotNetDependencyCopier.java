@@ -98,21 +98,20 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			val currentLayer = (MainConfigurationLayer) dotNetModuleExtension.getCurrentLayer();
 			val currentLayerName = dotNetModuleExtension.getCurrentLayerName();
 
-			val r = new ReadAction<Set<String>>()
+			val r = new ReadAction<Set<File>>()
 			{
 				@Override
-				protected void run(Result<Set<String>> listResult) throws Throwable
+				protected void run(Result<Set<File>> listResult) throws Throwable
 				{
-
-					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, currentLayerName, currentLayer, true, true));
+					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, false));
 				}
 			}.execute();
 
 			val list = r.getResultObject();
 
-			for(val d : list)
+			for(val file : list)
 			{
-				VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(new File(d), true);
+				VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(file, true);
 				if(fileByIoFile == null)
 				{
 					continue;

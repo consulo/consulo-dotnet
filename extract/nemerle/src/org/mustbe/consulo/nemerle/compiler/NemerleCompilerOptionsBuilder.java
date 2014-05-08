@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerMessage;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
@@ -36,7 +35,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Function;
 import lombok.val;
 
 /**
@@ -87,10 +88,17 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 		String outputFile = DotNetMacros.extract(module, layerName, dotNetLayer);
 		arguments.add("-out:" + FileUtil.toSystemIndependentName(outputFile));
 
-		val dependFiles = DotNetCompilerUtil.collectDependencies(module, layerName, dotNetLayer, true, false);
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, false);
 		if(!dependFiles.isEmpty())
 		{
-			arguments.add("-reference:" + StringUtils.join(dependFiles, ","));
+			arguments.add("-reference:" + StringUtil.join(dependFiles, new Function<File, String>()
+			{
+				@Override
+				public String fun(File file)
+				{
+					return StringUtil.QUOTER.fun(file.getAbsolutePath());
+				}
+			}, ","));
 		}
 
 		File tempFile = FileUtil.createTempFile("consulo-nemerle", ".nn");

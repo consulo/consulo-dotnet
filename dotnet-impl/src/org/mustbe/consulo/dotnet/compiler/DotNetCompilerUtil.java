@@ -16,14 +16,17 @@
 
 package org.mustbe.consulo.dotnet.compiler;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ModuleOrderEntry;
@@ -31,8 +34,8 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import lombok.val;
@@ -44,11 +47,11 @@ import lombok.val;
 public class DotNetCompilerUtil
 {
 	@NotNull
-	public static Set<String> collectDependencies(@NotNull Module module, @NotNull final String layerName, @NotNull final MainConfigurationLayer p,
-			final boolean toSystemInDepend, final boolean forDependCopy)
+	public static Set<File> collectDependencies(@NotNull final Module module, final boolean includeStdLibraries)
 	{
-		val list = new HashSet<String>();
-		val processed = new HashSet<Module>();
+		val list = new HashSet<File>();
+
+		val processed = new HashSet<Object>();
 
 		processed.add(module);
 
@@ -56,18 +59,35 @@ public class DotNetCompilerUtil
 		moduleRootManager.processOrder(new RootPolicy<Object>()
 		{
 			@Override
-			public Object visitModuleJdkOrderEntry(ModuleExtensionWithSdkOrderEntry jdkOrderEntry, Object value)
+			public Object visitModuleExtensionSdkOrderEntry(ModuleExtensionWithSdkOrderEntry orderEntry, Object value)
 			{
-				if(!forDependCopy)
+				Sdk sdk = orderEntry.getSdk();
+				if(sdk == null || processed.contains(sdk))
 				{
-					collectFromRoot(jdkOrderEntry);
+					return null;
 				}
+
+ 				processed.add(sdk);
+
+				if(!includeStdLibraries && sdk.getSdkType() instanceof DotNetSdkType)
+				{
+					return null;
+				}
+				collectFromRoot(orderEntry);
 				return null;
 			}
 
 			@Override
 			public Object visitLibraryOrderEntry(LibraryOrderEntry libraryOrderEntry, Object value)
 			{
+				Library library = libraryOrderEntry.getLibrary();
+				if(library == null || processed.contains(library))
+				{
+					return null;
+				}
+
+				processed.add(library);
+
 				collectFromRoot(libraryOrderEntry);
 				return null;
 			}
@@ -77,17 +97,14 @@ public class DotNetCompilerUtil
 				for(VirtualFile virtualFile : orderEntry.getFiles(OrderRootType.CLASSES))
 				{
 					VirtualFile virtualFileForJar = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
-					String path;
 					if(virtualFileForJar != null)
 					{
-						path = virtualFileForJar.getPath();
+						list.add(VfsUtil.virtualToIoFile(virtualFileForJar));
 					}
 					else
 					{
-						path = virtualFile.getPath();
+						list.add(VfsUtil.virtualToIoFile(virtualFile));
 					}
-
-					add(list, toSystemInDepend, path);
 				}
 			}
 
@@ -113,12 +130,10 @@ public class DotNetCompilerUtil
 					String depCurrentLayerName = dependencyExtension.getCurrentLayerName();
 					MainConfigurationLayer depCurrentLayer = (MainConfigurationLayer) dependencyExtension.getCurrentLayer();
 					String extract = DotNetMacros.extract(depModule, depCurrentLayerName, depCurrentLayer);
-					add(list, toSystemInDepend, extract);
-					if(forDependCopy)
-					{
-						Set<String> strings = collectDependencies(depModule, depCurrentLayerName, depCurrentLayer, toSystemInDepend, true);
-						list.addAll(strings);
-					}
+
+					list.add(new File(extract));
+
+					list.addAll(collectDependencies(depModule, false));
 				}
 
 				return null;
@@ -128,13 +143,4 @@ public class DotNetCompilerUtil
 		return list;
 	}
 
-	private static void add(Set<String> list, boolean toSystemInDepend, String extract)
-	{
-		if(toSystemInDepend)
-		{
-			extract = FileUtil.toSystemIndependentName(extract);
-		}
-
-		list.add(StringUtil.QUOTER.fun(extract));
-	}
 }

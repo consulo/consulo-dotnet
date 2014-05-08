@@ -40,6 +40,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.StandardFileSystems;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.util.Function;
 import lombok.val;
 
 /**
@@ -196,10 +197,17 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 		String outputFile = DotNetMacros.extract(module, layerName, dotNetLayer);
 		addArgument("/out:" + outputFile);
 
-		val dependFiles = DotNetCompilerUtil.collectDependencies(module, layerName, dotNetLayer, false, false);
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, false);
 		if(!dependFiles.isEmpty())
 		{
-			addArgument("/reference:" + StringUtil.join(dependFiles, ","));
+			addArgument("/reference:" + StringUtil.join(dependFiles, new Function<File, String>()
+			{
+				@Override
+				public String fun(File file)
+				{
+					return StringUtil.QUOTER.fun(file.getAbsolutePath());
+				}
+			}, ","));
 		}
 
 		if(dotNetLayer.isAllowDebugInfo())
