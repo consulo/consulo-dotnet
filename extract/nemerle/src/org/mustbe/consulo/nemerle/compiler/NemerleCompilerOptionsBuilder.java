@@ -85,10 +85,12 @@ public class NemerleCompilerOptionsBuilder implements DotNetCompilerOptionsBuild
 
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("-target:" + target);
+		arguments.add("-nologo");
+	//	arguments.add("-nostdlib");
 		String outputFile = DotNetMacros.extract(module, layerName, dotNetLayer);
 		arguments.add("-out:" + FileUtil.toSystemIndependentName(outputFile));
 
-		val dependFiles = DotNetCompilerUtil.collectDependencies(module, false);
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, true);
 		if(!dependFiles.isEmpty())
 		{
 			arguments.add("-reference:" + StringUtil.join(dependFiles, new Function<File, String>()

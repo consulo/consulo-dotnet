@@ -197,7 +197,7 @@ public class MSBaseDotNetCompilerOptionsBuilder implements DotNetCompilerOptions
 		String outputFile = DotNetMacros.extract(module, layerName, dotNetLayer);
 		addArgument("/out:" + outputFile);
 
-		val dependFiles = DotNetCompilerUtil.collectDependencies(module, false);
+		val dependFiles = DotNetCompilerUtil.collectDependencies(module, true);
 		if(!dependFiles.isEmpty())
 		{
 			addArgument("/reference:" + StringUtil.join(dependFiles, new Function<File, String>()
