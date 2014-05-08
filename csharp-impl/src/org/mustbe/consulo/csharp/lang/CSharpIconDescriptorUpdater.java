@@ -173,7 +173,7 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		}
 
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(element, DotNetModuleExtension.class);
-		if(extension != null && extension.isAllowSourceRoots() && !DotNetModuleUtil.isUnderSourceRoot(element))
+		if(containingFile != null && extension != null && extension.isAllowSourceRoots() && !DotNetModuleUtil.isUnderSourceRoot(element))
 		{
 			ProjectFileIndex fileIndex = ProjectRootManager.getInstance(containingFile.getProject()).getFileIndex();
 			VirtualFile virtualFile = containingFile.getVirtualFile();
