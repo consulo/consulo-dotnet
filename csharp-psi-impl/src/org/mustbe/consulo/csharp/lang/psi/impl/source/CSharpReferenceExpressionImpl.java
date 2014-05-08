@@ -804,11 +804,6 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				}
 			}
 
-			if(PsiTreeUtil.getParentOfType(this, CSharpAttributeImpl.class) != null)
-			{
-				return ResolveToKind.NAMESPACE;
-			}
-
 			if(PsiTreeUtil.getParentOfType(this, CSharpUsingNamespaceStatementImpl.class) != null)
 			{
 				return ResolveToKind.NAMESPACE;
