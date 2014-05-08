@@ -18,22 +18,22 @@ package org.mustbe.consulo.csharp.lang.psi.impl.light.builder;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 06.02.14
+ * @since 08.05.14
  */
-public class CSharpLightLocalVariableBuilder extends CSharpLightVariableBuilder<CSharpLightLocalVariableBuilder> implements CSharpLocalVariable
+public class CSharpLightParameterBuilder extends CSharpLightVariableBuilder<CSharpLightParameterBuilder> implements DotNetParameter
 {
-	public CSharpLightLocalVariableBuilder(Project project)
+	public CSharpLightParameterBuilder(Project project)
 	{
 		super(project);
 	}
 
-	public CSharpLightLocalVariableBuilder(PsiElement element)
+	public CSharpLightParameterBuilder(PsiElement element)
 	{
 		super(element);
 	}
@@ -41,6 +41,6 @@ public class CSharpLightLocalVariableBuilder extends CSharpLightVariableBuilder<
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitLocalVariable(this);
+		visitor.visitParameter(this);
 	}
 }

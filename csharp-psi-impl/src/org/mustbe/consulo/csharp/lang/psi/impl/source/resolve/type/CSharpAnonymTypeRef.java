@@ -18,7 +18,6 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySet;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.builder.CSharpLightFieldDeclarationBuilder;
@@ -82,7 +81,7 @@ public class CSharpAnonymTypeRef extends DotNetTypeRef.Adapter
 
 	private DotNetTypeDeclaration resolve(Project project, GlobalSearchScope resolveScope)
 	{
-		CSharpLightTypeDeclarationBuilder builder = new CSharpLightTypeDeclarationBuilder(project, CSharpLanguage.INSTANCE);
+		CSharpLightTypeDeclarationBuilder builder = new CSharpLightTypeDeclarationBuilder(project);
 		builder.addModifier(CSharpModifier.PUBLIC);
 		builder.withParent(myContainingFile);
 		builder.withType(CSharpLightTypeDeclarationBuilder.Type.STRUCT);
@@ -92,7 +91,7 @@ public class CSharpAnonymTypeRef extends DotNetTypeRef.Adapter
 			DotNetExpression nameReferenceExpression = set.getNameReferenceExpression();
 			DotNetExpression valueReferenceExpression = set.getValueReferenceExpression();
 
-			CSharpLightFieldDeclarationBuilder fieldBuilder = new CSharpLightFieldDeclarationBuilder(project, CSharpLanguage.INSTANCE);
+			CSharpLightFieldDeclarationBuilder fieldBuilder = new CSharpLightFieldDeclarationBuilder(project);
 
 			if(valueReferenceExpression == null)
 			{

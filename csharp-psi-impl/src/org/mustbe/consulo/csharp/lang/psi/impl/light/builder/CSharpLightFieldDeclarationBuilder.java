@@ -21,10 +21,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -44,9 +45,9 @@ public class CSharpLightFieldDeclarationBuilder extends CSharpLightVariableBuild
 		super(element);
 	}
 
-	public CSharpLightFieldDeclarationBuilder(Project manager, Language language)
+	public CSharpLightFieldDeclarationBuilder(Project manager)
 	{
-		super(manager, language);
+		super(manager);
 	}
 
 	@Nullable
@@ -106,11 +107,21 @@ public class CSharpLightFieldDeclarationBuilder extends CSharpLightVariableBuild
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifierWithMask modifier)
 	{
+		if(modifier == DotNetModifierWithMask.STATIC)
+		{
+			modifier = CSharpModifier.STATIC;
+		}
 		return myModifiers.contains(modifier);
 	}
 
 	public void addModifier(DotNetModifierWithMask modifierWithMask)
 	{
 		myModifiers.add(modifierWithMask);
+	}
+
+	@Override
+	public void accept(@NotNull CSharpElementVisitor visitor)
+	{
+		visitor.visitFieldDeclaration(this);
 	}
 }

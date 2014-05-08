@@ -16,9 +16,12 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.light.builder;
 
-import com.intellij.lang.Language;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.CSharpLanguage;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.light.LightElement;
@@ -33,12 +36,12 @@ public abstract class CSharpLightElementBuilder<T extends CSharpLightElementBuil
 
 	public CSharpLightElementBuilder(PsiElement element)
 	{
-		super(element.getManager(), element.getLanguage());
+		super(element.getManager(), CSharpLanguage.INSTANCE);
 	}
 
-	public CSharpLightElementBuilder(Project project, Language language)
+	public CSharpLightElementBuilder(Project project)
 	{
-		super(PsiManager.getInstance(project), language);
+		super(PsiManager.getInstance(project), CSharpLanguage.INSTANCE);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -47,6 +50,21 @@ public abstract class CSharpLightElementBuilder<T extends CSharpLightElementBuil
 		myParent = parent;
 		return (T) this;
 	}
+
+	@Override
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof CSharpElementVisitor)
+		{
+			accept((CSharpElementVisitor)visitor);
+		}
+		else
+		{
+			super.accept(visitor);
+		}
+	}
+
+	public abstract void accept(@NotNull CSharpElementVisitor visitor);
 
 	@Override
 	public PsiFile getContainingFile()

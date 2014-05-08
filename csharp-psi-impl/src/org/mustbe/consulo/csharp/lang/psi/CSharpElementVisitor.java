@@ -76,7 +76,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(expression);
 	}
 
-	public void visitTypeDeclaration(CSharpTypeDeclarationImpl declaration)
+	public void visitTypeDeclaration(CSharpTypeDeclaration declaration)
 	{
 		visitElement(declaration);
 	}
@@ -171,7 +171,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(type);
 	}
 
-	public void visitLocalVariable(CSharpLocalVariableImpl variable)
+	public void visitLocalVariable(CSharpLocalVariable variable)
 	{
 		visitElement(variable);
 	}

@@ -60,7 +60,7 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		psi.accept(new CSharpRecursiveElementVisitor()
 		{
 			@Override
-			public void visitTypeDeclaration(CSharpTypeDeclarationImpl declaration)
+			public void visitTypeDeclaration(CSharpTypeDeclaration declaration)
 			{
 				super.visitTypeDeclaration(declaration);
 

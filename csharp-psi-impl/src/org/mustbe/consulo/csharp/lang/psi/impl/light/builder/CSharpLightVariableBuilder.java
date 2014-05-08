@@ -24,7 +24,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 
@@ -38,9 +37,9 @@ public abstract class CSharpLightVariableBuilder<T extends CSharpLightVariableBu
 	private boolean myConstant;
 	private DotNetTypeRef myTypeRef;
 
-	public CSharpLightVariableBuilder(Project manager, Language language)
+	public CSharpLightVariableBuilder(Project project)
 	{
-		super(manager, language);
+		super(project);
 	}
 
 	public CSharpLightVariableBuilder(PsiElement element)

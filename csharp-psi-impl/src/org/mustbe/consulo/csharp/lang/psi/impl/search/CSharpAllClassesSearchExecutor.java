@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.search.searches.AllClassesSearch;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
@@ -159,7 +159,7 @@ public class CSharpAllClassesSearchExecutor implements QueryExecutor<DotNetTypeD
 			}
 
 			@Override
-			public void visitTypeDeclaration(CSharpTypeDeclarationImpl aClass)
+			public void visitTypeDeclaration(CSharpTypeDeclaration aClass)
 			{
 				stopped[0] = !processor.process(aClass);
 				super.visitTypeDeclaration(aClass);

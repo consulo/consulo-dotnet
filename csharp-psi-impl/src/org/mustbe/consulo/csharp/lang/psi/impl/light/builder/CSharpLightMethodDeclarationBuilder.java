@@ -22,119 +22,84 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
  * @since 08.05.14
  */
-public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBuilder<CSharpLightTypeDeclarationBuilder> implements
-		CSharpTypeDeclaration
+public class CSharpLightMethodDeclarationBuilder extends CSharpLightNamedElementBuilder<CSharpLightMethodDeclarationBuilder> implements
+		CSharpMethodDeclaration
 {
-	public enum Type
-	{
-		DEFAULT,
-		STRUCT,
-		ENUM,
-		INTERFACE
-	}
-
-	private List<DotNetQualifiedElement> myMembers = new ArrayList<DotNetQualifiedElement>();
 	private List<DotNetModifierWithMask> myModifiers = new ArrayList<DotNetModifierWithMask>();
-	private Type myType = Type.DEFAULT;
+	private List<DotNetParameter> myParameters = new ArrayList<DotNetParameter>();
 	private String myParentQName;
+	private DotNetTypeRef myReturnType;
 
-	public CSharpLightTypeDeclarationBuilder(Project project)
+	public CSharpLightMethodDeclarationBuilder(Project project)
 	{
 		super(project);
 	}
 
-	public CSharpLightTypeDeclarationBuilder(PsiElement element)
+	@Override
+	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		super(element);
+		visitor.visitMethodDeclaration(this);
 	}
 
 	@Override
-	public boolean hasExtensions()
+	public boolean isDelegate()
 	{
-		for(DotNetQualifiedElement qualifiedElement : getMembers())
-		{
-			if(CSharpMethodImplUtil.isExtensionMethod(qualifiedElement))
-			{
-				return true;
-			}
-		}
 		return false;
 	}
 
 	@Override
-	public PsiElement getLeftBrace()
-	{
-		return null;
-	}
-
-	@Override
-	public PsiElement getRightBrace()
-	{
-		return null;
-	}
-
-	@Override
-	public boolean isInterface()
-	{
-		return myType == Type.INTERFACE;
-	}
-
-	@Override
-	public boolean isStruct()
-	{
-		return myType == Type.STRUCT;
-	}
-
-	@Override
-	public boolean isEnum()
-	{
-		return myType == Type.ENUM;
-	}
-
-	@Override
-	public boolean isInheritAllowed()
+	public boolean isOperator()
 	{
 		return false;
 	}
 
 	@Nullable
 	@Override
-	public DotNetTypeList getExtendList()
+	public IElementType getOperatorElementType()
+	{
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public DotNetType getReturnType()
 	{
 		return null;
 	}
 
 	@NotNull
 	@Override
-	public DotNetType[] getExtends()
+	public DotNetTypeRef getReturnTypeRef()
 	{
-		return new DotNetType[0];
+		return myReturnType;
 	}
 
+	@Nullable
 	@Override
-	public boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep)
+	public PsiElement getCodeBlock()
 	{
-		return false;
+		return null;
 	}
 
 	@Nullable
@@ -152,22 +117,9 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	}
 
 	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
-	{
-		visitor.visitTypeDeclaration(this);
-	}
-
-	@Override
 	public int getGenericParametersCount()
 	{
 		return 0;
-	}
-
-	@NotNull
-	@Override
-	public DotNetQualifiedElement[] getMembers()
-	{
-		return ContainerUtil.toArray(myMembers, DotNetQualifiedElement.ARRAY_FACTORY);
 	}
 
 	@Override
@@ -185,6 +137,34 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	public DotNetModifierList getModifierList()
 	{
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef[] getParameterTypesForRuntime()
+	{
+		DotNetParameter[] parameters = getParameters();
+		DotNetTypeRef[] typeRefs = new DotNetTypeRef[parameters.length];
+		for(int i = 0; i < parameters.length; i++)
+		{
+			DotNetParameter parameter = parameters[i];
+			typeRefs[i] = parameter.toTypeRef(false);
+		}
+		return typeRefs;
+	}
+
+	@Nullable
+	@Override
+	public DotNetParameterList getParameterList()
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetParameter[] getParameters()
+	{
+		return ContainerUtil.toArray(myParameters, DotNetParameter.ARRAY_FACTORY);
 	}
 
 	@Nullable
@@ -218,31 +198,35 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 		return null;
 	}
 
-	public CSharpLightTypeDeclarationBuilder withParentQName(String parentQName)
+	@NotNull
+	public CSharpLightMethodDeclarationBuilder withReturnType(DotNetTypeRef type)
+	{
+		myReturnType = type;
+		return this;
+	}
+
+	@NotNull
+	public CSharpLightMethodDeclarationBuilder withParentQName(String parentQName)
 	{
 		myParentQName = parentQName;
 		return this;
 	}
 
-	public CSharpLightTypeDeclarationBuilder addModifier(DotNetModifierWithMask modifierWithMask)
+	@NotNull
+	public CSharpLightMethodDeclarationBuilder addModifier(DotNetModifierWithMask modifierWithMask)
 	{
 		myModifiers.add(modifierWithMask);
 		return this;
 	}
 
-	public CSharpLightTypeDeclarationBuilder withType(Type type)
+	@NotNull
+	public CSharpLightMethodDeclarationBuilder addParameter(DotNetParameter parameter)
 	{
-		myType = type;
-		return this;
-	}
-
-	public CSharpLightTypeDeclarationBuilder addMember(@NotNull DotNetQualifiedElement element)
-	{
-		if(element instanceof CSharpLightElementBuilder)
+		if(parameter instanceof CSharpLightElementBuilder)
 		{
-			((CSharpLightElementBuilder) element).withParent(this);
+			((CSharpLightElementBuilder) parameter).withParent(this);
 		}
-		myMembers.add(element);
+		myParameters.add(parameter);
 		return this;
 	}
 }

@@ -19,7 +19,6 @@ package org.mustbe.consulo.csharp.lang.psi.impl.light.builder;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
@@ -33,9 +32,9 @@ public abstract class CSharpLightNamedElementBuilder<T extends CSharpLightNamedE
 {
 	private String myName;
 
-	public CSharpLightNamedElementBuilder(Project manager, Language language)
+	public CSharpLightNamedElementBuilder(Project project)
 	{
-		super(manager, language);
+		super(project);
 	}
 
 	public CSharpLightNamedElementBuilder(PsiElement element)
