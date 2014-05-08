@@ -33,6 +33,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 
@@ -186,7 +187,12 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	@Override
 	public String getPresentableQName()
 	{
-		return getName();
+		String parentQName = getPresentableParentQName();
+		if(StringUtil.isEmpty(parentQName))
+		{
+			return getName();
+		}
+		return parentQName + "." + getName();
 	}
 
 	@Nullable
