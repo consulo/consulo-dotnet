@@ -19,7 +19,11 @@ package org.mustbe.consulo.dotnet.debugger;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Icon;
+
 import org.jetbrains.annotations.Nullable;
+import com.intellij.icons.AllIcons;
+import com.intellij.util.BitUtil;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
 import mono.debugger.IncompatibleThreadStateException;
@@ -37,7 +41,7 @@ public class DotNetExecutionStack extends XExecutionStack
 
 	public DotNetExecutionStack(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
 	{
-		super(threadMirror.name());
+		super(threadMirror.name(), getIcon(threadMirror));
 
 		try
 		{
@@ -58,6 +62,16 @@ public class DotNetExecutionStack extends XExecutionStack
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private static Icon getIcon(ThreadMirror threadMirror)
+	{
+		int state = threadMirror.state();
+		if(BitUtil.isSet(state, ThreadMirror.ThreadState.Running))
+		{
+			return AllIcons.Debugger.ThreadRunning;
+		}
+		return AllIcons.Debugger.ThreadFrozen;
 	}
 
 	@Nullable
