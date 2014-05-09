@@ -19,6 +19,7 @@ package org.mustbe.consulo.mono.dotnet.module.extension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
@@ -54,6 +55,21 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 			@Nullable DebugConnectionInfo d)
 	{
 		return createRunCommandLineImpl(fileName, configurationProfile, d, getSdk());
+	}
+
+	@NotNull
+	@Override
+	public String getDebugFileExtension()
+	{
+		MainConfigurationLayer currentLayer = (MainConfigurationLayer) getCurrentLayer();
+		switch(currentLayer.getTarget())
+		{
+			case EXECUTABLE:
+				return "exe.mdb";
+			case LIBRARY:
+				return "dll.mdb";
+		}
+		throw new IllegalArgumentException();
 	}
 
 	@NotNull

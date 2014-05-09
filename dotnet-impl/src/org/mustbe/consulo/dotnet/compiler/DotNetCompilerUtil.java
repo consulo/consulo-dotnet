@@ -49,6 +49,12 @@ public class DotNetCompilerUtil
 	@NotNull
 	public static Set<File> collectDependencies(@NotNull final Module module, final boolean includeStdLibraries)
 	{
+		return collectDependencies(module, false, includeStdLibraries);
+	}
+
+	@NotNull
+	public static Set<File> collectDependencies(@NotNull final Module module, final boolean debugSymbol, final boolean includeStdLibraries)
+	{
 		val list = new HashSet<File>();
 
 		val processed = new HashSet<Object>();
@@ -129,9 +135,12 @@ public class DotNetCompilerUtil
 				{
 					String depCurrentLayerName = dependencyExtension.getCurrentLayerName();
 					MainConfigurationLayer depCurrentLayer = (MainConfigurationLayer) dependencyExtension.getCurrentLayer();
-					String extract = DotNetMacros.extract(depModule, depCurrentLayerName, depCurrentLayer);
 
-					list.add(new File(extract));
+					list.add(new File(DotNetMacros.extract(depModule, depCurrentLayerName, depCurrentLayer)));
+					if(debugSymbol)
+					{
+						list.add(new File(DotNetMacros.extract(depModule, depCurrentLayerName, depCurrentLayer, true)));
+					}
 
 					list.addAll(collectDependencies(depModule, false));
 				}

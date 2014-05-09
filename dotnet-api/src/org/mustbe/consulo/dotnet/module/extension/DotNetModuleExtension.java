@@ -43,4 +43,7 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	@NotNull
 	GlobalSearchScope getScopeForResolving(boolean test);
+
+	@NotNull
+	String getDebugFileExtension();
 }

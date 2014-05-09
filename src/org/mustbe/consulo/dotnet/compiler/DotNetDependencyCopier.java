@@ -103,7 +103,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				@Override
 				protected void run(Result<Set<File>> listResult) throws Throwable
 				{
-					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, false));
+					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, true, false));
 				}
 			}.execute();
 

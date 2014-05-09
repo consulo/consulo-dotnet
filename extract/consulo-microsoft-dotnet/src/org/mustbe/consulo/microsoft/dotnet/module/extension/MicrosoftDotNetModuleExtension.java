@@ -56,6 +56,13 @@ public class MicrosoftDotNetModuleExtension extends DotNetModuleExtensionImpl<Mi
 	}
 
 	@NotNull
+	@Override
+	public String getDebugFileExtension()
+	{
+		return "pdb";
+	}
+
+	@NotNull
 	public static GeneralCommandLine createRunCommandLineImpl(
 			@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, @Nullable DebugConnectionInfo d, Sdk sdk)
 	{

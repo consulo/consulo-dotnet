@@ -19,8 +19,10 @@ package org.mustbe.consulo.dotnet.compiler;
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -42,17 +44,32 @@ public class DotNetMacros
 	@NotNull
 	public static String extract(@NotNull Module module, @NotNull String currentLayerName, MainConfigurationLayer currentLayer)
 	{
+		return extract(module, currentLayerName, currentLayer, false);
+	}
+
+	@NotNull
+	public static String extract(@NotNull Module module, @NotNull String currentLayerName, MainConfigurationLayer currentLayer, boolean debugSymbols)
+	{
 		ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
 		String fileExtension = null;
-		switch(currentLayer.getTarget())
+		if(debugSymbols)
 		{
-			case EXECUTABLE:
-				fileExtension = "exe";
-				break;
-			case LIBRARY:
-				fileExtension = "dll";
-				break;
+			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+			assert extension != null;
+			fileExtension = extension.getDebugFileExtension();
+		}
+		else
+		{
+			switch(currentLayer.getTarget())
+			{
+				case EXECUTABLE:
+					fileExtension = "exe";
+					break;
+				case LIBRARY:
+					fileExtension = "dll";
+					break;
+			}
 		}
 
 		String path = currentLayer.getOutputDir() + "/" + currentLayer.getFileName();

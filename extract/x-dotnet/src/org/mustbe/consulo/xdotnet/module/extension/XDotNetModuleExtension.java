@@ -66,4 +66,22 @@ public class XDotNetModuleExtension extends DotNetModuleExtensionImpl<XDotNetMod
 		}
 		throw  new IllegalArgumentException(sdkType.getName());
 	}
+
+	@NotNull
+	@Override
+	public String getDebugFileExtension()
+	{
+		Sdk sdk = getSdk();
+		assert sdk != null;
+		SdkTypeId sdkType = sdk.getSdkType();
+		if(sdkType instanceof MicrosoftDotNetSdkType)
+		{
+			return "mdb";
+		}
+		else if(sdkType instanceof MonoSdkType)
+		{
+			return "pdb";
+		}
+		throw  new IllegalArgumentException(sdkType.getName());
+	}
 }
