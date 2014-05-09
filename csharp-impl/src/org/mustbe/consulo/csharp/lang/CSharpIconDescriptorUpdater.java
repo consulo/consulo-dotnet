@@ -178,7 +178,10 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		{
 			ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
 			VirtualFile virtualFile = containingFile.getVirtualFile();
-			assert virtualFile != null;
+			if(virtualFile == null)
+			{
+				return;
+			}
 			if(fileIndex.isInLibraryClasses(virtualFile) || fileIndex.isInLibrarySource(virtualFile))
 			{
 				return;
