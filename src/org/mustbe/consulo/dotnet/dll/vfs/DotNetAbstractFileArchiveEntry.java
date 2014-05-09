@@ -1,8 +1,10 @@
 package org.mustbe.consulo.dotnet.dll.vfs;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -11,7 +13,6 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
-import com.intellij.util.text.CharArrayUtil;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 
 /**
@@ -51,10 +52,22 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 
 		CharSequence charSequence = XStubBuilder.buildText(builder);
 
-		char[] chars = CharArrayUtil.fromSequence(charSequence);
 		try
 		{
-			return CharArrayUtil.toByteArray(chars);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			OutputStreamWriter writer = new OutputStreamWriter(out);
+			try
+			{
+				for(int i = 0; i < charSequence.length(); i++)
+				{
+					writer.write(charSequence.charAt(i));
+				}
+			}
+			finally
+			{
+				writer.close();
+			}
+			return out.toByteArray();
 		}
 		catch(IOException e)
 		{
