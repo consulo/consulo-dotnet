@@ -89,7 +89,7 @@ public class AttributeStubBuilder
 			return Collections.emptyList();
 		}
 
-		val list = new ArrayList<LineStubBlock>();
+		val list = new ArrayList<LineStubBlock>(customAttributes.length);
 		for(CustomAttribute customAttribute : customAttributes)
 		{
 			MethodDefOrRef constructor = customAttribute.getConstructor();

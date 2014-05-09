@@ -104,14 +104,14 @@ public class XStubBuilder
 		}
 	};
 
-	private List<StubBlock> myRoots = new SmartList<StubBlock>();
-
-	public XStubBuilder(String namespace, List<TypeDef> typeDefs)
+	@NotNull
+	public static List<? extends StubBlock> parseTypeDef(String namespace, List<TypeDef> typeDefs)
 	{
+		List<StubBlock> blocks = new SmartList<StubBlock>();
 		StubBlock namespaceBlock = processNamespace(namespace);
 		if(namespaceBlock != null)
 		{
-			myRoots.add(namespaceBlock);
+			blocks.add(namespaceBlock);
 		}
 
 		for(TypeDef typeDef : typeDefs)
@@ -124,15 +124,17 @@ public class XStubBuilder
 			}
 			else
 			{
-				myRoots.addAll(AttributeStubBuilder.processAttributes(typeDef, null, null, null, null));
-				myRoots.add(typeBlock);
+				blocks.addAll(AttributeStubBuilder.processAttributes(typeDef, null, null, null, null));
+				blocks.add(typeBlock);
 			}
 		}
+		return blocks;
 	}
 
-	public XStubBuilder(AssemblyInfo assemblyInfo)
+	@NotNull
+	public static List<? extends StubBlock> parseAssemblyInfo(AssemblyInfo assemblyInfo)
 	{
-		myRoots.addAll(AttributeStubBuilder.processAttributes(assemblyInfo, null, null, "assembly", null));
+		return AttributeStubBuilder.processAttributes(assemblyInfo, null, null, "assembly", null);
 	}
 
 	// System.MulticastDelegate
@@ -943,18 +945,18 @@ public class XStubBuilder
 	}
 
 	@NotNull
-	public CharSequence gen()
+	public static CharSequence buildText(List<? extends StubBlock> blocks)
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(PsiBundle.message("psi.decompiled.text.header")).append('\n').append('\n');
 
-		for(int i = 0; i < myRoots.size(); i++)
+		for(int i = 0; i < blocks.size(); i++)
 		{
 			if(i != 0)
 			{
 				builder.append('\n');
 			}
-			StubBlock stubBlock = myRoots.get(i);
+			StubBlock stubBlock = blocks.get(i);
 			processBlock(builder, stubBlock, 0);
 		}
 

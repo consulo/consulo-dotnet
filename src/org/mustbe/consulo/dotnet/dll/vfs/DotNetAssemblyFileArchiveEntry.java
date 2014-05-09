@@ -16,9 +16,12 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs;
 
+import java.util.List;
+
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import edu.arizona.cs.mbel.mbel.AssemblyInfo;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 
@@ -41,8 +44,8 @@ public class DotNetAssemblyFileArchiveEntry extends DotNetAbstractFileArchiveEnt
 
 	@NotNull
 	@Override
-	public XStubBuilder createBuilder()
+	public List<? extends StubBlock> build()
 	{
-		return new XStubBuilder(myAssemblyInfo);
+		return XStubBuilder.parseAssemblyInfo(myAssemblyInfo);
 	}
 }

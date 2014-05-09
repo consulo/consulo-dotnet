@@ -21,6 +21,7 @@ import java.util.List;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import com.intellij.util.SmartList;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 import edu.arizona.cs.mbel.mbel.TypeDef;
@@ -61,8 +62,8 @@ public class DotNetBaseFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 
 	@NotNull
 	@Override
-	public XStubBuilder createBuilder()
+	public List<? extends StubBlock> build()
 	{
-		return new XStubBuilder(getNamespace(), myTypeDefs);
+		return XStubBuilder.parseTypeDef(getNamespace(), myTypeDefs);
 	}
 }
