@@ -21,6 +21,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaT
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UnfairTextRange;
 
@@ -90,7 +91,14 @@ public class CSharpParametersInfo
 			name = "p" + index;
 		}
 
-		myBuilder.append(typeRef.getPresentableText());
+		if(CodeInsightSettings.getInstance().SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO)
+		{
+			myBuilder.append(typeRef.getQualifiedText());
+		}
+		else
+		{
+			myBuilder.append(typeRef.getPresentableText());
+		}
 		myBuilder.append(" ");
 		myBuilder.append(name);
 	}
