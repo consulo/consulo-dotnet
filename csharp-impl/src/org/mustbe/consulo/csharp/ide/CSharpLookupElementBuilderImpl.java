@@ -31,6 +31,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.codeInsight.completion.CompletionData;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
@@ -161,8 +162,9 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 					// dont insert () if it inside method call
 					if(elementAt == null || elementAt.getNode().getElementType() != CSharpTokens.LPAR)
 					{
-						insertionContext.getDocument().insertString(offset, "()");
+						insertionContext.getDocument().insertString(offset, "();");
 						insertionContext.getEditor().getCaretModel().moveToOffset(offset + 1);
+						AutoPopupController.getInstance(insertionContext.getProject()).autoPopupParameterInfo(insertionContext.getEditor(), null);
 					}
 				}
 			});
