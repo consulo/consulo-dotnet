@@ -36,13 +36,16 @@ public class CSharpParametersInfo
 	public static CSharpParametersInfo build(Object o)
 	{
 		Object[] parameters = null;
+		DotNetTypeRef returnType = null;
 		if(o instanceof DotNetLikeMethodDeclaration)
 		{
 			parameters = ((DotNetLikeMethodDeclaration) o).getParameters();
+			returnType = ((DotNetLikeMethodDeclaration) o).getReturnTypeRef();
 		}
 		else if(o instanceof CSharpLambdaTypeRef)
 		{
 			parameters = ((CSharpLambdaTypeRef) o).getParameterTypes();
+			returnType = ((CSharpLambdaTypeRef) o).getReturnType();
 		}
 
 		if(parameters == null)
@@ -51,6 +54,12 @@ public class CSharpParametersInfo
 		}
 
 		CSharpParametersInfo parametersInfo = new CSharpParametersInfo(parameters.length);
+		if(CodeInsightSettings.getInstance().SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO)
+		{
+			parametersInfo.myBuilder.append(returnType.getPresentableText());
+			parametersInfo.myBuilder.append(" (");
+		}
+
 		for(int i = 0; i < parameters.length; i++)
 		{
 			if(i != 0)
@@ -63,6 +72,11 @@ public class CSharpParametersInfo
 			int length = parametersInfo.length();
 			parametersInfo.buildParameter(parameter, i);
 			parametersInfo.myParameterRanges[i] = new TextRange(length, parametersInfo.length());
+		}
+
+		if(CodeInsightSettings.getInstance().SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO)
+		{
+			parametersInfo.myBuilder.append(")");
 		}
 
 		return parametersInfo;
@@ -91,14 +105,7 @@ public class CSharpParametersInfo
 			name = "p" + index;
 		}
 
-		if(CodeInsightSettings.getInstance().SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO)
-		{
-			myBuilder.append(typeRef.getQualifiedText());
-		}
-		else
-		{
-			myBuilder.append(typeRef.getPresentableText());
-		}
+		myBuilder.append(typeRef.getPresentableText());
 		myBuilder.append(" ");
 		myBuilder.append(name);
 	}
