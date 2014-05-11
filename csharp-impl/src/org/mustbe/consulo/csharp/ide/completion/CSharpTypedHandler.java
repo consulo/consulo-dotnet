@@ -21,6 +21,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionI
 import com.intellij.codeInsight.AutoPopupController;
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -30,7 +31,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author VISTALL
- * @since 06.01.14.
+ * @since 06.01.14
  */
 public class CSharpTypedHandler extends TypedHandlerDelegate
 {
@@ -46,7 +47,33 @@ public class CSharpTypedHandler extends TypedHandlerDelegate
 		{
 			autoPopupMemberLookup(project, editor);
 		}
+		if(c == ';')
+		{
+			if(handleSemicolon(editor, fileType))
+			{
+				return Result.STOP;
+			}
+		}
 		return Result.CONTINUE;
+	}
+
+	private static boolean handleSemicolon(Editor editor, FileType fileType)
+	{
+		int offset = editor.getCaretModel().getOffset();
+		if(offset == editor.getDocument().getTextLength())
+		{
+			return false;
+		}
+
+		char charAt = editor.getDocument().getCharsSequence().charAt(offset);
+		if(charAt != ';')
+		{
+			return false;
+		}
+
+		editor.getCaretModel().moveToOffset(offset + 1);
+		editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+		return true;
 	}
 
 	private static void autoPopupMemberLookup(Project project, final Editor editor)
