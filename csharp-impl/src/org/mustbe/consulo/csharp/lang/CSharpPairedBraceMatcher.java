@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lang.BracePair;
 import com.intellij.lang.PairedBraceMatcher;
@@ -43,9 +44,17 @@ public class CSharpPairedBraceMatcher implements PairedBraceMatcher
 	}
 
 	@Override
-	public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType elementType, @Nullable IElementType elementType2)
+	public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType elementType, @Nullable IElementType contextElement)
 	{
-		return false;
+		return contextElement != null && (
+				CSharpTokenSets.WHITE_SPACE == contextElement ||
+				CSharpTokenSets.COMMENTS.contains(contextElement) ||
+				contextElement == CSharpTokens.SEMICOLON ||
+				contextElement == CSharpTokens.COMMA ||
+				contextElement == CSharpTokens.RBRACKET ||
+				contextElement == CSharpTokens.RPAR ||
+				contextElement == CSharpTokens.RBRACE ||
+				contextElement == CSharpTokens.LBRACE);
 	}
 
 	@Override
