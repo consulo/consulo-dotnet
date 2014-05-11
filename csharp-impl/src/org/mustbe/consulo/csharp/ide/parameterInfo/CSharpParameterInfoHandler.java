@@ -232,11 +232,6 @@ public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiEleme
 			// callExpression -> arguments -> argumentList
 			parameterIndex = prevSibling.getExpressions().length/* + prevSibling.getNamedArgumentList().size()*/;
 		}
-		else if(PsiTreeUtil.getParentOfType(place, CSharpMethodCallExpressionImpl.class, true) != null)
-		{
-			// seems foo(<caret>)
-			parameterIndex = 0;
-		}
 		return parameterIndex;
 	}
 }
