@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.ide.parameterInfo;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterListOwner;
 import org.mustbe.consulo.csharp.lang.psi.UsefulPsiTreeUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpAttributeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallExpressionImpl;
@@ -44,13 +45,6 @@ import com.intellij.psi.util.PsiTreeUtil;
  */
 public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiElement, Object>
 {
-	@SuppressWarnings("unchecked")
-	private static final Class<PsiElement>[] ourCallArgumentsOwners = new Class[]{
-			CSharpMethodCallExpressionImpl.class,
-			CSharpNewExpressionImpl.class,
-			CSharpAttributeImpl.class
-	};
-
 	@Override
 	public boolean couldShowInLookup()
 	{
@@ -59,8 +53,7 @@ public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiEleme
 
 	@Nullable
 	@Override
-	public Object[] getParametersForLookup(
-			LookupElement item, ParameterInfoContext context)
+	public Object[] getParametersForLookup(LookupElement item, ParameterInfoContext context)
 	{
 		return new Object[0];
 	}
@@ -77,8 +70,7 @@ public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiEleme
 	public PsiElement findElementForParameterInfo(CreateParameterInfoContext context)
 	{
 		final PsiElement at = context.getFile().findElementAt(context.getEditor().getCaretModel().getOffset());
-		final CSharpMethodCallParameterListImpl parameterList = PsiTreeUtil.getParentOfType(at, CSharpMethodCallParameterListImpl.class);
-		return parameterList == null ? null : PsiTreeUtil.getParentOfType(parameterList, ourCallArgumentsOwners);
+		return PsiTreeUtil.getParentOfType(at, CSharpMethodCallParameterListOwner.class);
 	}
 
 	@Override
@@ -145,7 +137,7 @@ public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiEleme
 		{
 			context.setParameterOwner(place);
 		}
-		else if(context.getParameterOwner() != PsiTreeUtil.getParentOfType(place, ourCallArgumentsOwners))
+		else if(context.getParameterOwner() != PsiTreeUtil.getParentOfType(place, CSharpMethodCallParameterListOwner.class))
 		{
 			context.removeHint();
 			return;

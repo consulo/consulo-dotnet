@@ -19,6 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterList;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -30,7 +32,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 19.12.13.
  */
-public class CSharpAttributeImpl extends CSharpElementImpl implements DotNetAttribute
+public class CSharpAttributeImpl extends CSharpElementImpl implements DotNetAttribute, CSharpMethodCallParameterListOwner
 {
 	public CSharpAttributeImpl(@NotNull ASTNode node)
 	{
@@ -64,5 +66,12 @@ public class CSharpAttributeImpl extends CSharpElementImpl implements DotNetAttr
 			return (DotNetTypeDeclaration) resolve.getParent();
 		}
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public CSharpMethodCallParameterList getParameterList()
+	{
+		return findChildByClass(CSharpMethodCallParameterList.class);
 	}
 }

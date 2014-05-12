@@ -14,35 +14,18 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
- * @since 16.12.13.
+ * @since 12.05.14
  */
-public class CSharpMethodCallParameterListImpl extends CSharpElementImpl implements CSharpMethodCallParameterList
+public interface CSharpMethodCallParameterList extends DotNetElement
 {
-	public CSharpMethodCallParameterListImpl(@NotNull ASTNode node)
-	{
-		super(node);
-	}
-
-	@Override
 	@NotNull
-	public DotNetExpression[] getExpressions()
-	{
-		return findChildrenByClass(DotNetExpression.class);
-	}
-
-	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
-	{
-		visitor.visitMethodCallParameterList(this);
-	}
+	DotNetExpression[] getExpressions();
 }

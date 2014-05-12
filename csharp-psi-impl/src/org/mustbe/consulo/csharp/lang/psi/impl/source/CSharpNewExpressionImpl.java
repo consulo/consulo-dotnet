@@ -19,18 +19,13 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySet;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySetBlock;
-import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterList;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpAnonymTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpQualifiedTypeRef;
-import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -77,42 +72,6 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 		}
 	}
 
-	private DotNetTypeRef createAnonymType()
-	{
-		CSharpFieldOrPropertySetBlock fieldOrPropertySetBlock = getFieldOrPropertySetBlock();
-		if(fieldOrPropertySetBlock != null)
-		{
-			CSharpFieldOrPropertySet[] sets = fieldOrPropertySetBlock.getSets();
-
-			StringBuilder builder = new StringBuilder();
-			builder.append("public struct Anonym {");
-			for(CSharpFieldOrPropertySet set : sets)
-			{
-				DotNetExpression nameReferenceExpression = set.getNameReferenceExpression();
-				DotNetExpression valueReferenceExpression = set.getValueReferenceExpression();
-
-				builder.append("public readonly ");
-				if(valueReferenceExpression == null)
-				{
-					builder.append(DotNetTypes.System_Object);
-				}
-				else
-				{
-					builder.append(valueReferenceExpression.toTypeRef(true).getQualifiedText());
-				}
-				builder.append(" ");
-				builder.append(nameReferenceExpression.getText());
-				builder.append(";\n");
-			}
-			builder.append("}");
-
-			DotNetTypeDeclaration typeDeclaration = CSharpFileFactory.createTypeDeclaration(getProject(), getResolveScope(), builder.toString());
-			return new CSharpQualifiedTypeRef(typeDeclaration);
-		}
-
-		return null;
-	}
-
 	@Nullable
 	@Override
 	public DotNetType getNewType()
@@ -125,5 +84,12 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 	public CSharpFieldOrPropertySetBlock getFieldOrPropertySetBlock()
 	{
 		return findChildByClass(CSharpFieldOrPropertySetBlock.class);
+	}
+
+	@Nullable
+	@Override
+	public CSharpMethodCallParameterList getParameterList()
+	{
+		return findChildByClass(CSharpMethodCallParameterList.class);
 	}
 }

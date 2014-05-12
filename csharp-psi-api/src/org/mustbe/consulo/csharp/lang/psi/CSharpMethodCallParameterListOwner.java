@@ -17,18 +17,14 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetElement;
 
 /**
  * @author VISTALL
- * @since 29.12.13.
+ * @since 12.05.14
  */
-public interface CSharpNewExpression extends DotNetExpression, CSharpMethodCallParameterListOwner
+public interface CSharpMethodCallParameterListOwner extends DotNetElement
 {
 	@Nullable
-	DotNetType getNewType();
-
-	@Nullable
-	CSharpFieldOrPropertySetBlock getFieldOrPropertySetBlock();
+	CSharpMethodCallParameterList getParameterList();
 }
