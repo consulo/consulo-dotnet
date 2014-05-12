@@ -74,11 +74,6 @@ public class CSharpInheritUtil
 				PsiElement psiElement = dotNetType.toTypeRef().resolve(typeDeclaration);
 				if(psiElement instanceof CSharpTypeDeclaration)
 				{
-					if(psiElement.isEquivalentTo(other))
-					{
-						return true;
-					}
-
 					if(psiElement.isEquivalentTo(typeDeclaration))
 					{
 						return false;
