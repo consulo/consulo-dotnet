@@ -90,7 +90,7 @@ public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiEleme
 		int count = 0;
 		if(element instanceof CSharpMethodCallParameterListOwner)
 		{
-			ResolveResult[] resolveResults = ((CSharpMethodCallParameterListOwner) element).multiResolve(true);
+			ResolveResult[] resolveResults = ((CSharpMethodCallParameterListOwner) element).multiResolve(false);
 			if(resolveResults.length > 0)
 			{
 				callable = resolveResults[0].getElement();
