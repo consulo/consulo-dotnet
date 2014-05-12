@@ -48,17 +48,12 @@ public class MethodAcceptorImpl
 				DotNetExpression[] expressions,
 				DotNetParameter[] parameters)
 		{
-			if(expressions.length != parameters.length)
-			{
-				return 0;
-			}
-
 			int weight = 0;
 			for(int i = 0; i < expressions.length; i++)
 			{
 				DotNetExpression expression = expressions[i];
-				DotNetParameter parameter = parameters[i];
-				if(expression == null)
+				DotNetParameter parameter = ArrayUtil2.safeGet(parameters, i);
+				if(expression == null || parameter == null)
 				{
 					return weight;
 				}
@@ -72,7 +67,7 @@ public class MethodAcceptorImpl
 				}
 			}
 
-			return weight == expressions.length ? WeightProcessor.MAX_WEIGHT : weight;
+			return weight == parameters.length ? WeightProcessor.MAX_WEIGHT : weight;
 		}
 	}
 
