@@ -60,6 +60,7 @@ import com.intellij.psi.PsiQualifiedReference;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.QualifiedName;
@@ -168,15 +169,14 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public ResolveResult[] multiResolve(final boolean incompleteCode)
 	{
-		/*return ResolveCache.getInstance(getProject()).resolveWithCaching(this,
-		new ResolveCache.PolyVariantResolver<CSharpReferenceExpressionImpl>()
+		return ResolveCache.getInstance(getProject()).resolveWithCaching(this, new ResolveCache.PolyVariantResolver<CSharpReferenceExpressionImpl>()
 		{
 			@NotNull
 			@Override
 			public ResolveResult[] resolve(@NotNull CSharpReferenceExpressionImpl cSharpReferenceExpression, boolean incompleteCode)
-			{      */
+			{
 				ResolveResult[] resolveResults = multiResolveImpl(true);
-				if(incompleteCode)
+				if(!incompleteCode)
 				{
 					return resolveResults;
 				}
@@ -190,8 +190,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					}
 				}
 				return ContainerUtil.toArray(filter, ResolveResultWithWeight.ARRAY_FACTORY);
-			//}
-	//	}, true, incompleteCode);
+			}
+		}, true, incompleteCode);
 	}
 
 	private ResolveResult[] multiResolveImpl(boolean named)
@@ -211,8 +211,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			boolean named, final ResolveToKind kind, final CSharpExpressionWithParameters parameters, final T e)
 	{
 		Condition<PsiNamedElement> namedElementCondition;
-		@SuppressWarnings("unchecked")
-		WeightProcessor<PsiNamedElement> weightProcessor = WeightProcessor.MAXIMUM;
+		@SuppressWarnings("unchecked") WeightProcessor<PsiNamedElement> weightProcessor = WeightProcessor.MAXIMUM;
 		switch(kind)
 		{
 			case ATTRIBUTE:
@@ -303,7 +302,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 						{
 							return 0;
 						}
-						return MethodAcceptorImpl.calcAcceptableWeight(parameters,(DotNetArrayMethodDeclaration) psiNamedElement);
+						return MethodAcceptorImpl.calcAcceptableWeight(parameters, (DotNetArrayMethodDeclaration) psiNamedElement);
 					}
 				};
 				break;
@@ -623,8 +622,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			}
 
 			boolean typeResolving = kind != ResolveToKind.METHOD;
-			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, typeResolving, null,
-					resolveState);
+			CSharpResolveUtil.walkChildren(p, targetToWalkChildren, typeResolving, null, resolveState);
 			return p.toResolveResults();
 		}
 	}
@@ -751,7 +749,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			return null;
 		}
 		ResolveResultWithWeight resolveResult = (ResolveResultWithWeight) resolveResults[0];
-		assert resolveResult.isGoodResult();
+		if(!resolveResult.isGoodResult())
+		{
+			return null;
+		}
 		return resolveResult.getElement();
 	}
 

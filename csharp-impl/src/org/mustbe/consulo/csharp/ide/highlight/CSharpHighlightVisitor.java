@@ -242,7 +242,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			return;
 		}
 
-		ResolveResult[] resolveResults = expression.multiResolve(true);
+		ResolveResult[] resolveResults = expression.multiResolve(false);
 
 		ResolveResult goodResult = resolveResults.length > 0 && ((ResolveResultWithWeight)resolveResults[0]).isGoodResult() ? resolveResults[0] : null;
 
