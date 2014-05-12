@@ -34,14 +34,20 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarat
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.ResolveResultWithWeight;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
@@ -63,6 +69,20 @@ import lombok.val;
  */
 public class CSharpHighlightVisitor extends CSharpElementVisitor implements HighlightVisitor
 {
+	public static class ResolveError
+	{
+		private String description;
+		private String tooltip;
+		private PsiElement range;
+
+		public ResolveError(String description, String tooltip, PsiElement range)
+		{
+			this.description = description;
+			this.tooltip = tooltip;
+			this.range = range;
+		}
+	}
+
 	private HighlightInfoHolder myHighlightInfoHolder;
 
 	@Override
@@ -244,7 +264,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 		ResolveResult[] resolveResults = expression.multiResolve(false);
 
-		ResolveResult goodResult = resolveResults.length > 0 && ((ResolveResultWithWeight)resolveResults[0]).isGoodResult() ? resolveResults[0] : null;
+		ResolveResult goodResult = resolveResults.length > 0 && ((ResolveResultWithWeight) resolveResults[0]).isGoodResult() ? resolveResults[0] :
+				null;
 
 		if(goodResult != null)
 		{
@@ -269,12 +290,75 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			}
 			else
 			{
-				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).descriptionAndTooltip("'" + referenceElement.getText()
-						+ "' .....").range(referenceElement).create();
+				ResolveError forError = createResolveError(expression, resolveResults[0].getElement());
+				if(forError == null)
+				{
+					return;
+				}
+
+				HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).description(forError.description).escapedToolTip
+						(forError.tooltip).range(forError.range).create();
 
 				myHighlightInfoHolder.add(info);
 			}
 		}
+	}
+
+	private static ResolveError createResolveError(PsiElement element, PsiElement resolveElement)
+	{
+		PsiElement parent = element.getParent();
+		if(parent instanceof CSharpMethodCallExpressionImpl)
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.append("<b>Expected:</b> (");
+			if(resolveElement instanceof DotNetVariable)
+			{
+				DotNetTypeRef typeRef = ((DotNetVariable) resolveElement).toTypeRef(false);
+				if(!(typeRef instanceof CSharpLambdaTypeRef))
+				{
+					return null;
+				}
+				DotNetTypeRef[] parameterTypes = ((CSharpLambdaTypeRef) typeRef).getParameterTypes();
+				for(int i = 0; i < parameterTypes.length; i++)
+				{
+					if(i != 0)
+					{
+						builder.append(", ");
+					}
+					DotNetTypeRef parameterType = parameterTypes[i];
+					builder.append(parameterType.getPresentableText());
+				}
+			}
+			else if(resolveElement instanceof DotNetLikeMethodDeclaration)
+			{
+				DotNetParameter[] parameters = ((DotNetLikeMethodDeclaration) resolveElement).getParameters();
+				for(int i = 0; i < parameters.length; i++)
+				{
+					if(i != 0)
+					{
+						builder.append(", ");
+					}
+					DotNetParameter parameter = parameters[i];
+					builder.append(parameter.toTypeRef(false).getPresentableText());
+				}
+			}
+			builder.append(")<br>");
+			builder.append("<b>Found:</b> (");
+			DotNetExpression[] parameterExpressions = ((CSharpMethodCallExpressionImpl) parent).getParameterExpressions();
+			for(int i = 0; i < parameterExpressions.length; i++)
+			{
+				if(i != 0)
+				{
+					builder.append(", ");
+				}
+				DotNetExpression parameterExpression = parameterExpressions[i];
+				builder.append(parameterExpression.toTypeRef(false).getPresentableText());
+			}
+			builder.append(")");
+
+			return new ResolveError("", builder.toString(), ((CSharpMethodCallExpressionImpl) parent).getParameterList());
+		}
+		return null;
 	}
 
 	@Nullable
