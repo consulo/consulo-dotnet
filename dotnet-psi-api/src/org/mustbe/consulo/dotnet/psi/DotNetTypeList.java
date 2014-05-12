@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
@@ -26,6 +27,9 @@ public interface DotNetTypeList extends DotNetElement
 {
 	@NotNull
 	DotNetType[] getTypes();
+
+	@NotNull
+	DotNetTypeRef[] getTypeRefs();
 
 	@NotNull
 	String[] getTypeTexts();

@@ -24,6 +24,9 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpStubTypeListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeListStub;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfo;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfoUtil;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IndexSink;
@@ -65,7 +68,14 @@ public class CSharpTypeListElementType extends CSharpAbstractStubElementType<CSh
 			String typeText = typeTexts[i];
 			refs[i] = StringRef.fromString(typeText);
 		}
-		return new CSharpTypeListStub(stubElement, this, refs);
+
+		DotNetType[] typeRefs = dotNetTypeList.getTypes();
+		CSharpStubTypeInfo[] typeInfos = new CSharpStubTypeInfo[typeRefs.length];
+		for(int i = 0; i < typeRefs.length; i++)
+		{
+			typeInfos[i] = CSharpStubTypeInfoUtil.toStub(typeRefs[i]);
+		}
+		return new CSharpTypeListStub(stubElement, this, refs, typeInfos);
 	}
 
 	@Override
@@ -76,6 +86,12 @@ public class CSharpTypeListElementType extends CSharpAbstractStubElementType<CSh
 		for(String reference : references)
 		{
 			stubOutputStream.writeName(reference);
+		}
+		CSharpStubTypeInfo[] infos = cSharpTypeListStub.getTypeRefs();
+		stubOutputStream.writeByte(references.length);
+		for(CSharpStubTypeInfo typeRef : infos)
+		{
+			typeRef.writeTo(stubOutputStream);
 		}
 	}
 
@@ -89,7 +105,13 @@ public class CSharpTypeListElementType extends CSharpAbstractStubElementType<CSh
 		{
 			refs[i] = stubInputStream.readName();
 		}
-		return new CSharpTypeListStub(stubElement, this, refs);
+		byte types = stubInputStream.readByte();
+		CSharpStubTypeInfo[] infos = new CSharpStubTypeInfo[types];
+		for(int i = 0; i < infos.length; i++)
+		{
+			infos[i] = CSharpStubTypeInfoUtil.read(stubInputStream);
+		}
+		return new CSharpTypeListStub(stubElement, this, refs, infos);
 	}
 
 	@Override

@@ -730,21 +730,19 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			return DotNetTypeRef.ERROR_TYPE;
 		}
 
-		DotNetType[] anExtends = typeDeclaration.getExtends();
+		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
 		if(anExtends.length == 0)
 		{
 			return new CSharpTypeDefTypeRef(DotNetTypes.System_Object, 0);
 		}
 		else
 		{
-			for(DotNetType anExtend : anExtends)
+			for(DotNetTypeRef anExtend : anExtends)
 			{
-				DotNetTypeRef dotNetTypeRef = anExtend.toTypeRef();
-
-				PsiElement resolve = dotNetTypeRef.resolve(this);
+				PsiElement resolve = anExtend.resolve(this);
 				if(resolve instanceof DotNetTypeDeclaration && !((DotNetTypeDeclaration) resolve).isInterface())
 				{
-					return dotNetTypeRef;
+					return anExtend;
 				}
 			}
 

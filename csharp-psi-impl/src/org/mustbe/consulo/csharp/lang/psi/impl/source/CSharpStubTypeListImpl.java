@@ -19,8 +19,11 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeListStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfo;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfoUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 
@@ -59,6 +62,40 @@ public class CSharpStubTypeListImpl extends CSharpStubElementImpl<CSharpTypeList
 	public DotNetType[] getTypes()
 	{
 		return findChildrenByClass(DotNetType.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef[] getTypeRefs()
+	{
+		CSharpTypeListStub stub = getStub();
+		if(stub != null)
+		{
+			CSharpStubTypeInfo[] typeRefs = stub.getTypeRefs();
+			if(typeRefs.length == 0)
+			{
+				return DotNetTypeRef.EMPTY_ARRAY;
+			}
+			DotNetTypeRef[] refs = new DotNetTypeRef[typeRefs.length];
+			for(int i = 0; i < refs.length; i++)
+			{
+				refs[i] = CSharpStubTypeInfoUtil.toTypeRef(typeRefs[i], this);
+			}
+			return refs;
+		}
+
+		DotNetType[] types = getTypes();
+		if(types.length == 0)
+		{
+			return DotNetTypeRef.EMPTY_ARRAY;
+		}
+		DotNetTypeRef[] array = new DotNetTypeRef[types.length];
+		for(int i = 0; i < types.length; i++)
+		{
+			DotNetType type = types[i];
+			array[i] = type.toTypeRef();
+		}
+		return array;
 	}
 
 	@Override

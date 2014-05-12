@@ -19,7 +19,6 @@ package org.mustbe.consulo.csharp.lang.psi;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -66,12 +65,12 @@ public class CSharpInheritUtil
 		{
 			return true;
 		}
-		DotNetType[] anExtends = typeDeclaration.getExtends();
+		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
 		if(anExtends.length > 0)
 		{
-			for(DotNetType dotNetType : anExtends)
+			for(DotNetTypeRef dotNetType : anExtends)
 			{
-				PsiElement psiElement = dotNetType.toTypeRef().resolve(typeDeclaration);
+				PsiElement psiElement = dotNetType.resolve(typeDeclaration);
 				if(psiElement instanceof CSharpTypeDeclaration)
 				{
 					if(psiElement.isEquivalentTo(typeDeclaration))

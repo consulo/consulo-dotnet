@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.consulo.lombok.annotations.Logger;
@@ -30,7 +31,6 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper.Gener
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
@@ -286,11 +286,7 @@ public class CSharpResolveUtil
 			}
 		}
 
-		for(DotNetType dotNetType : typeDeclaration.getExtends())
-		{
-			supers.add(dotNetType.toTypeRef());
-		}
-
+		Collections.addAll(supers, typeDeclaration.getExtendTypeRefs());
 		return true;
 	}
 }

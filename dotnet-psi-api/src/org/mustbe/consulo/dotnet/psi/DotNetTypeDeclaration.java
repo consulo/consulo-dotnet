@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.psi;
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
@@ -41,7 +42,7 @@ public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetMod
 	DotNetTypeList getExtendList();
 
 	@NotNull
-	DotNetType[] getExtends();
+	DotNetTypeRef[] getExtendTypeRefs();
 
 	boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep);
 }

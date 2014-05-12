@@ -30,9 +30,9 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -126,9 +126,9 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 
 	@NotNull
 	@Override
-	public DotNetType[] getExtends()
+	public DotNetTypeRef[] getExtendTypeRefs()
 	{
-		return new DotNetType[0];
+		return new DotNetTypeRef[0];
 	}
 
 	@Override

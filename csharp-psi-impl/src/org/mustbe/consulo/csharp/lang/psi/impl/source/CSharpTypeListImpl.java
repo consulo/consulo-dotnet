@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 
 /**
@@ -43,6 +44,24 @@ public class CSharpTypeListImpl extends CSharpElementImpl implements DotNetTypeL
 		{
 			DotNetType type = types[i];
 			array[i] = type.getText();
+		}
+		return array;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef[] getTypeRefs()
+	{
+		DotNetType[] types = getTypes();
+		if(types.length == 0)
+		{
+			return DotNetTypeRef.EMPTY_ARRAY;
+		}
+		DotNetTypeRef[] array = new DotNetTypeRef[types.length];
+		for(int i = 0; i < types.length; i++)
+		{
+			DotNetType type = types[i];
+			array[i] = type.toTypeRef();
 		}
 		return array;
 	}

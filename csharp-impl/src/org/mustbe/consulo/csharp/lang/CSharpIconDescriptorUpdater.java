@@ -232,15 +232,28 @@ public class CSharpIconDescriptorUpdater implements IconDescriptorUpdater
 		}
 	}
 
-	public static boolean isAttribute(CSharpTypeDeclaration declaration)
+	//TODO [VISTALL] uncomment until fix delay at first completion
+	public static boolean isAttribute(final CSharpTypeDeclaration declaration)
 	{
+		/*DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(declaration.getProject()).findType(DotNetTypes.System_Attribute,
+				declaration.getResolveScope(), 0);
+		if(type == null)
+		{
+			return false;
+		}
+		return declaration.isInheritor(type,  true); */
 		return false;
-		//return CSharpInheritUtil.isParent(DotNetTypes.System_Attribute, declaration, true);
 	}
 
 	public static boolean isException(CSharpTypeDeclaration declaration)
 	{
+		/*DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(declaration.getProject()).findType(DotNetTypes.System_Exception,
+				declaration.getResolveScope(), 0);
+		if(type == null)
+		{
+			return false;
+		}
+		return declaration.isInheritor(type,  true);  */
 		return false;
-		//	return CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, typeDeclaration, true)
 	}
 }

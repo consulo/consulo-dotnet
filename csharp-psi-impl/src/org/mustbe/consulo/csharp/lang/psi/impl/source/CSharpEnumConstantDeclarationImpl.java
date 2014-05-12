@@ -85,10 +85,10 @@ public class CSharpEnumConstantDeclarationImpl extends CSharpStubVariableImpl<CS
 		DotNetTypeDeclaration parentOfType = PsiTreeUtil.getParentOfType(this, DotNetTypeDeclaration.class);
 		assert parentOfType != null;
 
-		DotNetType[] anExtends = parentOfType.getExtends();
+		DotNetTypeRef[] anExtends = parentOfType.getExtendTypeRefs();
 		if(anExtends.length > 0)
 		{
-			return anExtends[0].toTypeRef();
+			return anExtends[0];
 		}
 		return new CSharpQualifiedTypeRef(parentOfType);
 	}

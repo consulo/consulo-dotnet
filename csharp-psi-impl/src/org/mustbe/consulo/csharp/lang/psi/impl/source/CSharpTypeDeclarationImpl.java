@@ -19,7 +19,6 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
@@ -30,9 +29,9 @@ import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
@@ -172,15 +171,15 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	@Override
 	public DotNetTypeList getExtendList()
 	{
-		return (DotNetTypeList) findChildByType(CSharpElements.EXTENDS_LIST);
+		return getStubOrPsiChild(CSharpStubElements.EXTENDS_LIST);
 	}
 
-	@Override
 	@NotNull
-	public DotNetType[] getExtends()
+	@Override
+	public DotNetTypeRef[] getExtendTypeRefs()
 	{
 		DotNetTypeList extendList = getExtendList();
-		return extendList == null ? DotNetType.EMPTY_ARRAY : extendList.getTypes();
+		return extendList == null ? DotNetTypeRef.EMPTY_ARRAY : extendList.getTypeRefs();
 	}
 
 	@Override
