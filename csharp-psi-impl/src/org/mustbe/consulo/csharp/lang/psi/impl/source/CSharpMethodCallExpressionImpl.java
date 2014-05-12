@@ -27,6 +27,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveResult;
 
 /**
  * @author VISTALL
@@ -67,25 +68,44 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 		visitor.visitMethodCallExpression(this);
 	}
 
-	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
+	@Nullable
+	public PsiElement resolveToCallable()
 	{
 		DotNetExpression callExpression = getCallExpression();
 
 		if(callExpression instanceof CSharpReferenceExpressionImpl)
 		{
-			PsiElement resolve = ((CSharpReferenceExpressionImpl) callExpression).resolve();
-			if(resolve instanceof DotNetVariable)
-			{
-				DotNetTypeRef dotNetTypeRef = ((DotNetVariable) resolve).toTypeRef(false);
-				if(dotNetTypeRef instanceof CSharpLambdaTypeRef)
-				{
-					return ((CSharpLambdaTypeRef) dotNetTypeRef).getReturnType();
-				}
-			}
-			return CSharpReferenceExpressionImpl.toTypeRef(resolve);
+			return ((CSharpReferenceExpressionImpl) callExpression).resolve();
 		}
-		return callExpression.toTypeRef(resolveFromParent);
+		return null;
+	}
+
+	@Override
+	public ResolveResult[] multiResolve(boolean incompleteCode)
+	{
+		DotNetExpression callExpression = getCallExpression();
+
+		if(callExpression instanceof CSharpReferenceExpressionImpl)
+		{
+			return ((CSharpReferenceExpressionImpl) callExpression).multiResolve(incompleteCode);
+		}
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
+	{
+		PsiElement resolve = resolveToCallable();
+		if(resolve instanceof DotNetVariable)
+		{
+			DotNetTypeRef dotNetTypeRef = ((DotNetVariable) resolve).toTypeRef(false);
+			if(dotNetTypeRef instanceof CSharpLambdaTypeRef)
+			{
+				return ((CSharpLambdaTypeRef) dotNetTypeRef).getReturnType();
+			}
+		}
+		return CSharpReferenceExpressionImpl.toTypeRef(resolve);
 	}
 }

@@ -27,6 +27,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveResult;
 
 /**
  * @author VISTALL
@@ -73,5 +74,18 @@ public class CSharpAttributeImpl extends CSharpElementImpl implements DotNetAttr
 	public CSharpMethodCallParameterList getParameterList()
 	{
 		return findChildByClass(CSharpMethodCallParameterList.class);
+	}
+
+	@Nullable
+	@Override
+	public PsiElement resolveToCallable()
+	{
+		return null;
+	}
+
+	@Override
+	public ResolveResult[] multiResolve(boolean incompleteCode)
+	{
+		return ResolveResult.EMPTY_ARRAY;
 	}
 }

@@ -20,13 +20,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterListOwner;
 import org.mustbe.consulo.csharp.lang.psi.UsefulPsiTreeUtil;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpAttributeImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallParameterListImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNewExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReferenceExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.parameterInfo.CreateParameterInfoContext;
 import com.intellij.lang.parameterInfo.ParameterInfoContext;
@@ -76,7 +75,7 @@ public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiEleme
 	@Override
 	public void showParameterInfo(@NotNull PsiElement element, CreateParameterInfoContext context)
 	{
-		Pair<PsiElement, Integer> callableInfo = resolveToCallableInfo(element);
+		Pair<Object, Integer> callableInfo = resolveToCallableInfo(element);
 
 		if(callableInfo != null && callableInfo.getSecond() > 0)
 		{
@@ -85,34 +84,40 @@ public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiEleme
 		}
 	}
 
-	private static Pair<PsiElement, Integer> resolveToCallableInfo(PsiElement element)
+	private static Pair<Object, Integer> resolveToCallableInfo(PsiElement element)
 	{
-		PsiElement callable = null;
+		Object callable = null;
 		int count = 0;
-		if(element instanceof CSharpMethodCallExpressionImpl)
+		if(element instanceof CSharpMethodCallParameterListOwner)
 		{
-			DotNetExpression callExpression = ((CSharpMethodCallExpressionImpl) element).getCallExpression();
-			if(callExpression instanceof CSharpReferenceExpressionImpl)
+			ResolveResult[] resolveResults = ((CSharpMethodCallParameterListOwner) element).multiResolve(true);
+			if(resolveResults.length > 0)
 			{
-				ResolveResult[] resolveResults = ((CSharpReferenceExpressionImpl) callExpression).multiResolve(true);
-				if(resolveResults.length > 0)
+				callable = resolveResults[0].getElement();
+				if(callable instanceof DotNetLikeMethodDeclaration)
 				{
-					callable = resolveResults[0].getElement();
-					if(callable instanceof DotNetLikeMethodDeclaration)
+					count = ((DotNetLikeMethodDeclaration) callable).getParameters().length;
+				}
+				else if(callable instanceof DotNetVariable)
+				{
+					DotNetTypeRef typeRef = ((DotNetVariable) callable).toTypeRef(false);
+					if(typeRef instanceof CSharpLambdaTypeRef)
 					{
-						count = ((DotNetLikeMethodDeclaration) callable).getParameters().length;
+						PsiElement resolve = typeRef.resolve(element);
+						if(resolve instanceof DotNetLikeMethodDeclaration)
+						{
+							callable = resolve;
+						}
+						else
+						{
+							callable = typeRef;
+						}
+						count = ((CSharpLambdaTypeRef) typeRef).getParameterTypes().length;
 					}
 				}
 			}
 		}
-		else if(element instanceof CSharpAttributeImpl)
-		{
-			//TODO [VISTALL] support [A()]
-		}
-		else if(element instanceof CSharpNewExpressionImpl)
-		{
-			//TODO [VISTALL] support new A()
-		}
+
 		if(callable == null)
 		{
 			return null;
@@ -182,13 +187,8 @@ public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiEleme
 
 		TextRange parameterRange = build.getParameterRange(context.getCurrentParameterIndex());
 
-		context.setupUIComponentPresentation(text,
-				parameterRange.getStartOffset(),
-				parameterRange.getEndOffset(),
-				!context.isUIComponentEnabled(),
-				false,
-				false,
-				context.getDefaultParameterColor());
+		context.setupUIComponentPresentation(text, parameterRange.getStartOffset(), parameterRange.getEndOffset(), !context.isUIComponentEnabled(),
+				false, false, context.getDefaultParameterColor());
 	}
 
 	// from google-dart plugin
@@ -200,7 +200,7 @@ public class CSharpParameterInfoHandler implements ParameterInfoHandler<PsiEleme
 		if(place == argumentList)
 		{
 			assert argumentList != null;
-			final Pair<PsiElement, Integer> info = resolveToCallableInfo(argumentList.getParent());
+			final Pair<Object, Integer> info = resolveToCallableInfo(argumentList.getParent());
 			// the last one
 			parameterIndex = info == null ? -1 : info.getSecond() - 1;
 		}

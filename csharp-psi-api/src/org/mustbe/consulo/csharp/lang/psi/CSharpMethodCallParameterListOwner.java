@@ -18,6 +18,8 @@ package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveResult;
 
 /**
  * @author VISTALL
@@ -27,4 +29,9 @@ public interface CSharpMethodCallParameterListOwner extends DotNetElement
 {
 	@Nullable
 	CSharpMethodCallParameterList getParameterList();
+
+	@Nullable
+	PsiElement resolveToCallable();
+
+	ResolveResult[] multiResolve(final boolean incompleteCode);
 }
