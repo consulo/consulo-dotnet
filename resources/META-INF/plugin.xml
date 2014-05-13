@@ -37,6 +37,7 @@
 		<extensionPoint name="classInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="directClassInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor"/>
+		<extensionPoint name="documentationResolver" interface="org.mustbe.consulo.dotnet.documentation.DotNetDocumentationResolver" />
 	</extensionPoints>
 
 	<project-components>
@@ -48,6 +49,10 @@
 		</component>
 	</project-components>
 
+	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
+		<documentationResolver implementation="org.mustbe.consulo.dotnet.documentation.DefaultDocumentationResolver" />
+	</extensions>
+
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetDllFileTypeFactory"/>
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
@@ -55,6 +60,7 @@
 		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetLibraryRootDetector" />
 		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetXmlDocumentationRootDetector" />
 
+		<applicationService serviceImplementation="org.mustbe.consulo.dotnet.documentation.DotNetDocumentationCache" />
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade"
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiFacadeImpl"/>
 

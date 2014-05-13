@@ -19,6 +19,10 @@
 	<name>Mono .NET</name>
 	<depends>org.mustbe.consulo.dotnet.core</depends>
 
+	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
+		<documentationResolver implementation="org.mustbe.consulo.mono.dotnet.documentation.MonoDocumentationResolver" />
+	</extensions>
+
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 

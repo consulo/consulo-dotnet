@@ -23,6 +23,8 @@
             <element id="module-output" name="csharp-spellchecker" />
             <element id="module-output" name="dotnet-debugger-impl" />
             <element id="module-output" name="dotnet-debugger-api" />
+            <element id="module-output" name="dotnet-documentation-api" />
+            <element id="module-output" name="dotnet-documentation-impl" />
           </element>
           <element id="file-copy" path="$PROJECT_DIR$/csharp-psi-impl/lib/jel.jar" />
           <element id="library" level="project" name="dotnet-asm" />

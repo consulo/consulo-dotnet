@@ -16,12 +16,10 @@
 
 package org.mustbe.consulo.dotnet.documentation;
 
-import java.io.IOException;
 import java.util.List;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
+import org.emonic.base.codehierarchy.CodeHierarchyHelper;
+import org.emonic.base.documentation.IDocumentation;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
@@ -29,23 +27,17 @@ import org.mustbe.consulo.dotnet.resolve.DotNetNativeTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import lombok.val;
 
@@ -172,125 +164,12 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 	@Override
 	public String generateDoc(PsiElement element, @Nullable PsiElement element2)
 	{
-		PsiFile containingFile = element.getContainingFile();
-		if(containingFile == null)
+		IDocumentation documentation = DotNetDocumentationCache.getInstance().findDocumentation(element);
+		if(documentation == null)
 		{
 			return null;
 		}
-		VirtualFile virtualFile = containingFile.getVirtualFile();
-		if(virtualFile == null)
-		{
-			return null;
-		}
-		List<OrderEntry> orderEntriesForFile = ProjectRootManager.getInstance(element.getProject()).getFileIndex().getOrderEntriesForFile
-				(virtualFile);
-
-		String docQName = getDocName(element);
-
-		for(OrderEntry orderEntry : orderEntriesForFile)
-		{
-			for(VirtualFile docVirtualFile : orderEntry.getFiles(OrderRootType.DOCUMENTATION))
-			{
-				if(docVirtualFile.getFileType() != XmlFileType.INSTANCE)
-				{
-					continue;
-				}
-
-				try
-				{
-					Document document = JDOMUtil.loadDocument(docVirtualFile.getInputStream());
-					val rootTag = document.getRootElement();
-					if(rootTag == null)
-					{
-						continue;
-					}
-
-					val membersTag = rootTag.getChild("members");
-
-					if(membersTag != null)
-					{
-						val members = membersTag.getChildren("member");
-						for(val member : members)
-						{
-							String name = member.getAttributeValue("name");
-							if(Comparing.equal(docQName, name))
-							{
-								return generate(member, (DotNetQualifiedElement) element);
-							}
-						}
-					}
-				}
-				catch(JDOMException e)
-				{
-					e.printStackTrace();
-				}
-				catch(IOException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-		return null;
-	}
-
-	private String generate(Element xmlTag, DotNetQualifiedElement psiElement)
-	{
-		StringBuilder builder = new StringBuilder();
-		builder.append("<html><body>");
-
-		String presentableParentQName = psiElement.getPresentableParentQName();
-		if(!StringUtil.isEmpty(presentableParentQName))
-		{
-			builder.append("<b><small>").append(presentableParentQName).append("</small></b>");
-			builder.append("<br>");
-		}
-
-		builder.append("<code>");
-		if(psiElement instanceof DotNetModifierListOwner)
-		{
-			appendModifiers((DotNetModifierListOwner) psiElement, builder);
-		}
-
-		if(psiElement instanceof DotNetTypeDeclaration)
-		{
-			appendTypeDeclarationType((DotNetTypeDeclaration) psiElement, builder);
-			builder.append(" ");
-		}
-		else if(psiElement instanceof DotNetPropertyDeclaration)
-		{
-			builder.append(generateLinksForType(((DotNetPropertyDeclaration) psiElement).toTypeRef(true), psiElement)).append(" ");
-		}
-		else if(psiElement instanceof DotNetLikeMethodDeclaration)
-		{
-			builder.append(generateLinksForType(((DotNetLikeMethodDeclaration) psiElement).getReturnTypeRef(), psiElement)).append(" ");
-		}
-
-		builder.append(psiElement.getName());
-
-		if(psiElement instanceof DotNetLikeMethodDeclaration)
-		{
-			builder.append("(");
-			builder.append(StringUtil.join(((DotNetLikeMethodDeclaration) psiElement).getParameters(), new Function<DotNetParameter, String>()
-			{
-				@Override
-				public String fun(DotNetParameter dotNetParameter)
-				{
-					return generateLinksForType(dotNetParameter.toTypeRef(true), dotNetParameter) + " " + dotNetParameter.getName();
-				}
-			}, ", "));
-			builder.append(")");
-		}
-
-		builder.append("</code><br><br>");
-
-		val summaryElement = xmlTag.getChild("summary");
-		if(summaryElement != null)
-		{
-			builder.append("<b><big>").append("Summary").append("</big></b><br>");
-			builder.append(xmlTag.getChildText("summary"));
-		}
-		builder.append("</body></html>");
-		return builder.toString();
+		return CodeHierarchyHelper.getFormText(documentation);
 	}
 
 	private static void appendTypeDeclarationType(DotNetTypeDeclaration psiElement, StringBuilder builder)
@@ -324,159 +203,6 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		for(DotNetModifierWithMask modifier : modifierList.getModifiers())
 		{
 			builder.append(modifier.name().toLowerCase()).append(" ");
-		}
-	}
-
-	private String getDocName(PsiElement element)
-	{
-		String docQName = getDocName0(element);
-		if(element instanceof DotNetPropertyDeclaration)
-		{
-			return "P:" + docQName;
-		}
-		else if(element instanceof DotNetEventDeclaration)
-		{
-			return "E:" + docQName;
-		}
-		else if(element instanceof DotNetTypeDeclaration)
-		{
-			return "T:" + docQName;
-		}
-		else if(element instanceof DotNetFieldDeclaration)
-		{
-			return "F:" + docQName;
-		}
-		else if(element instanceof DotNetLikeMethodDeclaration)
-		{
-			return "M:" + docQName;
-		}
-		return docQName;
-	}
-
-	private String getDocName0(PsiElement element)
-	{
-		if(element instanceof DotNetPropertyDeclaration ||
-				element instanceof DotNetEventDeclaration ||
-				element instanceof DotNetFieldDeclaration)
-		{
-			return getQNameForDoc(element, ((DotNetNamedElement) element).getName());
-		}
-		else if(element instanceof DotNetTypeDeclaration)
-		{
-			String name = ((DotNetTypeDeclaration) element).getName();
-			int genericParametersCount = ((DotNetTypeDeclaration) element).getGenericParametersCount();
-			if(genericParametersCount > 0)
-			{
-				name = name + '`' + genericParametersCount;
-			}
-
-			String presentableParentQName = ((DotNetTypeDeclaration) element).getPresentableParentQName();
-			if(StringUtil.isEmpty(presentableParentQName))
-			{
-				return name;
-			}
-			else
-			{
-				return presentableParentQName + "." + name;
-			}
-		}
-		else if(element instanceof DotNetLikeMethodDeclaration)
-		{
-			String name = ((DotNetLikeMethodDeclaration) element).getName();
-			int genericParametersCount = ((DotNetLikeMethodDeclaration) element).getGenericParametersCount();
-			if(genericParametersCount > 0)
-			{
-				name = name + '`' + genericParametersCount;
-			}
-
-			String fullName = getQNameForDoc(element, name);
-
-			DotNetParameter[] parameters = ((DotNetLikeMethodDeclaration) element).getParameters();
-			if(parameters.length > 0)
-			{
-				fullName = fullName + "(";
-				fullName = fullName + StringUtil.join(parameters, new Function<DotNetParameter, String>()
-				{
-					@Override
-					public String fun(DotNetParameter dotNetParameter)
-					{
-						DotNetTypeRef dotNetTypeRef = dotNetParameter.toTypeRef(true);
-
-						return typeToDocName(dotNetParameter, dotNetTypeRef);
-					}
-				}, ",");
-				fullName = fullName + ")";
-			}
-			return fullName;
-		}
-		else
-		{
-			return "test";
-		}
-	}
-
-	private String getQNameForDoc(PsiElement element, String name)
-	{
-		String fullName;
-		PsiElement parent = element.getParent();
-		if(parent instanceof DotNetTypeDeclaration)
-		{
-			fullName = getDocName0(parent) + "." + name;
-		}
-		else
-		{
-			String presentableParentQName = ((DotNetQualifiedElement) element).getPresentableParentQName();
-			if(StringUtil.isEmpty(presentableParentQName))
-			{
-				fullName = name;
-			}
-			else
-			{
-				fullName = presentableParentQName + "." + name;
-			}
-		}
-		return fullName;
-	}
-
-	private String typeToDocName(PsiElement element, DotNetTypeRef typeRef)
-	{
-		if(typeRef instanceof DotNetArrayTypeRef)
-		{
-			return typeToDocName(element, ((DotNetArrayTypeRef) typeRef).getInnerType()) + "[]";
-		}
-		else if(typeRef instanceof DotNetPointerTypeRef)
-		{
-			return typeToDocName(element, ((DotNetPointerTypeRef) typeRef).getInnerType()) + "*";
-		}
-		else if(typeRef instanceof DotNetNativeTypeRef)
-		{
-			return ((DotNetNativeTypeRef) typeRef).getWrapperQualifiedClass();
-		}
-		else
-		{
-			PsiElement resolve = typeRef.resolve(element);
-			if(resolve == null)
-			{
-				return "<error>";
-			}
-
-			if(resolve instanceof DotNetGenericParameter)
-			{
-				DotNetGenericParameterListOwner generic = PsiTreeUtil.getParentOfType(resolve, DotNetGenericParameterListOwner.class);
-				if(element == generic)
-				{
-					return "`" + ArrayUtil.indexOf(generic.getGenericParameters(), resolve);
-				}
-				else
-				{
-					// handle class parameter - in method
-					return ((DotNetGenericParameter) resolve).getName();
-				}
-			}
-			else
-			{
-				return getDocName0(resolve);
-			}
 		}
 	}
 

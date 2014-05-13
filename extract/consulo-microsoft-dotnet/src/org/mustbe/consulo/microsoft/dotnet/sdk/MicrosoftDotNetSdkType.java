@@ -59,7 +59,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	@NotNull
 	public static MicrosoftDotNetSdkType getInstance()
 	{
-		return findInstance(MicrosoftDotNetSdkType.class);
+		return EP_NAME.findExtension(MicrosoftDotNetSdkType.class);
 	}
 
 	public MicrosoftDotNetSdkType()
