@@ -134,66 +134,6 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	}
 
 	@Override
-	public void setupSdkPaths(Sdk sdk)
-	{
-		VirtualFile homeDirectory = sdk.getHomeDirectory();
-		assert homeDirectory != null;
-
-	/*	File file = new File(homeDirectory.getPath(), "csc.rsp");
-		if(file.exists())
-		{
-			try
-			{
-				List<String> lines = FileUtil.loadLines(file);
-
-				List<String> libraries = new ArrayList<String>(lines.size());
-				libraries.add("mscorlib.dll");
-				for(String line : lines)
-				{
-					if(line.startsWith("/r:"))
-					{
-						libraries.add(line.substring(3, line.length()));
-					}
-				}
-
-				SdkModificator sdkModificator = sdk.getSdkModificator();
-
-				for(String orderDll : libraries)
-				{
-					VirtualFile dllVirtualFile = homeDirectory.findFileByRelativePath(orderDll);
-					if(dllVirtualFile == null)
-					{
-						continue;
-					}
-
-					VirtualFile rootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(dllVirtualFile);
-					if(rootForLocalFile != null)
-					{
-						sdkModificator.addRoot(rootForLocalFile, OrderRootType.CLASSES);
-					}
-
-					String xmlFileUrl = homeDirectory.getUrl() + "/" + orderDll.substring(0, orderDll.length() - 3) + "xml";
-
-					VirtualFile docVirtualFile = VirtualFileManager.getInstance().refreshAndFindFileByUrl(xmlFileUrl);
-					if(docVirtualFile != null)
-					{
-						sdkModificator.addRoot(docVirtualFile, OrderRootType.DOCUMENTATION);
-					}
-				}
-				sdkModificator.commitChanges();
-			}
-			catch(IOException e)
-			{
-				super.setupSdkPaths(sdk);
-			}
-		}
-		else */
-		{
-			super.setupSdkPaths(sdk);
-		}
-	}
-
-	@Override
 	public void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, final Consumer<Sdk> sdkCreatedCallback)
 	{
 		FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();

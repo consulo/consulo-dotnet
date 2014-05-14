@@ -60,12 +60,18 @@ public abstract class DotNetSdkType extends SdkType
 				continue;
 			}
 
-			VirtualFile jarRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(dllVirtualFile);
-			if(jarRootForLocalFile == null)
+			VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(dllVirtualFile);
+			if(archiveRootForLocalFile == null)
 			{
 				continue;
 			}
-			sdkModificator.addRoot(jarRootForLocalFile, OrderRootType.CLASSES);
+			sdkModificator.addRoot(archiveRootForLocalFile, OrderRootType.CLASSES);
+
+			VirtualFile docFile = homeDirectory.findChild(dllVirtualFile.getNameWithoutExtension() + ".xml");
+			if(docFile != null)
+			{
+				sdkModificator.addRoot(docFile, OrderRootType.DOCUMENTATION);
+			}
 		}
 
 		postSetupSdkPaths(sdk, sdkModificator);
