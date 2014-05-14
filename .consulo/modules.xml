@@ -141,20 +141,6 @@
         <orderEntry type="module" module-name="dotnet-impl" />
         <orderEntry type="module" module-name="dotnet-debugger-api" />
       </module>
-      <module name="impl/nemerle" dirurl="file://$PROJECT_DIR$/extract/nemerle">
-        <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-        <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="dotnet-api" />
-        <orderEntry type="module" module-name="dotnet-impl" />
-      </module>
       <module name="dotnet-psi-impl" dirurl="file://$PROJECT_DIR$/dotnet-psi-impl">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
         <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
@@ -178,33 +164,6 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="dotnet-api" exported="" />
         <orderEntry type="module" module-name="dotnet-psi-api" />
-      </module>
-      <module name="impl/nunit" dirurl="file://$PROJECT_DIR$/extract/nunit">
-        <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
-        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="consulo-dotnet" />
-        <orderEntry type="module" module-name="consulo-mono-dotnet" />
-        <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
-      </module>
-      <module name="impl/visual-studio" dirurl="file://$PROJECT_DIR$/extract/visual-studio">
-        <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
-        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
       </module>
       <module name="impl/iron-python" dirurl="file://$PROJECT_DIR$/extract/iron-python">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" custom-plugin-dir-url="file://$MODULE_DIR$/../../dep" />
@@ -275,7 +234,6 @@
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="visual-studio" />
         <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
         <orderEntry type="module" module-name="csharp-impl" />
       </module>
