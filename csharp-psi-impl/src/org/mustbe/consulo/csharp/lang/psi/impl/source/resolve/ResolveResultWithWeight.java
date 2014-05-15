@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
 
@@ -49,5 +50,11 @@ public class ResolveResultWithWeight extends PsiElementResolveResult
 	public boolean isGoodResult()
 	{
 		return myWeight == WeightProcessor.MAX_WEIGHT;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		return o instanceof ResolveResultWithWeight && Comparing.equal(getElement(), ((ResolveResultWithWeight) o).getElement());
 	}
 }

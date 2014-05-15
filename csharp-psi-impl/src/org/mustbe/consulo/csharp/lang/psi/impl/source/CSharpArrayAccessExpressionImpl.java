@@ -103,7 +103,7 @@ public class CSharpArrayAccessExpressionImpl extends CSharpElementImpl implement
 	@Override
 	public PsiElement resolve()
 	{
-		ResolveResult[] resolveResults = CSharpReferenceExpressionImpl.multiResolve0(true, CSharpReferenceExpressionImpl.ResolveToKind.ARRAY_METHOD,
+		ResolveResult[] resolveResults = CSharpReferenceExpressionImpl.multiResolve0( CSharpReferenceExpressionImpl.ResolveToKind.ARRAY_METHOD,
 				this, this);
 		for(ResolveResult resolveResult : resolveResults)
 		{

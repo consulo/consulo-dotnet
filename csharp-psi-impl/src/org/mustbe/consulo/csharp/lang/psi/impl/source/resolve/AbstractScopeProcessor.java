@@ -65,7 +65,12 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 		}
 		else
 		{
-			myElements.add(new ResolveResultWithWeight(element, weight));
+			ResolveResultWithWeight e = new ResolveResultWithWeight(element, weight);
+			if(myElements.contains(e))
+			{
+				return;
+			}
+			myElements.add(e);
 		}
 	}
 

@@ -138,10 +138,6 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetName
 		{
 			return false;
 		}
-		if(!myScope.equals(that.myScope))
-		{
-			return false;
-		}
 
 		return true;
 	}
