@@ -17,59 +17,51 @@
 package org.mustbe.consulo.csharp.ide.highlight.check;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
+import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
+import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
  * @since 11.03.14
  */
-public abstract class AbstractCompilerCheck<T extends PsiElement> implements CompilerCheckEx<T>
+public abstract class AbstractCompilerCheck<T extends PsiElement> extends CompilerCheck<T>
 {
-	protected final HighlightInfoType myType;
-	protected final Processor<T> myProcessor;
-	protected String myId;
+	protected final String myId;
 
-	public AbstractCompilerCheck(HighlightInfoType type, Processor<T> processor)
+	public AbstractCompilerCheck()
 	{
-		myType = type;
-		myProcessor = processor;
+		myId = getClass().getSimpleName();
 	}
 
 	public boolean accept(@NotNull T element)
 	{
-		assert myProcessor != null;
-		return myProcessor.process(element);
+		return false;
 	}
 
 	@Override
-	public void add(@NotNull T element, @NotNull HighlightInfoHolder holder)
+	public final CompilerCheckResult check(@NotNull CSharpLanguageVersion languageVersion, @NotNull T element)
 	{
 		if(accept(element))
 		{
-			String message = makeMessage(element);
+			String message = CSharpErrorBundle.message(myId);
 			if(ApplicationManager.getApplication().isInternal())
 			{
 				message = myId + ": " + message;
 			}
-			HighlightInfo highlightInfo = HighlightInfo.newHighlightInfo(myType).descriptionAndTooltip(message).range(makeRange(element)).create();
-			holder.add(highlightInfo);
+
+			CompilerCheckResult result = new CompilerCheckResult();
+			result.setText(message);
+			result.setTextRange(element.getTextRange());
+			checkImpl(element, result);
+			return result;
 		}
+		return null;
 	}
 
-	protected abstract String makeMessage(@NotNull T element);
-
-	protected abstract TextRange makeRange(@NotNull T element);
-
-	@Override
-	public void setId(@NotNull String id)
+	public void checkImpl(@NotNull T element, @NotNull CompilerCheckResult checkResult)
 	{
-		assert myId == null;
-		myId = id;
+
 	}
 }

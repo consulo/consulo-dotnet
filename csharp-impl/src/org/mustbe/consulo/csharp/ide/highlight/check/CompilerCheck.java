@@ -17,14 +17,55 @@
 package org.mustbe.consulo.csharp.ide.highlight.check;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
+import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 09.03.14
  */
-public interface CompilerCheck<T extends PsiElement>
+public abstract class CompilerCheck<T extends PsiElement>
 {
-	void add(@NotNull T element, @NotNull HighlightInfoHolder holder);
+	public static class CompilerCheckResult
+	{
+		private String myText;
+		private TextRange myTextRange;
+		private HighlightInfoType myHighlightInfoType;
+
+		public TextRange getTextRange()
+		{
+			return myTextRange;
+		}
+
+		public void setTextRange(TextRange textRange)
+		{
+			myTextRange = textRange;
+		}
+
+		public String getText()
+		{
+			return myText;
+		}
+
+		public void setText(String text)
+		{
+			myText = text;
+		}
+
+		public HighlightInfoType getHighlightInfoType()
+		{
+			return myHighlightInfoType;
+		}
+
+		public void setHighlightInfoType(HighlightInfoType highlightInfoType)
+		{
+			myHighlightInfoType = highlightInfoType;
+		}
+	}
+
+	@Nullable
+	public abstract CompilerCheckResult check(@NotNull CSharpLanguageVersion languageVersion, @NotNull T element);
 }

@@ -17,7 +17,6 @@
 package org.mustbe.consulo.csharp.ide.highlight;
 
 import java.util.List;
-import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +40,8 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.ResolveResultWithWeight;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
+import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
+import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
@@ -55,6 +56,7 @@ import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -116,12 +118,31 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 		if(element instanceof DotNetElement)
 		{
-			for(Map.Entry<CompilerCheck<PsiElement>, Class<?>> compilerCheckClassEntry : CSharpCompilerChecks.ourValues.entrySet())
+			CSharpLanguageVersion languageVersion = CSharpLanguageVersion.HIGHEST;
+			CSharpModuleExtension extension = ModuleUtilCore.getExtension(element, CSharpModuleExtension.class);
+			if(extension != null)
 			{
-				if(compilerCheckClassEntry.getValue().isAssignableFrom(element.getClass()))
+				languageVersion = extension.getLanguageVersion();
+			}
+
+			for(CSharpCompilerChecks classEntry : CSharpCompilerChecks.VALUES)
+			{
+				if(languageVersion.ordinal() >= classEntry.getLanguageVersion().ordinal() &&
+						classEntry.getTargetClass().isAssignableFrom(element.getClass()))
 				{
-					CompilerCheck<PsiElement> key = compilerCheckClassEntry.getKey();
-					key.add(element, myHighlightInfoHolder);
+					CompilerCheck.CompilerCheckResult check = classEntry.check(languageVersion, element);
+					if(check == null)
+					{
+						continue;
+					}
+					HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(check.getHighlightInfoType());
+					builder = builder.descriptionAndTooltip(check.getText());
+					builder = builder.range(check.getTextRange());
+					HighlightInfo highlightInfo = builder.create();
+					if(highlightInfo != null)
+					{
+						myHighlightInfoHolder.add(highlightInfo);
+					}
 				}
 			}
 		}

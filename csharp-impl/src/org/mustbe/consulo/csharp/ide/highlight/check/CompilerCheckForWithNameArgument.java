@@ -19,11 +19,8 @@ package org.mustbe.consulo.csharp.ide.highlight.check;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
@@ -31,28 +28,14 @@ import com.intellij.util.Processor;
  */
 public class CompilerCheckForWithNameArgument<T extends DotNetNamedElement & PsiNameIdentifierOwner> extends AbstractCompilerCheck<T>
 {
-	@NotNull
-	public static <T extends DotNetNamedElement & PsiNameIdentifierOwner> CompilerCheck<T> of(@NotNull HighlightInfoType type,
-			@NotNull Processor<T> processor)
-	{
-		return new CompilerCheckForWithNameArgument<T>(type, processor);
-	}
-
-	public CompilerCheckForWithNameArgument(HighlightInfoType type, Processor<T> processor)
-	{
-		super(type, processor);
-	}
-
 	@Override
-	protected String makeMessage(@NotNull T element)
+	public void checkImpl(@NotNull T element, @NotNull CompilerCheckResult result)
 	{
-		return CSharpErrorBundle.message(myId, element.getName());
-	}
-
-	@Override
-	protected TextRange makeRange(@NotNull T element)
-	{
+		result.setText(CSharpErrorBundle.message(myId, element.getName()));
 		PsiElement nameIdentifier = element.getNameIdentifier();
-		return nameIdentifier == null ? element.getTextRange() : nameIdentifier.getTextRange();
+		if(nameIdentifier != null)
+		{
+			result.setTextRange(nameIdentifier.getTextRange());
+		}
 	}
 }

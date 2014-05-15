@@ -16,253 +16,79 @@
 
 package org.mustbe.consulo.csharp.ide.highlight;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
-import org.mustbe.consulo.csharp.ide.highlight.check.AbstractCompilerCheck;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
-import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheckEx;
-import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheckForWithNameArgument;
-import org.mustbe.consulo.csharp.ide.highlight.check.SimpleCompilerCheck;
-import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
-import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.impl.CSharpTypeUtil;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpAssignmentExpressionImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpThrowStatementImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
-import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
-import org.mustbe.consulo.dotnet.psi.DotNetVariable;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.dotnet.util.ArrayUtil2;
+import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
- * @since 09.03.14
+ * @since 15.05.14
  */
-public interface CSharpCompilerChecks
+public enum CSharpCompilerChecks
 {
-	AbstractCompilerCheck<PsiElement> CS0029 = new AbstractCompilerCheck<PsiElement>(HighlightInfoType.ERROR, null)
+	CS0029(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // assign type check
+	CS0155(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // throw object must be child of System.Exception
+	CS0231(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // 'params' modifier must be last
+	CS0815(CSharpLanguageVersion._3_0, HighlightInfoType.ERROR), // lambdas cant be cast to 'var'
+	CS1100(CSharpLanguageVersion._3_0, HighlightInfoType.ERROR), // 'this' modifier can be only set to first parameter
+	CS1644(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // features checks
+	CS1737(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR); // parameter default values check for order
+
+	public static final CSharpCompilerChecks[] VALUES = CSharpCompilerChecks.values();
+
+	private final CSharpLanguageVersion myLanguageVersion;
+	private final HighlightInfoType myType;
+	private final CompilerCheck<PsiElement> myCheck;
+	private final Class<?> myTargetClass;
+
+	CSharpCompilerChecks(CSharpLanguageVersion languageVersion, HighlightInfoType type)
 	{
-		@Override
-		public boolean accept(@NotNull PsiElement element)
+		myLanguageVersion = languageVersion;
+		myType = type;
+		try
 		{
-			Pair<DotNetTypeRef, DotNetTypeRef> resolve = resolve(element);
-			if(resolve == null)
-			{
-				return false;
-			}
-			if(resolve.getFirst() == DotNetTypeRef.AUTO_TYPE)
-			{
-				return false;
-			}
-			return !CSharpTypeUtil.isInheritable(resolve.getSecond(), resolve.getFirst(), element);
-		}
+			Class<?> aClass = Class.forName("org.mustbe.consulo.csharp.ide.highlight.check.impl." + name());
+			myCheck = (CompilerCheck<PsiElement>) aClass.newInstance();
 
-		@Override
-		protected String makeMessage(@NotNull PsiElement element)
-		{
-			Pair<DotNetTypeRef, DotNetTypeRef> resolve = resolve(element);
-			if(resolve == null)
-			{
-				return null;
-			}
-			return CSharpErrorBundle.message(myId, resolve.getSecond().getQualifiedText(), resolve.getFirst().getQualifiedText());
-		}
+			ParameterizedType genericType = (ParameterizedType) aClass.getGenericSuperclass();
 
-		private Pair<DotNetTypeRef, DotNetTypeRef> resolve(PsiElement element)
+			myTargetClass = (Class<?>) genericType.getActualTypeArguments()[0];
+		}
+		catch(Exception e)
 		{
-			if(element instanceof DotNetVariable)
-			{
-				DotNetExpression initializer = ((DotNetVariable) element).getInitializer();
-				if(initializer == null)
-				{
-					return null;
-				}
-				return Pair.create(((DotNetVariable) element).toTypeRef(false), initializer.toTypeRef(false));
-			}
-			else if(element instanceof CSharpAssignmentExpressionImpl)
-			{
-				CSharpOperatorReferenceImpl operatorElement = ((CSharpAssignmentExpressionImpl) element).getOperatorElement();
-				if(operatorElement.getOperator().getNode().getElementType() != CSharpTokens.EQ)
-				{
-					return null;
-				}
-				DotNetExpression[] expressions = ((CSharpAssignmentExpressionImpl) element).getExpressions();
-				if(expressions.length != 2)
-				{
-					return null;
-				}
-				return Pair.create(expressions[0].toTypeRef(false), expressions[1].toTypeRef(false));
-			}
+			throw new Error(e);
+		}
+	}
+
+	@Nullable
+	public CompilerCheck.CompilerCheckResult check(CSharpLanguageVersion languageVersion, PsiElement element)
+	{
+		CompilerCheck.CompilerCheckResult check = myCheck.check(languageVersion, element);
+		if(check == null)
+		{
 			return null;
 		}
-
-		@Override
-		protected TextRange makeRange(@NotNull PsiElement element)
+		if(check.getHighlightInfoType() == null)
 		{
-			if(element instanceof CSharpAssignmentExpressionImpl)
-			{
-				return ((CSharpAssignmentExpressionImpl) element).getExpressions()[1].getTextRange();
-			}
-			else if(element instanceof DotNetVariable)
-			{
-				return ((DotNetVariable) element).getInitializer().getTextRange();
-			}
-			throw new IllegalArgumentException();
+			check.setHighlightInfoType(myType);
 		}
-	};
+		return check;
+	}
 
-	CompilerCheck<CSharpThrowStatementImpl> CS0155 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<CSharpThrowStatementImpl>()
+	@NotNull
+	public CSharpLanguageVersion getLanguageVersion()
 	{
-		@Override
-		public boolean process(CSharpThrowStatementImpl statement)
-		{
-			DotNetExpression expression = statement.getExpression();
-			if(expression == null)
-			{
-				return false;
-			}
+		return myLanguageVersion;
+	}
 
-			DotNetTypeRef dotNetTypeRef = expression.toTypeRef(true);
-
-			return !CSharpInheritUtil.isParentOrSelf(DotNetTypes.System_Exception, dotNetTypeRef, statement, true);
-		}
-	});
-
-	CompilerCheck<CSharpLocalVariable> CS0815 = new SimpleCompilerCheck<CSharpLocalVariable>(HighlightInfoType.ERROR, new Processor<CSharpLocalVariable>()
+	@NotNull
+	public Class<?> getTargetClass()
 	{
-		@Override
-		public boolean process(CSharpLocalVariable cSharpLocalVariable)
-		{
-			DotNetTypeRef dotNetTypeRef = cSharpLocalVariable.toTypeRef(false);
-			if(dotNetTypeRef == DotNetTypeRef.AUTO_TYPE)
-			{
-				DotNetExpression initializer = cSharpLocalVariable.getInitializer();
-				if(initializer == null)
-				{
-					return false;
-				}
-				DotNetTypeRef initializerType = initializer.toTypeRef(false);
-				return initializerType instanceof CSharpLambdaTypeRef;
-			}
-			return false;
-		}
-	})
-	{
-		@Override
-		protected TextRange makeRange(@NotNull CSharpLocalVariable element)
-		{
-			DotNetExpression initializer = element.getInitializer();
-			assert initializer != null;
-			return initializer.getTextRange();
-		}
-	};
-
-	CompilerCheck<DotNetParameter> CS0231 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<DotNetParameter>()
-	{
-		@Override
-		public boolean process(DotNetParameter dotNetParameter)
-		{
-			if(!dotNetParameter.hasModifier(CSharpModifier.PARAMS))
-			{
-				return false;
-			}
-
-			DotNetParameterList parent = (DotNetParameterList) dotNetParameter.getParent();
-
-			DotNetParameter[] parameters = parent.getParameters();
-
-			return ArrayUtil.getLastElement(parameters) != dotNetParameter;
-		}
-	});
-
-	CompilerCheck<CSharpMethodDeclaration> CS1100 = CompilerCheckForWithNameArgument.of(HighlightInfoType.ERROR, new Processor<CSharpMethodDeclaration>()
-	{
-		@Override
-		public boolean process(CSharpMethodDeclaration methodDeclaration)
-		{
-			DotNetParameter[] parameters = methodDeclaration.getParameters();
-			for(int i = 0; i < parameters.length; i++)
-			{
-				DotNetParameter parameter = parameters[i];
-				if(i == 0)
-				{
-					continue;
-				}
-
-				if(parameter.hasModifier(CSharpModifier.THIS))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-	});
-
-	CompilerCheck<DotNetParameter> CS1737 = SimpleCompilerCheck.of(HighlightInfoType.ERROR, new Processor<DotNetParameter>()
-	{
-		@Override
-		public boolean process(DotNetParameter dotNetParameter)
-		{
-			if(dotNetParameter.getInitializer() == null)
-			{
-				return false;
-			}
-
-			DotNetParameterList parent = (DotNetParameterList) dotNetParameter.getParent();
-
-			DotNetParameter[] parameters = parent.getParameters();
-
-			int i = ArrayUtil.indexOf(parameters, dotNetParameter);
-
-			DotNetParameter nextParameter = ArrayUtil2.safeGet(parameters, i + 1);
-			return nextParameter != null && nextParameter.getInitializer() == null;
-		}
-	});
-
-	Map<CompilerCheck<PsiElement>, Class<?>> ourValues = new LinkedHashMap<CompilerCheck<PsiElement>, Class<?>>();
-
-	Object ourInitializer = new Object()
-	{
-		{
-			for(Field field : CSharpCompilerChecks.class.getFields())
-			{
-				if(field.getType() == Map.class || field.getType() == Object.class)
-				{
-					continue;
-				}
-
-				ParameterizedType genericType = (ParameterizedType) field.getGenericType();
-				try
-				{
-					CompilerCheckEx<PsiElement> o = (CompilerCheckEx<PsiElement>) field.get(null);
-					o.setId(field.getName());
-
-					Class<?> type = (Class<?>) genericType.getActualTypeArguments()[0];
-					ourValues.put(o, type);
-				}
-				catch(IllegalAccessException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-	};
+		return myTargetClass;
+	}
 }
