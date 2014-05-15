@@ -60,6 +60,7 @@ public class XStubUtil
 			"lock",
 			"object",
 			"case",
+			"delegate",
 			"finally",
 			"internal",
 	};
