@@ -26,6 +26,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImp
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 
@@ -58,7 +59,12 @@ public class CS0029 extends AbstractCompilerCheck<PsiElement>
 		{
 			return;
 		}
-		checkResult.setText(CSharpErrorBundle.message(myId, resolve.getSecond().getQualifiedText(), resolve.getFirst().getQualifiedText()));
+		String message = CSharpErrorBundle.message(myId, resolve.getSecond().getQualifiedText(), resolve.getFirst().getQualifiedText());
+		if(ApplicationManager.getApplication().isInternal())
+		{
+			message = myId + ": " + message;
+		}
+		checkResult.setText(message);
 		if(element instanceof CSharpAssignmentExpressionImpl)
 		{
 			checkResult.setTextRange(((CSharpAssignmentExpressionImpl) element).getExpressions()[1].getTextRange());
