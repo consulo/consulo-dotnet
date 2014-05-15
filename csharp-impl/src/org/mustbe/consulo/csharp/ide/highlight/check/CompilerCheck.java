@@ -16,10 +16,15 @@
 
 package org.mustbe.consulo.csharp.ide.highlight.check;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 
@@ -34,6 +39,8 @@ public abstract class CompilerCheck<T extends PsiElement>
 		private String myText;
 		private TextRange myTextRange;
 		private HighlightInfoType myHighlightInfoType;
+
+		private List<IntentionAction> myQuickFixes = Collections.emptyList();
 
 		public TextRange getTextRange()
 		{
@@ -63,6 +70,20 @@ public abstract class CompilerCheck<T extends PsiElement>
 		public void setHighlightInfoType(HighlightInfoType highlightInfoType)
 		{
 			myHighlightInfoType = highlightInfoType;
+		}
+
+		public void addQuickFix(IntentionAction a)
+		{
+			if(myQuickFixes.isEmpty())
+			{
+				myQuickFixes = new ArrayList<IntentionAction>(3);
+			}
+			myQuickFixes.add(a);
+		}
+
+		public List<IntentionAction> getQuickFixes()
+		{
+			return myQuickFixes;
 		}
 	}
 

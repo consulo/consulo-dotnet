@@ -55,6 +55,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl;
+import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.TextRange;
@@ -142,6 +143,11 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 					if(highlightInfo != null)
 					{
 						myHighlightInfoHolder.add(highlightInfo);
+
+						for(IntentionAction intentionAction : check.getQuickFixes())
+						{
+							QuickFixAction.registerQuickFixAction(highlightInfo, intentionAction);
+						}
 					}
 				}
 			}

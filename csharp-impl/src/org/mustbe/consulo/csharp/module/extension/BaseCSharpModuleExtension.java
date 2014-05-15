@@ -45,6 +45,12 @@ public abstract class BaseCSharpModuleExtension<T extends BaseCSharpModuleExtens
 		return currentLayer.isAllowUnsafeCode();
 	}
 
+	public void setLanguageVersion(@NotNull CSharpLanguageVersion languageVersion)
+	{
+		CSharpConfigurationLayer currentLayer = (CSharpConfigurationLayer) getCurrentLayer();
+		currentLayer.setLanguageVersion(languageVersion);
+	}
+
 	@NotNull
 	@Override
 	public CSharpLanguageVersion getLanguageVersion()

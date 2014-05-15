@@ -20,6 +20,7 @@ import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.module.extension.CSharpMutableModuleExtension;
 import org.mustbe.consulo.module.extension.LayeredMutableModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
@@ -27,7 +28,8 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author VISTALL
  * @since 26.11.13.
  */
-public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension implements LayeredMutableModuleExtension<MonoCSharpModuleExtension>
+public class MonoCSharpMutableModuleExtension extends MonoCSharpModuleExtension implements
+		LayeredMutableModuleExtension<MonoCSharpModuleExtension>, CSharpMutableModuleExtension<MonoCSharpModuleExtension>
 {
 	public MonoCSharpMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{

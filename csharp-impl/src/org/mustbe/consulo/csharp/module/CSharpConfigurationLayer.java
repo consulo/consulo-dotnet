@@ -199,8 +199,7 @@ public class CSharpConfigurationLayer implements ConfigurationLayer
 		if(obj instanceof CSharpConfigurationLayer)
 		{
 			CSharpConfigurationLayer other = (CSharpConfigurationLayer) obj;
-			return myAllowUnsafeCode == other.isAllowUnsafeCode() &&
-					myLanguageVersionPointer.equals(other.myLanguageVersionPointer);
+			return myAllowUnsafeCode == other.isAllowUnsafeCode() && myLanguageVersionPointer.equals(other.myLanguageVersionPointer);
 		}
 		return false;
 	}
@@ -230,5 +229,10 @@ public class CSharpConfigurationLayer implements ConfigurationLayer
 	public void setAllowUnsafeCode(boolean allowUnsafeCode)
 	{
 		myAllowUnsafeCode = allowUnsafeCode;
+	}
+
+	public void setLanguageVersion(CSharpLanguageVersion languageVersion)
+	{
+		myLanguageVersionPointer.set(null, languageVersion);
 	}
 }

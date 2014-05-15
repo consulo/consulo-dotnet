@@ -31,17 +31,27 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLambdaExpressionImpl;
 import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
+import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
+import org.mustbe.consulo.csharp.module.extension.CSharpMutableModuleExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
+import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.Function;
+import com.intellij.util.IncorrectOperationException;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -49,7 +59,64 @@ import com.intellij.util.Function;
  */
 public class CS1644 extends CompilerCheck<PsiElement>
 {
-	class Feature
+	public static class SetLanguageVersionFix extends PsiElementBaseIntentionAction
+	{
+		private CSharpLanguageVersion myLanguageVersion;
+
+		public SetLanguageVersionFix(CSharpLanguageVersion languageVersion)
+		{
+			myLanguageVersion = languageVersion;
+		}
+
+		@NotNull
+		@Override
+		public String getText()
+		{
+			return "Set language version to '" + myLanguageVersion.getPresentableName() + "'";
+		}
+
+		@Override
+		public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException
+		{
+			CSharpModuleExtension extension = ModuleUtilCore.getExtension(element, CSharpModuleExtension.class);
+			if(extension == null)
+			{
+				return;
+			}
+
+			ModuleRootManager rootManager = ModuleRootManager.getInstance(extension.getModule());
+
+			ModifiableRootModel modifiableModel = rootManager.getModifiableModel();
+
+			val mutable = modifiableModel.getExtension(CSharpMutableModuleExtension.class);
+			assert mutable != null;
+			mutable.setLanguageVersion(myLanguageVersion);
+
+			modifiableModel.commit();
+		}
+
+		@Override
+		public boolean startInWriteAction()
+		{
+			return true;
+		}
+
+		@Override
+		public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement element)
+		{
+			CSharpModuleExtension extension = ModuleUtilCore.getExtension(element, CSharpModuleExtension.class);
+			return extension != null && extension.getLanguageVersion().ordinal() < myLanguageVersion.ordinal();
+		}
+
+		@NotNull
+		@Override
+		public String getFamilyName()
+		{
+			return "C#";
+		}
+	}
+
+	public static class Feature
 	{
 		private String myName;
 		private CSharpLanguageVersion myLanguageVersion;
@@ -157,6 +224,7 @@ public class CS1644 extends CompilerCheck<PsiElement>
 				CompilerCheckResult result = new CompilerCheckResult();
 				result.setText(message);
 				result.setTextRange(fun.getTextRange());
+				result.addQuickFix(new SetLanguageVersionFix(feature.myLanguageVersion));
 
 				IElementType elementType = fun.getNode().getElementType();
 				if(!myAllKeywords.contains(elementType))

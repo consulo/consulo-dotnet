@@ -5,13 +5,15 @@ import javax.swing.JComponent;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.module.extension.CSharpMutableModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
  * @author VISTALL
  * @since 31.03.14
  */
-public class XCSharpMutableModuleExtension extends XCSharpModuleExtension implements MutableModuleExtension<XCSharpModuleExtension>
+public class XCSharpMutableModuleExtension extends XCSharpModuleExtension implements MutableModuleExtension<XCSharpModuleExtension>,
+		CSharpMutableModuleExtension<XCSharpModuleExtension>
 {
 	public XCSharpMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
