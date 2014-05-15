@@ -18,8 +18,16 @@ package org.mustbe.consulo.csharp.ide.reflactoring;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.reflactoring.introduceVariable.CSharpIntroduceVariableHandler;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.search.PsiSearchHelper;
+import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringActionHandler;
 
 /**
@@ -40,4 +48,41 @@ public class CSharpRefactoringSupportProvider extends RefactoringSupportProvider
 	{
 		return true;
 	}
+
+	@Override
+	public boolean isInplaceRenameAvailable(PsiElement element, PsiElement context)
+	{
+		return mayRenameInplace(element, context);
+	}
+
+	@Override
+	public boolean isMemberInplaceRenameAvailable(PsiElement element, PsiElement context)
+	{
+		return element instanceof DotNetQualifiedElement;
+	}
+
+	public static boolean mayRenameInplace(PsiElement elementToRename, final PsiElement nameSuggestionContext)
+	{
+		if(nameSuggestionContext != null && nameSuggestionContext.getContainingFile() != elementToRename.getContainingFile())
+		{
+			return false;
+		}
+		if(!(elementToRename instanceof CSharpLocalVariable) && !(elementToRename instanceof CSharpParameterImpl))
+		{
+			return false;
+		}
+		SearchScope useScope = PsiSearchHelper.SERVICE.getInstance(elementToRename.getProject()).getUseScope(elementToRename);
+		if(!(useScope instanceof LocalSearchScope))
+		{
+			return false;
+		}
+		PsiElement[] scopeElements = ((LocalSearchScope) useScope).getScope();
+		if(scopeElements.length > 1)
+		{
+			return false;    // ... and badly scoped resource variables
+		}
+		PsiFile containingFile = elementToRename.getContainingFile();
+		return PsiTreeUtil.isAncestor(containingFile, scopeElements[0], false);
+	}
+
 }

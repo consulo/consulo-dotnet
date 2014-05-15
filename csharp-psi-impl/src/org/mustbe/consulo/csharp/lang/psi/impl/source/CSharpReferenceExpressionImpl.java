@@ -78,6 +78,32 @@ import lombok.val;
 @Logger
 public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements DotNetReferenceExpression, PsiPolyVariantReference
 {
+	private static class OurResolver implements ResolveCache.PolyVariantResolver<CSharpReferenceExpressionImpl>
+	{
+		private static final OurResolver INSTANCE = new OurResolver();
+
+		@NotNull
+		@Override
+		public ResolveResult[] resolve(@NotNull CSharpReferenceExpressionImpl ref, boolean incompleteCode)
+		{
+			ResolveResult[] resolveResults = ref.multiResolveImpl(true);
+			if(!incompleteCode)
+			{
+				return resolveResults;
+			}
+			List<ResolveResultWithWeight> filter = new ArrayList<ResolveResultWithWeight>();
+			for(ResolveResult resolveResult : resolveResults)
+			{
+				ResolveResultWithWeight resolveResultWithWeight = (ResolveResultWithWeight) resolveResult;
+				if(resolveResultWithWeight.isGoodResult())
+				{
+					filter.add(resolveResultWithWeight);
+				}
+			}
+			return ContainerUtil.toArray(filter, ResolveResultWithWeight.ARRAY_FACTORY);
+		}
+	}
+
 	public static final String AttributeSuffix = "Attribute";
 
 	private static final Condition<PsiNamedElement> ourTypeOrMethodOrGenericCondition = new Condition<PsiNamedElement>()
@@ -178,29 +204,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public ResolveResult[] multiResolve(final boolean incompleteCode)
 	{
-		return ResolveCache.getInstance(getProject()).resolveWithCaching(this, new ResolveCache.PolyVariantResolver<CSharpReferenceExpressionImpl>()
-		{
-			@NotNull
-			@Override
-			public ResolveResult[] resolve(@NotNull CSharpReferenceExpressionImpl cSharpReferenceExpression, boolean incompleteCode)
-			{
-				ResolveResult[] resolveResults = multiResolveImpl(true);
-				if(!incompleteCode)
-				{
-					return resolveResults;
-				}
-				List<ResolveResultWithWeight> filter = new ArrayList<ResolveResultWithWeight>();
-				for(ResolveResult resolveResult : resolveResults)
-				{
-					ResolveResultWithWeight resolveResultWithWeight = (ResolveResultWithWeight) resolveResult;
-					if(resolveResultWithWeight.isGoodResult())
-					{
-						filter.add(resolveResultWithWeight);
-					}
-				}
-				return ContainerUtil.toArray(filter, ResolveResultWithWeight.ARRAY_FACTORY);
-			}
-		}, true, incompleteCode);
+		return ResolveCache.getInstance(getProject()).resolveWithCaching(this, OurResolver.INSTANCE, false, incompleteCode);
 	}
 
 	private ResolveResult[] multiResolveImpl(boolean named)
@@ -864,7 +868,12 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public PsiElement handleElementRename(String s) throws IncorrectOperationException
 	{
-		return null;
+		PsiElement element = getReferenceElement();
+
+		PsiElement newIdentifier = CSharpFileFactory.createIdentifier(getProject(), getResolveScope(), s);
+
+		element.replace(newIdentifier);
+		return this;
 	}
 
 	@Override
@@ -882,7 +891,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			return Comparing.equal(((CSharpNamespaceAsElement) resolve).getPresentableQName(), ((CSharpNamespaceAsElement) element)
 					.getPresentableQName());
 		}
-		return resolve == element;
+		return element.getManager().areElementsEquivalent(element, resolve);
 	}
 
 	@NotNull

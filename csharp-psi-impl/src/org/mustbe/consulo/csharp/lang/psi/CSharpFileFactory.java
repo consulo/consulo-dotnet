@@ -26,8 +26,8 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatem
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.SingleRootFileViewProvider;
@@ -65,15 +65,29 @@ public class CSharpFileFactory
 		return (CSharpUsingNamespaceStatementImpl) firstChild.getStatements()[0];
 	}
 
+	@NotNull
 	public static DotNetType createType(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String typeText)
 	{
-		val clazz = "class _Dummy { " + typeText + " _dummy; }";
+		CSharpFieldDeclaration field = createField(project, scope, typeText + " _dummy");
+		return field.getType();
+	}
+
+	@NotNull
+	public static CSharpFieldDeclaration createField(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
+	{
+		val clazz = "class _Dummy { " + text + "; }";
 
 		CSharpFragmentedFileImpl psiFile = createTypeDeclarationWithScope(project, scope, clazz);
 
 		DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) psiFile.getMembers()[0];
-		DotNetVariable dotNetNamedElement = (DotNetVariable) typeDeclaration.getMembers()[0];
-		return dotNetNamedElement.getType();
+		return (CSharpFieldDeclaration) typeDeclaration.getMembers()[0];
+	}
+
+	@NotNull
+	public static PsiElement createIdentifier(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String name)
+	{
+		CSharpFieldDeclaration field = createField(project, scope, "int " + name);
+		return field.getNameIdentifier();
 	}
 
 	public static DotNetStatement createStatement(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)

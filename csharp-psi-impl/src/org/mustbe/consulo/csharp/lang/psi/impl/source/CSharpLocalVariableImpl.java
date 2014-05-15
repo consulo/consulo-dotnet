@@ -19,14 +19,18 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.reflactoring.CSharpRefactoringUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariableDeclarationStatement;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 
@@ -98,12 +102,25 @@ public class CSharpLocalVariableImpl extends CSharpVariableImpl implements CShar
 	@Override
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
-		return null;
+		CSharpRefactoringUtil.replaceNameIdentifier(this, s);
+		return this;
 	}
 
 	@Override
 	public boolean isConstant()
 	{
 		return findChildByType(CSharpTokens.CONST_KEYWORD) != null;
+	}
+
+	@NotNull
+	@Override
+	public SearchScope getUseScope()
+	{
+		PsiElement parent = getParent();
+		if(parent instanceof CSharpLocalVariableDeclarationStatement)
+		{
+			return new LocalSearchScope(parent.getParent());
+		}
+		return super.getUseScope();
 	}
 }
