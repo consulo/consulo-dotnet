@@ -912,10 +912,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				{
 					return false;
 				}
-				if(e instanceof CSharpMethodDeclaration && ((CSharpMethodDeclaration) e).isDelegate())
-				{
-					return false;
-				}
+
 				if(e instanceof CSharpLocalVariable || e instanceof DotNetParameter || e instanceof CSharpLambdaParameter)
 				{
 					return true;

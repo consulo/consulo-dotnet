@@ -151,23 +151,27 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 			{
 				builder = builder.withItemTextUnderlined(true);
 			}
-			builder = builder.withInsertHandler(new InsertHandler<LookupElement>()
+			else if(!methodDeclaration.isDelegate())
 			{
-				@Override
-				public void handleInsert(InsertionContext insertionContext, LookupElement lookupElement)
+				builder = builder.withInsertHandler(new InsertHandler<LookupElement>()
 				{
-					int offset = insertionContext.getEditor().getCaretModel().getOffset();
-
-					PsiElement elementAt = insertionContext.getFile().findElementAt(offset);
-					// dont insert () if it inside method call
-					if(elementAt == null || elementAt.getNode().getElementType() != CSharpTokens.LPAR)
+					@Override
+					public void handleInsert(InsertionContext insertionContext, LookupElement lookupElement)
 					{
-						insertionContext.getDocument().insertString(offset, "();");
-						insertionContext.getEditor().getCaretModel().moveToOffset(offset + 1);
-						AutoPopupController.getInstance(insertionContext.getProject()).autoPopupParameterInfo(insertionContext.getEditor(), null);
+						int offset = insertionContext.getEditor().getCaretModel().getOffset();
+
+						PsiElement elementAt = insertionContext.getFile().findElementAt(offset);
+						// dont insert () if it inside method call
+						if(elementAt == null || elementAt.getNode().getElementType() != CSharpTokens.LPAR)
+						{
+							insertionContext.getDocument().insertString(offset, "();");
+							insertionContext.getEditor().getCaretModel().moveToOffset(offset + 1);
+							AutoPopupController.getInstance(insertionContext.getProject()).autoPopupParameterInfo(insertionContext.getEditor(), null);
+
+						}
 					}
-				}
-			});
+				});
+			}
 			return builder;
 		}
 		else if(element instanceof DotNetVariable)
