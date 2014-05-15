@@ -22,7 +22,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFixedStatementImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 
@@ -50,6 +49,5 @@ public class CS0214 extends AbstractCompilerCheck<CSharpFixedStatementImpl>
 	{
 		PsiElement fixedElement = statement.getFixedElement();
 		checkResult.setTextRange(fixedElement.getTextRange());
-		checkResult.setHighlightInfoType(HighlightInfoType.WRONG_REF);
 	}
 }

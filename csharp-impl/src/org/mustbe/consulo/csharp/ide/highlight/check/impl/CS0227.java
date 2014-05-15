@@ -21,7 +21,6 @@ import org.mustbe.consulo.csharp.ide.highlight.check.AbstractCompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpModifierListImpl;
 import org.mustbe.consulo.csharp.module.extension.BaseCSharpModuleExtension;
-import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.psi.PsiElement;
 
@@ -52,6 +51,5 @@ public class CS0227 extends AbstractCompilerCheck<CSharpModifierListImpl>
 		PsiElement modifier = list.getModifier(CSharpTokens.UNSAFE_KEYWORD);
 		assert modifier != null;
 		checkResult.setTextRange(modifier.getTextRange());
-		checkResult.setHighlightInfoType(HighlightInfoType.WRONG_REF);
 	}
 }

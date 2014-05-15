@@ -33,8 +33,8 @@ public enum CSharpCompilerChecks
 {
 	CS0029(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // assign type check
 	CS0155(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // throw object must be child of System.Exception
-	CS0214(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // fixed can be used inside unsafe context
-	CS0227(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // 'unsafe' modifier check
+	CS0214(CSharpLanguageVersion._1_0, HighlightInfoType.WRONG_REF), // fixed can be used inside unsafe context
+	CS0227(CSharpLanguageVersion._1_0, HighlightInfoType.WRONG_REF), // 'unsafe' modifier check
 	CS0231(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // 'params' modifier must be last
 	CS0815(CSharpLanguageVersion._3_0, HighlightInfoType.ERROR), // lambdas cant be cast to 'var'
 	CS1100(CSharpLanguageVersion._3_0, HighlightInfoType.ERROR), // 'this' modifier can be only set to first parameter
