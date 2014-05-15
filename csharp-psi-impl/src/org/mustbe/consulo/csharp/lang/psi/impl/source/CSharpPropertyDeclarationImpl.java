@@ -70,7 +70,7 @@ public class CSharpPropertyDeclarationImpl extends CSharpStubVariableImpl<CSharp
 	@Override
 	public DotNetExpression getInitializer()
 	{
-		return null;
+		return findChildByClass(DotNetExpression.class);
 	}
 
 	@NotNull

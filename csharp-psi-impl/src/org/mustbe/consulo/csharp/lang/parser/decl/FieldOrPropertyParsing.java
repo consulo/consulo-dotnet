@@ -145,6 +145,16 @@ public class FieldOrPropertyParsing extends MemberWithBodyParsing
 		{
 			parseAccessors(builderWrapper, XXX_ACCESSOR, PROPERTY_ACCESSOR_START);
 
+			if(builderWrapper.getTokenType() == EQ)
+			{
+				builderWrapper.advanceLexer();
+				if(ExpressionParsing.parse(builderWrapper) == null)
+				{
+					builderWrapper.error("Expression expected");
+				}
+				expect(builderWrapper, SEMICOLON, "';' expected");
+			}
+
 			marker.done(PROPERTY_DECLARATION);
 		}
 		else
