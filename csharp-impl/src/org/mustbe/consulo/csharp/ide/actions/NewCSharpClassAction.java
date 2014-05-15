@@ -24,7 +24,7 @@ import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.CSharpIcons;
-import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
+import org.mustbe.consulo.csharp.module.extension.BaseCSharpModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
@@ -87,7 +87,7 @@ public class NewCSharpClassAction extends CreateFromTemplateAction<PsiFile>
 				}
 			}
 		}
-		return module != null && ModuleUtilCore.getExtension(module, CSharpModuleExtension.class) != null;
+		return module != null && ModuleUtilCore.getExtension(module, BaseCSharpModuleExtension.class) != null;
 	}
 
 	@Override

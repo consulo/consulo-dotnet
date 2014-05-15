@@ -31,10 +31,10 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author VISTALL
  * @since 15.12.13.
  */
-public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> extends ChildLayeredModuleExtensionImpl<T> implements
-		DotNetModuleLangExtension<T>
+public abstract class BaseCSharpModuleExtension<T extends BaseCSharpModuleExtension<T>> extends ChildLayeredModuleExtensionImpl<T> implements
+		DotNetModuleLangExtension<T>, CSharpModuleExtension<T>
 {
-	public CSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
+	public BaseCSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
 		super(id, module);
 	}
@@ -43,6 +43,14 @@ public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> 
 	{
 		CSharpConfigurationLayer currentLayer = (CSharpConfigurationLayer) getCurrentLayer();
 		return currentLayer.isAllowUnsafeCode();
+	}
+
+	@NotNull
+	@Override
+	public CSharpLanguageVersion getLanguageVersion()
+	{
+		CSharpConfigurationLayer currentLayer = (CSharpConfigurationLayer) getCurrentLayer();
+		return currentLayer.getLanguageVersion();
 	}
 
 	@NotNull
@@ -56,7 +64,7 @@ public abstract class CSharpModuleExtension<T extends CSharpModuleExtension<T>> 
 	@Override
 	protected ConfigurationLayer createLayer()
 	{
-		return new CSharpConfigurationLayer();
+		return new CSharpConfigurationLayer(getProject(), getId());
 	}
 
 	@NotNull

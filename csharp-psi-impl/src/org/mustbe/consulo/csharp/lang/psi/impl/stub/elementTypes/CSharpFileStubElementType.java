@@ -25,7 +25,8 @@ import java.util.Queue;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
-import org.mustbe.consulo.csharp.lang.CSharpLanguageVersionImpl;
+import org.mustbe.consulo.csharp.lang.CSharpLanguageVersionWrapper;
+import org.mustbe.consulo.csharp.lang.CSharpLanguageVersionWrapper;
 import org.mustbe.consulo.csharp.lang.CSharpMacroLanguage;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroDefine;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMacroRecursiveElementVisitor;
@@ -100,7 +101,7 @@ public class CSharpFileStubElementType extends IStubFileElementType<CSharpFileSt
 		final Project project = psi.getProject();
 		final Language languageForParser = getLanguageForParser(psi);
 		final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
-		final CSharpLanguageVersionImpl languageVersion = (CSharpLanguageVersionImpl) (tempLanguageVersion == null ? psi.getLanguageVersion() :
+		final CSharpLanguageVersionWrapper languageVersion = (CSharpLanguageVersionWrapper) (tempLanguageVersion == null ? psi.getLanguageVersion() :
 				tempLanguageVersion);
 
 		FileViewProvider viewProvider = ((PsiFile) psi).getViewProvider();

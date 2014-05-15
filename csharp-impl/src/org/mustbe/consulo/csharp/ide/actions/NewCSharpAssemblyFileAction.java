@@ -24,7 +24,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.assemblyInfo.CSharpAssemblyConstants;
-import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
+import org.mustbe.consulo.csharp.module.extension.BaseCSharpModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeView;
@@ -150,7 +150,7 @@ public class NewCSharpAssemblyFileAction extends AnAction
 				return false;
 			}
 		}
-		if(module == null || ModuleUtilCore.getExtension(module, CSharpModuleExtension.class) == null)
+		if(module == null || ModuleUtilCore.getExtension(module, BaseCSharpModuleExtension.class) == null)
 		{
 			return false;
 		}

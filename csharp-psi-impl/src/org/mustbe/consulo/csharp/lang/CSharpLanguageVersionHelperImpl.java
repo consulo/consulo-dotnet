@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
 import com.intellij.lang.LanguageVersion;
 
 /**
@@ -25,10 +26,43 @@ import com.intellij.lang.LanguageVersion;
  */
 public class CSharpLanguageVersionHelperImpl extends CSharpLanguageVersionHelper
 {
+	private final CSharpLanguageVersionWrapper[] myWrappers;
+	private CSharpLanguageVersionWrapper myHighest;
+
+	public CSharpLanguageVersionHelperImpl()
+	{
+		CSharpLanguageVersion[] values = CSharpLanguageVersion.values();
+
+		myWrappers = new CSharpLanguageVersionWrapper[values.length];
+		for(int i = 0; i < myWrappers.length; i++)
+		{
+			myWrappers[i] = new CSharpLanguageVersionWrapper(values[i]);
+			if(values[i] == CSharpLanguageVersion.HIGHEST)
+			{
+				myHighest = myWrappers[i];
+			}
+		}
+		assert myHighest != null;
+	}
+
 	@NotNull
 	@Override
-	public LanguageVersion[] getVersions()
+	public LanguageVersion<CSharpLanguage> getHighestVersion()
 	{
-		return CSharpLanguageVersionImpl.VALUES;
+		return myHighest;
+	}
+
+	@NotNull
+	@Override
+	public LanguageVersion<CSharpLanguage>[] getVersions()
+	{
+		return myWrappers;
+	}
+
+	@NotNull
+	@Override
+	public LanguageVersion<CSharpLanguage> getWrapper(@NotNull CSharpLanguageVersion version)
+	{
+		return myWrappers[version.ordinal()];
 	}
 }

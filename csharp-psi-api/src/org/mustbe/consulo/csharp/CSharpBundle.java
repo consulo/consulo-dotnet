@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang;
+package org.mustbe.consulo.csharp;
 
-import org.consulo.lombok.annotations.ApplicationService;
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
-import com.intellij.lang.LanguageVersion;
+import org.consulo.lombok.annotations.Bundle;
 
 /**
  * @author VISTALL
- * @since 14.12.13.
+ * @since 15.05.14
  */
-@ApplicationService
-public abstract class CSharpLanguageVersionHelper
+@Bundle
+public class CSharpBundle
 {
-	@NotNull
-	public abstract LanguageVersion<CSharpLanguage> getHighestVersion();
-
-	@NotNull
-	public abstract LanguageVersion<CSharpLanguage>[] getVersions();
-
-	@NotNull
-	public abstract LanguageVersion<CSharpLanguage> getWrapper(@NotNull CSharpLanguageVersion version);
 }

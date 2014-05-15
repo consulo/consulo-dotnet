@@ -18,7 +18,7 @@ package org.mustbe.consulo.mono.csharp.module.extension;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.compiler.MSBaseDotNetCompilerOptionsBuilder;
-import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
+import org.mustbe.consulo.csharp.module.extension.BaseCSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -28,7 +28,7 @@ import com.intellij.openapi.util.SystemInfo;
  * @author VISTALL
  * @since 26.11.13.
  */
-public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpModuleExtension>
+public class MonoCSharpModuleExtension extends BaseCSharpModuleExtension<MonoCSharpModuleExtension>
 {
 	public MonoCSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
@@ -43,7 +43,7 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 	}
 
 	@NotNull
-	public static DotNetCompilerOptionsBuilder createCompilerOptionsBuilderImpl(CSharpModuleExtension<?> extension)
+	public static DotNetCompilerOptionsBuilder createCompilerOptionsBuilderImpl(BaseCSharpModuleExtension<?> extension)
 	{
 		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(extension);
 		if(extension.isAllowUnsafeCode())
@@ -52,7 +52,23 @@ public class MonoCSharpModuleExtension extends CSharpModuleExtension<MonoCSharpM
 		}
 		optionsBuilder.addArgument("/nologo");
 		optionsBuilder.addArgument("/nostdlib+");
-
+		switch(extension.getLanguageVersion())
+		{
+			case _1_0:
+				optionsBuilder.addArgument("/langversion:ISO-1");
+				break;
+			case _2_0:
+				optionsBuilder.addArgument("/langversion:ISO-2");
+				break;
+			case _3_0:
+				optionsBuilder.addArgument("/langversion:3");
+				break;
+			case _4_0:
+				optionsBuilder.addArgument("/langversion:4");
+			case _5_0:
+				optionsBuilder.addArgument("/langversion:5");
+				break;
+		}
 		if(SystemInfo.isWindows)
 		{
 			optionsBuilder.setExecutableFromSdk("/../../../bin/mcs.bat");

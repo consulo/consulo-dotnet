@@ -1,7 +1,7 @@
 package org.mustbe.consulo.xdotnet.module.extension;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
+import org.mustbe.consulo.csharp.module.extension.BaseCSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtension;
@@ -16,7 +16,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author VISTALL
  * @since 31.03.14
  */
-public class XCSharpModuleExtension extends CSharpModuleExtension<XCSharpModuleExtension>
+public class XCSharpModuleExtension extends BaseCSharpModuleExtension<XCSharpModuleExtension>
 {
 	public XCSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{

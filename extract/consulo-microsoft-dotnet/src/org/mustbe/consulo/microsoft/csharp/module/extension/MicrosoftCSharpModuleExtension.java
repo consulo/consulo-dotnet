@@ -18,7 +18,7 @@ package org.mustbe.consulo.microsoft.csharp.module.extension;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.compiler.MSBaseDotNetCompilerOptionsBuilder;
-import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
+import org.mustbe.consulo.csharp.module.extension.BaseCSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
@@ -26,7 +26,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author VISTALL
  * @since 26.11.13.
  */
-public class MicrosoftCSharpModuleExtension extends CSharpModuleExtension<MicrosoftCSharpModuleExtension>
+public class MicrosoftCSharpModuleExtension extends BaseCSharpModuleExtension<MicrosoftCSharpModuleExtension>
 {
 	public MicrosoftCSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
@@ -41,7 +41,7 @@ public class MicrosoftCSharpModuleExtension extends CSharpModuleExtension<Micros
 	}
 
 	@NotNull
-	public static DotNetCompilerOptionsBuilder createCompilerOptionsBuilderImpl(CSharpModuleExtension<?> extension)
+	public static DotNetCompilerOptionsBuilder createCompilerOptionsBuilderImpl(BaseCSharpModuleExtension<?> extension)
 	{
 		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(extension);
 		optionsBuilder.addArgument("/nologo");
@@ -51,6 +51,22 @@ public class MicrosoftCSharpModuleExtension extends CSharpModuleExtension<Micros
 		if(extension.isAllowUnsafeCode())
 		{
 			optionsBuilder.addArgument("/unsafe");
+		}
+		switch(extension.getLanguageVersion())
+		{
+			case _1_0:
+				optionsBuilder.addArgument("/langversion:ISO-1");
+				break;
+			case _2_0:
+				optionsBuilder.addArgument("/langversion:ISO-2");
+				break;
+			case _3_0:
+				optionsBuilder.addArgument("/langversion:3");
+				break;
+			case _4_0:
+			case _5_0:
+				optionsBuilder.addArgument("/langversion:default");
+				break;
 		}
 		optionsBuilder.setExecutableFromSdk("csc.exe");
 		return optionsBuilder;

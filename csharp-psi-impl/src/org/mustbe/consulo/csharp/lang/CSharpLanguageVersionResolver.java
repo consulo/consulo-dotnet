@@ -18,7 +18,7 @@ package org.mustbe.consulo.csharp.lang;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.LanguageVersionResolver;
@@ -40,15 +40,19 @@ public class CSharpLanguageVersionResolver implements LanguageVersionResolver<CS
 	{
 		if(element == null)
 		{
-			return CSharpLanguageVersionImpl.LAST;
+			return CSharpLanguageVersionHelper.getInstance().getHighestVersion();
 		}
 		Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(element);
 		if(moduleForPsiElement == null)
 		{
-			return CSharpLanguageVersionImpl.LAST;
+			return CSharpLanguageVersionHelper.getInstance().getHighestVersion();
 		}
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(moduleForPsiElement, DotNetModuleExtension.class);
-		return getLanguageVersion0(extension);
+		CSharpModuleExtension extension = ModuleUtilCore.getExtension(moduleForPsiElement, CSharpModuleExtension.class);
+		if(extension == null)
+		{
+			return CSharpLanguageVersionHelper.getInstance().getHighestVersion();
+		}
+		return CSharpLanguageVersionHelper.getInstance().getWrapper(extension.getLanguageVersion());
 	}
 
 	@Override
@@ -57,23 +61,18 @@ public class CSharpLanguageVersionResolver implements LanguageVersionResolver<CS
 	{
 		if(project  == null || virtualFile == null)
 		{
-			return CSharpLanguageVersionImpl.LAST;
+			return CSharpLanguageVersionHelper.getInstance().getHighestVersion();
 		}
 		Module moduleForPsiElement = ModuleUtilCore.findModuleForFile(virtualFile, project);
 		if(moduleForPsiElement == null)
 		{
-			return CSharpLanguageVersionImpl.LAST;
+			return CSharpLanguageVersionHelper.getInstance().getHighestVersion();
 		}
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(moduleForPsiElement, DotNetModuleExtension.class);
-		return getLanguageVersion0(extension);
-	}
-
-	private LanguageVersion<CSharpLanguage> getLanguageVersion0(DotNetModuleExtension extension)
-	{
+		CSharpModuleExtension extension = ModuleUtilCore.getExtension(moduleForPsiElement, CSharpModuleExtension.class);
 		if(extension == null)
 		{
-			return CSharpLanguageVersionImpl.LAST;
+			return CSharpLanguageVersionHelper.getInstance().getHighestVersion();
 		}
-		return CSharpLanguageVersionImpl.convertFromVersion(extension.getVersion());
+		return CSharpLanguageVersionHelper.getInstance().getWrapper(extension.getLanguageVersion());
 	}
 }

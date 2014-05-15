@@ -20,7 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
-import org.mustbe.consulo.csharp.lang.CSharpLanguageVersionImpl;
+import org.mustbe.consulo.csharp.lang.CSharpLanguageVersionWrapper;
+import org.mustbe.consulo.csharp.lang.CSharpLanguageVersionWrapper;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageVersionResolvers;
 import com.intellij.lexer.Lexer;
@@ -46,7 +47,7 @@ public interface CSharpTemplateTokens
 		protected Lexer createBaseLexer(PsiFile file, TemplateLanguageFileViewProvider viewProvider)
 		{
 			final Language baseLanguage = viewProvider.getBaseLanguage();
-			final CSharpLanguageVersionImpl languageVersion = (CSharpLanguageVersionImpl) LanguageVersionResolvers.INSTANCE.forLanguage
+			final CSharpLanguageVersionWrapper languageVersion = (CSharpLanguageVersionWrapper) LanguageVersionResolvers.INSTANCE.forLanguage
 					(baseLanguage).getLanguageVersion(baseLanguage, file);
 
 			List<TextRange> disabledBlocks = Collections.emptyList();

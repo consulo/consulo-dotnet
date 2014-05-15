@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet;
+package org.mustbe.consulo.csharp.module.extension;
 
-import com.intellij.util.ArrayUtil;
+import org.consulo.module.extension.ModuleExtension;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 22.11.13.
+ * @since 15.05.14
  */
-public enum DotNetVersion
+public interface CSharpModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T>
 {
-	_1_0,
-	_1_1,
-	_2_0,
-	_3_0,
-	_3_5,
-	_4_0,
-	_4_5,
-	_4_5_1;
-
-	public static final DotNetVersion LAST = ArrayUtil.getLastElement(values());
+	@NotNull
+	CSharpLanguageVersion getLanguageVersion();
 }

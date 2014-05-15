@@ -19,7 +19,6 @@ package org.mustbe.consulo.dotnet.module.extension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetVersion;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
@@ -33,9 +32,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends ModuleExtensionWithSdk<T>, LayeredModuleExtension<T>
 {
 	boolean isAllowSourceRoots();
-
-	@NotNull
-	DotNetVersion getVersion();
 
 	@NotNull
 	GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile,

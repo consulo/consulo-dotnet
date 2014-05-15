@@ -19,7 +19,6 @@ package org.mustbe.consulo.dotnet.module.extension;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetVersion;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayerImpl;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
@@ -94,13 +93,6 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 	{
 		MainConfigurationLayer currentProfileEx = (MainConfigurationLayer) getCurrentLayer();
 		return currentProfileEx.getInheritableSdk();
-	}
-
-	@NotNull
-	@Override
-	public DotNetVersion getVersion()
-	{
-		return DotNetVersion.LAST;
 	}
 
 	@Nullable

@@ -17,7 +17,7 @@
 package org.mustbe.consulo.csharp.ide.actions;
 
 import org.mustbe.consulo.csharp.CSharpIcons;
-import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
+import org.mustbe.consulo.csharp.module.extension.BaseCSharpModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
@@ -51,7 +51,7 @@ public class NewCSharpFileAction extends CreateFileFromTemplateAction
 				return false;
 			}
 		}
-		return module != null && ModuleUtilCore.getExtension(module, CSharpModuleExtension.class) != null;
+		return module != null && ModuleUtilCore.getExtension(module, BaseCSharpModuleExtension.class) != null;
 	}
 
 	@Override
