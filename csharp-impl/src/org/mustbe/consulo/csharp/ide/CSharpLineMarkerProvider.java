@@ -25,12 +25,22 @@ import org.mustbe.consulo.csharp.ide.lineMarkerProvider.LineMarkerCollector;
 import org.mustbe.consulo.csharp.ide.lineMarkerProvider.OverrideTypeCollector;
 import org.mustbe.consulo.csharp.ide.lineMarkerProvider.PartialTypeCollector;
 import org.mustbe.consulo.csharp.ide.lineMarkerProvider.RecursiveCallCollector;
+import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import com.intellij.codeHighlighting.Pass;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.colors.CodeInsightColors;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.FunctionUtil;
 
 /**
  * @author VISTALL
@@ -44,10 +54,45 @@ public class CSharpLineMarkerProvider implements LineMarkerProvider, DumbAware
 			new RecursiveCallCollector()
 	};
 
+	protected final DaemonCodeAnalyzerSettings daemonCodeAnalyzerSettings;
+	protected final EditorColorsManager editorColorsManager;
+
+	public CSharpLineMarkerProvider(DaemonCodeAnalyzerSettings daemonSettings, EditorColorsManager colorsManager)
+	{
+		daemonCodeAnalyzerSettings = daemonSettings;
+		editorColorsManager = colorsManager;
+	}
+
 	@Nullable
 	@Override
 	public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element)
 	{
+		if(daemonCodeAnalyzerSettings.SHOW_METHOD_SEPARATORS && (element instanceof DotNetQualifiedElement))
+		{
+			if(element.getNode().getTreeParent() == null)
+			{
+				return null;
+			}
+
+			final PsiElement parent = element.getParent();
+			if(!(parent instanceof DotNetMemberOwner))
+			{
+				return null;
+			}
+
+			if(((DotNetMemberOwner) parent).getMembers()[0] == element)
+			{
+				return null;
+			}
+
+			LineMarkerInfo info = new LineMarkerInfo<PsiElement>(element, element.getTextRange(), null, Pass.UPDATE_ALL, FunctionUtil.<Object,
+					String>nullConstant(), null, GutterIconRenderer.Alignment.RIGHT);
+			EditorColorsScheme scheme = editorColorsManager.getGlobalScheme();
+			info.separatorColor = scheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
+			info.separatorPlacement = SeparatorPlacement.TOP;
+			return info;
+		}
+
 		return null;
 	}
 
