@@ -16,7 +16,6 @@
 
 <idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
-		<localInspection implementationClass="org.mustbe.consulo.csharp.ide.codeInsight.unsafeCodeInspection.UnsafeCodeInspection"
-						 displayName="Unsafe code" groupName="C#" enabledByDefault="true" />
+
 	</extensions>
 </idea-plugin>
