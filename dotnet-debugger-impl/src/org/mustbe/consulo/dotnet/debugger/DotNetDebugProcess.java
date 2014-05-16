@@ -67,7 +67,6 @@ public class DotNetDebugProcess extends XDebugProcess
 	{
 		super(session);
 		session.setPauseActionSupported(true);
-		session.setAutoInitBreakpoints(false);
 		myDebugConnectionInfo = state.getDebugConnectionInfo();
 		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo, runProfile);
 		myDebugThread.start();
@@ -76,6 +75,12 @@ public class DotNetDebugProcess extends XDebugProcess
 	public void setExecutionResult(ExecutionResult executionResult)
 	{
 		myResult = executionResult;
+	}
+
+	@Override
+	public boolean checkCanInitBreakpoints()
+	{
+		return false;
 	}
 
 	@Nullable
@@ -92,6 +97,7 @@ public class DotNetDebugProcess extends XDebugProcess
 		return myResult.getExecutionConsole();
 	}
 
+	@NotNull
 	@Override
 	public XBreakpointHandler<?>[] getBreakpointHandlers()
 	{
