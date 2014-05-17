@@ -227,25 +227,31 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 				return;
 			}
 
-			TypeMirror type = value.type();
-
-			assert type != null;
-
-			childrenList.add(new DotNetObjectValueMirrorNode(myDebugContext, myThreadMirror, type, null));
-
-			List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
-			for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
+			try
 			{
-				if(fieldMirror.isStatic())
-				{
-					continue;
-				}
+				TypeMirror type = value.type();
 
-				if(fieldMirror instanceof PropertyMirror && ((PropertyMirror) fieldMirror).isArrayProperty())
+				assert type != null;
+
+				childrenList.add(new DotNetObjectValueMirrorNode(myDebugContext, myThreadMirror, type, null));
+
+				List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
+				for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
 				{
-					continue;
+					if(fieldMirror.isStatic())
+					{
+						continue;
+					}
+
+					if(fieldMirror instanceof PropertyMirror && ((PropertyMirror) fieldMirror).isArrayProperty())
+					{
+						continue;
+					}
+					childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldMirror, myThreadMirror, (ObjectValueMirror) value));
 				}
-				childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldMirror, myThreadMirror, (ObjectValueMirror) value));
+			}
+			catch(InvalidObjectException ignored)
+			{
 			}
 		}
 		node.addChildren(childrenList, true);
