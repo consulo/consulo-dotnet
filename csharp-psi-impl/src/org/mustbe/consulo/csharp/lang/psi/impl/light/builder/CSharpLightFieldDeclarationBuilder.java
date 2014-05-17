@@ -107,11 +107,7 @@ public class CSharpLightFieldDeclarationBuilder extends CSharpLightVariableBuild
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifierWithMask modifier)
 	{
-		if(modifier == DotNetModifierWithMask.STATIC)
-		{
-			modifier = CSharpModifier.STATIC;
-		}
-		return myModifiers.contains(modifier);
+		return myModifiers.contains(CSharpModifier.as(modifier));
 	}
 
 	public void addModifier(DotNetModifierWithMask modifierWithMask)

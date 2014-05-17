@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 
 /**
@@ -47,5 +48,23 @@ public enum CSharpModifier implements DotNetModifierWithMask
 	public int mask()
 	{
 		return myMask;
+	}
+
+	@NotNull
+	public static CSharpModifier as(DotNetModifierWithMask modifierWithMask)
+	{
+		if(modifierWithMask == DotNetModifierWithMask.STATIC)
+		{
+			return CSharpModifier.STATIC;
+		}
+
+		if(modifierWithMask instanceof CSharpModifier)
+		{
+			return (CSharpModifier) modifierWithMask;
+		}
+		else
+		{
+			throw new IllegalArgumentException(modifierWithMask + " is cant be casted to CSharpModifier");
+		}
 	}
 }

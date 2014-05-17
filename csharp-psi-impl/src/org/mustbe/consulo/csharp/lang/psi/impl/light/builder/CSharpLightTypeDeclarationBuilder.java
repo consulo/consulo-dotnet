@@ -173,11 +173,7 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifierWithMask modifier)
 	{
-		if(modifier == DotNetModifierWithMask.STATIC)
-		{
-			modifier = CSharpModifier.STATIC;
-		}
-		return myModifiers.contains(modifier);
+		return myModifiers.contains(CSharpModifier.as(modifier));
 	}
 
 	@Nullable
