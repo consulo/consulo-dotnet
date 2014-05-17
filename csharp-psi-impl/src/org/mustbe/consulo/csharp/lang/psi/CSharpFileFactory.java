@@ -19,10 +19,12 @@ package org.mustbe.consulo.csharp.lang.psi;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpExpressionStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFragmentedFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -90,6 +92,13 @@ public class CSharpFileFactory
 		return field.getNameIdentifier();
 	}
 
+	public static DotNetExpression createExpression(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
+	{
+		DotNetStatement statement = createStatement(project, scope, text);
+		assert statement instanceof CSharpExpressionStatementImpl;
+		return ((CSharpExpressionStatementImpl) statement).getExpression();
+	}
+
 	public static DotNetStatement createStatement(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
 	{
 		val clazz = "class _Dummy { " +
@@ -102,7 +111,7 @@ public class CSharpFileFactory
 
 		DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) psiFile.getMembers()[0];
 		CSharpMethodDeclaration dotNetNamedElement = (CSharpMethodDeclaration) typeDeclaration.getMembers()[0];
-		return ((CSharpBlockStatementImpl)dotNetNamedElement.getCodeBlock()).getStatements()[0];
+		return ((CSharpBlockStatementImpl) dotNetNamedElement.getCodeBlock()).getStatements()[0];
 	}
 
 	public static DotNetTypeDeclaration createTypeDeclaration(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
