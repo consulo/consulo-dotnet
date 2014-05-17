@@ -223,7 +223,7 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	public CSharpGenericConstraint[] getGenericConstraints()
 	{
 		CSharpGenericConstraintList genericConstraintList = getGenericConstraintList();
-		return genericConstraintList == null ? CSharpGenericConstraint.EMPTY_ARRAY : genericConstraintList.getGenericConstraintValues();
+		return genericConstraintList == null ? CSharpGenericConstraint.EMPTY_ARRAY : genericConstraintList.getGenericConstraints();
 	}
 
 	@Override

@@ -41,7 +41,7 @@ public class CSharpGenericConstraintListImpl extends CSharpElementImpl implement
 
 	@NotNull
 	@Override
-	public CSharpGenericConstraint[] getGenericConstraintValues()
+	public CSharpGenericConstraint[] getGenericConstraints()
 	{
 		return findChildrenByClass(CSharpGenericConstraint.class);
 	}

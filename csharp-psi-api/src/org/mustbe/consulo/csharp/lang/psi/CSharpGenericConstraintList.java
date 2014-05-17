@@ -26,5 +26,5 @@ import org.mustbe.consulo.dotnet.psi.DotNetElement;
 public interface CSharpGenericConstraintList extends DotNetElement
 {
 	@NotNull
-	CSharpGenericConstraint[] getGenericConstraintValues();
+	CSharpGenericConstraint[] getGenericConstraints();
 }
