@@ -151,7 +151,7 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 			{
 				builder = builder.withItemTextUnderlined(true);
 			}
-			else if(!methodDeclaration.isDelegate())
+			if(!methodDeclaration.isDelegate())
 			{
 				builder = builder.withInsertHandler(new InsertHandler<LookupElement>()
 				{
