@@ -22,6 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySetBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterList;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
+import org.mustbe.consulo.csharp.lang.psi.CSharpReferenceExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpAnonymTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
@@ -71,7 +72,7 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 			if(type instanceof DotNetReferenceType)
 			{
 				DotNetReferenceExpression referenceExpression = ((DotNetReferenceType) type).getReferenceExpression();
-				if(referenceExpression instanceof CSharpReferenceExpressionImpl)
+				if(referenceExpression instanceof CSharpReferenceExpression)
 				{
 					typeRef = ((CSharpReferenceExpressionImpl) referenceExpression).toTypeRef(CSharpReferenceExpressionImpl
 							.ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD, resolveFromParent);
@@ -129,7 +130,7 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 		if(newType instanceof DotNetReferenceType)
 		{
 			DotNetReferenceExpression referenceExpression = ((DotNetReferenceType) newType).getReferenceExpression();
-			if(referenceExpression instanceof CSharpReferenceExpressionImpl)
+			if(referenceExpression instanceof CSharpReferenceExpression)
 			{
 				return referenceExpression.multiResolve(incompleteCode);
 			}

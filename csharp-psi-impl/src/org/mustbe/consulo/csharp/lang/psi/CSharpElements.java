@@ -107,7 +107,7 @@ public interface CSharpElements
 			CSharpMethodCallExpressionImpl.class);
 
 	IElementType CONSTRUCTOR_SUPER_CALL_EXPRESSION = new IElementTypeAsPsiFactory("CONSTRUCTOR_SUPER_CALL_EXPRESSION", CSharpLanguage.INSTANCE,
-			CSharpMethodCallExpressionImpl.class);
+			CSharpConstructorSuperCallImpl.class);
 
 	IElementType CHECKED_EXPRESSION = new IElementTypeAsPsiFactory("CHECKED_EXPRESSION", CSharpLanguage.INSTANCE, CSharpCheckedExpressionImpl.class);
 

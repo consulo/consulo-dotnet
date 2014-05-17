@@ -24,6 +24,7 @@ import org.mustbe.consulo.csharp.ide.codeInsight.actions.ConvertToNormalCallFix;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.*;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpArrayAccessExpressionImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpConstructorSuperCallImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
@@ -381,7 +382,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	private static CSharpMethodCallParameterListOwner findCallOwner(PsiElement element)
 	{
 		PsiElement parent = element.getParent();
-		if(parent instanceof CSharpMethodCallExpressionImpl)
+		if(parent instanceof CSharpMethodCallExpressionImpl || parent instanceof CSharpConstructorSuperCallImpl)
 		{
 			return (CSharpMethodCallParameterListOwner) parent;
 		}

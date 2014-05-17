@@ -63,6 +63,7 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.stubs.StubIndex;
+import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.CommonProcessors;
@@ -144,6 +145,9 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		LABEL
 	}
 
+	private static final TokenSet ourReferenceElements = TokenSet.create(CSharpTokens.THIS_KEYWORD, CSharpTokens.BASE_KEYWORD,
+			CSharpTokens.IDENTIFIER);
+
 	public CSharpReferenceExpressionImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -159,7 +163,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Nullable
 	public PsiElement getReferenceElement()
 	{
-		return findChildByType(CSharpTokens.IDENTIFIER);
+		return findChildByType(ourReferenceElements);
 	}
 
 	@Override
@@ -534,8 +538,22 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				CSharpNamespaceAsElement namespaceAsElement = new CSharpNamespaceAsElement(element.getProject(), qName2, element.getResolveScope());
 				return new ResolveResultWithWeight[]{new ResolveResultWithWeight(namespaceAsElement)};
 			case CONSTRUCTOR:
-				ResolveResultWithWeight[] resolveResult = ((CSharpReferenceExpressionImpl) element).multiResolveImpl(ResolveToKind
-						.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD);
+
+				CSharpReferenceExpressionImpl referenceExpression = (CSharpReferenceExpressionImpl) element;
+
+				ResolveToKind newKind = ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD;
+				PsiElement referenceElement = referenceExpression.getReferenceElement();
+				assert referenceElement != null;
+				if(referenceElement.getNode().getElementType() == CSharpTokens.BASE_KEYWORD)
+				{
+					newKind = ResolveToKind.BASE;
+				}
+				else if(referenceElement.getNode().getElementType() == CSharpTokens.THIS_KEYWORD)
+				{
+					newKind = ResolveToKind.THIS;
+				}
+
+				ResolveResultWithWeight[] resolveResult = referenceExpression.multiResolveImpl(newKind);
 				if(resolveResult.length == 0)
 				{
 					return ResolveResultWithWeight.EMPTY_ARRAY;
@@ -551,7 +569,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					return ResolveResultWithWeight.EMPTY_ARRAY;
 				}
 
-				CSharpMethodCallParameterListOwner parent = (CSharpMethodCallParameterListOwner) element.getParent().getParent();
+				CSharpMethodCallParameterListOwner parent = PsiTreeUtil.getParentOfType(element, CSharpMethodCallParameterListOwner.class);
 
 				val constructorProcessor = new ConstructorProcessor(parent, completion);
 				((DotNetConstructorListOwner) type).processConstructors(new Processor<DotNetConstructorDeclaration>()
@@ -837,6 +855,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		else if(tempElement instanceof CSharpUsingNamespaceStatementImpl)
 		{
 			return ResolveToKind.NAMESPACE;
+		}
+		else if(tempElement instanceof CSharpConstructorSuperCallImpl)
+		{
+			return ResolveToKind.CONSTRUCTOR;
 		}
 		else if(tempElement instanceof CSharpAttributeImpl)
 		{

@@ -510,4 +510,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(referenceExpression);
 	}
+
+	public void visitConstructorSuperCall(CSharpConstructorSuperCallImpl call)
+	{
+		visitElement(call);
+	}
 }
