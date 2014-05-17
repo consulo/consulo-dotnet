@@ -46,7 +46,7 @@ public class CSharpGenericConstraintKeywordValueImpl extends CSharpElementImpl i
 
 	@NotNull
 	@Override
-	public IElementType getElementType()
+	public IElementType getKeywordElementType()
 	{
 		PsiElement element = findNotNullChildByType(ourSet);
 		return element.getNode().getElementType();

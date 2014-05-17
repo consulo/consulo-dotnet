@@ -68,7 +68,7 @@ public class CS0413 extends CompilerCheck<PsiElement>
 				{
 					for(CSharpGenericConstraintValue value : constraint.getGenericConstraintValues())
 					{
-						if(value instanceof CSharpGenericConstraintKeywordValue && ((CSharpGenericConstraintKeywordValue) value).getElementType() ==
+						if(value instanceof CSharpGenericConstraintKeywordValue && ((CSharpGenericConstraintKeywordValue) value).getKeywordElementType() ==
 								CSharpTokens.CLASS_KEYWORD || value instanceof CSharpGenericConstraintTypeValue)
 						{
 							findReferenceOrClass = true;

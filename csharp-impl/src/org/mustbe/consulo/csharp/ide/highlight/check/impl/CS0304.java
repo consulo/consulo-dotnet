@@ -57,7 +57,7 @@ public class CS0304 extends CompilerCheck<CSharpNewExpression>
 				{
 					for(CSharpGenericConstraintValue value : constraint.getGenericConstraintValues())
 					{
-						if(value instanceof CSharpGenericConstraintKeywordValue && ((CSharpGenericConstraintKeywordValue) value).getElementType() ==
+						if(value instanceof CSharpGenericConstraintKeywordValue && ((CSharpGenericConstraintKeywordValue) value).getKeywordElementType() ==
 								CSharpTokens.NEW_KEYWORD)
 						{
 							findNew = true;

@@ -26,5 +26,5 @@ import com.intellij.psi.tree.IElementType;
 public interface CSharpGenericConstraintKeywordValue extends CSharpGenericConstraintValue
 {
 	@NotNull
-	IElementType getElementType();
+	IElementType getKeywordElementType();
 }
