@@ -130,8 +130,8 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 	{
 		if(element instanceof CSharpMethodDeclaration)
 		{
-			CSharpMethodDeclaration methodDeclaration = (CSharpMethodDeclaration) element;
-			DotNetTypeRef[] parameterTypes = methodDeclaration.getParameterTypesForRuntime();
+			final CSharpMethodDeclaration methodDeclaration = (CSharpMethodDeclaration) element;
+			final DotNetTypeRef[] parameterTypes = methodDeclaration.getParameterTypesForRuntime();
 
 			String parameterText = "(" + StringUtil.join(parameterTypes, new Function<DotNetTypeRef, String>()
 			{
@@ -165,7 +165,12 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 						if(elementAt == null || elementAt.getNode().getElementType() != CSharpTokens.LPAR)
 						{
 							insertionContext.getDocument().insertString(offset, "();");
-							insertionContext.getEditor().getCaretModel().moveToOffset(offset + 1);
+							int step = 1; // step inside ()
+							if(parameterTypes.length == 0)
+							{
+								step = 3; // if no parameters step out ();
+							}
+							insertionContext.getEditor().getCaretModel().moveToOffset(offset + step);
 							AutoPopupController.getInstance(insertionContext.getProject()).autoPopupParameterInfo(insertionContext.getEditor(), null);
 
 						}
