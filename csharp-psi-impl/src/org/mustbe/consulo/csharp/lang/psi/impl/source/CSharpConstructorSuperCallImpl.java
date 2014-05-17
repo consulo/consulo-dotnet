@@ -55,7 +55,7 @@ public class CSharpConstructorSuperCallImpl extends CSharpElementImpl implements
 	@Override
 	public PsiElement resolveToCallable()
 	{
-		return null;
+		return getExpression().resolve();
 	}
 
 	@NotNull

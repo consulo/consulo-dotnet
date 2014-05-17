@@ -23,115 +23,19 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNativeTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpNullableTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPointerTypeImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeWrapperWithTypeArgumentsImpl;
-import org.mustbe.consulo.dotnet.psi.*;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Function;
+import org.mustbe.consulo.dotnet.ide.DotNetElementPresentationUtil;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import lombok.val;
 
 /**
  * @author VISTALL
- * @since 29.12.13.
+ * @since 17.05.14
  */
-public class CSharpElementPresentationUtil
+public class CSharpElementPresentationUtil extends DotNetElementPresentationUtil
 {
 	@NotNull
-	public static String formatTypeWithGenericParameters(@NotNull DotNetTypeDeclaration typeDeclaration)
-	{
-		DotNetGenericParameter[] genericParameters = typeDeclaration.getGenericParameters();
-		String name = typeDeclaration.getName();
-		if(genericParameters.length == 0)
-		{
-			return name == null ? "<null>" : name;
-		}
-
-		StringBuilder builder = new StringBuilder();
-		builder.append(name == null ? "<null>" : name);
-		formatTypeGenericParameters(genericParameters, builder);
-		return builder.toString();
-	}
-
-	public static void formatTypeGenericParameters(@NotNull DotNetGenericParameter[] parameters, @NotNull StringBuilder builder)
-	{
-		if(parameters.length > 0)
-		{
-			builder.append("<");
-			builder.append(StringUtil.join(parameters, new Function<DotNetGenericParameter, String>()
-			{
-				@Override
-				public String fun(DotNetGenericParameter dotNetGenericParameter)
-				{
-					return dotNetGenericParameter.getName();
-				}
-			}, ", "));
-			builder.append(">");
-		}
-	}
-
-	@NotNull
-	public static String formatMethod(@NotNull DotNetMethodDeclaration methodDeclaration)
-	{
-		StringBuilder builder = new StringBuilder();
-		builder.append(methodDeclaration.getName());
-		formatTypeGenericParameters(methodDeclaration.getGenericParameters(), builder);
-		formatParameters(methodDeclaration, builder);
-		return builder.toString();
-	}
-
-	@NotNull
-	public static String formatField(@NotNull DotNetFieldDeclaration fieldDeclaration)
-	{
-		StringBuilder builder = new StringBuilder();
-		builder.append(fieldDeclaration.getName());
-		builder.append(":");
-		builder.append(fieldDeclaration.toTypeRef(true).getPresentableText());
-		return builder.toString();
-	}
-
-	private static void formatParameters(@NotNull DotNetMethodDeclaration methodDeclaration, @NotNull StringBuilder builder)
-	{
-		DotNetParameter[] parameters = methodDeclaration.getParameters();
-		if(parameters.length == 0)
-		{
-			builder.append("()");
-		}
-		else
-		{
-			builder.append("(");
-			builder.append(StringUtil.join(parameters, new Function<DotNetParameter, String>()
-			{
-				@Override
-				public String fun(DotNetParameter parameter)
-				{
-					return parameter.getName() + ":" + parameter.toTypeRef(true).getPresentableText();
-				}
-			}, ", "));
-			builder.append(")");
-		}
-
-		if(!(methodDeclaration instanceof DotNetConstructorDeclaration))
-		{
-			builder.append(":").append(methodDeclaration.getReturnTypeRef().getPresentableText());
-		}
-	}
-
-	@NotNull
-	public static String formatGenericParameters(@NotNull DotNetGenericParameterListOwner owner)
-	{
-		DotNetGenericParameter[] genericParameters = owner.getGenericParameters();
-		if(genericParameters.length == 0)
-		{
-			return "";
-		}
-		return "<" + StringUtil.join(genericParameters, new Function<DotNetGenericParameter, String>()
-		{
-			@Override
-			public String fun(DotNetGenericParameter genericParameter)
-			{
-				return genericParameter.getName();
-			}
-		}, ", ") + ">";
-	}
-
 	public static String formatType(DotNetType type)
 	{
 		if(type == null)

@@ -20,7 +20,7 @@ import javax.swing.Icon;
 
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.ide.CSharpElementPresentationUtil;
+import org.mustbe.consulo.dotnet.ide.DotNetElementPresentationUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.ide.IconDescriptorUpdaters;
@@ -50,7 +50,7 @@ public class CSharpQualifiedElementPresentationProvider implements ItemPresentat
 		{
 			if(myDeclaration instanceof DotNetTypeDeclaration)
 			{
-				return CSharpElementPresentationUtil.formatTypeWithGenericParameters((DotNetTypeDeclaration) myDeclaration);
+				return DotNetElementPresentationUtil.formatTypeWithGenericParameters((DotNetTypeDeclaration) myDeclaration);
 			}
 			//FIXME [VISTALL] use org.mustbe.consulo.csharp.ide.projectView.CSharpQElementTreeNode.getPresentableText() ?
 			return myDeclaration.getName();

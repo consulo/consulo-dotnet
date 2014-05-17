@@ -29,6 +29,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
+import org.mustbe.consulo.dotnet.ide.DotNetElementPresentationUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.AutoPopupController;
@@ -205,7 +206,7 @@ public class CSharpLookupElementBuilderImpl extends CSharpLookupElementBuilder
 
 			builder = builder.withTypeText(typeDeclaration.getPresentableParentQName());
 
-			builder = builder.withTailText(CSharpElementPresentationUtil.formatGenericParameters(typeDeclaration), true);
+			builder = builder.withTailText(DotNetElementPresentationUtil.formatGenericParameters(typeDeclaration), true);
 
 			return builder;
 		}

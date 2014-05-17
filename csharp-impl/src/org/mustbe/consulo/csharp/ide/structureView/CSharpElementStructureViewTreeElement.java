@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.ide.CSharpElementPresentationUtil;
+import org.mustbe.consulo.dotnet.ide.DotNetElementPresentationUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.ide.structureView.StructureViewTreeElement;
@@ -64,13 +64,13 @@ public class CSharpElementStructureViewTreeElement extends PsiTreeElementBase<Ps
 	public String getPresentableText()
 	{
 		PsiNamedElement value = getValue();
-		if(value instanceof DotNetMethodDeclaration)
+		if(value instanceof DotNetLikeMethodDeclaration)
 		{
-			return CSharpElementPresentationUtil.formatMethod((DotNetMethodDeclaration) value);
+			return DotNetElementPresentationUtil.formatMethod((DotNetLikeMethodDeclaration) value, DotNetElementPresentationUtil.METHOD_SCALA_LIKE_FULL);
 		}
 		else if(value instanceof DotNetFieldDeclaration)
 		{
-			return CSharpElementPresentationUtil.formatField((DotNetFieldDeclaration) value);
+			return DotNetElementPresentationUtil.formatField((DotNetFieldDeclaration) value);
 		}
 		else if(value instanceof DotNetNamespaceDeclaration)
 		{

@@ -22,11 +22,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.ide.CSharpElementPresentationUtil;
+import org.mustbe.consulo.dotnet.ide.DotNetElementPresentationUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
@@ -99,13 +99,13 @@ public class CSharpQElementTreeNode extends CSharpAbstractElementTreeNode<DotNet
 
 	public static String getPresentableText(PsiNamedElement value)
 	{
-		if(value instanceof DotNetMethodDeclaration)
+		if(value instanceof DotNetLikeMethodDeclaration)
 		{
-			return CSharpElementPresentationUtil.formatMethod((DotNetMethodDeclaration) value);
+			return DotNetElementPresentationUtil.formatMethod((DotNetLikeMethodDeclaration) value, DotNetElementPresentationUtil.METHOD_SCALA_LIKE_FULL);
 		}
 		else if(value instanceof DotNetFieldDeclaration)
 		{
-			return CSharpElementPresentationUtil.formatField((DotNetFieldDeclaration) value);
+			return DotNetElementPresentationUtil.formatField((DotNetFieldDeclaration) value);
 		}
 		else if(value instanceof DotNetNamespaceDeclaration)
 		{
@@ -113,7 +113,7 @@ public class CSharpQElementTreeNode extends CSharpAbstractElementTreeNode<DotNet
 		}
 		else if(value instanceof DotNetTypeDeclaration)
 		{
-			return CSharpElementPresentationUtil.formatTypeWithGenericParameters((DotNetTypeDeclaration) value);
+			return DotNetElementPresentationUtil.formatTypeWithGenericParameters((DotNetTypeDeclaration) value);
 		}
 		else
 		{
