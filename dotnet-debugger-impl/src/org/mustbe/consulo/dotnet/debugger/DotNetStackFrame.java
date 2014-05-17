@@ -18,11 +18,14 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import java.io.File;
 
+import javax.swing.Icon;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -85,11 +88,27 @@ public class DotNetStackFrame extends XStackFrame
 	@Override
 	public void customizePresentation(ColoredTextContainer component)
 	{
-		component.setIcon(AllIcons.Nodes.Method);
-
 		Location location = myFrame.location();
+		MethodMirror method = location.method();
 
-		component.append(location.method().name() + "()", SimpleTextAttributes.REGULAR_ATTRIBUTES);
+		String name = method.name();
+		Icon icon = AllIcons.Nodes.Method;
+		if(name.equals(XStubUtil.CONSTRUCTOR_NAME) || name.equals(XStubUtil.STATIC_CONSTRUCTOR_NAME))
+		{
+			name = method.declaringType().name() + "()";
+		}
+		else if(name.equals(XStubUtil.STATIC_CONSTRUCTOR_NAME))
+		{
+			name = method.declaringType().name();
+			icon = AllIcons.Nodes.Static;
+		}
+		else
+		{
+			name = method.name() + "()";
+		}
+
+		component.setIcon(icon);
+		component.append(name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
 
 		StringBuilder builder = new StringBuilder();
 		String fileName = location.sourcePath();
