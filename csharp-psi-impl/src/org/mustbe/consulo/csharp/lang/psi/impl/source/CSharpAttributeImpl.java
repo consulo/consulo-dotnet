@@ -76,6 +76,14 @@ public class CSharpAttributeImpl extends CSharpElementImpl implements DotNetAttr
 		return findChildByClass(CSharpMethodCallParameterList.class);
 	}
 
+	@Override
+	@NotNull
+	public DotNetExpression[] getParameterExpressions()
+	{
+		CSharpMethodCallParameterList parameterList = getParameterList();
+		return parameterList == null ? DotNetExpression.EMPTY_ARRAY : parameterList.getExpressions();
+	}
+
 	@Nullable
 	@Override
 	public PsiElement resolveToCallable()

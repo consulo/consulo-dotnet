@@ -24,6 +24,8 @@ import org.mustbe.consulo.csharp.ide.codeInsight.actions.ConvertToNormalCallFix;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterListOwner;
+import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
@@ -47,6 +49,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
@@ -333,8 +336,8 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 
 	private static ResolveError createResolveError(PsiElement element, PsiElement resolveElement)
 	{
-		PsiElement parent = element.getParent();
-		if(parent instanceof CSharpMethodCallExpressionImpl)
+		CSharpMethodCallParameterListOwner callOwner = findCallOwner(element);
+		if(callOwner != null)
 		{
 			StringBuilder builder = new StringBuilder();
 			builder.append("<b>Expected:</b> (");
@@ -371,7 +374,7 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			}
 			builder.append(")<br>");
 			builder.append("<b>Found:</b> (");
-			DotNetExpression[] parameterExpressions = ((CSharpMethodCallExpressionImpl) parent).getParameterExpressions();
+			DotNetExpression[] parameterExpressions = callOwner.getParameterExpressions();
 			for(int i = 0; i < parameterExpressions.length; i++)
 			{
 				if(i != 0)
@@ -383,7 +386,21 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			}
 			builder.append(")");
 
-			return new ResolveError("", builder.toString(), ((CSharpMethodCallExpressionImpl) parent).getParameterList());
+			return new ResolveError("", builder.toString(), callOwner.getParameterList());
+		}
+		return null;
+	}
+
+	private static CSharpMethodCallParameterListOwner findCallOwner(PsiElement element)
+	{
+		PsiElement parent = element.getParent();
+		if(parent instanceof CSharpMethodCallExpressionImpl)
+		{
+			return (CSharpMethodCallParameterListOwner) parent;
+		}
+		else if(parent instanceof DotNetReferenceType && parent.getParent() instanceof CSharpNewExpression)
+		{
+			return (CSharpMethodCallParameterListOwner) parent.getParent();
 		}
 		return null;
 	}

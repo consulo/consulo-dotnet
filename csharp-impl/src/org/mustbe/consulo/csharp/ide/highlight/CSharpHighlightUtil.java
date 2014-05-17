@@ -30,6 +30,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDefStatementImpl
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeUtil;
+import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
@@ -93,6 +94,12 @@ public class CSharpHighlightUtil
 				key = CSharpHighlightKey.CLASS_NAME;
 			}
 		}
+		else if(element instanceof DotNetConstructorDeclaration)
+		{
+			PsiElement parent = element.getParent();
+			highlightNamed(holder, parent, target);
+			return null;
+		}
 		else if(element instanceof DotNetGenericParameter || element instanceof CSharpTypeDefStatementImpl)
 		{
 			key = CSharpHighlightKey.GENERIC_PARAMETER_NAME;
@@ -109,7 +116,7 @@ public class CSharpHighlightUtil
 			}
 			else
 			{
-				key = ((DotNetMethodDeclaration) element).hasModifier(CSharpModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
+				key = ((DotNetModifierListOwner) element).hasModifier(CSharpModifier.STATIC) ? CSharpHighlightKey.STATIC_METHOD : CSharpHighlightKey
 						.INSTANCE_METHOD;
 			}
 		}

@@ -221,7 +221,7 @@ public class CSharpElementVisitor extends PsiElementVisitor
 		visitElement(expression);
 	}
 
-	public void visitNewExpression(CSharpNewExpressionImpl expression)
+	public void visitNewExpression(CSharpNewExpression expression)
 	{
 		visitElement(expression);
 	}

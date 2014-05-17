@@ -17,21 +17,18 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.light.builder;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpConstructorDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
- * @since 08.05.14
+ * @since 17.05.14
  */
-public class CSharpLightMethodDeclarationBuilder extends CSharpLightLikeMethodDeclarationBuilder<CSharpLightMethodDeclarationBuilder> implements
-		CSharpMethodDeclaration
+public class CSharpLightConstructorDeclarationBuilder extends CSharpLightLikeMethodDeclarationBuilder<CSharpLightConstructorDeclarationBuilder>
+		implements CSharpConstructorDeclaration
 {
-	public CSharpLightMethodDeclarationBuilder(Project project)
+	public CSharpLightConstructorDeclarationBuilder(Project project)
 	{
 		super(project);
 	}
@@ -39,32 +36,12 @@ public class CSharpLightMethodDeclarationBuilder extends CSharpLightLikeMethodDe
 	@Override
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
-		visitor.visitMethodDeclaration(this);
+		visitor.visitConstructorDeclaration(this);
 	}
 
 	@Override
-	public boolean isDelegate()
+	public boolean isDeConstructor()
 	{
 		return false;
-	}
-
-	@Override
-	public boolean isOperator()
-	{
-		return false;
-	}
-
-	@Nullable
-	@Override
-	public IElementType getOperatorElementType()
-	{
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return null;
 	}
 }

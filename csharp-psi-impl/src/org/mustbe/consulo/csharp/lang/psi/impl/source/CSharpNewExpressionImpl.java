@@ -25,6 +25,9 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpAnonymTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
@@ -64,7 +67,25 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 		}
 		else
 		{
-			DotNetTypeRef typeRef = type.toTypeRef();
+			DotNetTypeRef typeRef = null;
+			if(type instanceof DotNetReferenceType)
+			{
+				DotNetReferenceExpression referenceExpression = ((DotNetReferenceType) type).getReferenceExpression();
+				if(referenceExpression instanceof CSharpReferenceExpressionImpl)
+				{
+					typeRef = ((CSharpReferenceExpressionImpl) referenceExpression).toTypeRef(CSharpReferenceExpressionImpl
+							.ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD, resolveFromParent);
+				}
+				else
+				{
+					typeRef = DotNetTypeRef.ERROR_TYPE;
+				}
+			}
+			else
+			{
+				typeRef = type.toTypeRef();
+			}
+
 			for(PsiElement ignored : findChildrenByType(CSharpTokens.LBRACKET))
 			{
 				typeRef = new CSharpArrayTypeRef(typeRef, 0);
@@ -104,6 +125,23 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 	@Override
 	public ResolveResult[] multiResolve(boolean incompleteCode)
 	{
+		DotNetType newType = getNewType();
+		if(newType instanceof DotNetReferenceType)
+		{
+			DotNetReferenceExpression referenceExpression = ((DotNetReferenceType) newType).getReferenceExpression();
+			if(referenceExpression instanceof CSharpReferenceExpressionImpl)
+			{
+				return referenceExpression.multiResolve(incompleteCode);
+			}
+		}
 		return ResolveResult.EMPTY_ARRAY;
+	}
+
+	@NotNull
+	@Override
+	public DotNetExpression[] getParameterExpressions()
+	{
+		CSharpMethodCallParameterList parameterList = getParameterList();
+		return parameterList == null ? DotNetExpression.EMPTY_ARRAY : parameterList.getExpressions();
 	}
 }

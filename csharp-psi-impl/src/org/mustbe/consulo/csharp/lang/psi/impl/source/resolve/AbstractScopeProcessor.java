@@ -79,6 +79,11 @@ public abstract class AbstractScopeProcessor extends UserDataHolderBase implemen
 		myElements.addAll(processor.myElements);
 	}
 
+	public boolean isEmpty()
+	{
+		return myElements.isEmpty();
+	}
+
 	@NotNull
 	public ResolveResultWithWeight[] toResolveResults()
 	{

@@ -28,6 +28,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpVisibilityUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.AbstractScopeProcessor;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.ConstructorProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.ExtensionResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MemberResolveScopeProcessor;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.MethodAcceptorImpl;
@@ -86,7 +87,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		@Override
 		public ResolveResult[] resolve(@NotNull CSharpReferenceExpressionImpl ref, boolean incompleteCode)
 		{
-			ResolveResult[] resolveResults = ref.multiResolveImpl();
+			ResolveResult[] resolveResults = ref.multiResolveImpl(ref.kind());
 			if(!incompleteCode)
 			{
 				return resolveResults;
@@ -135,6 +136,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		NATIVE_TYPE_WRAPPER,
 		ARRAY_METHOD,
 		TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD,
+		CONSTRUCTOR,
 		ANY_MEMBER,
 		FIELD_OR_PROPERTY,
 		THIS,
@@ -207,10 +209,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return ResolveCache.getInstance(getProject()).resolveWithCaching(this, OurResolver.INSTANCE, false, incompleteCode);
 	}
 
-	private ResolveResult[] multiResolveImpl()
+	private ResolveResultWithWeight[] multiResolveImpl(ResolveToKind kind)
 	{
-		ResolveToKind kind = kind();
-
 		CSharpExpressionWithParameters p = null;
 		PsiElement parent = getParent();
 		if(parent instanceof CSharpExpressionWithParameters)
@@ -220,10 +220,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return multiResolve0(kind, p, this);
 	}
 
-	public static <T extends PsiQualifiedReference & PsiElement> ResolveResult[] multiResolve0(
-			final ResolveToKind kind,
-			final CSharpExpressionWithParameters parameters,
-			final T e)
+	public static <T extends PsiQualifiedReference & PsiElement> ResolveResultWithWeight[] multiResolve0(
+			final ResolveToKind kind, final CSharpExpressionWithParameters parameters, final T e)
 	{
 		Condition<PsiNamedElement> namedElementCondition;
 		@SuppressWarnings("unchecked") WeightProcessor<PsiNamedElement> weightProcessor = WeightProcessor.MAXIMUM;
@@ -233,7 +231,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				val referenceName = e.getReferenceName();
 				if(referenceName == null)
 				{
-					return ResolveResult.EMPTY_ARRAY;
+					return ResolveResultWithWeight.EMPTY_ARRAY;
 				}
 				namedElementCondition = new Condition<PsiNamedElement>()
 				{
@@ -268,7 +266,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				val referenceName2 = e.getReferenceName();
 				if(referenceName2 == null)
 				{
-					return ResolveResult.EMPTY_ARRAY;
+					return ResolveResultWithWeight.EMPTY_ARRAY;
 				}
 				val text2 = StringUtil.strip(referenceName2, CharFilter.NOT_WHITESPACE_FILTER);
 				namedElementCondition = new Condition<PsiNamedElement>()
@@ -534,6 +532,37 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				String qName2 = StringUtil.strip(element.getText(), CharFilter.NOT_WHITESPACE_FILTER);
 				CSharpNamespaceAsElement namespaceAsElement = new CSharpNamespaceAsElement(element.getProject(), qName2, element.getResolveScope());
 				return new ResolveResultWithWeight[]{new ResolveResultWithWeight(namespaceAsElement)};
+			case CONSTRUCTOR:
+				ResolveResultWithWeight[] resolveResult = ((CSharpReferenceExpressionImpl) element).multiResolveImpl(ResolveToKind
+						.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD);
+				if(resolveResult.length == 0)
+				{
+					return ResolveResultWithWeight.EMPTY_ARRAY;
+				}
+				ResolveResultWithWeight resolveResultWithWeight = resolveResult[0];
+				if(!resolveResultWithWeight.isGoodResult())
+				{
+					return ResolveResultWithWeight.EMPTY_ARRAY;
+				}
+				PsiElement type = resolveResultWithWeight.getElement();
+				if(!(type instanceof DotNetTypeDeclaration))
+				{
+					return ResolveResultWithWeight.EMPTY_ARRAY;
+				}
+
+				CSharpMethodCallParameterListOwner parent = (CSharpMethodCallParameterListOwner) element.getParent().getParent();
+
+				val constructorProcessor = new ConstructorProcessor(parent, completion);
+				for(DotNetNamedElement m : ((DotNetTypeDeclaration) type).getMembers())
+				{
+					if(!constructorProcessor.execute(m, null))
+					{
+						return constructorProcessor.toResolveResults();
+					}
+				}
+
+				constructorProcessor.executeDefault((DotNetTypeDeclaration) type);
+				return constructorProcessor.toResolveResults();
 			case ATTRIBUTE:
 				/*condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);
 				val resolveResults = processAnyMember(qualifier, condition, named);
@@ -796,6 +825,11 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 		else if(tempElement instanceof DotNetReferenceType)
 		{
+			PsiElement parentOfParent = tempElement.getParent();
+			if(parentOfParent instanceof CSharpMethodCallParameterListOwner)
+			{
+				return ResolveToKind.CONSTRUCTOR;
+			}
 			return ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD;
 		}
 		else if(tempElement instanceof CSharpUsingNamespaceStatementImpl)
@@ -953,15 +987,30 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
-		ResolveToKind kind = kind();
-		switch(kind)
+		return toTypeRef(kind(), resolveFromParent);
+	}
+
+	@NotNull
+	public DotNetTypeRef toTypeRef(ResolveToKind resolveToKind, boolean resolveFromParent)
+	{
+		switch(resolveToKind)
 		{
 			case BASE:
 				return resolveBaseTypeRef();
 		}
 
-		PsiElement resolve = resolve();
-		return toTypeRef(resolve);
+		ResolveResultWithWeight[] resolveResults = multiResolveImpl(resolveToKind);
+		if(resolveResults.length == 0)
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+
+		ResolveResultWithWeight resolveResult = resolveResults[0];
+		if(!resolveResult.isGoodResult())
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+		return toTypeRef(resolveResult.getElement());
 	}
 
 	@NotNull

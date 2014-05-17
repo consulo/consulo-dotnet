@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpExpressionWithParameters;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveResult;
@@ -25,7 +26,7 @@ import com.intellij.psi.ResolveResult;
  * @author VISTALL
  * @since 12.05.14
  */
-public interface CSharpMethodCallParameterListOwner extends DotNetElement
+public interface CSharpMethodCallParameterListOwner extends DotNetElement, CSharpExpressionWithParameters
 {
 	@Nullable
 	CSharpMethodCallParameterList getParameterList();
