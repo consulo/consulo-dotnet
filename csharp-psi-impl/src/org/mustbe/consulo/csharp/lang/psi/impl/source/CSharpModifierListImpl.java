@@ -32,8 +32,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeList;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -104,7 +104,7 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 	}
 
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifierWithMask modifier)
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		if(hasModifierInTree(modifier))
 		{
@@ -129,7 +129,7 @@ public class CSharpModifierListImpl extends CSharpElementImpl implements DotNetM
 	}
 
 	@Override
-	public boolean hasModifierInTree(@NotNull DotNetModifierWithMask modifier)
+	public boolean hasModifierInTree(@NotNull DotNetModifier modifier)
 	{
 		IElementType iElementType = ourModifiers.get(CSharpModifier.as(modifier));
 		return iElementType != null && findChildByType(iElementType) != null;

@@ -20,24 +20,16 @@ package org.mustbe.consulo.dotnet.psi;
  * @author VISTALL
  * @since 12.03.14
  */
-public interface DotNetModifierWithMask
+public interface DotNetModifier
 {
-	DotNetModifierWithMask STATIC = new DotNetModifierWithMask()
+	DotNetModifier STATIC = new DotNetModifier()
 	{
 		@Override
 		public String name()
 		{
 			return "static";
 		}
-
-		@Override
-		public int mask()
-		{
-			return -1;
-		}
 	};
 
 	String name();
-
-	int mask();
 }

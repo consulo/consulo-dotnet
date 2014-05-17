@@ -200,7 +200,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 			return;
 		}
 
-		for(DotNetModifierWithMask modifier : modifierList.getModifiers())
+		for(DotNetModifier modifier : modifierList.getModifiers())
 		{
 			builder.append(modifier.name().toLowerCase()).append(" ");
 		}

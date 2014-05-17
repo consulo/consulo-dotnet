@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet;
 
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -45,7 +45,7 @@ public class DotNetRunUtil
 
 	public static boolean isEntryPoint(DotNetMethodDeclaration methodDeclaration)
 	{
-		if(!methodDeclaration.hasModifier(DotNetModifierWithMask.STATIC))
+		if(!methodDeclaration.hasModifier(DotNetModifier.STATIC))
 		{
 			return false;
 		}

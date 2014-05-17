@@ -17,13 +17,13 @@
 package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 
 /**
 * @author VISTALL
 * @since 06.01.14.
 */
-public enum CSharpModifier implements DotNetModifierWithMask
+public enum CSharpModifier implements DotNetModifier
 {
 	PUBLIC,
 	PRIVATE,
@@ -44,16 +44,15 @@ public enum CSharpModifier implements DotNetModifierWithMask
 		myMask = 1 << ordinal();
 	}
 
-	@Override
 	public int mask()
 	{
 		return myMask;
 	}
 
 	@NotNull
-	public static CSharpModifier as(DotNetModifierWithMask modifierWithMask)
+	public static CSharpModifier as(DotNetModifier modifierWithMask)
 	{
-		if(modifierWithMask == DotNetModifierWithMask.STATIC)
+		if(modifierWithMask == DotNetModifier.STATIC)
 		{
 			return CSharpModifier.STATIC;
 		}

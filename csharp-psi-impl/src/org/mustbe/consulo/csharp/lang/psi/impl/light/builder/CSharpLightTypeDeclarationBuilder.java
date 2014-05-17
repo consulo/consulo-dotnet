@@ -27,8 +27,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
@@ -54,7 +54,7 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	}
 
 	private List<DotNetQualifiedElement> myMembers = new ArrayList<DotNetQualifiedElement>();
-	private List<DotNetModifierWithMask> myModifiers = new ArrayList<DotNetModifierWithMask>();
+	private List<DotNetModifier> myModifiers = new ArrayList<DotNetModifier>();
 	private Type myType = Type.DEFAULT;
 	private String myParentQName;
 
@@ -171,7 +171,7 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	}
 
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifierWithMask modifier)
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		return myModifiers.contains(CSharpModifier.as(modifier));
 	}
@@ -220,7 +220,7 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 		return this;
 	}
 
-	public CSharpLightTypeDeclarationBuilder addModifier(DotNetModifierWithMask modifierWithMask)
+	public CSharpLightTypeDeclarationBuilder addModifier(DotNetModifier modifierWithMask)
 	{
 		myModifiers.add(modifierWithMask);
 		return this;

@@ -21,9 +21,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.MemberStub;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
@@ -57,7 +57,7 @@ public abstract class CSharpStubMemberImpl<S extends MemberStub<?>> extends CSha
 	}
 
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifierWithMask modifier)
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		S stub = getStub();
 		if(stub != null)

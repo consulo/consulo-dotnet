@@ -24,8 +24,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariableDeclarationStatement;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -67,7 +67,7 @@ public class CSharpLocalVariableImpl extends CSharpVariableImpl implements CShar
 	}
 
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifierWithMask modifier)
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		return false;
 	}

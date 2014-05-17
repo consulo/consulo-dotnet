@@ -26,8 +26,8 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierWithMask;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
@@ -46,7 +46,7 @@ import com.intellij.util.containers.ContainerUtil;
 public class CSharpLightMethodDeclarationBuilder extends CSharpLightNamedElementBuilder<CSharpLightMethodDeclarationBuilder> implements
 		CSharpMethodDeclaration
 {
-	private List<DotNetModifierWithMask> myModifiers = new ArrayList<DotNetModifierWithMask>();
+	private List<DotNetModifier> myModifiers = new ArrayList<DotNetModifier>();
 	private List<DotNetParameter> myParameters = new ArrayList<DotNetParameter>();
 	private String myParentQName;
 	private DotNetTypeRef myReturnType;
@@ -123,7 +123,7 @@ public class CSharpLightMethodDeclarationBuilder extends CSharpLightNamedElement
 	}
 
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifierWithMask modifier)
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		return myModifiers.contains(CSharpModifier.as(modifier));
 	}
@@ -209,7 +209,7 @@ public class CSharpLightMethodDeclarationBuilder extends CSharpLightNamedElement
 	}
 
 	@NotNull
-	public CSharpLightMethodDeclarationBuilder addModifier(DotNetModifierWithMask modifierWithMask)
+	public CSharpLightMethodDeclarationBuilder addModifier(DotNetModifier modifierWithMask)
 	{
 		myModifiers.add(modifierWithMask);
 		return this;
