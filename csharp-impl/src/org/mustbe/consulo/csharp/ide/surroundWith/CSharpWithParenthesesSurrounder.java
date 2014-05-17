@@ -21,7 +21,7 @@ public class CSharpWithParenthesesSurrounder implements Surrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return "(expr)";
+		return "(expression)";
 	}
 
 	@Override
