@@ -22,12 +22,14 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
+import org.mustbe.consulo.csharp.lang.psi.CSharpElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpLambdaExpressionImpl;
 import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
@@ -137,6 +139,22 @@ public class CS1644 extends CompilerCheck<PsiElement>
 				public PsiElement fun(PsiElement element)
 				{
 					if(element instanceof CSharpLambdaExpressionImpl)
+					{
+						return element;
+					}
+					return null;
+				}
+			}));
+			add(new Feature("generics", CSharpLanguageVersion._2_0, new Function<PsiElement, PsiElement>()
+			{
+				@Override
+				public PsiElement fun(PsiElement element)
+				{
+					if(element instanceof CSharpGenericParameterListImpl)
+					{
+						return element;
+					}
+					else if(element.getNode() != null && element.getNode().getElementType() == CSharpElements.TYPE_ARGUMENTS)
 					{
 						return element;
 					}
