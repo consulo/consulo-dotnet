@@ -61,22 +61,33 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		{
 			return generateQuickVariableInfo((DotNetVariable) element);
 		}
-		else if(element instanceof DotNetMethodDeclaration)
+		else if(element instanceof DotNetLikeMethodDeclaration)
 		{
-			return generateQuickMethodDeclarationInfo((DotNetMethodDeclaration) element);
+			return generateQuickLikeMethodDeclarationInfo((DotNetLikeMethodDeclaration) element);
 		}
 		return null;
 	}
 
-	private static String generateQuickMethodDeclarationInfo(DotNetMethodDeclaration element)
+	private static String generateQuickLikeMethodDeclarationInfo(DotNetLikeMethodDeclaration element)
 	{
 		StringBuilder builder = new StringBuilder();
 
 		appendModifiers(element, builder);
 
-		builder.append(generateLinksForType(element.getReturnTypeRef(), element));
-		builder.append(" ");
-		builder.append(element.getName());
+		if(element instanceof DotNetConstructorDeclaration)
+		{
+			if(((DotNetConstructorDeclaration) element).isDeConstructor())
+			{
+				builder.append("~");
+			}
+			builder.append(element.getName());
+		}
+		else
+		{
+			builder.append(generateLinksForType(element.getReturnTypeRef(), element));
+			builder.append(" ");
+			builder.append(element.getName());
+		}
 		builder.append("(");
 		builder.append(StringUtil.join(element.getParameters(), new Function<DotNetParameter, String>()
 		{
