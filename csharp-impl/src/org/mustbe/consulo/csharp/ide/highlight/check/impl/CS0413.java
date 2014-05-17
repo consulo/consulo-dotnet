@@ -17,17 +17,19 @@
 package org.mustbe.consulo.csharp.ide.highlight.check.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraint;
 import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintKeywordValue;
 import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintOwner;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintTypeValue;
 import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintValue;
-import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpAsExpressionImpl;
 import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 
@@ -35,21 +37,30 @@ import com.intellij.psi.util.PsiTreeUtil;
  * @author VISTALL
  * @since 17.05.14
  */
-public class CS0304 extends CompilerCheck<CSharpNewExpression>
+public class CS0413 extends CompilerCheck<PsiElement>
 {
+	@Nullable
 	@Override
-	public CompilerCheckResult check(@NotNull CSharpLanguageVersion languageVersion, @NotNull CSharpNewExpression element)
+	public CompilerCheckResult check(
+			@NotNull CSharpLanguageVersion languageVersion, @NotNull PsiElement element)
 	{
-		PsiElement resolve = element.toTypeRef(false).resolve(element);
-		if(resolve instanceof DotNetGenericParameter)
+		if(element instanceof CSharpAsExpressionImpl)
 		{
+			DotNetTypeRef typeRef = ((CSharpAsExpressionImpl) element).toTypeRef(false);
+
+			PsiElement resolve = typeRef.resolve(element);
+			if(!(resolve instanceof DotNetGenericParameter))
+			{
+				return null;
+			}
+
 			DotNetGenericParameterListOwner parent = PsiTreeUtil.getParentOfType(resolve, DotNetGenericParameterListOwner.class);
 			if(!(parent instanceof CSharpGenericConstraintOwner))
 			{
 				return null;
 			}
 
-			boolean findNew = false;
+			boolean findReferenceOrClass = false;
 			for(CSharpGenericConstraint constraint : ((CSharpGenericConstraintOwner) parent).getGenericConstraints())
 			{
 				DotNetGenericParameter genericParameter = constraint.resolve();
@@ -58,9 +69,9 @@ public class CS0304 extends CompilerCheck<CSharpNewExpression>
 					for(CSharpGenericConstraintValue value : constraint.getGenericConstraintValues())
 					{
 						if(value instanceof CSharpGenericConstraintKeywordValue && ((CSharpGenericConstraintKeywordValue) value).getElementType() ==
-								CSharpTokens.NEW_KEYWORD)
+								CSharpTokens.CLASS_KEYWORD || value instanceof CSharpGenericConstraintTypeValue)
 						{
-							findNew = true;
+							findReferenceOrClass = true;
 							break;
 						}
 					}
@@ -68,11 +79,9 @@ public class CS0304 extends CompilerCheck<CSharpNewExpression>
 				}
 			}
 
-			if(!findNew)
+			if(!findReferenceOrClass)
 			{
-				DotNetType newType = element.getNewType();
-				assert newType != null;
-				return result(newType, ((DotNetGenericParameter) resolve).getName());
+				return result(element, "as", ((DotNetGenericParameter) resolve).getName());
 			}
 		}
 		return null;
