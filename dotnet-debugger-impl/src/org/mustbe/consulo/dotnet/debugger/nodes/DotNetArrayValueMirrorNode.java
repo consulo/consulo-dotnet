@@ -16,16 +16,12 @@
 
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
-import com.intellij.icons.AllIcons;
 import mono.debugger.ArrayValueMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
-import mono.debugger.TypeTag;
 import mono.debugger.Value;
 
 /**
@@ -51,30 +47,6 @@ public class DotNetArrayValueMirrorNode extends DotNetAbstractVariableMirrorNode
 		myArrayValueMirror = arrayValueMirror;
 		myIndex = index;
 		myValue = arrayValueMirror.get(index);
-	}
-
-	@NotNull
-	@Override
-	public Icon getIconForVariable()
-	{
-		TypeMirror typeOfVariable = getTypeOfVariable();
-		if(typeOfVariable == null)
-		{
-			return AllIcons.Debugger.Value;
-		}
-
-		if(typeOfVariable.isArray())
-		{
-			return AllIcons.Debugger.Db_array;
-		}
-
-		TypeTag typeTag = typeTag();
-		if(typeTag != null && typeTag != TypeTag.String)
-		{
-			return AllIcons.Debugger.Db_primitive;
-		}
-
-		return AllIcons.Debugger.Value;
 	}
 
 	@Nullable

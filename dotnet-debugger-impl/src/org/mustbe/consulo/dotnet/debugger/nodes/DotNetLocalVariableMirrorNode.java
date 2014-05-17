@@ -16,17 +16,13 @@
 
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
-import com.intellij.icons.AllIcons;
 import mono.debugger.LocalVariableMirror;
 import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.StackFrameMirror;
 import mono.debugger.TypeMirror;
-import mono.debugger.TypeTag;
 import mono.debugger.Value;
 import mono.debugger.util.ImmutablePair;
 
@@ -51,25 +47,6 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 	public TypeMirror getTypeOfVariable()
 	{
 		return myLocal.type();
-	}
-
-	@NotNull
-	@Override
-	public Icon getIconForVariable()
-	{
-		TypeMirror typeOfVariable = getTypeOfVariable();
-		if(typeOfVariable.isArray())
-		{
-			return AllIcons.Debugger.Db_array;
-		}
-
-		TypeTag typeTag = typeTag();
-		if(typeTag != null && typeTag != TypeTag.String)
-		{
-			return AllIcons.Debugger.Db_primitive;
-		}
-
-		return AllIcons.Nodes.Variable;
 	}
 
 	@Nullable

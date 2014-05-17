@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
@@ -154,7 +155,27 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	}
 
 	@NotNull
-	public abstract Icon getIconForVariable();
+	public Icon getIconForVariable()
+	{
+		TypeMirror typeOfVariable = getTypeOfVariable();
+		if(typeOfVariable == null)
+		{
+			return AllIcons.Debugger.Value;
+		}
+
+		if(typeOfVariable.isArray())
+		{
+			return AllIcons.Debugger.Db_array;
+		}
+
+		TypeTag typeTag = typeTag();
+		if(typeTag != null && typeTag != TypeTag.String)
+		{
+			return AllIcons.Debugger.Db_primitive;
+		}
+
+		return AllIcons.Debugger.Value;
+	}
 
 	@Nullable
 	public abstract Value<?> getValueOfVariable();

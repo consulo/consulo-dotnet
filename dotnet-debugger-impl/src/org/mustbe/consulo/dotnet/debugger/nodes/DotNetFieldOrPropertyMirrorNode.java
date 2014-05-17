@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
+import mono.debugger.FieldMirror;
 import mono.debugger.FieldOrPropertyMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.PropertyMirror;
@@ -60,7 +61,15 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	@Override
 	public Icon getIconForVariable()
 	{
-		return myFieldOrPropertyMirror instanceof PropertyMirror ? AllIcons.Nodes.Property : AllIcons.Nodes.Field;
+		if(myFieldOrPropertyMirror instanceof PropertyMirror)
+		{
+			return AllIcons.Nodes.Property;
+		}
+		if(myFieldOrPropertyMirror instanceof FieldMirror && myFieldOrPropertyMirror.isStatic())
+		{
+			return AllIcons.Nodes.Field;
+		}
+		return super.getIconForVariable();
 	}
 
 	@Nullable
