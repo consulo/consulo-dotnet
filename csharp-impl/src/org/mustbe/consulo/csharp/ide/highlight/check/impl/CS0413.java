@@ -46,7 +46,8 @@ public class CS0413 extends CompilerCheck<PsiElement>
 	{
 		if(element instanceof CSharpAsExpressionImpl)
 		{
-			DotNetTypeRef typeRef = ((CSharpAsExpressionImpl) element).toTypeRef(false);
+			CSharpAsExpressionImpl asExpression = (CSharpAsExpressionImpl) element;
+			DotNetTypeRef typeRef = asExpression.toTypeRef(false);
 
 			PsiElement resolve = typeRef.resolve(element);
 			if(!(resolve instanceof DotNetGenericParameter))
@@ -81,7 +82,7 @@ public class CS0413 extends CompilerCheck<PsiElement>
 
 			if(!findReferenceOrClass)
 			{
-				return result(element, "as", ((DotNetGenericParameter) resolve).getName());
+				return result(asExpression.getAsKeyword(), "as", ((DotNetGenericParameter) resolve).getName());
 			}
 		}
 		return null;

@@ -19,10 +19,12 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -39,6 +41,12 @@ public class CSharpAsExpressionImpl extends CSharpElementImpl implements DotNetE
 	public DotNetType getType()
 	{
 		return findChildByClass(DotNetType.class);
+	}
+
+	@NotNull
+	public PsiElement getAsKeyword()
+	{
+		return findNotNullChildByType(CSharpTokens.AS_KEYWORD);
 	}
 
 	@Override
