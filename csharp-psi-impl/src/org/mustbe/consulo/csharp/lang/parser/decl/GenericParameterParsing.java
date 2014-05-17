@@ -123,30 +123,42 @@ public class GenericParameterParsing extends SharingParsingHelpers
 		doneOneElement(builder, IDENTIFIER, REFERENCE_EXPRESSION, "Identifier expected");
 		if(expect(builder, COLON, "Colon expected"))
 		{
-			PsiBuilder.Marker value = builder.mark();
-			IElementType doneElement = null;
-			if(builder.getTokenType() == CLASS_KEYWORD || builder.getTokenType() == STRUCT_KEYWORD || builder.getTokenType() == NEW_KEYWORD)
+			while(!builder.eof())
 			{
-				boolean newKeyword = builder.getTokenType() == NEW_KEYWORD;
-				builder.advanceLexer();
-				if(newKeyword)
-				{
-					expect(builder, LPAR, "'(' expected");
-					expect(builder, RPAR, "')' expected");
-				}
+				PsiBuilder.Marker value = builder.mark();
+				IElementType doneElement = null;
 
-				doneElement = GENERIC_CONSTRAINT_KEYWORD_VALUE;
-			}
-			else
-			{
-				if(parseType(builder, BracketFailPolicy.NOTHING, false) == null)
+				if(builder.getTokenType() == CLASS_KEYWORD || builder.getTokenType() == STRUCT_KEYWORD || builder.getTokenType() == NEW_KEYWORD)
 				{
-					builder.error("Type expected");
-				}
-				doneElement = GENERIC_CONSTRAINT_TYPE_VALUE;
-			}
+					boolean newKeyword = builder.getTokenType() == NEW_KEYWORD;
+					builder.advanceLexer();
+					if(newKeyword)
+					{
+						expect(builder, LPAR, "'(' expected");
+						expect(builder, RPAR, "')' expected");
+					}
 
-			value.done(doneElement);
+					doneElement = GENERIC_CONSTRAINT_KEYWORD_VALUE;
+				}
+				else
+				{
+					if(parseType(builder, BracketFailPolicy.NOTHING, false) == null)
+					{
+						builder.error("Type expected");
+					}
+					doneElement = GENERIC_CONSTRAINT_TYPE_VALUE;
+				}
+				value.done(doneElement);
+
+				if(builder.getTokenType() == COMMA)
+				{
+					builder.advanceLexer();
+				}
+				else
+				{
+					break;
+				}
+			}
 		}
 
 		marker.done(GENERIC_CONSTRAINT);
