@@ -18,14 +18,16 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintValue;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintTypeValue;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
  * @since 11.03.14
  */
-public class CSharpGenericConstraintTypeValueImpl extends CSharpElementImpl implements CSharpGenericConstraintValue
+public class CSharpGenericConstraintTypeValueImpl extends CSharpElementImpl implements CSharpGenericConstraintTypeValue
 {
 	public CSharpGenericConstraintTypeValueImpl(@NotNull ASTNode node)
 	{
@@ -36,5 +38,19 @@ public class CSharpGenericConstraintTypeValueImpl extends CSharpElementImpl impl
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitGenericConstraintTypeValue(this);
+	}
+
+	@NotNull
+	@Override
+	public DotNetType getType()
+	{
+		return findNotNullChildByClass(DotNetType.class);
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef toTypeRef()
+	{
+		return getType().toTypeRef();
 	}
 }

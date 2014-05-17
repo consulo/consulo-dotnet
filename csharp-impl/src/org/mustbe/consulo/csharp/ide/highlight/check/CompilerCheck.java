@@ -22,9 +22,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
 import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.intention.IntentionAction;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 
@@ -89,4 +91,26 @@ public abstract class CompilerCheck<T extends PsiElement>
 
 	@Nullable
 	public abstract CompilerCheckResult check(@NotNull CSharpLanguageVersion languageVersion, @NotNull T element);
+
+	@NotNull
+	public CompilerCheckResult result(@NotNull PsiElement range, String... args)
+	{
+		return result(range.getTextRange(), args);
+	}
+
+	@NotNull
+	public CompilerCheckResult result(@NotNull TextRange range, String... args)
+	{
+		String id = getClass().getSimpleName();
+		String message = CSharpErrorBundle.message(id, args);
+		if(ApplicationManager.getApplication().isInternal())
+		{
+			message = id + ": " + message;
+		}
+
+		CompilerCheckResult result = new CompilerCheckResult();
+		result.setText(message);
+		result.setTextRange(range);
+		return result;
+	}
 }

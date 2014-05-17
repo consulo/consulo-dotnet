@@ -19,6 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.light;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraint;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintList;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -78,5 +80,19 @@ public class CSharpLightMethodDeclaration extends CSharpLightLikeMethodDeclarati
 	public boolean isExtensionWrapper()
 	{
 		return myExtensionWrapper;
+	}
+
+	@Nullable
+	@Override
+	public CSharpGenericConstraintList getGenericConstraintList()
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public CSharpGenericConstraint[] getGenericConstraints()
+	{
+		return CSharpGenericConstraint.EMPTY_ARRAY;
 	}
 }

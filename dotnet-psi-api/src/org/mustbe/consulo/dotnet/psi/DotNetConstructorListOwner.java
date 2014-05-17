@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.dotnet.psi;
 
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
- * @since 30.11.13.
+ * @since 17.05.14
  */
-public interface CSharpMethodDeclaration extends DotNetMethodDeclaration, CSharpGenericConstraintOwner
+public interface DotNetConstructorListOwner extends DotNetElement
 {
+	void processConstructors(@NotNull Processor<DotNetConstructorDeclaration> processor);
 }

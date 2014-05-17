@@ -18,15 +18,21 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintValue;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintKeywordValue;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
  * @since 30.11.13.
  */
-public class CSharpGenericConstraintKeywordValueImpl extends CSharpElementImpl implements CSharpGenericConstraintValue
+public class CSharpGenericConstraintKeywordValueImpl extends CSharpElementImpl implements CSharpGenericConstraintKeywordValue
 {
+	private static final TokenSet ourSet = TokenSet.create(CSharpTokens.NEW_KEYWORD, CSharpTokens.CLASS_KEYWORD, CSharpTokens.STRUCT_KEYWORD);
+
 	public CSharpGenericConstraintKeywordValueImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -36,5 +42,13 @@ public class CSharpGenericConstraintKeywordValueImpl extends CSharpElementImpl i
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitGenericConstraintKeywordValue(this);
+	}
+
+	@NotNull
+	@Override
+	public IElementType getElementType()
+	{
+		PsiElement element = findNotNullChildByType(ourSet);
+		return element.getNode().getElementType();
 	}
 }

@@ -22,7 +22,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
  * @author VISTALL
  * @since 30.11.13.
  */
-public interface CSharpTypeDeclaration extends DotNetTypeDeclaration, CSharpBodyWithBraces
+public interface CSharpTypeDeclaration extends DotNetTypeDeclaration, CSharpGenericConstraintOwner, CSharpBodyWithBraces
 {
 	boolean hasExtensions();
 }

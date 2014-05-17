@@ -16,12 +16,15 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
- * @since 30.11.13.
+ * @since 17.05.14
  */
-public interface CSharpMethodDeclaration extends DotNetMethodDeclaration, CSharpGenericConstraintOwner
+public interface CSharpGenericConstraintKeywordValue extends CSharpGenericConstraintValue
 {
+	@NotNull
+	IElementType getElementType();
 }

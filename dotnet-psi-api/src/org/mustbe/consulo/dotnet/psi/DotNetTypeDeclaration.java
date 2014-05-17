@@ -28,7 +28,7 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  */
 @ArrayFactoryFields
 public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetModifierListOwner, DotNetGenericParameterListOwner,
-		PsiNameIdentifierOwner, DotNetMemberOwner
+		PsiNameIdentifierOwner, DotNetMemberOwner, DotNetConstructorListOwner
 {
 	boolean isInterface();
 

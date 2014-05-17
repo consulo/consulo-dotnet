@@ -19,6 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraint;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintList;
 import org.mustbe.consulo.csharp.lang.psi.CSharpInheritUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
@@ -26,6 +28,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpTypeStub;
+import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
@@ -37,6 +40,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
@@ -141,8 +145,8 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
-			@NotNull PsiElement place)
+	public boolean processDeclarations(
+			@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place)
 	{
 		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
 		{
@@ -205,5 +209,26 @@ public class CSharpTypeDeclarationImpl extends CSharpStubMemberImpl<CSharpTypeSt
 			}
 		}
 		return false;
+	}
+
+	@Nullable
+	@Override
+	public CSharpGenericConstraintList getGenericConstraintList()
+	{
+		return findChildByClass(CSharpGenericConstraintList.class);
+	}
+
+	@NotNull
+	@Override
+	public CSharpGenericConstraint[] getGenericConstraints()
+	{
+		CSharpGenericConstraintList genericConstraintList = getGenericConstraintList();
+		return genericConstraintList == null ? CSharpGenericConstraint.EMPTY_ARRAY : genericConstraintList.getGenericConstraintValues();
+	}
+
+	@Override
+	public void processConstructors(@NotNull Processor<DotNetConstructorDeclaration> processor)
+	{
+		CSharpTypeDeclarationImplUtil.processConstructors(this, processor);
 	}
 }

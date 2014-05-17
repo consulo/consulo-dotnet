@@ -21,7 +21,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterListOwner;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.builder.CSharpLightConstructorDeclarationBuilder;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetConstructorListOwner;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 
@@ -60,17 +60,17 @@ public class ConstructorProcessor extends AbstractScopeProcessor
 		return true;
 	}
 
-	public void executeDefault(DotNetTypeDeclaration type)
+	public void executeDefault(DotNetConstructorListOwner owner)
 	{
 		if(!isEmpty())
 		{
 			return;
 		}
 
-		CSharpLightConstructorDeclarationBuilder builder = new CSharpLightConstructorDeclarationBuilder(type.getProject());
+		CSharpLightConstructorDeclarationBuilder builder = new CSharpLightConstructorDeclarationBuilder(owner.getProject());
 		builder.addModifier(CSharpModifier.PUBLIC);
-		builder.setNavigationElement(type);
-		builder.withParent(type);
+		builder.setNavigationElement(owner);
+		builder.withParent(owner);
 
 		execute(builder, null);
 	}

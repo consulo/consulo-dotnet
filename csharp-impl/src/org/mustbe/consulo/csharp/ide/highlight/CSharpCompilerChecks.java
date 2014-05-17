@@ -36,6 +36,7 @@ public enum CSharpCompilerChecks
 	CS0214(CSharpLanguageVersion._1_0, HighlightInfoType.WRONG_REF), // fixed can be used inside unsafe context
 	CS0227(CSharpLanguageVersion._1_0, HighlightInfoType.WRONG_REF), // 'unsafe' modifier check
 	CS0231(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // 'params' modifier must be last
+	CS0304(CSharpLanguageVersion._2_0, HighlightInfoType.ERROR), // generic cant be new without new() constraint
 	CS0815(CSharpLanguageVersion._3_0, HighlightInfoType.ERROR), // lambdas cant be cast to 'var'
 	CS1100(CSharpLanguageVersion._3_0, HighlightInfoType.ERROR), // 'this' modifier can be only set to first parameter
 	CS1644(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // features checks

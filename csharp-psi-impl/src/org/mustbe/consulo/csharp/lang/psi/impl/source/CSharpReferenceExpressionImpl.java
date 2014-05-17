@@ -77,7 +77,7 @@ import lombok.val;
  * @since 28.11.13.
  */
 @Logger
-public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements DotNetReferenceExpression, PsiPolyVariantReference
+public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements CSharpReferenceExpression, PsiPolyVariantReference
 {
 	private static class OurResolver implements ResolveCache.PolyVariantResolver<CSharpReferenceExpressionImpl>
 	{
@@ -155,6 +155,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		return this;
 	}
 
+	@Override
 	@Nullable
 	public PsiElement getReferenceElement()
 	{
@@ -545,7 +546,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					return ResolveResultWithWeight.EMPTY_ARRAY;
 				}
 				PsiElement type = resolveResultWithWeight.getElement();
-				if(!(type instanceof DotNetTypeDeclaration))
+				if(!(type instanceof DotNetConstructorListOwner))
 				{
 					return ResolveResultWithWeight.EMPTY_ARRAY;
 				}
@@ -553,15 +554,16 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				CSharpMethodCallParameterListOwner parent = (CSharpMethodCallParameterListOwner) element.getParent().getParent();
 
 				val constructorProcessor = new ConstructorProcessor(parent, completion);
-				for(DotNetNamedElement m : ((DotNetTypeDeclaration) type).getMembers())
+				((DotNetConstructorListOwner) type).processConstructors(new Processor<DotNetConstructorDeclaration>()
 				{
-					if(!constructorProcessor.execute(m, null))
+					@Override
+					public boolean process(DotNetConstructorDeclaration constructorDeclaration)
 					{
-						return constructorProcessor.toResolveResults();
+						return constructorProcessor.execute(constructorDeclaration, null);
 					}
-				}
+				});
 
-				constructorProcessor.executeDefault((DotNetTypeDeclaration) type);
+				constructorProcessor.executeDefault((DotNetConstructorListOwner) type);
 				return constructorProcessor.toResolveResults();
 			case ATTRIBUTE:
 				/*condition = Conditions.and(condition, ourTypeOrMethodOrGenericCondition);

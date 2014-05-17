@@ -19,23 +19,56 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraint;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintValue;
+import org.mustbe.consulo.csharp.lang.psi.CSharpReferenceExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import lombok.val;
 
 /**
  * @author VISTALL
  * @since 30.11.13.
  */
-public class CSharpGenericConstraintImpl extends CSharpElementImpl
+public class CSharpGenericConstraintImpl extends CSharpElementImpl implements CSharpGenericConstraint
 {
 	public CSharpGenericConstraintImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	@Nullable
-	public CSharpReferenceExpressionImpl getGenericParameterReference()
+	@Override
+	public DotNetGenericParameter resolve()
 	{
-		return findChildByClass(CSharpReferenceExpressionImpl.class);
+		val genericParameterReference = getGenericParameterReference();
+		if(genericParameterReference == null)
+		{
+			return null;
+		}
+		PsiElement resolve = genericParameterReference.resolve();
+		if(resolve instanceof DotNetGenericParameter)
+		{
+			return (DotNetGenericParameter) resolve;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	@Nullable
+	public CSharpReferenceExpression getGenericParameterReference()
+	{
+		return findChildByClass(CSharpReferenceExpression.class);
+	}
+
+	@NotNull
+	@Override
+	public CSharpGenericConstraintValue[] getGenericConstraintValues()
+	{
+		return findChildrenByClass(CSharpGenericConstraintValue.class);
 	}
 
 	@Override

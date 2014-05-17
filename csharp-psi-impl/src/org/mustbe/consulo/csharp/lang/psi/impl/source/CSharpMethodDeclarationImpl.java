@@ -19,6 +19,8 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraint;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintList;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
@@ -94,5 +96,20 @@ public class CSharpMethodDeclarationImpl extends CSharpLikeMethodDeclarationImpl
 			return childByType == null ? null : childByType.getNode().getElementType();
 		}
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public CSharpGenericConstraintList getGenericConstraintList()
+	{
+		return findChildByClass(CSharpGenericConstraintList.class);
+	}
+
+	@NotNull
+	@Override
+	public CSharpGenericConstraint[] getGenericConstraints()
+	{
+		CSharpGenericConstraintList genericConstraintList = getGenericConstraintList();
+		return genericConstraintList == null ? CSharpGenericConstraint.EMPTY_ARRAY : genericConstraintList.getGenericConstraintValues();
 	}
 }

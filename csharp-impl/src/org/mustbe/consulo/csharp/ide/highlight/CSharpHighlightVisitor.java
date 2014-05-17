@@ -22,18 +22,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.codeInsight.actions.ConvertToNormalCallFix;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpEventDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterListOwner;
-import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
-import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
-import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.*;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpArrayAccessExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpEnumConstantDeclarationImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericConstraintImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpGenericParameterImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpMethodCallExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImpl;
@@ -47,6 +39,7 @@ import org.mustbe.consulo.csharp.module.extension.CSharpModuleExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
@@ -67,7 +60,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.ReferenceRange;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.tree.IElementType;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -164,27 +156,22 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 	}
 
 	@Override
-	public void visitGenericConstraint(CSharpGenericConstraintImpl constraint)
+	public void visitGenericConstraint(CSharpGenericConstraint constraint)
 	{
 		super.visitGenericConstraint(constraint);
 
-		val genericParameterReference = constraint.getGenericParameterReference();
-		if(genericParameterReference == null)
-		{
-			return;
-		}
-		val referenceElement = genericParameterReference.getReferenceElement();
-		val resolve = genericParameterReference.resolve();
+		DotNetGenericParameter resolve = constraint.resolve();
+
+		CSharpReferenceExpression reference = constraint.getGenericParameterReference();
+		assert reference != null;
 
 		if(resolve != null)
 		{
-			assert referenceElement != null;
-			highlightNamed(resolve, referenceElement);
+			highlightNamed(resolve, reference);
 		}
 		else
 		{
-			assert referenceElement != null;
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).range(referenceElement).create());
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.WRONG_REF).range(reference).create());
 		}
 	}
 

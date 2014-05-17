@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
@@ -40,7 +39,6 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -215,15 +213,9 @@ public class CS1644 extends CompilerCheck<PsiElement>
 				{
 					continue;
 				}
-				String message = CSharpErrorBundle.message(getClass().getSimpleName(), feature.myName, languageVersion.getPresentableName());
-				if(ApplicationManager.getApplication().isInternal())
-				{
-					message = getClass().getSimpleName() + ": " + message;
-				}
 
-				CompilerCheckResult result = new CompilerCheckResult();
-				result.setText(message);
-				result.setTextRange(fun.getTextRange());
+				CompilerCheckResult result = result(fun, feature.myName, languageVersion.getPresentableName());
+
 				result.addQuickFix(new SetLanguageVersionFix(feature.myLanguageVersion));
 
 				IElementType elementType = fun.getNode().getElementType();

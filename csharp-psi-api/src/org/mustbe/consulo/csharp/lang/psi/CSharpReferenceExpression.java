@@ -16,12 +16,16 @@
 
 package org.mustbe.consulo.csharp.lang.psi;
 
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 30.11.13.
+ * @since 17.05.14
  */
-public interface CSharpMethodDeclaration extends DotNetMethodDeclaration, CSharpGenericConstraintOwner
+public interface CSharpReferenceExpression extends DotNetReferenceExpression
 {
+	@Nullable
+	PsiElement getReferenceElement();
 }

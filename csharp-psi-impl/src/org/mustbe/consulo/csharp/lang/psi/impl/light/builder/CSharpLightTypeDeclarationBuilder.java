@@ -22,9 +22,13 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraint;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintList;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImplUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
+import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
@@ -36,6 +40,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 
 /**
@@ -212,6 +217,26 @@ public class CSharpLightTypeDeclarationBuilder extends CSharpLightNamedElementBu
 	public PsiElement getNameIdentifier()
 	{
 		return null;
+	}
+
+	@Override
+	public void processConstructors(@NotNull Processor<DotNetConstructorDeclaration> processor)
+	{
+		CSharpTypeDeclarationImplUtil.processConstructors(this, processor);
+	}
+
+	@Nullable
+	@Override
+	public CSharpGenericConstraintList getGenericConstraintList()
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public CSharpGenericConstraint[] getGenericConstraints()
+	{
+		return CSharpGenericConstraint.EMPTY_ARRAY;
 	}
 
 	public CSharpLightTypeDeclarationBuilder withParentQName(String parentQName)

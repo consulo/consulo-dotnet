@@ -17,32 +17,30 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
-import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraint;
-import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintList;
-import com.intellij.lang.ASTNode;
+import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
- * @since 30.11.13.
+ * @since 17.05.14
  */
-public class CSharpGenericConstraintListImpl extends CSharpElementImpl implements CSharpGenericConstraintList
+public class CSharpTypeDeclarationImplUtil
 {
-	public CSharpGenericConstraintListImpl(@NotNull ASTNode node)
+	public static void processConstructors(@NotNull DotNetTypeDeclaration type, @NotNull Processor<DotNetConstructorDeclaration> processor)
 	{
-		super(node);
-	}
+		for(DotNetNamedElement dotNetNamedElement : type.getMembers())
+		{
+			if(!(dotNetNamedElement instanceof DotNetConstructorDeclaration))
+			{
+				continue;
+			}
 
-	@Override
-	public void accept(@NotNull CSharpElementVisitor visitor)
-	{
-		visitor.visitGenericConstraintList(this);
-	}
-
-	@NotNull
-	@Override
-	public CSharpGenericConstraint[] getGenericConstraintValues()
-	{
-		return findChildrenByClass(CSharpGenericConstraint.class);
+			if(!processor.process((DotNetConstructorDeclaration) dotNetNamedElement))
+			{
+				return;
+			}
+		}
 	}
 }
