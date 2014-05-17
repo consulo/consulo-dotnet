@@ -286,7 +286,15 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 						@Override
 						public void visitObjectValue(@NotNull ObjectValueMirror value)
 						{
-							TypeMirror type = value.type();
+							TypeMirror type = null;
+							try
+							{
+								type = value.type();
+							}
+							catch(InvalidObjectException ignored)
+							{
+							}
+
 							if(type == null)
 							{
 								return;
