@@ -771,9 +771,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			}
 			else if(temp instanceof CSharpCodeFragment)
 			{
-				last = temp;
-				targetToWalkChildren = ((CSharpCodeFragment) temp).getScopeElement().getParent();
-				break;
+				temp = ((CSharpCodeFragment) temp).getScopeElement();
+				continue;
 			}
 			temp = temp.getParent();
 		}
