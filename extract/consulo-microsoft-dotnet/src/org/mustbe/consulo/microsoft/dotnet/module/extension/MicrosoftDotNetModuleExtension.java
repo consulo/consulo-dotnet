@@ -16,12 +16,13 @@
 
 package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
+import java.io.File;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
-import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -47,12 +48,17 @@ public class MicrosoftDotNetModuleExtension extends DotNetModuleExtensionImpl<Mi
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(
-			@NotNull String fileName,
-			@NotNull ConfigurationLayer configurationProfile,
-			@Nullable DebugConnectionInfo d)
+	public GeneralCommandLine createDefaultCommandLine(
+			@NotNull String fileName, @Nullable DebugConnectionInfo d)
 	{
-		return createRunCommandLineImpl(fileName, configurationProfile, d, getSdk());
+		return createRunCommandLineImpl(fileName, d, getSdk());
+	}
+
+	@NotNull
+	@Override
+	public File getLoaderPath()
+	{
+		return getLoaderPath(MicrosoftDotNetModuleExtension.class);
 	}
 
 	@NotNull
@@ -63,8 +69,7 @@ public class MicrosoftDotNetModuleExtension extends DotNetModuleExtensionImpl<Mi
 	}
 
 	@NotNull
-	public static GeneralCommandLine createRunCommandLineImpl(
-			@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, @Nullable DebugConnectionInfo d, Sdk sdk)
+	public static GeneralCommandLine createRunCommandLineImpl(@NotNull String fileName, @Nullable DebugConnectionInfo d, Sdk sdk)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		commandLine.setExePath(fileName);

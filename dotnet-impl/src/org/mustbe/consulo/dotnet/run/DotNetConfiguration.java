@@ -137,7 +137,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		}
 
 		DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();
-		val runCommandLine = extension.createRunCommandLine(exeFile, currentLayer, debugConnectionInfo);
+		val runCommandLine = extension.createDefaultCommandLine(exeFile, debugConnectionInfo);
 		String programParameters = runProfile.getProgramParameters();
 		if(!StringUtil.isEmpty(programParameters))
 		{

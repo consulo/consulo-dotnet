@@ -39,6 +39,7 @@
             <element id="module-output" name="consulo-microsoft-dotnet" />
           </element>
         </element>
+        <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-microsoft-dotnet/dist" />
       </element>
       <element id="directory" name="mono-dotnet">
         <element id="directory" name="lib">
@@ -47,6 +48,7 @@
             <element id="module-production-resource-output" name="consulo-mono-dotnet" />
           </element>
         </element>
+        <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-mono-dotnet/dist" />
       </element>
       <element id="directory" name="nemerle">
         <element id="directory" name="lib">

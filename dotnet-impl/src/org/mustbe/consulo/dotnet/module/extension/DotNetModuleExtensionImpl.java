@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
+import java.io.File;
+
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +26,9 @@ import org.mustbe.consulo.dotnet.module.MainConfigurationLayerImpl;
 import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
 import org.mustbe.consulo.module.extension.LayeredModuleExtensionImpl;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -50,6 +55,15 @@ public abstract class DotNetModuleExtensionImpl<S extends DotNetModuleExtensionI
 			d.getVariables().add("DEBUG");
 			d.setAllowDebugInfo(true);
 		}
+	}
+
+	@NotNull
+	public static File getLoaderPath(Class<?> clazz)
+	{
+		PluginClassLoader classLoader = (PluginClassLoader) clazz.getClassLoader();
+		IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());
+		assert plugin != null;
+		return new File(new File(plugin.getPath(), "loader"), "loader.exe");
 	}
 
 	@NotNull

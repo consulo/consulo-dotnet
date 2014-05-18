@@ -16,12 +16,13 @@
 
 package org.mustbe.consulo.mono.dotnet.module.extension;
 
+import java.io.File;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
-import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -49,12 +50,16 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(
-			@NotNull String fileName,
-			@NotNull ConfigurationLayer configurationProfile,
-			@Nullable DebugConnectionInfo d)
+	public GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d)
 	{
-		return createRunCommandLineImpl(fileName, configurationProfile, d, getSdk());
+		return createRunCommandLineImpl(fileName, d, getSdk());
+	}
+
+	@NotNull
+	@Override
+	public File getLoaderPath()
+	{
+		return getLoaderPath(MonoDotNetModuleExtension.class);
 	}
 
 	@NotNull
@@ -73,8 +78,7 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 	}
 
 	@NotNull
-	public static GeneralCommandLine createRunCommandLineImpl(
-			@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, @Nullable DebugConnectionInfo d, @NotNull Sdk sdk)
+	public static GeneralCommandLine createRunCommandLineImpl(@NotNull String fileName, @Nullable DebugConnectionInfo d, @NotNull Sdk sdk)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 

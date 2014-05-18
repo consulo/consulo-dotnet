@@ -16,13 +16,14 @@
 
 package org.mustbe.consulo.xdotnet.module.extension;
 
+import java.io.File;
+
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
-import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -51,18 +52,36 @@ public class XDotNetModuleExtension extends DotNetModuleExtensionImpl<XDotNetMod
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile, DebugConnectionInfo d)
+	public GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, DebugConnectionInfo d)
 	{
 		Sdk sdk = getSdk();
 		assert sdk != null;
 		SdkTypeId sdkType = sdk.getSdkType();
 		if(sdkType instanceof MicrosoftDotNetSdkType)
 		{
-			return MicrosoftDotNetModuleExtension.createRunCommandLineImpl(fileName, configurationProfile, d, sdk);
+			return MicrosoftDotNetModuleExtension.createRunCommandLineImpl(fileName, d, sdk);
 		}
 		else if(sdkType instanceof MonoSdkType)
 		{
-			return MonoDotNetModuleExtension.createRunCommandLineImpl(fileName, configurationProfile, d, sdk);
+			return MonoDotNetModuleExtension.createRunCommandLineImpl(fileName, d, sdk);
+		}
+		throw  new IllegalArgumentException(sdkType.getName());
+	}
+
+	@NotNull
+	@Override
+	public File getLoaderPath()
+	{
+		Sdk sdk = getSdk();
+		assert sdk != null;
+		SdkTypeId sdkType = sdk.getSdkType();
+		if(sdkType instanceof MicrosoftDotNetSdkType)
+		{
+			return getLoaderPath(MicrosoftDotNetModuleExtension.class);
+		}
+		else if(sdkType instanceof MonoSdkType)
+		{
+			return getLoaderPath(MonoDotNetModuleExtension.class);
 		}
 		throw  new IllegalArgumentException(sdkType.getName());
 	}

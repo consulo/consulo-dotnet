@@ -16,11 +16,12 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
+import java.io.File;
+
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import org.mustbe.consulo.module.extension.ConfigurationLayer;
 import org.mustbe.consulo.module.extension.LayeredModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -34,8 +35,10 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	boolean isAllowSourceRoots();
 
 	@NotNull
-	GeneralCommandLine createRunCommandLine(@NotNull String fileName, @NotNull ConfigurationLayer configurationProfile,
-			@Nullable DebugConnectionInfo d);
+	GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d);
+
+	@NotNull
+	File getLoaderPath();
 
 	@NotNull
 	GlobalSearchScope getScopeForResolving(boolean test);
