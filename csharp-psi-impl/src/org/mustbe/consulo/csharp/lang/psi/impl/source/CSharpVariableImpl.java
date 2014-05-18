@@ -61,7 +61,7 @@ public abstract class CSharpVariableImpl extends CSharpMemberImpl implements Dot
 				return DotNetTypeRef.UNKNOWN_TYPE;
 			}
 
-			return initializer.toTypeRef(true);
+			return initializer.toTypeRef(false);
 		}
 		else
 		{
