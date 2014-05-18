@@ -18,9 +18,9 @@ package org.mustbe.consulo.csharp.ide.highlight.check.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
-import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraint;
 import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintKeywordValue;
 import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintOwner;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintOwnerUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintValue;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
@@ -30,6 +30,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -50,21 +51,18 @@ public class CS0304 extends CompilerCheck<CSharpNewExpression>
 			}
 
 			boolean findNew = false;
-			for(CSharpGenericConstraint constraint : ((CSharpGenericConstraintOwner) parent).getGenericConstraints())
+
+			val constraint = CSharpGenericConstraintOwnerUtil.forParameter((CSharpGenericConstraintOwner) parent, (DotNetGenericParameter) resolve);
+			if(constraint != null)
 			{
-				DotNetGenericParameter genericParameter = constraint.resolve();
-				if(genericParameter == resolve)
+				for(CSharpGenericConstraintValue value : constraint.getGenericConstraintValues())
 				{
-					for(CSharpGenericConstraintValue value : constraint.getGenericConstraintValues())
+					if(value instanceof CSharpGenericConstraintKeywordValue && ((CSharpGenericConstraintKeywordValue) value).getKeywordElementType()
+							== CSharpTokens.NEW_KEYWORD)
 					{
-						if(value instanceof CSharpGenericConstraintKeywordValue && ((CSharpGenericConstraintKeywordValue) value).getKeywordElementType() ==
-								CSharpTokens.NEW_KEYWORD)
-						{
-							findNew = true;
-							break;
-						}
+						findNew = true;
+						break;
 					}
-					break;
 				}
 			}
 

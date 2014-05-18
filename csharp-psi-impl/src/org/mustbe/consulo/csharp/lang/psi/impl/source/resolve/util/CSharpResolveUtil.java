@@ -16,14 +16,19 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintKeywordValue;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintOwner;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintOwnerUtil;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintTypeValue;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintValue;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpForeachStatementImpl;
@@ -31,6 +36,8 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDef
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper.GenericUnwrapTool;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
@@ -49,6 +56,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.SmartList;
 import lombok.val;
 
 /**
@@ -144,9 +152,9 @@ public class CSharpResolveUtil
 		{
 			DotNetGenericExtractor extractor = state.get(CSharpResolveUtil.EXTRACTOR_KEY);
 
-			DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) entrance;
+			val typeDeclaration = (DotNetTypeDeclaration) entrance;
 
-			List<DotNetTypeRef> superTypes = new ArrayList<DotNetTypeRef>(2);
+			val superTypes = new SmartList<DotNetTypeRef>();
 
 			if(typeDeclaration.hasModifier(CSharpModifier.PARTIAL))
 			{
@@ -204,6 +212,59 @@ public class CSharpResolveUtil
 				if(!walkChildren(processor, entrance.getParent(), typeResolving, maxScope, state))
 				{
 					return false;
+				}
+			}
+		}
+		else if(entrance instanceof DotNetGenericParameter)
+		{
+			DotNetGenericParameterList parameterList = (DotNetGenericParameterList) entrance.getParent();
+
+			PsiElement parent = parameterList.getParent();
+			if(!(parent instanceof CSharpGenericConstraintOwner))
+			{
+				return true;
+			}
+
+			val constraint = CSharpGenericConstraintOwnerUtil.forParameter((CSharpGenericConstraintOwner) parent, (DotNetGenericParameter) entrance);
+			if(constraint == null)
+			{
+				return true;
+			}
+
+			val superTypes = new SmartList<DotNetTypeRef>();
+			for(CSharpGenericConstraintValue value : constraint.getGenericConstraintValues())
+			{
+				if(value instanceof CSharpGenericConstraintTypeValue)
+				{
+					DotNetTypeRef typeRef = ((CSharpGenericConstraintTypeValue) value).toTypeRef();
+					superTypes.add(typeRef);
+				}
+				else if(value instanceof CSharpGenericConstraintKeywordValue)
+				{
+					if(((CSharpGenericConstraintKeywordValue) value).getKeywordElementType() == CSharpTokens.STRUCT_KEYWORD)
+					{
+						superTypes.add(new CSharpTypeDefTypeRef(DotNetTypes.System_ValueType, 0));
+					}
+					else if(((CSharpGenericConstraintKeywordValue) value).getKeywordElementType() == CSharpTokens.CLASS_KEYWORD)
+					{
+						superTypes.add(new CSharpTypeDefTypeRef(DotNetTypes.System_Object, 0));
+					}
+				}
+			}
+
+			for(DotNetTypeRef dotNetTypeRef : superTypes)
+			{
+				PsiElement resolve = dotNetTypeRef.resolve(entrance);
+
+				if(resolve != null && resolve != entrance)
+				{
+					DotNetGenericExtractor genericExtractor = dotNetTypeRef.getGenericExtractor(resolve, entrance);
+					ResolveState newState = ResolveState.initial().put(EXTRACTOR_KEY, genericExtractor);
+
+					if(!walkChildren(processor, resolve, false, maxScope, newState))
+					{
+						return false;
+					}
 				}
 			}
 		}
