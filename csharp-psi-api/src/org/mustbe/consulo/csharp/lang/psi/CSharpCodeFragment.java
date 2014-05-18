@@ -14,35 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source;
+package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiCodeFragment;
-import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 18.05.14
  */
-public class CSharpFragmentedFileImpl extends CSharpFileImpl implements PsiCodeFragment
+public interface CSharpCodeFragment extends PsiElement
 {
-	private GlobalSearchScope myResolveScope;
-
-	public CSharpFragmentedFileImpl(@NotNull FileViewProvider viewProvider)
-	{
-		super(viewProvider);
-	}
-
-	@Override
-	public void forceResolveScope(GlobalSearchScope searchScope)
-	{
-		myResolveScope = searchScope;
-	}
-
-	@Override
-	public GlobalSearchScope getForcedResolveScope()
-	{
-		return myResolveScope;
-	}
+	@NotNull
+	PsiElement getScopeElement();
 }

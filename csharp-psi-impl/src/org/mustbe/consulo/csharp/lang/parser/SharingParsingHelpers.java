@@ -92,7 +92,7 @@ public class SharingParsingHelpers implements CSharpTokenSets, CSharpTokens, CSh
 		return empty;
 	}
 
-	protected static TypeInfo parseType(@NotNull CSharpBuilderWrapper builder, BracketFailPolicy bracketFailPolicy, boolean varSupport)
+	public static TypeInfo parseType(@NotNull CSharpBuilderWrapper builder, BracketFailPolicy bracketFailPolicy, boolean varSupport)
 	{
 		TypeInfo typeInfo = parseInnerType(builder, varSupport);
 		if(typeInfo == null)

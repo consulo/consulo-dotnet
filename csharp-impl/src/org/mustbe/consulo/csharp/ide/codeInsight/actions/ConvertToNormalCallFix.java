@@ -104,7 +104,7 @@ public class ConvertToNormalCallFix extends PsiElementBaseIntentionAction
 			protected void run(Result<Object> objectResult) throws Throwable
 			{
 				CSharpExpressionStatementImpl statement = (CSharpExpressionStatementImpl) CSharpFileFactory.createStatement(callExpression
-						.getProject(), callExpression.getResolveScope(), builder.toString());
+						.getProject(), builder.toString());
 
 				callExpression.replace(statement.getExpression());
 			}

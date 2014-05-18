@@ -29,7 +29,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -71,7 +70,7 @@ public class CSharpOperatorHelperImpl extends CSharpOperatorHelper
 			try
 			{
 				String text = FileUtil.loadTextAndClose(resourceAsStream);
-				DotNetTypeDeclaration declaration = CSharpFileFactory.createTypeDeclaration(myProject, GlobalSearchScope.allScope(myProject), text);
+				DotNetTypeDeclaration declaration = CSharpFileFactory.createTypeDeclaration(myProject, text);
 				Collections.addAll(list, declaration.getMembers());
 			}
 			catch(IOException e)

@@ -34,7 +34,7 @@ public class CSharpRefactoringUtil
 			return;
 		}
 
-		PsiElement newIdentifier = CSharpFileFactory.createIdentifier(owner.getProject(), owner.getResolveScope(), newName);
+		PsiElement newIdentifier = CSharpFileFactory.createIdentifier(owner.getProject(), newName);
 
 		nameIdentifier.replace(newIdentifier);
 	}

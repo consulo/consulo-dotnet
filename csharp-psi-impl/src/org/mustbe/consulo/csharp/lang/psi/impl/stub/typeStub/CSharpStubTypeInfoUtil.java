@@ -35,7 +35,7 @@ import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTy
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpGenericWrapperTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpPointerTypeRef;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpReferenceTypeByTextRef;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeRefFromText;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -172,7 +172,7 @@ public class CSharpStubTypeInfoUtil
 				return DotNetTypeRef.ERROR_TYPE;
 			case REF:
 				CSharpStubReferenceTypeInfo referenceTypeInfo = (CSharpStubReferenceTypeInfo) typeInfo;
-				return new CSharpReferenceTypeByTextRef(referenceTypeInfo.getText(), element);
+				return new CSharpTypeRefFromText(referenceTypeInfo.getText(), element);
 			case POINTER:
 				CSharpStubPointerTypeInfo pointerTypeInfo = (CSharpStubPointerTypeInfo) typeInfo;
 				return new CSharpPointerTypeRef(toTypeRef(pointerTypeInfo.getInnerType(), element));

@@ -27,7 +27,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Couple;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -39,7 +39,7 @@ public class CS0029 extends AbstractCompilerCheck<PsiElement>
 	@Override
 	public boolean accept(@NotNull PsiElement element)
 	{
-		Pair<DotNetTypeRef, DotNetTypeRef> resolve = resolve(element);
+		Couple<DotNetTypeRef> resolve = resolve(element);
 		if(resolve == null)
 		{
 			return false;
@@ -54,7 +54,7 @@ public class CS0029 extends AbstractCompilerCheck<PsiElement>
 	@Override
 	public void checkImpl(@NotNull PsiElement element, @NotNull CompilerCheckResult checkResult)
 	{
-		Pair<DotNetTypeRef, DotNetTypeRef> resolve = resolve(element);
+		Couple<DotNetTypeRef> resolve = resolve(element);
 		if(resolve == null)
 		{
 			return;
@@ -75,7 +75,7 @@ public class CS0029 extends AbstractCompilerCheck<PsiElement>
 		}
 	}
 
-	private Pair<DotNetTypeRef, DotNetTypeRef> resolve(PsiElement element)
+	private Couple<DotNetTypeRef> resolve(PsiElement element)
 	{
 		if(element instanceof DotNetVariable)
 		{
@@ -84,7 +84,7 @@ public class CS0029 extends AbstractCompilerCheck<PsiElement>
 			{
 				return null;
 			}
-			return Pair.create(((DotNetVariable) element).toTypeRef(false), initializer.toTypeRef(false));
+			return Couple.newOne(((DotNetVariable) element).toTypeRef(false), initializer.toTypeRef(false));
 		}
 		else if(element instanceof CSharpAssignmentExpressionImpl)
 		{
@@ -98,7 +98,7 @@ public class CS0029 extends AbstractCompilerCheck<PsiElement>
 			{
 				return null;
 			}
-			return Pair.create(expressions[0].toTypeRef(false), expressions[1].toTypeRef(false));
+			return Couple.newOne(expressions[0].toTypeRef(false), expressions[1].toTypeRef(false));
 		}
 		return null;
 	}

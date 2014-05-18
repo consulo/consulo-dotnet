@@ -49,7 +49,7 @@ public class CSharpParenthesesPostfixTemplate extends PostfixTemplate
 	@Override
 	public void expand(@NotNull PsiElement context, @NotNull Editor editor)
 	{
-		val newExpression = CSharpFileFactory.createExpression(context.getProject(), context.getResolveScope(), "(" + context.getText() + ")");
+		val newExpression = CSharpFileFactory.createExpression(context.getProject(), "(" + context.getText() + ")");
 
 		context.replace(newExpression);
 	}

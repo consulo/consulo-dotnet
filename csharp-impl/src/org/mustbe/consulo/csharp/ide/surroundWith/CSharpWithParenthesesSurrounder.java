@@ -37,7 +37,7 @@ public class CSharpWithParenthesesSurrounder implements Surrounder
 	{
 		val oldExpression = (DotNetExpression) elements[0];
 
-		val newExpression = CSharpFileFactory.createExpression(project, oldExpression.getResolveScope(), "(" + oldExpression.getText() + ")");
+		val newExpression = CSharpFileFactory.createExpression(project, "(" + oldExpression.getText() + ")");
 
 		val replace = oldExpression.replace(newExpression);
 

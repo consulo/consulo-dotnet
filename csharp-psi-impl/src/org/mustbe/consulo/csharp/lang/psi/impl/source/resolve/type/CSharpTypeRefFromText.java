@@ -19,7 +19,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
+import org.mustbe.consulo.csharp.lang.psi.CSharpCodeFragmentFactory;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.text.StringUtil;
@@ -29,12 +29,12 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 15.01.14
  */
-public class CSharpReferenceTypeByTextRef extends DotNetTypeRef.Adapter
+public class CSharpTypeRefFromText extends DotNetTypeRef.Adapter
 {
 	private final String myText;
 	private final PsiElement myOwner;
 
-	public CSharpReferenceTypeByTextRef(final String text, final PsiElement owner)
+	public CSharpTypeRefFromText(final String text, final PsiElement owner)
 	{
 		myText = text;
 		myOwner = owner;
@@ -44,7 +44,7 @@ public class CSharpReferenceTypeByTextRef extends DotNetTypeRef.Adapter
 	@LazyInstance
 	private DotNetType getType()
 	{
-		return CSharpFileFactory.createType(myOwner.getProject(), myOwner.getResolveScope(), myText);
+		return CSharpCodeFragmentFactory.createType(myOwner, myText);
 	}
 
 	@Nullable

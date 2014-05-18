@@ -77,7 +77,7 @@ public class CSharpModuleTypeHelperImpl extends CSharpModuleTypeHelper
 			builder.append("] { get; set; }");
 			builder.append("}");
 
-			DotNetTypeDeclaration typeDeclaration = CSharpFileFactory.createTypeDeclaration(myModule.getProject(), searchScope, builder.toString());
+			DotNetTypeDeclaration typeDeclaration = CSharpFileFactory.createTypeDeclaration(myModule.getProject(), builder.toString());
 			myArrayTypes.put(dimensions, typeDeclaration);
 			return typeDeclaration;
 		}

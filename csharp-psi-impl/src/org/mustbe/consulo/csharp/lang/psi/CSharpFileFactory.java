@@ -21,7 +21,6 @@ import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpExpressionStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFragmentedFileImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingNamespaceStatementImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -33,7 +32,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.SingleRootFileViewProvider;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightVirtualFile;
 import lombok.val;
 
@@ -68,38 +66,38 @@ public class CSharpFileFactory
 	}
 
 	@NotNull
-	public static DotNetType createType(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String typeText)
+	public static DotNetType createType(@NotNull Project project, @NotNull String typeText)
 	{
-		CSharpFieldDeclaration field = createField(project, scope, typeText + " _dummy");
+		CSharpFieldDeclaration field = createField(project, typeText + " _dummy");
 		return field.getType();
 	}
 
 	@NotNull
-	public static CSharpFieldDeclaration createField(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
+	public static CSharpFieldDeclaration createField(@NotNull Project project, @NotNull String text)
 	{
 		val clazz = "class _Dummy { " + text + "; }";
 
-		CSharpFragmentedFileImpl psiFile = createTypeDeclarationWithScope(project, scope, clazz);
+		CSharpFileImpl psiFile = createTypeDeclarationWithScope(project, clazz);
 
 		DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) psiFile.getMembers()[0];
 		return (CSharpFieldDeclaration) typeDeclaration.getMembers()[0];
 	}
 
 	@NotNull
-	public static PsiElement createIdentifier(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String name)
+	public static PsiElement createIdentifier(@NotNull Project project, @NotNull String name)
 	{
-		CSharpFieldDeclaration field = createField(project, scope, "int " + name);
+		CSharpFieldDeclaration field = createField(project, "int " + name);
 		return field.getNameIdentifier();
 	}
 
-	public static DotNetExpression createExpression(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
+	public static DotNetExpression createExpression(@NotNull Project project, @NotNull String text)
 	{
-		DotNetStatement statement = createStatement(project, scope, text);
+		DotNetStatement statement = createStatement(project, text);
 		assert statement instanceof CSharpExpressionStatementImpl;
 		return ((CSharpExpressionStatementImpl) statement).getExpression();
 	}
 
-	public static DotNetStatement createStatement(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
+	public static DotNetStatement createStatement(@NotNull Project project, @NotNull String text)
 	{
 		val clazz = "class _Dummy { " +
 				"void test() {" +
@@ -107,26 +105,24 @@ public class CSharpFileFactory
 				"}" +
 				" }";
 
-		CSharpFragmentedFileImpl psiFile = createTypeDeclarationWithScope(project, scope, clazz);
+		CSharpFileImpl psiFile = createTypeDeclarationWithScope(project, clazz);
 
 		DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) psiFile.getMembers()[0];
 		CSharpMethodDeclaration dotNetNamedElement = (CSharpMethodDeclaration) typeDeclaration.getMembers()[0];
 		return ((CSharpBlockStatementImpl) dotNetNamedElement.getCodeBlock()).getStatements()[0];
 	}
 
-	public static DotNetTypeDeclaration createTypeDeclaration(@NotNull Project project, @NotNull GlobalSearchScope scope, @NotNull String text)
+	public static DotNetTypeDeclaration createTypeDeclaration(@NotNull Project project, @NotNull String text)
 	{
-		CSharpFragmentedFileImpl psiFile = createTypeDeclarationWithScope(project, scope, text);
+		CSharpFileImpl psiFile = createTypeDeclarationWithScope(project, text);
 
 		return (DotNetTypeDeclaration) psiFile.getMembers()[0];
 	}
 
-	private static CSharpFragmentedFileImpl createTypeDeclarationWithScope(Project project, GlobalSearchScope scope, String clazz)
+	private static CSharpFileImpl createTypeDeclarationWithScope(Project project, String clazz)
 	{
 		val virtualFile = new LightVirtualFile("dummy.cs", CSharpFileType.INSTANCE, clazz, System.currentTimeMillis());
 		val viewProvider = new SingleRootFileViewProvider(PsiManager.getInstance(project), virtualFile, false);
-		val psiFile = new CSharpFragmentedFileImpl(viewProvider);
-		psiFile.forceResolveScope(scope);
-		return psiFile;
+		return new CSharpFileImpl(viewProvider);
 	}
 }

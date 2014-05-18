@@ -50,7 +50,7 @@ import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
@@ -658,7 +658,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			}
 
 
-			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, false);
+			Couple<PsiElement> resolveLayers = getResolveLayers(element, false);
 
 			PsiElement targetToWalkChildren = resolveLayers.getSecond();
 
@@ -677,7 +677,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		{
 			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE_KEY, element.getContainingFile());
 
-			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, false);
+			Couple<PsiElement> resolveLayers = getResolveLayers(element, false);
 
 			PsiElement last = resolveLayers.getFirst();
 			PsiElement targetToWalkChildren = resolveLayers.getSecond();
@@ -698,7 +698,8 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 		}
 	}
 
-	private static Pair<PsiElement, PsiElement> getResolveLayers(PsiElement element, boolean strict)
+	@NotNull
+	private static Couple<PsiElement> getResolveLayers(PsiElement element, boolean strict)
 	{
 		PsiElement last = null;
 		PsiElement targetToWalkChildren = null;
@@ -716,7 +717,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 					PsiElement listOwner = PsiTreeUtil.getParentOfType(temp, DotNetModifierListOwner.class);
 					if(listOwner != null)
 					{
-						Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(listOwner, true);
+						Couple<PsiElement> resolveLayers = getResolveLayers(listOwner, true);
 						last = resolveLayers.getFirst();
 						targetToWalkChildren = resolveLayers.getSecond();
 						break;
@@ -768,15 +769,21 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 				targetToWalkChildren = temp.getParent();
 				break;
 			}
+			else if(temp instanceof CSharpCodeFragment)
+			{
+				last = temp;
+				targetToWalkChildren = ((CSharpCodeFragment) temp).getScopeElement().getParent();
+				break;
+			}
 			temp = temp.getParent();
 		}
 
 		if(targetToWalkChildren == null)
 		{
-			return Pair.create(last, last);
+			return Couple.newOne(last, last);
 			//LOGGER.error(element.getText() + " " + last + " " + kind + " " + element.getParent() + " " + element.getContainingFile().getName());
 		}
-		return Pair.create(last, targetToWalkChildren);
+		return Couple.newOne(last, targetToWalkChildren);
 	}
 
 	@NotNull
@@ -933,7 +940,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 	{
 		PsiElement element = getReferenceElement();
 
-		PsiElement newIdentifier = CSharpFileFactory.createIdentifier(getProject(), getResolveScope(), s);
+		PsiElement newIdentifier = CSharpFileFactory.createIdentifier(getProject(), s);
 
 		element.replace(newIdentifier);
 		return this;
