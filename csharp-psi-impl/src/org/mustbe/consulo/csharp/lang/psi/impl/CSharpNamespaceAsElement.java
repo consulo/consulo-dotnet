@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.CSharpIndexKeys;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.index.NamespaceByQNameIndex;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -181,6 +182,12 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetName
 				{
 					return true;
 				}
+
+				if(!CSharpResolveUtil.checkConditionKey(processor, namedElement))
+				{
+					return true;
+				}
+
 				return processor.execute(namedElement, state);
 			}
 		});
@@ -197,6 +204,10 @@ public class CSharpNamespaceAsElement extends LightElement implements DotNetName
 				if(namedElement instanceof DotNetNamespaceDeclaration)
 				{
 					val e = new CSharpNamespaceAsElement(getProject(), ((DotNetNamespaceDeclaration) namedElement).getPresentableQName(), myScope);
+					if(!CSharpResolveUtil.checkConditionKey(processor, namedElement))
+					{
+						return true;
+					}
 					return processor.execute(e, state);
 				}
 				return true;

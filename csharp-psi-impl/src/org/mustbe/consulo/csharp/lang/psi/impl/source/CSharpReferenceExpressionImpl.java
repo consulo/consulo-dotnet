@@ -668,14 +668,14 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 
 			resolveState = ResolveState.initial();
 			resolveState = resolveState.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
-			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
+			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE_KEY, element.getContainingFile());
 
 			CSharpResolveUtil.walkChildren(p2, targetToWalkChildren, false, null, resolveState);
 			return p2.toResolveResults();
 		}
 		else
 		{
-			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE, element.getContainingFile());
+			resolveState = resolveState.put(CSharpResolveUtil.CONTAINS_FILE_KEY, element.getContainingFile());
 
 			Pair<PsiElement, PsiElement> resolveLayers = getResolveLayers(element, false);
 

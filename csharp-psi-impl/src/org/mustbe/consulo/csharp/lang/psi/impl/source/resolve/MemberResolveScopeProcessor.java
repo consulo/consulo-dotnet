@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
@@ -38,6 +39,9 @@ public class MemberResolveScopeProcessor extends AbstractScopeProcessor
 		myNameCondition = condition;
 		myWeightProcessor = weightProcessor;
 		myNamed = named;
+
+		//noinspection unchecked
+		putUserData(CSharpResolveUtil.CONDITION_KEY, (Condition) condition);
 	}
 
 	@Override

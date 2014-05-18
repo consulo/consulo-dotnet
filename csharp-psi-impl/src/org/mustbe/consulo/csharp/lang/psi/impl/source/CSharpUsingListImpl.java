@@ -71,7 +71,7 @@ public class CSharpUsingListImpl extends CSharpStubElementImpl<CSharpUsingListSt
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{
-		PsiFile psiFile = state.get(CSharpResolveUtil.CONTAINS_FILE);
+		PsiFile psiFile = state.get(CSharpResolveUtil.CONTAINS_FILE_KEY);
 		if(psiFile == null)
 		{
 			return true;

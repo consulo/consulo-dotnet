@@ -53,9 +53,9 @@ public class CSharpLocalVariableDeclarationStatementImpl extends CSharpElementIm
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
 			place)
 	{
-		for(CSharpLocalVariable cSharpLocalVariable : getVariables())
+		for(CSharpLocalVariable variable : getVariables())
 		{
-			if(!processor.execute(cSharpLocalVariable, state))
+			if(!processor.execute(variable, state))
 			{
 				return false;
 			}

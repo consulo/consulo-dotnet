@@ -22,6 +22,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightMethodDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.CSharpLightParameterList;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpMethodImplUtil;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
@@ -45,26 +46,34 @@ public class ExtensionResolveScopeProcessor extends AbstractScopeProcessor
 		myCond = condition;
 		myWeightProcessor = weightProcessor;
 		myNamed = named;
+
+		putUserData(CSharpResolveUtil.CONDITION_KEY, new Condition<PsiElement>()
+		{
+			@Override
+			public boolean value(PsiElement element)
+			{
+				return element instanceof CSharpTypeDeclaration && ((CSharpTypeDeclaration) element).hasExtensions();
+			}
+		});
 	}
 
 	@Override
 	public boolean execute(@NotNull PsiElement element, ResolveState state)
 	{
-		if(element instanceof CSharpTypeDeclaration && ((CSharpTypeDeclaration) element).hasExtensions())
-		{
-			for(DotNetNamedElement dotNetNamedElement : ((CSharpTypeDeclaration) element).getMembers())
-			{
-				if(!myCond.value(dotNetNamedElement) || !CSharpMethodImplUtil.isExtensionMethod(dotNetNamedElement))
-				{
-					continue;
-				}
+		assert element instanceof CSharpTypeDeclaration;
 
-				int weight = myWeightProcessor.getWeight(dotNetNamedElement);
-				add(new ResolveResultWithWeight(transform((CSharpMethodDeclaration) dotNetNamedElement), weight));
-				if(weight == WeightProcessor.MAX_WEIGHT && myNamed)
-				{
-					return false;
-				}
+		for(DotNetNamedElement dotNetNamedElement : ((CSharpTypeDeclaration) element).getMembers())
+		{
+			if(!myCond.value(dotNetNamedElement) || !CSharpMethodImplUtil.isExtensionMethod(dotNetNamedElement))
+			{
+				continue;
+			}
+
+			int weight = myWeightProcessor.getWeight(dotNetNamedElement);
+			add(new ResolveResultWithWeight(transform((CSharpMethodDeclaration) dotNetNamedElement), weight));
+			if(weight == WeightProcessor.MAX_WEIGHT && myNamed)
+			{
+				return false;
 			}
 		}
 		return true;

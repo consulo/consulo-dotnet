@@ -41,6 +41,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.KeyWithDefaultValue;
 import com.intellij.psi.PsiElement;
@@ -67,8 +68,8 @@ public class CSharpResolveUtil
 		}
 	};
 
-	public static final Key<PsiFile> CONTAINS_FILE = Key.create("contains.file");
-	//public static final Key<String> NAME_HINT = Key.create("name.hint");
+	public static final Key<PsiFile> CONTAINS_FILE_KEY = Key.create("contains.file");
+	public static final Key<Condition<PsiElement>> CONDITION_KEY = Key.create("condition");
 
 	public static boolean treeWalkUp(
 			@NotNull PsiScopeProcessor processor, @NotNull PsiElement entrance, @NotNull PsiElement sender, @Nullable PsiElement maxScope)
@@ -246,7 +247,7 @@ public class CSharpResolveUtil
 			return walkChildren(processor, parentNamespace, typeResolving, maxScope, state);
 		}
 
-		PsiFile psiFile = state.get(CONTAINS_FILE);
+		PsiFile psiFile = state.get(CONTAINS_FILE_KEY);
 		return psiFile == null || walkChildren(processor, psiFile, typeResolving, maxScope, state);
 	}
 
@@ -283,6 +284,11 @@ public class CSharpResolveUtil
 
 		for(DotNetNamedElement namedElement : typeDeclaration.getMembers())
 		{
+			if(!checkConditionKey(processor, namedElement))
+			{
+				continue;
+			}
+
 			DotNetNamedElement extracted = GenericUnwrapTool.extract(namedElement, genericExtractor);
 
 			if(!processor.execute(extracted, state))
@@ -319,5 +325,11 @@ public class CSharpResolveUtil
 		}
 
 		return current.toTypeRef(false);
+	}
+
+	public static boolean checkConditionKey(@NotNull PsiScopeProcessor processor, @NotNull PsiElement element)
+	{
+		Condition<PsiElement> hint = processor.getHint(CONDITION_KEY);
+		return hint != null && hint.value(element);
 	}
 }

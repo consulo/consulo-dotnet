@@ -24,12 +24,8 @@ import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.BaseScopeProcessor;
-import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
@@ -53,33 +49,29 @@ public class CSharpSearchUtil
 	public static DotNetPropertyDeclaration findPropertyByName(@NotNull final String name, @NotNull PsiElement owner,
 			@NotNull DotNetGenericExtractor extractor)
 	{
-		final Ref<DotNetPropertyDeclaration> ref = Ref.create();
-		PsiScopeProcessor psiScopeProcessor = new BaseScopeProcessor()
+		SingleSearchProcessor<DotNetPropertyDeclaration> processor = new SingleSearchProcessor<DotNetPropertyDeclaration>(name)
 		{
 			@Override
-			public boolean execute(@NotNull PsiElement element, ResolveState state)
+			public DotNetPropertyDeclaration isValidElement(@NotNull PsiElement element)
 			{
-
-				if(element instanceof DotNetPropertyDeclaration && Comparing.equal(((DotNetPropertyDeclaration) element).getName(), name))
+				if(element instanceof DotNetPropertyDeclaration)
 				{
 					//FIXME [VISTALL]  stupy hack until override ill supported
 					if(((DotNetPropertyDeclaration) element).hasModifier(CSharpModifier.PRIVATE))
 					{
-						return true;
+						return null;
 					}
-
-					ref.set((DotNetPropertyDeclaration) element);
-					return false;
+					return (DotNetPropertyDeclaration) element;
 				}
-				return true;
+				return null;
 			}
 		};
 
 		ResolveState state = ResolveState.initial();
 		state = state.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
 
-		CSharpResolveUtil.walkChildren(psiScopeProcessor, owner, false, null, state);
-		return ref.get();
+		CSharpResolveUtil.walkChildren(processor, owner, false, null, state);
+		return processor.get();
 	}
 
 	@Nullable
@@ -98,35 +90,33 @@ public class CSharpSearchUtil
 	public static DotNetMethodDeclaration findMethodByName(@NotNull final String name, @NotNull PsiElement owner,
 			@NotNull DotNetGenericExtractor extractor)
 	{
-		final Ref<DotNetMethodDeclaration> ref = Ref.create();
-		PsiScopeProcessor psiScopeProcessor = new BaseScopeProcessor()
+		SingleSearchProcessor<DotNetMethodDeclaration> processor = new SingleSearchProcessor<DotNetMethodDeclaration>(name)
 		{
 			@Override
-			public boolean execute(@NotNull PsiElement element, ResolveState state)
+			public DotNetMethodDeclaration isValidElement(@NotNull PsiElement element)
 			{
-				if(element instanceof DotNetMethodDeclaration && Comparing.equal(((DotNetMethodDeclaration) element).getName(), name))
+				if(element instanceof DotNetMethodDeclaration)
 				{
 					//FIXME [VISTALL]  stupy hack until override ill supported
 					if(((DotNetMethodDeclaration) element).hasModifier(CSharpModifier.PRIVATE))
 					{
-						return true;
+						return null;
 					}
 
 					DotNetParameter[] parameters = ((DotNetMethodDeclaration) element).getParameters();
 					if(parameters.length == 0) //TODO [VISTALL] parameter handling
 					{
-						ref.set((DotNetMethodDeclaration) element);
-						return false;
+						return (DotNetMethodDeclaration) element;
 					}
 				}
-				return true;
+				return null;
 			}
 		};
 
 		ResolveState state = ResolveState.initial();
 		state = state.put(CSharpResolveUtil.EXTRACTOR_KEY, extractor);
 
-		CSharpResolveUtil.walkChildren(psiScopeProcessor, owner, false, null, state);
-		return ref.get();
+		CSharpResolveUtil.walkChildren(processor, owner, false, null, state);
+		return processor.get();
 	}
 }
