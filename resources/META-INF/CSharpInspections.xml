@@ -18,5 +18,7 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<localInspection implementationClass="org.mustbe.consulo.csharp.ide.codeInspection.unnecessaryCast.UnnecessaryCastInspection"
 						 displayName="Unnecessary Cast" groupName="C#" enabledByDefault="true" />
+		<localInspection implementationClass="org.mustbe.consulo.csharp.ide.codeInspection.unnecessaryType.UnnecessaryTypeInspection"
+						 displayName="Unnecessary Type" groupName="C#" enabledByDefault="true" />
 	</extensions>
 </idea-plugin>

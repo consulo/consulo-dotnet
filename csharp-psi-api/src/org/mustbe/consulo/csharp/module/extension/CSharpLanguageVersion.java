@@ -36,6 +36,11 @@ public enum CSharpLanguageVersion implements Named, NamedPointer<CSharpLanguageV
 
 	public static final CSharpLanguageVersion HIGHEST = _5_0;
 
+	public boolean isAtLeast(@NotNull CSharpLanguageVersion languageVersion)
+	{
+		return ordinal() >= languageVersion.ordinal();
+	}
+
 	@NotNull
 	public String getPresentableName()
 	{

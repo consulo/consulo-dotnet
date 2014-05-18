@@ -31,6 +31,8 @@ import com.intellij.psi.PsiElementVisitor;
  */
 public class CSharpElementVisitor extends PsiElementVisitor
 {
+	public static final CSharpElementVisitor EMPTY = new CSharpElementVisitor();
+
 	public void visitCSharpFile(CSharpFileImpl file)
 	{
 		visitFile(file);
