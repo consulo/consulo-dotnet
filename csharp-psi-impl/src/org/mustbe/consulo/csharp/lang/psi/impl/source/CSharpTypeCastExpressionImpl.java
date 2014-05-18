@@ -17,6 +17,7 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -44,6 +45,12 @@ public class CSharpTypeCastExpressionImpl extends CSharpElementImpl implements D
 	public DotNetType getType()
 	{
 		return findNotNullChildByClass(DotNetType.class);
+	}
+
+	@Nullable
+	public DotNetExpression getInnerExpression()
+	{
+		return findChildByClass(DotNetExpression.class);
 	}
 
 	@NotNull
