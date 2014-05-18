@@ -26,11 +26,15 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceAsElement;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpNamespaceHelper;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpForeachStatementImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpTypeDefTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.wrapper.GenericUnwrapTool;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetNamespaceDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
@@ -64,6 +68,7 @@ public class CSharpResolveUtil
 	};
 
 	public static final Key<PsiFile> CONTAINS_FILE = Key.create("contains.file");
+	//public static final Key<String> NAME_HINT = Key.create("name.hint");
 
 	public static boolean treeWalkUp(
 			@NotNull PsiScopeProcessor processor, @NotNull PsiElement entrance, @NotNull PsiElement sender, @Nullable PsiElement maxScope)
@@ -288,5 +293,31 @@ public class CSharpResolveUtil
 
 		Collections.addAll(supers, typeDeclaration.getExtendTypeRefs());
 		return true;
+	}
+
+	@NotNull
+	public static DotNetTypeRef resolveIterableType(@NotNull CSharpForeachStatementImpl foreachStatement)
+	{
+		DotNetExpression iterableExpression = foreachStatement.getIterableExpression();
+		if(iterableExpression == null)
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+
+		DotNetTypeRef typeRef = iterableExpression.toTypeRef(false);
+
+		DotNetMethodDeclaration method = CSharpSearchUtil.findMethodByName("GetEnumerator", typeRef, foreachStatement);
+		if(method == null)
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+
+		DotNetPropertyDeclaration current = CSharpSearchUtil.findPropertyByName("Current", method.getReturnTypeRef(), foreachStatement);
+		if(current == null)
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+
+		return current.toTypeRef(false);
 	}
 }

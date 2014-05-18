@@ -140,6 +140,10 @@ public class GenericUnwrapTool
 			CSharpFieldDeclaration e = (CSharpFieldDeclaration) namedElement;
 			return (T) new CSharpLightFieldDeclaration(e, exchangeTypeRefs(e.toTypeRef(true), extractor, e));
 		}
+		else
+		{
+			System.out.println("Unsupported: " + namedElement);
+		}
 		return namedElement;
 	}
 

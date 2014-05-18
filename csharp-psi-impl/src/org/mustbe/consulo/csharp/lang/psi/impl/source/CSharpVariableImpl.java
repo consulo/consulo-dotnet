@@ -58,7 +58,7 @@ public abstract class CSharpVariableImpl extends CSharpMemberImpl implements Dot
 			DotNetExpression initializer = getInitializer();
 			if(initializer == null)
 			{
-				return DotNetTypeRef.UNKNOWN_TYPE;
+				return DotNetTypeRef.ERROR_TYPE;
 			}
 
 			return initializer.toTypeRef(false);

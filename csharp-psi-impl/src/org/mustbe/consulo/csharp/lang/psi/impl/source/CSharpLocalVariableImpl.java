@@ -24,9 +24,11 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariableDeclarationStatement;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.LocalSearchScope;
@@ -64,6 +66,35 @@ public class CSharpLocalVariableImpl extends CSharpVariableImpl implements CShar
 			return localVariable.getType();
 		}
 		return type;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
+	{
+		PsiElement parent = getParent();
+		if(parent instanceof CSharpForeachStatementImpl)
+		{
+			DotNetType type = getType();
+			if(type == null)
+			{
+				return DotNetTypeRef.ERROR_TYPE;
+			}
+
+			DotNetTypeRef typeRef = type.toTypeRef();
+			if(typeRef == DotNetTypeRef.AUTO_TYPE && resolveFromInitializer)
+			{
+				return CSharpResolveUtil.resolveIterableType((CSharpForeachStatementImpl) parent);
+			}
+			else
+			{
+				return typeRef;
+			}
+		}
+		else
+		{
+			return super.toTypeRef(resolveFromInitializer);
+		}
 	}
 
 	@Override

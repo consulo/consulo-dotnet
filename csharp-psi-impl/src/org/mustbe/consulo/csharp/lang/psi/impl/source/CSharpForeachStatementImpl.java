@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -42,6 +43,12 @@ public class CSharpForeachStatementImpl extends CSharpElementImpl implements Dot
 	public void accept(@NotNull CSharpElementVisitor visitor)
 	{
 		visitor.visitForeachStatement(this);
+	}
+
+	@Nullable
+	public DotNetExpression getIterableExpression()
+	{
+		return findChildByClass(DotNetExpression.class);
 	}
 
 	@Nullable
