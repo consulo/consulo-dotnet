@@ -517,4 +517,9 @@ public class CSharpElementVisitor extends PsiElementVisitor
 	{
 		visitElement(call);
 	}
+
+	public void visitNewArrayLength(CSharpNewArrayLengthImpl element)
+	{
+		visitElement(element);
+	}
 }

@@ -42,6 +42,12 @@ public class CSharpMethodCallExpressionImpl extends CSharpElementImpl implements
 	}
 
 	@Override
+	public boolean canResolve()
+	{
+		return true;
+	}
+
+	@Override
 	@Nullable
 	public CSharpMethodCallParameterList getParameterList()
 	{

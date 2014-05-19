@@ -44,6 +44,12 @@ public class CSharpConstructorSuperCallImpl extends CSharpElementImpl implements
 		visitor.visitConstructorSuperCall(this);
 	}
 
+	@Override
+	public boolean canResolve()
+	{
+		return true;
+	}
+
 	@Nullable
 	@Override
 	public CSharpMethodCallParameterList getParameterList()

@@ -1034,6 +1034,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 		{
 			while(builder.getTokenType() == LBRACKET)
 			{
+				val arrayMarker = builder.mark();
 				builder.advanceLexer();
 
 				while(true)
@@ -1050,6 +1051,7 @@ public class ExpressionParsing extends SharingParsingHelpers
 				}
 
 				expect(builder, RBRACKET, "']' expected");
+				arrayMarker.done(NEW_ARRAY_LENGTH);
 			}
 
 			if(builder.getTokenType() == LPAR)

@@ -28,6 +28,8 @@ import com.intellij.psi.ResolveResult;
  */
 public interface CSharpMethodCallParameterListOwner extends DotNetElement, CSharpExpressionWithParameters
 {
+	boolean canResolve();
+
 	@Nullable
 	CSharpMethodCallParameterList getParameterList();
 

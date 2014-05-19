@@ -69,6 +69,12 @@ public class CSharpAttributeImpl extends CSharpElementImpl implements DotNetAttr
 		return null;
 	}
 
+	@Override
+	public boolean canResolve()
+	{
+		return true;
+	}
+
 	@Nullable
 	@Override
 	public CSharpMethodCallParameterList getParameterList()

@@ -23,7 +23,6 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpFieldOrPropertySetBlock;
 import org.mustbe.consulo.csharp.lang.psi.CSharpMethodCallParameterList;
 import org.mustbe.consulo.csharp.lang.psi.CSharpNewExpression;
 import org.mustbe.consulo.csharp.lang.psi.CSharpReferenceExpression;
-import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpAnonymTypeRef;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpArrayTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -44,6 +43,12 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 	public CSharpNewExpressionImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	public boolean canResolve()
+	{
+		return getParameterList() != null;
 	}
 
 	@Override
@@ -69,17 +74,24 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 		else
 		{
 			DotNetTypeRef typeRef = null;
-			if(type instanceof DotNetReferenceType)
+			if(canResolve())
 			{
-				DotNetReferenceExpression referenceExpression = ((DotNetReferenceType) type).getReferenceExpression();
-				if(referenceExpression instanceof CSharpReferenceExpression)
+				if(type instanceof DotNetReferenceType)
 				{
-					typeRef = ((CSharpReferenceExpressionImpl) referenceExpression).toTypeRef(CSharpReferenceExpressionImpl
-							.ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD, resolveFromParent);
+					DotNetReferenceExpression referenceExpression = ((DotNetReferenceType) type).getReferenceExpression();
+					if(referenceExpression instanceof CSharpReferenceExpression)
+					{
+						typeRef = ((CSharpReferenceExpressionImpl) referenceExpression).toTypeRef(CSharpReferenceExpressionImpl
+								.ResolveToKind.TYPE_OR_GENERIC_PARAMETER_OR_DELEGATE_METHOD, resolveFromParent);
+					}
+					else
+					{
+						typeRef = DotNetTypeRef.ERROR_TYPE;
+					}
 				}
 				else
 				{
-					typeRef = DotNetTypeRef.ERROR_TYPE;
+					typeRef = type.toTypeRef();
 				}
 			}
 			else
@@ -87,12 +99,17 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 				typeRef = type.toTypeRef();
 			}
 
-			for(PsiElement ignored : findChildrenByType(CSharpTokens.LBRACKET))
+			for(CSharpNewArrayLengthImpl length : getNewArrayLengths())
 			{
-				typeRef = new CSharpArrayTypeRef(typeRef, 0);
+				typeRef = new CSharpArrayTypeRef(typeRef, length.getDimensionSize());
 			}
 			return typeRef;
 		}
+	}
+
+	public CSharpNewArrayLengthImpl[] getNewArrayLengths()
+	{
+		return findChildrenByClass(CSharpNewArrayLengthImpl.class);
 	}
 
 	@Nullable
@@ -126,6 +143,10 @@ public class CSharpNewExpressionImpl extends CSharpElementImpl implements CSharp
 	@Override
 	public ResolveResult[] multiResolve(boolean incompleteCode)
 	{
+		if(!canResolve())
+		{
+			return ResolveResult.EMPTY_ARRAY;
+		}
 		DotNetType newType = getNewType();
 		if(newType instanceof DotNetReferenceType)
 		{
