@@ -374,7 +374,12 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 			}
 			builder.append(")");
 
-			return new ResolveError("", builder.toString(), callOwner.getParameterList());
+			PsiElement parameterList = callOwner.getParameterList();
+			if(parameterList == null)
+			{
+				parameterList = callOwner;
+			}
+			return new ResolveError("", builder.toString(), parameterList);
 		}
 		return null;
 	}
