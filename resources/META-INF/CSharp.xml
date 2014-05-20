@@ -34,12 +34,6 @@
 		<debugger.provider implementation="org.mustbe.consulo.csharp.ide.debugger.CSharpDebuggerProvider"/>
 	</extensions>
 
-	<project-components>
-		<component>
-			<implementation-class>org.mustbe.consulo.csharp.ide.highlight.CSharpTextEditorHighlightingPassFactory</implementation-class>
-		</component>
-	</project-components>
-
 	<extensions defaultExtensionNs="com.intellij">
 		<internalFileTemplate name="CSharpClass"/>
 		<internalFileTemplate name="CSharpInterface"/>
