@@ -111,6 +111,11 @@ public class CSharpXXXAccessorImpl extends CSharpStubMemberImpl<CSharpXXXAccesso
 	@Override
 	public IElementType getAccessorType()
 	{
+		CSharpXXXAccessorStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getAccessorType();
+		}
 		return getNameIdentifier().getNode().getElementType();
 	}
 
