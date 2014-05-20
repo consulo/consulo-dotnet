@@ -46,7 +46,7 @@ public class CS0029 extends CompilerCheck<PsiElement>
 {
 	@Nullable
 	@Override
-	public CompilerCheckResult check(
+	public CompilerCheckResult checkImpl(
 			@NotNull CSharpLanguageVersion languageVersion, @NotNull PsiElement element)
 	{
 		Trinity<DotNetTypeRef, DotNetTypeRef, ? extends PsiElement> resolve = resolve(element);

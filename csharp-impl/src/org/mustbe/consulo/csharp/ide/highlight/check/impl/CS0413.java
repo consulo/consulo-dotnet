@@ -42,7 +42,7 @@ public class CS0413 extends CompilerCheck<PsiElement>
 {
 	@Nullable
 	@Override
-	public CompilerCheckResult check(
+	public CompilerCheckResult checkImpl(
 			@NotNull CSharpLanguageVersion languageVersion, @NotNull PsiElement element)
 	{
 		if(element instanceof CSharpAsExpressionImpl)

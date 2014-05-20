@@ -89,19 +89,45 @@ public abstract class CompilerCheck<T extends PsiElement>
 		}
 	}
 
+	@NotNull
+	public List<CompilerCheckResult> check(@NotNull CSharpLanguageVersion languageVersion, @NotNull T element)
+	{
+		CompilerCheckResult check = checkImpl(languageVersion, element);
+		if(check == null)
+		{
+			return Collections.emptyList();
+		}
+		return Collections.singletonList(check);
+	}
+
 	@Nullable
-	public abstract CompilerCheckResult check(@NotNull CSharpLanguageVersion languageVersion, @NotNull T element);
+	public CompilerCheckResult checkImpl(@NotNull CSharpLanguageVersion languageVersion, @NotNull T element)
+	{
+		return null;
+	}
 
 	@NotNull
 	public CompilerCheckResult result(@NotNull PsiElement range, String... args)
 	{
-		return result(range.getTextRange(), args);
+		return resultImpl(getClass(), range, args);
 	}
 
 	@NotNull
 	public CompilerCheckResult result(@NotNull TextRange range, String... args)
 	{
-		String id = getClass().getSimpleName();
+		return resultImpl(getClass(), range, args);
+	}
+
+	@NotNull
+	public static CompilerCheckResult resultImpl(@NotNull Class<?> clazz, @NotNull PsiElement range, String... args)
+	{
+		return resultImpl(clazz, range.getTextRange(), args);
+	}
+
+	@NotNull
+	public static CompilerCheckResult resultImpl(@NotNull Class<?> clazz, @NotNull TextRange range, String... args)
+	{
+		String id = clazz.getSimpleName();
 		String message = CSharpErrorBundle.message(id, args);
 		if(ApplicationManager.getApplication().isInternal())
 		{

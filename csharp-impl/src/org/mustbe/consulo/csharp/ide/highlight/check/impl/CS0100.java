@@ -38,7 +38,7 @@ public class CS0100 extends CompilerCheck<DotNetElement>
 {
 	@Nullable
 	@Override
-	public CompilerCheckResult check(@NotNull CSharpLanguageVersion languageVersion, @NotNull DotNetElement element)
+	public CompilerCheckResult checkImpl(@NotNull CSharpLanguageVersion languageVersion, @NotNull DotNetElement element)
 	{
 		DotNetVariable[] parameters = getParameters(element);
 		if(parameters == null)

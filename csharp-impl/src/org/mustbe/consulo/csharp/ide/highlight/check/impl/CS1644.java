@@ -220,7 +220,7 @@ public class CS1644 extends CompilerCheck<PsiElement>
 
 	@Nullable
 	@Override
-	public CompilerCheckResult check(@NotNull CSharpLanguageVersion languageVersion, @NotNull PsiElement element)
+	public CompilerCheckResult checkImpl(@NotNull CSharpLanguageVersion languageVersion, @NotNull PsiElement element)
 	{
 		for(Feature feature : myFeatures)
 		{

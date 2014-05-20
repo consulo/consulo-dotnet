@@ -17,9 +17,10 @@
 package org.mustbe.consulo.csharp.ide.highlight;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.Collections;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
@@ -33,6 +34,8 @@ public enum CSharpCompilerChecks
 {
 	CS0029(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // assign type check
 	CS0100(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // parameter is duplicate
+	CS0128(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // local variable redeclaration check
+	CS0136(CSharpLanguageVersion._3_0, HighlightInfoType.ERROR), // lambda parameter redeclaration check
 	CS0155(CSharpLanguageVersion._1_0, HighlightInfoType.ERROR), // throw object must be child of System.Exception
 	CS0214(CSharpLanguageVersion._1_0, HighlightInfoType.WRONG_REF), // fixed can be used inside unsafe context
 	CS0227(CSharpLanguageVersion._1_0, HighlightInfoType.WRONG_REF), // 'unsafe' modifier check
@@ -74,19 +77,22 @@ public enum CSharpCompilerChecks
 		}
 	}
 
-	@Nullable
-	public CompilerCheck.CompilerCheckResult check(CSharpLanguageVersion languageVersion, PsiElement element)
+	@NotNull
+	public List<CompilerCheck.CompilerCheckResult> check(CSharpLanguageVersion languageVersion, PsiElement element)
 	{
-		CompilerCheck.CompilerCheckResult check = myCheck.check(languageVersion, element);
-		if(check == null)
+		List<CompilerCheck.CompilerCheckResult> results = myCheck.check(languageVersion, element);
+		if(results.isEmpty())
 		{
-			return null;
+			return Collections.emptyList();
 		}
-		if(check.getHighlightInfoType() == null)
+		for(CompilerCheck.CompilerCheckResult result : results)
 		{
-			check.setHighlightInfoType(myType);
+			if(result.getHighlightInfoType() == null)
+			{
+				result.setHighlightInfoType(myType);
+			}
 		}
-		return check;
+		return results;
 	}
 
 	@NotNull

@@ -127,22 +127,25 @@ public class CSharpHighlightVisitor extends CSharpElementVisitor implements High
 				if(languageVersion.ordinal() >= classEntry.getLanguageVersion().ordinal() &&
 						classEntry.getTargetClass().isAssignableFrom(element.getClass()))
 				{
-					CompilerCheck.CompilerCheckResult check = classEntry.check(languageVersion, element);
-					if(check == null)
+					List<CompilerCheck.CompilerCheckResult> results = classEntry.check(languageVersion, element);
+					if(results.isEmpty())
 					{
 						continue;
 					}
-					HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(check.getHighlightInfoType());
-					builder = builder.descriptionAndTooltip(check.getText());
-					builder = builder.range(check.getTextRange());
-					HighlightInfo highlightInfo = builder.create();
-					if(highlightInfo != null)
+					for(CompilerCheck.CompilerCheckResult result : results)
 					{
-						myHighlightInfoHolder.add(highlightInfo);
-
-						for(IntentionAction intentionAction : check.getQuickFixes())
+						HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(result.getHighlightInfoType());
+						builder = builder.descriptionAndTooltip(result.getText());
+						builder = builder.range(result.getTextRange());
+						HighlightInfo highlightInfo = builder.create();
+						if(highlightInfo != null)
 						{
-							QuickFixAction.registerQuickFixAction(highlightInfo, intentionAction);
+							myHighlightInfoHolder.add(highlightInfo);
+
+							for(IntentionAction intentionAction : result.getQuickFixes())
+							{
+								QuickFixAction.registerQuickFixAction(highlightInfo, intentionAction);
+							}
 						}
 					}
 				}

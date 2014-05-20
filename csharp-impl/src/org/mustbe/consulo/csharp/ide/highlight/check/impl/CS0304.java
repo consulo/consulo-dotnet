@@ -39,7 +39,7 @@ import lombok.val;
 public class CS0304 extends CompilerCheck<CSharpNewExpression>
 {
 	@Override
-	public CompilerCheckResult check(@NotNull CSharpLanguageVersion languageVersion, @NotNull CSharpNewExpression element)
+	public CompilerCheckResult checkImpl(@NotNull CSharpLanguageVersion languageVersion, @NotNull CSharpNewExpression element)
 	{
 		PsiElement resolve = element.toTypeRef(false).resolve(element);
 		if(resolve instanceof DotNetGenericParameter)

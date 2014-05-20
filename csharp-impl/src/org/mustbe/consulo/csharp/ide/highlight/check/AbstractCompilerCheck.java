@@ -41,7 +41,7 @@ public abstract class AbstractCompilerCheck<T extends PsiElement> extends Compil
 	}
 
 	@Override
-	public final CompilerCheckResult check(@NotNull CSharpLanguageVersion languageVersion, @NotNull T element)
+	public final CompilerCheckResult checkImpl(@NotNull CSharpLanguageVersion languageVersion, @NotNull T element)
 	{
 		if(accept(element))
 		{
