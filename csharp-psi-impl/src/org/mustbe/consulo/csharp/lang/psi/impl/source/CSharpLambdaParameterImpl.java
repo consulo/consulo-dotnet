@@ -17,8 +17,10 @@
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.reflactoring.CSharpRefactoringUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
@@ -29,8 +31,11 @@ import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
@@ -125,5 +130,19 @@ public class CSharpLambdaParameterImpl extends CSharpVariableImpl implements CSh
 		}
 		DotNetTypeRef[] leftTypeParameters = ((CSharpLambdaTypeRef) leftTypeRef).getParameterTypes();
 		return leftTypeParameters[ArrayUtil.indexOf(parameters, this)];
+	}
+
+	@Override
+	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	{
+		CSharpRefactoringUtil.replaceNameIdentifier(this, s);
+		return this;
+	}
+
+	@NotNull
+	@Override
+	public SearchScope getUseScope()
+	{
+		return new LocalSearchScope(getParent().getParent());
 	}
 }

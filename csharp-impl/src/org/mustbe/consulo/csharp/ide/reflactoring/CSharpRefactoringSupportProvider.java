@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.ide.reflactoring;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.ide.reflactoring.changeSignature.CSharpChangeSignatureHandler;
 import org.mustbe.consulo.csharp.ide.reflactoring.introduceVariable.CSharpIntroduceVariableHandler;
+import org.mustbe.consulo.csharp.lang.psi.CSharpLambdaParameter;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
@@ -77,7 +78,8 @@ public class CSharpRefactoringSupportProvider extends RefactoringSupportProvider
 		{
 			return false;
 		}
-		if(!(elementToRename instanceof CSharpLocalVariable) && !(elementToRename instanceof CSharpParameterImpl))
+		if(!(elementToRename instanceof CSharpLocalVariable) && !(elementToRename instanceof CSharpParameterImpl) && !(elementToRename instanceof
+				CSharpLambdaParameter))
 		{
 			return false;
 		}
