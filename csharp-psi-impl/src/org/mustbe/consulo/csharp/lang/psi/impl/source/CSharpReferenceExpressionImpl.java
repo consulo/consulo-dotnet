@@ -751,7 +751,7 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			}
 			else if(temp instanceof DotNetFieldDeclaration)
 			{
-				last = element.getParent();
+				last = temp.getParent();
 				targetToWalkChildren = temp.getParent();
 				break;
 			}
