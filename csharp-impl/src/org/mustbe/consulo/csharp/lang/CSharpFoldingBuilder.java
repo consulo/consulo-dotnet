@@ -28,7 +28,7 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpRecursiveElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTypeDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpBlockStatementImpl;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpTypeDeclarationImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpPsiUtilImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListChild;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpUsingListImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
@@ -56,6 +56,11 @@ public class CSharpFoldingBuilder implements FoldingBuilder
 		val foldingList = new ArrayList<FoldingDescriptor>();
 
 		PsiElement psi = astNode.getPsi();
+
+		if(CSharpPsiUtilImpl.isCompiledElement(psi))
+		{
+			return FoldingDescriptor.EMPTY;
+		}
 
 		psi.accept(new CSharpRecursiveElementVisitor()
 		{
