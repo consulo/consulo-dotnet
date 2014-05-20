@@ -17,10 +17,12 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder.util;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.util.QualifiedName;
@@ -64,6 +66,18 @@ public class XStubUtil
 			"finally",
 			"internal",
 	};
+
+	public static boolean containsCharSequence(@NotNull Collection<? extends CharSequence> collection, @NotNull CharSequence sequence)
+	{
+		for(CharSequence charSequence : collection)
+		{
+			if(Comparing.equal(charSequence, sequence))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static boolean isSet(long value, int mod)
 	{

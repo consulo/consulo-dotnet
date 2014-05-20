@@ -95,7 +95,7 @@ public class XStubBuilder
 		}
 	};
 
-	private static List<String> SKIPPED_SUPERTYPES = new ArrayList<String>()
+	private static List<CharSequence> SKIPPED_SUPERTYPES = new ArrayList<CharSequence>()
 	{
 		{
 			add(DotNetTypes.System_Object);
@@ -208,7 +208,7 @@ public class XStubBuilder
 		List<Object> supers = new ArrayList<Object>(interfaceImplementations.size() + 1);
 		if(superSuperClassFullName != null)
 		{
-			if(!SKIPPED_SUPERTYPES.contains(superSuperClassFullName))
+			if(!XStubUtil.containsCharSequence(SKIPPED_SUPERTYPES, superSuperClassFullName))
 			{
 				supers.add(typeDef.getSuperClass());
 			}
