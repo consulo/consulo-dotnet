@@ -21,8 +21,10 @@ import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpFileFactory;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariableDeclarationStatement;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpLambdaTypeRef;
 import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
 import org.mustbe.consulo.csharp.module.extension.CSharpModuleUtil;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.codeInspection.LocalInspectionTool;
@@ -105,6 +107,16 @@ public class UnnecessaryTypeInspection extends LocalInspectionTool
 				if(variable.isConstant())
 				{
 					return;
+				}
+
+				DotNetExpression initializer = variable.getInitializer();
+				if(initializer != null)
+				{
+					DotNetTypeRef typeRef = initializer.toTypeRef(false);
+					if(typeRef instanceof CSharpLambdaTypeRef)
+					{
+						return;
+					}
 				}
 
 				DotNetTypeRef typeRef = variable.toTypeRef(false);
