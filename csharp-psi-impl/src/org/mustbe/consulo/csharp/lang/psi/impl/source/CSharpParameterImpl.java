@@ -16,21 +16,32 @@
 
 package org.mustbe.consulo.csharp.lang.psi.impl.source;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.reflactoring.CSharpRefactoringUtil;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpVariableStub;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.typeStub.CSharpStubTypeInfoUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.search.SearchScope;
+import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public class CSharpParameterImpl extends CSharpStubVariableImpl<CSharpVariableStub<DotNetParameter>> implements DotNetParameter
+public class CSharpParameterImpl extends CSharpStubElementImpl<CSharpVariableStub<DotNetParameter>> implements DotNetParameter
 {
 	public CSharpParameterImpl(@NotNull ASTNode node)
 	{
@@ -48,6 +59,26 @@ public class CSharpParameterImpl extends CSharpStubVariableImpl<CSharpVariableSt
 		visitor.visitParameter(this);
 	}
 
+	@Override
+	public boolean isConstant()
+	{
+		return false;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
+	{
+		CSharpVariableStub<?> stub = getStub();
+		if(stub != null)
+		{
+			return CSharpStubTypeInfoUtil.toTypeRef(stub.getTypeInfo(), this);
+		}
+
+		DotNetType type = getType();
+		return type.toTypeRef();
+	}
+
 	@NotNull
 	@Override
 	public DotNetType getType()
@@ -60,5 +91,68 @@ public class CSharpParameterImpl extends CSharpStubVariableImpl<CSharpVariableSt
 	public DotNetExpression getInitializer()
 	{
 		return findChildByClass(DotNetExpression.class);
+	}
+
+	@Override
+	@Nullable
+	public DotNetModifierList getModifierList()
+	{
+		return findChildByClass(DotNetModifierList.class);
+	}
+
+	@Override
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	{
+		CSharpVariableStub<?> stub = getStub();
+		if(stub != null)
+		{
+			return stub.hasModifier(modifier);
+		}
+		DotNetModifierList modifierList = getModifierList();
+		return modifierList != null && modifierList.hasModifier(modifier);
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getNameIdentifier()
+	{
+		return findChildByType(CSharpTokens.IDENTIFIER);
+	}
+
+	@Override
+	public int getTextOffset()
+	{
+		PsiElement nameIdentifier = getNameIdentifier();
+		return nameIdentifier == null ? super.getTextOffset() : nameIdentifier.getTextOffset();
+	}
+
+	@Override
+	public String getName()
+	{
+		CSharpVariableStub<?> stub = getStub();
+		if(stub != null)
+		{
+			return stub.getName();
+		}
+		return CSharpPsiUtilImpl.getNameWithoutAt(this);
+	}
+
+	@Override
+	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	{
+		CSharpRefactoringUtil.replaceNameIdentifier(this, s);
+		return this;
+	}
+
+	@NotNull
+	@Override
+	public SearchScope getUseScope()
+	{
+		PsiElement parent = getParent();
+		if(parent instanceof CSharpParameterListImpl)
+		{
+			return new LocalSearchScope(parent.getParent());
+		}
+		return super.getUseScope();
 	}
 }
