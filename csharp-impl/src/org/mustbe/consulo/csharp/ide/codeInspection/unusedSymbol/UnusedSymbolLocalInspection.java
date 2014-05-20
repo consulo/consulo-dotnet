@@ -3,7 +3,11 @@ package org.mustbe.consulo.csharp.ide.codeInspection.unusedSymbol;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
+import org.mustbe.consulo.csharp.ide.highlight.check.impl.CS0168;
+import org.mustbe.consulo.csharp.ide.highlight.check.impl.CS0219;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalInspectionToolSession;
@@ -67,7 +71,8 @@ public class UnusedSymbolLocalInspection extends LocalInspectionTool
 	{
 		if(target instanceof CSharpLocalVariable)
 		{
-			return "Variable '" + name.getText() + "' is not used";
+			DotNetExpression initializer = ((CSharpLocalVariable) target).getInitializer();
+			return CompilerCheck.message(initializer == null ? CS0168.class : CS0219.class, name.getText());
 		}
 		else if(target instanceof DotNetParameter)
 		{

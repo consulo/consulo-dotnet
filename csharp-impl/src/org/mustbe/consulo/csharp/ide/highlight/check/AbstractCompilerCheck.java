@@ -17,9 +17,7 @@
 package org.mustbe.consulo.csharp.ide.highlight.check;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
 import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -45,15 +43,7 @@ public abstract class AbstractCompilerCheck<T extends PsiElement> extends Compil
 	{
 		if(accept(element))
 		{
-			String message = CSharpErrorBundle.message(myId);
-			if(ApplicationManager.getApplication().isInternal())
-			{
-				message = myId + ": " + message;
-			}
-
-			CompilerCheckResult result = new CompilerCheckResult();
-			result.setText(message);
-			result.setTextRange(element.getTextRange());
+			CompilerCheckResult result = result(element.getTextRange());
 			checkImpl(element, result);
 			return result;
 		}

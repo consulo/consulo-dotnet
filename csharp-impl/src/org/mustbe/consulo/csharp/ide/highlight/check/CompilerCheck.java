@@ -127,16 +127,21 @@ public abstract class CompilerCheck<T extends PsiElement>
 	@NotNull
 	public static CompilerCheckResult resultImpl(@NotNull Class<?> clazz, @NotNull TextRange range, String... args)
 	{
-		String id = clazz.getSimpleName();
+		CompilerCheckResult result = new CompilerCheckResult();
+		result.setText(message(clazz, args));
+		result.setTextRange(range);
+		return result;
+	}
+
+	@NotNull
+	public static String message(@NotNull Class<?> aClass, String... args)
+	{
+		String id = aClass.getSimpleName();
 		String message = CSharpErrorBundle.message(id, args);
 		if(ApplicationManager.getApplication().isInternal())
 		{
 			message = id + ": " + message;
 		}
-
-		CompilerCheckResult result = new CompilerCheckResult();
-		result.setText(message);
-		result.setTextRange(range);
-		return result;
+		return message;
 	}
 }
