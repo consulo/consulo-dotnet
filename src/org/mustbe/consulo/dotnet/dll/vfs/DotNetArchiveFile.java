@@ -61,7 +61,7 @@ public class DotNetArchiveFile implements ArchiveFile
 		val typeDefs = myModuleParser.getTypeDefs();
 		val fileList = new ArrayList<DotNetFileArchiveEntry>();
 
-		val duplicateMap = new HashMap<String, DotNetBaseFileArchiveEntry>();
+		val duplicateMap = new HashMap<String, DotNetBaseFileArchiveEntry>(); // map used for collect types with same name but different signature
 
 		// iterate type def add as files
 		for(TypeDef typeDef : typeDefs)
