@@ -67,10 +67,17 @@ public class CSharpCodeFragmentFactory
 	@NotNull
 	public static DotNetType createType(@NotNull PsiElement scope, @NotNull String text)
 	{
+		CSharpCodeFragmentImpl fragment = createFragment(scope, text);
+		return PsiTreeUtil.getChildOfType(fragment, DotNetType.class);
+	}
+
+
+	@NotNull
+	public static CSharpCodeFragmentImpl createFragment(@NotNull PsiElement scope, @NotNull String text)
+	{
 		val virtualFile = new LightVirtualFile("dummy.cs", CSharpFileType.INSTANCE, text, System.currentTimeMillis());
 		val viewProvider = new SingleRootFileViewProvider(PsiManager.getInstance(scope.getProject()), virtualFile, false);
 
-		CSharpCodeFragmentImpl codeFragment = new CSharpCodeFragmentImpl(TYPE_FRAGMENT, scope, viewProvider);
-		return PsiTreeUtil.getChildOfType(codeFragment, DotNetType.class);
+		return new CSharpCodeFragmentImpl(TYPE_FRAGMENT, scope, viewProvider);
 	}
 }

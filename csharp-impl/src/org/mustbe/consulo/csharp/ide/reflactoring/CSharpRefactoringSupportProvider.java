@@ -17,11 +17,13 @@
 package org.mustbe.consulo.csharp.ide.reflactoring;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.reflactoring.changeSignature.CSharpChangeSignatureHandler;
 import org.mustbe.consulo.csharp.ide.reflactoring.introduceVariable.CSharpIntroduceVariableHandler;
 import org.mustbe.consulo.csharp.lang.psi.CSharpLocalVariable;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpParameterImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.LocalSearchScope;
@@ -29,6 +31,7 @@ import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringActionHandler;
+import com.intellij.refactoring.changeSignature.ChangeSignatureHandler;
 
 /**
  * @author VISTALL
@@ -36,6 +39,13 @@ import com.intellij.refactoring.RefactoringActionHandler;
  */
 public class CSharpRefactoringSupportProvider extends RefactoringSupportProvider
 {
+	@Nullable
+	@Override
+	public ChangeSignatureHandler getChangeSignatureHandler()
+	{
+		return ApplicationManager.getApplication().isInternal() ? new CSharpChangeSignatureHandler() : null;
+	}
+
 	@Nullable
 	@Override
 	public RefactoringActionHandler getIntroduceVariableHandler()

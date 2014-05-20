@@ -21,16 +21,18 @@ import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import org.mustbe.consulo.csharp.lang.psi.CSharpCodeFragment;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiCodeFragment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.PsiFileImpl;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
  * @since 18.05.14
  */
-public class CSharpCodeFragmentImpl extends PsiFileImpl implements CSharpCodeFragment
+public class CSharpCodeFragmentImpl extends PsiFileImpl implements CSharpCodeFragment, PsiCodeFragment
 {
 	@NotNull
 	private final PsiElement myScope;
@@ -59,5 +61,17 @@ public class CSharpCodeFragmentImpl extends PsiFileImpl implements CSharpCodeFra
 	public PsiElement getScopeElement()
 	{
 		return myScope;
+	}
+
+	@Override
+	public void forceResolveScope(GlobalSearchScope searchScope)
+	{
+
+	}
+
+	@Override
+	public GlobalSearchScope getForcedResolveScope()
+	{
+		return myScope.getResolveScope();
 	}
 }
