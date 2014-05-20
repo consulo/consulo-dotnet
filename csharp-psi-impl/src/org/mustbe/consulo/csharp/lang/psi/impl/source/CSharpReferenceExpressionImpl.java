@@ -661,6 +661,10 @@ public class CSharpReferenceExpressionImpl extends CSharpElementImpl implements 
 			Couple<PsiElement> resolveLayers = getResolveLayers(element, false);
 
 			PsiElement targetToWalkChildren = resolveLayers.getSecond();
+			if(targetToWalkChildren == null)
+			{
+				return p.toResolveResults();
+			}
 
 			// walk for extensions
 			ExtensionResolveScopeProcessor p2 = new ExtensionResolveScopeProcessor(condition, weightProcessor, !с);
