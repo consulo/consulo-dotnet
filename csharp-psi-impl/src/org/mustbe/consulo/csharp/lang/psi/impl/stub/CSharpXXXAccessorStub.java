@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.stub;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.NotNull;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.tree.IElementType;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
+import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
- * Index Method
- * Property
- * Event
+ * @since 20.05.14
  */
-@ArrayFactoryFields
-public interface DotNetXXXAccessor extends DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetNamedElement, DotNetCodeBlockOwner
+public class CSharpXXXAccessorStub extends MemberStub<DotNetXXXAccessor>
 {
-	String VALUE = "value";
-
-	@NotNull
-	IElementType getAccessorType();
+	public CSharpXXXAccessorStub(StubElement parent, int modifierMask)
+	{
+		super(parent, CSharpStubElements.XXX_ACCESSOR, (StringRef) null, null, modifierMask, 0);
+	}
 }

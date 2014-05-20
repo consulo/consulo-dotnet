@@ -56,7 +56,7 @@ public class CSharpPropertyDeclarationImpl extends CSharpStubVariableImpl<CSharp
 	@Override
 	public DotNetXXXAccessor[] getAccessors()
 	{
-		return findChildrenByClass(DotNetXXXAccessor.class);
+		return getStubOrPsiChildren(CSharpStubElements.XXX_ACCESSOR, DotNetXXXAccessor.ARRAY_FACTORY);
 	}
 
 	@NotNull
@@ -77,7 +77,7 @@ public class CSharpPropertyDeclarationImpl extends CSharpStubVariableImpl<CSharp
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
-		return findChildrenByClass(DotNetNamedElement.class);
+		return getAccessors();
 	}
 
 	@Override

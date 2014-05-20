@@ -57,7 +57,7 @@ public class CSharpArrayMethodDeclarationImpl extends CSharpStubMemberImpl<CShar
 	@Override
 	public DotNetXXXAccessor[] getAccessors()
 	{
-		return findChildrenByClass(DotNetXXXAccessor.class);
+		return getStubOrPsiChildren(CSharpStubElements.XXX_ACCESSOR, DotNetXXXAccessor.ARRAY_FACTORY);
 	}
 
 	@NotNull

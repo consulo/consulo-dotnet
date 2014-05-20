@@ -21,8 +21,12 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.lang.psi.CSharpElementVisitor;
 import org.mustbe.consulo.csharp.lang.psi.CSharpPropertyDeclaration;
 import org.mustbe.consulo.csharp.lang.psi.CSharpSoftTokens;
+import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokenSets;
 import org.mustbe.consulo.csharp.lang.psi.impl.light.builder.CSharpLightLocalVariableBuilder;
+import org.mustbe.consulo.csharp.lang.psi.impl.stub.CSharpXXXAccessorStub;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetStatement;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import com.intellij.lang.ASTNode;
@@ -36,11 +40,35 @@ import com.intellij.psi.util.PsiTreeUtil;
  * @author VISTALL
  * @since 04.12.13.
  */
-public class CSharpXXXAccessorImpl extends CSharpMemberImpl implements DotNetXXXAccessor
+public class CSharpXXXAccessorImpl extends CSharpStubMemberImpl<CSharpXXXAccessorStub> implements DotNetXXXAccessor
 {
 	public CSharpXXXAccessorImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	public CSharpXXXAccessorImpl(@NotNull CSharpXXXAccessorStub stub)
+	{
+		super(stub, CSharpStubElements.XXX_ACCESSOR);
+	}
+
+	@Override
+	@Nullable
+	public DotNetModifierList getModifierList()
+	{
+		return findChildByClass(DotNetModifierList.class);
+	}
+
+	@Override
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	{
+		CSharpXXXAccessorStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.hasModifier(modifier);
+		}
+		DotNetModifierList modifierList = getModifierList();
+		return modifierList != null && modifierList.hasModifier(modifier);
 	}
 
 	@NotNull
@@ -51,8 +79,8 @@ public class CSharpXXXAccessorImpl extends CSharpMemberImpl implements DotNetXXX
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
-			@NotNull PsiElement place)
+	public boolean processDeclarations(
+			@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place)
 	{
 		if(getAccessorType() == CSharpSoftTokens.SET_KEYWORD)
 		{
@@ -62,9 +90,7 @@ public class CSharpXXXAccessorImpl extends CSharpMemberImpl implements DotNetXXX
 				return true;
 			}
 
-			CSharpLightLocalVariableBuilder builder = new CSharpLightLocalVariableBuilder(propertyDeclaration)
-					.withName(VALUE)
-					.withParent(this)
+			CSharpLightLocalVariableBuilder builder = new CSharpLightLocalVariableBuilder(propertyDeclaration).withName(VALUE).withParent(this)
 					.withTypeRef(propertyDeclaration.toTypeRef(true));
 
 			if(!processor.execute(builder, state))

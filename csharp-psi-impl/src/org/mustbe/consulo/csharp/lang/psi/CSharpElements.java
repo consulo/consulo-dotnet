@@ -51,7 +51,7 @@ public interface CSharpElements
 
 	IElementType CONVERSION_METHOD_DECLARATION = CSharpStubElements.CONVERSION_METHOD_DECLARATION;
 
-	IElementType XXX_ACCESSOR = new IElementTypeAsPsiFactory("XXX_ACCESSOR", CSharpLanguage.INSTANCE, CSharpXXXAccessorImpl.class);
+	IElementType XXX_ACCESSOR = CSharpStubElements.XXX_ACCESSOR;
 
 	IElementType FIELD_DECLARATION = CSharpStubElements.FIELD_DECLARATION;
 

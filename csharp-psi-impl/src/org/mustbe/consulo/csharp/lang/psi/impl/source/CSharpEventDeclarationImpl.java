@@ -57,7 +57,7 @@ public class CSharpEventDeclarationImpl extends CSharpStubVariableImpl<CSharpVar
 	@Override
 	public DotNetXXXAccessor[] getAccessors()
 	{
-		return findChildrenByClass(DotNetXXXAccessor.class);
+		return getStubOrPsiChildren(CSharpStubElements.XXX_ACCESSOR, DotNetXXXAccessor.ARRAY_FACTORY);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class CSharpEventDeclarationImpl extends CSharpStubVariableImpl<CSharpVar
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
-		return findChildrenByClass(DotNetNamedElement.class);
+		return getAccessors();
 	}
 
 	@Override
