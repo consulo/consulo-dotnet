@@ -11,11 +11,16 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalInspectionToolSession;
+import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.LocalQuickFixOnPsiElement;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
@@ -24,6 +29,44 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  */
 public class UnusedSymbolLocalInspection extends LocalInspectionTool
 {
+	public static final class DeleteLocalVariable extends LocalQuickFixOnPsiElement
+	{
+		@NotNull
+		private final String myName;
+
+		protected DeleteLocalVariable(@NotNull String name, @NotNull PsiElement element)
+		{
+			super(element);
+			myName = name;
+		}
+
+		@NotNull
+		@Override
+		public String getText()
+		{
+			return "Delete '" + myName + "' variable";
+		}
+
+		@Override
+		public void invoke(@NotNull Project project, @NotNull PsiFile psiFile, @NotNull final PsiElement element, @NotNull PsiElement element2)
+		{
+			new WriteCommandAction.Simple<Object>(project, psiFile)
+			{
+				@Override
+				protected void run() throws Throwable
+				{
+					element.delete();
+				}
+			}.execute();
+		}
+
+		@NotNull
+		@Override
+		public String getFamilyName()
+		{
+			return "C#";
+		}
+	}
 	private static final Key<UnusedSymbolVisitor> KEY = Key.create("UnusedSymbolVisitor");
 
 	@NotNull
@@ -63,7 +106,13 @@ public class UnusedSymbolLocalInspection extends LocalInspectionTool
 				continue;
 			}
 
-			problemsHolder.registerProblem(nameIdentifier, getDesc(key, nameIdentifier), ProblemHighlightType.LIKE_UNUSED_SYMBOL);
+			LocalQuickFix[] fixes = LocalQuickFix.EMPTY_ARRAY;
+			if(key instanceof CSharpLocalVariable)
+			{
+				fixes = new LocalQuickFix[] {new DeleteLocalVariable(nameIdentifier.getText(), key)};
+			}
+
+			problemsHolder.registerProblem(nameIdentifier, getDesc(key, nameIdentifier), ProblemHighlightType.LIKE_UNUSED_SYMBOL, fixes);
 		}
 	}
 
