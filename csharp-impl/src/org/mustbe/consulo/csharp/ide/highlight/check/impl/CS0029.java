@@ -17,65 +17,58 @@
 package org.mustbe.consulo.csharp.ide.highlight.check.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.ide.CSharpErrorBundle;
-import org.mustbe.consulo.csharp.ide.highlight.check.AbstractCompilerCheck;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.ide.highlight.check.CompilerCheck;
 import org.mustbe.consulo.csharp.lang.psi.CSharpTokens;
 import org.mustbe.consulo.csharp.lang.psi.impl.CSharpTypeUtil;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpAssignmentExpressionImpl;
 import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpOperatorReferenceImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpReturnStatementImpl;
+import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type.CSharpNativeTypeRef;
+import org.mustbe.consulo.csharp.module.extension.CSharpLanguageVersion;
+import org.mustbe.consulo.dotnet.psi.DotNetArrayMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.Couple;
+import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author VISTALL
  * @since 15.05.14
  */
-public class CS0029 extends AbstractCompilerCheck<PsiElement>
+public class CS0029 extends CompilerCheck<PsiElement>
 {
+	@Nullable
 	@Override
-	public boolean accept(@NotNull PsiElement element)
+	public CompilerCheckResult check(
+			@NotNull CSharpLanguageVersion languageVersion, @NotNull PsiElement element)
 	{
-		Couple<DotNetTypeRef> resolve = resolve(element);
+		Trinity<DotNetTypeRef, DotNetTypeRef, ? extends PsiElement> resolve = resolve(element);
 		if(resolve == null)
 		{
-			return false;
+			return null;
 		}
+
 		if(resolve.getFirst() == DotNetTypeRef.AUTO_TYPE)
 		{
-			return false;
+			return null;
 		}
-		return !CSharpTypeUtil.isInheritable(resolve.getSecond(), resolve.getFirst(), element);
+
+		if(!CSharpTypeUtil.isInheritable(resolve.getSecond(), resolve.getFirst(), element))
+		{
+			return result(resolve.getThird(), resolve.getSecond().getQualifiedText(), resolve.getFirst().getQualifiedText());
+		}
+
+		return null;
 	}
 
-	@Override
-	public void checkImpl(@NotNull PsiElement element, @NotNull CompilerCheckResult checkResult)
-	{
-		Couple<DotNetTypeRef> resolve = resolve(element);
-		if(resolve == null)
-		{
-			return;
-		}
-		String message = CSharpErrorBundle.message(myId, resolve.getSecond().getQualifiedText(), resolve.getFirst().getQualifiedText());
-		if(ApplicationManager.getApplication().isInternal())
-		{
-			message = myId + ": " + message;
-		}
-		checkResult.setText(message);
-		if(element instanceof CSharpAssignmentExpressionImpl)
-		{
-			checkResult.setTextRange(((CSharpAssignmentExpressionImpl) element).getExpressions()[1].getTextRange());
-		}
-		else if(element instanceof DotNetVariable)
-		{
-			checkResult.setTextRange(((DotNetVariable) element).getInitializer().getTextRange());
-		}
-	}
-
-	private Couple<DotNetTypeRef> resolve(PsiElement element)
+	private Trinity<DotNetTypeRef, DotNetTypeRef, ? extends PsiElement> resolve(PsiElement element)
 	{
 		if(element instanceof DotNetVariable)
 		{
@@ -84,7 +77,7 @@ public class CS0029 extends AbstractCompilerCheck<PsiElement>
 			{
 				return null;
 			}
-			return Couple.newOne(((DotNetVariable) element).toTypeRef(false), initializer.toTypeRef(false));
+			return Trinity.create(((DotNetVariable) element).toTypeRef(false), initializer.toTypeRef(false), initializer);
 		}
 		else if(element instanceof CSharpAssignmentExpressionImpl)
 		{
@@ -98,7 +91,54 @@ public class CS0029 extends AbstractCompilerCheck<PsiElement>
 			{
 				return null;
 			}
-			return Couple.newOne(expressions[0].toTypeRef(false), expressions[1].toTypeRef(false));
+			return Trinity.create(expressions[0].toTypeRef(false), expressions[1].toTypeRef(false), expressions[1]);
+		}
+		else if(element instanceof CSharpReturnStatementImpl)
+		{
+			DotNetModifierListOwner modifierListOwner = PsiTreeUtil.getParentOfType(element, DotNetModifierListOwner.class);
+			if(modifierListOwner == null)
+			{
+				return null;
+			}
+
+			DotNetTypeRef expected = null;
+			if(modifierListOwner instanceof DotNetConstructorDeclaration)
+			{
+				expected = CSharpNativeTypeRef.VOID;
+			}
+			else if(modifierListOwner instanceof DotNetMethodDeclaration)
+			{
+				expected = ((DotNetMethodDeclaration) modifierListOwner).getReturnTypeRef();
+			}
+			else if(modifierListOwner instanceof DotNetXXXAccessor)
+			{
+				PsiElement parentOfAccessor = modifierListOwner.getParent();
+				if(parentOfAccessor instanceof DotNetVariable)
+				{
+					expected = ((DotNetVariable) parentOfAccessor).toTypeRef(false);
+				}
+				else if(parentOfAccessor instanceof DotNetArrayMethodDeclaration)
+				{
+					expected = ((DotNetArrayMethodDeclaration) parentOfAccessor).getReturnTypeRef();
+				}
+			}
+
+			if(expected == null)
+			{
+				return null;
+			}
+
+			DotNetTypeRef actual = null;
+			DotNetExpression expression = ((CSharpReturnStatementImpl) element).getExpression();
+			if(expression == null)
+			{
+				actual = CSharpNativeTypeRef.VOID;
+			}
+			else
+			{
+				actual = expression.toTypeRef(false);
+			}
+			return Trinity.create(expected, actual, expression == null ? element : expression);
 		}
 		return null;
 	}
