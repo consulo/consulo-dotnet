@@ -48,6 +48,40 @@ public interface MsilTokens extends TokenType
 
 	IElementType INT64_KEYWORD = new IElementType("INT64_KEYWORD", MsilLanguage.INSTANCE);
 
+	IElementType VOID_KEYWORD = new IElementType("VOID_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType BOOL_KEYWORD = new IElementType("BOOL_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType OBJECT_KEYWORD = new IElementType("OBJECT_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType EXTENDS_KEYWORD = new IElementType("EXTENDS_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType STRING_KEYWORD = new IElementType("STRING_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType UINT64_KEYWORD = new IElementType("UINT64_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType FLOAT_KEYWORD = new IElementType("FLOAT_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType INT8_KEYWORD = new IElementType("INT8_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType UINT8_KEYWORD = new IElementType("UINT8_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType FLOAT64_KEYWORD = new IElementType("FLOAT64_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType UINT32_KEYWORD = new IElementType("UINT32_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType INT16_KEYWORD = new IElementType("INT16_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType UINT16_KEYWORD = new IElementType("UINT16_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType IMPLEMENTS_KEYWORD = new IElementType("IMPLEMENTS_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType PERC = new IElementType("PERC", MsilLanguage.INSTANCE);
+
+	IElementType AND = new IElementType("AND", MsilLanguage.INSTANCE);
+
+	IElementType COMMA = new IElementType("COMMA", MsilLanguage.INSTANCE);
+
 	IElementType LBRACE = new IElementType("LBRACE", MsilLanguage.INSTANCE);
 
 	IElementType RBRACE = new IElementType("RBRACE", MsilLanguage.INSTANCE);

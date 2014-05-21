@@ -20,10 +20,11 @@ import java.util.List;
 
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.mbel.CustomAttribute;
 import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
+import edu.arizona.cs.mbel.mbel.NestedTypeRef;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.mbel.TypeSpec;
@@ -48,7 +49,7 @@ public class MsilSharedBuilder implements SignatureConstants
 			builder.append(".custom ");
 
 			MethodDefOrRef constructor = customAttribute.getConstructor();
-			builder.append(constructor.getParent().getFullName());
+			toStringFromDefRefSpec(builder, constructor.getParent(), null);
 			builder.append(":").append(constructor.getName()).append("\n");
 
 			parent.getBlocks().add(new LineStubBlock(builder));
@@ -118,8 +119,8 @@ public class MsilSharedBuilder implements SignatureConstants
 				builder.append("uint");
 				break;
 			case ELEMENT_TYPE_BYREF:
-				builder.append("ref ");
 				typeToString(builder, ((InnerTypeOwner) signature).getInnerType(), typeDef);
+				builder.append("&");
 				break;
 			case ELEMENT_TYPE_PTR:
 				PointerTypeSignature pointerTypeSignature = (PointerTypeSignature) signature;
@@ -134,7 +135,7 @@ public class MsilSharedBuilder implements SignatureConstants
 			case ELEMENT_TYPE_CLASS:
 				ClassTypeSignature typeSignature = (ClassTypeSignature) signature;
 				builder.append("class ");
-				XStubUtil.appendDottedValidName(builder, typeSignature.getClassType().getFullName());
+				toStringFromDefRefSpec(builder, typeSignature.getClassType(), typeDef);
 				break;
 			case ELEMENT_TYPE_GENERIC_INST:
 				TypeSignatureWithGenericParameters mainTypeSignature = (TypeSignatureWithGenericParameters) signature;
@@ -166,12 +167,24 @@ public class MsilSharedBuilder implements SignatureConstants
 			case ELEMENT_TYPE_VALUETYPE:
 				builder.append("valuetype ");
 				ValueTypeSignature valueTypeSignature = (ValueTypeSignature) signature;
-				XStubUtil.appendDottedValidName(builder, valueTypeSignature.getValueType().getFullName());
+				toStringFromDefRefSpec(builder, valueTypeSignature.getValueType(), typeDef);
 				break;
 			default:
 				builder.append("UNK").append(Integer.toHexString(type).toUpperCase());
 				break;
 		}
+	}
+
+	public static void appendTypeRefFullName(StringBuilder builder, TypeRef typeRef)
+	{
+		String namespace = typeRef.getNamespace();
+		String name = typeRef.getName();
+		if(!StringUtil.isEmpty(namespace))
+		{
+			builder.append(namespace);
+			builder.append('.');
+		}
+		builder.append(name);
 	}
 
 	public static <T> void join(StringBuilder builder, List<T> list, PairFunction<StringBuilder, T, Void> function, String dem)
@@ -190,9 +203,15 @@ public class MsilSharedBuilder implements SignatureConstants
 
 	public static void toStringFromDefRefSpec(StringBuilder builder, Object o, TypeDef typeDef)
 	{
-		if(o instanceof TypeRef)
+		if(o instanceof NestedTypeRef)
 		{
-			XStubUtil.appendTypeRefFullName(builder, ((TypeRef) o));
+			toStringFromDefRefSpec(builder, ((NestedTypeRef) o).getEnclosingTypeRef(), typeDef);
+			builder.append("/");
+			builder.append(((NestedTypeRef) o).getName());
+		}
+		else if(o instanceof TypeRef)
+		{
+			appendTypeRefFullName(builder, ((TypeRef) o));
 		}
 		else if(o instanceof TypeSpec)
 		{
