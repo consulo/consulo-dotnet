@@ -81,11 +81,33 @@ COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 
 	"object"       { return MsilTokens.OBJECT_KEYWORD; }
 
-	"char"       { return MsilTokens.CHAR_KEYWORD; }
+	"char"         { return MsilTokens.CHAR_KEYWORD; }
 
 	"extends"      { return MsilTokens.EXTENDS_KEYWORD; }
 
 	"implements"   { return MsilTokens.IMPLEMENTS_KEYWORD; }
+
+	"public"       { return MsilTokens.PUBLIC_KEYWORD; }
+
+	"private"      { return MsilTokens.PRIVATE_KEYWORD; }
+
+	"assembly"      { return MsilTokens.ASSEMBLY_KEYWORD; }
+
+	"static"        { return MsilTokens.STATIC_KEYWORD; }
+
+	"abstract"      { return MsilTokens.ABSTRACT_KEYWORD; }
+
+	"literal"       { return MsilTokens.LITERAL_KEYWORD; }
+
+	"initonly"      { return MsilTokens.INITONLY_KEYWORD; }
+
+	"protected"     { return MsilTokens.PROTECTED_KEYWORD; }
+
+	"final"         { return MsilTokens.FINAL_KEYWORD; }
+
+	"hidebysig"     { return MsilTokens.HIDEBYSIG_KEYWORD; }
+
+	"virtual"       { return MsilTokens.VIRTUAL_KEYWORD; }
 
 	{SINGLE_LINE_COMMENT}      { return MsilTokens.LINE_COMMENT; }
 

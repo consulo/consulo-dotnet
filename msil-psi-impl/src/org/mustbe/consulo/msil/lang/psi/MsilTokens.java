@@ -80,6 +80,28 @@ public interface MsilTokens extends TokenType
 
 	IElementType IMPLEMENTS_KEYWORD = new IElementType("IMPLEMENTS_KEYWORD", MsilLanguage.INSTANCE);
 
+	IElementType PUBLIC_KEYWORD = new IElementType("PUBLIC_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType STATIC_KEYWORD = new IElementType("STATIC_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType ABSTRACT_KEYWORD = new IElementType("ABSTRACT_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType FINAL_KEYWORD = new IElementType("FINAL_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType PRIVATE_KEYWORD = new IElementType("PRIVATE_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType LITERAL_KEYWORD = new IElementType("LITERAL_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType ASSEMBLY_KEYWORD = new IElementType("ASSEMBLY_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType HIDEBYSIG_KEYWORD = new IElementType("HIDEBYSIG_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType INITONLY_KEYWORD = new IElementType("INITONLY_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType VIRTUAL_KEYWORD = new IElementType("VIRTUAL_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType PROTECTED_KEYWORD = new IElementType("PROTECTED_KEYWORD", MsilLanguage.INSTANCE);
+
 	IElementType PERC = new IElementType("PERC", MsilLanguage.INSTANCE);
 
 	IElementType AND = new IElementType("AND", MsilLanguage.INSTANCE);
