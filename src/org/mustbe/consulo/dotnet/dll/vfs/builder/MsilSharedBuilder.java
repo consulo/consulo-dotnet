@@ -16,11 +16,16 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.mbel.CustomAttribute;
 import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
@@ -36,10 +41,34 @@ import edu.arizona.cs.mbel.signature.*;
  */
 public class MsilSharedBuilder implements SignatureConstants
 {
+	private static final String[] KEYWORDS;
+
+	static
+	{
+		Set<String> set = new HashSet<String>();
+		for(IElementType keyword : MsilTokenSets.KEYWORDS.getTypes())
+		{
+			set.add(keyword.toString().replace("_KEYWORD", "").toLowerCase());
+		}
+		KEYWORDS = ArrayUtil.toStringArray(set);
+	}
+
 	public static final char[] BRACES = {
 			'{',
 			'}'
 	};
+
+	public static String validName(String name)
+	{
+		for(String s : KEYWORDS)
+		{
+			if(StringUtil.contains(s, name))
+			{
+				return StringUtil.SINGLE_QUOTER.fun(name);
+			}
+		}
+		return name;
+	}
 
 	public static void processAttributes(StubBlock parent, CustomAttributeOwner owner)
 	{

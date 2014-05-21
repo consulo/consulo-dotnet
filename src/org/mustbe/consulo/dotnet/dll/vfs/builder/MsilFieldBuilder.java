@@ -68,7 +68,7 @@ public class MsilFieldBuilder extends MsilSharedBuilder implements FieldAttribut
 
 		typeToString(builder, field.getSignature().getType(), typeDef);
 		builder.append(" ");
-		builder.append(field.getName());
+		builder.append(validName(field.getName()));
 		builder.append("\n");
 
 		block.getBlocks().add(new LineStubBlock(builder));
