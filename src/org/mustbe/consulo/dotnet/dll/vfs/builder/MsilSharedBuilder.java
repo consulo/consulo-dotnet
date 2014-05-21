@@ -60,17 +60,30 @@ public class MsilSharedBuilder implements SignatureConstants
 
 	public static void appendValidName(StringBuilder builder, String name)
 	{
+		boolean equals = false;
 		for(String s : KEYWORDS)
 		{
-			if(name.contains(s))
+			if(name.equals(s))
 			{
-				builder.append('\'');
-				builder.append(name);
-				builder.append('\'');
-				return;
+				equals = true;
+				break;
 			}
 		}
-		builder.append(name);
+
+		if(equals || StringUtil.containsChar(name, '<'))
+		{
+			if(equals)
+			{
+				System.out.println("name " + name);
+			}
+			builder.append('\'');
+			builder.append(name);
+			builder.append('\'');
+		}
+		else
+		{
+			builder.append(name);
+		}
 	}
 
 	public static void processAttributes(StubBlock parent, CustomAttributeOwner owner)
