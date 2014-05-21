@@ -72,10 +72,6 @@ public class MsilSharedBuilder implements SignatureConstants
 
 		if(equals || StringUtil.containsChar(name, '<'))
 		{
-			if(equals)
-			{
-				System.out.println("name " + name);
-			}
 			builder.append('\'');
 			builder.append(name);
 			builder.append('\'');
