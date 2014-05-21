@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.mbel.AssemblyInfo;
@@ -29,6 +30,7 @@ import edu.arizona.cs.mbel.mbel.Field;
 import edu.arizona.cs.mbel.mbel.InterfaceImplementation;
 import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.signature.TypeAttributes;
 
 /**
  * @author VISTALL
@@ -61,6 +63,36 @@ public class MsilStubBuilder extends MsilSharedBuilder
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(".class ");
+
+		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.VisibilityMask, TypeAttributes.Public))
+		{
+			builder.append("public ");
+		}
+
+		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.ClassSemanticsMask, TypeAttributes.Interface))
+		{
+			builder.append("inteface ");
+		}
+
+		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.Abstract))
+		{
+			builder.append("abstract ");
+		}
+
+		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.Sealed))
+		{
+			builder.append("sealed ");
+		}
+
+		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.SpecialName))
+		{
+			builder.append("specialname ");
+		}
+
+		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.Serializable))
+		{
+			builder.append("serializable ");
+		}
 
 		if(StringUtil.isEmpty(typeDef.getNamespace()))
 		{
