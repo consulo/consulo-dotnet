@@ -18,6 +18,7 @@
 	<id>org.mustbe.consulo.microsoft.dotnet</id>
 	<name>Microsoft .NET</name>
 	<depends>org.mustbe.consulo.dotnet.core</depends>
+	<depends config-file="CSharp.xml" optional="true">org.mustbe.consulo.csharp</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
@@ -27,13 +28,6 @@
 								 icon="/icons/dotnet.png"
 								 immutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension"
 								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />
-
-		<moduleExtensionProvider key="microsoft-csharp"
-								 parentKey="microsoft-dotnet"
-								 name="C#"
-								 icon="/icons/dotnet.png"
-								 immutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtension"
-								 mutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpMutableModuleExtension"/>
 
 		<sdkType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
 		<bundledSdkProvider implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetBundledSdkProvider" />

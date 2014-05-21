@@ -22,7 +22,6 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SmartList;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 import edu.arizona.cs.mbel.mbel.TypeDef;
@@ -44,10 +43,6 @@ public class DotNetBaseFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 
 	public void addTypeDef(@NotNull TypeDef typeDef)
 	{
-		if(isAlreadyDefined(typeDef))
-		{
-			return;
-		}
 		myTypeDefs.add(typeDef);
 	}
 
@@ -55,23 +50,6 @@ public class DotNetBaseFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 	public List<TypeDef> getTypeDefs()
 	{
 		return myTypeDefs;
-	}
-
-	/**
-	 * Return true is type already defined. It for case when one type is struct, and second is class. C# cant handle this problem
-	 */
-	private boolean isAlreadyDefined(@NotNull TypeDef typeDef)
-	{
-		//noinspection ForLoopReplaceableByForEach
-		for(int i = 0; i < myTypeDefs.size(); i++)
-		{
-			TypeDef def = myTypeDefs.get(i);
-			if(Comparing.equal(typeDef.getName(), def.getName()))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override

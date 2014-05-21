@@ -14,15 +14,11 @@
   ~ limitations under the License.
   -->
 
-<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
+<idea-plugin>
 	<id>org.mustbe.consulo.dotnet.core</id>
 	<name>.NET Core</name>
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
-	<depends optional="true" config-file="CSharpSpellchecker.xml">com.intellij.spellchecker</depends>
-
-	<xi:include href="/META-INF/CSharp.xml" xpointer="xpointer(/idea-plugin/*)"/>
-	<xi:include href="/META-INF/CSharpInspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
 	<application-components>
 		<component>
@@ -51,6 +47,11 @@
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
 		<documentationResolver implementation="org.mustbe.consulo.dotnet.documentation.DefaultDocumentationResolver" />
+	</extensions>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<fileTypeFactory implementation="org.mustbe.consulo.msil.MsilFileTypeFactory" />
+		<lang.parserDefinition language="MSIL" implementationClass="org.mustbe.consulo.msil.lang.MsilParserDefinition" />
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">

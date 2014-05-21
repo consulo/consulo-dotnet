@@ -4,6 +4,7 @@
 	<category>Language Extension</category>
 	<depends>org.consulo.python</depends>
 	<depends>org.mustbe.consulo.microsoft.dotnet</depends>
+	<depends>org.mustbe.consulo.csharp</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>

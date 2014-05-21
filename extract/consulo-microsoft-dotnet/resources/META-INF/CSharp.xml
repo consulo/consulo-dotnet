@@ -13,21 +13,14 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+
 <idea-plugin>
-	<id>org.mustbe.consulo.xdotnet</id>
-	<name>Cross .NET</name>
-	<depends>org.mustbe.consulo.microsoft.dotnet</depends>
-	<depends>org.mustbe.consulo.dotnet.mono</depends>
-	<depends config-file="CSharp.xml" optional="true">org.mustbe.consulo.csharp</depends>
-
 	<extensions defaultExtensionNs="com.intellij">
-		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
-
-		<moduleExtensionProvider key="x-dotnet"
-								 name="X .NET"
+		<moduleExtensionProvider key="microsoft-csharp"
+								 parentKey="microsoft-dotnet"
+								 name="C#"
 								 icon="/icons/dotnet.png"
-								 immutableClass="org.mustbe.consulo.xdotnet.module.extension.XDotNetModuleExtension"
-								 mutableClass="org.mustbe.consulo.xdotnet.module.extension.XDotNetMutableModuleExtension" />
-
+								 immutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpModuleExtension"
+								 mutableClass="org.mustbe.consulo.microsoft.csharp.module.extension.MicrosoftCSharpMutableModuleExtension"/>
 	</extensions>
 </idea-plugin>

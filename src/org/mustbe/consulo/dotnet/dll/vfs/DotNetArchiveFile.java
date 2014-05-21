@@ -77,11 +77,11 @@ public class DotNetArchiveFile implements ArchiveFile
 			String namespace = typeDef.getNamespace();
 			if(StringUtil.isEmpty(namespace))
 			{
-				path = userName + ".cs";
+				path = userName + ".msil";
 			}
 			else
 			{
-				path = namespace.replace(".", "/") + "/" + userName + ".cs";
+				path = namespace.replace(".", "/") + "/" + userName + ".msil";
 			}
 
 			DotNetBaseFileArchiveEntry fileWithSameName = duplicateMap.get(path);
