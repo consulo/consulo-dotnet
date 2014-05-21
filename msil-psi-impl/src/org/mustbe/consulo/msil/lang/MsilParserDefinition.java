@@ -20,8 +20,8 @@ import java.io.Reader;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.msil.MsilLanguage;
 import org.mustbe.consulo.msil.lang.lexer._MsilLexer;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilFileImpl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
@@ -46,8 +46,6 @@ import com.intellij.psi.tree.TokenSet;
  */
 public class MsilParserDefinition implements ParserDefinition
 {
-	private static final IFileElementType FILE_ELEMENT_TYPE = new IFileElementType(MsilLanguage.INSTANCE);
-
 	@NotNull
 	@Override
 	public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion)
@@ -82,7 +80,7 @@ public class MsilParserDefinition implements ParserDefinition
 	@Override
 	public IFileElementType getFileNodeType()
 	{
-		return FILE_ELEMENT_TYPE;
+		return MsilStubElements.FILE;
 	}
 
 	@NotNull

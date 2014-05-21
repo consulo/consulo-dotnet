@@ -51,6 +51,7 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="org.mustbe.consulo.msil.MsilFileTypeFactory" />
+		<stubElementTypeHolder class="org.mustbe.consulo.msil.lang.psi.MsilStubElements" />
 		<lang.parserDefinition language="MSIL" implementationClass="org.mustbe.consulo.msil.lang.MsilParserDefinition" />
 		<editorHighlighterProvider filetype="MSIL" implementationClass="org.mustbe.consulo.msil.ide.highlight.MsilEditorHighlighterProvider" />
 	</extensions>
