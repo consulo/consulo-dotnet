@@ -47,6 +47,8 @@ COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 
 	".assembly"    { return MsilTokens._ASSEMBLY_KEYWORD; }
 
+	".param"       { return MsilTokens._PARAM_KEYWORD; }
+
 	"class"        { return MsilTokens.CLASS_KEYWORD; }
 
 	"valuetype"    { return MsilTokens.VALUETYPE_KEYWORD; }

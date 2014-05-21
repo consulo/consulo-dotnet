@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import java.util.List;
 
+import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.util.BitUtil;
@@ -124,6 +125,23 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 		StubBlock e = new StubBlock(builder, null, BRACES);
 
 		processAttributes(e, methodDef);
+
+		for(int i = 0; i < parameters.size(); i++)
+		{
+			ParameterSignature parameterSignature = parameters.get(i);
+
+			ParameterInfo parameterInfo = parameterSignature.getParameterInfo();
+			if(parameterInfo == null)
+			{
+				continue;
+			}
+
+			if(parameterInfo.getCustomAttributes().length != 0)
+			{
+				e.getBlocks().add(new LineStubBlock(".param [" + (i + 1) + "]"));
+				processAttributes(e, parameterInfo);
+			}
+		}
 
 		block.getBlocks().add(e);
 	}
