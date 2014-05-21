@@ -58,6 +58,8 @@ public interface MsilTokens extends TokenType
 
 	IElementType STRING_KEYWORD = new IElementType("STRING_KEYWORD", MsilLanguage.INSTANCE);
 
+	IElementType CHAR_KEYWORD = new IElementType("CHAR_KEYWORD", MsilLanguage.INSTANCE);
+
 	IElementType UINT64_KEYWORD = new IElementType("UINT64_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType FLOAT_KEYWORD = new IElementType("FLOAT_KEYWORD", MsilLanguage.INSTANCE);

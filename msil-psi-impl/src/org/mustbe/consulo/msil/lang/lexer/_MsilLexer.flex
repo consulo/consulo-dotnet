@@ -79,6 +79,8 @@ COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 
 	"object"       { return MsilTokens.OBJECT_KEYWORD; }
 
+	"char"       { return MsilTokens.CHAR_KEYWORD; }
+
 	"extends"      { return MsilTokens.EXTENDS_KEYWORD; }
 
 	"implements"   { return MsilTokens.IMPLEMENTS_KEYWORD; }
