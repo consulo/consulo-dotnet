@@ -19,6 +19,7 @@ SINGLE_LINE_COMMENT="/""/"[^\r\n]*
 MULTI_LINE_STYLE_COMMENT=("/*"{COMMENT_TAIL})|"/*"
 COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 
+DIGIT = [0-9]
 IDENTIFIER_PART=[:jletter:] [:jletterdigit:]*
 IDENTIFIER=(\.)?{IDENTIFIER_PART}(\.{IDENTIFIER_PART})*(\`[:jletterdigit:]*)?
 QIDENTIFIER=\'{IDENTIFIER}\'
@@ -137,6 +138,8 @@ QIDENTIFIER=\'{IDENTIFIER}\'
 	"interface"     { return MsilTokens.INTERFACE_KEYWORD; }
 
 	"[out]"         { return MsilTokens.BRACKET_OUT_KEYWORD; }
+
+	{DIGIT}         { return MsilTokens.NUMBER; }
 
 	{QIDENTIFIER}   { return MsilTokens.QIDENTIFIER; }
 

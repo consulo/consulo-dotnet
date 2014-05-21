@@ -28,6 +28,8 @@ public interface MsilTokens extends TokenType
 {
 	IElementType IDENTIFIER = new IElementType("IDENTIFIER", MsilLanguage.INSTANCE);
 
+	IElementType NUMBER = new IElementType("NUMBER", MsilLanguage.INSTANCE);
+
 	IElementType QIDENTIFIER = new IElementType("IDENTIFIER", MsilLanguage.INSTANCE);
 
 	IElementType _CLASS_KEYWORD = new IElementType("_CLASS_KEYWORD", MsilLanguage.INSTANCE);

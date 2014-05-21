@@ -21,6 +21,7 @@ import java.io.Reader;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.lexer._MsilLexer;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
@@ -56,6 +57,10 @@ public class MsilSyntaxHighlighter extends SyntaxHighlighterBase
 		else if(MsilTokenSets.KEYWORDS.contains(elementType))
 		{
 			return pack(DefaultLanguageHighlighterColors.KEYWORD);
+		}
+		else if(elementType == MsilTokens.NUMBER)
+		{
+			return pack(DefaultLanguageHighlighterColors.NUMBER);
 		}
 		return new TextAttributesKey[0];
 	}
