@@ -26,6 +26,10 @@ import com.intellij.psi.tree.IElementType;
  */
 public interface MsilTokens extends TokenType
 {
+	IElementType IDENTIFIER = new IElementType("IDENTIFIER", MsilLanguage.INSTANCE);
+
+	IElementType QIDENTIFIER = new IElementType("IDENTIFIER", MsilLanguage.INSTANCE);
+
 	IElementType _CLASS_KEYWORD = new IElementType("_CLASS_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType _METHOD_KEYWORD = new IElementType("_METHOD_KEYWORD", MsilLanguage.INSTANCE);
@@ -119,4 +123,18 @@ public interface MsilTokens extends TokenType
 	IElementType BLOCK_COMMENT = new IElementType("BLOCK_COMMENT", MsilLanguage.INSTANCE);
 
 	IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", MsilLanguage.INSTANCE);
+
+	IElementType LBRACKET = new IElementType("LBRACKET", MsilLanguage.INSTANCE);
+
+	IElementType LPAR = new IElementType("LPAR", MsilLanguage.INSTANCE);
+
+	IElementType EQ = new IElementType("EQ", MsilLanguage.INSTANCE);
+
+	IElementType GT = new IElementType("GT", MsilLanguage.INSTANCE);
+
+	IElementType LT = new IElementType("LT", MsilLanguage.INSTANCE);
+
+	IElementType RPAR = new IElementType("RPAR", MsilLanguage.INSTANCE);
+
+	IElementType RBRACKET = new IElementType("RBRACKET", MsilLanguage.INSTANCE);
 }

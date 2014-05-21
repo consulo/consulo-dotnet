@@ -19,6 +19,9 @@ SINGLE_LINE_COMMENT="/""/"[^\r\n]*
 MULTI_LINE_STYLE_COMMENT=("/*"{COMMENT_TAIL})|"/*"
 COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 
+IDENTIFIER_PART=[:jletter:] [:jletterdigit:]*
+IDENTIFIER=(\.)?{IDENTIFIER_PART}(\.{IDENTIFIER_PART})*(\`[:jletterdigit:]*)?
+QIDENTIFIER=\'{IDENTIFIER}\'
 %%
 
 <YYINITIAL>
@@ -26,6 +29,20 @@ COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 	"{"            { return MsilTokens.LBRACE; }
 
 	"}"            { return MsilTokens.RBRACE; }
+
+	"<"            { return MsilTokens.LT; }
+
+	">"            { return MsilTokens.GT; }
+
+	"["            { return MsilTokens.LBRACKET; }
+
+	"]"            { return MsilTokens.RBRACKET; }
+
+	"("            { return MsilTokens.LPAR; }
+
+	")"            { return MsilTokens.RPAR; }
+
+	"="            { return MsilTokens.EQ; }
 
 	"&"            { return MsilTokens.AND; }
 
@@ -112,6 +129,10 @@ COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 	"value"         { return MsilTokens.VALUE_KEYWORD; }
 
 	"[out]"         { return MsilTokens.BRACKET_OUT_KEYWORD; }
+
+	{QIDENTIFIER}   { return MsilTokens.QIDENTIFIER; }
+
+	{IDENTIFIER}    { return MsilTokens.IDENTIFIER; }
 
 	{SINGLE_LINE_COMMENT}      { return MsilTokens.LINE_COMMENT; }
 
