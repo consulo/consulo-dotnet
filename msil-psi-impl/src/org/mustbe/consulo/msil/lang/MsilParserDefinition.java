@@ -21,14 +21,15 @@ import java.io.Reader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.msil.lang.lexer._MsilLexer;
+import org.mustbe.consulo.msil.lang.parser.MsilParser;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilFileImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.AbstractMsilStubElementType;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
@@ -55,25 +56,9 @@ public class MsilParserDefinition implements ParserDefinition
 
 	@NotNull
 	@Override
-	public PsiParser createParser(
-			@Nullable Project project, @NotNull LanguageVersion languageVersion)
+	public PsiParser createParser(@Nullable Project project, @NotNull LanguageVersion languageVersion)
 	{
-		return new PsiParser()
-		{
-			@NotNull
-			@Override
-			public ASTNode parse(
-					@NotNull IElementType elementType, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
-			{
-				PsiBuilder.Marker mark = builder.mark();
-				while(!builder.eof())
-				{
-					builder.advanceLexer();
-				}
-				mark.done(elementType);
-				return builder.getTreeBuilt();
-			}
-		};
+		return new MsilParser();
 	}
 
 	@NotNull
@@ -108,6 +93,11 @@ public class MsilParserDefinition implements ParserDefinition
 	@Override
 	public PsiElement createElement(ASTNode astNode)
 	{
+		IElementType elementType = astNode.getElementType();
+		if(elementType instanceof AbstractMsilStubElementType)
+		{
+			return ((AbstractMsilStubElementType) elementType).createPsi(astNode);
+		}
 		return new ASTWrapperPsiElement(astNode);
 	}
 
