@@ -22,11 +22,13 @@ COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 DIGIT = [0-9]
 IDENTIFIER_PART=[:jletter:] [:jletterdigit:]*
 IDENTIFIER=(\.)?{IDENTIFIER_PART}(\.{IDENTIFIER_PART})*(\`[:jletterdigit:]*)?
-QIDENTIFIER=\'{IDENTIFIER}\'
+QIDENTIFIER=\'.*\'
 %%
 
 <YYINITIAL>
 {
+	{QIDENTIFIER}   { return MsilTokens.QIDENTIFIER; }
+
 	"{"            { return MsilTokens.LBRACE; }
 
 	"}"            { return MsilTokens.RBRACE; }
@@ -142,8 +144,6 @@ QIDENTIFIER=\'{IDENTIFIER}\'
 	"[out]"         { return MsilTokens.BRACKET_OUT_KEYWORD; }
 
 	{DIGIT}         { return MsilTokens.NUMBER; }
-
-	{QIDENTIFIER}   { return MsilTokens.QIDENTIFIER; }
 
 	{IDENTIFIER}    { return MsilTokens.IDENTIFIER; }
 
