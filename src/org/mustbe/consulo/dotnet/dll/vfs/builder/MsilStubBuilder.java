@@ -71,7 +71,7 @@ public class MsilStubBuilder extends MsilSharedBuilder
 
 		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.ClassSemanticsMask, TypeAttributes.Interface))
 		{
-			builder.append("inteface ");
+			builder.append("interface ");
 		}
 
 		if(XStubUtil.isSet(typeDef.getFlags(), TypeAttributes.Abstract))

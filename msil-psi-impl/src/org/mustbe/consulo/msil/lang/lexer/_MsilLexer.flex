@@ -128,6 +128,14 @@ QIDENTIFIER=\'{IDENTIFIER}\'
 
 	"value"         { return MsilTokens.VALUE_KEYWORD; }
 
+	"serializable"  { return MsilTokens.SERIALIZABLE_KEYWORD; }
+
+	"specialname"   { return MsilTokens.SPECIALNAME_KEYWORD; }
+
+	"sealed"        { return MsilTokens.SEALED_KEYWORD; }
+
+	"interface"     { return MsilTokens.INTERFACE_KEYWORD; }
+
 	"[out]"         { return MsilTokens.BRACKET_OUT_KEYWORD; }
 
 	{QIDENTIFIER}   { return MsilTokens.QIDENTIFIER; }
