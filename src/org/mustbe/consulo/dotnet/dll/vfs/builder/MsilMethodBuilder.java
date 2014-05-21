@@ -19,10 +19,12 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder;
 import java.util.List;
 
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.signature.MethodAttributes;
 import edu.arizona.cs.mbel.signature.ParamAttributes;
 import edu.arizona.cs.mbel.signature.ParameterInfo;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
@@ -33,12 +35,54 @@ import edu.arizona.cs.mbel.signature.TypeSignature;
  * @author VISTALL
  * @since 21.05.14
  */
-public class MsilMethodBuilder extends MsilSharedBuilder
+public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttributes
 {
 	public static void processMethod(MethodDef methodDef, final TypeDef typeDef, StubBlock block)
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(".method ");
+		if(XStubUtil.isSet(methodDef.getFlags(), MemberAccessMask, Public))
+		{
+			builder.append("public ");
+		}
+		else if(XStubUtil.isSet(methodDef.getFlags(), MemberAccessMask, Assem))
+		{
+			builder.append("assembly ");
+		}
+		else if(XStubUtil.isSet(methodDef.getFlags(), MemberAccessMask, Private))
+		{
+			builder.append("private ");
+		}
+		else if(XStubUtil.isSet(methodDef.getFlags(), MemberAccessMask, Family))
+		{
+			builder.append("protected ");
+		}
+
+		if(XStubUtil.isSet(methodDef.getFlags(), Static))
+		{
+			builder.append("static ");
+		}
+
+		if(XStubUtil.isSet(methodDef.getFlags(), Final))
+		{
+			builder.append("final ");
+		}
+
+		if(XStubUtil.isSet(methodDef.getFlags(), HideBySig))
+		{
+			builder.append("hidebysig ");
+		}
+
+		if(XStubUtil.isSet(methodDef.getFlags(), Abstract))
+		{
+			builder.append("abstract ");
+		}
+
+		if(XStubUtil.isSet(methodDef.getFlags(), Virtual))
+		{
+			builder.append("virtual ");
+		}
+
 		typeToString(builder, methodDef.getSignature().getReturnType().getInnerType(), typeDef);
 		builder.append(" ");
 		builder.append(methodDef.getName());
