@@ -26,6 +26,7 @@ import edu.arizona.cs.mbel.mbel.Event;
 import edu.arizona.cs.mbel.mbel.Field;
 import edu.arizona.cs.mbel.mbel.InterfaceImplementation;
 import edu.arizona.cs.mbel.mbel.MethodDef;
+import edu.arizona.cs.mbel.mbel.Property;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import edu.arizona.cs.mbel.signature.TypeAttributes;
 
@@ -125,6 +126,12 @@ public class MsilTypeBuilder extends MsilSharedBuilder implements TypeAttributes
 		{
 			Event event = typeDef.getEvents().get(k);
 			MsilEventBuilder.processEvent(event, typeDef, e);
+		}
+
+		for(int k = 0; k < typeDef.getProperties().size(); k++)
+		{
+			Property property = typeDef.getProperties().get(k);
+			MsilPropertyBuilder.processProperty(property, typeDef, e);
 		}
 
 		for(int k = 0; k < typeDef.getMethods().size(); k++)
