@@ -39,7 +39,7 @@ public class MsilFieldBuilder extends MsilSharedBuilder implements FieldAttribut
 		}
 		else if(XStubUtil.isSet(field.getFlags(), FieldAccessMask, Assembly))
 		{
-			builder.append("internal ");
+			builder.append("assembly ");
 		}
 		else if(XStubUtil.isSet(field.getFlags(), FieldAccessMask, Private))
 		{
