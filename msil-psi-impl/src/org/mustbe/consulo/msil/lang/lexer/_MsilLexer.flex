@@ -109,6 +109,8 @@ COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 
 	"virtual"       { return MsilTokens.VIRTUAL_KEYWORD; }
 
+	"value"         { return MsilTokens.VALUE_KEYWORD; }
+
 	"[out]"         { return MsilTokens.BRACKET_OUT_KEYWORD; }
 
 	{SINGLE_LINE_COMMENT}      { return MsilTokens.LINE_COMMENT; }

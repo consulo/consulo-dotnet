@@ -58,16 +58,19 @@ public class MsilSharedBuilder implements SignatureConstants
 			'}'
 	};
 
-	public static String validName(String name)
+	public static void appendValidName(StringBuilder builder, String name)
 	{
 		for(String s : KEYWORDS)
 		{
-			if(StringUtil.contains(s, name))
+			if(name.contains(s))
 			{
-				return StringUtil.SINGLE_QUOTER.fun(name);
+				builder.append('\'');
+				builder.append(name);
+				builder.append('\'');
+				return;
 			}
 		}
-		return name;
+		builder.append(name);
 	}
 
 	public static void processAttributes(StubBlock parent, CustomAttributeOwner owner)

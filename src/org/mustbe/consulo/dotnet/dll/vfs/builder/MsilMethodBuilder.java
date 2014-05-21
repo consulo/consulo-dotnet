@@ -86,7 +86,7 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 
 		typeToString(builder, methodDef.getSignature().getReturnType().getInnerType(), typeDef);
 		builder.append(" ");
-		builder.append(validName(methodDef.getName()));
+		appendValidName(builder, methodDef.getName());
 
 		builder.append("(");
 
@@ -115,7 +115,8 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 
 				if(parameterInfo != null)
 				{
-					builder.append(" ").append(parameterInfo.getName());
+					builder.append(" ");
+					appendValidName(builder, parameterInfo.getName());
 				}
 				return null;
 			}

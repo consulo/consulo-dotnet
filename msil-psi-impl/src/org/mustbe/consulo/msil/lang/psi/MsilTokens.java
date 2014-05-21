@@ -102,6 +102,8 @@ public interface MsilTokens extends TokenType
 
 	IElementType PROTECTED_KEYWORD = new IElementType("PROTECTED_KEYWORD", MsilLanguage.INSTANCE);
 
+	IElementType VALUE_KEYWORD = new IElementType("VALUE_KEYWORD", MsilLanguage.INSTANCE);
+
 	IElementType BRACKET_OUT_KEYWORD = new IElementType("PROTECTED_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType PERC = new IElementType("PERC", MsilLanguage.INSTANCE);
