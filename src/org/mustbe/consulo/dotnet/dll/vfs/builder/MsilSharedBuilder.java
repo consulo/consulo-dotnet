@@ -50,7 +50,7 @@ public class MsilSharedBuilder implements SignatureConstants
 
 			MethodDefOrRef constructor = customAttribute.getConstructor();
 			toStringFromDefRefSpec(builder, constructor.getParent(), null);
-			builder.append("::").append(constructor.getName()).append("\n");
+			builder.append("::").append(constructor.getName()).append("() = ()\n");
 
 			parent.getBlocks().add(new LineStubBlock(builder));
 		}
