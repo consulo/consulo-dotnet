@@ -35,6 +35,8 @@ QIDENTIFIER=\'{IDENTIFIER}\'
 
 	">"            { return MsilTokens.GT; }
 
+	"::"           { return MsilTokens.COLONCOLON; }
+
 	"["            { return MsilTokens.LBRACKET; }
 
 	"]"            { return MsilTokens.RBRACKET; }
