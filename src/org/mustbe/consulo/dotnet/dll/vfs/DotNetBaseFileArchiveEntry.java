@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.MsilStubBuilder;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import com.intellij.util.SmartList;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
@@ -64,6 +64,6 @@ public class DotNetBaseFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 	@Override
 	public List<? extends StubBlock> build()
 	{
-		return XStubBuilder.parseTypeDef(getNamespace(), myTypeDefs);
+		return MsilStubBuilder.parseTypeDef(getNamespace(), myTypeDefs);
 	}
 }

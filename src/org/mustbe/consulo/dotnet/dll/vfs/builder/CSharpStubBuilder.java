@@ -36,7 +36,6 @@ import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiBundle;
 import com.intellij.util.BitUtil;
 import com.intellij.util.PairFunction;
 import com.intellij.util.SmartList;
@@ -58,7 +57,8 @@ import lombok.val;
  * @since 12.12.13.
  */
 @Logger
-public class XStubBuilder
+@Deprecated
+public class CSharpStubBuilder
 {
 	private static final char[] BRACES = {
 			'{',
@@ -817,7 +817,7 @@ public class XStubBuilder
 			}
 		}
 
-		XStubBuilder.LOGGER.error(signature + " " + typeDef.getFullName() + "#" + (methodDef == null ? null : methodDef.getName()) + "(). Array: " +
+		CSharpStubBuilder.LOGGER.error(signature + " " + typeDef.getFullName() + "#" + (methodDef == null ? null : methodDef.getName()) + "(). Array: " +
 				Arrays.toString(value));
 
 		return StringUtil.QUOTER.fun("error");
@@ -844,7 +844,7 @@ public class XStubBuilder
 		}
 		else
 		{
-			XStubBuilder.LOGGER.error("Wrong byte count: " + defaultValue.length + ": " + typeDef.getFullName() + "." + debugName);
+			CSharpStubBuilder.LOGGER.error("Wrong byte count: " + defaultValue.length + ": " + typeDef.getFullName() + "." + debugName);
 			return "0";
 		}
 	}
@@ -944,61 +944,7 @@ public class XStubBuilder
 		return new StubBlock(builder, null, BRACES);
 	}
 
-	@NotNull
-	public static CharSequence buildText(List<? extends StubBlock> blocks)
-	{
-		StringBuilder builder = new StringBuilder();
-		builder.append(PsiBundle.message("psi.decompiled.text.header")).append('\n').append('\n');
 
-		for(int i = 0; i < blocks.size(); i++)
-		{
-			if(i != 0)
-			{
-				builder.append('\n');
-			}
-			StubBlock stubBlock = blocks.get(i);
-			processBlock(builder, stubBlock, 0);
-		}
-
-		return builder;
-	}
-
-	private static void processBlock(StringBuilder builder, StubBlock root, int index)
-	{
-		repeatSymbol(builder, '\t', index);
-		builder.append(root.getStartText());
-
-		if(!(root instanceof LineStubBlock))
-		{
-			char[] indents = root.getIndents();
-			builder.append('\n');
-			repeatSymbol(builder, '\t', index);
-			builder.append(indents[0]);
-			builder.append('\n');
-
-			List<StubBlock> blocks = root.getBlocks();
-			for(int i = 0; i < blocks.size(); i++)
-			{
-				if(i != 0)
-				{
-					builder.append('\n');
-				}
-				StubBlock stubBlock = blocks.get(i);
-				processBlock(builder, stubBlock, index + 1);
-			}
-
-			CharSequence innerText = root.getInnerText();
-			if(innerText != null)
-			{
-				repeatSymbol(builder, '\t', index + 1);
-				builder.append(innerText);
-			}
-
-			repeatSymbol(builder, '\t', index);
-			builder.append(indents[1]);
-			builder.append('\n');
-		}
-	}
 
 	public static <T> void join(StringBuilder builder, List<T> list, PairFunction<StringBuilder, T, Void> function, String dem)
 	{
@@ -1011,14 +957,6 @@ public class XStubBuilder
 
 			T t = list.get(i);
 			function.fun(builder, t);
-		}
-	}
-
-	private static void repeatSymbol(StringBuilder builder, char ch, int count)
-	{
-		for(int i = 0; i < count; i++)
-		{
-			builder.append(ch);
 		}
 	}
 }

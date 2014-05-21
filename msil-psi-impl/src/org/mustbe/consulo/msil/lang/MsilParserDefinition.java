@@ -16,9 +16,13 @@
 
 package org.mustbe.consulo.msil.lang;
 
+import java.io.Reader;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.msil.MsilLanguage;
+import org.mustbe.consulo.msil.lang.lexer._MsilLexer;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilFileImpl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
@@ -26,7 +30,7 @@ import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
-import com.intellij.lexer.EmptyLexer;
+import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
@@ -46,10 +50,9 @@ public class MsilParserDefinition implements ParserDefinition
 
 	@NotNull
 	@Override
-	public Lexer createLexer(
-			@Nullable Project project, @NotNull LanguageVersion languageVersion)
+	public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion)
 	{
-		return new EmptyLexer();
+		return new FlexAdapter(new _MsilLexer((Reader)null));
 	}
 
 	@NotNull
@@ -86,14 +89,14 @@ public class MsilParserDefinition implements ParserDefinition
 	@Override
 	public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion)
 	{
-		return TokenSet.EMPTY;
+		return MsilTokenSets.WHITESPACES;
 	}
 
 	@NotNull
 	@Override
 	public TokenSet getCommentTokens(@NotNull LanguageVersion languageVersion)
 	{
-		return TokenSet.EMPTY;
+		return MsilTokenSets.COMMENTS;
 	}
 
 	@NotNull
