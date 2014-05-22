@@ -69,6 +69,8 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		{
 			PsiBuilder.Marker newMark = builder.mark();
 
+			builder.advanceLexer();
+
 			parseType(builder);
 
 			newMark.done(EXTENDS_TYPE_LIST);
@@ -77,6 +79,8 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		if(builder.getTokenType() == IMPLEMENTS_KEYWORD)
 		{
 			PsiBuilder.Marker newMark = builder.mark();
+
+			builder.advanceLexer();
 
 			while(!builder.eof())
 			{
@@ -131,7 +135,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 	private void parseReferenceExpression(PsiBuilder builder)
 	{
-		if(builder.getTokenType() == REFERENCE_EXPRESSION)
+		if(builder.getTokenType() == IDENTIFIER)
 		{
 			PsiBuilder.Marker mark = builder.mark();
 
