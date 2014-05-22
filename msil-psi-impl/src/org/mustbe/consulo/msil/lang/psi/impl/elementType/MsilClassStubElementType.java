@@ -22,7 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilClassEntryImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -49,28 +51,34 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	@Override
 	public MsilClassEntry createPsi(@NotNull MsilClassEntryStub msilClassEntryStub)
 	{
-		return null;
+		return new MsilClassEntryImpl(msilClassEntryStub, this);
 	}
 
 	@Override
-	public MsilClassEntryStub createStub(
-			@NotNull MsilClassEntry msilClassEntry, StubElement stubElement)
+	public MsilClassEntryStub createStub(@NotNull MsilClassEntry msilClassEntry, StubElement stubElement)
 	{
 		return new MsilClassEntryStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(
-			@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
 	@NotNull
 	@Override
-	public MsilClassEntryStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilClassEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		return new MsilClassEntryStub(stubElement, this);
+	}
+
+	@Override
+	public void indexStub(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull IndexSink indexSink)
+	{
+		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())
+		{
+			indexer.indexClass(msilClassEntryStub, indexSink);
+		}
 	}
 }

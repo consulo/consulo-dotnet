@@ -28,6 +28,7 @@
 
 	<extensionPoints>
 		<extensionPoint name="psi.facade" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade" area="CONSULO_PROJECT"/>
+		<extensionPoint name="stubIndexer" interface="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer" />
 
 		<extensionPoint name="debugger.provider" interface="org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider" />
 		<extensionPoint name="classInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
