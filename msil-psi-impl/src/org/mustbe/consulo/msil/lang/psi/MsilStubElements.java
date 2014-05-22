@@ -16,6 +16,11 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilClassStubElementType;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilEventStubElementType;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilFieldStubElementType;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilMethodStubElementType;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilPropertyStubElementType;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilStubFileElementType;
 
 /**
@@ -25,4 +30,9 @@ import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilStubFileElementType
 public interface MsilStubElements
 {
 	MsilStubFileElementType FILE = new MsilStubFileElementType();
+	MsilClassStubElementType CLASS = new MsilClassStubElementType();
+	MsilMethodStubElementType METHOD = new MsilMethodStubElementType();
+	MsilPropertyStubElementType PROPERTY = new MsilPropertyStubElementType();
+	MsilEventStubElementType EVENT = new MsilEventStubElementType();
+	MsilFieldStubElementType FIELD = new MsilFieldStubElementType();
 }

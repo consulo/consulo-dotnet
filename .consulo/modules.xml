@@ -311,6 +311,7 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="sourceFolder" forTests="false" />
+        <orderEntry type="module" module-name="dotnet-psi-api" />
       </module>
       <module name="msil-psi-impl" dirurl="file://$PROJECT_DIR$/msil-psi-impl">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />

@@ -16,12 +16,12 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
-import com.intellij.psi.PsiElement;
+import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 
 /**
  * @author VISTALL
  * @since 21.05.14
  */
-public interface MsilCustomAttribute extends PsiElement
+public interface MsilCustomAttribute extends DotNetAttribute
 {
 }
