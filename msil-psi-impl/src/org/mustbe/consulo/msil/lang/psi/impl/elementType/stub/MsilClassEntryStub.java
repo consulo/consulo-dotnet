@@ -20,6 +20,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -27,8 +28,30 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class MsilClassEntryStub extends StubBase<MsilClassEntry>
 {
-	public MsilClassEntryStub(StubElement parent, IStubElementType elementType)
+	private StringRef myNamespace;
+	private StringRef myName;
+
+	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, String namespace, String name)
 	{
 		super(parent, elementType);
+		myName = StringRef.fromNullableString(name);
+		myNamespace = StringRef.fromNullableString(namespace);
+	}
+
+	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, StringRef namespace, StringRef name)
+	{
+		super(parent, elementType);
+		myName = name;
+		myNamespace = namespace;
+	}
+
+	public String getName()
+	{
+		return StringRef.toString(myName);
+	}
+
+	public String getNamespace()
+	{
+		return StringRef.toString(myNamespace);
 	}
 }

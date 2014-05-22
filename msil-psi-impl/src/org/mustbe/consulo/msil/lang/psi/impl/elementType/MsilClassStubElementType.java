@@ -28,6 +28,7 @@ import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -57,20 +58,25 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	@Override
 	public MsilClassEntryStub createStub(@NotNull MsilClassEntry msilClassEntry, StubElement stubElement)
 	{
-		return new MsilClassEntryStub(stubElement, this);
+		String namespace = msilClassEntry.getPresentableParentQName();
+		String name = msilClassEntry.getName();
+		return new MsilClassEntryStub(stubElement, this, namespace, name);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilClassEntryStub stub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+		stubOutputStream.writeName(stub.getNamespace());
+		stubOutputStream.writeName(stub.getName());
 	}
 
 	@NotNull
 	@Override
 	public MsilClassEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilClassEntryStub(stubElement, this);
+		StringRef namespace = inputStream.readName();
+		StringRef name = inputStream.readName();
+		return new MsilClassEntryStub(stubElement, this, namespace, name);
 	}
 
 	@Override

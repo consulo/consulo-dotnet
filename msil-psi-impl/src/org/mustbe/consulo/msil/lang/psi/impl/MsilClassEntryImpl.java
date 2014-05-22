@@ -30,8 +30,10 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
+import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
@@ -51,6 +53,13 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	public MsilClassEntryImpl(@NotNull ASTNode node)
 	{
 		super(node);
+	}
+
+	@NotNull
+	public String getNameFromBytecode()
+	{
+		PsiElement element = getNameIdentifier();
+		return element == null ? "" : element.getText();
 	}
 
 	@Override
@@ -153,21 +162,37 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public String getPresentableParentQName()
 	{
-		return null;
+		MsilClassEntryStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getNamespace();
+		}
+		return StringUtil.getPackageName(getNameFromBytecode());
 	}
 
 	@Nullable
 	@Override
 	public String getPresentableQName()
 	{
-		return null;
+		return getNameFromBytecode();
+	}
+
+	@Override
+	public String getName()
+	{
+		MsilClassEntryStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getName();
+		}
+		return StringUtil.getShortName(getNameFromBytecode());
 	}
 
 	@Nullable
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		return null;
+		return findChildByType(MsilTokens.IDENTIFIER);
 	}
 
 	@Override
