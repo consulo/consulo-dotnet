@@ -81,6 +81,10 @@ QIDENTIFIER=\'.*\'
 
 	"int16"        { return MsilTokens.INT16_KEYWORD; }
 
+	"int"          { return MsilTokens.INT_KEYWORD; }
+
+	"uint"          { return MsilTokens.UINT_KEYWORD; }
+
 	"uint16"       { return MsilTokens.UINT16_KEYWORD; }
 
 	"int32"        { return MsilTokens.INT32_KEYWORD; }
