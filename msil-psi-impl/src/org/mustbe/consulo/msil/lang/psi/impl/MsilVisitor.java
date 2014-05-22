@@ -22,6 +22,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilEventEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
+import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
 import org.mustbe.consulo.msil.lang.psi.MsilPropertyEntry;
 import com.intellij.psi.PsiElementVisitor;
 
@@ -64,5 +65,10 @@ public class MsilVisitor extends PsiElementVisitor
 	public void visitPropertyEntry(MsilPropertyEntry entry)
 	{
 		visitElement(entry);
+	}
+
+	public void visitModifierList(MsilModifierList list)
+	{
+		visitElement(list);
 	}
 }

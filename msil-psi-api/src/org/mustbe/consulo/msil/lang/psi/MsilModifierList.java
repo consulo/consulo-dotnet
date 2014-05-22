@@ -16,12 +16,12 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 
 /**
  * @author VISTALL
- * @since 21.05.14
+ * @since 22.05.14
  */
-public interface MsilEntry extends DotNetElement
+public interface MsilModifierList extends DotNetModifierList
 {
 }

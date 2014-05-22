@@ -17,9 +17,13 @@
 package org.mustbe.consulo.msil.lang.parser;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.msil.lang.psi.MsilElements;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.PsiBuilderUtil;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
 
@@ -27,7 +31,7 @@ import com.intellij.psi.tree.IElementType;
  * @author VISTALL
  * @since 21.05.14
  */
-public class MsilParser implements PsiParser
+public class MsilParser implements PsiParser, MsilTokens, MsilElements
 {
 	@NotNull
 	@Override
@@ -36,9 +40,44 @@ public class MsilParser implements PsiParser
 		PsiBuilder.Marker mark = builder.mark();
 		while(!builder.eof())
 		{
-			builder.advanceLexer();
+			IElementType tokenType = builder.getTokenType();
+			if(tokenType == _CLASS_KEYWORD)
+			{
+				parseClass(builder);
+			}
+			else
+			{
+				builder.advanceLexer();
+			}
 		}
 		mark.done(elementType);
 		return builder.getTreeBuilt();
+	}
+
+	private void parseClass(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		parseModifierList(builder);
+
+		if(!PsiBuilderUtil.expect(builder, IDENTIFIER))
+		{
+			builder.error("Expected name");
+		}
+
+		mark.done(CLASS);
+	}
+
+	private void parseModifierList(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		while(MsilTokenSets.MODIFIERS.contains(builder.getTokenType()))
+		{
+			builder.advanceLexer();
+		}
+		mark.done(MODIFIER_LIST);
 	}
 }

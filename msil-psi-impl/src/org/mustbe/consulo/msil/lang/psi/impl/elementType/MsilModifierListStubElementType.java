@@ -19,9 +19,9 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
-import org.mustbe.consulo.msil.lang.psi.impl.MsilClassEntryImpl;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
+import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilModifierListImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilModifierListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -29,47 +29,47 @@ import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author VISTALL
- * @since 21.05.14
+ * @since 22.05.14
  */
-public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilClassEntryStub, MsilClassEntry>
+public class MsilModifierListStubElementType extends AbstractMsilStubElementType<MsilModifierListStub, MsilModifierList>
 {
-	public MsilClassStubElementType()
+	public MsilModifierListStubElementType()
 	{
-		super("MSIL_CLASS_ENTRY");
+		super("MSIL_MODIFIER_LIST");
 	}
 
 	@NotNull
 	@Override
-	public MsilClassEntry createPsi(@NotNull ASTNode astNode)
+	public MsilModifierList createPsi(@NotNull ASTNode astNode)
 	{
-		return new MsilClassEntryImpl(astNode);
+		return new MsilModifierListImpl(astNode);
 	}
 
 	@Override
-	public MsilClassEntry createPsi(@NotNull MsilClassEntryStub msilClassEntryStub)
+	public MsilModifierList createPsi(@NotNull MsilModifierListStub msilModifierListStub)
 	{
-		return null;
+		return new MsilModifierListImpl(msilModifierListStub, this);
 	}
 
 	@Override
-	public MsilClassEntryStub createStub(
-			@NotNull MsilClassEntry msilClassEntry, StubElement stubElement)
+	public MsilModifierListStub createStub(
+			@NotNull MsilModifierList msilModifierList, StubElement stubElement)
 	{
-		return new MsilClassEntryStub(stubElement, this);
+		return new MsilModifierListStub(stubElement, this);
 	}
 
 	@Override
 	public void serialize(
-			@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+			@NotNull MsilModifierListStub msilModifierListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
 	@NotNull
 	@Override
-	public MsilClassEntryStub deserialize(
+	public MsilModifierListStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilClassEntryStub(stubElement, this);
+		return new MsilModifierListStub(stubElement, this);
 	}
 }

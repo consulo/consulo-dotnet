@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 
@@ -27,7 +28,7 @@ import com.intellij.psi.stubs.StubElement;
  * @author VISTALL
  * @since 21.05.14
  */
-public abstract class MsilStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T>
+public abstract class MsilStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements StubBasedPsiElement
 {
 	protected MsilStubElementImpl(@NotNull ASTNode node)
 	{

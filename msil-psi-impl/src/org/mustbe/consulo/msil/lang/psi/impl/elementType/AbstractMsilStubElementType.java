@@ -18,8 +18,8 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.msil.MsilLanguage;
-import org.mustbe.consulo.msil.lang.psi.MsilEntry;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
@@ -29,7 +29,7 @@ import com.intellij.psi.stubs.StubElement;
  * @author VISTALL
  * @since 21.05.14
  */
-public abstract class AbstractMsilStubElementType<T extends StubElement, E extends MsilEntry> extends IStubElementType<T, E>
+public abstract class AbstractMsilStubElementType<T extends StubElement, E extends DotNetElement> extends IStubElementType<T, E>
 {
 	public AbstractMsilStubElementType(@NotNull @NonNls String debugName)
 	{

@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi;
+package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubBase;
+import com.intellij.psi.stubs.StubElement;
 
 /**
  * @author VISTALL
- * @since 21.05.14
+ * @since 22.05.14
  */
-public interface MsilEntry extends DotNetElement
+public class MsilModifierListStub extends StubBase<MsilModifierList>
 {
+	public MsilModifierListStub(StubElement parent, IStubElementType elementType)
+	{
+		super(parent, elementType);
+	}
 }
