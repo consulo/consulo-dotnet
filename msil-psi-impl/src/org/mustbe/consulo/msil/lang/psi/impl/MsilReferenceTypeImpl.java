@@ -19,9 +19,14 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilReferenceTypeRefImpl;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 
 /**
@@ -48,22 +53,61 @@ public class MsilReferenceTypeImpl extends MsilStubElementImpl<MsilReferenceType
 
 	@NotNull
 	@Override
+	public DotNetPsiFacade.TypeResoleKind getTypeResoleKind()
+	{
+		MsilReferenceTypeStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getTypeResoleKind();
+		}
+		PsiElement childByType = findChildByType(MsilTokenSets.REFERENCE_TYPE_START);
+		if(childByType == null)
+		{
+			return DotNetPsiFacade.TypeResoleKind.UNKNOWN;
+		}
+		if(childByType.getNode().getElementType() == MsilTokens.VALUETYPE_KEYWORD)
+		{
+			return DotNetPsiFacade.TypeResoleKind.STRUCT;
+		}
+		else if(childByType.getNode().getElementType() == MsilTokens.CLASS_KEYWORD)
+		{
+			return DotNetPsiFacade.TypeResoleKind.CLASS;
+		}
+		return DotNetPsiFacade.TypeResoleKind.UNKNOWN;
+	}
+
+	@NotNull
+	@Override
 	public String getReferenceText()
 	{
-		return null;
+		MsilReferenceTypeStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getReferenceText();
+		}
+
+		PsiElement childByType = findChildByClass(MsilReferenceExpressionImpl.class);
+		if(childByType == null)
+		{
+			return "";
+		}
+		else
+		{
+			return childByType.getText();
+		}
 	}
 
 	@NotNull
 	@Override
 	public DotNetReferenceExpression getReferenceExpression()
 	{
-		return null;
+		return findNotNullChildByClass(MsilReferenceExpressionImpl.class);
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return null;
+		return new MsilReferenceTypeRefImpl(getProject(), getReferenceText(), getTypeResoleKind());
 	}
 }

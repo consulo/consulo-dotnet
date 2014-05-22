@@ -19,10 +19,12 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.msil.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilClassEntryImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
@@ -82,6 +84,8 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	@Override
 	public void indexStub(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull IndexSink indexSink)
 	{
+		indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, MsilHelper.append(msilClassEntryStub.getNamespace(), msilClassEntryStub.getName()));
+
 		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())
 		{
 			indexer.indexClass(msilClassEntryStub, indexSink);

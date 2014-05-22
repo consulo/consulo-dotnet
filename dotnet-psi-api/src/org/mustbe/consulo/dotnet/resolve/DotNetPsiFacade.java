@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import java.util.Collection;
 
+import org.consulo.annotations.Immutable;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,25 +33,29 @@ import com.intellij.util.ArrayUtil;
 @ProjectService
 public abstract class DotNetPsiFacade
 {
-	public static enum ResoleKind
+	public static enum TypeResoleKind
 	{
 		CLASS,
 		STRUCT,
-		UNKNOWN
+		UNKNOWN;
+
+		@Immutable
+		@NotNull
+		public static TypeResoleKind[] VALUES = values();
 	}
 
 	public static class ResolveContext
 	{
 		private final String myQName;
 		private final int myGenericCount;
-		private final ResoleKind myResoleKind;
+		private final TypeResoleKind myTypeResoleKind;
 		private final GlobalSearchScope myScope;
 
-		public ResolveContext(String qname, int genericCount, ResoleKind resoleKind, GlobalSearchScope scope)
+		public ResolveContext(String qname, int genericCount, TypeResoleKind typeResoleKind, GlobalSearchScope scope)
 		{
 			myQName = qname;
 			myGenericCount = genericCount;
-			myResoleKind = resoleKind;
+			myTypeResoleKind = typeResoleKind;
 			myScope = scope;
 		}
 
@@ -59,9 +64,9 @@ public abstract class DotNetPsiFacade
 			return myGenericCount;
 		}
 
-		public ResoleKind getResoleKind()
+		public TypeResoleKind getTypeResoleKind()
 		{
-			return myResoleKind;
+			return myTypeResoleKind;
 		}
 
 		public GlobalSearchScope getScope()
@@ -113,7 +118,7 @@ public abstract class DotNetPsiFacade
 
 	public boolean isAcceptableType(@NotNull ResolveContext context, @NotNull DotNetTypeDeclaration type)
 	{
-		switch(context.getResoleKind())
+		switch(context.getTypeResoleKind())
 		{
 			case CLASS:
 				if(type.isStruct())
@@ -146,7 +151,7 @@ public abstract class DotNetPsiFacade
 	@NotNull
 	public DotNetTypeDeclaration[] findTypes(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount)
 	{
-		return findTypes(new ResolveContext(qName, genericCount, ResoleKind.UNKNOWN, searchScope));
+		return findTypes(new ResolveContext(qName, genericCount, TypeResoleKind.UNKNOWN, searchScope));
 	}
 
 	@Nullable

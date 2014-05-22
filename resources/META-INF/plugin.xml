@@ -51,6 +51,8 @@
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex" />
+
 		<fileTypeFactory implementation="org.mustbe.consulo.msil.MsilFileTypeFactory" />
 		<stubElementTypeHolder class="org.mustbe.consulo.msil.lang.psi.MsilStubElements" />
 		<lang.parserDefinition language="MSIL" implementationClass="org.mustbe.consulo.msil.lang.MsilParserDefinition" />

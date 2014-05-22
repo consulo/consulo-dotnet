@@ -17,9 +17,11 @@
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -27,8 +29,38 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class MsilReferenceTypeStub extends StubBase<DotNetReferenceType>
 {
-	public MsilReferenceTypeStub(StubElement parent, IStubElementType elementType)
+	private final DotNetPsiFacade.TypeResoleKind myTypeResoleKind;
+	private final StringRef myReferenceText;
+
+	public MsilReferenceTypeStub(
+			StubElement parent,
+			IStubElementType elementType,
+			DotNetPsiFacade.TypeResoleKind typeResoleKind,
+			String referenceText)
 	{
 		super(parent, elementType);
+		myTypeResoleKind = typeResoleKind;
+		myReferenceText = StringRef.fromNullableString(referenceText);
+	}
+
+	public MsilReferenceTypeStub(
+			StubElement parent,
+			IStubElementType elementType,
+			DotNetPsiFacade.TypeResoleKind typeResoleKind,
+			StringRef referenceText)
+	{
+		super(parent, elementType);
+		myTypeResoleKind = typeResoleKind;
+		myReferenceText = referenceText;
+	}
+
+	public String getReferenceText()
+	{
+		return StringRef.toString(myReferenceText);
+	}
+
+	public DotNetPsiFacade.TypeResoleKind getTypeResoleKind()
+	{
+		return myTypeResoleKind;
 	}
 }

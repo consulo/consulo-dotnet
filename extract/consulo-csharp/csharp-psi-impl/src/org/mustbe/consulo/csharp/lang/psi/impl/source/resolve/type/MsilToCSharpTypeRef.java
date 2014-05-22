@@ -14,16 +14,30 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
-import com.intellij.psi.tree.TokenSet;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.psi.impl.msil.MsilToCSharpUtil;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
-public interface MsilStubTokenSets extends MsilStubElements
+public class MsilToCSharpTypeRef extends DotNetTypeRef.Delegate
 {
-	TokenSet TYPE_STUBS = TokenSet.create(NATIVE_TYPE, REFERENCE_TYPE, POINTER_TYPE, TYPE_BY_REF, TYPE_WITH_TYPE_ARGUMENTS, ARRAY_TYPE,
-			CLASS_GENERIC_TYPE, METHOD_GENERIC_TYPE);
+	public MsilToCSharpTypeRef(DotNetTypeRef typeRef)
+	{
+		super(typeRef);
+	}
+
+	@Nullable
+	@Override
+	public final PsiElement resolve(@NotNull PsiElement scope)
+	{
+		PsiElement resolve = super.resolve(scope);
+		return MsilToCSharpUtil.wrap(resolve);
+	}
 }

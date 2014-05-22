@@ -20,12 +20,14 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilReferenceTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -53,17 +55,19 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 	}
 
 	@Override
-	public MsilReferenceTypeStub createStub(
-			@NotNull DotNetReferenceType dotNetReferenceType, StubElement stubElement)
+	public MsilReferenceTypeStub createStub(@NotNull DotNetReferenceType dotNetReferenceType, StubElement stubElement)
 	{
-		return new MsilReferenceTypeStub(stubElement, this);
+		DotNetPsiFacade.TypeResoleKind typeResoleKind = dotNetReferenceType.getTypeResoleKind();
+		String referenceText = dotNetReferenceType.getReferenceText();
+		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText);
 	}
 
 	@Override
 	public void serialize(
 			@NotNull MsilReferenceTypeStub msilReferenceTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+		stubOutputStream.writeByte(msilReferenceTypeStub.getTypeResoleKind().ordinal());
+		stubOutputStream.writeName(msilReferenceTypeStub.getReferenceText());
 	}
 
 	@NotNull
@@ -71,6 +75,8 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 	public MsilReferenceTypeStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilReferenceTypeStub(stubElement, this);
+		DotNetPsiFacade.TypeResoleKind typeResoleKind = DotNetPsiFacade.TypeResoleKind.VALUES[inputStream.readByte()];
+		StringRef referenceText = inputStream.readName();
+		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText);
 	}
 }

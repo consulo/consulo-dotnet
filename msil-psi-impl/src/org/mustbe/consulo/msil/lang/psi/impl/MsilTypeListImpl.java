@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilTypeListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
@@ -50,14 +51,25 @@ public class MsilTypeListImpl extends MsilStubElementImpl<MsilTypeListStub> impl
 	@Override
 	public DotNetType[] getTypes()
 	{
-		return new DotNetType[0];
+		return getStubOrPsiChildren(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeRef[] getTypeRefs()
 	{
-		return new DotNetTypeRef[0];
+		DotNetType[] types = getTypes();
+		if(types.length == 0)
+		{
+			return DotNetTypeRef.EMPTY_ARRAY;
+		}
+		DotNetTypeRef[] array = new DotNetTypeRef[types.length];
+		for(int i = 0; i < types.length; i++)
+		{
+			DotNetType type = types[i];
+			array[i] = type.toTypeRef();
+		}
+		return array;
 	}
 
 	@NotNull

@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import com.intellij.psi.stubs.StringStubIndexExtension;
+import com.intellij.psi.stubs.StubIndexExtension;
+import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 13.12.13.
+ * @since 22.05.14
  */
-public interface DotNetReferenceType extends DotNetType
+public class MsilTypeByQNameIndex extends StringStubIndexExtension<MsilClassEntry>
 {
-	@NotNull
-	DotNetPsiFacade.TypeResoleKind getTypeResoleKind();
+	public static MsilTypeByQNameIndex getInstance()
+	{
+		return StubIndexExtension.EP_NAME.findExtension(MsilTypeByQNameIndex.class);
+	}
 
 	@NotNull
-	String getReferenceText();
-
-	@NotNull
-	DotNetReferenceExpression getReferenceExpression();
+	@Override
+	public StubIndexKey<String, MsilClassEntry> getKey()
+	{
+		return MsilIndexKeys.TYPE_BY_QNAME_INDEX;
+	}
 }

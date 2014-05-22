@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi;
+package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
-import com.intellij.psi.tree.TokenSet;
+import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
-public interface MsilStubTokenSets extends MsilStubElements
+public interface MsilIndexKeys
 {
-	TokenSet TYPE_STUBS = TokenSet.create(NATIVE_TYPE, REFERENCE_TYPE, POINTER_TYPE, TYPE_BY_REF, TYPE_WITH_TYPE_ARGUMENTS, ARRAY_TYPE,
-			CLASS_GENERIC_TYPE, METHOD_GENERIC_TYPE);
+	StubIndexKey<String, MsilClassEntry> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("msil.type.by.qname.index");
+
 }
