@@ -16,13 +16,21 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilNativeTypeStub;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilReferenceTypeRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -30,6 +38,29 @@ import com.intellij.psi.stubs.IStubElementType;
  */
 public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> implements DotNetNativeType
 {
+	private static final Map<IElementType, String> ourTypes = new HashMap<IElementType, String>()
+	{
+		{
+			put(MsilTokens.STRING_KEYWORD, "System.String");
+			put(MsilTokens.OBJECT_KEYWORD, "System.Object");
+			put(MsilTokens.INT_KEYWORD, "System.IntPtr");
+			put(MsilTokens.UINT_KEYWORD, "System.UIntPtr");
+			put(MsilTokens.CHAR_KEYWORD, "System.Char");
+			put(MsilTokens.BOOL_KEYWORD, "System.Bool");
+			put(MsilTokens.INT8_KEYWORD, "System.SByte");
+			put(MsilTokens.UINT8_KEYWORD, "System.Byte");
+			put(MsilTokens.INT16_KEYWORD, "System.Int16");
+			put(MsilTokens.UINT16_KEYWORD, "System.UInt16");
+			put(MsilTokens.INT32_KEYWORD, "System.Int32");
+			put(MsilTokens.UINT32_KEYWORD, "System.UInt32");
+			put(MsilTokens.INT64_KEYWORD, "System.Int64");
+			put(MsilTokens.UINT64_KEYWORD, "System.UInt64");
+			put(MsilTokens.FLOAT_KEYWORD, "System.Single");
+			put(MsilTokens.FLOAT64_KEYWORD, "System.Double");
+			put(MsilTokens.VOID_KEYWORD, "System.Void");
+		}
+	};
+
 	public MsilNativeTypeImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -44,14 +75,26 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 	@Override
 	public PsiElement getTypeElement()
 	{
-		return null;
+		return findNotNullChildByType(MsilTokenSets.NATIVE_TYPES);
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return null;
+		IElementType elementType = null;
+		MsilNativeTypeStub stub = getStub();
+		if(stub != null)
+		{
+			elementType = stub.getTypeElementType();
+		}
+		else
+		{
+			elementType = getTypeElement().getNode().getElementType();
+		}
+		String ref = ourTypes.get(elementType);
+		assert ref != null : elementType.toString();
+		return new MsilReferenceTypeRefImpl(getProject(), ref, DotNetPsiFacade.TypeResoleKind.UNKNOWN);
 	}
 
 	@Override

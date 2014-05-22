@@ -20,6 +20,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -27,8 +28,16 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class MsilNativeTypeStub extends StubBase<DotNetNativeType>
 {
-	public MsilNativeTypeStub(StubElement parent, IStubElementType elementType)
+	private final IElementType myType;
+
+	public MsilNativeTypeStub(StubElement parent, IStubElementType elementType, IElementType type)
 	{
 		super(parent, elementType);
+		myType = type;
+	}
+
+	public IElementType getTypeElementType()
+	{
+		return myType;
 	}
 }

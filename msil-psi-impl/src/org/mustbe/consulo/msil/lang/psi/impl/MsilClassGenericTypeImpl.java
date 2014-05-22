@@ -63,6 +63,6 @@ public class MsilClassGenericTypeImpl extends MsilStubElementImpl<MsilClassGener
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return null;
+		return DotNetTypeRef.ERROR_TYPE;
 	}
 }

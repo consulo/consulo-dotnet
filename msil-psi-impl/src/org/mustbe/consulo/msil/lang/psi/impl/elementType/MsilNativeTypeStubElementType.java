@@ -20,12 +20,15 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilNativeTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilNativeTypeStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.util.ArrayUtil;
 
 /**
  * @author VISTALL
@@ -56,14 +59,13 @@ public class MsilNativeTypeStubElementType extends AbstractMsilStubElementType<M
 	public MsilNativeTypeStub createStub(
 			@NotNull DotNetNativeType dotNetNativeType, StubElement stubElement)
 	{
-		return new MsilNativeTypeStub(stubElement, this);
+		return new MsilNativeTypeStub(stubElement, this, dotNetNativeType.getTypeElement().getNode().getElementType());
 	}
 
 	@Override
-	public void serialize(
-			@NotNull MsilNativeTypeStub msilNativeTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilNativeTypeStub msilNativeTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+		stubOutputStream.writeInt(ArrayUtil.indexOf(MsilTokenSets.NATIVE_TYPES_AS_ARRAY, msilNativeTypeStub.getTypeElementType()));
 	}
 
 	@NotNull
@@ -71,6 +73,7 @@ public class MsilNativeTypeStubElementType extends AbstractMsilStubElementType<M
 	public MsilNativeTypeStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilNativeTypeStub(stubElement, this);
+		IElementType elementType = MsilTokenSets.NATIVE_TYPES_AS_ARRAY[inputStream.readInt()];
+		return new MsilNativeTypeStub(stubElement, this, elementType);
 	}
 }
