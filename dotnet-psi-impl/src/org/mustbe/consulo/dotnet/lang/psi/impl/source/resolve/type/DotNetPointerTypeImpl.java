@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
+package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,11 +26,11 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 06.01.14.
  */
-public class CSharpPointerTypeRef extends DotNetTypeRef.Adapter implements DotNetPointerTypeRef
+public class DotNetPointerTypeImpl extends DotNetTypeRef.Adapter implements DotNetPointerTypeRef
 {
 	private final DotNetTypeRef myInnerType;
 
-	public CSharpPointerTypeRef(DotNetTypeRef innerType)
+	public DotNetPointerTypeImpl(DotNetTypeRef innerType)
 	{
 		myInnerType = innerType;
 	}
@@ -62,6 +62,7 @@ public class CSharpPointerTypeRef extends DotNetTypeRef.Adapter implements DotNe
 		return myInnerType.resolve(scope);
 	}
 
+	@Override
 	@NotNull
 	public DotNetTypeRef getInnerType()
 	{

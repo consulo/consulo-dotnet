@@ -18,11 +18,10 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
-import org.mustbe.consulo.msil.lang.psi.impl.MsilFieldEntryImpl;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilFieldEntryStub;
-import com.intellij.lang.ASTNode;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -31,46 +30,32 @@ import com.intellij.psi.stubs.StubOutputStream;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilFieldStubElementType extends AbstractMsilStubElementType<MsilFieldEntryStub,MsilFieldEntry>
+public abstract class MsilEmpyTypeStubElementType extends AbstractMsilStubElementType<MsilEmptyTypeStub, DotNetType>
 {
-	public MsilFieldStubElementType()
+	public MsilEmpyTypeStubElementType(@NotNull @NonNls String debugName)
 	{
-		super("MSIL_FIELD_ENTRY");
-	}
-
-	@NotNull
-	@Override
-	public MsilFieldEntry createPsi(@NotNull ASTNode astNode)
-	{
-		return new MsilFieldEntryImpl(astNode);
-	}
-
-	@NotNull
-	@Override
-	public MsilFieldEntry createPsi(@NotNull MsilFieldEntryStub msilFieldEntryStub)
-	{
-		return new MsilFieldEntryImpl(msilFieldEntryStub, this);
+		super(debugName);
 	}
 
 	@Override
-	public MsilFieldEntryStub createStub(
-			@NotNull MsilFieldEntry msilFieldEntry, StubElement stubElement)
+	public MsilEmptyTypeStub createStub(
+			@NotNull DotNetType type, StubElement stubElement)
 	{
-		return new MsilFieldEntryStub(stubElement, this);
+		return new MsilEmptyTypeStub(stubElement, this);
 	}
 
 	@Override
 	public void serialize(
-			@NotNull MsilFieldEntryStub msilFieldEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+			@NotNull MsilEmptyTypeStub msilEmptyTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
 	@NotNull
 	@Override
-	public MsilFieldEntryStub deserialize(
+	public MsilEmptyTypeStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilFieldEntryStub(stubElement, this);
+		return new MsilEmptyTypeStub(stubElement, this);
 	}
 }

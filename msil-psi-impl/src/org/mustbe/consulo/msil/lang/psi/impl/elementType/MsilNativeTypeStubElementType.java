@@ -19,9 +19,9 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.msil.lang.psi.MsilPropertyEntry;
-import org.mustbe.consulo.msil.lang.psi.impl.MsilPropertyEntryImpl;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilPropertyEntryStub;
+import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilNativeTypeImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilNativeTypeStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -29,46 +29,48 @@ import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author VISTALL
- * @since 21.05.14
+ * @since 22.05.14
  */
-public class MsilPropertyStubElementType extends AbstractMsilStubElementType<MsilPropertyEntryStub, MsilPropertyEntry>
+public class MsilNativeTypeStubElementType extends AbstractMsilStubElementType<MsilNativeTypeStub, DotNetNativeType>
 {
-	public MsilPropertyStubElementType()
+	public MsilNativeTypeStubElementType()
 	{
-		super("MSIL_PROPERTY_ENTRY");
+		super("MSIL_NATIVE_TYPE");
 	}
 
 	@NotNull
 	@Override
-	public MsilPropertyEntry createPsi(@NotNull ASTNode astNode)
+	public DotNetNativeType createPsi(@NotNull ASTNode astNode)
 	{
-		return new MsilPropertyEntryImpl(astNode);
+		return new MsilNativeTypeImpl(astNode);
 	}
 
 	@NotNull
 	@Override
-	public MsilPropertyEntry createPsi(@NotNull MsilPropertyEntryStub msilPropertyEntryStub)
+	public DotNetNativeType createPsi(@NotNull MsilNativeTypeStub msilNativeTypeStub)
 	{
-		return new MsilPropertyEntryImpl(msilPropertyEntryStub, this);
+		return new MsilNativeTypeImpl(msilNativeTypeStub, this);
 	}
 
 	@Override
-	public MsilPropertyEntryStub createStub(@NotNull MsilPropertyEntry msilPropertyEntry, StubElement stubElement)
+	public MsilNativeTypeStub createStub(
+			@NotNull DotNetNativeType dotNetNativeType, StubElement stubElement)
 	{
-		return new MsilPropertyEntryStub(stubElement, this);
+		return new MsilNativeTypeStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilPropertyEntryStub msilPropertyEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(
+			@NotNull MsilNativeTypeStub msilNativeTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
 	@NotNull
 	@Override
-	public MsilPropertyEntryStub deserialize(
+	public MsilNativeTypeStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilPropertyEntryStub(stubElement, this);
+		return new MsilNativeTypeStub(stubElement, this);
 	}
 }

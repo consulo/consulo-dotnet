@@ -18,30 +18,19 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.ArrayFactory;
 
 /**
  * @author VISTALL
- * @since 21.05.14
+ * @since 22.05.14
  */
-public abstract class MsilStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements StubBasedPsiElement, DotNetElement
+public abstract class MsilElementImpl extends ASTWrapperPsiElement implements DotNetElement
 {
-	protected MsilStubElementImpl(@NotNull ASTNode node)
+	public MsilElementImpl(@NotNull ASTNode node)
 	{
 		super(node);
-	}
-
-	protected MsilStubElementImpl(@NotNull T stub, @NotNull IStubElementType nodeType)
-	{
-		super(stub, nodeType);
 	}
 
 	@Override
@@ -55,13 +44,6 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 		{
 			visitor.visitElement(this);
 		}
-	}
-
-	@NotNull
-	public <T extends PsiElement> T getFirstStubOrPsiChild(TokenSet tokenSet, ArrayFactory<T> arrayFactory)
-	{
-		T[] stubOrPsiChildren = getStubOrPsiChildren(tokenSet, arrayFactory);
-		return stubOrPsiChildren[0];
 	}
 
 	public abstract void accept(MsilVisitor visitor);

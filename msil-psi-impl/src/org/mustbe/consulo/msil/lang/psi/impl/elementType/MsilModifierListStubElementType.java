@@ -45,6 +45,7 @@ public class MsilModifierListStubElementType extends AbstractMsilStubElementType
 		return new MsilModifierListImpl(astNode);
 	}
 
+	@NotNull
 	@Override
 	public MsilModifierList createPsi(@NotNull MsilModifierListStub msilModifierListStub)
 	{

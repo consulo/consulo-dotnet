@@ -16,13 +16,12 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilClassStubElementType;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilEventStubElementType;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilFieldStubElementType;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilMethodStubElementType;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilModifierListStubElementType;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilPropertyStubElementType;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.MsilStubFileElementType;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilPointerTypeImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.*;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
+import com.intellij.lang.ASTNode;
 
 /**
  * @author VISTALL
@@ -37,4 +36,24 @@ public interface MsilStubElements
 	MsilEventStubElementType EVENT = new MsilEventStubElementType();
 	MsilFieldStubElementType FIELD = new MsilFieldStubElementType();
 	MsilModifierListStubElementType MODIFIER_LIST = new MsilModifierListStubElementType();
+	MsilTypeListStubElementType EXTENDS_TYPE_LIST = new MsilTypeListStubElementType("MSIL_EXTENDS_TYPE_LIST");
+	MsilTypeListStubElementType IMPLEMENTS_TYPE_LIST = new MsilTypeListStubElementType("MSIL_IMPLEMENTS_TYPE_LIST");
+	MsilNativeTypeStubElementType NATIVE_TYPE = new MsilNativeTypeStubElementType();
+	MsilReferenceTypeStubElementType REFERENCE_TYPE = new MsilReferenceTypeStubElementType();
+	MsilEmpyTypeStubElementType POINTER_TYPE = new MsilEmpyTypeStubElementType("MSIL_POINTER_TYPE")
+	{
+		@NotNull
+		@Override
+		public DotNetType createPsi(@NotNull ASTNode astNode)
+		{
+			return new MsilPointerTypeImpl(astNode);
+		}
+
+		@NotNull
+		@Override
+		public DotNetType createPsi(@NotNull MsilEmptyTypeStub msilEmptyTypeStub)
+		{
+			return new MsilPointerTypeImpl(msilEmptyTypeStub, this);
+		}
+	};
 }

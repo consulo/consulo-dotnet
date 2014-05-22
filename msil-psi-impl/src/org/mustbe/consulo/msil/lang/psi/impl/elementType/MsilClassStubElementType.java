@@ -45,6 +45,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 		return new MsilClassEntryImpl(astNode);
 	}
 
+	@NotNull
 	@Override
 	public MsilClassEntry createPsi(@NotNull MsilClassEntryStub msilClassEntryStub)
 	{

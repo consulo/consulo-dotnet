@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi;
+package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.mustbe.consulo.msil.MsilLanguage;
-import org.mustbe.consulo.msil.lang.psi.impl.MsilReferenceExpressionImpl;
-import com.intellij.psi.tree.IElementTypeAsPsiFactory;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubBase;
+import com.intellij.psi.stubs.StubElement;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
-public interface MsilElements extends MsilStubElements
+public class MsilTypeListStub extends StubBase<DotNetTypeList>
 {
-	IElementTypeAsPsiFactory REFERENCE_EXPRESSION = new IElementTypeAsPsiFactory("MSIL_REFERENCE_EXPRESSION", MsilLanguage.INSTANCE,
-			MsilReferenceExpressionImpl.class);
+	public MsilTypeListStub(StubElement parent, IStubElementType elementType)
+	{
+		super(parent, elementType);
+	}
 }

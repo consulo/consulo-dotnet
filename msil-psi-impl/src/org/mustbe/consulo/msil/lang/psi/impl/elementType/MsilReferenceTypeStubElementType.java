@@ -19,9 +19,9 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.msil.lang.psi.MsilPropertyEntry;
-import org.mustbe.consulo.msil.lang.psi.impl.MsilPropertyEntryImpl;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilPropertyEntryStub;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilReferenceTypeImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -29,46 +29,48 @@ import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author VISTALL
- * @since 21.05.14
+ * @since 22.05.14
  */
-public class MsilPropertyStubElementType extends AbstractMsilStubElementType<MsilPropertyEntryStub, MsilPropertyEntry>
+public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementType<MsilReferenceTypeStub, DotNetReferenceType>
 {
-	public MsilPropertyStubElementType()
+	public MsilReferenceTypeStubElementType()
 	{
-		super("MSIL_PROPERTY_ENTRY");
+		super("MSIL_REFERENCE_TYPE");
 	}
 
 	@NotNull
 	@Override
-	public MsilPropertyEntry createPsi(@NotNull ASTNode astNode)
+	public DotNetReferenceType createPsi(@NotNull ASTNode astNode)
 	{
-		return new MsilPropertyEntryImpl(astNode);
+		return new MsilReferenceTypeImpl(astNode);
 	}
 
 	@NotNull
 	@Override
-	public MsilPropertyEntry createPsi(@NotNull MsilPropertyEntryStub msilPropertyEntryStub)
+	public DotNetReferenceType createPsi(@NotNull MsilReferenceTypeStub msilReferenceTypeStub)
 	{
-		return new MsilPropertyEntryImpl(msilPropertyEntryStub, this);
+		return new MsilReferenceTypeImpl(msilReferenceTypeStub, this);
 	}
 
 	@Override
-	public MsilPropertyEntryStub createStub(@NotNull MsilPropertyEntry msilPropertyEntry, StubElement stubElement)
+	public MsilReferenceTypeStub createStub(
+			@NotNull DotNetReferenceType dotNetReferenceType, StubElement stubElement)
 	{
-		return new MsilPropertyEntryStub(stubElement, this);
+		return new MsilReferenceTypeStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilPropertyEntryStub msilPropertyEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(
+			@NotNull MsilReferenceTypeStub msilReferenceTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
 	@NotNull
 	@Override
-	public MsilPropertyEntryStub deserialize(
+	public MsilReferenceTypeStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilPropertyEntryStub(stubElement, this);
+		return new MsilReferenceTypeStub(stubElement, this);
 	}
 }

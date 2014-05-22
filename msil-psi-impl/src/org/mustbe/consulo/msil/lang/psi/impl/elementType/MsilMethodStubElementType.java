@@ -45,6 +45,7 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 		return new MsilMethodEntryImpl(astNode);
 	}
 
+	@NotNull
 	@Override
 	public MsilMethodEntry createPsi(@NotNull MsilMethodEntryStub msilMethodEntryStub)
 	{

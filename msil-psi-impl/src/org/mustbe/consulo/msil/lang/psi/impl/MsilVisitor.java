@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl;
 
+import org.mustbe.consulo.dotnet.psi.DotNetPointerType;
 import org.mustbe.consulo.msil.lang.psi.MsilAssemblyEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
@@ -70,5 +71,10 @@ public class MsilVisitor extends PsiElementVisitor
 	public void visitModifierList(MsilModifierList list)
 	{
 		visitElement(list);
+	}
+
+	public void visitPointerType(DotNetPointerType pointerType)
+	{
+		visitElement(pointerType);
 	}
 }

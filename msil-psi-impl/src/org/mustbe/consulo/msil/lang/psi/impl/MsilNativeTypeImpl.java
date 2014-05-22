@@ -14,45 +14,48 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi.impl.elementType;
+package org.mustbe.consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
-import org.mustbe.consulo.msil.MsilLanguage;
+import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilNativeTypeStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
 
 /**
  * @author VISTALL
- * @since 21.05.14
+ * @since 22.05.14
  */
-public abstract class AbstractMsilStubElementType<T extends StubElement, E extends DotNetElement> extends IStubElementType<T, E>
+public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> implements DotNetNativeType
 {
-	public AbstractMsilStubElementType(@NotNull @NonNls String debugName)
+	public MsilNativeTypeImpl(@NotNull ASTNode node)
 	{
-		super(debugName, MsilLanguage.INSTANCE);
+		super(node);
+	}
+
+	public MsilNativeTypeImpl(@NotNull MsilNativeTypeStub stub, @NotNull IStubElementType nodeType)
+	{
+		super(stub, nodeType);
 	}
 
 	@NotNull
-	public abstract E createPsi(@NotNull ASTNode astNode);
-
 	@Override
-	@NotNull
-	public abstract E createPsi(@NotNull T t);
-
-	@NotNull
-	@Override
-	public String getExternalId()
+	public PsiElement getTypeElement()
 	{
-		return "msil." + toString();
+		return null;
 	}
 
+	@NotNull
+	@Override
+	public DotNetTypeRef toTypeRef()
+	{
+		return null;
+	}
 
 	@Override
-	public void indexStub(@NotNull T t, @NotNull IndexSink indexSink)
+	public void accept(MsilVisitor visitor)
 	{
 
 	}

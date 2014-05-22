@@ -26,12 +26,13 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderUtil;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
  * @since 21.05.14
  */
-public class MsilParser implements PsiParser, MsilTokens, MsilElements
+public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilElements
 {
 	@NotNull
 	@Override
@@ -62,12 +63,86 @@ public class MsilParser implements PsiParser, MsilTokens, MsilElements
 
 		parseModifierList(builder);
 
-		if(!PsiBuilderUtil.expect(builder, IDENTIFIER))
+		expect(builder, IDENTIFIER, "Expected name");
+
+		if(builder.getTokenType() == EXTENDS_KEYWORD)
 		{
-			builder.error("Expected name");
+			PsiBuilder.Marker newMark = builder.mark();
+
+			parseType(builder);
+
+			newMark.done(EXTENDS_TYPE_LIST);
+		}
+
+		if(builder.getTokenType() == IMPLEMENTS_KEYWORD)
+		{
+			PsiBuilder.Marker newMark = builder.mark();
+
+			while(!builder.eof())
+			{
+				parseType(builder);
+
+				if(builder.getTokenType() != COMMA)
+				{
+					break;
+				}
+				else
+				{
+					builder.advanceLexer();
+				}
+			}
+
+			newMark.done(IMPLEMENTS_TYPE_LIST);
 		}
 
 		mark.done(CLASS);
+	}
+
+	private void parseType(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		IElementType tokenType = builder.getTokenType();
+		if(NATIVE_TYPES.contains(tokenType))
+		{
+			builder.advanceLexer();
+			mark.done(NATIVE_TYPE);
+		}
+		else if(REFERENCE_TYPE_START.contains(tokenType))
+		{
+			builder.advanceLexer();
+
+			parseReferenceExpression(builder);
+
+			mark.done(REFERENCE_TYPE);
+		}
+		else
+		{
+			parseReferenceExpression(builder);
+
+			mark.done(REFERENCE_TYPE);
+		}
+
+		if(builder.getTokenType() == PERC)
+		{
+
+		}
+	}
+
+	private void parseReferenceExpression(PsiBuilder builder)
+	{
+		if(builder.getTokenType() == REFERENCE_EXPRESSION)
+		{
+			PsiBuilder.Marker mark = builder.mark();
+
+			builder.advanceLexer();
+
+			mark.done(REFERENCE_EXPRESSION);
+		}
+		else
+		{
+			builder.error("Identifier expected");
+		}
 	}
 
 	private void parseModifierList(PsiBuilder builder)
@@ -79,5 +154,31 @@ public class MsilParser implements PsiParser, MsilTokens, MsilElements
 			builder.advanceLexer();
 		}
 		mark.done(MODIFIER_LIST);
+	}
+
+	private static boolean expect(PsiBuilder builder, TokenSet tokenSet, String name)
+	{
+		if(!PsiBuilderUtil.expect(builder, tokenSet))
+		{
+			builder.error(name);
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	private static boolean expect(PsiBuilder builder, IElementType tokenSet, String name)
+	{
+		if(!PsiBuilderUtil.expect(builder, tokenSet))
+		{
+			builder.error(name);
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 }

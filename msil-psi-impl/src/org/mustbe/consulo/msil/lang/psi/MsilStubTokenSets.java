@@ -16,16 +16,13 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
-import org.mustbe.consulo.msil.MsilLanguage;
-import org.mustbe.consulo.msil.lang.psi.impl.MsilReferenceExpressionImpl;
-import com.intellij.psi.tree.IElementTypeAsPsiFactory;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
-public interface MsilElements extends MsilStubElements
+public interface MsilStubTokenSets extends MsilStubElements
 {
-	IElementTypeAsPsiFactory REFERENCE_EXPRESSION = new IElementTypeAsPsiFactory("MSIL_REFERENCE_EXPRESSION", MsilLanguage.INSTANCE,
-			MsilReferenceExpressionImpl.class);
+	TokenSet TYPE_STUBS = TokenSet.create(NATIVE_TYPE, REFERENCE_TYPE, POINTER_TYPE);
 }
