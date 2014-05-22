@@ -47,6 +47,7 @@ public class XStubUtil
 	public static final String CONSTRUCTOR_NAME = ".ctor";
 	public static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
 
+	@Deprecated
 	public static final char GENERIC_MARKER_IN_NAME = '`';
 	private static final char[] ILLEGAL_CHARS = new char[] {'{', '}', '<', '>', '=', '\\', '/'};
 
@@ -180,15 +181,6 @@ public class XStubUtil
 		return a;
 	}
 
-	public static String cutGenericMarker(String name)
-	{
-		int i = name.lastIndexOf(GENERIC_MARKER_IN_NAME);
-		if(i > 0)
-		{
-			name = name.substring(0, i);
-		}
-		return name;
-	}
 
 	public static boolean isInvisibleMember(String name)
 	{

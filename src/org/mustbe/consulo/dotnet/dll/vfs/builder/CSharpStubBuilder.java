@@ -33,6 +33,7 @@ import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XByteUtil;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubModifier;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
+import org.mustbe.consulo.msil.MsilHelper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
@@ -149,7 +150,7 @@ public class CSharpStubBuilder
 			{
 				if("Invoke".equals(methodDef.getName()))
 				{
-					MethodDef newMethodDef = new MethodDef(XStubUtil.cutGenericMarker(typeDef.getName()), methodDef.getImplFlags(),
+					MethodDef newMethodDef = new MethodDef(MsilHelper.cutGenericMarker(typeDef.getName()), methodDef.getImplFlags(),
 							methodDef.getFlags(),
 							methodDef.getSignature());
 					for(GenericParamDef paramDef : typeDef.getGenericParams())

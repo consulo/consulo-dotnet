@@ -240,6 +240,7 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="dotnet-psi-api" exported="" />
+        <orderEntry type="module" module-name="msil-psi-api" exported="" />
       </module>
       <module name="csharp/csharp-psi-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-psi-impl">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
@@ -325,9 +326,9 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="msil-psi-api" />
-        <orderEntry type="module" module-name="dotnet-psi-api" />
-        <orderEntry type="module" module-name="dotnet-psi-impl" />
+        <orderEntry type="module" module-name="msil-psi-api" exported="" />
+        <orderEntry type="module" module-name="dotnet-psi-api" exported="" />
+        <orderEntry type="module" module-name="dotnet-psi-impl" exported="" />
       </module>
     </modules>
   </component>

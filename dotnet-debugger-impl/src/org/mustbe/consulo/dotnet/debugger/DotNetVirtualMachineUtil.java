@@ -17,9 +17,9 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.msil.MsilHelper;
 import com.intellij.openapi.project.Project;
 import mono.debugger.TypeMirror;
 
@@ -33,7 +33,7 @@ public class DotNetVirtualMachineUtil
 	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
 	{
 		String qualifiedName = typeMirror.qualifiedName();
-		int index = qualifiedName.indexOf(XStubUtil.GENERIC_MARKER_IN_NAME);
+		int index = qualifiedName.indexOf(MsilHelper.GENERIC_MARKER_IN_NAME);
 
 		int genericCount = 0;
 		if(index != -1)
@@ -53,7 +53,7 @@ public class DotNetVirtualMachineUtil
 		int genericParametersCount = qualifiedElement.getGenericParametersCount();
 		if(genericParametersCount > 0)
 		{
-			presentableQName = presentableQName + XStubUtil.GENERIC_MARKER_IN_NAME + genericParametersCount;
+			presentableQName = presentableQName + MsilHelper.GENERIC_MARKER_IN_NAME + genericParametersCount;
 		}
 		assert presentableQName != null;
 		return presentableQName;
@@ -76,7 +76,7 @@ public class DotNetVirtualMachineUtil
 			return;
 		}
 
-		builder.append(XStubUtil.cutGenericMarker(typeMirror.qualifiedName())); // cut to `
+		builder.append(MsilHelper.cutGenericMarker(typeMirror.qualifiedName())); // cut to `
 		builder.append("<");
 		TypeMirror[] typeMirrors = typeMirror.genericArguments();
 		for(int i = 0; i < typeMirrors.length; i++)

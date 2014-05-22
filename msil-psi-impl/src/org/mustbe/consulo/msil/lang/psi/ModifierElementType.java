@@ -51,6 +51,6 @@ public class ModifierElementType extends IElementType implements DotNetModifier
 	@Override
 	public String name()
 	{
-		return toString();
+		return toString().replace("_KEYWORD", "").toLowerCase();
 	}
 }
