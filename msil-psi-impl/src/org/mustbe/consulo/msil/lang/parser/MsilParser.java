@@ -76,7 +76,15 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			newMark.done(EXTENDS_TYPE_LIST);
 		}
 
-		if(builder.getTokenType() == IMPLEMENTS_KEYWORD)
+		parseTypeList(builder, IMPLEMENTS_KEYWORD, null,IMPLEMENTS_TYPE_LIST);
+
+
+		mark.done(CLASS);
+	}
+
+	private void parseTypeList(PsiBuilder builder, IElementType start, IElementType stop, IElementType to)
+	{
+		if(builder.getTokenType() == start)
 		{
 			PsiBuilder.Marker newMark = builder.mark();
 
@@ -96,10 +104,13 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 				}
 			}
 
-			newMark.done(IMPLEMENTS_TYPE_LIST);
-		}
+			if(stop != null)
+			{
+				expect(builder, stop, stop + " is expected");
+			}
 
-		mark.done(CLASS);
+			newMark.done(to);
+		}
 	}
 
 	private void parseType(PsiBuilder builder)
@@ -129,7 +140,15 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		if(builder.getTokenType() == PERC)
 		{
-
+			mark = mark.precede();
+			builder.advanceLexer();
+			mark.done(POINTER_TYPE);
+		}
+		else if(builder.getTokenType() == LT)
+		{
+			mark = mark.precede();
+			parseTypeList(builder, LT, GT, TYPE_ARGUMENTS_TYPE_LIST);
+			mark.done(TYPE_WITH_TYPE_ARGUMENTS);
 		}
 	}
 

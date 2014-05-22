@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilPointerTypeImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilTypeWithTypeArgumentsImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.*;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 import com.intellij.lang.ASTNode;
@@ -38,6 +39,7 @@ public interface MsilStubElements
 	MsilModifierListStubElementType MODIFIER_LIST = new MsilModifierListStubElementType();
 	MsilTypeListStubElementType EXTENDS_TYPE_LIST = new MsilTypeListStubElementType("MSIL_EXTENDS_TYPE_LIST");
 	MsilTypeListStubElementType IMPLEMENTS_TYPE_LIST = new MsilTypeListStubElementType("MSIL_IMPLEMENTS_TYPE_LIST");
+	MsilTypeListStubElementType TYPE_ARGUMENTS_TYPE_LIST = new MsilTypeListStubElementType("MSIL_TYPE_ARGUMENTS_TYPE_LIST");
 	MsilNativeTypeStubElementType NATIVE_TYPE = new MsilNativeTypeStubElementType();
 	MsilReferenceTypeStubElementType REFERENCE_TYPE = new MsilReferenceTypeStubElementType();
 	MsilEmpyTypeStubElementType POINTER_TYPE = new MsilEmpyTypeStubElementType("MSIL_POINTER_TYPE")
@@ -54,6 +56,22 @@ public interface MsilStubElements
 		public DotNetType createPsi(@NotNull MsilEmptyTypeStub msilEmptyTypeStub)
 		{
 			return new MsilPointerTypeImpl(msilEmptyTypeStub, this);
+		}
+	};
+	MsilEmpyTypeStubElementType TYPE_WITH_TYPE_ARGUMENTS = new MsilEmpyTypeStubElementType("MSIL_TYPE_WRAPPER_WITH_TYPE_ARGUMENTS")
+	{
+		@NotNull
+		@Override
+		public DotNetType createPsi(@NotNull ASTNode astNode)
+		{
+			return new MsilTypeWithTypeArgumentsImpl(astNode);
+		}
+
+		@NotNull
+		@Override
+		public DotNetType createPsi(@NotNull MsilEmptyTypeStub msilEmptyTypeStub)
+		{
+			return new MsilTypeWithTypeArgumentsImpl(msilEmptyTypeStub, this);
 		}
 	};
 }

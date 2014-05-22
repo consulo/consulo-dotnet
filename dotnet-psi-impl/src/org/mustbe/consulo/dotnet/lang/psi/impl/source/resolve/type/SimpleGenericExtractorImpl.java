@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
+package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,18 +23,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
  * @since 13.01.14
  */
-public class CSharpGenericExtractor implements DotNetGenericExtractor
+public class SimpleGenericExtractorImpl implements DotNetGenericExtractor
 {
 	private Map<DotNetGenericParameter, DotNetTypeRef> myMap;
 
-	public CSharpGenericExtractor(DotNetGenericParameter[] genericParameters, DotNetTypeRef[] arguments)
+	public SimpleGenericExtractorImpl(DotNetGenericParameter[] genericParameters, DotNetTypeRef[] arguments)
 	{
 		myMap = new HashMap<DotNetGenericParameter, DotNetTypeRef>(genericParameters.length);
 		for(int i = 0; i < genericParameters.length; i++)

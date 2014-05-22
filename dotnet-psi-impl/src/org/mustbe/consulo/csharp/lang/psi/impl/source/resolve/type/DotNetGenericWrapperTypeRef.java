@@ -18,6 +18,7 @@ package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type.SimpleGenericExtractorImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
@@ -28,12 +29,12 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 04.01.14.
  */
-public class CSharpGenericWrapperTypeRef extends DotNetTypeRef.Adapter
+public class DotNetGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 {
 	private final DotNetTypeRef myInner;
 	private final DotNetTypeRef[] myArguments;
 
-	public CSharpGenericWrapperTypeRef(DotNetTypeRef inner, DotNetTypeRef[] rArguments)
+	public DotNetGenericWrapperTypeRef(DotNetTypeRef inner, DotNetTypeRef[] rArguments)
 	{
 		myInner = inner;
 		myArguments = rArguments;
@@ -106,7 +107,7 @@ public class CSharpGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 		{
 			return DotNetGenericExtractor.EMPTY;
 		}
-		return new CSharpGenericExtractor(genericParameters, getArguments());
+		return new SimpleGenericExtractorImpl(genericParameters, getArguments());
 	}
 
 	public DotNetTypeRef getInner()

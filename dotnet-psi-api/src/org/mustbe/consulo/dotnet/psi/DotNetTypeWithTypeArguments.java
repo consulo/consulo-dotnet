@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 13.12.13.
  */
-public interface DotNetTypeWrapperWithTypeArguments extends DotNetType
+public interface DotNetTypeWithTypeArguments extends DotNetType
 {
 	@NotNull
 	DotNetType getInnerType();
