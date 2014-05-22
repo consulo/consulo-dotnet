@@ -357,6 +357,12 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			builder.advanceLexer();
 			mark.done(METHOD_GENERIC_TYPE);
 		}
+		else if(tokenType == EXCL)
+		{
+			builder.advanceLexer();
+			expect(builder, IDENTIFIER, "Identifier expected");
+			mark.done(CLASS_GENERIC_TYPE);
+		}
 		else if(REFERENCE_TYPE_START.contains(tokenType))
 		{
 			builder.advanceLexer();
