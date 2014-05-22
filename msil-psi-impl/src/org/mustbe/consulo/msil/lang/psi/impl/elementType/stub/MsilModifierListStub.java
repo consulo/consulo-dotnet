@@ -16,10 +16,15 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.msil.lang.psi.ModifierElementType;
 import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.BitUtil;
 
 /**
  * @author VISTALL
@@ -27,8 +32,40 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class MsilModifierListStub extends StubBase<MsilModifierList>
 {
-	public MsilModifierListStub(StubElement parent, IStubElementType elementType)
+	private final int myModifiers;
+
+	public MsilModifierListStub(StubElement parent, IStubElementType elementType, MsilModifierList modifiers)
 	{
 		super(parent, elementType);
+
+		int mod = 0;
+		for(DotNetModifier dotNetModifier : modifiers.getModifiers())
+		{
+			mod |= BitUtil.set(mod, getMask((ModifierElementType) dotNetModifier), true);
+		}
+		myModifiers = mod;
+	}
+
+	public MsilModifierListStub(StubElement parent, IStubElementType elementType, int modifiers)
+	{
+		super(parent, elementType);
+		myModifiers = modifiers;
+	}
+
+	public boolean hasModififer(ModifierElementType elementType)
+	{
+		return BitUtil.isSet(myModifiers, getMask(elementType));
+	}
+
+	private int getMask(ModifierElementType elementType)
+	{
+		int i = ArrayUtil.indexOf(MsilTokenSets.MODIFIERS_AS_ARRAY, elementType);
+		assert i != -1;
+		return i << 1;
+	}
+
+	public int getModifiers()
+	{
+		return myModifiers;
 	}
 }

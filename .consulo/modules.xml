@@ -317,6 +317,7 @@
       <module name="msil-psi-impl" dirurl="file://$PROJECT_DIR$/msil-psi-impl">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
         <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>

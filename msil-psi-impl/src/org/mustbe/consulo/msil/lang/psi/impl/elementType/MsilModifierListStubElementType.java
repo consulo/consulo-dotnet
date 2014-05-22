@@ -53,24 +53,22 @@ public class MsilModifierListStubElementType extends AbstractMsilStubElementType
 	}
 
 	@Override
-	public MsilModifierListStub createStub(
-			@NotNull MsilModifierList msilModifierList, StubElement stubElement)
+	public MsilModifierListStub createStub(@NotNull MsilModifierList msilModifierList, StubElement stubElement)
 	{
-		return new MsilModifierListStub(stubElement, this);
+		return new MsilModifierListStub(stubElement, this, msilModifierList);
 	}
 
 	@Override
-	public void serialize(
-			@NotNull MsilModifierListStub msilModifierListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilModifierListStub msilModifierListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+		stubOutputStream.writeInt(msilModifierListStub.getModifiers());
 	}
 
 	@NotNull
 	@Override
-	public MsilModifierListStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilModifierListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilModifierListStub(stubElement, this);
+		int modifiers = inputStream.readInt();
+		return new MsilModifierListStub(stubElement, this, modifiers);
 	}
 }

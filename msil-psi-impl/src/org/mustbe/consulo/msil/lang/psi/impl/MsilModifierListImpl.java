@@ -16,16 +16,22 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl;
 
+import java.util.ArrayList;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.msil.lang.psi.ModifierElementType;
 import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilModifierListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -53,7 +59,15 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	@Override
 	public DotNetModifier[] getModifiers()
 	{
-		return new DotNetModifier[0];
+		val modifiers = new ArrayList<DotNetModifier>();
+		for(ModifierElementType modifierElementType : MsilTokenSets.MODIFIERS_AS_ARRAY)
+		{
+			if(hasModifier(modifierElementType))
+			{
+				modifiers.add(modifierElementType);
+			}
+		}
+		return modifiers.toArray(new DotNetModifier[modifiers.size()]);
 	}
 
 	@NotNull
@@ -66,19 +80,37 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
-		return false;
+		DotNetModifier elementType = modifier;
+		if(modifier == DotNetModifier.STATIC)
+		{
+			elementType = MsilTokens.STATIC_KEYWORD;
+		}
+
+		assert elementType instanceof ModifierElementType;
+		MsilModifierListStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.hasModififer((ModifierElementType)elementType);
+		}
+		return hasModifierInTree(elementType);
 	}
 
 	@Override
 	public boolean hasModifierInTree(@NotNull DotNetModifier modifier)
 	{
-		return false;
+		DotNetModifier elementType = modifier;
+		if(modifier == DotNetModifier.STATIC)
+		{
+			elementType = MsilTokens.STATIC_KEYWORD;
+		}
+		assert elementType instanceof ModifierElementType;
+		return findChildByType((IElementType) elementType) != null;
 	}
 
 	@Nullable
 	@Override
 	public PsiElement getModifier(IElementType elementType)
 	{
-		return null;
+		return findChildByType(elementType);
 	}
 }

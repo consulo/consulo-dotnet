@@ -33,9 +33,9 @@ import com.intellij.psi.tree.IStubFileElementType;
  * @author VISTALL
  * @since 21.05.14
  */
-public class MsilStubFileElementType extends IStubFileElementType<MsilFileStub>
+public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 {
-	public MsilStubFileElementType()
+	public MsilFileStubElementType()
 	{
 		super("MSIL_FILE", MsilLanguage.INSTANCE);
 	}
@@ -67,7 +67,7 @@ public class MsilStubFileElementType extends IStubFileElementType<MsilFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		return 1;
+		return 2;
 	}
 
 	@NotNull

@@ -31,7 +31,7 @@ import com.intellij.lang.ASTNode;
  */
 public interface MsilStubElements
 {
-	MsilStubFileElementType FILE = new MsilStubFileElementType();
+	MsilFileStubElementType FILE = new MsilFileStubElementType();
 	MsilClassStubElementType CLASS = new MsilClassStubElementType();
 	MsilCustomAttributeStubElementType CUSTOM_ATTRIBUTE = new MsilCustomAttributeStubElementType();
 	MsilMethodStubElementType METHOD = new MsilMethodStubElementType();
