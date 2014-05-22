@@ -43,6 +43,8 @@ public interface MsilStubElements
 	MsilTypeListStubElementType TYPE_ARGUMENTS_TYPE_LIST = new MsilTypeListStubElementType("MSIL_TYPE_ARGUMENTS_TYPE_LIST");
 	MsilNativeTypeStubElementType NATIVE_TYPE = new MsilNativeTypeStubElementType();
 	MsilReferenceTypeStubElementType REFERENCE_TYPE = new MsilReferenceTypeStubElementType();
+	MsilParameterListStubElementType PARAMETER_LIST = new MsilParameterListStubElementType();
+	MsilParameterStubElementType PARAMETER = new MsilParameterStubElementType();
 	MsilEmpyTypeStubElementType POINTER_TYPE = new MsilEmpyTypeStubElementType("MSIL_POINTER_TYPE")
 	{
 		@NotNull

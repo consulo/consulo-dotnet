@@ -34,6 +34,8 @@ import com.intellij.psi.tree.TokenSet;
  */
 public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilElements
 {
+	private static final TokenSet IDENTIFIERS = TokenSet.create(IDENTIFIER, QIDENTIFIER);
+
 	@NotNull
 	@Override
 	public ASTNode parse(@NotNull IElementType elementType, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
@@ -70,11 +72,75 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		{
 			parseProperty(builder);
 		}
+		else if(tokenType == _METHOD_KEYWORD)
+		{
+			parseMethod(builder);
+		}
 		else
 		{
 			builder.error("Unexpected token " + tokenType);
 			builder.advanceLexer();
 		}
+	}
+
+	private void parseMethod(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		parseModifierList(builder);
+
+		parseType(builder);
+
+		expect(builder, IDENTIFIERS, "Identifier expected");
+
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			PsiBuilder.Marker parameterListMarker = builder.mark();
+
+			if(builder.getTokenType() != RPAR)
+			{
+				while(!builder.eof())
+				{
+					PsiBuilder.Marker parameterMarker = builder.mark();
+					parseModifierList(builder);
+					parseType(builder);
+					expect(builder, IDENTIFIERS, "Identifier expected");
+					parameterMarker.done(PARAMETER);
+
+					if(builder.getTokenType() == COMMA)
+					{
+						builder.advanceLexer();
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+
+			expect(builder, RPAR, "')' expected");
+			parameterListMarker.done(PARAMETER_LIST);
+		}
+
+		if(expect(builder, LBRACE, "'{' expected"))
+		{
+			while(!builder.eof())
+			{
+				if(builder.getTokenType() == RBRACE)
+				{
+					break;
+				}
+				else
+				{
+					parse(builder);
+				}
+			}
+			expect(builder, RBRACE, "'}' expected");
+		}
+
+		mark.done(PROPERTY);
 	}
 
 	private void parseProperty(PsiBuilder builder)
