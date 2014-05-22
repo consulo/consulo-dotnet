@@ -203,6 +203,22 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		expect(builder, IDENTIFIER, "Identifier expected");
 
+		if(expect(builder, LBRACE, "'{' expected"))
+		{
+			while(!builder.eof())
+			{
+				if(builder.getTokenType() == RBRACE)
+				{
+					break;
+				}
+				else
+				{
+					parse(builder);
+				}
+			}
+			expect(builder, RBRACE, "'}' expected");
+		}
+
 		mark.done(EVENT);
 	}
 
