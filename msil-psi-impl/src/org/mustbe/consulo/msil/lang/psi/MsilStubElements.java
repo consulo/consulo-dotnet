@@ -32,6 +32,7 @@ public interface MsilStubElements
 {
 	MsilStubFileElementType FILE = new MsilStubFileElementType();
 	MsilClassStubElementType CLASS = new MsilClassStubElementType();
+	MsilCustomAttributeStubElementType CUSTOM_ATTRIBUTE = new MsilCustomAttributeStubElementType();
 	MsilMethodStubElementType METHOD = new MsilMethodStubElementType();
 	MsilPropertyStubElementType PROPERTY = new MsilPropertyStubElementType();
 	MsilEventStubElementType EVENT = new MsilEventStubElementType();

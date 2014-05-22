@@ -54,11 +54,34 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		{
 			parseClass(builder);
 		}
+		else if(tokenType == _CUSTOM_KEYWORD)
+		{
+			parseAttribute(builder);
+		}
 		else
 		{
 			builder.error("Unexpected token " + tokenType);
 			builder.advanceLexer();
 		}
+	}
+
+	private void parseAttribute(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		parseType(builder);
+
+		expect(builder, COLONCOLON, "'::' expected");
+		expect(builder, IDENTIFIER, "Identifier expected");
+		expect(builder, LPAR, "'(' expected");
+		expect(builder, RPAR, "')' expected");
+		expect(builder, EQ, "'=' expected");
+		expect(builder, LPAR, "'(' expected");
+		expect(builder, RPAR, "')' expected");
+
+		mark.done(CUSTOM_ATTRIBUTE);
 	}
 
 	private void parseClass(PsiBuilder builder)
@@ -82,9 +105,23 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			newMark.done(EXTENDS_TYPE_LIST);
 		}
 
-		parseTypeList(builder, IMPLEMENTS_KEYWORD, null,IMPLEMENTS_TYPE_LIST);
+		parseTypeList(builder, IMPLEMENTS_KEYWORD, null, IMPLEMENTS_TYPE_LIST);
 
-
+		if(expect(builder, LBRACE, "'{' expected"))
+		{
+			while(!builder.eof())
+			{
+				if(builder.getTokenType() == RBRACE)
+				{
+					break;
+				}
+				else
+				{
+					parse(builder);
+				}
+			}
+			expect(builder, RBRACE, "'}' expected");
+		}
 		mark.done(CLASS);
 	}
 
@@ -185,11 +222,14 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		mark.done(MODIFIER_LIST);
 	}
 
-	private static boolean expect(PsiBuilder builder, TokenSet tokenSet, String name)
+	private static boolean expect(PsiBuilder builder, TokenSet tokenSet, String text)
 	{
 		if(!PsiBuilderUtil.expect(builder, tokenSet))
 		{
-			builder.error(name);
+			if(text != null)
+			{
+				builder.error(text);
+			}
 			return false;
 		}
 		else
@@ -198,11 +238,14 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		}
 	}
 
-	private static boolean expect(PsiBuilder builder, IElementType tokenSet, String name)
+	private static boolean expect(PsiBuilder builder, IElementType tokenSet, String text)
 	{
 		if(!PsiBuilderUtil.expect(builder, tokenSet))
 		{
-			builder.error(name);
+			if(text != null)
+			{
+				builder.error(text);
+			}
 			return false;
 		}
 		else
