@@ -16,9 +16,14 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.lang.psi.DotNetInheritUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
@@ -28,6 +33,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
@@ -38,6 +44,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -103,13 +110,21 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public DotNetTypeRef[] getExtendTypeRefs()
 	{
-		return new DotNetTypeRef[0];
+		DotNetTypeList extendList = getStubOrPsiChild(MsilStubElements.EXTENDS_TYPE_LIST);
+		DotNetTypeList implementList = getStubOrPsiChild(MsilStubElements.IMPLEMENTS_TYPE_LIST);
+
+		DotNetTypeRef[] types = extendList == null ? DotNetTypeRef.EMPTY_ARRAY : extendList.getTypeRefs();
+		DotNetTypeRef[] types1 = implementList == null ? DotNetTypeRef.EMPTY_ARRAY : implementList.getTypeRefs();
+		List<DotNetTypeRef> list = new ArrayList<DotNetTypeRef>(types.length + types1.length);
+		Collections.addAll(list, types);
+		Collections.addAll(list, types1);
+		return ContainerUtil.toArray(list, DotNetTypeRef.EMPTY_ARRAY);
 	}
 
 	@Override
 	public boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep)
 	{
-		return false;
+		return DotNetInheritUtil.isInheritor(this, other, deep);
 	}
 
 	@Override
@@ -174,6 +189,11 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public String getPresentableQName()
 	{
+		MsilClassEntryStub stub = getStub();
+		if(stub != null)
+		{
+			return MsilHelper.append(stub.getNamespace(), stub.getName());
+		}
 		return getNameFromBytecode();
 	}
 

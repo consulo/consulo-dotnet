@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.msil;
 
+import com.intellij.openapi.util.text.StringUtil;
+
 /**
  * @author VISTALL
  * @since 22.05.14
@@ -32,5 +34,29 @@ public class MsilHelper
 			name = name.substring(0, i);
 		}
 		return name;
+	}
+
+	public static String appendNoGeneric(String namespace, String name)
+	{
+		if(StringUtil.isEmpty(namespace))
+		{
+			return cutGenericMarker(name);
+		}
+		else
+		{
+			return namespace + "." + cutGenericMarker(name);
+		}
+	}
+
+	public static String append(String namespace, String name)
+	{
+		if(StringUtil.isEmpty(namespace))
+		{
+			return name;
+		}
+		else
+		{
+			return namespace + "." + name;
+		}
 	}
 }

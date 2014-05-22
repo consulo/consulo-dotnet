@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.dotnet.lang.psi;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.util.CSharpResolveUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -31,7 +30,7 @@ import lombok.val;
  * @since 31.12.13.
  */
 @Logger
-public class CSharpInheritUtil
+public class DotNetInheritUtil
 {
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
 	{
@@ -71,7 +70,7 @@ public class CSharpInheritUtil
 			for(DotNetTypeRef dotNetType : anExtends)
 			{
 				PsiElement psiElement = dotNetType.resolve(typeDeclaration);
-				if(psiElement instanceof CSharpTypeDeclaration)
+				if(psiElement instanceof DotNetTypeDeclaration)
 				{
 					if(psiElement.isEquivalentTo(typeDeclaration))
 					{
@@ -86,21 +85,6 @@ public class CSharpInheritUtil
 						}
 					}
 				}
-			}
-		}
-		else
-		{
-			String defaultSuperType = CSharpResolveUtil.getDefaultSuperType(typeDeclaration);
-			if(defaultSuperType == null)
-			{
-				return false;
-			}
-
-			DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(typeDeclaration.getProject()).findType(defaultSuperType,
-					typeDeclaration.getResolveScope(), 0);
-			if(type != null)
-			{
-				return !type.isEquivalentTo(typeDeclaration) && isInheritor(type, other, true);
 			}
 		}
 		return false;

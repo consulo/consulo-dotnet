@@ -61,7 +61,7 @@ public class MsilModifierListStub extends StubBase<MsilModifierList>
 	{
 		int i = ArrayUtil.indexOf(MsilTokenSets.MODIFIERS_AS_ARRAY, elementType);
 		assert i != -1;
-		return i << 1;
+		return 1 << i;
 	}
 
 	public int getModifiers()
