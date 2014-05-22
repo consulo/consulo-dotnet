@@ -34,8 +34,6 @@ import com.intellij.psi.tree.TokenSet;
  */
 public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilElements
 {
-	private static final TokenSet IDENTIFIERS = TokenSet.create(IDENTIFIER, QIDENTIFIER);
-
 	@NotNull
 	@Override
 	public ASTNode parse(@NotNull IElementType elementType, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)

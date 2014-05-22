@@ -24,6 +24,8 @@ import com.intellij.psi.tree.TokenSet;
  */
 public interface MsilTokenSets extends MsilTokens
 {
+	TokenSet IDENTIFIERS = TokenSet.create(IDENTIFIER, QIDENTIFIER);
+
 	TokenSet _KEYWORDS = TokenSet.create(_CLASS_KEYWORD, _FIELD_KEYWORD, _PROPERTY_KEYWORD, _METHOD_KEYWORD, _ASSEMBLY_KEYWORD, _EVENT_KEYWORD,
 			_CUSTOM_KEYWORD, _PARAM_KEYWORD);
 
