@@ -334,6 +334,14 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			parseTypeList(builder, LT, GT, TYPE_ARGUMENTS_TYPE_LIST);
 			mark.done(TYPE_WITH_TYPE_ARGUMENTS);
 		}
+
+		while(builder.getTokenType() == LBRACKET)
+		{
+			mark = mark.precede();
+			expect(builder, LBRACKET, "'[' expected");
+			expect(builder, RBRACKET, "']' expected");
+			mark.done(ARRAY_TYPE);
+		}
 	}
 
 	private void parseReferenceExpression(PsiBuilder builder)

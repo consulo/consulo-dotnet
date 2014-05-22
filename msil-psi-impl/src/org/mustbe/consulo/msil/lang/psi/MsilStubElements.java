@@ -18,6 +18,7 @@ package org.mustbe.consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilArrayTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilPointerTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilTypeWithTypeArgumentsImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.*;
@@ -75,6 +76,22 @@ public interface MsilStubElements
 		public DotNetType createPsi(@NotNull MsilEmptyTypeStub msilEmptyTypeStub)
 		{
 			return new MsilTypeWithTypeArgumentsImpl(msilEmptyTypeStub, this);
+		}
+	};
+	MsilEmpyTypeStubElementType ARRAY_TYPE = new MsilEmpyTypeStubElementType("ARRAY_TYPE")
+	{
+		@NotNull
+		@Override
+		public DotNetType createPsi(@NotNull ASTNode astNode)
+		{
+			return new MsilArrayTypeImpl(astNode);
+		}
+
+		@NotNull
+		@Override
+		public DotNetType createPsi(@NotNull MsilEmptyTypeStub msilEmptyTypeStub)
+		{
+			return new MsilArrayTypeImpl(msilEmptyTypeStub, this);
 		}
 	};
 }
