@@ -144,6 +144,8 @@ public interface MsilTokens extends TokenType
 
 	IElementType LPAR = new IElementType("LPAR", MsilLanguage.INSTANCE);
 
+	IElementType EXCL = new IElementType("EXCL", MsilLanguage.INSTANCE);
+
 	IElementType EQ = new IElementType("EQ", MsilLanguage.INSTANCE);
 
 	IElementType GT = new IElementType("GT", MsilLanguage.INSTANCE);

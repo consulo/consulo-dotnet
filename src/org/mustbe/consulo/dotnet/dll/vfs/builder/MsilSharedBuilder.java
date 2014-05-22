@@ -198,6 +198,7 @@ public class MsilSharedBuilder implements SignatureConstants
 			case ELEMENT_TYPE_VAR:
 				XGenericTypeSignature typeGenericTypeSignature = (XGenericTypeSignature) signature;
 				assert typeDef != null;
+				builder.append("!");
 				builder.append(typeDef.getGenericParams().get(typeGenericTypeSignature.getIndex()).getName());
 				break;
 			case ELEMENT_TYPE_MVAR:

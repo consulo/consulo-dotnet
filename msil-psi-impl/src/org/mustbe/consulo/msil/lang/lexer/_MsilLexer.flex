@@ -37,6 +37,8 @@ QIDENTIFIER=\'.*\'
 
 	">"            { return MsilTokens.GT; }
 
+	"!"            { return MsilTokens.EXCL; }
+
 	"::"           { return MsilTokens.COLONCOLON; }
 
 	"["            { return MsilTokens.LBRACKET; }

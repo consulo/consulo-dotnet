@@ -47,6 +47,7 @@ public interface MsilStubElements
 	MsilParameterListStubElementType PARAMETER_LIST = new MsilParameterListStubElementType();
 	MsilParameterStubElementType PARAMETER = new MsilParameterStubElementType();
 	MsilParameterAttributeListStubElementType PARAMETER_ATTRIBUTE_LIST = new MsilParameterAttributeListStubElementType();
+	MsilMethodGenericTypeStubElementType METHOD_GENERIC_TYPE = new MsilMethodGenericTypeStubElementType();
 	MsilEmpyTypeStubElementType POINTER_TYPE = new MsilEmpyTypeStubElementType("MSIL_POINTER_TYPE")
 	{
 		@NotNull
