@@ -58,11 +58,51 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		{
 			parseAttribute(builder);
 		}
+		else if(tokenType == _FIELD_KEYWORD)
+		{
+			parseField(builder);
+		}
+		else if(tokenType == _EVENT_KEYWORD)
+		{
+			parseEvent(builder);
+		}
 		else
 		{
 			builder.error("Unexpected token " + tokenType);
 			builder.advanceLexer();
 		}
+	}
+
+	private void parseField(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		parseModifierList(builder);
+
+		parseType(builder);
+
+		expect(builder, IDENTIFIER, "Identifier expected");
+
+		//TODO [VISTALL] initializer
+
+		mark.done(FIELD);
+	}
+
+	private void parseEvent(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		parseModifierList(builder);
+
+		parseType(builder);
+
+		expect(builder, IDENTIFIER, "Identifier expected");
+
+		mark.done(EVENT);
 	}
 
 	private void parseAttribute(PsiBuilder builder)
