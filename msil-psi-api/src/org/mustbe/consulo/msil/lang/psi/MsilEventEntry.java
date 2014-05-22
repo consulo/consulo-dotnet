@@ -16,10 +16,12 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
+
 /**
  * @author VISTALL
  * @since 21.05.14
  */
-public interface MsilEventEntry extends MsilEntry
+public interface MsilEventEntry extends MsilEntry, DotNetEventDeclaration
 {
 }

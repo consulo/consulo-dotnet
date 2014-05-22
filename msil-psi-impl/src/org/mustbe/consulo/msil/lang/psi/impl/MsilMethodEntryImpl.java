@@ -16,11 +16,25 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilMethodEntryStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
@@ -42,5 +56,126 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	public void accept(MsilVisitor visitor)
 	{
 		visitor.visitMethodEntry(this);
+	}
+
+	@Override
+	public boolean isDelegate()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isOperator()
+	{
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public IElementType getOperatorElementType()
+	{
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public DotNetType getReturnType()
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef getReturnTypeRef()
+	{
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getCodeBlock()
+	{
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public DotNetGenericParameterList getGenericParameterList()
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetGenericParameter[] getGenericParameters()
+	{
+		return new DotNetGenericParameter[0];
+	}
+
+	@Override
+	public int getGenericParametersCount()
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	{
+		return getModifierList().hasModifier(modifier);
+	}
+
+	@NotNull
+	@Override
+	public DotNetModifierList getModifierList()
+	{
+		return getRequiredStubOrPsiChild(MsilStubElements.MODIFIER_LIST);
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef[] getParameterTypesForRuntime()
+	{
+		return new DotNetTypeRef[0];
+	}
+
+	@Nullable
+	@Override
+	public DotNetParameterList getParameterList()
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetParameter[] getParameters()
+	{
+		return new DotNetParameter[0];
+	}
+
+	@Nullable
+	@Override
+	public String getPresentableParentQName()
+	{
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public String getPresentableQName()
+	{
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getNameIdentifier()
+	{
+		return null;
+	}
+
+	@Override
+	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	{
+		return null;
 	}
 }

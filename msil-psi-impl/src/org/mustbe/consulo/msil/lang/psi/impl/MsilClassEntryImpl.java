@@ -29,6 +29,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -138,14 +139,14 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
-		return false;
+		return getModifierList().hasModifier(modifier);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public DotNetModifierList getModifierList()
 	{
-		return null;
+		return getRequiredStubOrPsiChild(MsilStubElements.MODIFIER_LIST);
 	}
 
 	@Nullable

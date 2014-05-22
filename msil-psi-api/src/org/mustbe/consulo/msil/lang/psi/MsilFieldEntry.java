@@ -16,10 +16,12 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
+
 /**
  * @author VISTALL
  * @since 21.05.14
  */
-public interface MsilFieldEntry extends MsilEntry
+public interface MsilFieldEntry extends MsilEntry, DotNetFieldDeclaration
 {
 }

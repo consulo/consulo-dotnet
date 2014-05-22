@@ -16,10 +16,12 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
+
 /**
  * @author VISTALL
  * @since 21.05.14
  */
-public interface MsilPropertyEntry extends MsilEntry
+public interface MsilPropertyEntry extends MsilEntry, DotNetPropertyDeclaration
 {
 }
