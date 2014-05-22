@@ -182,7 +182,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		parseType(builder);
 
-		expect(builder, IDENTIFIER, "Identifier expected");
+		expect(builder, IDENTIFIERS, "Identifier expected");
 
 		if(expect(builder, LBRACE, "'{' expected"))
 		{
@@ -213,7 +213,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		parseType(builder);
 
-		expect(builder, IDENTIFIER, "Identifier expected");
+		expect(builder, IDENTIFIERS, "Identifier expected");
 
 		//TODO [VISTALL] initializer
 
@@ -230,7 +230,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		parseType(builder);
 
-		expect(builder, IDENTIFIER, "Identifier expected");
+		expect(builder, IDENTIFIERS, "Identifier expected");
 
 		if(expect(builder, LBRACE, "'{' expected"))
 		{
