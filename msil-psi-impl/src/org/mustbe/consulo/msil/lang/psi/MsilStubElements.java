@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilArrayTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilPointerTypeImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilTypeByRefImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilTypeWithTypeArgumentsImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.*;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
@@ -63,6 +64,22 @@ public interface MsilStubElements
 		public DotNetType createPsi(@NotNull MsilEmptyTypeStub msilEmptyTypeStub)
 		{
 			return new MsilPointerTypeImpl(msilEmptyTypeStub, this);
+		}
+	};
+	MsilEmpyTypeStubElementType TYPE_BY_REF = new MsilEmpyTypeStubElementType("MSIL_TYPE_BY_REF")
+	{
+		@NotNull
+		@Override
+		public DotNetType createPsi(@NotNull ASTNode astNode)
+		{
+			return new MsilTypeByRefImpl(astNode);
+		}
+
+		@NotNull
+		@Override
+		public DotNetType createPsi(@NotNull MsilEmptyTypeStub msilEmptyTypeStub)
+		{
+			return new MsilTypeByRefImpl(msilEmptyTypeStub, this);
 		}
 	};
 	MsilEmpyTypeStubElementType TYPE_WITH_TYPE_ARGUMENTS = new MsilEmpyTypeStubElementType("MSIL_TYPE_WRAPPER_WITH_TYPE_ARGUMENTS")

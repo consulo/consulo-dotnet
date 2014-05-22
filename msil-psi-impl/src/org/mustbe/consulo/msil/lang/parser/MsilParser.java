@@ -360,7 +360,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		else if(tokenType == EXCL)
 		{
 			builder.advanceLexer();
-			expect(builder, IDENTIFIER, "Identifier expected");
+			expect(builder, IDENTIFIERS, "Identifier expected");
 			mark.done(CLASS_GENERIC_TYPE);
 		}
 		else if(REFERENCE_TYPE_START.contains(tokenType))
@@ -397,6 +397,13 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			expect(builder, LBRACKET, "'[' expected");
 			expect(builder, RBRACKET, "']' expected");
 			mark.done(ARRAY_TYPE);
+		}
+
+		if(builder.getTokenType() == AND)
+		{
+			mark = mark.precede();
+			builder.advanceLexer();
+			mark.done(TYPE_BY_REF);
 		}
 	}
 
