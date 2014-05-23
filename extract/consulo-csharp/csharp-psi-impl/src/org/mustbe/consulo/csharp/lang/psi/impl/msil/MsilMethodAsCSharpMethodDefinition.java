@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi.impl;
+package org.mustbe.consulo.csharp.lang.psi.impl.msil;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.CSharpLanguage;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraint;
+import org.mustbe.consulo.csharp.lang.psi.CSharpGenericConstraintList;
+import org.mustbe.consulo.csharp.lang.psi.CSharpMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
@@ -27,39 +31,41 @@ import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.msil.MsilHelper;
+import org.mustbe.consulo.msil.lang.psi.ModifierElementType;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
-import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
-import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilMethodEntryStub;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.impl.light.LightElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
- * @since 21.05.14
+ * @since 23.05.14
  */
-public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub> implements MsilMethodEntry
+public class MsilMethodAsCSharpMethodDefinition extends LightElement implements CSharpMethodDeclaration
 {
-	public MsilMethodEntryImpl(@NotNull ASTNode node)
+	private final MsilMethodEntry myMethodEntry;
+
+	public MsilMethodAsCSharpMethodDefinition(MsilMethodEntry methodEntry)
 	{
-		super(node);
+		super(PsiManager.getInstance(methodEntry.getProject()), CSharpLanguage.INSTANCE);
+		myMethodEntry = methodEntry;
+		setNavigationElement(methodEntry); //TODO [VISTALL] generator from MSIL to C#
 	}
 
-	public MsilMethodEntryImpl(@NotNull MsilMethodEntryStub stub, @NotNull IStubElementType nodeType)
-	{
-		super(stub, nodeType);
-	}
-
+	@Nullable
 	@Override
-	public void accept(MsilVisitor visitor)
+	public CSharpGenericConstraintList getGenericConstraintList()
 	{
-		visitor.visitMethodEntry(this);
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public CSharpGenericConstraint[] getGenericConstraints()
+	{
+		return new CSharpGenericConstraint[0];
 	}
 
 	@Override
@@ -81,18 +87,18 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return null;
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetType getReturnType()
 	{
-		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
+		return null;
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeRef getReturnTypeRef()
 	{
-		return getReturnType().toTypeRef();
+		return MsilToCSharpUtil.extractToCSharp(myMethodEntry.getReturnTypeRef(), myMethodEntry);
 	}
 
 	@Nullable
@@ -125,14 +131,19 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
-		return getModifierList().hasModifier(modifier);
+		ModifierElementType modifierElementType = MsilToCSharpUtil.toMsilModifier(modifier);
+		if(modifierElementType == null)
+		{
+			return false;
+		}
+		return myMethodEntry.hasModifier(modifierElementType);
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetModifierList getModifierList()
 	{
-		return getRequiredStubOrPsiChild(MsilStubElements.MODIFIER_LIST);
+		return myMethodEntry.getModifierList();
 	}
 
 	@NotNull
@@ -160,40 +171,33 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	@Override
 	public String getPresentableParentQName()
 	{
-		return StringUtil.getPackageName(getNameFromBytecode());
+		return myMethodEntry.getPresentableParentQName();
 	}
 
 	@Nullable
 	@Override
 	public String getPresentableQName()
 	{
-		return getNameFromBytecode();
+		return myMethodEntry.getPresentableQName();
+	}
+
+	@Override
+	public String getName()
+	{
+		return myMethodEntry.getName();
+	}
+
+	@Override
+	public String toString()
+	{
+		return getPresentableQName();
 	}
 
 	@Nullable
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(MsilTokenSets.IDENTIFIERS);
-	}
-
-	@Override
-	public String getName()
-	{
-		String nameFromBytecode = getNameFromBytecode();
-		if(MsilHelper.CONSTRUCTOR_NAME.equals(nameFromBytecode) || MsilHelper.STATIC_CONSTRUCTOR_NAME.equals(nameFromBytecode))
-		{
-			return nameFromBytecode;
-		}
-		return StringUtil.getShortName(nameFromBytecode);
-	}
-
-	@Override
-	@NotNull
-	public String getNameFromBytecode()
-	{
-		PsiElement element = getNameIdentifier();
-		return element == null ? "" : StringUtil.unquoteString(element.getText());
+		return null;
 	}
 
 	@Override

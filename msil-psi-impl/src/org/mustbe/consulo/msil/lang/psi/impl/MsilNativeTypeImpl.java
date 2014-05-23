@@ -46,7 +46,7 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 			put(MsilTokens.INT_KEYWORD, "System.IntPtr");
 			put(MsilTokens.UINT_KEYWORD, "System.UIntPtr");
 			put(MsilTokens.CHAR_KEYWORD, "System.Char");
-			put(MsilTokens.BOOL_KEYWORD, "System.Bool");
+			put(MsilTokens.BOOL_KEYWORD, "System.Boolean");
 			put(MsilTokens.INT8_KEYWORD, "System.SByte");
 			put(MsilTokens.UINT8_KEYWORD, "System.Byte");
 			put(MsilTokens.INT16_KEYWORD, "System.Int16");

@@ -20,7 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetArrayType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilArrayTypRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 
@@ -50,13 +52,13 @@ public class MsilArrayTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> im
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return null;
+		return new MsilArrayTypRefImpl(getInnerType().toTypeRef());
 	}
 
 	@NotNull
 	@Override
 	public DotNetType getInnerType()
 	{
-		return null;
+		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 }

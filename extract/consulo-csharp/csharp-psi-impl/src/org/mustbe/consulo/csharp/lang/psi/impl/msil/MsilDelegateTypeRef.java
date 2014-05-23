@@ -14,17 +14,33 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.msil;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 21.05.14
+ * @since 23.05.14
  */
-public interface MsilMethodEntry extends MsilEntry, DotNetMethodDeclaration
+public class MsilDelegateTypeRef extends DotNetTypeRef.Delegate
 {
-	@NotNull
-	String getNameFromBytecode();
+	public MsilDelegateTypeRef(DotNetTypeRef typeRef)
+	{
+		super(typeRef);
+	}
+
+	@Nullable
+	@Override
+	public PsiElement resolve(@NotNull PsiElement scope)
+	{
+		PsiElement resolve = super.resolve(scope);
+		if(resolve == null)
+		{
+			return null;
+		}
+		return MsilToCSharpUtil.wrap(resolve);
+	}
 }
