@@ -23,6 +23,7 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.lang.psi.DotNetInheritUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
@@ -32,6 +33,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
@@ -40,6 +42,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -85,13 +88,15 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public boolean isStruct()
 	{
-		return false;
+		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(getProject()).findType(DotNetTypes.System_ValueType, getResolveScope(), 0);
+		return type != null && isInheritor(type, true);
 	}
 
 	@Override
 	public boolean isEnum()
 	{
-		return false;
+		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(getProject()).findType(DotNetTypes.System_Enum, getResolveScope(), 0);
+		return type != null && isInheritor(type, true);
 	}
 
 	@Override
@@ -220,5 +225,15 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
+	}
+
+	@Override
+	public boolean isEquivalentTo(PsiElement another)
+	{
+		if(another instanceof DotNetTypeDeclaration)
+		{
+			return Comparing.equal(getPresentableQName(), ((DotNetTypeDeclaration) another).getPresentableQName());
+		}
+		return super.isEquivalentTo(another);
 	}
 }
