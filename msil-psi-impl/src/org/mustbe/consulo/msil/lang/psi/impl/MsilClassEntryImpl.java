@@ -144,20 +144,22 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public DotNetGenericParameterList getGenericParameterList()
 	{
-		return null;
+		return getStubOrPsiChild(MsilStubElements.GENERIC_PARAMETER_LIST);
 	}
 
 	@NotNull
 	@Override
 	public DotNetGenericParameter[] getGenericParameters()
 	{
-		return new DotNetGenericParameter[0];
+		DotNetGenericParameterList genericParameterList = getGenericParameterList();
+		return genericParameterList == null ? DotNetGenericParameter.EMPTY_ARRAY : genericParameterList.getParameters();
 	}
 
 	@Override
 	public int getGenericParametersCount()
 	{
-		return 0;
+		DotNetGenericParameterList genericParameterList = getGenericParameterList();
+		return genericParameterList == null ? 0 : genericParameterList.getGenericParametersCount();
 	}
 
 	@NotNull

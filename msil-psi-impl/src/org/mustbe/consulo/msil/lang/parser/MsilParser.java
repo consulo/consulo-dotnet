@@ -27,6 +27,7 @@ import com.intellij.lang.PsiBuilderUtil;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -123,6 +124,8 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		parseType(builder);
 
 		expect(builder, IDENTIFIERS, "Identifier expected");
+
+		parseGenericList(builder);
 
 		if(expect(builder, LPAR, "'(' expected"))
 		{
@@ -280,6 +283,8 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		expect(builder, IDENTIFIER, "Expected name");
 
+		parseGenericList(builder);
+
 		if(builder.getTokenType() == EXTENDS_KEYWORD)
 		{
 			PsiBuilder.Marker newMark = builder.mark();
@@ -421,6 +426,44 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		{
 			builder.error("Identifier expected");
 		}
+	}
+
+	public void parseGenericList(PsiBuilder builder)
+	{
+		if(builder.getTokenType() != LT)
+		{
+			return;
+		}
+
+		PsiBuilder.Marker mark = builder.mark();
+		builder.advanceLexer();
+
+		while(true)
+		{
+			parseGeneric(builder);
+
+			if(builder.getTokenType() == COMMA)
+			{
+				builder.advanceLexer();
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		expect(builder, GT, "'>' expected");
+
+		mark.done(GENERIC_PARAMETER_LIST);
+	}
+
+	public void parseGeneric(PsiBuilder builder)
+	{
+		val marker = builder.mark();
+
+		expect(builder, IDENTIFIERS, "Name expected");
+
+		marker.done(GENERIC_PARAMETER);
 	}
 
 	private void parseModifierList(PsiBuilder builder)

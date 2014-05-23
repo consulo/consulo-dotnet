@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
@@ -28,6 +29,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.mbel.CustomAttribute;
+import edu.arizona.cs.mbel.mbel.GenericParamDef;
+import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
 import edu.arizona.cs.mbel.mbel.NestedTypeRef;
 import edu.arizona.cs.mbel.mbel.TypeDef;
@@ -97,6 +100,27 @@ public class MsilSharedBuilder implements SignatureConstants
 		}
 	}
 
+	protected static void processGeneric(StringBuilder builder, GenericParamOwner paramOwner)
+	{
+		List<GenericParamDef> genericParams = paramOwner.getGenericParams();
+		if(genericParams.isEmpty())
+		{
+			return;
+		}
+
+		builder.append("<");
+		join(builder, genericParams, new PairFunction<StringBuilder, GenericParamDef, Void>()
+		{
+			@Nullable
+			@Override
+			public Void fun(StringBuilder t, GenericParamDef v)
+			{
+				t.append(v.getName());
+				return null;
+			}
+		}, ", ");
+		builder.append(">");
+	}
 
 	public static void typeToString(StringBuilder builder, TypeSignature signature, TypeDef typeDef)
 	{
