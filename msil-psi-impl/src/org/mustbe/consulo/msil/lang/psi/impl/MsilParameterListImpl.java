@@ -19,7 +19,9 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilParameter;
 import org.mustbe.consulo.msil.lang.psi.MsilParameterList;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilParameterListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
@@ -42,16 +44,26 @@ public class MsilParameterListImpl extends MsilStubElementImpl<MsilParameterList
 
 	@NotNull
 	@Override
-	public DotNetParameter[] getParameters()
+	public MsilParameter[] getParameters()
 	{
-		return new DotNetParameter[0];
+		return getStubOrPsiChildren(MsilStubElements.PARAMETER, MsilParameter.ARRAY_FACTORY);
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeRef[] getParameterTypesForRuntime()
 	{
-		return new DotNetTypeRef[0];
+		DotNetParameter[] parameters = getParameters();
+		if(parameters.length == 0)
+		{
+			return DotNetTypeRef.EMPTY_ARRAY;
+		}
+		DotNetTypeRef[] dotNetTypeRefs = new DotNetTypeRef[parameters.length];
+		for(int i = 0; i < dotNetTypeRefs.length; i++)
+		{
+			dotNetTypeRefs[i] = parameters[i].toTypeRef(true);
+		}
+		return dotNetTypeRefs;
 	}
 
 	@Override

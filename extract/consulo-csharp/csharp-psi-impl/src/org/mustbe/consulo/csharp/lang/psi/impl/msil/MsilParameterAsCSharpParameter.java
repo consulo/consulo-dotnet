@@ -14,16 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi;
+package org.mustbe.consulo.csharp.lang.psi.impl.msil;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 
 /**
  * @author VISTALL
- * @since 22.05.14
+ * @since 23.05.14
  */
-@ArrayFactoryFields
-public interface MsilParameter extends DotNetParameter
+public class MsilParameterAsCSharpParameter extends MsilVariableAsCSharpVariable implements DotNetParameter
 {
+	private final int myIndex;
+
+	public MsilParameterAsCSharpParameter(DotNetVariable variable, int index)
+	{
+		super(variable);
+		myIndex = index;
+	}
+
+	@Override
+	public String getName()
+	{
+		String name = super.getName();
+		return name == null ? "p" + myIndex : name;
+	}
 }

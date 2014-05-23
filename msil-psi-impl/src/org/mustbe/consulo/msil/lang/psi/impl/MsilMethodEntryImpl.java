@@ -139,21 +139,23 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	@Override
 	public DotNetTypeRef[] getParameterTypesForRuntime()
 	{
-		return new DotNetTypeRef[0];
+		DotNetParameterList parameterList = getParameterList();
+		return parameterList == null ? DotNetTypeRef.EMPTY_ARRAY : parameterList.getParameterTypesForRuntime();
 	}
 
 	@Nullable
 	@Override
 	public DotNetParameterList getParameterList()
 	{
-		return null;
+		return getRequiredStubOrPsiChild(MsilStubElements.PARAMETER_LIST);
 	}
 
 	@NotNull
 	@Override
 	public DotNetParameter[] getParameters()
 	{
-		return new DotNetParameter[0];
+		DotNetParameterList parameterList = getParameterList();
+		return parameterList == null ? DotNetParameter.EMPTY_ARRAY : parameterList.getParameters();
 	}
 
 	@Nullable

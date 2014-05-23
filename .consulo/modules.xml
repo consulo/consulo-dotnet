@@ -190,9 +190,9 @@
         <orderEntry type="module" module-name="dotnet-debugger-api" />
         <orderEntry type="module" module-name="dotnet-impl" />
         <orderEntry type="module" module-name="dotnet-psi-api" />
-        <orderEntry type="module" module-name="csharp-psi-impl" />
         <orderEntry type="library" name="dotnet-asm" level="project" />
         <orderEntry type="module" module-name="consulo-dotnet" />
+        <orderEntry type="module" module-name="msil-psi-impl" />
       </module>
       <module name="dotnet-documentation-api" dirurl="file://$PROJECT_DIR$/dotnet-documentation-api">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
@@ -266,6 +266,7 @@
         </orderEntry>
         <orderEntry type="module" module-name="dotnet-psi-impl" />
         <orderEntry type="module" module-name="msil-psi-impl" />
+        <orderEntry type="module" module-name="dotnet-debugger-impl" />
       </module>
       <module name="csharp/csharp-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-impl">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
@@ -308,6 +309,7 @@
       <module name="msil-psi-api" dirurl="file://$PROJECT_DIR$/msil-psi-api">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
         <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <extension id="lombok" />
         <content url="file://$MODULE_DIR$">
           <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
         </content>

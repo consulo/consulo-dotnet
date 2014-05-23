@@ -20,6 +20,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilParameter;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -27,8 +28,22 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class MsilParameterStub extends StubBase<MsilParameter>
 {
-	public MsilParameterStub(StubElement parent, IStubElementType elementType)
+	private final StringRef myName;
+
+	public MsilParameterStub(StubElement parent, IStubElementType elementType, StringRef ref)
 	{
 		super(parent, elementType);
+		myName = ref;
+	}
+
+	public MsilParameterStub(StubElement parent, IStubElementType elementType, String name)
+	{
+		super(parent, elementType);
+		myName = StringRef.fromNullableString(name);
+	}
+
+	public String getName()
+	{
+		return StringRef.toString(myName);
 	}
 }

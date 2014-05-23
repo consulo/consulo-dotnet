@@ -14,39 +14,36 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi.impl;
+package org.mustbe.consulo.csharp.lang.psi.impl.msil;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.lang.CSharpLanguage;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.msil.lang.psi.MsilParameter;
-import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
-import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilParameterStub;
-import com.intellij.lang.ASTNode;
+import org.mustbe.consulo.msil.lang.psi.ModifierElementType;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.impl.light.LightElement;
 import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
- * @since 22.05.14
+ * @since 23.05.14
  */
-public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> implements MsilParameter
+public class MsilVariableAsCSharpVariable extends LightElement implements DotNetVariable
 {
-	public MsilParameterImpl(@NotNull ASTNode node)
-	{
-		super(node);
-	}
+	private final DotNetVariable myVariable;
 
-	public MsilParameterImpl(@NotNull MsilParameterStub stub, @NotNull IStubElementType nodeType)
+	public MsilVariableAsCSharpVariable(DotNetVariable variable)
 	{
-		super(stub, nodeType);
+		super(PsiManager.getInstance(variable.getProject()), CSharpLanguage.INSTANCE);
+		myVariable = variable;
 	}
 
 	@Override
@@ -59,14 +56,14 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
-		return getType().toTypeRef();
+		return MsilToCSharpUtil.extractToCSharp(myVariable.toTypeRef(resolveFromInitializer), myVariable);
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetType getType()
 	{
-		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
+		return null;
 	}
 
 	@Nullable
@@ -79,39 +76,38 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
-		return getModifierList().hasModifier(modifier);
+		ModifierElementType modifierElementType = MsilToCSharpUtil.toMsilModifier(modifier);
+		if(modifierElementType == null)
+		{
+			return false;
+		}
+		return myVariable.hasModifier(modifierElementType);
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetModifierList getModifierList()
 	{
-		return getRequiredStubOrPsiChild(MsilStubTokenSets.MODIFIER_LIST);
+		return myVariable.getModifierList();
 	}
 
 	@Override
-	public void accept(MsilVisitor visitor)
+	public String toString()
 	{
-
+		return getName();
 	}
 
 	@Override
 	public String getName()
 	{
-		MsilParameterStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getName();
-		}
-		PsiElement nameIdentifier = getNameIdentifier();
-		return nameIdentifier == null ? null : nameIdentifier.getText();
+		return myVariable.getName();
 	}
 
 	@Nullable
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(MsilTokenSets.IDENTIFIERS);
+		return null;
 	}
 
 	@Override

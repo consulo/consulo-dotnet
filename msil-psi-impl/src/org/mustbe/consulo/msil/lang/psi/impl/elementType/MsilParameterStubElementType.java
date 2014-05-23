@@ -26,6 +26,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -53,24 +54,23 @@ public class MsilParameterStubElementType extends AbstractMsilStubElementType<Ms
 	}
 
 	@Override
-	public MsilParameterStub createStub(
-			@NotNull MsilParameter msilParameter, StubElement stubElement)
+	public MsilParameterStub createStub(@NotNull MsilParameter msilParameter, StubElement stubElement)
 	{
-		return new MsilParameterStub(stubElement, this);
+		String name = msilParameter.getName();
+		return new MsilParameterStub(stubElement, this, name);
 	}
 
 	@Override
-	public void serialize(
-			@NotNull MsilParameterStub msilParameterStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilParameterStub msilParameterStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+		stubOutputStream.writeName(msilParameterStub.getName());
 	}
 
 	@NotNull
 	@Override
-	public MsilParameterStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilParameterStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilParameterStub(stubElement, this);
+		StringRef name = inputStream.readName();
+		return new MsilParameterStub(stubElement, this, name);
 	}
 }
