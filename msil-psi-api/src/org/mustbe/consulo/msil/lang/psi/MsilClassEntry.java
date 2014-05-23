@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**
@@ -24,4 +25,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
  */
 public interface MsilClassEntry extends MsilEntry, DotNetTypeDeclaration
 {
+	@NotNull
+	MsilCustomAttribute[] getAttributes();
 }

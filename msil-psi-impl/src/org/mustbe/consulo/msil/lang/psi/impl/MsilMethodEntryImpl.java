@@ -28,6 +28,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.MsilHelper;
+import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
@@ -196,6 +197,13 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	{
 		PsiElement element = getNameIdentifier();
 		return element == null ? "" : StringUtil.unquoteString(element.getText());
+	}
+
+	@NotNull
+	@Override
+	public MsilCustomAttribute[] getAttributes()
+	{
+		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
 	}
 
 	@Override

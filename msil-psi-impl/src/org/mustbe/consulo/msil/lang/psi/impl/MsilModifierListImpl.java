@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.msil.lang.psi.ModifierElementType;
+import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
@@ -74,6 +76,16 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	@Override
 	public DotNetAttribute[] getAttributes()
 	{
+		PsiElement parentByStub = getParentByStub();
+		if(parentByStub instanceof MsilClassEntry)
+		{
+			return ((MsilClassEntry) parentByStub).getAttributes();
+		}
+		else if(parentByStub instanceof MsilMethodEntry)
+		{
+			return ((MsilMethodEntry) parentByStub).getAttributes();
+		}
+
 		return new DotNetAttribute[0];
 	}
 

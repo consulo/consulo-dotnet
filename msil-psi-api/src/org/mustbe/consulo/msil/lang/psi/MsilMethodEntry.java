@@ -27,4 +27,7 @@ public interface MsilMethodEntry extends MsilEntry, DotNetMethodDeclaration
 {
 	@NotNull
 	String getNameFromBytecode();
+
+	@NotNull
+	MsilCustomAttribute[] getAttributes();
 }

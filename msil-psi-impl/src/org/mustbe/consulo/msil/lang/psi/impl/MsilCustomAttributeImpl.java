@@ -18,10 +18,13 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
+import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilCustomAttributeStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 
 /**
@@ -41,9 +44,25 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 	}
 
 	@Nullable
+	public DotNetType getType()
+	{
+		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
+	}
+
+	@Nullable
 	@Override
 	public DotNetTypeDeclaration resolveToType()
 	{
+		DotNetType type = getType();
+		if(type == null)
+		{
+			return null;
+		}
+		PsiElement resolve = type.toTypeRef().resolve(this);
+		if(resolve instanceof DotNetTypeDeclaration)
+		{
+			return (DotNetTypeDeclaration) resolve;
+		}
 		return null;
 	}
 
