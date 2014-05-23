@@ -126,6 +126,8 @@ public interface MsilTokens extends TokenType
 
 	ModifierElementType SPECIALNAME_KEYWORD = new ModifierElementType("SPECIALNAME_KEYWORD", MsilLanguage.INSTANCE);
 
+	ModifierElementType RTSPECIALNAME_KEYWORD = new ModifierElementType("RTSPECIALNAME_KEYWORD", MsilLanguage.INSTANCE);
+
 	IElementType PERC = new IElementType("PERC", MsilLanguage.INSTANCE);
 
 	IElementType AND = new IElementType("AND", MsilLanguage.INSTANCE);

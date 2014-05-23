@@ -143,6 +143,8 @@ QIDENTIFIER=\'.*\'
 
 	"specialname"   { return MsilTokens.SPECIALNAME_KEYWORD; }
 
+	"rtspecialname" { return MsilTokens.RTSPECIALNAME_KEYWORD; }
+
 	"sealed"        { return MsilTokens.SEALED_KEYWORD; }
 
 	"interface"     { return MsilTokens.INTERFACE_KEYWORD; }

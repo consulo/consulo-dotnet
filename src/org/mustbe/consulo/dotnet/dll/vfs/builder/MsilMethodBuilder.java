@@ -84,6 +84,16 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 			builder.append("virtual ");
 		}
 
+		if(XStubUtil.isSet(methodDef.getFlags(), SpecialName))
+		{
+			builder.append("specialname ");
+		}
+
+		if(XStubUtil.isSet(methodDef.getFlags(), RTSpecialName))
+		{
+			builder.append("rtspecialname ");
+		}
+
 		typeToString(builder, methodDef.getSignature().getReturnType().getInnerType(), typeDef);
 		builder.append(" ");
 		appendValidName(builder, methodDef.getName());
