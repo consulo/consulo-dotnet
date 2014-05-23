@@ -29,6 +29,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilParameterStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
@@ -104,7 +105,7 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 			return stub.getName();
 		}
 		PsiElement nameIdentifier = getNameIdentifier();
-		return nameIdentifier == null ? null : nameIdentifier.getText();
+		return nameIdentifier == null ? null : StringUtil.unquoteString(nameIdentifier.getText());
 	}
 
 	@Nullable

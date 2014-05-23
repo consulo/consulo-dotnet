@@ -19,7 +19,9 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilTypeByRefTypeRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 
@@ -45,10 +47,15 @@ public class MsilTypeByRefImpl extends MsilStubElementImpl<MsilEmptyTypeStub> im
 
 	}
 
+	public DotNetType getInnerType()
+	{
+		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
+	}
+
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return null;
+		return new MsilTypeByRefTypeRefImpl(getInnerType().toTypeRef());
 	}
 }

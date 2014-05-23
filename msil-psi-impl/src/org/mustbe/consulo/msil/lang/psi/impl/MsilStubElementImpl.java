@@ -22,6 +22,7 @@ import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
@@ -42,6 +43,17 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 	protected MsilStubElementImpl(@NotNull T stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
+	}
+
+	@Override
+	public int getTextOffset()
+	{
+		if(this instanceof PsiNameIdentifierOwner)
+		{
+			PsiElement nameIdentifier = (((PsiNameIdentifierOwner) this).getNameIdentifier());
+			return nameIdentifier != null ? nameIdentifier.getTextOffset() : super.getTextOffset();
+		}
+		return super.getTextOffset();
 	}
 
 	@Override
