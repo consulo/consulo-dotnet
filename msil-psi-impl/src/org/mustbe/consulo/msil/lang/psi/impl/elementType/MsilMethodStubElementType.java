@@ -63,7 +63,7 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 	@Override
 	public void serialize(@NotNull MsilMethodEntryStub msilMethodEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-   	stubOutputStream.writeName(msilMethodEntryStub.getNameFromBytecode());
+		stubOutputStream.writeName(msilMethodEntryStub.getNameFromBytecode());
 	}
 
 	@NotNull

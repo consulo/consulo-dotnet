@@ -26,6 +26,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -53,17 +54,16 @@ public class MsilFieldStubElementType extends AbstractMsilStubElementType<MsilFi
 	}
 
 	@Override
-	public MsilFieldEntryStub createStub(
-			@NotNull MsilFieldEntry msilFieldEntry, StubElement stubElement)
+	public MsilFieldEntryStub createStub(@NotNull MsilFieldEntry msilFieldEntry, StubElement stubElement)
 	{
-		return new MsilFieldEntryStub(stubElement, this);
+		String name = msilFieldEntry.getNameFromBytecode();
+		return new MsilFieldEntryStub(stubElement, this, name);
 	}
 
 	@Override
-	public void serialize(
-			@NotNull MsilFieldEntryStub msilFieldEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilFieldEntryStub msilFieldEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+		stubOutputStream.writeName(msilFieldEntryStub.getNameFromBytecode());
 	}
 
 	@NotNull
@@ -71,6 +71,7 @@ public class MsilFieldStubElementType extends AbstractMsilStubElementType<MsilFi
 	public MsilFieldEntryStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilFieldEntryStub(stubElement, this);
+		StringRef ref = inputStream.readName();
+		return new MsilFieldEntryStub(stubElement, this, ref);
 	}
 }

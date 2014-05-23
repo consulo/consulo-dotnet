@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 
 /**
@@ -24,4 +25,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
  */
 public interface MsilFieldEntry extends MsilEntry, DotNetFieldDeclaration
 {
+	@NotNull
+	String getNameFromBytecode();
 }

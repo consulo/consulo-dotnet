@@ -26,8 +26,11 @@ import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
+import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilFieldEntryStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
@@ -64,14 +67,14 @@ public class MsilFieldEntryImpl extends MsilStubElementImpl<MsilFieldEntryStub> 
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
-		return null;
+		return getType().toTypeRef();
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public DotNetType getType()
 	{
-		return null;
+		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
 	@Nullable
@@ -98,21 +101,40 @@ public class MsilFieldEntryImpl extends MsilStubElementImpl<MsilFieldEntryStub> 
 	@Override
 	public String getPresentableParentQName()
 	{
-		return null;
+		return StringUtil.getPackageName(getNameFromBytecode());
 	}
 
 	@Nullable
 	@Override
 	public String getPresentableQName()
 	{
-		return null;
+		return getNameFromBytecode();
 	}
 
 	@Nullable
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		return null;
+		return findChildByType(MsilTokenSets.IDENTIFIERS);
+	}
+
+	@Override
+	public String getName()
+	{
+		return StringUtil.getShortName(getNameFromBytecode());
+	}
+
+	@Override
+	@NotNull
+	public String getNameFromBytecode()
+	{
+		MsilFieldEntryStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getNameFromBytecode();
+		}
+		PsiElement element = getNameIdentifier();
+		return element == null ? "" : StringUtil.unquoteString(element.getText());
 	}
 
 	@Override
