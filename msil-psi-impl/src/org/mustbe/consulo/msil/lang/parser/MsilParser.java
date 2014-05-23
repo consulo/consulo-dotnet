@@ -169,7 +169,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			expect(builder, RBRACE, "'}' expected");
 		}
 
-		mark.done(PROPERTY);
+		mark.done(METHOD);
 	}
 
 	private void parseProperty(PsiBuilder builder)
