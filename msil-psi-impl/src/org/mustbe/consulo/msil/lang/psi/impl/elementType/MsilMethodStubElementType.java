@@ -26,6 +26,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -55,13 +56,14 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 	@Override
 	public MsilMethodEntryStub createStub(@NotNull MsilMethodEntry msilMethodEntry, StubElement stubElement)
 	{
-		return new MsilMethodEntryStub(stubElement, this);
+		String name = msilMethodEntry.getNameFromBytecode();
+		return new MsilMethodEntryStub(stubElement, this, name);
 	}
 
 	@Override
 	public void serialize(@NotNull MsilMethodEntryStub msilMethodEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+   	stubOutputStream.writeName(msilMethodEntryStub.getNameFromBytecode());
 	}
 
 	@NotNull
@@ -69,6 +71,7 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 	public MsilMethodEntryStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilMethodEntryStub(stubElement, this);
+		StringRef ref = inputStream.readName();
+		return new MsilMethodEntryStub(stubElement, this, ref);
 	}
 }

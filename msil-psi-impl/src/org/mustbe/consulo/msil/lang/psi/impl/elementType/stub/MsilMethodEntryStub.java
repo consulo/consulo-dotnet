@@ -20,6 +20,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -27,8 +28,22 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class MsilMethodEntryStub extends StubBase<MsilMethodEntry>
 {
-	public MsilMethodEntryStub(StubElement parent, IStubElementType elementType)
+	private StringRef myName;
+
+	public MsilMethodEntryStub(StubElement parent, IStubElementType elementType, StringRef name)
 	{
 		super(parent, elementType);
+		myName = name;
+	}
+
+	public MsilMethodEntryStub(StubElement parent, IStubElementType elementType, String name)
+	{
+		super(parent, elementType);
+		myName = StringRef.fromNullableString(name);
+	}
+
+	public String getNameFromBytecode()
+	{
+		return StringRef.toString(myName);
 	}
 }
