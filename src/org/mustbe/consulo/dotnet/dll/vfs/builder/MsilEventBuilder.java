@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import edu.arizona.cs.mbel.mbel.Event;
+import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import edu.arizona.cs.mbel.signature.EventAttributes;
 
@@ -37,6 +38,19 @@ public class MsilEventBuilder extends MsilSharedBuilder implements EventAttribut
 
 		StubBlock e1 = new StubBlock(builder, null, BRACES);
 		processAttributes(e1, event);
+
+		MethodDef addOnMethod = event.getAddOnMethod();
+		if(addOnMethod != null)
+		{
+			appendAccessor(".addon", typeDef, addOnMethod, e1);
+		}
+
+		MethodDef removeOnMethod = event.getRemoveOnMethod();
+		if(removeOnMethod != null)
+		{
+			appendAccessor(".removeon", typeDef, removeOnMethod, e1);
+		}
+
 		e.getBlocks().add(e1);
 	}
 }

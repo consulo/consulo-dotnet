@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder;
 
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
+import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.Property;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 
@@ -36,6 +37,18 @@ public class MsilPropertyBuilder extends MsilSharedBuilder
 
 		StubBlock e1 = new StubBlock(builder, null, BRACES);
 		processAttributes(e1, property);
+
+		MethodDef getter = property.getGetter();
+		if(getter != null)
+		{
+			appendAccessor(".get", typeDef, getter, e1);
+		}
+
+		MethodDef setter = property.getSetter();
+		if(setter != null)
+		{
+			appendAccessor(".set", typeDef, setter, e1);
+		}
 		e.getBlocks().add(e1);
 	}
 }

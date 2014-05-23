@@ -31,6 +31,7 @@ import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.mbel.CustomAttribute;
 import edu.arizona.cs.mbel.mbel.GenericParamDef;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
+import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
 import edu.arizona.cs.mbel.mbel.NestedTypeRef;
 import edu.arizona.cs.mbel.mbel.TypeDef;
@@ -98,6 +99,38 @@ public class MsilSharedBuilder implements SignatureConstants
 
 			parent.getBlocks().add(new LineStubBlock(builder));
 		}
+	}
+
+	protected static void appendAccessor(String name, final TypeDef typeDef, MethodDef methodDef, StubBlock block)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(name);
+		builder.append(" ");
+
+		typeToString(builder, methodDef.getSignature().getReturnType().getInnerType(), typeDef);
+
+		builder.append(" ");
+
+		toStringFromDefRefSpec(builder, methodDef.getParent(), typeDef);
+
+		builder.append("::");
+
+		builder.append(methodDef.getName());
+
+		builder.append("(");
+		join(builder, methodDef.getSignature().getParameters(), new PairFunction<StringBuilder, ParameterSignature, Void>()
+		{
+			@Nullable
+			@Override
+			public Void fun(StringBuilder t, ParameterSignature v)
+			{
+				typeToString(t, v.getInnerType(), typeDef);
+				return null;
+			}
+		}, ", ");
+		builder.append(")\n");
+
+		block.getBlocks().add(new LineStubBlock(builder));
 	}
 
 	protected static void processGeneric(StringBuilder builder, GenericParamOwner paramOwner)
