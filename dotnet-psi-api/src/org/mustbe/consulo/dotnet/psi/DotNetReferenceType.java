@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 
 /**
  * @author VISTALL
@@ -24,6 +25,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DotNetReferenceType extends DotNetType
 {
+	@NotNull
+	DotNetPsiFacade.TypeResoleKind getTypeResoleKind();
+
 	@NotNull
 	String getReferenceText();
 

@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.MsilStubBuilder;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import edu.arizona.cs.mbel.mbel.AssemblyInfo;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
@@ -32,7 +32,7 @@ import edu.arizona.cs.mbel.mbel.ModuleParser;
 @Logger
 public class DotNetAssemblyFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 {
-	public static final String AssemblyInfo = "AssemblyInfo.cs";
+	public static final String AssemblyInfo = "AssemblyInfo.msil";
 
 	private final AssemblyInfo myAssemblyInfo;
 
@@ -46,6 +46,6 @@ public class DotNetAssemblyFileArchiveEntry extends DotNetAbstractFileArchiveEnt
 	@Override
 	public List<? extends StubBlock> build()
 	{
-		return XStubBuilder.parseAssemblyInfo(myAssemblyInfo);
+		return MsilStubBuilder.parseAssemblyInfo(myAssemblyInfo);
 	}
 }

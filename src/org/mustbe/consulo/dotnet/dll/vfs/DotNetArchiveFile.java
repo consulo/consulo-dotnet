@@ -29,6 +29,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
+import org.mustbe.consulo.msil.MsilHelper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;
@@ -71,17 +72,17 @@ public class DotNetArchiveFile implements ArchiveFile
 				continue;
 			}
 
-			String userName = XStubUtil.cutGenericMarker(typeDef.getName());
+			String userName = MsilHelper.cutGenericMarker(typeDef.getName());
 
 			String path;
 			String namespace = typeDef.getNamespace();
 			if(StringUtil.isEmpty(namespace))
 			{
-				path = userName + ".cs";
+				path = userName + ".msil";
 			}
 			else
 			{
-				path = namespace.replace(".", "/") + "/" + userName + ".cs";
+				path = namespace.replace(".", "/") + "/" + userName + ".msil";
 			}
 
 			DotNetBaseFileArchiveEntry fileWithSameName = duplicateMap.get(path);

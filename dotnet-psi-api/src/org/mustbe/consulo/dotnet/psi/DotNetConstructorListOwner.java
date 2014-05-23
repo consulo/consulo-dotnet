@@ -17,13 +17,14 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
  * @since 17.05.14
  */
-public interface DotNetConstructorListOwner extends DotNetElement
+public interface DotNetConstructorListOwner extends DotNetElement, PsiNamedElement
 {
 	void processConstructors(@NotNull Processor<DotNetConstructorDeclaration> processor);
 }

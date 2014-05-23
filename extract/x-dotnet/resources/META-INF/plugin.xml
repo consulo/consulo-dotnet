@@ -18,6 +18,7 @@
 	<name>Cross .NET</name>
 	<depends>org.mustbe.consulo.microsoft.dotnet</depends>
 	<depends>org.mustbe.consulo.dotnet.mono</depends>
+	<depends config-file="CSharp.xml" optional="true">org.mustbe.consulo.csharp</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
@@ -28,11 +29,5 @@
 								 immutableClass="org.mustbe.consulo.xdotnet.module.extension.XDotNetModuleExtension"
 								 mutableClass="org.mustbe.consulo.xdotnet.module.extension.XDotNetMutableModuleExtension" />
 
-		<moduleExtensionProvider key="x-csharp"
-								 parentKey="x-dotnet"
-								 name="C#"
-								 icon="/icons/dotnet.png"
-								 immutableClass="org.mustbe.consulo.xdotnet.module.extension.XCSharpModuleExtension"
-								 mutableClass="org.mustbe.consulo.xdotnet.module.extension.XCSharpMutableModuleExtension"/>
 	</extensions>
 </idea-plugin>

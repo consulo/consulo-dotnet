@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import java.util.Collection;
 
+import org.consulo.annotations.Immutable;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,21 +33,60 @@ import com.intellij.util.ArrayUtil;
 @ProjectService
 public abstract class DotNetPsiFacade
 {
+	public static enum TypeResoleKind
+	{
+		CLASS,
+		STRUCT,
+		UNKNOWN;
+
+		@Immutable
+		@NotNull
+		public static TypeResoleKind[] VALUES = values();
+	}
+
+	public static class ResolveContext
+	{
+		private final String myQName;
+		private final int myGenericCount;
+		private final TypeResoleKind myTypeResoleKind;
+		private final GlobalSearchScope myScope;
+
+		public ResolveContext(String qname, int genericCount, TypeResoleKind typeResoleKind, GlobalSearchScope scope)
+		{
+			myQName = qname;
+			myGenericCount = genericCount;
+			myTypeResoleKind = typeResoleKind;
+			myScope = scope;
+		}
+
+		public int getGenericCount()
+		{
+			return myGenericCount;
+		}
+
+		public TypeResoleKind getTypeResoleKind()
+		{
+			return myTypeResoleKind;
+		}
+
+		public GlobalSearchScope getScope()
+		{
+			return myScope;
+		}
+
+		public String getQName()
+		{
+			return myQName;
+		}
+	}
+
 	public static class Adapter extends DotNetPsiFacade
 	{
 		@NotNull
 		@Override
-		public DotNetTypeDeclaration[] findTypes(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount)
+		public DotNetTypeDeclaration[] findTypes(@NotNull ResolveContext context)
 		{
 			return DotNetTypeDeclaration.EMPTY_ARRAY;
-		}
-
-		@Nullable
-		@Override
-		public DotNetTypeDeclaration findType(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount)
-		{
-			DotNetTypeDeclaration[] types = findTypes(qName, searchScope, genericCount);
-			return types.length > 0 ? types[0] : null;
 		}
 
 		@NotNull
@@ -76,11 +116,50 @@ public abstract class DotNetPsiFacade
 		}
 	}
 
-	@NotNull
-	public abstract DotNetTypeDeclaration[] findTypes(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount);
+	public boolean isAcceptableType(@NotNull ResolveContext context, @NotNull DotNetTypeDeclaration type)
+	{
+		switch(context.getTypeResoleKind())
+		{
+			case CLASS:
+				if(type.isStruct())
+				{
+					return false;
+				}
+				break;
+			case STRUCT:
+				if(!type.isStruct())
+				{
+					return false;
+				}
+				break;
+		}
+
+		boolean needCheckGeneric = context.getGenericCount() != -1;
+		return needCheckGeneric && type.getGenericParametersCount() == context.getGenericCount() || !needCheckGeneric;
+	}
 
 	@Nullable
-	public abstract DotNetTypeDeclaration findType(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount);
+	public DotNetTypeDeclaration findType(@NotNull ResolveContext resolveContext)
+	{
+		DotNetTypeDeclaration[] types = findTypes(resolveContext);
+		return types.length > 0 ? types[0] : null;
+	}
+
+	@NotNull
+	public abstract DotNetTypeDeclaration[] findTypes(@NotNull ResolveContext context);
+
+	@NotNull
+	public DotNetTypeDeclaration[] findTypes(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount)
+	{
+		return findTypes(new ResolveContext(qName, genericCount, TypeResoleKind.UNKNOWN, searchScope));
+	}
+
+	@Nullable
+	public DotNetTypeDeclaration findType(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount)
+	{
+		DotNetTypeDeclaration[] types = findTypes(qName, searchScope, genericCount);
+		return types.length > 0 ? types[0] : null;
+	}
 
 	@NotNull
 	public abstract String[] getAllTypeNames();

@@ -125,7 +125,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 
 		PsiFile containingFile = element.getContainingFile();
 		final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(element.getProject()).getFileIndex();
-		VirtualFile vFile = containingFile.getVirtualFile();
+		VirtualFile vFile = containingFile == null ? null : containingFile.getVirtualFile();
 		if(vFile != null && (fileIndex.isInLibrarySource(vFile) || fileIndex.isInLibraryClasses(vFile)))
 		{
 			final List<OrderEntry> orderEntries = fileIndex.getOrderEntriesForFile(vFile);
@@ -137,7 +137,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		}
 		else
 		{
-			final Module module = ModuleUtil.findModuleForPsiElement(containingFile);
+			final Module module = containingFile == null ? null : ModuleUtil.findModuleForPsiElement(containingFile);
 			if(module != null)
 			{
 				builder.append('[').append(module.getName()).append("] ");

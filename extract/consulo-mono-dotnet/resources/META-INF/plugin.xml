@@ -18,6 +18,7 @@
 	<id>org.mustbe.consulo.dotnet.mono</id>
 	<name>Mono .NET</name>
 	<depends>org.mustbe.consulo.dotnet.core</depends>
+	<depends config-file="CSharp.xml" optional="true">org.mustbe.consulo.csharp</depends>
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
 		<documentationResolver implementation="org.mustbe.consulo.mono.dotnet.documentation.MonoDocumentationResolver" />
@@ -31,13 +32,6 @@
 								 icon="/icons/mono.png"
 								 immutableClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension"
 								 mutableClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetMutableModuleExtension"/>
-
-		<moduleExtensionProvider key="mono-csharp"
-								 parentKey="mono-dotnet"
-								 name="C#"
-								 icon="/icons/mono.png"
-								 immutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpModuleExtension"
-								 mutableClass="org.mustbe.consulo.mono.csharp.module.extension.MonoCSharpMutableModuleExtension"/>
 
 		<sdkType implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType"/>
 		<bundledSdkProvider implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoBundledSdkProvider"/>

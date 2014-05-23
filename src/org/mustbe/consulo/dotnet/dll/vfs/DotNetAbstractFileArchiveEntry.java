@@ -11,8 +11,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.consulo.lombok.annotations.LazyInstance;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.XStubBuilder;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 
 /**
@@ -50,7 +50,7 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 		}
 		List<? extends StubBlock> builder = build();
 
-		CharSequence charSequence = XStubBuilder.buildText(builder);
+		CharSequence charSequence = XStubUtil.buildText(builder);
 
 		try
 		{

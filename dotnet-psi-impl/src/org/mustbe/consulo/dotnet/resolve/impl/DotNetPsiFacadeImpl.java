@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
@@ -34,7 +33,7 @@ import com.intellij.util.ArrayUtil;
  * @author VISTALL
  * @since 10.01.14
  */
-public class DotNetPsiFacadeImpl extends DotNetPsiFacade
+public class DotNetPsiFacadeImpl extends DotNetPsiFacade.Adapter
 {
 	private static final ExtensionPointName<DotNetPsiFacade> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.psi.facade");
 
@@ -50,30 +49,14 @@ public class DotNetPsiFacadeImpl extends DotNetPsiFacade
 
 	@NotNull
 	@Override
-	public DotNetTypeDeclaration[] findTypes(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount)
+	public DotNetTypeDeclaration[] findTypes(@NotNull ResolveContext context)
 	{
-		List<DotNetTypeDeclaration> typeDeclarations = new ArrayList<DotNetTypeDeclaration>();
+		List<DotNetTypeDeclaration> list = new ArrayList<DotNetTypeDeclaration>();
 		for(DotNetPsiFacade facade : myFacades)
 		{
-			Collections.addAll(typeDeclarations, facade.findTypes(qName, searchScope, genericCount));
+			Collections.addAll(list, facade.findTypes(context));
 		}
-		return typeDeclarations.isEmpty() ? DotNetTypeDeclaration.EMPTY_ARRAY : typeDeclarations.toArray(new DotNetTypeDeclaration[typeDeclarations
-				.size()]);
-	}
-
-	@Nullable
-	@Override
-	public DotNetTypeDeclaration findType(@NotNull String qName, @NotNull GlobalSearchScope searchScope, int genericCount)
-	{
-		for(DotNetPsiFacade facade : myFacades)
-		{
-			DotNetTypeDeclaration type = facade.findType(qName, searchScope, genericCount);
-			if(type != null)
-			{
-				return type;
-			}
-		}
-		return null;
+		return toArray(list);
 	}
 
 	@NotNull

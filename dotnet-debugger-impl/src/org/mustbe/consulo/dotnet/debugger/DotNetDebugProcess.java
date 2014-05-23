@@ -18,8 +18,6 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.CSharpFileType;
-import org.mustbe.consulo.csharp.lang.psi.CSharpExpressionFragmentFactory;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.run.DotNetRunProfileState;
@@ -31,9 +29,8 @@ import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
@@ -167,7 +164,7 @@ public class DotNetDebugProcess extends XDebugProcess
 			@Override
 			public FileType getFileType()
 			{
-				return CSharpFileType.INSTANCE;
+				return PlainTextFileType.INSTANCE;
 			}
 
 			@NotNull
@@ -175,8 +172,9 @@ public class DotNetDebugProcess extends XDebugProcess
 			public Document createDocument(
 					@NotNull Project project, @NotNull String text, @Nullable XSourcePosition sourcePosition, @NotNull EvaluationMode mode)
 			{
-				PsiFile expressionFragment = CSharpExpressionFragmentFactory.createExpressionFragment(project, text);
-				return PsiDocumentManager.getInstance(project).getDocument(expressionFragment);
+				/*PsiFile expressionFragment = CSharpExpressionFragmentFactory.createExpressionFragment(project, text);
+				return PsiDocumentManager.getInstance(project).getDocument(expressionFragment);   */
+				throw new IllegalArgumentException();
 			}
 		};
 	}
