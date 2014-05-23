@@ -136,7 +136,7 @@ public class MsilSharedBuilder implements SignatureConstants
 				builder.append("uint32");
 				break;
 			case ELEMENT_TYPE_I8:
-				builder.append("in64");
+				builder.append("int64");
 				break;
 			case ELEMENT_TYPE_U8:
 				builder.append("uint64");
