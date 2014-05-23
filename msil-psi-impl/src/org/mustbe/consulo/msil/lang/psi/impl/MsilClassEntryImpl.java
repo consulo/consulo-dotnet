@@ -137,7 +137,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public void processConstructors(@NotNull Processor<DotNetConstructorDeclaration> processor)
 	{
-
+		throw new IllegalArgumentException();
 	}
 
 	@Nullable
