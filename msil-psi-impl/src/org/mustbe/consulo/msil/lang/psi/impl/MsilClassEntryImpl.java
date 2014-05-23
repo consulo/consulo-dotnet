@@ -36,6 +36,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
+import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import com.intellij.lang.ASTNode;
@@ -78,7 +79,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public boolean isInterface()
 	{
-		return false;
+		return hasModifier(MsilTokens.INTERFACE_KEYWORD);
 	}
 
 	@Override
@@ -157,7 +158,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
-		return new DotNetNamedElement[0];
+		return getStubOrPsiChildren(MsilStubTokenSets.MEMBER_STUBS, DotNetNamedElement.ARRAY_FACTORY);
 	}
 
 	@Override
