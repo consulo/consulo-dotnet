@@ -50,6 +50,14 @@ public interface MsilTokens extends TokenType
 
 	IElementType _PARAM_KEYWORD = new IElementType("_PARAM_KEYWORD", MsilLanguage.INSTANCE);
 
+	IElementType _GET_KEYWORD = new IElementType("_GET_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType _SET_KEYWORD = new IElementType("_SET_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType _ADDON_KEYWORD = new IElementType("_ADDON_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType _REMOVEON_KEYWORD = new IElementType("_REMOVEON_KEYWORD", MsilLanguage.INSTANCE);
+
 	IElementType CLASS_KEYWORD = new IElementType("CLASS_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType VALUETYPE_KEYWORD = new IElementType("CLASS_KEYWORD", MsilLanguage.INSTANCE);

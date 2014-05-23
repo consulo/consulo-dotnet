@@ -73,6 +73,14 @@ QIDENTIFIER=\'.*\'
 
 	".param"       { return MsilTokens._PARAM_KEYWORD; }
 
+	".get"         { return MsilTokens._GET_KEYWORD; }
+
+	".set"         { return MsilTokens._SET_KEYWORD; }
+
+	".addon"       { return MsilTokens._ADDON_KEYWORD; }
+
+	".removeon"    { return MsilTokens._REMOVEON_KEYWORD; }
+
 	"class"        { return MsilTokens.CLASS_KEYWORD; }
 
 	"valuetype"    { return MsilTokens.VALUETYPE_KEYWORD; }
