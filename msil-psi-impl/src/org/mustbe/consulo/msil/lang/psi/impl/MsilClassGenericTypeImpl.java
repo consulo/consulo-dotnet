@@ -18,9 +18,11 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilClassGenericType;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassGenericTypeStub;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilClassGenericTypeRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -63,6 +65,8 @@ public class MsilClassGenericTypeImpl extends MsilStubElementImpl<MsilClassGener
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return DotNetTypeRef.ERROR_TYPE;
+		MsilClassEntry parent = getStubOrPsiParentOfType(MsilClassEntry.class);
+		assert parent != null;
+		return new MsilClassGenericTypeRefImpl(parent, getGenericName());
 	}
 }
