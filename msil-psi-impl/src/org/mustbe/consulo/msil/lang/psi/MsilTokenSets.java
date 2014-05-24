@@ -75,6 +75,15 @@ public interface MsilTokenSets extends MsilTokens
 			UINT_KEYWORD
 	};
 
+	IElementType[] XXX_ACCESSOR_START_AS_ARRAY = new IElementType[]{
+			_GET_KEYWORD,
+			_SET_KEYWORD,
+			_ADDON_KEYWORD,
+			_REMOVEON_KEYWORD
+	};
+
+	TokenSet XXX_ACCESSOR_START = TokenSet.create(XXX_ACCESSOR_START_AS_ARRAY);
+
 	TokenSet NATIVE_TYPES = TokenSet.create(NATIVE_TYPES_AS_ARRAY);
 
 	TokenSet KEYWORDS = TokenSet.orSet(MODIFIERS, REFERENCE_TYPE_START, NATIVE_TYPES, TokenSet.create(EXTENDS_KEYWORD, IMPLEMENTS_KEYWORD));

@@ -79,6 +79,10 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		{
 			parseParamAttributeList(builder);
 		}
+		else if(XXX_ACCESSOR_START.contains(tokenType))
+		{
+			parseAccessor(builder);
+		}
 		else
 		{
 			builder.error("Unexpected token " + tokenType);
@@ -127,34 +131,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		parseGenericList(builder);
 
-		if(expect(builder, LPAR, "'(' expected"))
-		{
-			PsiBuilder.Marker parameterListMarker = builder.mark();
-
-			if(builder.getTokenType() != RPAR)
-			{
-				while(!builder.eof())
-				{
-					PsiBuilder.Marker parameterMarker = builder.mark();
-					parseModifierList(builder);
-					parseType(builder);
-					expect(builder, IDENTIFIERS, "Identifier expected");
-					parameterMarker.done(PARAMETER);
-
-					if(builder.getTokenType() == COMMA)
-					{
-						builder.advanceLexer();
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-
-			expect(builder, RPAR, "')' expected");
-			parameterListMarker.done(PARAMETER_LIST);
-		}
+		parseParameterList(builder);
 
 		if(expect(builder, LBRACE, "'{' expected"))
 		{
@@ -254,6 +231,60 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		mark.done(EVENT);
 	}
 
+	private void parseAccessor(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		parseType(builder); // return type
+
+		parseType(builder); // contains
+
+		expect(builder, COLONCOLON, "'::' expected");
+
+		expect(builder, IDENTIFIERS, "Identifier expected");
+
+		parseParameterList(builder);
+
+		mark.done(XXX_ACCESSOR);
+	}
+
+	private void parseParameterList(PsiBuilder builder)
+	{
+		if(expect(builder, LPAR, "'(' expected"))
+		{
+			PsiBuilder.Marker parameterListMarker = builder.mark();
+
+			if(builder.getTokenType() != RPAR)
+			{
+				while(!builder.eof())
+				{
+					PsiBuilder.Marker parameterMarker = builder.mark();
+					parseModifierList(builder);
+					parseType(builder);
+					if(IDENTIFIERS.contains(builder.getTokenType()))
+					{
+						builder.advanceLexer();
+					}
+					parameterMarker.done(PARAMETER);
+
+					if(builder.getTokenType() == COMMA)
+					{
+						builder.advanceLexer();
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+
+			expect(builder, RPAR, "')' expected");
+			parameterListMarker.done(PARAMETER_LIST);
+		}
+	}
+
 	private void parseAttribute(PsiBuilder builder)
 	{
 		PsiBuilder.Marker mark = builder.mark();
@@ -264,8 +295,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		expect(builder, COLONCOLON, "'::' expected");
 		expect(builder, IDENTIFIER, "Identifier expected");
-		expect(builder, LPAR, "'(' expected");
-		expect(builder, RPAR, "')' expected");
+		parseParameterList(builder);
 		expect(builder, EQ, "'=' expected");
 		expect(builder, LPAR, "'(' expected");
 		expect(builder, RPAR, "')' expected");

@@ -17,7 +17,9 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -69,11 +71,11 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 		}
 	}
 
-	@NotNull
+	@Nullable
 	public <T extends PsiElement> T getFirstStubOrPsiChild(TokenSet tokenSet, ArrayFactory<T> arrayFactory)
 	{
 		T[] stubOrPsiChildren = getStubOrPsiChildren(tokenSet, arrayFactory);
-		return stubOrPsiChildren[0];
+		return ArrayUtil2.safeGet(stubOrPsiChildren, 0);
 	}
 
 	public abstract void accept(MsilVisitor visitor);

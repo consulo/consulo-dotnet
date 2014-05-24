@@ -115,7 +115,7 @@ public class MsilSharedBuilder implements SignatureConstants
 
 		builder.append("::");
 
-		builder.append(methodDef.getName());
+		appendValidName(builder, methodDef.getName());
 
 		builder.append("(");
 		join(builder, methodDef.getSignature().getParameters(), new PairFunction<StringBuilder, ParameterSignature, Void>()
