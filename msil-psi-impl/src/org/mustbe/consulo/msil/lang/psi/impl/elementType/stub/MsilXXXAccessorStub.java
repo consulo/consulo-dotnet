@@ -47,7 +47,7 @@ public class MsilXXXAccessorStub extends StubBase<MsilXXXAcessor>
 		myName = name;
 	}
 
-	public String getName()
+	public String getMethodName()
 	{
 		return StringRef.toString(myName);
 	}

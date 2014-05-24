@@ -124,7 +124,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 		MsilXXXAccessorStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.getName();
+			return stub.getMethodName();
 		}
 		PsiElement childByType = findChildByType(MsilTokenSets.IDENTIFIERS);
 		return childByType == null ? null : StringUtil.unquoteString(childByType.getText());

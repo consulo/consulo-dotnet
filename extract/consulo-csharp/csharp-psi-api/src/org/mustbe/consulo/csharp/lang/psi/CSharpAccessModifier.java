@@ -14,21 +14,37 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
+package org.mustbe.consulo.csharp.lang.psi;
 
-import org.mustbe.consulo.msil.lang.psi.MsilEventEntry;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
+import org.consulo.annotations.Immutable;
 
 /**
  * @author VISTALL
- * @since 22.05.14
+ * @since 24.05.14
  */
-public class MsilEventEntryStub extends StubBase<MsilEventEntry>
+public enum CSharpAccessModifier
 {
-	public MsilEventEntryStub(StubElement parent, IStubElementType elementType)
+	PUBLIC,
+	INTERNAL,
+	PROTECTED,
+	PRIVATE;
+
+	@Immutable
+	public static final CSharpAccessModifier[] VALUES = values();
+
+	public CSharpModifier toModifier()
 	{
-		super(parent, elementType);
+		switch(this)
+		{
+			case PUBLIC:
+				return CSharpModifier.PUBLIC;
+			case INTERNAL:
+				//TODO [VISTALL] return CSharpModifier.INTERNAL;
+			case PROTECTED:
+				return CSharpModifier.PROTECTED;
+			case PRIVATE:
+				return CSharpModifier.PRIVATE;
+		}
+		return CSharpModifier.PUBLIC;
 	}
 }

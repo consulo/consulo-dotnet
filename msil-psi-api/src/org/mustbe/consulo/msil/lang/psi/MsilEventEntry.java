@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
 
 /**
@@ -24,4 +25,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
  */
 public interface MsilEventEntry extends MsilEntry, DotNetEventDeclaration
 {
+	@NotNull
+	String getNameFromBytecode();
 }

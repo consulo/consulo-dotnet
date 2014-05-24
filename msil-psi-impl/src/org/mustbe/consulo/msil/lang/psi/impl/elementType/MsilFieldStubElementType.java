@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilFieldEntryImpl;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilFieldEntryStub;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -32,7 +32,7 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilFieldStubElementType extends AbstractMsilStubElementType<MsilFieldEntryStub,MsilFieldEntry>
+public class MsilFieldStubElementType extends AbstractMsilStubElementType<MsilVariableEntryStub,MsilFieldEntry>
 {
 	public MsilFieldStubElementType()
 	{
@@ -48,30 +48,30 @@ public class MsilFieldStubElementType extends AbstractMsilStubElementType<MsilFi
 
 	@NotNull
 	@Override
-	public MsilFieldEntry createPsi(@NotNull MsilFieldEntryStub msilFieldEntryStub)
+	public MsilFieldEntry createPsi(@NotNull MsilVariableEntryStub msilVariableEntryStub)
 	{
-		return new MsilFieldEntryImpl(msilFieldEntryStub, this);
+		return new MsilFieldEntryImpl(msilVariableEntryStub, this);
 	}
 
 	@Override
-	public MsilFieldEntryStub createStub(@NotNull MsilFieldEntry msilFieldEntry, StubElement stubElement)
+	public MsilVariableEntryStub createStub(@NotNull MsilFieldEntry msilFieldEntry, StubElement stubElement)
 	{
 		String name = msilFieldEntry.getNameFromBytecode();
-		return new MsilFieldEntryStub(stubElement, this, name);
+		return new MsilVariableEntryStub(stubElement, this, name);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilFieldEntryStub msilFieldEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilVariableEntryStub msilVariableEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-		stubOutputStream.writeName(msilFieldEntryStub.getNameFromBytecode());
+		stubOutputStream.writeName(msilVariableEntryStub.getNameFromBytecode());
 	}
 
 	@NotNull
 	@Override
-	public MsilFieldEntryStub deserialize(
+	public MsilVariableEntryStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
-		return new MsilFieldEntryStub(stubElement, this, ref);
+		return new MsilVariableEntryStub(stubElement, this, ref);
 	}
 }

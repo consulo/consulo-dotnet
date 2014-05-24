@@ -16,36 +16,28 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilEventEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEventEntryStub;
+import org.mustbe.consulo.msil.lang.psi.MsilXXXAcessor;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilEventEntryImpl extends MsilStubElementImpl<MsilEventEntryStub> implements MsilEventEntry
+public class MsilEventEntryImpl extends MsilQVariableImpl implements MsilEventEntry
 {
 	public MsilEventEntryImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilEventEntryImpl(@NotNull MsilEventEntryStub stub, @NotNull IStubElementType nodeType)
+	public MsilEventEntryImpl(@NotNull MsilVariableEntryStub stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -60,80 +52,13 @@ public class MsilEventEntryImpl extends MsilStubElementImpl<MsilEventEntryStub> 
 	@Override
 	public DotNetXXXAccessor[] getAccessors()
 	{
-		return new DotNetXXXAccessor[0];
+		return getStubOrPsiChildren(MsilStubElements.XXX_ACCESSOR, MsilXXXAcessor.ARRAY_FACTORY);
 	}
 
 	@NotNull
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
-		return new DotNetNamedElement[0];
-	}
-
-	@Override
-	public boolean isConstant()
-	{
-		return false;
-	}
-
-	@NotNull
-	@Override
-	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
-	{
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public DotNetType getType()
-	{
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public DotNetExpression getInitializer()
-	{
-		return null;
-	}
-
-	@Override
-	public boolean hasModifier(@NotNull DotNetModifier modifier)
-	{
-		return getModifierList().hasModifier(modifier);
-	}
-
-	@NotNull
-	@Override
-	public DotNetModifierList getModifierList()
-	{
-		return getRequiredStubOrPsiChild(MsilStubElements.MODIFIER_LIST);
-	}
-
-	@Nullable
-	@Override
-	public String getPresentableParentQName()
-	{
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public String getPresentableQName()
-	{
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return null;
-	}
-
-	@Override
-	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
-	{
-		return null;
+		return getAccessors();
 	}
 }

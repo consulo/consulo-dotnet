@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 
 /**
@@ -24,4 +25,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
  */
 public interface MsilPropertyEntry extends MsilEntry, DotNetPropertyDeclaration
 {
+	@Nullable
+	String getNameFromBytecode();
 }

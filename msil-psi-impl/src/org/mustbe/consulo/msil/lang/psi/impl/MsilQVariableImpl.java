@@ -14,57 +14,42 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.msil;
+package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.CSharpLanguage;
-import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
+import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.light.LightElement;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
- * @since 23.05.14
+ * @since 24.05.14
  */
-public class MsilVariableAsCSharpVariable extends LightElement implements DotNetVariable
+public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariableEntryStub> implements DotNetVariable, DotNetQualifiedElement
 {
-	private final DotNetVariable myVariable;
-	private MsilModifierListToCSharpModifierList myModifierList;
-
-	public MsilVariableAsCSharpVariable(DotNetVariable variable)
+	public MsilQVariableImpl(@NotNull ASTNode node)
 	{
-		this(CSharpModifier.EMPTY_ARRAY, variable);
+		super(node);
 	}
 
-	public MsilVariableAsCSharpVariable(CSharpModifier[] modifiers, DotNetVariable variable)
+	public MsilQVariableImpl(@NotNull MsilVariableEntryStub stub, @NotNull IStubElementType nodeType)
 	{
-		super(PsiManager.getInstance(variable.getProject()), CSharpLanguage.INSTANCE);
-		setNavigationElement(variable);
-		myModifierList = new MsilModifierListToCSharpModifierList(modifiers, (MsilModifierList) variable.getModifierList());
-		myVariable = variable;
-	}
-
-	@Override
-	public PsiFile getContainingFile()
-	{
-		return myVariable.getContainingFile();
-	}
-
-	public DotNetVariable getVariable()
-	{
-		return myVariable;
+		super(stub, nodeType);
 	}
 
 	@Override
@@ -77,14 +62,14 @@ public class MsilVariableAsCSharpVariable extends LightElement implements DotNet
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
-		return MsilToCSharpUtil.extractToCSharp(myVariable.toTypeRef(resolveFromInitializer), myVariable);
+		return getType().toTypeRef();
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public DotNetType getType()
 	{
-		return null;
+		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
 	@Nullable
@@ -97,33 +82,53 @@ public class MsilVariableAsCSharpVariable extends LightElement implements DotNet
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
-		return myModifierList.hasModifier(modifier);
+		return getModifierList().hasModifier(modifier);
+	}
+
+	@NotNull
+	@Override
+	public DotNetModifierList getModifierList()
+	{
+		return getRequiredStubOrPsiChild(MsilStubElements.MODIFIER_LIST);
 	}
 
 	@Nullable
 	@Override
-	public DotNetModifierList getModifierList()
+	public String getPresentableParentQName()
 	{
-		return myModifierList;
+		return StringUtil.getPackageName(getNameFromBytecode());
 	}
 
+	@Nullable
 	@Override
-	public String toString()
+	public String getPresentableQName()
 	{
-		return getName();
-	}
-
-	@Override
-	public String getName()
-	{
-		return myVariable.getName();
+		return getNameFromBytecode();
 	}
 
 	@Nullable
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		return null;
+		return findChildByType(MsilTokenSets.IDENTIFIERS);
+	}
+
+	@Override
+	public String getName()
+	{
+		return StringUtil.getShortName(getNameFromBytecode());
+	}
+
+	@NotNull
+	public String getNameFromBytecode()
+	{
+		MsilVariableEntryStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getNameFromBytecode();
+		}
+		PsiElement element = getNameIdentifier();
+		return element == null ? "" : StringUtil.unquoteString(element.getText());
 	}
 
 	@Override

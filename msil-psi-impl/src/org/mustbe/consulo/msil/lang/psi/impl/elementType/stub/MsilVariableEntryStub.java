@@ -26,17 +26,17 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilFieldEntryStub extends StubBase<MsilFieldEntry>
+public class MsilVariableEntryStub extends StubBase<MsilFieldEntry>
 {
 	private StringRef myName;
 
-	public MsilFieldEntryStub(StubElement parent, IStubElementType elementType, StringRef name)
+	public MsilVariableEntryStub(StubElement parent, IStubElementType elementType, StringRef name)
 	{
 		super(parent, elementType);
 		myName = name;
 	}
 
-	public MsilFieldEntryStub(StubElement parent, IStubElementType elementType, String name)
+	public MsilVariableEntryStub(StubElement parent, IStubElementType elementType, String name)
 	{
 		super(parent, elementType);
 		myName = StringRef.fromNullableString(name);

@@ -26,6 +26,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.io.StringRef;
 
 /**
@@ -56,14 +57,16 @@ public class MsilXXXAccessorStubElementType extends AbstractMsilStubElementType<
 	@Override
 	public MsilXXXAccessorStub createStub(@NotNull MsilXXXAcessor accessor, StubElement stubElement)
 	{
-		return new MsilXXXAccessorStub(stubElement, this, accessor.getAccessorType(), accessor.getName());
+		IElementType accessorType = accessor.getAccessorType();
+		String name = accessor.getMethodName();
+		return new MsilXXXAccessorStub(stubElement, this, accessorType, name);
 	}
 
 	@Override
 	public void serialize(@NotNull MsilXXXAccessorStub stub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeInt(stub.getIndex());
-		stubOutputStream.writeName(stub.getName());
+		stubOutputStream.writeName(stub.getMethodName());
 	}
 
 	@NotNull
