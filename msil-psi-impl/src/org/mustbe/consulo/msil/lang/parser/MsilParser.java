@@ -425,13 +425,14 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			mark.done(REFERENCE_TYPE);
 		}
 
-		if(builder.getTokenType() == PERC)
+		while(builder.getTokenType() == PERC)
 		{
 			mark = mark.precede();
 			builder.advanceLexer();
 			mark.done(POINTER_TYPE);
 		}
-		else if(builder.getTokenType() == LT)
+
+		if(builder.getTokenType() == LT)
 		{
 			mark = mark.precede();
 			parseTypeList(builder, LT, GT, TYPE_ARGUMENTS_TYPE_LIST);
