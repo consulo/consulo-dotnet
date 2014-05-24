@@ -147,7 +147,7 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 				continue;
 			}
 
-			if(parameterInfo.getCustomAttributes().length != 0)
+			if(!parameterInfo.getCustomAttributes().isEmpty())
 			{
 				e.getBlocks().add(new LineStubBlock(".param [" + (i + 1) + "]"));
 				processAttributes(e, parameterInfo);

@@ -83,13 +83,13 @@ public class AttributeStubBuilder
 	public static List<LineStubBlock> processAttributes(
 			CustomAttributeOwner owner, TypeDef typeDef, MethodDef methodDef, String forceTarget, ProcessAttributesCallback callback)
 	{
-		CustomAttribute[] customAttributes = owner.getCustomAttributes();
-		if(customAttributes.length == 0)
+		List<CustomAttribute> customAttributes = owner.getCustomAttributes();
+		if(customAttributes.isEmpty())
 		{
 			return Collections.emptyList();
 		}
 
-		val list = new ArrayList<LineStubBlock>(customAttributes.length);
+		val list = new ArrayList<LineStubBlock>(customAttributes.size());
 		for(CustomAttribute customAttribute : customAttributes)
 		{
 			MethodDefOrRef constructor = customAttribute.getConstructor();
