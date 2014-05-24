@@ -112,6 +112,10 @@ public class MsilTypeBuilder extends MsilSharedBuilder implements TypeAttributes
 		for(int k = 0; k < typeDef.getNestedClasses().size(); k++)
 		{
 			TypeDef def = typeDef.getNestedClasses().get(k);
+			if(XStubUtil.isInvisibleMember(def.getName()))
+			{
+				continue;
+			}
 			e.getBlocks().add(processTypeDef(def));
 		}
 
