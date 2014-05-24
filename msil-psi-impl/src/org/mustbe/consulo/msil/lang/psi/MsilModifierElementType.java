@@ -28,21 +28,21 @@ import com.intellij.psi.tree.IElementType;
  * @author VISTALL
  * @since 22.05.14
  */
-public class ModifierElementType extends IElementType implements DotNetModifier
+public class MsilModifierElementType extends IElementType implements DotNetModifier
 {
-	public ModifierElementType(
+	public MsilModifierElementType(
 			@NotNull @NonNls String debugName, @Nullable Language language)
 	{
 		super(debugName, language);
 	}
 
-	public ModifierElementType(
+	public MsilModifierElementType(
 			@NotNull @NonNls String debugName, @Nullable Language language, @Nullable LanguageVersion languageVersion)
 	{
 		super(debugName, language, languageVersion);
 	}
 
-	protected ModifierElementType(
+	protected MsilModifierElementType(
 			@NotNull @NonNls String debugName, @Nullable Language language, @Nullable LanguageVersion languageVersion, boolean register)
 	{
 		super(debugName, language, languageVersion, register);

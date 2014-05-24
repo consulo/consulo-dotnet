@@ -100,41 +100,41 @@ public interface MsilTokens extends TokenType
 
 	IElementType IMPLEMENTS_KEYWORD = new IElementType("IMPLEMENTS_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType PUBLIC_KEYWORD = new ModifierElementType("PUBLIC_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType PUBLIC_KEYWORD = new MsilModifierElementType("PUBLIC_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType STATIC_KEYWORD = new ModifierElementType("STATIC_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType STATIC_KEYWORD = new MsilModifierElementType("STATIC_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType ABSTRACT_KEYWORD = new ModifierElementType("ABSTRACT_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType ABSTRACT_KEYWORD = new MsilModifierElementType("ABSTRACT_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType FINAL_KEYWORD = new ModifierElementType("FINAL_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType FINAL_KEYWORD = new MsilModifierElementType("FINAL_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType PRIVATE_KEYWORD = new ModifierElementType("PRIVATE_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType PRIVATE_KEYWORD = new MsilModifierElementType("PRIVATE_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType LITERAL_KEYWORD = new ModifierElementType("LITERAL_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType LITERAL_KEYWORD = new MsilModifierElementType("LITERAL_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType ASSEMBLY_KEYWORD = new ModifierElementType("ASSEMBLY_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType ASSEMBLY_KEYWORD = new MsilModifierElementType("ASSEMBLY_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType HIDEBYSIG_KEYWORD = new ModifierElementType("HIDEBYSIG_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType HIDEBYSIG_KEYWORD = new MsilModifierElementType("HIDEBYSIG_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType INITONLY_KEYWORD = new ModifierElementType("INITONLY_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType INITONLY_KEYWORD = new MsilModifierElementType("INITONLY_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType VIRTUAL_KEYWORD = new ModifierElementType("VIRTUAL_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType VIRTUAL_KEYWORD = new MsilModifierElementType("VIRTUAL_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType PROTECTED_KEYWORD = new ModifierElementType("PROTECTED_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType PROTECTED_KEYWORD = new MsilModifierElementType("PROTECTED_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType VALUE_KEYWORD = new ModifierElementType("VALUE_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType VALUE_KEYWORD = new MsilModifierElementType("VALUE_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType BRACKET_OUT_KEYWORD = new ModifierElementType("BRACKET_OUT_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType BRACKET_OUT_KEYWORD = new MsilModifierElementType("BRACKET_OUT_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType INTERFACE_KEYWORD = new ModifierElementType("INTERFACE_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType INTERFACE_KEYWORD = new MsilModifierElementType("INTERFACE_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType SERIALIZABLE_KEYWORD = new ModifierElementType("SERIALIZABLE_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType SERIALIZABLE_KEYWORD = new MsilModifierElementType("SERIALIZABLE_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType SEALED_KEYWORD = new ModifierElementType("SEALED_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType SEALED_KEYWORD = new MsilModifierElementType("SEALED_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType SPECIALNAME_KEYWORD = new ModifierElementType("SPECIALNAME_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType SPECIALNAME_KEYWORD = new MsilModifierElementType("SPECIALNAME_KEYWORD", MsilLanguage.INSTANCE);
 
-	ModifierElementType RTSPECIALNAME_KEYWORD = new ModifierElementType("RTSPECIALNAME_KEYWORD", MsilLanguage.INSTANCE);
+	MsilModifierElementType RTSPECIALNAME_KEYWORD = new MsilModifierElementType("RTSPECIALNAME_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType PERC = new IElementType("PERC", MsilLanguage.INSTANCE);
 

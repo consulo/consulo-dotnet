@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
-import org.mustbe.consulo.msil.lang.psi.ModifierElementType;
+import org.mustbe.consulo.msil.lang.psi.MsilModifierElementType;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
@@ -62,7 +62,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	public DotNetModifier[] getModifiers()
 	{
 		val modifiers = new ArrayList<DotNetModifier>();
-		for(ModifierElementType modifierElementType : MsilTokenSets.MODIFIERS_AS_ARRAY)
+		for(MsilModifierElementType modifierElementType : MsilTokenSets.MODIFIERS_AS_ARRAY)
 		{
 			if(hasModifier(modifierElementType))
 			{
@@ -98,11 +98,11 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 			elementType = MsilTokens.STATIC_KEYWORD;
 		}
 
-		assert elementType instanceof ModifierElementType;
+		assert elementType instanceof MsilModifierElementType;
 		MsilModifierListStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.hasModififer((ModifierElementType)elementType);
+			return stub.hasModififer((MsilModifierElementType)elementType);
 		}
 		return hasModifierInTree(elementType);
 	}
@@ -115,7 +115,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 		{
 			elementType = MsilTokens.STATIC_KEYWORD;
 		}
-		assert elementType instanceof ModifierElementType;
+		assert elementType instanceof MsilModifierElementType;
 		return findChildByType((IElementType) elementType) != null;
 	}
 
