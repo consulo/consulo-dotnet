@@ -38,6 +38,8 @@ public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetMod
 
 	boolean isInheritAllowed();
 
+	boolean isNested();
+
 	@Nullable
 	DotNetTypeList getExtendList();
 

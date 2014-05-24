@@ -28,21 +28,24 @@ import com.intellij.util.io.StringRef;
  */
 public class MsilClassEntryStub extends StubBase<MsilClassEntry>
 {
-	private StringRef myNamespace;
-	private StringRef myName;
+	private final StringRef myNamespace;
+	private final StringRef myName;
+	private final boolean myNested;
 
-	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, String namespace, String name)
+	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, String namespace, String name, boolean nested)
 	{
 		super(parent, elementType);
 		myName = StringRef.fromNullableString(name);
 		myNamespace = StringRef.fromNullableString(namespace);
+		myNested = nested;
 	}
 
-	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, StringRef namespace, StringRef name)
+	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, StringRef namespace, StringRef name, boolean nested)
 	{
 		super(parent, elementType);
 		myName = name;
 		myNamespace = namespace;
+		myNested = nested;
 	}
 
 	public String getName()
@@ -53,5 +56,10 @@ public class MsilClassEntryStub extends StubBase<MsilClassEntry>
 	public String getNamespace()
 	{
 		return StringRef.toString(myNamespace);
+	}
+
+	public boolean isNested()
+	{
+		return myNested;
 	}
 }

@@ -231,6 +231,13 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	}
 
 	@Override
+	public boolean isNested()
+	{
+		PsiElement parentByStub = getParentByStub();
+		return parentByStub instanceof MsilClassEntry;
+	}
+
+	@Override
 	public boolean isEquivalentTo(PsiElement another)
 	{
 		if(another instanceof DotNetTypeDeclaration)

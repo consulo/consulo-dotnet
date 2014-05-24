@@ -62,7 +62,8 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	{
 		String namespace = msilClassEntry.getPresentableParentQName();
 		String name = msilClassEntry.getName();
-		return new MsilClassEntryStub(stubElement, this, namespace, name);
+		boolean nested = msilClassEntry.isNested();
+		return new MsilClassEntryStub(stubElement, this, namespace, name, nested);
 	}
 
 	@Override
@@ -70,6 +71,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	{
 		stubOutputStream.writeName(stub.getNamespace());
 		stubOutputStream.writeName(stub.getName());
+		stubOutputStream.writeBoolean(stub.isNested());
 	}
 
 	@NotNull
@@ -78,13 +80,18 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	{
 		StringRef namespace = inputStream.readName();
 		StringRef name = inputStream.readName();
-		return new MsilClassEntryStub(stubElement, this, namespace, name);
+		boolean nested = inputStream.readBoolean();
+		return new MsilClassEntryStub(stubElement, this, namespace, name, nested);
 	}
 
 	@Override
 	public void indexStub(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull IndexSink indexSink)
 	{
-		indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, MsilHelper.append(msilClassEntryStub.getNamespace(), msilClassEntryStub.getName()));
+		if(!msilClassEntryStub.isNested())
+		{
+			indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, MsilHelper.append(msilClassEntryStub.getNamespace(),
+					msilClassEntryStub.getName()));
+		}
 
 		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())
 		{
