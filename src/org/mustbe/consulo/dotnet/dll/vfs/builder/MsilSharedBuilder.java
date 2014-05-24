@@ -33,7 +33,6 @@ import edu.arizona.cs.mbel.mbel.GenericParamDef;
 import edu.arizona.cs.mbel.mbel.GenericParamOwner;
 import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.MethodDefOrRef;
-import edu.arizona.cs.mbel.mbel.NestedTypeRef;
 import edu.arizona.cs.mbel.mbel.TypeDef;
 import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.mbel.TypeSpec;
@@ -302,13 +301,16 @@ public class MsilSharedBuilder implements SignatureConstants
 
 	public static void toStringFromDefRefSpec(StringBuilder builder, Object o, TypeDef typeDef)
 	{
-		if(o instanceof NestedTypeRef)
+		/*if(o instanceof NestedTypeRef)
 		{
 			toStringFromDefRefSpec(builder, ((NestedTypeRef) o).getEnclosingTypeRef(), typeDef);
 			builder.append("/");
 			builder.append(((NestedTypeRef) o).getName());
 		}
-		else if(o instanceof TypeRef)
+		else */
+
+
+		if(o instanceof TypeRef)
 		{
 			appendTypeRefFullName(builder, ((TypeRef) o));
 		}
