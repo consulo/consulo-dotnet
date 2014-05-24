@@ -16,8 +16,8 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.msil.lang.psi.MsilReferenceType;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
@@ -27,36 +27,46 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilReferenceTypeStub extends StubBase<DotNetReferenceType>
+public class MsilReferenceTypeStub extends StubBase<MsilReferenceType>
 {
 	private final DotNetPsiFacade.TypeResoleKind myTypeResoleKind;
 	private final StringRef myReferenceText;
+	private final StringRef myNestedClassText;
 
 	public MsilReferenceTypeStub(
 			StubElement parent,
 			IStubElementType elementType,
 			DotNetPsiFacade.TypeResoleKind typeResoleKind,
-			String referenceText)
+			String referenceText,
+			String nestedClassText)
 	{
 		super(parent, elementType);
 		myTypeResoleKind = typeResoleKind;
 		myReferenceText = StringRef.fromNullableString(referenceText);
+		myNestedClassText = StringRef.fromNullableString(nestedClassText);
 	}
 
 	public MsilReferenceTypeStub(
 			StubElement parent,
 			IStubElementType elementType,
 			DotNetPsiFacade.TypeResoleKind typeResoleKind,
-			StringRef referenceText)
+			StringRef referenceText,
+			StringRef nestedClassText)
 	{
 		super(parent, elementType);
 		myTypeResoleKind = typeResoleKind;
 		myReferenceText = referenceText;
+		myNestedClassText = nestedClassText;
 	}
 
 	public String getReferenceText()
 	{
 		return StringRef.toString(myReferenceText);
+	}
+
+	public String getNestedClassText()
+	{
+		return StringRef.toString(myNestedClassText);
 	}
 
 	public DotNetPsiFacade.TypeResoleKind getTypeResoleKind()

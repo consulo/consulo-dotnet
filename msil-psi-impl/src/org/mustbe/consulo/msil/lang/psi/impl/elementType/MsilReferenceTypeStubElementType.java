@@ -19,8 +19,8 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.msil.lang.psi.MsilReferenceType;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilReferenceTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
 import com.intellij.lang.ASTNode;
@@ -33,7 +33,7 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementType<MsilReferenceTypeStub, DotNetReferenceType>
+public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementType<MsilReferenceTypeStub, MsilReferenceType>
 {
 	public MsilReferenceTypeStubElementType()
 	{
@@ -42,24 +42,25 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 
 	@NotNull
 	@Override
-	public DotNetReferenceType createPsi(@NotNull ASTNode astNode)
+	public MsilReferenceType createPsi(@NotNull ASTNode astNode)
 	{
 		return new MsilReferenceTypeImpl(astNode);
 	}
 
 	@NotNull
 	@Override
-	public DotNetReferenceType createPsi(@NotNull MsilReferenceTypeStub msilReferenceTypeStub)
+	public MsilReferenceType createPsi(@NotNull MsilReferenceTypeStub msilReferenceTypeStub)
 	{
 		return new MsilReferenceTypeImpl(msilReferenceTypeStub, this);
 	}
 
 	@Override
-	public MsilReferenceTypeStub createStub(@NotNull DotNetReferenceType dotNetReferenceType, StubElement stubElement)
+	public MsilReferenceTypeStub createStub(@NotNull MsilReferenceType dotNetReferenceType, StubElement stubElement)
 	{
 		DotNetPsiFacade.TypeResoleKind typeResoleKind = dotNetReferenceType.getTypeResoleKind();
 		String referenceText = dotNetReferenceType.getReferenceText();
-		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText);
+		String nestedClassName = dotNetReferenceType.getNestedClassName();
+		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText, nestedClassName);
 	}
 
 	@Override
@@ -68,6 +69,7 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 	{
 		stubOutputStream.writeByte(msilReferenceTypeStub.getTypeResoleKind().ordinal());
 		stubOutputStream.writeName(msilReferenceTypeStub.getReferenceText());
+		stubOutputStream.writeName(msilReferenceTypeStub.getNestedClassText());
 	}
 
 	@NotNull
@@ -77,6 +79,7 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 	{
 		DotNetPsiFacade.TypeResoleKind typeResoleKind = DotNetPsiFacade.TypeResoleKind.VALUES[inputStream.readByte()];
 		StringRef referenceText = inputStream.readName();
-		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText);
+		StringRef nestedClassText = inputStream.readName();
+		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText, nestedClassText);
 	}
 }

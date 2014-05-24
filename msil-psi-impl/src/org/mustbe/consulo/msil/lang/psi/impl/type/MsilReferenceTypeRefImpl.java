@@ -20,13 +20,17 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubIndex;
+import com.intellij.util.SmartList;
 
 /**
  * @author VISTALL
@@ -36,12 +40,14 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 {
 	private final Project myProject;
 	private final String myRef;
+	private final String myNestedRef;
 	private final DotNetPsiFacade.TypeResoleKind myTypeResoleKind;
 
-	public MsilReferenceTypeRefImpl(Project project, String ref, DotNetPsiFacade.TypeResoleKind typeResoleKind)
+	public MsilReferenceTypeRefImpl(Project project, String ref, String nestedRef, DotNetPsiFacade.TypeResoleKind typeResoleKind)
 	{
 		myProject = project;
 		myRef = ref;
+		myNestedRef = nestedRef;
 		myTypeResoleKind = typeResoleKind;
 	}
 
@@ -49,32 +55,55 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 	@Override
 	public PsiElement resolve(@NotNull PsiElement scope)
 	{
-		Collection<MsilClassEntry> elements = StubIndex.getElements(MsilIndexKeys.TYPE_BY_QNAME_INDEX, myRef, myProject, scope.getResolveScope(),
-				MsilClassEntry.class);
+		final Collection<MsilClassEntry> elements = StubIndex.getElements(MsilIndexKeys.TYPE_BY_QNAME_INDEX, myRef, myProject,
+				scope.getResolveScope(), MsilClassEntry.class);
 
-		if(elements.isEmpty())
+		Collection<MsilClassEntry> forSearch = elements;
+		if(forSearch.isEmpty())
 		{
 			return null;
 		}
 
-		for(MsilClassEntry type : elements)
+		if(!StringUtil.isEmpty(myNestedRef))
 		{
+			forSearch = new SmartList<MsilClassEntry>();
+			for(MsilClassEntry element : elements)
+			{
+				for(DotNetNamedElement dotNetNamedElement : element.getMembers())
+				{
+					if(dotNetNamedElement instanceof MsilClassEntry && Comparing.equal(dotNetNamedElement.getName(), myNestedRef))
+					{
+						forSearch.add((MsilClassEntry) dotNetNamedElement);
+					}
+				}
+			}
+		}
+
+		for(PsiElement type : forSearch)
+		{
+			if(!(type instanceof MsilClassEntry))
+			{
+				continue;
+			}
+
+			MsilClassEntry classEntry = (MsilClassEntry) type;
+
 			switch(myTypeResoleKind)
 			{
 				case CLASS:
-					if(type.isStruct())
+					if(classEntry.isStruct())
 					{
 						continue;
 					}
 					break;
 				case STRUCT:
-					if(!type.isStruct())
+					if(!classEntry.isStruct())
 					{
 						continue;
 					}
 					break;
 			}
-			return type;
+			return classEntry;
 		}
 		return null;
 	}

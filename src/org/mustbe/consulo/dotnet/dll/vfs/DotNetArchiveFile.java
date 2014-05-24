@@ -67,7 +67,7 @@ public class DotNetArchiveFile implements ArchiveFile
 		// iterate type def add as files
 		for(TypeDef typeDef : typeDefs)
 		{
-			if(XStubUtil.isInvisibleMember(typeDef.getName()))
+			if(XStubUtil.isInvisibleMember(typeDef.getName()) || typeDef.getParent() != null)
 			{
 				continue;
 			}

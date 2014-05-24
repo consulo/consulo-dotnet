@@ -49,6 +49,8 @@ QIDENTIFIER=\'.*\'
 
 	")"            { return MsilTokens.RPAR; }
 
+	"/"            { return MsilTokens.BACKSLASH; }
+
 	"="            { return MsilTokens.EQ; }
 
 	"&"            { return MsilTokens.AND; }

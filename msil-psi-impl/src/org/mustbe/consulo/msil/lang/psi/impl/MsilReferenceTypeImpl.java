@@ -17,15 +17,17 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
-import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilReferenceType;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
 import org.mustbe.consulo.msil.lang.psi.impl.type.MsilReferenceTypeRefImpl;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 
@@ -33,7 +35,7 @@ import com.intellij.psi.stubs.IStubElementType;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilReferenceTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub> implements DotNetReferenceType
+public class MsilReferenceTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub> implements MsilReferenceType
 {
 	public MsilReferenceTypeImpl(@NotNull ASTNode node)
 	{
@@ -108,6 +110,19 @@ public class MsilReferenceTypeImpl extends MsilStubElementImpl<MsilReferenceType
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return new MsilReferenceTypeRefImpl(getProject(), getReferenceText(), getTypeResoleKind());
+		return new MsilReferenceTypeRefImpl(getProject(), getReferenceText(), getNestedClassName(), getTypeResoleKind());
+	}
+
+	@Nullable
+	@Override
+	public String getNestedClassName()
+	{
+		MsilReferenceTypeStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getNestedClassText();
+		}
+		PsiElement childByType = findChildByType(MsilTokenSets.IDENTIFIERS);
+		return childByType == null ? null : StringUtil.unquoteString(childByType.getText());
 	}
 }

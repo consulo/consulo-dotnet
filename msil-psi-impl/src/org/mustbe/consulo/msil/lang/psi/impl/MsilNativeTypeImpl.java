@@ -94,7 +94,7 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 		}
 		String ref = ourTypes.get(elementType);
 		assert ref != null : elementType.toString();
-		return new MsilReferenceTypeRefImpl(getProject(), ref, DotNetPsiFacade.TypeResoleKind.UNKNOWN);
+		return new MsilReferenceTypeRefImpl(getProject(), ref, null, DotNetPsiFacade.TypeResoleKind.UNKNOWN);
 	}
 
 	@Override

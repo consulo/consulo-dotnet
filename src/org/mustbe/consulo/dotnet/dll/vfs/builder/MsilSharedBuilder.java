@@ -301,16 +301,21 @@ public class MsilSharedBuilder implements SignatureConstants
 
 	public static void toStringFromDefRefSpec(StringBuilder builder, Object o, TypeDef typeDef)
 	{
-		/*if(o instanceof NestedTypeRef)
+		if(o instanceof TypeDef)
 		{
-			toStringFromDefRefSpec(builder, ((NestedTypeRef) o).getEnclosingTypeRef(), typeDef);
-			builder.append("/");
-			builder.append(((NestedTypeRef) o).getName());
+			TypeDef parent = ((TypeDef) o).getParent();
+			if(parent != null)
+			{
+				appendTypeRefFullName(builder, typeDef);
+				builder.append("/");
+				builder.append(((TypeDef) o).getName());
+			}
+			else
+			{
+				appendTypeRefFullName(builder, ((TypeRef) o));
+			}
 		}
-		else */
-
-
-		if(o instanceof TypeRef)
+		else if(o instanceof TypeRef)
 		{
 			appendTypeRefFullName(builder, ((TypeRef) o));
 		}
