@@ -79,31 +79,24 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 			}
 		}
 
-		for(PsiElement type : forSearch)
+		for(MsilClassEntry type : forSearch)
 		{
-			if(!(type instanceof MsilClassEntry))
-			{
-				continue;
-			}
-
-			MsilClassEntry classEntry = (MsilClassEntry) type;
-
 			switch(myTypeResoleKind)
 			{
 				case CLASS:
-					if(classEntry.isStruct())
+					if(type.isStruct())
 					{
 						continue;
 					}
 					break;
 				case STRUCT:
-					if(!classEntry.isStruct())
+					if(!type.isStruct())
 					{
 						continue;
 					}
 					break;
 			}
-			return classEntry;
+			return type;
 		}
 		return null;
 	}
