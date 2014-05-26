@@ -59,6 +59,10 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		{
 			parseAttribute(builder);
 		}
+		else if(tokenType == _ASSEMBLY_KEYWORD)
+		{
+			parseAssembly(builder);
+		}
 		else if(tokenType == _FIELD_KEYWORD)
 		{
 			parseField(builder);
@@ -115,6 +119,31 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		}
 
 		mark.done(PARAMETER_ATTRIBUTE_LIST);
+	}
+
+	private void parseAssembly(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		builder.advanceLexer();
+
+		if(expect(builder, LBRACE, "'{' expected"))
+		{
+			while(!builder.eof())
+			{
+				if(builder.getTokenType() == RBRACE)
+				{
+					break;
+				}
+				else
+				{
+					parse(builder);
+				}
+			}
+			expect(builder, RBRACE, "'}' expected");
+		}
+
+		mark.done(ASSEMBLY);
 	}
 
 	private void parseMethod(PsiBuilder builder)

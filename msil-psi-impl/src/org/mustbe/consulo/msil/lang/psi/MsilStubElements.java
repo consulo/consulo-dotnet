@@ -39,6 +39,7 @@ public interface MsilStubElements
 	MsilPropertyStubElementType PROPERTY = new MsilPropertyStubElementType();
 	MsilEventStubElementType EVENT = new MsilEventStubElementType();
 	MsilFieldStubElementType FIELD = new MsilFieldStubElementType();
+	MsilAssemblyStubElementType ASSEMBLY = new MsilAssemblyStubElementType();
 	MsilModifierListStubElementType MODIFIER_LIST = new MsilModifierListStubElementType();
 	MsilTypeListStubElementType EXTENDS_TYPE_LIST = new MsilTypeListStubElementType("MSIL_EXTENDS_TYPE_LIST");
 	MsilTypeListStubElementType IMPLEMENTS_TYPE_LIST = new MsilTypeListStubElementType("MSIL_IMPLEMENTS_TYPE_LIST");
