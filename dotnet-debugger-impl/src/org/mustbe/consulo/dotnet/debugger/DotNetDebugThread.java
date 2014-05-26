@@ -117,11 +117,9 @@ public class DotNetDebugThread extends Thread
 			try
 			{
 				virtualMachine = l.accept(argumentMap);
-				myVirtualMachine = virtualMachine;
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
 				//
 			}
 
@@ -129,6 +127,8 @@ public class DotNetDebugThread extends Thread
 			{
 				return;
 			}
+
+			myVirtualMachine = virtualMachine;
 
 			virtualMachine.enableEvents(EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,
 					EventKind.USER_BREAK, EventKind.USER_LOG);
