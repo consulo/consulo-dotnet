@@ -39,7 +39,9 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
+import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
@@ -52,7 +54,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.Consumer;
-import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.containers.ContainerUtil;
 import lombok.val;
 
@@ -116,7 +117,7 @@ public class ExportDotNetSdkToZipAction extends AnAction
 			{
 				val dir = virtualFiles.get(0);
 
-				new SequentialModalProgressTask(project, "Exporting: " + selected.getName(), false)
+				new Task.ConditionalModal(project, "Exporting: " + selected.getName(), false, PerformInBackgroundOption.DEAF)
 				{
 					@Override
 					public void run(@NotNull final ProgressIndicator progressIndicator)
