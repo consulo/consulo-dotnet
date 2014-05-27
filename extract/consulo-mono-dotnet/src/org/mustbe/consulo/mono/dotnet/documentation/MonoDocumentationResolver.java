@@ -31,12 +31,17 @@ import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.documentation.DotNetDocumentationResolver;
+import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.Function;
 import com.intellij.util.containers.ConcurrentWeakHashMap;
 
 /**
@@ -67,19 +72,87 @@ public class MonoDocumentationResolver implements DotNetDocumentationResolver
 			myCache.put(virtualFile, trees);
 		}
 
+		String namespace = null;
+		String className = null;
+		String memberName = null;
+		// FIXME [VISTALL] nested types?
+		if(element instanceof DotNetTypeDeclaration)
+		{
+			namespace = ((DotNetTypeDeclaration) element).getPresentableParentQName();
+			className = ((DotNetTypeDeclaration) element).getName();
+		}
+		else if(element instanceof DotNetQualifiedElement)
+		{
+			if(element instanceof DotNetMethodDeclaration && ((DotNetMethodDeclaration) element).isDelegate())
+			{
+				namespace = ((DotNetMethodDeclaration) element).getPresentableParentQName();
+				className = ((DotNetMethodDeclaration) element).getName();
+			}
+			else
+			{
+				PsiElement parent = element.getParent();
+				if(parent instanceof DotNetTypeDeclaration)
+				{
+					namespace = ((DotNetTypeDeclaration) parent).getPresentableParentQName();
+					className = ((DotNetTypeDeclaration) parent).getName();
+				}
+				else
+				{
+					return null;
+				}
+				memberName = ((DotNetQualifiedElement) element).getName();
+				memberName += appendArguments(element);
+			}
+		}
+
+		if(className == null)
+		{
+			return null;
+		}
+
 		for(MonodocTree tree : trees)
 		{
-			if(element instanceof DotNetTypeDeclaration)
+			ITypeDocumentation documentation = tree.findDocumentation(namespace, className);
+			if(documentation != null)
 			{
-				DotNetTypeDeclaration typeDeclaration = (DotNetTypeDeclaration) element;
-				ITypeDocumentation documentation = tree.findDocumentation(typeDeclaration.getPresentableParentQName(), typeDeclaration.getName());
-				if(documentation != null)
+				if(memberName != null)
 				{
-					return documentation;
+					List<IDocumentation> documentations = documentation.getDocumentation();
+
+					for(IDocumentation iDocumentation : documentations)
+					{
+						if(Comparing.equal(iDocumentation.getName(), memberName))
+						{
+							return iDocumentation;
+						}
+					}
+					return null;
 				}
+				return documentation;
 			}
 		}
 		return null;
+	}
+
+	private String appendArguments(PsiElement element)
+	{
+		if(!(element instanceof DotNetMethodDeclaration))
+		{
+			return "";
+		}
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("(");
+		builder.append(StringUtil.join(((DotNetMethodDeclaration) element).getParameters(), new Function<DotNetParameter, String>()
+		{
+			@Override
+			public String fun(DotNetParameter dotNetParameter)
+			{
+				return dotNetParameter.toTypeRef(false).getPresentableText();
+			}
+		},","));
+		builder.append(")");
+		return builder.toString();
 	}
 
 	private MonodocTree[] loadTrees(VirtualFile virtualFile)

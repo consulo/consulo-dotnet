@@ -12,7 +12,10 @@ package org.emonic.base.documentation;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface ITypeDocumentation extends IDocumentation
 {
-	public List getDocumentation();
+	@NotNull
+	List<IDocumentation> getDocumentation();
 }

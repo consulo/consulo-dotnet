@@ -13,24 +13,27 @@ package org.emonic.base.documentation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
-public class TypeDocumentation extends Documentation implements
-		ITypeDocumentation {
+public class TypeDocumentation extends Documentation implements ITypeDocumentation
+{
+	private final List<IDocumentation> myDocumentations;
 
-	private final List documentation;
-
-	public TypeDocumentation(String name, Element element) {
+	public TypeDocumentation(String name, Element element)
+	{
 		super(name, element);
-		documentation = new ArrayList();
+		myDocumentations = new ArrayList<IDocumentation>();
 	}
 
-	public void add(IDocumentation doc) {
-		documentation.add(doc);
+	public void add(IDocumentation doc)
+	{
+		myDocumentations.add(doc);
 	}
 
-	public List getDocumentation() {
-		return documentation;
+	@NotNull
+	public List<IDocumentation> getDocumentation()
+	{
+		return myDocumentations;
 	}
-
 }

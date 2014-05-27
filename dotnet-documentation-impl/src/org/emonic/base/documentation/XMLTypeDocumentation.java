@@ -13,25 +13,27 @@ package org.emonic.base.documentation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 final class XMLTypeDocumentation extends XMLDocumentation implements ITypeDocumentation
 {
-
-	private List memberDocumentation;
+	private List<IDocumentation> myMemberDocumentation;
 
 	XMLTypeDocumentation(String name)
 	{
 		super(name);
-		memberDocumentation = new ArrayList();
+		myMemberDocumentation = new ArrayList<IDocumentation>();
 	}
 
 	void add(IDocumentation documentation)
 	{
-		memberDocumentation.add(documentation);
+		myMemberDocumentation.add(documentation);
 	}
 
-	public List getDocumentation()
+	@NotNull
+	@Override
+	public List<IDocumentation> getDocumentation()
 	{
-		return memberDocumentation;
+		return myMemberDocumentation;
 	}
-
 }
