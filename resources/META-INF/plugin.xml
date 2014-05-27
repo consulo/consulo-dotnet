@@ -20,6 +20,12 @@
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
 
+	<actions>
+		<action id="DotNet.ExportDotNetSdkToZip" class="org.mustbe.consulo.dotnet.ide.actions.ExportDotNetSdkToZipAction"
+				text="Export .NET sdk to zip" internal="true">
+			<add-to-group group-id="Internal" />
+		</action>
+	</actions>
 	<application-components>
 		<component>
 			<implementation-class>org.mustbe.consulo.dotnet.dll.vfs.DotNetArchiveFileSystem</implementation-class>
