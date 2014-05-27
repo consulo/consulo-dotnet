@@ -1,0 +1,95 @@
+/*
+ * Copyright 2013-2014 must-be.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.mustbe.consulo.msil.representation.projectView;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.msil.lang.psi.MsilFile;
+import org.mustbe.consulo.msil.representation.MsilFileRepresentationManager;
+import com.intellij.ide.projectView.SelectableTreeStructureProvider;
+import com.intellij.ide.projectView.ViewSettings;
+import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+
+/**
+ * @author VISTALL
+ * @since 27.05.14
+ */
+public class MsilFileRepresentationProjectViewProvider implements SelectableTreeStructureProvider, DumbAware
+{
+	private final Project myProject;
+
+	public MsilFileRepresentationProjectViewProvider(Project project)
+	{
+		myProject = project;
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getTopLevelElement(PsiElement element)
+	{
+		return null;
+	}
+
+	@Override
+	public Collection<AbstractTreeNode> modify(AbstractTreeNode parent, Collection<AbstractTreeNode> children, ViewSettings settings)
+	{
+		List<AbstractTreeNode> newList = new ArrayList<AbstractTreeNode>(children.size());
+
+		for(AbstractTreeNode n : children)
+		{
+			if(n instanceof MsilFileNode)
+			{
+				newList.add(n);
+				continue;
+			}
+
+			Object value = n.getValue();
+			if(value instanceof MsilFile)
+			{
+				VirtualFile[] representFiles = MsilFileRepresentationManager.getInstance(myProject).getRepresentFiles((MsilFile) value);
+				if(representFiles.length == 0)
+				{
+					newList.add(n);
+				}
+				else
+				{
+					newList.add(new MsilFileNode(myProject, (PsiFile) value, settings));
+				}
+			}
+			else
+			{
+				newList.add(n);
+			}
+		}
+		return newList;
+	}
+
+	@Nullable
+	@Override
+	public Object getData(Collection<AbstractTreeNode> selected, String dataName)
+	{
+		return null;
+	}
+}
