@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 
 /**
  * @author VISTALL
  * @since 01.03.14
  */
-public interface DotNetArrayMethodDeclaration extends DotNetMemberOwner, DotNetQualifiedElement, DotNetParameterListOwner, DotNetModifierListOwner
+public interface CSharpArrayMethodDeclaration extends DotNetLikeMethodDeclaration, DotNetMemberOwner
 {
 	@NotNull
 	DotNetXXXAccessor[] getAccessors();
-
-	@NotNull
-	DotNetType getReturnType();
-
-	@NotNull
-	DotNetTypeRef getReturnTypeRef();
 }
