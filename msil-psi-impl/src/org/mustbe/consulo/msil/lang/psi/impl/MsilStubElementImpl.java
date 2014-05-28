@@ -78,5 +78,11 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 		return ArrayUtil2.safeGet(stubOrPsiChildren, 0);
 	}
 
+	@Override
+	public PsiElement getParent()
+	{
+		return getParentByStub();
+	}
+
 	public abstract void accept(MsilVisitor visitor);
 }
