@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.lang.psi;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -32,6 +33,59 @@ import lombok.val;
 @Logger
 public class DotNetInheritUtil
 {
+	public static boolean isStruct(DotNetTypeDeclaration typeDeclaration)
+	{
+		return isInheritor(typeDeclaration, DotNetTypes.System_ValueType, true);
+	}
+
+	public static boolean isAttribute(DotNetTypeDeclaration typeDeclaration)
+	{
+		return isInheritor(typeDeclaration, DotNetTypes.System_Attribute, true);
+	}
+
+	public static boolean isException(DotNetTypeDeclaration typeDeclaration)
+	{
+		return isInheritor(typeDeclaration, DotNetTypes.System_Exception, true);
+	}
+
+	public static boolean isEnum(DotNetTypeDeclaration typeDeclaration)
+	{
+		return isInheritor(typeDeclaration, DotNetTypes.System_Enum, true);
+	}
+
+	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, String other, boolean deep)
+	{
+		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
+		if(anExtends.length > 0)
+		{
+			for(DotNetTypeRef dotNetType : anExtends)
+			{
+				PsiElement psiElement = dotNetType.resolve(typeDeclaration);
+				if(psiElement instanceof DotNetTypeDeclaration)
+				{
+					if(psiElement.isEquivalentTo(typeDeclaration))
+					{
+						return false;
+					}
+
+					if(Comparing.equal(((DotNetTypeDeclaration) psiElement).getPresentableQName(), other))
+					{
+						return true;
+					}
+
+					if(deep)
+					{
+						if(isInheritor((DotNetTypeDeclaration) psiElement, other, true))
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
 	{
 		PsiElement resolve = typeRef.resolve(element);

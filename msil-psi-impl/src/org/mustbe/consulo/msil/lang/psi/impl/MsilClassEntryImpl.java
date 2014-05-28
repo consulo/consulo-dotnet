@@ -23,7 +23,6 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.lang.psi.DotNetInheritUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
@@ -33,7 +32,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
@@ -89,15 +87,13 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public boolean isStruct()
 	{
-		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(getProject()).findType(DotNetTypes.System_ValueType, getResolveScope(), 0);
-		return type != null && isInheritor(type, true);
+		return DotNetInheritUtil.isStruct(this);
 	}
 
 	@Override
 	public boolean isEnum()
 	{
-		DotNetTypeDeclaration type = DotNetPsiFacade.getInstance(getProject()).findType(DotNetTypes.System_Enum, getResolveScope(), 0);
-		return type != null && isInheritor(type, true);
+		return DotNetInheritUtil.isEnum(this);
 	}
 
 	@Override
