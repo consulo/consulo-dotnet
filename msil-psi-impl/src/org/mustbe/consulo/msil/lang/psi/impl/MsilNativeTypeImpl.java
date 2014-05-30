@@ -26,7 +26,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilNativeTypeStub;
-import org.mustbe.consulo.msil.lang.psi.impl.type.MsilReferenceTypeRefImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilNativeTypeRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -94,7 +94,7 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 		}
 		String ref = ourTypes.get(elementType);
 		assert ref != null : elementType.toString();
-		return new MsilReferenceTypeRefImpl(getProject(), ref, null, DotNetPsiFacade.TypeResoleKind.UNKNOWN);
+		return new MsilNativeTypeRefImpl(getProject(), ref, DotNetPsiFacade.TypeResoleKind.UNKNOWN, elementType);
 	}
 
 	@Override
