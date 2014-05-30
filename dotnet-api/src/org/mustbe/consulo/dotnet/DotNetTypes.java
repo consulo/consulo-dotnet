@@ -32,7 +32,7 @@ public interface DotNetTypes
 	String System_ValueType = "System.ValueType";
 	String System_IntPtr = "System.IntPtr";
 	String System_UIntPtr = "System.UIntPtr";
-	String System_RuntimeType = "System.RuntimeType";
+	String System_Type = "System.Type";
 	String System_String = "System.String";
 	String System_Int32 = "System.Int32";
 	String System_Boolean = "System.Boolean";
