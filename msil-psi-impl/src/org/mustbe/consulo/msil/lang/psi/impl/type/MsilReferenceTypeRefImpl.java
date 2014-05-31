@@ -53,6 +53,20 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 
 	@Nullable
 	@Override
+	public String getPresentableText()
+	{
+		return StringUtil.getShortName(myRef);
+	}
+
+	@Nullable
+	@Override
+	public String getQualifiedText()
+	{
+		return myRef;
+	}
+
+	@Nullable
+	@Override
 	public PsiElement resolve(@NotNull PsiElement scope)
 	{
 		final Collection<MsilClassEntry> elements = StubIndex.getElements(MsilIndexKeys.TYPE_BY_QNAME_INDEX, myRef, myProject,
