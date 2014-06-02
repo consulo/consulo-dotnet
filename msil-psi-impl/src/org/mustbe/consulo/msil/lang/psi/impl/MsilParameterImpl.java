@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
@@ -119,5 +120,12 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetLikeMethodDeclaration getMethod()
+	{
+		return getStubOrPsiParentOfType(DotNetLikeMethodDeclaration.class);
 	}
 }
