@@ -26,11 +26,11 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 06.01.14.
  */
-public class DotNetPointerTypeImpl extends DotNetTypeRef.Adapter implements DotNetPointerTypeRef
+public class DotNetPointerTypeRefImpl extends DotNetTypeRef.Adapter implements DotNetPointerTypeRef
 {
 	private final DotNetTypeRef myInnerType;
 
-	public DotNetPointerTypeImpl(DotNetTypeRef innerType)
+	public DotNetPointerTypeRefImpl(DotNetTypeRef innerType)
 	{
 		myInnerType = innerType;
 	}

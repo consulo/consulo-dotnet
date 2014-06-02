@@ -18,7 +18,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type.DotNetPointerTypeImpl;
+import org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type.DotNetPointerTypeRefImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetPointerType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -68,6 +68,6 @@ public class MsilPointerTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> 
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return new DotNetPointerTypeImpl(getInnerType().toTypeRef());
+		return new DotNetPointerTypeRefImpl(getInnerType().toTypeRef());
 	}
 }
