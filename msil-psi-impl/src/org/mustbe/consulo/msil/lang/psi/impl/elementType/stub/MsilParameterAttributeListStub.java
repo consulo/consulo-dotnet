@@ -27,8 +27,16 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class MsilParameterAttributeListStub extends StubBase<MsilParameterAttributeList>
 {
-	public MsilParameterAttributeListStub(StubElement parent, IStubElementType elementType)
+	private final int myIndex;
+
+	public MsilParameterAttributeListStub(StubElement parent, IStubElementType elementType, int index)
 	{
 		super(parent, elementType);
+		myIndex = index;
+	}
+
+	public int getIndex()
+	{
+		return myIndex;
 	}
 }

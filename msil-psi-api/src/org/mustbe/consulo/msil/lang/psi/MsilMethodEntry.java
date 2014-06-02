@@ -30,4 +30,7 @@ public interface MsilMethodEntry extends MsilEntry, DotNetMethodDeclaration
 
 	@NotNull
 	MsilCustomAttribute[] getAttributes();
+
+	@NotNull
+	MsilCustomAttribute[] getParameterAttributes(int index);
 }

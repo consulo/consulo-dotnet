@@ -67,7 +67,7 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		return 25;
+		return 26;
 	}
 
 	@NotNull

@@ -16,12 +16,19 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
+@ArrayFactoryFields
 public interface MsilParameterAttributeList extends DotNetElement
 {
+	int getIndex();
+
+	@NotNull
+	MsilCustomAttribute[] getAttributes();
 }

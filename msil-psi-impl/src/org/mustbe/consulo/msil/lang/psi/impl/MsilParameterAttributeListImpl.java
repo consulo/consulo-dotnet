@@ -17,9 +17,13 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilParameterAttributeList;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
+import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilParameterAttributeListStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 
 /**
@@ -42,5 +46,24 @@ public class MsilParameterAttributeListImpl extends MsilStubElementImpl<MsilPara
 	public void accept(MsilVisitor visitor)
 	{
 
+	}
+
+	@Override
+	public int getIndex()
+	{
+		MsilParameterAttributeListStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getIndex();
+		}
+		PsiElement element = findChildByType(MsilTokens.NUMBER);
+		return element == null ? -1 : Integer.parseInt(element.getText());
+	}
+
+	@NotNull
+	@Override
+	public MsilCustomAttribute[] getAttributes()
+	{
+		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
 	}
 }

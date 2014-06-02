@@ -53,24 +53,23 @@ public class MsilParameterAttributeListStubElementType extends AbstractMsilStubE
 	}
 
 	@Override
-	public MsilParameterAttributeListStub createStub(
-			@NotNull MsilParameterAttributeList msilParameterAttributeList, StubElement stubElement)
+	public MsilParameterAttributeListStub createStub(@NotNull MsilParameterAttributeList list, StubElement stubElement)
 	{
-		return new MsilParameterAttributeListStub(stubElement, this);
+		int index = list.getIndex();
+		return new MsilParameterAttributeListStub(stubElement, this, index);
 	}
 
 	@Override
-	public void serialize(
-			@NotNull MsilParameterAttributeListStub msilParameterAttributeListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilParameterAttributeListStub list, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+		stubOutputStream.writeInt(list.getIndex());
 	}
 
 	@NotNull
 	@Override
-	public MsilParameterAttributeListStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilParameterAttributeListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilParameterAttributeListStub(stubElement, this);
+		int index = inputStream.readInt();
+		return new MsilParameterAttributeListStub(stubElement, this, index);
 	}
 }

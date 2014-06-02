@@ -30,6 +30,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
+import org.mustbe.consulo.msil.lang.psi.MsilParameterAttributeList;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
@@ -211,6 +212,22 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	public MsilCustomAttribute[] getAttributes()
 	{
 		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
+	}
+
+	@NotNull
+	@Override
+	public MsilCustomAttribute[] getParameterAttributes(int index)
+	{
+		MsilParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.PARAMETER_ATTRIBUTE_LIST, MsilParameterAttributeList
+				.ARRAY_FACTORY);
+		for(MsilParameterAttributeList attributeList : list)
+		{
+			if(attributeList.getIndex() == index)
+			{
+				return attributeList.getAttributes();
+			}
+		}
+		return MsilCustomAttribute.EMPTY_ARRAY;
 	}
 
 	@Override
