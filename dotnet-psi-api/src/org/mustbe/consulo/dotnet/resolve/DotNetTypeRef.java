@@ -74,51 +74,57 @@ public interface DotNetTypeRef
 
 	public class Delegate implements DotNetTypeRef
 	{
-		private final DotNetTypeRef myTypeRef;
+		private final DotNetTypeRef myDelegate;
 
-		public Delegate(DotNetTypeRef typeRef)
+		public Delegate(DotNetTypeRef delegate)
 		{
-			myTypeRef = typeRef;
+			myDelegate = delegate;
 		}
 
 		@Nullable
 		@Override
 		public String getPresentableText()
 		{
-			return myTypeRef.getPresentableText();
+			return myDelegate.getPresentableText();
 		}
 
 		@Nullable
 		@Override
 		public String getQualifiedText()
 		{
-			return myTypeRef.getQualifiedText();
+			return myDelegate.getQualifiedText();
 		}
 
 		@Override
 		public boolean isNullable()
 		{
-			return myTypeRef.isNullable();
+			return myDelegate.isNullable();
 		}
 
 		@Nullable
 		@Override
 		public PsiElement resolve(@NotNull PsiElement scope)
 		{
-			return myTypeRef.resolve(scope);
+			return myDelegate.resolve(scope);
 		}
 
 		@NotNull
 		@Override
 		public DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope)
 		{
-			return myTypeRef.getGenericExtractor(resolved, scope);
+			return myDelegate.getGenericExtractor(resolved, scope);
+		}
+
+		@NotNull
+		public DotNetTypeRef getDelegate()
+		{
+			return myDelegate;
 		}
 
 		@Override
 		public String toString()
 		{
-			return myTypeRef.toString();
+			return myDelegate.toString();
 		}
 	}
 

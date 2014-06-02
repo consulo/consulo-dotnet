@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi.impl.type;
-
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+package org.mustbe.consulo.dotnet.resolve;
 
 /**
  * @author VISTALL
- * @since 23.05.14
+ * @since 02.06.14
  */
-public class MsilTypeByRefTypeRefImpl extends DotNetTypeRef.Delegate
+public interface DotNetRefTypeRef extends DotNetTypeRef, DotNetTypeRefWithInnerTypeRef
 {
-	public MsilTypeByRefTypeRefImpl(DotNetTypeRef typeRef)
-	{
-		super(typeRef);
-	}
 }

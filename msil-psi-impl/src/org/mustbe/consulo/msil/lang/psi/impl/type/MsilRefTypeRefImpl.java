@@ -14,58 +14,42 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
+package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetRefTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 06.01.14.
+ * @since 23.05.14
  */
-public class DotNetPointerTypeImpl extends DotNetTypeRef.Adapter implements DotNetPointerTypeRef
+public class MsilRefTypeRefImpl extends DotNetTypeRef.Delegate implements DotNetRefTypeRef
 {
-	private final DotNetTypeRef myInnerType;
-
-	public DotNetPointerTypeImpl(DotNetTypeRef innerType)
+	public MsilRefTypeRefImpl(DotNetTypeRef typeRef)
 	{
-		myInnerType = innerType;
-	}
-
-	@Nullable
-	@Override
-	public String getPresentableText()
-	{
-		return myInnerType.getPresentableText() + "*";
+		super(typeRef);
 	}
 
 	@Nullable
 	@Override
 	public String getQualifiedText()
 	{
-		return myInnerType.getQualifiedText() + "*";
-	}
-
-	@Override
-	public boolean isNullable()
-	{
-		return myInnerType.isNullable();
+		return super.getQualifiedText() + "&";
 	}
 
 	@Nullable
 	@Override
-	public PsiElement resolve(@NotNull PsiElement scope)
+	public String getPresentableText()
 	{
-		return myInnerType.resolve(scope);
+		return super.getPresentableText() + "&";
 	}
 
-	@Override
 	@NotNull
+	@Override
 	public DotNetTypeRef getInnerTypeRef()
 	{
-		return myInnerType;
+		return getDelegate();
 	}
 }

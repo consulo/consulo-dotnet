@@ -21,7 +21,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
-import org.mustbe.consulo.msil.lang.psi.impl.type.MsilTypeByRefTypeRefImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilRefTypeRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 
@@ -56,6 +56,6 @@ public class MsilTypeByRefImpl extends MsilStubElementImpl<MsilEmptyTypeStub> im
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		return new MsilTypeByRefTypeRefImpl(getInnerType().toTypeRef());
+		return new MsilRefTypeRefImpl(getInnerType().toTypeRef());
 	}
 }

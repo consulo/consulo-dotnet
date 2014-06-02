@@ -72,7 +72,7 @@ public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
 
 	@NotNull
 	@Override
-	public DotNetTypeRef getInnerType()
+	public DotNetTypeRef getInnerTypeRef()
 	{
 		return myInnerType;
 	}

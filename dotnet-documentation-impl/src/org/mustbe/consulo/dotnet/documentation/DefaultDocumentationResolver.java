@@ -143,11 +143,11 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 	{
 		if(typeRef instanceof DotNetArrayTypeRef)
 		{
-			return typeToDocName(element, ((DotNetArrayTypeRef) typeRef).getInnerType()) + "[]";
+			return typeToDocName(element, ((DotNetArrayTypeRef) typeRef).getInnerTypeRef()) + "[]";
 		}
 		else if(typeRef instanceof DotNetPointerTypeRef)
 		{
-			return typeToDocName(element, ((DotNetPointerTypeRef) typeRef).getInnerType()) + "*";
+			return typeToDocName(element, ((DotNetPointerTypeRef) typeRef).getInnerTypeRef()) + "*";
 		}
 		else if(typeRef instanceof DotNetNativeTypeRef)
 		{

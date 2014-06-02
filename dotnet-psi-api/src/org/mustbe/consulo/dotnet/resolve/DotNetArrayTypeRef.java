@@ -16,14 +16,10 @@
 
 package org.mustbe.consulo.dotnet.resolve;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author VISTALL
  * @since 02.02.14
  */
-public interface DotNetArrayTypeRef extends DotNetTypeRef
+public interface DotNetArrayTypeRef extends DotNetTypeRef, DotNetTypeRefWithInnerTypeRef
 {
-	@NotNull
-	DotNetTypeRef getInnerType();
 }

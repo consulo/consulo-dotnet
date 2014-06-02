@@ -255,12 +255,12 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		}
 		else if(dotNetTypeRef instanceof DotNetArrayTypeRef)
 		{
-			builder.append(generateLinksForType(((DotNetArrayTypeRef) dotNetTypeRef).getInnerType(), element));
+			builder.append(generateLinksForType(((DotNetArrayTypeRef) dotNetTypeRef).getInnerTypeRef(), element));
 			builder.append("[]");
 		}
 		else if(dotNetTypeRef instanceof DotNetPointerTypeRef)
 		{
-			builder.append(generateLinksForType(((DotNetPointerTypeRef) dotNetTypeRef).getInnerType(), element));
+			builder.append(generateLinksForType(((DotNetPointerTypeRef) dotNetTypeRef).getInnerTypeRef(), element));
 			builder.append("*");
 		}
 		else if(dotNetTypeRef instanceof DotNetNativeTypeRef)
