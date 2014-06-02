@@ -27,7 +27,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 public interface DotNetParameterListOwner extends DotNetElement
 {
 	@NotNull
-	DotNetTypeRef[] getParameterTypesForRuntime();
+	DotNetTypeRef[] getParameterTypeRefs();
 
 	@Nullable
 	DotNetParameterList getParameterList();

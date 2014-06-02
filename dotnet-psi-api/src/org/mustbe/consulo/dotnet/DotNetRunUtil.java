@@ -54,7 +54,7 @@ public class DotNetRunUtil
 		{
 			return false;
 		}
-		DotNetTypeRef[] parameterTypesForRuntime = methodDeclaration.getParameterTypesForRuntime();
+		DotNetTypeRef[] parameterTypesForRuntime = methodDeclaration.getParameterTypeRefs();
 		if(parameterTypesForRuntime.length == 0)
 		{
 			return true;
