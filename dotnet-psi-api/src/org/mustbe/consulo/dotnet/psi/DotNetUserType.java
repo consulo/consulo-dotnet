@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi;
+package org.mustbe.consulo.dotnet.psi;
 
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetReferenceType;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 
 /**
  * @author VISTALL
- * @since 24.05.14
+ * @since 13.12.13.
  */
-public interface MsilReferenceType extends DotNetReferenceType
+public interface DotNetUserType extends DotNetType
 {
-	@Nullable
-	String getNestedClassName();
+	@NotNull
+	DotNetPsiFacade.TypeResoleKind getTypeResoleKind();
+
+	@NotNull
+	String getReferenceText();
+
+	@NotNull
+	DotNetReferenceExpression getReferenceExpression();
 }

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.msil.lang.psi.MsilReferenceType;
+import org.mustbe.consulo.msil.lang.psi.MsilUserType;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
@@ -35,14 +35,14 @@ import com.intellij.psi.stubs.IStubElementType;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilReferenceTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub> implements MsilReferenceType
+public class MsilUserTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub> implements MsilUserType
 {
-	public MsilReferenceTypeImpl(@NotNull ASTNode node)
+	public MsilUserTypeImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilReferenceTypeImpl(@NotNull MsilReferenceTypeStub stub, @NotNull IStubElementType nodeType)
+	public MsilUserTypeImpl(@NotNull MsilReferenceTypeStub stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}

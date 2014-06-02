@@ -17,7 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
-import org.mustbe.consulo.msil.lang.psi.MsilReferenceType;
+import org.mustbe.consulo.msil.lang.psi.MsilUserType;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
@@ -27,7 +27,7 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilReferenceTypeStub extends StubBase<MsilReferenceType>
+public class MsilReferenceTypeStub extends StubBase<MsilUserType>
 {
 	private final DotNetPsiFacade.TypeResoleKind myTypeResoleKind;
 	private final StringRef myReferenceText;

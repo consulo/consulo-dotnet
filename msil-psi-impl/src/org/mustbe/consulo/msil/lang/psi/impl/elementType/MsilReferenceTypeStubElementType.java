@@ -20,8 +20,8 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
-import org.mustbe.consulo.msil.lang.psi.MsilReferenceType;
-import org.mustbe.consulo.msil.lang.psi.impl.MsilReferenceTypeImpl;
+import org.mustbe.consulo.msil.lang.psi.MsilUserType;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilUserTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
@@ -33,29 +33,29 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementType<MsilReferenceTypeStub, MsilReferenceType>
+public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementType<MsilReferenceTypeStub, MsilUserType>
 {
 	public MsilReferenceTypeStubElementType()
 	{
-		super("MSIL_REFERENCE_TYPE");
+		super("MSIL_USER_TYPE");
 	}
 
 	@NotNull
 	@Override
-	public MsilReferenceType createPsi(@NotNull ASTNode astNode)
+	public MsilUserType createPsi(@NotNull ASTNode astNode)
 	{
-		return new MsilReferenceTypeImpl(astNode);
+		return new MsilUserTypeImpl(astNode);
 	}
 
 	@NotNull
 	@Override
-	public MsilReferenceType createPsi(@NotNull MsilReferenceTypeStub msilReferenceTypeStub)
+	public MsilUserType createPsi(@NotNull MsilReferenceTypeStub msilReferenceTypeStub)
 	{
-		return new MsilReferenceTypeImpl(msilReferenceTypeStub, this);
+		return new MsilUserTypeImpl(msilReferenceTypeStub, this);
 	}
 
 	@Override
-	public MsilReferenceTypeStub createStub(@NotNull MsilReferenceType dotNetReferenceType, StubElement stubElement)
+	public MsilReferenceTypeStub createStub(@NotNull MsilUserType dotNetReferenceType, StubElement stubElement)
 	{
 		DotNetPsiFacade.TypeResoleKind typeResoleKind = dotNetReferenceType.getTypeResoleKind();
 		String referenceText = dotNetReferenceType.getReferenceText();
