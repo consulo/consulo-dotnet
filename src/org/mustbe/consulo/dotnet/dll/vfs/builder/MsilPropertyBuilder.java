@@ -35,7 +35,7 @@ public class MsilPropertyBuilder extends MsilSharedBuilder
 		builder.append(" ");
 		appendValidName(builder, property.getName());
 
-		StubBlock e1 = new StubBlock(builder, null, BRACES);
+		StubBlock e1 = new StubBlock(builder, null, StubBlock.BRACES);
 		processAttributes(e1, property);
 
 		MethodDef getter = property.getGetter();

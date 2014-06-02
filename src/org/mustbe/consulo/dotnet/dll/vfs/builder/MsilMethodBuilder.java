@@ -133,7 +133,7 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 		}, ", ");
 		builder.append(")");
 
-		StubBlock e = new StubBlock(builder, null, BRACES);
+		StubBlock e = new StubBlock(builder, null, StubBlock.BRACES);
 
 		processAttributes(e, methodDef);
 

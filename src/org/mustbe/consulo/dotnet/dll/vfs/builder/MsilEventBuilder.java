@@ -36,7 +36,7 @@ public class MsilEventBuilder extends MsilSharedBuilder implements EventAttribut
 		builder.append(" ");
 		appendValidName(builder, event.getName());
 
-		StubBlock e1 = new StubBlock(builder, null, BRACES);
+		StubBlock e1 = new StubBlock(builder, null, StubBlock.BRACES);
 		processAttributes(e1, event);
 
 		MethodDef addOnMethod = event.getAddOnMethod();

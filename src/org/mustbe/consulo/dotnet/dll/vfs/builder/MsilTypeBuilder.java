@@ -106,7 +106,7 @@ public class MsilTypeBuilder extends MsilSharedBuilder implements TypeAttributes
 			}, ", ");
 		}
 
-		StubBlock e = new StubBlock(builder, null, BRACES);
+		StubBlock e = new StubBlock(builder, null, StubBlock.BRACES);
 		processAttributes(e, typeDef);
 
 		for(int k = 0; k < typeDef.getNestedClasses().size(); k++)
