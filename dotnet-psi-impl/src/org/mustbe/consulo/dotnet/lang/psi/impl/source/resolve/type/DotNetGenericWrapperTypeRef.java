@@ -22,20 +22,21 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithInnerTypeRef;
 import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 04.01.14.
  */
-public class DotNetGenericWrapperTypeRef extends DotNetTypeRef.Adapter
+public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRefWithInnerTypeRef
 {
-	private final DotNetTypeRef myInner;
+	private final DotNetTypeRef myInnerTypeRef;
 	private final DotNetTypeRef[] myArguments;
 
-	public DotNetGenericWrapperTypeRef(DotNetTypeRef inner, DotNetTypeRef[] rArguments)
+	public DotNetGenericWrapperTypeRef(DotNetTypeRef innerTypeRef, DotNetTypeRef[] rArguments)
 	{
-		myInner = inner;
+		myInnerTypeRef = innerTypeRef;
 		myArguments = rArguments;
 	}
 
@@ -44,15 +45,15 @@ public class DotNetGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 	public String getPresentableText()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append(getInner().getPresentableText());
+		builder.append(getInnerTypeRef().getPresentableText());
 		builder.append("<");
-		for(int i = 0; i < getArguments().length; i++)
+		for(int i = 0; i < getArgumentTypeRefs().length; i++)
 		{
 			if(i != 0)
 			{
 				builder.append(", ");
 			}
-			DotNetTypeRef argument = getArguments()[i];
+			DotNetTypeRef argument = getArgumentTypeRefs()[i];
 			builder.append(argument.getPresentableText());
 		}
 		builder.append(">");
@@ -64,15 +65,15 @@ public class DotNetGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 	public String getQualifiedText()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append(getInner().getQualifiedText());
+		builder.append(getInnerTypeRef().getQualifiedText());
 		builder.append("<");
-		for(int i = 0; i < getArguments().length; i++)
+		for(int i = 0; i < getArgumentTypeRefs().length; i++)
 		{
 			if(i != 0)
 			{
 				builder.append(", ");
 			}
-			DotNetTypeRef argument = getArguments()[i];
+			DotNetTypeRef argument = getArgumentTypeRefs()[i];
 			builder.append(argument.getQualifiedText());
 		}
 		builder.append(">");
@@ -82,14 +83,14 @@ public class DotNetGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 	@Override
 	public boolean isNullable()
 	{
-		return getInner().isNullable();
+		return getInnerTypeRef().isNullable();
 	}
 
 	@Nullable
 	@Override
 	public PsiElement resolve(@NotNull PsiElement element)
 	{
-		return getInner().resolve(element);
+		return getInnerTypeRef().resolve(element);
 	}
 
 	@NotNull
@@ -102,19 +103,22 @@ public class DotNetGenericWrapperTypeRef extends DotNetTypeRef.Adapter
 		}
 
 		DotNetGenericParameter[] genericParameters = ((DotNetGenericParameterListOwner) resolved).getGenericParameters();
-		if(genericParameters.length != getArguments().length)
+		if(genericParameters.length != getArgumentTypeRefs().length)
 		{
 			return DotNetGenericExtractor.EMPTY;
 		}
-		return new SimpleGenericExtractorImpl(genericParameters, getArguments());
+		return new SimpleGenericExtractorImpl(genericParameters, getArgumentTypeRefs());
 	}
 
-	public DotNetTypeRef getInner()
+	@Override
+	@NotNull
+	public DotNetTypeRef getInnerTypeRef()
 	{
-		return myInner;
+		return myInnerTypeRef;
 	}
 
-	public DotNetTypeRef[] getArguments()
+	@NotNull
+	public DotNetTypeRef[] getArgumentTypeRefs()
 	{
 		return myArguments;
 	}
