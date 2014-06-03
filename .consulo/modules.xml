@@ -283,6 +283,7 @@
         <orderEntry type="module" module-name="csharp-psi-impl" exported="" />
         <orderEntry type="module" module-name="dotnet-impl" />
         <orderEntry type="module" module-name="dotnet-debugger-api" />
+        <orderEntry type="module" module-name="msil-psi-impl" />
       </module>
       <module name="csharp/csharp-spellchecker" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-spellchecker">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" custom-plugin-dir-url="file://$MODULE_DIR$/../../../dep" />

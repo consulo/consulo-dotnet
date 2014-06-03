@@ -20,20 +20,26 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.msil.representation.MsilFileRepresentationManager;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.util.Pair;
+import com.intellij.psi.PsiFile;
 
 /**
  * @author VISTALL
  * @since 27.05.14
  */
-public class MsilRepresentFileNode extends AbstractTreeNode<VirtualFile>
+public class MsilRepresentFileNode extends AbstractTreeNode<Pair<String, ? extends FileType>>
 {
-	public MsilRepresentFileNode(Project project, VirtualFile value)
+	private final PsiFile myPsiFile;
+
+	public MsilRepresentFileNode(Project project, PsiFile psiFile, Pair<String, ? extends FileType> value)
 	{
 		super(project, value);
+		myPsiFile = psiFile;
 	}
 
 	@NotNull
@@ -44,11 +50,37 @@ public class MsilRepresentFileNode extends AbstractTreeNode<VirtualFile>
 	}
 
 	@Override
+	public boolean canNavigate()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canRepresent(Object element)
+	{
+		PsiFile representationFile = MsilFileRepresentationManager.getInstance(getProject()).getRepresentationFile(getValue().getSecond(),
+				myPsiFile.getVirtualFile());
+		return representationFile != null && representationFile.getVirtualFile() == element;
+	}
+
+	@Override
+	public void navigate(boolean requestFocus)
+	{
+		PsiFile representationFile = MsilFileRepresentationManager.getInstance(getProject()).getRepresentationFile(getValue().getSecond(),
+				myPsiFile.getVirtualFile());
+		if(representationFile == null)
+		{
+			return;
+		}
+		representationFile.navigate(requestFocus);
+	}
+
+	@Override
 	protected void update(PresentationData presentation)
 	{
-		VirtualFile value = getValue();
+		Pair<String, ? extends FileType> value = getValue();
 
-		presentation.setPresentableText(value.getName());
-		presentation.setIcon(value.getFileType().getIcon());
+		presentation.setPresentableText(value.getFirst());
+		presentation.setIcon(value.getSecond().getIcon());
 	}
 }

@@ -17,14 +17,19 @@
 package org.mustbe.consulo.msil.representation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.msil.MsilFileType;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.util.containers.MultiMap;
 
 /**
  * @author VISTALL
@@ -32,20 +37,80 @@ import com.intellij.openapi.vfs.VirtualFile;
  */
 public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationManager
 {
+	private MultiMap<VirtualFile, PsiFile> myFiles = new MultiMap<VirtualFile, PsiFile>();
+	private final Project myProject;
+
+	public MsilFileRepresentationManagerImpl(Project project)
+	{
+		myProject = project;
+	}
+
 	@NotNull
 	@Override
-	public VirtualFile[] getRepresentFiles(@NotNull MsilFile msilFile)
+	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@NotNull MsilFile msilFile, @NotNull VirtualFile virtualFile)
 	{
 		MsilFileRepresentationProvider[] extensions = MsilFileRepresentationProvider.EP_NAME.getExtensions();
-		List<VirtualFile> list = new ArrayList<VirtualFile>(extensions.length);
+		List<Pair<String, ? extends FileType>> list = new ArrayList<Pair<String, ? extends FileType>>(extensions.length);
 		for(MsilFileRepresentationProvider extension : extensions)
 		{
-			Pair<String, ? extends FileType> representResult = extension.getRepresentResult(msilFile);
-			if(representResult != null)
+			String fileName = extension.getRepresentFileName(msilFile);
+			if(fileName != null)
 			{
-				list.add(new MsilFileRepresentationVirtualFile(representResult));
+				list.add(new Pair<String, FileType>(fileName, extension.getFileType()));
 			}
 		}
-		return VfsUtil.toVirtualFileArray(list);
+		return list;
+	}
+
+	@Override
+	public PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull VirtualFile msilFile)
+	{
+		if(msilFile.getFileType() != MsilFileType.INSTANCE)
+		{
+			return null;
+		}
+
+		MsilFile file = (MsilFile) PsiManager.getInstance(myProject).findFile(msilFile);
+		if(file == null)
+		{
+			return null;
+		}
+
+		Collection<PsiFile> values = myFiles.getModifiable(msilFile);
+
+		for(PsiFile value : values)
+		{
+			if(value.getFileType() == fileType)
+			{
+				return value;
+			}
+		}
+
+		String name = null;
+		for(Pair<String, ? extends FileType> pair : getRepresentFileInfos(file, msilFile))
+		{
+			if(pair.getSecond() == fileType)
+			{
+				name = pair.getFirst();
+				break;
+			}
+		}
+
+		if(name == null)
+		{
+			return null;
+		}
+
+		for(MsilFileRepresentationProvider provider : MsilFileRepresentationProvider.EP_NAME.getExtensions())
+		{
+			if(provider.getFileType() == fileType)
+			{
+				PsiFile transform = provider.transform(name, file);
+
+				values.add(transform);
+				return transform;
+			}
+		}
+		return null;
 	}
 }

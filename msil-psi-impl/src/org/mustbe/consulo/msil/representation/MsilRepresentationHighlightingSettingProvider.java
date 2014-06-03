@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.ide.msil.representation.builder;
+package org.mustbe.consulo.msil.representation;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.CSharpFileType;
 import com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author VISTALL
- * @since 02.06.14
+ * @since 03.06.14
  */
 public class MsilRepresentationHighlightingSettingProvider extends DefaultHighlightingSettingProvider
 {
@@ -35,10 +33,10 @@ public class MsilRepresentationHighlightingSettingProvider extends DefaultHighli
 	@Override
 	public FileHighlightingSetting getDefaultSetting(@NotNull Project project, @NotNull VirtualFile file)
 	{
-		if(file.getFileType() == CSharpFileType.INSTANCE && ProjectFileIndex.SERVICE.getInstance(project).isInLibraryClasses(file))
+		if(file instanceof MsilFileRepresentationVirtualFile)
 		{
 			return FileHighlightingSetting.SKIP_INSPECTION;
 		}
-		return FileHighlightingSetting.NONE;
+		return null;
 	}
 }

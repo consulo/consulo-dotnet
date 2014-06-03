@@ -14,27 +14,48 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.ide.msil.representation.builder;
+package org.mustbe.consulo.msil.representation;
 
-import org.mustbe.consulo.csharp.lang.psi.impl.source.CSharpFileImpl;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
 import com.intellij.reference.SoftReference;
 
 /**
  * @author VISTALL
- * @since 02.06.14
+ * @since 03.06.14
  */
-public class CSharpToMsiNavigateUtil
+public class MsilRepresentationNavigateUtil
 {
 	public static Key<SoftReference<PsiElement>> MSIL_ELEMENT = Key.create("msil-element");
 
+	public static void navigateToRepresentation(@NotNull final PsiElement msilElement, @NotNull FileType fileType)
+	{
+		MsilFileRepresentationManager manager = MsilFileRepresentationManager.getInstance(msilElement.getProject());
 
-	public static void navigateToRepresentation(CSharpFileImpl file, final PsiElement msilElement)
+		VirtualFile virtualFile = msilElement.getContainingFile().getVirtualFile();
+		if(virtualFile == null)
+		{
+			return;
+		}
+
+		PsiFile representationFile = manager.getRepresentationFile(fileType, virtualFile);
+		if(representationFile == null)
+		{
+			return;
+		}
+
+		navigateToRepresentation(representationFile, msilElement);
+	}
+
+	public static void navigateToRepresentation(@NotNull PsiFile file, @NotNull final PsiElement msilElement)
 	{
 		final Ref<PsiElement> elementRef = new Ref<PsiElement>(null);
 		file.accept(new PsiRecursiveElementWalkingVisitor()

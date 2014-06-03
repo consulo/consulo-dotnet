@@ -28,9 +28,9 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -68,8 +68,8 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 			Object value = n.getValue();
 			if(value instanceof MsilFile)
 			{
-				VirtualFile[] representFiles = MsilFileRepresentationManager.getInstance(myProject).getRepresentFiles((MsilFile) value);
-				if(representFiles.length == 0)
+				val representFiles = MsilFileRepresentationManager.getInstance(myProject).getRepresentFileInfos((MsilFile) value);
+				if(representFiles.isEmpty())
 				{
 					newList.add(n);
 				}

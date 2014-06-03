@@ -16,9 +16,7 @@
 
 package org.mustbe.consulo.msil.representation;
 
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.Pair;
 import com.intellij.testFramework.LightVirtualFile;
 
 /**
@@ -27,24 +25,8 @@ import com.intellij.testFramework.LightVirtualFile;
  */
 public class MsilFileRepresentationVirtualFile extends LightVirtualFile
 {
-	private final Pair<String, ? extends FileType> myRepresentResult;
-
-	public MsilFileRepresentationVirtualFile(Pair<String, ? extends FileType> representResult)
+	public MsilFileRepresentationVirtualFile(String name, FileType fileType, CharSequence text)
 	{
-		myRepresentResult = representResult;
-	}
-
-	@NotNull
-	@Override
-	public FileType getFileType()
-	{
-		return myRepresentResult.getSecond();
-	}
-
-	@NotNull
-	@Override
-	public String getName()
-	{
-		return myRepresentResult.getFirst();
+		super(name, fileType, text);
 	}
 }

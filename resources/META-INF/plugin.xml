@@ -69,6 +69,9 @@
 
 		<projectService serviceInterface="org.mustbe.consulo.msil.representation.MsilFileRepresentationManager"
 						serviceImplementation="org.mustbe.consulo.msil.representation.MsilFileRepresentationManagerImpl"/>
+
+		<defaultHighlightingSettingProvider
+				implementation="org.mustbe.consulo.msil.representation.MsilRepresentationHighlightingSettingProvider"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">

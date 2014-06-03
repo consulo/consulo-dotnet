@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
 
 /**
@@ -33,8 +32,11 @@ public interface MsilFileRepresentationProvider
 	ExtensionPointName<MsilFileRepresentationProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.msilFileRepresentation");
 
 	@Nullable
-	Pair<String, ? extends FileType> getRepresentResult(@NotNull MsilFile msilFile);
+	String getRepresentFileName(@NotNull MsilFile msilFile);
 
 	@NotNull
-	PsiFile transform(@NotNull MsilFile msilFile);
+	PsiFile transform(String fileName, @NotNull MsilFile msilFile);
+
+	@NotNull
+	FileType getFileType();
 }
