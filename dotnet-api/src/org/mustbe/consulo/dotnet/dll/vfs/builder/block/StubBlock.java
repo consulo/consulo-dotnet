@@ -25,6 +25,11 @@ import java.util.List;
  */
 public class StubBlock
 {
+	public static final char[] BRACES = {
+			'{',
+			'}'
+	};
+
 	private CharSequence myStartText;
 	private CharSequence myInnerText;
 	private char[] myIndents;

@@ -17,12 +17,15 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.msil.MsilFileType;
 import org.mustbe.consulo.msil.MsilLanguage;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
+import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.stubs.StubElement;
 
 /**
  * @author VISTALL
@@ -40,5 +43,17 @@ public class MsilFileImpl extends PsiFileBase implements MsilFile
 	public FileType getFileType()
 	{
 		return MsilFileType.INSTANCE;
+	}
+
+	@NotNull
+	@Override
+	public DotNetNamedElement[] getMembers()
+	{
+		StubElement<?> stub = getStub();
+		if(stub != null)
+		{
+			return stub.getChildrenByType(MsilStubTokenSets.MEMBER_STUBS, DotNetNamedElement.ARRAY_FACTORY);
+		}
+		return findChildrenByClass(DotNetNamedElement.class);
 	}
 }

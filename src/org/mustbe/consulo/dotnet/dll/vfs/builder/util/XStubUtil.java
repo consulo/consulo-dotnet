@@ -18,17 +18,13 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder.util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
-import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.CSharpStubBuilder;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
+import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlockUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiBundle;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PairFunction;
@@ -212,70 +208,6 @@ public class XStubUtil
 		}
 	}
 
-	@NotNull
-	public static CharSequence buildText(List<? extends StubBlock> blocks)
-	{
-		StringBuilder builder = new StringBuilder();
-		builder.append(PsiBundle.message("psi.decompiled.text.header")).append('\n').append('\n');
-
-		for(int i = 0; i < blocks.size(); i++)
-		{
-			if(i != 0)
-			{
-				builder.append('\n');
-			}
-			StubBlock stubBlock = blocks.get(i);
-			processBlock(builder, stubBlock, 0);
-		}
-
-		return builder;
-	}
-
-	private static void processBlock(StringBuilder builder, StubBlock root, int index)
-	{
-		repeatSymbol(builder, '\t', index);
-		builder.append(root.getStartText());
-
-		if(!(root instanceof LineStubBlock))
-		{
-			char[] indents = root.getIndents();
-			builder.append('\n');
-			repeatSymbol(builder, '\t', index);
-			builder.append(indents[0]);
-			builder.append('\n');
-
-			List<StubBlock> blocks = root.getBlocks();
-			for(int i = 0; i < blocks.size(); i++)
-			{
-				if(i != 0)
-				{
-					builder.append('\n');
-				}
-				StubBlock stubBlock = blocks.get(i);
-				processBlock(builder, stubBlock, index + 1);
-			}
-
-			CharSequence innerText = root.getInnerText();
-			if(innerText != null)
-			{
-				repeatSymbol(builder, '\t', index + 1);
-				builder.append(innerText);
-			}
-
-			repeatSymbol(builder, '\t', index);
-			builder.append(indents[1]);
-			builder.append('\n');
-		}
-	}
-
-	private static void repeatSymbol(StringBuilder builder, char ch, int count)
-	{
-		for(int i = 0; i < count; i++)
-		{
-			builder.append(ch);
-		}
-	}
-
 	/**
 	 * Method for ignore {@link AbstractTypeReference#getFullName()} - dont create twice StringBuilder
 	 * @param builder
@@ -297,7 +229,7 @@ public class XStubUtil
 	{
 		QualifiedName qualifiedName = QualifiedName.fromDottedString(dottedName);
 
-		CSharpStubBuilder.join(builder, qualifiedName.getComponents(), new PairFunction<StringBuilder, String, Void>()
+		StubBlockUtil.join(builder, qualifiedName.getComponents(), new PairFunction<StringBuilder, String, Void>()
 		{
 			@Nullable
 			@Override

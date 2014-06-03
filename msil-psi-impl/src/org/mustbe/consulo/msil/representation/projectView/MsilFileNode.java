@@ -26,9 +26,11 @@ import org.mustbe.consulo.msil.representation.MsilFileRepresentationManager;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -44,16 +46,16 @@ public class MsilFileNode extends PsiFileNode
 	@Override
 	public Collection<AbstractTreeNode> getChildrenImpl()
 	{
-		VirtualFile[] representFiles = MsilFileRepresentationManager.getInstance(getProject()).getRepresentFiles((MsilFile) getValue());
-		if(representFiles.length == 0)
+		val representFiles = MsilFileRepresentationManager.getInstance(getProject()).getRepresentFileInfos((MsilFile) getValue());
+		if(representFiles.isEmpty())
 		{
 			return Collections.emptyList();
 		}
 
-		List<AbstractTreeNode> list = new ArrayList<AbstractTreeNode>(representFiles.length);
-		for(VirtualFile representFile : representFiles)
+		List<AbstractTreeNode> list = new ArrayList<AbstractTreeNode>(representFiles.size());
+		for(Pair<String, ? extends FileType> data : representFiles)
 		{
-			list.add(new MsilRepresentFileNode(getProject(), representFile));
+			list.add(new MsilRepresentFileNode(getProject(), getValue(), data));
 		}
 		return list;
 	}

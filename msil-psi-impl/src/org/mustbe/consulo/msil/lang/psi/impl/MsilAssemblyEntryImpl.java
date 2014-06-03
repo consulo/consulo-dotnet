@@ -16,11 +16,14 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilAssemblyEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilAssemblyEntryStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
@@ -42,5 +45,11 @@ public class MsilAssemblyEntryImpl extends MsilStubElementImpl<MsilAssemblyEntry
 	public void accept(MsilVisitor visitor)
 	{
 		visitor.visitAssemblyEntry(this);
+	}
+
+	@Override
+	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	{
+		return null;
 	}
 }

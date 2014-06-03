@@ -18,25 +18,25 @@ package org.mustbe.consulo.msil.representation;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.msil.lang.psi.MsilFile;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.PsiFile;
+import com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
+import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author VISTALL
- * @since 27.05.14
+ * @since 03.06.14
  */
-public interface MsilFileRepresentationProvider
+public class MsilRepresentationHighlightingSettingProvider extends DefaultHighlightingSettingProvider
 {
-	ExtensionPointName<MsilFileRepresentationProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.msilFileRepresentation");
-
 	@Nullable
-	String getRepresentFileName(@NotNull MsilFile msilFile);
-
-	@NotNull
-	PsiFile transform(String fileName, @NotNull MsilFile msilFile);
-
-	@NotNull
-	FileType getFileType();
+	@Override
+	public FileHighlightingSetting getDefaultSetting(@NotNull Project project, @NotNull VirtualFile file)
+	{
+		if(file instanceof MsilFileRepresentationVirtualFile)
+		{
+			return FileHighlightingSetting.SKIP_INSPECTION;
+		}
+		return null;
+	}
 }

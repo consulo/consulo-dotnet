@@ -16,10 +16,17 @@
 
 package org.mustbe.consulo.msil.representation;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
 
 /**
  * @author VISTALL
@@ -29,5 +36,19 @@ import com.intellij.openapi.vfs.VirtualFile;
 public abstract class MsilFileRepresentationManager
 {
 	@NotNull
-	public abstract VirtualFile[] getRepresentFiles(@NotNull MsilFile msilFile);
+	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@NotNull MsilFile msilFile)
+	{
+		VirtualFile virtualFile = msilFile.getVirtualFile();
+		if(virtualFile == null)
+		{
+			return Collections.emptyList();
+		}
+		return getRepresentFileInfos(msilFile, virtualFile);
+	}
+
+	@NotNull
+	public abstract List<Pair<String, ? extends FileType>> getRepresentFileInfos(@NotNull MsilFile msilFile, @NotNull VirtualFile virtualFile);
+
+	@Nullable
+	public abstract PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull VirtualFile msilFile);
 }

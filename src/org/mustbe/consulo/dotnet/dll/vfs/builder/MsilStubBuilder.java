@@ -34,7 +34,7 @@ public class MsilStubBuilder extends MsilSharedBuilder
 	@NotNull
 	public static List<? extends StubBlock> parseAssemblyInfo(AssemblyInfo assemblyInfo)
 	{
-		StubBlock stubBlock = new StubBlock(".assembly", null, BRACES);
+		StubBlock stubBlock = new StubBlock(".assembly", null, StubBlock.BRACES);
 		processAttributes(stubBlock, assemblyInfo);
 		return Collections.singletonList(stubBlock);
 	}
@@ -51,5 +51,4 @@ public class MsilStubBuilder extends MsilSharedBuilder
 		}
 		return list;
 	}
-
 }

@@ -57,11 +57,6 @@ public class MsilSharedBuilder implements SignatureConstants
 		KEYWORDS = ArrayUtil.toStringArray(set);
 	}
 
-	public static final char[] BRACES = {
-			'{',
-			'}'
-	};
-
 	public static void appendValidName(StringBuilder builder, String name)
 	{
 		boolean equals = false;
