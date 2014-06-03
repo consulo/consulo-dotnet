@@ -44,40 +44,6 @@
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-mono-dotnet/dist" />
       </element>
-      <element id="directory" name="nemerle">
-        <element id="directory" name="lib">
-          <element id="zip-archive" name="nemerle.jar">
-            <element id="module-output" name="nemerle" />
-            <element id="module-production-resource-output" name="nemerle" />
-          </element>
-        </element>
-      </element>
-      <element id="directory" name="nunit">
-        <element id="directory" name="lib">
-          <element id="zip-archive" name="nunit.jar">
-            <element id="module-output" name="nunit" />
-            <element id="module-production-resource-output" name="nunit" />
-          </element>
-        </element>
-      </element>
-      <element id="directory" name="visual-studio">
-        <element id="directory" name="lib">
-          <element id="zip-archive" name="visual-studio.jar">
-            <element id="module-output" name="visual-studio" />
-            <element id="module-production-resource-output" name="visual-studio" />
-            <element id="module-output" name="csproj-support" />
-            <element id="module-production-resource-output" name="csproj-support" />
-          </element>
-        </element>
-      </element>
-      <element id="directory" name="iron-python">
-        <element id="directory" name="lib">
-          <element id="zip-archive" name="iron-python.jar">
-            <element id="module-output" name="iron-python" />
-            <element id="module-production-resource-output" name="iron-python" />
-          </element>
-        </element>
-      </element>
       <element id="directory" name="x-dotnet">
         <element id="directory" name="lib">
           <element id="zip-archive" name="x-dotnet.jar">
