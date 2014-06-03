@@ -137,7 +137,6 @@
           </library>
         </orderEntry>
         <orderEntry type="module" module-name="consulo-dotnet" />
-        <orderEntry type="module" module-name="csharp-psi-api" />
       </module>
       <module name="layered-module-extension" dirurl="file://$PROJECT_DIR$/layered-module-extension">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />

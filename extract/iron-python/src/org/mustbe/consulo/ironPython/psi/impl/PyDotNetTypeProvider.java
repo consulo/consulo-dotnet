@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
@@ -105,7 +105,7 @@ public class PyDotNetTypeProvider extends PyTypeProviderBase
 				{
 					final DotNetLikeMethodDeclaration method = (DotNetLikeMethodDeclaration) psiElement;
 					final DotNetParameter[] psiParameters = method.getParameterList().getParameters();
-					int javaIndex = method.hasModifier(CSharpModifier.STATIC) ? index : index - 1; // adjust for 'self' parameter
+					int javaIndex = method.hasModifier(DotNetModifier.STATIC) ? index : index - 1; // adjust for 'self' parameter
 					if(javaIndex < psiParameters.length)
 					{
 						DotNetTypeRef paramType = psiParameters[javaIndex].toTypeRef(true);
