@@ -22,6 +22,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.util.ProcessingContext;
@@ -161,10 +162,14 @@ public class PyDotNetClassType implements PyClassLikeType
 	public List<PyClassLikeType> getSuperClassTypes(@NotNull TypeEvalContext context)
 	{
 		final List<PyClassLikeType> result = new ArrayList<PyClassLikeType>();
-		/*for(DotNetTypeDeclaration cls : myClass.getSupers())
+		for(DotNetTypeRef typeRef : myClass.getExtendTypeRefs())
 		{
-			result.add(new PyDotNetClassType(cls, myDefinition));
-		}   */
+			PsiElement resolve = typeRef.resolve(myClass);
+			if(resolve instanceof DotNetTypeDeclaration)
+			{
+				result.add(new PyDotNetClassType((DotNetTypeDeclaration) resolve, myDefinition));
+			}
+		}
 		return result;
 	}
 
