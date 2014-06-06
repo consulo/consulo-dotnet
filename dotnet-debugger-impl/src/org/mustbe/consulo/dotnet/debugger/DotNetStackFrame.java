@@ -78,11 +78,11 @@ public class DotNetStackFrame extends XStackFrame
 		return XDebuggerUtil.getInstance().createPosition(fileByPath, myFrame.location().lineNumber() - 1);
 	}
 
+	@Nullable
 	@Override
-	public boolean equals(Object obj)
+	public Object getEqualityObject()
 	{
-		return obj instanceof DotNetStackFrame && ((DotNetStackFrame) obj).myFrame.id() == myFrame.id() && ((DotNetStackFrame) obj).myFrame.thread()
-				.id() == myFrame.thread().id();
+		return myFrame;
 	}
 
 	@Override
