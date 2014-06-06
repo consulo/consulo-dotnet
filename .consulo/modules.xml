@@ -150,6 +150,9 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="sourceFolder" forTests="false" />
+        <orderEntry type="library" exploded="" name="mono-soft-debugging" level="project" />
+        <orderEntry type="library" exploded="" name="dotnet-asm" level="project" />
+        <orderEntry type="module" module-name="dotnet-api" />
       </module>
       <module name="dotnet-debugger-impl" dirurl="file://$PROJECT_DIR$/dotnet-debugger-impl">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
@@ -161,11 +164,9 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="library" name="mono-soft-debugging" level="project" />
-        <orderEntry type="module" module-name="dotnet-debugger-api" />
+        <orderEntry type="module" module-name="dotnet-debugger-api" exported="" />
         <orderEntry type="module" module-name="dotnet-impl" />
         <orderEntry type="module" module-name="dotnet-psi-api" />
-        <orderEntry type="library" name="dotnet-asm" level="project" />
         <orderEntry type="module" module-name="consulo-dotnet" />
         <orderEntry type="module" module-name="msil-psi-impl" />
       </module>
@@ -257,8 +258,8 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="csharp-psi-impl" exported="" />
         <orderEntry type="module" module-name="dotnet-impl" />
-        <orderEntry type="module" module-name="dotnet-debugger-api" />
         <orderEntry type="module" module-name="msil-psi-impl" />
+        <orderEntry type="module" module-name="dotnet-debugger-impl" />
       </module>
       <module name="csharp/csharp-spellchecker" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-spellchecker">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" custom-plugin-dir-url="file://$MODULE_DIR$/../../../dep" />

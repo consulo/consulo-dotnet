@@ -27,12 +27,16 @@ import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.XDebuggerUtil;
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
@@ -83,6 +87,37 @@ public class DotNetStackFrame extends XStackFrame
 	public Object getEqualityObject()
 	{
 		return myFrame;
+	}
+
+	@Nullable
+	@Override
+	public XDebuggerEvaluator getEvaluator()
+	{
+		return new XDebuggerEvaluator()
+		{
+			@Override
+			public void evaluate(
+					@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+			{
+				for(DotNetDebuggerProvider dotNetDebuggerProvider : DotNetDebuggerProvider.EP_NAME.getExtensions())
+				{
+					FileType supportedFileType = dotNetDebuggerProvider.getSupportedFileType();
+					if(supportedFileType instanceof LanguageFileType && ((LanguageFileType) supportedFileType).getLanguage() == expression
+							.getLanguage())
+					{
+						dotNetDebuggerProvider.evaluate(myFrame, myDebuggerContext, expression.getExpression(), null, callback);
+						break;
+					}
+				}
+			}
+
+			@Override
+			public void evaluate(
+					@NotNull String expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+			{
+
+			}
+		};
 	}
 
 	@Override
