@@ -18,15 +18,29 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
 /**
  * @author VISTALL
  * @since 10.04.14
  */
-public interface DotNetDebuggerProvider
+public abstract class DotNetDebuggerProvider
 {
-	ExtensionPointName<DotNetDebuggerProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.debugger.provider");
+	public static final ExtensionPointName<DotNetDebuggerProvider> EP_NAME =
+			ExtensionPointName.create("org.mustbe.consulo.dotnet.core.debugger.provider");
 
-	public boolean isSupported(@NotNull PsiFile psiFile);
+	@NotNull
+	public abstract FileType getSupportedFileType();
+
+	@NotNull
+	public abstract PsiFile createExpressionCodeFragment(
+			@NotNull Project project, @NotNull PsiElement sourcePosition, @NotNull String text, boolean isPhysical);
+
+	public boolean isSupported(@NotNull PsiFile psiFile)
+	{
+		return getSupportedFileType() == psiFile.getFileType();
+	}
 }

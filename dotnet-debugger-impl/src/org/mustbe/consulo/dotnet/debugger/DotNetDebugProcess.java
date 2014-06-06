@@ -27,10 +27,6 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.project.Project;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
@@ -39,7 +35,6 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import lombok.val;
 import mono.debugger.ThreadMirror;
@@ -158,25 +153,7 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public XDebuggerEditorsProvider getEditorsProvider()
 	{
-		return new XDebuggerEditorsProvider()
-		{
-			@NotNull
-			@Override
-			public FileType getFileType()
-			{
-				return PlainTextFileType.INSTANCE;
-			}
-
-			@NotNull
-			@Override
-			public Document createDocument(
-					@NotNull Project project, @NotNull String text, @Nullable XSourcePosition sourcePosition, @NotNull EvaluationMode mode)
-			{
-				/*PsiFile expressionFragment = CSharpExpressionFragmentFactory.createExpressionFragment(project, text);
-				return PsiDocumentManager.getInstance(project).getDocument(expressionFragment);   */
-				throw new IllegalArgumentException();
-			}
-		};
+		return new DotNetEditorsProvider();
 	}
 
 	@Override
