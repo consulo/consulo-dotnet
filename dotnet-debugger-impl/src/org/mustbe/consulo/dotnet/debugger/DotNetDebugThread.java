@@ -251,28 +251,26 @@ public class DotNetDebugThread extends Thread
 				DotNetDebugContext debugContext = createDebugContext();
 
 				DotNetTypeDeclaration[] qualifiedNameImpl = DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, debugContext);
-				if(qualifiedNameImpl.length == 0)
+				if(qualifiedNameImpl.length != 0)
 				{
-					return;
-				}
-
-				Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = getOurBreakpoints();
-				for(DotNetTypeDeclaration dotNetTypeDeclaration : qualifiedNameImpl)
-				{
-					VirtualFile typeVirtualFile = dotNetTypeDeclaration.getContainingFile().getVirtualFile();
-
-					for(final XLineBreakpoint<XBreakpointProperties> breakpoint : breakpoints)
+					Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = getOurBreakpoints();
+					for(DotNetTypeDeclaration dotNetTypeDeclaration : qualifiedNameImpl)
 					{
-						VirtualFile lineBreakpoint = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
-						if(!Comparing.equal(typeVirtualFile, lineBreakpoint))
+						VirtualFile typeVirtualFile = dotNetTypeDeclaration.getContainingFile().getVirtualFile();
+
+						for(final XLineBreakpoint<XBreakpointProperties> breakpoint : breakpoints)
 						{
-							continue;
+							VirtualFile lineBreakpoint = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
+							if(!Comparing.equal(typeVirtualFile, lineBreakpoint))
+							{
+								continue;
+							}
+
+							val type = (DotNetLineBreakpointType) breakpoint.getType();
+
+							type.createRequest(mySession.getProject(), virtualMachine, breakpoint, typeMirror);
+
 						}
-
-						val type = (DotNetLineBreakpointType) breakpoint.getType();
-
-						type.createRequest(mySession.getProject(), virtualMachine, breakpoint, typeMirror);
-
 					}
 				}
 
