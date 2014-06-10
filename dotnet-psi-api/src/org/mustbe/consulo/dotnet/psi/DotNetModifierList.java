@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
@@ -38,4 +40,7 @@ public interface DotNetModifierList extends DotNetElement
 
 	@Nullable
 	PsiElement getModifierElement(DotNetModifier modifier);
+
+	@NotNull
+	List<PsiElement> getModifierElements(@NotNull DotNetModifier modifier);
 }

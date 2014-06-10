@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -121,6 +122,22 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 		return findChildByType(elementType) != null;
 	}
 
+	@Nullable
+	@Override
+	public PsiElement getModifierElement(DotNetModifier modifier)
+	{
+		MsilModifierElementType elementType = asMsilModifier(modifier);
+		return findChildByType(elementType);
+	}
+
+	@NotNull
+	@Override
+	public List<PsiElement> getModifierElements(@NotNull DotNetModifier modifier)
+	{
+		MsilModifierElementType elementType = asMsilModifier(modifier);
+		return findChildrenByType(elementType);
+	}
+
 	private static MsilModifierElementType asMsilModifier(DotNetModifier modifier)
 	{
 		DotNetModifier elementType = modifier;
@@ -135,13 +152,5 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 
 		assert elementType instanceof MsilModifierElementType;
 		return (MsilModifierElementType) elementType;
-	}
-
-	@Nullable
-	@Override
-	public PsiElement getModifierElement(DotNetModifier modifier)
-	{
-		MsilModifierElementType elementType = asMsilModifier(modifier);
-		return findChildByType(elementType);
 	}
 }
