@@ -213,7 +213,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 
 		for(DotNetModifier modifier : modifierList.getModifiers())
 		{
-			builder.append(modifier.name().toLowerCase()).append(" ");
+			builder.append(modifier.getPresentableText()).append(" ");
 		}
 	}
 

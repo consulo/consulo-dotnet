@@ -25,7 +25,7 @@ public interface DotNetModifier
 	DotNetModifier STATIC = new DotNetModifier()
 	{
 		@Override
-		public String name()
+		public String getPresentableText()
 		{
 			return "static";
 		}
@@ -34,11 +34,11 @@ public interface DotNetModifier
 	DotNetModifier SEALED = new DotNetModifier()
 	{
 		@Override
-		public String name()
+		public String getPresentableText()
 		{
 			return "sealed";
 		}
 	};
 
-	String name();
+	String getPresentableText();
 }

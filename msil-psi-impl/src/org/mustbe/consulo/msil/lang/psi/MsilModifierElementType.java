@@ -49,7 +49,7 @@ public class MsilModifierElementType extends IElementType implements DotNetModif
 	}
 
 	@Override
-	public String name()
+	public String getPresentableText()
 	{
 		return toString().replace("_KEYWORD", "").toLowerCase();
 	}

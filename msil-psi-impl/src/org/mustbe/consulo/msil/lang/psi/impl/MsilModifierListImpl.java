@@ -34,7 +34,6 @@ import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilModifierListSt
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
 import lombok.val;
 
@@ -140,8 +139,9 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 
 	@Nullable
 	@Override
-	public PsiElement getModifier(IElementType elementType)
+	public PsiElement getModifierElement(DotNetModifier modifier)
 	{
+		MsilModifierElementType elementType = asMsilModifier(modifier);
 		return findChildByType(elementType);
 	}
 }
