@@ -96,12 +96,6 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return DotNetInheritUtil.isEnum(this);
 	}
 
-	@Override
-	public boolean isInheritAllowed()
-	{
-		return false;
-	}
-
 	@Nullable
 	@Override
 	public DotNetTypeList getExtendList()

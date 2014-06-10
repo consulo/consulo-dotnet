@@ -36,8 +36,6 @@ public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetMod
 
 	boolean isEnum();
 
-	boolean isInheritAllowed();
-
 	boolean isNested();
 
 	@Nullable

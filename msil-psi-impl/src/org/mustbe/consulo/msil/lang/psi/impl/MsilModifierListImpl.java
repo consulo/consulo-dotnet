@@ -106,17 +106,11 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
-		DotNetModifier elementType = modifier;
-		if(modifier == DotNetModifier.STATIC)
-		{
-			elementType = MsilTokens.STATIC_KEYWORD;
-		}
-
-		assert elementType instanceof MsilModifierElementType;
+		MsilModifierElementType elementType = asMsilModifier(modifier);
 		MsilModifierListStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.hasModififer((MsilModifierElementType)elementType);
+			return stub.hasModififer(elementType);
 		}
 		return hasModifierInTree(elementType);
 	}
@@ -124,13 +118,24 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	@Override
 	public boolean hasModifierInTree(@NotNull DotNetModifier modifier)
 	{
+		MsilModifierElementType elementType = asMsilModifier(modifier);
+		return findChildByType(elementType) != null;
+	}
+
+	private static MsilModifierElementType asMsilModifier(DotNetModifier modifier)
+	{
 		DotNetModifier elementType = modifier;
 		if(modifier == DotNetModifier.STATIC)
 		{
 			elementType = MsilTokens.STATIC_KEYWORD;
 		}
+		else if(modifier == DotNetModifier.SEALED)
+		{
+			elementType = MsilTokens.SEALED_KEYWORD;
+		}
+
 		assert elementType instanceof MsilModifierElementType;
-		return findChildByType((IElementType) elementType) != null;
+		return (MsilModifierElementType) elementType;
 	}
 
 	@Nullable

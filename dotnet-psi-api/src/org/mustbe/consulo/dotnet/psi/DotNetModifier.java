@@ -31,5 +31,14 @@ public interface DotNetModifier
 		}
 	};
 
+	DotNetModifier SEALED = new DotNetModifier()
+	{
+		@Override
+		public String name()
+		{
+			return "sealed";
+		}
+	};
+
 	String name();
 }
