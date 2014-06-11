@@ -39,7 +39,7 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		myIndex = index;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getPresentableText()
 	{

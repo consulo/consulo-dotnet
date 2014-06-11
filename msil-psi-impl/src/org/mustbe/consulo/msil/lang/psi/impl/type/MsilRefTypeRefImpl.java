@@ -32,14 +32,14 @@ public class MsilRefTypeRefImpl extends DotNetTypeRef.Delegate implements DotNet
 		super(typeRef);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getQualifiedText()
 	{
 		return super.getQualifiedText() + "&";
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getPresentableText()
 	{

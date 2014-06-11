@@ -36,14 +36,14 @@ public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
 		myInnerType = innerType;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getPresentableText()
 	{
 		return myInnerType.getPresentableText() + "[]";
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getQualifiedText()
 	{

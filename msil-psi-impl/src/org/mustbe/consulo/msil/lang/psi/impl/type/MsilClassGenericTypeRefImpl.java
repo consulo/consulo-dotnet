@@ -40,7 +40,7 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		myName = name;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getPresentableText()
 	{

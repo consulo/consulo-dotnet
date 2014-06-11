@@ -51,14 +51,14 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 		myTypeResoleKind = typeResoleKind;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getPresentableText()
 	{
 		return StringUtil.getShortName(myRef);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getQualifiedText()
 	{

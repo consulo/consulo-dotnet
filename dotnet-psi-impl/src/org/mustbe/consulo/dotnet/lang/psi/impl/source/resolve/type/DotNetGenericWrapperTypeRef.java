@@ -40,7 +40,7 @@ public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRef
 		myArguments = rArguments;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getPresentableText()
 	{
@@ -60,7 +60,7 @@ public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRef
 		return builder.toString();
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getQualifiedText()
 	{

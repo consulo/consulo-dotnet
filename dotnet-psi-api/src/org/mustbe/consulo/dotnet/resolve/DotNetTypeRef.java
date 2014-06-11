@@ -31,14 +31,14 @@ public interface DotNetTypeRef
 {
 	public class Adapter implements DotNetTypeRef
 	{
-		@Nullable
+		@NotNull
 		@Override
 		public String getPresentableText()
 		{
 			return null;
 		}
 
-		@Nullable
+		@NotNull
 		@Override
 		public String getQualifiedText()
 		{
@@ -81,14 +81,14 @@ public interface DotNetTypeRef
 			myDelegate = delegate;
 		}
 
-		@Nullable
+		@NotNull
 		@Override
 		public String getPresentableText()
 		{
 			return myDelegate.getPresentableText();
 		}
 
-		@Nullable
+		@NotNull
 		@Override
 		public String getQualifiedText()
 		{
@@ -130,7 +130,7 @@ public interface DotNetTypeRef
 
 	DotNetTypeRef ERROR_TYPE = new Adapter()
 	{
-		@Nullable
+		@NotNull
 		@Override
 		public String getPresentableText()
 		{
@@ -140,7 +140,7 @@ public interface DotNetTypeRef
 
 	DotNetTypeRef UNKNOWN_TYPE = new Adapter()
 	{
-		@Nullable
+		@NotNull
 		@Override
 		public String getPresentableText()
 		{
@@ -150,7 +150,7 @@ public interface DotNetTypeRef
 
 	DotNetTypeRef AUTO_TYPE = new Adapter()
 	{
-		@Nullable
+		@NotNull
 		@Override
 		public String getPresentableText()
 		{
@@ -167,7 +167,7 @@ public interface DotNetTypeRef
 			return DotNetPsiFacade.getInstance(scope.getProject()).findType(DotNetTypes.System_Object, scope.getResolveScope(), 0);
 		}
 
-		@Nullable
+		@NotNull
 		@Override
 		public String getPresentableText()
 		{
@@ -175,10 +175,10 @@ public interface DotNetTypeRef
 		}
 	};
 
-	@Nullable
+	@NotNull
 	String getPresentableText();
 
-	@Nullable
+	@NotNull
 	String getQualifiedText();
 
 	boolean isNullable();

@@ -35,14 +35,14 @@ public class DotNetPointerTypeRefImpl extends DotNetTypeRef.Adapter implements D
 		myInnerType = innerType;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getPresentableText()
 	{
 		return myInnerType.getPresentableText() + "*";
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getQualifiedText()
 	{
