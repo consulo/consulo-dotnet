@@ -28,4 +28,7 @@ public interface CSharpCallArgumentList extends DotNetElement
 {
 	@NotNull
 	DotNetExpression[] getExpressions();
+
+	@NotNull
+	CSharpNamedCallArgument[] getNamedArguments();
 }

@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 
 /**
  * @author VISTALL
- * @since 19.12.13.
+ * @since 17.06.14
  */
-@ArrayFactoryFields
-public interface DotNetAttribute extends DotNetElement
+public interface CSharpNamedCallArgument extends DotNetElement
 {
-	@Nullable
-	DotNetTypeDeclaration resolveToType();
-
 	@NotNull
-	DotNetTypeRef toTypeRef();
+	CSharpReferenceExpression getArgumentNameReference();
+
+	@Nullable
+	DotNetExpression getArgumentExpression();
 }

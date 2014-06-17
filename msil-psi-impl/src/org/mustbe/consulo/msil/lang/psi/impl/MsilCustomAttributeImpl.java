@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilCustomAttributeStub;
@@ -64,6 +65,18 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 			return (DotNetTypeDeclaration) resolve;
 		}
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef toTypeRef()
+	{
+		DotNetType type = getType();
+		if(type == null)
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+		return type.toTypeRef();
 	}
 
 	@Override
