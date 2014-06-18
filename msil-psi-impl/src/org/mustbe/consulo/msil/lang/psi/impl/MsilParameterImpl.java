@@ -23,6 +23,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilParameter;
@@ -33,6 +34,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -127,5 +129,13 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	public DotNetLikeMethodDeclaration getMethod()
 	{
 		return getStubOrPsiParentOfType(DotNetLikeMethodDeclaration.class);
+	}
+
+	@Override
+	public int getIndex()
+	{
+		DotNetParameterList parameterList = getStubOrPsiParentOfType(DotNetParameterList.class);
+		assert parameterList != null;
+		return ArrayUtil.indexOf(parameterList.getParameters(), this);
 	}
 }

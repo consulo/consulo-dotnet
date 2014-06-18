@@ -28,4 +28,6 @@ public interface DotNetParameter extends DotNetVariable
 {
 	@NotNull
 	DotNetLikeMethodDeclaration getMethod();
+
+	int getIndex();
 }
