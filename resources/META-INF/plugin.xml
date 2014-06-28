@@ -17,6 +17,7 @@
 <idea-plugin>
 	<id>org.mustbe.consulo.dotnet.core</id>
 	<name>.NET Core</name>
+	<version>SNAPSHOT</version>
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
 

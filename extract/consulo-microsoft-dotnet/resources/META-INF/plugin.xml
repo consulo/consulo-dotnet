@@ -17,6 +17,7 @@
 <idea-plugin>
 	<id>org.mustbe.consulo.microsoft.dotnet</id>
 	<name>Microsoft .NET</name>
+	<version>SNAPSHOT</version>
 	<depends>org.mustbe.consulo.dotnet.core</depends>
 	<depends config-file="CSharp.xml" optional="true">org.mustbe.consulo.csharp</depends>
 
