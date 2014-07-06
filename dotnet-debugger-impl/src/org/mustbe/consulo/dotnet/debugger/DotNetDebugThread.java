@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -81,7 +81,7 @@ public class DotNetDebugThread extends Thread
 	private final RunProfile myRunProfile;
 	private boolean myStop;
 
-	private Queue<Processor<VirtualMachine>> myQueue = new ConcurrentLinkedDeque<Processor<VirtualMachine>>();
+	private Queue<Processor<VirtualMachine>> myQueue = new ConcurrentLinkedQueue<Processor<VirtualMachine>>();
 
 	private VirtualMachine myVirtualMachine;
 
