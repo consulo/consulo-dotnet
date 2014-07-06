@@ -25,6 +25,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -69,6 +70,10 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 	@Override
 	public PsiElement resolve(@NotNull PsiElement scope)
 	{
+		if(DumbService.isDumb(scope.getProject()))
+		{
+			return null;
+		}
 		final Collection<MsilClassEntry> elements = StubIndex.getElements(MsilIndexKeys.TYPE_BY_QNAME_INDEX, myRef, myProject,
 				scope.getResolveScope(), MsilClassEntry.class);
 
