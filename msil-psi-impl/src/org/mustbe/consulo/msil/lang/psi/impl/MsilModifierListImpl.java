@@ -17,7 +17,9 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +46,19 @@ import lombok.val;
  */
 public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListStub> implements MsilModifierList
 {
+	private static Map<DotNetModifier, MsilModifierElementType> ourReplaceMap = new HashMap<DotNetModifier, MsilModifierElementType>()
+	{
+		{
+			put(DotNetModifier.STATIC, MsilTokens.STATIC_KEYWORD);
+			put(DotNetModifier.PRIVATE, MsilTokens.PRIVATE_KEYWORD);
+			put(DotNetModifier.PUBLIC, MsilTokens.PUBLIC_KEYWORD);
+			put(DotNetModifier.PROTECTED, MsilTokens.PROTECTED_KEYWORD);
+			put(DotNetModifier.INTERNAL, MsilTokens.ASSEMBLY_KEYWORD);
+			put(DotNetModifier.ABSTRACT, MsilTokens.ABSTRACT_KEYWORD);
+			put(DotNetModifier.SEALED, MsilTokens.SEALED_KEYWORD);
+		}
+	};
+
 	public MsilModifierListImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -138,19 +153,21 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 		return findChildrenByType(elementType);
 	}
 
+	@NotNull
 	private static MsilModifierElementType asMsilModifier(DotNetModifier modifier)
 	{
-		DotNetModifier elementType = modifier;
-		if(modifier == DotNetModifier.STATIC)
+		if(modifier instanceof MsilModifierElementType)
 		{
-			elementType = MsilTokens.STATIC_KEYWORD;
+			return (MsilModifierElementType) modifier;
 		}
-		else if(modifier == DotNetModifier.SEALED)
+		else
 		{
-			elementType = MsilTokens.SEALED_KEYWORD;
+			MsilModifierElementType msilModifierElementType = ourReplaceMap.get(modifier);
+			if(msilModifierElementType != null)
+			{
+				return msilModifierElementType;
+			}
+			throw new IllegalArgumentException(modifier + " cant be casted to MsilModifierElementType");
 		}
-
-		assert elementType instanceof MsilModifierElementType;
-		return (MsilModifierElementType) elementType;
 	}
 }

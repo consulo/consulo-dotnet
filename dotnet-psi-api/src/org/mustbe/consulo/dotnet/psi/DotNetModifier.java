@@ -40,5 +40,50 @@ public interface DotNetModifier
 		}
 	};
 
+	DotNetModifier PRIVATE = new DotNetModifier()
+	{
+		@Override
+		public String getPresentableText()
+		{
+			return "private";
+		}
+	};
+
+	DotNetModifier PUBLIC = new DotNetModifier()
+	{
+		@Override
+		public String getPresentableText()
+		{
+			return "public";
+		}
+	};
+
+	DotNetModifier PROTECTED = new DotNetModifier()
+	{
+		@Override
+		public String getPresentableText()
+		{
+			return "protected";
+		}
+	};
+
+	DotNetModifier INTERNAL = new DotNetModifier()
+	{
+		@Override
+		public String getPresentableText()
+		{
+			return "internal";
+		}
+	};
+
+	DotNetModifier ABSTRACT = new DotNetModifier()
+	{
+		@Override
+		public String getPresentableText()
+		{
+			return "abstract";
+		}
+	};
+
 	String getPresentableText();
 }
