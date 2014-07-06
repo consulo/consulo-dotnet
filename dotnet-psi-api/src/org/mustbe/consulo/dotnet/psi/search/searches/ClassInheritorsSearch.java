@@ -193,7 +193,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 			@Override
 			public String compute()
 			{
-				return baseClass.getPresentableQName();
+				return baseClass.getVmQName();
 			}
 		});
 		if(DotNetTypes.System_Object.equals(qname))
@@ -211,7 +211,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 						@Nullable
 						public String compute()
 						{
-							return aClass.getPresentableQName();
+							return aClass.getVmQName();
 						}
 					});
 					return DotNetTypes.System_Object.equals(qname1) || consumer.process(aClass);
@@ -238,7 +238,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 					@Override
 					public void run()
 					{
-						fqn[0] = candidate.getPresentableQName();
+						fqn[0] = candidate.getVmQName();
 						if(parameters.isCheckInheritance() || parameters.isCheckDeep())
 						{
 							if(!candidate.isInheritor(currentBase.get(), false))

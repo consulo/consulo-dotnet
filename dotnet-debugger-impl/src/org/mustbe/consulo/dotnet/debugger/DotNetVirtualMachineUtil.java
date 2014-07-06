@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.msil.MsilHelper;
 import com.intellij.openapi.project.Project;
@@ -33,7 +34,7 @@ public class DotNetVirtualMachineUtil
 	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
 	{
 		String qualifiedName = typeMirror.qualifiedName();
-		int index = qualifiedName.indexOf(MsilHelper.GENERIC_MARKER_IN_NAME);
+		int index = qualifiedName.indexOf(DotNetTypeDeclarationUtil.GENERIC_MARKER_IN_NAME);
 
 		int genericCount = 0;
 		if(index != -1)
@@ -49,14 +50,9 @@ public class DotNetVirtualMachineUtil
 	@NotNull
 	public static String toVMQualifiedName(DotNetTypeDeclaration qualifiedElement)
 	{
-		String presentableQName = qualifiedElement.getPresentableQName();
-		int genericParametersCount = qualifiedElement.getGenericParametersCount();
-		if(genericParametersCount > 0)
-		{
-			presentableQName = presentableQName + MsilHelper.GENERIC_MARKER_IN_NAME + genericParametersCount;
-		}
-		assert presentableQName != null;
-		return presentableQName;
+		String vmQName = qualifiedElement.getVmQName();
+		assert vmQName != null;
+		return vmQName;
 	}
 
 	@NotNull

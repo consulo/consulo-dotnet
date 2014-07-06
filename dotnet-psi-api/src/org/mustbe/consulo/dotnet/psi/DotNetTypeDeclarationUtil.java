@@ -16,36 +16,26 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 06.07.14
  */
-@ArrayFactoryFields
-public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetModifierListOwner, DotNetGenericParameterListOwner,
-		PsiNameIdentifierOwner, DotNetMemberOwner, DotNetConstructorListOwner
+public class DotNetTypeDeclarationUtil
 {
-	boolean isInterface();
-
-	boolean isStruct();
-
-	boolean isEnum();
-
-	boolean isNested();
+	public static final char GENERIC_MARKER_IN_NAME = '`';
 
 	@Nullable
-	DotNetTypeList getExtendList();
-
-	@NotNull
-	DotNetTypeRef[] getExtendTypeRefs();
-
-	boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep);
-
-	@Nullable
-	String getVmQName();
+	public static String getVmQName(@NotNull DotNetTypeDeclaration typeDeclaration)
+	{
+		int genericParametersCount = typeDeclaration.getGenericParametersCount();
+		String presentableQName = typeDeclaration.getPresentableQName();
+		if(genericParametersCount == 0)
+		{
+			return presentableQName;
+		}
+		return presentableQName + GENERIC_MARKER_IN_NAME + genericParametersCount;
+	}
 }

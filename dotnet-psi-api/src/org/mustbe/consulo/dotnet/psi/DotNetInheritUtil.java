@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.lang.psi;
+package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.Comparing;
@@ -68,7 +67,7 @@ public class DotNetInheritUtil
 						return false;
 					}
 
-					if(Comparing.equal(((DotNetTypeDeclaration) psiElement).getPresentableQName(), other))
+					if(Comparing.equal(((DotNetTypeDeclaration) psiElement).getVmQName(), other))
 					{
 						return true;
 					}
@@ -99,7 +98,7 @@ public class DotNetInheritUtil
 
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
-		if(Comparing.equal(parentClass, typeDeclaration.getPresentableQName()))
+		if(Comparing.equal(parentClass, typeDeclaration.getVmQName()))
 		{
 			return true;
 		}

@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.msil;
 
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
 import com.intellij.openapi.util.text.StringUtil;
 
 /**
@@ -26,11 +27,10 @@ public class MsilHelper
 {
 	public static final String CONSTRUCTOR_NAME = ".ctor";
 	public static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
-	public static final char GENERIC_MARKER_IN_NAME = '`';
 
 	public static String cutGenericMarker(String name)
 	{
-		int i = name.lastIndexOf(GENERIC_MARKER_IN_NAME);
+		int i = name.lastIndexOf(DotNetTypeDeclarationUtil.GENERIC_MARKER_IN_NAME);
 		if(i > 0)
 		{
 			name = name.substring(0, i);

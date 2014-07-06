@@ -41,7 +41,7 @@ public class DotNetAttributeUtil
 		for(DotNetAttribute attribute : attributes)
 		{
 			DotNetTypeDeclaration typeDeclaration = attribute.resolveToType();
-			if(typeDeclaration != null && Comparing.equal(typeDeclaration.getPresentableQName(), qName))
+			if(typeDeclaration != null && Comparing.equal(typeDeclaration.getVmQName(), qName))
 			{
 				return true;
 			}

@@ -23,7 +23,7 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.lang.psi.DotNetInheritUtil;
+import org.mustbe.consulo.dotnet.psi.DotNetInheritUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
@@ -197,6 +197,12 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	}
 
 	@Override
+	public String getVmQName()
+	{
+		return getNameFromBytecode();
+	}
+
+	@Override
 	public String getName()
 	{
 		MsilClassEntryStub stub = getStub();
@@ -232,7 +238,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	{
 		if(another instanceof DotNetTypeDeclaration)
 		{
-			return Comparing.equal(getPresentableQName(), ((DotNetTypeDeclaration) another).getPresentableQName());
+			return Comparing.equal(getVmQName(), ((DotNetTypeDeclaration) another).getVmQName());
 		}
 		return super.isEquivalentTo(another);
 	}

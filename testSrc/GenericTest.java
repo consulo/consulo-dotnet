@@ -1,4 +1,4 @@
-import org.mustbe.consulo.msil.MsilHelper;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
 
 /**
  * @author VISTALL
@@ -10,7 +10,7 @@ public class GenericTest
 	{
 		String qualifiedName = "test`1";
 
-		int index = qualifiedName.indexOf(MsilHelper.GENERIC_MARKER_IN_NAME);
+		int index = qualifiedName.indexOf(DotNetTypeDeclarationUtil.GENERIC_MARKER_IN_NAME);
 
 		int genericCount = 0;
 		if(index != -1)
