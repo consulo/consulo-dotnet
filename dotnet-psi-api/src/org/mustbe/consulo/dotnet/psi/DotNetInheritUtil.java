@@ -44,7 +44,7 @@ public class DotNetInheritUtil
 
 	public static boolean isException(DotNetTypeDeclaration typeDeclaration)
 	{
-		return isInheritor(typeDeclaration, DotNetTypes.System_Exception, true);
+		return isParentOrSelf(DotNetTypes.System_Exception, typeDeclaration, true);
 	}
 
 	public static boolean isEnum(DotNetTypeDeclaration typeDeclaration)
