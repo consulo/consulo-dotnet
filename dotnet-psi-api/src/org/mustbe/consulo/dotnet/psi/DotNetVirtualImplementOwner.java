@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.stub;
+package org.mustbe.consulo.dotnet.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.lang.psi.CSharpStubElements;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
- * @since 18.12.13.
+ * @since 11.07.14
  */
-public class CSharpConstructorStub extends CSharpMethodStub
+public interface DotNetVirtualImplementOwner extends DotNetElement
 {
-	public CSharpConstructorStub(StubElement parent, @Nullable StringRef name, @Nullable StringRef qname, int modifierMask, int otherModifierMask)
-	{
-		super(parent, CSharpStubElements.CONSTRUCTOR_DECLARATION, name, qname, modifierMask, otherModifierMask, null, null, -1);
-	}
+	@Nullable
+	DotNetType getTypeForImplement();
+
+	@NotNull
+	DotNetTypeRef getTypeRefForImplement();
 }

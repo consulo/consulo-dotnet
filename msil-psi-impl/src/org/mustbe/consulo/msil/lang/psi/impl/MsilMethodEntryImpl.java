@@ -38,6 +38,8 @@ import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilMethodEntryStu
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
@@ -234,5 +236,33 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
+		{
+			if(!processor.execute(dotNetGenericParameter, state))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Nullable
+	@Override
+	public DotNetType getTypeForImplement()
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef getTypeRefForImplement()
+	{
+		return DotNetTypeRef.ERROR_TYPE;
 	}
 }

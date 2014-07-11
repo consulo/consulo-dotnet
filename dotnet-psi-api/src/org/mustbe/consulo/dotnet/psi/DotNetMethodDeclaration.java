@@ -24,7 +24,7 @@ import com.intellij.psi.tree.IElementType;
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetMethodDeclaration extends DotNetLikeMethodDeclaration, PsiNameIdentifierOwner
+public interface DotNetMethodDeclaration extends DotNetLikeMethodDeclaration, DotNetVirtualImplementOwner, PsiNameIdentifierOwner
 {
 	boolean isDelegate();
 

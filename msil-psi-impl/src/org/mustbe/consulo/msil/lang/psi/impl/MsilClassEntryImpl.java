@@ -44,6 +44,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
@@ -163,6 +165,20 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		return getModifierList().hasModifier(modifier);
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
+		{
+			if(!processor.execute(dotNetGenericParameter, state))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@NotNull

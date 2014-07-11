@@ -17,8 +17,11 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilEventEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilXXXAcessor;
@@ -60,5 +63,19 @@ public class MsilEventEntryImpl extends MsilQVariableImpl implements MsilEventEn
 	public DotNetNamedElement[] getMembers()
 	{
 		return getAccessors();
+	}
+
+	@Nullable
+	@Override
+	public DotNetType getTypeForImplement()
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef getTypeRefForImplement()
+	{
+		return DotNetTypeRef.ERROR_TYPE;
 	}
 }
