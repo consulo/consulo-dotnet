@@ -14,28 +14,35 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
+package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.NotNullFunction;
 
 /**
  * @author VISTALL
- * @since 18.12.13.
+ * @since 13.07.14
  */
-public class CSharpTypeRefFromQualifiedName extends DotNetTypeRef.Adapter
+public class DotNetTypeRefByQName extends DotNetTypeRef.Adapter
 {
 	private final String myQualifiedName;
-	private final int myGenericCount;
+	private final NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> myTransformer;
 
-	public CSharpTypeRefFromQualifiedName(@NotNull String qualifiedName, int genericCount)
+	public DotNetTypeRefByQName(@NotNull String qualifiedName)
+	{
+		this(qualifiedName, DotNetPsiSearcher.DEFAULT_TRANSFORMER);
+	}
+
+	public DotNetTypeRefByQName(@NotNull String qualifiedName, @NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		myQualifiedName = qualifiedName;
-		myGenericCount = genericCount;
+		myTransformer = transformer;
 	}
 
 	@NotNull
@@ -56,6 +63,7 @@ public class CSharpTypeRefFromQualifiedName extends DotNetTypeRef.Adapter
 	@Override
 	public PsiElement resolve(@NotNull PsiElement scope)
 	{
-		return DotNetPsiFacade.getInstance(scope.getProject()).findType(myQualifiedName, scope.getResolveScope(), myGenericCount);
+		return DotNetPsiSearcher.getInstance(scope.getProject()).findType(myQualifiedName, scope.getResolveScope(),
+				DotNetPsiSearcher.TypeResoleKind.UNKNOWN, myTransformer);
 	}
 }

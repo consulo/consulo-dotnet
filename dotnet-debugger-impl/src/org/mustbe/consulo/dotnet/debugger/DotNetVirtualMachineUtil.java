@@ -18,8 +18,7 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.msil.MsilHelper;
 import com.intellij.openapi.project.Project;
 import mono.debugger.TypeMirror;
@@ -34,17 +33,9 @@ public class DotNetVirtualMachineUtil
 	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
 	{
 		String qualifiedName = typeMirror.qualifiedName();
-		int index = qualifiedName.indexOf(DotNetTypeDeclarationUtil.GENERIC_MARKER_IN_NAME);
-
-		int genericCount = 0;
-		if(index != -1)
-		{
-			genericCount = Integer.parseInt(qualifiedName.substring(index + 1, qualifiedName.length()));
-			qualifiedName = qualifiedName.substring(0, index);
-		}
-
 		Project project = debugContext.getProject();
-		return DotNetPsiFacade.getInstance(project).findTypes(qualifiedName, debugContext.getResolveScope(), genericCount);
+		return DotNetPsiSearcher.getInstance(project).findTypes(qualifiedName, debugContext.getResolveScope(),
+				DotNetPsiSearcher.TypeResoleKind.UNKNOWN);
 	}
 
 	@NotNull

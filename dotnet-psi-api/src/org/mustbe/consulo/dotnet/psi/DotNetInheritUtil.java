@@ -20,6 +20,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
@@ -107,7 +108,7 @@ public class DotNetInheritUtil
 
 	public static boolean isParent(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
-		val type = DotNetPsiFacade.getInstance(typeDeclaration.getProject()).findType(parentClass, typeDeclaration.getResolveScope(), -1);
+		val type = DotNetPsiSearcher.getInstance(typeDeclaration.getProject()).findType(parentClass, typeDeclaration.getResolveScope());
 		return type != null && typeDeclaration.isInheritor(type, deep);
 	}
 

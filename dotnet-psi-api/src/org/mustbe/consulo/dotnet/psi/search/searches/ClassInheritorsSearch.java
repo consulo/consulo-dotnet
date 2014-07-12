@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -275,7 +275,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 		};
 		stack.push(Pair.create(createHardReference(baseClass), qname));
 		val projectScope = GlobalSearchScope.allScope(baseClass.getProject());
-		final DotNetPsiFacade facade = DotNetPsiFacade.getInstance(projectScope.getProject());
+		final DotNetPsiSearcher facade = DotNetPsiSearcher.getInstance(projectScope.getProject());
 		while(!stack.isEmpty())
 		{
 			ProgressIndicatorProvider.checkCanceled();
@@ -290,7 +290,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 					@Override
 					public DotNetTypeDeclaration compute()
 					{
-						return facade.findType(fqn, projectScope, -1);
+						return facade.findType(fqn, projectScope);
 					}
 				});
 				if(psiClass == null)

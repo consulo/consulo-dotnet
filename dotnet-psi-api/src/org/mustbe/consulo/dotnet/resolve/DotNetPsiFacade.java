@@ -31,6 +31,7 @@ import com.intellij.util.ArrayUtil;
  * @since 10.01.14
  */
 @ProjectService
+@Deprecated
 public abstract class DotNetPsiFacade
 {
 	public static enum TypeResoleKind

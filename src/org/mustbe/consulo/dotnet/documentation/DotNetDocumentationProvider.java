@@ -25,7 +25,7 @@ import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetNativeTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.openapi.module.Module;
@@ -39,7 +39,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.Function;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -232,16 +231,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		{
 			String qName = s.substring(TYPE_PREFIX.length(), s.length());
 
-			int genericCount = -1;
-			int indexOfG = qName.indexOf('`');
-			if(indexOfG != -1)
-			{
-				val oldQName = qName;
-
-				qName = oldQName.substring(0, indexOfG);
-				genericCount = Integer.parseInt(oldQName.substring(indexOfG + 1, oldQName.length()));
-			}
-			return DotNetPsiFacade.getInstance(element.getProject()).findType(qName, element.getResolveScope(), genericCount);
+			return DotNetPsiSearcher.getInstance(element.getProject()).findType(qName, element.getResolveScope());
 		}
 		return null;
 	}
