@@ -113,7 +113,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 			assert methodEntry != null;
 			int i = ArrayUtil.indexOf(parameterList.getParameters(), parentByStub);
 			assert i != -1;
-			return methodEntry.getParameterAttributes(i);
+			return methodEntry.getParameterAttributes(i + 1);
 		}
 
 		return DotNetAttribute.EMPTY_ARRAY;
