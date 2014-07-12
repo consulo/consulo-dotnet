@@ -18,6 +18,8 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -30,8 +32,27 @@ public class DotNetTypeDeclarationUtil
 	@Nullable
 	public static String getVmQName(@NotNull DotNetTypeDeclaration typeDeclaration)
 	{
+		String presentableQName;
+
+		PsiElement parent = typeDeclaration.getParent();
+		if(parent instanceof DotNetTypeDeclaration)
+		{
+			String q = ((DotNetTypeDeclaration) parent).getPresentableQName();
+
+			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q  + "/" + typeDeclaration.getName();
+		}
+		else if(parent instanceof DotNetQualifiedElement)
+		{
+			String q = ((DotNetQualifiedElement) parent).getPresentableQName();
+
+			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q  + "." + typeDeclaration.getName();
+		}
+		else
+		{
+			presentableQName = typeDeclaration.getName();
+		}
+
 		int genericParametersCount = typeDeclaration.getGenericParametersCount();
-		String presentableQName = typeDeclaration.getPresentableQName();
 		if(genericParametersCount == 0)
 		{
 			return presentableQName;
