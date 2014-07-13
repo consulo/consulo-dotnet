@@ -33,7 +33,7 @@ public class MsilHelper
 	public static String prepareForUser(@NotNull String name)
 	{
 		String newName = cutGenericMarker(name);
-		newName = newName.replace(DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_GAME, DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_GAME);
+		newName = newName.replace(DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_GAME, DotNetTypeDeclarationUtil.NORMAL_SEPARATOR_IN_GAME);
 		return newName;
 	}
 
