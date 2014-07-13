@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.msil;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
 import com.intellij.openapi.util.text.StringUtil;
 
@@ -28,7 +29,16 @@ public class MsilHelper
 	public static final String CONSTRUCTOR_NAME = ".ctor";
 	public static final String STATIC_CONSTRUCTOR_NAME = ".cctor";
 
-	public static String cutGenericMarker(String name)
+	@NotNull
+	public static String prepareForUser(@NotNull String name)
+	{
+		String newName = cutGenericMarker(name);
+		newName = newName.replace(DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_GAME, DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_GAME);
+		return newName;
+	}
+
+	@NotNull
+	public static String cutGenericMarker(@NotNull String name)
 	{
 		int i = name.lastIndexOf(DotNetTypeDeclarationUtil.GENERIC_MARKER_IN_NAME);
 		if(i > 0)

@@ -59,11 +59,12 @@ public class DotNetVirtualMachineUtil
 		TypeMirror original = typeMirror.original();
 		if(original == null)
 		{
-			builder.append(typeMirror.qualifiedName());
+			builder.append(MsilHelper.prepareForUser(typeMirror.qualifiedName()));
 			return;
 		}
 
-		builder.append(MsilHelper.cutGenericMarker(typeMirror.qualifiedName())); // cut to `
+		builder.append(MsilHelper.prepareForUser(typeMirror.qualifiedName()));
+
 		builder.append("<");
 		TypeMirror[] typeMirrors = typeMirror.genericArguments();
 		for(int i = 0; i < typeMirrors.length; i++)
