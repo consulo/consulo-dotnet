@@ -50,6 +50,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import lombok.val;
 import mono.debugger.EventKind;
 import mono.debugger.Location;
+import mono.debugger.SocketAttachingConnector;
 import mono.debugger.SocketListeningConnector;
 import mono.debugger.SuspendPolicy;
 import mono.debugger.TypeMirror;
@@ -122,48 +123,58 @@ public class DotNetDebugThread extends Thread
 			{
 				//
 			}
-
-			if(virtualMachine == null)
-			{
-				return;
-			}
-
-			myVirtualMachine = virtualMachine;
-
-			virtualMachine.enableEvents(EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,
-					EventKind.USER_BREAK, EventKind.USER_LOG);
-
-			TypeLoadRequest typeLoad = virtualMachine.eventRequestManager().createTypeLoad();
-			if(virtualMachine.isAtLeastVersion(2, 9))
-			{
-				Set<String> files = new HashSet<String>();
-				Collection<? extends XLineBreakpoint<XBreakpointProperties>> ourBreakpoints = getOurBreakpoints();
-				for(final XLineBreakpoint<XBreakpointProperties> ourBreakpoint : ourBreakpoints)
-				{
-					files.add(ourBreakpoint.getPresentableFilePath());
-				}
-
-				typeLoad.addSourceFileFilter(ArrayUtil.toStringArray(files));
-			}
-			typeLoad.enable();
-
-			try
-			{
-				virtualMachine.eventQueue().remove();  //Wait VMStart
-				virtualMachine.resume();
-			}
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
-				return;
-			}
 		}
 		else
 		{
+			SocketAttachingConnector l = new SocketAttachingConnector();
+			Map<String, Connector.Argument> argumentMap = l.defaultArguments();
+			argumentMap.get("hostname").setValue(myDebugConnectionInfo.getHost());
+			argumentMap.get("port").setValue(String.valueOf(myDebugConnectionInfo.getPort()));
+			argumentMap.get("timeout").setValue("10000");
+
+
+			try
+			{
+				virtualMachine = l.attach(argumentMap);
+			}
+			catch(Exception e)
+			{
+				//
+			}
 		}
 
 		if(virtualMachine == null)
 		{
+			return;
+		}
+
+		myVirtualMachine = virtualMachine;
+
+		virtualMachine.enableEvents(EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,
+				EventKind.USER_BREAK, EventKind.USER_LOG);
+
+		TypeLoadRequest typeLoad = virtualMachine.eventRequestManager().createTypeLoad();
+		if(virtualMachine.isAtLeastVersion(2, 9))
+		{
+			Set<String> files = new HashSet<String>();
+			Collection<? extends XLineBreakpoint<XBreakpointProperties>> ourBreakpoints = getOurBreakpoints();
+			for(final XLineBreakpoint<XBreakpointProperties> ourBreakpoint : ourBreakpoints)
+			{
+				files.add(ourBreakpoint.getPresentableFilePath());
+			}
+
+			typeLoad.addSourceFileFilter(ArrayUtil.toStringArray(files));
+		}
+		typeLoad.enable();
+
+		try
+		{
+			virtualMachine.eventQueue().remove();  //Wait VMStart
+			virtualMachine.resume();
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
 			return;
 		}
 

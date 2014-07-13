@@ -61,6 +61,10 @@ public class DotNetDebugProcess extends XDebugProcess
 		session.setPauseActionSupported(true);
 		myDebugConnectionInfo = state.getDebugConnectionInfo();
 		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo, runProfile);
+	}
+
+	public void start()
+	{
 		myDebugThread.start();
 	}
 
