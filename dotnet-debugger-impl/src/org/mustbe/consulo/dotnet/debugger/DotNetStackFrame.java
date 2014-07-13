@@ -128,7 +128,7 @@ public class DotNetStackFrame extends XStackFrame
 
 		String name = method.name();
 		Icon icon = AllIcons.Nodes.Method;
-		if(name.equals(XStubUtil.CONSTRUCTOR_NAME) || name.equals(XStubUtil.STATIC_CONSTRUCTOR_NAME))
+		if(name.equals(XStubUtil.CONSTRUCTOR_NAME))
 		{
 			name = method.declaringType().name() + "()";
 		}
