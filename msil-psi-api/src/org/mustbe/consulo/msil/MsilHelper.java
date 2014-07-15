@@ -40,10 +40,49 @@ public class MsilHelper
 	@NotNull
 	public static String cutGenericMarker(@NotNull String name)
 	{
+		int nested = name.lastIndexOf(DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_GAME);
 		int i = name.lastIndexOf(DotNetTypeDeclarationUtil.GENERIC_MARKER_IN_NAME);
 		if(i > 0)
 		{
-			name = name.substring(0, i);
+			// if we dont have nested like System.Collection.Generic.List`1
+			if(nested == -1)
+			{
+				name = name.substring(0, i);
+			}
+			// if we have nested like System.Collection.Generic.List`1/Enumerator
+			else
+			{
+				StringBuilder builder = new StringBuilder(name.length() - 2);
+				char[] chars = name.toCharArray();
+
+				boolean genericEntered = false;
+				for(char aChar : chars)
+				{
+					switch(aChar)
+					{
+						case '`':
+							genericEntered = true;
+							break;
+						case '/':
+							aChar = '.';
+						default:
+							if(genericEntered)
+							{
+								if(Character.isDigit(aChar))
+								{
+									continue;
+								}
+								else
+								{
+									genericEntered = false;
+								}
+							}
+							builder.append(aChar);
+							break;
+					}
+				}
+				name = builder.toString();
+			}
 		}
 		return name;
 	}
