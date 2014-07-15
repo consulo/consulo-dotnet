@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
@@ -94,7 +94,7 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 		}
 		String ref = ourTypes.get(elementType);
 		assert ref != null : elementType.toString();
-		return new MsilNativeTypeRefImpl(getProject(), ref, DotNetPsiFacade.TypeResoleKind.UNKNOWN, elementType);
+		return new MsilNativeTypeRefImpl(ref, DotNetPsiSearcher.TypeResoleKind.UNKNOWN, elementType);
 	}
 
 	@Override

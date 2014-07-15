@@ -215,6 +215,16 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public String getVmQName()
 	{
+		MsilClassEntryStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getVmQName();
+		}
+		PsiElement parent = getParent();
+		if(parent instanceof MsilClassEntry)
+		{
+			return ((MsilClassEntry) parent).getVmQName() + "/" + getNameFromBytecode();
+		}
 		return getNameFromBytecode();
 	}
 

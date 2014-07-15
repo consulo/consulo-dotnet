@@ -30,27 +30,32 @@ public class MsilClassEntryStub extends StubBase<MsilClassEntry>
 {
 	private final StringRef myNamespace;
 	private final StringRef myName;
-	private final boolean myNested;
+	private final StringRef myVmQName;
 
-	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, String namespace, String name, boolean nested)
+	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, String namespace, String name, String vmQNamed)
 	{
 		super(parent, elementType);
 		myName = StringRef.fromNullableString(name);
 		myNamespace = StringRef.fromNullableString(namespace);
-		myNested = nested;
+		myVmQName = StringRef.fromNullableString(vmQNamed);
 	}
 
-	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, StringRef namespace, StringRef name, boolean nested)
+	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, StringRef namespace, StringRef name, StringRef vmQName)
 	{
 		super(parent, elementType);
 		myName = name;
 		myNamespace = namespace;
-		myNested = nested;
+		myVmQName = vmQName;
 	}
 
 	public String getName()
 	{
 		return StringRef.toString(myName);
+	}
+
+	public String getVmQName()
+	{
+		return StringRef.toString(myVmQName);
 	}
 
 	public String getNamespace()
@@ -60,6 +65,7 @@ public class MsilClassEntryStub extends StubBase<MsilClassEntry>
 
 	public boolean isNested()
 	{
-		return myNested;
+		String s = StringRef.toString(myVmQName);
+		return s != null && s.contains("/");
 	}
 }

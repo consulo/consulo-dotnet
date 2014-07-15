@@ -19,7 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.msil.lang.psi.MsilUserType;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilUserTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
@@ -57,7 +57,7 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 	@Override
 	public MsilReferenceTypeStub createStub(@NotNull MsilUserType dotNetReferenceType, StubElement stubElement)
 	{
-		DotNetPsiFacade.TypeResoleKind typeResoleKind = dotNetReferenceType.getTypeResoleKind();
+		DotNetPsiSearcher.TypeResoleKind typeResoleKind = dotNetReferenceType.getTypeResoleKind();
 		String referenceText = dotNetReferenceType.getReferenceText();
 		String nestedClassName = dotNetReferenceType.getNestedClassName();
 		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText, nestedClassName);
@@ -77,7 +77,7 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 	public MsilReferenceTypeStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		DotNetPsiFacade.TypeResoleKind typeResoleKind = DotNetPsiFacade.TypeResoleKind.VALUES[inputStream.readByte()];
+		DotNetPsiSearcher.TypeResoleKind typeResoleKind = DotNetPsiSearcher.TypeResoleKind.VALUES[inputStream.readByte()];
 		StringRef referenceText = inputStream.readName();
 		StringRef nestedClassText = inputStream.readName();
 		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText, nestedClassText);

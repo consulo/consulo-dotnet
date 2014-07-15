@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.msil.lang.psi.MsilUserType;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
@@ -29,14 +29,14 @@ import com.intellij.util.io.StringRef;
  */
 public class MsilReferenceTypeStub extends StubBase<MsilUserType>
 {
-	private final DotNetPsiFacade.TypeResoleKind myTypeResoleKind;
+	private final DotNetPsiSearcher.TypeResoleKind myTypeResoleKind;
 	private final StringRef myReferenceText;
 	private final StringRef myNestedClassText;
 
 	public MsilReferenceTypeStub(
 			StubElement parent,
 			IStubElementType elementType,
-			DotNetPsiFacade.TypeResoleKind typeResoleKind,
+			DotNetPsiSearcher.TypeResoleKind typeResoleKind,
 			String referenceText,
 			String nestedClassText)
 	{
@@ -49,7 +49,7 @@ public class MsilReferenceTypeStub extends StubBase<MsilUserType>
 	public MsilReferenceTypeStub(
 			StubElement parent,
 			IStubElementType elementType,
-			DotNetPsiFacade.TypeResoleKind typeResoleKind,
+			DotNetPsiSearcher.TypeResoleKind typeResoleKind,
 			StringRef referenceText,
 			StringRef nestedClassText)
 	{
@@ -69,7 +69,7 @@ public class MsilReferenceTypeStub extends StubBase<MsilUserType>
 		return StringRef.toString(myNestedClassText);
 	}
 
-	public DotNetPsiFacade.TypeResoleKind getTypeResoleKind()
+	public DotNetPsiSearcher.TypeResoleKind getTypeResoleKind()
 	{
 		return myTypeResoleKind;
 	}

@@ -19,7 +19,6 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.msil.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilClassEntryImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
@@ -62,8 +61,8 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	{
 		String namespace = msilClassEntry.getPresentableParentQName();
 		String name = msilClassEntry.getName();
-		boolean nested = msilClassEntry.isNested();
-		return new MsilClassEntryStub(stubElement, this, namespace, name, nested);
+		String vmQName = msilClassEntry.getVmQName();
+		return new MsilClassEntryStub(stubElement, this, namespace, name, vmQName);
 	}
 
 	@Override
@@ -71,7 +70,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	{
 		stubOutputStream.writeName(stub.getNamespace());
 		stubOutputStream.writeName(stub.getName());
-		stubOutputStream.writeBoolean(stub.isNested());
+		stubOutputStream.writeName(stub.getVmQName());
 	}
 
 	@NotNull
@@ -80,8 +79,8 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	{
 		StringRef namespace = inputStream.readName();
 		StringRef name = inputStream.readName();
-		boolean nested = inputStream.readBoolean();
-		return new MsilClassEntryStub(stubElement, this, namespace, name, nested);
+		StringRef vmQName = inputStream.readName();
+		return new MsilClassEntryStub(stubElement, this, namespace, name, vmQName);
 	}
 
 	@Override
@@ -89,8 +88,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	{
 		if(!msilClassEntryStub.isNested())
 		{
-			indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, MsilHelper.append(msilClassEntryStub.getNamespace(),
-					msilClassEntryStub.getName()));
+			indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, msilClassEntryStub.getVmQName());
 		}
 
 		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())

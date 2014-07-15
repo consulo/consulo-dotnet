@@ -17,8 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
-import com.intellij.openapi.project.Project;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -29,9 +28,9 @@ public class MsilNativeTypeRefImpl extends MsilReferenceTypeRefImpl
 {
 	private final IElementType myElementType;
 
-	public MsilNativeTypeRefImpl(Project project, String ref, DotNetPsiFacade.TypeResoleKind typeResoleKind, IElementType elementType)
+	public MsilNativeTypeRefImpl(String ref, DotNetPsiSearcher.TypeResoleKind typeResoleKind, IElementType elementType)
 	{
-		super(project, ref, null, typeResoleKind);
+		super(ref, typeResoleKind);
 		myElementType = elementType;
 	}
 
