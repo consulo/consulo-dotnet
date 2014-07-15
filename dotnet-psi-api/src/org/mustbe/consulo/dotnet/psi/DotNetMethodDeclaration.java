@@ -16,9 +16,7 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
-import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -26,10 +24,4 @@ import com.intellij.psi.tree.IElementType;
  */
 public interface DotNetMethodDeclaration extends DotNetLikeMethodDeclaration, DotNetVirtualImplementOwner, PsiNameIdentifierOwner
 {
-	boolean isDelegate();
-
-	boolean isOperator();
-
-	@Nullable
-	IElementType getOperatorElementType();
 }

@@ -41,7 +41,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -64,25 +63,6 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	public void accept(MsilVisitor visitor)
 	{
 		visitor.visitMethodEntry(this);
-	}
-
-	@Override
-	public boolean isDelegate()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isOperator()
-	{
-		return false;
-	}
-
-	@Nullable
-	@Override
-	public IElementType getOperatorElementType()
-	{
-		return null;
 	}
 
 	@NotNull

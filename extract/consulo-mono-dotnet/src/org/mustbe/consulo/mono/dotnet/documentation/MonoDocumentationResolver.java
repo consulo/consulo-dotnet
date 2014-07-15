@@ -83,7 +83,7 @@ public class MonoDocumentationResolver implements DotNetDocumentationResolver
 		}
 		else if(element instanceof DotNetQualifiedElement)
 		{
-			if(element instanceof DotNetMethodDeclaration && ((DotNetMethodDeclaration) element).isDelegate())
+			if(element instanceof DotNetMethodDeclaration)
 			{
 				namespace = ((DotNetMethodDeclaration) element).getPresentableParentQName();
 				className = ((DotNetMethodDeclaration) element).getName();
