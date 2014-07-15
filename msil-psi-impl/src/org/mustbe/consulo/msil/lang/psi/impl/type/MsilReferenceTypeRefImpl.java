@@ -48,7 +48,7 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 		int i = myRef.lastIndexOf("/");
 		if(i != -1)
 		{
-			return myRef.substring(i, myRef.length());
+			return myRef.substring(i + 1, myRef.length());
 		}
 		return StringUtil.getShortName(myRef);
 	}
