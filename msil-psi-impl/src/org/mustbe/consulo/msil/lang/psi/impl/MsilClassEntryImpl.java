@@ -23,10 +23,10 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetInheritUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
+import org.mustbe.consulo.dotnet.psi.DotNetInheritUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -220,9 +220,9 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		{
 			return stub.getVmQName();
 		}
-		PsiElement parent = getParent();
-		if(parent instanceof MsilClassEntry)
+		if(hasModifier(MsilTokens.NESTED_KEYWORD))
 		{
+			PsiElement parent = getParent();
 			return ((MsilClassEntry) parent).getVmQName() + "/" + getNameFromBytecode();
 		}
 		return getNameFromBytecode();

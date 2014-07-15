@@ -22,7 +22,7 @@ COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 DIGIT = [0-9]
 IDENTIFIER_PART=[:jletter:] [:jletterdigit:]*
 IDENTIFIER=(\.)?{IDENTIFIER_PART}(\.{IDENTIFIER_PART})*(\`[:jletterdigit:]*)?
-QIDENTIFIER=\'.*\'
+QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 %%
 
 <YYINITIAL>
@@ -148,6 +148,8 @@ QIDENTIFIER=\'.*\'
 	"virtual"       { return MsilTokens.VIRTUAL_KEYWORD; }
 
 	"value"         { return MsilTokens.VALUE_KEYWORD; }
+
+	"nested"        { return MsilTokens.NESTED_KEYWORD; }
 
 	"serializable"  { return MsilTokens.SERIALIZABLE_KEYWORD; }
 
