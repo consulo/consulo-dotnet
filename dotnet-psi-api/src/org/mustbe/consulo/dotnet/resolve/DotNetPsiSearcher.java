@@ -59,6 +59,12 @@ public abstract class DotNetPsiSearcher
 	};
 
 	@NotNull
+	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
+	{
+		return findTypes(vmQName, scope, TypeResoleKind.UNKNOWN, DEFAULT_TRANSFORMER);
+	}
+
+	@NotNull
 	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind)
 	{
 		return findTypes(vmQName, scope, typeResoleKind, DEFAULT_TRANSFORMER);
