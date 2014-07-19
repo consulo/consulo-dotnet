@@ -38,6 +38,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import com.intellij.lang.ASTNode;
@@ -71,7 +72,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	public String getNameFromBytecode()
 	{
 		PsiElement element = getNameIdentifier();
-		return element == null ? "" : element.getText();
+		return element == null ? "" : StringUtil.unquoteString(element.getText());
 	}
 
 	@Override
@@ -223,7 +224,10 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		if(hasModifier(MsilTokens.NESTED_KEYWORD))
 		{
 			PsiElement parent = getParent();
-			return ((MsilClassEntry) parent).getVmQName() + "/" + getNameFromBytecode();
+			if(parent instanceof MsilClassEntry)  //dont throw exception if tree is broken
+			{
+				return ((MsilClassEntry) parent).getVmQName() + "/" + getNameFromBytecode();
+			}
 		}
 		return getNameFromBytecode();
 	}
@@ -250,7 +254,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(MsilTokens.IDENTIFIER);
+		return findChildByType(MsilTokenSets.IDENTIFIERS);
 	}
 
 	@Override
