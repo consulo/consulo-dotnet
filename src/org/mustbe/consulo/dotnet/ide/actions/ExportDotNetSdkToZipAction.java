@@ -30,7 +30,6 @@ import org.consulo.lombok.annotations.Logger;
 import org.consulo.sdk.SdkUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.msil.MsilFileType;
 import com.intellij.ide.util.ChooseElementsDialog;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -47,7 +46,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -67,14 +66,7 @@ public class ExportDotNetSdkToZipAction extends AnAction
 	@Override
 	public void actionPerformed(AnActionEvent anActionEvent)
 	{
-		List<Sdk> sdks = ContainerUtil.filter(SdkTable.getInstance().getAllSdks(), new Condition<Sdk>()
-		{
-			@Override
-			public boolean value(Sdk sdk)
-			{
-				return sdk.getSdkType() instanceof DotNetSdkType;
-			}
-		});
+		List<Sdk> sdks = ContainerUtil.filter(SdkTable.getInstance().getAllSdks(), Conditions.alwaysTrue());
 
 		if(sdks.isEmpty())
 		{
