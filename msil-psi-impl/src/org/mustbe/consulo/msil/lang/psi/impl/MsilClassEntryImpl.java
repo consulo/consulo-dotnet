@@ -228,6 +228,13 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return getNameFromBytecode();
 	}
 
+	@Nullable
+	@Override
+	public String getVmName()
+	{
+		return getName();
+	}
+
 	@Override
 	public String getName()
 	{

@@ -48,4 +48,7 @@ public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetMod
 
 	@Nullable
 	String getVmQName();
+
+	@Nullable
+	String getVmName();
 }

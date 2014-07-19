@@ -61,4 +61,17 @@ public class DotNetTypeDeclarationUtil
 		}
 		return presentableQName + GENERIC_MARKER_IN_NAME + genericParametersCount;
 	}
+
+	@Nullable
+	public static String getVmName(@NotNull DotNetTypeDeclaration typeDeclaration)
+	{
+		String name = typeDeclaration.getName();
+
+		int genericParametersCount = typeDeclaration.getGenericParametersCount();
+		if(genericParametersCount == 0)
+		{
+			return name;
+		}
+		return name + GENERIC_MARKER_IN_NAME + genericParametersCount;
+	}
 }
