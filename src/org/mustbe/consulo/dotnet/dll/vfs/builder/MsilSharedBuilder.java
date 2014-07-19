@@ -57,19 +57,11 @@ public class MsilSharedBuilder implements SignatureConstants
 		KEYWORDS = ArrayUtil.toStringArray(set);
 	}
 
+	private static final char[] INVALID_CHARS = {'<', '/', '>'};
+
 	public static void appendValidName(StringBuilder builder, String name)
 	{
-		boolean equals = false;
-		for(String s : KEYWORDS)
-		{
-			if(name.equals(s))
-			{
-				equals = true;
-				break;
-			}
-		}
-
-		if(equals || StringUtil.containsChar(name, '<'))
+		if(!isValidName(name))
 		{
 			builder.append('\'');
 			builder.append(name);
@@ -79,6 +71,31 @@ public class MsilSharedBuilder implements SignatureConstants
 		{
 			builder.append(name);
 		}
+	}
+
+	private static boolean isValidName(String name)
+	{
+		if(name.length() > 0 && Character.isDigit(name.charAt(0)))
+		{
+			return false;
+		}
+
+		for(char invalidChar : INVALID_CHARS)
+		{
+			if(name.indexOf(invalidChar) >= 0)
+			{
+				return false;
+			}
+		}
+
+		for(String s : KEYWORDS)
+		{
+			if(name.equals(s))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static void processAttributes(StubBlock parent, CustomAttributeOwner owner)
@@ -269,16 +286,16 @@ public class MsilSharedBuilder implements SignatureConstants
 		}
 	}
 
-	public static void appendTypeRefFullName(@NotNull StringBuilder builder, @NotNull TypeRef typeRef)
+	public static void appendTypeRefFullName(@NotNull StringBuilder builder, String namespace, @NotNull String name)
 	{
-		String namespace = typeRef.getNamespace();
-		String name = typeRef.getName();
 		if(!StringUtil.isEmpty(namespace))
 		{
-			builder.append(namespace);
-			builder.append('.');
+			appendValidName(builder, namespace + "." + name);
 		}
-		builder.append(name);
+		else
+		{
+			appendValidName(builder, name);
+		}
 	}
 
 	public static <T> void join(StringBuilder builder, List<T> list, PairFunction<StringBuilder, T, Void> function, String dem)
@@ -302,18 +319,18 @@ public class MsilSharedBuilder implements SignatureConstants
 			TypeDef parent = ((TypeDef) o).getParent();
 			if(parent != null)
 			{
-				appendTypeRefFullName(builder, parent);
+				appendTypeRefFullName(builder, parent.getNamespace(), parent.getName());
 				builder.append("/");
-				builder.append(((TypeDef) o).getName());
+				appendValidName(builder, ((TypeDef) o).getName());
 			}
 			else
 			{
-				appendTypeRefFullName(builder, ((TypeRef) o));
+				appendTypeRefFullName(builder, ((TypeRef) o).getNamespace(), ((TypeRef) o).getName());
 			}
 		}
 		else if(o instanceof TypeRef)
 		{
-			appendTypeRefFullName(builder, ((TypeRef) o));
+			appendTypeRefFullName(builder, ((TypeRef) o).getNamespace(), ((TypeRef) o).getName());
 		}
 		else if(o instanceof TypeSpec)
 		{

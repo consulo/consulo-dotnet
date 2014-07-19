@@ -14,7 +14,7 @@ public class DotNetDllFileTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ModuleParser moduleParser = new ModuleParser(new FileInputStream("C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\System.Core.dll"));
+		ModuleParser moduleParser = new ModuleParser(new FileInputStream("G:\\ikvm-7.2.4630.5\\bin\\IKVM.OpenJDK.Core.dll"));
 
 		DotNetArchiveFile archiveFile = new DotNetArchiveFile(moduleParser, 0);
 
@@ -23,10 +23,14 @@ public class DotNetDllFileTest
 		{
 			ArchiveEntry next = entries.next();
 
-			System.out.println((next.isDirectory() ? "Dir: " : "File: ") + next.getName());
+			if(!next.getName().contains("StringPrep.msil"))
+			{
+				continue;
+			}
 
 			if(!next.isDirectory())
 			{
+
 				InputStream inputStream = archiveFile.getInputStream(next);
 				int available = inputStream.available();
 				byte[] data = new byte[available];

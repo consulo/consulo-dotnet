@@ -340,7 +340,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		parseModifierList(builder);
 
-		expect(builder, IDENTIFIER, "Expected name");
+		expect(builder, IDENTIFIERS, "Expected name");
 
 		parseGenericList(builder);
 
@@ -486,7 +486,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 	private void parseReferenceExpression(PsiBuilder builder)
 	{
-		if(builder.getTokenType() == IDENTIFIER)
+		if(IDENTIFIERS.contains(builder.getTokenType()))
 		{
 			PsiBuilder.Marker mark = builder.mark();
 

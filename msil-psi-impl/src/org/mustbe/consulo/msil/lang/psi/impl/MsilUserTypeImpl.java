@@ -95,7 +95,7 @@ public class MsilUserTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub>
 		}
 		else
 		{
-			return childByType.getText();
+			return StringUtil.unquoteString(childByType.getText());
 		}
 	}
 

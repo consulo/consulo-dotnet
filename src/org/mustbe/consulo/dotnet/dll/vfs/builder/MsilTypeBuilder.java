@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.mbel.Event;
 import edu.arizona.cs.mbel.mbel.Field;
@@ -87,16 +86,8 @@ public class MsilTypeBuilder extends MsilSharedBuilder implements TypeAttributes
 			builder.append("serializable ");
 		}
 
-		if(StringUtil.isEmpty(typeDef.getNamespace()))
-		{
-			builder.append(typeDef.getName());
-		}
-		else
-		{
-			builder.append(typeDef.getNamespace());
-			builder.append(".");
-			builder.append(typeDef.getName());
-		}
+		appendTypeRefFullName(builder, typeDef.getNamespace(), typeDef.getName());
+
 		processGeneric(builder, typeDef);
 
 		Object superClass = typeDef.getSuperClass();
