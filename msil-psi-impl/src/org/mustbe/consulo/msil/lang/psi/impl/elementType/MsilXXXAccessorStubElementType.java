@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.msil.lang.psi.MsilXXXAcessor;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilXXXAccessorImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilXXXAccessorStub;
@@ -26,7 +27,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.io.StringRef;
 
 /**
@@ -57,7 +57,7 @@ public class MsilXXXAccessorStubElementType extends AbstractMsilStubElementType<
 	@Override
 	public MsilXXXAccessorStub createStub(@NotNull MsilXXXAcessor accessor, StubElement stubElement)
 	{
-		IElementType accessorType = accessor.getAccessorType();
+		DotNetXXXAccessor.Kind accessorType = accessor.getAccessorKind();
 		String name = accessor.getMethodName();
 		return new MsilXXXAccessorStub(stubElement, this, accessorType, name);
 	}

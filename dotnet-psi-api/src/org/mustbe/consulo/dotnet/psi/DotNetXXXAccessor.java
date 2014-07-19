@@ -17,9 +17,9 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -33,6 +33,19 @@ public interface DotNetXXXAccessor extends DotNetModifierListOwner, PsiNameIdent
 {
 	String VALUE = "value";
 
-	@NotNull
-	IElementType getAccessorType();
+	enum Kind
+	{
+		GET,
+		SET,
+		ADD,
+		REMOVE;
+
+		public static final Kind[] VALUES = values();
+	}
+
+	@Nullable
+	PsiElement getAccessorElement();
+
+	@Nullable
+	Kind getAccessorKind();
 }

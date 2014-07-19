@@ -27,6 +27,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilParameterList;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.MsilXXXAcessor;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilXXXAccessorStub;
 import com.intellij.lang.ASTNode;
@@ -56,20 +57,6 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 	public void accept(MsilVisitor visitor)
 	{
 
-	}
-
-	@NotNull
-	@Override
-	public IElementType getAccessorType()
-	{
-		MsilXXXAccessorStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getAccessorType();
-		}
-
-		PsiElement element = findNotNullChildByFilter(MsilTokenSets.XXX_ACCESSOR_START);
-		return element.getNode().getElementType();
 	}
 
 	@Nullable
@@ -140,5 +127,42 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 			return DotNetParameter.EMPTY_ARRAY;
 		}
 		return stubOrPsiChild.getParameters();
+	}
+
+	@Nullable
+	@Override
+	public PsiElement getAccessorElement()
+	{
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public Kind getAccessorKind()
+	{
+		MsilXXXAccessorStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getAccessorType();
+		}
+
+		IElementType elementType = findNotNullChildByFilter(MsilTokenSets.XXX_ACCESSOR_START).getNode().getElementType();
+		if(elementType == MsilTokens._GET_KEYWORD)
+		{
+			return Kind.GET;
+		}
+		else if(elementType == MsilTokens._SET_KEYWORD)
+		{
+			return Kind.SET;
+		}
+		else if(elementType == MsilTokens._ADDON_KEYWORD)
+		{
+			return Kind.ADD;
+		}
+		else if(elementType == MsilTokens._REMOVEON_KEYWORD)
+		{
+			return Kind.REMOVE;
+		}
+		return null;
 	}
 }

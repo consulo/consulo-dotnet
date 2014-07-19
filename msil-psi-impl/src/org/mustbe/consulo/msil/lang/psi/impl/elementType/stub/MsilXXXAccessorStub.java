@@ -16,13 +16,11 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.msil.lang.psi.MsilXXXAcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.StringRef;
 
 /**
@@ -34,9 +32,9 @@ public class MsilXXXAccessorStub extends StubBase<MsilXXXAcessor>
 	private int myIndex;
 	private StringRef myName;
 
-	public MsilXXXAccessorStub(StubElement parent, IStubElementType elementType, IElementType accessor, String name)
+	public MsilXXXAccessorStub(StubElement parent, IStubElementType elementType, DotNetXXXAccessor.Kind accessor, String name)
 	{
-		this(parent, elementType, ArrayUtil.indexOf(MsilTokenSets.XXX_ACCESSOR_START_AS_ARRAY, accessor), StringRef.fromNullableString(name));
+		this(parent, elementType, accessor == null ? -1 : accessor.ordinal(), StringRef.fromNullableString(name));
 	}
 
 	public MsilXXXAccessorStub(StubElement parent, IStubElementType elementType, int i, StringRef name)
@@ -57,8 +55,8 @@ public class MsilXXXAccessorStub extends StubBase<MsilXXXAcessor>
 		return myIndex;
 	}
 
-	public IElementType getAccessorType()
+	public DotNetXXXAccessor.Kind getAccessorType()
 	{
-		return MsilTokenSets.XXX_ACCESSOR_START_AS_ARRAY[myIndex];
+		return myIndex == -1 ? null : DotNetXXXAccessor.Kind.VALUES[myIndex];
 	}
 }
