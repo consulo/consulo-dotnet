@@ -23,15 +23,9 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
-import org.mustbe.consulo.dotnet.psi.DotNetInheritUtil;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.psi.*;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
@@ -41,6 +35,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilNativeTypeRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -106,6 +101,13 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return null;
 	}
 
+	@Nullable
+	@Override
+	public DotNetFieldDeclaration findFieldByName(@NotNull String name, boolean dep)
+	{
+		return DotNetTypeDeclarationUtil.findFieldByName(this, name, dep);
+	}
+
 	@NotNull
 	@Override
 	public DotNetTypeRef[] getExtendTypeRefs()
@@ -125,6 +127,14 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	public boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep)
 	{
 		return DotNetInheritUtil.isInheritor(this, other, deep);
+	}
+
+	@Override
+	public DotNetTypeRef getTypeRefForEnumConstants()
+	{
+		DotNetFieldDeclaration value = findFieldByName("__value", false);
+		return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(DotNetTypes.System_Int32,
+				DotNetPsiSearcher.TypeResoleKind.UNKNOWN, MsilTokens.INT32_KEYWORD);
 	}
 
 	@Override
@@ -169,8 +179,8 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
-			place)
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
 	{
 		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
 		{

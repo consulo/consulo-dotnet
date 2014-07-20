@@ -46,9 +46,14 @@ public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetMod
 
 	boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep);
 
+	DotNetTypeRef getTypeRefForEnumConstants();
+
 	@Nullable
 	String getVmQName();
 
 	@Nullable
 	String getVmName();
+
+	@Nullable
+	DotNetFieldDeclaration findFieldByName(@NotNull String name, boolean dep);
 }

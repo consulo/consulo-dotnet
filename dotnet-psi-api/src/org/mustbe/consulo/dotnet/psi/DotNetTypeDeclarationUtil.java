@@ -18,6 +18,8 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 
@@ -32,6 +34,30 @@ public class DotNetTypeDeclarationUtil
 	public static final char NORMAL_SEPARATOR_IN_GAME = '.';
 
 	@Nullable
+	public static DotNetFieldDeclaration findFieldByName(@NotNull DotNetTypeDeclaration tp, @NotNull String name, boolean dep)
+	{
+		for(DotNetNamedElement element : tp.getMembers())
+		{
+			if(element instanceof DotNetFieldDeclaration && Comparing.equal(element.getName(), name))
+			{
+				return (DotNetFieldDeclaration) element;
+			}
+		}
+		if(dep)
+		{
+			for(DotNetTypeRef typeRef : tp.getExtendTypeRefs())
+			{
+				PsiElement resolve = typeRef.resolve(tp);
+				if(resolve instanceof DotNetTypeDeclaration && !resolve.isEquivalentTo(tp))
+				{
+					return findFieldByName((DotNetTypeDeclaration)resolve, name, true);
+				}
+			}
+		}
+		return null;
+	}
+
+	@Nullable
 	public static String getVmQName(@NotNull DotNetTypeDeclaration typeDeclaration)
 	{
 		String presentableQName;
@@ -41,13 +67,13 @@ public class DotNetTypeDeclarationUtil
 		{
 			String q = ((DotNetTypeDeclaration) parent).getPresentableQName();
 
-			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q  + NESTED_SEPARATOR_IN_GAME + typeDeclaration.getName();
+			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NESTED_SEPARATOR_IN_GAME + typeDeclaration.getName();
 		}
 		else if(parent instanceof DotNetQualifiedElement)
 		{
 			String q = ((DotNetQualifiedElement) parent).getPresentableQName();
 
-			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q  + NORMAL_SEPARATOR_IN_GAME + typeDeclaration.getName();
+			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NORMAL_SEPARATOR_IN_GAME + typeDeclaration.getName();
 		}
 		else
 		{
