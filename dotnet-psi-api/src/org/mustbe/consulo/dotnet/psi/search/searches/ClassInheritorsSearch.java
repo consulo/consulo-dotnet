@@ -40,6 +40,7 @@ import com.intellij.psi.search.PsiSearchScopeUtil;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.searches.ExtensibleQueryFactory;
 import com.intellij.reference.SoftReference;
+import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.Query;
 import com.intellij.util.QueryExecutor;
@@ -102,22 +103,25 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 		private final SearchScope myScope;
 		private final boolean myCheckDeep;
 		private final boolean myCheckInheritance;
+		private final Function<DotNetTypeDeclaration, DotNetTypeDeclaration> myTransformer;
 		private final Condition<String> myNameCondition;
 
 		public SearchParameters(@NotNull final DotNetTypeDeclaration aClass, @NotNull SearchScope scope, final boolean checkDeep,
-				final boolean checkInheritance)
+				final boolean checkInheritance, Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 		{
-			this(aClass, scope, checkDeep, checkInheritance, Condition.TRUE);
+			this(aClass, scope, checkDeep, checkInheritance, Condition.TRUE, transformer);
 		}
 
 		public SearchParameters(@NotNull final DotNetTypeDeclaration aClass, @NotNull SearchScope scope, final boolean checkDeep,
-				final boolean checkInheritance, @NotNull final Condition<String> nameCondition)
+				final boolean checkInheritance, @NotNull final Condition<String> nameCondition, Function<DotNetTypeDeclaration,
+				DotNetTypeDeclaration> transformer)
 		{
 			myClass = aClass;
 			myScope = scope;
 			myCheckDeep = checkDeep;
 			myCheckInheritance = checkInheritance;
 			myNameCondition = nameCondition;
+			myTransformer = transformer;
 		}
 
 		@NotNull
@@ -154,9 +158,9 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 	}
 
 	public static Query<DotNetTypeDeclaration> search(@NotNull final DotNetTypeDeclaration aClass, @NotNull SearchScope scope,
-			final boolean checkDeep, final boolean checkInheritance)
+			final boolean checkDeep, final boolean checkInheritance, Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
-		return search(new SearchParameters(aClass, scope, checkDeep, checkInheritance));
+		return search(new SearchParameters(aClass, scope, checkDeep, checkInheritance, transformer));
 	}
 
 	public static Query<DotNetTypeDeclaration> search(@NotNull SearchParameters parameters)
@@ -165,19 +169,26 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 	}
 
 	public static Query<DotNetTypeDeclaration> search(@NotNull final DotNetTypeDeclaration aClass, @NotNull SearchScope scope,
-			final boolean checkDeep)
+			final boolean checkDeep, Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
-		return search(aClass, scope, checkDeep, true);
+		return search(aClass, scope, checkDeep, true, transformer);
 	}
 
 	public static Query<DotNetTypeDeclaration> search(@NotNull final DotNetTypeDeclaration aClass, final boolean checkDeep)
 	{
-		return search(aClass, aClass.getUseScope(), checkDeep);
+		return search(aClass, aClass.getUseScope(), checkDeep, DotNetPsiSearcher.DEFAULT_TRANSFORMER);
 	}
 
-	public static Query<DotNetTypeDeclaration> search(@NotNull DotNetTypeDeclaration aClass)
+	public static Query<DotNetTypeDeclaration> search(@NotNull final DotNetTypeDeclaration aClass, final boolean checkDeep,
+			@NotNull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
-		return search(aClass, true);
+		return search(aClass, aClass.getUseScope(), checkDeep, transformer);
+	}
+
+	public static Query<DotNetTypeDeclaration> search(@NotNull DotNetTypeDeclaration aClass, @NotNull Function<DotNetTypeDeclaration,
+			DotNetTypeDeclaration> transformer)
+	{
+		return search(aClass, true, transformer);
 	}
 
 	private static boolean processInheritors(@NotNull final Processor<DotNetTypeDeclaration> consumer,
@@ -198,8 +209,8 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 		});
 		if(DotNetTypes.System_Object.equals(qname))
 		{
-			return AllClassesSearch.search(searchScope, baseClass.getProject(), parameters.getNameCondition()).forEach(
-					new Processor<DotNetTypeDeclaration>()
+			return AllClassesSearch.search(searchScope, baseClass.getProject(), parameters.getNameCondition()).forEach(new
+																															   Processor<DotNetTypeDeclaration>()
 			{
 				@Override
 				public boolean process(final DotNetTypeDeclaration aClass)
@@ -214,7 +225,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 							return aClass.getVmQName();
 						}
 					});
-					return DotNetTypes.System_Object.equals(qname1) || consumer.process(aClass);
+					return DotNetTypes.System_Object.equals(qname1) || consumer.process(parameters.myTransformer.fun(aClass));
 				}
 			});
 		}
@@ -251,7 +262,8 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 						if(PsiSearchScopeUtil.isInScope(searchScope, candidate))
 						{
 							final String name = candidate.getName();
-							if(name != null && parameters.getNameCondition().value(name) && !consumer.process(candidate))
+							if(name != null && parameters.getNameCondition().value(name) && !consumer.process(parameters.myTransformer.fun
+									(candidate)))
 							{
 								result.set(false);
 							}
