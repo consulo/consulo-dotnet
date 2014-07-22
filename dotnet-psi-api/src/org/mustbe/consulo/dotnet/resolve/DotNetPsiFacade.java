@@ -22,6 +22,7 @@ import org.consulo.annotations.Immutable;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
@@ -32,6 +33,7 @@ import com.intellij.util.ArrayUtil;
  */
 @ProjectService
 @Deprecated
+@DeprecationInfo(value = "For type searching use DotNetPsiSearcher. DotNetPsiFacade dont supported cli qnames", until = "2.0")
 public abstract class DotNetPsiFacade
 {
 	public static enum TypeResoleKind
