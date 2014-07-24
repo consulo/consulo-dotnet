@@ -16,18 +16,54 @@
 
 package org.mustbe.consulo.dotnet.library;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
+
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.dll.DotNetDllFileType;
 import com.intellij.ide.highlighter.XmlFileType;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.libraries.ui.FileTypeBasedRootFilter;
+import com.intellij.openapi.roots.libraries.ui.RootDetector;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 
 /**
  * @author VISTALL
  * @since 01.02.14
  */
-public class DotNetXmlDocumentationRootDetector extends FileTypeBasedRootFilter
+public class DotNetXmlDocumentationRootDetector extends RootDetector
 {
 	public DotNetXmlDocumentationRootDetector()
 	{
-		super(OrderRootType.DOCUMENTATION, false, XmlFileType.INSTANCE, ".NET xml documentation");
+		super(OrderRootType.DOCUMENTATION, false, ".NET xml documentation");
+	}
+
+	@NotNull
+	@Override
+	public Collection<VirtualFile> detectRoots(@NotNull VirtualFile rootCandidate, @NotNull ProgressIndicator progressIndicator)
+	{
+		if(rootCandidate.getFileSystem() instanceof ArchiveFileSystem)
+		{
+			VirtualFile localFile = ArchiveVfsUtil.getVirtualFileForArchive(rootCandidate);
+			if(localFile == null || localFile.getFileType() != DotNetDllFileType.INSTANCE)
+			{
+				return Collections.emptyList();
+			}
+			String docFilePath = localFile.getParent().getPath() + "/" + localFile.getNameWithoutExtension() + XmlFileType.DOT_DEFAULT_EXTENSION;
+			VirtualFile docFile = LocalFileSystem.getInstance().findFileByIoFile(new File(docFilePath));
+			if(docFile != null)
+			{
+				return Collections.singletonList(docFile);
+			}
+		}
+		else if(rootCandidate.getFileType() == XmlFileType.INSTANCE)
+		{
+			return Collections.singletonList(rootCandidate);
+		}
+		return Collections.emptyList();
 	}
 }

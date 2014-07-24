@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.dotnet.library;
 
-import org.mustbe.consulo.dotnet.dll.DotNetDllFileType;
+import org.mustbe.consulo.msil.MsilFileType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.FileTypeBasedRootFilter;
 
@@ -28,6 +28,6 @@ public class DotNetLibraryRootDetector extends FileTypeBasedRootFilter
 {
 	public DotNetLibraryRootDetector()
 	{
-		super(OrderRootType.CLASSES, false, DotNetDllFileType.INSTANCE, ".NET library");
+		super(OrderRootType.BINARIES, false, MsilFileType.INSTANCE, ".NET library");
 	}
 }
