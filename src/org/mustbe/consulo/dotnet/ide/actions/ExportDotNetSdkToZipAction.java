@@ -129,7 +129,7 @@ public class ExportDotNetSdkToZipAction extends AnAction
 		{
 			val buffer = new byte[1024];
 
-			VirtualFile[] files = selected.getRootProvider().getFiles(OrderRootType.CLASSES);
+			VirtualFile[] files = selected.getRootProvider().getFiles(OrderRootType.BINARIES);
 			for(VirtualFile v : files)
 			{
 				VirtualFile virtualFileForArchive = ArchiveVfsUtil.getVirtualFileForArchive(v);

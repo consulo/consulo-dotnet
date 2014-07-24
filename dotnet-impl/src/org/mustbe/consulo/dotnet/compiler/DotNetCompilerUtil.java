@@ -100,7 +100,7 @@ public class DotNetCompilerUtil
 
 			private void collectFromRoot(OrderEntry orderEntry)
 			{
-				for(VirtualFile virtualFile : orderEntry.getFiles(OrderRootType.CLASSES))
+				for(VirtualFile virtualFile : orderEntry.getFiles(OrderRootType.BINARIES))
 				{
 					VirtualFile virtualFileForJar = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
 					if(virtualFileForJar != null)

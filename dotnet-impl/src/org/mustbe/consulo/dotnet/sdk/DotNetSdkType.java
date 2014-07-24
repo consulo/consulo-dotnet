@@ -41,7 +41,7 @@ public abstract class DotNetSdkType extends SdkType
 	@Override
 	public boolean isRootTypeApplicable(OrderRootType type)
 	{
-		return type == OrderRootType.CLASSES || type == OrderRootType.SOURCES || type == OrderRootType.DOCUMENTATION;
+		return type == OrderRootType.BINARIES || type == OrderRootType.SOURCES || type == OrderRootType.DOCUMENTATION;
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public abstract class DotNetSdkType extends SdkType
 			{
 				continue;
 			}
-			sdkModificator.addRoot(archiveRootForLocalFile, OrderRootType.CLASSES);
+			sdkModificator.addRoot(archiveRootForLocalFile, OrderRootType.BINARIES);
 
 			VirtualFile docFile = homeDirectory.findChild(dllVirtualFile.getNameWithoutExtension() + ".xml");
 			if(docFile != null)

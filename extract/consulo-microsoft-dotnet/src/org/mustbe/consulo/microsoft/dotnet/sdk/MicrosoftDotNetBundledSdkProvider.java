@@ -64,7 +64,7 @@ public class MicrosoftDotNetBundledSdkProvider implements BundledSdkProvider
 			microsoftDotNetSdkType.setupSdkPaths(sdk);
 
 			// for 3.5 dont have core libs - need manual setup
-			if(sdk.getRoots(OrderRootType.CLASSES).length == 0)
+			if(sdk.getRoots(OrderRootType.BINARIES).length == 0)
 			{
 				continue;
 			}
