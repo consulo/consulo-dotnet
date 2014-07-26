@@ -16,8 +16,7 @@
 
 package org.mustbe.consulo.dotnet.execution;
 
-import java.io.IOException;
-import java.net.ServerSocket;
+import com.intellij.util.net.NetUtils;
 
 /**
  * @author VISTALL
@@ -35,16 +34,7 @@ public class DebugConnectionInfo
 		myServer = server;
 		if(port == -1)
 		{
-			try
-			{
-				ServerSocket serverSocket = new ServerSocket(0);
-				myPort = serverSocket.getLocalPort();
-				serverSocket.close();
-			}
-			catch(IOException e)
-			{
-				throw new IllegalArgumentException(e);
-			}
+			myPort = NetUtils.tryToFindAvailableSocketPort();
 		}
 		else
 		{
