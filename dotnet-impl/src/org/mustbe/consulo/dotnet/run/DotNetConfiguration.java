@@ -57,7 +57,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	private String myProgramParameters;
 	private String myWorkingDir = "";
 	private Map<String, String> myEnvsMap = Collections.emptyMap();
-	private boolean myPassParentEnvs;
+	private boolean myPassParentEnvs = true;
 
 	public DotNetConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory)
 	{
@@ -133,7 +133,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		DebugConnectionInfo debugConnectionInfo = null;
 		if(executor instanceof DefaultDebugExecutor)
 		{
-			debugConnectionInfo = new DebugConnectionInfo("127.0.0.1", -1, false);
+			debugConnectionInfo = new DebugConnectionInfo("127.0.0.1", -1, true);
 		}
 
 		DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();

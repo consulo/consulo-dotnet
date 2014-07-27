@@ -130,16 +130,20 @@ public class DotNetDebugThread extends Thread
 			Map<String, Connector.Argument> argumentMap = l.defaultArguments();
 			argumentMap.get("hostname").setValue(myDebugConnectionInfo.getHost());
 			argumentMap.get("port").setValue(String.valueOf(myDebugConnectionInfo.getPort()));
-			argumentMap.get("timeout").setValue("10000");
+			argumentMap.get("timeout").setValue("10");
 
-
-			try
+			int tryCount = 5;
+			while(tryCount != 0)
 			{
-				virtualMachine = l.attach(argumentMap);
-			}
-			catch(Exception e)
-			{
-				//
+				try
+				{
+					virtualMachine = l.attach(argumentMap);
+					break;
+				}
+				catch(Exception e)
+				{
+					tryCount --;
+				}
 			}
 		}
 

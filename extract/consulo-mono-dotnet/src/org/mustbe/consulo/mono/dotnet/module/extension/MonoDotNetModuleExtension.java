@@ -116,7 +116,7 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 		builder.append(debugConnectionInfo.getPort());
 		if(debugConnectionInfo.isServer())
 		{
-			builder.append(",suspend=n,server=y");
+			builder.append(",suspend=y,server=y");
 		}
 		else
 		{
