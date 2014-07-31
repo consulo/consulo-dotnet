@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import com.intellij.openapi.module.Module;
@@ -133,13 +132,10 @@ public class DotNetCompilerUtil
 				DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(depModule, DotNetModuleExtension.class);
 				if(dependencyExtension != null)
 				{
-					String depCurrentLayerName = dependencyExtension.getCurrentLayerName();
-					MainConfigurationLayer depCurrentLayer = (MainConfigurationLayer) dependencyExtension.getCurrentLayer();
-
-					list.add(new File(DotNetMacros.extract(depModule, depCurrentLayerName, depCurrentLayer)));
+					list.add(new File(DotNetMacros.extract(depModule, dependencyExtension)));
 					if(debugSymbol)
 					{
-						list.add(new File(DotNetMacros.extract(depModule, depCurrentLayerName, depCurrentLayer, true)));
+						list.add(new File(DotNetMacros.extract(depModule, dependencyExtension, true)));
 					}
 
 					list.addAll(collectDependencies(depModule, false));

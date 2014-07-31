@@ -20,16 +20,15 @@ import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.csharp.module.extension.CSharpConfigurationPanel;
 import org.mustbe.consulo.csharp.module.extension.CSharpMutableModuleExtension;
-import org.mustbe.consulo.module.extension.LayeredMutableModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
  * @author VISTALL
  * @since 26.11.13.
  */
-public class MicrosoftCSharpMutableModuleExtension extends MicrosoftCSharpModuleExtension implements
-		LayeredMutableModuleExtension<MicrosoftCSharpModuleExtension>, CSharpMutableModuleExtension<MicrosoftCSharpModuleExtension>
+public class MicrosoftCSharpMutableModuleExtension extends MicrosoftCSharpModuleExtension implements CSharpMutableModuleExtension<MicrosoftCSharpModuleExtension>
 {
 	public MicrosoftCSharpMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
@@ -40,7 +39,13 @@ public class MicrosoftCSharpMutableModuleExtension extends MicrosoftCSharpModule
 	@Override
 	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
 	{
-		return createConfigurablePanelImpl(runnable);
+		return new CSharpConfigurationPanel(this);
+	}
+
+	@Override
+	public void setEnabled(boolean val)
+	{
+		myIsEnabled = val;
 	}
 
 	@Override

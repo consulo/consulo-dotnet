@@ -21,7 +21,6 @@ import java.io.File;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -47,9 +46,7 @@ public class DotNetDebuggerUtil
 		{
 			return null;
 		}
-		String currentLayerName = extension.getCurrentLayerName();
-		MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
-		val exeFile = DotNetMacros.extract(extension.getModule(), currentLayerName, currentLayer);
+		val exeFile = DotNetMacros.extract(extension.getModule(), extension);
 		return new File(exeFile);
 	}
 

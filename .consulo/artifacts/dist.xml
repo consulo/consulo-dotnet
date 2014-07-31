@@ -13,7 +13,6 @@
             <element id="module-production-resource-output" name="dotnet-api" />
             <element id="module-output" name="dotnet-psi-impl" />
             <element id="module-output" name="dotnet-impl" />
-            <element id="module-output" name="layered-module-extension" />
             <element id="module-output" name="dotnet-debugger-impl" />
             <element id="module-output" name="dotnet-debugger-api" />
             <element id="module-output" name="dotnet-documentation-api" />
@@ -43,14 +42,6 @@
           </element>
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-mono-dotnet/dist" />
-      </element>
-      <element id="directory" name="x-dotnet">
-        <element id="directory" name="lib">
-          <element id="zip-archive" name="x-dotnet.jar">
-            <element id="module-output" name="x-dotnet" />
-            <element id="module-production-resource-output" name="x-dotnet" />
-          </element>
-        </element>
       </element>
       <element id="directory" name="csharp">
         <element id="directory" name="lib">

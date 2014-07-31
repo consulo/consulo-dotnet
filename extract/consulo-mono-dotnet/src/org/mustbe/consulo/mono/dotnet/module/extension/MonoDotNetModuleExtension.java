@@ -21,8 +21,7 @@ import java.io.File;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
+import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -34,7 +33,7 @@ import com.intellij.openapi.util.SystemInfo;
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDotNetModuleExtension>
+public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDotNetModuleExtension>
 {
 	public MonoDotNetModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel)
 	{
@@ -66,8 +65,7 @@ public class MonoDotNetModuleExtension extends DotNetModuleExtensionImpl<MonoDot
 	@Override
 	public String getDebugFileExtension()
 	{
-		MainConfigurationLayer currentLayer = (MainConfigurationLayer) getCurrentLayer();
-		switch(currentLayer.getTarget())
+		switch(getTarget())
 		{
 			case EXECUTABLE:
 				return "exe.mdb";

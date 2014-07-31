@@ -21,7 +21,6 @@ import java.util.Arrays;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -108,14 +107,11 @@ public class DotNetCompiler implements TranslatingCompiler
 		assert dotNetModuleExtension != null;
 		assert langDotNetModuleExtension != null;
 
-		String layerName = dotNetModuleExtension.getCurrentLayerName();
-
 		DotNetCompilerOptionsBuilder builder = langDotNetModuleExtension.createCompilerOptionsBuilder();
 
 		try
 		{
-			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, layerName,
-					(MainConfigurationLayer) dotNetModuleExtension.getCurrentLayer());
+			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, dotNetModuleExtension);
 
 			val process = commandLine.createProcess();
 			val processHandler = new CapturingProcessHandler(process, Charset.forName("UTF-8"));

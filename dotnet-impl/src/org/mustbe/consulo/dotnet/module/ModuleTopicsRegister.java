@@ -57,7 +57,7 @@ public class ModuleTopicsRegister extends AbstractProjectComponent
 	@Override
 	public void projectOpened()
 	{
-		myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener.Adapter()
+		myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener()
 		{
 			@Override
 			public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension)
@@ -70,11 +70,8 @@ public class ModuleTopicsRegister extends AbstractProjectComponent
 				{
 					return;
 				}
-				MainConfigurationLayer oldV = (MainConfigurationLayer) ((DotNetModuleExtension<?>) oldExtension).getCurrentLayer();
-				MainConfigurationLayer newV = (MainConfigurationLayer) ((DotNetModuleExtension<?>) newExtension).getCurrentLayer();
-
-				if(oldExtension.isEnabled() != newExtension.isEnabled() ||
-						!Comparing.haveEqualElements(oldV.getVariables(), newV.getVariables()))
+				if(oldExtension.isEnabled() != newExtension.isEnabled() || !Comparing.haveEqualElements(((DotNetModuleExtension) oldExtension)
+						.getVariables(), ((DotNetModuleExtension) newExtension).getVariables()))
 				{
 					reParseFiles(oldExtension.getModule());
 				}

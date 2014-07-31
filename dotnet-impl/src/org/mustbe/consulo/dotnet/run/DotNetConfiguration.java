@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.ExecutionException;
@@ -125,10 +124,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 			throw new ExecutionException("Module don't have .NET extension");
 		}
 
-		String currentLayerName = extension.getCurrentLayerName();
-		MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
-
-		val exeFile = DotNetMacros.extract(module, currentLayerName, currentLayer);
+		val exeFile = DotNetMacros.extract(module, extension);
 
 		DebugConnectionInfo debugConnectionInfo = null;
 		if(executor instanceof DefaultDebugExecutor)
@@ -145,8 +141,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		}
 		runCommandLine.setPassParentEnvironment(runProfile.isPassParentEnvs());
 		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
-		runCommandLine.setWorkDirectory(DotNetMacros.extractLikeWorkDir(module, runProfile.getWorkingDirectory(), currentLayerName, currentLayer,
-				false));
+		runCommandLine.setWorkDirectory(DotNetMacros.extractLikeWorkDir(module, runProfile.getWorkingDirectory(), false));
 		return new DotNetRunProfileState(exeFile, executionEnvironment, runCommandLine, debugConnectionInfo);
 	}
 

@@ -18,11 +18,10 @@ package org.mustbe.consulo.dotnet.compiler;
 
 import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -33,35 +32,25 @@ import com.intellij.openapi.vfs.VfsUtil;
  */
 public class DotNetMacros
 {
-	public static final String MODULE_OUTPUT_DIR = "${module-output-dir}";
-
-	public static final String CONFIGURATION = "${configuration}";
-
-	public static final String MODULE_NAME = "${module-name}";
-
-	public static final String OUTPUT_FILE_EXT = "${output-file-ext}";
-
 	@NotNull
-	public static String extract(@NotNull Module module, @NotNull String currentLayerName, MainConfigurationLayer currentLayer)
+	public static String extract(@NotNull Module module, DotNetModuleExtension<?> extension)
 	{
-		return extract(module, currentLayerName, currentLayer, false);
+		return extract(module, extension, false);
 	}
 
 	@NotNull
-	public static String extract(@NotNull Module module, @NotNull String currentLayerName, MainConfigurationLayer currentLayer, boolean debugSymbols)
+	public static String extract(@NotNull Module module, DotNetModuleExtension<?> extension, boolean debugSymbols)
 	{
 		ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 
 		String fileExtension = null;
 		if(debugSymbols)
 		{
-			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-			assert extension != null;
 			fileExtension = extension.getDebugFileExtension();
 		}
 		else
 		{
-			switch(currentLayer.getTarget())
+			switch(extension.getTarget())
 			{
 				case EXECUTABLE:
 					fileExtension = "exe";
@@ -72,30 +61,32 @@ public class DotNetMacros
 			}
 		}
 
-		String path = currentLayer.getOutputDir() + "/" + currentLayer.getFileName();
-		path = StringUtil.replace(path, MODULE_OUTPUT_DIR, compilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance
+		String path = extension.getOutputDir() + "/" + extension.getFileName();
+		path = StringUtil.replace(path, DotNetModuleExtension.MODULE_OUTPUT_DIR, compilerPathsManager.getCompilerOutputUrl
+				(ProductionContentFolderTypeProvider.getInstance
 				()));
 
-		path = StringUtil.replace(path, CONFIGURATION, currentLayerName);
-		path = StringUtil.replace(path, MODULE_NAME, module.getName());
-		path = StringUtil.replace(path, OUTPUT_FILE_EXT, fileExtension);
+		String currentLayerName = ModuleRootManager.getInstance(module).getCurrentLayerName();
+		path = StringUtil.replace(path, DotNetModuleExtension.CONFIGURATION, currentLayerName);
+		path = StringUtil.replace(path, DotNetModuleExtension.MODULE_NAME, module.getName());
+		path = StringUtil.replace(path, DotNetModuleExtension.OUTPUT_FILE_EXT, fileExtension);
 		return FileUtil.toSystemDependentName(VfsUtil.urlToPath(path));
 	}
 
-	public static String getModuleOutputDirUrl(@NotNull Module module, String name, MainConfigurationLayer p)
+	public static String getModuleOutputDirUrl(@NotNull Module module, DotNetModuleExtension<?> extension)
 	{
-		return extractLikeWorkDir(module, p.getOutputDir(), name, p, true);
+		return extractLikeWorkDir(module, extension.getOutputDir(), true);
 	}
 
-	public static String extractLikeWorkDir(@NotNull Module module, @NotNull String path, @NotNull String name, MainConfigurationLayer p,
-			boolean url)
+	public static String extractLikeWorkDir(@NotNull Module module, @NotNull String path, boolean url)
 	{
+		ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 		ModuleCompilerPathsManager compilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
 		String compilerOutputUrl = compilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
 
-		path = StringUtil.replace(path, MODULE_OUTPUT_DIR, url ? compilerOutputUrl : VfsUtil.urlToPath(compilerOutputUrl));
-		path = StringUtil.replace(path, CONFIGURATION, name);
-		path = StringUtil.replace(path, MODULE_NAME, module.getName());
+		path = StringUtil.replace(path, DotNetModuleExtension.MODULE_OUTPUT_DIR, url ? compilerOutputUrl : VfsUtil.urlToPath(compilerOutputUrl));
+		path = StringUtil.replace(path, DotNetModuleExtension.CONFIGURATION, moduleRootManager.getCurrentLayerName());
+		path = StringUtil.replace(path, DotNetModuleExtension.MODULE_NAME, module.getName());
 		return path;
 	}
 }
