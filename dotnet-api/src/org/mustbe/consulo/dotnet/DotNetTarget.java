@@ -23,7 +23,8 @@ package org.mustbe.consulo.dotnet;
 public enum DotNetTarget
 {
 	EXECUTABLE(DotNetBundle.message("executable.desc")),
-	LIBRARY(DotNetBundle.message("library.desc"));
+	LIBRARY(DotNetBundle.message("library.desc")),
+	NET_MODULE(DotNetBundle.message("netmodule.desc"));
 
 	private final String myDescription;
 
