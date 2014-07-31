@@ -40,13 +40,13 @@ import com.intellij.psi.search.GlobalSearchScopes;
 public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtension<S>> extends ModuleExtensionWithSdkImpl<S> implements
 		DotNetModuleExtension<S>
 {
-	private DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
-	private boolean myAllowDebugInfo;
-	private boolean myAllowSourceRoots;
-	private String myMainType;
+	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
+	protected boolean myAllowDebugInfo;
+	protected boolean myAllowSourceRoots;
+	protected String myMainType;
 	protected List<String> myVariables = new ArrayList<String>();
-	private String myFileName = DEFAULT_FILE_NAME;
-	private String myOutputDirectory = DEFAULT_OUTPUT_DIR;
+	protected String myFileName = DEFAULT_FILE_NAME;
+	protected String myOutputDirectory = DEFAULT_OUTPUT_DIR;
 
 	public BaseDotNetModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{
