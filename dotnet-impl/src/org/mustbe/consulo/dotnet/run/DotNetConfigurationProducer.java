@@ -79,7 +79,7 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		if(extension != null)
 		{
-			if(extension.getTarget() == DotNetTarget.EXECUTABLE)
+			if(extension.getTarget() == DotNetTarget.EXECUTABLE || extension.getTarget() == DotNetTarget.WIN_EXECUTABLE)
 			{
 				return Pair.create(module, extension.getOutputDir());
 			}

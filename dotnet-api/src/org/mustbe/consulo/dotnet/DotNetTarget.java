@@ -24,7 +24,8 @@ public enum DotNetTarget
 {
 	EXECUTABLE(DotNetBundle.message("executable.desc"), "exe"),
 	LIBRARY(DotNetBundle.message("library.desc"), "dll"),
-	NET_MODULE(DotNetBundle.message("netmodule.desc"), "netmodule");
+	NET_MODULE(DotNetBundle.message("netmodule.desc"), "netmodule"),
+	WIN_EXECUTABLE(DotNetBundle.message("win.executable.desc"), "exe");
 
 	private final String myDescription;
 	private final String myExtension;
