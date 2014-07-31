@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTarget;
@@ -66,12 +67,12 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	{
 		return super.isModifiedImpl(ex) ||
 				!myTarget.equals(ex.myTarget) ||
-						myAllowDebugInfo != ex.isAllowDebugInfo() ||
-						myAllowSourceRoots != ex.isAllowSourceRoots() ||
-						!myVariables.equals(ex.getVariables()) ||
-						!Comparing.equal(myMainType, ex.myMainType) ||
-						!Comparing.equal(getFileName(), ex.getFileName()) ||
-						!Comparing.equal(getOutputDir(), ex.getOutputDir());
+				myAllowDebugInfo != ex.isAllowDebugInfo() ||
+				myAllowSourceRoots != ex.isAllowSourceRoots() ||
+				!myVariables.equals(ex.getVariables()) ||
+				!Comparing.equal(myMainType, ex.myMainType) ||
+				!Comparing.equal(getFileName(), ex.getFileName()) ||
+				!Comparing.equal(getOutputDir(), ex.getOutputDir());
 	}
 
 	@Override
@@ -87,6 +88,48 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		myOutputDirectory = mutableModuleExtension.myOutputDirectory;
 		myVariables.clear();
 		myVariables.addAll(mutableModuleExtension.myVariables);
+	}
+
+	@Override
+	protected void loadStateImpl(@NotNull Element element)
+	{
+		super.loadStateImpl(element);
+
+		myTarget = DotNetTarget.valueOf(element.getAttributeValue("target", DotNetTarget.EXECUTABLE.name()));
+		myAllowDebugInfo = Boolean.valueOf(element.getAttributeValue("debug", "false"));
+		myAllowSourceRoots = Boolean.valueOf(element.getAttributeValue("allow-source-roots", "false"));
+		myFileName = element.getAttributeValue("file-name", DEFAULT_FILE_NAME);
+		myOutputDirectory = element.getAttributeValue("output-dir", DEFAULT_OUTPUT_DIR);
+		myMainType = element.getAttributeValue("main-type");
+
+		for(Element defineElement : element.getChildren("define"))
+		{
+			myVariables.add(defineElement.getText());
+		}
+	}
+
+	@Override
+	protected void getStateImpl(@NotNull Element element)
+	{
+		super.getStateImpl(element);
+
+		element.setAttribute("target", myTarget.name());
+		element.setAttribute("debug", Boolean.toString(myAllowDebugInfo));
+		element.setAttribute("allow-source-roots", Boolean.toString(myAllowSourceRoots));
+		element.setAttribute("file-name", myFileName);
+		element.setAttribute("output-dir", myOutputDirectory);
+		if(myMainType != null)
+		{
+			{
+				element.setAttribute("main-type", myMainType);
+			}
+		}
+		for(String variable : myVariables)
+		{
+			{
+				element.addContent(new Element("define").setText(variable));
+			}
+		}
 	}
 
 	@NotNull
