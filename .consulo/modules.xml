@@ -75,7 +75,6 @@
         <orderEntry type="module-extension-sdk" extension-id="java" />
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="layered-module-extension" exported="" />
       </module>
       <module name="dotnet-psi-api" dirurl="file://$PROJECT_DIR$/dotnet-psi-api">
         <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
@@ -113,33 +112,6 @@
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module" module-name="dotnet-api" exported="" />
         <orderEntry type="module" module-name="dotnet-psi-api" />
-      </module>
-      <module name="layered-module-extension" dirurl="file://$PROJECT_DIR$/layered-module-extension">
-        <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
-        <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-      </module>
-      <module name="impl/x-dotnet" dirurl="file://$PROJECT_DIR$/extract/x-dotnet">
-        <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-        <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
-        <extension id="lombok" />
-        <content url="file://$MODULE_DIR$">
-          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-        </content>
-        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-        <orderEntry type="module-extension-sdk" extension-id="java" />
-        <orderEntry type="sourceFolder" forTests="false" />
-        <orderEntry type="module" module-name="dotnet-impl" />
-        <orderEntry type="module" module-name="csharp-impl" />
-        <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
-        <orderEntry type="module" module-name="consulo-mono-dotnet" />
       </module>
       <module name="dotnet-debugger-api" dirurl="file://$PROJECT_DIR$/dotnet-debugger-api">
         <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />

@@ -17,7 +17,6 @@
 package org.mustbe.consulo.dotnet.run;
 
 import org.mustbe.consulo.dotnet.DotNetTarget;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.actions.RunConfigurationProducer;
@@ -80,10 +79,9 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		if(extension != null)
 		{
-			MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
-			if(currentLayer.getTarget() == DotNetTarget.EXECUTABLE)
+			if(extension.getTarget() == DotNetTarget.EXECUTABLE)
 			{
-				return Pair.create(module, currentLayer.getOutputDir());
+				return Pair.create(module, extension.getOutputDir());
 			}
 			return null;
 		}

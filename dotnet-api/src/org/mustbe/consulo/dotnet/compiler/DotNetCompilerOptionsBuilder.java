@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -35,6 +35,5 @@ public interface DotNetCompilerOptionsBuilder
 	DotNetCompilerMessage convertToMessage(Module module, String line);
 
 	@NotNull
-	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull String layerName,
-			@NotNull MainConfigurationLayer dotNetLayer) throws IOException;
+	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull DotNetModuleExtension<?> dotNetLayer) throws IOException;
 }

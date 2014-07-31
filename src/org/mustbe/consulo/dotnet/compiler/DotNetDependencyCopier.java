@@ -26,7 +26,6 @@ import java.util.Set;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.application.ReadAction;
@@ -95,8 +94,6 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 
 			val dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 			assert dotNetModuleExtension != null;
-			val currentLayer = (MainConfigurationLayer) dotNetModuleExtension.getCurrentLayer();
-			val currentLayerName = dotNetModuleExtension.getCurrentLayerName();
 
 			val r = new ReadAction<Set<File>>()
 			{
@@ -116,7 +113,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				{
 					continue;
 				}
-				itemList.add(new DotNetProcessingItem(fileByIoFile, module, currentLayerName, currentLayer));
+				itemList.add(new DotNetProcessingItem(fileByIoFile, module, dotNetModuleExtension));
 			}
 		}
 
@@ -136,7 +133,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 		{
 			DotNetProcessingItem dotNetProcessingItem = (DotNetProcessingItem) processingItem;
 			String moduleOutputDirUrl = DotNetMacros.getModuleOutputDirUrl(dotNetProcessingItem.getTarget(),
-					dotNetProcessingItem.getLayerName(), dotNetProcessingItem.getLayer());
+					dotNetProcessingItem.getExtension());
 
 			File copyFile = new File(VirtualFileManager.extractPath(moduleOutputDirUrl), processingItem.getFile().getName());
 
@@ -146,7 +143,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			{
 				FileUtil.copy(file, copyFile);
 
-				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null, null, null));
+				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null, null));
 			}
 			catch(IOException e)
 			{

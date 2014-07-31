@@ -17,7 +17,6 @@
 package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.MainConfigurationLayer;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.module.extension.ModuleExtensionHelper;
 import com.intellij.execution.configuration.ConfigurationFactoryEx;
@@ -63,10 +62,9 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 					DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 					if(extension != null)
 					{
-						MainConfigurationLayer currentLayer = (MainConfigurationLayer) extension.getCurrentLayer();
 						dotNetConfiguration.setName(module.getName());
 						dotNetConfiguration.setModule(module);
-						dotNetConfiguration.setWorkingDirectory(currentLayer.getOutputDir());
+						dotNetConfiguration.setWorkingDirectory(extension.getOutputDir());
 						break;
 					}
 				}

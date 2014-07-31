@@ -21,7 +21,7 @@ import java.io.File;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionImpl;
+import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -32,7 +32,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MicrosoftDotNetModuleExtension extends DotNetModuleExtensionImpl<MicrosoftDotNetModuleExtension>
+public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<MicrosoftDotNetModuleExtension>
 {
 	public MicrosoftDotNetModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
 	{

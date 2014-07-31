@@ -21,10 +21,9 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionChangeListener;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.AbstractProjectComponent;
@@ -33,11 +32,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.ModuleRootLayerListener;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.containers.hash.HashSet;
@@ -57,27 +55,12 @@ public class ModuleTopicsRegister extends AbstractProjectComponent
 	@Override
 	public void projectOpened()
 	{
-		myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener.Adapter()
+		myProject.getMessageBus().connect().subscribe(ProjectTopics.MODULE_LAYERS, new ModuleRootLayerListener.Adapter()
 		{
 			@Override
-			public void beforeExtensionChanged(@NotNull ModuleExtension<?> oldExtension, @NotNull ModuleExtension<?> newExtension)
+			public void currentLayerChanged(@NotNull Module module, @NotNull String oldName, @NotNull String newName)
 			{
-				if(DumbService.isDumb(myProject))
-				{
-					return;
-				}
-				if(!(oldExtension instanceof DotNetModuleExtension))
-				{
-					return;
-				}
-				MainConfigurationLayer oldV = (MainConfigurationLayer) ((DotNetModuleExtension<?>) oldExtension).getCurrentLayer();
-				MainConfigurationLayer newV = (MainConfigurationLayer) ((DotNetModuleExtension<?>) newExtension).getCurrentLayer();
-
-				if(oldExtension.isEnabled() != newExtension.isEnabled() ||
-						!Comparing.haveEqualElements(oldV.getVariables(), newV.getVariables()))
-				{
-					reParseFiles(oldExtension.getModule());
-				}
+				reParseFiles(module);
 			}
 		});
 	}

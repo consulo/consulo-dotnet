@@ -16,15 +16,32 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
+import java.util.List;
+
 import org.consulo.module.extension.MutableModuleExtensionWithSdk;
-import org.mustbe.consulo.module.extension.LayeredMutableModuleExtension;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTarget;
 
 /**
  * @author VISTALL
  * @since 01.02.14
  */
 public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetModuleExtension<T>,
-		MutableModuleExtensionWithSdk<T>, LayeredMutableModuleExtension<T>
+		MutableModuleExtensionWithSdk<T>
 {
+	@Override
+	List<String> getVariables();
 
+	void setFileName(@NotNull String name);
+
+	void setOutputDir(@NotNull String name);
+
+	void setAllowSourceRoots(boolean val);
+
+	void setMainType(@Nullable String qName);
+
+	void setTarget(@NotNull DotNetTarget target);
+
+	void setAllowDebugInfo(boolean allowDebugInfo);
 }

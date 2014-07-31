@@ -18,9 +18,12 @@ package org.mustbe.consulo.mono.dotnet.module.extension;
 
 import javax.swing.JComponent;
 
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.module.extension.DotNetConfigurationPanel;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 /**
@@ -34,11 +37,18 @@ public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension 
 		super(id, rootModel);
 	}
 
+	@NotNull
+	@Override
+	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
+	{
+		return (MutableModuleInheritableNamedPointer<Sdk>) super.getInheritableSdk();
+	}
+
 	@Nullable
 	@Override
 	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
 	{
-		return createConfigurablePanelImpl(runnable);
+		return new DotNetConfigurationPanel(this, myVariables, runnable);
 	}
 
 	@Override

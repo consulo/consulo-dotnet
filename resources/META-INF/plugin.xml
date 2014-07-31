@@ -48,9 +48,6 @@
 
 	<project-components>
 		<component>
-			<implementation-class>org.mustbe.consulo.dotnet.ui.profile.DotNetConfigurationLayerWidgetRegistrator</implementation-class>
-		</component>
-		<component>
 			<implementation-class>org.mustbe.consulo.dotnet.module.ModuleTopicsRegister</implementation-class>
 		</component>
 	</project-components>
