@@ -58,6 +58,9 @@ public class DotNetMacros
 				case LIBRARY:
 					fileExtension = "dll";
 					break;
+				case NET_MODULE:
+					fileExtension = "netmodule";
+					break;
 			}
 		}
 
