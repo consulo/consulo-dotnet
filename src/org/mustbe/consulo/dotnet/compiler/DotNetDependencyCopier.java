@@ -26,6 +26,7 @@ import java.util.Set;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.application.ReadAction;
@@ -100,7 +101,10 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				@Override
 				protected void run(Result<Set<File>> listResult) throws Throwable
 				{
-					listResult.setResult(DotNetCompilerUtil.collectDependencies(module, true, false));
+					Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true, false);
+					files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true, false));
+
+					listResult.setResult(files);
 				}
 			}.execute();
 

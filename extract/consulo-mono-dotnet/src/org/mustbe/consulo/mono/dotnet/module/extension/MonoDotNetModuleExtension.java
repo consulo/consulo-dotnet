@@ -65,14 +65,7 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 	@Override
 	public String getDebugFileExtension()
 	{
-		switch(getTarget())
-		{
-			case EXECUTABLE:
-				return "exe.mdb";
-			case LIBRARY:
-				return "dll.mdb";
-		}
-		throw new IllegalArgumentException();
+		return getTarget().getExtension() + ".mdb";
 	}
 
 	@NotNull

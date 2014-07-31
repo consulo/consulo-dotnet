@@ -75,7 +75,7 @@
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetDllFileTypeFactory"/>
+		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetModuleFileTypeFactory"/>
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 
 		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetLibraryRootDetector"/>

@@ -50,18 +50,7 @@ public class DotNetMacros
 		}
 		else
 		{
-			switch(extension.getTarget())
-			{
-				case EXECUTABLE:
-					fileExtension = "exe";
-					break;
-				case LIBRARY:
-					fileExtension = "dll";
-					break;
-				case NET_MODULE:
-					fileExtension = "netmodule";
-					break;
-			}
+			fileExtension = extension.getTarget().getExtension();
 		}
 
 		String path = extension.getOutputDir() + "/" + extension.getFileName();

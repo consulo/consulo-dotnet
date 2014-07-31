@@ -22,15 +22,22 @@ package org.mustbe.consulo.dotnet;
  */
 public enum DotNetTarget
 {
-	EXECUTABLE(DotNetBundle.message("executable.desc")),
-	LIBRARY(DotNetBundle.message("library.desc")),
-	NET_MODULE(DotNetBundle.message("netmodule.desc"));
+	EXECUTABLE(DotNetBundle.message("executable.desc"), "exe"),
+	LIBRARY(DotNetBundle.message("library.desc"), "dll"),
+	NET_MODULE(DotNetBundle.message("netmodule.desc"), "netmodule");
 
 	private final String myDescription;
+	private final String myExtension;
 
-	DotNetTarget(String description)
+	DotNetTarget(String description, String extension)
 	{
 		myDescription = description;
+		myExtension = extension;
+	}
+
+	public String getExtension()
+	{
+		return myExtension;
 	}
 
 	public String getDescription()

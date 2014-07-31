@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.dll.DotNetDllFileType;
+import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.roots.OrderRootType;
@@ -49,7 +49,7 @@ public class DotNetXmlDocumentationRootDetector extends RootDetector
 		if(rootCandidate.getFileSystem() instanceof ArchiveFileSystem)
 		{
 			VirtualFile localFile = ArchiveVfsUtil.getVirtualFileForArchive(rootCandidate);
-			if(localFile == null || localFile.getFileType() != DotNetDllFileType.INSTANCE)
+			if(localFile == null || localFile.getFileType() != DotNetModuleFileType.INSTANCE)
 			{
 				return Collections.emptyList();
 			}

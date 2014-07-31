@@ -23,7 +23,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.consulo.vfs.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.dll.DotNetDllFileType;
+import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
@@ -44,7 +44,7 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 	@NotNull
 	public static DotNetArchiveFileSystem getInstance()
 	{
-		return (DotNetArchiveFileSystem) VirtualFileManager.getInstance().getFileSystem(DotNetDllFileType.PROTOCOL);
+		return (DotNetArchiveFileSystem) VirtualFileManager.getInstance().getFileSystem(DotNetModuleFileType.PROTOCOL);
 	}
 
 	public DotNetArchiveFileSystem(MessageBus bus)
@@ -82,7 +82,7 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 	@Override
 	public String getProtocol()
 	{
-		return DotNetDllFileType.PROTOCOL;
+		return DotNetModuleFileType.PROTOCOL;
 	}
 
 	@Override

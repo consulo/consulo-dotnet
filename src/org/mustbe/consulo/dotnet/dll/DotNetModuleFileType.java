@@ -23,15 +23,22 @@ import com.intellij.ide.highlighter.ArchiveFileType;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class DotNetDllFileType extends ArchiveFileType
+public class DotNetModuleFileType extends ArchiveFileType
 {
-	public static final DotNetDllFileType INSTANCE = new DotNetDllFileType();
+	public static final DotNetModuleFileType INSTANCE = new DotNetModuleFileType();
 	public static final String PROTOCOL = "netdll";
 
 	@Override
 	public String getProtocol()
 	{
 		return PROTOCOL;
+	}
+
+	@NotNull
+	@Override
+	public String getDescription()
+	{
+		return ".NET libraries";
 	}
 
 	@NotNull

@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import com.intellij.openapi.module.Module;
@@ -34,6 +35,7 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
@@ -46,13 +48,14 @@ import lombok.val;
 public class DotNetCompilerUtil
 {
 	@NotNull
-	public static Set<File> collectDependencies(@NotNull final Module module, final boolean includeStdLibraries)
+	public static Set<File> collectDependencies(@NotNull final Module module, @NotNull DotNetTarget target, final boolean includeStdLibraries)
 	{
-		return collectDependencies(module, false, includeStdLibraries);
+		return collectDependencies(module, target, false, includeStdLibraries);
 	}
 
 	@NotNull
-	public static Set<File> collectDependencies(@NotNull final Module module, final boolean debugSymbol, final boolean includeStdLibraries)
+	public static Set<File> collectDependencies(@NotNull final Module module, @NotNull final DotNetTarget target, final boolean debugSymbol,
+			final boolean includeStdLibraries)
 	{
 		val list = new HashSet<File>();
 
@@ -72,7 +75,7 @@ public class DotNetCompilerUtil
 					return null;
 				}
 
- 				processed.add(sdk);
+				processed.add(sdk);
 
 				if(!includeStdLibraries && sdk.getSdkType() instanceof DotNetSdkType)
 				{
@@ -101,14 +104,13 @@ public class DotNetCompilerUtil
 			{
 				for(VirtualFile virtualFile : orderEntry.getFiles(OrderRootType.BINARIES))
 				{
-					VirtualFile virtualFileForJar = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
-					if(virtualFileForJar != null)
+					VirtualFile virtualFileForArchive = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
+					if(virtualFileForArchive != null)
 					{
-						list.add(VfsUtil.virtualToIoFile(virtualFileForJar));
-					}
-					else
-					{
-						list.add(VfsUtil.virtualToIoFile(virtualFile));
+						if(Comparing.equal(virtualFileForArchive.getExtension(), target.getExtension()))
+						{
+							list.add(VfsUtil.virtualToIoFile(virtualFileForArchive));
+						}
 					}
 				}
 			}
@@ -130,7 +132,7 @@ public class DotNetCompilerUtil
 				processed.add(depModule);
 
 				DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(depModule, DotNetModuleExtension.class);
-				if(dependencyExtension != null)
+				if(dependencyExtension != null && dependencyExtension.getTarget() == target)
 				{
 					list.add(new File(DotNetMacros.extract(depModule, dependencyExtension)));
 					if(debugSymbol)
@@ -138,7 +140,7 @@ public class DotNetCompilerUtil
 						list.add(new File(DotNetMacros.extract(depModule, dependencyExtension, true)));
 					}
 
-					list.addAll(collectDependencies(depModule, false));
+					list.addAll(collectDependencies(depModule, target, false));
 				}
 
 				return null;
