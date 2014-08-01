@@ -131,6 +131,8 @@ QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 
 	"assembly"      { return MsilTokens.ASSEMBLY_KEYWORD; }
 
+	"famorassem"    { return MsilTokens.FAMORASSEMBLY_KEYWORD; }
+
 	"static"        { return MsilTokens.STATIC_KEYWORD; }
 
 	"abstract"      { return MsilTokens.ABSTRACT_KEYWORD; }

@@ -114,6 +114,8 @@ public interface MsilTokens extends TokenType
 
 	MsilModifierElementType ASSEMBLY_KEYWORD = new MsilModifierElementType("ASSEMBLY_KEYWORD", MsilLanguage.INSTANCE);
 
+	MsilModifierElementType FAMORASSEMBLY_KEYWORD = new MsilModifierElementType("FAMORASSEMBLY_KEYWORD", MsilLanguage.INSTANCE);
+
 	MsilModifierElementType HIDEBYSIG_KEYWORD = new MsilModifierElementType("HIDEBYSIG_KEYWORD", MsilLanguage.INSTANCE);
 
 	MsilModifierElementType INITONLY_KEYWORD = new MsilModifierElementType("INITONLY_KEYWORD", MsilLanguage.INSTANCE);

@@ -58,6 +58,10 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 		{
 			builder.append("protected ");
 		}
+		else if(XStubUtil.isSet(methodDef.getFlags(), MemberAccessMask, FamORAssem))
+		{
+			builder.append("famorassem ");
+		}
 
 		if(XStubUtil.isSet(methodDef.getFlags(), Static))
 		{
