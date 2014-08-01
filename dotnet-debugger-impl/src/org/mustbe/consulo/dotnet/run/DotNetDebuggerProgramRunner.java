@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugProcess;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
@@ -26,6 +27,8 @@ import com.intellij.execution.runners.DefaultProgramRunner;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
@@ -79,6 +82,27 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 	@Override
 	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile)
 	{
-		return DefaultDebugExecutor.EXECUTOR_ID.equals(executorId) && runProfile instanceof DotNetConfiguration;
+		if(!DefaultDebugExecutor.EXECUTOR_ID.equals(executorId))
+		{
+			return false;
+		}
+
+		if(runProfile instanceof DotNetConfiguration)
+		{
+			Module module = ((DotNetConfiguration) runProfile).getConfigurationModule().getModule();
+			if(module == null)
+			{
+				return false;
+			}
+
+			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+			if(extension != null && !extension.isAllowDebugInfo())
+			{
+				return false;
+			}
+			return true;
+		}
+
+		return false;
 	}
 }

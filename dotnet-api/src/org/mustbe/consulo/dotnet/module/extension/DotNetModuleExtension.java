@@ -35,7 +35,6 @@ import com.intellij.psi.search.GlobalSearchScope;
  */
 public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends ModuleExtensionWithSdk<T>
 {
-
 	String MODULE_OUTPUT_DIR = "${module-output-dir}";
 
 	String CONFIGURATION = "${configuration}";
