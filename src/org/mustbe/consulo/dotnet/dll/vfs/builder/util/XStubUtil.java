@@ -17,22 +17,10 @@
 package org.mustbe.consulo.dotnet.dll.vfs.builder.util;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Collection;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlockUtil;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.util.QualifiedName;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.ByteBuffer;
-import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
-import edu.arizona.cs.mbel.mbel.TypeRef;
 import edu.arizona.cs.mbel.signature.Signature;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -67,18 +55,6 @@ public class XStubUtil
 			"finally",
 			"internal",
 	};
-
-	public static boolean containsCharSequence(@NotNull Collection<? extends CharSequence> collection, @NotNull CharSequence sequence)
-	{
-		for(CharSequence charSequence : collection)
-		{
-			if(Comparing.equal(charSequence, sequence))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public static boolean isSet(long value, int mod)
 	{
@@ -116,30 +92,6 @@ public class XStubUtil
 					return "UnsupportedEncodingException";
 				}
 			}
-		}
-	}
-
-	@NotNull
-	public static String cutSuperTypeName(@NotNull String name, @Nullable Ref<Boolean> callback)
-	{
-		if(name.equals(CONSTRUCTOR_NAME) || name.equals(STATIC_CONSTRUCTOR_NAME))
-		{
-			return name;
-		}
-		else if(StringUtil.containsChar(name, '.'))
-		{
-			// method override(implement) from superclass, cut owner of super method
-			val dotIndex = name.lastIndexOf('.');
-			name = name.substring(dotIndex + 1, name.length());
-			if(callback != null)
-			{
-				callback.set(Boolean.TRUE);
-			}
-			return name;
-		}
-		else
-		{
-			return name;
 		}
 	}
 
@@ -188,56 +140,5 @@ public class XStubUtil
 			}
 		}
 		return false;
-	}
-
-	public static void appendValidName(StringBuilder builder, String name)
-	{
-		if(ArrayUtil.contains(name, KEYWORDS))
-		{
-			builder.append('@');
-		}
-
-		int index = name.indexOf(GENERIC_MARKER_IN_NAME);
-		if(index != -1)
-		{
-			builder.append(name, 0, index);
-		}
-		else
-		{
-			builder.append(name);
-		}
-	}
-
-	/**
-	 * Method for ignore {@link AbstractTypeReference#getFullName()} - dont create twice StringBuilder
-	 * @param builder
-	 * @param typeRef
-	 */
-	public static void appendTypeRefFullName(StringBuilder builder, TypeRef typeRef)
-	{
-		String namespace = typeRef.getNamespace();
-		String name = typeRef.getName();
-		if(!StringUtil.isEmpty(namespace))
-		{
-			appendDottedValidName(builder, namespace);
-			builder.append('.');
-		}
-		appendValidName(builder, name);
-	}
-
-	public static void appendDottedValidName(StringBuilder builder, String dottedName)
-	{
-		QualifiedName qualifiedName = QualifiedName.fromDottedString(dottedName);
-
-		StubBlockUtil.join(builder, qualifiedName.getComponents(), new PairFunction<StringBuilder, String, Void>()
-		{
-			@Nullable
-			@Override
-			public Void fun(StringBuilder t, String v)
-			{
-				appendValidName(t, v);
-				return null;
-			}
-		}, ".");
 	}
 }
