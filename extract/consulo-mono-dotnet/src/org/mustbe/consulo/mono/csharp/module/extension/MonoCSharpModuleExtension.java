@@ -46,12 +46,7 @@ public class MonoCSharpModuleExtension extends BaseCSharpModuleExtension<MonoCSh
 	public static DotNetCompilerOptionsBuilder createCompilerOptionsBuilderImpl(BaseCSharpModuleExtension<?> extension)
 	{
 		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(extension);
-		if(extension.isAllowUnsafeCode())
-		{
-			optionsBuilder.addArgument("/unsafe");
-		}
-		optionsBuilder.addArgument("/nologo");
-		optionsBuilder.addArgument("/nostdlib+");
+
 		switch(extension.getLanguageVersion())
 		{
 			case _1_0:

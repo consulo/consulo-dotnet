@@ -44,14 +44,9 @@ public class MicrosoftCSharpModuleExtension extends BaseCSharpModuleExtension<Mi
 	public static DotNetCompilerOptionsBuilder createCompilerOptionsBuilderImpl(BaseCSharpModuleExtension<?> extension)
 	{
 		MSBaseDotNetCompilerOptionsBuilder optionsBuilder = new MSBaseDotNetCompilerOptionsBuilder(extension);
-		optionsBuilder.addArgument("/nologo");
 		optionsBuilder.addArgument("/fullpaths");
 		optionsBuilder.addArgument("/utf8output");
-		optionsBuilder.addArgument("/nostdlib+");
-		if(extension.isAllowUnsafeCode())
-		{
-			optionsBuilder.addArgument("/unsafe");
-		}
+
 		switch(extension.getLanguageVersion())
 		{
 			case _1_0:
