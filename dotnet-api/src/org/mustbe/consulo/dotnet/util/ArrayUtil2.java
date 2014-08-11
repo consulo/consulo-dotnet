@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.util;
 
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -32,5 +34,15 @@ public class ArrayUtil2
 		if(index < 0 || array.length <= index)
 			return null;
 		return array[index];
+	}
+
+	@Nullable
+	public static <T> T safeGet(@Nullable List<? extends T> array, int index)
+	{
+		if(array == null)
+			return null;
+		if(index < 0 || array.size() <= index)
+			return null;
+		return array.get(index);
 	}
 }
