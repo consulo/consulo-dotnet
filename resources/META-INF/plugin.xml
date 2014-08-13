@@ -79,6 +79,7 @@
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 
 		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetLibraryRootDetector"/>
+		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetLibraryDirectoryDetector"/>
 		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetXmlDocumentationRootDetector"/>
 
 		<applicationService serviceImplementation="org.mustbe.consulo.dotnet.documentation.DotNetDocumentationCache"/>
