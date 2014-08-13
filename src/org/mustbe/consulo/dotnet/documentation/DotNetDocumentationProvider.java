@@ -39,6 +39,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.Function;
+import com.intellij.xml.util.XmlStringUtil;
 
 /**
  * @author VISTALL
@@ -85,7 +86,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		{
 			builder.append(generateLinksForType(element.getReturnTypeRef(), element));
 			builder.append(" ");
-			builder.append(element.getName());
+			builder.append(XmlStringUtil.escapeString(element.getName()));
 		}
 		builder.append("(");
 		builder.append(StringUtil.join(element.getParameters(), new Function<DotNetParameter, String>()
