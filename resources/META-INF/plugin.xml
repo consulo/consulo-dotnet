@@ -65,7 +65,7 @@
 		<lang.parserDefinition language="MSIL" implementationClass="org.mustbe.consulo.msil.lang.MsilParserDefinition"/>
 		<editorHighlighterProvider filetype="MSIL" implementationClass="org.mustbe.consulo.msil.ide.highlight.MsilEditorHighlighterProvider"/>
 
-		<treeStructureProvider implementation="org.mustbe.consulo.msil.representation.projectView.MsilFileRepresentationProjectViewProvider"/>
+		< implementation="org.mustbe.consulo.msil.representation.projectView.MsilFileRepresentationProjectViewProvider"/>
 
 		<projectService serviceInterface="org.mustbe.consulo.msil.representation.MsilFileRepresentationManager"
 						serviceImplementation="org.mustbe.consulo.msil.representation.MsilFileRepresentationManagerImpl"/>

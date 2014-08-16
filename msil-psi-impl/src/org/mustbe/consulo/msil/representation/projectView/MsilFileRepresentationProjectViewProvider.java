@@ -26,7 +26,6 @@ import org.mustbe.consulo.msil.representation.MsilFileRepresentationManager;
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -36,7 +35,7 @@ import lombok.val;
  * @author VISTALL
  * @since 27.05.14
  */
-public class MsilFileRepresentationProjectViewProvider implements SelectableTreeStructureProvider, DumbAware
+public class MsilFileRepresentationProjectViewProvider implements SelectableTreeStructureProvider
 {
 	private final Project myProject;
 
