@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.compiler.impl.FileIndexCompileScope;
+import com.intellij.compiler.impl.ModuleRootCompileScope;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 
@@ -37,7 +38,7 @@ public class DotNetCompileModuleScopeFactory implements CompileModuleScopeFactor
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		if(extension != null && !extension.isAllowSourceRoots())
 		{
-			return new DotNetModuleCompileScope(module, b);
+			return new ModuleRootCompileScope(module, b);
 		}
 		return null;
 	}
