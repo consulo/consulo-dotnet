@@ -21,7 +21,9 @@
           <orderEntry type="module" module-name="dotnet-psi-impl" exported="" />
           <orderEntry type="module" module-name="dotnet-impl" exported="" />
           <orderEntry type="library" exploded="" name="dotnet-asm" level="project" />
-          <orderEntry type="module-library" exported="">
+          <orderEntry type="module" module-name="dotnet-documentation-impl" />
+          <orderEntry type="module" module-name="msil-psi-impl" />
+          <orderEntry type="module-library">
             <library name="consulo:XML">
               <CLASSES>
                 <root url="jar://$MODULE_DIR$/dep/xml/lib/jsr173_1.0_api.jar!/" />
@@ -33,8 +35,6 @@
               <SOURCES />
             </library>
           </orderEntry>
-          <orderEntry type="module" module-name="dotnet-documentation-impl" />
-          <orderEntry type="module" module-name="msil-psi-impl" />
         </module-layer>
       </module>
       <module name="impl/consulo-microsoft-dotnet" dirurl="file://$PROJECT_DIR$/extract/consulo-microsoft-dotnet" current-layer="Default">
@@ -179,10 +179,11 @@
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
-          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" forTests="false" />
           <orderEntry type="module" module-name="dotnet-documentation-api" exported="" />
+          <orderEntry type="module" module-name="dotnet-psi-api" />
           <orderEntry type="module-library">
             <library name="consulo:XML">
               <CLASSES>
@@ -195,7 +196,6 @@
               <SOURCES />
             </library>
           </orderEntry>
-          <orderEntry type="module" module-name="dotnet-psi-api" />
         </module-layer>
       </module>
       <module name="csharp/csharp-psi-api" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-psi-api" current-layer="Default">

@@ -19,7 +19,7 @@
 	<name>.NET Core</name>
 	<version>SNAPSHOT</version>
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
-	<depends>com.intellij.xml</depends>
+	<depends config-file="com.intellij.xml.xml" optional="true">com.intellij.xml</depends>
 
 	<actions>
 		<action id="DotNet.ExportDotNetSdkToZip" class="org.mustbe.consulo.dotnet.ide.actions.ExportDotNetSdkToZipAction"
@@ -53,7 +53,6 @@
 	</project-components>
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
-		<documentationResolver implementation="org.mustbe.consulo.dotnet.documentation.DefaultDocumentationResolver"/>
 		<psiSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilPsiSearcher" />
 	</extensions>
 
@@ -80,7 +79,6 @@
 
 		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetLibraryRootDetector"/>
 		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetLibraryDirectoryDetector"/>
-		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetXmlDocumentationRootDetector"/>
 
 		<applicationService serviceImplementation="org.mustbe.consulo.dotnet.documentation.DotNetDocumentationCache"/>
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade"
