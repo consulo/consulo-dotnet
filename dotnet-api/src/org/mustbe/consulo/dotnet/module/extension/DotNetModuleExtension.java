@@ -35,13 +35,13 @@ import com.intellij.psi.search.GlobalSearchScope;
  */
 public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends ModuleExtensionWithSdk<T>
 {
-	String MODULE_OUTPUT_DIR = "${module-output-dir}";
+	String MODULE_OUTPUT_DIR = "$ModuleProductionOutputDirPath$";
 
-	String CONFIGURATION = "${configuration}";
+	String CONFIGURATION = "$ModuleProfileName$";
 
-	String MODULE_NAME = "${module-name}";
+	String MODULE_NAME = "$ModuleName$";
 
-	String OUTPUT_FILE_EXT = "${output-file-ext}";
+	String OUTPUT_FILE_EXT = "$TargetFileExt$";
 
 	String DEFAULT_FILE_NAME = MODULE_NAME + "." + OUTPUT_FILE_EXT;
 

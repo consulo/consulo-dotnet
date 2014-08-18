@@ -24,7 +24,7 @@ import java.util.Map;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
+import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
@@ -124,7 +124,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 			throw new ExecutionException("Module don't have .NET extension");
 		}
 
-		val exeFile = DotNetMacros.extract(module, extension);
+		val exeFile = DotNetMacroUtil.expandOutputFile(extension);
 
 		DebugConnectionInfo debugConnectionInfo = null;
 		if(executor instanceof DefaultDebugExecutor)
@@ -141,7 +141,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		}
 		runCommandLine.setPassParentEnvironment(runProfile.isPassParentEnvs());
 		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
-		runCommandLine.setWorkDirectory(DotNetMacros.extractLikeWorkDir(module, runProfile.getWorkingDirectory(), false));
+		runCommandLine.setWorkDirectory(DotNetMacroUtil.expand(module, runProfile.getWorkingDirectory(), false));
 		return new DotNetRunProfileState(exeFile, executionEnvironment, runCommandLine, debugConnectionInfo);
 	}
 

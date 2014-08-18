@@ -86,6 +86,8 @@
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher"
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiSearcherImpl"/>
 
+		<macro implementation="org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro" />
+
 		<!--<packageViewHelper implementation="org.mustbe.consulo.dotnet.ide.projectView.DotNetPackageViewHelper" /> -->
 
 		<contentFolderSupportPatcher implementation="org.mustbe.consulo.dotnet.module.DotNetContentFolderSupportPatcher"/>

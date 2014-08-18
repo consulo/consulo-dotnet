@@ -20,7 +20,7 @@ import java.io.File;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.compiler.DotNetMacros;
+import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -46,7 +46,7 @@ public class DotNetDebuggerUtil
 		{
 			return null;
 		}
-		val exeFile = DotNetMacros.extract(extension.getModule(), extension);
+		val exeFile = DotNetMacroUtil.expandOutputFile(extension);
 		return new File(exeFile);
 	}
 

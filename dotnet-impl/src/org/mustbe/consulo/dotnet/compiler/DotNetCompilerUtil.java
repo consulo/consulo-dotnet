@@ -134,10 +134,10 @@ public class DotNetCompilerUtil
 				DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(depModule, DotNetModuleExtension.class);
 				if(dependencyExtension != null && dependencyExtension.getTarget() == target)
 				{
-					list.add(new File(DotNetMacros.extract(depModule, dependencyExtension)));
+					list.add(new File(DotNetMacroUtil.expandOutputFile(dependencyExtension)));
 					if(debugSymbol)
 					{
-						list.add(new File(DotNetMacros.extract(depModule, dependencyExtension, true)));
+						list.add(new File(DotNetMacroUtil.expandOutputFile(dependencyExtension, true)));
 					}
 
 					list.addAll(collectDependencies(depModule, target, false));

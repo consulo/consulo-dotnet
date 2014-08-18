@@ -44,7 +44,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import lombok.val;
 
 /**
@@ -117,7 +116,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				{
 					continue;
 				}
-				itemList.add(new DotNetProcessingItem(fileByIoFile, module, dotNetModuleExtension));
+				itemList.add(new DotNetProcessingItem(fileByIoFile, dotNetModuleExtension));
 			}
 		}
 
@@ -136,10 +135,9 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 		for(ProcessingItem processingItem : processingItems)
 		{
 			DotNetProcessingItem dotNetProcessingItem = (DotNetProcessingItem) processingItem;
-			String moduleOutputDirUrl = DotNetMacros.getModuleOutputDirUrl(dotNetProcessingItem.getTarget(),
-					dotNetProcessingItem.getExtension());
+			String moduleOutputDir = DotNetMacroUtil.expandOutputDir(dotNetProcessingItem.getExtension());
 
-			File copyFile = new File(VirtualFileManager.extractPath(moduleOutputDirUrl), processingItem.getFile().getName());
+			File copyFile = new File(moduleOutputDir, processingItem.getFile().getName());
 
 			File file = VfsUtilCore.virtualToIoFile(processingItem.getFile());
 
@@ -147,7 +145,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			{
 				FileUtil.copy(file, copyFile);
 
-				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null, null));
+				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null));
 			}
 			catch(IOException e)
 			{

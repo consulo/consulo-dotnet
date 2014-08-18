@@ -22,7 +22,6 @@ import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.compiler.EmptyValidityState;
 import com.intellij.openapi.compiler.FileProcessingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 
 /**
@@ -32,13 +31,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingItem
 {
 	private final VirtualFile myVirtualFile;
-	private final Module myTarget;
 	private final DotNetModuleExtension myExtension;
 
-	public DotNetProcessingItem(VirtualFile virtualFile, Module target, DotNetModuleExtension<?> dotNetModuleExtension)
+	public DotNetProcessingItem(VirtualFile virtualFile, DotNetModuleExtension<?> dotNetModuleExtension)
 	{
 		myVirtualFile = virtualFile;
-		myTarget = target;
 		myExtension = dotNetModuleExtension;
 	}
 
@@ -54,11 +51,6 @@ public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingIt
 	public ValidityState getValidityState()
 	{
 		return new EmptyValidityState();
-	}
-
-	public Module getTarget()
-	{
-		return myTarget;
 	}
 
 	public DotNetModuleExtension getExtension()

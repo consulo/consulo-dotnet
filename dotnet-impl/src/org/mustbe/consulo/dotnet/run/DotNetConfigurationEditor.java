@@ -16,6 +16,9 @@
 
 package org.mustbe.consulo.dotnet.run;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
@@ -53,6 +56,7 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 	{
 		myProgramParametersPanel.reset(runConfiguration);
 		myModuleComboBox.setSelectedItem(runConfiguration.getConfigurationModule().getModule());
+		myProgramParametersPanel.setModuleContext(runConfiguration.getConfigurationModule().getModule());
 	}
 
 	@Override
@@ -77,6 +81,17 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 				myModuleComboBox.addItem(module);
 			}
 		}
+		myModuleComboBox.addItemListener(new ItemListener()
+		{
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				if(e.getStateChange() == ItemEvent.SELECTED)
+				{
+					myProgramParametersPanel.setModuleContext((Module) myModuleComboBox.getSelectedItem());
+				}
+			}
+		});
 
 		FormBuilder formBuilder = FormBuilder.createFormBuilder();
 		formBuilder.addLabeledComponent("Module", myModuleComboBox);
