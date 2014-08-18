@@ -16,7 +16,6 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
-import java.io.File;
 import java.util.List;
 
 import org.consulo.annotations.Immutable;
@@ -69,9 +68,6 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	@NotNull
 	GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d);
-
-	@NotNull
-	File getLoaderPath();
 
 	@NotNull
 	GlobalSearchScope getScopeForResolving(boolean test);

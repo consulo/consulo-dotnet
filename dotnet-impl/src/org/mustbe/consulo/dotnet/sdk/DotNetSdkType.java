@@ -16,8 +16,13 @@
 
 package org.mustbe.consulo.dotnet.sdk;
 
+import java.io.File;
+
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -36,6 +41,21 @@ public abstract class DotNetSdkType extends SdkType
 	public DotNetSdkType(@NonNls String name)
 	{
 		super(name);
+	}
+
+	@NotNull
+	public File getLoaderFile()
+	{
+		return getLoaderFile(getClass());
+	}
+
+	@NotNull
+	protected static File getLoaderFile(Class<?> clazz)
+	{
+		PluginClassLoader classLoader = (PluginClassLoader) clazz.getClassLoader();
+		IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());
+		assert plugin != null;
+		return new File(new File(plugin.getPath(), "loader"), "loader.exe");
 	}
 
 	@Override

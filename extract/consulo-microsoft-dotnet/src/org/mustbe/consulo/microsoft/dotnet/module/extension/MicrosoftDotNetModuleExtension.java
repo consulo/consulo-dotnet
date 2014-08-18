@@ -16,8 +16,6 @@
 
 package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
-import java.io.File;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
@@ -52,13 +50,6 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 			@NotNull String fileName, @Nullable DebugConnectionInfo d)
 	{
 		return createRunCommandLineImpl(fileName, d, getSdk());
-	}
-
-	@NotNull
-	@Override
-	public File getLoaderPath()
-	{
-		return getLoaderPath(MicrosoftDotNetModuleExtension.class);
 	}
 
 	@NotNull
