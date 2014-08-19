@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.csharp.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 
 /**
  * @author VISTALL
- * @since 28.11.13.
+ * @since 19.08.14
  */
-public interface DotNetPropertyDeclaration extends DotNetVariable, DotNetVirtualImplementOwner, DotNetMemberOwner, DotNetQualifiedElement
+public interface CSharpAttribute extends DotNetAttribute, CSharpCallArgumentListOwner
 {
-	String DEFAULT_INDEX_PROPERTY_NAME = "Item";
-
-	@NotNull
-	DotNetXXXAccessor[] getAccessors();
+	@Nullable
+	CSharpReferenceExpression getReferenceExpression();
 }

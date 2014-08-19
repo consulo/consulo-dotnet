@@ -22,6 +22,18 @@ package org.mustbe.consulo.dotnet;
  */
 public interface DotNetTypes
 {
+	interface System
+	{
+		interface Runtime
+		{
+			interface CompilerServices
+			{
+				String ExtensionAttribute = "System.Runtime.CompilerServices.ExtensionAttribute";
+				String IndexerName = "System.Runtime.CompilerServices.IndexerName";
+			}
+		}
+	}
+
 	String System_Array = "System.Array";
 	String System_Serializable = "System.Serializable";
 	String System_Exception = "System.Exception";
@@ -40,5 +52,4 @@ public interface DotNetTypes
 	String System_Attribute = "System.Attribute";
 	String System_ObsoleteAttribute = "System.ObsoleteAttribute";
 	String System_ParamArrayAttribute = "System.ParamArrayAttribute";
-	String System_Runtime_CompilerServices_ExtensionAttribute = "System.Runtime.CompilerServices.ExtensionAttribute";
 }
