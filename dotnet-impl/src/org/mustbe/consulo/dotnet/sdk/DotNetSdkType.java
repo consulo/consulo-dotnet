@@ -27,6 +27,9 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.DocumentationOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 
@@ -36,7 +39,11 @@ import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
  */
 public abstract class DotNetSdkType extends SdkType
 {
-	public static final String[] ORDER_DLLS = {"mscorlib.dll", "System.dll", "System.Core.dll"};
+	public static final String[] ORDER_DLLS = {
+			"mscorlib.dll",
+			"System.dll",
+			"System.Core.dll"
+	};
 
 	public DotNetSdkType(@NonNls String name)
 	{
@@ -61,7 +68,8 @@ public abstract class DotNetSdkType extends SdkType
 	@Override
 	public boolean isRootTypeApplicable(OrderRootType type)
 	{
-		return type == OrderRootType.BINARIES || type == OrderRootType.SOURCES || type == OrderRootType.DOCUMENTATION;
+		return type == BinariesOrderRootType.getInstance() || type == SourcesOrderRootType.getInstance() || type == DocumentationOrderRootType
+				.getInstance();
 	}
 
 	@Override
@@ -85,12 +93,12 @@ public abstract class DotNetSdkType extends SdkType
 			{
 				continue;
 			}
-			sdkModificator.addRoot(archiveRootForLocalFile, OrderRootType.BINARIES);
+			sdkModificator.addRoot(archiveRootForLocalFile, BinariesOrderRootType.getInstance());
 
 			VirtualFile docFile = homeDirectory.findChild(dllVirtualFile.getNameWithoutExtension() + ".xml");
 			if(docFile != null)
 			{
-				sdkModificator.addRoot(docFile, OrderRootType.DOCUMENTATION);
+				sdkModificator.addRoot(docFile, DocumentationOrderRootType.getInstance());
 			}
 		}
 

@@ -7,8 +7,8 @@ import org.emonic.base.documentation.IDocumentation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
@@ -65,7 +65,7 @@ public class DotNetDocumentationCache
 
 		for(OrderEntry orderEntry : orderEntriesForFile)
 		{
-			for(VirtualFile docVirtualFile : orderEntry.getFiles(OrderRootType.DOCUMENTATION))
+			for(VirtualFile docVirtualFile : orderEntry.getFiles(DocumentationOrderRootType.getInstance()))
 			{
 				for(DotNetDocumentationResolver documentationResolver : DotNetDocumentationResolver.EP_NAME.getExtensions())
 				{

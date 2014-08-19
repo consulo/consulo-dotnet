@@ -44,7 +44,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
@@ -129,7 +129,7 @@ public class ExportDotNetSdkToZipAction extends AnAction
 		{
 			val buffer = new byte[1024];
 
-			VirtualFile[] files = selected.getRootProvider().getFiles(OrderRootType.BINARIES);
+			VirtualFile[] files = selected.getRootProvider().getFiles(BinariesOrderRootType.getInstance());
 			for(VirtualFile v : files)
 			{
 				VirtualFile virtualFileForArchive = ArchiveVfsUtil.getVirtualFileForArchive(v);

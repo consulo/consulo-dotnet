@@ -24,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.RootDetector;
+import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -39,7 +39,7 @@ public class DotNetXmlDocumentationRootDetector extends RootDetector
 {
 	public DotNetXmlDocumentationRootDetector()
 	{
-		super(OrderRootType.DOCUMENTATION, false, ".NET xml documentation");
+		super(DocumentationOrderRootType.getInstance(), false, ".NET xml documentation");
 	}
 
 	@NotNull

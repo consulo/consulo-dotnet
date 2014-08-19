@@ -1,8 +1,8 @@
 package org.mustbe.consulo.dotnet.library;
 
 import org.mustbe.consulo.msil.MsilFileType;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.ui.FileTypeBasedRootFilter;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 
 /**
  * @author VISTALL
@@ -12,6 +12,6 @@ public class DotNetLibraryDirectoryDetector extends FileTypeBasedRootFilter
 {
 	public DotNetLibraryDirectoryDetector()
 	{
-		super(OrderRootType.BINARIES, true, MsilFileType.INSTANCE, ".NET libraries directory");
+		super(BinariesOrderRootType.getInstance(), true, MsilFileType.INSTANCE, ".NET libraries directory");
 	}
 }

@@ -53,7 +53,7 @@ public class DotNetDebugContext
 			GlobalSearchScope globalSearchScope = GlobalSearchScope.EMPTY_SCOPE;
 			for(Module module : modules)
 			{
-				DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+				DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 				if(extension != null)
 				{
 					globalSearchScope = globalSearchScope.union(extension.getScopeForResolving(true));

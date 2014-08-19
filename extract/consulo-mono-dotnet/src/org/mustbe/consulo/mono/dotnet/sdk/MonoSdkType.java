@@ -40,7 +40,7 @@ import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -130,7 +130,7 @@ public class MonoSdkType extends DotNetSdkType
 		{
 			if(Comparing.equal(virtualFile.getExtension(), "source"))
 			{
-				modificator.addRoot(virtualFile, OrderRootType.DOCUMENTATION);
+				modificator.addRoot(virtualFile, DocumentationOrderRootType.getInstance());
 			}
 		}
 	}

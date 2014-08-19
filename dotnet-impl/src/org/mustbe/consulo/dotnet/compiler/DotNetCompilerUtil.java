@@ -32,9 +32,9 @@ import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ModuleOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -102,7 +102,7 @@ public class DotNetCompilerUtil
 
 			private void collectFromRoot(OrderEntry orderEntry)
 			{
-				for(VirtualFile virtualFile : orderEntry.getFiles(OrderRootType.BINARIES))
+				for(VirtualFile virtualFile : orderEntry.getFiles(BinariesOrderRootType.getInstance()))
 				{
 					VirtualFile virtualFileForArchive = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
 					if(virtualFileForArchive != null)

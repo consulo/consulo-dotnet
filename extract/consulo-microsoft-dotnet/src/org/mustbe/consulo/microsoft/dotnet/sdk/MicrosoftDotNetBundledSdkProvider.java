@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.projectRoots.BundledSdkProvider;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Pair;
 
 /**
@@ -64,7 +64,7 @@ public class MicrosoftDotNetBundledSdkProvider implements BundledSdkProvider
 			microsoftDotNetSdkType.setupSdkPaths(sdk);
 
 			// for 3.5 dont have core libs - need manual setup
-			if(sdk.getRoots(OrderRootType.BINARIES).length == 0)
+			if(sdk.getRoots(BinariesOrderRootType.getInstance()).length == 0)
 			{
 				continue;
 			}
