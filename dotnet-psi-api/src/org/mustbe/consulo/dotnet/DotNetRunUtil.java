@@ -29,7 +29,7 @@ import com.intellij.openapi.util.Comparing;
  */
 public class DotNetRunUtil
 {
-	private static final String STRING_ARRAY = DotNetTypes.System_String + "[]";
+	private static final String STRING_ARRAY = DotNetTypes.System.String + "[]";
 
 	public static boolean hasEntryPoint(DotNetTypeDeclaration typeDeclaration)
 	{

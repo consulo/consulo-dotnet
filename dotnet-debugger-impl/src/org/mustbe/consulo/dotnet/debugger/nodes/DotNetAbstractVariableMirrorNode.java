@@ -313,7 +313,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 							String toStringValue = null;
 							String qTypeOfValue = toString.declaringType().qualifiedName();
-							if(Comparing.equal(qTypeOfValue, DotNetTypes.System_Object))
+							if(Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
 							{
 								toStringValue = "{" + qTypeOfValue + "@" + value.address() + "}";
 							}

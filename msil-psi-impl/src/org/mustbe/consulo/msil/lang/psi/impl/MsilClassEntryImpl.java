@@ -133,7 +133,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	public DotNetTypeRef getTypeRefForEnumConstants()
 	{
 		DotNetFieldDeclaration value = findFieldByName("__value", false);
-		return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(DotNetTypes.System_Int32,
+		return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(DotNetTypes.System.Int32,
 				DotNetPsiSearcher.TypeResoleKind.UNKNOWN, MsilTokens.INT32_KEYWORD);
 	}
 

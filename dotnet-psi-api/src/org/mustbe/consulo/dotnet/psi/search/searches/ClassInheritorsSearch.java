@@ -207,7 +207,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 				return baseClass.getVmQName();
 			}
 		});
-		if(DotNetTypes.System_Object.equals(qname))
+		if(DotNetTypes.System.Object.equals(qname))
 		{
 			return AllClassesSearch.search(searchScope, baseClass.getProject(), parameters.getNameCondition()).forEach(new
 																															   Processor<DotNetTypeDeclaration>()
@@ -225,7 +225,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 							return aClass.getVmQName();
 						}
 					});
-					return DotNetTypes.System_Object.equals(qname1) || consumer.process(parameters.myTransformer.fun(aClass));
+					return DotNetTypes.System.Object.equals(qname1) || consumer.process(parameters.myTransformer.fun(aClass));
 				}
 			});
 		}

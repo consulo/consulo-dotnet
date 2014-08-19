@@ -164,7 +164,7 @@ public interface DotNetTypeRef
 		@Override
 		public PsiElement resolve(@NotNull PsiElement scope)
 		{
-			return DotNetPsiSearcher.getInstance(scope.getProject()).findType(DotNetTypes.System_Object, scope.getResolveScope());
+			return DotNetPsiSearcher.getInstance(scope.getProject()).findType(DotNetTypes.System.Object, scope.getResolveScope());
 		}
 
 		@NotNull

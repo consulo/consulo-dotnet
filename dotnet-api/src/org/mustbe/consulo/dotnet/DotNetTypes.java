@@ -32,24 +32,24 @@ public interface DotNetTypes
 				String IndexerName = "System.Runtime.CompilerServices.IndexerName";
 			}
 		}
+
+		String Array = "System.Array";
+		String Serializable = "System.Serializable";
+		String Exception = "System.Exception";
+		String MulticastDelegate = "System.MulticastDelegate";
+		String Object = "System.Object";
+		String Enum = "System.Enum";
+		String ValueType = "System.ValueType";
+		String IntPtr = "System.IntPtr";
+		String UIntPtr = "System.UIntPtr";
+		String Type = "System.Type";
+		String String = "System.String";
+		String Int32 = "System.Int32";
+		String Boolean = "System.Boolean";
+		String IDisposable = "System.IDisposable";
+
+		String Attribute = "System.Attribute";
+		String ObsoleteAttribute = "System.ObsoleteAttribute";
+		String ParamArrayAttribute = "System.ParamArrayAttribute";
 	}
-
-	String System_Array = "System.Array";
-	String System_Serializable = "System.Serializable";
-	String System_Exception = "System.Exception";
-	String System_MulticastDelegate = "System.MulticastDelegate";
-	String System_Object = "System.Object";
-	String System_Enum = "System.Enum";
-	String System_ValueType = "System.ValueType";
-	String System_IntPtr = "System.IntPtr";
-	String System_UIntPtr = "System.UIntPtr";
-	String System_Type = "System.Type";
-	String System_String = "System.String";
-	String System_Int32 = "System.Int32";
-	String System_Boolean = "System.Boolean";
-	String System_IDisposable = "System.IDisposable";
-
-	String System_Attribute = "System.Attribute";
-	String System_ObsoleteAttribute = "System.ObsoleteAttribute";
-	String System_ParamArrayAttribute = "System.ParamArrayAttribute";
 }

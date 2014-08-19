@@ -34,22 +34,22 @@ public class DotNetInheritUtil
 {
 	public static boolean isStruct(DotNetTypeDeclaration typeDeclaration)
 	{
-		return isInheritor(typeDeclaration, DotNetTypes.System_ValueType, true);
+		return isInheritor(typeDeclaration, DotNetTypes.System.ValueType, true);
 	}
 
 	public static boolean isAttribute(DotNetTypeDeclaration typeDeclaration)
 	{
-		return isInheritor(typeDeclaration, DotNetTypes.System_Attribute, true);
+		return isInheritor(typeDeclaration, DotNetTypes.System.Attribute, true);
 	}
 
 	public static boolean isException(DotNetTypeDeclaration typeDeclaration)
 	{
-		return isParentOrSelf(DotNetTypes.System_Exception, typeDeclaration, true);
+		return isParentOrSelf(DotNetTypes.System.Exception, typeDeclaration, true);
 	}
 
 	public static boolean isEnum(DotNetTypeDeclaration typeDeclaration)
 	{
-		return isInheritor(typeDeclaration, DotNetTypes.System_Enum, true);
+		return isInheritor(typeDeclaration, DotNetTypes.System.Enum, true);
 	}
 
 	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, String other, boolean deep)
