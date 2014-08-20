@@ -1,11 +1,10 @@
 <component name="libraryTable">
   <library name="joou">
-    <CLASSES>
+    <binaries>
       <root url="jar://$PROJECT_DIR$/lib/joou-0.9.2-SNAPSHOT.jar!/" />
-    </CLASSES>
-    <DOCUMENTATION />
-    <SOURCES>
+    </binaries>
+    <sources>
       <root url="jar://$PROJECT_DIR$/libSrc/joou-0.9.2-SNAPSHOT-sources.jar!/" />
-    </SOURCES>
+    </sources>
   </library>
 </component>
