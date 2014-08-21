@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetConfigurationPanel;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 
 /**
  * @author VISTALL
@@ -32,7 +32,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension implements DotNetMutableModuleExtension<MonoDotNetModuleExtension>
 {
-	public MonoDotNetMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel)
+	public MonoDotNetMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
 	{
 		super(id, rootModel);
 	}

@@ -24,7 +24,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTarget;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -45,7 +45,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	protected String myFileName = DEFAULT_FILE_NAME;
 	protected String myOutputDirectory = DEFAULT_OUTPUT_DIR;
 
-	public BaseDotNetModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
+	public BaseDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer module)
 	{
 		super(id, module);
 	}

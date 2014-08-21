@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.module.extension.CSharpConfigurationPanel;
 import org.mustbe.consulo.csharp.module.extension.CSharpMutableModuleExtension;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 
 /**
  * @author VISTALL
@@ -30,7 +30,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class MicrosoftCSharpMutableModuleExtension extends MicrosoftCSharpModuleExtension implements CSharpMutableModuleExtension<MicrosoftCSharpModuleExtension>
 {
-	public MicrosoftCSharpMutableModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
+	public MicrosoftCSharpMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer module)
 	{
 		super(id, module);
 	}

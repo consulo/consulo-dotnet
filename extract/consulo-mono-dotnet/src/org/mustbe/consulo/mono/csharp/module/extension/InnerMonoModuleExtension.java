@@ -7,7 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModifiableModuleRootLayer;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.vfs.VirtualFile;
 
 /**
@@ -23,7 +24,7 @@ public abstract class InnerMonoModuleExtension<T extends InnerMonoModuleExtensio
 
 	private Sdk myLazySdk;
 
-	public InnerMonoModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel)
+	public InnerMonoModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
 	{
 		super(id, rootModel);
 		myPointer = new DummyModuleInheritableNamedPointer<Sdk>()
@@ -38,7 +39,7 @@ public abstract class InnerMonoModuleExtension<T extends InnerMonoModuleExtensio
 
 	private Sdk get()
 	{
-		MonoDotNetModuleExtension extension = myRootModel.getExtensionWithoutCheck(MonoDotNetModuleExtension.class);
+		MonoDotNetModuleExtension extension = myModuleRootLayer.getExtensionWithoutCheck(MonoDotNetModuleExtension.class);
 
 		Sdk parentSdk = !extension.isEnabled() ? null : extension.getSdk();
 		if(parentSdk != myParentSdk)
@@ -63,7 +64,7 @@ public abstract class InnerMonoModuleExtension<T extends InnerMonoModuleExtensio
 		myIsEnabled = val;
 		if(val)
 		{
-			myRootModel.addModuleExtensionSdkEntry(this);
+			((ModifiableModuleRootLayer)myModuleRootLayer).addModuleExtensionSdkEntry(this);
 		}
 	}
 

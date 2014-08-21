@@ -21,7 +21,7 @@ import org.mustbe.consulo.csharp.compiler.MSBaseDotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.csharp.module.extension.BaseCSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.util.SystemInfo;
 
 /**
@@ -30,7 +30,7 @@ import com.intellij.openapi.util.SystemInfo;
  */
 public class MonoCSharpModuleExtension extends BaseCSharpModuleExtension<MonoCSharpModuleExtension>
 {
-	public MonoCSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
+	public MonoCSharpModuleExtension(@NotNull String id, @NotNull ModuleRootLayer module)
 	{
 		super(id, module);
 	}
