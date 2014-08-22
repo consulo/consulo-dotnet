@@ -16,23 +16,31 @@
 
 package org.mustbe.consulo.dotnet.module.roots;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.OrderEntryWithTracking;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.impl.ClonableOrderEntry;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.OrderEntryBaseImpl;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.util.ArrayUtil;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
-public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements ClonableOrderEntry
+public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements ClonableOrderEntry, OrderEntryWithTracking
 {
 	private String myName;
 
@@ -46,14 +54,36 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 	@Override
 	public VirtualFile[] getFiles(OrderRootType orderRootType)
 	{
-		return new VirtualFile[0];
+		DotNetModuleExtension extension = myModuleRootLayer.getExtension(DotNetModuleExtension.class);
+		if(extension == null)
+		{
+			return VirtualFile.EMPTY_ARRAY;
+		}
+
+		String[] systemLibrary = extension.getSystemLibraryUrls(getPresentableName(), orderRootType);
+		List<VirtualFile> virtualFiles = new ArrayList<VirtualFile>(systemLibrary.length);
+		for(String url : systemLibrary)
+		{
+			VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(url);
+			if(fileByUrl != null)
+			{
+				virtualFiles.add(fileByUrl);
+			}
+		}
+		return VfsUtil.toVirtualFileArray(virtualFiles);
 	}
 
 	@NotNull
 	@Override
 	public String[] getUrls(OrderRootType orderRootType)
 	{
-		return new String[0];
+		DotNetModuleExtension extension = myModuleRootLayer.getExtension(DotNetModuleExtension.class);
+		if(extension == null)
+		{
+			return ArrayUtil.EMPTY_STRING_ARRAY;
+		}
+
+		return extension.getSystemLibraryUrls(getPresentableName(), orderRootType);
 	}
 
 	@NotNull
@@ -66,7 +96,7 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 	@Override
 	public boolean isValid()
 	{
-		return true;
+		return myModuleRootLayer.getExtension(DotNetModuleExtension.class) != null;
 	}
 
 	@NotNull

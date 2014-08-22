@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
+import java.io.File;
 import java.util.List;
 
 import org.consulo.annotations.Immutable;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.psi.search.GlobalSearchScope;
 
 /**
@@ -74,4 +76,10 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	@NotNull
 	String getDebugFileExtension();
+
+	@NotNull
+	List<File> getAvailableSystemLibraries();
+
+	@NotNull
+	String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType);
 }

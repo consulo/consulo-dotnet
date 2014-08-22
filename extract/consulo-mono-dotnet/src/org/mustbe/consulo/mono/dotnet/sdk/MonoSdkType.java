@@ -116,7 +116,6 @@ public class MonoSdkType extends DotNetSdkType
 		return MonoDotNetIcons.Mono;
 	}
 
-	@Override
 	protected void postSetupSdkPaths(Sdk sdk, @NotNull SdkModificator modificator)
 	{
 		VirtualFile homeDirectory = sdk.getHomeDirectory();

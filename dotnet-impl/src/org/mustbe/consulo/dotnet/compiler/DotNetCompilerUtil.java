@@ -23,16 +23,14 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
+import org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryImpl;
+import org.mustbe.consulo.dotnet.module.roots.DotNetRootPolicy;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LibraryOrderEntry;
-import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ModuleOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
@@ -57,27 +55,19 @@ public class DotNetCompilerUtil
 	public static Set<File> collectDependencies(@NotNull final Module module, @NotNull final DotNetTarget target, final boolean debugSymbol,
 			final boolean includeStdLibraries)
 	{
-		val list = new HashSet<File>();
+		val set = new HashSet<File>();
 
 		val processed = new HashSet<Object>();
 
 		processed.add(module);
 
 		ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-		moduleRootManager.processOrder(new RootPolicy<Object>()
+		moduleRootManager.processOrder(new DotNetRootPolicy<Object>()
 		{
 			@Override
-			public Object visitModuleExtensionSdkOrderEntry(ModuleExtensionWithSdkOrderEntry orderEntry, Object value)
+			public Object visitDotNetLibrary(DotNetLibraryOrderEntryImpl orderEntry, Object value)
 			{
-				Sdk sdk = orderEntry.getSdk();
-				if(sdk == null || processed.contains(sdk))
-				{
-					return null;
-				}
-
-				processed.add(sdk);
-
-				if(!includeStdLibraries && sdk.getSdkType() instanceof DotNetSdkType)
+				if(!includeStdLibraries)
 				{
 					return null;
 				}
@@ -109,7 +99,7 @@ public class DotNetCompilerUtil
 					{
 						if(Comparing.equal(virtualFileForArchive.getExtension(), target.getExtension()))
 						{
-							list.add(VfsUtil.virtualToIoFile(virtualFileForArchive));
+							set.add(VfsUtil.virtualToIoFile(virtualFileForArchive));
 						}
 					}
 				}
@@ -134,20 +124,20 @@ public class DotNetCompilerUtil
 				DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(depModule, DotNetModuleExtension.class);
 				if(dependencyExtension != null && dependencyExtension.getTarget() == target)
 				{
-					list.add(new File(DotNetMacroUtil.expandOutputFile(dependencyExtension)));
+					set.add(new File(DotNetMacroUtil.expandOutputFile(dependencyExtension)));
 					if(debugSymbol)
 					{
-						list.add(new File(DotNetMacroUtil.expandOutputFile(dependencyExtension, true)));
+						set.add(new File(DotNetMacroUtil.expandOutputFile(dependencyExtension, true)));
 					}
 
-					list.addAll(collectDependencies(depModule, target, false));
+					set.addAll(collectDependencies(depModule, target, false));
 				}
 
 				return null;
 			}
 		}, null);
 
-		return list;
+		return set;
 	}
 
 }

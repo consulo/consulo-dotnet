@@ -123,6 +123,7 @@
           <orderEntry type="sourceFolder" forTests="false" />
           <orderEntry type="module" module-name="dotnet-api" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-api" />
+          <orderEntry type="library" name="dotnet-asm" level="project" />
         </module-layer>
       </module>
       <module name="dotnet-debugger-api" dirurl="file://$PROJECT_DIR$/dotnet-debugger-api" current-layer="Default">
