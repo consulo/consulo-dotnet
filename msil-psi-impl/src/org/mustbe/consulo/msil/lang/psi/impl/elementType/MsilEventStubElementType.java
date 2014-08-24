@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilEventEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilPropertyEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilEventEntryImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 import com.intellij.lang.ASTNode;
@@ -42,7 +41,7 @@ public class MsilEventStubElementType extends AbstractMsilStubElementType<MsilVa
 
 	@NotNull
 	@Override
-	public MsilEventEntry createPsi(@NotNull ASTNode astNode)
+	public MsilEventEntry createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilEventEntryImpl(astNode);
 	}

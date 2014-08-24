@@ -25,7 +25,6 @@ import org.mustbe.consulo.msil.lang.parser.MsilParser;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilFileImpl;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.AbstractMsilStubElementType;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
@@ -37,7 +36,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 
@@ -93,11 +91,6 @@ public class MsilParserDefinition implements ParserDefinition
 	@Override
 	public PsiElement createElement(ASTNode astNode)
 	{
-		IElementType elementType = astNode.getElementType();
-		if(elementType instanceof AbstractMsilStubElementType)
-		{
-			return ((AbstractMsilStubElementType) elementType).createPsi(astNode);
-		}
 		return new ASTWrapperPsiElement(astNode);
 	}
 

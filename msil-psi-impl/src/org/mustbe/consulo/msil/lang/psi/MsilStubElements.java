@@ -58,7 +58,7 @@ public interface MsilStubElements
 	{
 		@NotNull
 		@Override
-		public DotNetType createPsi(@NotNull ASTNode astNode)
+		public DotNetType createElement(@NotNull ASTNode astNode)
 		{
 			return new MsilPointerTypeImpl(astNode);
 		}
@@ -74,7 +74,7 @@ public interface MsilStubElements
 	{
 		@NotNull
 		@Override
-		public DotNetType createPsi(@NotNull ASTNode astNode)
+		public DotNetType createElement(@NotNull ASTNode astNode)
 		{
 			return new MsilTypeByRefImpl(astNode);
 		}
@@ -90,7 +90,7 @@ public interface MsilStubElements
 	{
 		@NotNull
 		@Override
-		public DotNetType createPsi(@NotNull ASTNode astNode)
+		public DotNetType createElement(@NotNull ASTNode astNode)
 		{
 			return new MsilTypeWithTypeArgumentsImpl(astNode);
 		}
@@ -106,7 +106,7 @@ public interface MsilStubElements
 	{
 		@NotNull
 		@Override
-		public DotNetType createPsi(@NotNull ASTNode astNode)
+		public DotNetType createElement(@NotNull ASTNode astNode)
 		{
 			return new MsilArrayTypeImpl(astNode);
 		}

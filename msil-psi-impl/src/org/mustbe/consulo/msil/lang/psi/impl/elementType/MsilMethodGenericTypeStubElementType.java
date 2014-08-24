@@ -40,7 +40,7 @@ public class MsilMethodGenericTypeStubElementType extends AbstractMsilStubElemen
 
 	@NotNull
 	@Override
-	public MsilMethodGenericType createPsi(@NotNull ASTNode astNode)
+	public MsilMethodGenericType createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilMethodGenericTypeImpl(astNode);
 	}

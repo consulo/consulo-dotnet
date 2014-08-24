@@ -20,24 +20,22 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.msil.MsilLanguage;
-import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.tree.IElementTypeAsPsiFactory;
 
 /**
  * @author VISTALL
  * @since 21.05.14
  */
-public abstract class AbstractMsilStubElementType<T extends StubElement, E extends DotNetElement> extends IStubElementType<T, E>
+public abstract class AbstractMsilStubElementType<T extends StubElement, E extends DotNetElement> extends IStubElementType<T,
+		E> implements IElementTypeAsPsiFactory
 {
 	public AbstractMsilStubElementType(@NotNull @NonNls String debugName)
 	{
 		super(debugName, MsilLanguage.INSTANCE);
 	}
-
-	@NotNull
-	public abstract E createPsi(@NotNull ASTNode astNode);
 
 	@Override
 	@NotNull

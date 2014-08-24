@@ -18,7 +18,8 @@ package org.mustbe.consulo.msil.lang.psi;
 
 import org.mustbe.consulo.msil.MsilLanguage;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilReferenceExpressionImpl;
-import com.intellij.psi.tree.IElementTypeAsPsiFactory;
+import com.intellij.psi.tree.ElementTypeAsPsiFactory;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -26,6 +27,6 @@ import com.intellij.psi.tree.IElementTypeAsPsiFactory;
  */
 public interface MsilElements extends MsilStubElements
 {
-	IElementTypeAsPsiFactory REFERENCE_EXPRESSION = new IElementTypeAsPsiFactory("MSIL_REFERENCE_EXPRESSION", MsilLanguage.INSTANCE,
+	IElementType REFERENCE_EXPRESSION = new ElementTypeAsPsiFactory("MSIL_REFERENCE_EXPRESSION", MsilLanguage.INSTANCE,
 			MsilReferenceExpressionImpl.class);
 }
