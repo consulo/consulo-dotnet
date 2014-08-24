@@ -40,7 +40,7 @@ public class MsilGenericParameterListStubElementType extends AbstractMsilStubEle
 
 	@NotNull
 	@Override
-	public DotNetGenericParameterList createPsi(@NotNull ASTNode astNode)
+	public DotNetGenericParameterList createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilGenericParameterListImpl(astNode);
 	}

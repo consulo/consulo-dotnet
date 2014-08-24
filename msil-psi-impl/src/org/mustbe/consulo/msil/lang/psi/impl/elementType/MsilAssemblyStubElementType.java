@@ -40,7 +40,7 @@ public class MsilAssemblyStubElementType extends AbstractMsilStubElementType<Msi
 
 	@NotNull
 	@Override
-	public MsilAssemblyEntry createPsi(@NotNull ASTNode astNode)
+	public MsilAssemblyEntry createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilAssemblyEntryImpl(astNode);
 	}

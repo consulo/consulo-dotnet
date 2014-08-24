@@ -42,7 +42,7 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 
 	@NotNull
 	@Override
-	public MsilUserType createPsi(@NotNull ASTNode astNode)
+	public MsilUserType createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilUserTypeImpl(astNode);
 	}

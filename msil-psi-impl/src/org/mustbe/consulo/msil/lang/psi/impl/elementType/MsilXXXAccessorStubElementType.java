@@ -42,7 +42,7 @@ public class MsilXXXAccessorStubElementType extends AbstractMsilStubElementType<
 
 	@NotNull
 	@Override
-	public MsilXXXAcessor createPsi(@NotNull ASTNode astNode)
+	public MsilXXXAcessor createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilXXXAccessorImpl(astNode);
 	}

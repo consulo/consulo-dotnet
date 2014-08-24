@@ -41,7 +41,7 @@ public class MsilCustomAttributeStubElementType extends AbstractMsilStubElementT
 
 	@NotNull
 	@Override
-	public MsilCustomAttribute createPsi(@NotNull ASTNode astNode)
+	public MsilCustomAttribute createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilCustomAttributeImpl(astNode);
 	}

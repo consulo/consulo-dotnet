@@ -41,7 +41,7 @@ public class MsilFieldStubElementType extends AbstractMsilStubElementType<MsilVa
 
 	@NotNull
 	@Override
-	public MsilFieldEntry createPsi(@NotNull ASTNode astNode)
+	public MsilFieldEntry createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilFieldEntryImpl(astNode);
 	}

@@ -41,7 +41,7 @@ public class MsilParameterStubElementType extends AbstractMsilStubElementType<Ms
 
 	@NotNull
 	@Override
-	public MsilParameter createPsi(@NotNull ASTNode astNode)
+	public MsilParameter createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilParameterImpl(astNode);
 	}
