@@ -41,6 +41,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	protected boolean myAllowDebugInfo;
 	protected boolean myAllowSourceRoots;
 	protected String myMainType;
+	protected String myNamespacePrefix;
 	protected List<String> myVariables = new ArrayList<String>();
 	protected String myFileName = DEFAULT_FILE_NAME;
 	protected String myOutputDirectory = DEFAULT_OUTPUT_DIR;
@@ -59,6 +60,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 				myAllowSourceRoots != ex.isAllowSourceRoots() ||
 				!myVariables.equals(ex.getVariables()) ||
 				!Comparing.equal(myMainType, ex.myMainType) ||
+				!Comparing.equal(myNamespacePrefix, ex.myNamespacePrefix) ||
 				!Comparing.equal(getFileName(), ex.getFileName()) ||
 				!Comparing.equal(getOutputDir(), ex.getOutputDir());
 	}
@@ -73,6 +75,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		myAllowSourceRoots = mutableModuleExtension.myAllowSourceRoots;
 		myMainType = mutableModuleExtension.myMainType;
 		myFileName = mutableModuleExtension.myFileName;
+		myNamespacePrefix = mutableModuleExtension.myNamespacePrefix;
 		myOutputDirectory = mutableModuleExtension.myOutputDirectory;
 		myVariables.clear();
 		myVariables.addAll(mutableModuleExtension.myVariables);
@@ -89,6 +92,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		myFileName = element.getAttributeValue("file-name", DEFAULT_FILE_NAME);
 		myOutputDirectory = element.getAttributeValue("output-dir", DEFAULT_OUTPUT_DIR);
 		myMainType = element.getAttributeValue("main-type");
+		myNamespacePrefix = element.getAttributeValue("namespace-prefix");
 
 		for(Element defineElement : element.getChildren("define"))
 		{
@@ -106,6 +110,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		element.setAttribute("allow-source-roots", Boolean.toString(myAllowSourceRoots));
 		element.setAttribute("file-name", myFileName);
 		element.setAttribute("output-dir", myOutputDirectory);
+		element.setAttribute("namespace-prefix", getNamespacePrefix());
 		if(myMainType != null)
 		{
 			{
@@ -161,6 +166,13 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 
 	@NotNull
 	@Override
+	public String getNamespacePrefix()
+	{
+		return StringUtil.notNullize(myNamespacePrefix);
+	}
+
+	@NotNull
+	@Override
 	public String getFileName()
 	{
 		return StringUtil.notNullizeIfEmpty(myFileName, DEFAULT_FILE_NAME);
@@ -176,6 +188,11 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	public void setFileName(@NotNull String name)
 	{
 		myFileName = name;
+	}
+
+	public void setNamespacePrefix(String namespacePrefix)
+	{
+		myNamespacePrefix = namespacePrefix;
 	}
 
 	public void setOutputDir(@NotNull String dir)

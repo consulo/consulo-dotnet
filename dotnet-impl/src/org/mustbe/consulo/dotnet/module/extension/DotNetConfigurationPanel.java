@@ -245,6 +245,18 @@ public class DotNetConfigurationPanel extends JPanel
 		});
 		add(debugCombobox);
 
+		val namespacePrefixField = new JBTextField(extension.getNamespacePrefix());
+		namespacePrefixField.getDocument().addDocumentListener(new DocumentAdapter()
+		{
+			@Override
+			protected void textChanged(DocumentEvent documentEvent)
+			{
+				extension.setNamespacePrefix(namespacePrefixField.getText());
+			}
+		});
+
+		final LabeledComponent<JBTextField> namespaceComponent = LabeledComponent.left(namespacePrefixField, "Namespace:");
+
 		val allowSourceRootsBox = new JBCheckBox(DotNetBundle.message("allow.source.roots.label"), extension.isAllowSourceRoots());
 		allowSourceRootsBox.addActionListener(new ActionListener()
 		{
@@ -252,10 +264,13 @@ public class DotNetConfigurationPanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				extension.setAllowSourceRoots(allowSourceRootsBox.isSelected());
+				namespaceComponent.setVisible(!allowSourceRootsBox.isSelected());
+
 				updater.run();
 			}
 		});
 		add(allowSourceRootsBox);
+		add(namespaceComponent);
 
 		val dataModel = new CollectionListModel<String>(variables)
 		{

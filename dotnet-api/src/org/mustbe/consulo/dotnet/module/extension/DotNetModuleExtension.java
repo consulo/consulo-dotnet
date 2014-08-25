@@ -57,6 +57,9 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	String getFileName();
 
 	@NotNull
+	String getNamespacePrefix();
+
+	@NotNull
 	String getOutputDir();
 
 	@InheritImmutable
