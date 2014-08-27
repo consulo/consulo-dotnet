@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.psi;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -26,16 +27,21 @@ import com.intellij.openapi.util.Comparing;
  */
 public class DotNetAttributeUtil
 {
-	public static boolean hasAttribute(@NotNull DotNetModifierListOwner owner, @NotNull String qName)
+	public static DotNetAttribute findAttribute(@NotNull PsiElement owner, @NotNull String qName)
 	{
 		if(DumbService.isDumb(owner.getProject()))
 		{
-			return false;
+			return null;
 		}
-		DotNetModifierList modifierList = owner.getModifierList();
+
+		if(!(owner instanceof DotNetModifierListOwner))
+		{
+			return null;
+		}
+		DotNetModifierList modifierList = ((DotNetModifierListOwner) owner).getModifierList();
 		if(modifierList == null)
 		{
-			return false;
+			return null;
 		}
 		DotNetAttribute[] attributes = modifierList.getAttributes();
 		for(DotNetAttribute attribute : attributes)
@@ -43,9 +49,14 @@ public class DotNetAttributeUtil
 			DotNetTypeDeclaration typeDeclaration = attribute.resolveToType();
 			if(typeDeclaration != null && Comparing.equal(typeDeclaration.getVmQName(), qName))
 			{
-				return true;
+				return attribute;
 			}
 		}
-		return false;
+		return null;
+	}
+
+	public static boolean hasAttribute(@NotNull PsiElement owner, @NotNull String qName)
+	{
+		return findAttribute(owner, qName) != null;
 	}
 }

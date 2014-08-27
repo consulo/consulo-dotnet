@@ -15,7 +15,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-api" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-api" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-impl" exported="" />
@@ -46,7 +46,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="csharp-impl" />
           <orderEntry type="module" module-name="dotnet-impl" exported="" />
         </module-layer>
@@ -62,7 +62,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="csharp-impl" />
           <orderEntry type="module" module-name="dotnet-impl" />
           <orderEntry type="module" module-name="dotnet-documentation-impl" />
@@ -79,7 +79,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="dotnet-psi-api" dirurl="file://$PROJECT_DIR$/dotnet-psi-api" current-layer="Default">
@@ -93,7 +93,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-api" exported="" />
         </module-layer>
       </module>
@@ -106,7 +106,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-psi-api" />
         </module-layer>
       </module>
@@ -120,7 +120,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-api" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-api" />
         </module-layer>
@@ -134,7 +134,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="library" exploded="" name="mono-soft-debugging" level="project" />
           <orderEntry type="library" exploded="" name="dotnet-asm" level="project" />
           <orderEntry type="module" module-name="dotnet-api" />
@@ -150,7 +150,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-debugger-api" exported="" />
           <orderEntry type="module" module-name="dotnet-impl" />
           <orderEntry type="module" module-name="dotnet-psi-api" />
@@ -167,7 +167,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
       <module name="dotnet-documentation-impl" dirurl="file://$PROJECT_DIR$/dotnet-documentation-impl" current-layer="Default">
@@ -179,7 +179,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-documentation-api" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-api" />
           <orderEntry type="module-library">
@@ -205,7 +205,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-psi-api" exported="" />
           <orderEntry type="module" module-name="msil-psi-api" exported="" />
         </module-layer>
@@ -222,7 +222,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="csharp-psi-api" exported="" />
           <orderEntry type="library" name="joou" level="project" />
           <orderEntry type="module-library">
@@ -249,7 +249,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="csharp-psi-impl" exported="" />
           <orderEntry type="module" module-name="dotnet-impl" />
           <orderEntry type="module" module-name="msil-psi-impl" />
@@ -266,7 +266,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module-library">
             <library name="consulo:Spellchecker">
               <binaries>
@@ -288,7 +288,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-psi-api" />
         </module-layer>
       </module>
@@ -302,7 +302,7 @@
           </content>
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="msil-psi-api" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-api" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-impl" exported="" />
