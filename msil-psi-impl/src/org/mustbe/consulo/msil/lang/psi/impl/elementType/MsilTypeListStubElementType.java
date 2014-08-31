@@ -41,7 +41,7 @@ public class MsilTypeListStubElementType extends AbstractMsilStubElementType<Msi
 
 	@NotNull
 	@Override
-	public DotNetTypeList createPsi(@NotNull ASTNode astNode)
+	public DotNetTypeList createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilTypeListImpl(astNode);
 	}

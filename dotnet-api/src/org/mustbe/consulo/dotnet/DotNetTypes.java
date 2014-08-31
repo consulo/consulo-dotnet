@@ -24,6 +24,18 @@ public interface DotNetTypes
 {
 	interface System
 	{
+		interface Reflection
+		{
+			String AssemblyTitleAttribute = "System.Reflection.AssemblyTitleAttribute";
+			String AssemblyDescriptionAttribute = "System.Reflection.AssemblyDescriptionAttribute";
+			String AssemblyCompanyAttribute = "System.Reflection.AssemblyCompanyAttribute";
+			String AssemblyProductAttribute = "System.Reflection.AssemblyProductAttribute";
+			String AssemblyCopyrightAttribute = "System.Reflection.AssemblyCopyrightAttribute";
+			String AssemblyTrademarkAttribute = "System.Reflection.AssemblyTrademarkAttribute";
+			String AssemblyVersionAttribute = "System.Reflection.AssemblyVersionAttribute";
+			String AssemblyFileVersionAttribute = "System.Reflection.AssemblyFileVersionAttribute";
+		}
+
 		interface Runtime
 		{
 			interface CompilerServices

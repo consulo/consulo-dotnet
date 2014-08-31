@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.compiler.MSBaseDotNetCompilerOptionsBuilder;
 import org.mustbe.consulo.csharp.module.extension.BaseCSharpModuleExtension;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 
 /**
  * @author VISTALL
@@ -28,7 +28,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
  */
 public class MicrosoftCSharpModuleExtension extends BaseCSharpModuleExtension<MicrosoftCSharpModuleExtension>
 {
-	public MicrosoftCSharpModuleExtension(@NotNull String id, @NotNull ModifiableRootModel module)
+	public MicrosoftCSharpModuleExtension(@NotNull String id, @NotNull ModuleRootLayer module)
 	{
 		super(id, module);
 	}

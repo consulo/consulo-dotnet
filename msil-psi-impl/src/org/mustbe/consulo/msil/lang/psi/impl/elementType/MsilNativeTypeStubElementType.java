@@ -43,7 +43,7 @@ public class MsilNativeTypeStubElementType extends AbstractMsilStubElementType<M
 
 	@NotNull
 	@Override
-	public DotNetNativeType createPsi(@NotNull ASTNode astNode)
+	public DotNetNativeType createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilNativeTypeImpl(astNode);
 	}

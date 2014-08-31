@@ -17,7 +17,9 @@
 package org.mustbe.consulo.dotnet.resolve;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -25,6 +27,18 @@ import org.mustbe.consulo.dotnet.psi.DotNetType;
  */
 public class DotNetTypeRefUtil
 {
+	@Nullable
+	public static PsiElement resolve(@Nullable DotNetType type)
+	{
+		if(type == null)
+		{
+			return null;
+		}
+
+		DotNetTypeRef typeRef = type.toTypeRef();
+		return typeRef.resolve(type);
+	}
+
 	@NotNull
 	public static DotNetTypeRef[] toArray(@NotNull DotNetType[] arguments)
 	{

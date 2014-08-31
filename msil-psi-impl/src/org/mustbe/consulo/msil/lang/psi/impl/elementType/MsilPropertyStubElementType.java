@@ -41,7 +41,7 @@ public class MsilPropertyStubElementType extends AbstractMsilStubElementType<Msi
 
 	@NotNull
 	@Override
-	public MsilPropertyEntry createPsi(@NotNull ASTNode astNode)
+	public MsilPropertyEntry createElement(@NotNull ASTNode astNode)
 	{
 		return new MsilPropertyEntryImpl(astNode);
 	}
