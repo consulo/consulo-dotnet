@@ -18,7 +18,6 @@ import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.DotNetRunUtil;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryImpl;
-import org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
 import com.intellij.icons.AllIcons;
@@ -362,8 +361,7 @@ public class DotNetConfigurationPanel extends JPanel
 
 				if(b)
 				{
-					DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry = new DotNetLibraryOrderEntryImpl(DotNetLibraryOrderEntryTypeProvider
-							.getInstance(), (ModuleRootLayerImpl) moduleRootLayer, itemAt);
+					DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry = new DotNetLibraryOrderEntryImpl((ModuleRootLayerImpl) moduleRootLayer, itemAt);
 
 					moduleRootLayer.addOrderEntry(dotNetLibraryOrderEntry);
 				}

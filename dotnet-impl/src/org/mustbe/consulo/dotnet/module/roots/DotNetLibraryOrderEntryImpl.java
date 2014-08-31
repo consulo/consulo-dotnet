@@ -22,7 +22,6 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderEntryWithTracking;
@@ -44,9 +43,9 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 {
 	private String myName;
 
-	public DotNetLibraryOrderEntryImpl(@NotNull OrderEntryTypeProvider<?> provider, @NotNull ModuleRootLayerImpl rootLayer, String name)
+	public DotNetLibraryOrderEntryImpl(@NotNull ModuleRootLayerImpl rootLayer, String name)
 	{
-		super(provider, rootLayer);
+		super(DotNetLibraryOrderEntryTypeProvider.getInstance(), rootLayer);
 		myName = name;
 	}
 
@@ -128,6 +127,6 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 	@Override
 	public OrderEntry cloneEntry(ModuleRootLayerImpl layer)
 	{
-		return new DotNetLibraryOrderEntryImpl(getProvider(), layer, getPresentableName());
+		return new DotNetLibraryOrderEntryImpl(layer, getPresentableName());
 	}
 }
