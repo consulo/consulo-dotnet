@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.resolve;
+package org.mustbe.consulo.csharp.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
  * @since 31.08.14
  */
-public interface DotNetChameleonTypeRef extends DotNetTypeRef
+public interface CSharpChameleonTypeRef extends DotNetTypeRef
 {
 	@NotNull
 	DotNetTypeRef doMirror(@NotNull DotNetTypeRef another);
