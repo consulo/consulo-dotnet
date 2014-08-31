@@ -2,6 +2,7 @@ package org.mustbe.consulo.dotnet.module.extension;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.UIUtil;
@@ -343,28 +345,13 @@ public class DotNetConfigurationPanel extends JPanel
 		});
 		add(variableDecorator.createPanel());
 
-		//add(new JBLabel("Libraries: "));
+		add(new JBLabel("Libraries: "));
 		final CheckBoxList<String> checkBoxList = new CheckBoxList<String>();
 		checkBoxList.setPaintBusy(true);
 
 		val moduleRootLayer = extension.getModuleRootLayer();
 
-		ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Map<String, Boolean> map = new TreeMap<String, Boolean>();
-
-				for(String s : new String[]{"System", "System.Core", "System.Xml"})
-				{
-					map.put(s, findOrderEntry(s, moduleRootLayer) != null);
-				}
-
-				checkBoxList.setStringItems(map);
-				checkBoxList.setPaintBusy(false);
-			}
-		});
+		reloadSystemLibraries(checkBoxList, extension);
 
 		checkBoxList.setCheckBoxListListener(new CheckBoxListListener()
 		{
@@ -392,7 +379,37 @@ public class DotNetConfigurationPanel extends JPanel
 				UIUtil.invokeLaterIfNeeded(updater);
 			}
 		});
-		//add(ScrollPaneFactory.createScrollPane(checkBoxList, true));
+		add(ScrollPaneFactory.createScrollPane(checkBoxList, true));
+	}
+
+	private static void reloadSystemLibraries(final CheckBoxList<String> checkBoxList, final DotNetMutableModuleExtension<?> extension)
+	{
+		ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				List<File> availableSystemLibraries = extension.getAvailableSystemLibraries();
+				final Map<String, Boolean> map = new TreeMap<String, Boolean>();
+
+				for(File library : availableSystemLibraries)
+				{
+					String libraryName = library.getName();
+
+					map.put(libraryName, findOrderEntry(libraryName, extension.getModuleRootLayer()) != null);
+				}
+
+				UIUtil.invokeLaterIfNeeded(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						checkBoxList.setStringItems(map);
+						checkBoxList.setPaintBusy(false);
+					}
+				});
+			}
+		});
 	}
 
 	private static OrderEntry findOrderEntry(String name, ModifiableModuleRootLayer layer)

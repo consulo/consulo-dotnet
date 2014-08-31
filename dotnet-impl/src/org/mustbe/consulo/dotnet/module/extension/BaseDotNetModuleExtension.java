@@ -16,7 +16,10 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
@@ -24,11 +27,23 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTarget;
+import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootLayer;
+import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopes;
+import com.intellij.util.ArrayUtil;
+import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.parse.PEModule;
 
 /**
  * @author VISTALL
@@ -123,6 +138,72 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 				element.addContent(new Element("define").setText(variable));
 			}
 		}
+	}
+
+	@NotNull
+	@Override
+	public List<File> getAvailableSystemLibraries()
+	{
+		Sdk sdk = getSdk();
+		if(sdk == null)
+		{
+			return Collections.emptyList();
+		}
+
+		String homePath = sdk.getHomePath();
+		if(homePath == null)
+		{
+			return Collections.emptyList();
+		}
+
+		File file = new File(homePath);
+		File[] files = file.listFiles();
+		if(files == null)
+		{
+			return Collections.emptyList();
+		}
+
+		List<File> fileList = new ArrayList<File>();
+		for(File childFile : files)
+		{
+			try
+			{
+				if(!FileUtilRt.getExtension(childFile.getName()).equals("dll"))
+				{
+					continue;
+				}
+				new PEModule(new MSILInputStream(new FileInputStream(childFile)));
+				fileList.add(childFile);
+			}
+			catch(Exception e)
+			{
+			}
+		}
+		return fileList;
+	}
+
+	@NotNull
+	@Override
+	public String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType)
+	{
+		Sdk sdk = getSdk();
+		if(sdk == null)
+		{
+			return ArrayUtil.EMPTY_STRING_ARRAY;
+		}
+
+		if(orderRootType == BinariesOrderRootType.getInstance())
+		{
+			String url = VirtualFileManager.constructUrl(DotNetModuleFileType.PROTOCOL, sdk.getHomePath() + "/" + name + ArchiveFileSystem
+					.ARCHIVE_SEPARATOR);
+			return new String[]{url};
+		}
+		else if(orderRootType == DocumentationOrderRootType.getInstance())
+		{
+			String nameWithoutExtension = FileUtil.getNameWithoutExtension(name);
+			return new String[]{sdk.getHomePath() + "/" + nameWithoutExtension + ".xml"};
+		}
+		return ArrayUtil.EMPTY_STRING_ARRAY;
 	}
 
 	@NotNull

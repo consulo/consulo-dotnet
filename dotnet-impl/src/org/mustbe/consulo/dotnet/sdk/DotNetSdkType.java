@@ -23,15 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
-import com.intellij.openapi.roots.types.DocumentationOrderRootType;
-import com.intellij.openapi.roots.types.SourcesOrderRootType;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 
 /**
  * @author VISTALL
@@ -39,12 +31,6 @@ import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
  */
 public abstract class DotNetSdkType extends SdkType
 {
-	public static final String[] ORDER_DLLS = {
-			"mscorlib.dll",
-			"System.dll",
-			"System.Core.dll"
-	};
-
 	public DotNetSdkType(@NonNls String name)
 	{
 		super(name);
@@ -65,50 +51,4 @@ public abstract class DotNetSdkType extends SdkType
 		return new File(new File(plugin.getPath(), "loader"), "loader.exe");
 	}
 
-	@Override
-	public boolean isRootTypeApplicable(OrderRootType type)
-	{
-		return type == BinariesOrderRootType.getInstance() || type == SourcesOrderRootType.getInstance() || type == DocumentationOrderRootType
-				.getInstance();
-	}
-
-	@Override
-	public void setupSdkPaths(Sdk sdk)
-	{
-		SdkModificator sdkModificator = sdk.getSdkModificator();
-
-		VirtualFile homeDirectory = sdk.getHomeDirectory();
-		assert homeDirectory != null;
-
-		for(String orderDll : ORDER_DLLS)
-		{
-			VirtualFile dllVirtualFile = homeDirectory.findFileByRelativePath(orderDll);
-			if(dllVirtualFile == null)
-			{
-				continue;
-			}
-
-			VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(dllVirtualFile);
-			if(archiveRootForLocalFile == null)
-			{
-				continue;
-			}
-			sdkModificator.addRoot(archiveRootForLocalFile, BinariesOrderRootType.getInstance());
-
-			VirtualFile docFile = homeDirectory.findChild(dllVirtualFile.getNameWithoutExtension() + ".xml");
-			if(docFile != null)
-			{
-				sdkModificator.addRoot(docFile, DocumentationOrderRootType.getInstance());
-			}
-		}
-
-		postSetupSdkPaths(sdk, sdkModificator);
-
-		sdkModificator.commitChanges();
-	}
-
-	protected void postSetupSdkPaths(Sdk sdk, @NotNull SdkModificator modificator)
-	{
-
-	}
 }

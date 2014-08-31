@@ -16,6 +16,9 @@
 
 package org.mustbe.consulo.mono.dotnet.module.extension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
@@ -25,7 +28,13 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleRootLayer;
+import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.DocumentationOrderRootType;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -57,6 +66,41 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 	public String getDebugFileExtension()
 	{
 		return getTarget().getExtension() + ".mdb";
+	}
+
+	@NotNull
+	@Override
+	public String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType)
+	{
+		if(orderRootType == DocumentationOrderRootType.getInstance())
+		{
+			String[] systemLibraryUrls = super.getSystemLibraryUrls(name, orderRootType);
+
+			Sdk sdk = getSdk();
+			if(sdk == null)
+			{
+				return systemLibraryUrls;
+			}
+
+			VirtualFile docDir = sdk.getHomeDirectory().findFileByRelativePath("/../../monodoc/sources");
+			if(docDir == null)
+			{
+				return systemLibraryUrls;
+			}
+
+			List<String> list = new ArrayList<String>();
+			ContainerUtil.addAll(list, systemLibraryUrls);
+
+			for(VirtualFile virtualFile : docDir.getChildren())
+			{
+				if(Comparing.equal(virtualFile.getExtension(), "source"))
+				{
+					list.add(virtualFile.getUrl());
+				}
+			}
+			return ArrayUtil.toStringArray(list);
+		}
+		return super.getSystemLibraryUrls(name, orderRootType);
 	}
 
 	@NotNull
