@@ -17,7 +17,9 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -28,4 +30,7 @@ public interface DotNetConstantExpression extends DotNetExpression
 {
 	@Nullable
 	Object getValue();
+
+	@NotNull
+	IElementType getLiteralType();
 }
