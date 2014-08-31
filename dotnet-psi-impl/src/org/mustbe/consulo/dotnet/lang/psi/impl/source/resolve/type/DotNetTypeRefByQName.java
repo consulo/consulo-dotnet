@@ -32,6 +32,7 @@ import com.intellij.util.NotNullFunction;
 public class DotNetTypeRefByQName extends DotNetTypeRef.Adapter
 {
 	private final String myQualifiedName;
+	private final boolean myNullable;
 	private final NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> myTransformer;
 
 	public DotNetTypeRefByQName(@NotNull String qualifiedName)
@@ -39,10 +40,28 @@ public class DotNetTypeRefByQName extends DotNetTypeRef.Adapter
 		this(qualifiedName, DotNetPsiSearcher.DEFAULT_TRANSFORMER);
 	}
 
+	public DotNetTypeRefByQName(@NotNull String qualifiedName, boolean nullable)
+	{
+		this(qualifiedName, DotNetPsiSearcher.DEFAULT_TRANSFORMER, nullable);
+	}
+
 	public DotNetTypeRefByQName(@NotNull String qualifiedName, @NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	{
+		this(qualifiedName, transformer, true);
+	}
+
+	public DotNetTypeRefByQName(@NotNull String qualifiedName, @NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer,
+			boolean nullable)
 	{
 		myQualifiedName = qualifiedName;
 		myTransformer = transformer;
+		myNullable = nullable;
+	}
+
+	@Override
+	public boolean isNullable()
+	{
+		return myNullable;
 	}
 
 	@NotNull

@@ -23,7 +23,6 @@ import org.emonic.base.documentation.IDocumentation;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetNativeTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -253,10 +252,6 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		{
 			builder.append(generateLinksForType(((DotNetPointerTypeRef) dotNetTypeRef).getInnerTypeRef(), element));
 			builder.append("*");
-		}
-		else if(dotNetTypeRef instanceof DotNetNativeTypeRef)
-		{
-			wrapToLink(dotNetTypeRef, ((DotNetNativeTypeRef) dotNetTypeRef).getWrapperQualifiedClass(), 0, builder);
 		}
 		else
 		{

@@ -134,7 +134,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	{
 		DotNetFieldDeclaration value = findFieldByName("__value", false);
 		return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(DotNetTypes.System.Int32,
-				DotNetPsiSearcher.TypeResoleKind.UNKNOWN, MsilTokens.INT32_KEYWORD);
+				DotNetPsiSearcher.TypeResoleKind.UNKNOWN);
 	}
 
 	@Override

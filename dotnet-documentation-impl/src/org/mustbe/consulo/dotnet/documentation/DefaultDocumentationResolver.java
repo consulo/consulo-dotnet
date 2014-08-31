@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetNativeTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.ide.highlighter.XmlFileType;
@@ -148,10 +147,6 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 		else if(typeRef instanceof DotNetPointerTypeRef)
 		{
 			return typeToDocName(element, ((DotNetPointerTypeRef) typeRef).getInnerTypeRef()) + "*";
-		}
-		else if(typeRef instanceof DotNetNativeTypeRef)
-		{
-			return ((DotNetNativeTypeRef) typeRef).getWrapperQualifiedClass();
 		}
 		else
 		{

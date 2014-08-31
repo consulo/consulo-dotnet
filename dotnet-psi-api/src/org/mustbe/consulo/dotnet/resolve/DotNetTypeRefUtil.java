@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import com.intellij.psi.PsiElement;
 
@@ -27,6 +28,36 @@ import com.intellij.psi.PsiElement;
  */
 public class DotNetTypeRefUtil
 {
+	public static boolean isVoid(@NotNull DotNetTypeRef typeRef)
+	{
+		return DotNetTypes.System.Void.equals(typeRef.getQualifiedText());
+	}
+
+	public static boolean isInt32(@NotNull DotNetTypeRef typeRef)
+	{
+		return DotNetTypes.System.Int32.equals(typeRef.getQualifiedText());
+	}
+
+	public static boolean isUInt32(@NotNull DotNetTypeRef typeRef)
+	{
+		return DotNetTypes.System.UInt32.equals(typeRef.getQualifiedText());
+	}
+
+	public static boolean isInt64(@NotNull DotNetTypeRef typeRef)
+	{
+		return DotNetTypes.System.Int64.equals(typeRef.getQualifiedText());
+	}
+
+	public static boolean isUInt64(@NotNull DotNetTypeRef typeRef)
+	{
+		return DotNetTypes.System.UInt64.equals(typeRef.getQualifiedText());
+	}
+
+	public static boolean isBool(@NotNull DotNetTypeRef typeRef)
+	{
+		return DotNetTypes.System.Boolean.equals(typeRef.getQualifiedText());
+	}
+
 	@Nullable
 	public static PsiElement resolve(@Nullable DotNetType type)
 	{

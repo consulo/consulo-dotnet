@@ -20,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 02.02.14
+ * @since 31.08.14
  */
-public interface DotNetNativeTypeRef extends DotNetTypeRef
+public interface DotNetChameleonTypeRef extends DotNetTypeRef
 {
 	@NotNull
-	String getWrapperQualifiedClass();
+	DotNetTypeRef doMirror(@NotNull DotNetTypeRef another);
 }

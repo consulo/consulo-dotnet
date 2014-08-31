@@ -56,9 +56,21 @@ public interface DotNetTypes
 		String UIntPtr = "System.UIntPtr";
 		String Type = "System.Type";
 		String String = "System.String";
+		String Char = "System.Char";
+		String Byte = "System.Byte";
+		String SByte = "System.SByte";
+		String Int16 = "System.Int16";
+		String UInt16 = "System.UInt16";
+		String Decimal = "System.Decimal";
 		String Int32 = "System.Int32";
+		String UInt32 = "System.UInt32";
+		String Int64 = "System.Int64";
+		String UInt64 = "System.UInt64";
+		String Double = "System.Double";
+		String Single = "System.Single";
 		String Boolean = "System.Boolean";
 		String IDisposable = "System.IDisposable";
+		String Void = "System.Void";
 
 		String Attribute = "System.Attribute";
 		String ObsoleteAttribute = "System.ObsoleteAttribute";
