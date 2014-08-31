@@ -28,6 +28,10 @@ import com.intellij.psi.PsiElement;
  */
 public interface DotNetModifierList extends DotNetElement
 {
+	void addModifier(@NotNull DotNetModifier modifier);
+
+	void removeModifier(@NotNull DotNetModifier modifier);
+
 	@NotNull
 	DotNetModifier[] getModifiers();
 

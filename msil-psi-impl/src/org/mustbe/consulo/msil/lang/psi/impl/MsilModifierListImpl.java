@@ -76,6 +76,18 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 		visitor.visitModifierList(this);
 	}
 
+	@Override
+	public void addModifier(@NotNull DotNetModifier modifier)
+	{
+
+	}
+
+	@Override
+	public void removeModifier(@NotNull DotNetModifier modifier)
+	{
+
+	}
+
 	@NotNull
 	@Override
 	public DotNetModifier[] getModifiers()
