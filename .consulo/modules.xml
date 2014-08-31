@@ -254,6 +254,7 @@
           <orderEntry type="module" module-name="dotnet-impl" />
           <orderEntry type="module" module-name="msil-psi-impl" />
           <orderEntry type="module" module-name="dotnet-debugger-impl" />
+          <orderEntry type="module" module-name="composite-formatting-string" />
         </module-layer>
       </module>
       <module name="csharp/csharp-spellchecker" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-spellchecker" current-layer="Default">
@@ -308,16 +309,18 @@
           <orderEntry type="module" module-name="dotnet-psi-impl" exported="" />
         </module-layer>
       </module>
-      <module name="csharp/csharp-composite-format-string" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-composite-format-string" current-layer="Default">
+      <module name="composite-formatting-string" dirurl="file://$PROJECT_DIR$/composite-formatting-string" current-layer="Default">
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
           <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" forTests="false" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="dotnet-psi-api" />
         </module-layer>
       </module>
     </modules>

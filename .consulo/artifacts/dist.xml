@@ -19,6 +19,7 @@
             <element id="module-output" name="dotnet-documentation-impl" />
             <element id="module-output" name="msil-psi-api" />
             <element id="module-output" name="msil-psi-impl" />
+            <element id="module-output" name="composite-formatting-string" />
           </element>
           <element id="library" level="project" name="dotnet-asm" />
           <element id="library" level="project" name="mono-soft-debugging" />

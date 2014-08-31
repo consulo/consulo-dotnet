@@ -14,22 +14,30 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.cfs.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.csharp.cfs.lang.CfsFileType;
+import org.mustbe.consulo.csharp.cfs.lang.CfsLanguage;
+import com.intellij.extapi.psi.PsiFileBase;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.psi.FileViewProvider;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 31.08.14
  */
-public interface CSharpCallArgumentList extends DotNetCallArgumentList
+public class CfsFile extends PsiFileBase
 {
-	@Override
-	@NotNull
-	DotNetExpression[] getExpressions();
+	public CfsFile(@NotNull FileViewProvider viewProvider)
+	{
+		super(viewProvider, CfsLanguage.INSTANCE);
+	}
 
 	@NotNull
-	CSharpNamedCallArgument[] getNamedArguments();
+	@Override
+	public FileType getFileType()
+	{
+		return CfsFileType.INSTANCE;
+	}
 }

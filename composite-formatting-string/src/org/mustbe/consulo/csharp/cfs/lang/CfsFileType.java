@@ -14,22 +14,53 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.cfs.lang;
+
+import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 31.08.14
  */
-public interface CSharpCallArgumentList extends DotNetCallArgumentList
+public class CfsFileType extends LanguageFileType
 {
-	@Override
-	@NotNull
-	DotNetExpression[] getExpressions();
+	public static final CfsFileType INSTANCE = new CfsFileType();
+
+	public CfsFileType()
+	{
+		super(CfsLanguage.INSTANCE);
+	}
 
 	@NotNull
-	CSharpNamedCallArgument[] getNamedArguments();
+	@Override
+	public String getName()
+	{
+		return "CFS";
+	}
+
+	@NotNull
+	@Override
+	public String getDescription()
+	{
+		return getDefaultExtension();
+	}
+
+	@NotNull
+	@Override
+	public String getDefaultExtension()
+	{
+		return "cfs";
+	}
+
+	@Nullable
+	@Override
+	public Icon getIcon()
+	{
+		return AllIcons.FileTypes.Text;
+	}
 }

@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.cfs.lang;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import com.intellij.openapi.fileTypes.FileTypeConsumer;
+import com.intellij.openapi.fileTypes.FileTypeFactory;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 31.08.14
  */
-public interface CSharpCallArgumentList extends DotNetCallArgumentList
+public class CfsFileTypeFactory extends FileTypeFactory
 {
 	@Override
-	@NotNull
-	DotNetExpression[] getExpressions();
-
-	@NotNull
-	CSharpNamedCallArgument[] getNamedArguments();
+	public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer)
+	{
+		fileTypeConsumer.consume(CfsFileType.INSTANCE);
+	}
 }

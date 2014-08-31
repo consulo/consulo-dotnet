@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.cfs.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.csharp.cfs.psi.CfsItem;
+import com.intellij.psi.tree.ElementTypeAsPsiFactory;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 31.08.14
  */
-public interface CSharpCallArgumentList extends DotNetCallArgumentList
+public interface CfsElements
 {
-	@Override
-	@NotNull
-	DotNetExpression[] getExpressions();
-
-	@NotNull
-	CSharpNamedCallArgument[] getNamedArguments();
+	IElementType ITEM = new ElementTypeAsPsiFactory("CFS_ITEM", CfsLanguage.INSTANCE, CfsItem.class);
 }

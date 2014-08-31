@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.cfs.ide;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 31.08.14
  */
-public interface CSharpCallArgumentList extends DotNetCallArgumentList
+public class CfsSyntaxHighlighterFactory extends SingleLazyInstanceSyntaxHighlighterFactory
 {
+	@NotNull
 	@Override
-	@NotNull
-	DotNetExpression[] getExpressions();
-
-	@NotNull
-	CSharpNamedCallArgument[] getNamedArguments();
+	protected SyntaxHighlighter createHighlighter()
+	{
+		return new CfsSyntaxHighlighter();
+	}
 }

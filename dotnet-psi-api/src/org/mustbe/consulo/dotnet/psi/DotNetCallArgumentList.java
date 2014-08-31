@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 31.08.14
  */
-public interface CSharpCallArgumentList extends DotNetCallArgumentList
+public interface DotNetCallArgumentList extends DotNetElement
 {
-	@Override
 	@NotNull
 	DotNetExpression[] getExpressions();
-
-	@NotNull
-	CSharpNamedCallArgument[] getNamedArguments();
 }

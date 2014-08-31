@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.csharp.cfs.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import com.intellij.lang.Language;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 31.08.14
  */
-public interface CSharpCallArgumentList extends DotNetCallArgumentList
+public class CfsLanguage extends Language
 {
-	@Override
-	@NotNull
-	DotNetExpression[] getExpressions();
+	public static CfsLanguage INSTANCE = new CfsLanguage();
 
-	@NotNull
-	CSharpNamedCallArgument[] getNamedArguments();
+	public CfsLanguage()
+	{
+		super("CFS");
+	}
 }
