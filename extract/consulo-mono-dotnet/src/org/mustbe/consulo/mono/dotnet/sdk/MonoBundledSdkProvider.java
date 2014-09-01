@@ -66,8 +66,6 @@ public class MonoBundledSdkProvider implements BundledSdkProvider
 				sdk.setVersionString(file.getName());
 				sdk.setHomePath(file.getAbsolutePath());
 
-				monoSdkType.setupSdkPaths(sdk);
-
 				list.add(sdk);
 			}
 		}
