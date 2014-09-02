@@ -86,6 +86,6 @@ public class DotNetModuleExtensionWithSdkPanel
 			}
 		});
 
-		return LabeledComponent.left(mySdkComboBox, "SDK:");
+		return LabeledComponent.left(mySdkComboBox, "Sdk:");
 	}
 }
