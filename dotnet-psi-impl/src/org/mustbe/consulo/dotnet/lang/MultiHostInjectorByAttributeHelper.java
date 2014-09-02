@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.dotnet.lang;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentListOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.TextRange;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 02.09.14
  */
-public interface CSharpCallArgumentListOwner extends DotNetCallArgumentListOwner
+public interface MultiHostInjectorByAttributeHelper
 {
-	boolean canResolve();
-
-	@Override
-	@Nullable
-	CSharpCallArgumentList getParameterList();
+	ExtensionPointName<MultiHostInjectorByAttributeHelper> EP_NAME =
+			ExtensionPointName.create("org.mustbe.consulo.dotnet.core.injectionByAttributeHelper");
 
 	@Nullable
-	DotNetTypeList getTypeArgumentList();
+	String getLanguageId(@NotNull DotNetAttribute attribute);
 
-	@NotNull
-	DotNetTypeRef[] getTypeArgumentListRefs();
+	@Nullable
+	TextRange getTextRangeForInject(@NotNull DotNetExpression expression);
 }

@@ -48,6 +48,8 @@
 		<extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="documentationResolver" interface="org.mustbe.consulo.dotnet.documentation.DotNetDocumentationResolver"/>
 		<extensionPoint name="msilFileRepresentation" interface="org.mustbe.consulo.msil.representation.MsilFileRepresentationProvider"/>
+
+		<extensionPoint name="injectionByAttributeHelper" interface="org.mustbe.consulo.dotnet.lang.MultiHostInjectorByAttributeHelper"/>
 	</extensionPoints>
 
 	<project-components>
@@ -109,6 +111,10 @@
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopier"/>
 		<compiler.translatingHelper implementation="org.mustbe.consulo.dotnet.compiler.DotNetTranslatingCompilerFilesMonitorHelper"/>
 		<compiler.moduleScopeFactory implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompileModuleScopeFactory"/>
+
+
+		<multiHostInjector forClass="org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList"
+						   implementationClass="org.mustbe.consulo.dotnet.lang.MultiHostInjectorByAttribute" />
 
 		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider"/>
 	</extensions>
