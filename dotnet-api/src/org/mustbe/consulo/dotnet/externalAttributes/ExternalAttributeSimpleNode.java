@@ -14,29 +14,41 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.dotnet.externalAttributes;
+
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentListOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.util.SmartList;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 02.09.14
  */
-public interface CSharpCallArgumentListOwner extends DotNetCallArgumentListOwner
+public class ExternalAttributeSimpleNode
 {
-	boolean canResolve();
+	private List<ExternalAttributeNode> myAttributes = new SmartList<ExternalAttributeNode>();
 
-	@Override
-	@Nullable
-	CSharpCallArgumentList getParameterList();
+	private final String myName;
 
-	@Nullable
-	DotNetTypeList getTypeArgumentList();
+	public ExternalAttributeSimpleNode(String name)
+	{
+		myName = name;
+	}
+
+	public void addAttribute(@NotNull ExternalAttributeNode a)
+	{
+		myAttributes.add(a);
+	}
 
 	@NotNull
-	DotNetTypeRef[] getTypeArgumentListRefs();
+	public List<ExternalAttributeNode> getAttributes()
+	{
+		return myAttributes;
+	}
+
+	public String getName()
+	{
+		return myName;
+	}
 }

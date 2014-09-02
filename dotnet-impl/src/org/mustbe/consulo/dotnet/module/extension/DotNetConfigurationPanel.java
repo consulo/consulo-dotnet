@@ -2,8 +2,9 @@ package org.mustbe.consulo.dotnet.module.extension;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,7 +13,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 
-import org.consulo.module.extension.ui.ModuleExtensionWithSdkPanel;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.DotNetRunUtil;
@@ -52,7 +52,7 @@ public class DotNetConfigurationPanel extends JPanel
 	public DotNetConfigurationPanel(final DotNetMutableModuleExtension<?> extension, final List<String> variables, final Runnable updater)
 	{
 		super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, true));
-		add(new ModuleExtensionWithSdkPanel(extension, updater));
+		add(DotNetModuleExtensionWithSdkPanel.create(extension));
 
 		val fileNameField = new JBTextField(extension.getFileName());
 		fileNameField.getEmptyText().setText(DotNetModuleExtension.DEFAULT_FILE_NAME);
@@ -361,9 +361,26 @@ public class DotNetConfigurationPanel extends JPanel
 
 				if(b)
 				{
-					DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry = new DotNetLibraryOrderEntryImpl((ModuleRootLayerImpl) moduleRootLayer, itemAt);
+					val dotNetLibraryOrderEntry = new DotNetLibraryOrderEntryImpl((ModuleRootLayerImpl) moduleRootLayer, itemAt);
 
 					moduleRootLayer.addOrderEntry(dotNetLibraryOrderEntry);
+
+					OrderEntry[] orderEntries = moduleRootLayer.getOrderEntries();
+
+					Arrays.sort(orderEntries, new Comparator<OrderEntry>()
+					{
+						@Override
+						public int compare(OrderEntry o1, OrderEntry o2)
+						{
+							if(o2 == dotNetLibraryOrderEntry)
+							{
+								return 1;
+							}
+							return 0;
+						}
+					});
+
+					moduleRootLayer.rearrangeOrderEntries(orderEntries);
 				}
 				else
 				{
@@ -387,13 +404,11 @@ public class DotNetConfigurationPanel extends JPanel
 			@Override
 			public void run()
 			{
-				List<File> availableSystemLibraries = extension.getAvailableSystemLibraries();
+				Map<String, String> availableSystemLibraries = extension.getAvailableSystemLibraries();
 				final Map<String, Boolean> map = new TreeMap<String, Boolean>();
 
-				for(File library : availableSystemLibraries)
+				for(String libraryName : availableSystemLibraries.keySet())
 				{
-					String libraryName = library.getName();
-
 					map.put(libraryName, findOrderEntry(libraryName, extension.getModuleRootLayer()) != null);
 				}
 
@@ -415,7 +430,7 @@ public class DotNetConfigurationPanel extends JPanel
 		OrderEntry[] orderEntries = layer.getOrderEntries();
 		for(OrderEntry orderEntry : orderEntries)
 		{
-			if(orderEntry instanceof DotNetLibraryOrderEntryImpl && orderEntry.getPresentableName().equals(name))
+			if(orderEntry instanceof DotNetLibraryOrderEntryImpl && orderEntry.getPresentableName().equalsIgnoreCase(name))
 			{
 				return orderEntry;
 			}

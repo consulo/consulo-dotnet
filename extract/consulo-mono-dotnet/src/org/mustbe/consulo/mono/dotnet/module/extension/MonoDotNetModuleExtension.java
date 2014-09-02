@@ -70,17 +70,11 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 
 	@NotNull
 	@Override
-	public String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType)
+	public String[] getSystemLibraryUrlsImpl(@NotNull Sdk sdk, @NotNull String name, @NotNull OrderRootType orderRootType)
 	{
 		if(orderRootType == DocumentationOrderRootType.getInstance())
 		{
-			String[] systemLibraryUrls = super.getSystemLibraryUrls(name, orderRootType);
-
-			Sdk sdk = getSdk();
-			if(sdk == null)
-			{
-				return systemLibraryUrls;
-			}
+			String[] systemLibraryUrls = super.getSystemLibraryUrlsImpl(sdk, name, orderRootType);
 
 			VirtualFile docDir = sdk.getHomeDirectory().findFileByRelativePath("/../../monodoc/sources");
 			if(docDir == null)
@@ -100,7 +94,7 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 			}
 			return ArrayUtil.toStringArray(list);
 		}
-		return super.getSystemLibraryUrls(name, orderRootType);
+		return super.getSystemLibraryUrlsImpl(sdk, name, orderRootType);
 	}
 
 	@NotNull

@@ -14,29 +14,38 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.dotnet.externalAttributes;
+
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentListOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 02.09.14
  */
-public interface CSharpCallArgumentListOwner extends DotNetCallArgumentListOwner
+public class CompositeExternalAttributeHolder implements ExternalAttributeHolder
 {
-	boolean canResolve();
+	private List<ExternalAttributeHolder> myHolders;
 
+	public CompositeExternalAttributeHolder(@NotNull List<ExternalAttributeHolder> holders)
+	{
+		myHolders = holders;
+	}
+
+	@Nullable
 	@Override
-	@Nullable
-	CSharpCallArgumentList getParameterList();
-
-	@Nullable
-	DotNetTypeList getTypeArgumentList();
-
-	@NotNull
-	DotNetTypeRef[] getTypeArgumentListRefs();
+	public ExternalAttributeCompositeNode findClassNode(@NotNull String qname)
+	{
+		for(ExternalAttributeHolder holder : myHolders)
+		{
+			ExternalAttributeCompositeNode classNode = holder.findClassNode(qname);
+			if(classNode != null)
+			{
+				return classNode;
+			}
+		}
+		return null;
+	}
 }

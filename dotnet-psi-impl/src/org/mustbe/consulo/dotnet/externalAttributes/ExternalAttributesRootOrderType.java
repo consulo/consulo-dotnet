@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.dotnet.externalAttributes;
 
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentListOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.openapi.roots.OrderRootType;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 02.09.14
  */
-public interface CSharpCallArgumentListOwner extends DotNetCallArgumentListOwner
+public class ExternalAttributesRootOrderType extends OrderRootType
 {
-	boolean canResolve();
-
-	@Override
-	@Nullable
-	CSharpCallArgumentList getParameterList();
-
-	@Nullable
-	DotNetTypeList getTypeArgumentList();
-
 	@NotNull
-	DotNetTypeRef[] getTypeArgumentListRefs();
+	@LazyInstance
+	public static ExternalAttributesRootOrderType getInstance()
+	{
+		return getOrderRootType(ExternalAttributesRootOrderType.class);
+	}
+
+	public ExternalAttributesRootOrderType()
+	{
+		super("dotNetExternalAttributes");
+	}
 }

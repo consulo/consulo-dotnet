@@ -16,17 +16,20 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
-import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.consulo.annotations.Immutable;
 import org.consulo.annotations.InheritImmutable;
-import org.consulo.module.extension.ModuleExtensionWithSdk;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.psi.search.GlobalSearchScope;
 
@@ -34,7 +37,7 @@ import com.intellij.psi.search.GlobalSearchScope;
  * @author VISTALL
  * @since 20.11.13.
  */
-public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends ModuleExtensionWithSdk<T>
+public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends ModuleExtension<T>
 {
 	String MODULE_OUTPUT_DIR = "$ModuleProductionOutputDirPath$";
 
@@ -47,6 +50,18 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	String DEFAULT_FILE_NAME = MODULE_NAME + "." + OUTPUT_FILE_EXT;
 
 	String DEFAULT_OUTPUT_DIR = MODULE_OUTPUT_DIR;
+
+	@NotNull
+	ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
+
+	@Nullable
+	Sdk getSdk();
+
+	@Nullable
+	String getSdkName();
+
+	@NotNull
+	Class<? extends SdkType> getSdkTypeClass();
 
 	boolean isAllowSourceRoots();
 
@@ -81,7 +96,7 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	String getDebugFileExtension();
 
 	@NotNull
-	List<File> getAvailableSystemLibraries();
+	Map<String, String> getAvailableSystemLibraries();
 
 	@NotNull
 	String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType);

@@ -14,29 +14,44 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.lang.psi;
+package org.mustbe.consulo.dotnet.externalAttributes;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentListOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 
 /**
  * @author VISTALL
- * @since 12.05.14
+ * @since 02.09.14
  */
-public interface CSharpCallArgumentListOwner extends DotNetCallArgumentListOwner
+public class ExternalAttributeArgumentNode
 {
-	boolean canResolve();
+	private final String myType;
+	private final String myValue;
 
-	@Override
-	@Nullable
-	CSharpCallArgumentList getParameterList();
+	public ExternalAttributeArgumentNode(String type, String value)
+	{
+		myType = type;
+		myValue = value;
+	}
 
-	@Nullable
-	DotNetTypeList getTypeArgumentList();
+	public String getValue()
+	{
+		return myValue;
+	}
+
+	public String getType()
+	{
+		return myType;
+	}
 
 	@NotNull
-	DotNetTypeRef[] getTypeArgumentListRefs();
+	public Object toJavaObject()
+	{
+		if(DotNetTypes.System.String.equals(myType))
+		{
+			return myValue;
+		}
+		//TODO [VISTALL] others?
+		return myValue;
+	}
 }
