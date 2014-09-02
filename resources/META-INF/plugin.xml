@@ -92,8 +92,6 @@
 
 		<macro implementation="org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro" />
 
-		<!--<packageViewHelper implementation="org.mustbe.consulo.dotnet.ide.projectView.DotNetPackageViewHelper" /> -->
-
 		<contentFolderSupportPatcher implementation="org.mustbe.consulo.dotnet.module.DotNetContentFolderSupportPatcher"/>
 		<iconDescriptorUpdater implementation="org.mustbe.consulo.dotnet.ide.DotNetIconDescriptorUpdater"/>
 		<consoleFilterProvider implementation="org.mustbe.consulo.dotnet.run.filters.DotNetConsoleFilterProvider"/>
