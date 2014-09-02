@@ -18,18 +18,23 @@ package org.mustbe.consulo.dotnet.module.extension;
 
 import java.util.List;
 
-import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.consulo.module.extension.MutableModuleExtension;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTarget;
+import com.intellij.openapi.projectRoots.Sdk;
 
 /**
  * @author VISTALL
  * @since 01.02.14
  */
-public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetModuleExtension<T>,
-		MutableModuleExtensionWithSdk<T>
+public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetModuleExtension<T>, MutableModuleExtension<T>
 {
+	@Override
+	@NotNull
+	MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk();
+
 	@Override
 	List<String> getVariables();
 

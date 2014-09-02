@@ -54,6 +54,11 @@ public class DotNetLibraryOrderEntryTypeProvider implements OrderEntryTypeProvid
 	public DotNetLibraryOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException
 	{
 		String name = element.getAttributeValue("name");
+		if(name.endsWith(".dll"))
+		{
+			int lastIndex = name.lastIndexOf(".dll");
+			name = name.substring(0, lastIndex);
+		}
 		return new DotNetLibraryOrderEntryImpl((ModuleRootLayerImpl) moduleRootLayer, name);
 	}
 

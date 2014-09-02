@@ -108,7 +108,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="dotnet-psi-api" />
+          <orderEntry type="module" module-name="dotnet-psi-api" exported="" />
         </module-layer>
       </module>
       <module name="dotnet-impl" dirurl="file://$PROJECT_DIR$/dotnet-impl" current-layer="Default">
