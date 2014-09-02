@@ -20,30 +20,44 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.consulo.module.extension.impl.ModuleExtensionWithSdkImpl;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
+import org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.Processor;
+import com.intellij.util.SmartList;
 import edu.arizona.cs.mbel.MSILInputStream;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
 import edu.arizona.cs.mbel.parse.PEModule;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -52,6 +66,9 @@ import edu.arizona.cs.mbel.parse.PEModule;
 public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtension<S>> extends ModuleExtensionWithSdkImpl<S> implements
 		DotNetModuleExtension<S>
 {
+	private Map<String, Map<OrderRootType, String[]>> myUrlsCache = new HashMap<String, Map<OrderRootType, String[]>>();
+	private Sdk myLastSdk;
+
 	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 	protected boolean myAllowDebugInfo;
 	protected boolean myAllowSourceRoots;
@@ -184,7 +201,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 
 	@NotNull
 	@Override
-	public String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType)
+	public final String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType)
 	{
 		Sdk sdk = getSdk();
 		if(sdk == null)
@@ -192,6 +209,29 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 			return ArrayUtil.EMPTY_STRING_ARRAY;
 		}
 
+		if(!Comparing.equal(myLastSdk, sdk))
+		{
+			myLastSdk = sdk;
+			myUrlsCache.clear();
+		}
+
+		Map<OrderRootType, String[]> orderRootTypeMap = myUrlsCache.get(name);
+		if(orderRootTypeMap == null)
+		{
+			myUrlsCache.put(name, orderRootTypeMap = new HashMap<OrderRootType, String[]>());
+		}
+
+		String[] urls = orderRootTypeMap.get(orderRootType);
+		if(urls == null)
+		{
+			orderRootTypeMap.put(orderRootType, urls = getSystemLibraryUrlsImpl(sdk, name, orderRootType));
+		}
+
+		return urls;
+	}
+
+	protected String[] getSystemLibraryUrlsImpl(@NotNull Sdk sdk, String name, OrderRootType orderRootType)
+	{
 		if(orderRootType == BinariesOrderRootType.getInstance())
 		{
 			String url = VirtualFileManager.constructUrl(DotNetModuleFileType.PROTOCOL, sdk.getHomePath() + "/" + name + ArchiveFileSystem
@@ -203,7 +243,64 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 			String nameWithoutExtension = FileUtil.getNameWithoutExtension(name);
 			return new String[]{sdk.getHomePath() + "/" + nameWithoutExtension + ".xml"};
 		}
+		else if(orderRootType == ExternalAttributesRootOrderType.getInstance())
+		{
+			try
+			{
+				File libraryFile = new File(sdk.getHomePath(), name);
+				ModuleParser moduleParser = new ModuleParser(new FileInputStream(libraryFile));
+				final String fileVersion = moduleParser.getAssemblyInfo().getMajorVersion() + "." + moduleParser.getAssemblyInfo().getMinorVersion
+						() +
+						"." +
+						moduleParser.getAssemblyInfo().getBuildNumber() + "." + moduleParser.getAssemblyInfo().getRevisionNumber();
+
+				PluginClassLoader classLoader = (PluginClassLoader) getClass().getClassLoader();
+				IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());
+				assert plugin != null;
+				File dir = new File(plugin.getPath(), "externalAttributes");
+
+				val urls = new SmartList<String>();
+				val requiredFileName = name + ".xml";
+				FileUtil.visitFiles(dir, new Processor<File>()
+				{
+					@Override
+					public boolean process(File file)
+					{
+						if(file.isDirectory())
+						{
+							return true;
+						}
+						if(Comparing.equal(requiredFileName, file.getName(), false) && isValidExternalFile(fileVersion, file))
+						{
+							urls.add(VfsUtil.pathToUrl(file.getPath()));
+						}
+						return true;
+					}
+				});
+
+				return ArrayUtil.toStringArray(urls);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 		return ArrayUtil.EMPTY_STRING_ARRAY;
+	}
+
+	private static boolean isValidExternalFile(String version, File toCheck)
+	{
+		try
+		{
+			Document document = JDOMUtil.loadDocument(toCheck);
+			String versionPattern = document.getRootElement().getChildText("version");
+			return Pattern.compile(versionPattern).matcher(version).find();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@NotNull

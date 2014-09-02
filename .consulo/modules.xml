@@ -101,6 +101,7 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
           <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -122,8 +123,8 @@
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-api" exported="" />
-          <orderEntry type="module" module-name="dotnet-psi-api" />
           <orderEntry type="library" name="dotnet-asm" level="project" />
+          <orderEntry type="module" module-name="dotnet-psi-impl" />
         </module-layer>
       </module>
       <module name="dotnet-debugger-api" dirurl="file://$PROJECT_DIR$/dotnet-debugger-api" current-layer="Default">

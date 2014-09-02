@@ -17,36 +17,56 @@
 <assembly>
 	<version>2.0.\d.\d</version>
 
-	<class name="System.Xml.XmlNode">
-		<method name="SelectNodes">
+	<class name="System.Console">
+		<method name="WriteLine">
 			<parameter type="System.String">
 				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
-					<argument type="System.String">XPath</argument>
+					<argument type="System.String">CFS</argument>
 				</attribute>
 			</parameter>
+			<parameter type="System.Object" />
 		</method>
-		<method name="SelectNodes">
+
+		<method name="WriteLine">
 			<parameter type="System.String">
 				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
-					<argument type="System.String">XPath</argument>
+					<argument type="System.String">CFS</argument>
 				</attribute>
 			</parameter>
-			<parameter type="System.Xml.XmlNamespaceManager" />
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
 		</method>
-		<method name="SelectSingleNode">
+
+		<method name="WriteLine">
 			<parameter type="System.String">
 				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
-					<argument type="System.String">XPath</argument>
+					<argument type="System.String">CFS</argument>
 				</attribute>
 			</parameter>
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
 		</method>
-		<method name="SelectSingleNode">
+
+		<method name="WriteLine">
 			<parameter type="System.String">
 				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
-					<argument type="System.String">XPath</argument>
+					<argument type="System.String">CFS</argument>
 				</attribute>
 			</parameter>
-			<parameter type="System.Xml.XmlNamespaceManager" />
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+		</method>
+
+		<method name="WriteLine">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object[]" />
 		</method>
 	</class>
 </assembly>

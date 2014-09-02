@@ -14,27 +14,44 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet;
+package org.mustbe.consulo.dotnet.externalAttributes;
 
-import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.roots.OrderRootType;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 
 /**
  * @author VISTALL
  * @since 02.09.14
  */
-public class ExternalAttributesRootOrderType extends OrderRootType
+public class ExternalAttributeArgumentNode
 {
-	@NotNull
-	@LazyInstance
-	public static ExternalAttributesRootOrderType getInstance()
+	private final String myType;
+	private final String myValue;
+
+	public ExternalAttributeArgumentNode(String type, String value)
 	{
-		return getOrderRootType(ExternalAttributesRootOrderType.class);
+		myType = type;
+		myValue = value;
 	}
 
-	public ExternalAttributesRootOrderType()
+	public String getValue()
 	{
-		super("dotNetExternalAttributes");
+		return myValue;
+	}
+
+	public String getType()
+	{
+		return myType;
+	}
+
+	@NotNull
+	public Object toJavaObject()
+	{
+		if(DotNetTypes.System.String.equals(myType))
+		{
+			return myValue;
+		}
+		//TODO [VISTALL] others?
+		return myValue;
 	}
 }
