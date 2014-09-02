@@ -103,6 +103,8 @@
 
 		<orderEntryTypeProvider implementation="org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider" />
 
+		<orderRootType implementation="org.mustbe.consulo.dotnet.ExternalAttributesRootOrderType" />
+		<orderRootTypeEditor key="dotNetExternalAttributes" implementationClass="org.mustbe.consulo.dotnet.ExternalAttributesOrderRootTypeUIFactory" />
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompiler"/>
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopier"/>
 		<compiler.translatingHelper implementation="org.mustbe.consulo.dotnet.compiler.DotNetTranslatingCompilerFilesMonitorHelper"/>
