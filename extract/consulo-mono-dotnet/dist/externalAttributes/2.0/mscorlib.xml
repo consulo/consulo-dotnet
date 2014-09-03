@@ -68,5 +68,56 @@
 			</parameter>
 			<parameter type="System.Object[]" />
 		</method>
+
+		<method name="Write">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object" />
+		</method>
+
+		<method name="Write">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+		</method>
+
+		<method name="Write">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+		</method>
+
+		<method name="Write">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+		</method>
+
+		<method name="Write">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object[]" />
+		</method>
 	</class>
 </assembly>
