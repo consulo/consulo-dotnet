@@ -49,7 +49,12 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 			{
 				String name = element.getAttributeValue("name");
 
-				val classNode = new ExternalAttributeCompositeNode(name);
+				ExternalAttributeCompositeNode classNode = holder.myClasses.get(name);
+				if(classNode == null)
+				{
+					holder.myClasses.put(name, classNode = new ExternalAttributeCompositeNode(name));
+				}
+
 				readAttributes(element, classNode);
 
 				for(Element classChildren : element.getChildren())
@@ -69,8 +74,6 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 						classNode.addChild(methodNode);
 					}
 				}
-
-				holder.myClasses.put(name, classNode);
 			}
 			return holder;
 		}
