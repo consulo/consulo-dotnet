@@ -28,6 +28,11 @@ import com.intellij.psi.PsiElement;
  */
 public class DotNetTypeRefUtil
 {
+	public static boolean isObject(@NotNull DotNetTypeRef typeRef)
+	{
+		return DotNetTypes.System.Object.equals(typeRef.getQualifiedText());
+	}
+
 	public static boolean isVoid(@NotNull DotNetTypeRef typeRef)
 	{
 		return DotNetTypes.System.Void.equals(typeRef.getQualifiedText());
