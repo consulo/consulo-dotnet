@@ -26,5 +26,5 @@ import org.jetbrains.annotations.Nullable;
 public interface ExternalAttributeHolder
 {
 	@Nullable
-	ExternalAttributeCompositeNode findClassNode(@NotNull String qname);
+	ExternalAttributeWithChildrenNode findClassNode(@NotNull String qname);
 }

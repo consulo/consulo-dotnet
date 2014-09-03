@@ -16,45 +16,16 @@
 
 package org.mustbe.consulo.dotnet.externalAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 02.09.14
  */
-public class ExternalAttributeCompositeNode extends ExternalAttributeSimpleNode
+public interface ExternalAttributeWithChildrenNode extends ExternalAttributeSimpleNode
 {
-	private final List<ExternalAttributeSimpleNode> myChildren = new ArrayList<ExternalAttributeSimpleNode>();
-
-	public ExternalAttributeCompositeNode(String qualifiedName)
-	{
-		super(qualifiedName);
-	}
-
-	public void addChild(@NotNull ExternalAttributeSimpleNode methodNode)
-	{
-		myChildren.add(methodNode);
-	}
-
-	@Nullable
-	public ExternalAttributeSimpleNode findByName(@NotNull String name)
-	{
-		for(ExternalAttributeSimpleNode child : myChildren)
-		{
-			if(child.getName().equals(name))
-			{
-				return child;
-			}
-		}
-		return null;
-	}
 	@NotNull
-	public List<ExternalAttributeSimpleNode> getChildren()
-	{
-		return myChildren;
-	}
+	List<ExternalAttributeSimpleNode> getChildren();
 }

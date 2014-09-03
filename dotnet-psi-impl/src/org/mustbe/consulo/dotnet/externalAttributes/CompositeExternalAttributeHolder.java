@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenCompositeNodeImpl;
+import com.intellij.util.SmartList;
 
 /**
  * @author VISTALL
@@ -36,16 +38,21 @@ public class CompositeExternalAttributeHolder implements ExternalAttributeHolder
 
 	@Nullable
 	@Override
-	public ExternalAttributeCompositeNode findClassNode(@NotNull String qname)
+	public ExternalAttributeWithChildrenNode findClassNode(@NotNull String qname)
 	{
+		List<ExternalAttributeWithChildrenNode> list = new SmartList<ExternalAttributeWithChildrenNode>();
 		for(ExternalAttributeHolder holder : myHolders)
 		{
-			ExternalAttributeCompositeNode classNode = holder.findClassNode(qname);
+			ExternalAttributeWithChildrenNode classNode = holder.findClassNode(qname);
 			if(classNode != null)
 			{
-				return classNode;
+				list.add(classNode);
 			}
 		}
-		return null;
+		if(list.isEmpty())
+		{
+			return null;
+		}
+		return new ExternalAttributeWithChildrenCompositeNodeImpl(list);
 	}
 }

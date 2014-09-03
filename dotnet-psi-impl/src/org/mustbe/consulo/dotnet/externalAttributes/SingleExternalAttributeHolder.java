@@ -26,6 +26,9 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenNodeImpl;
+import org.mustbe.consulo.dotnet.externalAttributes.nodes.ExternalAttributeNodeImpl;
+import org.mustbe.consulo.dotnet.externalAttributes.nodes.ExternalAttributeSimpleNodeImpl;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import lombok.val;
@@ -49,10 +52,10 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 			{
 				String name = element.getAttributeValue("name");
 
-				ExternalAttributeCompositeNode classNode = holder.myClasses.get(name);
+				ExternalAttributeWithChildrenNodeImpl classNode = (ExternalAttributeWithChildrenNodeImpl) holder.myClasses.get(name);
 				if(classNode == null)
 				{
-					holder.myClasses.put(name, classNode = new ExternalAttributeCompositeNode(name));
+					holder.myClasses.put(name, classNode = new ExternalAttributeWithChildrenNodeImpl(name));
 				}
 
 				readAttributes(element, classNode);
@@ -62,12 +65,12 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 					String classChildrenName = classChildren.getName();
 					if("method".equals(classChildrenName))
 					{
-						val methodNode = new ExternalAttributeCompositeNode(classChildren.getAttributeValue("name"));
+						val methodNode = new ExternalAttributeWithChildrenNodeImpl(classChildren.getAttributeValue("name"));
 						readAttributes(classChildren, methodNode);
 
 						for(Element methodChild : classChildren.getChildren())
 						{
-							val parameterNode = new ExternalAttributeSimpleNode(methodChild.getAttributeValue("type"));
+							val parameterNode = new ExternalAttributeSimpleNodeImpl(methodChild.getAttributeValue("type"));
 							readAttributes(methodChild, parameterNode);
 							methodNode.addChild(parameterNode);
 						}
@@ -88,11 +91,11 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 		return null;
 	}
 
-	private static void readAttributes(Element element, ExternalAttributeSimpleNode owner)
+	private static void readAttributes(Element element, ExternalAttributeSimpleNodeImpl owner)
 	{
 		for(Element att : element.getChildren("attribute"))
 		{
-			ExternalAttributeNode attributeNode = new ExternalAttributeNode(att.getAttributeValue("name"));
+			ExternalAttributeNodeImpl attributeNode = new ExternalAttributeNodeImpl(att.getAttributeValue("name"));
 			owner.addAttribute(attributeNode);
 
 			for(Element attChild : att.getChildren())
@@ -106,11 +109,11 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 		}
 	}
 
-	private Map<String, ExternalAttributeCompositeNode> myClasses = new THashMap<String, ExternalAttributeCompositeNode>();
+	private Map<String, ExternalAttributeWithChildrenNode> myClasses = new THashMap<String, ExternalAttributeWithChildrenNode>();
 
 	@Nullable
 	@Override
-	public ExternalAttributeCompositeNode findClassNode(@NotNull String qname)
+	public ExternalAttributeWithChildrenNode findClassNode(@NotNull String qname)
 	{
 		return myClasses.get(qname);
 	}

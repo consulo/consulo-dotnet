@@ -19,36 +19,16 @@ package org.mustbe.consulo.dotnet.externalAttributes;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.util.SmartList;
 
 /**
  * @author VISTALL
  * @since 02.09.14
  */
-public class ExternalAttributeSimpleNode
+public interface ExternalAttributeSimpleNode
 {
-	private List<ExternalAttributeNode> myAttributes = new SmartList<ExternalAttributeNode>();
-
-	private final String myName;
-
-	public ExternalAttributeSimpleNode(String name)
-	{
-		myName = name;
-	}
-
-	public void addAttribute(@NotNull ExternalAttributeNode a)
-	{
-		myAttributes.add(a);
-	}
+	@NotNull
+	List<ExternalAttributeNode> getAttributes();
 
 	@NotNull
-	public List<ExternalAttributeNode> getAttributes()
-	{
-		return myAttributes;
-	}
-
-	public String getName()
-	{
-		return myName;
-	}
+	String getName();
 }

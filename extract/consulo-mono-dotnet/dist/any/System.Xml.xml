@@ -15,7 +15,7 @@
   -->
 
 <assembly>
-	<version>2.0.\d.\d</version>
+	<version>\d.\d.\d.\d</version>
 
 	<class name="System.Xml.XmlNode">
 		<method name="SelectNodes">
