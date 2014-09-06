@@ -49,10 +49,21 @@ import lombok.val;
  */
 public class DotNetConfigurationPanel extends JPanel
 {
+	private final CheckBoxList<String> myLibraryList;
+	private DotNetMutableModuleExtension<?> myExtension;
+
 	public DotNetConfigurationPanel(final DotNetMutableModuleExtension<?> extension, final List<String> variables, final Runnable updater)
 	{
 		super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, true));
-		add(DotNetModuleExtensionWithSdkPanel.create(extension));
+		myExtension = extension;
+		add(DotNetModuleExtensionWithSdkPanel.create(extension, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				reloadSystemLibraries();
+			}
+		}));
 
 		val fileNameField = new JBTextField(extension.getFileName());
 		fileNameField.getEmptyText().setText(DotNetModuleExtension.DEFAULT_FILE_NAME);
@@ -345,19 +356,18 @@ public class DotNetConfigurationPanel extends JPanel
 		add(variableDecorator.createPanel());
 
 		add(new JBLabel("Libraries: "));
-		final CheckBoxList<String> checkBoxList = new CheckBoxList<String>();
-		checkBoxList.setPaintBusy(true);
+		myLibraryList = new CheckBoxList<String>();
 
 		val moduleRootLayer = extension.getModuleRootLayer();
 
-		reloadSystemLibraries(checkBoxList, extension);
+		reloadSystemLibraries();
 
-		checkBoxList.setCheckBoxListListener(new CheckBoxListListener()
+		myLibraryList.setCheckBoxListListener(new CheckBoxListListener()
 		{
 			@Override
 			public void checkBoxSelectionChanged(int i, boolean b)
 			{
-				String itemAt = (String) checkBoxList.getItemAt(i);
+				String itemAt = (String) myLibraryList.getItemAt(i);
 
 				if(b)
 				{
@@ -394,22 +404,23 @@ public class DotNetConfigurationPanel extends JPanel
 				UIUtil.invokeLaterIfNeeded(updater);
 			}
 		});
-		add(ScrollPaneFactory.createScrollPane(checkBoxList, true));
+		add(ScrollPaneFactory.createScrollPane(myLibraryList, true));
 	}
 
-	private static void reloadSystemLibraries(final CheckBoxList<String> checkBoxList, final DotNetMutableModuleExtension<?> extension)
+	private void reloadSystemLibraries()
 	{
+		myLibraryList.setPaintBusy(true);
 		ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				Map<String, String> availableSystemLibraries = extension.getAvailableSystemLibraries();
+				Map<String, String> availableSystemLibraries = myExtension.getAvailableSystemLibraries();
 				final Map<String, Boolean> map = new TreeMap<String, Boolean>();
 
 				for(String libraryName : availableSystemLibraries.keySet())
 				{
-					map.put(libraryName, findOrderEntry(libraryName, extension.getModuleRootLayer()) != null);
+					map.put(libraryName, findOrderEntry(libraryName, myExtension.getModuleRootLayer()) != null);
 				}
 
 				UIUtil.invokeLaterIfNeeded(new Runnable()
@@ -417,8 +428,8 @@ public class DotNetConfigurationPanel extends JPanel
 					@Override
 					public void run()
 					{
-						checkBoxList.setStringItems(map);
-						checkBoxList.setPaintBusy(false);
+						myLibraryList.setStringItems(map);
+						myLibraryList.setPaintBusy(false);
 					}
 				});
 			}

@@ -39,7 +39,7 @@ import com.intellij.openapi.util.Condition;
  */
 public class DotNetModuleExtensionWithSdkPanel
 {
-	public static JComponent create(@NotNull DotNetMutableModuleExtension<?> myExtensionWithSdk)
+	public static JComponent create(@NotNull DotNetMutableModuleExtension<?> myExtensionWithSdk, @NotNull final Runnable updater)
 	{
 		final Class<? extends SdkType> sdkType = myExtensionWithSdk.getSdkTypeClass();
 		final ProjectSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(myExtensionWithSdk.getModule().getProject())
@@ -83,6 +83,7 @@ public class DotNetModuleExtensionWithSdkPanel
 			public void itemStateChanged(ItemEvent e)
 			{
 				inheritableSdk.set(mySdkComboBox.getSelectedModuleName(), mySdkComboBox.getSelectedSdkName());
+				updater.run();
 			}
 		});
 
