@@ -1,8 +1,0 @@
-using System;
-
-#if (${NAMESPACE_NAME} && ${NAMESPACE_NAME} != "")namespace ${NAMESPACE_NAME} {
-#end
-public class ${NAME}Attribute : Attribute{
-
-}
-#if (${NAMESPACE_NAME} && ${NAMESPACE_NAME} != "")}#end

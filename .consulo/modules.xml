@@ -47,7 +47,6 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="csharp-impl" />
           <orderEntry type="module" module-name="dotnet-impl" exported="" />
         </module-layer>
       </module>
@@ -63,7 +62,6 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="csharp-impl" />
           <orderEntry type="module" module-name="dotnet-impl" />
           <orderEntry type="module" module-name="dotnet-documentation-impl" />
         </module-layer>
@@ -194,91 +192,6 @@
               </binaries>
             </library>
           </orderEntry>
-        </module-layer>
-      </module>
-      <module name="csharp/csharp-psi-api" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-psi-api" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
-          <extension id="lombok" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="dotnet-psi-api" exported="" />
-          <orderEntry type="module" module-name="msil-psi-api" exported="" />
-        </module-layer>
-      </module>
-      <module name="csharp/csharp-psi-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-psi-impl" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
-          <extension id="lombok" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="csharp-psi-api" exported="" />
-          <orderEntry type="library" name="joou" level="project" />
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/jel.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
-          <orderEntry type="module" module-name="dotnet-psi-impl" />
-          <orderEntry type="module" module-name="msil-psi-impl" />
-          <orderEntry type="module" module-name="dotnet-debugger-impl" />
-        </module-layer>
-      </module>
-      <module name="csharp/csharp-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-impl" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
-          <extension id="lombok" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="csharp-psi-impl" exported="" />
-          <orderEntry type="module" module-name="dotnet-impl" />
-          <orderEntry type="module" module-name="msil-psi-impl" />
-          <orderEntry type="module" module-name="dotnet-debugger-impl" />
-          <orderEntry type="module" module-name="composite-formatting-string" />
-        </module-layer>
-      </module>
-      <module name="csharp/csharp-spellchecker" dirurl="file://$PROJECT_DIR$/extract/consulo-csharp/csharp-spellchecker" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" custom-plugin-dir-url="file://$MODULE_DIR$/../../../dep" />
-          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
-          <extension id="lombok" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-          <orderEntry type="module-library">
-            <library name="consulo:Spellchecker">
-              <binaries>
-                <root url="jar://$MODULE_DIR$/../../../dep/spellchecker/lib/spellchecker.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
-          <orderEntry type="module" module-name="csharp-psi-api" />
-          <orderEntry type="module" module-name="csharp-psi-impl" />
         </module-layer>
       </module>
       <module name="msil-psi-api" dirurl="file://$PROJECT_DIR$/msil-psi-api" current-layer="Default">

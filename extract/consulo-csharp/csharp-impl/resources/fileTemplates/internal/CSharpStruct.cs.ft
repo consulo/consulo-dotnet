@@ -1,6 +1,0 @@
-#if (${NAMESPACE_NAME} && ${NAMESPACE_NAME} != "")namespace ${NAMESPACE_NAME} {
-#end
-public struct ${NAME} {
-
-}
-#if (${NAMESPACE_NAME} && ${NAMESPACE_NAME} != "")}#end

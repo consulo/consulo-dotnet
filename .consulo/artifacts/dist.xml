@@ -44,20 +44,6 @@
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-mono-dotnet/dist" />
       </element>
-      <element id="directory" name="csharp">
-        <element id="directory" name="lib">
-          <element id="zip-archive" name="csharp.jar">
-            <element id="module-production-resource-output" name="csharp-impl" />
-            <element id="module-output" name="csharp-psi-api" />
-            <element id="module-production-resource-output" name="csharp-psi-api" />
-            <element id="module-output" name="csharp-psi-impl" />
-            <element id="module-production-resource-output" name="csharp-psi-impl" />
-            <element id="module-output" name="csharp-spellchecker" />
-            <element id="module-output" name="csharp-impl" />
-          </element>
-          <element id="file-copy" path="$PROJECT_DIR$/extract/consulo-csharp/csharp-psi-impl/lib/jel.jar" />
-        </element>
-      </element>
     </root>
   </artifact>
 </component>
