@@ -64,6 +64,7 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-impl" />
           <orderEntry type="module" module-name="dotnet-documentation-impl" />
+          <orderEntry type="module" module-name="dotnet-psi-api" />
         </module-layer>
       </module>
       <module name="dotnet-api" dirurl="file://$PROJECT_DIR$/dotnet-api" current-layer="Default">
