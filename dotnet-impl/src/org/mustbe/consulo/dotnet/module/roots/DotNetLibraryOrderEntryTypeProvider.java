@@ -21,7 +21,7 @@ import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.roots.OrderEntryTypeProvider;
+import org.mustbe.consulo.roots.impl.OrderEntryTypeProviderEx;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
@@ -33,7 +33,7 @@ import com.intellij.openapi.util.InvalidDataException;
  * @author VISTALL
  * @since 21.08.14
  */
-public class DotNetLibraryOrderEntryTypeProvider implements OrderEntryTypeProvider<DotNetLibraryOrderEntryImpl>
+public class DotNetLibraryOrderEntryTypeProvider extends OrderEntryTypeProviderEx<DotNetLibraryOrderEntryImpl>
 {
 	@NotNull
 	@LazyInstance
