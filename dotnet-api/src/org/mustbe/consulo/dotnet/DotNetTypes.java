@@ -62,6 +62,7 @@ public interface DotNetTypes
 		String Int16 = "System.Int16";
 		String UInt16 = "System.UInt16";
 		String Decimal = "System.Decimal";
+		String Nullable$1 = "System.Nullable`1";
 		String Int32 = "System.Int32";
 		String UInt32 = "System.UInt32";
 		String Int64 = "System.Int64";
