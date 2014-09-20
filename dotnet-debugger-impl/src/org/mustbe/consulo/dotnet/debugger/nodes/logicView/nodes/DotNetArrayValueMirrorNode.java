@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
+package org.mustbe.consulo.dotnet.debugger.nodes.logicView.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import mono.debugger.ArrayValueMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;

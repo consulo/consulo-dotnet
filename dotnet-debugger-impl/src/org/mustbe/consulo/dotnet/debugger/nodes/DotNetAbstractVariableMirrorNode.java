@@ -16,24 +16,19 @@
 
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
-import java.util.List;
-
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
-import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import org.mustbe.consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
-import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import lombok.val;
 import mono.debugger.*;
 
@@ -83,7 +78,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 					setValue = new BooleanValueMirror(virtualMachine, Boolean.valueOf(expression));
 					break;
 				default:
-					setValue = new NumberValueMirror(virtualMachine,typeTag.getTag(), Double.parseDouble(expression));
+					setValue = new NumberValueMirror(virtualMachine, typeTag.getTag(), Double.parseDouble(expression));
 					break;
 			}
 
@@ -204,54 +199,12 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 		XValueChildrenList childrenList = new XValueChildrenList();
 		val value = getValueOfVariable();
-		if(typeOfVariable.isArray())
+		for(DotNetLogicValueView dotNetLogicValueView : DotNetLogicValueView.IMPL)
 		{
-			ArrayValueMirror arrayValueMirror = (ArrayValueMirror) value;
-			if(arrayValueMirror == null)
+			if(dotNetLogicValueView.canHandle(myDebugContext, typeOfVariable))
 			{
-				return;
-			}
-			int length = arrayValueMirror.length();
-			int min = Math.min(length, 100);
-			for(int i = 0; i < min; i++)
-			{
-				String name = getName() + "[" + i + "]";
-
-				childrenList.add(new DotNetArrayValueMirrorNode(myDebugContext, name, myThreadMirror, arrayValueMirror, i));
-			}
-		}
-		else
-		{
-			if(!(value instanceof ObjectValueMirror))
-			{
-				return;
-			}
-
-			try
-			{
-				TypeMirror type = value.type();
-
-				assert type != null;
-
-				childrenList.add(new DotNetObjectValueMirrorNode(myDebugContext, myThreadMirror, type, null));
-
-				List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
-				for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
-				{
-					if(fieldMirror.isStatic())
-					{
-						continue;
-					}
-
-					if(fieldMirror instanceof PropertyMirror && ((PropertyMirror) fieldMirror).isArrayProperty())
-					{
-						continue;
-					}
-					childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldMirror, myThreadMirror, (ObjectValueMirror) value));
-				}
-			}
-			catch(InvalidObjectException ignored)
-			{
+				dotNetLogicValueView.computeChildren(myDebugContext, myThreadMirror, value, childrenList);
+				break;
 			}
 		}
 		node.addChildren(childrenList, true);
@@ -262,114 +215,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	{
 		final Value<?> valueOfVariable = getValueOfVariable();
 
-		xValueNode.setPresentation(getIconForVariable(), new XValuePresentation()
-		{
-			@Nullable
-			@Override
-			public String getType()
-			{
-				TypeMirror typeOfVariable = getTypeOfVariable();
-				if(typeOfVariable == null)
-				{
-					return null;
-				}
-				return DotNetVirtualMachineUtil.formatNameWithGeneric(typeOfVariable);
-			}
-
-			@Override
-			public void renderValue(@NotNull final XValueTextRenderer xValueTextRenderer)
-			{
-				if(valueOfVariable != null)
-				{
-					valueOfVariable.accept(new ValueVisitor.Adapter()
-					{
-						@Override
-						public void visitStringValue(@NotNull StringValueMirror value, @NotNull String mainValue)
-						{
-							xValueTextRenderer.renderStringValue(mainValue);
-						}
-
-						@Override
-						public void visitObjectValue(@NotNull ObjectValueMirror value)
-						{
-							TypeMirror type = null;
-							try
-							{
-								type = value.type();
-							}
-							catch(InvalidObjectException ignored)
-							{
-							}
-
-							if(type == null)
-							{
-								return;
-							}
-							MethodMirror toString = type.findMethodByName("ToString", true);
-							if(toString == null)
-							{
-								return;
-							}
-
-							String toStringValue = null;
-							String qTypeOfValue = toString.declaringType().qualifiedName();
-							if(Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
-							{
-								toStringValue = "{" + qTypeOfValue + "@" + value.address() + "}";
-							}
-							else
-							{
-								Value<?> invoke = toString.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, value);
-								if(invoke instanceof StringValueMirror)
-								{
-									toStringValue = ((StringValueMirror) invoke).value();
-								}
-							}
-							if(toStringValue != null)
-							{
-								xValueTextRenderer.renderValue(toStringValue);
-							}
-						}
-
-						@Override
-						public void visitArrayValue(@NotNull ArrayValueMirror value)
-						{
-							StringBuilder builder = new StringBuilder();
-							builder.append("{");
-							String type = DotNetVirtualMachineUtil.formatNameWithGeneric(value.type());
-							builder.append(type.replaceFirst("\\[\\]", "[" + value.length() + "]"));
-							builder.append("@");
-							builder.append(value.object().address());
-							builder.append("}");
-							xValueTextRenderer.renderValue(builder.toString());
-						}
-
-						@Override
-						public void visitCharValue(@NotNull CharValueMirror valueMirror, @NotNull Character mainValue)
-						{
-							xValueTextRenderer.renderCharValue(String.valueOf(mainValue));
-						}
-
-						@Override
-						public void visitBooleanValue(@NotNull BooleanValueMirror value, @NotNull Boolean mainValue)
-						{
-							xValueTextRenderer.renderKeywordValue(String.valueOf(mainValue));
-						}
-
-						@Override
-						public void visitNumberValue(@NotNull NumberValueMirror value, @NotNull Number mainValue)
-						{
-							xValueTextRenderer.renderNumericValue(String.valueOf(mainValue));
-						}
-
-						@Override
-						public void visitNoObjectValue(@NotNull NoObjectValueMirror value)
-						{
-							xValueTextRenderer.renderKeywordValue("null");
-						}
-					});
-				}
-			}
-		}, valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror);
+		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myThreadMirror, getTypeOfVariable(), valueOfVariable),
+				valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror);
 	}
 }
