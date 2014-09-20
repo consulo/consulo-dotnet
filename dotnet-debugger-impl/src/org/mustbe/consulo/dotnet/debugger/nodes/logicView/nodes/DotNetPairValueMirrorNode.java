@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetValuePresentation;
 import com.intellij.icons.AllIcons;
+import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
@@ -49,6 +50,13 @@ public class DotNetPairValueMirrorNode extends DotNetAbstractVariableMirrorNode
 	private static String getName(@NotNull ThreadMirror threadMirror, Value<?> value)
 	{
 		return XValuePresentationUtil.computeValueText(new DotNetValuePresentation(threadMirror, null, value));
+	}
+
+	@Nullable
+	@Override
+	public XValueModifier getModifier()
+	{
+		return null;
 	}
 
 	@NotNull
