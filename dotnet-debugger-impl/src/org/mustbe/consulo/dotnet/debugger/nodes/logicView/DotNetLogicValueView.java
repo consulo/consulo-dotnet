@@ -18,6 +18,7 @@ public interface DotNetLogicValueView
 	DotNetLogicValueView[] IMPL = new DotNetLogicValueView[]{
 			new ArrayDotNetLogicValueView(),
 			new DictionaryDotNetLogicValueView(),
+			//new CollectionDotNetLogicValueView(),
 			new DefaultDotNetLogicValueView()
 	};
 

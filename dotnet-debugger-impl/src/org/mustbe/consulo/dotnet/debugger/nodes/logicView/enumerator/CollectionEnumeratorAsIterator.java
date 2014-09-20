@@ -1,10 +1,25 @@
+/*
+ * Copyright 2013-2014 must-be.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mustbe.consulo.dotnet.debugger.nodes.logicView.enumerator;
 
 import java.util.Iterator;
 
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.MdbDebuggerUtil;
-import com.intellij.openapi.util.Pair;
 import mono.debugger.BooleanValueMirror;
 import mono.debugger.InvokeFlags;
 import mono.debugger.MethodMirror;
@@ -17,15 +32,14 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 20.09.14
  */
-public class DictionaryEnumeratorAsIterator implements Iterator<Pair<Value<?>, Value<?>>>
+public class CollectionEnumeratorAsIterator implements Iterator<Value<?>>
 {
 	private ThreadMirror myThreadMirror;
 	private Value<?> myValue;
 	private MethodMirror myMoveNextMethod;
-	private MethodMirror myKeyMethod;
-	private MethodMirror myValueMethod;
+	private MethodMirror myCurrentMethod;
 
-	public DictionaryEnumeratorAsIterator(ThreadMirror threadMirror, Value<?> value, DotNetDebugContext debugContext) throws CantCreateException
+	public CollectionEnumeratorAsIterator(ThreadMirror threadMirror, Value<?> value, DotNetDebugContext debugContext) throws CantCreateException
 	{
 		myThreadMirror = threadMirror;
 		myValue = value;
@@ -37,14 +51,10 @@ public class DictionaryEnumeratorAsIterator implements Iterator<Pair<Value<?>, V
 		{
 			throw new CantCreateException();
 		}
+		System.out.println(myMoveNextMethod.declaringType());
 
-		myKeyMethod = MdbDebuggerUtil.findGetterForProperty("Key", typeMirror);
-		if(myKeyMethod == null)
-		{
-			throw new CantCreateException();
-		}
-		myValueMethod = MdbDebuggerUtil.findGetterForProperty("Value", typeMirror);
-		if(myValueMethod == null)
+		myCurrentMethod = MdbDebuggerUtil.findGetterForProperty("Current", typeMirror);
+		if(myCurrentMethod == null)
 		{
 			throw new CantCreateException();
 		}
@@ -70,13 +80,11 @@ public class DictionaryEnumeratorAsIterator implements Iterator<Pair<Value<?>, V
 	}
 
 	@Override
-	public Pair<Value<?>, Value<?>> next()
+	public Value<?> next()
 	{
 		try
 		{
-			Value<?> keyValue = myKeyMethod.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, myValue);
-			Value<?> valueValue = myValueMethod.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, myValue);
-			return Pair.<Value<?>, Value<?>>create(keyValue, valueValue);
+			return myCurrentMethod.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, myValue);
 		}
 		catch(ThrowValueException e)
 		{
@@ -86,7 +94,7 @@ public class DictionaryEnumeratorAsIterator implements Iterator<Pair<Value<?>, V
 			//MethodMirror toString = type.findMethodByName("ToString", true);
 			//System.out.println(toString.invoke(myThreadMirror, throwExceptionValue));
 		}
-		return Pair.create(null, null);
+		return null;
 	}
 
 	@Override
