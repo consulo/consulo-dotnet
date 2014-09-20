@@ -29,6 +29,7 @@ import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredTextContainer;
@@ -202,6 +203,10 @@ public class DotNetStackFrame extends XStackFrame
 			LocalVariableMirror[] locals = method.locals(myFrame.location().codeIndex());
 			for(LocalVariableMirror local : locals)
 			{
+				if(StringUtil.isEmpty(local.name()))
+				{
+					continue;
+				}
 				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(myDebuggerContext, local, myFrame);
 
 				childrenList.add(localVariableMirrorNode);
