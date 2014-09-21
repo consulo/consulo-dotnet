@@ -69,6 +69,12 @@ public class DotNetValuePresentation extends XValuePresentation
 				@Override
 				public void visitObjectValue(@NotNull ObjectValueMirror value)
 				{
+					if(value.id() == 0)
+					{
+						render.renderKeywordValue("null");
+						return;
+					}
+
 					TypeMirror type = null;
 					try
 					{

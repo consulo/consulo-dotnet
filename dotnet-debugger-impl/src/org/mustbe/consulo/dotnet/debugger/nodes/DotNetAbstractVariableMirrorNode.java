@@ -152,7 +152,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@NotNull
 	public Icon getIconForVariable()
 	{
-		TypeMirror typeOfVariable = getTypeOfVariable();
+		TypeMirror typeOfVariable = getTypeOfVariableForChildren();
 		if(typeOfVariable == null)
 		{
 			return AllIcons.Debugger.Value;
@@ -175,6 +175,30 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@Nullable
 	public abstract Value<?> getValueOfVariable();
 
+	@Nullable
+	public TypeMirror getTypeOfVariableForChildren()
+	{
+		Value<?> valueOfVariable = getValueOfVariable();
+		if(valueOfVariable == null)
+		{
+			return getTypeOfVariable();
+		}
+		try
+		{
+			return valueOfVariable.type();
+		}
+		catch(Exception e)
+		{
+			return getTypeOfVariable();
+		}
+	}
+
+	@Nullable
+	public Value<?> getValueOfVariableForChildren()
+	{
+		return getValueOfVariable();
+	}
+
 	public abstract void setValueForVariable(@NotNull Value<?> value);
 
 	@Nullable
@@ -191,7 +215,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		val typeOfVariable = getTypeOfVariable();
+		val typeOfVariable = getTypeOfVariableForChildren();
 		if(typeOfVariable == null)
 		{
 			return;
