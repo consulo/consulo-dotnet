@@ -50,7 +50,6 @@ public class EnumerableDotNetLogicValueView implements DotNetLogicValueView
 		Value<?> getEnumeratorValue = null;
 		try
 		{
-			System.out.println(getEnumerator.declaringType());
 			getEnumeratorValue = getEnumerator.invoke(threadMirror, InvokeFlags.DISABLE_BREAKPOINTS, value);
 		}
 		catch(Exception e)
