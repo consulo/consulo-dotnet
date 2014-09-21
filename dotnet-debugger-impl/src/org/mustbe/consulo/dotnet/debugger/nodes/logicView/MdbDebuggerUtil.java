@@ -20,9 +20,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import mono.debugger.InvokeFlags;
 import mono.debugger.MethodMirror;
 import mono.debugger.PropertyMirror;
+import mono.debugger.StringValueMirror;
+import mono.debugger.ThreadMirror;
+import mono.debugger.ThrowValueException;
 import mono.debugger.TypeMirror;
+import mono.debugger.Value;
 
 /**
  * @author VISTALL
@@ -30,6 +35,23 @@ import mono.debugger.TypeMirror;
  */
 public class MdbDebuggerUtil
 {
+	public static void rethrow(ThreadMirror mirror, Exception t)
+	{
+		if(!(t instanceof ThrowValueException))
+		{
+			return;
+		}
+		Value<?> throwExceptionValue = ((ThrowValueException) t).getThrowExceptionValue();
+		TypeMirror type = throwExceptionValue.type();
+
+		MethodMirror toString = type.findMethodByName("ToString", true);
+		Value<?> invoke = toString.invoke(mirror, InvokeFlags.DISABLE_BREAKPOINTS, throwExceptionValue);
+		if(!(invoke instanceof StringValueMirror))
+		{
+			return;
+		}
+		throw new IllegalArgumentException(((StringValueMirror) invoke).value());
+	}
 	public static boolean isInImplementList(TypeMirror typeMirror, String qName)
 	{
 		for(TypeMirror mirror : typeMirror.getInterfaces())

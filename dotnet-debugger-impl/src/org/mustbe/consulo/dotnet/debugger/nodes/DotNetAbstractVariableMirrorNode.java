@@ -216,6 +216,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		final Value<?> valueOfVariable = getValueOfVariable();
 
 		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myThreadMirror, getTypeOfVariable(), valueOfVariable),
-				valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror);
+				valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror || valueOfVariable instanceof
+						StringValueMirror);
 	}
 }

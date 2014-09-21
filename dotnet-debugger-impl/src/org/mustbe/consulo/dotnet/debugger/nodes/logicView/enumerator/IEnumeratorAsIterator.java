@@ -2,9 +2,7 @@ package org.mustbe.consulo.dotnet.debugger.nodes.logicView.enumerator;
 
 import java.util.Iterator;
 
-import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.MdbDebuggerUtil;
-import com.intellij.openapi.util.Pair;
 import mono.debugger.BooleanValueMirror;
 import mono.debugger.InvokeFlags;
 import mono.debugger.MethodMirror;
@@ -17,15 +15,14 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 20.09.14
  */
-public class DictionaryEnumeratorAsIterator implements Iterator<Pair<Value<?>, Value<?>>>
+public class IEnumeratorAsIterator implements Iterator<Value<?>>
 {
 	private ThreadMirror myThreadMirror;
 	private Value<?> myValue;
 	private MethodMirror myMoveNextMethod;
-	private MethodMirror myKeyMethod;
-	private MethodMirror myValueMethod;
+	private MethodMirror myCurrent;
 
-	public DictionaryEnumeratorAsIterator(ThreadMirror threadMirror, Value<?> value, DotNetDebugContext debugContext) throws CantCreateException
+	public IEnumeratorAsIterator(ThreadMirror threadMirror, Value<?> value) throws CantCreateException
 	{
 		myThreadMirror = threadMirror;
 		myValue = value;
@@ -38,13 +35,8 @@ public class DictionaryEnumeratorAsIterator implements Iterator<Pair<Value<?>, V
 			throw new CantCreateException();
 		}
 
-		myKeyMethod = MdbDebuggerUtil.findGetterForProperty("Key", typeMirror);
-		if(myKeyMethod == null)
-		{
-			throw new CantCreateException();
-		}
-		myValueMethod = MdbDebuggerUtil.findGetterForProperty("Value", typeMirror);
-		if(myValueMethod == null)
+		myCurrent = MdbDebuggerUtil.findGetterForProperty("Current", typeMirror);
+		if(myCurrent == null)
 		{
 			throw new CantCreateException();
 		}
@@ -70,13 +62,11 @@ public class DictionaryEnumeratorAsIterator implements Iterator<Pair<Value<?>, V
 	}
 
 	@Override
-	public Pair<Value<?>, Value<?>> next()
+	public Value<?> next()
 	{
 		try
 		{
-			Value<?> keyValue = myKeyMethod.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, myValue);
-			Value<?> valueValue = myValueMethod.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, myValue);
-			return Pair.<Value<?>, Value<?>>create(keyValue, valueValue);
+			return myCurrent.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, myValue);
 		}
 		catch(ThrowValueException e)
 		{
@@ -86,7 +76,7 @@ public class DictionaryEnumeratorAsIterator implements Iterator<Pair<Value<?>, V
 			//MethodMirror toString = type.findMethodByName("ToString", true);
 			//System.out.println(toString.invoke(myThreadMirror, throwExceptionValue));
 		}
-		return Pair.create(null, null);
+		return null;
 	}
 
 	@Override
