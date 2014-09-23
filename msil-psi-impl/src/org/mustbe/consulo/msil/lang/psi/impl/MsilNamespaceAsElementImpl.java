@@ -51,6 +51,7 @@ public class MsilNamespaceAsElementImpl extends IndexBasedDotNetNamespaceAsEleme
 		return MsilAllNamespaceIndex.getInstance();
 	}
 
+	@NotNull
 	@Override
 	public DotNetNamespaceAsElement createNamespace(@NotNull String indexKey, @NotNull String qName)
 	{

@@ -59,6 +59,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	@NotNull
 	public abstract StringStubIndexExtension<? extends PsiElement> getSoftIndexExtension();
 
+	@NotNull
 	public abstract DotNetNamespaceAsElement createNamespace(@NotNull String indexKey, @NotNull String qName);
 
 	@NotNull
