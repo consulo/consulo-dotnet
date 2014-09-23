@@ -31,6 +31,7 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 
 /**
@@ -100,4 +101,7 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	@NotNull
 	String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType);
+
+	@NotNull
+	PsiElement[] getEntryPointElements();
 }

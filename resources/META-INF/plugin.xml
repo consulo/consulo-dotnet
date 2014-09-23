@@ -38,7 +38,6 @@
 	</application-components>
 
 	<extensionPoints>
-		<extensionPoint name="psi.facade" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade" area="CONSULO_PROJECT"/>
 		<extensionPoint name="psiSearcher" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="stubIndexer" interface="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer"/>
 
@@ -89,8 +88,7 @@
 		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetLibraryDirectoryDetector"/>
 
 		<applicationService serviceImplementation="org.mustbe.consulo.dotnet.documentation.DotNetDocumentationCache"/>
-		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade"
-						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiFacadeImpl"/>
+
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher"
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiSearcherImpl"/>
 

@@ -20,6 +20,7 @@ import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -27,6 +28,9 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
  */
 public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T>> extends ModuleExtension<T>
 {
+	@NotNull
+	PsiElement[] getEntryPointElements();
+
 	@NotNull
 	LanguageFileType getFileType();
 

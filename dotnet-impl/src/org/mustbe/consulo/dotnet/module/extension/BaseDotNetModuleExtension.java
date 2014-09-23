@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
@@ -55,11 +56,13 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
+import com.intellij.util.containers.ContainerUtil;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 import lombok.val;
 
@@ -272,6 +275,21 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	}
 
 	@NotNull
+	@Override
+	public PsiElement[] getEntryPointElements()
+	{
+		List<PsiElement> list = new ArrayList<PsiElement>();
+		for(ModuleExtension moduleExtension : myModuleRootLayer.getExtensions())
+		{
+			if(moduleExtension instanceof DotNetModuleLangExtension)
+			{
+				Collections.addAll(list, ((DotNetModuleLangExtension) moduleExtension).getEntryPointElements());
+			}
+		}
+		return ContainerUtil.toArray(list, PsiElement.ARRAY_FACTORY);
+	}
+
+	@NotNull
 	protected String[] getSystemLibraryUrlsImpl(@NotNull Sdk sdk, String name, OrderRootType orderRootType)
 	{
 		if(orderRootType == BinariesOrderRootType.getInstance())
@@ -469,7 +487,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		myFileName = name;
 	}
 
-	public void setNamespacePrefix(String namespacePrefix)
+	public void setNamespacePrefix(@NotNull String namespacePrefix)
 	{
 		myNamespacePrefix = namespacePrefix;
 	}

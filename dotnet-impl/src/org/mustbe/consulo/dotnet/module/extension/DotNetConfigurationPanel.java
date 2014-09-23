@@ -31,11 +31,9 @@ import javax.swing.event.DocumentEvent;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetBundle;
-import org.mustbe.consulo.dotnet.DotNetRunUtil;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryImpl;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiFacade;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.application.ApplicationManager;
@@ -142,10 +140,10 @@ public class DotNetConfigurationPanel extends JPanel
 					return;
 				}
 
-				if(value instanceof DotNetTypeDeclaration)
+				if(value instanceof DotNetQualifiedElement)
 				{
 					setIcon(IconDescriptorUpdaters.getIcon((PsiElement) value, 0));
-					append(((DotNetTypeDeclaration) value).getPresentableQName());
+					append(((DotNetQualifiedElement) value).getPresentableQName());
 				}
 				else if(value instanceof String)
 				{
@@ -169,9 +167,9 @@ public class DotNetConfigurationPanel extends JPanel
 				}
 
 				Object selectedItem = mainClassList.getSelectedItem();
-				if(selectedItem instanceof DotNetTypeDeclaration)
+				if(selectedItem instanceof DotNetQualifiedElement)
 				{
-					extension.setMainType(((DotNetTypeDeclaration) selectedItem).getPresentableQName());
+					extension.setMainType(((DotNetQualifiedElement) selectedItem).getPresentableQName());
 				}
 				else if(selectedItem instanceof String)
 				{
@@ -191,9 +189,7 @@ public class DotNetConfigurationPanel extends JPanel
 			@Override
 			public void run()
 			{
-				final DotNetPsiFacade dotNetPsiFacade = DotNetPsiFacade.getInstance(extension.getProject());
-
-				final Ref<DotNetTypeDeclaration> selected = Ref.create();
+				final Ref<DotNetQualifiedElement> selected = Ref.create();
 				final List<Object> newItems = new ArrayList<Object>();
 				newItems.add(null);
 
@@ -202,20 +198,16 @@ public class DotNetConfigurationPanel extends JPanel
 					@Override
 					public void run()
 					{
-						String[] allTypeNames = dotNetPsiFacade.getAllTypeNames();
-						for(String allTypeName : allTypeNames)
+						for(PsiElement psiElement : extension.getEntryPointElements())
 						{
-							DotNetTypeDeclaration[] types = dotNetPsiFacade.getTypesByName(allTypeName, extension.getScopeForResolving(false));
-							for(DotNetTypeDeclaration type : types)
+							if(psiElement instanceof DotNetQualifiedElement)
 							{
-								if(type != null && type.getGenericParametersCount() == 0 && DotNetRunUtil.hasEntryPoint(type))
+								newItems.add(psiElement);
+								String mainType = extension.getMainType();
+								DotNetQualifiedElement qualifiedElement = (DotNetQualifiedElement) psiElement;
+								if(mainType != null && Comparing.equal(mainType, qualifiedElement.getPresentableQName()))
 								{
-									newItems.add(type);
-									String mainType = extension.getMainType();
-									if(mainType != null && Comparing.equal(mainType, type.getPresentableQName()))
-									{
-										selected.set(type);
-									}
+									selected.set(qualifiedElement);
 								}
 							}
 						}
@@ -227,7 +219,7 @@ public class DotNetConfigurationPanel extends JPanel
 					@Override
 					public void run()
 					{
-						DotNetTypeDeclaration selectedType = selected.get();
+						DotNetQualifiedElement selectedType = selected.get();
 						String mainType = extension.getMainType();
 						if(mainType != null && selectedType == null)
 						{
