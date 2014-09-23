@@ -16,18 +16,29 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
+import org.consulo.lombok.annotations.LazyInstance;
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 22.05.14
+ * @since 23.09.14
  */
-public interface MsilIndexKeys
+public class MsilNamespaceIndex extends StringStubIndexExtension<MsilClassEntry>
 {
-	StubIndexKey<String, MsilClassEntry> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("msil.type.by.qname.index");
+	@NotNull
+	@LazyInstance
+	public static MsilNamespaceIndex getInstance()
+	{
+		return EP_NAME.findExtension(MsilNamespaceIndex.class);
+	}
 
-	StubIndexKey<String, MsilClassEntry> NAMESPACE_INDEX = StubIndexKey.createIndexKey("msil.namespace.index");
-
-	StubIndexKey<String, MsilClassEntry> ALL_NAMESPACE_INDEX = StubIndexKey.createIndexKey("msil.all.namespace.index");
+	@NotNull
+	@Override
+	public StubIndexKey<String, MsilClassEntry> getKey()
+	{
+		return MsilIndexKeys.NAMESPACE_INDEX;
+	}
 }

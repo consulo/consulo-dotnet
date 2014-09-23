@@ -64,6 +64,8 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex"/>
+		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex"/>
+		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilAllNamespaceIndex"/>
 
 		<fileTypeFactory implementation="org.mustbe.consulo.msil.MsilFileTypeFactory"/>
 		<stubElementTypeHolder class="org.mustbe.consulo.msil.lang.psi.MsilStubElements"/>

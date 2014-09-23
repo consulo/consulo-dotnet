@@ -20,7 +20,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.lang.psi.impl.CompositeDotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
@@ -36,10 +39,37 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	private static final ExtensionPointName<DotNetPsiSearcher> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.psiSearcher");
 
 	private DotNetPsiSearcher[] mySearchers;
+	private Project myProject;
 
 	public DotNetPsiSearcherImpl(Project project)
 	{
+		myProject = project;
 		mySearchers = EP_NAME.getExtensions(project);
+	}
+
+	@Nullable
+	@Override
+	public DotNetNamespaceAsElement findNamespaceImpl(@NotNull String indexKey, @NotNull String qName, @NotNull GlobalSearchScope scope)
+	{
+		List<DotNetNamespaceAsElement> namespaceAsElements = new SmartList<DotNetNamespaceAsElement>();
+		for(DotNetPsiSearcher searcher : mySearchers)
+		{
+			DotNetNamespaceAsElement namespace = searcher.findNamespaceImpl(indexKey, qName, scope);
+			if(namespace != null)
+			{
+				namespaceAsElements.add(namespace);
+			}
+		}
+
+		if(namespaceAsElements.isEmpty())
+		{
+			return null;
+		}
+		else if(namespaceAsElements.size() == 1)
+		{
+			return namespaceAsElements.get(0);
+		}
+		return new CompositeDotNetNamespaceAsElement(myProject, qName, namespaceAsElements);
 	}
 
 	@NotNull

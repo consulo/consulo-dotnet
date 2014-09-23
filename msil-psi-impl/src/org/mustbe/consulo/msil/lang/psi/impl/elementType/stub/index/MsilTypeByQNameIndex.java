@@ -16,10 +16,10 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
 /**
@@ -28,9 +28,11 @@ import com.intellij.psi.stubs.StubIndexKey;
  */
 public class MsilTypeByQNameIndex extends StringStubIndexExtension<MsilClassEntry>
 {
+	@NotNull
+	@LazyInstance
 	public static MsilTypeByQNameIndex getInstance()
 	{
-		return StubIndexExtension.EP_NAME.findExtension(MsilTypeByQNameIndex.class);
+		return EP_NAME.findExtension(MsilTypeByQNameIndex.class);
 	}
 
 	@NotNull

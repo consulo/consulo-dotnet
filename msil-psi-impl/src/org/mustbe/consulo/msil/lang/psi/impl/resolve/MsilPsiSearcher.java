@@ -19,8 +19,14 @@ package org.mustbe.consulo.msil.lang.psi.impl.resolve;
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilNamespaceAsElementImpl;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilAllNamespaceIndex;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -40,9 +46,27 @@ public class MsilPsiSearcher extends DotNetPsiSearcher
 
 	@NotNull
 	@Override
-	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind
-			typeResoleKind)
+	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope,
+			@NotNull TypeResoleKind typeResoleKind)
 	{
 		return MsilTypeByQNameIndex.getInstance().get(vmQName, myProject, scope);
+	}
+
+	@Nullable
+	@Override
+	public DotNetNamespaceAsElement findNamespaceImpl(@NotNull String indexKey, @NotNull String qName, @NotNull GlobalSearchScope scope)
+	{
+		Collection<MsilClassEntry> temp = MsilNamespaceIndex.getInstance().get(indexKey, myProject, scope);
+		if(!temp.isEmpty())
+		{
+			return new MsilNamespaceAsElementImpl(myProject, indexKey, qName);
+		}
+
+		temp = MsilAllNamespaceIndex.getInstance().get(indexKey, myProject, scope);
+		if(!temp.isEmpty())
+		{
+			return new MsilNamespaceAsElementImpl(myProject, indexKey, qName);
+		}
+		return null;
 	}
 }

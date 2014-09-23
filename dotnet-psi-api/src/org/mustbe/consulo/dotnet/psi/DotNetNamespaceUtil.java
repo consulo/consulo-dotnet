@@ -14,20 +14,29 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
+package org.mustbe.consulo.dotnet.psi;
 
-import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
-import com.intellij.psi.stubs.StubIndexKey;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.util.QualifiedName;
 
 /**
  * @author VISTALL
- * @since 22.05.14
+ * @since 23.09.14
  */
-public interface MsilIndexKeys
+public class DotNetNamespaceUtil
 {
-	StubIndexKey<String, MsilClassEntry> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("msil.type.by.qname.index");
+	public static String ROOT_FOR_INDEXING = "<root>";
 
-	StubIndexKey<String, MsilClassEntry> NAMESPACE_INDEX = StubIndexKey.createIndexKey("msil.namespace.index");
+	@NotNull
+	public static String getIndexableNamespace(@NotNull String namespace)
+	{
+		return StringUtil.notNullizeIfEmpty(namespace, ROOT_FOR_INDEXING);
+	}
 
-	StubIndexKey<String, MsilClassEntry> ALL_NAMESPACE_INDEX = StubIndexKey.createIndexKey("msil.all.namespace.index");
+	@NotNull
+	public static String getIndexableNamespace(@NotNull QualifiedName qualifiedName)
+	{
+		return StringUtil.notNullizeIfEmpty(qualifiedName.join("."), ROOT_FOR_INDEXING);
+	}
 }

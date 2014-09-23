@@ -19,16 +19,19 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceUtil;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilClassEntryImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.io.StringRef;
 
 /**
@@ -87,6 +90,20 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	public void indexStub(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull IndexSink indexSink)
 	{
 		indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, msilClassEntryStub.getVmQName());
+
+		String namespace = msilClassEntryStub.getNamespace();
+		indexSink.occurrence(MsilIndexKeys.NAMESPACE_INDEX, DotNetNamespaceUtil.getIndexableNamespace(namespace));
+
+		if(!StringUtil.isEmpty(namespace))
+		{
+			QualifiedName qNamespace = QualifiedName.fromDottedString(namespace);
+
+			QualifiedName parent = null;
+			while((parent = qNamespace.getParent()) != null)
+			{
+				indexSink.occurrence(MsilIndexKeys.ALL_NAMESPACE_INDEX, DotNetNamespaceUtil.getIndexableNamespace(parent));
+			}
+		}
 
 		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())
 		{
