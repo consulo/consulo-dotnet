@@ -96,11 +96,10 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 
 		if(!StringUtil.isEmpty(namespace))
 		{
-			QualifiedName qNamespace = QualifiedName.fromDottedString(namespace);
-
-			QualifiedName parent = null;
-			while((parent = qNamespace.getParent()) != null)
+			QualifiedName parent = QualifiedName.fromDottedString(namespace);
+			while((parent = parent.getParent()) != null)
 			{
+				System.out.println(parent);
 				indexSink.occurrence(MsilIndexKeys.ALL_NAMESPACE_INDEX, DotNetNamespaceUtil.getIndexableNamespace(parent));
 			}
 		}
