@@ -26,6 +26,8 @@ import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
@@ -42,6 +44,20 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	{
 		super(project, Language.ANY, qName);
 		myList = list;
+	}
+
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
+			place)
+	{
+		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
+		{
+			if(!dotNetNamespaceAsElement.processDeclarations(processor, state, lastParent, place))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@NotNull
