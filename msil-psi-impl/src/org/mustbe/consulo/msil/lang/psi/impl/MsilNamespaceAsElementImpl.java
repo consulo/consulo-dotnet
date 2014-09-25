@@ -18,7 +18,6 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.lang.psi.impl.IndexBasedDotNetNamespaceAsElement;
-import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.msil.MsilLanguage;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilAllNamespaceIndex;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex;
@@ -49,12 +48,5 @@ public class MsilNamespaceAsElementImpl extends IndexBasedDotNetNamespaceAsEleme
 	public StringStubIndexExtension<? extends PsiElement> getSoftIndexExtension()
 	{
 		return MsilAllNamespaceIndex.getInstance();
-	}
-
-	@NotNull
-	@Override
-	public DotNetNamespaceAsElement createNamespace(@NotNull String indexKey, @NotNull String qName)
-	{
-		return new MsilNamespaceAsElementImpl(myProject, indexKey, qName);
 	}
 }

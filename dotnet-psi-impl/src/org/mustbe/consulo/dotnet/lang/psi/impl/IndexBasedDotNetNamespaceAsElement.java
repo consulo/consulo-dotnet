@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceUtil;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -33,6 +33,7 @@ import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ArrayListSet;
+import com.intellij.util.indexing.IdFilter;
 import lombok.val;
 
 /**
@@ -60,9 +61,6 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	public abstract StringStubIndexExtension<? extends PsiElement> getSoftIndexExtension();
 
 	@NotNull
-	public abstract DotNetNamespaceAsElement createNamespace(@NotNull String indexKey, @NotNull String qName);
-
-	@NotNull
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces)
@@ -88,13 +86,17 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 				}
 				return true;
 			}
-		}, globalSearchScope, null);
+		}, globalSearchScope, IdFilter.byScope(myProject, globalSearchScope));
 
 		List newList = new ArrayList<PsiElement>(psiElements.size() + namespaceChildren.size());
 		newList.addAll(psiElements);
 		for(String namespaceChild : namespaceChildren)
 		{
-			newList.add(createNamespace(DotNetNamespaceUtil.getIndexableNamespace(namespaceChild), namespaceChild));
+			DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(namespaceChild, globalSearchScope);
+			if(namespace != null)
+			{
+				newList.add(namespace);
+			}
 		}
 		return newList;
 	}
