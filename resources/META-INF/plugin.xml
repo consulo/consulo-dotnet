@@ -49,6 +49,8 @@
 		<extensionPoint name="msilFileRepresentation" interface="org.mustbe.consulo.msil.representation.MsilFileRepresentationProvider"/>
 
 		<extensionPoint name="injectionByAttributeHelper" interface="org.mustbe.consulo.dotnet.lang.MultiHostInjectorByAttributeHelper"/>
+
+		<extensionPoint name="dependencyCopierExtension" interface="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopierExtension"/>
 	</extensionPoints>
 
 	<project-components>
