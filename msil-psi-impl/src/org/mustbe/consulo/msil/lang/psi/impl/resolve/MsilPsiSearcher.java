@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetNamespaceUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
@@ -56,6 +57,11 @@ public class MsilPsiSearcher extends DotNetPsiSearcher
 	@Override
 	public DotNetNamespaceAsElement findNamespaceImpl(@NotNull String indexKey, @NotNull String qName, @NotNull GlobalSearchScope scope)
 	{
+		if(DotNetNamespaceUtil.ROOT_FOR_INDEXING.equals(indexKey))
+		{
+			return new MsilNamespaceAsElementImpl(myProject, indexKey, qName);
+		}
+
 		Collection<MsilClassEntry> temp = MsilNamespaceIndex.getInstance().get(indexKey, myProject, scope);
 		if(!temp.isEmpty())
 		{
