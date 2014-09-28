@@ -121,7 +121,7 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 	@Override
 	public boolean isSynthetic()
 	{
-		return true;
+		return false; // allow delete
 	}
 
 	@Override

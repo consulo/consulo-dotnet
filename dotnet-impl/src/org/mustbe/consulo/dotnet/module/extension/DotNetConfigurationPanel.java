@@ -19,11 +19,7 @@ package org.mustbe.consulo.dotnet.module.extension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -32,26 +28,30 @@ import javax.swing.event.DocumentEvent;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.DotNetTarget;
-import org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.roots.ModifiableModuleRootLayer;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.ui.*;
+import com.intellij.ui.AnActionButton;
+import com.intellij.ui.AnActionButtonRunnable;
+import com.intellij.ui.CollectionComboBoxModel;
+import com.intellij.ui.CollectionListModel;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.UIUtil;
@@ -63,21 +63,10 @@ import lombok.val;
  */
 public class DotNetConfigurationPanel extends JPanel
 {
-	private final CheckBoxList<String> myLibraryList;
-	private DotNetMutableModuleExtension<?> myExtension;
-
 	public DotNetConfigurationPanel(final DotNetMutableModuleExtension<?> extension, final List<String> variables, final Runnable updater)
 	{
 		super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, true));
-		myExtension = extension;
-		add(DotNetModuleExtensionWithSdkPanel.create(extension, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				reloadSystemLibraries();
-			}
-		}));
+		add(DotNetModuleExtensionWithSdkPanel.create(extension, EmptyRunnable.INSTANCE));
 
 		val fileNameField = new JBTextField(extension.getFileName());
 		fileNameField.getEmptyText().setText(DotNetModuleExtension.DEFAULT_FILE_NAME);
@@ -362,98 +351,5 @@ public class DotNetConfigurationPanel extends JPanel
 			}
 		});
 		add(variableDecorator.createPanel());
-
-		add(new JBLabel("Libraries: "));
-		myLibraryList = new CheckBoxList<String>();
-
-		val moduleRootLayer = extension.getModuleRootLayer();
-
-		reloadSystemLibraries();
-
-		myLibraryList.setCheckBoxListListener(new CheckBoxListListener()
-		{
-			@Override
-			public void checkBoxSelectionChanged(int i, boolean b)
-			{
-				String itemAt = (String) myLibraryList.getItemAt(i);
-
-				if(b)
-				{
-					val dotNetLibraryOrderEntry = new DotNetLibraryOrderEntryImpl((ModuleRootLayerImpl) moduleRootLayer, itemAt);
-
-					moduleRootLayer.addOrderEntry(dotNetLibraryOrderEntry);
-
-					OrderEntry[] orderEntries = moduleRootLayer.getOrderEntries();
-
-					Arrays.sort(orderEntries, new Comparator<OrderEntry>()
-					{
-						@Override
-						public int compare(OrderEntry o1, OrderEntry o2)
-						{
-							if(o2 == dotNetLibraryOrderEntry)
-							{
-								return 1;
-							}
-							return 0;
-						}
-					});
-
-					moduleRootLayer.rearrangeOrderEntries(orderEntries);
-				}
-				else
-				{
-					OrderEntry orderEntry = findOrderEntry(itemAt, moduleRootLayer);
-					if(orderEntry != null)
-					{
-						moduleRootLayer.removeOrderEntry(orderEntry);
-					}
-				}
-
-				UIUtil.invokeLaterIfNeeded(updater);
-			}
-		});
-		add(ScrollPaneFactory.createScrollPane(myLibraryList, true));
-	}
-
-	private void reloadSystemLibraries()
-	{
-		myLibraryList.setPaintBusy(true);
-		ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Map<String, String> availableSystemLibraries = myExtension.getAvailableSystemLibraries();
-				final Map<String, Boolean> map = new TreeMap<String, Boolean>();
-
-				for(String libraryName : availableSystemLibraries.keySet())
-				{
-					map.put(libraryName, findOrderEntry(libraryName, myExtension.getModuleRootLayer()) != null);
-				}
-
-				UIUtil.invokeLaterIfNeeded(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						myLibraryList.setStringItems(map);
-						myLibraryList.setPaintBusy(false);
-					}
-				});
-			}
-		});
-	}
-
-	private static OrderEntry findOrderEntry(String name, ModifiableModuleRootLayer layer)
-	{
-		OrderEntry[] orderEntries = layer.getOrderEntries();
-		for(OrderEntry orderEntry : orderEntries)
-		{
-			if(orderEntry instanceof DotNetLibraryOrderEntryImpl && orderEntry.getPresentableName().equalsIgnoreCase(name))
-			{
-				return orderEntry;
-			}
-		}
-		return null;
 	}
 }
