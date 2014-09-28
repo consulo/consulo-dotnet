@@ -30,6 +30,7 @@ import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.impl.ClonableOrderEntry;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.OrderEntryBaseImpl;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -116,6 +117,12 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 		{
 			return rRootPolicy.visitOrderEntry(this, r);
 		}
+	}
+
+	@Override
+	public boolean isEquivalentTo(@NotNull OrderEntry entry)
+	{
+		return entry instanceof DotNetLibraryOrderEntryImpl && Comparing.equal(myName, entry.getPresentableName());
 	}
 
 	@Override
