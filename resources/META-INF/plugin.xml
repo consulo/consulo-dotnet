@@ -106,6 +106,7 @@
 		<xdebugger.breakpointType implementation="org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType"/>
 
 		<orderEntryTypeProvider implementation="org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider" />
+		<addModuleDependencyTabFactory implementation="org.mustbe.consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory" />
 
 		<orderRootType implementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType" />
 		<orderRootTypeEditor key="dotNetExternalAttributes" implementationClass="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesOrderRootTypeUIFactory" />
