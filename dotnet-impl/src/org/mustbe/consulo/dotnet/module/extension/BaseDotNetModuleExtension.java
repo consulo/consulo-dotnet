@@ -161,9 +161,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		}
 		for(String variable : myVariables)
 		{
-			{
-				element.addContent(new Element("define").setText(variable));
-			}
+			element.addContent(new Element("define").setText(variable));
 		}
 	}
 
