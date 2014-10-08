@@ -157,9 +157,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		element.setAttribute("namespace-prefix", getNamespacePrefix());
 		if(myMainType != null)
 		{
-			{
-				element.setAttribute("main-type", myMainType);
-			}
+			element.setAttribute("main-type", myMainType);
 		}
 		for(String variable : myVariables)
 		{
