@@ -21,19 +21,18 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.lang.Language;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.util.Processor;
+import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.containers.ArrayListSet;
-import com.intellij.util.indexing.IdFilter;
 import lombok.val;
 
 /**
@@ -71,27 +70,42 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 			return psiElements;
 		}
 
+		val thisQualifiedName = QualifiedName.fromDottedString(myQName);
+
 		StringStubIndexExtension<? extends PsiElement> softIndexExtension = getSoftIndexExtension();
 
 		val namespaceChildren = new ArrayListSet<String>();
-		StubIndex.getInstance().processAllKeys(softIndexExtension.getKey(), new Processor<String>()
+		Collection<? extends PsiElement> otherNamespaces = softIndexExtension.get(myIndexKey, myProject, globalSearchScope);
+		for(PsiElement psiElement : otherNamespaces)
 		{
-			@Override
-			public boolean process(String otherNamespace)
+			ProgressManager.checkCanceled();
+
+			if(psiElement instanceof DotNetQualifiedElement)
 			{
-				String packageName = StringUtil.getPackageName(otherNamespace);
-				if(packageName.equals(myQName))
+				String presentableQName = ((DotNetQualifiedElement) psiElement).getPresentableQName();
+				if(presentableQName == null)
 				{
-					namespaceChildren.add(otherNamespace);
+					continue;
 				}
-				return true;
+
+				QualifiedName qualifiedName = QualifiedName.fromDottedString(presentableQName);
+				if(qualifiedName.matchesPrefix(thisQualifiedName))
+				{
+					List<String> childList = qualifiedName.getComponents().subList(0, thisQualifiedName.getComponentCount() + 1);
+
+					QualifiedName child = QualifiedName.fromComponents(childList);
+
+					namespaceChildren.add(child.toString());
+				}
 			}
-		}, globalSearchScope, IdFilter.byScope(myProject, globalSearchScope));
+		}
 
 		List newList = new ArrayList<PsiElement>(psiElements.size() + namespaceChildren.size());
 		newList.addAll(psiElements);
 		for(String namespaceChild : namespaceChildren)
 		{
+			ProgressManager.checkCanceled();
+
 			DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(namespaceChild, globalSearchScope);
 			if(namespace != null)
 			{
