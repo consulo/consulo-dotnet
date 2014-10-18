@@ -89,12 +89,17 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		List<PsiElement> list = new SmartList<PsiElement>();
 		for(PsiElement element : getChildren(globalSearchScope, withChildNamespaces))
 		{
-			if(element instanceof PsiNamedElement && Comparing.equal(name, ((PsiNamedElement) element).getName()))
-			{
-				list.add(element);
-			}
+			addIfNameEqual(list, element, name);
 		}
 		return list.isEmpty() ? PsiElement.EMPTY_ARRAY : ContainerUtil.toArray(list, PsiElement.ARRAY_FACTORY);
+	}
+
+	protected static void addIfNameEqual(List<PsiElement> toAdd, PsiElement element, String name)
+	{
+		if(element instanceof PsiNamedElement && Comparing.equal(name, ((PsiNamedElement) element).getName()))
+		{
+			toAdd.add(element);
+		}
 	}
 
 	@Override

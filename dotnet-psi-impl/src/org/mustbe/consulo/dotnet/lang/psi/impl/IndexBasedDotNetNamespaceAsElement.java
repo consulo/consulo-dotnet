@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressManager;
@@ -32,7 +31,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.util.QualifiedName;
+import com.intellij.util.SmartList;
 import com.intellij.util.containers.ArrayListSet;
+import com.intellij.util.containers.ContainerUtil;
 import lombok.val;
 
 /**
@@ -61,6 +62,41 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 	@NotNull
 	@Override
+	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces)
+	{
+		List<PsiElement> elements = new SmartList<PsiElement>();
+
+		Collection<? extends PsiElement> psiElements = getHardIndexExtension().get(myIndexKey, myProject, globalSearchScope);
+		for(PsiElement psiElement : psiElements)
+		{
+			ProgressManager.checkCanceled();
+
+			addIfNameEqual(elements, psiElement, name);
+		}
+
+		if(!withChildNamespaces)
+		{
+			return ContainerUtil.toArray(elements, PsiElement.ARRAY_FACTORY);
+		}
+
+		val newQualifiedName = QualifiedName.fromDottedString(myQName).append(name);
+
+		Collection<? extends PsiElement> otherNamespaces = getSoftIndexExtension().get(newQualifiedName.toString(), myProject, globalSearchScope);
+
+		if(!otherNamespaces.isEmpty())
+		{
+			val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(), globalSearchScope);
+			if(namespace != null)
+			{
+				elements.add(namespace);
+			}
+		}
+
+		return ContainerUtil.toArray(elements, PsiElement.ARRAY_FACTORY);
+	}
+
+	@NotNull
+	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces)
 	{
@@ -72,10 +108,8 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 		val thisQualifiedName = QualifiedName.fromDottedString(myQName);
 
-		StringStubIndexExtension<? extends PsiElement> softIndexExtension = getSoftIndexExtension();
-
 		val namespaceChildren = new ArrayListSet<String>();
-		Collection<? extends PsiElement> otherNamespaces = softIndexExtension.get(myIndexKey, myProject, globalSearchScope);
+		Collection<? extends PsiElement> otherNamespaces = getSoftIndexExtension().get(myIndexKey, myProject, globalSearchScope);
 		for(PsiElement psiElement : otherNamespaces)
 		{
 			ProgressManager.checkCanceled();
@@ -106,7 +140,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 		{
 			ProgressManager.checkCanceled();
 
-			DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(namespaceChild, globalSearchScope);
+			val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(namespaceChild, globalSearchScope);
 			if(namespace != null)
 			{
 				newList.add(namespace);
