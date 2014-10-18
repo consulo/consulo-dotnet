@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
+import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -56,9 +57,14 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d)
+	public GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d) throws ExecutionException
 	{
-		return createRunCommandLineImpl(fileName, d, getSdk());
+		Sdk sdk = getSdk();
+		if(sdk == null)
+		{
+			throw new ExecutionException(".NET SDK for module is not defined");
+		}
+		return createRunCommandLineImpl(fileName, d, sdk);
 	}
 
 	@NotNull

@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -88,7 +89,7 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	String getMainType();
 
 	@NotNull
-	GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d);
+	GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d) throws ExecutionException;
 
 	@NotNull
 	GlobalSearchScope getScopeForResolving(boolean test);

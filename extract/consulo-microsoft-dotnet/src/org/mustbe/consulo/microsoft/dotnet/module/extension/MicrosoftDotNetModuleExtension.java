@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
+import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -46,8 +47,7 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createDefaultCommandLine(
-			@NotNull String fileName, @Nullable DebugConnectionInfo d)
+	public GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d) throws ExecutionException
 	{
 		return createRunCommandLineImpl(fileName, d, getSdk());
 	}
