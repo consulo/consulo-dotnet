@@ -62,12 +62,12 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 
 	@NotNull
 	@Override
-	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces)
+	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
 	{
 		List<PsiElement> list = new SmartList<PsiElement>();
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
-			PsiElement[] children = dotNetNamespaceAsElement.findChildren(name, globalSearchScope, withChildNamespaces);
+			PsiElement[] children = dotNetNamespaceAsElement.findChildren(name, globalSearchScope, filter);
 			Collections.addAll(list, children);
 		}
 		return list.isEmpty() ? PsiElement.EMPTY_ARRAY : ContainerUtil.toArray(list, PsiElement.ARRAY_FACTORY);
@@ -76,12 +76,12 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	@NotNull
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces)
+	public Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
 	{
 		List list = new LinkedList<PsiElement>();
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
-			Collection<? extends PsiElement> children = dotNetNamespaceAsElement.getChildren(globalSearchScope, withChildNamespaces);
+			Collection<? extends PsiElement> children = dotNetNamespaceAsElement.getChildren(globalSearchScope, filter);
 			list.addAll(children);
 		}
 		return list;

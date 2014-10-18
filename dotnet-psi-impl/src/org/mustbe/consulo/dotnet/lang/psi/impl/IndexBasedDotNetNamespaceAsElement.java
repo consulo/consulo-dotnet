@@ -31,6 +31,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.util.QualifiedName;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.ContainerUtil;
@@ -62,50 +63,55 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 	@NotNull
 	@Override
-	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces)
+	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
 	{
-		List<PsiElement> elements = new SmartList<PsiElement>();
-
-		Collection<? extends PsiElement> psiElements = getHardIndexExtension().get(myIndexKey, myProject, globalSearchScope);
-		for(PsiElement psiElement : psiElements)
+		switch(filter)
 		{
-			ProgressManager.checkCanceled();
+			case ONLY_ELEMENTS:
+				List<PsiElement> elements = new SmartList<PsiElement>();
 
-			addIfNameEqual(elements, psiElement, name);
+				Collection<? extends PsiElement> psiElements = getHardIndexExtension().get(myIndexKey, myProject, globalSearchScope);
+				for(PsiElement psiElement : psiElements)
+				{
+					ProgressManager.checkCanceled();
+
+					addIfNameEqual(elements, psiElement, name);
+				}
+				return ContainerUtil.toArray(elements, PsiElement.ARRAY_FACTORY);
+			case ONLY_NAMESPACES:
+				val newQualifiedName = QualifiedName.fromDottedString(myQName).append(name);
+
+				Collection<? extends PsiElement> otherNamespaces = getSoftIndexExtension().get(newQualifiedName.toString(), myProject, globalSearchScope);
+
+				if(!otherNamespaces.isEmpty())
+				{
+					val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(), globalSearchScope);
+					if(namespace != null)
+					{
+						return new PsiElement[] {namespace};
+					}
+				}
+				return PsiElement.EMPTY_ARRAY;
+			case NONE:
+				PsiElement[] onlyElements = findChildren(name, globalSearchScope, ChildrenFilter.ONLY_ELEMENTS);
+				PsiElement[] onlyNamespaces = findChildren(name, globalSearchScope, ChildrenFilter.ONLY_NAMESPACES);
+				return ArrayUtil.mergeArrays(onlyElements, onlyNamespaces);
 		}
 
-		if(!withChildNamespaces)
-		{
-			return ContainerUtil.toArray(elements, PsiElement.ARRAY_FACTORY);
-		}
-
-		val newQualifiedName = QualifiedName.fromDottedString(myQName).append(name);
-
-		Collection<? extends PsiElement> otherNamespaces = getSoftIndexExtension().get(newQualifiedName.toString(), myProject, globalSearchScope);
-
-		if(!otherNamespaces.isEmpty())
-		{
-			val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(), globalSearchScope);
-			if(namespace != null)
-			{
-				elements.add(namespace);
-			}
-		}
-
-		return ContainerUtil.toArray(elements, PsiElement.ARRAY_FACTORY);
+		return PsiElement.EMPTY_ARRAY;
 	}
 
 	@NotNull
 	@Override
-	@SuppressWarnings("unchecked")
-	public Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces)
+	protected Collection<? extends PsiElement> getOnlyElements(@NotNull GlobalSearchScope globalSearchScope)
 	{
-		Collection<? extends PsiElement> psiElements = getHardIndexExtension().get(myIndexKey, myProject, globalSearchScope);
-		if(!withChildNamespaces)
-		{
-			return psiElements;
-		}
+		return getHardIndexExtension().get(myIndexKey, myProject, globalSearchScope);
+	}
 
+	@NotNull
+	@Override
+	protected Collection<? extends PsiElement> getOnlyNamespaces(@NotNull GlobalSearchScope globalSearchScope)
+	{
 		val thisQualifiedName = QualifiedName.fromDottedString(myQName);
 
 		val namespaceChildren = new ArrayListSet<String>();
@@ -134,8 +140,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 			}
 		}
 
-		List newList = new ArrayList<PsiElement>(psiElements.size() + namespaceChildren.size());
-		newList.addAll(psiElements);
+		List<PsiElement> newList = new ArrayList<PsiElement>(namespaceChildren.size());
 		for(String namespaceChild : namespaceChildren)
 		{
 			ProgressManager.checkCanceled();

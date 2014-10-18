@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.lang.psi.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +48,7 @@ import com.intellij.util.containers.ContainerUtil;
 public abstract class BaseDotNetNamespaceAsElement extends LightElement implements DotNetNamespaceAsElement
 {
 	public static Key<GlobalSearchScope> RESOLVE_SCOPE = Key.create("resolve.scope");
-	public static Key<Boolean> WITH_CHILD_NAMESPACES = Key.create("with.child.namespaces");
+	public static Key<ChildrenFilter> FILTER = Key.create("namespace.children.filter");
 
 	protected Project myProject;
 	protected String myQName;
@@ -66,12 +67,16 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		GlobalSearchScope globalSearchScope = state.get(RESOLVE_SCOPE);
 		if(globalSearchScope == null)
 		{
-			throw new IllegalArgumentException("Please specify RESOLVE_SCOPE");
+			throw new IllegalArgumentException("Please specify RESOLVE_SCOPE key");
 		}
 
-		boolean withChildNamespaces = state.get(WITH_CHILD_NAMESPACES) == Boolean.TRUE;
+		ChildrenFilter filter = state.get(FILTER);
+		if(filter == null)
+		{
+			throw new IllegalArgumentException("Please specify FILTER key");
+		}
 
-		for(PsiElement element : getChildren(globalSearchScope, withChildNamespaces))
+		for(PsiElement element : getChildren(globalSearchScope, filter))
 		{
 			if(!processor.execute(element, state))
 			{
@@ -84,10 +89,10 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 
 	@NotNull
 	@Override
-	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces)
+	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
 	{
 		List<PsiElement> list = new SmartList<PsiElement>();
-		for(PsiElement element : getChildren(globalSearchScope, withChildNamespaces))
+		for(PsiElement element : getChildren(globalSearchScope, filter))
 		{
 			addIfNameEqual(list, element, name);
 		}
@@ -104,7 +109,35 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 
 	@Override
 	@NotNull
-	public Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces)
+	@SuppressWarnings("unchecked")
+	public Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
+	{
+		switch(filter)
+		{
+			case ONLY_ELEMENTS:
+				return getOnlyElements(globalSearchScope);
+			case ONLY_NAMESPACES:
+				return getOnlyNamespaces(globalSearchScope);
+			case NONE:
+				Collection<? extends PsiElement> onlyElements = getOnlyElements(globalSearchScope);
+				Collection<? extends PsiElement> onlyNamespaces = getOnlyNamespaces(globalSearchScope);
+				List newList = new ArrayList(onlyElements.size() + onlyNamespaces.size());
+
+				newList.addAll(onlyElements);
+				newList.addAll(onlyNamespaces);
+				return newList;
+		}
+		return Collections.emptyList();
+	}
+
+	@NotNull
+	protected Collection<? extends PsiElement> getOnlyElements(@NotNull GlobalSearchScope globalSearchScope)
+	{
+		return Collections.emptyList();
+	}
+
+	@NotNull
+	protected Collection<? extends PsiElement> getOnlyNamespaces(@NotNull GlobalSearchScope globalSearchScope)
 	{
 		return Collections.emptyList();
 	}

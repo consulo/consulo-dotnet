@@ -13,9 +13,16 @@ import com.intellij.psi.search.GlobalSearchScope;
  */
 public interface DotNetNamespaceAsElement extends DotNetQualifiedElement
 {
-	@NotNull
-	Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces);
+	enum ChildrenFilter
+	{
+		ONLY_ELEMENTS,
+		ONLY_NAMESPACES,
+		NONE
+	}
 
 	@NotNull
-	PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, boolean withChildNamespaces);
+	Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter policy);
+
+	@NotNull
+	PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter policy);
 }
