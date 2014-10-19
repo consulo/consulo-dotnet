@@ -18,12 +18,9 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.lang.psi.impl.IndexBasedDotNetNamespaceAsElement;
+import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import org.mustbe.consulo.msil.MsilLanguage;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilAllNamespaceIndex;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StringStubIndexExtension;
 
 /**
  * @author VISTALL
@@ -31,22 +28,11 @@ import com.intellij.psi.stubs.StringStubIndexExtension;
  */
 public class MsilNamespaceAsElementImpl extends IndexBasedDotNetNamespaceAsElement
 {
-	public MsilNamespaceAsElementImpl(@NotNull Project project, @NotNull String indexKey, @NotNull String qName)
+	public MsilNamespaceAsElementImpl(@NotNull Project project,
+			@NotNull String indexKey,
+			@NotNull String qName,
+			@NotNull IndexBasedDotNetPsiSearcher searcher)
 	{
-		super(project, MsilLanguage.INSTANCE, indexKey, qName);
-	}
-
-	@NotNull
-	@Override
-	public StringStubIndexExtension<? extends PsiElement> getHardIndexExtension()
-	{
-		return MsilNamespaceIndex.getInstance();
-	}
-
-	@NotNull
-	@Override
-	public StringStubIndexExtension<? extends PsiElement> getSoftIndexExtension()
-	{
-		return MsilAllNamespaceIndex.getInstance();
+		super(project, MsilLanguage.INSTANCE, indexKey, qName, searcher);
 	}
 }

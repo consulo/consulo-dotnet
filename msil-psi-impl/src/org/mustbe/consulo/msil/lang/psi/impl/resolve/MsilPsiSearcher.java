@@ -19,30 +19,48 @@ package org.mustbe.consulo.msil.lang.psi.impl.resolve;
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
-import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilNamespaceAsElementImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilAllNamespaceIndex;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.StringStubIndexExtension;
 
 /**
  * @author VISTALL
  * @since 13.07.14
  */
-public class MsilPsiSearcher extends DotNetPsiSearcher
+public class MsilPsiSearcher extends IndexBasedDotNetPsiSearcher
 {
-	private Project myProject;
-
 	public MsilPsiSearcher(Project project)
 	{
-		myProject = project;
+		super(project);
+	}
+
+	@NotNull
+	@Override
+	protected DotNetNamespaceAsElement createNamespace(@NotNull String indexKey, @NotNull String qName)
+	{
+		return new MsilNamespaceAsElementImpl(myProject, indexKey, qName, this);
+	}
+
+	@NotNull
+	@Override
+	public StringStubIndexExtension<? extends PsiElement> getHardIndexExtension()
+	{
+		return MsilNamespaceIndex.getInstance();
+	}
+
+	@NotNull
+	@Override
+	public StringStubIndexExtension<? extends PsiElement> getSoftIndexExtension()
+	{
+		return MsilAllNamespaceIndex.getInstance();
 	}
 
 	@NotNull
@@ -51,28 +69,5 @@ public class MsilPsiSearcher extends DotNetPsiSearcher
 			@NotNull TypeResoleKind typeResoleKind)
 	{
 		return MsilTypeByQNameIndex.getInstance().get(vmQName, myProject, scope);
-	}
-
-	@Nullable
-	@Override
-	public DotNetNamespaceAsElement findNamespaceImpl(@NotNull String indexKey, @NotNull String qName, @NotNull GlobalSearchScope scope)
-	{
-		if(DotNetNamespaceUtil.ROOT_FOR_INDEXING.equals(indexKey))
-		{
-			return new MsilNamespaceAsElementImpl(myProject, indexKey, qName);
-		}
-
-		Collection<MsilClassEntry> temp = MsilNamespaceIndex.getInstance().get(indexKey, myProject, scope);
-		if(!temp.isEmpty())
-		{
-			return new MsilNamespaceAsElementImpl(myProject, indexKey, qName);
-		}
-
-		temp = MsilAllNamespaceIndex.getInstance().get(indexKey, myProject, scope);
-		if(!temp.isEmpty())
-		{
-			return new MsilNamespaceAsElementImpl(myProject, indexKey, qName);
-		}
-		return null;
 	}
 }
