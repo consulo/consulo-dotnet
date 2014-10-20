@@ -72,7 +72,7 @@ public class DotNetTypeRefUtil
 		}
 
 		DotNetTypeRef typeRef = type.toTypeRef();
-		return typeRef.resolve(type);
+		return typeRef.resolve(type).getElement();
 	}
 
 	@NotNull

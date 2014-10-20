@@ -47,7 +47,7 @@ public class DotNetTypeDeclarationUtil
 		{
 			for(DotNetTypeRef typeRef : tp.getExtendTypeRefs())
 			{
-				PsiElement resolve = typeRef.resolve(tp);
+				PsiElement resolve = typeRef.resolve(tp).getElement();
 				if(resolve instanceof DotNetTypeDeclaration && !resolve.isEquivalentTo(tp))
 				{
 					return findFieldByName((DotNetTypeDeclaration)resolve, name, true);
