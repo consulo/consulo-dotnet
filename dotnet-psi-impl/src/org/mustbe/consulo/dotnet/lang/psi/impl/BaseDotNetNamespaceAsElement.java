@@ -146,6 +146,10 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	@Override
 	public String getPresentableParentQName()
 	{
+		if(myQName.length() == 0)
+		{
+			return null;
+		}
 		return StringUtil.getPackageName(myQName);
 	}
 
