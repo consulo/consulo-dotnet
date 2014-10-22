@@ -48,12 +48,6 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 		return myTypeResoleKind;
 	}
 
-	@Override
-	public boolean isNullable()
-	{
-		return myTypeResoleKind != DotNetPsiSearcher.TypeResoleKind.STRUCT;
-	}
-
 	@NotNull
 	@Override
 	public String getPresentableText()
@@ -89,6 +83,6 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 			return DotNetTypeResolveResult.EMPTY;
 		}
 
-		return new SimpleTypeResolveResult(ArrayUtil.getFirstElement(types));
+		return new SimpleTypeResolveResult(ArrayUtil.getFirstElement(types), myTypeResoleKind != DotNetPsiSearcher.TypeResoleKind.STRUCT);
 	}
 }

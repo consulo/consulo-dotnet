@@ -77,6 +77,12 @@ public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRef
 			}
 			return new SimpleGenericExtractorImpl(genericParameters, myWrapperTypeRef.getArgumentTypeRefs());
 		}
+
+		@Override
+		public boolean isNullable()
+		{
+			return true;
+		}
 	}
 
 	private final DotNetTypeRef myInnerTypeRef;
@@ -126,12 +132,6 @@ public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRef
 		}
 		builder.append(">");
 		return builder.toString();
-	}
-
-	@Override
-	public boolean isNullable()
-	{
-		return getInnerTypeRef().isNullable();
 	}
 
 	@NotNull

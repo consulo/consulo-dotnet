@@ -28,6 +28,7 @@ public class SimpleTypeResolveResult implements DotNetTypeResolveResult
 {
 	private PsiElement myElement;
 	private DotNetGenericExtractor myExtractor;
+	private boolean myNullable;
 
 	public SimpleTypeResolveResult(@Nullable PsiElement element)
 	{
@@ -38,6 +39,18 @@ public class SimpleTypeResolveResult implements DotNetTypeResolveResult
 	{
 		myElement = element;
 		myExtractor = extractor;
+	}
+
+	public SimpleTypeResolveResult(@Nullable PsiElement element, boolean nullable)
+	{
+		this(element, DotNetGenericExtractor.EMPTY, nullable);
+	}
+
+	public SimpleTypeResolveResult(@Nullable PsiElement element, @NotNull DotNetGenericExtractor extractor, boolean nullable)
+	{
+		myElement = element;
+		myExtractor = extractor;
+		myNullable= nullable;
 	}
 
 	@Nullable
@@ -52,5 +65,11 @@ public class SimpleTypeResolveResult implements DotNetTypeResolveResult
 	public DotNetGenericExtractor getGenericExtractor()
 	{
 		return myExtractor;
+	}
+
+	@Override
+	public boolean isNullable()
+	{
+		return myNullable;
 	}
 }

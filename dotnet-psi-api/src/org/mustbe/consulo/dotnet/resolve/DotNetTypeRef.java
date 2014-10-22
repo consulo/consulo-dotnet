@@ -43,12 +43,6 @@ public interface DotNetTypeRef
 			return getPresentableText();
 		}
 
-		@Override
-		public boolean isNullable()
-		{
-			return true;
-		}
-
 		@NotNull
 		@Override
 		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
@@ -84,12 +78,6 @@ public interface DotNetTypeRef
 		public String getQualifiedText()
 		{
 			return myDelegate.getQualifiedText();
-		}
-
-		@Override
-		public boolean isNullable()
-		{
-			return myDelegate.isNullable();
 		}
 
 		@NotNull
@@ -147,8 +135,6 @@ public interface DotNetTypeRef
 
 	@NotNull
 	String getQualifiedText();
-
-	boolean isNullable();
 
 	@NotNull
 	DotNetTypeResolveResult resolve(@NotNull PsiElement scope);

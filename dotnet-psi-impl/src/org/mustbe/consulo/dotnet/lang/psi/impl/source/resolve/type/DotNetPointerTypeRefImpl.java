@@ -49,12 +49,6 @@ public class DotNetPointerTypeRefImpl extends DotNetTypeRef.Adapter implements D
 		return myInnerType.getQualifiedText() + "*";
 	}
 
-	@Override
-	public boolean isNullable()
-	{
-		return myInnerType.isNullable();
-	}
-
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)

@@ -41,6 +41,12 @@ public interface DotNetTypeResolveResult
 		{
 			return DotNetGenericExtractor.EMPTY;
 		}
+
+		@Override
+		public boolean isNullable()
+		{
+			return true;
+		}
 	};
 
 	@Nullable
@@ -48,4 +54,6 @@ public interface DotNetTypeResolveResult
 
 	@NotNull
 	DotNetGenericExtractor getGenericExtractor();
+
+	boolean isNullable();
 }

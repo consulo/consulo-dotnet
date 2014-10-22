@@ -49,12 +49,6 @@ public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
 		return myInnerType.getQualifiedText() + "[]";
 	}
 
-	@Override
-	public boolean isNullable()
-	{
-		return true;
-	}
-
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
