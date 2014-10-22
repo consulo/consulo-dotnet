@@ -18,8 +18,6 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -141,25 +139,6 @@ public interface DotNetTypeRef
 		public String getPresentableText()
 		{
 			return "var";
-		}
-	};
-
-	DotNetTypeRef NULL_TYPE = new Adapter()
-	{
-		@NotNull
-		@Override
-		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
-		{
-			DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(scope.getProject()).findType(DotNetTypes.System.Object,
-					scope.getResolveScope());
-			return new SimpleTypeResolveResult(type, DotNetGenericExtractor.EMPTY);
-		}
-
-		@NotNull
-		@Override
-		public String getPresentableText()
-		{
-			return "null";
 		}
 	};
 
