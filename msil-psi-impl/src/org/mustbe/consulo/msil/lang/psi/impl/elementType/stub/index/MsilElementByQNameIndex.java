@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.util.QualifiedName;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import com.intellij.psi.stubs.StringStubIndexExtension;
+import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
  * @since 23.09.14
  */
-public class DotNetNamespaceUtil
+public class MsilElementByQNameIndex extends StringStubIndexExtension<DotNetQualifiedElement>
 {
-	public static String ROOT_FOR_INDEXING = "<root>";
-
 	@NotNull
-	public static String getIndexableNamespace(@NotNull String namespace)
+	@LazyInstance
+	public static MsilElementByQNameIndex getInstance()
 	{
-		return StringUtil.notNullizeIfEmpty(namespace, ROOT_FOR_INDEXING);
+		return EP_NAME.findExtension(MsilElementByQNameIndex.class);
 	}
 
 	@NotNull
-	public static String getIndexableNamespace(@NotNull QualifiedName qualifiedName)
+	@Override
+	public StubIndexKey<String, DotNetQualifiedElement> getKey()
 	{
-		return StringUtil.notNullizeIfEmpty(qualifiedName.join("."), ROOT_FOR_INDEXING);
+		return MsilIndexKeys.ELEMENT_BY_QNAME_INDEX;
 	}
 }

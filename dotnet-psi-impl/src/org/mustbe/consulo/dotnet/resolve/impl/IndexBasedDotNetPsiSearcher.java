@@ -18,13 +18,12 @@ package org.mustbe.consulo.dotnet.resolve.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceUtil;
+import org.mustbe.consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.util.CommonProcessors;
@@ -46,26 +45,27 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 	protected abstract DotNetNamespaceAsElement createNamespace(@NotNull String indexKey, @NotNull String qName);
 
 	@NotNull
-	public abstract StringStubIndexExtension<? extends PsiElement> getHardIndexExtension();
+	public abstract StubIndexKey<String, DotNetQualifiedElement> getElementByQNameIndexKey();
 
 	@NotNull
-	public abstract StringStubIndexExtension<? extends PsiElement> getSoftIndexExtension();
+	public abstract StubIndexKey<String, DotNetQualifiedElement> getNamespaceIndexKey();
+
+	@Override
+	@Nullable
+	public final DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
+	{
+		return findNamespaceImpl(DotNetNamespaceStubUtil.getIndexableNamespace(qName), qName, scope);
+	}
 
 	@Nullable
-	@Override
 	public DotNetNamespaceAsElement findNamespaceImpl(@NotNull String indexKey, @NotNull String qName, @NotNull GlobalSearchScope scope)
 	{
-		if(DotNetNamespaceUtil.ROOT_FOR_INDEXING.equals(indexKey))
+		if(DotNetNamespaceStubUtil.ROOT_FOR_INDEXING.equals(indexKey))
 		{
 			return createNamespace(indexKey, qName);
 		}
 
-		if(isFoundAnyOneElement(myProject, indexKey, getHardIndexExtension(), scope))
-		{
-			return createNamespace(indexKey, qName);
-		}
-
-		if(isFoundAnyOneElement(myProject, indexKey, getSoftIndexExtension(), scope))
+		if(isFoundAnyOneElement(myProject, indexKey, getNamespaceIndexKey(), scope))
 		{
 			return createNamespace(indexKey, qName);
 		}
@@ -74,14 +74,11 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 
 	private static boolean isFoundAnyOneElement(@NotNull Project project,
 			@NotNull String indexKey,
-			@NotNull StringStubIndexExtension<? extends PsiElement> indexExtension,
+			@NotNull StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
 			@NotNull GlobalSearchScope scope)
 	{
-		CommonProcessors.FindProcessor<PsiElement> processor = new CommonProcessors.FindFirstProcessor<PsiElement>();
-
-		StubIndexKey key = indexExtension.getKey();
-
-		StubIndex.getInstance().processElements(key, indexKey, project, scope, PsiElement.class, processor);
+		CommonProcessors.FindProcessor<DotNetQualifiedElement> processor = new CommonProcessors.FindFirstProcessor<DotNetQualifiedElement>();
+		StubIndex.getInstance().processElements(keyForIndex, indexKey, project, scope, DotNetQualifiedElement.class, processor);
 		return processor.isFound();
 	}
 }

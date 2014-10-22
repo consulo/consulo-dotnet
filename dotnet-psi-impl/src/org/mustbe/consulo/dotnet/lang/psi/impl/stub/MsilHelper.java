@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil;
+package org.mustbe.consulo.dotnet.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
@@ -33,14 +33,14 @@ public class MsilHelper
 	public static String prepareForUser(@NotNull String name)
 	{
 		String newName = cutGenericMarker(name);
-		newName = newName.replace(DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_GAME, DotNetTypeDeclarationUtil.NORMAL_SEPARATOR_IN_GAME);
+		newName = newName.replace(DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_NAME, DotNetTypeDeclarationUtil.NORMAL_SEPARATOR_IN_NAME);
 		return newName;
 	}
 
 	@NotNull
 	public static String cutGenericMarker(@NotNull String name)
 	{
-		int nested = name.lastIndexOf(DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_GAME);
+		int nested = name.lastIndexOf(DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_NAME);
 		int i = name.lastIndexOf(DotNetTypeDeclarationUtil.GENERIC_MARKER_IN_NAME);
 		if(i > 0)
 		{

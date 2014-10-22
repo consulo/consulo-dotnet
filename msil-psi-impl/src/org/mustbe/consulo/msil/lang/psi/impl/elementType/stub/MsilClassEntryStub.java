@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
@@ -65,7 +66,6 @@ public class MsilClassEntryStub extends StubBase<MsilClassEntry>
 
 	public boolean isNested()
 	{
-		String s = StringRef.toString(myVmQName);
-		return s != null && s.contains("/");
+		return getParentStub() instanceof DotNetTypeDeclaration;
 	}
 }

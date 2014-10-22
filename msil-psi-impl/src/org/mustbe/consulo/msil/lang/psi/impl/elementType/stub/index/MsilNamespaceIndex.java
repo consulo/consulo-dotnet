@@ -18,7 +18,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
@@ -26,7 +26,7 @@ import com.intellij.psi.stubs.StubIndexKey;
  * @author VISTALL
  * @since 23.09.14
  */
-public class MsilNamespaceIndex extends StringStubIndexExtension<MsilClassEntry>
+public class MsilNamespaceIndex extends StringStubIndexExtension<DotNetQualifiedElement>
 {
 	@NotNull
 	@LazyInstance
@@ -37,7 +37,7 @@ public class MsilNamespaceIndex extends StringStubIndexExtension<MsilClassEntry>
 
 	@NotNull
 	@Override
-	public StubIndexKey<String, MsilClassEntry> getKey()
+	public StubIndexKey<String, DotNetQualifiedElement> getKey()
 	{
 		return MsilIndexKeys.NAMESPACE_INDEX;
 	}

@@ -169,7 +169,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	@Override
 	public String toString()
 	{
-		return null;
+		return getClass().getSimpleName() + ":" + getPresentableQName();
 	}
 
 	@Override

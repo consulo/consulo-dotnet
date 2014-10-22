@@ -30,8 +30,8 @@ import com.intellij.psi.PsiElement;
 public class DotNetTypeDeclarationUtil
 {
 	public static final char GENERIC_MARKER_IN_NAME = '`';
-	public static final char NESTED_SEPARATOR_IN_GAME = '/';
-	public static final char NORMAL_SEPARATOR_IN_GAME = '.';
+	public static final char NESTED_SEPARATOR_IN_NAME = '/';
+	public static final char NORMAL_SEPARATOR_IN_NAME = '.';
 
 	@Nullable
 	public static DotNetFieldDeclaration findFieldByName(@NotNull DotNetTypeDeclaration tp, @NotNull String name, boolean dep)
@@ -67,13 +67,13 @@ public class DotNetTypeDeclarationUtil
 		{
 			String q = ((DotNetTypeDeclaration) parent).getPresentableQName();
 
-			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NESTED_SEPARATOR_IN_GAME + typeDeclaration.getName();
+			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NESTED_SEPARATOR_IN_NAME + typeDeclaration.getName();
 		}
 		else if(parent instanceof DotNetQualifiedElement)
 		{
 			String q = ((DotNetQualifiedElement) parent).getPresentableQName();
 
-			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NORMAL_SEPARATOR_IN_GAME + typeDeclaration.getName();
+			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NORMAL_SEPARATOR_IN_NAME + typeDeclaration.getName();
 		}
 		else
 		{

@@ -27,7 +27,7 @@ import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.msil.MsilHelper;
+import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
