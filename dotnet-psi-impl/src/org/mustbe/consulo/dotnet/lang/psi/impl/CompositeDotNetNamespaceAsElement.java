@@ -28,6 +28,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.NotNullFunction;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 
@@ -46,8 +47,10 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement
-			place)
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+			@NotNull ResolveState state,
+			PsiElement lastParent,
+			@NotNull PsiElement place)
 	{
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
@@ -61,12 +64,15 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 
 	@NotNull
 	@Override
-	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
+	public PsiElement[] findChildren(@NotNull String name,
+			@NotNull GlobalSearchScope globalSearchScope,
+			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
+			@NotNull ChildrenFilter filter)
 	{
 		List<PsiElement> list = new SmartList<PsiElement>();
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
-			PsiElement[] children = dotNetNamespaceAsElement.findChildren(name, globalSearchScope, filter);
+			PsiElement[] children = dotNetNamespaceAsElement.findChildren(name, globalSearchScope, transformer, filter);
 			Collections.addAll(list, children);
 		}
 		return list.isEmpty() ? PsiElement.EMPTY_ARRAY : ContainerUtil.toArray(list, PsiElement.ARRAY_FACTORY);
@@ -75,12 +81,14 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	@NotNull
 	@Override
 	@SuppressWarnings("unchecked")
-	public PsiElement[] getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
+	public PsiElement[] getChildren(@NotNull GlobalSearchScope globalSearchScope,
+			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
+			@NotNull ChildrenFilter filter)
 	{
 		PsiElement[] array = PsiElement.EMPTY_ARRAY;
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
-			PsiElement[] children = dotNetNamespaceAsElement.getChildren(globalSearchScope, filter);
+			PsiElement[] children = dotNetNamespaceAsElement.getChildren(globalSearchScope, transformer, filter);
 			array = ArrayUtil.mergeArrays(array, children);
 		}
 		return array;
