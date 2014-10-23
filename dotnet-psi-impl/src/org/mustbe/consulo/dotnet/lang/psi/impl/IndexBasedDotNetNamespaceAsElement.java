@@ -39,8 +39,8 @@ import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CommonProcessors;
+import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ArrayListSet;
-import com.intellij.util.containers.ContainerUtil;
 import lombok.val;
 
 /**
@@ -70,7 +70,8 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 	@NotNull
 	@Override
-	public PsiElement[] findChildren(@NotNull final String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
+	public PsiElement[] findChildren(@NotNull final String name, @NotNull GlobalSearchScope globalSearchScope,
+			@NotNull NotNullFunction<PsiElement, PsiElement> transformer, @NotNull ChildrenFilter filter)
 	{
 		StubIndexKey<String, DotNetQualifiedElement> key;
 		switch(filter)
@@ -82,7 +83,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 				Collection<DotNetQualifiedElement> elements = StubIndex.getElements(key, myIndexKey + "." + name, myProject, globalSearchScope,
 						DotNetQualifiedElement.class);
 
-				return ContainerUtil.toArray(elements, DotNetQualifiedElement.ARRAY_FACTORY);
+				return toArray(elements, transformer);
 			case ONLY_NAMESPACES:
 				val newQualifiedName = QualifiedName.fromDottedString(myQName).append(name);
 
@@ -100,13 +101,13 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 					val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(), globalSearchScope);
 					if(namespace != null)
 					{
-						return new PsiElement[]{namespace};
+						return new PsiElement[]{transformer.fun(namespace)};
 					}
 				}
 				return PsiElement.EMPTY_ARRAY;
 			case NONE:
-				PsiElement[] onlyElements = findChildren(name, globalSearchScope, ChildrenFilter.ONLY_ELEMENTS);
-				PsiElement[] onlyNamespaces = findChildren(name, globalSearchScope, ChildrenFilter.ONLY_NAMESPACES);
+				PsiElement[] onlyElements = findChildren(name, globalSearchScope, transformer, ChildrenFilter.ONLY_ELEMENTS);
+				PsiElement[] onlyNamespaces = findChildren(name, globalSearchScope, transformer, ChildrenFilter.ONLY_NAMESPACES);
 				return ArrayUtil.mergeArrays(onlyElements, onlyNamespaces);
 		}
 

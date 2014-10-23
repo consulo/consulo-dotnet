@@ -16,9 +16,7 @@
 
 package org.mustbe.consulo.dotnet.lang.psi.impl;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +27,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 
@@ -76,14 +75,14 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	@NotNull
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<? extends PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
+	public PsiElement[] getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
 	{
-		List list = new LinkedList<PsiElement>();
+		PsiElement[] array = PsiElement.EMPTY_ARRAY;
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
-			Collection<? extends PsiElement> children = dotNetNamespaceAsElement.getChildren(globalSearchScope, filter);
-			list.addAll(children);
+			PsiElement[] children = dotNetNamespaceAsElement.getChildren(globalSearchScope, filter);
+			array = ArrayUtil.mergeArrays(array, children);
 		}
-		return list;
+		return array;
 	}
 }
