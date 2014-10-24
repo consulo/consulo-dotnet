@@ -16,7 +16,9 @@
 
 package org.mustbe.consulo.dotnet.resolve;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.consulo.annotations.Immutable;
 import org.consulo.lombok.annotations.ProjectService;
@@ -26,6 +28,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -83,19 +86,19 @@ public abstract class DotNetPsiSearcher
 		{
 			return DotNetTypeDeclaration.EMPTY_ARRAY;
 		}
-		/*List<DotNetTypeDeclaration> list = new ArrayList<DotNetTypeDeclaration>(declarations.size());
+		List<DotNetTypeDeclaration> list = new ArrayList<DotNetTypeDeclaration>(declarations.size());
 
 		for(DotNetTypeDeclaration declaration : declarations)
 		{
-			if(typeResoleKind == TypeResoleKind.UNKNOWN ||
-					declaration.isStruct() && typeResoleKind == TypeResoleKind.STRUCT ||
-					!declaration.isStruct() && typeResoleKind == TypeResoleKind.CLASS)
+			//if(typeResoleKind == TypeResoleKind.UNKNOWN ||
+			//		declaration.isStruct() && typeResoleKind == TypeResoleKind.STRUCT ||
+			//		!declaration.isStruct() && typeResoleKind == TypeResoleKind.CLASS)
 			{
 				list.add(transformer.fun(declaration));
 			}
-		}   */
+		}
 
-		return declarations.toArray(new DotNetTypeDeclaration[declarations.size()]);
+		return ContainerUtil.toArray(list, DotNetTypeDeclaration.ARRAY_FACTORY);
 	}
 
 	@NotNull
