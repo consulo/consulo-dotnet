@@ -44,6 +44,7 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 		super(stub, nodeType);
 	}
 
+	@Override
 	@Nullable
 	public DotNetType getType()
 	{

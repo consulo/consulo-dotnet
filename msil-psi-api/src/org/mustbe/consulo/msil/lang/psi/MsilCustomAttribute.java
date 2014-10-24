@@ -17,7 +17,9 @@
 package org.mustbe.consulo.msil.lang.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 
 /**
  * @author VISTALL
@@ -26,4 +28,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 @ArrayFactoryFields
 public interface MsilCustomAttribute extends DotNetAttribute
 {
+	@Nullable
+	DotNetType getType();
 }

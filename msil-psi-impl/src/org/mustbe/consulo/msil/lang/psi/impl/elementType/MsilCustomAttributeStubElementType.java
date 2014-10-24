@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilCustomAttributeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilCustomAttributeStub;
@@ -57,14 +58,16 @@ public class MsilCustomAttributeStubElementType extends AbstractMsilStubElementT
 	public MsilCustomAttributeStub createStub(
 			@NotNull MsilCustomAttribute msilCustomAttribute, StubElement stubElement)
 	{
-		return new MsilCustomAttributeStub(stubElement, this, (StringRef)null);
+		DotNetType type = msilCustomAttribute.getType();
+		String ref = type == null ? null : type.getText();
+		return new MsilCustomAttributeStub(stubElement, this, ref);
 	}
 
 	@Override
 	public void serialize(
 			@NotNull MsilCustomAttributeStub msilCustomAttributeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
+		stubOutputStream.writeName(msilCustomAttributeStub.getTypeRef());
 	}
 
 	@NotNull
@@ -72,6 +75,7 @@ public class MsilCustomAttributeStubElementType extends AbstractMsilStubElementT
 	public MsilCustomAttributeStub deserialize(
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		return new MsilCustomAttributeStub(stubElement, this, (StringRef)null);
+		StringRef ref = inputStream.readName();
+		return new MsilCustomAttributeStub(stubElement, this, ref);
 	}
 }
