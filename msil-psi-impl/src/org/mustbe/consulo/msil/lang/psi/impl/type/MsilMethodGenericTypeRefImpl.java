@@ -17,9 +17,10 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import org.mustbe.consulo.dotnet.resolve.SimpleTypeResolveResult;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import com.intellij.psi.PsiElement;
@@ -43,14 +44,23 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRef.Adapter
 	@Override
 	public String getPresentableText()
 	{
-		DotNetGenericParameter resolve = resolve(myParent);
-		return resolve == null ? String.valueOf(myIndex) : resolve.getName();
+		PsiElement resolve = resolve(myParent).getElement();
+		if(resolve instanceof DotNetGenericParameter)
+		{
+			return ((DotNetGenericParameter) resolve).getName();
+		}
+		return String.valueOf(myIndex);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
-	public DotNetGenericParameter resolve(@NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
-		return ArrayUtil2.safeGet(myParent.getGenericParameters(), myIndex);
+		DotNetGenericParameter dotNetGenericParameter = ArrayUtil2.safeGet(myParent.getGenericParameters(), myIndex);
+		if(dotNetGenericParameter == null)
+		{
+			return DotNetTypeResolveResult.EMPTY;
+		}
+		return new SimpleTypeResolveResult(dotNetGenericParameter);
 	}
 }

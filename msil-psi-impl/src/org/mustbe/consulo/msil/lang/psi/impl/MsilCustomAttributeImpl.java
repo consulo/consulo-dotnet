@@ -44,6 +44,7 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 		super(stub, nodeType);
 	}
 
+	@Override
 	@Nullable
 	public DotNetType getType()
 	{
@@ -59,7 +60,7 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 		{
 			return null;
 		}
-		PsiElement resolve = type.toTypeRef().resolve(this);
+		PsiElement resolve = type.toTypeRef().resolve(this).getElement();
 		if(resolve instanceof DotNetTypeDeclaration)
 		{
 			return (DotNetTypeDeclaration) resolve;

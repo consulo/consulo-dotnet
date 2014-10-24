@@ -17,10 +17,11 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import org.mustbe.consulo.dotnet.resolve.SimpleTypeResolveResult;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -47,12 +48,6 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 		return myTypeResoleKind;
 	}
 
-	@Override
-	public boolean isNullable()
-	{
-		return myTypeResoleKind != DotNetPsiSearcher.TypeResoleKind.STRUCT;
-	}
-
 	@NotNull
 	@Override
 	public String getPresentableText()
@@ -72,18 +67,22 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 		return myRef;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
-	public PsiElement resolve(@NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
 		if(DumbService.isDumb(scope.getProject()))
 		{
-			return null;
+			return DotNetTypeResolveResult.EMPTY;
 		}
 
 		DotNetTypeDeclaration[] types = DotNetPsiSearcher.getInstance(scope.getProject()).findTypes(myRef, scope.getResolveScope(),
 				myTypeResoleKind);
+		if(types.length == 0)
+		{
+			return DotNetTypeResolveResult.EMPTY;
+		}
 
-		return ArrayUtil.getFirstElement(types);
+		return new SimpleTypeResolveResult(ArrayUtil.getFirstElement(types), myTypeResoleKind != DotNetPsiSearcher.TypeResoleKind.STRUCT);
 	}
 }

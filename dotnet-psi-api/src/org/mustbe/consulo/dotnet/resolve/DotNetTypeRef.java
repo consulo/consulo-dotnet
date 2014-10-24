@@ -18,8 +18,6 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTypes;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -45,24 +43,11 @@ public interface DotNetTypeRef
 			return getPresentableText();
 		}
 
-		@Override
-		public boolean isNullable()
-		{
-			return true;
-		}
-
-		@Nullable
-		@Override
-		public PsiElement resolve(@NotNull PsiElement scope)
-		{
-			return null;
-		}
-
 		@NotNull
 		@Override
-		public DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope)
+		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 		{
-			return DotNetGenericExtractor.EMPTY;
+			return DotNetTypeResolveResult.EMPTY;
 		}
 
 		@Override
@@ -95,24 +80,11 @@ public interface DotNetTypeRef
 			return myDelegate.getQualifiedText();
 		}
 
-		@Override
-		public boolean isNullable()
-		{
-			return myDelegate.isNullable();
-		}
-
-		@Nullable
-		@Override
-		public PsiElement resolve(@NotNull PsiElement scope)
-		{
-			return myDelegate.resolve(scope);
-		}
-
 		@NotNull
 		@Override
-		public DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope)
+		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 		{
-			return myDelegate.getGenericExtractor(resolved, scope);
+			return myDelegate.resolve(scope);
 		}
 
 		@NotNull
@@ -158,34 +130,12 @@ public interface DotNetTypeRef
 		}
 	};
 
-	DotNetTypeRef NULL_TYPE = new Adapter()
-	{
-		@Nullable
-		@Override
-		public PsiElement resolve(@NotNull PsiElement scope)
-		{
-			return DotNetPsiSearcher.getInstance(scope.getProject()).findType(DotNetTypes.System.Object, scope.getResolveScope());
-		}
-
-		@NotNull
-		@Override
-		public String getPresentableText()
-		{
-			return "null";
-		}
-	};
-
 	@NotNull
 	String getPresentableText();
 
 	@NotNull
 	String getQualifiedText();
 
-	boolean isNullable();
-
-	@Nullable
-	PsiElement resolve(@NotNull PsiElement scope);
-
 	@NotNull
-	DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope);
+	DotNetTypeResolveResult resolve(@NotNull PsiElement scope);
 }

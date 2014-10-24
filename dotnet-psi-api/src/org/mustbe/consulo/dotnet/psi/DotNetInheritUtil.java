@@ -59,7 +59,7 @@ public class DotNetInheritUtil
 		{
 			for(DotNetTypeRef dotNetType : anExtends)
 			{
-				PsiElement psiElement = dotNetType.resolve(typeDeclaration);
+				PsiElement psiElement = dotNetType.resolve(typeDeclaration).getElement();
 				if(psiElement instanceof DotNetTypeDeclaration)
 				{
 					if(psiElement.isEquivalentTo(typeDeclaration))
@@ -87,7 +87,7 @@ public class DotNetInheritUtil
 
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
 	{
-		PsiElement resolve = typeRef.resolve(element);
+		PsiElement resolve = typeRef.resolve(element).getElement();
 		if(!(resolve instanceof DotNetTypeDeclaration))
 		{
 			return false;
@@ -122,7 +122,7 @@ public class DotNetInheritUtil
 		{
 			for(DotNetTypeRef dotNetType : anExtends)
 			{
-				PsiElement psiElement = dotNetType.resolve(typeDeclaration);
+				PsiElement psiElement = dotNetType.resolve(typeDeclaration).getElement();
 				if(psiElement instanceof DotNetTypeDeclaration)
 				{
 					if(psiElement.isEquivalentTo(typeDeclaration))

@@ -17,10 +17,9 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -50,24 +49,11 @@ public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
 		return myInnerType.getQualifiedText() + "[]";
 	}
 
-	@Override
-	public boolean isNullable()
-	{
-		return true;
-	}
-
-	@Nullable
-	@Override
-	public PsiElement resolve(@NotNull PsiElement scope)
-	{
-		return null;
-	}
-
 	@NotNull
 	@Override
-	public DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
-		return DotNetGenericExtractor.EMPTY;
+		return DotNetTypeResolveResult.EMPTY;
 	}
 
 	@NotNull

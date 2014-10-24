@@ -17,11 +17,11 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import org.mustbe.consulo.dotnet.resolve.SimpleTypeResolveResult;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 
@@ -47,17 +47,17 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		return myName;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
-	public PsiElement resolve(@NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
 		for(DotNetGenericParameter parameter : myParent.getGenericParameters())
 		{
 			if(Comparing.equal(myName, parameter.getName()))
 			{
-				return parameter;
+				return new SimpleTypeResolveResult(parameter);
 			}
 		}
-		return null;
+		return DotNetTypeResolveResult.EMPTY;
 	}
 }

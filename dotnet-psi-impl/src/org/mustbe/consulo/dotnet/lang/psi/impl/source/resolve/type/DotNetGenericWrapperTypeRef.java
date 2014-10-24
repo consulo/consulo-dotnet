@@ -23,6 +23,8 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithInnerTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -31,6 +33,58 @@ import com.intellij.psi.PsiElement;
  */
 public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRefWithInnerTypeRef
 {
+	public static class Result implements DotNetTypeResolveResult
+	{
+		private final DotNetGenericWrapperTypeRef myWrapperTypeRef;
+		private final PsiElement myScope;
+		private NullableLazyValue<PsiElement> myValue = new NullableLazyValue<PsiElement>()
+		{
+			@Nullable
+			@Override
+			protected PsiElement compute()
+			{
+				return myWrapperTypeRef.getInnerTypeRef().resolve(myScope).getElement();
+			}
+		};
+
+		public Result(DotNetGenericWrapperTypeRef dotNetGenericWrapperTypeRef, PsiElement scope)
+		{
+			myWrapperTypeRef = dotNetGenericWrapperTypeRef;
+			myScope = scope;
+		}
+
+		@Nullable
+		@Override
+		public PsiElement getElement()
+		{
+			return myValue.getValue();
+		}
+
+		@NotNull
+		@Override
+		public DotNetGenericExtractor getGenericExtractor()
+		{
+			PsiElement resolved = getElement();
+			if(!(resolved instanceof DotNetGenericParameterListOwner))
+			{
+				return DotNetGenericExtractor.EMPTY;
+			}
+
+			DotNetGenericParameter[] genericParameters = ((DotNetGenericParameterListOwner) resolved).getGenericParameters();
+			if(genericParameters.length != myWrapperTypeRef.getArgumentTypeRefs().length)
+			{
+				return DotNetGenericExtractor.EMPTY;
+			}
+			return new SimpleGenericExtractorImpl(genericParameters, myWrapperTypeRef.getArgumentTypeRefs());
+		}
+
+		@Override
+		public boolean isNullable()
+		{
+			return true;
+		}
+	}
+
 	private final DotNetTypeRef myInnerTypeRef;
 	private final DotNetTypeRef[] myArguments;
 
@@ -80,34 +134,11 @@ public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRef
 		return builder.toString();
 	}
 
-	@Override
-	public boolean isNullable()
-	{
-		return getInnerTypeRef().isNullable();
-	}
-
-	@Nullable
-	@Override
-	public PsiElement resolve(@NotNull PsiElement element)
-	{
-		return getInnerTypeRef().resolve(element);
-	}
-
 	@NotNull
 	@Override
-	public DotNetGenericExtractor getGenericExtractor(@NotNull PsiElement resolved, @NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
-		if(!(resolved instanceof DotNetGenericParameterListOwner))
-		{
-			return DotNetGenericExtractor.EMPTY;
-		}
-
-		DotNetGenericParameter[] genericParameters = ((DotNetGenericParameterListOwner) resolved).getGenericParameters();
-		if(genericParameters.length != getArgumentTypeRefs().length)
-		{
-			return DotNetGenericExtractor.EMPTY;
-		}
-		return new SimpleGenericExtractorImpl(genericParameters, getArgumentTypeRefs());
+		return new Result(this, scope);
 	}
 
 	@Override

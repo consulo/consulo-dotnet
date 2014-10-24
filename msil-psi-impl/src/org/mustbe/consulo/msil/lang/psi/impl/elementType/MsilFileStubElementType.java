@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.MsilLanguage;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilFileStub;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.stubs.DefaultStubBuilder;
@@ -67,7 +68,12 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		return 35;
+		int version = 37;
+		for(MsilStubIndexer msilStubIndexer : MsilStubIndexer.EP_NAME.getExtensions())
+		{
+			version += msilStubIndexer.getVersion();
+		}
+		return version;
 	}
 
 	@NotNull

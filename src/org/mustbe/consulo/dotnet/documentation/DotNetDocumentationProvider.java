@@ -255,7 +255,7 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		}
 		else
 		{
-			PsiElement resolve = dotNetTypeRef.resolve(element);
+			PsiElement resolve = dotNetTypeRef.resolve(element).getElement();
 			if(resolve instanceof DotNetQualifiedElement)
 			{
 				if(resolve instanceof DotNetGenericParameterListOwner)

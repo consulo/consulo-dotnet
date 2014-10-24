@@ -29,7 +29,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.util.XStubUtil;
-import org.mustbe.consulo.msil.MsilHelper;
+import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;

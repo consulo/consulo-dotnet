@@ -14,31 +14,46 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
+package org.mustbe.consulo.dotnet.resolve;
 
-import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
-import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 23.09.14
+ * @since 20.10.14
  */
-public class MsilAllNamespaceIndex extends StringStubIndexExtension<MsilClassEntry>
+public interface DotNetTypeResolveResult
 {
-	@NotNull
-	@LazyInstance
-	public static MsilAllNamespaceIndex getInstance()
+	DotNetTypeResolveResult EMPTY = new DotNetTypeResolveResult()
 	{
-		return EP_NAME.findExtension(MsilAllNamespaceIndex.class);
-	}
+		@Nullable
+		@Override
+		public PsiElement getElement()
+		{
+			return null;
+		}
+
+		@NotNull
+		@Override
+		public DotNetGenericExtractor getGenericExtractor()
+		{
+			return DotNetGenericExtractor.EMPTY;
+		}
+
+		@Override
+		public boolean isNullable()
+		{
+			return true;
+		}
+	};
+
+	@Nullable
+	PsiElement getElement();
 
 	@NotNull
-	@Override
-	public StubIndexKey<String, MsilClassEntry> getKey()
-	{
-		return MsilIndexKeys.ALL_NAMESPACE_INDEX;
-	}
+	DotNetGenericExtractor getGenericExtractor();
+
+	boolean isNullable();
 }

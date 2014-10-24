@@ -16,9 +16,12 @@
 
 package org.mustbe.consulo.dotnet.lang.psi.impl;
 
+import gnu.trove.THashSet;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
@@ -27,6 +30,7 @@ import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -35,10 +39,8 @@ import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CommonProcessors;
-import com.intellij.util.Processor;
-import com.intellij.util.SmartList;
+import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ArrayListSet;
-import com.intellij.util.containers.ContainerUtil;
 import lombok.val;
 
 /**
@@ -55,8 +57,11 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	@NotNull
 	private final IndexBasedDotNetPsiSearcher mySearcher;
 
-	protected IndexBasedDotNetNamespaceAsElement(@NotNull Project project, @NotNull Language language, @NotNull String indexKey,
-			@NotNull String qName, @NotNull IndexBasedDotNetPsiSearcher searcher)
+	protected IndexBasedDotNetNamespaceAsElement(@NotNull Project project,
+			@NotNull Language language,
+			@NotNull String indexKey,
+			@NotNull String qName,
+			@NotNull IndexBasedDotNetPsiSearcher searcher)
 	{
 		super(project, language, qName);
 		myIndexKey = indexKey;
@@ -65,35 +70,29 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 	@NotNull
 	@Override
-	public PsiElement[] findChildren(@NotNull final String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
+	public PsiElement[] findChildren(@NotNull final String name, @NotNull GlobalSearchScope globalSearchScope,
+			@NotNull NotNullFunction<PsiElement, PsiElement> transformer, @NotNull ChildrenFilter filter)
 	{
-		StubIndexKey key = null;
+		StubIndexKey<String, DotNetQualifiedElement> key;
 		switch(filter)
 		{
 			case ONLY_ELEMENTS:
-				val elements = new SmartList<PsiElement>();
 
-				key = mySearcher.getHardIndexExtension().getKey();
+				key = mySearcher.getElementByQNameIndexKey();
 
-				StubIndex.getInstance().processElements(key, myIndexKey, myProject, globalSearchScope,
-						PsiElement.class, new Processor<PsiElement>()
-				{
-					@Override
-					public boolean process(PsiElement element)
-					{
-						addIfNameEqual(elements, element, name);
-						return true;
-					}
-				});
+				Collection<DotNetQualifiedElement> elements = StubIndex.getElements(key, myIndexKey + "." + name, myProject, globalSearchScope,
+						DotNetQualifiedElement.class);
 
-				return ContainerUtil.toArray(elements, PsiElement.ARRAY_FACTORY);
+				return toArray(elements, transformer);
 			case ONLY_NAMESPACES:
 				val newQualifiedName = QualifiedName.fromDottedString(myQName).append(name);
 
-				key = mySearcher.getSoftIndexExtension().getKey();
+				key = mySearcher.getNamespaceIndexKey();
 
-				CommonProcessors.FindFirstProcessor<PsiElement> processor = new CommonProcessors.FindFirstProcessor<PsiElement>();
-				StubIndex.getInstance().processElements(key, newQualifiedName.toString(), myProject, globalSearchScope, PsiElement.class, processor);
+				CommonProcessors.FindFirstProcessor<DotNetQualifiedElement> processor = new CommonProcessors
+						.FindFirstProcessor<DotNetQualifiedElement>();
+				StubIndex.getInstance().processElements(key, newQualifiedName.toString(), myProject, globalSearchScope,
+						DotNetQualifiedElement.class, processor);
 
 				PsiElement foundValue = processor.getFoundValue();
 
@@ -102,13 +101,13 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 					val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(), globalSearchScope);
 					if(namespace != null)
 					{
-						return new PsiElement[] {namespace};
+						return new PsiElement[]{transformer.fun(namespace)};
 					}
 				}
 				return PsiElement.EMPTY_ARRAY;
 			case NONE:
-				PsiElement[] onlyElements = findChildren(name, globalSearchScope, ChildrenFilter.ONLY_ELEMENTS);
-				PsiElement[] onlyNamespaces = findChildren(name, globalSearchScope, ChildrenFilter.ONLY_NAMESPACES);
+				PsiElement[] onlyElements = findChildren(name, globalSearchScope, transformer, ChildrenFilter.ONLY_ELEMENTS);
+				PsiElement[] onlyNamespaces = findChildren(name, globalSearchScope, transformer, ChildrenFilter.ONLY_NAMESPACES);
 				return ArrayUtil.mergeArrays(onlyElements, onlyNamespaces);
 		}
 
@@ -119,7 +118,21 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	@Override
 	protected Collection<? extends PsiElement> getOnlyElements(@NotNull GlobalSearchScope globalSearchScope)
 	{
-		return mySearcher.getHardIndexExtension().get(myIndexKey, myProject, globalSearchScope);
+		Collection<DotNetQualifiedElement> otherElements = StubIndex.getElements(mySearcher.getNamespaceIndexKey(), myIndexKey, myProject,
+				globalSearchScope, DotNetQualifiedElement.class);
+
+		Set<PsiElement> set = new THashSet<PsiElement>();
+		for(DotNetQualifiedElement psiElement : otherElements)
+		{
+			ProgressManager.checkCanceled();
+
+			String presentableQName = psiElement.getPresentableParentQName();
+			if(Comparing.equal(myQName, presentableQName))
+			{
+				set.add(psiElement);
+			}
+		}
+		return set;
 	}
 
 	@NotNull
@@ -129,28 +142,27 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 		val thisQualifiedName = QualifiedName.fromDottedString(myQName);
 
 		val namespaceChildren = new ArrayListSet<String>();
-		Collection<? extends PsiElement> otherNamespaces = mySearcher.getSoftIndexExtension().get(myIndexKey, myProject, globalSearchScope);
-		for(PsiElement psiElement : otherNamespaces)
+		Collection<DotNetQualifiedElement> otherNamespaces = StubIndex.getElements(mySearcher.getNamespaceIndexKey(), myIndexKey, myProject,
+				globalSearchScope, DotNetQualifiedElement.class);
+
+		for(DotNetQualifiedElement psiElement : otherNamespaces)
 		{
 			ProgressManager.checkCanceled();
 
-			if(psiElement instanceof DotNetQualifiedElement)
+			String presentableQName = psiElement.getPresentableQName();
+			if(presentableQName == null)
 			{
-				String presentableQName = ((DotNetQualifiedElement) psiElement).getPresentableQName();
-				if(presentableQName == null)
-				{
-					continue;
-				}
+				continue;
+			}
 
-				QualifiedName qualifiedName = QualifiedName.fromDottedString(presentableQName);
-				if(qualifiedName.matchesPrefix(thisQualifiedName))
-				{
-					List<String> childList = qualifiedName.getComponents().subList(0, thisQualifiedName.getComponentCount() + 1);
+			QualifiedName qualifiedName = QualifiedName.fromDottedString(presentableQName);
+			if(qualifiedName.matchesPrefix(thisQualifiedName))
+			{
+				List<String> childList = qualifiedName.getComponents().subList(0, thisQualifiedName.getComponentCount() + 1);
 
-					QualifiedName child = QualifiedName.fromComponents(childList);
+				QualifiedName child = QualifiedName.fromComponents(childList);
 
-					namespaceChildren.add(child.toString());
-				}
+				namespaceChildren.add(child.toString());
 			}
 		}
 

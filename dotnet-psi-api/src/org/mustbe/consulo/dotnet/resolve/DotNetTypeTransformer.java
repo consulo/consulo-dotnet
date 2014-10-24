@@ -14,31 +14,24 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
+package org.mustbe.consulo.dotnet.resolve;
 
-import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
+import com.intellij.psi.PsiElement;
+import com.intellij.util.NotNullFunction;
 
 /**
  * @author VISTALL
- * @since 23.09.14
+ * @since 23.10.14
  */
-public class MsilNamespaceIndex extends StringStubIndexExtension<DotNetQualifiedElement>
+public class DotNetTypeTransformer implements NotNullFunction<PsiElement, PsiElement>
 {
-	@NotNull
-	@LazyInstance
-	public static MsilNamespaceIndex getInstance()
-	{
-		return EP_NAME.findExtension(MsilNamespaceIndex.class);
-	}
+	public static final DotNetTypeTransformer INSTANCE = new DotNetTypeTransformer();
 
 	@NotNull
 	@Override
-	public StubIndexKey<String, DotNetQualifiedElement> getKey()
+	public PsiElement fun(PsiElement element)
 	{
-		return MsilIndexKeys.NAMESPACE_INDEX;
+		return element;
 	}
 }

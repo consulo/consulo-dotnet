@@ -32,4 +32,9 @@ public class MsilStubIndexer
 	{
 		// empty body
 	}
+
+	public int getVersion()
+	{
+		return 0;
+	}
 }

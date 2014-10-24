@@ -17,10 +17,11 @@
 package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import org.mustbe.consulo.dotnet.resolve.SimpleTypeResolveResult;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.NotNullFunction;
@@ -32,7 +33,7 @@ import com.intellij.util.NotNullFunction;
 public class DotNetTypeRefByQName extends DotNetTypeRef.Adapter
 {
 	private final String myQualifiedName;
-	private final boolean myNullable;
+	private final Boolean myNullable;
 	private final NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> myTransformer;
 
 	public DotNetTypeRefByQName(@NotNull String qualifiedName)
@@ -47,21 +48,15 @@ public class DotNetTypeRefByQName extends DotNetTypeRef.Adapter
 
 	public DotNetTypeRefByQName(@NotNull String qualifiedName, @NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
-		this(qualifiedName, transformer, true);
+		this(qualifiedName, transformer, null);
 	}
 
 	public DotNetTypeRefByQName(@NotNull String qualifiedName, @NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer,
-			boolean nullable)
+			Boolean nullable)
 	{
 		myQualifiedName = qualifiedName;
 		myTransformer = transformer;
 		myNullable = nullable;
-	}
-
-	@Override
-	public boolean isNullable()
-	{
-		return myNullable;
 	}
 
 	@NotNull
@@ -78,11 +73,12 @@ public class DotNetTypeRefByQName extends DotNetTypeRef.Adapter
 		return myQualifiedName;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
-	public PsiElement resolve(@NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
-		return DotNetPsiSearcher.getInstance(scope.getProject()).findType(myQualifiedName, scope.getResolveScope(),
+		DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(scope.getProject()).findType(myQualifiedName, scope.getResolveScope(),
 				DotNetPsiSearcher.TypeResoleKind.UNKNOWN, myTransformer);
+		return new SimpleTypeResolveResult(type, myNullable == Boolean.TRUE);
 	}
 }

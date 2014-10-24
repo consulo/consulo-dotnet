@@ -17,9 +17,9 @@
 package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -49,15 +49,9 @@ public class DotNetPointerTypeRefImpl extends DotNetTypeRef.Adapter implements D
 		return myInnerType.getQualifiedText() + "*";
 	}
 
+	@NotNull
 	@Override
-	public boolean isNullable()
-	{
-		return myInnerType.isNullable();
-	}
-
-	@Nullable
-	@Override
-	public PsiElement resolve(@NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
 		return myInnerType.resolve(scope);
 	}

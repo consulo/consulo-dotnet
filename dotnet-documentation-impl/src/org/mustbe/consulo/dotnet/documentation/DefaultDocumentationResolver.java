@@ -150,7 +150,7 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 		}
 		else
 		{
-			PsiElement resolve = typeRef.resolve(element);
+			PsiElement resolve = typeRef.resolve(element).getElement();
 			if(resolve == null)
 			{
 				return "<error>";

@@ -49,12 +49,12 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 
 	@Nullable
 	@Override
-	public DotNetNamespaceAsElement findNamespaceImpl(@NotNull String indexKey, @NotNull String qName, @NotNull GlobalSearchScope scope)
+	public DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
 	{
 		List<DotNetNamespaceAsElement> namespaceAsElements = new SmartList<DotNetNamespaceAsElement>();
 		for(DotNetPsiSearcher searcher : mySearchers)
 		{
-			DotNetNamespaceAsElement namespace = searcher.findNamespaceImpl(indexKey, qName, scope);
+			DotNetNamespaceAsElement namespace = searcher.findNamespace(qName, scope);
 			if(namespace != null)
 			{
 				namespaceAsElements.add(namespace);

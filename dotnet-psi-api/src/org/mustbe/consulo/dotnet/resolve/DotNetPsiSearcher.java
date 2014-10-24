@@ -24,7 +24,6 @@ import org.consulo.annotations.Immutable;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetNamespaceUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
@@ -60,13 +59,7 @@ public abstract class DotNetPsiSearcher
 	};
 
 	@Nullable
-	public final DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
-	{
-		return findNamespaceImpl(DotNetNamespaceUtil.getIndexableNamespace(qName), qName, scope);
-	}
-
-	@Nullable
-	public DotNetNamespaceAsElement findNamespaceImpl(@NotNull String indexKey, @NotNull String qName, @NotNull GlobalSearchScope scope)
+	public DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
 	{
 		return null;
 	}
