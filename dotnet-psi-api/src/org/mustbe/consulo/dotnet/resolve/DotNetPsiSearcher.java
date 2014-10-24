@@ -16,9 +16,7 @@
 
 package org.mustbe.consulo.dotnet.resolve;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.consulo.annotations.Immutable;
 import org.consulo.lombok.annotations.ProjectService;
@@ -81,7 +79,11 @@ public abstract class DotNetPsiSearcher
 			@NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		Collection<? extends DotNetTypeDeclaration> declarations = findTypesImpl(vmQName, scope, typeResoleKind);
-		List<DotNetTypeDeclaration> list = new ArrayList<DotNetTypeDeclaration>(declarations.size());
+		if(declarations.isEmpty())
+		{
+			return DotNetTypeDeclaration.EMPTY_ARRAY;
+		}
+		/*List<DotNetTypeDeclaration> list = new ArrayList<DotNetTypeDeclaration>(declarations.size());
 
 		for(DotNetTypeDeclaration declaration : declarations)
 		{
@@ -91,9 +93,9 @@ public abstract class DotNetPsiSearcher
 			{
 				list.add(transformer.fun(declaration));
 			}
-		}
+		}   */
 
-		return ArrayUtil.toObjectArray(list, DotNetTypeDeclaration.class);
+		return declarations.toArray(new DotNetTypeDeclaration[declarations.size()]);
 	}
 
 	@NotNull
