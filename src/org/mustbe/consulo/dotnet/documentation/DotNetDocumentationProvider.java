@@ -23,6 +23,7 @@ import org.emonic.base.documentation.IDocumentation;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericWrapperTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -252,6 +253,22 @@ public class DotNetDocumentationProvider implements DocumentationProvider
 		{
 			builder.append(generateLinksForType(((DotNetPointerTypeRef) dotNetTypeRef).getInnerTypeRef(), element));
 			builder.append("*");
+		}
+		else if(dotNetTypeRef instanceof DotNetGenericWrapperTypeRef)
+		{
+			builder.append(generateLinksForType(((DotNetGenericWrapperTypeRef) dotNetTypeRef).getInnerTypeRef(), element));
+			builder.append(XmlStringUtil.escapeString("<"));
+			DotNetTypeRef[] argumentTypeRefs = ((DotNetGenericWrapperTypeRef) dotNetTypeRef).getArgumentTypeRefs();
+			for(int i = 0; i < argumentTypeRefs.length; i++)
+			{
+				if(i != 0)
+				{
+					builder.append(", ");
+				}
+				DotNetTypeRef argumentTypeRef = argumentTypeRefs[i];
+				builder.append(generateLinksForType(argumentTypeRef, element));
+			}
+			builder.append(XmlStringUtil.escapeString(">"));
 		}
 		else
 		{

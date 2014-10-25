@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericWrapperTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithInnerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.psi.PsiElement;
@@ -31,11 +31,11 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 04.01.14.
  */
-public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRefWithInnerTypeRef
+public class SimpleGenericWrapperTypeRef implements DotNetGenericWrapperTypeRef
 {
 	public static class Result implements DotNetTypeResolveResult
 	{
-		private final DotNetGenericWrapperTypeRef myWrapperTypeRef;
+		private final SimpleGenericWrapperTypeRef myWrapperTypeRef;
 		private final PsiElement myScope;
 		private NullableLazyValue<PsiElement> myValue = new NullableLazyValue<PsiElement>()
 		{
@@ -47,9 +47,9 @@ public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRef
 			}
 		};
 
-		public Result(DotNetGenericWrapperTypeRef dotNetGenericWrapperTypeRef, PsiElement scope)
+		public Result(SimpleGenericWrapperTypeRef simpleGenericWrapperTypeRef, PsiElement scope)
 		{
-			myWrapperTypeRef = dotNetGenericWrapperTypeRef;
+			myWrapperTypeRef = simpleGenericWrapperTypeRef;
 			myScope = scope;
 		}
 
@@ -88,7 +88,7 @@ public class DotNetGenericWrapperTypeRef implements DotNetTypeRef, DotNetTypeRef
 	private final DotNetTypeRef myInnerTypeRef;
 	private final DotNetTypeRef[] myArguments;
 
-	public DotNetGenericWrapperTypeRef(DotNetTypeRef innerTypeRef, DotNetTypeRef[] rArguments)
+	public SimpleGenericWrapperTypeRef(DotNetTypeRef innerTypeRef, DotNetTypeRef[] rArguments)
 	{
 		myInnerTypeRef = innerTypeRef;
 		myArguments = rArguments;
