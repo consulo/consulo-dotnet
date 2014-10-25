@@ -120,4 +120,45 @@
 			<parameter type="System.Object[]" />
 		</method>
 	</class>
+
+	<class name="System.String">
+		<method name="Format">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object" />
+		</method>
+
+		<method name="Format">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+		</method>
+
+		<method name="Format">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+			<parameter type="System.Object" />
+		</method>
+
+		<method name="Format">
+			<parameter type="System.String">
+				<attribute name="MustBe.Consulo.Attributes.InjectLanguageAttribute">
+					<argument type="System.String">CFS</argument>
+				</attribute>
+			</parameter>
+			<parameter type="System.Object[]" />
+		</method>
+	</class>
 </assembly>
