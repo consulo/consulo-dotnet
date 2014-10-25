@@ -31,6 +31,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.impl.source.tree.injected.Place;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 
@@ -92,12 +93,12 @@ public class CfsItem extends ASTWrapperPsiElement
 					{
 						continue;
 					}
-					PsiElement parent = host.getParent();
-					if(!(parent instanceof DotNetCallArgumentList))
+					DotNetCallArgumentList callArgumentList = PsiTreeUtil.getParentOfType(host, DotNetCallArgumentList.class);
+					if(callArgumentList == null)
 					{
 						continue;
 					}
-					DotNetExpression[] expressions = ((DotNetCallArgumentList) parent).getExpressions();
+					DotNetExpression[] expressions = callArgumentList.getExpressions();
 					int i = ArrayUtil.find(expressions, host);
 					assert i != -1;
 
