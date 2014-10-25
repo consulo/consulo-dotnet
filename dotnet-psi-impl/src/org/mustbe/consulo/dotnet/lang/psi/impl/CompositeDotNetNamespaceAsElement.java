@@ -47,6 +47,19 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	}
 
 	@Override
+	public boolean isWritable()
+	{
+		for(DotNetNamespaceAsElement namespaceAsElement : myList)
+		{
+			if(namespaceAsElement.isWritable())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
 			@NotNull ResolveState state,
 			PsiElement lastParent,

@@ -90,6 +90,12 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		return true;
 	}
 
+	@Override
+	public boolean isWritable()
+	{
+		return true;
+	}
+
 	@NotNull
 	@Override
 	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
