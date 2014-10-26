@@ -70,6 +70,7 @@ public interface DotNetTypes
 		String Double = "System.Double";
 		String Single = "System.Single";
 		String Boolean = "System.Boolean";
+		String TypedReference = "System.TypedReference";
 		String IDisposable = "System.IDisposable";
 		String Void = "System.Void";
 

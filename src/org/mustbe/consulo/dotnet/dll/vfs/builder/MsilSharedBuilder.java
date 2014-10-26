@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
@@ -231,6 +232,9 @@ public class MsilSharedBuilder implements SignatureConstants
 			case ELEMENT_TYPE_BYREF:
 				typeToString(builder, ((InnerTypeOwner) signature).getInnerType(), typeDef);
 				builder.append("&");
+				break;
+			case ELEMENT_TYPE_TYPEDBYREF:
+				builder.append("valuetype ").append(DotNetTypes.System.TypedReference);
 				break;
 			case ELEMENT_TYPE_PTR:
 				PointerTypeSignature pointerTypeSignature = (PointerTypeSignature) signature;
