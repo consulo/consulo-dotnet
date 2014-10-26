@@ -130,7 +130,7 @@ public class DotNetInheritUtil
 						return false;
 					}
 
-					if(typeDeclaration.isEquivalentTo(other))
+					if(psiElement.isEquivalentTo(other))
 					{
 						return true;
 					}
