@@ -130,6 +130,11 @@ public class DotNetInheritUtil
 						return false;
 					}
 
+					if(typeDeclaration.isEquivalentTo(other))
+					{
+						return true;
+					}
+
 					if(deep)
 					{
 						if(isInheritor((DotNetTypeDeclaration) psiElement, other, true))
