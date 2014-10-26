@@ -252,7 +252,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 						fqn[0] = candidate.getVmQName();
 						if(parameters.isCheckInheritance() || parameters.isCheckDeep())
 						{
-							if(!candidate.isInheritor(currentBase.get(), false))
+							if(!candidate.isInheritor(currentBase.get(), true))
 							{
 								result.set(true);
 								return;
