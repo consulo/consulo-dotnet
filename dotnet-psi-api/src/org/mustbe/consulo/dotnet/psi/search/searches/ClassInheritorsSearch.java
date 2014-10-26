@@ -344,7 +344,7 @@ public class ClassInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecl
 			@Override
 			public Boolean compute()
 			{
-				return !baseClass.hasModifier(DotNetModifier.SEALED);
+				return baseClass.hasModifier(DotNetModifier.SEALED);
 			}
 		});
 	}
