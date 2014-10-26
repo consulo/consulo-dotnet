@@ -24,10 +24,10 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
+import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
@@ -44,7 +44,6 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 
 /**
@@ -135,12 +134,6 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		DotNetFieldDeclaration value = findFieldByName("__value", false);
 		return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(DotNetTypes.System.Int32,
 				DotNetPsiSearcher.TypeResoleKind.UNKNOWN);
-	}
-
-	@Override
-	public void processConstructors(@NotNull Processor<DotNetConstructorDeclaration> processor)
-	{
-		throw new IllegalArgumentException();
 	}
 
 	@Nullable

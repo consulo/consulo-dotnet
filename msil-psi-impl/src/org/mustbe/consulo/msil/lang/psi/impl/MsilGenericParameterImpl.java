@@ -19,7 +19,6 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
@@ -29,7 +28,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.Processor;
 
 /**
  * @author VISTALL
@@ -49,12 +47,6 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 
 	@Override
 	public void accept(MsilVisitor visitor)
-	{
-
-	}
-
-	@Override
-	public void processConstructors(@NotNull Processor<DotNetConstructorDeclaration> processor)
 	{
 
 	}

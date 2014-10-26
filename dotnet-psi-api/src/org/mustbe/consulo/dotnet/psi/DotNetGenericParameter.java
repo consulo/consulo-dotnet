@@ -24,7 +24,6 @@ import com.intellij.psi.PsiNameIdentifierOwner;
  * @since 30.11.13.
  */
 @ArrayFactoryFields
-public interface DotNetGenericParameter extends DotNetNamedElement, DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetConstructorListOwner
+public interface DotNetGenericParameter extends DotNetNamedElement, DotNetModifierListOwner, PsiNameIdentifierOwner
 {
-
 }
