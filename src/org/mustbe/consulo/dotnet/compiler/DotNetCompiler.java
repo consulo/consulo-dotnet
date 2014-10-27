@@ -67,7 +67,7 @@ public class DotNetCompiler implements TranslatingCompiler
 		for(Module module : compileScope.getAffectedModules())
 		{
 			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-			if(extension != null && extension.getSdk() == null)
+			if(extension != null && extension.getSdk() == null && extension.isSupportCompilation())
 			{
 				throw new IllegalArgumentException("SDK for module " + module.getName() + " cant be empty");
 			}
@@ -89,6 +89,12 @@ public class DotNetCompiler implements TranslatingCompiler
 		}
 		Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
 		if(moduleForFile == null)
+		{
+			return false;
+		}
+
+		DotNetModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(moduleForFile, DotNetModuleExtension.class);
+		if(dotNetModuleExtension != null && !dotNetModuleExtension.isSupportCompilation())
 		{
 			return false;
 		}

@@ -109,6 +109,12 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	}
 
 	@Override
+	public boolean isSupportCompilation()
+	{
+		return true;
+	}
+
+	@Override
 	public void commit(@NotNull S mutableModuleExtension)
 	{
 		super.commit(mutableModuleExtension);

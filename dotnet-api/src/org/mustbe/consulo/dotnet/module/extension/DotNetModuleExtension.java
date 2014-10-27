@@ -53,6 +53,8 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	String DEFAULT_OUTPUT_DIR = MODULE_OUTPUT_DIR;
 
+	boolean isSupportCompilation();
+
 	@NotNull
 	ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 

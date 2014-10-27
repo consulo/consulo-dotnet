@@ -95,6 +95,11 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			val dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 			assert dotNetModuleExtension != null;
 
+			if(!dotNetModuleExtension.isSupportCompilation())
+			{
+				continue;
+			}
+
 			val r = new ReadAction<Set<File>>()
 			{
 				@Override
