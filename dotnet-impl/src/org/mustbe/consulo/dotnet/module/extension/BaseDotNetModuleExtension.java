@@ -73,6 +73,8 @@ import lombok.val;
 public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtension<S>> extends ModuleExtensionImpl<S> implements
 		DotNetModuleExtension<S>
 {
+	public static final File[] EMPTY_FILE_ARRAY = new File[0];
+
 	private Map<String, Map<OrderRootType, String[]>> myUrlsCache = new HashMap<String, Map<OrderRootType, String[]>>();
 	private Sdk myLastSdk;
 
@@ -191,27 +193,9 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	@Override
 	public Map<String, String> getAvailableSystemLibraries()
 	{
-		Sdk sdk = getSdk();
-		if(sdk == null)
-		{
-			return Collections.emptyMap();
-		}
-
-		String homePath = sdk.getHomePath();
-		if(homePath == null)
-		{
-			return Collections.emptyMap();
-		}
-
-		File file = new File(homePath);
-		File[] files = file.listFiles();
-		if(files == null)
-		{
-			return Collections.emptyMap();
-		}
-
 		Map<String, String> map = new TreeMap<String, String>();
-		for(File childFile : files)
+		File[] directoriesForLibraries = getFilesForLibraries();
+		for(File childFile : directoriesForLibraries)
 		{
 			try
 			{
@@ -290,7 +274,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	{
 		if(orderRootType == BinariesOrderRootType.getInstance())
 		{
-			File libraryByAssemblyName = getLibraryByAssemblyName(sdk, name, null);
+			File libraryByAssemblyName = getLibraryByAssemblyName(name, null);
 			if(libraryByAssemblyName == null)
 			{
 				return ArrayUtil.EMPTY_STRING_ARRAY;
@@ -311,7 +295,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 			try
 			{
 				final Ref<Couple<String>> ref = Ref.create();
-				File libraryFile = getLibraryByAssemblyName(sdk, name, ref);
+				File libraryFile = getLibraryByAssemblyName(name, ref);
 				if(libraryFile == null)
 				{
 					return ArrayUtil.EMPTY_STRING_ARRAY;
@@ -353,38 +337,32 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		return ArrayUtil.EMPTY_STRING_ARRAY;
 	}
 
-	private static File getLibraryByAssemblyName(Sdk sdk, String name, Ref<Couple<String>> cache)
+	@NotNull
+	public File[] getFilesForLibraries()
 	{
-		File sdkHome = new File(sdk.getHomePath());
-		try
+		Sdk sdk = getSdk();
+		if(sdk == null)
 		{
-			File file = new File(sdkHome, name + ".dll");
-			// fast hack
-			Couple<String> info = getInfo(file);
-			if(Comparing.equal(info.getFirst(), name))
-			{
-				if(cache != null)
-				{
-					cache.set(info);
-				}
-				return file;
-			}
-		}
-		catch(Exception ignored)
-		{
+			return EMPTY_FILE_ARRAY;
 		}
 
-		File[] files = sdkHome.listFiles();
-		if(files == null)
+		String homePath = sdk.getHomePath();
+		if(homePath == null)
 		{
-			return null;
+			return EMPTY_FILE_ARRAY;
 		}
+		File[] files = new File(homePath).listFiles();
+		return files == null ? EMPTY_FILE_ARRAY : files;
+	}
 
-		for(File childFile : files)
+	@Nullable
+	private File getLibraryByAssemblyName(String name, Ref<Couple<String>> cache)
+	{
+		File[] filesForLibraries = getFilesForLibraries();
+		for(File childFile : filesForLibraries)
 		{
 			try
 			{
-				// fast hack
 				Couple<String> info = getInfo(childFile);
 				if(Comparing.equal(info.getFirst(), name))
 				{
@@ -397,7 +375,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 			}
 			catch(Exception ignored)
 			{
-
 			}
 		}
 		return null;
