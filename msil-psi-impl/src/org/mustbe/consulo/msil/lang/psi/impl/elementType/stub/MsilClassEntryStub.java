@@ -66,6 +66,6 @@ public class MsilClassEntryStub extends StubBase<MsilClassEntry>
 
 	public boolean isNested()
 	{
-		return getParentStub() instanceof DotNetTypeDeclaration;
+		return getParentStub() instanceof MsilClassEntryStub;
 	}
 }
