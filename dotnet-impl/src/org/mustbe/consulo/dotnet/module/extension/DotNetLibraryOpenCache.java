@@ -36,10 +36,8 @@ import edu.arizona.cs.mbel.parse.MSILParseException;
 
 /**
  * @author VISTALL
- * @see com.intellij.openapi.util.io.ZipFileCache
  * @since 03.11.14
- * <p/>
- * This is variable of but for ModuleParser
+ * This is copy of {@link com.intellij.openapi.util.io.ZipFileCache} but instead {@link java.util.zip.ZipFile} opening we create {@link ModuleParser}
  */
 public class DotNetLibraryOpenCache
 {
