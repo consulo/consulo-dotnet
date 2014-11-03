@@ -17,7 +17,6 @@
 package org.mustbe.consulo.dotnet.module.extension;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,7 +62,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import edu.arizona.cs.mbel.mbel.ModuleParser;
 import lombok.val;
 
 /**
@@ -203,30 +201,35 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		File[] directoriesForLibraries = getFilesForLibraries();
 		for(File childFile : directoriesForLibraries)
 		{
-			try
+			if(!FileUtilRt.getExtension(childFile.getName()).equals("dll"))
 			{
-				if(!FileUtilRt.getExtension(childFile.getName()).equals("dll"))
-				{
-					continue;
-				}
-				Couple<String> info = getInfo(childFile);
-				map.put(info.getFirst(), info.getSecond());
+				continue;
 			}
-			catch(Exception e)
+			Couple<String> info = parseLibrary(childFile);
+			if(info == null)
 			{
+				continue;
 			}
+			map.put(info.getFirst(), info.getSecond());
 		}
 		return map;
 	}
 
-	@NotNull
-	private static Couple<String> getInfo(File f) throws Exception
+	@Nullable
+	private static Couple<String> parseLibrary(File f)
 	{
-		ModuleParser moduleParser = new ModuleParser(new FileInputStream(f));
-		return Couple.of(moduleParser.getAssemblyInfo().getName(), moduleParser.getAssemblyInfo().getMajorVersion() + "." + moduleParser
-				.getAssemblyInfo().getMinorVersion() +
-				"." +
-				moduleParser.getAssemblyInfo().getBuildNumber() + "." + moduleParser.getAssemblyInfo().getRevisionNumber());
+		try
+		{
+			val moduleParser = DotNetLibraryOpenCache.acquire(f.getPath());
+			return Couple.of(moduleParser.getAssemblyInfo().getName(), moduleParser.getAssemblyInfo().getMajorVersion() + "." + moduleParser
+					.getAssemblyInfo().getMinorVersion() +
+					"." +
+					moduleParser.getAssemblyInfo().getBuildNumber() + "." + moduleParser.getAssemblyInfo().getRevisionNumber());
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
 	}
 
 	@NotNull
@@ -367,20 +370,18 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		File[] filesForLibraries = getFilesForLibraries();
 		for(File childFile : filesForLibraries)
 		{
-			try
+			Couple<String> info = parseLibrary(childFile);
+			if(info == null)
 			{
-				Couple<String> info = getInfo(childFile);
-				if(Comparing.equal(info.getFirst(), name))
-				{
-					if(cache != null)
-					{
-						cache.set(info);
-					}
-					return childFile;
-				}
+				continue;
 			}
-			catch(Exception ignored)
+			if(Comparing.equal(info.getFirst(), name))
 			{
+				if(cache != null)
+				{
+					cache.set(info);
+				}
+				return childFile;
 			}
 		}
 		return null;

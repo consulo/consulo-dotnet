@@ -17,13 +17,13 @@
 package org.mustbe.consulo.dotnet.dll.vfs;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 import org.consulo.lombok.annotations.Logger;
 import org.consulo.vfs.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
+import org.mustbe.consulo.dotnet.module.extension.DotNetLibraryOpenCache;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
@@ -65,8 +65,7 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 				try
 				{
 					File mirrorFile = getMirrorFile(originalFile);
-					ModuleParser parser = new ModuleParser(new FileInputStream(mirrorFile));
-
+					ModuleParser parser = DotNetLibraryOpenCache.acquireWithNext(mirrorFile.getPath());
 					return new DotNetArchiveFile(parser, mirrorFile.lastModified());
 				}
 				catch(Exception e)
