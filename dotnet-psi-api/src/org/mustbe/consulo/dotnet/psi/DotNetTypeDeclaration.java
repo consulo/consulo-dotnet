@@ -53,7 +53,4 @@ public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetMod
 
 	@Nullable
 	String getVmName();
-
-	@Nullable
-	DotNetFieldDeclaration findFieldByName(@NotNull String name, boolean dep);
 }

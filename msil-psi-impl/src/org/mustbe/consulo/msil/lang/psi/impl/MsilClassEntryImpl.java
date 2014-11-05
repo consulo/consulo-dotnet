@@ -100,13 +100,6 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return null;
 	}
 
-	@Nullable
-	@Override
-	public DotNetFieldDeclaration findFieldByName(@NotNull String name, boolean dep)
-	{
-		return DotNetTypeDeclarationUtil.findFieldByName(this, name, dep);
-	}
-
 	@NotNull
 	@Override
 	public DotNetTypeRef[] getExtendTypeRefs()
@@ -131,7 +124,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public DotNetTypeRef getTypeRefForEnumConstants()
 	{
-		DotNetFieldDeclaration value = findFieldByName("__value", false);
+		DotNetFieldDeclaration value = findFieldByName(this, "__value");
 		return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(DotNetTypes.System.Int32,
 				DotNetPsiSearcher.TypeResoleKind.UNKNOWN);
 	}
@@ -288,5 +281,18 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	public MsilCustomAttribute[] getAttributes()
 	{
 		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
+	}
+
+	@Nullable
+	private static DotNetFieldDeclaration findFieldByName(@NotNull DotNetTypeDeclaration tp, @NotNull String name)
+	{
+		for(DotNetNamedElement element : tp.getMembers())
+		{
+			if(element instanceof DotNetFieldDeclaration && Comparing.equal(element.getName(), name))
+			{
+				return (DotNetFieldDeclaration) element;
+			}
+		}
+		return null;
 	}
 }

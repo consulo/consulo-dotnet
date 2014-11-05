@@ -33,29 +33,6 @@ public class DotNetTypeDeclarationUtil
 	public static final char NESTED_SEPARATOR_IN_NAME = '/';
 	public static final char NORMAL_SEPARATOR_IN_NAME = '.';
 
-	@Nullable
-	public static DotNetFieldDeclaration findFieldByName(@NotNull DotNetTypeDeclaration tp, @NotNull String name, boolean dep)
-	{
-		for(DotNetNamedElement element : tp.getMembers())
-		{
-			if(element instanceof DotNetFieldDeclaration && Comparing.equal(element.getName(), name))
-			{
-				return (DotNetFieldDeclaration) element;
-			}
-		}
-		if(dep)
-		{
-			for(DotNetTypeRef typeRef : tp.getExtendTypeRefs())
-			{
-				PsiElement resolve = typeRef.resolve(tp).getElement();
-				if(resolve instanceof DotNetTypeDeclaration && !resolve.isEquivalentTo(tp))
-				{
-					return findFieldByName((DotNetTypeDeclaration)resolve, name, true);
-				}
-			}
-		}
-		return null;
-	}
 
 	@Nullable
 	public static String getVmQName(@NotNull DotNetTypeDeclaration typeDeclaration)
