@@ -27,7 +27,9 @@ import org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryImpl;
 import org.mustbe.consulo.dotnet.module.roots.DotNetRootPolicy;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LibraryOrderEntry;
+import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.ModuleOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
@@ -87,6 +89,21 @@ public class DotNetCompilerUtil
 				processed.add(library);
 
 				collectFromRoot(libraryOrderEntry);
+				return null;
+			}
+
+			@Override
+			public Object visitModuleExtensionSdkOrderEntry(ModuleExtensionWithSdkOrderEntry orderEntry, Object value)
+			{
+				Sdk sdk = orderEntry.getSdk();
+				if(sdk == null || processed.contains(sdk))
+				{
+					return null;
+				}
+
+				processed.add(sdk);
+
+				collectFromRoot(orderEntry);
 				return null;
 			}
 
