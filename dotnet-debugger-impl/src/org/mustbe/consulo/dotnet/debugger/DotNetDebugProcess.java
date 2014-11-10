@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import org.mustbe.consulo.dotnet.run.DotNetRunProfileState;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
@@ -51,15 +50,15 @@ public class DotNetDebugProcess extends XDebugProcess
 {
 	private ExecutionResult myResult;
 	private final DebugConnectionInfo myDebugConnectionInfo;
-	private DotNetDebugThread myDebugThread;
+	private final DotNetDebugThread myDebugThread;
 
 	private EventSet myPausedEventSet;
 
-	public DotNetDebugProcess(XDebugSession session, DotNetRunProfileState state, RunProfile runProfile)
+	public DotNetDebugProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
 	{
 		super(session);
 		session.setPauseActionSupported(true);
-		myDebugConnectionInfo = state.getDebugConnectionInfo();
+		myDebugConnectionInfo = debugConnectionInfo;
 		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo, runProfile);
 	}
 

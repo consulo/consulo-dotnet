@@ -62,7 +62,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
 			{
 				DotNetRunProfileState dotNetRunProfileState = (DotNetRunProfileState) state;
-				DotNetDebugProcess process = new DotNetDebugProcess(session, dotNetRunProfileState, env.getRunProfile());
+				DotNetDebugProcess process = new DotNetDebugProcess(session, dotNetRunProfileState.getDebugConnectionInfo(), env.getRunProfile());
 				if(!dotNetRunProfileState.getDebugConnectionInfo().isServer())
 				{
 					process.start();
