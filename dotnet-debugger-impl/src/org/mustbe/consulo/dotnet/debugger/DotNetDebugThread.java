@@ -174,7 +174,10 @@ public class DotNetDebugThread extends Thread
 		try
 		{
 			virtualMachine.eventQueue().remove();  //Wait VMStart
-			virtualMachine.resume();
+			if(!myDebugConnectionInfo.isServer())
+			{
+				virtualMachine.resume();
+			}
 		}
 		catch(InterruptedException e)
 		{
