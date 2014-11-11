@@ -49,13 +49,12 @@ public class DotNetExecutionStack extends XExecutionStack
 
 			for(StackFrameMirror frame : frames)
 			{
+				DotNetStackFrame stackFrame = new DotNetStackFrame(debuggerContext, frame);
+				stackFrames.add(stackFrame);
 				if(myTopFrame == null)
 				{
-					myTopFrame = new DotNetStackFrame(debuggerContext, frame);
-					continue;
+					myTopFrame = stackFrame;
 				}
-
-				stackFrames.add(new DotNetStackFrame(debuggerContext, frame));
 			}
 		}
 		catch(IncompatibleThreadStateException e)
