@@ -77,7 +77,7 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 	@Override
 	public boolean canHaveChildren()
 	{
-		return myObjectValueMirror == null;
+		return myObjectValueMirror == null || super.canHaveChildren();
 	}
 
 	@Override
