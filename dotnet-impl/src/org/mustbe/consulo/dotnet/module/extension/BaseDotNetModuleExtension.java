@@ -374,7 +374,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 			@Override
 			public boolean value(File file)
 			{
-				return FileUtilRt.getNameWithoutExtension(file.getName()).equalsIgnoreCase(name);
+				return file.getName().equalsIgnoreCase(name + ".dll");
 			}
 		});
 
