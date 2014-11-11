@@ -46,6 +46,7 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Ref;
@@ -365,26 +366,49 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	}
 
 	@Nullable
-	private File getLibraryByAssemblyName(String name, Ref<Couple<String>> cache)
+	private File getLibraryByAssemblyName(@NotNull final String name, @Nullable Ref<Couple<String>> cache)
 	{
 		File[] filesForLibraries = getFilesForLibraries();
+		File singleFile = ContainerUtil.find(filesForLibraries, new Condition<File>()
+		{
+			@Override
+			public boolean value(File file)
+			{
+				return FileUtilRt.getNameWithoutExtension(file.getName()).equalsIgnoreCase(name);
+			}
+		});
+
+		if(singleFile != null && isValidLibrary(singleFile, name, cache))
+		{
+			return singleFile;
+		}
+
 		for(File childFile : filesForLibraries)
 		{
-			Couple<String> info = parseLibrary(childFile);
-			if(info == null)
+			if(isValidLibrary(childFile, name, cache))
 			{
-				continue;
-			}
-			if(Comparing.equal(info.getFirst(), name))
-			{
-				if(cache != null)
-				{
-					cache.set(info);
-				}
 				return childFile;
 			}
 		}
 		return null;
+	}
+
+	private boolean isValidLibrary(@NotNull File file, @NotNull final String name, @Nullable Ref<Couple<String>> cache)
+	{
+		Couple<String> info = parseLibrary(file);
+		if(info == null)
+		{
+			return false;
+		}
+		if(Comparing.equal(info.getFirst(), name))
+		{
+			if(cache != null)
+			{
+				cache.set(info);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	private static boolean isValidExternalFile(String version, File toCheck)
