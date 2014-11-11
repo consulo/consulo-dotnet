@@ -369,12 +369,13 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	private File getLibraryByAssemblyName(@NotNull final String name, @Nullable Ref<Couple<String>> cache)
 	{
 		File[] filesForLibraries = getFilesForLibraries();
+		String nameWithExtension = name + ".dll";
 		File singleFile = ContainerUtil.find(filesForLibraries, new Condition<File>()
 		{
 			@Override
 			public boolean value(File file)
 			{
-				return file.getName().equalsIgnoreCase(name + ".dll");
+				return file.getName().equalsIgnoreCase(nameWithExtension);
 			}
 		});
 
