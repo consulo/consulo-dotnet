@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
 import mono.debugger.FieldMirror;
 import mono.debugger.FieldOrPropertyMirror;
+import mono.debugger.InvalidFieldIdException;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.PropertyMirror;
 import mono.debugger.ThreadMirror;
@@ -76,12 +77,25 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	@Override
 	public Value<?> getValueOfVariable()
 	{
-		return myFieldOrPropertyMirror.value(myThreadMirror, myObjectValueMirror);
+		try
+		{
+			return myFieldOrPropertyMirror.value(myThreadMirror, myObjectValueMirror);
+		}
+		catch(InvalidFieldIdException e)
+		{
+			return null;
+		}
 	}
 
 	@Override
 	public void setValueForVariable(@NotNull Value<?> value)
 	{
-		myFieldOrPropertyMirror.setValue(myThreadMirror, myObjectValueMirror, value);
+		try
+		{
+			myFieldOrPropertyMirror.setValue(myThreadMirror, myObjectValueMirror, value);
+		}
+		catch(InvalidFieldIdException ignored)
+		{
+		}
 	}
 }
