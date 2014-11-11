@@ -234,13 +234,19 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		node.addChildren(childrenList, true);
 	}
 
+	public boolean canHaveChildren()
+	{
+		final Value<?> valueOfVariable = getValueOfVariable();
+		return valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror || valueOfVariable instanceof
+				StringValueMirror;
+	}
+
 	@Override
 	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
 		final Value<?> valueOfVariable = getValueOfVariable();
 
 		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myThreadMirror, getTypeOfVariable(), valueOfVariable),
-				valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror || valueOfVariable instanceof
-						StringValueMirror);
+				canHaveChildren());
 	}
 }

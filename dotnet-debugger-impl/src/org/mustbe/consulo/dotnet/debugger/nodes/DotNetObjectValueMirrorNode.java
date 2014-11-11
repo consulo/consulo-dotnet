@@ -75,6 +75,12 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 	}
 
 	@Override
+	public boolean canHaveChildren()
+	{
+		return myObjectValueMirror == null;
+	}
+
+	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
 		XValueChildrenList childrenList = new XValueChildrenList();
