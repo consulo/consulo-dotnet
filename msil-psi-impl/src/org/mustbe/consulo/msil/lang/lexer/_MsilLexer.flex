@@ -165,6 +165,8 @@ QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 
 	"[out]"         { return MsilTokens.BRACKET_OUT_KEYWORD; }
 
+	"[opt]"         { return MsilTokens.BRACKET_OPT_KEYWORD; }
+
 	{DIGIT}         { return MsilTokens.NUMBER; }
 
 	{IDENTIFIER}    { return MsilTokens.IDENTIFIER; }

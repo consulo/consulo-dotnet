@@ -113,6 +113,11 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 				ParameterInfo parameterInfo = parameterSignature.getParameterInfo();
 				if(parameterInfo != null)
 				{
+					if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.HasDefault))
+					{
+						builder.append("[opt] ");
+					}
+
 					if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.Out))
 					{
 						builder.append("[out] ");
