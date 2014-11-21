@@ -40,6 +40,16 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		myIndex = index;
 	}
 
+	public MsilMethodEntry getParent()
+	{
+		return myParent;
+	}
+
+	public int getIndex()
+	{
+		return myIndex;
+	}
+
 	@NotNull
 	@Override
 	public String getPresentableText()

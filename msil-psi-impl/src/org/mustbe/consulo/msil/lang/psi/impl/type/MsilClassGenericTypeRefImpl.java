@@ -47,6 +47,24 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		return myName;
 	}
 
+	public MsilClassEntry getParent()
+	{
+		return myParent;
+	}
+
+	public int getIndex()
+	{
+		DotNetGenericParameter[] genericParameters = myParent.getGenericParameters();
+		for(int i = 0; i < genericParameters.length; i++)
+		{
+			DotNetGenericParameter genericParameter = genericParameters[i];
+			if(Comparing.equal(myName, genericParameter.getName()))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
