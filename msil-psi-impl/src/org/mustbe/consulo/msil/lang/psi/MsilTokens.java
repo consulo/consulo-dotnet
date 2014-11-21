@@ -144,6 +144,10 @@ public interface MsilTokens extends TokenType
 
 	MsilModifierElementType BACKSLASH = new MsilModifierElementType("BACKSLASH", MsilLanguage.INSTANCE);
 
+	IElementType PLUS = new IElementType("PLUS =", MsilLanguage.INSTANCE);
+
+	IElementType MINUS = new IElementType("MINUS", MsilLanguage.INSTANCE);
+
 	IElementType PERC = new IElementType("PERC", MsilLanguage.INSTANCE);
 
 	IElementType AND = new IElementType("AND", MsilLanguage.INSTANCE);

@@ -23,6 +23,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -54,6 +55,20 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
+		MsilGenericParameterStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.hasModifier(modifier);
+		}
+
+		if(modifier == DotNetModifier.CONTRAVARIANT)
+		{
+			return findChildByType(MsilTokens.MINUS) != null;
+		}
+		else if(modifier == DotNetModifier.COVARIANT)
+		{
+			return findChildByType(MsilTokens.PLUS) != null;
+		}
 		return false;
 	}
 

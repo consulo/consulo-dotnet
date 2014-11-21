@@ -18,9 +18,11 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.BitUtil;
 import com.intellij.util.io.StringRef;
 
 /**
@@ -29,14 +31,46 @@ import com.intellij.util.io.StringRef;
  */
 public class MsilGenericParameterStub extends NamedStubBase<DotNetGenericParameter>
 {
-	public MsilGenericParameterStub(
-			StubElement parent, IStubElementType elementType, @Nullable StringRef name)
+	private static final int COVARIANT = 1 << 0;
+	private static final int CONTRAVARIANT = 1 << 1;
+
+	private int myModifierMask;
+
+	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, int modifierMask)
 	{
 		super(parent, elementType, name);
+		myModifierMask = modifierMask;
 	}
 
-	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable String name)
+	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable String name, int modifierMask)
 	{
 		super(parent, elementType, name);
+		myModifierMask = modifierMask;
+	}
+
+	public static int toModifiers(DotNetGenericParameter parameter)
+	{
+		int i = 0;
+		i = BitUtil.set(i, COVARIANT, parameter.hasModifier(DotNetModifier.COVARIANT));
+		i = BitUtil.set(i, CONTRAVARIANT, parameter.hasModifier(DotNetModifier.CONTRAVARIANT));
+		return i;
+	}
+
+	public int getModifierMask()
+	{
+		return myModifierMask;
+	}
+
+	public boolean hasModifier(DotNetModifier modifier)
+	{
+		if(modifier == DotNetModifier.COVARIANT)
+		{
+			return BitUtil.isSet(myModifierMask, COVARIANT);
+		}
+		else if(modifier == DotNetModifier.CONTRAVARIANT)
+		{
+			return BitUtil.isSet(myModifierMask, CONTRAVARIANT);
+		}
+		return false;
 	}
 }

@@ -59,6 +59,10 @@ QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 
 	","            { return MsilTokens.COMMA; }
 
+	"+"            { return MsilTokens.PLUS; }
+
+	"-"            { return MsilTokens.MINUS; }
+
 	".class"       { return MsilTokens._CLASS_KEYWORD; }
 
 	".custom"      { return MsilTokens._CUSTOM_KEYWORD; }

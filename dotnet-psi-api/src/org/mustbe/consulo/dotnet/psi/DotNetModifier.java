@@ -85,5 +85,23 @@ public interface DotNetModifier
 		}
 	};
 
+	DotNetModifier COVARIANT = new DotNetModifier()
+	{
+		@Override
+		public String getPresentableText()
+		{
+			return "covariant";
+		}
+	};
+
+	DotNetModifier CONTRAVARIANT = new DotNetModifier()
+	{
+		@Override
+		public String getPresentableText()
+		{
+			return "contravariant";
+		}
+	};
+
 	String getPresentableText();
 }

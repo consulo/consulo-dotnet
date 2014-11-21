@@ -57,13 +57,15 @@ public class MsilGenericParameterStubElementType extends AbstractMsilStubElement
 	public MsilGenericParameterStub createStub(@NotNull DotNetGenericParameter parameter, StubElement stubElement)
 	{
 		String name = parameter.getName();
-		return new MsilGenericParameterStub(stubElement, this, name);
+		int mod = MsilGenericParameterStub.toModifiers(parameter);
+		return new MsilGenericParameterStub(stubElement, this, name, mod);
 	}
 
 	@Override
 	public void serialize(@NotNull MsilGenericParameterStub msilGenericParameterStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilGenericParameterStub.getName());
+		stubOutputStream.writeVarInt(msilGenericParameterStub.getModifierMask());
 	}
 
 	@NotNull
@@ -72,6 +74,7 @@ public class MsilGenericParameterStubElementType extends AbstractMsilStubElement
 			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
-		return new MsilGenericParameterStub(stubElement, this, ref);
+		int mod = inputStream.readVarInt();
+		return new MsilGenericParameterStub(stubElement, this, ref, mod);
 	}
 }

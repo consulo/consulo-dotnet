@@ -161,6 +161,17 @@ public class MsilSharedBuilder implements SignatureConstants
 			@Override
 			public Void fun(StringBuilder t, GenericParamDef v)
 			{
+				int flags = v.getFlags();
+				int varianceMask = flags & GenericParamAttributes.VarianceMask;
+				switch(varianceMask)
+				{
+					case GenericParamAttributes.Covariant:
+						t.append("+");
+						break;
+					case GenericParamAttributes.Contravariant:
+						t.append("-");
+						break;
+				}
 				t.append(v.getName());
 				return null;
 			}
