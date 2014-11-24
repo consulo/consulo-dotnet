@@ -22,8 +22,8 @@ import org.mustbe.consulo.dotnet.psi.DotNetFieldDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Function;
@@ -35,10 +35,10 @@ import com.intellij.util.Function;
 public class DotNetElementPresentationUtil
 {
 	@NotNull
-	public static String formatTypeWithGenericParameters(@NotNull DotNetTypeDeclaration typeDeclaration)
+	public static <T extends DotNetGenericParameterListOwner & DotNetNamedElement> String formatTypeWithGenericParameters(@NotNull T el)
 	{
-		DotNetGenericParameter[] genericParameters = typeDeclaration.getGenericParameters();
-		String name = typeDeclaration.getName();
+		DotNetGenericParameter[] genericParameters = el.getGenericParameters();
+		String name = el.getName();
 		if(genericParameters.length == 0)
 		{
 			return name == null ? "<null>" : name;
@@ -124,7 +124,7 @@ public class DotNetElementPresentationUtil
 				{
 					if(!BitUtil.isSet(flags, METHOD_PARAMETER_NAME))
 					{
-						return  parameter.toTypeRef(true).getPresentableText();
+						return parameter.toTypeRef(true).getPresentableText();
 					}
 
 					if(BitUtil.isSet(flags, METHOD_SCALA_FORMAT))
@@ -133,7 +133,7 @@ public class DotNetElementPresentationUtil
 					}
 					else
 					{
-						return parameter.toTypeRef(true).getPresentableText() + " " + parameter.getName() ;
+						return parameter.toTypeRef(true).getPresentableText() + " " + parameter.getName();
 					}
 				}
 			}, ", "));
