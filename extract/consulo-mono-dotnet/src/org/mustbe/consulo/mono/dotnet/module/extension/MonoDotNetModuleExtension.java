@@ -61,6 +61,14 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 	public GeneralCommandLine createDefaultCommandLine(@NotNull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException
 	{
 		String fileName = DotNetMacroUtil.expandOutputFile(this);
+		return createDefaultCommandLineImpl(sdk, debugConnectionInfo, fileName);
+	}
+
+	@NotNull
+	public static GeneralCommandLine createDefaultCommandLineImpl(@NotNull Sdk sdk,
+			@Nullable DebugConnectionInfo debugConnectionInfo,
+			@NotNull String fileName)
+	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 
 		String runFile = null;
@@ -86,7 +94,8 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 			commandLine.addParameter(generateParameterForRun(debugConnectionInfo));
 		}
 		commandLine.addParameter(fileName);
-		return commandLine;	}
+		return commandLine;
+	}
 
 	@NotNull
 	@Override
