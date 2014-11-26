@@ -31,6 +31,7 @@ import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.ConfigurationFactory;
+import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
@@ -41,6 +42,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
@@ -124,7 +126,11 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 			throw new ExecutionException("Module don't have .NET extension");
 		}
 
-		val exeFile = DotNetMacroUtil.expandOutputFile(extension);
+		Sdk sdk = extension.getSdk();
+		if(sdk == null)
+		{
+			throw new ExecutionException("SDK for module is not defined");
+		}
 
 		DebugConnectionInfo debugConnectionInfo = null;
 		if(executor instanceof DefaultDebugExecutor)
@@ -133,7 +139,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		}
 
 		DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();
-		val runCommandLine = extension.createDefaultCommandLine(exeFile, debugConnectionInfo);
+		GeneralCommandLine runCommandLine = extension.createDefaultCommandLine(sdk, debugConnectionInfo);
 		String programParameters = runProfile.getProgramParameters();
 		if(!StringUtil.isEmpty(programParameters))
 		{
@@ -142,7 +148,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		runCommandLine.setPassParentEnvironment(runProfile.isPassParentEnvs());
 		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
 		runCommandLine.setWorkDirectory(DotNetMacroUtil.expand(module, runProfile.getWorkingDirectory(), false));
-		return new DotNetRunProfileState(exeFile, executionEnvironment, runCommandLine, debugConnectionInfo);
+		return new DotNetRunProfileState(executionEnvironment, runCommandLine, debugConnectionInfo);
 	}
 
 	@Override

@@ -91,7 +91,7 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	String getMainType();
 
 	@NotNull
-	GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d) throws ExecutionException;
+	GeneralCommandLine createDefaultCommandLine(@NotNull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
 
 	@NotNull
 	GlobalSearchScope getScopeForResolving(boolean test);

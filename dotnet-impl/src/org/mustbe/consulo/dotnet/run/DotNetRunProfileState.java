@@ -40,15 +40,14 @@ import lombok.val;
  */
 public class DotNetRunProfileState implements RunProfileState
 {
-	private final String myExeFile;
 	private final ExecutionEnvironment myExecutionEnvironment;
 	private final GeneralCommandLine myRunCommandLine;
 	private final DebugConnectionInfo myDebugConnectionInfo;
 
-	public DotNetRunProfileState(
-			String exeFile, ExecutionEnvironment executionEnvironment, GeneralCommandLine runCommandLine, DebugConnectionInfo debugConnectionInfo)
+	public DotNetRunProfileState(@NotNull ExecutionEnvironment executionEnvironment,
+			@NotNull GeneralCommandLine runCommandLine,
+			@Nullable DebugConnectionInfo debugConnectionInfo)
 	{
-		myExeFile = exeFile;
 		myExecutionEnvironment = executionEnvironment;
 		myRunCommandLine = runCommandLine;
 		myDebugConnectionInfo = debugConnectionInfo;
@@ -58,9 +57,9 @@ public class DotNetRunProfileState implements RunProfileState
 	@Override
 	public ExecutionResult execute(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException
 	{
-		if(!new File(getExeFile()).exists())
+		if(!new File(myRunCommandLine.getExePath()).exists())
 		{
-			throw new ExecutionException(getExeFile() + " is not exists");
+			throw new ExecutionException(myRunCommandLine.getExePath() + " is not exists");
 		}
 
 		val builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
@@ -71,21 +70,19 @@ public class DotNetRunProfileState implements RunProfileState
 		return new DefaultExecutionResult(console, osProcessHandler);
 	}
 
+	@Nullable
 	public DebugConnectionInfo getDebugConnectionInfo()
 	{
 		return myDebugConnectionInfo;
 	}
 
-	public String getExeFile()
-	{
-		return myExeFile;
-	}
-
+	@NotNull
 	public ExecutionEnvironment getExecutionEnvironment()
 	{
 		return myExecutionEnvironment;
 	}
 
+	@NotNull
 	public GeneralCommandLine getRunCommandLine()
 	{
 		return myRunCommandLine;

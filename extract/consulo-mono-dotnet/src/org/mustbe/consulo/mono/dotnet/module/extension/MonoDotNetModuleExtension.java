@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
@@ -57,15 +58,35 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 
 	@NotNull
 	@Override
-	public GeneralCommandLine createDefaultCommandLine(@NotNull String fileName, @Nullable DebugConnectionInfo d) throws ExecutionException
+	public GeneralCommandLine createDefaultCommandLine(@NotNull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException
 	{
-		Sdk sdk = getSdk();
-		if(sdk == null)
+		String fileName = DotNetMacroUtil.expandOutputFile(this);
+		GeneralCommandLine commandLine = new GeneralCommandLine();
+
+		String runFile = null;
+		if(SystemInfo.isWindows)
 		{
-			throw new ExecutionException(".NET SDK for module is not defined");
+			runFile = sdk.getHomePath() + "/../../../bin/mono.exe";
 		}
-		return createRunCommandLineImpl(fileName, d, sdk);
-	}
+		else if(SystemInfo.isMac)
+		{
+			runFile = sdk.getHomePath() + "/../../../bin/mono";
+		}
+		else if(SystemInfo.isLinux)
+		{
+			runFile = "/usr/bin/mono";
+		}
+
+		assert runFile != null : SystemInfo.OS_NAME;
+
+		commandLine.setExePath(runFile);
+		if(debugConnectionInfo != null)
+		{
+			commandLine.addParameter("--debug");
+			commandLine.addParameter(generateParameterForRun(debugConnectionInfo));
+		}
+		commandLine.addParameter(fileName);
+		return commandLine;	}
 
 	@NotNull
 	@Override
@@ -101,37 +122,6 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 			return ArrayUtil.toStringArray(list);
 		}
 		return super.getSystemLibraryUrlsImpl(sdk, name, orderRootType);
-	}
-
-	@NotNull
-	public static GeneralCommandLine createRunCommandLineImpl(@NotNull String fileName, @Nullable DebugConnectionInfo d, @NotNull Sdk sdk)
-	{
-		GeneralCommandLine commandLine = new GeneralCommandLine();
-
-		String runFile = null;
-		if(SystemInfo.isWindows)
-		{
-			runFile = sdk.getHomePath() + "/../../../bin/mono.exe";
-		}
-		else if(SystemInfo.isMac)
-		{
-			runFile = sdk.getHomePath() + "/../../../bin/mono";
-		}
-		else if(SystemInfo.isLinux)
-		{
-			runFile = "/usr/bin/mono";
-		}
-
-		assert runFile != null : SystemInfo.OS_NAME;
-
-		commandLine.setExePath(runFile);
-		if(d != null)
-		{
-			commandLine.addParameter("--debug");
-			commandLine.addParameter(generateParameterForRun(d));
-		}
-		commandLine.addParameter(fileName);
-		return commandLine;
 	}
 
 	private static String generateParameterForRun(@NotNull DebugConnectionInfo debugConnectionInfo)
