@@ -101,7 +101,7 @@
 		<consoleFilterProvider implementation="org.mustbe.consulo.dotnet.run.filters.DotNetConsoleFilterProvider"/>
 		<configurationType implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationType"/>
 		<runConfigurationProducer implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationProducer"/>
-		<programRunner implementation="org.mustbe.consulo.dotnet.run.DotNetDebuggerProgramRunner" id="net-debugger"/>
+		<programRunner implementation="org.mustbe.consulo.dotnet.run.DotNetDebuggerProgramRunner" id="dotnet-debugger"/>
 
 		<xdebugger.breakpointType implementation="org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType"/>
 
