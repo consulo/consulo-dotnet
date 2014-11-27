@@ -28,4 +28,11 @@ public class MsilNativeTypeRefImpl extends MsilReferenceTypeRefImpl
 	{
 		super(ref, typeResoleKind);
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof MsilNativeTypeRefImpl && myRef.equals(((MsilNativeTypeRefImpl) obj).myRef) && myTypeResoleKind == (
+				(MsilNativeTypeRefImpl) obj).myTypeResoleKind;
+	}
 }

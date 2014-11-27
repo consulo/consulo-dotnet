@@ -28,38 +28,44 @@ import com.intellij.psi.PsiElement;
  */
 public class DotNetPointerTypeRefImpl extends DotNetTypeRef.Adapter implements DotNetPointerTypeRef
 {
-	private final DotNetTypeRef myInnerType;
+	private final DotNetTypeRef myInnerTypeRef;
 
-	public DotNetPointerTypeRefImpl(DotNetTypeRef innerType)
+	public DotNetPointerTypeRefImpl(DotNetTypeRef innerTypeRef)
 	{
-		myInnerType = innerType;
+		myInnerTypeRef = innerTypeRef;
 	}
 
 	@NotNull
 	@Override
 	public String getPresentableText()
 	{
-		return myInnerType.getPresentableText() + "*";
+		return myInnerTypeRef.getPresentableText() + "*";
 	}
 
 	@NotNull
 	@Override
 	public String getQualifiedText()
 	{
-		return myInnerType.getQualifiedText() + "*";
+		return myInnerTypeRef.getQualifiedText() + "*";
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
-		return myInnerType.resolve(scope);
+		return myInnerTypeRef.resolve(scope);
 	}
 
 	@Override
 	@NotNull
 	public DotNetTypeRef getInnerTypeRef()
 	{
-		return myInnerType;
+		return myInnerTypeRef;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof DotNetPointerTypeRef && myInnerTypeRef.equals(((DotNetPointerTypeRef) obj).getInnerTypeRef());
 	}
 }

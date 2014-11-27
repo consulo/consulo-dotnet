@@ -28,25 +28,25 @@ import com.intellij.psi.PsiElement;
  */
 public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
 {
-	private final DotNetTypeRef myInnerType;
+	private final DotNetTypeRef myInnerTypeRef;
 
-	public MsilArrayTypRefImpl(DotNetTypeRef innerType)
+	public MsilArrayTypRefImpl(DotNetTypeRef innerTypeRef)
 	{
-		myInnerType = innerType;
+		myInnerTypeRef = innerTypeRef;
 	}
 
 	@NotNull
 	@Override
 	public String getPresentableText()
 	{
-		return myInnerType.getPresentableText() + "[]";
+		return myInnerTypeRef.getPresentableText() + "[]";
 	}
 
 	@NotNull
 	@Override
 	public String getQualifiedText()
 	{
-		return myInnerType.getQualifiedText() + "[]";
+		return myInnerTypeRef.getQualifiedText() + "[]";
 	}
 
 	@NotNull
@@ -60,6 +60,12 @@ public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
 	@Override
 	public DotNetTypeRef getInnerTypeRef()
 	{
-		return myInnerType;
+		return myInnerTypeRef;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof MsilArrayTypRefImpl && myInnerTypeRef.equals(((MsilArrayTypRefImpl) obj).getInnerTypeRef());
 	}
 }

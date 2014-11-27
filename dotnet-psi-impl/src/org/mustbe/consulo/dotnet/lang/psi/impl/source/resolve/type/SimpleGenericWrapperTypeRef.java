@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericWrapperTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.psi.PsiElement;
 
@@ -86,12 +87,12 @@ public class SimpleGenericWrapperTypeRef implements DotNetGenericWrapperTypeRef
 	}
 
 	private final DotNetTypeRef myInnerTypeRef;
-	private final DotNetTypeRef[] myArguments;
+	private final DotNetTypeRef[] myArgumentTypeRefs;
 
 	public SimpleGenericWrapperTypeRef(DotNetTypeRef innerTypeRef, DotNetTypeRef[] rArguments)
 	{
 		myInnerTypeRef = innerTypeRef;
-		myArguments = rArguments;
+		myArgumentTypeRefs = rArguments;
 	}
 
 	@NotNull
@@ -148,9 +149,25 @@ public class SimpleGenericWrapperTypeRef implements DotNetGenericWrapperTypeRef
 		return myInnerTypeRef;
 	}
 
+	@Override
 	@NotNull
 	public DotNetTypeRef[] getArgumentTypeRefs()
 	{
-		return myArguments;
+		return myArgumentTypeRefs;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj instanceof SimpleGenericWrapperTypeRef)
+		{
+			SimpleGenericWrapperTypeRef otherObject = (SimpleGenericWrapperTypeRef) obj;
+			if(!myInnerTypeRef.equals(otherObject.getInnerTypeRef()))
+			{
+				return false;
+			}
+			return Comparing.equal(myArgumentTypeRefs, otherObject.getArgumentTypeRefs());
+		}
+		return false;
 	}
 }

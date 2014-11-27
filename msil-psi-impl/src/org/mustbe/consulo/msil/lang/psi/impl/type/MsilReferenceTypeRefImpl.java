@@ -16,16 +16,19 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
+import java.util.Collection;
+
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
 import org.mustbe.consulo.dotnet.resolve.SimpleTypeResolveResult;
+import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -33,8 +36,8 @@ import com.intellij.util.ArrayUtil;
  */
 public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 {
-	private final String myRef;
-	private final DotNetPsiSearcher.TypeResoleKind myTypeResoleKind;
+	protected final String myRef;
+	protected final DotNetPsiSearcher.TypeResoleKind myTypeResoleKind;
 
 	public MsilReferenceTypeRefImpl(String ref, DotNetPsiSearcher.TypeResoleKind typeResoleKind)
 	{
@@ -76,13 +79,19 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 			return DotNetTypeResolveResult.EMPTY;
 		}
 
-		DotNetTypeDeclaration[] types = DotNetPsiSearcher.getInstance(scope.getProject()).findTypes(myRef, scope.getResolveScope(),
-				myTypeResoleKind);
-		if(types.length == 0)
+		Collection<MsilClassEntry> entries = MsilTypeByQNameIndex.getInstance().get(myRef, scope.getProject(), scope.getResolveScope());
+
+		if(entries.isEmpty())
 		{
 			return DotNetTypeResolveResult.EMPTY;
 		}
+		return new SimpleTypeResolveResult(ContainerUtil.getFirstItem(entries), myTypeResoleKind != DotNetPsiSearcher.TypeResoleKind.STRUCT);
+	}
 
-		return new SimpleTypeResolveResult(ArrayUtil.getFirstElement(types), myTypeResoleKind != DotNetPsiSearcher.TypeResoleKind.STRUCT);
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof MsilReferenceTypeRefImpl && myRef.equals(((MsilReferenceTypeRefImpl) obj).myRef) && myTypeResoleKind == (
+				(MsilReferenceTypeRefImpl) obj).myTypeResoleKind;
 	}
 }

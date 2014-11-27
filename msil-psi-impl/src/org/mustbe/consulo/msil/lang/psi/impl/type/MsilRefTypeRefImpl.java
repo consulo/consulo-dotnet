@@ -17,7 +17,6 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetRefTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
@@ -51,5 +50,11 @@ public class MsilRefTypeRefImpl extends DotNetTypeRef.Delegate implements DotNet
 	public DotNetTypeRef getInnerTypeRef()
 	{
 		return getDelegate();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof MsilRefTypeRefImpl && getInnerTypeRef().equals(((MsilRefTypeRefImpl) obj).getInnerTypeRef());
 	}
 }

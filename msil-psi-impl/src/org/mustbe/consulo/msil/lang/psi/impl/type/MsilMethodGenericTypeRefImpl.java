@@ -73,4 +73,11 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		}
 		return new SimpleTypeResolveResult(dotNetGenericParameter);
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof MsilMethodGenericTypeRefImpl && myParent.isEquivalentTo(((MsilMethodGenericTypeRefImpl) obj).myParent) && myIndex == (
+				(MsilMethodGenericTypeRefImpl) obj).myIndex;
+	}
 }

@@ -78,4 +78,11 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		}
 		return DotNetTypeResolveResult.EMPTY;
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof MsilClassGenericTypeRefImpl && myParent.isEquivalentTo(((MsilClassGenericTypeRefImpl) obj).myParent) && myName.equals(
+				((MsilClassGenericTypeRefImpl) obj).myName);
+	}
 }
