@@ -21,9 +21,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilParameterList;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
@@ -31,10 +34,14 @@ import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.MsilXXXAcessor;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilXXXAccessorStub;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -43,6 +50,52 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub> implements MsilXXXAcessor
 {
+	private class CacheValueProvider implements CachedValueProvider<MsilMethodEntry>
+	{
+		@Nullable
+		@Override
+		public Result<MsilMethodEntry> compute()
+		{
+			DotNetType targetType = getStubOrPsiChildByIndex(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY, 1);
+			if(targetType == null)
+			{
+				return null;
+			}
+			String name = getMethodName();
+			if(name == null)
+			{
+				return null;
+			}
+
+			PsiElement element = targetType.toTypeRef().resolve(MsilXXXAccessorImpl.this).getElement();
+			if(!(element instanceof MsilClassEntry))
+			{
+				return null;
+			}
+
+			DotNetTypeRef[] parameterTypeRefs = getParameterTypeRefs();
+
+			MsilMethodEntry method = null;
+			for(DotNetNamedElement namedElement : ((MsilClassEntry) element).getMembers())
+			{
+				if(namedElement instanceof MsilMethodEntry && Comparing.equal(((MsilMethodEntry) namedElement).getNameFromBytecode(),
+						name) && Comparing.equal(((MsilMethodEntry) namedElement).getParameterTypeRefs(), parameterTypeRefs))
+				{
+					method = (MsilMethodEntry) namedElement;
+					break;
+				}
+			}
+
+			if(method == null)
+			{
+				return null;
+			}
+			return Result.create(method, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
+		}
+	}
+
+	private CacheValueProvider myCacheValueProvider = new CacheValueProvider();
+
 	public MsilXXXAccessorImpl(@NotNull ASTNode node)
 	{
 		super(node);
@@ -69,14 +122,16 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
-		return false;
+		MsilMethodEntry msilMethodEntry = resolveToMethod();
+		return msilMethodEntry != null && msilMethodEntry.hasModifier(modifier);
 	}
 
 	@Nullable
 	@Override
 	public DotNetModifierList getModifierList()
 	{
-		return null;
+		MsilMethodEntry msilMethodEntry = resolveToMethod();
+		return msilMethodEntry != null ? msilMethodEntry.getModifierList() : null;
 	}
 
 	@Nullable
@@ -127,6 +182,25 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 			return DotNetParameter.EMPTY_ARRAY;
 		}
 		return stubOrPsiChild.getParameters();
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef[] getParameterTypeRefs()
+	{
+		MsilParameterList stubOrPsiChild = getStubOrPsiChild(MsilStubTokenSets.PARAMETER_LIST);
+		if(stubOrPsiChild == null)
+		{
+			return DotNetTypeRef.EMPTY_ARRAY;
+		}
+		return stubOrPsiChild.getParameterTypeRefs();
+	}
+
+	@Nullable
+	@Override
+	public MsilMethodEntry resolveToMethod()
+	{
+		return CachedValuesManager.getCachedValue(this, myCacheValueProvider);
 	}
 
 	@Nullable

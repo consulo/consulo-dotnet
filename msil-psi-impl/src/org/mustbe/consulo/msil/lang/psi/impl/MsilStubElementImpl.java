@@ -78,6 +78,13 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 		return ArrayUtil2.safeGet(stubOrPsiChildren, 0);
 	}
 
+	@Nullable
+	public <T extends PsiElement> T getStubOrPsiChildByIndex(TokenSet tokenSet, ArrayFactory<T> arrayFactory, int index)
+	{
+		T[] stubOrPsiChildren = getStubOrPsiChildren(tokenSet, arrayFactory);
+		return ArrayUtil2.safeGet(stubOrPsiChildren, index);
+	}
+
 	@Override
 	public PsiElement getParent()
 	{

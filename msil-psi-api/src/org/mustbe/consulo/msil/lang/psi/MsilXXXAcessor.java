@@ -38,4 +38,10 @@ public interface MsilXXXAcessor extends DotNetXXXAccessor
 
 	@NotNull
 	DotNetParameter[] getParameters();
+
+	@NotNull
+	DotNetTypeRef[] getParameterTypeRefs();
+
+	@Nullable
+	MsilMethodEntry resolveToMethod();
 }
