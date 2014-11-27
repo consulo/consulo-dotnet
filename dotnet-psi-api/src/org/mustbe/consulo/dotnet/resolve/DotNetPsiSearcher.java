@@ -90,9 +90,9 @@ public abstract class DotNetPsiSearcher
 
 		for(DotNetTypeDeclaration declaration : declarations)
 		{
-			//if(typeResoleKind == TypeResoleKind.UNKNOWN ||
-			//		declaration.isStruct() && typeResoleKind == TypeResoleKind.STRUCT ||
-			//		!declaration.isStruct() && typeResoleKind == TypeResoleKind.CLASS)
+			if(typeResoleKind == TypeResoleKind.UNKNOWN ||
+					declaration.isStruct() && typeResoleKind == TypeResoleKind.STRUCT ||
+					!declaration.isStruct() && typeResoleKind == TypeResoleKind.CLASS)
 			{
 				list.add(transformer.fun(declaration));
 			}
