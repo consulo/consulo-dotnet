@@ -19,7 +19,7 @@ package org.mustbe.consulo.dotnet.dll.vfs.builder.util;
 import java.io.UnsupportedEncodingException;
 
 import com.intellij.openapi.util.text.StringUtil;
-import edu.arizona.cs.mbel.ByteBuffer;
+import edu.arizona.cs.mbel.io.ByteBuffer;
 import edu.arizona.cs.mbel.signature.Signature;
 
 /**

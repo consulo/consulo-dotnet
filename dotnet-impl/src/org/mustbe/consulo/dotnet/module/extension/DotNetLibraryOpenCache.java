@@ -16,7 +16,7 @@
  */
 package org.mustbe.consulo.dotnet.module.extension;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -124,7 +124,7 @@ public class DotNetLibraryOpenCache
 	{
 		path = FileUtil.toSystemDependentName(path);
 		debug("opening %s", path);
-		return new ModuleParser(new FileInputStream(path));
+		return new ModuleParser(new File(path));
 	}
 
 	private static int tryCloseFiles()

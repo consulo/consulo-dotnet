@@ -1,4 +1,4 @@
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.Iterator;
 
@@ -14,7 +14,7 @@ public class DotNetDllFileTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ModuleParser moduleParser = new ModuleParser(new FileInputStream("G:\\ikvm-7.2.4630.5\\bin\\IKVM.OpenJDK.Core.dll"));
+		ModuleParser moduleParser = new ModuleParser(new File("G:\\ikvm-7.2.4630.5\\bin\\IKVM.OpenJDK.Core.dll"));
 
 		DotNetArchiveFile archiveFile = new DotNetArchiveFile(moduleParser, 0);
 
