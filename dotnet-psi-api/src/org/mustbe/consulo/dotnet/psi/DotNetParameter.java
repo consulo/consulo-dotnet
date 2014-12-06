@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,8 +26,8 @@ import org.jetbrains.annotations.NotNull;
 @ArrayFactoryFields
 public interface DotNetParameter extends DotNetVariable
 {
-	@NotNull
-	DotNetLikeMethodDeclaration getMethod();
+	@Nullable
+	DotNetParameterListOwner getOwner();
 
 	int getIndex();
 }
