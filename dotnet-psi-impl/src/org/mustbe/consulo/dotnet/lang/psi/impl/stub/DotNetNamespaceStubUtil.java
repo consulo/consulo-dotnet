@@ -64,5 +64,9 @@ public class DotNetNamespaceStubUtil
 			}
 			while((parent = parent.getParent()) != null);
 		}
+		else
+		{
+			indexSink.occurrence(namespaceKey, indexableNamespace);
+		}
 	}
 }
