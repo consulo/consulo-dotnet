@@ -20,8 +20,9 @@ import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.util.Comparing;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefUtil;
 
 /**
  * @author VISTALL
@@ -29,8 +30,6 @@ import com.intellij.openapi.util.Comparing;
  */
 public class DotNetRunUtil
 {
-	private static final String STRING_ARRAY = DotNetTypes.System.String + "[]";
-
 	public static boolean hasEntryPoint(DotNetTypeDeclaration typeDeclaration)
 	{
 		for(DotNetNamedElement dotNetNamedElement : typeDeclaration.getMembers())
@@ -64,6 +63,8 @@ public class DotNetRunUtil
 		{
 			return false;
 		}
-		return Comparing.equal(parameterTypesForRuntime[0].getQualifiedText(), STRING_ARRAY);
+		DotNetTypeRef dotNetTypeRef = parameterTypesForRuntime[0];
+		return dotNetTypeRef instanceof DotNetArrayTypeRef && DotNetTypeRefUtil.isVmQNameEqual(((DotNetArrayTypeRef) dotNetTypeRef).getInnerTypeRef
+				(), methodDeclaration, DotNetTypes.System.String);
 	}
 }

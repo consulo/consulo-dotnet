@@ -18,8 +18,11 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -28,36 +31,51 @@ import com.intellij.psi.PsiElement;
  */
 public class DotNetTypeRefUtil
 {
+	@Deprecated
+	@DeprecationInfo(value = "Use #isVmQNameEqual due getQualifiedText() dont return qualified name of element inside type")
 	public static boolean isObject(@NotNull DotNetTypeRef typeRef)
 	{
 		return DotNetTypes.System.Object.equals(typeRef.getQualifiedText());
 	}
+
+	@Deprecated
+	@DeprecationInfo(value = "Use #isVmQNameEqual due getQualifiedText() dont return qualified name of element inside type")
 
 	public static boolean isVoid(@NotNull DotNetTypeRef typeRef)
 	{
 		return DotNetTypes.System.Void.equals(typeRef.getQualifiedText());
 	}
 
+	@Deprecated
+	@DeprecationInfo(value = "Use #isVmQNameEqual due getQualifiedText() dont return qualified name of element inside type")
 	public static boolean isInt32(@NotNull DotNetTypeRef typeRef)
 	{
 		return DotNetTypes.System.Int32.equals(typeRef.getQualifiedText());
 	}
 
+	@Deprecated
+	@DeprecationInfo(value = "Use #isVmQNameEqual due getQualifiedText() dont return qualified name of element inside type")
 	public static boolean isUInt32(@NotNull DotNetTypeRef typeRef)
 	{
 		return DotNetTypes.System.UInt32.equals(typeRef.getQualifiedText());
 	}
 
+	@Deprecated
+	@DeprecationInfo(value = "Use #isVmQNameEqual due getQualifiedText() dont return qualified name of element inside type")
 	public static boolean isInt64(@NotNull DotNetTypeRef typeRef)
 	{
 		return DotNetTypes.System.Int64.equals(typeRef.getQualifiedText());
 	}
 
+	@Deprecated
+	@DeprecationInfo(value = "Use #isVmQNameEqual due getQualifiedText() dont return qualified name of element inside type")
 	public static boolean isUInt64(@NotNull DotNetTypeRef typeRef)
 	{
 		return DotNetTypes.System.UInt64.equals(typeRef.getQualifiedText());
 	}
 
+	@Deprecated
+	@DeprecationInfo(value = "Use #isVmQNameEqual due getQualifiedText() dont return qualified name of element inside type")
 	public static boolean isBool(@NotNull DotNetTypeRef typeRef)
 	{
 		return DotNetTypes.System.Boolean.equals(typeRef.getQualifiedText());
@@ -73,6 +91,18 @@ public class DotNetTypeRefUtil
 
 		DotNetTypeRef typeRef = type.toTypeRef();
 		return typeRef.resolve(type).getElement();
+	}
+
+	public static boolean isVmQNameEqual(@NotNull DotNetTypeRef typeRef, @NotNull PsiElement element, @NotNull String expectedVmQName)
+	{
+		DotNetTypeResolveResult typeResolveResult = typeRef.resolve(element);
+		PsiElement typeResolveResultElement = typeResolveResult.getElement();
+		if(typeResolveResultElement instanceof DotNetTypeDeclaration)
+		{
+			String vmQName = ((DotNetTypeDeclaration) typeResolveResultElement).getVmQName();
+			return vmQName != null && Comparing.equal(vmQName, expectedVmQName);
+		}
+		return false;
 	}
 
 	@NotNull
