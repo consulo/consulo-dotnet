@@ -120,5 +120,7 @@
 						   implementationClass="org.mustbe.consulo.dotnet.lang.MultiHostInjectorByAttribute" />
 
 		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider"/>
+
+		<moduleRootsProcessor implementation="org.mustbe.consulo.dotnet.module.DotNetModuleRootsProcessor" />
 	</extensions>
 </idea-plugin>

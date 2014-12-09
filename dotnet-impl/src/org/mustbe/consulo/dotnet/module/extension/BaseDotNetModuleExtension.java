@@ -57,8 +57,6 @@ import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
@@ -425,20 +423,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 			e.printStackTrace();
 		}
 		return false;
-	}
-
-	@NotNull
-	@Override
-	public GlobalSearchScope getScopeForResolving(boolean test)
-	{
-		if(isAllowSourceRoots())
-		{
-			return GlobalSearchScope.moduleRuntimeScope(getModule(), test);
-		}
-		else
-		{
-			return GlobalSearchScopes.directoryScope(getProject(), getModule().getModuleDir(), true);
-		}
 	}
 
 	@Override

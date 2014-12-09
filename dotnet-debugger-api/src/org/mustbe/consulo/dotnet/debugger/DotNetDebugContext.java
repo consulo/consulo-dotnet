@@ -17,11 +17,9 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configurations.ModuleRunProfile;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import mono.debugger.VirtualMachine;
@@ -53,12 +51,7 @@ public class DotNetDebugContext
 			GlobalSearchScope globalSearchScope = GlobalSearchScope.EMPTY_SCOPE;
 			for(Module module : modules)
 			{
-				DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-				if(extension != null)
-				{
-					globalSearchScope = globalSearchScope.union(extension.getScopeForResolving(true));
-				}
-				globalSearchScope = globalSearchScope.union(GlobalSearchScope.moduleRuntimeScope(module, true));
+				globalSearchScope = globalSearchScope.union(GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, true));
 			}
 			return globalSearchScope;
 		}

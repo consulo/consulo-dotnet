@@ -33,7 +33,6 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -92,9 +91,6 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	@NotNull
 	GeneralCommandLine createDefaultCommandLine(@NotNull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
-
-	@NotNull
-	GlobalSearchScope getScopeForResolving(boolean test);
 
 	@NotNull
 	String getDebugFileExtension();
