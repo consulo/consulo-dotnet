@@ -257,6 +257,23 @@ public class MsilSharedBuilder implements SignatureConstants
 				typeToString(builder, szArrayTypeSignature.getElementType(), typeDef);
 				builder.append("[]");
 				break;
+			case ELEMENT_TYPE_ARRAY:
+				ArrayTypeSignature arrayTypeSignature = (ArrayTypeSignature) signature;
+				typeToString(builder, arrayTypeSignature.getElementType(), typeDef);
+				ArrayShapeSignature arrayShape = arrayTypeSignature.getArrayShape();
+				builder.append("[");
+				for(int i = 0; i < arrayShape.getRank(); i++)
+				{
+					if(i != 0)
+					{
+						builder.append(", ");
+					}
+					int low = arrayShape.getLowerBounds()[i];
+					builder.append(low);
+					builder.append("...");
+				}
+				builder.append("]");
+				break;
 			case ELEMENT_TYPE_CLASS:
 				ClassTypeSignature typeSignature = (ClassTypeSignature) signature;
 				builder.append("class ");
