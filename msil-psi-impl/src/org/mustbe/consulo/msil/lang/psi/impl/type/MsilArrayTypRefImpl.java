@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -29,10 +30,12 @@ import com.intellij.psi.PsiElement;
 public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
 {
 	private final DotNetTypeRef myInnerTypeRef;
+	private final int[] myLowerValues;
 
-	public MsilArrayTypRefImpl(DotNetTypeRef innerTypeRef)
+	public MsilArrayTypRefImpl(DotNetTypeRef innerTypeRef, int[] lowerValues)
 	{
 		myInnerTypeRef = innerTypeRef;
+		myLowerValues = lowerValues;
 	}
 
 	@NotNull
@@ -63,9 +66,15 @@ public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
 		return myInnerTypeRef;
 	}
 
+	public int[] getLowerValues()
+	{
+		return myLowerValues;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj instanceof MsilArrayTypRefImpl && myInnerTypeRef.equals(((MsilArrayTypRefImpl) obj).getInnerTypeRef());
+		return obj instanceof MsilArrayTypRefImpl && myInnerTypeRef.equals(((MsilArrayTypRefImpl) obj).getInnerTypeRef()) && Comparing.equal
+				(myLowerValues, ((MsilArrayTypRefImpl) obj).myLowerValues);
 	}
 }

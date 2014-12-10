@@ -27,7 +27,9 @@ QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 
 <YYINITIAL>
 {
-	{QIDENTIFIER}   { return MsilTokens.QIDENTIFIER; }
+	{QIDENTIFIER}  { return MsilTokens.QIDENTIFIER; }
+
+	"..."          { return MsilTokens.ELLIPSIS; }
 
 	"{"            { return MsilTokens.LBRACE; }
 

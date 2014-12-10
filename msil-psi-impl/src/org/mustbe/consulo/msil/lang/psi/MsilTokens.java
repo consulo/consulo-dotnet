@@ -158,6 +158,8 @@ public interface MsilTokens extends TokenType
 
 	IElementType RBRACE = new IElementType("RBRACE", MsilLanguage.INSTANCE);
 
+	IElementType ELLIPSIS = new IElementType("ELLIPSIS", MsilLanguage.INSTANCE);
+
 	IElementType BLOCK_COMMENT = new IElementType("BLOCK_COMMENT", MsilLanguage.INSTANCE);
 
 	IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", MsilLanguage.INSTANCE);

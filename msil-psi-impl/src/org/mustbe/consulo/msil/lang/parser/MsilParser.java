@@ -18,6 +18,7 @@ package org.mustbe.consulo.msil.lang.parser;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilElements;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import com.intellij.lang.ASTNode;
@@ -471,7 +472,9 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		while(builder.getTokenType() == LBRACKET)
 		{
 			mark = mark.precede();
+
 			expect(builder, LBRACKET, "'[' expected");
+			parseArrayDimensions(builder);
 			expect(builder, RBRACKET, "']' expected");
 			mark.done(ARRAY_TYPE);
 		}
@@ -481,6 +484,47 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			mark = mark.precede();
 			builder.advanceLexer();
 			mark.done(TYPE_BY_REF);
+		}
+	}
+
+	private void parseArrayDimensions(PsiBuilder builder)
+	{
+		while(true)
+		{
+			PsiBuilder.Marker marker = parseArrayDimension(builder);
+			if(marker == null)
+			{
+				break;
+			}
+
+			if(builder.getTokenType() == COMMA)
+			{
+				builder.advanceLexer();
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+
+	private PsiBuilder.Marker parseArrayDimension(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		if(builder.getTokenType() == MsilTokens.NUMBER)
+		{
+			builder.advanceLexer();
+
+			expect(builder, MsilTokens.ELLIPSIS, "'...' expected");
+
+			mark.done(MsilStubElements.ARRAY_DIMENSION);
+			return mark;
+		}
+		else
+		{
+			mark.drop();
+			return null;
 		}
 	}
 
