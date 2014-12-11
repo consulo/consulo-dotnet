@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.LineStubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
+import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
@@ -268,7 +269,7 @@ public class MsilSharedBuilder implements SignatureConstants
 					{
 						builder.append(", ");
 					}
-					int low = arrayShape.getLowerBounds()[i];
+					int low = ArrayUtil2.safeGet(arrayShape.getLowerBounds(), i);
 					builder.append(low);
 					builder.append("...");
 				}

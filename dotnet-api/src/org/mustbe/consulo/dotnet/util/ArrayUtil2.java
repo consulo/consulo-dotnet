@@ -26,6 +26,15 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ArrayUtil2
 {
+	public static int safeGet(@Nullable int[] array, int index)
+	{
+		if(array == null)
+			return 0;
+		if(index < 0 || array.length <= index)
+			return 0;
+		return array[index];
+	}
+
 	@Nullable
 	public static <T> T safeGet(@Nullable T[] array, int index)
 	{
