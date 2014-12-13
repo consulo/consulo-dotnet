@@ -67,6 +67,8 @@ QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 
 	".class"       { return MsilTokens._CLASS_KEYWORD; }
 
+	".ctor"       { return MsilTokens._CTOR_KEYWORD; }
+
 	".custom"      { return MsilTokens._CUSTOM_KEYWORD; }
 
 	".method"      { return MsilTokens._METHOD_KEYWORD; }

@@ -162,7 +162,7 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(MsilTokenSets.IDENTIFIERS);
+		return findChildByType(MsilTokenSets.IDENTIFIERS_AND_CTOR);
 	}
 
 	@Override

@@ -157,7 +157,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		parseType(builder);
 
-		expect(builder, IDENTIFIERS, "Identifier expected");
+		expect(builder, IDENTIFIERS_AND_CTOR, "Identifier expected");
 
 		parseGenericList(builder);
 
@@ -324,7 +324,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		parseType(builder);
 
 		expect(builder, COLONCOLON, "'::' expected");
-		expect(builder, IDENTIFIER, "Identifier expected");
+		expect(builder, _CTOR_KEYWORD, "'.ctor' expected");
 		parseParameterList(builder);
 		expect(builder, EQ, "'=' expected");
 		expect(builder, LPAR, "'(' expected");
