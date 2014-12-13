@@ -30,6 +30,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.BitUtil;
 import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.mbel.CustomAttribute;
 import edu.arizona.cs.mbel.mbel.GenericParamDef;
@@ -147,7 +148,7 @@ public class MsilSharedBuilder implements SignatureConstants
 		block.getBlocks().add(new LineStubBlock(builder));
 	}
 
-	protected static void processGeneric(StringBuilder builder, GenericParamOwner paramOwner)
+	protected static void processGeneric(StringBuilder builder, final GenericParamOwner paramOwner)
 	{
 		List<GenericParamDef> genericParams = paramOwner.getGenericParams();
 		if(genericParams.isEmpty())
@@ -160,20 +161,55 @@ public class MsilSharedBuilder implements SignatureConstants
 		{
 			@Nullable
 			@Override
-			public Void fun(StringBuilder t, GenericParamDef v)
+			public Void fun(StringBuilder innerBuilder, GenericParamDef genericParamDef)
 			{
-				int flags = v.getFlags();
+				int flags = genericParamDef.getFlags();
+
+				int specialFlags = flags & GenericParamAttributes.SpecialConstraintMask;
+
+				if(BitUtil.isSet(specialFlags, GenericParamAttributes.NotNullableValueTypeConstraint))
+				{
+					innerBuilder.append("valuetype ");
+				}
+
+				if(BitUtil.isSet(specialFlags, GenericParamAttributes.ReferenceTypeConstraint))
+				{
+					innerBuilder.append("class ");
+				}
+
+				if(BitUtil.isSet(specialFlags, GenericParamAttributes.DefaultConstructorConstraint))
+				{
+					innerBuilder.append(".ctor ");
+				}
+
+				List<Object> constraints = genericParamDef.getConstraints();
+				if(!constraints.isEmpty())
+				{
+					innerBuilder.append("(");
+					join(innerBuilder, constraints, new PairFunction<StringBuilder, Object, Void>()
+					{
+						@Nullable
+						@Override
+						public Void fun(StringBuilder t, Object v)
+						{
+							toStringFromDefRefSpec(t, v, paramOwner instanceof TypeDef ? (TypeDef) paramOwner : null);
+							return null;
+						}
+					}, ", ");
+					innerBuilder.append(")");
+				}
+
 				int varianceMask = flags & GenericParamAttributes.VarianceMask;
 				switch(varianceMask)
 				{
 					case GenericParamAttributes.Covariant:
-						t.append("+");
+						innerBuilder.append("+");
 						break;
 					case GenericParamAttributes.Contravariant:
-						t.append("-");
+						innerBuilder.append("-");
 						break;
 				}
-				t.append(v.getName());
+				innerBuilder.append(genericParamDef.getName());
 				return null;
 			}
 		}, ", ");
