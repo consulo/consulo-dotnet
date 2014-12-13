@@ -20,6 +20,8 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import org.mustbe.consulo.msil.lang.psi.MsilGenericParameter;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilGenericParameterImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterStub;
 import com.intellij.lang.ASTNode;
@@ -32,7 +34,7 @@ import com.intellij.util.io.StringRef;
  * @author VISTALL
  * @since 23.05.14
  */
-public class MsilGenericParameterStubElementType extends AbstractMsilStubElementType<MsilGenericParameterStub, DotNetGenericParameter>
+public class MsilGenericParameterStubElementType extends AbstractMsilStubElementType<MsilGenericParameterStub, MsilGenericParameter>
 {
 	public MsilGenericParameterStubElementType()
 	{
@@ -48,17 +50,18 @@ public class MsilGenericParameterStubElementType extends AbstractMsilStubElement
 
 	@NotNull
 	@Override
-	public DotNetGenericParameter createPsi(@NotNull MsilGenericParameterStub msilGenericParameterStub)
+	public MsilGenericParameter createPsi(@NotNull MsilGenericParameterStub msilGenericParameterStub)
 	{
 		return new MsilGenericParameterImpl(msilGenericParameterStub, this);
 	}
 
 	@Override
-	public MsilGenericParameterStub createStub(@NotNull DotNetGenericParameter parameter, StubElement stubElement)
+	public MsilGenericParameterStub createStub(@NotNull MsilGenericParameter parameter, StubElement stubElement)
 	{
 		String name = parameter.getName();
 		int mod = MsilGenericParameterStub.toModifiers(parameter);
-		return new MsilGenericParameterStub(stubElement, this, name, mod);
+		DotNetPsiSearcher.TypeResoleKind typeKind = parameter.getTypeKind();
+		return new MsilGenericParameterStub(stubElement, this, name, mod, typeKind);
 	}
 
 	@Override
@@ -66,6 +69,7 @@ public class MsilGenericParameterStubElementType extends AbstractMsilStubElement
 	{
 		stubOutputStream.writeName(msilGenericParameterStub.getName());
 		stubOutputStream.writeVarInt(msilGenericParameterStub.getModifierMask());
+		stubOutputStream.writeVarInt(msilGenericParameterStub.getTypeKindIndex());
 	}
 
 	@NotNull
@@ -75,6 +79,7 @@ public class MsilGenericParameterStubElementType extends AbstractMsilStubElement
 	{
 		StringRef ref = inputStream.readName();
 		int mod = inputStream.readVarInt();
-		return new MsilGenericParameterStub(stubElement, this, ref, mod);
+		int typeKindIndex = inputStream.readVarInt();
+		return new MsilGenericParameterStub(stubElement, this, ref, mod, typeKindIndex);
 	}
 }

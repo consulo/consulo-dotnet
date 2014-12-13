@@ -16,9 +16,12 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import org.mustbe.consulo.msil.lang.psi.MsilGenericParameter;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
@@ -33,32 +36,54 @@ public class MsilGenericParameterStub extends NamedStubBase<DotNetGenericParamet
 {
 	private static final int COVARIANT = 1 << 0;
 	private static final int CONTRAVARIANT = 1 << 1;
+	private static final int HAS_DEFAULT_CONSTRUCTOR = 1 << 2;
 
 	private int myModifierMask;
+	private int myTypeKindIndex;
 
-	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, int modifierMask)
+	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, int modifierMask, int typeKindIndex)
 	{
 		super(parent, elementType, name);
 		myModifierMask = modifierMask;
+		myTypeKindIndex = typeKindIndex;
 	}
 
-	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable String name, int modifierMask)
+	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable String name, int modifierMask,
+			@NotNull DotNetPsiSearcher.TypeResoleKind typeKind)
 	{
 		super(parent, elementType, name);
 		myModifierMask = modifierMask;
+		myTypeKindIndex = typeKind.ordinal();
 	}
 
-	public static int toModifiers(DotNetGenericParameter parameter)
+	public static int toModifiers(MsilGenericParameter parameter)
 	{
 		int i = 0;
 		i = BitUtil.set(i, COVARIANT, parameter.hasModifier(DotNetModifier.COVARIANT));
 		i = BitUtil.set(i, CONTRAVARIANT, parameter.hasModifier(DotNetModifier.CONTRAVARIANT));
+		i = BitUtil.set(i, HAS_DEFAULT_CONSTRUCTOR, parameter.hasDefaultConstructor());
 		return i;
 	}
 
 	public int getModifierMask()
 	{
 		return myModifierMask;
+	}
+
+	public int getTypeKindIndex()
+	{
+		return myTypeKindIndex;
+	}
+
+	@NotNull
+	public DotNetPsiSearcher.TypeResoleKind getTypeKind()
+	{
+		return DotNetPsiSearcher.TypeResoleKind.VALUES[myTypeKindIndex];
+	}
+
+	public boolean hasDefaultConstructor()
+	{
+		return BitUtil.isSet(myModifierMask, HAS_DEFAULT_CONSTRUCTOR);
 	}
 
 	public boolean hasModifier(DotNetModifier modifier)

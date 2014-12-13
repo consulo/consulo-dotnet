@@ -19,22 +19,27 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilGenericParameter;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author VISTALL
  * @since 23.05.14
  */
-public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericParameterStub> implements DotNetGenericParameter
+public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericParameterStub> implements MsilGenericParameter
 {
 	public MsilGenericParameterImpl(@NotNull ASTNode node)
 	{
@@ -102,5 +107,55 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef[] getExtendTypeRefs()
+	{
+		DotNetTypeList typeList = getStubOrPsiChild(MsilStubElements.GENERIC_PARAM_EXTENDS_LIST);
+		if(typeList == null)
+		{
+			return DotNetTypeRef.EMPTY_ARRAY;
+		}
+		return typeList.getTypeRefs();
+	}
+
+	@NotNull
+	@Override
+	public DotNetPsiSearcher.TypeResoleKind getTypeKind()
+	{
+		MsilGenericParameterStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getTypeKind();
+		}
+
+		PsiElement constraintElement = findChildByType(MsilTokenSets.GENERIC_CONSTRAINT_KEYWORDS);
+		if(constraintElement == null)
+		{
+			return DotNetPsiSearcher.TypeResoleKind.UNKNOWN;
+		}
+		IElementType elementType = constraintElement.getNode().getElementType();
+		if(elementType == MsilTokens.CLASS_KEYWORD)
+		{
+			return DotNetPsiSearcher.TypeResoleKind.CLASS;
+		}
+		else if(elementType == MsilTokens.VALUETYPE_KEYWORD)
+		{
+			return DotNetPsiSearcher.TypeResoleKind.STRUCT;
+		}
+		return DotNetPsiSearcher.TypeResoleKind.UNKNOWN;
+	}
+
+	@Override
+	public boolean hasDefaultConstructor()
+	{
+		MsilGenericParameterStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.hasDefaultConstructor();
+		}
+		return findChildByType(MsilTokens._CTOR_KEYWORD) != null;
 	}
 }
