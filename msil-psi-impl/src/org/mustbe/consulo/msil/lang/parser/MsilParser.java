@@ -577,6 +577,12 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 	{
 		val marker = builder.mark();
 
+		expect(builder, GENERIC_CONSTRAINT_KEYWORDS, null);
+
+		expect(builder, _CTOR_KEYWORD, null);
+
+		parseTypeList(builder, LPAR, RPAR, GENERIC_PARAM_EXTENDS_LIST);
+
 		if(builder.getTokenType() == PLUS || builder.getTokenType() == MINUS)
 		{
 			builder.advanceLexer();
