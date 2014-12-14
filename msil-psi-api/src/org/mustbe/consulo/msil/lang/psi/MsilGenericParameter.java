@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
@@ -25,6 +26,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
  * @author VISTALL
  * @since 13.12.14
  */
+@ArrayFactoryFields
 public interface MsilGenericParameter extends DotNetGenericParameter
 {
 	@NotNull

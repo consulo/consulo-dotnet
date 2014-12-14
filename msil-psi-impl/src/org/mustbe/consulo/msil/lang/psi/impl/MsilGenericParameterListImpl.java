@@ -17,8 +17,8 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
+import org.mustbe.consulo.msil.lang.psi.MsilGenericParameter;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterListStub;
 import com.intellij.lang.ASTNode;
@@ -48,9 +48,9 @@ public class MsilGenericParameterListImpl extends MsilStubElementImpl<MsilGeneri
 
 	@NotNull
 	@Override
-	public DotNetGenericParameter[] getParameters()
+	public MsilGenericParameter[] getParameters()
 	{
-		return getStubOrPsiChildren(MsilStubElements.GENERIC_PARAMETER, DotNetGenericParameter.ARRAY_FACTORY);
+		return getStubOrPsiChildren(MsilStubElements.GENERIC_PARAMETER, MsilGenericParameter.ARRAY_FACTORY);
 	}
 
 	@Override
