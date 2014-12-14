@@ -28,5 +28,6 @@ public class MsilFileRepresentationVirtualFile extends LightVirtualFile
 	public MsilFileRepresentationVirtualFile(String name, FileType fileType, CharSequence text)
 	{
 		super(name, fileType, text);
+		setWritable(false);
 	}
 }
