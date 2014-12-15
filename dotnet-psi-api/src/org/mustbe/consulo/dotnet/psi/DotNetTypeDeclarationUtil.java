@@ -18,8 +18,6 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 
@@ -37,32 +35,32 @@ public class DotNetTypeDeclarationUtil
 	@Nullable
 	public static String getVmQName(@NotNull DotNetTypeDeclaration typeDeclaration)
 	{
-		String presentableQName;
+		String vmQName;
 
 		PsiElement parent = typeDeclaration.getParent();
 		if(parent instanceof DotNetTypeDeclaration)
 		{
-			String q = ((DotNetTypeDeclaration) parent).getPresentableQName();
+			String q = ((DotNetTypeDeclaration) parent).getVmQName();
 
-			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NESTED_SEPARATOR_IN_NAME + typeDeclaration.getName();
+			vmQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NESTED_SEPARATOR_IN_NAME + typeDeclaration.getName();
 		}
 		else if(parent instanceof DotNetQualifiedElement)
 		{
 			String q = ((DotNetQualifiedElement) parent).getPresentableQName();
 
-			presentableQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NORMAL_SEPARATOR_IN_NAME + typeDeclaration.getName();
+			vmQName = StringUtil.isEmpty(q) ? typeDeclaration.getName() : q + NORMAL_SEPARATOR_IN_NAME + typeDeclaration.getName();
 		}
 		else
 		{
-			presentableQName = typeDeclaration.getName();
+			vmQName = typeDeclaration.getName();
 		}
 
 		int genericParametersCount = typeDeclaration.getGenericParametersCount();
 		if(genericParametersCount == 0)
 		{
-			return presentableQName;
+			return vmQName;
 		}
-		return presentableQName + GENERIC_MARKER_IN_NAME + genericParametersCount;
+		return vmQName + GENERIC_MARKER_IN_NAME + genericParametersCount;
 	}
 
 	@Nullable
