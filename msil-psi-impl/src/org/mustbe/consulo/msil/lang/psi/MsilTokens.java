@@ -38,6 +38,8 @@ public interface MsilTokens extends TokenType
 
 	IElementType _CTOR_KEYWORD = new IElementType("_CTOR_KEYWORD", MsilLanguage.INSTANCE);
 
+	IElementType _CCTOR_KEYWORD = new IElementType("_CCTOR_KEYWORD", MsilLanguage.INSTANCE);
+
 	IElementType _METHOD_KEYWORD = new IElementType("_METHOD_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType _FIELD_KEYWORD = new IElementType("_FIELD_KEYWORD", MsilLanguage.INSTANCE);
@@ -143,8 +145,6 @@ public interface MsilTokens extends TokenType
 	MsilModifierElementType RTSPECIALNAME_KEYWORD = new MsilModifierElementType("RTSPECIALNAME_KEYWORD", MsilLanguage.INSTANCE);
 
 	MsilModifierElementType NESTED_KEYWORD = new MsilModifierElementType("NESTED_KEYWORD", MsilLanguage.INSTANCE);
-
-	MsilModifierElementType BACKSLASH = new MsilModifierElementType("BACKSLASH", MsilLanguage.INSTANCE);
 
 	IElementType PLUS = new IElementType("PLUS =", MsilLanguage.INSTANCE);
 

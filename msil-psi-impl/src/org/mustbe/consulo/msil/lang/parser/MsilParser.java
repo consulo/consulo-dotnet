@@ -434,23 +434,11 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 			parseReferenceExpression(builder);
 
-			if(builder.getTokenType() == BACKSLASH)
-			{
-				builder.advanceLexer();
-				expect(builder, IDENTIFIERS, "Identifier expected");
-			}
-
 			mark.done(REFERENCE_TYPE);
 		}
 		else
 		{
 			parseReferenceExpression(builder);
-
-			if(builder.getTokenType() == BACKSLASH)
-			{
-				builder.advanceLexer();
-				expect(builder, IDENTIFIERS, "Identifier expected");
-			}
 
 			mark.done(REFERENCE_TYPE);
 		}

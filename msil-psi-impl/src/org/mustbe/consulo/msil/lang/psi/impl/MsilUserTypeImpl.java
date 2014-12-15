@@ -17,7 +17,6 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -110,29 +109,7 @@ public class MsilUserTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub>
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
-		String nestedClassName = getNestedClassName();
-		String fullTypeName = null;
-		if(StringUtil.isEmpty(nestedClassName))
-		{
-			fullTypeName = getReferenceText();
-		}
-		else
-		{
-			fullTypeName = getReferenceText() + "/" + nestedClassName;
-		}
+		String fullTypeName = getReferenceText();
 		return new MsilReferenceTypeRefImpl(fullTypeName, getTypeResoleKind());
-	}
-
-	@Nullable
-	@Override
-	public String getNestedClassName()
-	{
-		MsilReferenceTypeStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getNestedClassText();
-		}
-		PsiElement childByType = findChildByType(MsilTokenSets.IDENTIFIERS);
-		return childByType == null ? null : StringUtil.unquoteString(childByType.getText());
 	}
 }

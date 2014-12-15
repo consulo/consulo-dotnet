@@ -16,7 +16,6 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetUserType;
 
 /**
@@ -25,6 +24,4 @@ import org.mustbe.consulo.dotnet.psi.DotNetUserType;
  */
 public interface MsilUserType extends DotNetUserType
 {
-	@Nullable
-	String getNestedClassName();
 }

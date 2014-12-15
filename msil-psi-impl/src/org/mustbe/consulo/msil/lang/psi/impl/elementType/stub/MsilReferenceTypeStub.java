@@ -31,42 +31,30 @@ public class MsilReferenceTypeStub extends StubBase<MsilUserType>
 {
 	private final DotNetPsiSearcher.TypeResoleKind myTypeResoleKind;
 	private final StringRef myReferenceText;
-	private final StringRef myNestedClassText;
 
-	public MsilReferenceTypeStub(
-			StubElement parent,
+	public MsilReferenceTypeStub(StubElement parent,
 			IStubElementType elementType,
 			DotNetPsiSearcher.TypeResoleKind typeResoleKind,
-			String referenceText,
-			String nestedClassText)
+			String referenceText)
 	{
 		super(parent, elementType);
 		myTypeResoleKind = typeResoleKind;
 		myReferenceText = StringRef.fromNullableString(referenceText);
-		myNestedClassText = StringRef.fromNullableString(nestedClassText);
 	}
 
-	public MsilReferenceTypeStub(
-			StubElement parent,
+	public MsilReferenceTypeStub(StubElement parent,
 			IStubElementType elementType,
 			DotNetPsiSearcher.TypeResoleKind typeResoleKind,
-			StringRef referenceText,
-			StringRef nestedClassText)
+			StringRef referenceText)
 	{
 		super(parent, elementType);
 		myTypeResoleKind = typeResoleKind;
 		myReferenceText = referenceText;
-		myNestedClassText = nestedClassText;
 	}
 
 	public String getReferenceText()
 	{
 		return StringRef.toString(myReferenceText);
-	}
-
-	public String getNestedClassText()
-	{
-		return StringRef.toString(myNestedClassText);
 	}
 
 	public DotNetPsiSearcher.TypeResoleKind getTypeResoleKind()

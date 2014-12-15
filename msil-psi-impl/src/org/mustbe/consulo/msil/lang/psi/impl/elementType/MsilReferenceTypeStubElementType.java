@@ -59,8 +59,7 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 	{
 		DotNetPsiSearcher.TypeResoleKind typeResoleKind = dotNetReferenceType.getTypeResoleKind();
 		String referenceText = dotNetReferenceType.getReferenceText();
-		String nestedClassName = dotNetReferenceType.getNestedClassName();
-		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText, nestedClassName);
+		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText);
 	}
 
 	@Override
@@ -69,7 +68,6 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 	{
 		stubOutputStream.writeByte(msilReferenceTypeStub.getTypeResoleKind().ordinal());
 		stubOutputStream.writeName(msilReferenceTypeStub.getReferenceText());
-		stubOutputStream.writeName(msilReferenceTypeStub.getNestedClassText());
 	}
 
 	@NotNull
@@ -79,7 +77,6 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 	{
 		DotNetPsiSearcher.TypeResoleKind typeResoleKind = DotNetPsiSearcher.TypeResoleKind.VALUES[inputStream.readByte()];
 		StringRef referenceText = inputStream.readName();
-		StringRef nestedClassText = inputStream.readName();
-		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText, nestedClassText);
+		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText);
 	}
 }

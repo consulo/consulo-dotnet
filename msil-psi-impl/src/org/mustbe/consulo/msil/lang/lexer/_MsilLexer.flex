@@ -20,8 +20,9 @@ MULTI_LINE_STYLE_COMMENT=("/*"{COMMENT_TAIL})|"/*"
 COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 
 DIGIT = [0-9]
-IDENTIFIER_PART=[:jletter:] [:jletterdigit:]*
-IDENTIFIER=(\.)?{IDENTIFIER_PART}(\.{IDENTIFIER_PART})*(\`[:jletterdigit:]*)?
+IDENTIFIER_PART=[:jletter:] [:jletterdigit:]* (\`[:jletterdigit:]*)?
+SEPARATOR=(\.) | (\/)
+IDENTIFIER={IDENTIFIER_PART}({SEPARATOR}{IDENTIFIER_PART})*
 QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 %%
 
@@ -51,8 +52,6 @@ QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 
 	")"            { return MsilTokens.RPAR; }
 
-	"/"            { return MsilTokens.BACKSLASH; }
-
 	"="            { return MsilTokens.EQ; }
 
 	"&"            { return MsilTokens.AND; }
@@ -67,7 +66,9 @@ QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 
 	".class"       { return MsilTokens._CLASS_KEYWORD; }
 
-	".ctor"       { return MsilTokens._CTOR_KEYWORD; }
+	".ctor"        { return MsilTokens._CTOR_KEYWORD; }
+
+	".cctor"       { return MsilTokens._CCTOR_KEYWORD; }
 
 	".custom"      { return MsilTokens._CUSTOM_KEYWORD; }
 

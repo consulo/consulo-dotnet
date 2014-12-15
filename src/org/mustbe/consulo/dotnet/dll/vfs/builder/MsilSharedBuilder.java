@@ -388,7 +388,7 @@ public class MsilSharedBuilder implements SignatureConstants
 			TypeDef parent = ((TypeDef) o).getParent();
 			if(parent != null)
 			{
-				toStringFromDefRefSpec(builder, parent, null);
+				toStringFromDefRefSpec(builder, parent, parent);
 				builder.append("/");
 				appendValidName(builder, ((TypeDef) o).getName());
 			}
