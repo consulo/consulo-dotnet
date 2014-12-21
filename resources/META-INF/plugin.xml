@@ -51,6 +51,7 @@
 		<extensionPoint name="injectionByAttributeHelper" interface="org.mustbe.consulo.dotnet.lang.MultiHostInjectorByAttributeHelper"/>
 
 		<extensionPoint name="dependencyCopierExtension" interface="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopierExtension"/>
+		<extensionPoint name="debuggerHelper" interface="org.mustbe.consulo.dotnet.debugger.DotNetDebugHelper" />
 	</extensionPoints>
 
 	<project-components>
@@ -61,6 +62,8 @@
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
 		<psiSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilPsiSearcher" />
+
+		<debuggerHelper implementation="org.mustbe.consulo.dotnet.debugger.DefaultDotNetDebugHelper" order="last"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
@@ -80,9 +83,7 @@
 
 		<defaultHighlightingSettingProvider
 				implementation="org.mustbe.consulo.msil.representation.MsilRepresentationHighlightingSettingProvider"/>
-	</extensions>
 
-	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="org.mustbe.consulo.dotnet.dll.DotNetModuleFileTypeFactory"/>
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 

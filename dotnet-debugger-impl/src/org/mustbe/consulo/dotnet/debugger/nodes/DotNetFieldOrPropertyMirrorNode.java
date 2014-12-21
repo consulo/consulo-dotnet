@@ -28,6 +28,7 @@ import mono.debugger.InvalidFieldIdException;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.PropertyMirror;
 import mono.debugger.ThreadMirror;
+import mono.debugger.ThrowValueException;
 import mono.debugger.TypeMirror;
 import mono.debugger.Value;
 
@@ -81,10 +82,13 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 		{
 			return myFieldOrPropertyMirror.value(myThreadMirror, myObjectValueMirror);
 		}
-		catch(InvalidFieldIdException e)
+		catch(ThrowValueException ignored)
 		{
-			return null;
 		}
+		catch(InvalidFieldIdException ignored)
+		{
+		}
+		return null;
 	}
 
 	@Override
@@ -93,6 +97,9 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 		try
 		{
 			myFieldOrPropertyMirror.setValue(myThreadMirror, myObjectValueMirror, value);
+		}
+		catch(ThrowValueException ignored)
+		{
 		}
 		catch(InvalidFieldIdException ignored)
 		{

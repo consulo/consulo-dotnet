@@ -16,22 +16,16 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
-import java.io.File;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -39,16 +33,6 @@ import lombok.val;
  */
 public class DotNetDebuggerUtil
 {
-	public static File getOutputFile(PsiElement element)
-	{
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(element, DotNetModuleExtension.class);
-		if(extension == null)
-		{
-			return null;
-		}
-		val exeFile = DotNetMacroUtil.expandOutputFile(extension);
-		return new File(exeFile);
-	}
 
 	@Nullable
 	public static PsiElement findPsiElement(@NotNull final Project project, @NotNull final VirtualFile file, final int line)

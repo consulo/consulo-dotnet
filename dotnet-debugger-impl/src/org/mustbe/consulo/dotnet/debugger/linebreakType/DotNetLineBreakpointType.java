@@ -16,10 +16,9 @@
 
 package org.mustbe.consulo.dotnet.debugger.linebreakType;
 
-import java.io.File;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebugHelper;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugThread;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProviders;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
@@ -32,7 +31,6 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
@@ -208,18 +206,12 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		{
 			AssemblyMirror[] assemblies = virtualMachine.rootAppDomain().assemblies();
 
-			File outputFile = DotNetDebuggerUtil.getOutputFile(parent);
-			if(outputFile == null)
+			for(DotNetDebugHelper debugHelper : DotNetDebugHelper.EP_NAME.getExtensions())
 			{
-				return null;
-			}
-
-			for(AssemblyMirror assembly : assemblies)
-			{
-				File file = new File(assembly.location());
-				if(FileUtil.filesEqual(outputFile, file))
+				TypeMirror typeMirror = debugHelper.findTypeMirrorFromAssemblies(vmQualifiedName, assemblies, parent);
+				if(typeMirror != null)
 				{
-					return assembly.findTypeByQualifiedName(vmQualifiedName, false);
+					return typeMirror;
 				}
 			}
 			return null;
