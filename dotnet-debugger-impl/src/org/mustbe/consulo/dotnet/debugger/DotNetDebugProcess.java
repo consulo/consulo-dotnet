@@ -128,6 +128,12 @@ public class DotNetDebugProcess extends XDebugProcess
 		myBreakpointManager.addBreakpointListener(DotNetLineBreakpointType.getInstance(), myBreakpointListener);
 	}
 
+	@NotNull
+	public DotNetDebugThread getDebugThread()
+	{
+		return myDebugThread;
+	}
+
 	public void start()
 	{
 		myDebugThread.start();

@@ -42,6 +42,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.EventDispatcher;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -86,6 +87,8 @@ public class DotNetDebugThread extends Thread
 
 	private VirtualMachine myVirtualMachine;
 
+	private EventDispatcher<DotNetVirtualMachineListener> myEventDispatcher = EventDispatcher.create(DotNetVirtualMachineListener.class);
+
 	public DotNetDebugThread(XDebugSession session, DotNetDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
 	{
 		super("DotNetDebugThread: " + new Random().nextInt());
@@ -96,8 +99,19 @@ public class DotNetDebugThread extends Thread
 		myDebuggerManager = XDebuggerManager.getInstance(session.getProject());
 	}
 
+	public void addListener(DotNetVirtualMachineListener listener)
+	{
+		myEventDispatcher.addListener(listener);
+	}
+
+	public void removeListener(DotNetVirtualMachineListener listener)
+	{
+		myEventDispatcher.removeListener(listener);
+	}
+
 	public void setStop()
 	{
+		myEventDispatcher.getMulticaster().connectionStopped();
 		myStop = true;
 		myVirtualMachine = null;
 	}
@@ -149,7 +163,12 @@ public class DotNetDebugThread extends Thread
 
 		if(virtualMachine == null)
 		{
+			myEventDispatcher.getMulticaster().connectionFailed();
 			return;
+		}
+		else
+		{
+			myEventDispatcher.getMulticaster().connectionSuccess(virtualMachine);
 		}
 
 		myVirtualMachine = virtualMachine;
@@ -185,7 +204,8 @@ public class DotNetDebugThread extends Thread
 		}
 		catch(InterruptedException e)
 		{
-			e.printStackTrace();
+			LOGGER.error(e);
+			myEventDispatcher.getMulticaster().connectionFailed();
 			return;
 		}
 
@@ -224,7 +244,7 @@ public class DotNetDebugThread extends Thread
 
 						if(event instanceof VMDeathEvent)
 						{
-							myStop = true;
+							setStop();
 							return;
 						}
 					}
