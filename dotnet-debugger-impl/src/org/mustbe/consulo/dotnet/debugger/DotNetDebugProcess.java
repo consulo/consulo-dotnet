@@ -30,8 +30,10 @@ import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
+import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
+import com.intellij.xdebugger.breakpoints.XBreakpointListener;
+import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
@@ -48,11 +50,71 @@ import mono.debugger.request.StepRequest;
  */
 public class DotNetDebugProcess extends XDebugProcess
 {
+	private class MyXBreakpointListener implements XBreakpointListener<XLineBreakpoint<XBreakpointProperties>>
+	{
+		@Override
+		public void breakpointAdded(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
+		{
+			val project = getSession().getProject();
+
+			myDebugThread.processAnyway(new Processor<VirtualMachine>()
+			{
+				@Override
+				public boolean process(final VirtualMachine virtualMachine)
+				{
+					new ReadAction<Object>()
+					{
+						@Override
+						protected void run(Result<Object> objectResult) throws Throwable
+						{
+							val type = (DotNetLineBreakpointType) breakpoint.getType();
+
+							type.createRequest(project, virtualMachine, breakpoint, null);
+						}
+					}.execute();
+
+					return false;
+				}
+			});
+		}
+
+		@Override
+		public void breakpointRemoved(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
+		{
+			myDebugThread.processAnyway(new Processor<VirtualMachine>()
+			{
+				@Override
+				public boolean process(VirtualMachine virtualMachine)
+				{
+					EventRequest eventRequest = breakpoint.getUserData(DotNetDebugThread.EVENT_REQUEST);
+					if(eventRequest != null)
+					{
+						eventRequest.disable();
+					}
+
+					if(eventRequest != null)
+					{
+						virtualMachine.eventRequestManager().deleteEventRequest(eventRequest);
+					}
+					return false;
+				}
+			});
+		}
+
+		@Override
+		public void breakpointChanged(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint)
+		{
+
+		}
+	}
+
 	private ExecutionResult myResult;
 	private final DebugConnectionInfo myDebugConnectionInfo;
 	private final DotNetDebugThread myDebugThread;
 
 	private EventSet myPausedEventSet;
+	private XBreakpointManager myBreakpointManager;
+	private final XBreakpointListener myBreakpointListener = new MyXBreakpointListener();
 
 	public DotNetDebugProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
 	{
@@ -60,6 +122,10 @@ public class DotNetDebugProcess extends XDebugProcess
 		session.setPauseActionSupported(true);
 		myDebugConnectionInfo = debugConnectionInfo;
 		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo, runProfile);
+
+		myBreakpointManager = XDebuggerManager.getInstance(session.getProject()).getBreakpointManager();
+
+		myBreakpointManager.addBreakpointListener(DotNetLineBreakpointType.getInstance(), myBreakpointListener);
 	}
 
 	public void start()
@@ -90,66 +156,6 @@ public class DotNetDebugProcess extends XDebugProcess
 	public ExecutionConsole createConsole()
 	{
 		return myResult.getExecutionConsole();
-	}
-
-	@NotNull
-	@Override
-	public XBreakpointHandler<?>[] getBreakpointHandlers()
-	{
-		return new XBreakpointHandler[]{
-				new XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>(DotNetLineBreakpointType.class)
-				{
-
-					@Override
-					public void registerBreakpoint(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
-					{
-						val project = getSession().getProject();
-
-						myDebugThread.processAnyway(new Processor<VirtualMachine>()
-						{
-							@Override
-							public boolean process(final VirtualMachine virtualMachine)
-							{
-								new ReadAction<Object>()
-								{
-									@Override
-									protected void run(Result<Object> objectResult) throws Throwable
-									{
-										val type = (DotNetLineBreakpointType) breakpoint.getType();
-
-										type.createRequest(project, virtualMachine, breakpoint, null);
-									}
-								}.execute();
-
-								return false;
-							}
-						});
-					}
-
-					@Override
-					public void unregisterBreakpoint(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint, final boolean temporary)
-					{
-						myDebugThread.processAnyway(new Processor<VirtualMachine>()
-						{
-							@Override
-							public boolean process(VirtualMachine virtualMachine)
-							{
-								EventRequest eventRequest = breakpoint.getUserData(DotNetDebugThread.EVENT_REQUEST);
-								if(eventRequest != null)
-								{
-									eventRequest.disable();
-								}
-
-								if(eventRequest != null)
-								{
-									virtualMachine.eventRequestManager().deleteEventRequest(eventRequest);
-								}
-								return false;
-							}
-						});
-					}
-				}
-		};
 	}
 
 	@NotNull
@@ -247,6 +253,7 @@ public class DotNetDebugProcess extends XDebugProcess
 		myPausedEventSet = null;
 		myDebugThread.setStop();
 		myDebugThread.normalizeBreakpoints();
+		myBreakpointManager.removeBreakpointListener(myBreakpointListener);
 	}
 
 	@Override
