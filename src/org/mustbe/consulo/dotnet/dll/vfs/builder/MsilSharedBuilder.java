@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
@@ -46,6 +47,7 @@ import edu.arizona.cs.mbel.signature.*;
  * @author VISTALL
  * @since 21.05.14
  */
+@Logger
 public class MsilSharedBuilder implements SignatureConstants
 {
 	private static final String[] KEYWORDS;
@@ -335,7 +337,12 @@ public class MsilSharedBuilder implements SignatureConstants
 				break;
 			case ELEMENT_TYPE_VAR:
 				XGenericTypeSignature typeGenericTypeSignature = (XGenericTypeSignature) signature;
-				assert typeDef != null;
+				if(typeDef == null)
+				{
+					LOGGER.error("TypeDef is null", new Exception());
+					builder.append("GENERICERROR");
+					return;
+				}
 				builder.append("!");
 				builder.append(typeDef.getGenericParams().get(typeGenericTypeSignature.getIndex()).getName());
 				break;
