@@ -35,11 +35,13 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.Computable;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -112,18 +114,26 @@ public class DotNetLibraryModuleDependencyTabContext extends AddModuleDependency
 			@Override
 			public void run()
 			{
-				Map<String, String> availableSystemLibraries = extension.getAvailableSystemLibraries();
+				val availableSystemLibraries = extension.getAvailableSystemLibraries();
 
-				final Map<String, String> map = new TreeMap<String, String>();
-
-				for(Map.Entry<String, String> entry : availableSystemLibraries.entrySet())
+				final Map<String, String> map = ApplicationManager.getApplication().runReadAction(new Computable<Map<String, String>>()
 				{
-					if(findOrderEntry(entry.getKey(), myClasspathPanel.getRootModel()) != null)
+					@Override
+					public Map<String, String> compute()
 					{
-						continue;
+						Map<String, String>  map = new TreeMap<String, String>();
+
+						for(Map.Entry<String, String> entry : availableSystemLibraries.entrySet())
+						{
+							if(findOrderEntry(entry.getKey(), myClasspathPanel.getRootModel()) != null)
+							{
+								continue;
+							}
+							map.put(entry.getKey(), entry.getValue());
+						}
+						return map;
 					}
-					map.put(entry.getKey(), entry.getValue());
-				}
+				});
 
 				UIUtil.invokeLaterIfNeeded(new Runnable()
 				{
