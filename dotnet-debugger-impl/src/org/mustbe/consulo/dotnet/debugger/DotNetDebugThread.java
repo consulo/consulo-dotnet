@@ -113,7 +113,14 @@ public class DotNetDebugThread extends Thread
 	{
 		if(myVirtualMachine != null)
 		{
-			myVirtualMachine.dispose();
+			try
+			{
+				myVirtualMachine.dispose();
+			}
+			catch(Exception e)
+			{
+				//
+			}
 		}
 		connectionStopped();
 	}
