@@ -111,8 +111,17 @@ public class DotNetDebugThread extends Thread
 
 	public void setStop()
 	{
-		myEventDispatcher.getMulticaster().connectionStopped();
+		if(myVirtualMachine != null)
+		{
+			myVirtualMachine.dispose();
+		}
+		connectionStopped();
+	}
+
+	private void connectionStopped()
+	{
 		myStop = true;
+		myEventDispatcher.getMulticaster().connectionStopped();
 		myVirtualMachine = null;
 	}
 
@@ -244,7 +253,7 @@ public class DotNetDebugThread extends Thread
 
 						if(event instanceof VMDeathEvent)
 						{
-							setStop();
+							connectionStopped();
 							return;
 						}
 					}
