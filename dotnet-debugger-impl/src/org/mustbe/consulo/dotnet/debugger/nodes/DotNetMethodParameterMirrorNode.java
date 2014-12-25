@@ -66,7 +66,8 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 		{
 			return;
 		}
-		PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(myDebugContext.getProject(), fileByPath, myFrame.location().lineNumber() - 1);
+		PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(myDebugContext.getProject(), fileByPath,
+				myFrame.location().lineNumber() - 1);
 		if(psiElement == null)
 		{
 			return;

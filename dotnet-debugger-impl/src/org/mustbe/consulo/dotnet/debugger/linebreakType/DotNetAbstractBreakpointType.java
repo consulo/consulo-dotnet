@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebugHelper;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointTypeBase;
@@ -38,6 +39,9 @@ public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBa
 		super(id, title, editorsProvider);
 	}
 
-	public abstract boolean createRequest(
-			@NotNull Project project, @NotNull VirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint, TypeMirror typeMirror);
+	public abstract boolean createRequest(@NotNull Project project,
+			@NotNull DotNetDebugHelper helper,
+			@NotNull VirtualMachine virtualMachine,
+			@NotNull XLineBreakpoint breakpoint,
+			@NotNull TypeMirror typeMirror);
 }

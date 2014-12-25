@@ -69,7 +69,7 @@ public class DotNetDebugProcess extends XDebugProcess
 						{
 							val type = (DotNetLineBreakpointType) breakpoint.getType();
 
-							type.createRequest(project, virtualMachine, breakpoint, null);
+							type.createRequest(project, myDebugHelper, virtualMachine, breakpoint, null);
 						}
 					}.execute();
 
@@ -115,17 +115,31 @@ public class DotNetDebugProcess extends XDebugProcess
 	private EventSet myPausedEventSet;
 	private XBreakpointManager myBreakpointManager;
 	private final XBreakpointListener myBreakpointListener = new MyXBreakpointListener();
+	private final DotNetDebugHelper myDebugHelper;
 
 	public DotNetDebugProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
 	{
 		super(session);
 		session.setPauseActionSupported(true);
 		myDebugConnectionInfo = debugConnectionInfo;
+		myDebugHelper = createHelper();
 		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo, runProfile);
 
 		myBreakpointManager = XDebuggerManager.getInstance(session.getProject()).getBreakpointManager();
 
 		myBreakpointManager.addBreakpointListener(DotNetLineBreakpointType.getInstance(), myBreakpointListener);
+	}
+
+	@NotNull
+	protected DotNetDebugHelper createHelper()
+	{
+		return new DefaultDotNetDebugHelper();
+	}
+
+	@NotNull
+	public DotNetDebugHelper getDebugHelper()
+	{
+		return myDebugHelper;
 	}
 
 	@NotNull

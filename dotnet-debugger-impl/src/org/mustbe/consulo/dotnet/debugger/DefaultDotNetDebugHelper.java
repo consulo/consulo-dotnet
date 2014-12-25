@@ -33,7 +33,7 @@ import mono.debugger.TypeMirror;
  * @author VISTALL
  * @since 21.12.14
  */
-public class DefaultDotNetDebugHelper extends DotNetDebugHelper
+public class DefaultDotNetDebugHelper implements DotNetDebugHelper
 {
 	@Override
 	public TypeMirror findTypeMirrorFromAssemblies(String vmQualifiedName,
@@ -67,5 +67,4 @@ public class DefaultDotNetDebugHelper extends DotNetDebugHelper
 		val exeFile = DotNetMacroUtil.expandOutputFile(extension);
 		return new File(exeFile);
 	}
-
 }

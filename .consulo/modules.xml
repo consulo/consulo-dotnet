@@ -139,6 +139,7 @@
           <orderEntry type="library" exploded="" name="mono-soft-debugging" level="project" />
           <orderEntry type="library" exploded="" name="dotnet-asm" level="project" />
           <orderEntry type="module" module-name="dotnet-api" />
+          <orderEntry type="module" module-name="dotnet-psi-api" />
         </module-layer>
       </module>
       <module name="dotnet-debugger-impl" dirurl="file://$PROJECT_DIR$/dotnet-debugger-impl" current-layer="Default">
@@ -242,4 +243,3 @@
     </modules>
   </component>
 </project>
-

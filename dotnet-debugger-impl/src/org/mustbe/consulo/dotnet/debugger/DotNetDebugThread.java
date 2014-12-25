@@ -270,7 +270,7 @@ public class DotNetDebugThread extends Thread
 						stoppedAlready = true;
 
 						myDebugProcess.setPausedEventSet(eventSet);
-						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location);
+						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location, myDebugProcess.getDebugHelper());
 						DotNetDebugContext debugContext = createDebugContext();
 						if(xLineBreakpoint != null)
 						{
@@ -326,7 +326,7 @@ public class DotNetDebugThread extends Thread
 
 							val type = (DotNetLineBreakpointType) breakpoint.getType();
 
-							type.createRequest(mySession.getProject(), virtualMachine, breakpoint, typeMirror);
+							type.createRequest(mySession.getProject(), myDebugProcess.getDebugHelper(), virtualMachine, breakpoint, typeMirror);
 						}
 					}
 				}
@@ -352,11 +352,11 @@ public class DotNetDebugThread extends Thread
 	public DotNetDebugContext createDebugContext()
 	{
 		assert myVirtualMachine != null;
-		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile);
+		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile, myDebugProcess.getDebugHelper());
 	}
 
 	@Nullable
-	private XLineBreakpoint<?> resolveToBreakpoint(@Nullable Location location)
+	private XLineBreakpoint<?> resolveToBreakpoint(@Nullable Location location, DotNetDebugHelper debugHelper)
 	{
 		if(location == null)
 		{
@@ -374,7 +374,7 @@ public class DotNetDebugThread extends Thread
 		}
 
 		XLineBreakpoint<XBreakpointProperties> breakpointAtLine = myDebuggerManager.getBreakpointManager().findBreakpointAtLine
-				(DotNetLineBreakpointType.getInstance(), fileByPath, location.lineNumber() - 1); // .net asm - 1 index based, consulo - 0 based
+				(DotNetLineBreakpointType.getInstance(), fileByPath, location.lineNumber());
 		if(breakpointAtLine == null)
 		{
 			return null;

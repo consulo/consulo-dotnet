@@ -84,12 +84,15 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	}
 
 	@Override
-	public boolean createRequest(
-			@NotNull Project project, @NotNull VirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint, @Nullable TypeMirror typeMirror)
+	public boolean createRequest(@NotNull Project project,
+			@NotNull DotNetDebugHelper helper,
+			@NotNull VirtualMachine virtualMachine,
+			@NotNull XLineBreakpoint breakpoint,
+			@Nullable TypeMirror typeMirror)
 	{
 		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
-		Pair<BreakpointResult, Location> pair = findLocationImpl(project, virtualMachine, breakpoint, typeMirror);
+		Pair<BreakpointResult, Location> pair = findLocationImpl(project, virtualMachine, breakpoint, typeMirror, helper);
 		switch(pair.getFirst())
 		{
 			case WRONG_TYPE:
@@ -110,8 +113,11 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	}
 
 	@NotNull
-	public Pair<BreakpointResult, Location> findLocationImpl(
-			Project project, VirtualMachine virtualMachine, XLineBreakpoint<?> lineBreakpoint, @Nullable TypeMirror typeMirror)
+	public Pair<BreakpointResult, Location> findLocationImpl(@NotNull Project project,
+			@NotNull VirtualMachine virtualMachine,
+			@NotNull XLineBreakpoint<?> lineBreakpoint,
+			@Nullable TypeMirror typeMirror,
+			@NotNull DotNetDebugHelper helper)
 	{
 		VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(lineBreakpoint.getFileUrl());
 		if(fileByUrl == null)
@@ -150,7 +156,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			return WRONG_TYPE;
 		}
 
-		TypeMirror mirror = typeMirror == null ? findTypeMirror(vmQualifiedName, virtualMachine, fileByUrl, typeDeclaration) : typeMirror;
+		TypeMirror mirror = typeMirror == null ? findTypeMirror(vmQualifiedName, virtualMachine, fileByUrl, typeDeclaration, helper) : typeMirror;
 
 		if(mirror == null)
 		{
@@ -181,8 +187,11 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		return Pair.<BreakpointResult, Location>create(BreakpointResult.OK, new LocationImpl(virtualMachine, targetMirror, index));
 	}
 
-	private TypeMirror findTypeMirror(final String vmQualifiedName, VirtualMachine virtualMachine, VirtualFile virtualFile,
-			DotNetTypeDeclaration parent)
+	private TypeMirror findTypeMirror(final String vmQualifiedName,
+			VirtualMachine virtualMachine,
+			VirtualFile virtualFile,
+			DotNetTypeDeclaration parent,
+			DotNetDebugHelper helper)
 	{
 
 		if(virtualMachine.isAtLeastVersion(2, 9))
@@ -206,13 +215,10 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		{
 			AssemblyMirror[] assemblies = virtualMachine.rootAppDomain().assemblies();
 
-			for(DotNetDebugHelper debugHelper : DotNetDebugHelper.EP_NAME.getExtensions())
+			TypeMirror typeMirror = helper.findTypeMirrorFromAssemblies(vmQualifiedName, assemblies, parent);
+			if(typeMirror != null)
 			{
-				TypeMirror typeMirror = debugHelper.findTypeMirrorFromAssemblies(vmQualifiedName, assemblies, parent);
-				if(typeMirror != null)
-				{
-					return typeMirror;
-				}
+				return typeMirror;
 			}
 			return null;
 		}

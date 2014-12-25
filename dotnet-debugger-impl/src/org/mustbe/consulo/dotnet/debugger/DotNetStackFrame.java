@@ -97,8 +97,8 @@ public class DotNetStackFrame extends XStackFrame
 		return new XDebuggerEvaluator()
 		{
 			@Override
-			public void evaluate(
-					@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+			public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback,
+					@Nullable XSourcePosition expressionPosition)
 			{
 				for(DotNetDebuggerProvider dotNetDebuggerProvider : DotNetDebuggerProvider.EP_NAME.getExtensions())
 				{
@@ -113,8 +113,7 @@ public class DotNetStackFrame extends XStackFrame
 			}
 
 			@Override
-			public void evaluate(
-					@NotNull String expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+			public void evaluate(@NotNull String expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 			{
 
 			}

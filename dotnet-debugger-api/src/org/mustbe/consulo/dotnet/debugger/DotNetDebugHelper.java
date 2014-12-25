@@ -19,7 +19,6 @@ package org.mustbe.consulo.dotnet.debugger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import mono.debugger.AssemblyMirror;
 import mono.debugger.TypeMirror;
 
@@ -27,12 +26,10 @@ import mono.debugger.TypeMirror;
  * @author VISTALL
  * @since 21.12.14
  */
-public abstract class DotNetDebugHelper
+public interface DotNetDebugHelper
 {
-	public static final ExtensionPointName<DotNetDebugHelper> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.debuggerHelper");
-
 	@Nullable
-	public abstract TypeMirror findTypeMirrorFromAssemblies(String vmQualifiedName,
+	TypeMirror findTypeMirrorFromAssemblies(String vmQualifiedName,
 			@NotNull AssemblyMirror[] assemblyMirrors,
 			@NotNull DotNetTypeDeclaration typeDeclaration);
 }
