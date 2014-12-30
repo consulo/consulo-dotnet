@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.psi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
@@ -28,6 +29,9 @@ import com.intellij.psi.PsiNameIdentifierOwner;
 public interface DotNetVariable extends PsiNameIdentifierOwner, DotNetNamedElement, DotNetModifierListOwner
 {
 	boolean isConstant();
+
+	@Nullable
+	PsiElement getConstantKeywordElement();
 
 	@NotNull
 	DotNetTypeRef toTypeRef(boolean resolveFromInitializer);

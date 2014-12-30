@@ -60,6 +60,13 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 		return false;
 	}
 
+	@Nullable
+	@Override
+	public PsiElement getConstantKeywordElement()
+	{
+		return null;
+	}
+
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)

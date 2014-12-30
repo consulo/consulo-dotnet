@@ -52,6 +52,13 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 		super(stub, nodeType);
 	}
 
+	@Nullable
+	@Override
+	public PsiElement getConstantKeywordElement()
+	{
+		return null;
+	}
+
 	@Override
 	public boolean isConstant()
 	{
