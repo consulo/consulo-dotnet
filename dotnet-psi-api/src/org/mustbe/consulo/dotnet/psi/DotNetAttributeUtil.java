@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
@@ -27,8 +28,13 @@ import com.intellij.psi.PsiElement;
  */
 public class DotNetAttributeUtil
 {
+	@Nullable
 	public static DotNetAttribute findAttribute(@NotNull PsiElement owner, @NotNull String qName)
 	{
+		if(!owner.isValid())
+		{
+			return null;
+		}
 		if(DumbService.isDumb(owner.getProject()))
 		{
 			return null;
