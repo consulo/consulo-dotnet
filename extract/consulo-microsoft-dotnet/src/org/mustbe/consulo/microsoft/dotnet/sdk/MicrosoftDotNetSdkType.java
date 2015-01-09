@@ -19,6 +19,7 @@ package org.mustbe.consulo.microsoft.dotnet.sdk;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -56,6 +57,8 @@ import lombok.val;
  */
 public class MicrosoftDotNetSdkType extends DotNetSdkType
 {
+	private static final Pattern _4_0_PATTERN = Pattern.compile("4.0(.\\d.\\d)?");
+
 	@NotNull
 	public static MicrosoftDotNetSdkType getInstance()
 	{
@@ -118,6 +121,17 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	public String getPresentableName()
 	{
 		return "Microsoft .NET";
+	}
+
+	@NotNull
+	@Override
+	public File getLoaderFile(@NotNull Sdk sdk)
+	{
+		if(_4_0_PATTERN.matcher(sdk.getVersionString()).find())
+		{
+			return getLoaderFile(MicrosoftDotNetSdkType.class, "loader4.exe");
+		}
+		return super.getLoaderFile(sdk);
 	}
 
 	@Nullable

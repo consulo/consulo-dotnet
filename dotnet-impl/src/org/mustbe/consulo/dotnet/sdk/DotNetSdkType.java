@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 
 /**
@@ -37,18 +38,17 @@ public abstract class DotNetSdkType extends SdkType
 	}
 
 	@NotNull
-	public File getLoaderFile()
+	public File getLoaderFile(@NotNull Sdk sdk)
 	{
-		return getLoaderFile(getClass());
+		return getLoaderFile(getClass(), "loader.exe");
 	}
 
 	@NotNull
-	protected static File getLoaderFile(Class<?> clazz)
+	protected static File getLoaderFile(Class<?> clazz, String str)
 	{
 		PluginClassLoader classLoader = (PluginClassLoader) clazz.getClassLoader();
 		IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());
 		assert plugin != null;
 		return new File(new File(plugin.getPath(), "loader"), "loader.exe");
 	}
-
 }
