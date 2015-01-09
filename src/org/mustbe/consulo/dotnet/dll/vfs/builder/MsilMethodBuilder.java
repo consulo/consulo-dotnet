@@ -101,7 +101,7 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 		typeToString(builder, methodDef.getSignature().getReturnType().getInnerType(), typeDef);
 		builder.append(" ");
 		appendValidName(builder, methodDef.getName());
-		processGeneric(builder, methodDef);
+		processGeneric(builder, methodDef, typeDef);
 		builder.append("(");
 
 		List<ParameterSignature> parameters = methodDef.getSignature().getParameters();

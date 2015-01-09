@@ -88,7 +88,7 @@ public class MsilTypeBuilder extends MsilSharedBuilder implements TypeAttributes
 
 		appendTypeRefFullName(builder, typeDef.getNamespace(), typeDef.getName());
 
-		processGeneric(builder, typeDef);
+		processGeneric(builder, typeDef, typeDef);
 
 		Object superClass = typeDef.getSuperClass();
 		if(superClass != null)

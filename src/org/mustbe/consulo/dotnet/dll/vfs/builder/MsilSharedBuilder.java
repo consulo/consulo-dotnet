@@ -150,7 +150,7 @@ public class MsilSharedBuilder implements SignatureConstants
 		block.getBlocks().add(new LineStubBlock(builder));
 	}
 
-	protected static void processGeneric(StringBuilder builder, final GenericParamOwner paramOwner)
+	protected static void processGeneric(StringBuilder builder, @NotNull final GenericParamOwner paramOwner, @Nullable final TypeDef typeDef)
 	{
 		List<GenericParamDef> genericParams = paramOwner.getGenericParams();
 		if(genericParams.isEmpty())
@@ -194,7 +194,7 @@ public class MsilSharedBuilder implements SignatureConstants
 						@Override
 						public Void fun(StringBuilder t, Object v)
 						{
-							toStringFromDefRefSpec(t, v, paramOwner instanceof TypeDef ? (TypeDef) paramOwner : null);
+							toStringFromDefRefSpec(t, v, typeDef);
 							return null;
 						}
 					}, ", ");
