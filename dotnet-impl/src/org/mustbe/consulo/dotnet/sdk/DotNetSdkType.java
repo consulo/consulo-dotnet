@@ -44,11 +44,11 @@ public abstract class DotNetSdkType extends SdkType
 	}
 
 	@NotNull
-	protected static File getLoaderFile(Class<?> clazz, String str)
+	protected static File getLoaderFile(Class<?> clazz, String fileName)
 	{
 		PluginClassLoader classLoader = (PluginClassLoader) clazz.getClassLoader();
 		IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());
 		assert plugin != null;
-		return new File(new File(plugin.getPath(), "loader"), "loader.exe");
+		return new File(new File(plugin.getPath(), "loader"), fileName);
 	}
 }

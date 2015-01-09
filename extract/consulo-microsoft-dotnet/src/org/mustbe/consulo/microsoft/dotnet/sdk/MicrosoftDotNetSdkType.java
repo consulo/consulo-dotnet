@@ -57,7 +57,7 @@ import lombok.val;
  */
 public class MicrosoftDotNetSdkType extends DotNetSdkType
 {
-	private static final Pattern _4_0_PATTERN = Pattern.compile("4.0(.\\d.\\d)?");
+	private static final Pattern _4_0_PATTERN = Pattern.compile("4.0(.\\d(.\\d)?)?");
 
 	@NotNull
 	public static MicrosoftDotNetSdkType getInstance()
