@@ -124,9 +124,12 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension
 				{
 					for(DotNetNamedElement element1 : ((DotNetTypeDeclaration) element).getMembers())
 					{
-						CoverageListRootNode e = new CoverageListRootNode(getProject(), element1, getSuitesBundle(), getStateBean());
-						e.setParent(node);
-						nodes.add(e);
+						if(element1 instanceof DotNetTypeDeclaration)
+						{
+							CoverageListRootNode e = new CoverageListRootNode(getProject(), element1, getSuitesBundle(), getStateBean());
+							e.setParent(node);
+							nodes.add(e);
+						}
 					}
 				}
 				return nodes;
