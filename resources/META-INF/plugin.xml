@@ -120,5 +120,8 @@
 		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider"/>
 
 		<moduleRootsProcessor implementation="org.mustbe.consulo.dotnet.module.DotNetModuleRootsProcessor" />
+
+		<coverageEngine implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEngine" />
+		<programRunner implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageProgramRunner" />
 	</extensions>
 </idea-plugin>

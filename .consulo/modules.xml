@@ -240,6 +240,20 @@
           <orderEntry type="module" module-name="dotnet-psi-api" />
         </module-layer>
       </module>
+      <module name="impl/consulo-opencover" dirurl="file://$PROJECT_DIR$/extract/consulo-opencover" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
+          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
+        </module-layer>
+      </module>
     </modules>
   </component>
 </project>

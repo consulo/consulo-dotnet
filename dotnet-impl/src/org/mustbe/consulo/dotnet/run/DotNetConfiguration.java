@@ -27,6 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageConfigurationEditor;
+import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
@@ -36,12 +38,14 @@ import com.intellij.execution.configurations.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
@@ -91,6 +95,13 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		readModule(element);
 
 		XmlSerializer.deserializeInto(this, element);
+
+		Element coverageElement = element.getChild("coverage");
+		if(coverageElement != null)
+		{
+			CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate(this);
+			coverageEnabledConfiguration.readExternal(coverageElement);
+		}
 	}
 
 	@Override
@@ -100,13 +111,21 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		writeModule(element);
 
 		XmlSerializer.serializeInto(this, element);
+
+		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate(this);
+		Element coverageElement = new Element("coverage");
+		coverageEnabledConfiguration.writeExternal(coverageElement);
+		element.addContent(coverageElement);
 	}
 
 	@NotNull
 	@Override
 	public SettingsEditor<? extends RunConfiguration> getConfigurationEditor()
 	{
-		return new DotNetConfigurationEditor(getProject());
+		SettingsEditorGroup<DotNetConfiguration> group = new SettingsEditorGroup<DotNetConfiguration>();
+		group.addEditor("General", new DotNetConfigurationEditor(getProject()));
+		group.addEditor("Coverage", new DotNetCoverageConfigurationEditor());
+		return group;
 	}
 
 	@Nullable

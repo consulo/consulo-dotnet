@@ -35,6 +35,15 @@
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-microsoft-dotnet/dist" />
       </element>
+      <element id="directory" name="opencover">
+        <element id="directory" name="lib">
+          <element id="jar-archive" name="opencover.jar">
+            <element id="module-output" name="consulo-opencover" />
+            <element id="module-production-resource-output" name="consulo-opencover" />
+          </element>
+        </element>
+        <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-opencover/dist" />
+      </element>
       <element id="directory" name="mono-dotnet">
         <element id="directory" name="lib">
           <element id="zip-archive" name="mono-dotnet.jar">

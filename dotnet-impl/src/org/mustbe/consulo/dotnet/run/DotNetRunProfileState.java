@@ -32,6 +32,8 @@ import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
+import com.intellij.util.Consumer;
+import com.intellij.util.NotNullFunction;
 import lombok.val;
 
 /**
@@ -41,33 +43,50 @@ import lombok.val;
 public class DotNetRunProfileState implements RunProfileState
 {
 	private final ExecutionEnvironment myExecutionEnvironment;
-	private final GeneralCommandLine myRunCommandLine;
+	private final GeneralCommandLine myOriginalCommandLine;
 	private final DebugConnectionInfo myDebugConnectionInfo;
+
+	private GeneralCommandLine myCommandLineForRun;
+	@SuppressWarnings("unchecked")
+	private Consumer<OSProcessHandler> myProcessHandlerConsumer = Consumer.EMPTY_CONSUMER;
 
 	public DotNetRunProfileState(@NotNull ExecutionEnvironment executionEnvironment,
 			@NotNull GeneralCommandLine runCommandLine,
 			@Nullable DebugConnectionInfo debugConnectionInfo)
 	{
 		myExecutionEnvironment = executionEnvironment;
-		myRunCommandLine = runCommandLine;
+		myOriginalCommandLine = runCommandLine;
 		myDebugConnectionInfo = debugConnectionInfo;
+
+		myCommandLineForRun = runCommandLine;
+	}
+
+	public void modifyCommandLine(@NotNull NotNullFunction<GeneralCommandLine, GeneralCommandLine> function)
+	{
+		myCommandLineForRun = function.fun(myOriginalCommandLine);
 	}
 
 	@Nullable
 	@Override
 	public ExecutionResult execute(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException
 	{
-		if(!new File(myRunCommandLine.getExePath()).exists())
+		if(!new File(myCommandLineForRun.getExePath()).exists())
 		{
-			throw new ExecutionException(myRunCommandLine.getExePath() + " is not exists");
+			throw new ExecutionException(myCommandLineForRun.getExePath() + " is not exists");
 		}
 
 		val builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
 
-		OSProcessHandler osProcessHandler = new OSProcessHandler(getRunCommandLine());
+		OSProcessHandler handler = new OSProcessHandler(myCommandLineForRun);  		myProcessHandlerConsumer.consume(handler);
+
 		ConsoleView console = builder.getConsole();
-		console.attachToProcess(osProcessHandler);
-		return new DefaultExecutionResult(console, osProcessHandler);
+		console.attachToProcess(handler);
+		return new DefaultExecutionResult(console, handler);
+	}
+
+	public void setProcessHandlerConsumer(@NotNull Consumer<OSProcessHandler> processHandlerConsumer)
+	{
+		myProcessHandlerConsumer = processHandlerConsumer;
 	}
 
 	@Nullable
@@ -85,6 +104,6 @@ public class DotNetRunProfileState implements RunProfileState
 	@NotNull
 	public GeneralCommandLine getRunCommandLine()
 	{
-		return myRunCommandLine;
+		return myCommandLineForRun;
 	}
 }
