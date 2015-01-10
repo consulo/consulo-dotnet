@@ -31,7 +31,6 @@ import com.intellij.coverage.CoverageSuite;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.coverage.view.CoverageViewExtension;
 import com.intellij.coverage.view.CoverageViewManager;
-import com.intellij.coverage.view.DirectoryCoverageViewExtension;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import com.intellij.execution.testframework.AbstractTestProxy;
@@ -57,7 +56,7 @@ public class DotNetCoverageEngine extends CoverageEngine
 			CoverageSuitesBundle suiteBundle,
 			CoverageViewManager.StateBean stateBean)
 	{
-		return new DirectoryCoverageViewExtension(project, getCoverageAnnotator(project), suiteBundle, stateBean);
+		return new DotNetCoverageViewExtension(project, suiteBundle, stateBean);
 	}
 
 	@Override

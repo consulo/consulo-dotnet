@@ -17,9 +17,10 @@
 package org.mustbe.consulo.microsoft.dotnet.run.coverage;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringReader;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
@@ -28,12 +29,8 @@ import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.run.DotNetConfiguration;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageRunner;
+import org.mustbe.consulo.dotnet.run.coverage.hack.HackClassData;
 import org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 import com.intellij.coverage.CoverageSuite;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
@@ -64,33 +61,43 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 	{
 		try
 		{
-			FileReader reader = new FileReader(sessionDataFile.getAbsolutePath());
-			OpenCoverXmlHandler xmlOutputParser = new OpenCoverXmlHandler();
-			try
+			JAXBContext jaxbContext = JAXBContext.newInstance(CoverageSession.class);
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+			CoverageSession unmarshal = (CoverageSession) unmarshaller.unmarshal(sessionDataFile);
+
+			ProjectData projectData = new ProjectData();
+			CoverageSession.Modules modules = unmarshal.Modules;
+			if(modules != null)
 			{
-				XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-				xmlReader.setEntityResolver(new EntityResolver()
+				CoverageSession.Module[] modules2 = modules.Modules;
+				if(modules2 != null)
 				{
-					@Override
-					public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
+					for(CoverageSession.Module module : modules2)
 					{
-						return new InputSource(new StringReader(""));
+						CoverageSession.Classes classes = module.Classes;
+						if(classes == null)
+						{
+							continue;
+						}
+						CoverageSession.Class[] classes1 = classes.Classes;
+						if(classes1 == null)
+						{
+							continue;
+						}
+
+						for(CoverageSession.Class aClass : classes1)
+						{
+							HackClassData classData = HackClassData.getOrCreateClassData(projectData, aClass.FullName);
+
+							classData.setSequenceCoverage(aClass.Summary.sequenceCoverage);
+						}
 					}
-				});
-				xmlReader.setContentHandler(xmlOutputParser);
-				xmlReader.parse(new InputSource(reader));
-				return xmlOutputParser.getProjectData();
+				}
 			}
-			finally
-			{
-				reader.close();
-			}
+			return projectData;
 		}
-		catch(SAXException e)
-		{
-			e.printStackTrace();
-		}
-		catch(IOException e)
+		catch(JAXBException e)
 		{
 			e.printStackTrace();
 		}
