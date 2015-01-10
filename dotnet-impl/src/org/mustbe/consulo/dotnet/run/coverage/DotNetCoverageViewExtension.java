@@ -24,7 +24,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
-import org.mustbe.consulo.dotnet.run.coverage.hack.HackClassData;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.coverage.view.CoverageListRootNode;
 import com.intellij.coverage.view.CoverageViewExtension;
@@ -86,10 +85,6 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension
 			}
 
 			ClassData classData = getSuitesBundle().getCoverageData().getClassData(vmQName);
-			if(classData instanceof HackClassData)
-			{
-				return ((HackClassData) classData).getSequenceCoverage() + " %";
-			}
 
 
 		}
