@@ -29,7 +29,6 @@ import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.run.DotNetConfiguration;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageRunner;
-import org.mustbe.consulo.dotnet.run.coverage.hack.HackClassData;
 import org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension;
 import com.intellij.coverage.CoverageSuite;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -37,6 +36,7 @@ import com.intellij.execution.configurations.coverage.CoverageEnabledConfigurati
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.NotNullPairFunction;
 
@@ -88,9 +88,8 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 
 						for(CoverageSession.Class aClass : classes1)
 						{
-							HackClassData classData = HackClassData.getOrCreateClassData(projectData, aClass.FullName);
+							ClassData classData = projectData.getOrCreateClassData(aClass.FullName);
 
-							classData.setSequenceCoverage(aClass.Summary.sequenceCoverage);
 						}
 					}
 				}
