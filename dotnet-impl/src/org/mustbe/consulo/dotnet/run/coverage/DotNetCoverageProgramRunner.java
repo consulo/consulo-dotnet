@@ -66,7 +66,13 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 			return false;
 		}
 		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) profile);
-		if(coverageEnabledConfiguration.getCoverageRunner() == null || !coverageEnabledConfiguration.isCoverageEnabled())
+		CoverageRunner coverageRunner = coverageEnabledConfiguration.getCoverageRunner();
+		if(coverageRunner == null || !coverageEnabledConfiguration.isCoverageEnabled())
+		{
+			return false;
+		}
+
+		if(!DotNetCoverageRunner.findAvailableRunners(profile).contains(coverageRunner))
 		{
 			return false;
 		}
