@@ -18,13 +18,16 @@ package org.mustbe.consulo.dotnet.run;
 
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.actions.RunConfigurationProducer;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -40,18 +43,13 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 	@Override
 	protected boolean setupConfigurationFromContext(DotNetConfiguration configuration, ConfigurationContext context, Ref<PsiElement> sourceElement)
 	{
-		PsiElement psiLocation = context.getPsiLocation();
-		if(psiLocation == null)
+		val contextInfo = getModuleForRun(context);
+		if(contextInfo != null)
 		{
-			return false;
-		}
-
-		Pair<Module, String> moduleForRun = getModuleForRun(context);
-		if(moduleForRun != null)
-		{
-			configuration.setName(moduleForRun.getFirst().getName());
-			configuration.setModule(moduleForRun.getFirst());
-			configuration.setWorkingDirectory(moduleForRun.getSecond());
+			configuration.setName(contextInfo.getFirst().getName());
+			configuration.setModule(contextInfo.getFirst());
+			configuration.setWorkingDirectory(contextInfo.getSecond());
+			sourceElement.set(contextInfo.getThird());
 			return true;
 		}
 		return false;
@@ -60,17 +58,23 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 	@Override
 	public boolean isConfigurationFromContext(DotNetConfiguration configuration, ConfigurationContext context)
 	{
-		Pair<Module, String> moduleForRun = getModuleForRun(context);
-		if(moduleForRun == null)
+		val contextInfo = getModuleForRun(context);
+		if(contextInfo == null)
 		{
 			return false;
 		}
 
-		return configuration.getConfigurationModule().getModule() == moduleForRun.getFirst();
+		return configuration.getConfigurationModule().getModule() == contextInfo.getFirst();
 	}
 
-	private Pair<Module, String> getModuleForRun(ConfigurationContext configurationContext)
+	private Trinity<Module, String, PsiFile> getModuleForRun(ConfigurationContext configurationContext)
 	{
+		PsiElement psiLocation = configurationContext.getPsiLocation();
+		if(psiLocation == null)
+		{
+			return null;
+		}
+
 		Module module = configurationContext.getModule();
 		if(module == null)
 		{
@@ -81,7 +85,18 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 		{
 			if(extension.getTarget() == DotNetTarget.EXECUTABLE || extension.getTarget() == DotNetTarget.WIN_EXECUTABLE)
 			{
-				return Pair.create(module, extension.getOutputDir());
+				PsiFile containingFile = psiLocation.getContainingFile();
+				if(containingFile == null)
+				{
+					return null;
+				}
+
+				DotNetModuleLangExtension langExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
+				if(langExtension == null || langExtension.getFileType() != containingFile.getFileType())
+				{
+					return null;
+				}
+				return Trinity.create(module, extension.getOutputDir(), containingFile);
 			}
 			return null;
 		}
