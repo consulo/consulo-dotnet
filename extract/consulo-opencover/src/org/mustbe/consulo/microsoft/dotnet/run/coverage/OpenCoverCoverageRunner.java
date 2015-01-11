@@ -38,10 +38,12 @@ import com.intellij.execution.configurations.coverage.CoverageEnabledConfigurati
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.NotNullPairFunction;
+import com.intellij.util.execution.ParametersListUtil;
 
 /**
  * @author VISTALL
@@ -184,6 +186,12 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 				newCommandLine.addParameter("-target:" + v.getExePath());
 				newCommandLine.addParameter("-filter:+[*]*");
 				newCommandLine.addParameter("-output:" + coverageEnabledConfiguration.getCoverageFilePath());
+
+				String parametersAsString = ParametersListUtil.join(v.getParametersList().getParameters());
+				if(!StringUtil.isEmpty(parametersAsString))
+				{
+					newCommandLine.addParameter("-targetargs:\"" + parametersAsString + "\"");
+				}
 				return newCommandLine;
 			}
 		};
