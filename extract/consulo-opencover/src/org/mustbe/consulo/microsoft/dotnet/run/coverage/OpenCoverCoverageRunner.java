@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.microsoft.dotnet.run.coverage;
 
+import gnu.trove.TIntObjectHashMap;
+
 import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
@@ -40,6 +42,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.rt.coverage.data.ClassData;
+import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.NotNullPairFunction;
@@ -90,12 +93,20 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 						{
 							continue;
 						}
+						TIntObjectHashMap<String> filePaths = new TIntObjectHashMap<String>();
+						CoverageSession.File[] files = module.Files == null ? null : module.Files.Files;
+						if(files != null)
+						{
+							for(CoverageSession.File file : files)
+							{
+								filePaths.put(file.UId, file.FullPath);
+							}
+						}
 
 						for(CoverageSession.Class aClass : classes1)
 						{
 							ClassData classData = projectData.getOrCreateClassData(aClass.FullName);
 
-							int a = 0;
 							Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
 							CoverageSession.Method[] methods = aClass.Methods == null ? null : aClass.Methods.Methods;
 							if(methods != null)
@@ -110,7 +121,6 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 										{
 											for(CoverageSession.SequencePoint point : points)
 											{
-												a++;
 												Integer count = map.get(point.StartLine);
 												if(count == null)
 												{
@@ -119,6 +129,13 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 												else
 												{
 													map.put(point.StartLine, count + point.VisitCount);
+												}
+
+												int fileUId = point.FileUId;
+												String filePath = filePaths.get(fileUId);
+												if(filePath != null)
+												{
+													classData.setSource(filePath);
 												}
 											}
 										}
@@ -132,6 +149,7 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 							{
 								int index = i++;
 								lineDatas[index] = new LineData(entry.getKey(), "");
+								lineDatas[index].setStatus(LineCoverage.FULL);
 								lineDatas[index].setHits(entry.getValue());
 							}
 							classData.setLines(lineDatas);

@@ -16,13 +16,16 @@
 
 package org.mustbe.consulo.dotnet.run.coverage;
 
-import java.util.Collections;
+import gnu.trove.THashSet;
+
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.run.DotNetConfiguration;
+import org.mustbe.consulo.dotnet.psi.DotNetFile;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.coverage.CoverageAnnotator;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageFileProvider;
@@ -34,10 +37,14 @@ import com.intellij.coverage.view.CoverageViewManager;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import com.intellij.execution.testframework.AbstractTestProxy;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiRecursiveElementVisitor;
 
 /**
  * @author VISTALL
@@ -95,6 +102,34 @@ public class DotNetCoverageEngine extends CoverageEngine
 
 	@Nullable
 	@Override
+	public String getQualifiedName(@NotNull File outputFile, @NotNull final PsiFile sourceFile)
+	{
+
+		return ApplicationManager.getApplication().runReadAction(new Computable<String>()
+		{
+			@Override
+			public String compute()
+			{
+				final Ref<String> ref = Ref.create();
+				sourceFile.accept(new PsiRecursiveElementVisitor()
+				{
+					@Override
+					public void visitElement(PsiElement element)
+					{
+						super.visitElement(element);
+						if(element instanceof DotNetTypeDeclaration)
+						{
+							ref.set(((DotNetTypeDeclaration) element).getVmQName());
+						}
+					}
+				});
+				return ref.get();
+			}
+		});
+	}
+
+	@Nullable
+	@Override
 	public CoverageSuite createCoverageSuite(@NotNull CoverageRunner covRunner,
 			@NotNull String name,
 			@NotNull CoverageFileProvider coverageDataFileProvider,
@@ -120,13 +155,13 @@ public class DotNetCoverageEngine extends CoverageEngine
 	@Override
 	public boolean coverageEditorHighlightingApplicableTo(@NotNull PsiFile psiFile)
 	{
-		return true;
+		return psiFile instanceof DotNetFile;
 	}
 
 	@Override
 	public boolean acceptedByFilters(@NotNull PsiFile psiFile, @NotNull CoverageSuitesBundle suite)
 	{
-		return false;
+		return true;
 	}
 
 	@Override
@@ -137,9 +172,29 @@ public class DotNetCoverageEngine extends CoverageEngine
 
 	@NotNull
 	@Override
-	public Set<String> getQualifiedNames(@NotNull PsiFile sourceFile)
+	public Set<String> getQualifiedNames(@NotNull final PsiFile sourceFile)
 	{
-		return Collections.emptySet();
+		return ApplicationManager.getApplication().runReadAction(new Computable<Set<String>>()
+		{
+			@Override
+			public Set<String> compute()
+			{
+				final Set<String> set = new THashSet<String>();
+				sourceFile.accept(new PsiRecursiveElementVisitor()
+				{
+					@Override
+					public void visitElement(PsiElement element)
+					{
+						super.visitElement(element);
+						if(element instanceof DotNetTypeDeclaration)
+						{
+							set.add(((DotNetTypeDeclaration) element).getVmQName());
+						}
+					}
+				});
+				return set;
+			}
+		});
 	}
 
 	@Override
