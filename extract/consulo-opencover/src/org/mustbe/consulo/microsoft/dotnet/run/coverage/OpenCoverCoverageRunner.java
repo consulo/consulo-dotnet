@@ -28,7 +28,7 @@ import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.run.DotNetConfiguration;
+import org.mustbe.consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageRunner;
 import org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension;
@@ -168,13 +168,13 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 
 	@NotNull
 	@Override
-	public NotNullPairFunction<DotNetConfiguration, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine()
+	public NotNullPairFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine()
 	{
-		return new NotNullPairFunction<DotNetConfiguration, GeneralCommandLine, GeneralCommandLine>()
+		return new NotNullPairFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine>()
 		{
 			@NotNull
 			@Override
-			public GeneralCommandLine fun(DotNetConfiguration t, GeneralCommandLine v)
+			public GeneralCommandLine fun(DotNetConfigurationWithCoverage t, GeneralCommandLine v)
 			{
 				CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate(t);
 
@@ -190,7 +190,7 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 				String parametersAsString = ParametersListUtil.join(v.getParametersList().getParameters());
 				if(!StringUtil.isEmpty(parametersAsString))
 				{
-					newCommandLine.addParameter("-targetargs:\"" + parametersAsString + "\"");
+					newCommandLine.addParameter("-targetargs:" + parametersAsString + "");
 				}
 				return newCommandLine;
 			}

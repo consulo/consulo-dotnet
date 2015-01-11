@@ -18,7 +18,6 @@ package org.mustbe.consulo.dotnet.run.coverage;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.run.DotNetConfiguration;
 import org.mustbe.consulo.dotnet.run.PatchableRunProfileState;
 import com.intellij.coverage.CoverageExecutor;
 import com.intellij.coverage.CoverageHelper;
@@ -106,7 +105,7 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 
 			val modifierForCommandLine = dotNetCoverageRunner.getModifierForCommandLine();
 
-			val runProfile = (DotNetConfiguration) environment.getRunProfile();
+			val runProfile = (DotNetConfigurationWithCoverage) environment.getRunProfile();
 
 			PatchableRunProfileState patchableRunProfileState = (PatchableRunProfileState) state;
 			patchableRunProfileState.modifyCommandLine(new NotNullFunction<GeneralCommandLine, GeneralCommandLine>()
@@ -124,7 +123,7 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 				@Override
 				public void consume(ProcessHandler osProcessHandler)
 				{
-					CoverageHelper.attachToProcess(runProfile, osProcessHandler, environment.getRunnerSettings());
+					CoverageHelper.attachToProcess((RunConfigurationBase) runProfile, osProcessHandler, environment.getRunnerSettings());
 				}
 			});
 		}

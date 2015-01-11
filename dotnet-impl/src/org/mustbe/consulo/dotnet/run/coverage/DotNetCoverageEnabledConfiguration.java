@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.run.coverage;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 
@@ -27,6 +28,12 @@ import com.intellij.execution.configurations.coverage.CoverageEnabledConfigurati
  */
 public class DotNetCoverageEnabledConfiguration extends CoverageEnabledConfiguration
 {
+	@NotNull
+	public static DotNetCoverageEnabledConfiguration getOrCreate(DotNetConfigurationWithCoverage configurationWithCoverage)
+	{
+		return (DotNetCoverageEnabledConfiguration) CoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) configurationWithCoverage);
+	}
+
 	public DotNetCoverageEnabledConfiguration(DotNetConfigurationWithCoverage configuration)
 	{
 		super((RunConfigurationBase) configuration);

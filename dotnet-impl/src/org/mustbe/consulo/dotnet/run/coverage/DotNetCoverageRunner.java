@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.run.DotNetConfiguration;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageRunner;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -66,7 +65,7 @@ public abstract class DotNetCoverageRunner extends CoverageRunner
 	}
 
 	@NotNull
-	public abstract NotNullPairFunction<DotNetConfiguration, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine();
+	public abstract NotNullPairFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine();
 
 	public abstract boolean acceptModuleExtension(@NotNull DotNetModuleExtension<?> moduleExtension);
 
