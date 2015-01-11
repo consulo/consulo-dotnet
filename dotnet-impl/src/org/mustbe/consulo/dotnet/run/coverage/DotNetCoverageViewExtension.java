@@ -38,6 +38,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.rt.coverage.data.ClassData;
+import com.intellij.rt.coverage.data.LineData;
 import com.intellij.util.ui.ColumnInfo;
 
 /**
@@ -76,19 +77,61 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension
 	public String getPercentage(int columnIdx, AbstractTreeNode node)
 	{
 		Object value = node.getValue();
+		if(!(value instanceof PsiElement))
+		{
+			return UNKNOWN;
+		}
+		double percentValue = getPercentValue((PsiElement) value, -1);
+		if(percentValue == -1)
+		{
+			return UNKNOWN;
+		}
+		else
+		{
+			return percentValue + " %";
+		}
+	}
+
+	private double getPercentValue(PsiElement value, double unknownValue)
+	{
 		if(value instanceof DotNetTypeDeclaration)
 		{
 			String vmQName = ((DotNetTypeDeclaration) value).getVmQName();
 			if(vmQName == null)
 			{
-				return UNKNOWN;
+				return unknownValue;
 			}
 
-			ClassData classData = getSuitesBundle().getCoverageData().getClassData(vmQName);
+			ClassData classData = getSuitesBundle().getCoverageData().getOrCreateClassData(vmQName);
 
+			LineData[] lines = (LineData[]) classData.getLines();
+			if(lines == null)
+			{
+				return unknownValue;
+			}
+			double i = 0;
+			for(LineData line : lines)
+			{
+				if(line.getHits() > 0)
+				{
+					i ++;
+				}
+			}
 
+			return (i / lines.length) * 100;
 		}
-		return UNKNOWN;
+		else if(value instanceof DotNetNamespaceAsElement)
+		{
+			PsiElement[] children = ((DotNetNamespaceAsElement) value).getChildren(mySearchScope, DotNetNamespaceAsElement.ChildrenFilter.NONE);
+			double all = 0;
+			for(PsiElement temp : children)
+			{
+				all += getPercentValue(temp, 0);
+			}
+
+			return all / children.length;
+		}
+		return unknownValue;
 	}
 
 	@Override

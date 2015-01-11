@@ -17,6 +17,8 @@
 package org.mustbe.consulo.microsoft.dotnet.run.coverage;
 
 import java.io.File;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -37,6 +39,7 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.rt.coverage.data.ClassData;
+import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.NotNullPairFunction;
 
@@ -90,6 +93,46 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 						{
 							ClassData classData = projectData.getOrCreateClassData(aClass.FullName);
 
+							int a = 0;
+							Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
+							CoverageSession.Method[] methods = aClass.Methods == null ? null : aClass.Methods.Methods;
+							if(methods != null)
+							{
+								for(CoverageSession.Method method : methods)
+								{
+									CoverageSession.SequencePoints sequencePoints = method.SequencePoints;
+									if(sequencePoints != null)
+									{
+										CoverageSession.SequencePoint[] points = sequencePoints.Points;
+										if(points != null)
+										{
+											for(CoverageSession.SequencePoint point : points)
+											{
+												a++;
+												Integer count = map.get(point.StartLine);
+												if(count == null)
+												{
+													map.put(point.StartLine, point.VisitCount);
+												}
+												else
+												{
+													map.put(point.StartLine, count + point.VisitCount);
+												}
+											}
+										}
+									}
+								}
+							}
+
+							LineData[] lineDatas = new LineData[map.size()];
+							int i = 0;
+							for(Map.Entry<Integer, Integer> entry : map.entrySet())
+							{
+								int index = i++;
+								lineDatas[index] = new LineData(entry.getKey(), "");
+								lineDatas[index].setHits(entry.getValue());
+							}
+							classData.setLines(lineDatas);
 						}
 					}
 				}

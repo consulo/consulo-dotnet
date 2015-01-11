@@ -31,6 +31,9 @@ public class CoverageSession
 	{
 		@XmlAttribute
 		public double sequenceCoverage;
+
+		@XmlAttribute
+		public int numSequencePoints;
 	}
 
 	public static class Modules
@@ -126,7 +129,10 @@ public class CoverageSession
 	public static class SequencePoint
 	{
 		@XmlAttribute(name = "ordinal")
-		public int ordinal;
+		public int Ordinal;
+
+		@XmlAttribute(name = "vc")
+		public int VisitCount;
 
 		@XmlAttribute(name = "sl")
 		public int StartLine;
