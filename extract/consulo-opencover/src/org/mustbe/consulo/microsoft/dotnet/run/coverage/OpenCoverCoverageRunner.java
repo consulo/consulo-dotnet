@@ -19,7 +19,7 @@ package org.mustbe.consulo.microsoft.dotnet.run.coverage;
 import gnu.trove.TIntObjectHashMap;
 
 import java.io.File;
-import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.xml.bind.JAXBContext;
@@ -107,7 +107,7 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 						{
 							ClassData classData = projectData.getOrCreateClassData(aClass.FullName);
 
-							Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
+							SortedMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
 							CoverageSession.Method[] methods = aClass.Methods == null ? null : aClass.Methods.Methods;
 							if(methods != null)
 							{
@@ -121,14 +121,17 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 										{
 											for(CoverageSession.SequencePoint point : points)
 											{
-												Integer count = map.get(point.StartLine);
-												if(count == null)
+												for(int i = point.StartLine; i <= point.EndLine; i++)
 												{
-													map.put(point.StartLine, point.VisitCount);
-												}
-												else
-												{
-													map.put(point.StartLine, count + point.VisitCount);
+													Integer count = map.get(i);
+													if(count == null)
+													{
+														map.put(i, point.VisitCount);
+													}
+													else
+													{
+														map.put(i, count + point.VisitCount);
+													}
 												}
 
 												int fileUId = point.FileUId;
@@ -143,16 +146,30 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 								}
 							}
 
-							LineData[] lineDatas = new LineData[map.size()];
-							int i = 0;
-							for(Map.Entry<Integer, Integer> entry : map.entrySet())
+							if(!map.isEmpty())
 							{
-								int index = i++;
-								lineDatas[index] = new LineData(entry.getKey(), "");
-								lineDatas[index].setStatus(LineCoverage.FULL);
-								lineDatas[index].setHits(entry.getValue());
+								LineData[] lineDatas = new LineData[map.lastKey() + 1];
+								for(int i = 0; i < lineDatas.length; i++)
+								{
+									Integer invokeCount = map.get(i);
+									if(invokeCount != null)
+									{
+										LineData lineData = new LineData(i, "");
+										if(invokeCount != 0)
+										{
+											lineData.setStatus(LineCoverage.FULL);
+										}
+										else
+										{
+											lineData.setStatus(LineCoverage.PARTIAL);
+										}
+
+										lineData.setHits(invokeCount);
+										lineDatas[i] = lineData;
+									}
+								}
+								classData.setLines(lineDatas);
 							}
-							classData.setLines(lineDatas);
 						}
 					}
 				}

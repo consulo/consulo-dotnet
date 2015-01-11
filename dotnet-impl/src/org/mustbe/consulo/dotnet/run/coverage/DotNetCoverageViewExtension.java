@@ -109,16 +109,22 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension
 			{
 				return unknownValue;
 			}
+
+			int len = 0;
 			double i = 0;
 			for(LineData line : lines)
 			{
-				if(line.getHits() > 0)
+				if(line != null)
 				{
-					i ++;
+					if(line.getHits() > 0)
+					{
+						i++;
+					}
+					len ++;
 				}
 			}
 
-			return (i / lines.length) * 100;
+			return (i / len) * 100;
 		}
 		else if(value instanceof DotNetNamespaceAsElement)
 		{
