@@ -48,7 +48,7 @@ public class DotNetCoverageEngine extends CoverageEngine
 	@Override
 	public boolean isApplicableTo(@Nullable RunConfigurationBase conf)
 	{
-		return conf instanceof DotNetConfiguration;
+		return conf instanceof DotNetConfigurationWithCoverage;
 	}
 
 	@Override
@@ -69,11 +69,11 @@ public class DotNetCoverageEngine extends CoverageEngine
 	@Override
 	public CoverageEnabledConfiguration createCoverageEnabledConfiguration(@Nullable RunConfigurationBase conf)
 	{
-		if(!(conf instanceof DotNetConfiguration))
+		if(!(conf instanceof DotNetConfigurationWithCoverage))
 		{
 			throw new IllegalArgumentException();
 		}
-		return new DotNetCoverageEnabledConfiguration((DotNetConfiguration) conf);
+		return new DotNetCoverageEnabledConfiguration((DotNetConfigurationWithCoverage) conf);
 	}
 
 	@Nullable

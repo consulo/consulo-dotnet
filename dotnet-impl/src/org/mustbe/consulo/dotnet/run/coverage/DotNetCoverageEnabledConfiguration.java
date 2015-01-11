@@ -18,7 +18,7 @@ package org.mustbe.consulo.dotnet.run.coverage;
 
 import java.util.List;
 
-import org.mustbe.consulo.dotnet.run.DotNetConfiguration;
+import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 
 /**
@@ -27,9 +27,9 @@ import com.intellij.execution.configurations.coverage.CoverageEnabledConfigurati
  */
 public class DotNetCoverageEnabledConfiguration extends CoverageEnabledConfiguration
 {
-	public DotNetCoverageEnabledConfiguration(DotNetConfiguration configuration)
+	public DotNetCoverageEnabledConfiguration(DotNetConfigurationWithCoverage configuration)
 	{
-		super(configuration);
+		super((RunConfigurationBase) configuration);
 
 		List<DotNetCoverageRunner> availableRunners = DotNetCoverageRunner.findAvailableRunners(configuration);
 		if(!availableRunners.isEmpty())

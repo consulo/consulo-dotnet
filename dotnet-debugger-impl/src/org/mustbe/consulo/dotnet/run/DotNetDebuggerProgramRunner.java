@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.run;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugProcess;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
@@ -87,9 +88,9 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			return false;
 		}
 
-		if(runProfile instanceof DotNetConfiguration)
+		if(runProfile instanceof DotNetConfigurationWithCoverage)
 		{
-			Module module = ((DotNetConfiguration) runProfile).getConfigurationModule().getModule();
+			Module module = ((DotNetConfigurationWithCoverage) runProfile).getConfigurationModule().getModule();
 			if(module == null)
 			{
 				return false;
