@@ -194,7 +194,7 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 			@Override
 			public GeneralCommandLine fun(DotNetConfigurationWithCoverage t, GeneralCommandLine v)
 			{
-				CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate(t);
+				CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.get(t);
 
 				File openCoverConsoleExecutable = getOpenCoverConsoleExecutable();
 

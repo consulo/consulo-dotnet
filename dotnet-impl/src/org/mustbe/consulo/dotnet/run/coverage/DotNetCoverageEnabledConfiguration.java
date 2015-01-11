@@ -29,7 +29,7 @@ import com.intellij.execution.configurations.coverage.CoverageEnabledConfigurati
 public class DotNetCoverageEnabledConfiguration extends CoverageEnabledConfiguration
 {
 	@NotNull
-	public static DotNetCoverageEnabledConfiguration getOrCreate(DotNetConfigurationWithCoverage configurationWithCoverage)
+	public static DotNetCoverageEnabledConfiguration get(DotNetConfigurationWithCoverage configurationWithCoverage)
 	{
 		return (DotNetCoverageEnabledConfiguration) CoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) configurationWithCoverage);
 	}

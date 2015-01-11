@@ -100,7 +100,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		Element coverageElement = element.getChild("coverage");
 		if(coverageElement != null)
 		{
-			CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate(this);
+			CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.get(this);
 			coverageEnabledConfiguration.readExternal(coverageElement);
 		}
 	}
@@ -113,7 +113,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 		XmlSerializer.serializeInto(this, element);
 
-		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate(this);
+		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.get(this);
 		Element coverageElement = new Element("coverage");
 		coverageEnabledConfiguration.writeExternal(coverageElement);
 		element.addContent(coverageElement);
