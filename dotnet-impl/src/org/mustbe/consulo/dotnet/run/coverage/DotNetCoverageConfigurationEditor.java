@@ -21,8 +21,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.run.DotNetConfiguration;
 import com.intellij.coverage.CoverageRunner;
+import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
@@ -37,7 +37,7 @@ import com.intellij.ui.components.JBCheckBox;
  * @author VISTALL
  * @since 10.01.15
  */
-public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConfiguration>
+public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConfigurationWithCoverage>
 {
 	private JPanel myPanel = new JPanel(new VerticalFlowLayout());
 	private ComboBox myRunnersBox = new ComboBox();
@@ -69,9 +69,9 @@ public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConf
 	}
 
 	@Override
-	protected void resetEditorFrom(DotNetConfiguration s)
+	protected void resetEditorFrom(DotNetConfigurationWithCoverage s)
 	{
-		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate(s);
+		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) s);
 
 		myEnabledCheckBox.setSelected(coverageEnabledConfiguration.isCoverageEnabled());
 		myRunnersBox.removeAllItems();
@@ -97,9 +97,9 @@ public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConf
 	}
 
 	@Override
-	protected void applyEditorTo(DotNetConfiguration s) throws ConfigurationException
+	protected void applyEditorTo(DotNetConfigurationWithCoverage s) throws ConfigurationException
 	{
-		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate(s);
+		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) s);
 
 		coverageEnabledConfiguration.setCoverageEnabled(myEnabledCheckBox.isSelected());
 

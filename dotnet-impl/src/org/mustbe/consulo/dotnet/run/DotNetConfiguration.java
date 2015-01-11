@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageConfigurationEditor;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
@@ -57,7 +58,7 @@ import lombok.val;
  * @author VISTALL
  * @since 26.11.13.
  */
-public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements CommonProgramRunConfigurationParameters
+public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements CommonProgramRunConfigurationParameters, DotNetConfigurationWithCoverage
 {
 	private String myProgramParameters;
 	private String myWorkingDir = "";
@@ -120,9 +121,10 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 	@NotNull
 	@Override
+	@SuppressWarnings("unchecked")
 	public SettingsEditor<? extends RunConfiguration> getConfigurationEditor()
 	{
-		SettingsEditorGroup<DotNetConfiguration> group = new SettingsEditorGroup<DotNetConfiguration>();
+		SettingsEditorGroup group = new SettingsEditorGroup();
 		group.addEditor("General", new DotNetConfigurationEditor(getProject()));
 		group.addEditor("Coverage", new DotNetCoverageConfigurationEditor());
 		return group;

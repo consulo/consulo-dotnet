@@ -40,11 +40,11 @@ public abstract class DotNetCoverageRunner extends CoverageRunner
 	@NotNull
 	public static List<DotNetCoverageRunner> findAvailableRunners(@NotNull RunProfile configuration)
 	{
-		if(!(configuration instanceof DotNetConfiguration))
+		if(!(configuration instanceof DotNetConfigurationWithCoverage))
 		{
 			return Collections.emptyList();
 		}
-		Module module = ((DotNetConfiguration) configuration).getConfigurationModule().getModule();
+		Module module = ((DotNetConfigurationWithCoverage) configuration).getConfigurationModule().getModule();
 		if(module != null)
 		{
 			DotNetModuleExtension moduleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
