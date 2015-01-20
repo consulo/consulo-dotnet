@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
@@ -33,6 +34,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -157,5 +159,16 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 			return stub.hasDefaultConstructor();
 		}
 		return findChildByType(MsilTokens._CTOR_KEYWORD) != null;
+	}
+
+	@Override
+	public int getIndex()
+	{
+		PsiElement parentByStub = getParentByStub();
+		if(parentByStub instanceof DotNetGenericParameterList)
+		{
+			return ArrayUtil.find(((DotNetGenericParameterList) parentByStub).getParameters(), this);
+		}
+		return -1;
 	}
 }

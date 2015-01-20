@@ -26,4 +26,5 @@ import com.intellij.psi.PsiNameIdentifierOwner;
 @ArrayFactoryFields
 public interface DotNetGenericParameter extends DotNetNamedElement, DotNetModifierListOwner, PsiNameIdentifierOwner
 {
+	int getIndex();
 }
