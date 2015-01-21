@@ -374,7 +374,7 @@ public class DotNetDebugThread extends Thread
 		}
 
 		XLineBreakpoint<XBreakpointProperties> breakpointAtLine = myDebuggerManager.getBreakpointManager().findBreakpointAtLine
-				(DotNetLineBreakpointType.getInstance(), fileByPath, location.lineNumber());
+				(DotNetLineBreakpointType.getInstance(), fileByPath, location.lineNumber() - 1); // .net asm - 1 index based, consulo - 0 based
 		if(breakpointAtLine == null)
 		{
 			return null;
