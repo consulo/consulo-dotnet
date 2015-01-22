@@ -132,6 +132,8 @@ public interface MsilTokens extends TokenType
 
 	MsilModifierElementType BRACKET_OUT_KEYWORD = new MsilModifierElementType("BRACKET_OUT_KEYWORD", MsilLanguage.INSTANCE);
 
+	MsilModifierElementType BRACKET_IN_KEYWORD = new MsilModifierElementType("BRACKET_IN_KEYWORD", MsilLanguage.INSTANCE);
+
 	MsilModifierElementType BRACKET_OPT_KEYWORD = new MsilModifierElementType("BRACKET_OPT_KEYWORD", MsilLanguage.INSTANCE);
 
 	MsilModifierElementType INTERFACE_KEYWORD = new MsilModifierElementType("INTERFACE_KEYWORD", MsilLanguage.INSTANCE);

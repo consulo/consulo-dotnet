@@ -118,6 +118,11 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 						builder.append("[opt] ");
 					}
 
+					if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.In))
+					{
+						builder.append("[in] ");
+					}
+
 					if(BitUtil.isSet(parameterInfo.getFlags(), ParamAttributes.Out))
 					{
 						builder.append("[out] ");

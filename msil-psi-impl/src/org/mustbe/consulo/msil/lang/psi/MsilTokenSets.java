@@ -56,6 +56,7 @@ public interface MsilTokenSets extends MsilTokens
 			SPECIALNAME_KEYWORD,
 			RTSPECIALNAME_KEYWORD,
 			NESTED_KEYWORD,
+			BRACKET_IN_KEYWORD
 	};
 
 	TokenSet MODIFIERS = TokenSet.create(MODIFIERS_AS_ARRAY);

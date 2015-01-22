@@ -46,6 +46,7 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 	{
 		return new DefaultStubBuilder()
 		{
+			@NotNull
 			@Override
 			protected StubElement createStubForFile(@NotNull PsiFile file)
 			{
@@ -68,7 +69,7 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		int version = 48;
+		int version = 49;
 		for(MsilStubIndexer msilStubIndexer : MsilStubIndexer.EP_NAME.getExtensions())
 		{
 			version += msilStubIndexer.getVersion();
