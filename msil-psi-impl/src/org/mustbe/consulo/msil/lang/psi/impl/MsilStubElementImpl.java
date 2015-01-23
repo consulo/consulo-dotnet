@@ -35,7 +35,7 @@ import com.intellij.util.ArrayFactory;
  * @author VISTALL
  * @since 21.05.14
  */
-public abstract class MsilStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements StubBasedPsiElement, DotNetElement
+public abstract class MsilStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements StubBasedPsiElement<T>, DotNetElement
 {
 	protected MsilStubElementImpl(@NotNull ASTNode node)
 	{

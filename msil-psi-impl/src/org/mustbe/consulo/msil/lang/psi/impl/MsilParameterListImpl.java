@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.lang.psi.impl.DotNetPsiCountUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilParameter;
@@ -40,6 +41,12 @@ public class MsilParameterListImpl extends MsilStubElementImpl<MsilParameterList
 	public MsilParameterListImpl(@NotNull MsilParameterListStub stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
+	}
+
+	@Override
+	public int getParametersCount()
+	{
+		return DotNetPsiCountUtil.countChildrenOfType(this, MsilStubElements.PARAMETER);
 	}
 
 	@NotNull

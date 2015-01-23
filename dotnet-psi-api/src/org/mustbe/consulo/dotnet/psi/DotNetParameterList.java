@@ -25,6 +25,8 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
  */
 public interface DotNetParameterList extends DotNetElement
 {
+	int getParametersCount();
+
 	@NotNull
 	DotNetParameter[] getParameters();
 

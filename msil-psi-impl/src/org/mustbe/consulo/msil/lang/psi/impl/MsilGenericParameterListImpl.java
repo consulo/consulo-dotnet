@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.lang.psi.impl.DotNetPsiCountUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.msil.lang.psi.MsilGenericParameter;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
@@ -56,6 +57,6 @@ public class MsilGenericParameterListImpl extends MsilStubElementImpl<MsilGeneri
 	@Override
 	public int getGenericParametersCount()
 	{
-		return getParameters().length;
+		return DotNetPsiCountUtil.countChildrenOfType(this, MsilStubElements.GENERIC_PARAMETER);
 	}
 }

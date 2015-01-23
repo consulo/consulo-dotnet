@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.lang.psi.impl.DotNetPsiCountUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -77,5 +78,11 @@ public class MsilTypeListImpl extends MsilStubElementImpl<MsilTypeListStub> impl
 	public String[] getTypeTexts()
 	{
 		return new String[0];
+	}
+
+	@Override
+	public int getTypesCount()
+	{
+		return DotNetPsiCountUtil.countChildrenOfType(this, MsilStubTokenSets.TYPE_STUBS);
 	}
 }

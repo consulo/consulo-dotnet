@@ -34,4 +34,6 @@ public interface DotNetTypeList extends DotNetElement
 	@NotNull
 	@Deprecated
 	String[] getTypeTexts();
+
+	int getTypesCount();
 }
