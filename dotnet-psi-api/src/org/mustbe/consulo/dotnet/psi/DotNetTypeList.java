@@ -32,5 +32,6 @@ public interface DotNetTypeList extends DotNetElement
 	DotNetTypeRef[] getTypeRefs();
 
 	@NotNull
+	@Deprecated
 	String[] getTypeTexts();
 }
