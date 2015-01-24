@@ -1,16 +1,60 @@
 package org.mustbe.consulo.dotnet.module;
 
+import gnu.trove.TObjectIntHashMap;
+import gnu.trove.TObjectProcedure;
+
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import com.google.common.base.Predicate;
 import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.roots.impl.ModuleRootsProcessorFromModuleDir;
+import com.intellij.openapi.roots.impl.ModuleRootsProcessor;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ArrayUtil;
 
 /**
  * @author VISTALL
  * @since 08.12.14
  */
-public class DotNetModuleRootsProcessor extends ModuleRootsProcessorFromModuleDir
+public class DotNetModuleRootsProcessor extends ModuleRootsProcessor
 {
+	@Override
+	public boolean containsFile(@NotNull TObjectIntHashMap<VirtualFile> roots, @NotNull final VirtualFile virtualFile)
+	{
+		return !roots.forEachKey(new TObjectProcedure<VirtualFile>()
+		{
+			@Override
+			public boolean execute(VirtualFile object)
+			{
+				return !VfsUtil.isAncestor(object, virtualFile, false);
+			}
+		});
+	}
+
+	@NotNull
+	@Override
+	public VirtualFile[] getFiles(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate)
+	{
+		if(predicate.apply(ProductionContentFolderTypeProvider.getInstance()))
+		{
+			return moduleRootModel.getContentRoots();
+		}
+		return VirtualFile.EMPTY_ARRAY;
+	}
+
+	@NotNull
+	@Override
+	public String[] getUrls(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate)
+	{
+		if(predicate.apply(ProductionContentFolderTypeProvider.getInstance()))
+		{
+			return moduleRootModel.getContentRootUrls();
+		}
+		return ArrayUtil.EMPTY_STRING_ARRAY;
+	}
+
 	@Override
 	public boolean canHandle(@NotNull ModuleRootModel moduleRootModel)
 	{
