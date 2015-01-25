@@ -28,8 +28,6 @@ import java.util.regex.Pattern;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
-import org.consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
-import org.consulo.module.extension.impl.SdkModuleInheritableNamedPointerImpl;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -75,7 +73,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	private Map<String, Map<OrderRootType, String[]>> myUrlsCache = new HashMap<String, Map<OrderRootType, String[]>>();
 	private Sdk myLastSdk;
 
-	private ModuleInheritableNamedPointerImpl<Sdk> mySdkPointer;
+	private DotNetModuleSdkPointer mySdkPointer;
 	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 	protected boolean myAllowDebugInfo;
 	protected boolean myAllowSourceRoots;
@@ -88,7 +86,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	public BaseDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
 	{
 		super(id, rootModel);
-		mySdkPointer = new SdkModuleInheritableNamedPointerImpl(rootModel.getProject(), id);
+		mySdkPointer = new DotNetModuleSdkPointer(rootModel.getProject(), id);
 	}
 
 	public boolean isModifiedImpl(S ex)
