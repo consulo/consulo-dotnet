@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugProcess;
+import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import com.intellij.execution.ExecutionException;
@@ -31,6 +32,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
@@ -54,23 +56,35 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			Project project, final RunProfileState state, RunContentDescriptor contentToReuse, final ExecutionEnvironment env) throws
 			ExecutionException
 	{
-		assert state instanceof DotNetRunProfileState;
+		final DebugConnectionInfo debugConnectionInfo;
+		if(state instanceof UserDataHolder)
+		{
+			debugConnectionInfo = ((UserDataHolder) state).getUserData(DotNetRunKeys.DEBUG_CONNECTION_INFO_KEY);
+		}
+		else
+		{
+			debugConnectionInfo = null;
+		}
+
+		if(debugConnectionInfo == null)
+		{
+			throw new ExecutionException("No debug connect information");
+		}
 		FileDocumentManager.getInstance().saveAllDocuments();
-		final XDebugSession debugSession = XDebuggerManager.getInstance(project).startSession(this, env, contentToReuse, new XDebugProcessStarter()
+		final XDebugSession debugSession = XDebuggerManager.getInstance(project).startSession(env, new XDebugProcessStarter()
 		{
 			@NotNull
 			@Override
 			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
 			{
-				DotNetRunProfileState dotNetRunProfileState = (DotNetRunProfileState) state;
-				DotNetDebugProcess process = new DotNetDebugProcess(session, dotNetRunProfileState.getDebugConnectionInfo(), env.getRunProfile());
-				if(!dotNetRunProfileState.getDebugConnectionInfo().isServer())
+				DotNetDebugProcess process = new DotNetDebugProcess(session, debugConnectionInfo, env.getRunProfile());
+				if(!debugConnectionInfo.isServer())
 				{
 					process.start();
 				}
 
 				process.setExecutionResult(state.execute(env.getExecutor(), DotNetDebuggerProgramRunner.this));
-				if(dotNetRunProfileState.getDebugConnectionInfo().isServer())
+				if(debugConnectionInfo.isServer())
 				{
 					process.start();
 				}

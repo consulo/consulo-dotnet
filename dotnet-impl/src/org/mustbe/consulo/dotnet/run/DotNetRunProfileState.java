@@ -18,18 +18,17 @@ package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -37,32 +36,19 @@ import lombok.val;
  */
 public class DotNetRunProfileState extends PatchableRunProfileState
 {
-	private final DebugConnectionInfo myDebugConnectionInfo;
-
-	public DotNetRunProfileState(@NotNull ExecutionEnvironment executionEnvironment,
-			@NotNull GeneralCommandLine runCommandLine,
-			@Nullable DebugConnectionInfo debugConnectionInfo)
+	public DotNetRunProfileState(@NotNull ExecutionEnvironment executionEnvironment, @NotNull GeneralCommandLine runCommandLine)
 	{
 		super(executionEnvironment, runCommandLine);
-		myDebugConnectionInfo = debugConnectionInfo;
 	}
 
 	@Nullable
 	@Override
 	public ExecutionResult executeImpl(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException
 	{
-		val builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
-
+		TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
 		OSProcessHandler handler = patchHandler(new OSProcessHandler(getCommandLineForRun()));
-
 		ConsoleView console = builder.getConsole();
 		console.attachToProcess(handler);
 		return new DefaultExecutionResult(console, handler);
-	}
-
-	@Nullable
-	public DebugConnectionInfo getDebugConnectionInfo()
-	{
-		return myDebugConnectionInfo;
 	}
 }

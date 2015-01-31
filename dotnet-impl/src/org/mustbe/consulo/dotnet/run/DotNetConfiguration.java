@@ -169,7 +169,14 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		runCommandLine.setPassParentEnvironment(runProfile.isPassParentEnvs());
 		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
 		runCommandLine.setWorkDirectory(DotNetMacroUtil.expand(module, runProfile.getWorkingDirectory(), false));
-		return new DotNetRunProfileState(executionEnvironment, runCommandLine, debugConnectionInfo);
+
+		DotNetRunProfileState state = new DotNetRunProfileState(executionEnvironment, runCommandLine);
+		if(debugConnectionInfo != null)
+		{
+			state.putUserData(DotNetRunKeys.DEBUG_CONNECTION_INFO_KEY, debugConnectionInfo);
+		}
+
+		return state;
 	}
 
 	@Override
