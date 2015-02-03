@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.module.extension;
 
 import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.psi.PsiElement;
@@ -29,6 +30,7 @@ import com.intellij.psi.PsiElement;
 public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T>> extends ModuleExtension<T>
 {
 	@NotNull
+	@RequiredReadAction
 	PsiElement[] getEntryPointElements();
 
 	@NotNull

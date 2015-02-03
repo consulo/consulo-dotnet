@@ -32,6 +32,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
@@ -262,6 +263,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 
 	@NotNull
 	@Override
+	@RequiredReadAction
 	public PsiElement[] getEntryPointElements()
 	{
 		List<PsiElement> list = new ArrayList<PsiElement>();

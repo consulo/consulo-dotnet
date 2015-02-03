@@ -25,6 +25,7 @@ import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.ExecutionException;
@@ -102,5 +103,6 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType);
 
 	@NotNull
+	@RequiredReadAction
 	PsiElement[] getEntryPointElements();
 }
