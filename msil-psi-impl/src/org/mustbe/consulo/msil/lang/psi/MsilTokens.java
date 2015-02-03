@@ -148,6 +148,8 @@ public interface MsilTokens extends TokenType
 
 	MsilModifierElementType NESTED_KEYWORD = new MsilModifierElementType("NESTED_KEYWORD", MsilLanguage.INSTANCE);
 
+	MsilModifierElementType VARARG_KEYWORD = new MsilModifierElementType("VARARG_KEYWORD", MsilLanguage.INSTANCE);
+
 	IElementType PLUS = new IElementType("PLUS =", MsilLanguage.INSTANCE);
 
 	IElementType MINUS = new IElementType("MINUS", MsilLanguage.INSTANCE);

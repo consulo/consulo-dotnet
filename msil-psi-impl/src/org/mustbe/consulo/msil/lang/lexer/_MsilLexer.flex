@@ -158,6 +158,8 @@ QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 
 	"virtual"       { return MsilTokens.VIRTUAL_KEYWORD; }
 
+	"vararg"       { return MsilTokens.VARARG_KEYWORD; }
+
 	"value"         { return MsilTokens.VALUE_KEYWORD; }
 
 	"nested"        { return MsilTokens.NESTED_KEYWORD; }

@@ -25,7 +25,9 @@ import com.intellij.util.BitUtil;
 import com.intellij.util.PairFunction;
 import edu.arizona.cs.mbel.mbel.MethodDef;
 import edu.arizona.cs.mbel.mbel.TypeDef;
+import edu.arizona.cs.mbel.signature.CallingConvention;
 import edu.arizona.cs.mbel.signature.MethodAttributes;
+import edu.arizona.cs.mbel.signature.MethodSignature;
 import edu.arizona.cs.mbel.signature.ParamAttributes;
 import edu.arizona.cs.mbel.signature.ParameterInfo;
 import edu.arizona.cs.mbel.signature.ParameterSignature;
@@ -98,13 +100,20 @@ public class MsilMethodBuilder extends MsilSharedBuilder implements MethodAttrib
 			builder.append("rtspecialname ");
 		}
 
-		typeToString(builder, methodDef.getSignature().getReturnType().getInnerType(), typeDef);
+		MethodSignature signature = methodDef.getSignature();
+
+		if(signature.getCallingConvention() == CallingConvention.VARARG)
+		{
+			builder.append("vararg ");
+		}
+
+		typeToString(builder, signature.getReturnType().getInnerType(), typeDef);
 		builder.append(" ");
 		appendValidName(builder, methodDef.getName());
 		processGeneric(builder, methodDef, typeDef);
 		builder.append("(");
 
-		List<ParameterSignature> parameters = methodDef.getSignature().getParameters();
+		List<ParameterSignature> parameters = signature.getParameters();
 		join(builder, parameters, new PairFunction<StringBuilder, ParameterSignature, Void>()
 		{
 			@Override
