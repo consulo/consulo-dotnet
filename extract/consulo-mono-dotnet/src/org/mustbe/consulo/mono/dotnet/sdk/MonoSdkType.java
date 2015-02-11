@@ -36,15 +36,12 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
-import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -118,24 +115,6 @@ public class MonoSdkType extends DotNetSdkType
 	public Icon getIcon()
 	{
 		return MonoDotNetIcons.Mono;
-	}
-
-	protected void postSetupSdkPaths(Sdk sdk, @NotNull SdkModificator modificator)
-	{
-		VirtualFile homeDirectory = sdk.getHomeDirectory();
-		assert homeDirectory != null;
-		VirtualFile docDir = homeDirectory.findFileByRelativePath("/../../monodoc/sources");
-		if(docDir == null)
-		{
-			return;
-		}
-		for(VirtualFile virtualFile : docDir.getChildren())
-		{
-			if(Comparing.equal(virtualFile.getExtension(), "source"))
-			{
-				modificator.addRoot(virtualFile, DocumentationOrderRootType.getInstance());
-			}
-		}
 	}
 
 	@Override
