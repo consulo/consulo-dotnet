@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -29,39 +30,49 @@ import mono.debugger.ThreadMirror;
  */
 public class DotNetSuspendContext extends XSuspendContext
 {
-	private XExecutionStack[] myXExecutionStacks;
-	private XExecutionStack myActivateStack;
+	private final DotNetDebugContext myDebuggerContext;
+	private final ThreadMirror myThreadMirror;
 
-	public DotNetSuspendContext(DotNetDebugContext debuggerContext, ThreadMirror active)
+	private XExecutionStack myActiveExecutionStack;
+
+	public DotNetSuspendContext(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
 	{
-		List<ThreadMirror> threadMirrors = debuggerContext.getVirtualMachine().allThreads();
-		myXExecutionStacks = new XExecutionStack[threadMirrors.size()];
-		for(int i = 0; i < myXExecutionStacks.length; i++)
+		myDebuggerContext = debuggerContext;
+		myThreadMirror = threadMirror;
+
+		myActiveExecutionStack = new DotNetExecutionStack(debuggerContext, threadMirror);
+	}
+
+	@Override
+	public void computeExecutionStacks(XExecutionStackContainer container)
+	{
+		List<ThreadMirror> threadMirrors = myDebuggerContext.getVirtualMachine().allThreads();
+
+		List<XExecutionStack> executionStacks = new ArrayList<XExecutionStack>();
+
+		for(ThreadMirror threadMirror : threadMirrors)
 		{
-			ThreadMirror threadMirror = threadMirrors.get(i);
-			myXExecutionStacks[i] = new DotNetExecutionStack(debuggerContext, threadMirror);
-			if(active != null && threadMirror.id() == active.id())
+			if(threadMirror.id() == myThreadMirror.id())
 			{
-				myActivateStack = myXExecutionStacks[i];
+				executionStacks.add(myActiveExecutionStack);
+			}
+			else
+			{
+				executionStacks.add(new DotNetExecutionStack(myDebuggerContext, threadMirror));
 			}
 		}
-		if(myActivateStack == null)
+
+		if(!executionStacks.contains(myActiveExecutionStack))
 		{
-			myActivateStack = myXExecutionStacks[0];
+			executionStacks.add(myActiveExecutionStack);
 		}
+		container.addExecutionStack(executionStacks, true);
 	}
 
 	@Nullable
 	@Override
 	public XExecutionStack getActiveExecutionStack()
 	{
-		return myActivateStack;
+		return myActiveExecutionStack;
 	}
-
-	@Override
-	public XExecutionStack[] getExecutionStacks()
-	{
-		return myXExecutionStacks;
-	}
-
 }
