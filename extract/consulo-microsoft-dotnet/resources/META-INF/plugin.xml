@@ -30,6 +30,5 @@
 								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />
 
 		<sdkType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
-		<bundledSdkProvider implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetBundledSdkProvider" />
 	</extensions>
 </idea-plugin>

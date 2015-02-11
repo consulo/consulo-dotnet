@@ -18,6 +18,8 @@ package org.mustbe.consulo.microsoft.dotnet.sdk;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -72,11 +74,35 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 
 	@NotNull
 	@Override
-	public String suggestHomePath()
+	public Collection<String> suggestHomePaths()
 	{
-		val windir = System.getenv("windir");
+		if(SystemInfo.isWindows)
+		{
+			File dir = new File(getFrameworkPath());
+			if(!dir.exists())
+			{
+				return Collections.emptyList();
+			}
+			List<Pair<String, File>> validSdkDirs = getValidSdkDirs(dir);
+			List<String> paths = new ArrayList<String>(validSdkDirs.size());
+			for(Pair<String, File> validSdkDir : validSdkDirs)
+			{
+				paths.add(validSdkDir.getSecond().getPath());
+			}
+			return paths;
+		}
+		return Collections.emptyList();
+	}
 
-		return windir + "/Microsoft.NET";
+	@Override
+	public boolean canCreatePredefinedSdks()
+	{
+		return true;
+	}
+
+	public String getFrameworkPath()
+	{
+		return System.getenv("windir") + "/Microsoft.NET";
 	}
 
 	@Override
@@ -93,9 +119,9 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	}
 
 	@Override
-	public String suggestSdkName(String s, String s2)
+	public String suggestSdkName(String currentSdkName, String sdkHome)
 	{
-		File file = new File(s2);
+		File file = new File(sdkHome);
 		if(file.getParentFile().getName().equalsIgnoreCase("Framework64"))
 		{
 			return getPresentableName() + " " + removeFirstCharIfIsV(file) + " (x64)";
@@ -151,8 +177,8 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	public void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, final Consumer<Sdk> sdkCreatedCallback)
 	{
 		FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-		VirtualFile microNetVirtualFile = FileChooser.chooseFile(singleFolderDescriptor, null, LocalFileSystem.getInstance().findFileByIoFile(new
-				File(suggestHomePath())));
+		VirtualFile microNetVirtualFile = FileChooser.chooseFile(singleFolderDescriptor, null, LocalFileSystem.getInstance().findFileByPath
+				(getFrameworkPath()));
 		if(microNetVirtualFile == null)
 		{
 			return;
