@@ -53,7 +53,7 @@ public class DotNetSuspendContext extends XSuspendContext
 
 		for(ThreadMirror threadMirror : threadMirrors)
 		{
-			if(myThreadMirror != null && threadMirror.id() == myThreadMirror.id())
+			if(myThreadMirror != null && threadMirror.systemThreadId() == myThreadMirror.systemThreadId())
 			{
 				executionStacks.add(myActiveExecutionStack);
 			}
