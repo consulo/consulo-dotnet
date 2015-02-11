@@ -18,8 +18,11 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
@@ -33,6 +36,27 @@ import com.intellij.psi.PsiWhiteSpace;
  */
 public class DotNetDebuggerUtil
 {
+	@Nullable
+	public static String getAssemblyTitle(@NotNull PsiElement element)
+	{
+		Module module = ModuleUtilCore.findModuleForPsiElement(element);
+		if(module == null)
+		{
+			return null;
+		}
+
+		DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(element, DotNetModuleLangExtension.class);
+		if(extension == null)
+		{
+			return module.getName();
+		}
+		String assemblyTitle = extension.getAssemblyTitle();
+		if(assemblyTitle == null)
+		{
+			return module.getName();
+		}
+		return assemblyTitle;
+	}
 
 	@Nullable
 	public static PsiElement findPsiElement(@NotNull final Project project, @NotNull final VirtualFile file, final int line)
