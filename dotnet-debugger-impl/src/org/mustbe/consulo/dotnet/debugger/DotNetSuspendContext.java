@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.debugger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XSuspendContext;
@@ -35,12 +36,12 @@ public class DotNetSuspendContext extends XSuspendContext
 
 	private XExecutionStack myActiveExecutionStack;
 
-	public DotNetSuspendContext(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
+	public DotNetSuspendContext(@NotNull DotNetDebugContext debuggerContext, @Nullable ThreadMirror threadMirror)
 	{
 		myDebuggerContext = debuggerContext;
 		myThreadMirror = threadMirror;
 
-		myActiveExecutionStack = new DotNetExecutionStack(debuggerContext, threadMirror);
+		myActiveExecutionStack = threadMirror == null ? null : new DotNetExecutionStack(debuggerContext, threadMirror);
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class DotNetSuspendContext extends XSuspendContext
 
 		for(ThreadMirror threadMirror : threadMirrors)
 		{
-			if(threadMirror.id() == myThreadMirror.id())
+			if(myThreadMirror != null && threadMirror.id() == myThreadMirror.id())
 			{
 				executionStacks.add(myActiveExecutionStack);
 			}
