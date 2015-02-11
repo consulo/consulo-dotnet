@@ -18,6 +18,9 @@ package org.mustbe.consulo.mono.dotnet.sdk;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -68,17 +71,52 @@ public class MonoSdkType extends DotNetSdkType
 		super("MONO_DOTNET_SDK");
 	}
 
-	@Nullable
+	@NotNull
 	@Override
-	public String suggestHomePath()
+	public Collection<String> suggestHomePaths()
+	{
+		String defaultHomePath = getDefaultHomePath();
+		if(defaultHomePath == null)
+		{
+			return Collections.emptyList();
+		}
+		File dir = new File(defaultHomePath, "lib/mono");
+		if(!dir.exists())
+		{
+			return Collections.emptyList();
+		}
+		List<String> list = new ArrayList<String>(1);
+		for(File file : dir.listFiles())
+		{
+			list.add(file.getPath());
+		}
+		return list;
+	}
+
+	@Override
+	public boolean canCreatePredefinedSdks()
+	{
+		return true;
+	}
+
+	@Nullable
+	private String getDefaultHomePath()
 	{
 		if(SystemInfo.isWindows)
 		{
-			return "C:/Program Files (x86)/Mono";
+			return "C:/Program Files (x86)/Mono/";
 		}
 		if(SystemInfo.isMac)
 		{
 			return "/Library/Frameworks/Mono.framework/Home/";
+		}
+		if(SystemInfo.isLinux)
+		{
+			File file = new File(LINUX_COMPILER);
+			if(file.exists())
+			{
+				return "/usr/";
+			}
 		}
 		return null;
 	}
@@ -97,9 +135,9 @@ public class MonoSdkType extends DotNetSdkType
 	}
 
 	@Override
-	public String suggestSdkName(String s, String s2)
+	public String suggestSdkName(String currentSdkName, String sdkHome)
 	{
-		File file = new File(s2);
+		File file = new File(sdkHome);
 		return getPresentableName() + " " + file.getName();
 	}
 
@@ -140,7 +178,7 @@ public class MonoSdkType extends DotNetSdkType
 		else if(SystemInfo.isWindows || SystemInfo.isMac)
 		{
 			FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-			val toSelectPath = suggestHomePath();
+			val toSelectPath = getDefaultHomePath();
 			val toSelect = toSelectPath == null ? null : LocalFileSystem.getInstance().findFileByPath(toSelectPath);
 			VirtualFile monoDir = FileChooser.chooseFile(singleFolderDescriptor, null, toSelect);
 			if(monoDir == null)

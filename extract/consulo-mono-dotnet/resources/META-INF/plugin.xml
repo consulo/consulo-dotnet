@@ -34,6 +34,5 @@
 								 mutableClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetMutableModuleExtension"/>
 
 		<sdkType implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType"/>
-		<bundledSdkProvider implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoBundledSdkProvider"/>
 	</extensions>
 </idea-plugin>
