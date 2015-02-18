@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.msil.MsilFileType;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import com.intellij.openapi.fileTypes.FileType;
@@ -63,6 +64,7 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 	}
 
 	@Override
+	@RequiredReadAction
 	public PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull VirtualFile msilFile)
 	{
 		if(msilFile.getFileType() != MsilFileType.INSTANCE)

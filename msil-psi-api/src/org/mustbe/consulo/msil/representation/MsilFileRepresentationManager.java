@@ -22,6 +22,7 @@ import java.util.List;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Pair;
@@ -50,5 +51,6 @@ public abstract class MsilFileRepresentationManager
 	public abstract List<Pair<String, ? extends FileType>> getRepresentFileInfos(@NotNull MsilFile msilFile, @NotNull VirtualFile virtualFile);
 
 	@Nullable
+	@RequiredReadAction
 	public abstract PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull VirtualFile msilFile);
 }

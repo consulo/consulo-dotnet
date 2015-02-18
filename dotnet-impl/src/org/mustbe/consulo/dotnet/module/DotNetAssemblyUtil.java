@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.module;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -30,6 +31,7 @@ import com.intellij.psi.PsiElement;
 public class DotNetAssemblyUtil
 {
 	@Nullable
+	@RequiredReadAction
 	public static String getAssemblyTitle(@NotNull PsiElement element)
 	{
 		Module module = ModuleUtilCore.findModuleForPsiElement(element);

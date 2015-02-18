@@ -2,6 +2,7 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -14,6 +15,7 @@ import com.intellij.psi.PsiManager;
 public class DotNetDebuggerProviders
 {
 	@Nullable
+	@RequiredReadAction
 	public static DotNetDebuggerProvider findByVirtualFile(@NotNull Project project, @NotNull VirtualFile virtualFile)
 	{
 		PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);

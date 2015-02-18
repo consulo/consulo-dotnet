@@ -22,6 +22,7 @@ import org.consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.sdk.SdkUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -171,6 +172,7 @@ public class DotNetModuleSdkPointer implements MutableModuleInheritableNamedPoin
 		element.setAttribute(myXmlPrefix + "-name", StringUtil.notNullize(myTargetPointer == null ? null : myTargetPointer.getName()));
 	}
 
+	@RequiredReadAction
 	public void fromXml(Element element)
 	{
 		final String moduleName = StringUtil.nullize(element.getAttributeValue(myXmlPrefix + "-module-name"));
