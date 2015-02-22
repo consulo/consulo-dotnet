@@ -20,7 +20,7 @@ import org.consulo.lombok.annotations.LazyInstance;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import org.mustbe.consulo.roots.impl.OrderEntryTypeProviderEx;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ModuleRootLayer;
@@ -74,7 +74,7 @@ public class DotNetLibraryOrderEntryTypeProvider extends OrderEntryTypeProviderE
 	{
 		ModuleRootLayerImpl moduleRootLayer = dotNetLibraryOrderEntry.getModuleRootLayer();
 
-		DotNetModuleExtension extension = moduleRootLayer.getExtension(DotNetModuleExtension.class);
+		DotNetSimpleModuleExtension extension = moduleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
 
 		ModuleExtensionProviderEP providerEP = extension == null ? null : ModuleExtensionProviderEP.findProviderEP(extension.getId());
 
