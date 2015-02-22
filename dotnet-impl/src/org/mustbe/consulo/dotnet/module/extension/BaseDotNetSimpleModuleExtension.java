@@ -58,7 +58,7 @@ import lombok.val;
  * @author VISTALL
  * @since 22.02.2015
  */
-public class BaseDotNetSimpleModuleExtension<S extends BaseDotNetModuleExtension<S>> extends ModuleExtensionImpl<S> implements
+public class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionImpl<S> implements
 		DotNetSimpleModuleExtension<S>
 {
 	public static final File[] EMPTY_FILE_ARRAY = new File[0];
