@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.module.dependency;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
@@ -34,7 +34,7 @@ public class DotNetLibraryModuleDependencyTabFactory implements AddModuleDepende
 	@Override
 	public boolean isAvailable(@NotNull ModuleRootLayer layer)
 	{
-		return layer.getExtension(DotNetModuleExtension.class) != null;
+		return layer.getExtension(DotNetSimpleModuleExtension.class) != null;
 	}
 
 	@NotNull
