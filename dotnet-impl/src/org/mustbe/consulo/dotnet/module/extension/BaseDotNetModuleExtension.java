@@ -76,7 +76,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	{
 		super.commit(mutableModuleExtension);
 
-		mySdkPointer.set(mutableModuleExtension.getInheritableSdk());
 		myTarget = mutableModuleExtension.myTarget;
 		myAllowDebugInfo = mutableModuleExtension.myAllowDebugInfo;
 		myAllowSourceRoots = mutableModuleExtension.myAllowSourceRoots;
@@ -84,8 +83,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		myFileName = mutableModuleExtension.myFileName;
 		myNamespacePrefix = mutableModuleExtension.myNamespacePrefix;
 		myOutputDirectory = mutableModuleExtension.myOutputDirectory;
-		myVariables.clear();
-		myVariables.addAll(mutableModuleExtension.myVariables);
 	}
 
 	@Override

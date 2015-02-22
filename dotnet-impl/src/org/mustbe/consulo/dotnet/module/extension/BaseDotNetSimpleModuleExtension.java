@@ -184,6 +184,16 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		}
 	}
 
+	@Override
+	public void commit(@NotNull S mutableModuleExtension)
+	{
+		super.commit(mutableModuleExtension);
+
+		mySdkPointer.set(mutableModuleExtension.getInheritableSdk());
+		myVariables.clear();
+		myVariables.addAll(mutableModuleExtension.myVariables);
+	}
+
 	public boolean isModifiedImpl(S ex)
 	{
 		return myIsEnabled != ex.isEnabled() ||
