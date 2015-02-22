@@ -24,8 +24,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jdom.Document;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
@@ -58,7 +60,7 @@ import lombok.val;
  * @author VISTALL
  * @since 22.02.2015
  */
-public class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionImpl<S> implements
+public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionImpl<S> implements
 		DotNetSimpleModuleExtension<S>
 {
 	public static final File[] EMPTY_FILE_ARRAY = new File[0];
@@ -67,10 +69,12 @@ public class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExt
 
 	protected List<String> myVariables = new ArrayList<String>();
 	protected Map<String, Map<OrderRootType, String[]>> myUrlsCache = new HashMap<String, Map<OrderRootType, String[]>>();
+	protected DotNetModuleSdkPointer mySdkPointer;
 
 	public BaseDotNetSimpleModuleExtension(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer)
 	{
 		super(id, moduleRootLayer);
+		mySdkPointer = new DotNetModuleSdkPointer(moduleRootLayer.getProject(), id);
 	}
 
 	@Override
@@ -107,10 +111,25 @@ public class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExt
 		return map;
 	}
 
+	@NotNull
+	@Override
+	public ModuleInheritableNamedPointer<Sdk> getInheritableSdk()
+	{
+		return mySdkPointer;
+	}
+
 	@Nullable
+	@Override
 	public Sdk getSdk()
 	{
-		return null;
+		return getInheritableSdk().get();
+	}
+
+	@Nullable
+	@Override
+	public String getSdkName()
+	{
+		return getInheritableSdk().getName();
 	}
 
 	@NotNull
@@ -142,6 +161,34 @@ public class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExt
 		}
 
 		return urls;
+	}
+
+	@Override
+	protected void loadStateImpl(@NotNull Element element)
+	{
+		mySdkPointer.fromXml(element);
+
+		for(Element defineElement : element.getChildren("define"))
+		{
+			myVariables.add(defineElement.getText());
+		}
+	}
+
+	@Override
+	protected void getStateImpl(@NotNull Element element)
+	{
+		mySdkPointer.toXml(element);
+		for(String variable : myVariables)
+		{
+			element.addContent(new Element("define").setText(variable));
+		}
+	}
+
+	public boolean isModifiedImpl(S ex)
+	{
+		return myIsEnabled != ex.isEnabled() ||
+				!mySdkPointer.equals(ex.getInheritableSdk()) ||
+				!myVariables.equals(ex.getVariables());
 	}
 
 	@Nullable

@@ -21,13 +21,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTarget;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -41,7 +39,6 @@ import com.intellij.util.containers.ContainerUtil;
 public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtension<S>> extends BaseDotNetSimpleModuleExtension<S> implements
 		DotNetModuleExtension<S>
 {
-	private DotNetModuleSdkPointer mySdkPointer;
 	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 	protected boolean myAllowDebugInfo;
 	protected boolean myAllowSourceRoots;
@@ -50,20 +47,18 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	protected String myFileName = DEFAULT_FILE_NAME;
 	protected String myOutputDirectory = DEFAULT_OUTPUT_DIR;
 
-	public BaseDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
+	public BaseDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer)
 	{
-		super(id, rootModel);
-		mySdkPointer = new DotNetModuleSdkPointer(rootModel.getProject(), id);
+		super(id, moduleRootLayer);
 	}
 
+	@Override
 	public boolean isModifiedImpl(S ex)
 	{
-		return myIsEnabled != ex.isEnabled() ||
+		return super.isModifiedImpl(ex) ||
 				!myTarget.equals(ex.myTarget) ||
 				myAllowDebugInfo != ex.isAllowDebugInfo() ||
-				!mySdkPointer.equals(ex.getInheritableSdk()) ||
 				myAllowSourceRoots != ex.isAllowSourceRoots() ||
-				!myVariables.equals(ex.getVariables()) ||
 				!Comparing.equal(myMainType, ex.myMainType) ||
 				!Comparing.equal(myNamespacePrefix, ex.myNamespacePrefix) ||
 				!Comparing.equal(getFileName(), ex.getFileName()) ||
@@ -98,7 +93,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	{
 		super.loadStateImpl(element);
 
-		mySdkPointer.fromXml(element);
 		myTarget = DotNetTarget.valueOf(element.getAttributeValue("target", DotNetTarget.EXECUTABLE.name()));
 		myAllowDebugInfo = Boolean.valueOf(element.getAttributeValue("debug", "false"));
 		myAllowSourceRoots = Boolean.valueOf(element.getAttributeValue("allow-source-roots", "false"));
@@ -106,11 +100,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		myOutputDirectory = element.getAttributeValue("output-dir", DEFAULT_OUTPUT_DIR);
 		myMainType = element.getAttributeValue("main-type");
 		myNamespacePrefix = element.getAttributeValue("namespace-prefix");
-
-		for(Element defineElement : element.getChildren("define"))
-		{
-			myVariables.add(defineElement.getText());
-		}
 	}
 
 	@Override
@@ -118,7 +107,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	{
 		super.getStateImpl(element);
 
-		mySdkPointer.toXml(element);
 		element.setAttribute("target", myTarget.name());
 		element.setAttribute("debug", Boolean.toString(myAllowDebugInfo));
 		element.setAttribute("allow-source-roots", Boolean.toString(myAllowSourceRoots));
@@ -129,32 +117,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		{
 			element.setAttribute("main-type", myMainType);
 		}
-		for(String variable : myVariables)
-		{
-			element.addContent(new Element("define").setText(variable));
-		}
-	}
-
-
-	@NotNull
-	@Override
-	public ModuleInheritableNamedPointer<Sdk> getInheritableSdk()
-	{
-		return mySdkPointer;
-	}
-
-	@Nullable
-	@Override
-	public Sdk getSdk()
-	{
-		return getInheritableSdk().get();
-	}
-
-	@Nullable
-	@Override
-	public String getSdkName()
-	{
-		return getInheritableSdk().getName();
 	}
 
 	@NotNull

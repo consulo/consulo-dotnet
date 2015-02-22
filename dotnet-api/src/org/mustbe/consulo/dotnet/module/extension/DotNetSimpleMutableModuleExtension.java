@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,24 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
+import java.util.List;
+
+import org.consulo.module.extension.MutableModuleExtension;
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTarget;
+import com.intellij.openapi.projectRoots.Sdk;
 
 /**
  * @author VISTALL
- * @since 01.02.14
+ * @since 22.02.2015
  */
-public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetModuleExtension<T>,
-		DotNetSimpleMutableModuleExtension<T>
+public interface DotNetSimpleMutableModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends DotNetSimpleModuleExtension<T>,
+		MutableModuleExtension<T>
 {
-	void setFileName(@NotNull String name);
+	@Override
+	List<String> getVariables();
 
-	void setNamespacePrefix(@NotNull String prefix);
-
-	void setOutputDir(@NotNull String name);
-
-	void setAllowSourceRoots(boolean val);
-
-	void setMainType(@Nullable String qName);
-
-	void setTarget(@NotNull DotNetTarget target);
-
-	void setAllowDebugInfo(boolean allowDebugInfo);
+	@Override
+	@NotNull
+	MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 }

@@ -52,7 +52,7 @@ public class DotNetModuleSdkPointer implements MutableModuleInheritableNamedPoin
 	@Nullable
 	public String getItemNameFromModule(@NotNull Module module)
 	{
-		final DotNetModuleExtension<?> extension = (DotNetModuleExtension) ModuleUtilCore.getExtension(module, myModuleExtensionId);
+		final DotNetSimpleModuleExtension<?> extension = (DotNetSimpleModuleExtension) ModuleUtilCore.getExtension(module, myModuleExtensionId);
 		if(extension != null)
 		{
 			return extension.getInheritableSdk().getName();
@@ -63,7 +63,7 @@ public class DotNetModuleSdkPointer implements MutableModuleInheritableNamedPoin
 	@Nullable
 	public Sdk getItemFromModule(@NotNull Module module)
 	{
-		final DotNetModuleExtension<?> extension = (DotNetModuleExtension) ModuleUtilCore.getExtension(module, myModuleExtensionId);
+		final DotNetSimpleModuleExtension<?> extension = (DotNetSimpleModuleExtension) ModuleUtilCore.getExtension(module, myModuleExtensionId);
 		if(extension != null)
 		{
 			return extension.getInheritableSdk().get();

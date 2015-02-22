@@ -16,7 +16,6 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
-import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
@@ -25,7 +24,6 @@ import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -46,17 +44,6 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	String DEFAULT_OUTPUT_DIR = MODULE_OUTPUT_DIR;
 
-	@NotNull
-	ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
-
-	@Nullable
-	Sdk getSdk();
-
-	@Nullable
-	String getSdkName();
-
-	@NotNull
-	Class<? extends SdkType> getSdkTypeClass();
 
 	boolean isAllowSourceRoots();
 
