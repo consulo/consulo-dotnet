@@ -39,12 +39,13 @@ import com.intellij.openapi.util.Condition;
  */
 public class DotNetModuleExtensionWithSdkPanel
 {
-	public static JComponent create(@NotNull DotNetMutableModuleExtension<?> myExtensionWithSdk, @NotNull final Runnable updater)
+	@NotNull
+	public static JComponent create(@NotNull DotNetSimpleMutableModuleExtension<?> moduleExtension, @NotNull final Runnable updater)
 	{
-		final Class<? extends SdkType> sdkType = myExtensionWithSdk.getSdkTypeClass();
-		final ProjectSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(myExtensionWithSdk.getModule().getProject())
+		final Class<? extends SdkType> sdkType = moduleExtension.getSdkTypeClass();
+		final ProjectSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(moduleExtension.getModule().getProject())
 				.getProjectSdksModel();
-		final SdkComboBox mySdkComboBox = new SdkComboBox(projectSdksModel, new Condition<SdkTypeId>()
+		final SdkComboBox sdkComboBox = new SdkComboBox(projectSdksModel, new Condition<SdkTypeId>()
 		{
 			@Override
 			public boolean value(SdkTypeId sdkTypeId)
@@ -52,12 +53,12 @@ public class DotNetModuleExtensionWithSdkPanel
 				return sdkType.isAssignableFrom(sdkTypeId.getClass());
 			}
 		}, true);
-		mySdkComboBox.insertModuleItems(myExtensionWithSdk);
+		sdkComboBox.insertModuleItems(moduleExtension);
 
-		final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = myExtensionWithSdk.getInheritableSdk();
+		final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = moduleExtension.getInheritableSdk();
 		if(inheritableSdk.isNull())
 		{
-			mySdkComboBox.setSelectedNoneSdk();
+			sdkComboBox.setSelectedNoneSdk();
 		}
 		else
 		{
@@ -67,26 +68,29 @@ public class DotNetModuleExtensionWithSdkPanel
 				final Module sdkInheritModule = inheritableSdk.getModule();
 				if(sdkInheritModule == null)
 				{
-					mySdkComboBox.addInvalidModuleItem(sdkInheritModuleName);
+					sdkComboBox.addInvalidModuleItem(sdkInheritModuleName);
 				}
-				mySdkComboBox.setSelectedModule(sdkInheritModuleName);
+				sdkComboBox.setSelectedModule(sdkInheritModuleName);
 			}
 			else
 			{
-				mySdkComboBox.setSelectedSdk(inheritableSdk.getName());
+				sdkComboBox.setSelectedSdk(inheritableSdk.getName());
 			}
 		}
 
-		mySdkComboBox.addItemListener(new ItemListener()
+		sdkComboBox.addItemListener(new ItemListener()
 		{
 			@Override
 			public void itemStateChanged(ItemEvent e)
 			{
-				inheritableSdk.set(mySdkComboBox.getSelectedModuleName(), mySdkComboBox.getSelectedSdkName());
-				updater.run();
+				if(e.getStateChange() == ItemEvent.SELECTED)
+				{
+					inheritableSdk.set(sdkComboBox.getSelectedModuleName(), sdkComboBox.getSelectedSdkName());
+					updater.run();
+				}
 			}
 		});
 
-		return LabeledComponent.left(mySdkComboBox, "Sdk:");
+		return LabeledComponent.left(sdkComboBox, "Sdk:");
 	}
 }
