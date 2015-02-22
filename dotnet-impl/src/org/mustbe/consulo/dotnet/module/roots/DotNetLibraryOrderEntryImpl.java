@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderEntryWithTracking;
@@ -54,7 +54,7 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 	@Override
 	public VirtualFile[] getFiles(OrderRootType orderRootType)
 	{
-		DotNetModuleExtension extension = myModuleRootLayer.getExtension(DotNetModuleExtension.class);
+		DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
 		if(extension == null)
 		{
 			return VirtualFile.EMPTY_ARRAY;
@@ -77,7 +77,7 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 	@Override
 	public String[] getUrls(OrderRootType orderRootType)
 	{
-		DotNetModuleExtension extension = myModuleRootLayer.getExtension(DotNetModuleExtension.class);
+		DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
 		if(extension == null)
 		{
 			return ArrayUtil.EMPTY_STRING_ARRAY;
@@ -96,7 +96,7 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 	@Override
 	public boolean isValid()
 	{
-		return myModuleRootLayer.getExtension(DotNetModuleExtension.class) != null;
+		return myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class) != null;
 	}
 
 	@NotNull

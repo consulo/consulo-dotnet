@@ -25,7 +25,7 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.roots.ModifiableModuleRootLayer;
@@ -103,7 +103,7 @@ public class DotNetLibraryModuleDependencyTabContext extends AddModuleDependency
 
 	private void reloadSystemLibraries()
 	{
-		final DotNetModuleExtension<?> extension = myClasspathPanel.getRootModel().getExtension(DotNetModuleExtension.class);
+		final DotNetSimpleModuleExtension<?> extension = myClasspathPanel.getRootModel().getExtension(DotNetSimpleModuleExtension.class);
 		if(extension == null)
 		{
 			return;

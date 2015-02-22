@@ -16,12 +16,6 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
-import java.util.List;
-import java.util.Map;
-
-import org.consulo.annotations.Immutable;
-import org.consulo.annotations.InheritImmutable;
-import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,14 +26,13 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 20.11.13.
  */
-public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends ModuleExtension<T>
+public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetSimpleModuleExtension<T>
 {
 	String MODULE_OUTPUT_DIR = "$ModuleProductionOutputDirPath$";
 
@@ -52,8 +45,6 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	String DEFAULT_FILE_NAME = MODULE_NAME + "." + OUTPUT_FILE_EXT;
 
 	String DEFAULT_OUTPUT_DIR = MODULE_OUTPUT_DIR;
-
-	boolean isSupportCompilation();
 
 	@NotNull
 	ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
@@ -83,10 +74,6 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	@NotNull
 	String getOutputDir();
 
-	@InheritImmutable
-	@Immutable
-	List<String> getVariables();
-
 	@Nullable
 	String getMainType();
 
@@ -95,12 +82,6 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	@NotNull
 	String getDebugFileExtension();
-
-	@NotNull
-	Map<String, String> getAvailableSystemLibraries();
-
-	@NotNull
-	String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType);
 
 	@NotNull
 	@RequiredReadAction
