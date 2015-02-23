@@ -31,7 +31,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingItem
 {
 	private final VirtualFile myVirtualFile;
-	private final DotNetModuleExtension myExtension;
+	private final DotNetModuleExtension<?> myExtension;
 
 	public DotNetProcessingItem(VirtualFile virtualFile, DotNetModuleExtension<?> dotNetModuleExtension)
 	{
@@ -53,7 +53,7 @@ public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingIt
 		return new EmptyValidityState();
 	}
 
-	public DotNetModuleExtension getExtension()
+	public DotNetModuleExtension<?> getExtension()
 	{
 		return myExtension;
 	}

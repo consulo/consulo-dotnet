@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.compiler.CompileContext;
@@ -92,10 +93,10 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				continue;
 			}
 
-			val dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+			DotNetSimpleModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetSimpleModuleExtension.class);
 			assert dotNetModuleExtension != null;
 
-			if(!dotNetModuleExtension.isSupportCompilation())
+			if(!dotNetModuleExtension.isSupportCompilation() || !(dotNetModuleExtension instanceof DotNetModuleExtension))
 			{
 				continue;
 			}
@@ -125,7 +126,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				{
 					continue;
 				}
-				itemList.add(new DotNetProcessingItem(fileByIoFile, dotNetModuleExtension));
+				itemList.add(new DotNetProcessingItem(fileByIoFile, (DotNetModuleExtension<?>) dotNetModuleExtension));
 			}
 		}
 

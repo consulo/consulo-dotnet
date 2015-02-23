@@ -53,6 +53,9 @@ public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtensi
 	@Immutable
 	List<String> getVariables();
 
+	/**
+	 * FIXME [VISTALL] this method is really needed? We can check it by instanceof DotNetModuleExtension
+	 */
 	boolean isSupportCompilation();
 
 	@NotNull
