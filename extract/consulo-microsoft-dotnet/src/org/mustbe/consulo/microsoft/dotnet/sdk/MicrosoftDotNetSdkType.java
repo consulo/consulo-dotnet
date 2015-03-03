@@ -188,7 +188,6 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 
 		List<Pair<String, File>> list = getValidSdkDirs(microNet);
 
-		val thisSdks = SdkTable.getInstance().getSdksOfType(this);
 		DefaultActionGroup actionGroup = new DefaultActionGroup();
 		for(val pair : list)
 		{
@@ -200,7 +199,8 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 					val path = pair.getSecond();
 					val absolutePath = path.getAbsolutePath();
 
-					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MicrosoftDotNetSdkType.this, absolutePath, thisSdks);
+					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MicrosoftDotNetSdkType.this, absolutePath,
+							SdkTable.getInstance().getAllSdks());
 					SdkImpl sdk = new SdkImpl(uniqueSdkName, MicrosoftDotNetSdkType.this);
 					sdk.setVersionString(getVersionString(absolutePath));
 					sdk.setHomePath(absolutePath);

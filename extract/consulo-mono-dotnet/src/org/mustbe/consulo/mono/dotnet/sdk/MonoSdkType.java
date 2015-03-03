@@ -215,7 +215,6 @@ public class MonoSdkType extends DotNetSdkType
 			}
 		}
 
-		val thisSdks = SdkTable.getInstance().getSdksOfType(this);
 		DefaultActionGroup actionGroup = new DefaultActionGroup();
 		for(val pair : list)
 		{
@@ -227,7 +226,8 @@ public class MonoSdkType extends DotNetSdkType
 					val path = pair.getSecond();
 					val absolutePath = path.getAbsolutePath();
 
-					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MonoSdkType.this, absolutePath, thisSdks);
+					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MonoSdkType.this, absolutePath,
+							SdkTable.getInstance().getAllSdks());
 					SdkImpl sdk = new SdkImpl(uniqueSdkName, MonoSdkType.this);
 					sdk.setVersionString(getVersionString(absolutePath));
 					sdk.setHomePath(absolutePath);
