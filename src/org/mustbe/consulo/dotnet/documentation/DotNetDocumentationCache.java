@@ -1,18 +1,16 @@
 package org.mustbe.consulo.dotnet.documentation;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.consulo.lombok.annotations.ApplicationService;
 import org.emonic.base.documentation.IDocumentation;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
-import com.intellij.openapi.vfs.VirtualFileEvent;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
@@ -23,22 +21,8 @@ import com.intellij.psi.PsiFile;
 @ApplicationService
 public class DotNetDocumentationCache
 {
-	public DotNetDocumentationCache(VirtualFileManager virtualFileManager)
+	public DotNetDocumentationCache()
 	{
-		virtualFileManager.addVirtualFileListener(new VirtualFileAdapter()
-		{
-			@Override
-			public void contentsChanged(@NotNull VirtualFileEvent event)
-			{
-				super.contentsChanged(event);
-			}
-
-			@Override
-			public void fileDeleted(@NotNull VirtualFileEvent event)
-			{
-				super.fileDeleted(event);
-			}
-		});
 	}
 
 	@Nullable
@@ -63,18 +47,18 @@ public class DotNetDocumentationCache
 		List<OrderEntry> orderEntriesForFile = ProjectRootManager.getInstance(navigationElement.getProject()).getFileIndex().getOrderEntriesForFile
 				(virtualFile);
 
+		List<VirtualFile> files = new ArrayList<VirtualFile>();
 		for(OrderEntry orderEntry : orderEntriesForFile)
 		{
-			for(VirtualFile docVirtualFile : orderEntry.getFiles(DocumentationOrderRootType.getInstance()))
+			Collections.addAll(files, orderEntry.getFiles(DocumentationOrderRootType.getInstance()));
+		}
+
+		for(DotNetDocumentationResolver documentationResolver : DotNetDocumentationResolver.EP_NAME.getExtensions())
+		{
+			IDocumentation documentation = documentationResolver.resolveDocumentation(files, navigationElement);
+			if(documentation != null)
 			{
-				for(DotNetDocumentationResolver documentationResolver : DotNetDocumentationResolver.EP_NAME.getExtensions())
-				{
-					IDocumentation documentation = documentationResolver.resolveDocumentation(docVirtualFile, navigationElement);
-					if(documentation != null)
-					{
-						return documentation;
-					}
-				}
+				return documentation;
 			}
 		}
 		return null;

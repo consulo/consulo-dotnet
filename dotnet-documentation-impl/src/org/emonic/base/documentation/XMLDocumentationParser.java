@@ -10,8 +10,6 @@
  ******************************************************************************/
 package org.emonic.base.documentation;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -23,30 +21,31 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import com.intellij.openapi.vfs.VirtualFile;
 
 public class XMLDocumentationParser
 {
-	public static ITypeDocumentation findTypeDocumentation(File file, String memberName)
+	public static ITypeDocumentation findTypeDocumentation(VirtualFile file, String memberName)
 	{
 		TypeHandler handler = new TypeHandler(memberName);
 		try
 		{
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-			parser.parse(new FileInputStream(file), handler);
+			parser.parse(file.getInputStream(), handler);
 		}
-		catch(SAXException e)
+		catch(SAXException ignored)
 		{
 		}
-		catch(FileNotFoundException e)
+		catch(FileNotFoundException ignored)
 		{
 		}
-		catch(IOException e)
+		catch(IOException ignored)
 		{
 		}
-		catch(ParserConfigurationException e)
+		catch(ParserConfigurationException ignored)
 		{
 		}
-		catch(FactoryConfigurationError e)
+		catch(FactoryConfigurationError ignored)
 		{
 		}
 		return handler.getTypeDocumentation();

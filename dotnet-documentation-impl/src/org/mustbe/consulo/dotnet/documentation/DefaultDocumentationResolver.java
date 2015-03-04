@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.documentation;
 
+import java.util.List;
+
 import org.emonic.base.documentation.IDocumentation;
 import org.emonic.base.documentation.XMLDocumentationParser;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +28,6 @@ import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -41,7 +42,21 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 {
 	@Nullable
 	@Override
-	public IDocumentation resolveDocumentation(
+	public IDocumentation resolveDocumentation(@NotNull List<VirtualFile> orderEntryFiles, @NotNull PsiElement element)
+	{
+		for(VirtualFile orderEntryFile : orderEntryFiles)
+		{
+			IDocumentation iDocumentation = resolveDocumentation(orderEntryFile, element);
+			if(iDocumentation != null)
+			{
+				return iDocumentation;
+			}
+		}
+		return null;
+	}
+
+	@Nullable
+	private IDocumentation resolveDocumentation(
 			@NotNull VirtualFile virtualFile, @NotNull PsiElement element)
 	{
 		if(virtualFile.getFileType() != XmlFileType.INSTANCE)
@@ -50,7 +65,7 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 		}
 		String docName = getDocName(element);
 
-		return XMLDocumentationParser.findTypeDocumentation(VfsUtilCore.virtualToIoFile(virtualFile), docName);
+		return XMLDocumentationParser.findTypeDocumentation(virtualFile, docName);
 	}
 
 	private String getDocName0(PsiElement element)
@@ -201,5 +216,4 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 		}
 		return docQName;
 	}
-
 }

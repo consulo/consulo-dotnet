@@ -55,7 +55,21 @@ public class MonoDocumentationResolver implements DotNetDocumentationResolver
 
 	@Nullable
 	@Override
-	public IDocumentation resolveDocumentation(@NotNull VirtualFile virtualFile, @NotNull PsiElement element)
+	public IDocumentation resolveDocumentation(@NotNull List<VirtualFile> orderEntryFiles, @NotNull PsiElement element)
+	{
+		for(VirtualFile orderEntryFile : orderEntryFiles)
+		{
+			IDocumentation iDocumentation = resolveDocumentation(orderEntryFile, element);
+			if(iDocumentation != null)
+			{
+				return iDocumentation;
+			}
+		}
+		return null;
+	}
+
+	@Nullable
+	private IDocumentation resolveDocumentation(@NotNull VirtualFile virtualFile, @NotNull PsiElement element)
 	{
 		if(!Comparing.equal(virtualFile.getExtension(), "source"))
 		{

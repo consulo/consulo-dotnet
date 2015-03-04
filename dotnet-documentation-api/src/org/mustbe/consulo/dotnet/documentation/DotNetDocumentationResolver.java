@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.documentation;
 
+import java.util.List;
+
 import org.emonic.base.documentation.IDocumentation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,5 +34,5 @@ public interface DotNetDocumentationResolver
 	ExtensionPointName<DotNetDocumentationResolver> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.documentationResolver");
 
 	@Nullable
-	IDocumentation resolveDocumentation(@NotNull VirtualFile virtualFile, @NotNull PsiElement element);
+	IDocumentation resolveDocumentation(@NotNull List<VirtualFile> orderEntryFiles, @NotNull PsiElement element);
 }
