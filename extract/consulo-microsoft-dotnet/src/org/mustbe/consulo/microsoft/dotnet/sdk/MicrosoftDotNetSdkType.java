@@ -17,41 +17,19 @@
 package org.mustbe.consulo.microsoft.dotnet.sdk;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.swing.Icon;
-import javax.swing.JComponent;
 
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.microsoft.dotnet.MicrosoftDotNetIcons;
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkAdditionalData;
 import com.intellij.openapi.projectRoots.SdkModel;
-import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Consumer;
-import lombok.val;
+import com.intellij.openapi.projectRoots.SdkModificator;
 
 /**
  * @author VISTALL
@@ -59,8 +37,6 @@ import lombok.val;
  */
 public class MicrosoftDotNetSdkType extends DotNetSdkType
 {
-	private static final Pattern _4_0_PATTERN = Pattern.compile("4.0(.\\d(.\\d)?)?");
-
 	@NotNull
 	public static MicrosoftDotNetSdkType getInstance()
 	{
@@ -72,74 +48,71 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 		super("MICROSOFT_DOTNET_SDK");
 	}
 
-	@NotNull
 	@Override
-	public Collection<String> suggestHomePaths()
+	public boolean supportsUserAdd()
 	{
-		if(SystemInfo.isWindows)
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator)
+	{
+		SdkAdditionalData sdkAdditionalData = sdkModificator.getSdkAdditionalData();
+		if(sdkAdditionalData instanceof MicrosoftDotNetSdkData)
 		{
-			File dir = new File(getFrameworkPath());
-			if(!dir.exists())
-			{
-				return Collections.emptyList();
-			}
-			List<Pair<String, File>> validSdkDirs = getValidSdkDirs(dir);
-			List<String> paths = new ArrayList<String>(validSdkDirs.size());
-			for(Pair<String, File> validSdkDir : validSdkDirs)
-			{
-				paths.add(validSdkDir.getSecond().getPath());
-			}
-			return paths;
+			return new MicrosoftDotNetSdkDataConfigurable((MicrosoftDotNetSdkData) sdkAdditionalData);
 		}
-		return Collections.emptyList();
+		return null;
 	}
 
 	@Override
-	public boolean canCreatePredefinedSdks()
+	public void saveAdditionalData(SdkAdditionalData additionalData, Element additional)
 	{
-		return true;
+		MicrosoftDotNetSdkData sdkData = (MicrosoftDotNetSdkData) additionalData;
+
+		additional.setAttribute("compiler-path", sdkData.getCompilerPath());
 	}
 
-	public String getFrameworkPath()
+	@Nullable
+	@Override
+	public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional)
 	{
-		return System.getenv("windir") + "/Microsoft.NET";
+		String compilerPath = additional.getAttributeValue("compiler-path");
+		if(compilerPath != null)
+		{
+			return new MicrosoftDotNetSdkData(compilerPath);
+		}
+		return null;
 	}
 
 	@Override
 	public boolean isValidSdkHome(String s)
 	{
-		return new File(s, "csc.exe").exists();
+		return new File(s, "mscorlib.dll").exists();
 	}
 
 	@Nullable
 	@Override
-	public String getVersionString(String s)
+	public String getVersionString(String sdkHome)
 	{
-		return removeFirstCharIfIsV(new File(s));
+		MicrosoftDotNetVersion version = MicrosoftDotNetVersion.findVersion(new File(sdkHome).getName());
+		if(version != null)
+		{
+			return version.getPresentableName();
+		}
+		return null;
 	}
 
 	@Override
 	public String suggestSdkName(String currentSdkName, String sdkHome)
 	{
-		File file = new File(sdkHome);
-		if(file.getParentFile().getName().equalsIgnoreCase("Framework64"))
+		MicrosoftDotNetVersion version = MicrosoftDotNetVersion.findVersion(new File(sdkHome).getName());
+		if(version != null)
 		{
-			return getPresentableName() + " " + removeFirstCharIfIsV(file) + " (x64)";
+			return version.getPresentableName();
 		}
-		else
-		{
-			return getPresentableName() + " " + removeFirstCharIfIsV(file);
-		}
-	}
-
-	public static String removeFirstCharIfIsV(File file)
-	{
-		return removeFirstCharIfIsV(file.getName());
-	}
-
-	public static String removeFirstCharIfIsV(String name)
-	{
-		return name.charAt(0) == 'v' ? name.substring(1, name.length()) : name;
+		return null;
 	}
 
 	@NotNull
@@ -153,9 +126,14 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	@Override
 	public File getLoaderFile(@NotNull Sdk sdk)
 	{
-		if(_4_0_PATTERN.matcher(sdk.getVersionString()).find())
+		MicrosoftDotNetVersion version = MicrosoftDotNetVersion.findVersion(sdk.getVersionString());
+		if(version != null)
 		{
-			return getLoaderFile(MicrosoftDotNetSdkType.class, "loader4.exe");
+			switch(version)
+			{
+				case _4_0:
+					return getLoaderFile(MicrosoftDotNetSdkType.class, "loader4.exe");
+			}
 		}
 		return super.getLoaderFile(sdk);
 	}
@@ -165,94 +143,5 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	public Icon getIcon()
 	{
 		return MicrosoftDotNetIcons.DotNet;
-	}
-
-	@Override
-	public boolean supportsCustomCreateUI()
-	{
-		return SystemInfo.isWindows;
-	}
-
-	@Override
-	public void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, final Consumer<Sdk> sdkCreatedCallback)
-	{
-		FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-		VirtualFile microNetVirtualFile = FileChooser.chooseFile(singleFolderDescriptor, null, LocalFileSystem.getInstance().findFileByPath
-				(getFrameworkPath()));
-		if(microNetVirtualFile == null)
-		{
-			return;
-		}
-
-		File microNet = VfsUtil.virtualToIoFile(microNetVirtualFile);
-
-		List<Pair<String, File>> list = getValidSdkDirs(microNet);
-
-		DefaultActionGroup actionGroup = new DefaultActionGroup();
-		for(val pair : list)
-		{
-			actionGroup.add(new AnAction(pair.getFirst())
-			{
-				@Override
-				public void actionPerformed(AnActionEvent anActionEvent)
-				{
-					val path = pair.getSecond();
-					val absolutePath = path.getAbsolutePath();
-
-					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MicrosoftDotNetSdkType.this, absolutePath,
-							SdkTable.getInstance().getAllSdks());
-					SdkImpl sdk = new SdkImpl(uniqueSdkName, MicrosoftDotNetSdkType.this);
-					sdk.setVersionString(getVersionString(absolutePath));
-					sdk.setHomePath(absolutePath);
-
-					sdkCreatedCallback.consume(sdk);
-				}
-			});
-		}
-
-		DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
-
-		ListPopup choose = JBPopupFactory.getInstance().createActionGroupPopup("Choose", actionGroup, dataContext,
-				JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
-
-		choose.showInCenterOf(parentComponent);
-	}
-
-	public List<Pair<String, File>> getValidSdkDirs(File microNet)
-	{
-		List<Pair<String, File>> list = new ArrayList<Pair<String, File>>();
-
-		File framework = new File(microNet, "Framework");
-		if(framework.exists())
-		{
-			File[] files = framework.listFiles();
-			if(files != null)
-			{
-				for(File file : files)
-				{
-					if(isValidSdkHome(file.getAbsolutePath()))
-					{
-						list.add(new Pair<String, File>(removeFirstCharIfIsV(file), file));
-					}
-				}
-			}
-		}
-
-		framework = new File(microNet, "Framework64");
-		if(framework.exists())
-		{
-			File[] files = framework.listFiles();
-			if(files != null)
-			{
-				for(File file : files)
-				{
-					if(isValidSdkHome(file.getAbsolutePath()))
-					{
-						list.add(new Pair<String, File>(removeFirstCharIfIsV(file) + " (x64)", file));
-					}
-				}
-			}
-		}
-		return list;
 	}
 }
