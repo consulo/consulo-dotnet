@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.microsoft.dotnet.MicrosoftDotNetIcons;
+import org.mustbe.consulo.microsoft.dotnet.util.MicrosoftDotNetUtil;
 import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkAdditionalData;
@@ -126,14 +127,10 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	@Override
 	public File getLoaderFile(@NotNull Sdk sdk)
 	{
-		MicrosoftDotNetVersion version = MicrosoftDotNetVersion.findVersion(sdk.getVersionString());
-		if(version != null)
+		String targetVersion = MicrosoftDotNetUtil.getTargetVersion();
+		if("4.0.0".equals(targetVersion))
 		{
-			switch(version)
-			{
-				case _4_0:
-					return getLoaderFile(MicrosoftDotNetSdkType.class, "loader4.exe");
-			}
+			return getLoaderFile(MicrosoftDotNetSdkType.class, "loader4.exe");
 		}
 		return super.getLoaderFile(sdk);
 	}
