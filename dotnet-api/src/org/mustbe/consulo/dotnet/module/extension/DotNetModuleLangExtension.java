@@ -20,6 +20,7 @@ import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.compiler.DotNetCompileFailedException;
 import org.mustbe.consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.psi.PsiElement;
@@ -42,5 +43,5 @@ public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T
 	String getAssemblyTitle();
 
 	@NotNull
-	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder();
+	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder() throws DotNetCompileFailedException;
 }

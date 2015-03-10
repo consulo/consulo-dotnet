@@ -30,6 +30,9 @@
 								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />
 
 		<sdkType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
+		<orderRootType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftCompilerDirOrderRootType" />
+		<orderRootTypeEditor key="microsoft-compiler-dirs"
+							 implementationClass="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftCompilerDirOrderRootTypeEditor" />
 
 		<predefinedBundlesProvider implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetPredefinedBundlesProvider" />
 	</extensions>

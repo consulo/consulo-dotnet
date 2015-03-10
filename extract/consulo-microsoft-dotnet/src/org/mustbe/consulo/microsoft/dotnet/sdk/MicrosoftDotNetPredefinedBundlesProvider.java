@@ -22,8 +22,11 @@ import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.bundle.PredefinedBundlesProvider;
+import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 
@@ -45,13 +48,25 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 			sdk.setHomePath(netFramework.getPath());
 			sdk.setVersionString(netFramework.getVersion().getPresentableName());
 
+			String compilerDir = null;
 			MicrosoftVisualStudioVersion visualStudioVersion = netFramework.getVisualStudioVersion();
 			if(visualStudioVersion != null)
 			{
-				String compilerPath = netFramework.getCompilerPath();
-				assert compilerPath != null;
-				sdk.setSdkAdditionalData(new MicrosoftDotNetSdkData(compilerPath));
+				compilerDir = netFramework.getCompilerPath();
 			}
+			else
+			{
+				compilerDir = netFramework.getPath();
+			}
+
+			assert compilerDir != null;
+			VirtualFile compilerVirtualDir = LocalFileSystem.getInstance().findFileByPath(compilerDir);
+			assert compilerVirtualDir != null;
+
+			SdkModificator sdkModificator = sdk.getSdkModificator();
+			sdkModificator.addRoot(compilerVirtualDir, MicrosoftCompilerDirOrderRootType.getInstance());
+			sdkModificator.commitChanges();
+
 			consumer.consume(sdk);
 		}
 	}

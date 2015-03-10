@@ -20,17 +20,13 @@ import java.io.File;
 
 import javax.swing.Icon;
 
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.microsoft.dotnet.MicrosoftDotNetIcons;
 import org.mustbe.consulo.microsoft.dotnet.util.MicrosoftDotNetUtil;
-import com.intellij.openapi.projectRoots.AdditionalDataConfigurable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
-import com.intellij.openapi.projectRoots.SdkModel;
-import com.intellij.openapi.projectRoots.SdkModificator;
+import com.intellij.openapi.roots.OrderRootType;
 
 /**
  * @author VISTALL
@@ -53,38 +49,6 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	public boolean supportsUserAdd()
 	{
 		return false;
-	}
-
-	@Nullable
-	@Override
-	public AdditionalDataConfigurable createAdditionalDataConfigurable(SdkModel sdkModel, SdkModificator sdkModificator)
-	{
-		SdkAdditionalData sdkAdditionalData = sdkModificator.getSdkAdditionalData();
-		if(sdkAdditionalData instanceof MicrosoftDotNetSdkData)
-		{
-			return new MicrosoftDotNetSdkDataConfigurable((MicrosoftDotNetSdkData) sdkAdditionalData);
-		}
-		return null;
-	}
-
-	@Override
-	public void saveAdditionalData(SdkAdditionalData additionalData, Element additional)
-	{
-		MicrosoftDotNetSdkData sdkData = (MicrosoftDotNetSdkData) additionalData;
-
-		additional.setAttribute("compiler-path", sdkData.getCompilerPath());
-	}
-
-	@Nullable
-	@Override
-	public SdkAdditionalData loadAdditionalData(Sdk currentSdk, Element additional)
-	{
-		String compilerPath = additional.getAttributeValue("compiler-path");
-		if(compilerPath != null)
-		{
-			return new MicrosoftDotNetSdkData(compilerPath);
-		}
-		return null;
 	}
 
 	@Override
@@ -111,6 +75,12 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	public String getPresentableName()
 	{
 		return "Microsoft .NET";
+	}
+
+	@Override
+	public boolean isRootTypeApplicable(OrderRootType type)
+	{
+		return type == MicrosoftCompilerDirOrderRootType.getInstance();
 	}
 
 	@NotNull

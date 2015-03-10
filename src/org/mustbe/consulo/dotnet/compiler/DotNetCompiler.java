@@ -103,7 +103,7 @@ public class DotNetCompiler implements TranslatingCompiler
 	}
 
 	@Override
-	public void compile(CompileContext compileContext, Chunk<Module> moduleChunk, VirtualFile[] virtualFiles, OutputSink outputSink)
+	public void compile(final CompileContext compileContext, Chunk<Module> moduleChunk, VirtualFile[] virtualFiles, OutputSink outputSink)
 	{
 		Module module = moduleChunk.getNodes().iterator().next();
 
@@ -113,7 +113,16 @@ public class DotNetCompiler implements TranslatingCompiler
 		assert dotNetModuleExtension != null;
 		assert langDotNetModuleExtension != null;
 
-		DotNetCompilerOptionsBuilder builder = langDotNetModuleExtension.createCompilerOptionsBuilder();
+		DotNetCompilerOptionsBuilder builder = null;
+		try
+		{
+			builder = langDotNetModuleExtension.createCompilerOptionsBuilder();
+		}
+		catch(final DotNetCompileFailedException e)
+		{
+			compileContext.addMessage(CompilerMessageCategory.ERROR, e.getMessage(), null, -1, -1);
+			return;
+		}
 
 		try
 		{

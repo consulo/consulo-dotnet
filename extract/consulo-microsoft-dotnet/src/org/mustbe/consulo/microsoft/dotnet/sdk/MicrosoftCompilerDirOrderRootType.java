@@ -16,30 +16,25 @@
 
 package org.mustbe.consulo.microsoft.dotnet.sdk;
 
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
+import com.intellij.openapi.roots.OrderRootType;
 
 /**
  * @author VISTALL
- * @since 09.03.2015
+ * @since 11.03.2015
  */
-public class MicrosoftDotNetSdkData implements SdkAdditionalData
+public class MicrosoftCompilerDirOrderRootType extends OrderRootType
 {
-	private final String myCompilerPath;
-
-	public MicrosoftDotNetSdkData(@NotNull String compilerPath)
+	@NotNull
+	@LazyInstance
+	public static MicrosoftCompilerDirOrderRootType getInstance()
 	{
-		myCompilerPath = compilerPath;
+		return getOrderRootType(MicrosoftCompilerDirOrderRootType.class);
 	}
 
-	public String getCompilerPath()
+	private MicrosoftCompilerDirOrderRootType()
 	{
-		return myCompilerPath;
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException
-	{
-		return new MicrosoftDotNetSdkData(myCompilerPath);
+		super("microsoft-compiler-dirs");
 	}
 }
