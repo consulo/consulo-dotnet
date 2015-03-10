@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * @author VISTALL
  * @since 09.03.2015
  */
-public class MicrosoftDotNetFramework implements Comparable<MicrosoftDotNetFramework>
+public class MicrosoftDotNetFramework
 {
 	private final MicrosoftDotNetVersion myVersion;
 	@NotNull
@@ -73,22 +73,5 @@ public class MicrosoftDotNetFramework implements Comparable<MicrosoftDotNetFrame
 			builder.append(" (").append(myVisualStudioVersion.getPresentableName()).append(")");
 		}
 		return builder.toString();
-	}
-
-	@Override
-	public int compareTo(@NotNull MicrosoftDotNetFramework o)
-	{
-		return getWeight() - o.getWeight();
-	}
-
-	private int getWeight()
-	{
-		int value = Integer.MAX_VALUE;
-		if(myVisualStudioVersion != null)
-		{
-			value += myVisualStudioVersion.ordinal();
-		}
-		value += myVersion.ordinal();
-		return value;
 	}
 }

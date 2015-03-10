@@ -97,23 +97,13 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	@Override
 	public String getVersionString(String sdkHome)
 	{
-		MicrosoftDotNetVersion version = MicrosoftDotNetVersion.findVersion(new File(sdkHome).getName());
-		if(version != null)
-		{
-			return version.getPresentableName();
-		}
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public String suggestSdkName(String currentSdkName, String sdkHome)
 	{
-		MicrosoftDotNetVersion version = MicrosoftDotNetVersion.findVersion(new File(sdkHome).getName());
-		if(version != null)
-		{
-			return version.getPresentableName();
-		}
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@NotNull

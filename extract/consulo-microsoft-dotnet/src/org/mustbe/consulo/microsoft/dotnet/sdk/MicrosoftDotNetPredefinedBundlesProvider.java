@@ -17,11 +17,7 @@
 package org.mustbe.consulo.microsoft.dotnet.sdk;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +25,7 @@ import org.mustbe.consulo.bundle.PredefinedBundlesProvider;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Consumer;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author VISTALL
@@ -41,12 +38,12 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 	{
 		MicrosoftDotNetSdkType sdkType = MicrosoftDotNetSdkType.getInstance();
 
-		Set<MicrosoftDotNetFramework> microsoftDotNetFrameworks = buildPaths(sdkType);
+		Collection<MicrosoftDotNetFramework> microsoftDotNetFrameworks = buildPaths(sdkType);
 		for(MicrosoftDotNetFramework netFramework : microsoftDotNetFrameworks)
 		{
 			SdkImpl sdk = createSdkWithName(sdkType, sdkType.getPresentableName() + " " + netFramework.toString());
-			sdk.setVersionString(netFramework.getVersion().getPresentableName());
 			sdk.setHomePath(netFramework.getPath());
+			sdk.setVersionString(netFramework.getVersion().getPresentableName());
 
 			MicrosoftVisualStudioVersion visualStudioVersion = netFramework.getVisualStudioVersion();
 			if(visualStudioVersion != null)
@@ -59,11 +56,11 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 		}
 	}
 
-	public Set<MicrosoftDotNetFramework> buildPaths(MicrosoftDotNetSdkType sdkType)
+	public Collection<MicrosoftDotNetFramework> buildPaths(MicrosoftDotNetSdkType sdkType)
 	{
 		if(SystemInfo.isWindows)
 		{
-			Set<MicrosoftDotNetFramework> set = new TreeSet<MicrosoftDotNetFramework>();
+			List<MicrosoftDotNetFramework> list = new ArrayList<MicrosoftDotNetFramework>();
 
 			// first of all, we try to collect sdk from Windows dir, where compilers are located at same dir
 			File framework = new File(System.getenv("windir"), "Microsoft.NET/Framework");
@@ -72,12 +69,10 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 			{
 				for(File file : files)
 				{
-					MicrosoftDotNetVersion microsoftDotNetVersion = MicrosoftDotNetVersion.findVersion(file.getName());
+					MicrosoftDotNetVersion microsoftDotNetVersion = MicrosoftDotNetVersion.findVersion(file.getName(), true);
 					if(microsoftDotNetVersion != null && sdkType.isValidSdkHome(file.getPath()))
 					{
-						MicrosoftDotNetVersion version = MicrosoftDotNetVersion.findVersion(file.getName());
-						assert version != null;
-						set.add(new MicrosoftDotNetFramework(version, file.getPath(), null, null));
+						list.add(new MicrosoftDotNetFramework(microsoftDotNetVersion, file.getPath(), null, null));
 					}
 				}
 			}
@@ -89,12 +84,32 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 			// we cant use external libraries if not external compilers
 			if(!compilerPaths.isEmpty())
 			{
-				collectFromReferenceAssemblies(set, compilerPaths, sdkType, "ProgramFiles");
-				collectFromReferenceAssemblies(set, compilerPaths, sdkType, "ProgramFiles(x86)");
+				collectFromReferenceAssemblies(list, compilerPaths, sdkType, "ProgramFiles");
+				collectFromReferenceAssemblies(list, compilerPaths, sdkType, "ProgramFiles(x86)");
 			}
-			return set;
+
+			ContainerUtil.sort(list, new Comparator<MicrosoftDotNetFramework>()
+			{
+				@Override
+				public int compare(MicrosoftDotNetFramework o1, MicrosoftDotNetFramework o2)
+				{
+					return getWeight(o1) - getWeight(o2);
+				}
+
+				private int getWeight(MicrosoftDotNetFramework f)
+				{
+					int value = 0;
+					if(f.getVisualStudioVersion() != null)
+					{
+						value += 100 + f.getVisualStudioVersion().ordinal();
+					}
+					value += f.getVersion().ordinal();
+					return value;
+				}
+			});
+			return list;
 		}
-		return Collections.emptySet();
+		return Collections.emptyList();
 	}
 
 	private void collectVisualStudioCompilerPaths(Map<MicrosoftVisualStudioVersion, String> map, String env)
@@ -115,7 +130,7 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 		}
 	}
 
-	private void collectFromReferenceAssemblies(Set<MicrosoftDotNetFramework> set,
+	private void collectFromReferenceAssemblies(Collection<MicrosoftDotNetFramework> set,
 			@NotNull Map<MicrosoftVisualStudioVersion, String> compilerPaths,
 			@NotNull MicrosoftDotNetSdkType sdkType,
 			@Nullable String env)
@@ -135,7 +150,7 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 
 		for(File file : files)
 		{
-			MicrosoftDotNetVersion microsoftDotNetVersion = MicrosoftDotNetVersion.findVersion(file.getName());
+			MicrosoftDotNetVersion microsoftDotNetVersion = MicrosoftDotNetVersion.findVersion(file.getName(), false);
 			if(microsoftDotNetVersion != null && sdkType.isValidSdkHome(file.getPath()))
 			{
 				for(Map.Entry<MicrosoftVisualStudioVersion, String> entry : compilerPaths.entrySet())

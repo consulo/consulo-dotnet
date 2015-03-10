@@ -42,12 +42,13 @@ public enum MicrosoftDotNetVersion
 	}
 
 	@Nullable
-	public static MicrosoftDotNetVersion findVersion(@NotNull String version)
+	public static MicrosoftDotNetVersion findVersion(@NotNull String version, boolean startWith)
 	{
 		version = version.charAt(0) == 'v' ? version.substring(1, version.length()) : version;
 		for(MicrosoftDotNetVersion microsoftDotNetVersion : values())
 		{
-			if(version.startsWith(microsoftDotNetVersion.myPresentableName))
+			String presentableName = microsoftDotNetVersion.myPresentableName;
+			if(startWith ? version.startsWith(presentableName) : version.equals(presentableName))
 			{
 				return microsoftDotNetVersion;
 			}
