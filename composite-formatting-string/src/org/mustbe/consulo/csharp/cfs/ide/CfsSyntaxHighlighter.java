@@ -20,15 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.csharp.cfs.lang.BaseCfsLanguageVersion;
 import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
-import org.mustbe.consulo.csharp.cfs.lang.lexer.CfsLexer;
 import com.intellij.lexer.Lexer;
-import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
@@ -44,11 +42,18 @@ public class CfsSyntaxHighlighter extends SyntaxHighlighterBase
 		safeMap(ourKeys, CfsTokens.INDEX, DefaultLanguageHighlighterColors.NUMBER);
 	}
 
+	private final BaseCfsLanguageVersion myLanguageVersion;
+
+	public CfsSyntaxHighlighter(BaseCfsLanguageVersion languageVersion)
+	{
+		myLanguageVersion = languageVersion;
+	}
+
 	@NotNull
 	@Override
 	public Lexer getHighlightingLexer()
 	{
-		return new MergingLexerAdapter(new CfsLexer(), TokenSet.create(CfsTokens.TEXT));
+		return myLanguageVersion.createLexer(null);
 	}
 
 	@NotNull

@@ -20,5 +20,7 @@
 		<lang.parserDefinition language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.lang.CfsParserDefinition" />
 		<lang.braceMatcher language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.lang.CfsPairedBraceMatcher" />
 		<lang.syntaxHighlighterFactory key="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.ide.CfsSyntaxHighlighterFactory" />
+
+		<lang.defineVersion language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.lang.IndexCfsLanguageVersion" />
 	</extensions>
 </idea-plugin>

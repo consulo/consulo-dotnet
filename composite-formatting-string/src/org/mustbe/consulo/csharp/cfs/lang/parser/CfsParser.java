@@ -32,6 +32,13 @@ import com.intellij.psi.tree.IElementType;
  */
 public class CfsParser implements PsiParser
 {
+	private final IElementType myArgumentElementType;
+
+	public CfsParser(IElementType argumentElementType)
+	{
+		myArgumentElementType = argumentElementType;
+	}
+
 	@NotNull
 	@Override
 	public ASTNode parse(@NotNull IElementType elementType, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
@@ -44,9 +51,9 @@ public class CfsParser implements PsiParser
 				PsiBuilder.Marker itemMark = builder.mark();
 				builder.advanceLexer();
 
-				if(!PsiBuilderUtil.expect(builder, CfsTokens.INDEX))
+				if(!PsiBuilderUtil.expect(builder, myArgumentElementType))
 				{
-					builder.error("Index expected");
+					builder.error("Argument expected");
 				}
 
 				if(builder.getTokenType() == CfsTokens.COMMA)

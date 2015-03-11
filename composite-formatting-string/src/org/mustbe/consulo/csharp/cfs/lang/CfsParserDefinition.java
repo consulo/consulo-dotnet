@@ -17,72 +17,28 @@
 package org.mustbe.consulo.csharp.cfs.lang;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.cfs.lang.lexer.CfsLexer;
-import org.mustbe.consulo.csharp.cfs.lang.parser.CfsParser;
 import org.mustbe.consulo.csharp.cfs.psi.CfsFile;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageVersion;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.openapi.project.Project;
+import com.intellij.lang.LanguageVersionableParserDefinition;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
  * @since 20.08.14
  */
-public class CfsParserDefinition implements ParserDefinition
+public class CfsParserDefinition extends LanguageVersionableParserDefinition
 {
 	private static final IFileElementType FILE_ELEMENT = new IFileElementType(CfsLanguage.INSTANCE);
-
-	@NotNull
-	@Override
-	public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion)
-	{
-		return new MergingLexerAdapter(new CfsLexer(), TokenSet.create(CfsTokens.TEXT));
-	}
-
-	@NotNull
-	@Override
-	public PsiParser createParser(@Nullable Project project, @NotNull LanguageVersion languageVersion)
-	{
-		return new CfsParser();
-	}
 
 	@NotNull
 	@Override
 	public IFileElementType getFileNodeType()
 	{
 		return FILE_ELEMENT;
-	}
-
-	@NotNull
-	@Override
-	public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion)
-	{
-		return TokenSet.EMPTY;
-	}
-
-	@NotNull
-	@Override
-	public TokenSet getCommentTokens(@NotNull LanguageVersion languageVersion)
-	{
-		return TokenSet.EMPTY;
-	}
-
-	@NotNull
-	@Override
-	public TokenSet getStringLiteralElements(@NotNull LanguageVersion languageVersion)
-	{
-		return TokenSet.EMPTY;
 	}
 
 	@NotNull

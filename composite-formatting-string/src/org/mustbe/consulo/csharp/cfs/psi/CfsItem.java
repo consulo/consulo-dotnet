@@ -17,7 +17,6 @@
 package org.mustbe.consulo.csharp.cfs.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -62,10 +61,38 @@ public class CfsItem extends ASTWrapperPsiElement
 	@Override
 	public PsiReference getReference()
 	{
-		return new PsiReferenceBase<PsiElement>(this)
+		final int index = getIndex();
+		if(index == -1)
+		{
+			return null;
+		}
+
+		PsiElement element = null;
+		Place shreds = InjectedLanguageUtil.getShreds(getContainingFile());
+		for(PsiLanguageInjectionHost.Shred shred : shreds)
+		{
+			PsiLanguageInjectionHost host = shred.getHost();
+			if(host == null)
+			{
+				continue;
+			}
+			DotNetCallArgumentList callArgumentList = PsiTreeUtil.getParentOfType(host, DotNetCallArgumentList.class);
+			if(callArgumentList == null)
+			{
+				continue;
+			}
+			DotNetExpression[] expressions = callArgumentList.getExpressions();
+			int i = ArrayUtil.find(expressions, host);
+			assert i != -1;
+
+			element = ArrayUtil2.safeGet(expressions, i + index + 1);
+			break;
+		}
+
+		return new PsiReferenceBase.Immediate<PsiElement>(this, true, element)
 		{
 			@Override
-			public TextRange getRangeInElement()
+			protected TextRange calculateDefaultRangeInElement()
 			{
 				return new TextRange(0, CfsItem.this.getTextLength());
 			}
@@ -74,44 +101,6 @@ public class CfsItem extends ASTWrapperPsiElement
 			public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
 			{
 				return null;
-			}
-
-			@Nullable
-			@Override
-			public PsiElement resolve()
-			{
-				int index = getIndex();
-				if(index == -1)
-				{
-					return null;
-				}
-				Place shreds = InjectedLanguageUtil.getShreds(getContainingFile());
-				for(PsiLanguageInjectionHost.Shred shred : shreds)
-				{
-					PsiLanguageInjectionHost host = shred.getHost();
-					if(host == null)
-					{
-						continue;
-					}
-					DotNetCallArgumentList callArgumentList = PsiTreeUtil.getParentOfType(host, DotNetCallArgumentList.class);
-					if(callArgumentList == null)
-					{
-						continue;
-					}
-					DotNetExpression[] expressions = callArgumentList.getExpressions();
-					int i = ArrayUtil.find(expressions, host);
-					assert i != -1;
-
-					return ArrayUtil2.safeGet(expressions, i + index + 1);
-				}
-				return null;
-			}
-
-			@NotNull
-			@Override
-			public Object[] getVariants()
-			{
-				return new Object[0];
 			}
 		};
 	}

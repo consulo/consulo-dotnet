@@ -16,7 +16,8 @@
 
 package test;
 
-import org.mustbe.consulo.csharp.cfs.lang.lexer.CfsLexer;
+import org.mustbe.consulo.csharp.cfs.lang.lexer.BaseCfsLexer;
+import org.mustbe.consulo.csharp.cfs.lang.lexer.IndexCfsLexer;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -27,7 +28,7 @@ public class MyLexerTest
 {
 	public static void main(String[] args)
 	{
-		CfsLexer lexer = new CfsLexer();
+		BaseCfsLexer lexer = new IndexCfsLexer();
 		lexer.start("{0,10:dd} {1} {2} {3} {-4} {5} ff hello world");
 
 		System.out.println("TEST " + lexer.getBufferSequence());

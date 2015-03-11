@@ -16,20 +16,28 @@
 
 package org.mustbe.consulo.csharp.cfs.ide;
 
+import org.consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
+import org.mustbe.consulo.csharp.cfs.lang.BaseCfsLanguageVersion;
+import org.mustbe.consulo.csharp.cfs.lang.CfsLanguage;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 
 /**
  * @author VISTALL
  * @since 31.08.14
  */
-public class CfsSyntaxHighlighterFactory extends SingleLazyInstanceSyntaxHighlighterFactory
+public class CfsSyntaxHighlighterFactory extends LanguageVersionableSyntaxHighlighterFactory
 {
+	public CfsSyntaxHighlighterFactory()
+	{
+		super(CfsLanguage.INSTANCE);
+	}
+
 	@NotNull
 	@Override
-	protected SyntaxHighlighter createHighlighter()
+	public SyntaxHighlighter getSyntaxHighlighter(@NotNull LanguageVersion languageVersion)
 	{
-		return new CfsSyntaxHighlighter();
+		return new CfsSyntaxHighlighter((BaseCfsLanguageVersion)languageVersion);
 	}
 }

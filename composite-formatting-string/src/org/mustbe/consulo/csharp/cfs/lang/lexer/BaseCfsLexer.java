@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.cfs.lang.lexer;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
@@ -24,23 +25,23 @@ import com.intellij.psi.tree.IElementType;
  * @author VISTALL
  * @since 31.08.14
  */
-public class CfsLexer extends LexerBase implements CfsTokens
+public abstract class BaseCfsLexer extends LexerBase implements CfsTokens
 {
 	private static final int TEXT_LAYER = 0;
-	private static final int INDEX_WAIT = 1;
+	private static final int ARGUMENT_WAIT = 1;
 	private static final int ALIGN_OR_FORMAT_OR_STOP = 2;
 	private static final int ALIGN_WAIT = 3;
 	private static final int FORMAT_WAIT = 5;
 	private static final int FORMAT_OR_STOP = 6;
 
-	private CharSequence myBuffer = "";
-	private int myIndex = 0;
-	private int myStopIndex = 0;
-	private int myBufferEnd = 1;
+	protected CharSequence myBuffer = "";
+	protected int myIndex = 0;
+	protected int myStopIndex = 0;
+	protected int myBufferEnd = 1;
 
-	private int myState = TEXT_LAYER;
+	protected int myState = TEXT_LAYER;
 
-	private IElementType myCache = null;
+	protected IElementType myCache = null;
 
 	@Override
 	public void start(CharSequence buffer, int startOffset, int endOffset, int initialState)
@@ -83,7 +84,7 @@ public class CfsLexer extends LexerBase implements CfsTokens
 				if(c == '{')
 				{
 					myStopIndex = myIndex + 1;
-					myState = INDEX_WAIT;
+					myState = ARGUMENT_WAIT;
 					return START;
 				}
 				else
@@ -91,8 +92,8 @@ public class CfsLexer extends LexerBase implements CfsTokens
 					myStopIndex = myIndex + 1;
 					return TEXT;
 				}
-			case INDEX_WAIT:
-				return stepNumber(c, INDEX, ALIGN_OR_FORMAT_OR_STOP);
+			case ARGUMENT_WAIT:
+				return stepArgument(c, INDEX, ALIGN_OR_FORMAT_OR_STOP);
 			case ALIGN_OR_FORMAT_OR_STOP:
 				if(c == '}')
 				{
@@ -181,7 +182,11 @@ public class CfsLexer extends LexerBase implements CfsTokens
 		}
 	}
 
-	private IElementType stepNumber(char c, IElementType to, int newState)
+	@NotNull
+	public abstract IElementType stepArgument(char c, IElementType to, int newState);
+
+	@NotNull
+	protected IElementType stepNumber(char c, IElementType to, int newState)
 	{
 		boolean minus = false;
 		int i = 0;
