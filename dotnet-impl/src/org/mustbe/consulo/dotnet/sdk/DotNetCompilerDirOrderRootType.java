@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.microsoft.dotnet.sdk;
+package org.mustbe.consulo.dotnet.sdk;
 
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
@@ -24,17 +24,17 @@ import com.intellij.openapi.roots.OrderRootType;
  * @author VISTALL
  * @since 11.03.2015
  */
-public class MicrosoftCompilerDirOrderRootType extends OrderRootType
+public class DotNetCompilerDirOrderRootType extends OrderRootType
 {
 	@NotNull
 	@LazyInstance
-	public static MicrosoftCompilerDirOrderRootType getInstance()
+	public static DotNetCompilerDirOrderRootType getInstance()
 	{
-		return getOrderRootType(MicrosoftCompilerDirOrderRootType.class);
+		return getOrderRootType(DotNetCompilerDirOrderRootType.class);
 	}
 
-	private MicrosoftCompilerDirOrderRootType()
+	private DotNetCompilerDirOrderRootType()
 	{
-		super("microsoft-compiler-dirs");
+		super("dotnet-compiler-dirs");
 	}
 }

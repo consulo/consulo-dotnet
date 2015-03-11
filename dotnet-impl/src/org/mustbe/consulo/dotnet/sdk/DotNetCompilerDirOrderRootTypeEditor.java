@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.microsoft.dotnet.sdk;
+package org.mustbe.consulo.dotnet.sdk;
 
 import javax.swing.Icon;
 
@@ -28,12 +28,12 @@ import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
  * @author VISTALL
  * @since 11.03.2015
  */
-public class MicrosoftCompilerDirOrderRootTypeEditor implements OrderRootTypeUIFactory
+public class DotNetCompilerDirOrderRootTypeEditor implements OrderRootTypeUIFactory
 {
 	@Override
 	public SdkPathEditor createPathEditor(Sdk sdk)
 	{
-		return new SdkPathEditor(getNodeText(), MicrosoftCompilerDirOrderRootType.getInstance(),
+		return new SdkPathEditor(getNodeText(), DotNetCompilerDirOrderRootType.getInstance(),
 				FileChooserDescriptorFactory.createSingleFolderDescriptor(), sdk);
 	}
 

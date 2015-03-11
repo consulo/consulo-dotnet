@@ -22,6 +22,7 @@ import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.bundle.PredefinedBundlesProvider;
+import org.mustbe.consulo.dotnet.sdk.DotNetCompilerDirOrderRootType;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.util.SystemInfo;
@@ -64,7 +65,7 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 			assert compilerVirtualDir != null;
 
 			SdkModificator sdkModificator = sdk.getSdkModificator();
-			sdkModificator.addRoot(compilerVirtualDir, MicrosoftCompilerDirOrderRootType.getInstance());
+			sdkModificator.addRoot(compilerVirtualDir, DotNetCompilerDirOrderRootType.getInstance());
 			sdkModificator.commitChanges();
 
 			consumer.consume(sdk);

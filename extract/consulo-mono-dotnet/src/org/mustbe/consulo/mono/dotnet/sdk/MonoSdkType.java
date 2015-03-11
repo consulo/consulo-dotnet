@@ -61,6 +61,29 @@ public class MonoSdkType extends DotNetSdkType
 	public static final String LINUX_COMPILER = "/usr/bin/mcs";
 
 	@NotNull
+	public String getExecutable(@NotNull Sdk sdk)
+	{
+		String runFile = null;
+		if(SystemInfo.isWindows)
+		{
+			runFile = sdk.getHomePath() + "/../../../bin/mono.exe";
+		}
+		else if(SystemInfo.isMac)
+		{
+			runFile = sdk.getHomePath() + "/../../../bin/mono";
+		}
+		else if(SystemInfo.isLinux)
+		{
+			runFile = "/usr/bin/mono";
+		}
+		else
+		{
+			throw new UnsupportedOperationException(SystemInfo.OS_NAME);
+		}
+		return runFile;
+	}
+
+	@NotNull
 	public static MonoSdkType getInstance()
 	{
 		return EP_NAME.findExtension(MonoSdkType.class);

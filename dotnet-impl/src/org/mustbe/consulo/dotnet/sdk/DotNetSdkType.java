@@ -25,6 +25,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
+import com.intellij.openapi.roots.OrderRootType;
 
 /**
  * @author VISTALL
@@ -35,6 +36,12 @@ public abstract class DotNetSdkType extends SdkType
 	public DotNetSdkType(@NonNls String name)
 	{
 		super(name);
+	}
+
+	@Override
+	public boolean isRootTypeApplicable(OrderRootType type)
+	{
+		return type == DotNetCompilerDirOrderRootType.getInstance();
 	}
 
 	@NotNull

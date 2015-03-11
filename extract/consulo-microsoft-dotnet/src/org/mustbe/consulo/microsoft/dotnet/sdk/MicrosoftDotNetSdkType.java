@@ -26,7 +26,6 @@ import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.microsoft.dotnet.MicrosoftDotNetIcons;
 import org.mustbe.consulo.microsoft.dotnet.util.MicrosoftDotNetUtil;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.OrderRootType;
 
 /**
  * @author VISTALL
@@ -75,12 +74,6 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	public String getPresentableName()
 	{
 		return "Microsoft .NET";
-	}
-
-	@Override
-	public boolean isRootTypeApplicable(OrderRootType type)
-	{
-		return type == MicrosoftCompilerDirOrderRootType.getInstance();
 	}
 
 	@NotNull

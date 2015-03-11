@@ -33,7 +33,6 @@ import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -71,21 +70,7 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 
-		String runFile = null;
-		if(SystemInfo.isWindows)
-		{
-			runFile = sdk.getHomePath() + "/../../../bin/mono.exe";
-		}
-		else if(SystemInfo.isMac)
-		{
-			runFile = sdk.getHomePath() + "/../../../bin/mono";
-		}
-		else if(SystemInfo.isLinux)
-		{
-			runFile = "/usr/bin/mono";
-		}
-
-		assert runFile != null : SystemInfo.OS_NAME;
+		String runFile = MonoSdkType.getInstance().getExecutable(sdk);
 
 		commandLine.setExePath(runFile);
 		if(debugConnectionInfo != null)
