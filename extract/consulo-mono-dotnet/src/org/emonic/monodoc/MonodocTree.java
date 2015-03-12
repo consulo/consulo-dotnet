@@ -28,6 +28,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import com.intellij.openapi.util.io.ZipFileCache;
 
 //import org.emonic.base.codehierarchy.AssemblyParser;
 
@@ -106,25 +107,29 @@ public final class MonodocTree extends MonodocNode
 	{
 		for(int i = 0; i < nodes.length; i++)
 		{
-			if(nodes[i].getElement().substring(2).equals(namespaceName))
+			MonodocNode node = nodes[i];
+
+			String element = node.getElement();
+			if(element != null)
 			{
-				MonodocNode[] childNodes = nodes[i].getNodes();
-				for(int j = 0; j < childNodes.length; j++)
+				if(element.substring(2).equals(namespaceName))
 				{
-					String name = childNodes[j].getElement();
-					int pidx = name.indexOf('#');
-					int sidx = name.lastIndexOf('/');
-					String cname = name.substring(pidx + 1, sidx);
-					if(cname.equals(typeName))
+					MonodocNode[] childNodes = node.getNodes();
+					for(int j = 0; j < childNodes.length; j++)
 					{
-						int cidx = name.indexOf(':');
-						ITypeDocumentation documentation = find(name.substring(cidx + 1, pidx));
-						return documentation;
+						String name = childNodes[j].getElement();
+						int pidx = name.indexOf('#');
+						int sidx = name.lastIndexOf('/');
+						String cname = name.substring(pidx + 1, sidx);
+						if(cname.equals(typeName))
+						{
+							int cidx = name.indexOf(':');
+							return find(name.substring(cidx + 1, pidx));
+						}
 					}
 				}
 			}
-		}
-		return null;
+		} return null;
 	}
 
 	private ITypeDocumentation find(String entry)
@@ -132,7 +137,7 @@ public final class MonodocTree extends MonodocNode
 		ZipFile zip = null;
 		try
 		{
-			zip = new ZipFile(zipFile);
+			zip = ZipFileCache.acquire(zipFile.getPath());
 			InputStream inputStream = zip.getInputStream(zip.getEntry(entry));
 			return parse(inputStream);
 		}
@@ -144,14 +149,7 @@ public final class MonodocTree extends MonodocNode
 		{
 			if(zip != null)
 			{
-				try
-				{
-					zip.close();
-				}
-				catch(IOException e)
-				{
-					// ignored
-				}
+				ZipFileCache.release(zip);
 			}
 		}
 	}
@@ -211,23 +209,20 @@ public final class MonodocTree extends MonodocNode
 								}
 								else
 								{
-									StringBuffer buffer = new StringBuffer(name);
-									synchronized(buffer)
+									StringBuilder buffer = new StringBuilder(name);
+									buffer.append('(');
+									for(int l = 0; l < parameters.getLength(); l++)
 									{
-										buffer.append('(');
-										for(int l = 0; l < parameters.getLength(); l++)
+										Node parameter = parameters.item(l);
+										if(parameter instanceof Element)
 										{
-											Node parameter = parameters.item(l);
-											if(parameter instanceof Element)
-											{
-												buffer.append(((Element) parameter).getAttribute("Type"));
-												buffer.append(',');
-											}
+											buffer.append(((Element) parameter).getAttribute("Type"));
+											buffer.append(',');
 										}
-										buffer.delete(buffer.length() - 1, buffer.length());
-										buffer.append(')');
-										name = CodeHierarchyHelper.convertSignature(buffer.toString());
 									}
+									buffer.delete(buffer.length() - 1, buffer.length());
+									buffer.append(')');
+									name = CodeHierarchyHelper.convertSignature(buffer.toString());
 								}
 							}
 							else if(nodeName.equals("Docs"))
