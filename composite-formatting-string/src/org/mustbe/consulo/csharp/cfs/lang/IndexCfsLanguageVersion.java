@@ -18,7 +18,7 @@ package org.mustbe.consulo.csharp.cfs.lang;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.cfs.lang.lexer.IndexCfsLexer;
+import org.mustbe.consulo.csharp.cfs.lang.lexer.CfsLexer;
 import org.mustbe.consulo.csharp.cfs.lang.parser.CfsParser;
 import com.intellij.lang.LanguageVersionWithDefinition;
 import com.intellij.lang.LanguageVersionWithParsing;
@@ -44,7 +44,7 @@ public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements L
 	@Override
 	public Lexer createInnerLexer()
 	{
-		return new IndexCfsLexer();
+		return new CfsLexer(CfsTokens.INDEX);
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 must-be.org
+ * Copyright 2013-2014 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,17 @@
 
 package org.mustbe.consulo.csharp.cfs.lang.lexer;
 
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lexer.FlexAdapter;
 import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
- * @since 12.03.2015
+ * @since 31.08.14
  */
-public class IndexCfsLexer extends BaseCfsLexer
+public class CfsLexer extends FlexAdapter
 {
-	@NotNull
-	@Override
-	public IElementType stepArgument(char c, IElementType to, int newState)
+	public CfsLexer(IElementType indexElementType)
 	{
-		return stepNumber(c, to, newState);
+		super(new _BaseLexer(indexElementType));
 	}
 }

@@ -18,7 +18,7 @@ package org.mustbe.consulo.csharp.cfs.lang;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.csharp.cfs.lang.lexer.ExpressionCfsLexer;
+import org.mustbe.consulo.csharp.cfs.lang.lexer.CfsLexer;
 import org.mustbe.consulo.csharp.cfs.lang.parser.CfsParser;
 import com.intellij.lang.Language;
 import com.intellij.lang.PsiParser;
@@ -60,6 +60,6 @@ public abstract class BaseExpressionCfsLanguageVersion extends BaseCfsLanguageVe
 		{
 			myExpressionElementType = createExpressionElementType();
 		}
-		return new ExpressionCfsLexer(myExpressionElementType);
+		return new CfsLexer(myExpressionElementType);
 	}
 }

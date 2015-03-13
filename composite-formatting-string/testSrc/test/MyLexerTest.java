@@ -16,8 +16,9 @@
 
 package test;
 
-import org.mustbe.consulo.csharp.cfs.lang.lexer.BaseCfsLexer;
-import org.mustbe.consulo.csharp.cfs.lang.lexer.IndexCfsLexer;
+import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
+import org.mustbe.consulo.csharp.cfs.lang.lexer.CfsLexer;
+import com.intellij.lexer.Lexer;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -28,8 +29,8 @@ public class MyLexerTest
 {
 	public static void main(String[] args)
 	{
-		BaseCfsLexer lexer = new IndexCfsLexer();
-		lexer.start("{0,10:dd} {1} {2} {3} {-4} {5} ff hello world");
+		Lexer lexer = new CfsLexer(CfsTokens.INDEX);
+		lexer.start("dasd asd asd as {test,10:dd} {test,} {2:,,} {3} {-4} {5} ff hello world");
 
 		System.out.println("TEST " + lexer.getBufferSequence());
 		IElementType tokenType;
@@ -39,13 +40,13 @@ public class MyLexerTest
 			lexer.advance();
 		}
 
-		lexer.start("{0,-10:dd} {1} {2} {3} {-4} {5} ff hello world");
+	/*	lexer.start("{0,-10:dd} {1} {2} {3} {-4} {5} ff hello world");
 		System.out.println("-----------------------------------------------");
 		System.out.println("TEST " + lexer.getBufferSequence());
 		while((tokenType = lexer.getTokenType()) != null)
 		{
 			System.out.println(tokenType + " : '" + lexer.getTokenText() + "'");
 			lexer.advance();
-		}
+		}  */
 	}
 }
