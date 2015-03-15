@@ -21,6 +21,7 @@ import javax.swing.JComponent;
 import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.module.extension.DotNetConfigurationPanel;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -52,6 +53,7 @@ public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModule
 
 	@Nullable
 	@Override
+	@RequiredDispatchThread
 	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
 	{
 		return new DotNetConfigurationPanel(this, myVariables, runnable);

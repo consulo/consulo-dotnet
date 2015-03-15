@@ -25,20 +25,24 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 
+import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
+import org.consulo.module.extension.ui.ModuleExtensionSdkBoxBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -54,6 +58,7 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
+import com.intellij.util.NullableFunction;
 import com.intellij.util.ui.UIUtil;
 import lombok.val;
 
@@ -63,10 +68,24 @@ import lombok.val;
  */
 public class DotNetConfigurationPanel extends JPanel
 {
+	@RequiredDispatchThread
 	public DotNetConfigurationPanel(final DotNetMutableModuleExtension<?> extension, final List<String> variables, final Runnable updater)
 	{
 		super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, true));
-		add(DotNetModuleExtensionWithSdkPanel.create(extension, EmptyRunnable.INSTANCE));
+		val moduleExtensionSdkBoxBuilder = ModuleExtensionSdkBoxBuilder.<DotNetMutableModuleExtension<?>>create(extension, updater);
+		moduleExtensionSdkBoxBuilder.sdkTypeClass(extension.getSdkTypeClass());
+		moduleExtensionSdkBoxBuilder.sdkPointerFunc(new NullableFunction<DotNetMutableModuleExtension<?>,
+				MutableModuleInheritableNamedPointer<Sdk>>()
+		{
+			@Nullable
+			@Override
+			public MutableModuleInheritableNamedPointer<Sdk> fun(DotNetMutableModuleExtension<?> mutableModuleExtension)
+			{
+				return mutableModuleExtension.getInheritableSdk();
+			}
+		});
+
+		add(moduleExtensionSdkBoxBuilder.build());
 
 		val fileNameField = new JBTextField(extension.getFileName());
 		fileNameField.getEmptyText().setText(DotNetModuleExtension.DEFAULT_FILE_NAME);
