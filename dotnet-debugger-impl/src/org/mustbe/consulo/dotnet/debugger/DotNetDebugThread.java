@@ -33,8 +33,6 @@ import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Key;
@@ -270,7 +268,7 @@ public class DotNetDebugThread extends Thread
 						stoppedAlready = true;
 
 						myDebugProcess.setPausedEventSet(eventSet);
-						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location, myDebugProcess.getDebugHelper());
+						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location);
 						DotNetDebugContext debugContext = createDebugContext();
 						if(xLineBreakpoint != null)
 						{
@@ -301,10 +299,10 @@ public class DotNetDebugThread extends Thread
 
 	private void insertBreakpoints(final VirtualMachine virtualMachine, final TypeMirror typeMirror)
 	{
-		new ReadAction<Object>()
+		ApplicationManager.getApplication().runReadAction(new Runnable()
 		{
 			@Override
-			protected void run(Result<Object> objectResult) throws Throwable
+			public void run()
 			{
 				DotNetDebugContext debugContext = createDebugContext();
 
@@ -326,14 +324,14 @@ public class DotNetDebugThread extends Thread
 
 							val type = (DotNetLineBreakpointType) breakpoint.getType();
 
-							type.createRequest(mySession.getProject(), myDebugProcess.getDebugHelper(), virtualMachine, breakpoint, typeMirror);
+							type.createRequest(mySession.getProject(), virtualMachine, breakpoint, typeMirror);
 						}
 					}
 				}
 
 				virtualMachine.resume();
 			}
-		}.execute();
+		});
 	}
 
 	private void processCommands(VirtualMachine virtualMachine)
@@ -352,11 +350,11 @@ public class DotNetDebugThread extends Thread
 	public DotNetDebugContext createDebugContext()
 	{
 		assert myVirtualMachine != null;
-		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile, myDebugProcess.getDebugHelper());
+		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile);
 	}
 
 	@Nullable
-	private XLineBreakpoint<?> resolveToBreakpoint(@Nullable Location location, DotNetDebugHelper debugHelper)
+	private XLineBreakpoint<?> resolveToBreakpoint(@Nullable Location location)
 	{
 		if(location == null)
 		{

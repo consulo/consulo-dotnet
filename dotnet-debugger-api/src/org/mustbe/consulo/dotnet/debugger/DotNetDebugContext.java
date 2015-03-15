@@ -33,18 +33,15 @@ public class DotNetDebugContext
 	private final Project myProject;
 	private final VirtualMachine myVirtualMachine;
 	private final RunProfile myRunProfile;
-	@NotNull
-	private final DotNetDebugHelper myDebugHelper;
+
 
 	public DotNetDebugContext(@NotNull Project project,
 			@NotNull VirtualMachine virtualMachine,
-			@NotNull RunProfile runProfile,
-			@NotNull DotNetDebugHelper debugHelper)
+			@NotNull RunProfile runProfile)
 	{
 		myProject = project;
 		myVirtualMachine = virtualMachine;
 		myRunProfile = runProfile;
-		myDebugHelper = debugHelper;
 	}
 
 	@NotNull
@@ -65,12 +62,6 @@ public class DotNetDebugContext
 		{
 			return GlobalSearchScope.allScope(getProject());
 		}
-	}
-
-	@NotNull
-	public DotNetDebugHelper getDebugHelper()
-	{
-		return myDebugHelper;
 	}
 
 	@NotNull

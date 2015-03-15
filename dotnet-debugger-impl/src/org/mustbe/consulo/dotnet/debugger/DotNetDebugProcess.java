@@ -24,8 +24,7 @@ import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
@@ -62,16 +61,16 @@ public class DotNetDebugProcess extends XDebugProcess
 				@Override
 				public boolean process(final VirtualMachine virtualMachine)
 				{
-					new ReadAction<Object>()
+					ApplicationManager.getApplication().runReadAction(new Runnable()
 					{
 						@Override
-						protected void run(Result<Object> objectResult) throws Throwable
+						public void run()
 						{
 							val type = (DotNetLineBreakpointType) breakpoint.getType();
 
-							type.createRequest(project, myDebugHelper, virtualMachine, breakpoint, null);
+							type.createRequest(project, virtualMachine, breakpoint, null);
 						}
-					}.execute();
+					});
 
 					return false;
 				}
@@ -115,31 +114,17 @@ public class DotNetDebugProcess extends XDebugProcess
 	private EventSet myPausedEventSet;
 	private XBreakpointManager myBreakpointManager;
 	private final XBreakpointListener myBreakpointListener = new MyXBreakpointListener();
-	private final DotNetDebugHelper myDebugHelper;
 
 	public DotNetDebugProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
 	{
 		super(session);
 		session.setPauseActionSupported(true);
 		myDebugConnectionInfo = debugConnectionInfo;
-		myDebugHelper = createHelper();
 		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo, runProfile);
 
 		myBreakpointManager = XDebuggerManager.getInstance(session.getProject()).getBreakpointManager();
 
 		myBreakpointManager.addBreakpointListener(DotNetLineBreakpointType.getInstance(), myBreakpointListener);
-	}
-
-	@NotNull
-	protected DotNetDebugHelper createHelper()
-	{
-		return new DefaultDotNetDebugHelper();
-	}
-
-	@NotNull
-	public DotNetDebugHelper getDebugHelper()
-	{
-		return myDebugHelper;
 	}
 
 	@NotNull
