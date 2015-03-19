@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
@@ -54,12 +53,7 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase
 		{
 			return Collections.<Language>singletonList(PlainTextLanguage.INSTANCE);
 		}
-		FileType supportedFileType = dotNetDebuggerProvider.getSupportedFileType();
-		if(supportedFileType instanceof LanguageFileType)
-		{
-			return Collections.singletonList(((LanguageFileType) supportedFileType).getLanguage());
-		}
-		return Collections.<Language>singletonList(PlainTextLanguage.INSTANCE);
+		return Collections.singletonList(dotNetDebuggerProvider.getEditorLanguage());
 	}
 
 	@NotNull

@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugThread;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProviders;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import org.mustbe.consulo.dotnet.module.DotNetAssemblyUtil;
@@ -77,12 +76,6 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	public DotNetLineBreakpointType()
 	{
 		super("dotnet-linebreapoint", ".NET Line Breakpoint", null);
-	}
-
-	@Override
-	public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project)
-	{
-		return DotNetDebuggerProviders.findByVirtualFile(project, file) != null;
 	}
 
 	@Override
