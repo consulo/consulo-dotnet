@@ -71,7 +71,7 @@ public class DotNetConfigurationPanel extends JPanel
 	@RequiredDispatchThread
 	public DotNetConfigurationPanel(final DotNetMutableModuleExtension<?> extension, final List<String> variables, final Runnable updater)
 	{
-		super(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, true));
+		super(new VerticalFlowLayout(true, true));
 		val moduleExtensionSdkBoxBuilder = ModuleExtensionSdkBoxBuilder.<DotNetMutableModuleExtension<?>>create(extension, updater);
 		moduleExtensionSdkBoxBuilder.sdkTypeClass(extension.getSdkTypeClass());
 		moduleExtensionSdkBoxBuilder.sdkPointerFunc(new NullableFunction<DotNetMutableModuleExtension<?>,
