@@ -16,6 +16,7 @@
 
 <idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
+		<completion.contributor language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.ide.completion.CfsCompletionContributor" />
 		<fileTypeFactory implementation="org.mustbe.consulo.csharp.cfs.lang.CfsFileTypeFactory" />
 		<lang.parserDefinition language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.lang.CfsParserDefinition" />
 		<lang.braceMatcher language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.lang.CfsPairedBraceMatcher" />
