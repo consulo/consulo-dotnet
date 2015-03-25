@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.cfs.ide;
+package org.mustbe.consulo.csharp.cfs.ide.highlight;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +40,7 @@ public class CfsSyntaxHighlighter extends SyntaxHighlighterBase
 	{
 		safeMap(ourKeys, CfsTokens.ALIGN, DefaultLanguageHighlighterColors.NUMBER);
 		safeMap(ourKeys, CfsTokens.INDEX, DefaultLanguageHighlighterColors.NUMBER);
+		safeMap(ourKeys, CfsTokens.FORMAT, DefaultLanguageHighlighterColors.INSTANCE_FIELD);
 	}
 
 	private final BaseCfsLanguageVersion myLanguageVersion;

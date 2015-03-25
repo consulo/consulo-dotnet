@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.csharp.cfs.lang;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
 
 /**
@@ -29,5 +30,12 @@ public class CfsLanguage extends Language
 	public CfsLanguage()
 	{
 		super("CFS");
+	}
+
+	@NotNull
+	@Override
+	public String getDisplayName()
+	{
+		return "Composite Formatting String";
 	}
 }

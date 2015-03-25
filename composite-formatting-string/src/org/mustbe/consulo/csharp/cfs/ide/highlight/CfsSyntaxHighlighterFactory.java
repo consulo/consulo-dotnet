@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.csharp.cfs.ide;
+package org.mustbe.consulo.csharp.cfs.ide.highlight;
 
 import org.consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
 import org.jetbrains.annotations.NotNull;
