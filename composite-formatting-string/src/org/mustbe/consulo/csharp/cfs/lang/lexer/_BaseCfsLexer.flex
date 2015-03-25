@@ -1,6 +1,6 @@
 package org.mustbe.consulo.csharp.cfs.lang.lexer;
 
-import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
 import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 
@@ -15,9 +15,9 @@ import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 %}
 
 %class _BaseLexer
-%implements FlexLexer
+%extends LexerBase
 %unicode
-%function advance
+%function advanceImpl
 %type IElementType
 %eof{  return;
 %eof}
@@ -26,21 +26,13 @@ import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 %state ALIGN_WAIT
 %state FORMAT_WAIT
 
-TEXT=([^\r\n\u2028\u2029\u000B\u000C\u0085!(\{)])+
-
-ARGUMENT_WAIT_PART=([^\r\n\u2028\u2029\u000B\u000C\u0085!(\,\}\:)])+
-
-ALIGN_WAIT=([^\r\n\u2028\u2029\u000B\u000C\u0085!(\}\:)])+
-
-FORMAT_WAIT=([^\r\n\u2028\u2029\u000B\u000C\u0085!(\})])+
-
 %%
 
 <YYINITIAL>
 {
    "{" { yybegin(ARGUMENT_WAIT); return CfsTokens.START; }
 
-   {TEXT} { return CfsTokens.TEXT; }
+   .   { return CfsTokens.TEXT; }
 }
 
 <ARGUMENT_WAIT>
@@ -51,7 +43,7 @@ FORMAT_WAIT=([^\r\n\u2028\u2029\u000B\u000C\u0085!(\})])+
 
    "}" { yybegin(YYINITIAL); return CfsTokens.END; }
 
-   {ARGUMENT_WAIT_PART}  { return myArgumentElementType; }
+   .   { return myArgumentElementType; }
 }
 
 <ALIGN_WAIT>
@@ -60,14 +52,14 @@ FORMAT_WAIT=([^\r\n\u2028\u2029\u000B\u000C\u0085!(\})])+
 
    ":" { yybegin(FORMAT_WAIT); return CfsTokens.COLON; }
 
-   {ALIGN_WAIT}   {  return CfsTokens.ALIGN; }
+   .   {  return CfsTokens.ALIGN; }
 }
 
 <FORMAT_WAIT>
 {
    "}" { yybegin(YYINITIAL); return CfsTokens.END; }
 
-   {FORMAT_WAIT} { return CfsTokens.FORMAT; }
+   .   { return CfsTokens.FORMAT; }
 }
 
 [^]  { throw new Error("Illegal character <"+yytext()+">" + " state <" + zzLexicalState + ">"); }

@@ -16,14 +16,13 @@
 
 package org.mustbe.consulo.csharp.cfs.lang;
 
-import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
  * @since 31.08.14
  */
-public interface CfsTokens extends TokenType
+public interface CfsTokens
 {
 	IElementType TEXT = new IElementType("CFS_TEXT", CfsLanguage.INSTANCE);
 

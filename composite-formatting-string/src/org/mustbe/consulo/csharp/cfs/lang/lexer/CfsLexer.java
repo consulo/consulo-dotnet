@@ -16,17 +16,19 @@
 
 package org.mustbe.consulo.csharp.cfs.lang.lexer;
 
-import com.intellij.lexer.FlexAdapter;
+import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
+import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
  * @since 31.08.14
  */
-public class CfsLexer extends FlexAdapter
+public class CfsLexer extends MergingLexerAdapter
 {
 	public CfsLexer(IElementType indexElementType)
 	{
-		super(new _BaseLexer(indexElementType));
+		super(new _BaseLexer(indexElementType), TokenSet.create(indexElementType, CfsTokens.ALIGN, CfsTokens.FORMAT));
 	}
 }
