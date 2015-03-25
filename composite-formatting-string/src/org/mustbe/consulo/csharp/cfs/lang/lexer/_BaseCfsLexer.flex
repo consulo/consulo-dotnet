@@ -32,7 +32,7 @@ import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 {
    "{" { yybegin(ARGUMENT_WAIT); return CfsTokens.START; }
 
-   .   { return CfsTokens.TEXT; }
+   [^]   { return CfsTokens.TEXT; }
 }
 
 <ARGUMENT_WAIT>
@@ -43,7 +43,7 @@ import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 
    "}" { yybegin(YYINITIAL); return CfsTokens.END; }
 
-   .   { return myArgumentElementType; }
+   [^]   { return myArgumentElementType; }
 }
 
 <ALIGN_WAIT>
@@ -52,14 +52,12 @@ import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 
    ":" { yybegin(FORMAT_WAIT); return CfsTokens.COLON; }
 
-   .   {  return CfsTokens.ALIGN; }
+   [^]   {  return CfsTokens.ALIGN; }
 }
 
 <FORMAT_WAIT>
 {
    "}" { yybegin(YYINITIAL); return CfsTokens.END; }
 
-   .   { return CfsTokens.FORMAT; }
+   [^]   { return CfsTokens.FORMAT; }
 }
-
-[^]  { throw new Error("Illegal character <"+yytext()+">" + " state <" + zzLexicalState + ">"); }
