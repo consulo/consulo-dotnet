@@ -17,6 +17,7 @@
 <idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
 		<colorSettingsPage implementation="org.mustbe.consulo.csharp.cfs.ide.highlight.CfsColorSettingsPage" />
+		<highlightUsagesHandlerFactory implementation="org.mustbe.consulo.csharp.cfs.ide.highlight.CfsItemHighlightUsagesHandlerFactory"/>
 		<completion.contributor language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.ide.completion.CfsCompletionContributor" />
 		<fileTypeFactory implementation="org.mustbe.consulo.csharp.cfs.lang.CfsFileTypeFactory" />
 		<lang.parserDefinition language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.lang.CfsParserDefinition" />

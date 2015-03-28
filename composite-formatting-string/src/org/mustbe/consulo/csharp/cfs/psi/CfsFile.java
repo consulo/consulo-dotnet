@@ -35,6 +35,12 @@ public class CfsFile extends PsiFileBase
 	}
 
 	@NotNull
+	public CfsItem[] getItems()
+	{
+		return findChildrenByClass(CfsItem.class);
+	}
+
+	@NotNull
 	@Override
 	public FileType getFileType()
 	{
