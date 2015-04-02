@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -36,16 +35,9 @@ public class MsilModifierElementType extends IElementType implements DotNetModif
 		super(debugName, language);
 	}
 
-	public MsilModifierElementType(
-			@NotNull @NonNls String debugName, @Nullable Language language, @Nullable LanguageVersion languageVersion)
+	protected MsilModifierElementType(@NotNull @NonNls String debugName, @Nullable Language language, boolean register)
 	{
-		super(debugName, language, languageVersion);
-	}
-
-	protected MsilModifierElementType(
-			@NotNull @NonNls String debugName, @Nullable Language language, @Nullable LanguageVersion languageVersion, boolean register)
-	{
-		super(debugName, language, languageVersion, register);
+		super(debugName, language, register);
 	}
 
 	@Override
