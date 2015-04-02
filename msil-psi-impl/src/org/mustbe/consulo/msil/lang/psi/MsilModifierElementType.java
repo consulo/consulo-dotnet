@@ -29,8 +29,7 @@ import com.intellij.psi.tree.IElementType;
  */
 public class MsilModifierElementType extends IElementType implements DotNetModifier
 {
-	public MsilModifierElementType(
-			@NotNull @NonNls String debugName, @Nullable Language language)
+	public MsilModifierElementType(@NotNull @NonNls String debugName, @Nullable Language language)
 	{
 		super(debugName, language);
 	}
