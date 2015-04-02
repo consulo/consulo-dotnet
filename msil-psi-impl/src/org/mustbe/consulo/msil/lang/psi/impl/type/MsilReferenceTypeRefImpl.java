@@ -16,8 +16,6 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
-import java.util.Collection;
-
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -28,7 +26,8 @@ import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQN
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.psi.stubs.StubIndex;
+import com.intellij.util.CommonProcessors;
 
 /**
  * @author VISTALL
@@ -79,13 +78,16 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 			return DotNetTypeResolveResult.EMPTY;
 		}
 
-		Collection<MsilClassEntry> entries = MsilTypeByQNameIndex.getInstance().get(myRef, scope.getProject(), scope.getResolveScope());
+		CommonProcessors.FindFirstProcessor<MsilClassEntry> processor = new CommonProcessors.FindFirstProcessor<MsilClassEntry>();
+		StubIndex.getInstance().processElements(MsilTypeByQNameIndex.getInstance().getKey(), myRef, scope.getProject(),
+				scope.getResolveScope(), MsilClassEntry.class, processor);
 
-		if(entries.isEmpty())
+		MsilClassEntry foundValue = processor.getFoundValue();
+		if(foundValue == null)
 		{
 			return DotNetTypeResolveResult.EMPTY;
 		}
-		return new SimpleTypeResolveResult(ContainerUtil.getFirstItem(entries), myTypeResoleKind != DotNetPsiSearcher.TypeResoleKind.STRUCT);
+		return new SimpleTypeResolveResult(foundValue, myTypeResoleKind != DotNetPsiSearcher.TypeResoleKind.STRUCT);
 	}
 
 	@Override
