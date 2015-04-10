@@ -51,6 +51,7 @@ public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtensi
 
 	@InheritImmutable
 	@Immutable
+	@NotNull
 	List<String> getVariables();
 
 	/**

@@ -77,6 +77,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		mySdkPointer = new DotNetModuleSdkPointer(moduleRootLayer.getProject(), id);
 	}
 
+	@NotNull
 	@Override
 	public List<String> getVariables()
 	{

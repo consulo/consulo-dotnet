@@ -30,6 +30,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 public interface DotNetSimpleMutableModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends DotNetSimpleModuleExtension<T>,
 		MutableModuleExtension<T>
 {
+	@NotNull
 	@Override
 	List<String> getVariables();
 
