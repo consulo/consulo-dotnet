@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.debugger.linebreakType;
 
+import javax.swing.Icon;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
@@ -33,6 +35,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import lombok.val;
@@ -78,42 +81,77 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror)
 	{
-		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
-
-		Pair<BreakpointResult, Location> pair = findLocationImpl(project, virtualMachine, breakpoint, typeMirror);
-		switch(pair.getFirst())
+		Pair<BreakpointResult, Location> resultPair = findLocationImpl(project, virtualMachine, breakpoint, typeMirror);
+		try
 		{
-			case WRONG_TYPE:
-				return false;
-			default:
-			case INVALID:
-				switch(breakpoint.getSuspendPolicy())
-				{
-					case NONE:
-						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_muted_invalid_breakpoint, null);
-						break;
-					default:
-						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
-						break;
-				}
-				return false;
-			case OK:
-				switch(breakpoint.getSuspendPolicy())
-				{
-					case NONE:
-						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_muted_verified_breakpoint, null);
-						break;
-					default:
+			switch(resultPair.getFirst())
+			{
+				default:
+					return false;
+				case OK:
+					if(breakpoint.getSuspendPolicy() != SuspendPolicy.NONE)
+					{
 						EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-						BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(pair.getSecond());
+						BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(resultPair.getSecond());
 						breakpointRequest.enable();
 
-						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
 						breakpoint.putUserData(DotNetAbstractBreakpointType.EVENT_REQUEST, breakpointRequest);
-						break;
-				}
-				return true;
+					}
+					return true;
+			}
 		}
+		finally
+		{
+			updateBreakpointPresentation(project, resultPair.getFirst(), breakpoint);
+		}
+	}
+
+	private void updateBreakpointPresentation(@NotNull Project project,
+			@NotNull BreakpointResult breakpointResult,
+			@NotNull XLineBreakpoint breakpoint)
+	{
+		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
+
+		Icon icon = null;
+		SuspendPolicy suspendPolicy = breakpoint.getSuspendPolicy();
+		if(breakpoint.isTemporary())
+		{
+			if(suspendPolicy == SuspendPolicy.NONE)
+			{
+				icon = AllIcons.Debugger.Db_temporary_breakpoint;
+			}
+			else
+			{
+				icon = AllIcons.Debugger.Db_muted_temporary_breakpoint;
+			}
+		}
+		else
+		{
+			switch(breakpointResult)
+			{
+				default:
+					if(suspendPolicy == SuspendPolicy.NONE)
+					{
+						icon = AllIcons.Debugger.Db_muted_invalid_breakpoint;
+					}
+					else
+					{
+						icon = AllIcons.Debugger.Db_invalid_breakpoint;
+					}
+					break;
+				case OK:
+					if(suspendPolicy == SuspendPolicy.NONE)
+					{
+						icon = AllIcons.Debugger.Db_muted_verified_breakpoint;
+					}
+					else
+					{
+						icon = AllIcons.Debugger.Db_verified_breakpoint;
+					}
+					break;
+			}
+		}
+		breakpointManager.updateBreakpointPresentation(breakpoint, icon, null);
 	}
 
 	@NotNull
