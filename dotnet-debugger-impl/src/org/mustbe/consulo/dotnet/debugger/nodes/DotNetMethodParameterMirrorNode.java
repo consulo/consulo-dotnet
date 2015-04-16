@@ -19,12 +19,9 @@ package org.mustbe.consulo.dotnet.debugger.nodes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterListOwner;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
@@ -56,18 +53,7 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 	@Override
 	public void computeSourcePosition(@NotNull XNavigatable navigatable)
 	{
-		String sourcePath = myFrame.location().sourcePath();
-		if(sourcePath == null)
-		{
-			return;
-		}
-		VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(sourcePath);
-		if(fileByPath == null)
-		{
-			return;
-		}
-		PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(myDebugContext.getProject(), fileByPath,
-				myFrame.location().lineNumber() - 1);
+		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebugContext, myFrame);
 		if(psiElement == null)
 		{
 			return;

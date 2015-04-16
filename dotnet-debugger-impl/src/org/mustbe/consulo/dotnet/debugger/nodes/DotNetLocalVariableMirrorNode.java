@@ -19,6 +19,18 @@ package org.mustbe.consulo.dotnet.debugger.nodes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetVariable;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.BaseScopeProcessor;
+import com.intellij.psi.scope.util.PsiScopesUtilCore;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.xdebugger.XDebuggerUtil;
+import com.intellij.xdebugger.frame.XNavigatable;
 import mono.debugger.LocalVariableMirror;
 import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.StackFrameMirror;
@@ -40,6 +52,62 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 		super(debuggerContext, local.name(), frame.thread());
 		myLocal = local;
 		myFrame = frame;
+	}
+
+	@Override
+	public boolean canNavigateToSource()
+	{
+		return true;
+	}
+
+	@Override
+	public void computeSourcePosition(@NotNull XNavigatable navigatable)
+	{
+		final String name = myLocal.name();
+		if(StringUtil.isEmpty(name))
+		{
+			return;
+		}
+		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebugContext, myFrame);
+		if(psiElement == null)
+		{
+			return;
+		}
+
+		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(psiElement, DotNetCodeBlockOwner.class);
+		if(codeBlockOwner == null)
+		{
+			return;
+		}
+
+
+		final Ref<DotNetVariable> elementRef = Ref.create();
+		PsiScopesUtilCore.treeWalkUp(new BaseScopeProcessor()
+		{
+			@Override
+			public boolean execute(@NotNull PsiElement element, ResolveState state)
+			{
+				if(element instanceof DotNetVariable && name.equals(((DotNetVariable) element).getName()))
+				{
+					elementRef.set((DotNetVariable) element);
+					return false;
+				}
+				return true;
+			}
+		}, psiElement, codeBlockOwner);
+
+		DotNetVariable element = elementRef.get();
+		if(element == null)
+		{
+			return;
+		}
+		PsiFile containingFile = element.getContainingFile();
+		if(containingFile == null)
+		{
+			return;
+		}
+		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(containingFile.getVirtualFile(),
+				element.getTextOffset()));
 	}
 
 	@NotNull
