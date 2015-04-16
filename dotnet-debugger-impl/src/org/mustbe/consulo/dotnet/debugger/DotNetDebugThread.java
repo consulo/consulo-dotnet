@@ -35,13 +35,14 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.Processor;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
@@ -72,8 +73,6 @@ import mono.debugger.request.TypeLoadRequest;
 @Logger
 public class DotNetDebugThread extends Thread
 {
-	public static Key<EventRequest> EVENT_REQUEST = Key.create("event-request-for-line-breakpoint");
-
 	private final XDebugSession mySession;
 	private final XDebuggerManager myDebuggerManager;
 	private final DotNetDebugProcess myDebugProcess;
@@ -194,7 +193,7 @@ public class DotNetDebugThread extends Thread
 		if(virtualMachine.isAtLeastVersion(2, 9))
 		{
 			Set<String> files = new HashSet<String>();
-			Collection<? extends XLineBreakpoint<XBreakpointProperties>> ourBreakpoints = getOurBreakpoints();
+			Collection<? extends XLineBreakpoint<XBreakpointProperties>> ourBreakpoints = getEnabledBreakpoints();
 			for(final XLineBreakpoint<XBreakpointProperties> ourBreakpoint : ourBreakpoints)
 			{
 				files.add(ourBreakpoint.getPresentableFilePath());
@@ -312,7 +311,7 @@ public class DotNetDebugThread extends Thread
 				DotNetTypeDeclaration[] qualifiedNameImpl = DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, debugContext);
 				if(qualifiedNameImpl.length != 0)
 				{
-					Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = getOurBreakpoints();
+					Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = getEnabledBreakpoints();
 					for(DotNetTypeDeclaration dotNetTypeDeclaration : qualifiedNameImpl)
 					{
 						VirtualFile typeVirtualFile = dotNetTypeDeclaration.getContainingFile().getVirtualFile();
@@ -385,23 +384,32 @@ public class DotNetDebugThread extends Thread
 
 	public void normalizeBreakpoints()
 	{
-		for(XLineBreakpoint<XBreakpointProperties> lineBreakpoint : getOurBreakpoints())
+		for(XLineBreakpoint<XBreakpointProperties> lineBreakpoint : getEnabledBreakpoints())
 		{
-			lineBreakpoint.putUserData(EVENT_REQUEST, null);
+			lineBreakpoint.putUserData(DotNetAbstractBreakpointType.EVENT_REQUEST, null);
 
 			myDebuggerManager.getBreakpointManager().updateBreakpointPresentation(lineBreakpoint, null, null);
 		}
 	}
 
 	@NotNull
-	public Collection<? extends XLineBreakpoint<XBreakpointProperties>> getOurBreakpoints()
+	public Collection<? extends XLineBreakpoint<XBreakpointProperties>> getEnabledBreakpoints()
 	{
 		return ApplicationManager.getApplication().runReadAction(new Computable<Collection<? extends XLineBreakpoint<XBreakpointProperties>>>()
 		{
 			@Override
 			public Collection<? extends XLineBreakpoint<XBreakpointProperties>> compute()
 			{
-				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetAbstractBreakpointType.class);
+				Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = myDebuggerManager.getBreakpointManager().getBreakpoints
+						(DotNetAbstractBreakpointType.class);
+				return ContainerUtil.filter(breakpoints, new Condition<XLineBreakpoint<XBreakpointProperties>>()
+				{
+					@Override
+					public boolean value(XLineBreakpoint<XBreakpointProperties> breakpoint)
+					{
+						return breakpoint.isEnabled();
+					}
+				});
 			}
 		});
 	}

@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.ExecutionResult;
@@ -85,7 +86,7 @@ public class DotNetDebugProcess extends XDebugProcess
 				@Override
 				public boolean process(DotNetVirtualMachine virtualMachine)
 				{
-					EventRequest eventRequest = breakpoint.getUserData(DotNetDebugThread.EVENT_REQUEST);
+					EventRequest eventRequest = breakpoint.getUserData(DotNetAbstractBreakpointType.EVENT_REQUEST);
 					if(eventRequest != null)
 					{
 						eventRequest.disable();
@@ -103,7 +104,14 @@ public class DotNetDebugProcess extends XDebugProcess
 		@Override
 		public void breakpointChanged(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint)
 		{
-
+			if(breakpoint.isEnabled())
+			{
+				breakpointAdded(breakpoint);
+			}
+			else
+			{
+				breakpointRemoved(breakpoint);
+			}
 		}
 	}
 

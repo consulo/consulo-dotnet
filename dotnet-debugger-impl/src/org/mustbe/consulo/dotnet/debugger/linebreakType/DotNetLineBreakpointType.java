@@ -19,7 +19,6 @@ package org.mustbe.consulo.dotnet.debugger.linebreakType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebugThread;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
@@ -74,7 +73,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 
 	@Override
 	@RequiredReadAction
-	public boolean createRequest(@NotNull Project project,
+	protected boolean createRequestImpl(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror)
@@ -88,15 +87,31 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 				return false;
 			default:
 			case INVALID:
-				breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
+				switch(breakpoint.getSuspendPolicy())
+				{
+					case NONE:
+						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_muted_invalid_breakpoint, null);
+						break;
+					default:
+						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_invalid_breakpoint, null);
+						break;
+				}
 				return false;
 			case OK:
-				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-				BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(pair.getSecond());
-				breakpointRequest.enable();
+				switch(breakpoint.getSuspendPolicy())
+				{
+					case NONE:
+						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_muted_verified_breakpoint, null);
+						break;
+					default:
+						EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+						BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(pair.getSecond());
+						breakpointRequest.enable();
 
-				breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
-				breakpoint.putUserData(DotNetDebugThread.EVENT_REQUEST, breakpointRequest);
+						breakpointManager.updateBreakpointPresentation(breakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
+						breakpoint.putUserData(DotNetAbstractBreakpointType.EVENT_REQUEST, breakpointRequest);
+						break;
+				}
 				return true;
 		}
 	}

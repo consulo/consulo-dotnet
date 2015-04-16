@@ -23,10 +23,12 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointTypeBase;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import mono.debugger.TypeMirror;
+import mono.debugger.request.EventRequest;
 
 /**
  * @author VISTALL
@@ -34,14 +36,30 @@ import mono.debugger.TypeMirror;
  */
 public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBase
 {
+	public static Key<EventRequest> EVENT_REQUEST = Key.create("event-request-for-line-breakpoint");
+
 	public DotNetAbstractBreakpointType(@NonNls @NotNull String id, @Nls @NotNull String title, @Nullable XDebuggerEditorsProvider editorsProvider)
 	{
 		super(id, title, editorsProvider);
 	}
 
 	@RequiredReadAction
-	public abstract boolean createRequest(@NotNull Project project,
+	public boolean createRequest(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
-			@NotNull TypeMirror typeMirror);
+			@Nullable TypeMirror typeMirror)
+	{
+		EventRequest eventRequest = breakpoint.getUserData(DotNetAbstractBreakpointType.EVENT_REQUEST);
+		if(eventRequest != null)
+		{
+			eventRequest.disable();
+		}
+		return createRequestImpl(project, virtualMachine, breakpoint, typeMirror);
+	}
+
+	@RequiredReadAction
+	protected abstract boolean createRequestImpl(@NotNull Project project,
+			@NotNull DotNetVirtualMachine virtualMachine,
+			@NotNull XLineBreakpoint breakpoint,
+			@Nullable TypeMirror typeMirror);
 }
