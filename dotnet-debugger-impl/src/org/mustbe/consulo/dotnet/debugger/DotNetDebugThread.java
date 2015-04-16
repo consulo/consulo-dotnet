@@ -83,7 +83,7 @@ public class DotNetDebugThread extends Thread
 
 	private Queue<Processor<VirtualMachine>> myQueue = new ConcurrentLinkedQueue<Processor<VirtualMachine>>();
 
-	private VirtualMachine myVirtualMachine;
+	private DotNetVirtualMachine myVirtualMachine;
 
 	private EventDispatcher<DotNetVirtualMachineListener> myEventDispatcher = EventDispatcher.create(DotNetVirtualMachineListener.class);
 
@@ -185,7 +185,7 @@ public class DotNetDebugThread extends Thread
 			myEventDispatcher.getMulticaster().connectionSuccess(virtualMachine);
 		}
 
-		myVirtualMachine = virtualMachine;
+		myVirtualMachine = new DotNetVirtualMachine(virtualMachine);
 
 		virtualMachine.enableEvents(EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,
 				EventKind.USER_BREAK, EventKind.USER_LOG);
@@ -252,7 +252,10 @@ public class DotNetDebugThread extends Thread
 
 						if(event instanceof TypeLoadEvent)
 						{
-							insertBreakpoints(virtualMachine, ((TypeLoadEvent) event).typeMirror());
+							TypeMirror typeMirror = ((TypeLoadEvent) event).typeMirror();
+
+							myVirtualMachine.loadTypeMirror(typeMirror);
+							insertBreakpoints(typeMirror);
 							continue l;
 						}
 
@@ -297,7 +300,7 @@ public class DotNetDebugThread extends Thread
 		}
 	}
 
-	private void insertBreakpoints(final VirtualMachine virtualMachine, final TypeMirror typeMirror)
+	private void insertBreakpoints(final TypeMirror typeMirror)
 	{
 		ApplicationManager.getApplication().runReadAction(new Runnable()
 		{
@@ -324,12 +327,12 @@ public class DotNetDebugThread extends Thread
 
 							val type = (DotNetLineBreakpointType) breakpoint.getType();
 
-							type.createRequest(mySession.getProject(), virtualMachine, breakpoint, typeMirror);
+							type.createRequest(mySession.getProject(), myVirtualMachine, breakpoint, typeMirror);
 						}
 					}
 				}
 
-				virtualMachine.resume();
+				myVirtualMachine.resume();
 			}
 		});
 	}
@@ -403,7 +406,7 @@ public class DotNetDebugThread extends Thread
 		});
 	}
 
-	public void processAnyway(Processor<VirtualMachine> processor)
+	public void processAnyway(Processor<DotNetVirtualMachine> processor)
 	{
 		if(myVirtualMachine == null)
 		{

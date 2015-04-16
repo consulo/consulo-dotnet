@@ -21,32 +21,26 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugThread;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
+import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
-import org.mustbe.consulo.dotnet.module.DotNetAssemblyUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import lombok.val;
-import mono.debugger.AssemblyMirror;
 import mono.debugger.Location;
 import mono.debugger.LocationImpl;
 import mono.debugger.MethodMirror;
 import mono.debugger.TypeMirror;
-import mono.debugger.VMDisconnectedException;
-import mono.debugger.VirtualMachine;
 import mono.debugger.protocol.Method_GetDebugInfo;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequestManager;
@@ -81,7 +75,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	@Override
 	@RequiredReadAction
 	public boolean createRequest(@NotNull Project project,
-			@NotNull VirtualMachine virtualMachine,
+			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror)
 	{
@@ -110,7 +104,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	@NotNull
 	@RequiredReadAction
 	public Pair<BreakpointResult, Location> findLocationImpl(@NotNull Project project,
-			@NotNull VirtualMachine virtualMachine,
+			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint<?> lineBreakpoint,
 			@Nullable TypeMirror typeMirror)
 	{
@@ -151,7 +145,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			return WRONG_TYPE;
 		}
 
-		TypeMirror mirror = typeMirror == null ? findTypeMirror(vmQualifiedName, virtualMachine, fileByUrl, typeDeclaration) : typeMirror;
+		TypeMirror mirror = typeMirror == null ? virtualMachine.findTypeMirror(fileByUrl, vmQualifiedName) : typeMirror;
 
 		if(mirror == null)
 		{
@@ -179,78 +173,6 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			return INVALID;
 		}
 
-		return Pair.<BreakpointResult, Location>create(BreakpointResult.OK, new LocationImpl(virtualMachine, targetMirror, index));
-	}
-
-	@RequiredReadAction
-	private TypeMirror findTypeMirror(final String vmQualifiedName,
-			VirtualMachine virtualMachine,
-			VirtualFile virtualFile,
-			DotNetTypeDeclaration parent)
-	{
-		try
-		{
-			if(virtualMachine.isAtLeastVersion(2, 9))
-			{
-				TypeMirror[] typesByQualifiedName = virtualMachine.findTypesByQualifiedName(vmQualifiedName, false);
-				return typesByQualifiedName.length == 0 ? null : typesByQualifiedName[0];
-			}
-			else if(virtualMachine.isAtLeastVersion(2, 7))
-			{
-				TypeMirror[] typesBySourcePath = virtualMachine.findTypesBySourcePath(virtualFile.getPath(), SystemInfo.isFileSystemCaseSensitive);
-				return ContainerUtil.find(typesBySourcePath, new Condition<TypeMirror>()
-				{
-					@Override
-					public boolean value(TypeMirror typeMirror)
-					{
-						return Comparing.equal(typeMirror.qualifiedName(), vmQualifiedName);
-					}
-				});
-			}
-			else
-			{
-				AssemblyMirror[] assemblies = virtualMachine.rootAppDomain().assemblies();
-
-				TypeMirror typeMirror = findTypeMirrorFromAssemblies(vmQualifiedName, assemblies, parent);
-				if(typeMirror != null)
-				{
-					return typeMirror;
-				}
-				return null;
-			}
-		}
-		catch(VMDisconnectedException e)
-		{
-			return null;
-		}
-	}
-
-	@RequiredReadAction
-	public static TypeMirror findTypeMirrorFromAssemblies(String vmQualifiedName,
-			@NotNull AssemblyMirror[] assemblies,
-			@NotNull DotNetTypeDeclaration typeDeclaration)
-	{
-		String assemblyTitle = DotNetAssemblyUtil.getAssemblyTitle(typeDeclaration);
-		if(assemblyTitle == null)
-		{
-			return null;
-		}
-
-		for(AssemblyMirror assembly : assemblies)
-		{
-			String name = assembly.name();
-			int i = name.indexOf(',');
-			if(i == -1)
-			{
-				continue;
-			}
-
-			String assemblyShortName = name.substring(0, i);
-			if(assemblyTitle.equals(assemblyShortName))
-			{
-				return assembly.findTypeByQualifiedName(vmQualifiedName, false);
-			}
-		}
-		return null;
+		return Pair.<BreakpointResult, Location>create(BreakpointResult.OK, new LocationImpl(virtualMachine.getDelegate(), targetMirror, index));
 	}
 }

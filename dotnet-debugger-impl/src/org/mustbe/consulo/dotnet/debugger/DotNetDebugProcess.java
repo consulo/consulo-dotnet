@@ -56,10 +56,10 @@ public class DotNetDebugProcess extends XDebugProcess
 		{
 			val project = getSession().getProject();
 
-			myDebugThread.processAnyway(new Processor<VirtualMachine>()
+			myDebugThread.processAnyway(new Processor<DotNetVirtualMachine>()
 			{
 				@Override
-				public boolean process(final VirtualMachine virtualMachine)
+				public boolean process(final DotNetVirtualMachine virtualMachine)
 				{
 					ApplicationManager.getApplication().runReadAction(new Runnable()
 					{
@@ -80,10 +80,10 @@ public class DotNetDebugProcess extends XDebugProcess
 		@Override
 		public void breakpointRemoved(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
 		{
-			myDebugThread.processAnyway(new Processor<VirtualMachine>()
+			myDebugThread.processAnyway(new Processor<DotNetVirtualMachine>()
 			{
 				@Override
-				public boolean process(VirtualMachine virtualMachine)
+				public boolean process(DotNetVirtualMachine virtualMachine)
 				{
 					EventRequest eventRequest = breakpoint.getUserData(DotNetDebugThread.EVENT_REQUEST);
 					if(eventRequest != null)

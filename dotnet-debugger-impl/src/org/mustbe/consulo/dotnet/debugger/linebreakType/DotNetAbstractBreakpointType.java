@@ -21,12 +21,12 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointTypeBase;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import mono.debugger.TypeMirror;
-import mono.debugger.VirtualMachine;
 
 /**
  * @author VISTALL
@@ -41,7 +41,7 @@ public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBa
 
 	@RequiredReadAction
 	public abstract boolean createRequest(@NotNull Project project,
-			@NotNull VirtualMachine virtualMachine,
+			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
 			@NotNull TypeMirror typeMirror);
 }

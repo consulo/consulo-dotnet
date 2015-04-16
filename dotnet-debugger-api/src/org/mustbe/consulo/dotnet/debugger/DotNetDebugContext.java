@@ -22,7 +22,6 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import mono.debugger.VirtualMachine;
 
 /**
  * @author VISTALL
@@ -31,12 +30,12 @@ import mono.debugger.VirtualMachine;
 public class DotNetDebugContext
 {
 	private final Project myProject;
-	private final VirtualMachine myVirtualMachine;
+	private final DotNetVirtualMachine myVirtualMachine;
 	private final RunProfile myRunProfile;
 
 
 	public DotNetDebugContext(@NotNull Project project,
-			@NotNull VirtualMachine virtualMachine,
+			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull RunProfile runProfile)
 	{
 		myProject = project;
@@ -71,7 +70,7 @@ public class DotNetDebugContext
 	}
 
 	@NotNull
-	public VirtualMachine getVirtualMachine()
+	public DotNetVirtualMachine getVirtualMachine()
 	{
 		return myVirtualMachine;
 	}
