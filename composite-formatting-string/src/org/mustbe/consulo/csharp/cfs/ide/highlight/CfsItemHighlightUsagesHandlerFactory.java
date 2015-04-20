@@ -18,7 +18,7 @@ package org.mustbe.consulo.csharp.cfs.ide.highlight;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.cfs.psi.CfsItem;
-import com.intellij.codeInsight.TargetElementUtilBase;
+import com.intellij.codeInsight.TargetElementUtil;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactory;
 import com.intellij.openapi.editor.Editor;
@@ -38,7 +38,7 @@ public class CfsItemHighlightUsagesHandlerFactory implements HighlightUsagesHand
 	@Override
 	public HighlightUsagesHandlerBase createHighlightUsagesHandler(Editor editor, PsiFile file)
 	{
-		int offset = TargetElementUtilBase.adjustOffset(file, editor.getDocument(), editor.getCaretModel().getOffset());
+		int offset = TargetElementUtil.adjustOffset(file, editor.getDocument(), editor.getCaretModel().getOffset());
 		PsiElement target = file.findElementAt(offset);
 		if(target != null && target.getParent() instanceof PsiLanguageInjectionHost)
 		{
