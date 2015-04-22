@@ -16,8 +16,10 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.util.Comparing;
@@ -30,6 +32,7 @@ import mono.debugger.TypeMirror;
 import mono.debugger.VMDisconnectedException;
 import mono.debugger.VirtualMachine;
 import mono.debugger.request.EventRequestManager;
+import mono.debugger.request.StepRequest;
 
 /**
  * @author VISTALL
@@ -38,6 +41,8 @@ import mono.debugger.request.EventRequestManager;
 public class DotNetVirtualMachine
 {
 	private List<TypeMirror> myLoadedTypeMirrors = new LinkedList<TypeMirror>();
+	private Set<StepRequest> myStepRequests = new LinkedHashSet<StepRequest>();
+
 	private VirtualMachine myVirtualMachine;
 
 	private boolean mySupportSearchTypesBySourcePaths;
@@ -54,6 +59,26 @@ public class DotNetVirtualMachine
 	{
 		myLoadedTypeMirrors.clear();
 		myVirtualMachine.dispose();
+	}
+
+	public void addStepRequest(@NotNull StepRequest stepRequest)
+	{
+		myStepRequests.add(stepRequest);
+	}
+
+	public void stopStepRequest(@NotNull StepRequest stepRequest)
+	{
+		stepRequest.disable();
+		myStepRequests.remove(stepRequest);
+	}
+
+	public void stopStepRequests()
+	{
+		for(StepRequest stepRequest : myStepRequests)
+		{
+			stepRequest.disable();
+		}
+		myStepRequests.clear();
 	}
 
 	public void loadTypeMirror(TypeMirror typeMirror)
@@ -114,6 +139,11 @@ public class DotNetVirtualMachine
 	public void resume()
 	{
 		myVirtualMachine.resume();
+	}
+
+	public void suspend()
+	{
+		myVirtualMachine.suspend();
 	}
 
 	@NotNull

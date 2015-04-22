@@ -63,7 +63,6 @@ import mono.debugger.event.TypeLoadEvent;
 import mono.debugger.event.VMDeathEvent;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequest;
-import mono.debugger.request.StepRequest;
 import mono.debugger.request.TypeLoadRequest;
 
 /**
@@ -80,7 +79,7 @@ public class DotNetDebugThread extends Thread
 	private final RunProfile myRunProfile;
 	private boolean myStop;
 
-	private Queue<Processor<VirtualMachine>> myQueue = new ConcurrentLinkedQueue<Processor<VirtualMachine>>();
+	private Queue<Processor<DotNetVirtualMachine>> myQueue = new ConcurrentLinkedQueue<Processor<DotNetVirtualMachine>>();
 
 	private DotNetVirtualMachine myVirtualMachine;
 
@@ -224,7 +223,7 @@ public class DotNetDebugThread extends Thread
 
 		while(!myStop)
 		{
-			processCommands(virtualMachine);
+			processCommands(myVirtualMachine);
 
 			boolean stoppedAlready = false;
 			EventQueue eventQueue = virtualMachine.eventQueue();
@@ -242,11 +241,6 @@ public class DotNetDebugThread extends Thread
 						if(request instanceof BreakpointRequest)
 						{
 							location = ((BreakpointRequest) request).location();
-						}
-
-						if(request instanceof StepRequest)
-						{
-							request.disable();
 						}
 
 						if(event instanceof TypeLoadEvent)
@@ -268,6 +262,8 @@ public class DotNetDebugThread extends Thread
 					if(!stoppedAlready && eventSet.suspendPolicy() == SuspendPolicy.ALL)
 					{
 						stoppedAlready = true;
+
+						myVirtualMachine.stopStepRequests();
 
 						myDebugProcess.setPausedEventSet(eventSet);
 						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location);
@@ -336,9 +332,9 @@ public class DotNetDebugThread extends Thread
 		});
 	}
 
-	private void processCommands(VirtualMachine virtualMachine)
+	private void processCommands(DotNetVirtualMachine virtualMachine)
 	{
-		Processor<VirtualMachine> processor;
+		Processor<DotNetVirtualMachine> processor;
 		while((processor = myQueue.poll()) != null)
 		{
 			if(processor.process(virtualMachine))
@@ -423,7 +419,7 @@ public class DotNetDebugThread extends Thread
 		processor.process(myVirtualMachine);
 	}
 
-	public void addCommand(Processor<VirtualMachine> processor)
+	public void addCommand(Processor<DotNetVirtualMachine> processor)
 	{
 		myQueue.add(processor);
 	}

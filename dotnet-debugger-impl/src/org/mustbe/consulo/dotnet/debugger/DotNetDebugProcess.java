@@ -39,7 +39,6 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import lombok.val;
 import mono.debugger.ThreadMirror;
-import mono.debugger.VirtualMachine;
 import mono.debugger.event.EventSet;
 import mono.debugger.request.EventRequest;
 import mono.debugger.request.StepRequest;
@@ -181,10 +180,10 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public void startPausing()
 	{
-		myDebugThread.addCommand(new Processor<VirtualMachine>()
+		myDebugThread.addCommand(new Processor<DotNetVirtualMachine>()
 		{
 			@Override
-			public boolean process(VirtualMachine virtualMachine)
+			public boolean process(DotNetVirtualMachine virtualMachine)
 			{
 				virtualMachine.suspend();
 				getSession().positionReached(new DotNetSuspendContext(myDebugThread.createDebugContext(), null));
@@ -197,11 +196,13 @@ public class DotNetDebugProcess extends XDebugProcess
 	public void resume()
 	{
 		myPausedEventSet = null;
-		myDebugThread.addCommand(new Processor<VirtualMachine>()
+		myDebugThread.addCommand(new Processor<DotNetVirtualMachine>()
 		{
 			@Override
-			public boolean process(VirtualMachine virtualMachine)
+			public boolean process(DotNetVirtualMachine virtualMachine)
 			{
+				virtualMachine.stopStepRequests();
+
 				return true;
 			}
 		});
@@ -247,14 +248,16 @@ public class DotNetDebugProcess extends XDebugProcess
 			return;
 		}
 
-		myDebugThread.addCommand(new Processor<VirtualMachine>()
+		myDebugThread.addCommand(new Processor<DotNetVirtualMachine>()
 		{
 			@Override
-			public boolean process(VirtualMachine virtualMachine)
+			public boolean process(DotNetVirtualMachine virtualMachine)
 			{
 				val eventRequestManager = virtualMachine.eventRequestManager();
 				val stepRequest = eventRequestManager.createStepRequest(threadMirror, stepSize, stepDepth);
 				stepRequest.enable();
+
+				virtualMachine.addStepRequest(stepRequest);
 				return true;
 			}
 		});
