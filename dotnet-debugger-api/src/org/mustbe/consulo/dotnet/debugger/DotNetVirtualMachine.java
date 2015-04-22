@@ -57,6 +57,7 @@ public class DotNetVirtualMachine
 
 	public void dispose()
 	{
+		myStepRequests.clear();
 		myLoadedTypeMirrors.clear();
 		myVirtualMachine.dispose();
 	}
