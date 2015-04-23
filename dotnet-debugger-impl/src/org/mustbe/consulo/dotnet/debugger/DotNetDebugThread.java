@@ -32,6 +32,8 @@ import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.ui.ConsoleView;
+import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
@@ -69,6 +71,7 @@ import mono.debugger.event.EventQueue;
 import mono.debugger.event.EventSet;
 import mono.debugger.event.TypeLoadEvent;
 import mono.debugger.event.UserBreakEvent;
+import mono.debugger.event.UserLogEvent;
 import mono.debugger.event.VMDeathEvent;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.TypeLoadRequest;
@@ -266,9 +269,14 @@ public class DotNetDebugThread extends Thread
 						{
 							state = ThreeState.UNSURE;
 						}
-						else
+						else if(event instanceof UserLogEvent)
 						{
-							System.out.println(event.getClass().getName());
+							//int level = ((UserLogEvent) event).getLevel();
+							String category = ((UserLogEvent) event).getCategory();
+							String message = ((UserLogEvent) event).getMessage();
+
+							ConsoleView consoleView = mySession.getConsoleView();
+							consoleView.print("[" + category + "] " + message + "\n", ConsoleViewContentType.USER_INPUT);
 						}
 					}
 
