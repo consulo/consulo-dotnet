@@ -17,9 +17,8 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,13 +42,13 @@ import mono.debugger.request.StepRequest;
  */
 public class DotNetVirtualMachine
 {
-	private List<TypeMirror> myLoadedTypeMirrors = new LinkedList<TypeMirror>();
-	private Set<StepRequest> myStepRequests = new LinkedHashSet<StepRequest>();
+	private final Map<String, TypeMirror> myLoadedTypeMirrors = ContainerUtil.newConcurrentMap();
+	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
 
-	private VirtualMachine myVirtualMachine;
+	private final VirtualMachine myVirtualMachine;
 
-	private boolean mySupportSearchTypesBySourcePaths;
-	private boolean mySupportSearchTypesByQualifiedName;
+	private final boolean mySupportSearchTypesBySourcePaths;
+	private final boolean mySupportSearchTypesByQualifiedName;
 
 	public DotNetVirtualMachine(@NotNull VirtualMachine virtualMachine)
 	{
@@ -85,9 +84,9 @@ public class DotNetVirtualMachine
 		myStepRequests.clear();
 	}
 
-	public void loadTypeMirror(TypeMirror typeMirror)
+	public void loadTypeMirror(@NotNull TypeMirror typeMirror)
 	{
-		myLoadedTypeMirrors.add(typeMirror);
+		myLoadedTypeMirrors.put(typeMirror.fullName(), typeMirror);
 	}
 
 	public EventRequestManager eventRequestManager()
@@ -124,7 +123,7 @@ public class DotNetVirtualMachine
 			}
 			else
 			{
-				for(TypeMirror loadedTypeMirror : myLoadedTypeMirrors)
+				for(TypeMirror loadedTypeMirror : myLoadedTypeMirrors.values())
 				{
 					if(loadedTypeMirror.qualifiedName().equals(vmQualifiedName))
 					{
@@ -160,7 +159,7 @@ public class DotNetVirtualMachine
 	{
 		AssemblyMirror assembly = event.getAssembly();
 
-		Iterator<TypeMirror> iterator = myLoadedTypeMirrors.iterator();
+		Iterator<TypeMirror> iterator = myLoadedTypeMirrors.values().iterator();
 		while(iterator.hasNext())
 		{
 			TypeMirror next = iterator.next();
