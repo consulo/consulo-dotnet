@@ -42,11 +42,17 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.Processor;
+import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import com.intellij.xdebugger.impl.XDebugSessionImpl;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
+import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
+import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import lombok.val;
 import mono.debugger.EventKind;
 import mono.debugger.Location;
@@ -54,15 +60,17 @@ import mono.debugger.SocketAttachingConnector;
 import mono.debugger.SocketListeningConnector;
 import mono.debugger.SuspendPolicy;
 import mono.debugger.TypeMirror;
+import mono.debugger.VMDisconnectedException;
 import mono.debugger.VirtualMachine;
 import mono.debugger.connect.Connector;
+import mono.debugger.event.BreakpointEvent;
 import mono.debugger.event.Event;
 import mono.debugger.event.EventQueue;
 import mono.debugger.event.EventSet;
 import mono.debugger.event.TypeLoadEvent;
+import mono.debugger.event.UserBreakEvent;
 import mono.debugger.event.VMDeathEvent;
 import mono.debugger.request.BreakpointRequest;
-import mono.debugger.request.EventRequest;
 import mono.debugger.request.TypeLoadRequest;
 
 /**
@@ -225,25 +233,23 @@ public class DotNetDebugThread extends Thread
 		{
 			processCommands(myVirtualMachine);
 
-			boolean stoppedAlready = false;
 			EventQueue eventQueue = virtualMachine.eventQueue();
 			EventSet eventSet;
 			try
 			{
 				l:
-				while((eventSet = eventQueue.remove(50)) != null)
+				while((eventSet = eventQueue.remove(10)) != null)
 				{
+					ThreeState state = eventSet.suspendPolicy() == SuspendPolicy.ALL ? ThreeState.YES : ThreeState.NO;
 					Location location = null;
 
 					for(final Event event : eventSet)
 					{
-						EventRequest request = event.request();
-						if(request instanceof BreakpointRequest)
+						if(event instanceof BreakpointEvent)
 						{
-							location = ((BreakpointRequest) request).location();
+							location = ((BreakpointRequest) event.request()).location();
 						}
-
-						if(event instanceof TypeLoadEvent)
+						else if(event instanceof TypeLoadEvent)
 						{
 							TypeMirror typeMirror = ((TypeLoadEvent) event).typeMirror();
 
@@ -251,17 +257,27 @@ public class DotNetDebugThread extends Thread
 							insertBreakpoints(typeMirror);
 							continue l;
 						}
-
-						if(event instanceof VMDeathEvent)
+						else if(event instanceof VMDeathEvent)
 						{
 							connectionStopped();
 							return;
 						}
+						else if(event instanceof UserBreakEvent)
+						{
+							state = ThreeState.UNSURE;
+						}
+						else
+						{
+							System.out.println(event.getClass().getName());
+						}
 					}
 
-					if(!stoppedAlready && eventSet.suspendPolicy() == SuspendPolicy.ALL)
+					if(state != ThreeState.NO)
 					{
-						stoppedAlready = true;
+						if(state == ThreeState.UNSURE)
+						{
+							myVirtualMachine.suspend();
+						}
 
 						myVirtualMachine.stopStepRequests();
 
@@ -276,12 +292,37 @@ public class DotNetDebugThread extends Thread
 						{
 							mySession.positionReached(new DotNetSuspendContext(debugContext, eventSet.eventThread()));
 						}
+
+						if(state == ThreeState.UNSURE)
+						{
+							UIUtil.invokeLaterIfNeeded(new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									XDebugSessionTab sessionTab = ((XDebugSessionImpl) mySession).getSessionTab();
+									if(sessionTab != null)
+									{
+										if(XDebuggerSettingsManager.getInstanceImpl().getGeneralSettings().isShowDebuggerOnBreakpoint())
+										{
+											sessionTab.toFront(true);
+										}
+										sessionTab.getUi().attractBy(XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION);
+									}
+								}
+							});
+						}
+						break;
 					}
 				}
 			}
-			catch(Exception e)
+			catch(VMDisconnectedException e)
 			{
-				//
+				// dont interest
+			}
+			catch(Throwable e)
+			{
+				e.printStackTrace();
 			}
 
 			try
