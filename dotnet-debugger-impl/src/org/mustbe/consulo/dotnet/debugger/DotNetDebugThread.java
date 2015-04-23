@@ -58,6 +58,7 @@ import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import lombok.val;
 import mono.debugger.EventKind;
 import mono.debugger.Location;
+import mono.debugger.NotSuspendedException;
 import mono.debugger.SocketAttachingConnector;
 import mono.debugger.SocketListeningConnector;
 import mono.debugger.SuspendPolicy;
@@ -65,6 +66,7 @@ import mono.debugger.TypeMirror;
 import mono.debugger.VMDisconnectedException;
 import mono.debugger.VirtualMachine;
 import mono.debugger.connect.Connector;
+import mono.debugger.event.AssemblyUnloadEvent;
 import mono.debugger.event.BreakpointEvent;
 import mono.debugger.event.Event;
 import mono.debugger.event.EventQueue;
@@ -265,6 +267,10 @@ public class DotNetDebugThread extends Thread
 							connectionStopped();
 							return;
 						}
+						else if(event instanceof AssemblyUnloadEvent)
+						{
+							myVirtualMachine.unloadTypeMirrorsByAssembly((AssemblyUnloadEvent) event);
+						}
 						else if(event instanceof UserBreakEvent)
 						{
 							state = ThreeState.UNSURE;
@@ -376,7 +382,14 @@ public class DotNetDebugThread extends Thread
 					}
 				}
 
-				myVirtualMachine.resume();
+				try
+				{
+					myVirtualMachine.resume();
+				}
+				catch(NotSuspendedException ignored)
+				{
+					// when u attached - app is not suspended
+				}
 			}
 		});
 	}

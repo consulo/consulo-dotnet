@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,10 +28,12 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
+import mono.debugger.AssemblyMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.VMDisconnectedException;
 import mono.debugger.VirtualMachine;
+import mono.debugger.event.AssemblyUnloadEvent;
 import mono.debugger.request.EventRequestManager;
 import mono.debugger.request.StepRequest;
 
@@ -151,5 +154,25 @@ public class DotNetVirtualMachine
 	public List<ThreadMirror> allThreads()
 	{
 		return myVirtualMachine.allThreads();
+	}
+
+	public void unloadTypeMirrorsByAssembly(AssemblyUnloadEvent event)
+	{
+		AssemblyMirror assembly = event.getAssembly();
+
+		Iterator<TypeMirror> iterator = myLoadedTypeMirrors.iterator();
+		while(iterator.hasNext())
+		{
+			TypeMirror next = iterator.next();
+			AssemblyMirror typeMirrorAssembly = next.assembly();
+			if(typeMirrorAssembly == null)
+			{
+				continue;
+			}
+			if(typeMirrorAssembly.id() == assembly.id())
+			{
+				iterator.remove();
+			}
+		}
 	}
 }
