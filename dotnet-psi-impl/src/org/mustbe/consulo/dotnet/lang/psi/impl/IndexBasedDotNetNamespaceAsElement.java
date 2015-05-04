@@ -40,6 +40,7 @@ import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.NotNullFunction;
+import com.intellij.util.Processor;
 import com.intellij.util.containers.ArrayListSet;
 import lombok.val;
 
@@ -70,8 +71,10 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 	@NotNull
 	@Override
-	public PsiElement[] findChildren(@NotNull final String name, @NotNull GlobalSearchScope globalSearchScope,
-			@NotNull NotNullFunction<PsiElement, PsiElement> transformer, @NotNull ChildrenFilter filter)
+	public PsiElement[] findChildren(@NotNull final String name,
+			@NotNull GlobalSearchScope globalSearchScope,
+			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
+			@NotNull ChildrenFilter filter)
 	{
 		StubIndexKey<String, DotNetQualifiedElement> key;
 		switch(filter)
@@ -118,20 +121,23 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	@Override
 	protected Collection<? extends PsiElement> getOnlyElements(@NotNull GlobalSearchScope globalSearchScope)
 	{
-		Collection<DotNetQualifiedElement> otherElements = StubIndex.getElements(mySearcher.getNamespaceIndexKey(), myIndexKey, myProject,
-				globalSearchScope, DotNetQualifiedElement.class);
+		final Set<PsiElement> set = new THashSet<PsiElement>();
 
-		Set<PsiElement> set = new THashSet<PsiElement>();
-		for(DotNetQualifiedElement psiElement : otherElements)
+		StubIndex.getInstance().processElements(mySearcher.getNamespaceIndexKey(), myIndexKey, myProject, globalSearchScope,
+				DotNetQualifiedElement.class, new Processor<DotNetQualifiedElement>()
 		{
-			ProgressManager.checkCanceled();
-
-			String presentableQName = psiElement.getPresentableParentQName();
-			if(Comparing.equal(myQName, presentableQName))
+			@Override
+			public boolean process(DotNetQualifiedElement element)
 			{
-				set.add(psiElement);
+				String presentableQName = element.getPresentableParentQName();
+				if(Comparing.equal(myQName, presentableQName))
+				{
+					set.add(element);
+				}
+				return true;
 			}
-		}
+		});
+
 		return set;
 	}
 
