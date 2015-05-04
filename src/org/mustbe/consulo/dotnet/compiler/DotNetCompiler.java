@@ -109,9 +109,10 @@ public class DotNetCompiler implements TranslatingCompiler
 
 		DotNetModuleLangExtension<?> langDotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
 		DotNetModuleExtension<?> dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-
-		assert dotNetModuleExtension != null;
-		assert langDotNetModuleExtension != null;
+		if(dotNetModuleExtension == null || langDotNetModuleExtension == null)
+		{
+			return;
+		}
 
 		DotNetCompilerOptionsBuilder builder = null;
 		try
