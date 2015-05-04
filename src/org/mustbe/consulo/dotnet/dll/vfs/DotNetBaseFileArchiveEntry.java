@@ -33,12 +33,15 @@ import edu.arizona.cs.mbel.mbel.TypeDef;
 @Logger
 public class DotNetBaseFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 {
-	private final List<TypeDef> myTypeDefs;
+	private List<TypeDef> myTypeDefs;
+
+	private final String myNamespace;
 
 	public DotNetBaseFileArchiveEntry(ModuleParser moduleParser, TypeDef typeDef, String name, long lastModified)
 	{
 		super(moduleParser, name, lastModified);
 		myTypeDefs = new SmartList<TypeDef>(typeDef);
+		myNamespace = typeDef.getNamespace();
 	}
 
 	public void addTypeDef(@NotNull TypeDef typeDef)
@@ -46,24 +49,19 @@ public class DotNetBaseFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 		myTypeDefs.add(typeDef);
 	}
 
-	@NotNull
-	public List<TypeDef> getTypeDefs()
-	{
-		return myTypeDefs;
-	}
-
 	@Override
 	@NotNull
 	public String getNamespace()
 	{
-		assert !myTypeDefs.isEmpty();
-		return myTypeDefs.get(0).getNamespace();
+		return myNamespace;
 	}
 
 	@NotNull
 	@Override
 	public List<? extends StubBlock> build()
 	{
-		return MsilStubBuilder.parseTypeDef(getNamespace(), myTypeDefs);
+		List<TypeDef> typeDefs = myTypeDefs;
+		myTypeDefs = null;
+		return MsilStubBuilder.parseTypeDef(myNamespace, typeDefs);
 	}
 }

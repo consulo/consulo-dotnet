@@ -34,9 +34,9 @@ public class DotNetAssemblyFileArchiveEntry extends DotNetAbstractFileArchiveEnt
 {
 	public static final String AssemblyInfo = "AssemblyInfo.msil";
 
-	private final AssemblyInfo myAssemblyInfo;
+	private AssemblyInfo myAssemblyInfo;
 
-	public DotNetAssemblyFileArchiveEntry(ModuleParser moduleParser, edu.arizona.cs.mbel.mbel.AssemblyInfo assemblyInfo, long lastModified)
+	public DotNetAssemblyFileArchiveEntry(ModuleParser moduleParser, AssemblyInfo assemblyInfo, long lastModified)
 	{
 		super(moduleParser, AssemblyInfo, lastModified);
 		myAssemblyInfo = assemblyInfo;
@@ -46,6 +46,8 @@ public class DotNetAssemblyFileArchiveEntry extends DotNetAbstractFileArchiveEnt
 	@Override
 	public List<? extends StubBlock> build()
 	{
-		return MsilStubBuilder.parseAssemblyInfo(myAssemblyInfo);
+		AssemblyInfo assemblyInfo = myAssemblyInfo;
+		myAssemblyInfo = null;
+		return MsilStubBuilder.parseAssemblyInfo(assemblyInfo);
 	}
 }

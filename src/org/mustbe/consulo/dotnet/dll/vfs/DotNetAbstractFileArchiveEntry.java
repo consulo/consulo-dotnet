@@ -8,11 +8,11 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.consulo.lombok.annotations.LazyInstance;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlockUtil;
+import com.intellij.openapi.util.NotNullLazyValue;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 
 /**
@@ -22,59 +22,76 @@ import edu.arizona.cs.mbel.mbel.ModuleParser;
 @Logger
 public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiveEntry
 {
-	private final ModuleParser myModuleParser;
+	private static class LazyValue extends NotNullLazyValue<byte[]>
+	{
+		private final DotNetAbstractFileArchiveEntry myEntry;
+		private ModuleParser myModuleParser;
+
+		public LazyValue(ModuleParser moduleParser, DotNetAbstractFileArchiveEntry entry)
+		{
+			myModuleParser = moduleParser;
+			myEntry = entry;
+		}
+
+		@NotNull
+		@Override
+		protected byte[] compute()
+		{
+			try
+			{
+				try
+				{
+					myModuleParser.parseNext();
+				}
+				catch(IOException ignored)
+				{
+				}
+				finally
+				{
+					myModuleParser = null;
+				}
+
+				List<? extends StubBlock> builder = myEntry.build();
+
+				CharSequence charSequence = StubBlockUtil.buildText(builder);
+
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				OutputStreamWriter writer = new OutputStreamWriter(out);
+				try
+				{
+					for(int i = 0; i < charSequence.length(); i++)
+					{
+						writer.write(charSequence.charAt(i));
+					}
+				}
+				finally
+				{
+					writer.close();
+				}
+				return out.toByteArray();
+			}
+			catch(IOException e)
+			{
+				LOGGER.error(e);
+				return ArrayUtils.EMPTY_BYTE_ARRAY;
+			}
+		}
+	}
+
 	private final String myName;
-	private long myLastModified;
+	private final long myLastModified;
+
+	private final NotNullLazyValue<byte[]> myByteArrayValue;
 
 	public DotNetAbstractFileArchiveEntry(ModuleParser moduleParser, String name, long lastModified)
 	{
-		myModuleParser = moduleParser;
 		myName = name;
 		myLastModified = lastModified;
+		myByteArrayValue = new LazyValue(moduleParser, this);
 	}
 
 	@NotNull
 	public abstract List<? extends StubBlock> build();
-
-	@NotNull
-	@LazyInstance
-	private byte[] getByteArray()
-	{
-		try
-		{
-			myModuleParser.parseNext();
-		}
-		catch(IOException ignored)
-		{
-			//
-		}
-		List<? extends StubBlock> builder = build();
-
-		CharSequence charSequence = StubBlockUtil.buildText(builder);
-
-		try
-		{
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			OutputStreamWriter writer = new OutputStreamWriter(out);
-			try
-			{
-				for(int i = 0; i < charSequence.length(); i++)
-				{
-					writer.write(charSequence.charAt(i));
-				}
-			}
-			finally
-			{
-				writer.close();
-			}
-			return out.toByteArray();
-		}
-		catch(IOException e)
-		{
-			LOGGER.error(e);
-			return ArrayUtils.EMPTY_BYTE_ARRAY;
-		}
-	}
 
 	@Override
 	public String getName()
@@ -85,7 +102,7 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 	@Override
 	public long getSize()
 	{
-		return getByteArray().length;
+		return myByteArrayValue.getValue().length;
 	}
 
 	@Override
@@ -111,6 +128,6 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 	@NotNull
 	public InputStream createInputStream()
 	{
-		return new ByteArrayInputStream(getByteArray());
+		return new ByteArrayInputStream(myByteArrayValue.getValue());
 	}
 }

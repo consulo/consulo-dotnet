@@ -44,22 +44,17 @@ import lombok.val;
  */
 public class DotNetArchiveFile implements ArchiveFile
 {
-	private ModuleParser myModuleParser;
-	private long myLastModified;
-
 	private final List<ArchiveEntry> myArchiveEntries;
 
 	public DotNetArchiveFile(ModuleParser moduleParser, long l)
 	{
-		myModuleParser = moduleParser;
-		myLastModified = l;
-		myArchiveEntries = map();
+		myArchiveEntries = map(moduleParser, l);
 	}
 
 	@NotNull
-	private List<ArchiveEntry> map()
+	private static List<ArchiveEntry> map(@NotNull ModuleParser moduleParser, long lastModifier)
 	{
-		val typeDefs = myModuleParser.getTypeDefs();
+		val typeDefs = moduleParser.getTypeDefs();
 		val fileList = new ArrayList<DotNetFileArchiveEntry>();
 
 		val duplicateMap = new HashMap<String, DotNetBaseFileArchiveEntry>(); // map used for collect types with same name but different signature
@@ -92,16 +87,16 @@ public class DotNetArchiveFile implements ArchiveFile
 			}
 			else
 			{
-				DotNetBaseFileArchiveEntry e = new DotNetBaseFileArchiveEntry(myModuleParser, typeDef, path, myLastModified);
+				DotNetBaseFileArchiveEntry e = new DotNetBaseFileArchiveEntry(moduleParser, typeDef, path, lastModifier);
 				fileList.add(e);
 				duplicateMap.put(path, e);
 			}
 		}
 
-		AssemblyInfo assemblyInfo = myModuleParser.getAssemblyInfo();
+		AssemblyInfo assemblyInfo = moduleParser.getAssemblyInfo();
 		if(assemblyInfo != null)
 		{
-			fileList.add(new DotNetAssemblyFileArchiveEntry(myModuleParser, assemblyInfo, myLastModified));
+			fileList.add(new DotNetAssemblyFileArchiveEntry(moduleParser, assemblyInfo, lastModifier));
 		}
 
 		// sort - at to head, files without namespaces
@@ -126,7 +121,7 @@ public class DotNetArchiveFile implements ArchiveFile
 
 		for(DotNetFileArchiveEntry fileEntry : fileList)
 		{
-			DotNetDirArchiveEntry dirEntry = createNamespaceDirIfNeed(alreadyAddedNamespaces, fileEntry, myLastModified);
+			DotNetDirArchiveEntry dirEntry = createNamespaceDirIfNeed(alreadyAddedNamespaces, fileEntry, lastModifier);
 			if(dirEntry != null)
 			{
 				list.add(dirEntry);
