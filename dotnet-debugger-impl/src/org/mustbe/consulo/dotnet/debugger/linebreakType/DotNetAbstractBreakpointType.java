@@ -28,6 +28,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointTypeBase;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import mono.debugger.TypeMirror;
+import mono.debugger.VMDisconnectedException;
 import mono.debugger.request.EventRequest;
 
 /**
@@ -49,12 +50,19 @@ public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBa
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror)
 	{
-		EventRequest eventRequest = breakpoint.getUserData(DotNetAbstractBreakpointType.EVENT_REQUEST);
-		if(eventRequest != null)
+		try
 		{
-			eventRequest.disable();
+			EventRequest eventRequest = breakpoint.getUserData(DotNetAbstractBreakpointType.EVENT_REQUEST);
+			if(eventRequest != null)
+			{
+				eventRequest.disable();
+			}
+			return createRequestImpl(project, virtualMachine, breakpoint, typeMirror);
 		}
-		return createRequestImpl(project, virtualMachine, breakpoint, typeMirror);
+		catch(VMDisconnectedException ignored)
+		{
+		}
+		return false;
 	}
 
 	@RequiredReadAction
