@@ -20,15 +20,16 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -75,7 +76,6 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	}
 
 	@Override
-	@RequiredReadAction
 	protected boolean createRequestImpl(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
@@ -155,19 +155,25 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	}
 
 	@NotNull
-	@RequiredReadAction
-	public Pair<BreakpointResult, Location> findLocationImpl(@NotNull Project project,
-			@NotNull DotNetVirtualMachine virtualMachine,
-			@NotNull XLineBreakpoint<?> lineBreakpoint,
-			@Nullable TypeMirror typeMirror)
+	public Pair<BreakpointResult, Location> findLocationImpl(@NotNull final Project project,
+			@NotNull final DotNetVirtualMachine virtualMachine,
+			@NotNull final XLineBreakpoint<?> lineBreakpoint,
+			@Nullable final TypeMirror typeMirror)
 	{
-		VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(lineBreakpoint.getFileUrl());
+		final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(lineBreakpoint.getFileUrl());
 		if(fileByUrl == null)
 		{
 			return INVALID;
 		}
 
-		PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(project, fileByUrl, lineBreakpoint.getLine());
+		PsiElement psiElement = ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>()
+		{
+			@Override
+			public PsiElement compute()
+			{
+				return DotNetDebuggerUtil.findPsiElement(project, fileByUrl, lineBreakpoint.getLine());
+			}
+		});
 		if(psiElement == null)
 		{
 			return INVALID;

@@ -25,7 +25,6 @@ import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
@@ -61,16 +60,9 @@ public class DotNetDebugProcess extends XDebugProcess
 				@Override
 				public boolean process(final DotNetVirtualMachine virtualMachine)
 				{
-					ApplicationManager.getApplication().runReadAction(new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							val type = (DotNetLineBreakpointType) breakpoint.getType();
+					val type = (DotNetLineBreakpointType) breakpoint.getType();
 
-							type.createRequest(project, virtualMachine, breakpoint, null);
-						}
-					});
+					type.createRequest(project, virtualMachine, breakpoint, null);
 
 					return false;
 				}

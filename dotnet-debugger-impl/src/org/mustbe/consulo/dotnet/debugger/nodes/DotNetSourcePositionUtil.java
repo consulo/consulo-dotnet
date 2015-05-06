@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -31,6 +32,7 @@ import mono.debugger.StackFrameMirror;
 public class DotNetSourcePositionUtil
 {
 	@Nullable
+	@RequiredReadAction
 	public static PsiElement resolveTargetPsiElement(DotNetDebugContext context, StackFrameMirror myFrame)
 	{
 		String sourcePath = myFrame.location().sourcePath();

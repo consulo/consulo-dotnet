@@ -24,6 +24,7 @@ import org.consulo.annotations.Immutable;
 import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
@@ -60,24 +61,28 @@ public abstract class DotNetPsiSearcher
 	};
 
 	@Nullable
+	@RequiredReadAction
 	public DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
 	{
 		return null;
 	}
 
 	@NotNull
+	@RequiredReadAction
 	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
 	{
 		return findTypes(vmQName, scope, TypeResoleKind.UNKNOWN, DEFAULT_TRANSFORMER);
 	}
 
 	@NotNull
+	@RequiredReadAction
 	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind)
 	{
 		return findTypes(vmQName, scope, typeResoleKind, DEFAULT_TRANSFORMER);
 	}
 
 	@NotNull
+	@RequiredReadAction
 	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind,
 			@NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
@@ -102,22 +107,26 @@ public abstract class DotNetPsiSearcher
 	}
 
 	@NotNull
+	@RequiredReadAction
 	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope,
 			@NotNull TypeResoleKind typeResoleKind);
 
 	@Nullable
+	@RequiredReadAction
 	public DotNetTypeDeclaration findType(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
 	{
 		return findType(vmQName, scope, TypeResoleKind.UNKNOWN);
 	}
 
 	@Nullable
+	@RequiredReadAction
 	public DotNetTypeDeclaration findType(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind)
 	{
 		return findType(vmQName, scope, typeResoleKind, DEFAULT_TRANSFORMER);
 	}
 
 	@Nullable
+	@RequiredReadAction
 	public DotNetTypeDeclaration findType(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind,
 			@NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{

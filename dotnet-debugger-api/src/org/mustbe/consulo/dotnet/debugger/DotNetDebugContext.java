@@ -33,7 +33,6 @@ public class DotNetDebugContext
 	private final DotNetVirtualMachine myVirtualMachine;
 	private final RunProfile myRunProfile;
 
-
 	public DotNetDebugContext(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull RunProfile runProfile)

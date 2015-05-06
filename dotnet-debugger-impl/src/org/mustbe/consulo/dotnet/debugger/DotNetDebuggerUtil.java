@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -34,9 +35,9 @@ import com.intellij.psi.PsiWhiteSpace;
 public class DotNetDebuggerUtil
 {
 	@Nullable
+	@RequiredReadAction
 	public static PsiElement findPsiElement(@NotNull final Project project, @NotNull final VirtualFile file, final int line)
 	{
-
 		final Document doc = FileDocumentManager.getInstance().getDocument(file);
 		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(doc);
 		if(psi == null)

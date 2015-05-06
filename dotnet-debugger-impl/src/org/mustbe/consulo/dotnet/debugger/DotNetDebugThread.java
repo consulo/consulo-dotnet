@@ -41,6 +41,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.Processor;
@@ -352,46 +353,47 @@ public class DotNetDebugThread extends Thread
 
 	private void insertBreakpoints(final TypeMirror typeMirror)
 	{
-		ApplicationManager.getApplication().runReadAction(new Runnable()
+		final DotNetDebugContext debugContext = createDebugContext();
+
+		DotNetTypeDeclaration[] typeDeclarations = ApplicationManager.getApplication().runReadAction(new Computable<DotNetTypeDeclaration[]>()
 		{
 			@Override
-			public void run()
+			public DotNetTypeDeclaration[] compute()
 			{
-				DotNetDebugContext debugContext = createDebugContext();
-
-				DotNetTypeDeclaration[] qualifiedNameImpl = DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, debugContext);
-				if(qualifiedNameImpl.length != 0)
-				{
-					Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = getEnabledBreakpoints();
-					for(DotNetTypeDeclaration dotNetTypeDeclaration : qualifiedNameImpl)
-					{
-						VirtualFile typeVirtualFile = dotNetTypeDeclaration.getContainingFile().getVirtualFile();
-
-						for(final XLineBreakpoint<XBreakpointProperties> breakpoint : breakpoints)
-						{
-							VirtualFile lineBreakpoint = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
-							if(!Comparing.equal(typeVirtualFile, lineBreakpoint))
-							{
-								continue;
-							}
-
-							val type = (DotNetLineBreakpointType) breakpoint.getType();
-
-							type.createRequest(mySession.getProject(), myVirtualMachine, breakpoint, typeMirror);
-						}
-					}
-				}
-
-				try
-				{
-					myVirtualMachine.resume();
-				}
-				catch(NotSuspendedException ignored)
-				{
-					// when u attached - app is not suspended
-				}
+				return DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, debugContext);
 			}
 		});
+
+		if(typeDeclarations.length > 0)
+		{
+			Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = getEnabledBreakpoints();
+			for(DotNetTypeDeclaration dotNetTypeDeclaration : typeDeclarations)
+			{
+				VirtualFile typeVirtualFile = PsiUtilBase.getVirtualFile(dotNetTypeDeclaration);
+
+				for(final XLineBreakpoint<XBreakpointProperties> breakpoint : breakpoints)
+				{
+					VirtualFile lineBreakpoint = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
+					if(!Comparing.equal(typeVirtualFile, lineBreakpoint))
+					{
+						continue;
+					}
+
+					val type = (DotNetLineBreakpointType) breakpoint.getType();
+
+					type.createRequest(mySession.getProject(), myVirtualMachine, breakpoint, typeMirror);
+				}
+			}
+		}
+
+		try
+		{
+			myVirtualMachine.resume();
+		}
+		catch(NotSuspendedException ignored)
+		{
+			// when u attached - app is not suspended
+		}
 	}
 
 	private void processCommands(DotNetVirtualMachine virtualMachine)

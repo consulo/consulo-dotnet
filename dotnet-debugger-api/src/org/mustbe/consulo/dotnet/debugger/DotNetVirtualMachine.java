@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
@@ -100,6 +101,7 @@ public class DotNetVirtualMachine
 		return myVirtualMachine;
 	}
 
+	@Nullable
 	public TypeMirror findTypeMirror(@NotNull final VirtualFile virtualFile, @NotNull final String vmQualifiedName)
 	{
 		try

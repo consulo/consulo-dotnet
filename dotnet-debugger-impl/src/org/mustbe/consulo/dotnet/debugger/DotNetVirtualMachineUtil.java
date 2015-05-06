@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
@@ -30,6 +31,7 @@ import mono.debugger.TypeMirror;
 public class DotNetVirtualMachineUtil
 {
 	@NotNull
+	@RequiredReadAction
 	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
 	{
 		String qualifiedName = typeMirror.qualifiedName();
