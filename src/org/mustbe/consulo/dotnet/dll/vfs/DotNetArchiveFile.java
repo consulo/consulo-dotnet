@@ -34,6 +34,7 @@ import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ArchiveEntry;
 import com.intellij.openapi.vfs.ArchiveFile;
+import com.intellij.util.ArrayUtil;
 import edu.arizona.cs.mbel.mbel.AssemblyInfo;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 import edu.arizona.cs.mbel.mbel.TypeDef;
@@ -187,7 +188,7 @@ public class DotNetArchiveFile implements ArchiveFile
 	{
 		if(archiveEntry instanceof DotNetDirArchiveEntry)
 		{
-			return new ByteArrayInputStream(new byte[0]);
+			return new ByteArrayInputStream(ArrayUtil.EMPTY_BYTE_ARRAY);
 		}
 		return ((DotNetFileArchiveEntry)archiveEntry).createInputStream();
 	}
