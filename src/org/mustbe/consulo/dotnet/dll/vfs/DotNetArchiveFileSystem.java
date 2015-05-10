@@ -66,7 +66,7 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 				{
 					File mirrorFile = getMirrorFile(originalFile);
 					ModuleParser parser = DotNetLibraryOpenCache.acquire(mirrorFile.getPath());
-					return new DotNetArchiveFile(parser, mirrorFile.lastModified());
+					return new DotNetArchiveFile(originalFile, parser, mirrorFile.lastModified());
 				}
 				catch(Exception e)
 				{

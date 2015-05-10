@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs;
 
+import java.io.File;
 import java.util.List;
 
 import org.consulo.lombok.annotations.Logger;
@@ -37,9 +38,9 @@ public class DotNetBaseFileArchiveEntry extends DotNetAbstractFileArchiveEntry
 
 	private final String myNamespace;
 
-	public DotNetBaseFileArchiveEntry(ModuleParser moduleParser, TypeDef typeDef, String name, long lastModified)
+	public DotNetBaseFileArchiveEntry(File originalFile, ModuleParser moduleParser, TypeDef typeDef, String name, long lastModified)
 	{
-		super(moduleParser, name, lastModified);
+		super(originalFile, moduleParser, name, lastModified);
 		myTypeDefs = new SmartList<TypeDef>(typeDef);
 		myNamespace = typeDef.getNamespace();
 	}

@@ -14,9 +14,10 @@ public class DotNetDllFileTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ModuleParser moduleParser = new ModuleParser(new File("G:\\ikvm-7.2.4630.5\\bin\\IKVM.OpenJDK.Core.dll"));
+		File file = new File("G:\\ikvm-7.2.4630.5\\bin\\IKVM.OpenJDK.Core.dll");
+		ModuleParser moduleParser = new ModuleParser(file);
 
-		DotNetArchiveFile archiveFile = new DotNetArchiveFile(moduleParser, 0);
+		DotNetArchiveFile archiveFile = new DotNetArchiveFile(file, moduleParser, 0);
 
 		Iterator<? extends ArchiveEntry> entries = archiveFile.entries();
 		while(entries.hasNext())

@@ -2,6 +2,7 @@ package org.mustbe.consulo.dotnet.dll.vfs;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlock;
 import org.mustbe.consulo.dotnet.dll.vfs.builder.block.StubBlockUtil;
 import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.util.ArrayUtil;
 import edu.arizona.cs.mbel.mbel.ModuleParser;
 
 /**
@@ -25,10 +27,12 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 	private static class LazyValue extends NotNullLazyValue<byte[]>
 	{
 		private final DotNetAbstractFileArchiveEntry myEntry;
+		private final File myOriginalFile;
 		private ModuleParser myModuleParser;
 
-		public LazyValue(ModuleParser moduleParser, DotNetAbstractFileArchiveEntry entry)
+		public LazyValue(File originalFile, ModuleParser moduleParser, DotNetAbstractFileArchiveEntry entry)
 		{
+			myOriginalFile = originalFile;
 			myModuleParser = moduleParser;
 			myEntry = entry;
 		}
@@ -43,8 +47,10 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 				{
 					myModuleParser.parseNext();
 				}
-				catch(IOException ignored)
+				catch(Throwable e)
 				{
+					LOGGER.error("File '" + myOriginalFile.getPath() + "' cant decompiled correctly please create issue with this file", e);
+					return ArrayUtil.EMPTY_BYTE_ARRAY;
 				}
 				finally
 				{
@@ -70,9 +76,9 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 				}
 				return out.toByteArray();
 			}
-			catch(IOException e)
+			catch(Throwable e)
 			{
-				LOGGER.error(e);
+				LOGGER.error("File '" + myOriginalFile.getPath() + "' cant decompiled correctly please create issue with this file", e);
 				return ArrayUtils.EMPTY_BYTE_ARRAY;
 			}
 		}
@@ -83,11 +89,11 @@ public abstract class DotNetAbstractFileArchiveEntry implements DotNetFileArchiv
 
 	private final NotNullLazyValue<byte[]> myByteArrayValue;
 
-	public DotNetAbstractFileArchiveEntry(ModuleParser moduleParser, String name, long lastModified)
+	public DotNetAbstractFileArchiveEntry(File originalFile, ModuleParser moduleParser, String name, long lastModified)
 	{
 		myName = name;
 		myLastModified = lastModified;
-		myByteArrayValue = new LazyValue(moduleParser, this);
+		myByteArrayValue = new LazyValue(originalFile, moduleParser, this);
 	}
 
 	@NotNull

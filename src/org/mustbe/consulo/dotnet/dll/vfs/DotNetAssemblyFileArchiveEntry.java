@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.dll.vfs;
 
+import java.io.File;
 import java.util.List;
 
 import org.consulo.lombok.annotations.Logger;
@@ -36,9 +37,9 @@ public class DotNetAssemblyFileArchiveEntry extends DotNetAbstractFileArchiveEnt
 
 	private AssemblyInfo myAssemblyInfo;
 
-	public DotNetAssemblyFileArchiveEntry(ModuleParser moduleParser, AssemblyInfo assemblyInfo, long lastModified)
+	public DotNetAssemblyFileArchiveEntry(File originalFile, ModuleParser moduleParser, AssemblyInfo assemblyInfo, long lastModified)
 	{
-		super(moduleParser, AssemblyInfo, lastModified);
+		super(originalFile, moduleParser, AssemblyInfo, lastModified);
 		myAssemblyInfo = assemblyInfo;
 	}
 

@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.dll.vfs;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -46,13 +47,13 @@ public class DotNetArchiveFile implements ArchiveFile
 {
 	private final List<ArchiveEntry> myArchiveEntries;
 
-	public DotNetArchiveFile(ModuleParser moduleParser, long l)
+	public DotNetArchiveFile(@NotNull File originalFile, ModuleParser moduleParser, long l)
 	{
-		myArchiveEntries = map(moduleParser, l);
+		myArchiveEntries = map(originalFile, moduleParser, l);
 	}
 
 	@NotNull
-	private static List<ArchiveEntry> map(@NotNull ModuleParser moduleParser, long lastModifier)
+	private static List<ArchiveEntry> map(@NotNull File originalFile, @NotNull ModuleParser moduleParser, long lastModifier)
 	{
 		val typeDefs = moduleParser.getTypeDefs();
 		val fileList = new ArrayList<DotNetFileArchiveEntry>();
@@ -87,7 +88,7 @@ public class DotNetArchiveFile implements ArchiveFile
 			}
 			else
 			{
-				DotNetBaseFileArchiveEntry e = new DotNetBaseFileArchiveEntry(moduleParser, typeDef, path, lastModifier);
+				DotNetBaseFileArchiveEntry e = new DotNetBaseFileArchiveEntry(originalFile, moduleParser, typeDef, path, lastModifier);
 				fileList.add(e);
 				duplicateMap.put(path, e);
 			}
@@ -96,7 +97,7 @@ public class DotNetArchiveFile implements ArchiveFile
 		AssemblyInfo assemblyInfo = moduleParser.getAssemblyInfo();
 		if(assemblyInfo != null)
 		{
-			fileList.add(new DotNetAssemblyFileArchiveEntry(moduleParser, assemblyInfo, lastModifier));
+			fileList.add(new DotNetAssemblyFileArchiveEntry(originalFile, moduleParser, assemblyInfo, lastModifier));
 		}
 
 		// sort - at to head, files without namespaces
