@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import org.mustbe.consulo.dotnet.module.extension.DotNetLibraryOpenCache;
+import org.mustbe.dotnet.msil.decompiler.file.DotNetArchiveFile;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.vfs.ArchiveFile;
 import com.intellij.openapi.vfs.ArchiveFileSystem;

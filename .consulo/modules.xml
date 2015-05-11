@@ -33,6 +33,7 @@
               </binaries>
             </library>
           </orderEntry>
+          <orderEntry type="library" name="dotnet-msil-decompiler" level="project" />
         </module-layer>
       </module>
       <module name="impl/consulo-microsoft-dotnet" dirurl="file://$PROJECT_DIR$/extract/consulo-microsoft-dotnet" current-layer="Default">
@@ -158,6 +159,7 @@
           <orderEntry type="module" module-name="dotnet-psi-api" />
           <orderEntry type="module" module-name="consulo-dotnet" />
           <orderEntry type="module" module-name="msil-psi-impl" />
+          <orderEntry type="library" name="dotnet-msil-decompiler" level="project" />
         </module-layer>
       </module>
       <module name="dotnet-documentation-api" dirurl="file://$PROJECT_DIR$/dotnet-documentation-api" current-layer="Default">

@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.lang.psi.impl.stub;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
 import com.intellij.openapi.util.text.StringUtil;
 
@@ -24,6 +25,8 @@ import com.intellij.openapi.util.text.StringUtil;
  * @author VISTALL
  * @since 22.05.14
  */
+@Deprecated
+@DeprecationInfo("Use #org.mustbe.dotnet.msil.decompiler.util.MsilHelper")
 public class MsilHelper
 {
 	public static final String CONSTRUCTOR_NAME = ".ctor";

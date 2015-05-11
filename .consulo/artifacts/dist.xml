@@ -24,6 +24,7 @@
           <element id="library" level="project" name="dotnet-asm" />
           <element id="library" level="project" name="mono-soft-debugging" />
           <element id="library" level="project" name="joou" />
+          <element id="library" level="project" name="dotnet-msil-decompiler" />
         </element>
       </element>
       <element id="directory" name="microsoft-dotnet">
