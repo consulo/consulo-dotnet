@@ -61,6 +61,6 @@ public class MsilFileType extends LanguageFileType
 	@Override
 	public Icon getIcon()
 	{
-		return AllIcons.FileTypes.JavaClass;
+		return AllIcons.FileTypes.Any_type;
 	}
 }
