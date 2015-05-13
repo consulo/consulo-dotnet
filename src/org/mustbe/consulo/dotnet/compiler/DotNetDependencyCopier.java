@@ -106,8 +106,10 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				@Override
 				protected void run(Result<Set<File>> listResult) throws Throwable
 				{
-					Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true, false);
-					files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true, false));
+					Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true,
+							DotNetCompilerUtil.SKIP_STD_LIBRARIES);
+					files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true,
+							DotNetCompilerUtil.SKIP_STD_LIBRARIES));
 
 					for(DotNetDependencyCopierExtension copierExtension : DotNetDependencyCopierExtension.EP_NAME.getExtensions())
 					{

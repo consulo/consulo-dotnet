@@ -36,6 +36,8 @@ import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
@@ -47,15 +49,21 @@ import lombok.val;
  */
 public class DotNetCompilerUtil
 {
-	@NotNull
-	public static Set<File> collectDependencies(@NotNull final Module module, @NotNull DotNetTarget target, final boolean includeStdLibraries)
+	public static final Condition<OrderEntry> ACCEPT_ALL = Conditions.alwaysFalse();
+	public static final Condition<OrderEntry> SKIP_STD_LIBRARIES = new Condition<OrderEntry>()
 	{
-		return collectDependencies(module, target, false, includeStdLibraries);
-	}
+		@Override
+		public boolean value(OrderEntry orderEntry)
+		{
+			return orderEntry instanceof DotNetLibraryOrderEntryImpl;
+		}
+	};
 
 	@NotNull
-	public static Set<File> collectDependencies(@NotNull final Module module, @NotNull final DotNetTarget target, final boolean debugSymbol,
-			final boolean includeStdLibraries)
+	public static Set<File> collectDependencies(@NotNull final Module module,
+			@NotNull final DotNetTarget target,
+			final boolean debugSymbol,
+			@NotNull final Condition<OrderEntry> skipCondition)
 	{
 		val set = new HashSet<File>();
 
@@ -69,7 +77,7 @@ public class DotNetCompilerUtil
 			@Override
 			public Object visitDotNetLibrary(DotNetLibraryOrderEntryImpl orderEntry, Object value)
 			{
-				if(!includeStdLibraries)
+				if(skipCondition.value(orderEntry))
 				{
 					return null;
 				}
@@ -80,6 +88,11 @@ public class DotNetCompilerUtil
 			@Override
 			public Object visitLibraryOrderEntry(LibraryOrderEntry libraryOrderEntry, Object value)
 			{
+				if(skipCondition.value(libraryOrderEntry))
+				{
+					return null;
+				}
+
 				Library library = libraryOrderEntry.getLibrary();
 				if(library == null || processed.contains(library))
 				{
@@ -95,6 +108,11 @@ public class DotNetCompilerUtil
 			@Override
 			public Object visitModuleExtensionSdkOrderEntry(ModuleExtensionWithSdkOrderEntry orderEntry, Object value)
 			{
+				if(skipCondition.value(orderEntry))
+				{
+					return null;
+				}
+
 				Sdk sdk = orderEntry.getSdk();
 				if(sdk == null || processed.contains(sdk))
 				{
@@ -125,6 +143,11 @@ public class DotNetCompilerUtil
 			@Override
 			public Object visitModuleOrderEntry(ModuleOrderEntry moduleOrderEntry, Object value)
 			{
+				if(skipCondition.value(moduleOrderEntry))
+				{
+					return null;
+				}
+
 				Module depModule = moduleOrderEntry.getModule();
 				if(depModule == null)
 				{
@@ -147,7 +170,7 @@ public class DotNetCompilerUtil
 						set.add(new File(DotNetMacroUtil.expandOutputFile(dependencyExtension, true)));
 					}
 
-					set.addAll(collectDependencies(depModule, target, false));
+					set.addAll(collectDependencies(depModule, target, false, skipCondition));
 				}
 
 				return null;
