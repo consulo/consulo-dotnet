@@ -1,0 +1,762 @@
+// Consulo API Decompiler stub source generated from bytecode
+// Implementation of methods is not available
+
+.class public serializable java.util.ArrayList extends java.util.AbstractList implements java.util.List, java.util.Collection, java.lang.Iterable, System.Collections.IEnumerable, java.util.RandomAccess, java.lang.Cloneable/__Interface, java.io.Serializable/__Interface, System.Runtime.Serialization.ISerializable
+{
+	.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+	.custom IKVM.Attributes.ImplementsAttribute::.ctor() = ()
+
+	.class nested assembly '1' extends java.lang.Object
+	{
+		.custom IKVM.Attributes.InnerClassAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.EnclosingMethodAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.ModifiersAttribute::.ctor() = ()
+
+		.method specialname rtspecialname void .ctor()
+		{
+		}
+	}
+
+	.class nested assembly sealed ArrayListSpliterator extends java.lang.Object implements java.util.Spliterator
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.field private initonly class java.util.ArrayList list
+
+		.field private int32 index
+
+		.field private int32 fence
+
+		.field private int32 expectedModCount
+
+		.method assembly hidebysig specialname rtspecialname void .ctor(class java.util.ArrayList, int32, int32, int32)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method private hidebysig int32 getFence()
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual class java.util.ArrayList/ArrayListSpliterator trySplit()
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual bool tryAdvance(class java.util.function.Consumer)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual void forEachRemaining(class java.util.function.Consumer)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual int64 estimateSize()
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual int32 characteristics()
+		{
+		}
+
+		.method public hidebysig virtual class java.util.Spliterator trySplit()
+		{
+			.custom IKVM.Attributes.ModifiersAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual int64 getExactSizeIfKnown()
+		{
+			.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual bool hasCharacteristics(int32)
+		{
+			.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual class java.util.Comparator getComparator()
+		{
+			.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+		}
+	}
+
+	.class nested assembly Itr extends java.lang.Object implements java.util.Iterator
+	{
+		.custom IKVM.Attributes.InnerClassAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.field assembly int32 cursor
+
+		.field assembly int32 lastRet
+
+		.field assembly int32 expectedModCount
+
+		.field assembly initonly class java.util.ArrayList this$0
+
+		.method assembly hidebysig specialname rtspecialname void .ctor(class java.util.ArrayList, class java.util.ArrayList/'1')
+		{
+			.custom IKVM.Attributes.ModifiersAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method private hidebysig specialname rtspecialname void .ctor(class java.util.ArrayList)
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method assembly final hidebysig virtual void checkForComodification()
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual bool hasNext()
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual object next()
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual void remove()
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual void forEachRemaining(class java.util.function.Consumer)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+	}
+
+	.class nested assembly ListItr extends java.util.ArrayList/Itr implements java.util.ListIterator, java.util.Iterator
+	{
+		.custom IKVM.Attributes.InnerClassAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.ImplementsAttribute::.ctor() = ()
+
+		.field assembly initonly class java.util.ArrayList this$0
+
+		.method assembly hidebysig specialname rtspecialname void .ctor(class java.util.ArrayList, int32)
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual bool hasPrevious()
+		{
+		}
+
+		.method public hidebysig virtual int32 nextIndex()
+		{
+		}
+
+		.method public hidebysig virtual int32 previousIndex()
+		{
+		}
+
+		.method public hidebysig virtual object previous()
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual void set(object)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual void add(object)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+	}
+
+	.class nested assembly SubList extends java.util.AbstractList implements java.util.RandomAccess
+	{
+		.custom IKVM.Attributes.InnerClassAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.ImplementsAttribute::.ctor() = ()
+
+		.class nested assembly specialname '1' extends java.lang.Object implements java.util.ListIterator, java.util.Iterator
+		{
+			.custom IKVM.Attributes.InnerClassAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.EnclosingMethodAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.ImplementsAttribute::.ctor() = ()
+
+			.field assembly int32 cursor
+
+			.field assembly int32 lastRet
+
+			.field assembly int32 expectedModCount
+
+			.field assembly initonly int32 val$index
+
+			.field assembly initonly int32 val$offset
+
+			.field assembly initonly class java.util.ArrayList/SubList this$1
+
+			.method assembly final hidebysig virtual void checkForComodification()
+			{
+				.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+			}
+
+			.method assembly hidebysig specialname rtspecialname void .ctor(class java.util.ArrayList/SubList, int32, int32)
+			{
+				.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+			}
+
+			.method public hidebysig virtual bool hasNext()
+			{
+				.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+			}
+
+			.method public hidebysig virtual object next()
+			{
+				.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+				.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+			}
+
+			.method public hidebysig virtual bool hasPrevious()
+			{
+			}
+
+			.method public hidebysig virtual object previous()
+			{
+				.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+				.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+			}
+
+			.method public hidebysig virtual void forEachRemaining(class java.util.function.Consumer)
+			{
+				.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+				.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+			}
+
+			.method public hidebysig virtual int32 nextIndex()
+			{
+			}
+
+			.method public hidebysig virtual int32 previousIndex()
+			{
+			}
+
+			.method public hidebysig virtual void remove()
+			{
+				.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+			}
+
+			.method public hidebysig virtual void set(object)
+			{
+				.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+				.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+			}
+
+			.method public hidebysig virtual void add(object)
+			{
+				.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+				.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+			}
+		}
+
+		.field private initonly class java.util.AbstractList parent
+
+		.field private initonly int32 parentOffset
+
+		.field private initonly int32 offset
+
+		.field assembly int32 size
+
+		.field assembly initonly class java.util.ArrayList this$0
+
+		.method assembly hidebysig specialname rtspecialname void .ctor(class java.util.ArrayList, class java.util.AbstractList, int32, int32, int32)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual object remove(int32)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual void add(int32, object)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method private hidebysig void rangeCheck(int32)
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method private hidebysig void checkForComodification()
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method private hidebysig void rangeCheckForAdd(int32)
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual bool addAll(int32, class java.util.Collection)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method private hidebysig string outOfBoundsMsg(int32)
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual object set(int32, object)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual object get(int32)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual int32 size()
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method famorassem hidebysig virtual void removeRange(int32, int32)
+		{
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual bool addAll(class java.util.Collection)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual class java.util.Iterator iterator()
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual class java.util.ListIterator listIterator(int32)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual class java.util.List subList(int32, int32)
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+
+		.method public hidebysig virtual class java.util.Spliterator spliterator()
+		{
+			.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+			.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+		}
+	}
+
+	.field private static literal static int64 serialVersionUID
+
+	.field private static initonly static object[] EMPTY_ELEMENTDATA
+
+	.field assembly object[] elementData
+
+	.field private int32 size
+
+	.method public static specialname void '__<clinit>'()
+	{
+	}
+
+	.method public hidebysig specialname rtspecialname void .ctor(int32 initialCapacity)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig specialname rtspecialname void .ctor()
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual bool add(object e)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual int32 size()
+	{
+	}
+
+	.method public hidebysig virtual object[] toArray(object[] a)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual object get(int32 index)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual class java.util.List subList(int32 fromIndex, int32 toIndex)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig specialname rtspecialname void .ctor(class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual class java.util.Iterator iterator()
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual bool remove(object o)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual object remove(int32 index)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual object set(int32 index, object element)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual bool addAll(class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual bool addAll(int32 index, class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual void clear()
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual bool isEmpty()
+	{
+	}
+
+	.method private hidebysig void ensureExplicitCapacity(int32)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private hidebysig void grow(int32)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private static hidebysig int32 hugeCapacity(int32)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual int32 indexOf(object o)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private hidebysig void rangeCheck(int32)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method assembly hidebysig virtual object elementData(int32)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private hidebysig void ensureCapacityInternal(int32)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private hidebysig void rangeCheckForAdd(int32)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private hidebysig void fastRemove(int32)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private hidebysig string outOfBoundsMsg(int32)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private hidebysig bool batchRemove(class java.util.Collection, bool)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method assembly static hidebysig void subListRangeCheck(int32, int32, int32)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual void trimToSize()
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual void ensureCapacity(int32 minCapacity)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual bool contains(object o)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual int32 lastIndexOf(object o)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual object clone()
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual object[] toArray()
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual void add(int32 index, object element)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method famorassem hidebysig virtual void removeRange(int32 fromIndex, int32 toIndex)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual bool removeAll(class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual bool retainAll(class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private hidebysig void writeObject(class java.io.ObjectOutputStream)
+	{
+		.custom IKVM.Attributes.ThrowsAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private hidebysig void readObject(class java.io.ObjectInputStream)
+	{
+		.custom IKVM.Attributes.ThrowsAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual class java.util.ListIterator listIterator(int32 index)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual class java.util.ListIterator listIterator()
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual void forEach(class java.util.function.Consumer action)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual class java.util.Spliterator spliterator()
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual bool removeIf(class java.util.function.Predicate filter)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual void replaceAll(class java.util.function.UnaryOperator operator)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual void sort(class java.util.Comparator c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method assembly static hidebysig int32 access$100(class java.util.ArrayList)
+	{
+		.custom IKVM.Attributes.ModifiersAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method private static specialname rtspecialname void .cctor()
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual class java.util.stream.Stream stream()
+	{
+		.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+	}
+
+	.method public hidebysig virtual class java.util.stream.Stream parallelStream()
+	{
+		.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+	}
+
+	.method private final virtual specialname class System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+	{
+		.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+	}
+
+	.method public static hidebysig specialname valuetype java.lang.Cloneable op_Implicit(class java.util.ArrayList)
+	{
+		.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+	}
+
+	.method public static hidebysig specialname valuetype java.io.Serializable op_Implicit(class java.util.ArrayList)
+	{
+		.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+	}
+
+	.method protected virtual void GetObjectData(class System.Runtime.Serialization.SerializationInfo, valuetype System.Runtime.Serialization.StreamingContext)
+	{
+		.custom System.Security.SecurityCriticalAttribute::.ctor() = ()
+
+		.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+	}
+
+	.method protected specialname rtspecialname void .ctor(class System.Runtime.Serialization.SerializationInfo, valuetype System.Runtime.Serialization.StreamingContext)
+	{
+		.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() = ()
+	}
+}

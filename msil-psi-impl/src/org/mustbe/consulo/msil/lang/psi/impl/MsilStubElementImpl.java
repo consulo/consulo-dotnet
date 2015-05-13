@@ -92,4 +92,10 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 	}
 
 	public abstract void accept(MsilVisitor visitor);
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "(" + getNode().getElementType() + ")";
+	}
 }
