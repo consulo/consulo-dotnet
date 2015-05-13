@@ -64,7 +64,7 @@ public interface MsilTokens extends TokenType
 
 	IElementType CLASS_KEYWORD = new IElementType("CLASS_KEYWORD", MsilLanguage.INSTANCE);
 
-	IElementType VALUETYPE_KEYWORD = new IElementType("CLASS_KEYWORD", MsilLanguage.INSTANCE);
+	IElementType VALUETYPE_KEYWORD = new IElementType("VALUETYPE_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType INT32_KEYWORD = new IElementType("INT32_KEYWORD", MsilLanguage.INSTANCE);
 
