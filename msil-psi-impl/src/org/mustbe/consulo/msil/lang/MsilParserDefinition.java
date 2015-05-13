@@ -16,8 +16,6 @@
 
 package org.mustbe.consulo.msil.lang;
 
-import java.io.Reader;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.msil.lang.lexer._MsilLexer;
@@ -30,7 +28,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
-import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
@@ -49,7 +46,7 @@ public class MsilParserDefinition implements ParserDefinition
 	@Override
 	public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion)
 	{
-		return new FlexAdapter(new _MsilLexer((Reader)null));
+		return new _MsilLexer();
 	}
 
 	@NotNull

@@ -32,8 +32,6 @@ public interface MsilTokens extends TokenType
 
 	IElementType COLONCOLON = new IElementType("COLONCOLON", MsilLanguage.INSTANCE);
 
-	IElementType QIDENTIFIER = new IElementType("QIDENTIFIER", MsilLanguage.INSTANCE);
-
 	IElementType _CLASS_KEYWORD = new IElementType("_CLASS_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType _CTOR_KEYWORD = new IElementType("_CTOR_KEYWORD", MsilLanguage.INSTANCE);

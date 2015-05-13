@@ -1,15 +1,15 @@
 package org.mustbe.consulo.msil.lang.lexer;
 
-import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 %%
 
 %public
 %class _MsilLexer
-%implements FlexLexer
+%extends LexerBase
 %unicode
-%function advance
+%function advanceImpl
 %type IElementType
 %eof{  return;
 %eof}
@@ -20,16 +20,18 @@ MULTI_LINE_STYLE_COMMENT=("/*"{COMMENT_TAIL})|"/*"
 COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 
 DIGIT = [0-9]
-IDENTIFIER_PART=[:jletter:] [:jletterdigit:]* (\`[:jletterdigit:]*)?
 SEPARATOR=(\.) | (\/)
-IDENTIFIER={IDENTIFIER_PART}({SEPARATOR}{IDENTIFIER_PART})*
-QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
+
+IDENTIFIER_PART=[:jletter:] [:jletterdigit:]* (\`[:jletterdigit:]*)?
+IDENTIFIER_IN_QUOTES="'"([^\\\'\r\n])*("'"|\\)?
+
+IDENTIFIERS={IDENTIFIER_PART} | {IDENTIFIER_IN_QUOTES}
+
+VALID_IDENTIFIERS={IDENTIFIERS}({SEPARATOR}{IDENTIFIERS})*
 %%
 
 <YYINITIAL>
 {
-	{QIDENTIFIER}  { return MsilTokens.QIDENTIFIER; }
-
 	"..."          { return MsilTokens.ELLIPSIS; }
 
 	"{"            { return MsilTokens.LBRACE; }
@@ -182,7 +184,7 @@ QIDENTIFIER="'"([^\\\'\r\n])*("'"|\\)?
 
 	{DIGIT}         { return MsilTokens.NUMBER; }
 
-	{IDENTIFIER}    { return MsilTokens.IDENTIFIER; }
+	{VALID_IDENTIFIERS}    { return MsilTokens.IDENTIFIER; }
 
 	{SINGLE_LINE_COMMENT}      { return MsilTokens.LINE_COMMENT; }
 

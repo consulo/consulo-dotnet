@@ -16,13 +16,10 @@
 
 package org.mustbe.consulo.msil.ide.highlight;
 
-import java.io.Reader;
-
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.lexer._MsilLexer;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
-import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -39,7 +36,7 @@ public class MsilSyntaxHighlighter extends SyntaxHighlighterBase
 	@Override
 	public Lexer getHighlightingLexer()
 	{
-		return new FlexAdapter(new _MsilLexer((Reader) null));
+		return new _MsilLexer();
 	}
 
 	@NotNull
