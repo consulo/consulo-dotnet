@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.lang.model.element.UnknownElementException;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Comparing;
@@ -54,8 +56,8 @@ public class DotNetVirtualMachine
 	public DotNetVirtualMachine(@NotNull VirtualMachine virtualMachine)
 	{
 		myVirtualMachine = virtualMachine;
-		mySupportSearchTypesByQualifiedName =  myVirtualMachine.isAtLeastVersion(2, 9);
-		mySupportSearchTypesBySourcePaths =  myVirtualMachine.isAtLeastVersion(2, 7);
+		mySupportSearchTypesByQualifiedName = myVirtualMachine.isAtLeastVersion(2, 9);
+		mySupportSearchTypesBySourcePaths = myVirtualMachine.isAtLeastVersion(2, 7);
 	}
 
 	public void dispose()
@@ -90,6 +92,11 @@ public class DotNetVirtualMachine
 		myLoadedTypeMirrors.put(typeMirror.fullName(), typeMirror);
 	}
 
+	public void unloadTypeMirror(@NotNull TypeMirror typeMirror)
+	{
+		myLoadedTypeMirrors.remove(typeMirror.fullName());
+	}
+
 	public EventRequestManager eventRequestManager()
 	{
 		return myVirtualMachine.eventRequestManager();
@@ -102,7 +109,8 @@ public class DotNetVirtualMachine
 	}
 
 	@Nullable
-	public TypeMirror findTypeMirror(@NotNull final VirtualFile virtualFile, @NotNull final String vmQualifiedName)
+	public TypeMirror findTypeMirror(@NotNull final VirtualFile virtualFile, @NotNull final String vmQualifiedName) throws
+			TypeMirrorUnloadedException
 	{
 		try
 		{
@@ -127,9 +135,16 @@ public class DotNetVirtualMachine
 			{
 				for(TypeMirror loadedTypeMirror : myLoadedTypeMirrors.values())
 				{
-					if(loadedTypeMirror.qualifiedName().equals(vmQualifiedName))
+					try
 					{
-						return loadedTypeMirror;
+						if(loadedTypeMirror.qualifiedName().equals(vmQualifiedName))
+						{
+							return loadedTypeMirror;
+						}
+					}
+					catch(UnknownElementException e)
+					{
+						throw new TypeMirrorUnloadedException(loadedTypeMirror, e);
 					}
 				}
 				return null;

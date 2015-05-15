@@ -21,8 +21,11 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
+import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
+import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointTypeBase;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
@@ -43,7 +46,7 @@ public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBa
 		super(id, title, editorsProvider);
 	}
 
-	public boolean createRequest(@NotNull Project project,
+	public boolean createRequest(@NotNull XDebugSession debugSession,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror)
@@ -55,10 +58,16 @@ public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBa
 			{
 				eventRequest.disable();
 			}
-			return createRequestImpl(project, virtualMachine, breakpoint, typeMirror);
+			return createRequestImpl(debugSession.getProject(), virtualMachine, breakpoint, typeMirror);
 		}
 		catch(VMDisconnectedException ignored)
 		{
+		}
+		catch(TypeMirrorUnloadedException e)
+		{
+			debugSession.getConsoleView().print(e.getFullName(), ConsoleViewContentType.ERROR_OUTPUT);
+			debugSession.getConsoleView().print("You can fix this error - restart debug. If you can repeat this error, " +
+					"please report it here 'https://github.com/consulo/consulo-dotnet/issues'", ConsoleViewContentType.ERROR_OUTPUT);
 		}
 		return false;
 	}
@@ -66,5 +75,5 @@ public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBa
 	protected abstract boolean createRequestImpl(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
-			@Nullable TypeMirror typeMirror);
+			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException;
 }

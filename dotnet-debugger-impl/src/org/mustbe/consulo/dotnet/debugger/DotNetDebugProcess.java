@@ -62,7 +62,7 @@ public class DotNetDebugProcess extends XDebugProcess
 				{
 					val type = (DotNetLineBreakpointType) breakpoint.getType();
 
-					type.createRequest(project, virtualMachine, breakpoint, null);
+					type.createRequest(getSession(), virtualMachine, breakpoint, null);
 
 					return false;
 				}

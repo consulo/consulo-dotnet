@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.debugger.linebreakType;
 
+import javax.lang.model.element.UnknownElementException;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.icons.AllIcons;
@@ -79,7 +81,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	protected boolean createRequestImpl(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
-			@Nullable TypeMirror typeMirror)
+			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException
 	{
 		Pair<BreakpointResult, Location> resultPair = findLocationImpl(project, virtualMachine, breakpoint, typeMirror);
 		try
@@ -158,7 +160,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 	public Pair<BreakpointResult, Location> findLocationImpl(@NotNull final Project project,
 			@NotNull final DotNetVirtualMachine virtualMachine,
 			@NotNull final XLineBreakpoint<?> lineBreakpoint,
-			@Nullable final TypeMirror typeMirror)
+			@Nullable final TypeMirror typeMirror) throws TypeMirrorUnloadedException
 	{
 		final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(lineBreakpoint.getFileUrl());
 		if(fileByUrl == null)
@@ -212,19 +214,28 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		}
 
 		MethodMirror targetMirror = null;
-		int index = -1;
-		highLoop:
-		for(MethodMirror methodMirror : mirror.methods())
+		int index = 0;
+		try
 		{
-			for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
+			targetMirror = null;
+			index = -1;
+			highLoop:
+			for(MethodMirror methodMirror : mirror.methods())
 			{
-				if(entry.line == (lineBreakpoint.getLine() + 1))
+				for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
 				{
-					targetMirror = methodMirror;
-					index = entry.offset;
-					break highLoop;
+					if(entry.line == (lineBreakpoint.getLine() + 1))
+					{
+						targetMirror = methodMirror;
+						index = entry.offset;
+						break highLoop;
+					}
 				}
 			}
+		}
+		catch(UnknownElementException e)
+		{
+			throw new TypeMirrorUnloadedException(mirror, e);
 		}
 
 		if(targetMirror == null)

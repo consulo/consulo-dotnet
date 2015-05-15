@@ -381,7 +381,7 @@ public class DotNetDebugThread extends Thread
 
 					val type = (DotNetLineBreakpointType) breakpoint.getType();
 
-					type.createRequest(mySession.getProject(), myVirtualMachine, breakpoint, typeMirror);
+					type.createRequest(mySession, myVirtualMachine, breakpoint, typeMirror);
 				}
 			}
 		}
