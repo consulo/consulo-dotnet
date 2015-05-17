@@ -41,7 +41,6 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import lombok.val;
 import mono.debugger.Location;
 import mono.debugger.LocationImpl;
 import mono.debugger.MethodMirror;
@@ -194,13 +193,20 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		{
 			return INVALID;
 		}
-		DotNetTypeDeclaration typeDeclaration = PsiTreeUtil.getParentOfType(codeBlockOwner, DotNetTypeDeclaration.class);
+		final DotNetTypeDeclaration typeDeclaration = PsiTreeUtil.getParentOfType(codeBlockOwner, DotNetTypeDeclaration.class);
 		if(typeDeclaration == null)
 		{
 			return INVALID;
 		}
 
-		val vmQualifiedName = DotNetVirtualMachineUtil.toVMQualifiedName(typeDeclaration);
+		String vmQualifiedName = ApplicationManager.getApplication().runReadAction(new Computable<String>()
+		{
+			@Override
+			public String compute()
+			{
+				return DotNetVirtualMachineUtil.toVMQualifiedName(typeDeclaration);
+			}
+		});
 		if(typeMirror != null && !Comparing.equal(vmQualifiedName, typeMirror.qualifiedName()))
 		{
 			return WRONG_TYPE;
