@@ -22,15 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
-import mono.debugger.FieldMirror;
-import mono.debugger.FieldOrPropertyMirror;
-import mono.debugger.InvalidFieldIdException;
-import mono.debugger.ObjectValueMirror;
-import mono.debugger.PropertyMirror;
-import mono.debugger.ThreadMirror;
-import mono.debugger.ThrowValueException;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
+import mono.debugger.*;
 
 /**
  * @author VISTALL
@@ -88,6 +80,9 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 		catch(InvalidFieldIdException ignored)
 		{
 		}
+		catch(VMDisconnectedException ignored)
+		{
+		}
 		return null;
 	}
 
@@ -102,6 +97,9 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 		{
 		}
 		catch(InvalidFieldIdException ignored)
+		{
+		}
+		catch(VMDisconnectedException ignored)
 		{
 		}
 	}
