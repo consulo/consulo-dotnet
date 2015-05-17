@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 
@@ -33,6 +34,7 @@ public class DotNetTypeDeclarationUtil
 
 
 	@Nullable
+	@RequiredReadAction
 	public static String getVmQName(@NotNull DotNetTypeDeclaration typeDeclaration)
 	{
 		String vmQName;

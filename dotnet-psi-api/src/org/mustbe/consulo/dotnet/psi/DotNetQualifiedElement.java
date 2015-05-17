@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -27,8 +28,10 @@ import org.jetbrains.annotations.Nullable;
 public interface DotNetQualifiedElement extends DotNetNamedElement
 {
 	@Nullable
+	@RequiredReadAction
 	String getPresentableParentQName();
 
 	@Nullable
+	@RequiredReadAction
 	String getPresentableQName();
 }

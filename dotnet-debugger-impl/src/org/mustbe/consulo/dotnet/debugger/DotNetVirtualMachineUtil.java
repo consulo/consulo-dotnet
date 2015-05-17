@@ -41,6 +41,7 @@ public class DotNetVirtualMachineUtil
 	}
 
 	@NotNull
+	@RequiredReadAction
 	public static String toVMQualifiedName(DotNetTypeDeclaration qualifiedElement)
 	{
 		String vmQName = qualifiedElement.getVmQName();

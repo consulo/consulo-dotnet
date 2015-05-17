@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.psi;
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiNameIdentifierOwner;
 
@@ -49,8 +50,10 @@ public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetMod
 	DotNetTypeRef getTypeRefForEnumConstants();
 
 	@Nullable
+	@RequiredReadAction
 	String getVmQName();
 
 	@Nullable
+	@RequiredReadAction
 	String getVmName();
 }
