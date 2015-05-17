@@ -27,10 +27,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNavigatable;
+import mono.debugger.InvalidFieldIdException;
+import mono.debugger.InvalidStackFrameException;
 import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.MethodParameterMirror;
 import mono.debugger.StackFrameMirror;
+import mono.debugger.ThrowValueException;
 import mono.debugger.TypeMirror;
+import mono.debugger.VMDisconnectedException;
 import mono.debugger.Value;
 import mono.debugger.util.ImmutablePair;
 
@@ -96,14 +100,14 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariable()
+	public Value<?> getValueOfVariableImpl() throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException, InvalidStackFrameException
 	{
 		return myFrame.localOrParameterValue(myParameter);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void setValueForVariable(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull Value<?> value)
 	{
 		myFrame.setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(myParameter, value));
 	}

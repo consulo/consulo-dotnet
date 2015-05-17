@@ -63,13 +63,13 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariable()
+	public Value<?> getValueOfVariableImpl()
 	{
 		return myObjectValueMirror;
 	}
 
 	@Override
-	public void setValueForVariable(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull Value<?> value)
 	{
 
 	}

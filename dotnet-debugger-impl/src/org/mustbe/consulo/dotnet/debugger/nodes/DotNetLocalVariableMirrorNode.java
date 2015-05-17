@@ -119,14 +119,14 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariable()
+	public Value<?> getValueOfVariableImpl()
 	{
 		return myFrame.localOrParameterValue(myLocal);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void setValueForVariable(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull Value<?> value)
 	{
 		myFrame.setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(myLocal, value));
 	}

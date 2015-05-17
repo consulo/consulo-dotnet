@@ -52,13 +52,13 @@ public class DotNetArrayValueMirrorNode extends DotNetAbstractVariableMirrorNode
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariable()
+	public Value<?> getValueOfVariableImpl()
 	{
 		return myValue;
 	}
 
 	@Override
-	public void setValueForVariable(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull Value<?> value)
 	{
 		myArrayValueMirror.set(myIndex, value);
 	}

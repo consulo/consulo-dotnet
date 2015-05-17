@@ -18,12 +18,14 @@ package org.mustbe.consulo.dotnet.debugger.nodes;
 
 import javax.swing.Icon;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.NullableFunction;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
@@ -36,6 +38,7 @@ import mono.debugger.*;
  * @author VISTALL
  * @since 11.04.14
  */
+@Logger
 public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirrorNode
 {
 	private XValueModifier myValueModifier = new XValueModifier()
@@ -84,15 +87,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 			if(setValue != null)
 			{
-
-				try
-				{
-					setValueForVariable(setValue);
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				setValueForVariable(setValue);
 			}
 
 			callback.valueModified();
@@ -102,7 +97,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		@Nullable
 		public String getInitialValueEditorText()
 		{
-			Value<?> valueOfVariable = getValueOfVariable();
+			Value<?> valueOfVariable = getValueOfVariableSafe();
 			if(valueOfVariable == null)
 			{
 				return null;
@@ -173,12 +168,30 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	}
 
 	@Nullable
-	public abstract Value<?> getValueOfVariable();
+	public abstract Value<?> getValueOfVariableImpl() throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException,
+			InvalidStackFrameException;
+
+	public abstract void setValueForVariableImpl(@NotNull Value<?> value) throws ThrowValueException, InvalidFieldIdException,
+			VMDisconnectedException, InvalidStackFrameException;
+
+	@Nullable
+	public Value<?> getValueOfVariableSafe()
+	{
+		return invoke(new NullableFunction<Void, Value<?>>()
+		{
+			@Nullable
+			@Override
+			public Value<?> fun(Void o)
+			{
+				return getValueOfVariableImpl();
+			}
+		}, null);
+	}
 
 	@Nullable
 	public TypeMirror getTypeOfVariableForChildren()
 	{
-		Value<?> valueOfVariable = getValueOfVariable();
+		Value<?> valueOfVariable = getValueOfVariableSafe();
 		if(valueOfVariable == null)
 		{
 			return getTypeOfVariable();
@@ -193,13 +206,45 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		}
 	}
 
-	@Nullable
-	public Value<?> getValueOfVariableForChildren()
+	public void setValueForVariable(@NotNull Value<?> value)
 	{
-		return getValueOfVariable();
+		invoke(new NullableFunction<Value<?>, Void>()
+		{
+			@Nullable
+			@Override
+			public Void fun(Value<?> o)
+			{
+				setValueForVariableImpl(o);
+				return null;
+			}
+		}, value);
 	}
 
-	public abstract void setValueForVariable(@NotNull Value<?> value);
+	@Nullable
+	protected <P, R> R invoke(NullableFunction<P, R> func, P param)
+	{
+		try
+		{
+			return func.fun(param);
+		}
+		catch(ThrowValueException ignored)
+		{
+		}
+		catch(InvalidFieldIdException ignored)
+		{
+		}
+		catch(VMDisconnectedException ignored)
+		{
+		}
+		catch(InvalidStackFrameException ignored)
+		{
+		}
+		catch(Exception e)
+		{
+			LOGGER.error(e);
+		}
+		return null;
+	}
 
 	@Nullable
 	@Override
@@ -222,7 +267,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		}
 
 		XValueChildrenList childrenList = new XValueChildrenList();
-		val value = getValueOfVariable();
+		val value = getValueOfVariableSafe();
 		for(DotNetLogicValueView dotNetLogicValueView : DotNetLogicValueView.IMPL)
 		{
 			if(dotNetLogicValueView.canHandle(myDebugContext, typeOfVariable))
@@ -236,7 +281,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 	public boolean canHaveChildren()
 	{
-		final Value<?> valueOfVariable = getValueOfVariable();
+		final Value<?> valueOfVariable = getValueOfVariableSafe();
 		return valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror || valueOfVariable instanceof
 				StringValueMirror;
 	}
@@ -244,7 +289,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@Override
 	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
-		final Value<?> valueOfVariable = getValueOfVariable();
+		final Value<?> valueOfVariable = getValueOfVariableSafe();
 
 		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myThreadMirror, getTypeOfVariable(), valueOfVariable),
 				canHaveChildren());

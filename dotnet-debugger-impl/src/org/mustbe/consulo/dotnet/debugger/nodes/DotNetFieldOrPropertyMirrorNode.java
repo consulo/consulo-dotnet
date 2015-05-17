@@ -33,8 +33,7 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	private final FieldOrPropertyMirror myFieldOrPropertyMirror;
 	private final ObjectValueMirror myObjectValueMirror;
 
-	public DotNetFieldOrPropertyMirrorNode(
-			@NotNull DotNetDebugContext debuggerContext,
+	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
 			@NotNull ThreadMirror threadMirror,
 			@Nullable ObjectValueMirror objectValueMirror)
@@ -68,39 +67,15 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariable()
+	public Value<?> getValueOfVariableImpl() throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException, InvalidStackFrameException
 	{
-		try
-		{
-			return myFieldOrPropertyMirror.value(myThreadMirror, myObjectValueMirror);
-		}
-		catch(ThrowValueException ignored)
-		{
-		}
-		catch(InvalidFieldIdException ignored)
-		{
-		}
-		catch(VMDisconnectedException ignored)
-		{
-		}
-		return null;
+		return myFieldOrPropertyMirror.value(myThreadMirror, myObjectValueMirror);
 	}
 
 	@Override
-	public void setValueForVariable(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull Value<?> value) throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException,
+			InvalidStackFrameException
 	{
-		try
-		{
-			myFieldOrPropertyMirror.setValue(myThreadMirror, myObjectValueMirror, value);
-		}
-		catch(ThrowValueException ignored)
-		{
-		}
-		catch(InvalidFieldIdException ignored)
-		{
-		}
-		catch(VMDisconnectedException ignored)
-		{
-		}
+		myFieldOrPropertyMirror.setValue(myThreadMirror, myObjectValueMirror, value);
 	}
 }

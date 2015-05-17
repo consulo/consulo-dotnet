@@ -50,13 +50,13 @@ public class DotNetSimpleValueMirrorNode extends DotNetAbstractVariableMirrorNod
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariable()
+	public Value<?> getValueOfVariableImpl()
 	{
 		return myValue;
 	}
 
 	@Override
-	public void setValueForVariable(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull Value<?> value)
 	{
 
 	}
