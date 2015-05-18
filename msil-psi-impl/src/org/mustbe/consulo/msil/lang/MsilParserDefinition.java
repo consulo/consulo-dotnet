@@ -18,7 +18,7 @@ package org.mustbe.consulo.msil.lang;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.msil.lang.lexer._MsilLexer;
+import org.mustbe.consulo.msil.lang.lexer.MsilLexer;
 import org.mustbe.consulo.msil.lang.parser.MsilParser;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
@@ -46,7 +46,7 @@ public class MsilParserDefinition implements ParserDefinition
 	@Override
 	public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion)
 	{
-		return new _MsilLexer();
+		return new MsilLexer();
 	}
 
 	@NotNull

@@ -327,8 +327,35 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		expect(builder, _CTOR_KEYWORD, "'.ctor' expected");
 		parseParameterList(builder);
 		expect(builder, EQ, "'=' expected");
-		expect(builder, LPAR, "'(' expected");
-		expect(builder, RPAR, "')' expected");
+
+		if(builder.getTokenType() == MsilTokens.LPAR)
+		{
+			PsiBuilder.Marker signatureMark = builder.mark();
+
+			builder.advanceLexer();
+
+			while(!builder.eof())
+			{
+				if(builder.getTokenType() == RPAR)
+				{
+					break;
+				}
+				else
+				{
+					if(builder.getTokenType() == HEX_NUMBER)
+					{
+						builder.advanceLexer();
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+			expect(builder, RPAR, "')' expected");
+
+			signatureMark.done(CUSTOM_ATTRIBUTE_SIGNATURE);
+		}
 
 		mark.done(CUSTOM_ATTRIBUTE);
 	}

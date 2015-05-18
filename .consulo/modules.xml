@@ -228,6 +228,7 @@
           <orderEntry type="module" module-name="msil-psi-api" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-api" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-impl" exported="" />
+          <orderEntry type="library" name="joou" level="project" />
         </module-layer>
       </module>
       <module name="composite-formatting-string" dirurl="file://$PROJECT_DIR$/composite-formatting-string" current-layer="Default">

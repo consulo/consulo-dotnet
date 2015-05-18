@@ -17,7 +17,7 @@
 package org.mustbe.consulo.msil.ide.highlight;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.msil.lang.lexer._MsilLexer;
+import org.mustbe.consulo.msil.lang.lexer.MsilLexer;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import com.intellij.lexer.Lexer;
@@ -36,7 +36,7 @@ public class MsilSyntaxHighlighter extends SyntaxHighlighterBase
 	@Override
 	public Lexer getHighlightingLexer()
 	{
-		return new _MsilLexer();
+		return new MsilLexer();
 	}
 
 	@NotNull
@@ -55,7 +55,7 @@ public class MsilSyntaxHighlighter extends SyntaxHighlighterBase
 		{
 			return pack(DefaultLanguageHighlighterColors.KEYWORD);
 		}
-		else if(elementType == MsilTokens.NUMBER)
+		else if(elementType == MsilTokens.NUMBER || elementType == MsilTokens.HEX_NUMBER)
 		{
 			return pack(DefaultLanguageHighlighterColors.NUMBER);
 		}

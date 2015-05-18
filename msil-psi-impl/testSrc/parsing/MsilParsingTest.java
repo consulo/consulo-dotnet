@@ -34,6 +34,11 @@ public class MsilParsingTest extends ParsingTestCase
 		doTest(true);
 	}
 
+	public void testTestCustomAttributeSignature()
+	{
+		doTest(true);
+	}
+
 	@Override
 	protected String getTestDataPath()
 	{

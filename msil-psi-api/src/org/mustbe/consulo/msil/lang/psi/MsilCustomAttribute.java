@@ -17,8 +17,11 @@
 package org.mustbe.consulo.msil.lang.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 
 /**
@@ -29,5 +32,14 @@ import org.mustbe.consulo.dotnet.psi.DotNetType;
 public interface MsilCustomAttribute extends DotNetAttribute
 {
 	@Nullable
+	@RequiredReadAction
 	DotNetType getType();
+
+	@NotNull
+	@RequiredReadAction
+	DotNetParameterList getParameterList();
+
+	@NotNull
+	@RequiredReadAction
+	MsilCustomAttributeSignature getSignature();
 }

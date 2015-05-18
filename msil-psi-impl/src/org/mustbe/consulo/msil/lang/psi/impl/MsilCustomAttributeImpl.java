@@ -18,10 +18,14 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
+import org.mustbe.consulo.msil.lang.psi.MsilCustomAttributeSignature;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilCustomAttributeStub;
 import com.intellij.lang.ASTNode;
@@ -49,6 +53,22 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 	public DotNetType getType()
 	{
 		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
+	}
+
+	@NotNull
+	@Override
+	@RequiredReadAction
+	public DotNetParameterList getParameterList()
+	{
+		return getRequiredStubOrPsiChild(MsilStubElements.PARAMETER_LIST);
+	}
+
+	@NotNull
+	@Override
+	@RequiredReadAction
+	public MsilCustomAttributeSignature getSignature()
+	{
+		return getRequiredStubOrPsiChild(MsilStubElements.CUSTOM_ATTRIBUTE_SIGNATURE);
 	}
 
 	@Nullable

@@ -1,0 +1,287 @@
+// Consulo API Decompiler stub source generated from bytecode
+// Implementation of methods is not available
+
+.class public interface abstract java.util.List extends System.Object implements java.util.Collection, java.lang.Iterable
+{
+	.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+	(
+		01 00 43 3C 45 3A 4C 6A 61 76 61 2F 6C 61 6E 67
+		2F 4F 62 6A 65 63 74 3B 3E 4C 6A 61 76 61 2F 6C
+		61 6E 67 2F 4F 62 6A 65 63 74 3B 4C 6A 61 76 61
+		2F 75 74 69 6C 2F 43 6F 6C 6C 65 63 74 69 6F 6E
+		3C 54 45 3B 3E 3B 00 00
+	)
+
+	.custom IKVM.Attributes.ImplementsAttribute::.ctor(string[]) =
+	(
+		01 00 01 00 00 00 14 6A 61 76 61 2E 75 74 69 6C
+		2E 43 6F 6C 6C 65 63 74 69 6F 6E 00 00
+	)
+
+	.class nested public abstract sealed __DefaultMethods extends System.Object
+	{
+		.custom IKVM.Attributes.HideFromJavaAttribute::.ctor() =
+		(
+			01 00 00 00
+		)
+
+		.method public static void replaceAll(class java.util.List, class java.util.function.UnaryOperator)
+		{
+		}
+
+		.method public static void sort(class java.util.List, class java.util.Comparator)
+		{
+		}
+
+		.method public static class java.util.Spliterator spliterator(class java.util.List)
+		{
+		}
+	}
+
+	.method public hidebysig abstract virtual bool add(object e)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 06 28 54 45 3B 29 5A 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual class java.util.Iterator iterator()
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 1B 28 29 4C 6A 61 76 61 2F 75 74 69 6C 2F
+			49 74 65 72 61 74 6F 72 3C 54 45 3B 3E 3B 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual int32 size()
+	{
+	}
+
+	.method public hidebysig abstract virtual object[] toArray(object[] a)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 20 3C 54 3A 4C 6A 61 76 61 2F 6C 61 6E 67
+			2F 4F 62 6A 65 63 74 3B 3E 28 5B 54 54 3B 29 5B
+			54 54 3B 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual object get(int32 index)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 06 28 49 29 54 45 3B 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual object remove(int32 index)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 06 28 49 29 54 45 3B 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual bool remove(object o)
+	{
+	}
+
+	.method public hidebysig abstract virtual void clear()
+	{
+	}
+
+	.method public hidebysig abstract virtual void add(int32 index, object element)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 07 28 49 54 45 3B 29 56 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual bool isEmpty()
+	{
+	}
+
+	.method public hidebysig abstract virtual bool equals(object o)
+	{
+	}
+
+	.method public hidebysig abstract virtual bool removeAll(class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 1C 28 4C 6A 61 76 61 2F 75 74 69 6C 2F 43
+			6F 6C 6C 65 63 74 69 6F 6E 3C 2A 3E 3B 29 5A 00
+			00
+		)
+	}
+
+	.method public hidebysig abstract virtual bool addAll(class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 1F 28 4C 6A 61 76 61 2F 75 74 69 6C 2F 43
+			6F 6C 6C 65 63 74 69 6F 6E 3C 2B 54 45 3B 3E 3B
+			29 5A 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual object[] toArray()
+	{
+	}
+
+	.method public hidebysig abstract virtual class java.util.List subList(int32 fromIndex, int32 toIndex)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 19 28 49 49 29 4C 6A 61 76 61 2F 75 74 69
+			6C 2F 4C 69 73 74 3C 54 45 3B 3E 3B 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual int32 indexOf(object o)
+	{
+	}
+
+	.method public hidebysig abstract virtual bool contains(object o)
+	{
+	}
+
+	.method public hidebysig abstract virtual int32 hashCode()
+	{
+	}
+
+	.method public hidebysig abstract virtual object set(int32 index, object element)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 09 28 49 54 45 3B 29 54 45 3B 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual class java.util.ListIterator listIterator()
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 1F 28 29 4C 6A 61 76 61 2F 75 74 69 6C 2F
+			4C 69 73 74 49 74 65 72 61 74 6F 72 3C 54 45 3B
+			3E 3B 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual bool containsAll(class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 1C 28 4C 6A 61 76 61 2F 75 74 69 6C 2F 43
+			6F 6C 6C 65 63 74 69 6F 6E 3C 2A 3E 3B 29 5A 00
+			00
+		)
+	}
+
+	.method public hidebysig abstract virtual bool addAll(int32 index, class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 20 28 49 4C 6A 61 76 61 2F 75 74 69 6C 2F
+			43 6F 6C 6C 65 63 74 69 6F 6E 3C 2B 54 45 3B 3E
+			3B 29 5A 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual bool retainAll(class java.util.Collection c)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 1C 28 4C 6A 61 76 61 2F 75 74 69 6C 2F 43
+			6F 6C 6C 65 63 74 69 6F 6E 3C 2A 3E 3B 29 5A 00
+			00
+		)
+	}
+
+	.method public hidebysig abstract virtual void replaceAll(class java.util.function.UnaryOperator operator)
+	{
+		.custom IKVM.Attributes.ModifiersAttribute::.ctor(valuetype IKVM.Attributes.Modifiers) =
+		(
+			01 00 01 00 00 00
+		)
+
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 2A 28 4C 6A 61 76 61 2F 75 74 69 6C 2F 66
+			75 6E 63 74 69 6F 6E 2F 55 6E 61 72 79 4F 70 65
+			72 61 74 6F 72 3C 54 45 3B 3E 3B 29 56 00 00
+		)
+	}
+
+	.method public static specialname void '<default>replaceAll'(class java.util.List, class java.util.function.UnaryOperator)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor(uint8[]) =
+		(
+			01 00 06 00 00 00 A1 28 67 67 68 94 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual void sort(class java.util.Comparator c)
+	{
+		.custom IKVM.Attributes.ModifiersAttribute::.ctor(valuetype IKVM.Attributes.Modifiers) =
+		(
+			01 00 01 00 00 00
+		)
+
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 1F 28 4C 6A 61 76 61 2F 75 74 69 6C 2F 43
+			6F 6D 70 61 72 61 74 6F 72 3C 2D 54 45 3B 3E 3B
+			29 56 00 00
+		)
+	}
+
+	.method public static specialname void '<default>sort'(class java.util.List, class java.util.Comparator)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor(uint8[]) =
+		(
+			01 00 03 00 00 00 A1 44 69 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual int32 lastIndexOf(object o)
+	{
+	}
+
+	.method public hidebysig abstract virtual class java.util.ListIterator listIterator(int32 index)
+	{
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 20 28 49 29 4C 6A 61 76 61 2F 75 74 69 6C
+			2F 4C 69 73 74 49 74 65 72 61 74 6F 72 3C 54 45
+			3B 3E 3B 00 00
+		)
+	}
+
+	.method public hidebysig abstract virtual class java.util.Spliterator spliterator()
+	{
+		.custom IKVM.Attributes.ModifiersAttribute::.ctor(valuetype IKVM.Attributes.Modifiers) =
+		(
+			01 00 01 00 00 00
+		)
+
+		.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+		(
+			01 00 1E 28 29 4C 6A 61 76 61 2F 75 74 69 6C 2F
+			53 70 6C 69 74 65 72 61 74 6F 72 3C 54 45 3B 3E
+			3B 00 00
+		)
+	}
+
+	.method public static specialname class java.util.Spliterator '<default>spliterator'(class java.util.List)
+	{
+		.custom IKVM.Attributes.LineNumberTableAttribute::.ctor(uint16) =
+		(
+			01 00 AF 02 00 00
+		)
+	}
+}

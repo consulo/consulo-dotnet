@@ -21,6 +21,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeWithTypeArguments;
 import org.mustbe.consulo.msil.lang.psi.MsilAssemblyEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
+import org.mustbe.consulo.msil.lang.psi.MsilCustomAttributeSignature;
 import org.mustbe.consulo.msil.lang.psi.MsilEventEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
@@ -82,5 +83,10 @@ public class MsilVisitor extends PsiElementVisitor
 	public void visitTypeWithTypeArguments(DotNetTypeWithTypeArguments type)
 	{
 		visitElement(type);
+	}
+
+	public void visitCustomAttributeSignature(MsilCustomAttributeSignature signature)
+	{
+		visitElement(signature);
 	}
 }
