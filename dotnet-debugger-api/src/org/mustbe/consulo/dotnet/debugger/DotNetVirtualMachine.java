@@ -68,6 +68,7 @@ public class DotNetVirtualMachine
 		myStepRequests.clear();
 		myLoadedTypeMirrors.clear();
 		myVirtualMachine.dispose();
+		myBreakpointEventRequests.clear();
 	}
 
 	public void addStepRequest(@NotNull StepRequest stepRequest)
@@ -81,15 +82,17 @@ public class DotNetVirtualMachine
 		myStepRequests.remove(stepRequest);
 	}
 
-	public void putRequest(@NotNull XBreakpoint<?> breakpoint, @Nullable EventRequest request)
+	@Nullable
+	public EventRequest putRequest(@NotNull XBreakpoint<?> breakpoint, @Nullable EventRequest request)
 	{
 		if(request == null)
 		{
-			myBreakpointEventRequests.remove(breakpoint);
+			return myBreakpointEventRequests.remove(breakpoint);
 		}
 		else
 		{
 			myBreakpointEventRequests.put(breakpoint, request);
+			return request;
 		}
 	}
 

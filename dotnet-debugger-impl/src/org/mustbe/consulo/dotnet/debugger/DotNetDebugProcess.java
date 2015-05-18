@@ -74,14 +74,10 @@ public class DotNetDebugProcess extends XDebugProcess
 				@Override
 				public boolean process(DotNetVirtualMachine virtualMachine)
 				{
-					EventRequest eventRequest = virtualMachine.getRequest(breakpoint);
+					EventRequest eventRequest = virtualMachine.putRequest(breakpoint, null);
 					if(eventRequest != null)
 					{
 						eventRequest.disable();
-					}
-
-					if(eventRequest != null)
-					{
 						virtualMachine.eventRequestManager().deleteEventRequest(eventRequest);
 					}
 					return false;
