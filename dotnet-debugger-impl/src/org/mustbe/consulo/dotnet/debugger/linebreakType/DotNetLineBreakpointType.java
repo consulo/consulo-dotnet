@@ -96,7 +96,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 						BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(resultPair.getSecond());
 						breakpointRequest.enable();
 
-						breakpoint.putUserData(DotNetAbstractBreakpointType.EVENT_REQUEST, breakpointRequest);
+						virtualMachine.putRequest(breakpoint, breakpointRequest);
 					}
 					return true;
 			}

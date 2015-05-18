@@ -24,7 +24,6 @@ import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointTypeBase;
@@ -39,8 +38,6 @@ import mono.debugger.request.EventRequest;
  */
 public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBase
 {
-	public static Key<EventRequest> EVENT_REQUEST = Key.create("event-request-for-line-breakpoint");
-
 	public DotNetAbstractBreakpointType(@NonNls @NotNull String id, @Nls @NotNull String title, @Nullable XDebuggerEditorsProvider editorsProvider)
 	{
 		super(id, title, editorsProvider);
@@ -53,7 +50,7 @@ public abstract class DotNetAbstractBreakpointType extends XLineBreakpointTypeBa
 	{
 		try
 		{
-			EventRequest eventRequest = breakpoint.getUserData(DotNetAbstractBreakpointType.EVENT_REQUEST);
+			EventRequest eventRequest = virtualMachine.getRequest(breakpoint);
 			if(eventRequest != null)
 			{
 				eventRequest.disable();

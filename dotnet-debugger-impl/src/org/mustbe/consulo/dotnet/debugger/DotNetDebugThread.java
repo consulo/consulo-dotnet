@@ -446,7 +446,7 @@ public class DotNetDebugThread extends Thread
 	{
 		for(XLineBreakpoint<XBreakpointProperties> lineBreakpoint : getEnabledBreakpoints())
 		{
-			lineBreakpoint.putUserData(DotNetAbstractBreakpointType.EVENT_REQUEST, null);
+			myVirtualMachine.putRequest(lineBreakpoint, null);
 
 			myDebuggerManager.getBreakpointManager().updateBreakpointPresentation(lineBreakpoint, null, null);
 		}

@@ -30,12 +30,14 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import mono.debugger.AssemblyMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.VMDisconnectedException;
 import mono.debugger.VirtualMachine;
 import mono.debugger.event.AssemblyUnloadEvent;
+import mono.debugger.request.EventRequest;
 import mono.debugger.request.EventRequestManager;
 import mono.debugger.request.StepRequest;
 
@@ -47,6 +49,7 @@ public class DotNetVirtualMachine
 {
 	private final Map<String, TypeMirror> myLoadedTypeMirrors = ContainerUtil.newConcurrentMap();
 	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
+	private final Map<XBreakpoint, EventRequest> myBreakpointEventRequests = ContainerUtil.newConcurrentMap();
 
 	private final VirtualMachine myVirtualMachine;
 
@@ -76,6 +79,24 @@ public class DotNetVirtualMachine
 	{
 		stepRequest.disable();
 		myStepRequests.remove(stepRequest);
+	}
+
+	public void putRequest(@NotNull XBreakpoint<?> breakpoint, @Nullable EventRequest request)
+	{
+		if(request == null)
+		{
+			myBreakpointEventRequests.remove(breakpoint);
+		}
+		else
+		{
+			myBreakpointEventRequests.put(breakpoint, request);
+		}
+	}
+
+	@Nullable
+	public EventRequest getRequest(XBreakpoint<?> breakpoint)
+	{
+		return myBreakpointEventRequests.get(breakpoint);
 	}
 
 	public void stopStepRequests()
