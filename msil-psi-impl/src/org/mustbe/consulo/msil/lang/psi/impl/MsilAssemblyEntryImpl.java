@@ -19,6 +19,8 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilAssemblyEntry;
+import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilAssemblyEntryStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -51,5 +53,12 @@ public class MsilAssemblyEntryImpl extends MsilStubElementImpl<MsilAssemblyEntry
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public MsilCustomAttribute[] getAttributes()
+	{
+		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
 	}
 }
