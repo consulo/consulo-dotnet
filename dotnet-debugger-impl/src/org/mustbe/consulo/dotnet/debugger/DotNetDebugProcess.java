@@ -53,8 +53,6 @@ public class DotNetDebugProcess extends XDebugProcess
 		@Override
 		public void breakpointAdded(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
 		{
-			val project = getSession().getProject();
-
 			myDebugThread.processAnyway(new Processor<DotNetVirtualMachine>()
 			{
 				@Override
