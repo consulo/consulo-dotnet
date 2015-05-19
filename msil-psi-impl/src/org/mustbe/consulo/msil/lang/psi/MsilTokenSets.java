@@ -72,7 +72,7 @@ public interface MsilTokenSets extends MsilTokens
 			OBJECT_KEYWORD,
 			STRING_KEYWORD,
 			UINT64_KEYWORD,
-			FLOAT_KEYWORD,
+			FLOAT32_KEYWORD,
 			INT8_KEYWORD,
 			UINT8_KEYWORD,
 			FLOAT64_KEYWORD,

@@ -55,7 +55,7 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 			put(MsilTokens.UINT32_KEYWORD, "System.UInt32");
 			put(MsilTokens.INT64_KEYWORD, "System.Int64");
 			put(MsilTokens.UINT64_KEYWORD, "System.UInt64");
-			put(MsilTokens.FLOAT_KEYWORD, "System.Single");
+			put(MsilTokens.FLOAT32_KEYWORD, "System.Single");
 			put(MsilTokens.FLOAT64_KEYWORD, "System.Double");
 			put(MsilTokens.VOID_KEYWORD, "System.Void");
 		}

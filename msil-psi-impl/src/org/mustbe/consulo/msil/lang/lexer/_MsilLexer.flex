@@ -118,7 +118,7 @@ VALID_IDENTIFIERS={IDENTIFIERS}({SEPARATOR}{IDENTIFIERS})*
 
 	"uint64"       { return MsilTokens.UINT64_KEYWORD; }
 
-	"float"        { return MsilTokens.FLOAT_KEYWORD; }
+	"float32"      { return MsilTokens.FLOAT32_KEYWORD; }
 
 	"float64"      { return MsilTokens.FLOAT64_KEYWORD; }
 
