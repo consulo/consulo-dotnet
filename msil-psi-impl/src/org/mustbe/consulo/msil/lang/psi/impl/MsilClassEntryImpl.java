@@ -167,6 +167,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return getStubOrPsiChildren(MsilStubTokenSets.MEMBER_STUBS, DotNetNamedElement.ARRAY_FACTORY);
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
@@ -187,6 +188,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return true;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetModifierList getModifierList()

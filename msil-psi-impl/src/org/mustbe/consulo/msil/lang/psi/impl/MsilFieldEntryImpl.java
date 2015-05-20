@@ -17,7 +17,11 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
+import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
@@ -36,6 +40,14 @@ public class MsilFieldEntryImpl extends MsilQVariableImpl implements MsilFieldEn
 	public MsilFieldEntryImpl(@NotNull MsilVariableEntryStub stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
+	}
+
+	@RequiredReadAction
+	@Nullable
+	@Override
+	public DotNetExpression getInitializer()
+	{
+		return getStubOrPsiChild(MsilStubElements.CONSTANT_VALUE);
 	}
 
 	@Override

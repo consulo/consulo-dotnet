@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,19 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import org.mustbe.consulo.dotnet.psi.DotNetArrayType;
 
 /**
  * @author VISTALL
- * @since 04.12.13.
+ * @since 19.05.2015
  */
-public interface DotNetVariable extends PsiNameIdentifierOwner, DotNetNamedElement, DotNetModifierListOwner
+public interface MsilArrayType extends DotNetArrayType
 {
-	@RequiredReadAction
-	boolean isConstant();
-
-	@Nullable
-	@RequiredReadAction
-	PsiElement getConstantKeywordElement();
-
 	@NotNull
 	@RequiredReadAction
-	DotNetTypeRef toTypeRef(boolean resolveFromInitializer);
-
-	@Nullable
-	@RequiredReadAction
-	DotNetType getType();
-
-	@Nullable
-	@RequiredReadAction
-	DotNetExpression getInitializer();
+	MsilArrayDimension[] getDimensions();
 }

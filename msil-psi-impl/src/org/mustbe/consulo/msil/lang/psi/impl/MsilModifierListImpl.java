@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
@@ -103,6 +104,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 		return modifiers.toArray(new DotNetModifier[modifiers.size()]);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetAttribute[] getAttributes()
@@ -125,7 +127,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 			assert methodEntry != null;
 			int i = ArrayUtil.indexOf(parameterList.getParameters(), parentByStub);
 			assert i != -1;
-			return methodEntry.getParameterAttributes(i + 1);
+			return methodEntry.getParameterAttributes(i);
 		}
 
 		return DotNetAttribute.EMPTY_ARRAY;

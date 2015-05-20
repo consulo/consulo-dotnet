@@ -17,6 +17,8 @@
 package org.mustbe.consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetMethodDeclaration;
 
 /**
@@ -29,8 +31,20 @@ public interface MsilMethodEntry extends MsilEntry, DotNetMethodDeclaration
 	String getNameFromBytecode();
 
 	@NotNull
+	@RequiredReadAction
 	MsilCustomAttribute[] getAttributes();
 
+	/**
+	 * @param index zero based index
+	 */
 	@NotNull
+	@RequiredReadAction
 	MsilCustomAttribute[] getParameterAttributes(int index);
+
+	/**
+	 * @param index zero based index
+	 */
+	@Nullable
+	@RequiredReadAction
+	MsilConstantValue getConstantValue(int index);
 }

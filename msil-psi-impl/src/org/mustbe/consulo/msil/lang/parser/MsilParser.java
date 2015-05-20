@@ -16,6 +16,9 @@
 
 package org.mustbe.consulo.msil.lang.parser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilElements;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
@@ -36,6 +39,21 @@ import lombok.val;
  */
 public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilElements
 {
+	private static final Map<IElementType, IElementType> ourConstantValues = new HashMap<IElementType, IElementType>();
+	static
+	{
+		ourConstantValues.put(FLOAT32_KEYWORD, DOUBLE_LITERAL);
+		ourConstantValues.put(FLOAT64_KEYWORD, DOUBLE_LITERAL);
+		ourConstantValues.put(INT8_KEYWORD, NUMBER_LITERAL);
+		ourConstantValues.put(UINT8_KEYWORD, NUMBER_LITERAL);
+		ourConstantValues.put(INT16_KEYWORD, NUMBER_LITERAL);
+		ourConstantValues.put(UINT16_KEYWORD, NUMBER_LITERAL);
+		ourConstantValues.put(INT32_KEYWORD, NUMBER_LITERAL);
+		ourConstantValues.put(UINT32_KEYWORD, NUMBER_LITERAL);
+		ourConstantValues.put(INT64_KEYWORD, NUMBER_LITERAL);
+		ourConstantValues.put(UINT64_KEYWORD, NUMBER_LITERAL);
+	}
+
 	@NotNull
 	@Override
 	public ASTNode parse(@NotNull IElementType elementType, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
@@ -103,9 +121,11 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		if(expect(builder, LBRACKET, "'[' expected"))
 		{
-			expect(builder, NUMBER, "Index expected");
+			expect(builder, NUMBER_LITERAL, "Index expected");
 			expect(builder, RBRACKET, "']' expected");
 		}
+
+		parseConstantValue(builder);
 
 		while(!builder.eof())
 		{
@@ -225,7 +245,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		expect(builder, IDENTIFIERS, "Identifier expected");
 
-		//TODO [VISTALL] initializer
+		parseConstantValue(builder);
 
 		mark.done(FIELD);
 	}
@@ -342,7 +362,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 				}
 				else
 				{
-					if(builder.getTokenType() == HEX_NUMBER)
+					if(builder.getTokenType() == HEX_NUMBER_LITERAL)
 					{
 						builder.advanceLexer();
 					}
@@ -444,7 +464,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			builder.advanceLexer();
 			mark.done(NATIVE_TYPE);
 		}
-		else if(tokenType == NUMBER)
+		else if(tokenType == NUMBER_LITERAL)
 		{
 			builder.advanceLexer();
 			mark.done(METHOD_GENERIC_TYPE);
@@ -527,7 +547,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 	{
 		PsiBuilder.Marker mark = builder.mark();
 
-		if(builder.getTokenType() == MsilTokens.NUMBER)
+		if(builder.getTokenType() == MsilTokens.NUMBER_LITERAL)
 		{
 			builder.advanceLexer();
 
@@ -556,6 +576,41 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		else
 		{
 			builder.error("Identifier expected");
+		}
+	}
+
+	private static void parseConstantValue(PsiBuilder builder)
+	{
+		if(builder.getTokenType() == EQ)
+		{
+			builder.advanceLexer();
+
+			PsiBuilder.Marker marker = builder.mark();
+
+			if(builder.getTokenType() == STRING_LITERAL || builder.getTokenType() == NULLREF_KEYWORD)
+			{
+				builder.advanceLexer();
+			}
+			else
+			{
+				IElementType iElementType = ourConstantValues.get(builder.getTokenType());
+				if(iElementType != null)
+				{
+					if(expect(builder, LPAR, "'(' expected"))
+					{
+						expect(builder, iElementType, "Expected value");
+
+						expect(builder, RPAR, "')' expected");
+					}
+				}
+				else
+				{
+					builder.error("Expected value");
+				}
+			}
+
+
+			marker.done(CONSTANT_VALUE);
 		}
 	}
 

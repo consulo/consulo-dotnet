@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
@@ -27,6 +28,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilParameter;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
@@ -54,12 +56,14 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 		super(stub, nodeType);
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isConstant()
 	{
 		return false;
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public PsiElement getConstantKeywordElement()
@@ -67,6 +71,7 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 		return null;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
@@ -74,6 +79,7 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 		return getType().toTypeRef();
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetType getType()
@@ -81,19 +87,32 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public DotNetExpression getInitializer()
 	{
+		int index = getIndex();
+		if(index == -1)
+		{
+			return null;
+		}
+		DotNetParameterListOwner owner = getOwner();
+		if(owner instanceof MsilMethodEntry)
+		{
+			return ((MsilMethodEntry) owner).getConstantValue(index);
+		}
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		return getModifierList().hasModifier(modifier);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetModifierList getModifierList()
@@ -104,7 +123,7 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	@Override
 	public void accept(MsilVisitor visitor)
 	{
-
+		visitor.visitParameter(this);
 	}
 
 	@Override

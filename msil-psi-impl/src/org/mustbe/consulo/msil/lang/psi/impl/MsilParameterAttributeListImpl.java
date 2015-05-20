@@ -17,6 +17,9 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.msil.lang.psi.MsilConstantValue;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilParameterAttributeList;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
@@ -45,10 +48,11 @@ public class MsilParameterAttributeListImpl extends MsilStubElementImpl<MsilPara
 	@Override
 	public void accept(MsilVisitor visitor)
 	{
-
+		visitor.visitParameterAttributeList(this);
 	}
 
 	@Override
+	@RequiredReadAction
 	public int getIndex()
 	{
 		MsilParameterAttributeListStub stub = getStub();
@@ -56,14 +60,23 @@ public class MsilParameterAttributeListImpl extends MsilStubElementImpl<MsilPara
 		{
 			return stub.getIndex();
 		}
-		PsiElement element = findChildByType(MsilTokens.NUMBER);
+		PsiElement element = findChildByType(MsilTokens.NUMBER_LITERAL);
 		return element == null ? -1 : Integer.parseInt(element.getText());
 	}
 
 	@NotNull
 	@Override
+	@RequiredReadAction
 	public MsilCustomAttribute[] getAttributes()
 	{
 		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
+	}
+
+	@Nullable
+	@Override
+	@RequiredReadAction
+	public MsilConstantValue getValue()
+	{
+		return getStubOrPsiChild(MsilStubElements.CONSTANT_VALUE);
 	}
 }

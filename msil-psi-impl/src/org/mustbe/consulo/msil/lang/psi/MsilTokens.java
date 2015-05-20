@@ -28,9 +28,13 @@ public interface MsilTokens extends TokenType
 {
 	IElementType IDENTIFIER = new IElementType("IDENTIFIER", MsilLanguage.INSTANCE);
 
-	IElementType NUMBER = new IElementType("NUMBER", MsilLanguage.INSTANCE);
+	IElementType NUMBER_LITERAL = new IElementType("NUMBER_LITERAL", MsilLanguage.INSTANCE);
 
-	IElementType HEX_NUMBER = new IElementType("HEX_NUMBER", MsilLanguage.INSTANCE);
+	IElementType DOUBLE_LITERAL = new IElementType("DOUBLE_LITERAL", MsilLanguage.INSTANCE);
+
+	IElementType STRING_LITERAL = new IElementType("STRING_LITERAL", MsilLanguage.INSTANCE);
+
+	IElementType HEX_NUMBER_LITERAL = new IElementType("HEX_NUMBER_LITERAL", MsilLanguage.INSTANCE);
 
 	IElementType COLONCOLON = new IElementType("COLONCOLON", MsilLanguage.INSTANCE);
 
@@ -85,6 +89,8 @@ public interface MsilTokens extends TokenType
 	IElementType UINT64_KEYWORD = new IElementType("UINT64_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType FLOAT32_KEYWORD = new IElementType("FLOAT32_KEYWORD", MsilLanguage.INSTANCE);
+
+	IElementType NULLREF_KEYWORD = new IElementType("NULLREF_KEYWORD", MsilLanguage.INSTANCE);
 
 	IElementType INT8_KEYWORD = new IElementType("INT8_KEYWORD", MsilLanguage.INSTANCE);
 

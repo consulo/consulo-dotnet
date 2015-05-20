@@ -57,7 +57,8 @@ public interface MsilStubElements
 	MsilXXXAccessorStubElementType XXX_ACCESSOR = new MsilXXXAccessorStubElementType();
 	MsilArrayDimensionStubElementType ARRAY_DIMENSION = new MsilArrayDimensionStubElementType();
 	MsilCustomAttributeSignatureElementType CUSTOM_ATTRIBUTE_SIGNATURE = new MsilCustomAttributeSignatureElementType();
-	MsilEmpyTypeStubElementType POINTER_TYPE = new MsilEmpyTypeStubElementType("MSIL_POINTER_TYPE")
+	MsilConstantValueStubElementType CONSTANT_VALUE = new MsilConstantValueStubElementType();
+	MsilEmptyTypeStubElementType POINTER_TYPE = new MsilEmptyTypeStubElementType("MSIL_POINTER_TYPE")
 	{
 		@NotNull
 		@Override
@@ -73,7 +74,7 @@ public interface MsilStubElements
 			return new MsilPointerTypeImpl(msilEmptyTypeStub, this);
 		}
 	};
-	MsilEmpyTypeStubElementType TYPE_BY_REF = new MsilEmpyTypeStubElementType("MSIL_TYPE_BY_REF")
+	MsilEmptyTypeStubElementType TYPE_BY_REF = new MsilEmptyTypeStubElementType("MSIL_TYPE_BY_REF")
 	{
 		@NotNull
 		@Override
@@ -89,7 +90,7 @@ public interface MsilStubElements
 			return new MsilTypeByRefImpl(msilEmptyTypeStub, this);
 		}
 	};
-	MsilEmpyTypeStubElementType TYPE_WITH_TYPE_ARGUMENTS = new MsilEmpyTypeStubElementType("MSIL_TYPE_WRAPPER_WITH_TYPE_ARGUMENTS")
+	MsilEmptyTypeStubElementType TYPE_WITH_TYPE_ARGUMENTS = new MsilEmptyTypeStubElementType("MSIL_TYPE_WRAPPER_WITH_TYPE_ARGUMENTS")
 	{
 		@NotNull
 		@Override
@@ -105,7 +106,7 @@ public interface MsilStubElements
 			return new MsilTypeWithTypeArgumentsImpl(msilEmptyTypeStub, this);
 		}
 	};
-	MsilEmpyTypeStubElementType ARRAY_TYPE = new MsilEmpyTypeStubElementType("ARRAY_TYPE")
+	MsilEmptyTypeStubElementType ARRAY_TYPE = new MsilEmptyTypeStubElementType("ARRAY_TYPE")
 	{
 		@NotNull
 		@Override

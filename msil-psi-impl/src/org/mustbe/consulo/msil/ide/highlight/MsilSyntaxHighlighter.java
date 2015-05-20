@@ -55,7 +55,11 @@ public class MsilSyntaxHighlighter extends SyntaxHighlighterBase
 		{
 			return pack(DefaultLanguageHighlighterColors.KEYWORD);
 		}
-		else if(elementType == MsilTokens.NUMBER || elementType == MsilTokens.HEX_NUMBER)
+		else if(elementType == MsilTokens.STRING_LITERAL)
+		{
+			return pack(DefaultLanguageHighlighterColors.STRING);
+		}
+		else if(elementType == MsilTokens.NUMBER_LITERAL || elementType == MsilTokens.HEX_NUMBER_LITERAL || elementType == MsilTokens.DOUBLE_LITERAL)
 		{
 			return pack(DefaultLanguageHighlighterColors.NUMBER);
 		}

@@ -42,7 +42,7 @@ public class MsilCustomAttributeSignatureImpl extends MsilStubElementImpl<MsilCu
 			return stub.getBytes();
 		}
 
-		PsiElement[] child = findChildrenByType(MsilTokens.HEX_NUMBER, PsiElement.class);
+		PsiElement[] child = findChildrenByType(MsilTokens.HEX_NUMBER_LITERAL, PsiElement.class);
 		byte[] bytes = new byte[child.length];
 		for(int i = 0; i < child.length; i++)
 		{

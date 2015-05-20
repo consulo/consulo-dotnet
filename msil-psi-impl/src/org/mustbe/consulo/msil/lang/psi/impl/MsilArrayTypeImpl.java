@@ -17,9 +17,11 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetArrayType;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilArrayDimension;
+import org.mustbe.consulo.msil.lang.psi.MsilArrayType;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
@@ -32,7 +34,7 @@ import com.intellij.util.ArrayUtil;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilArrayTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> implements DotNetArrayType
+public class MsilArrayTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> implements MsilArrayType
 {
 	public MsilArrayTypeImpl(@NotNull ASTNode node)
 	{
@@ -44,30 +46,33 @@ public class MsilArrayTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> im
 		super(stub, nodeType);
 	}
 
+	@Override
+	@RequiredReadAction
 	@NotNull
-	public MsilArrayDimensionImpl[] getDimensions()
+	public MsilArrayDimension[] getDimensions()
 	{
-		return getStubOrPsiChildren(MsilStubElements.ARRAY_DIMENSION, MsilArrayDimensionImpl.ARRAY_FACTORY);
+		return getStubOrPsiChildren(MsilStubElements.ARRAY_DIMENSION, MsilArrayDimension.ARRAY_FACTORY);
 	}
 
 	@Override
 	public void accept(MsilVisitor visitor)
 	{
-
+		visitor.visitArrayType(this);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{
 		int[] lowerValues = ArrayUtil.EMPTY_INT_ARRAY;
-		MsilArrayDimensionImpl[] dimensions = getDimensions();
+		MsilArrayDimension[] dimensions = getDimensions();
 		if(dimensions.length > 0)
 		{
 			lowerValues = new int[dimensions.length];
 			for(int i = 0; i < dimensions.length; i++)
 			{
-				MsilArrayDimensionImpl dimension = dimensions[i];
+				MsilArrayDimension dimension = dimensions[i];
 				lowerValues[i] = dimension.getLowerValue();
 			}
 		}
@@ -75,6 +80,7 @@ public class MsilArrayTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> im
 		return new MsilArrayTypRefImpl(getInnerType().toTypeRef(), lowerValues);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetType getInnerType()

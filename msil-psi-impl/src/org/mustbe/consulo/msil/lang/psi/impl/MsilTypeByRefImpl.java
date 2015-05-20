@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
@@ -52,6 +53,7 @@ public class MsilTypeByRefImpl extends MsilStubElementImpl<MsilEmptyTypeStub> im
 		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()

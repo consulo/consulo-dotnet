@@ -28,6 +28,12 @@ IDENTIFIER_IN_QUOTES="'"([^\\\'\r\n])*("'"|\\)?
 IDENTIFIERS={IDENTIFIER_PART} | {IDENTIFIER_IN_QUOTES}
 
 VALID_IDENTIFIERS={IDENTIFIERS}({SEPARATOR}{IDENTIFIERS})*
+
+STRING_LITERAL=\"([^\\\"\r\n]|{ESCAPE_SEQUENCE})*(\"|\\)?
+ESCAPE_SEQUENCE=\\[^\r\n]
+
+DOUBLE_LITERAL = {DIGIT} "." {DIGIT}
+
 %%
 
 <YYINITIAL>
@@ -97,6 +103,8 @@ VALID_IDENTIFIERS={IDENTIFIERS}({SEPARATOR}{IDENTIFIERS})*
 	"class"        { return MsilTokens.CLASS_KEYWORD; }
 
 	"valuetype"    { return MsilTokens.VALUETYPE_KEYWORD; }
+
+	"nullref"      { return MsilTokens.NULLREF_KEYWORD; }
 
 	"int8"         { return MsilTokens.INT8_KEYWORD; }
 
@@ -182,7 +190,11 @@ VALID_IDENTIFIERS={IDENTIFIERS}({SEPARATOR}{IDENTIFIERS})*
 
 	"[opt]"         { return MsilTokens.BRACKET_OPT_KEYWORD; }
 
-	{DIGIT}         { return MsilTokens.NUMBER; }
+	{DIGIT}         { return MsilTokens.NUMBER_LITERAL; }
+
+	{DOUBLE_LITERAL} { return MsilTokens.DOUBLE_LITERAL; }
+
+	{STRING_LITERAL} { return MsilTokens.STRING_LITERAL; }
 
 	{VALID_IDENTIFIERS}    { return MsilTokens.IDENTIFIER; }
 

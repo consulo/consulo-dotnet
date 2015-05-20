@@ -18,6 +18,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
@@ -47,6 +48,7 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 		super(stub, nodeType);
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getTextOffset()
 	{

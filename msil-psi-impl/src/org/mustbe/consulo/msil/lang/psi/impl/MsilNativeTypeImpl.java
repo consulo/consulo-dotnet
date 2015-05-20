@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -78,6 +79,7 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 		return findNotNullChildByType(MsilTokenSets.NATIVE_TYPES);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()

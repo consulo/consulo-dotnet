@@ -30,9 +30,9 @@ import com.intellij.psi.stubs.StubOutputStream;
  * @author VISTALL
  * @since 22.05.14
  */
-public abstract class MsilEmpyTypeStubElementType extends AbstractMsilStubElementType<MsilEmptyTypeStub, DotNetType>
+public abstract class MsilEmptyTypeStubElementType extends AbstractMsilStubElementType<MsilEmptyTypeStub, DotNetType>
 {
-	public MsilEmpyTypeStubElementType(@NotNull @NonNls String debugName)
+	public MsilEmptyTypeStubElementType(@NotNull @NonNls String debugName)
 	{
 		super(debugName);
 	}

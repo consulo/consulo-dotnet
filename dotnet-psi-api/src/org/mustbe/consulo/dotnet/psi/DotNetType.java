@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
@@ -28,5 +29,6 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 public interface DotNetType extends DotNetElement
 {
 	@NotNull
+	@RequiredReadAction
 	DotNetTypeRef toTypeRef();
 }

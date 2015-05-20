@@ -61,11 +61,11 @@ public class MsilLexer extends LookAheadLexer
 				{
 					if(tokenLength == 2)
 					{
-						advanceAs(baseLexer, MsilTokens.HEX_NUMBER);
+						advanceAs(baseLexer, MsilTokens.HEX_NUMBER_LITERAL);
 						return;
 					}
 				}
-				else if(tokenType == MsilTokens.NUMBER)
+				else if(tokenType == MsilTokens.NUMBER_LITERAL)
 				{
 					// for example 1A = NUMBER IDENTIFIER
 					if(tokenLength == 1)
@@ -85,13 +85,13 @@ public class MsilLexer extends LookAheadLexer
 							baseLexer.advance();
 							baseLexer.advance();
 
-							addToken(tokenStart + 2, MsilTokens.HEX_NUMBER);
+							addToken(tokenStart + 2, MsilTokens.HEX_NUMBER_LITERAL);
 							return;
 						}
 					}
 					else if(tokenLength == 2)
 					{
-						advanceAs(baseLexer, MsilTokens.HEX_NUMBER);
+						advanceAs(baseLexer, MsilTokens.HEX_NUMBER_LITERAL);
 						return;
 					}
 				}

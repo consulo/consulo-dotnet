@@ -18,15 +18,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.mustbe.consulo.dotnet.psi.DotNetPointerType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeWithTypeArguments;
-import org.mustbe.consulo.msil.lang.psi.MsilAssemblyEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
-import org.mustbe.consulo.msil.lang.psi.MsilCustomAttributeSignature;
-import org.mustbe.consulo.msil.lang.psi.MsilEventEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
-import org.mustbe.consulo.msil.lang.psi.MsilPropertyEntry;
+import org.mustbe.consulo.msil.lang.psi.*;
 import com.intellij.psi.PsiElementVisitor;
 
 /**
@@ -88,5 +80,30 @@ public class MsilVisitor extends PsiElementVisitor
 	public void visitCustomAttributeSignature(MsilCustomAttributeSignature signature)
 	{
 		visitElement(signature);
+	}
+
+	public void visitParameterAttributeList(MsilParameterAttributeList attributeList)
+	{
+		visitElement(attributeList);
+	}
+
+	public void visitParameter(MsilParameter msilParameter)
+	{
+		visitElement(msilParameter);
+	}
+
+	public void visitArrayDimension(MsilArrayDimension dimension)
+	{
+		visitElement(dimension);
+	}
+
+	public void visitArrayType(MsilArrayType msilArrayType)
+	{
+		visitElement(msilArrayType);
+	}
+
+	public void visitContantValue(MsilConstantValue value)
+	{
+		visitElement(value);
 	}
 }

@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type.SimpleGenericWrapperTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
@@ -70,6 +71,7 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilStubElementImpl<MsilEmpty
 		return getArgumentsList().getTypes();
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()

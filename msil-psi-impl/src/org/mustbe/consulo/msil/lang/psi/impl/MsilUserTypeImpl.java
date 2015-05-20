@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -105,6 +106,7 @@ public class MsilUserTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub>
 		return findNotNullChildByClass(MsilReferenceExpressionImpl.class);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()

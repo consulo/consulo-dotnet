@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -119,6 +120,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
@@ -126,6 +128,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 		return msilMethodEntry != null && msilMethodEntry.hasModifier(modifier);
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public DotNetModifierList getModifierList()

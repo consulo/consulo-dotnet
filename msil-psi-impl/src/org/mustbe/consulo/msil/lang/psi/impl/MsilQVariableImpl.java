@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
@@ -52,6 +53,7 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 		super(stub, nodeType);
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public PsiElement getConstantKeywordElement()
@@ -59,12 +61,14 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isConstant()
 	{
 		return false;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
@@ -72,6 +76,7 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 		return getType().toTypeRef();
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetType getType()
@@ -79,6 +84,7 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public DotNetExpression getInitializer()
@@ -86,12 +92,14 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		return getModifierList().hasModifier(modifier);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetModifierList getModifierList()

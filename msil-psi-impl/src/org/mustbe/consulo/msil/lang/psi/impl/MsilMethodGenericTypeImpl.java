@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
@@ -45,6 +46,7 @@ public class MsilMethodGenericTypeImpl extends MsilStubElementImpl<MsilMethodGen
 		super(stub, nodeType);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
@@ -68,7 +70,7 @@ public class MsilMethodGenericTypeImpl extends MsilStubElementImpl<MsilMethodGen
 		{
 			return stub.getIndex();
 		}
-		PsiElement element = findNotNullChildByType(MsilTokens.NUMBER);
+		PsiElement element = findNotNullChildByType(MsilTokens.NUMBER_LITERAL);
 		return Integer.parseInt(element.getText());
 	}
 }

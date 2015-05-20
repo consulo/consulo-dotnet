@@ -2,6 +2,8 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.msil.lang.psi.MsilArrayDimension;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilArrayDimensionStub;
 import com.intellij.lang.ASTNode;
@@ -13,7 +15,7 @@ import com.intellij.psi.stubs.IStubElementType;
  * @since 10.12.14
  */
 @ArrayFactoryFields
-public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensionStub>
+public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensionStub> implements MsilArrayDimension
 {
 	public MsilArrayDimensionImpl(@NotNull ASTNode node)
 	{
@@ -25,6 +27,8 @@ public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensi
 		super(stub, nodeType);
 	}
 
+	@Override
+	@RequiredReadAction
 	public int getLowerValue()
 	{
 		MsilArrayDimensionStub stub = getStub();
@@ -33,7 +37,7 @@ public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensi
 			return stub.getLowerValue();
 		}
 
-		PsiElement numberElement = findChildByType(MsilTokens.NUMBER);
+		PsiElement numberElement = findChildByType(MsilTokens.NUMBER_LITERAL);
 		if(numberElement == null)
 		{
 			return -1;
@@ -44,6 +48,6 @@ public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensi
 	@Override
 	public void accept(MsilVisitor visitor)
 	{
-
+		visitor.visitArrayDimension(this);
 	}
 }

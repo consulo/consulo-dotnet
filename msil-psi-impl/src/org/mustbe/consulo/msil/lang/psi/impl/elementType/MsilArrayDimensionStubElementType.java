@@ -3,6 +3,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.msil.lang.psi.MsilArrayDimension;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilArrayDimensionImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilArrayDimensionStub;
 import com.intellij.lang.ASTNode;
@@ -15,7 +16,7 @@ import com.intellij.psi.stubs.StubOutputStream;
  * @author VISTALL
  * @since 10.12.14
  */
-public class MsilArrayDimensionStubElementType extends AbstractMsilStubElementType<MsilArrayDimensionStub, MsilArrayDimensionImpl>
+public class MsilArrayDimensionStubElementType extends AbstractMsilStubElementType<MsilArrayDimensionStub, MsilArrayDimension>
 {
 	public MsilArrayDimensionStubElementType()
 	{
@@ -24,13 +25,13 @@ public class MsilArrayDimensionStubElementType extends AbstractMsilStubElementTy
 
 	@NotNull
 	@Override
-	public MsilArrayDimensionImpl createPsi(@NotNull MsilArrayDimensionStub msilArrayDimensionStub)
+	public MsilArrayDimension createPsi(@NotNull MsilArrayDimensionStub msilArrayDimensionStub)
 	{
 		return new MsilArrayDimensionImpl(msilArrayDimensionStub, this);
 	}
 
 	@Override
-	public MsilArrayDimensionStub createStub(@NotNull MsilArrayDimensionImpl psi, StubElement parentStub)
+	public MsilArrayDimensionStub createStub(@NotNull MsilArrayDimension psi, StubElement parentStub)
 	{
 		return new MsilArrayDimensionStub(parentStub, this, psi.getLowerValue());
 	}

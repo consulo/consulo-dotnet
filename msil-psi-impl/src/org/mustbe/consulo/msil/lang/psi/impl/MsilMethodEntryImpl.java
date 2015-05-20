@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
@@ -28,6 +29,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
+import org.mustbe.consulo.msil.lang.psi.MsilConstantValue;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilParameterAttributeList;
@@ -65,6 +67,7 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		visitor.visitMethodEntry(this);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetType getReturnType()
@@ -72,6 +75,7 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef getReturnTypeRef()
@@ -108,12 +112,14 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return genericParameterList == null ? 0 : genericParameterList.getGenericParametersCount();
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
 		return getModifierList().hasModifier(modifier);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetModifierList getModifierList()
@@ -144,6 +150,7 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return parameterList == null ? DotNetParameter.EMPTY_ARRAY : parameterList.getParameters();
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public String getPresentableParentQName()
@@ -151,6 +158,7 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return StringUtil.getPackageName(getNameFromBytecode());
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public String getPresentableQName()
@@ -189,6 +197,7 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return element == null ? "" : StringUtil.unquoteString(element.getText());
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public MsilCustomAttribute[] getAttributes()
@@ -196,20 +205,40 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public MsilCustomAttribute[] getParameterAttributes(int index)
 	{
+		MsilParameterAttributeList parameterAttributeList = findParameterAttributeList(index);
+		return parameterAttributeList == null ? MsilCustomAttribute.EMPTY_ARRAY : parameterAttributeList.getAttributes();
+	}
+
+	@RequiredReadAction
+	@Nullable
+	@Override
+	public MsilConstantValue getConstantValue(int index)
+	{
+		MsilParameterAttributeList parameterAttributeList = findParameterAttributeList(index);
+		return parameterAttributeList == null ? null : parameterAttributeList.getValue();
+	}
+
+	@Nullable
+	@RequiredReadAction
+	private MsilParameterAttributeList findParameterAttributeList(int index)
+	{
+		index ++;  // index is zero based, but in file it started with one
+
 		MsilParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.PARAMETER_ATTRIBUTE_LIST, MsilParameterAttributeList
 				.ARRAY_FACTORY);
 		for(MsilParameterAttributeList attributeList : list)
 		{
 			if(attributeList.getIndex() == index)
 			{
-				return attributeList.getAttributes();
+				return attributeList;
 			}
 		}
-		return MsilCustomAttribute.EMPTY_ARRAY;
+		return null;
 	}
 
 	@Override

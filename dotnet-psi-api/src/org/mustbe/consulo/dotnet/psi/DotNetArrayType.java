@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -25,5 +26,6 @@ import org.jetbrains.annotations.NotNull;
 public interface DotNetArrayType extends DotNetType
 {
 	@NotNull
+	@RequiredReadAction
 	DotNetType getInnerType();
 }

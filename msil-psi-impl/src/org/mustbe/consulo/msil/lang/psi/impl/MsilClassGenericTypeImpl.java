@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilClassGenericType;
@@ -61,6 +62,7 @@ public class MsilClassGenericTypeImpl extends MsilStubElementImpl<MsilClassGener
 		return childByType == null ? "" : childByType.getText();
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef()
