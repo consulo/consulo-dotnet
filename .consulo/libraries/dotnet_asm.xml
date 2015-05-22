@@ -4,7 +4,7 @@
       <root url="jar://$PROJECT_DIR$/lib/dotnet-asm.jar!/" />
     </binaries>
     <sources>
-      <root url="jar://$PROJECT_DIR$/libSrc/dotnet-asm-sources.jar!/" />
+      <root url="file://$PROJECT_DIR$/repo/dotnet-asm/src" />
     </sources>
   </library>
 </component>
