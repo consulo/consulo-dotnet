@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import org.mustbe.consulo.msil.representation.MsilFileRepresentationManager;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -34,9 +36,9 @@ import com.intellij.psi.PsiFile;
  */
 public class MsilRepresentFileNode extends AbstractTreeNode<Pair<String, ? extends FileType>>
 {
-	private final PsiFile myPsiFile;
+	private final MsilFile myPsiFile;
 
-	public MsilRepresentFileNode(Project project, PsiFile psiFile, Pair<String, ? extends FileType> value)
+	public MsilRepresentFileNode(Project project, MsilFile psiFile, Pair<String, ? extends FileType> value)
 	{
 		super(project, value);
 		myPsiFile = psiFile;
@@ -58,16 +60,15 @@ public class MsilRepresentFileNode extends AbstractTreeNode<Pair<String, ? exten
 	@Override
 	public boolean canRepresent(Object element)
 	{
-		PsiFile representationFile = MsilFileRepresentationManager.getInstance(getProject()).getRepresentationFile(getValue().getSecond(),
-				myPsiFile.getVirtualFile());
-		return representationFile != null && representationFile.getVirtualFile() == element;
+		return false;
 	}
 
 	@Override
+	@RequiredDispatchThread
 	public void navigate(boolean requestFocus)
 	{
 		PsiFile representationFile = MsilFileRepresentationManager.getInstance(getProject()).getRepresentationFile(getValue().getSecond(),
-				myPsiFile.getVirtualFile());
+				myPsiFile);
 		if(representationFile == null)
 		{
 			return;

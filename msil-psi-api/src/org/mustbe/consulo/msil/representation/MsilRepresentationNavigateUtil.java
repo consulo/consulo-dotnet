@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.representation;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
@@ -36,6 +37,7 @@ public class MsilRepresentationNavigateUtil
 {
 	public static Key<SoftReference<PsiElement>> MSIL_ELEMENT = Key.create("msil-element");
 
+	@RequiredReadAction
 	public static void navigateToRepresentation(@NotNull final PsiElement msilElement, @NotNull FileType fileType)
 	{
 		MsilFileRepresentationManager manager = MsilFileRepresentationManager.getInstance(msilElement.getProject());

@@ -29,7 +29,6 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiFile;
 import lombok.val;
 
 /**
@@ -38,7 +37,7 @@ import lombok.val;
  */
 public class MsilFileNode extends PsiFileNode
 {
-	public MsilFileNode(Project project, PsiFile value, ViewSettings viewSettings)
+	public MsilFileNode(Project project, MsilFile value, ViewSettings viewSettings)
 	{
 		super(project, value, viewSettings);
 	}
@@ -55,7 +54,7 @@ public class MsilFileNode extends PsiFileNode
 		List<AbstractTreeNode> list = new ArrayList<AbstractTreeNode>(representFiles.size());
 		for(Pair<String, ? extends FileType> data : representFiles)
 		{
-			list.add(new MsilRepresentFileNode(getProject(), getValue(), data));
+			list.add(new MsilRepresentFileNode(getProject(), (MsilFile) getValue(), data));
 		}
 		return list;
 	}

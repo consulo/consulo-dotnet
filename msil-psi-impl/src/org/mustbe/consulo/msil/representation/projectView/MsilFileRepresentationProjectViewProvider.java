@@ -28,7 +28,6 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import lombok.val;
 
 /**
@@ -74,7 +73,7 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 				}
 				else
 				{
-					newList.add(new MsilFileNode(myProject, (PsiFile) value, settings));
+					newList.add(new MsilFileNode(myProject, (MsilFile) value, settings));
 				}
 			}
 			else

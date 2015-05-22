@@ -22,28 +22,41 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.msil.MsilFileType;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
+import org.picocontainer.Disposable;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.newvfs.BulkFileListener;
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import com.intellij.util.containers.ConcurrentMultiMap;
 import com.intellij.util.containers.MultiMap;
 
 /**
  * @author VISTALL
  * @since 27.05.14
  */
-public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationManager
+public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationManager implements Disposable
 {
-	private MultiMap<VirtualFile, PsiFile> myFiles = new MultiMap<VirtualFile, PsiFile>();
-	private final Project myProject;
+	private MultiMap<VirtualFile, PsiFile> myFiles = new ConcurrentMultiMap<VirtualFile, PsiFile>();
 
 	public MsilFileRepresentationManagerImpl(Project project)
 	{
-		myProject = project;
+		super(project);
+		project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter()
+		{
+			@Override
+			public void before(@NotNull List<? extends VFileEvent> events)
+			{
+				for(VFileEvent event : events)
+				{
+					myFiles.remove(event.getFile());
+				}
+			}
+		});
 	}
 
 	@NotNull
@@ -65,20 +78,15 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 
 	@Override
 	@RequiredReadAction
-	public PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull VirtualFile msilFile)
+	public PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull MsilFile msilFile)
 	{
-		if(msilFile.getFileType() != MsilFileType.INSTANCE)
+		VirtualFile virtualFile = msilFile.getVirtualFile();
+		if(virtualFile == null)
 		{
 			return null;
 		}
 
-		MsilFile file = (MsilFile) PsiManager.getInstance(myProject).findFile(msilFile);
-		if(file == null)
-		{
-			return null;
-		}
-
-		Collection<PsiFile> values = myFiles.getModifiable(msilFile);
+		Collection<PsiFile> values = myFiles.getModifiable(virtualFile);
 
 		for(PsiFile value : values)
 		{
@@ -88,31 +96,33 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 			}
 		}
 
-		String name = null;
-		for(Pair<String, ? extends FileType> pair : getRepresentFileInfos(file, msilFile))
+		String fileName = null;
+		MsilFileRepresentationProvider provider = null;
+		for(MsilFileRepresentationProvider extension : MsilFileRepresentationProvider.EP_NAME.getExtensions())
 		{
-			if(pair.getSecond() == fileType)
+			String temp = extension.getRepresentFileName(msilFile);
+			if(temp != null)
 			{
-				name = pair.getFirst();
+				fileName = temp;
+				provider = extension;
 				break;
 			}
 		}
 
-		if(name == null)
+		if(fileName == null)
 		{
 			return null;
 		}
 
-		for(MsilFileRepresentationProvider provider : MsilFileRepresentationProvider.EP_NAME.getExtensions())
-		{
-			if(provider.getFileType() == fileType)
-			{
-				PsiFile transform = provider.transform(name, file);
+		PsiFile transform = provider.transform(fileName, msilFile);
 
-				values.add(transform);
-				return transform;
-			}
-		}
-		return null;
+		values.add(transform);
+		return transform;
+	}
+
+	@Override
+	public void dispose()
+	{
+		myFiles.clear();
 	}
 }

@@ -23,11 +23,14 @@ import org.consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.msil.MsilFileType;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 
 /**
  * @author VISTALL
@@ -36,6 +39,13 @@ import com.intellij.psi.PsiFile;
 @ProjectService
 public abstract class MsilFileRepresentationManager
 {
+	protected final Project myProject;
+
+	protected MsilFileRepresentationManager(Project project)
+	{
+		myProject = project;
+	}
+
 	@NotNull
 	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@NotNull MsilFile msilFile)
 	{
@@ -52,5 +62,17 @@ public abstract class MsilFileRepresentationManager
 
 	@Nullable
 	@RequiredReadAction
-	public abstract PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull VirtualFile msilFile);
+	public abstract PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull MsilFile msilFile);
+
+	@Nullable
+	@RequiredReadAction
+	public PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull VirtualFile virtualFile)
+	{
+		if(virtualFile.getFileType() != MsilFileType.INSTANCE)
+		{
+			return null;
+		}
+		PsiFile file = PsiManager.getInstance(myProject).findFile(virtualFile);
+		return file instanceof MsilFile ? getRepresentationFile(fileType, (MsilFile) file) : null;
+	}
 }
