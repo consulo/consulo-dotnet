@@ -31,7 +31,6 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
@@ -50,9 +49,6 @@ import lombok.val;
  */
 public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElement
 {
-	public static Key<Boolean> PROCESS_CHILD_NAMESPACES = Key.create("process.child.namespaces");
-	public static Key<GlobalSearchScope> RESOLVE_SCOPE = Key.create("resolve.scope");
-
 	protected String myIndexKey;
 
 	@NotNull
