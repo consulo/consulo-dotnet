@@ -29,6 +29,11 @@ public class MsilParsingTest extends ParsingTestCase
 		super("parsing", "msil");
 	}
 
+	public void testFieldConstWithValue()
+	{
+		doTest(true);
+	}
+
 	public void testArrayList()
 	{
 		doTest(true);

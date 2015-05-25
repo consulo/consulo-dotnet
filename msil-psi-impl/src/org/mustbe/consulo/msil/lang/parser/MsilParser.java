@@ -596,6 +596,8 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 				IElementType iElementType = ourConstantValues.get(builder.getTokenType());
 				if(iElementType != null)
 				{
+					builder.advanceLexer();  // advance keyword
+
 					if(expect(builder, LPAR, "'(' expected"))
 					{
 						expect(builder, iElementType, "Expected value");

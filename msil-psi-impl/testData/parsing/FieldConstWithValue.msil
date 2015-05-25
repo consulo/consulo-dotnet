@@ -1,0 +1,4 @@
+.class public Test
+{
+	.field private int32 index = int32(0);
+}
