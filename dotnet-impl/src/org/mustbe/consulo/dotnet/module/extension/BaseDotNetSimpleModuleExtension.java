@@ -24,12 +24,14 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import org.consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
@@ -60,6 +62,7 @@ import lombok.val;
  * @author VISTALL
  * @since 22.02.2015
  */
+@Logger
 public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionImpl<S> implements
 		DotNetSimpleModuleExtension<S>
 {
@@ -164,6 +167,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		return urls;
 	}
 
+	@RequiredReadAction
 	@Override
 	protected void loadStateImpl(@NotNull Element element)
 	{
@@ -293,7 +297,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				LOGGER.error(e);
 			}
 		}
 		return ArrayUtil.EMPTY_STRING_ARRAY;

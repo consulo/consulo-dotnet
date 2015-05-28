@@ -85,6 +85,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		myOutputDirectory = mutableModuleExtension.myOutputDirectory;
 	}
 
+	@RequiredReadAction
 	@Override
 	protected void loadStateImpl(@NotNull Element element)
 	{
