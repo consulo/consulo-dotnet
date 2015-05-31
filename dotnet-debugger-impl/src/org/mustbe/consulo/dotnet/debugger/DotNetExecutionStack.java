@@ -21,8 +21,13 @@ import java.util.List;
 
 import javax.swing.Icon;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.consulo.lombok.annotations.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
@@ -34,33 +39,32 @@ import mono.debugger.ThreadMirror;
  * @author VISTALL
  * @since 10.04.14
  */
+@ArrayFactoryFields
+@Logger
 public class DotNetExecutionStack extends XExecutionStack
 {
 	private DotNetStackFrame myTopFrame;
-	private List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
+	private boolean myTopFrameCalculated;
+
+	private DotNetDebugContext myDebuggerContext;
+	private ThreadMirror myThreadMirror;
 
 	public DotNetExecutionStack(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
 	{
-		super(threadMirror.name(), getIcon(threadMirror));
+		super(calcName(debuggerContext, threadMirror), getIcon(threadMirror));
+		myDebuggerContext = debuggerContext;
+		myThreadMirror = threadMirror;
+	}
 
-		try
+	@NotNull
+	private static String calcName(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
+	{
+		String name = threadMirror.name();
+		if(StringUtil.isEmpty(name))
 		{
-			List<StackFrameMirror> frames = threadMirror.frames();
-
-			for(StackFrameMirror frame : frames)
-			{
-				DotNetStackFrame stackFrame = new DotNetStackFrame(debuggerContext, frame);
-				stackFrames.add(stackFrame);
-				if(myTopFrame == null)
-				{
-					myTopFrame = stackFrame;
-				}
-			}
+			return "[" + DotNetSuspendContext.getThreadId(debuggerContext, threadMirror) + "] Unnamed";
 		}
-		catch(IncompatibleThreadStateException e)
-		{
-			e.printStackTrace();
-		}
+		return name;
 	}
 
 	private static Icon getIcon(ThreadMirror threadMirror)
@@ -73,16 +77,74 @@ public class DotNetExecutionStack extends XExecutionStack
 		return AllIcons.Debugger.ThreadFrozen;
 	}
 
+	public ThreadMirror getThreadMirror()
+	{
+		return myThreadMirror;
+	}
+
+	@Nullable
+	private XStackFrame calcTopFrame()
+	{
+		try
+		{
+			List<StackFrameMirror> frames = myThreadMirror.frames();
+			StackFrameMirror frame = ArrayUtil2.safeGet(frames, 0);
+			if(frame == null)
+			{
+				return null;
+			}
+			return myTopFrame = new DotNetStackFrame(myDebuggerContext, frame);
+		}
+		catch(IncompatibleThreadStateException e)
+		{
+			LOGGER.error(e);
+			return null;
+		}
+		finally
+		{
+			myTopFrameCalculated = true;
+		}
+	}
+
 	@Nullable
 	@Override
 	public XStackFrame getTopFrame()
 	{
-		return myTopFrame;
+		if(myTopFrameCalculated)
+		{
+			return myTopFrame;
+		}
+		return calcTopFrame();
 	}
 
 	@Override
-	public void computeStackFrames(int i, XStackFrameContainer xStackFrameContainer)
+	public void computeStackFrames(int i, XStackFrameContainer frameContainer)
 	{
-		xStackFrameContainer.addStackFrames(stackFrames, true);
+		try
+		{
+			List<StackFrameMirror> frames = myThreadMirror.frames();
+
+			List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
+			for(int j = 0; j < frames.size(); j++)
+			{
+				StackFrameMirror stackFrameMirror = frames.get(j);
+
+				DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, stackFrameMirror);
+
+				if(j == 0)
+				{
+					myTopFrameCalculated = true;
+					myTopFrame = stackFrame;
+				}
+
+				stackFrames.add(stackFrame);
+			}
+
+			frameContainer.addStackFrames(stackFrames, true);
+		}
+		catch(IncompatibleThreadStateException e)
+		{
+			frameContainer.errorOccurred("Stack frames not available fot not suspended thread");
+		}
 	}
 }

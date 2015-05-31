@@ -55,12 +55,19 @@ public class DotNetVirtualMachine
 
 	private final boolean mySupportSearchTypesBySourcePaths;
 	private final boolean mySupportSearchTypesByQualifiedName;
+	private final boolean mySupportSystemThreadId;
 
 	public DotNetVirtualMachine(@NotNull VirtualMachine virtualMachine)
 	{
 		myVirtualMachine = virtualMachine;
 		mySupportSearchTypesByQualifiedName = myVirtualMachine.isAtLeastVersion(2, 9);
 		mySupportSearchTypesBySourcePaths = myVirtualMachine.isAtLeastVersion(2, 7);
+		mySupportSystemThreadId = myVirtualMachine.isAtLeastVersion(2, 2);
+	}
+
+	public boolean isSupportSystemThreadId()
+	{
+		return mySupportSystemThreadId;
 	}
 
 	public void dispose()

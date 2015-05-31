@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XSuspendContext;
 import mono.debugger.ThreadMirror;
@@ -31,49 +32,58 @@ import mono.debugger.ThreadMirror;
  */
 public class DotNetSuspendContext extends XSuspendContext
 {
-	private final DotNetDebugContext myDebuggerContext;
-	private final ThreadMirror myThreadMirror;
+	private final long mySystemThreadId;
 
-	private XExecutionStack myActiveExecutionStack;
+	private final DotNetExecutionStack[] myExecutionStacks;
+	private DotNetDebugContext myDebuggerContext;
 
 	public DotNetSuspendContext(@NotNull DotNetDebugContext debuggerContext, @Nullable ThreadMirror threadMirror)
 	{
 		myDebuggerContext = debuggerContext;
-		myThreadMirror = threadMirror;
+		mySystemThreadId = threadMirror == null ? -1 : getThreadId(debuggerContext, threadMirror);
 
-		myActiveExecutionStack = threadMirror == null ? null : new DotNetExecutionStack(debuggerContext, threadMirror);
+		List<ThreadMirror> threadMirrors = debuggerContext.getVirtualMachine().allThreads();
+		List<DotNetExecutionStack> list = new ArrayList<DotNetExecutionStack>(threadMirrors.size());
+		for(ThreadMirror mirror : threadMirrors)
+		{
+			list.add(new DotNetExecutionStack(debuggerContext, mirror));
+		}
+		myExecutionStacks = ContainerUtil.toArray(list, DotNetExecutionStack.ARRAY_FACTORY);
 	}
 
 	@Override
-	public void computeExecutionStacks(XExecutionStackContainer container)
+	public XExecutionStack[] getExecutionStacks()
 	{
-		List<ThreadMirror> threadMirrors = myDebuggerContext.getVirtualMachine().allThreads();
-
-		List<XExecutionStack> executionStacks = new ArrayList<XExecutionStack>();
-
-		for(ThreadMirror threadMirror : threadMirrors)
-		{
-			if(myThreadMirror != null && threadMirror.systemThreadId() == myThreadMirror.systemThreadId())
-			{
-				executionStacks.add(myActiveExecutionStack);
-			}
-			else
-			{
-				executionStacks.add(new DotNetExecutionStack(myDebuggerContext, threadMirror));
-			}
-		}
-
-		if(!executionStacks.contains(myActiveExecutionStack))
-		{
-			executionStacks.add(myActiveExecutionStack);
-		}
-		container.addExecutionStack(executionStacks, true);
+		return myExecutionStacks;
 	}
 
 	@Nullable
 	@Override
 	public XExecutionStack getActiveExecutionStack()
 	{
-		return myActiveExecutionStack;
+		if(mySystemThreadId == -1)
+		{
+			return null;
+		}
+		for(DotNetExecutionStack executionStack : myExecutionStacks)
+		{
+			if(getThreadId(myDebuggerContext, executionStack.getThreadMirror()) == mySystemThreadId)
+			{
+				return executionStack;
+			}
+		}
+		return null;
+	}
+
+	public static long getThreadId(DotNetDebugContext context, ThreadMirror threadMirror)
+	{
+		if(context.getVirtualMachine().isSupportSystemThreadId())
+		{
+			return threadMirror.systemThreadId();
+		}
+		else
+		{
+			return threadMirror.id();
+		}
 	}
 }

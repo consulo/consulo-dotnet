@@ -39,15 +39,8 @@ import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
-import mono.debugger.AbsentInformationException;
-import mono.debugger.LocalVariableMirror;
-import mono.debugger.Location;
-import mono.debugger.MethodMirror;
-import mono.debugger.MethodParameterMirror;
-import mono.debugger.ObjectValueMirror;
-import mono.debugger.StackFrameMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
+import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import mono.debugger.*;
 
 /**
  * @author VISTALL
@@ -85,7 +78,7 @@ public class DotNetStackFrame extends XStackFrame
 	@Override
 	public Object getEqualityObject()
 	{
-		return myFrame;
+		return myFrame.location().method().id();
 	}
 
 	@Nullable
@@ -180,8 +173,16 @@ public class DotNetStackFrame extends XStackFrame
 				childrenList.add(new DotNetObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), myFrame.location().declaringType(), null));
 			}
 		}
-		catch(AbsentInformationException ignored)
+		catch(AbsentInformationException e)
 		{
+			node.setMessage("Stack frame info is not available", XDebuggerUIConstants.INFORMATION_MESSAGE_ICON,
+					XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES, null);
+			return;
+		}
+		catch(InvalidStackFrameException e)
+		{
+			node.setErrorMessage("Stack frame info is not valid");
+			return;
 		}
 
 		MethodParameterMirror[] parameters = method.parameters();
