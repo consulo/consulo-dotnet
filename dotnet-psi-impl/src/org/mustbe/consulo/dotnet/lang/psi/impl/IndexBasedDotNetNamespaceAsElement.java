@@ -37,7 +37,6 @@ import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.CommonProcessors;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ArrayListSet;
@@ -84,24 +83,12 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 				return toArray(elements, transformer);
 			case ONLY_NAMESPACES:
-				val newQualifiedName = QualifiedName.fromDottedString(myQName).append(name);
+				QualifiedName newQualifiedName = QualifiedName.fromDottedString(myQName).append(name);
 
-				key = mySearcher.getNamespaceIndexKey();
-
-				CommonProcessors.FindFirstProcessor<DotNetQualifiedElement> processor = new CommonProcessors
-						.FindFirstProcessor<DotNetQualifiedElement>();
-				StubIndex.getInstance().processElements(key, newQualifiedName.toString(), myProject, globalSearchScope,
-						DotNetQualifiedElement.class, processor);
-
-				PsiElement foundValue = processor.getFoundValue();
-
-				if(foundValue != null)
+				val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(), globalSearchScope);
+				if(namespace != null)
 				{
-					val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(), globalSearchScope);
-					if(namespace != null)
-					{
-						return new PsiElement[]{transformer.fun(namespace)};
-					}
+					return new PsiElement[]{transformer.fun(namespace)};
 				}
 				return PsiElement.EMPTY_ARRAY;
 			case NONE:
