@@ -73,7 +73,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 	@Override
 	public String getPresentableName()
 	{
-		return "Microsoft .NET";
+		return ".NET";
 	}
 
 	@NotNull

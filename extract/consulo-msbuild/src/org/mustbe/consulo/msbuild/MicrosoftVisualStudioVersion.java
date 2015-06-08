@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.microsoft.dotnet.sdk;
+package org.mustbe.consulo.msbuild;
 
 import org.jetbrains.annotations.NotNull;
 

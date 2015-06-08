@@ -20,6 +20,7 @@
             <element id="module-output" name="msil-psi-api" />
             <element id="module-output" name="msil-psi-impl" />
             <element id="module-output" name="composite-formatting-string" />
+            <element id="module-production-resource-output" name="dotnet-impl" />
           </element>
           <element id="library" level="project" name="dotnet-asm" />
           <element id="library" level="project" name="mono-soft-debugging" />
@@ -53,6 +54,14 @@
           </element>
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-mono-dotnet/dist" />
+      </element>
+      <element id="directory" name="msbuild">
+        <element id="directory" name="lib">
+          <element id="zip-archive" name="msbuild.jar">
+            <element id="module-output" name="consulo-msbuild" />
+            <element id="module-production-resource-output" name="consulo-msbuild" />
+          </element>
+        </element>
       </element>
     </root>
   </artifact>

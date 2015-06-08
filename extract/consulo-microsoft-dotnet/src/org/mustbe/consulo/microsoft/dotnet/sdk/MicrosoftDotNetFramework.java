@@ -17,7 +17,6 @@
 package org.mustbe.consulo.microsoft.dotnet.sdk;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,16 +27,13 @@ public class MicrosoftDotNetFramework
 	private final MicrosoftDotNetVersion myVersion;
 	@NotNull
 	private final String myPath;
-	private final MicrosoftVisualStudioVersion myVisualStudioVersion;
-	private final String myCompilerPath;
+	private boolean myWindir;
 
-	public MicrosoftDotNetFramework(@NotNull MicrosoftDotNetVersion version, @NotNull String path, MicrosoftVisualStudioVersion visualStudioVersion,
-			String compilerPath)
+	public MicrosoftDotNetFramework(@NotNull MicrosoftDotNetVersion version, @NotNull String path, boolean windir)
 	{
 		myVersion = version;
 		myPath = path;
-		myVisualStudioVersion = visualStudioVersion;
-		myCompilerPath = compilerPath;
+		myWindir = windir;
 	}
 
 	@NotNull
@@ -52,26 +48,13 @@ public class MicrosoftDotNetFramework
 		return myPath;
 	}
 
-	@Nullable
-	public String getCompilerPath()
-	{
-		return myCompilerPath;
-	}
-
-	@Nullable
-	public MicrosoftVisualStudioVersion getVisualStudioVersion()
-	{
-		return myVisualStudioVersion;
-	}
-
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder(myVersion.getPresentableName());
-		if(myVisualStudioVersion != null)
+		if(myWindir)
 		{
-			builder.append(" (").append(myVisualStudioVersion.getPresentableName()).append(")");
+			return myVersion.getPresentableName() + " (windir)";
 		}
-		return builder.toString();
+		return myVersion.getPresentableName();
 	}
 }

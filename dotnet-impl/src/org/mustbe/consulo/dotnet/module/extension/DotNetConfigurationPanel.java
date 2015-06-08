@@ -36,6 +36,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.InputValidator;
@@ -192,73 +193,76 @@ public class DotNetConfigurationPanel extends JPanel
 
 		model.update();
 
-		ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
+		if(!DumbService.isDumb(extension.getProject()))
 		{
-			@Override
-			public void run()
+			ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
 			{
-				final Ref<DotNetQualifiedElement> selected = Ref.create();
-				final List<Object> newItems = new ArrayList<Object>();
-				newItems.add(null);
-
-				ApplicationManager.getApplication().runReadAction(new Runnable()
+				@Override
+				public void run()
 				{
-					@Override
-					public void run()
+					final Ref<DotNetQualifiedElement> selected = Ref.create();
+					final List<Object> newItems = new ArrayList<Object>();
+					newItems.add(null);
+
+					ApplicationManager.getApplication().runReadAction(new Runnable()
 					{
-						for(PsiElement psiElement : extension.getEntryPointElements())
+						@Override
+						public void run()
 						{
-							if(psiElement instanceof DotNetQualifiedElement)
+							for(PsiElement psiElement : extension.getEntryPointElements())
 							{
-								newItems.add(psiElement);
-								String mainType = extension.getMainType();
-								DotNetQualifiedElement qualifiedElement = (DotNetQualifiedElement) psiElement;
-								if(mainType != null && Comparing.equal(mainType, qualifiedElement.getPresentableQName()))
+								if(psiElement instanceof DotNetQualifiedElement)
 								{
-									selected.set(qualifiedElement);
+									newItems.add(psiElement);
+									String mainType = extension.getMainType();
+									DotNetQualifiedElement qualifiedElement = (DotNetQualifiedElement) psiElement;
+									if(mainType != null && Comparing.equal(mainType, qualifiedElement.getPresentableQName()))
+									{
+										selected.set(qualifiedElement);
+									}
 								}
 							}
 						}
-					}
-				});
+					});
 
-				UIUtil.invokeLaterIfNeeded(new Runnable()
-				{
-					@Override
-					public void run()
+					UIUtil.invokeLaterIfNeeded(new Runnable()
 					{
-						DotNetQualifiedElement selectedType = selected.get();
-						String mainType = extension.getMainType();
-						if(mainType != null && selectedType == null)
+						@Override
+						public void run()
 						{
-							newItems.add(mainType);
-						}
-
-						items.clear();
-						items.addAll(newItems);
-
-						if(mainType != null)
-						{
-							if(selectedType != null)
+							DotNetQualifiedElement selectedType = selected.get();
+							String mainType = extension.getMainType();
+							if(mainType != null && selectedType == null)
 							{
-								model.setSelectedItem(selectedType);
+								newItems.add(mainType);
+							}
+
+							items.clear();
+							items.addAll(newItems);
+
+							if(mainType != null)
+							{
+								if(selectedType != null)
+								{
+									model.setSelectedItem(selectedType);
+								}
+								else
+								{
+									model.setSelectedItem(mainType);
+								}
 							}
 							else
 							{
-								model.setSelectedItem(mainType);
+								model.setSelectedItem(null);
 							}
-						}
-						else
-						{
-							model.setSelectedItem(null);
-						}
 
-						mainClassList.setEnabled(true);
-						model.update();
-					}
-				});
-			}
-		});
+							mainClassList.setEnabled(true);
+							model.update();
+						}
+					});
+				}
+			});
+		}
 
 		add(LabeledComponent.left(mainClassList, DotNetBundle.message("main.type.label")));
 

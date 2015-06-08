@@ -15,7 +15,7 @@
   -->
 
 <idea-plugin>
-	<id>org.mustbe.consulo.microsoft.dotnet</id>
+	<id>org.mustbe.consulo.dotnet.microsoft</id>
 	<name>Microsoft .NET</name>
 	<version>SNAPSHOT</version>
 	<depends>org.mustbe.consulo.dotnet.core</depends>
@@ -24,7 +24,7 @@
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
 
 		<moduleExtensionProvider key="microsoft-dotnet"
-								 name="Microsoft .NET"
+								 name=".NET"
 								 icon="/icons/dotnet.png"
 								 immutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension"
 								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />

@@ -117,6 +117,7 @@
           <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="java" />
@@ -257,6 +258,19 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
+        </module-layer>
+      </module>
+      <module name="impl/consulo-msbuild" dirurl="file://$PROJECT_DIR$/extract/consulo-msbuild" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
         </module-layer>
       </module>
     </modules>

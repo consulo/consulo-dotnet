@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,15 @@
 
 package org.mustbe.consulo.dotnet;
 
+import javax.swing.Icon;
+
+import com.intellij.openapi.util.IconLoader;
+
 /**
  * @author VISTALL
- * @since 20.11.13.
+ * @since 08.06.2015
  */
 public interface DotNetIcons
 {
-
+	Icon NetFoundation = IconLoader.findIcon("/icons/netFoundation.png");
 }

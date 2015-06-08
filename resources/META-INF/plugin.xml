@@ -103,10 +103,6 @@
 		<orderRootType implementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType" />
 		<orderRootTypeEditor key="dotNetExternalAttributes" implementationClass="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesOrderRootTypeUIFactory" />
 
-		<orderRootType implementation="org.mustbe.consulo.dotnet.sdk.DotNetCompilerDirOrderRootType" />
-		<orderRootTypeEditor key="dotnet-compiler-dirs"
-							 implementationClass="org.mustbe.consulo.dotnet.sdk.DotNetCompilerDirOrderRootTypeEditor" />
-
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompiler"/>
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopier"/>
 		<compiler.translatingHelper implementation="org.mustbe.consulo.dotnet.compiler.DotNetTranslatingCompilerFilesMonitorHelper"/>
@@ -122,5 +118,7 @@
 
 		<coverageEngine implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEngine" />
 		<programRunner implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageProgramRunner" />
+
+		<sdkType implementation="org.mustbe.consulo.dotnet.sdk.RoslynBundleType" />
 	</extensions>
 </idea-plugin>

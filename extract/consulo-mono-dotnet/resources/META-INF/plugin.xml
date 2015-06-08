@@ -28,7 +28,7 @@
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
 
 		<moduleExtensionProvider key="mono-dotnet"
-								 name="Mono .NET"
+								 name="Mono"
 								 icon="/icons/mono.png"
 								 immutableClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension"
 								 mutableClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetMutableModuleExtension"/>

@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.sdk;
+package org.mustbe.consulo.msbuild.bundle;
 
-import org.consulo.lombok.annotations.LazyInstance;
-import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.roots.OrderRootType;
+import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.projectRoots.SdkType;
 
 /**
  * @author VISTALL
- * @since 11.03.2015
+ * @since 08.06.2015
  */
-public class DotNetCompilerDirOrderRootType extends OrderRootType
+public abstract class BaseMSBuildBundleType extends SdkType
 {
-	@NotNull
-	@LazyInstance
-	public static DotNetCompilerDirOrderRootType getInstance()
+	public BaseMSBuildBundleType(@NonNls String name)
 	{
-		return getOrderRootType(DotNetCompilerDirOrderRootType.class);
+		super(name);
 	}
 
-	private DotNetCompilerDirOrderRootType()
+	@Override
+	public String suggestSdkName(String currentSdkName, String sdkHome)
 	{
-		super("dotnet-compiler-dirs");
+		return getPresentableName() + " " + getVersionString(sdkHome);
 	}
 }

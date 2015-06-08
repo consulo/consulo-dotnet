@@ -20,6 +20,7 @@ import java.io.File;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
@@ -41,7 +42,7 @@ public abstract class DotNetSdkType extends SdkType
 	@Override
 	public boolean isRootTypeApplicable(OrderRootType type)
 	{
-		return type == DotNetCompilerDirOrderRootType.getInstance();
+		return type == ExternalAttributesRootOrderType.getInstance();
 	}
 
 	@NotNull

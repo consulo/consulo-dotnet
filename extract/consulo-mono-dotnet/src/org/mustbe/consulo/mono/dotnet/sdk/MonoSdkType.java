@@ -168,7 +168,7 @@ public class MonoSdkType extends DotNetSdkType
 	@Override
 	public String getPresentableName()
 	{
-		return "Mono .NET";
+		return "Mono";
 	}
 
 	@Nullable
