@@ -58,6 +58,12 @@ public class DotNetModuleRootsProcessor extends ModuleRootsProcessor
 	@Override
 	public boolean canHandle(@NotNull ModuleRootModel moduleRootModel)
 	{
+		String moduleDirUrl = moduleRootModel.getModule().getModuleDirUrl();
+		// if moduleDirUrl - need process by NullModuleDirModuleRootsProcessor
+		if(moduleDirUrl == null)
+		{
+			return false;
+		}
 		DotNetModuleExtension extension = moduleRootModel.getExtension(DotNetModuleExtension.class);
 		return extension != null && !extension.isAllowSourceRoots();
 	}
