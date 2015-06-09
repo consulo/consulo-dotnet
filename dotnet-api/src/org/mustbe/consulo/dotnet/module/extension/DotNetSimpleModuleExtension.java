@@ -17,17 +17,14 @@
 package org.mustbe.consulo.dotnet.module.extension;
 
 import java.util.List;
-import java.util.Map;
 
 import org.consulo.annotations.Immutable;
 import org.consulo.annotations.InheritImmutable;
-import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.OrderRootType;
 
 /**
  * @author VISTALL
@@ -35,7 +32,7 @@ import com.intellij.openapi.roots.OrderRootType;
  *
  * Simple version of DotNetModuleExtension. But it dont have support for run or debug, it need provide new impl in plugins
  */
-public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends ModuleExtension<T>
+public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends DotNetModuleExtensionWithLibraryProviding<T>
 {
 	@NotNull
 	ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
@@ -58,10 +55,4 @@ public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtensi
 	 * FIXME [VISTALL] this method is really needed? We can check it by instanceof DotNetModuleExtension
 	 */
 	boolean isSupportCompilation();
-
-	@NotNull
-	Map<String, String> getAvailableSystemLibraries();
-
-	@NotNull
-	String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType);
 }

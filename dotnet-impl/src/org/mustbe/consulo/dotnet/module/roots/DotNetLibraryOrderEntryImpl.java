@@ -16,11 +16,12 @@
 
 package org.mustbe.consulo.dotnet.module.roots;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderEntry;
@@ -35,6 +36,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.SmartList;
 
 /**
  * @author VISTALL
@@ -60,14 +62,21 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 			return VirtualFile.EMPTY_ARRAY;
 		}
 
-		String[] systemLibrary = extension.getSystemLibraryUrls(getPresentableName(), orderRootType);
-		List<VirtualFile> virtualFiles = new ArrayList<VirtualFile>(systemLibrary.length);
-		for(String url : systemLibrary)
+		List<VirtualFile> virtualFiles = new SmartList<VirtualFile>();
+		for(ModuleExtension moduleExtension : myModuleRootLayer.getExtensions())
 		{
-			VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(url);
-			if(fileByUrl != null)
+			if(moduleExtension instanceof DotNetModuleExtensionWithLibraryProviding)
 			{
-				virtualFiles.add(fileByUrl);
+				String[] systemLibraryUrls = ((DotNetModuleExtensionWithLibraryProviding) moduleExtension).getSystemLibraryUrls(getPresentableName()
+						, orderRootType);
+				for(String systemLibraryUrl : systemLibraryUrls)
+				{
+					VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(systemLibraryUrl);
+					if(fileByUrl != null)
+					{
+						virtualFiles.add(fileByUrl);
+					}
+				}
 			}
 		}
 		return VfsUtil.toVirtualFileArray(virtualFiles);
@@ -83,7 +92,17 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 			return ArrayUtil.EMPTY_STRING_ARRAY;
 		}
 
-		return extension.getSystemLibraryUrls(getPresentableName(), orderRootType);
+		String[] urls = ArrayUtil.EMPTY_STRING_ARRAY;
+		for(ModuleExtension moduleExtension : myModuleRootLayer.getExtensions())
+		{
+			if(moduleExtension instanceof DotNetModuleExtensionWithLibraryProviding)
+			{
+				String[] systemLibraryUrls = ((DotNetModuleExtensionWithLibraryProviding) moduleExtension).getSystemLibraryUrls(getPresentableName()
+						, orderRootType);
+				urls = ArrayUtil.mergeArrays(urls, systemLibraryUrls);
+			}
+		}
+		return urls;
 	}
 
 	@NotNull

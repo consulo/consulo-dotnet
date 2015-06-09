@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.module.dependency;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -24,11 +25,14 @@ import java.util.TreeMap;
 import javax.swing.JComponent;
 import javax.swing.JList;
 
+import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.roots.ModifiableModuleRootLayer;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
@@ -41,7 +45,6 @@ import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -114,7 +117,7 @@ public class DotNetLibraryModuleDependencyTabContext extends AddModuleDependency
 			@Override
 			public void run()
 			{
-				val availableSystemLibraries = extension.getAvailableSystemLibraries();
+				final Map<String, String> availableSystemLibraries = getAvailableSystemLibraries();
 
 				final Map<String, String> map = ApplicationManager.getApplication().runReadAction(new Computable<Map<String, String>>()
 				{
@@ -140,17 +143,29 @@ public class DotNetLibraryModuleDependencyTabContext extends AddModuleDependency
 					@Override
 					public void run()
 					{
-						CollectionListModel<Map.Entry<String, String>> model = new CollectionListModel<Map.Entry<String, String>>();
-						for(Map.Entry<String, String> entry : map.entrySet())
-						{
-							model.add(entry);
-						}
+						CollectionListModel<Map.Entry<String, String>> model = new CollectionListModel<Map.Entry<String, String>>(map.entrySet());
+
 						myLibraryList.setModel(model);
 						myLibraryList.setPaintBusy(false);
 					}
 				});
 			}
 		});
+	}
+
+	@NotNull
+	private Map<String, String> getAvailableSystemLibraries()
+	{
+		Map<String, String> map = new HashMap<String, String>();
+		ModifiableRootModel rootModel = myClasspathPanel.getRootModel();
+		for(ModuleExtension<?> moduleExtension : rootModel.getExtensions())
+		{
+			if(moduleExtension instanceof DotNetModuleExtensionWithLibraryProviding)
+			{
+				map.putAll(((DotNetModuleExtensionWithLibraryProviding<?>) moduleExtension).getAvailableSystemLibraries());
+			}
+		}
+		return map;
 	}
 
 	private static OrderEntry findOrderEntry(String name, ModifiableModuleRootLayer layer)
