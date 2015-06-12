@@ -145,7 +145,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 			}
 
 			QualifiedName qualifiedName = QualifiedName.fromDottedString(presentableQName);
-			if(qualifiedName.matchesPrefix(thisQualifiedName))
+			if(thisQualifiedName.getComponentCount() > 0 && qualifiedName.matchesPrefix(thisQualifiedName))
 			{
 				List<String> childList = qualifiedName.getComponents().subList(0, thisQualifiedName.getComponentCount() + 1);
 
