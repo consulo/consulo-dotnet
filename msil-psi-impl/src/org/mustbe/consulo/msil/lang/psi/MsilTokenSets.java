@@ -89,7 +89,7 @@ public interface MsilTokenSets extends MsilTokens
 	TokenSet NATIVE_TYPES = TokenSet.create(NATIVE_TYPES_AS_ARRAY);
 
 	TokenSet KEYWORDS = TokenSet.orSet(MODIFIERS, REFERENCE_TYPE_START, NATIVE_TYPES, TokenSet.create(EXTENDS_KEYWORD, IMPLEMENTS_KEYWORD,
-			NULLREF_KEYWORD));
+			NULLREF_KEYWORD, TYPE_KEYWORD));
 
 	TokenSet COMMENTS = TokenSet.create(LINE_COMMENT, BLOCK_COMMENT);
 

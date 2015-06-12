@@ -184,6 +184,8 @@ DOUBLE_LITERAL = {DIGIT} "." {DIGIT}
 
 	"interface"     { return MsilTokens.INTERFACE_KEYWORD; }
 
+	"type"          { return MsilTokens.TYPE_KEYWORD; }
+
 	"[out]"         { return MsilTokens.BRACKET_OUT_KEYWORD; }
 
 	"[in]"          { return MsilTokens.BRACKET_IN_KEYWORD; }

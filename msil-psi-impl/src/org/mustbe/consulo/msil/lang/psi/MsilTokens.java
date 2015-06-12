@@ -110,6 +110,8 @@ public interface MsilTokens extends TokenType
 
 	IElementType IMPLEMENTS_KEYWORD = new IElementType("IMPLEMENTS_KEYWORD", MsilLanguage.INSTANCE);
 
+	IElementType TYPE_KEYWORD = new IElementType("TYPE_KEYWORD", MsilLanguage.INSTANCE);
+
 	MsilModifierElementType PUBLIC_KEYWORD = new MsilModifierElementType("PUBLIC_KEYWORD", MsilLanguage.INSTANCE);
 
 	MsilModifierElementType STATIC_KEYWORD = new MsilModifierElementType("STATIC_KEYWORD", MsilLanguage.INSTANCE);
