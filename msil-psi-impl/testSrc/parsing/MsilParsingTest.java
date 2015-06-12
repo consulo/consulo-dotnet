@@ -49,6 +49,11 @@ public class MsilParsingTest extends ParsingTestCase
 		doTest(true);
 	}
 
+	public void testGenericParameterCustomAttribute()
+	{
+		doTest(true);
+	}
+
 	@Override
 	protected String getTestDataPath()
 	{

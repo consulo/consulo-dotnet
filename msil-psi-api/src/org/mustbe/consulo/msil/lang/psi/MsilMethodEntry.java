@@ -41,6 +41,10 @@ public interface MsilMethodEntry extends MsilEntry, DotNetMethodDeclaration
 	@RequiredReadAction
 	MsilCustomAttribute[] getParameterAttributes(int index);
 
+	@NotNull
+	@RequiredReadAction
+	MsilCustomAttribute[] getGenericParameterAttributes(@NotNull String name);
+
 	/**
 	 * @param index zero based index
 	 */

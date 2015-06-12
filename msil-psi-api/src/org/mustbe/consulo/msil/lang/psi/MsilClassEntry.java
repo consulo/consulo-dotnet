@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**
@@ -27,6 +28,10 @@ public interface MsilClassEntry extends MsilEntry, DotNetTypeDeclaration
 {
 	@NotNull
 	MsilCustomAttribute[] getAttributes();
+
+	@NotNull
+	@RequiredReadAction
+	MsilCustomAttribute[] getGenericParameterAttributes(@NotNull String name);
 
 	@NotNull
 	String getNameFromBytecode();

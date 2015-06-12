@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.msil.lang.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.psi.DotNetElement;
 
 /**
  * @author VISTALL
- * @since 30.11.13.
+ * @since 12.06.2015
  */
 @ArrayFactoryFields
-public interface DotNetGenericParameter extends DotNetNamedElement, DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetAttributeListOwner
+public interface MsilTypeParameterAttributeList extends DotNetElement
 {
-	int getIndex();
+	@Nullable
+	@RequiredReadAction
+	String getGenericParameterName();
+
+	@NotNull
+	@RequiredReadAction
+	MsilCustomAttribute[] getAttributes();
 }

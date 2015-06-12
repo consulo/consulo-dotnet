@@ -82,6 +82,11 @@ public class MsilVisitor extends PsiElementVisitor
 		visitElement(signature);
 	}
 
+	public void visitTypeParameterAttributeList(MsilTypeParameterAttributeList attributeList)
+	{
+		visitElement(attributeList);
+	}
+
 	public void visitParameterAttributeList(MsilParameterAttributeList attributeList)
 	{
 		visitElement(attributeList);

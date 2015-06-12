@@ -1,0 +1,12 @@
+// Consulo API Decompiler stub source generated from bytecode
+// Implementation of methods is not available
+
+.class public sealed serializable Microsoft.FSharp.Collections.FSharpSet`1<T> extends System.Object implements System.Collections.IEnumerable, class System.Collections.Generic.IEnumerable`1<!T>, class System.Collections.Generic.ICollection`1<!T>, System.IComparable
+{
+	.param type T
+
+	.custom Microsoft.FSharp.Core.EqualityConditionalOnAttribute::.ctor() =
+	(
+		01 00 00 00
+	)
+}

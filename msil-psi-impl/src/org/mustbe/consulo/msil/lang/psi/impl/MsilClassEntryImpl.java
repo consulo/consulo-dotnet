@@ -43,6 +43,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
+import org.mustbe.consulo.msil.lang.psi.MsilTypeParameterAttributeList;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import org.mustbe.consulo.msil.lang.psi.impl.type.MsilNativeTypeRefImpl;
 import com.intellij.lang.ASTNode;
@@ -175,7 +176,9 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+			@NotNull ResolveState state,
+			PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
 		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
@@ -294,6 +297,23 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	public MsilCustomAttribute[] getAttributes()
 	{
 		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public MsilCustomAttribute[] getGenericParameterAttributes(@NotNull String name)
+	{
+		MsilTypeParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.TYPE_PARAMETER_ATTRIBUTE_LIST,
+				MsilTypeParameterAttributeList.ARRAY_FACTORY);
+		for(MsilTypeParameterAttributeList attributeList : list)
+		{
+			if(name.equals(attributeList.getGenericParameterName()))
+			{
+				return attributeList.getAttributes();
+			}
+		}
+		return MsilCustomAttribute.EMPTY_ARRAY;
 	}
 
 	@Nullable

@@ -50,6 +50,7 @@ public interface MsilStubElements
 	MsilParameterListStubElementType PARAMETER_LIST = new MsilParameterListStubElementType();
 	MsilParameterStubElementType PARAMETER = new MsilParameterStubElementType();
 	MsilParameterAttributeListStubElementType PARAMETER_ATTRIBUTE_LIST = new MsilParameterAttributeListStubElementType();
+	MsilTypeParameterAttributeListStubElementType TYPE_PARAMETER_ATTRIBUTE_LIST = new MsilTypeParameterAttributeListStubElementType();
 	MsilMethodGenericTypeStubElementType METHOD_GENERIC_TYPE = new MsilMethodGenericTypeStubElementType();
 	MsilClassGenericTypeStubElementType CLASS_GENERIC_TYPE = new MsilClassGenericTypeStubElementType();
 	MsilGenericParameterListStubElementType GENERIC_PARAMETER_LIST = new MsilGenericParameterListStubElementType();

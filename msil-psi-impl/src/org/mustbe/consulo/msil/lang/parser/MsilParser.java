@@ -119,13 +119,24 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		builder.advanceLexer();
 
-		if(expect(builder, LBRACKET, "'[' expected"))
+		IElementType doneTo = null;
+		if(expect(builder, TYPE_KEYWORD, null))
 		{
-			expect(builder, NUMBER_LITERAL, "Index expected");
-			expect(builder, RBRACKET, "']' expected");
+			expect(builder, IDENTIFIER, "Identifier expected");
+			doneTo = TYPE_PARAMETER_ATTRIBUTE_LIST;
 		}
+		else
+		{
+			if(expect(builder, LBRACKET, "'[' expected"))
+			{
+				expect(builder, NUMBER_LITERAL, "Index expected");
+				expect(builder, RBRACKET, "']' expected");
+			}
 
-		parseConstantValue(builder);
+			parseConstantValue(builder);
+
+			doneTo = PARAMETER_ATTRIBUTE_LIST;
+		}
 
 		while(!builder.eof())
 		{
@@ -139,7 +150,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 			}
 		}
 
-		mark.done(PARAMETER_ATTRIBUTE_LIST);
+		mark.done(doneTo);
 	}
 
 	private void parseAssembly(PsiBuilder builder)

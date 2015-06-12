@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
@@ -29,6 +30,7 @@ import com.intellij.psi.PsiElement;
 public class DotNetAttributeUtil
 {
 	@Nullable
+	@RequiredReadAction
 	public static DotNetAttribute findAttribute(@NotNull PsiElement owner, @NotNull String qName)
 	{
 		if(!owner.isValid())
@@ -40,16 +42,25 @@ public class DotNetAttributeUtil
 			return null;
 		}
 
-		if(!(owner instanceof DotNetModifierListOwner))
+		DotNetAttribute[] attributes;
+		if(owner instanceof DotNetAttributeListOwner)
 		{
-			return null;
+			attributes = ((DotNetAttributeListOwner) owner).getAttributes();
 		}
-		DotNetModifierList modifierList = ((DotNetModifierListOwner) owner).getModifierList();
-		if(modifierList == null)
+		else
 		{
-			return null;
+			if(!(owner instanceof DotNetModifierListOwner))
+			{
+				return null;
+			}
+			DotNetModifierList modifierList = ((DotNetModifierListOwner) owner).getModifierList();
+			if(modifierList == null)
+			{
+				return null;
+			}
+			 attributes = modifierList.getAttributes();
 		}
-		DotNetAttribute[] attributes = modifierList.getAttributes();
+
 		for(DotNetAttribute attribute : attributes)
 		{
 			DotNetTypeDeclaration typeDeclaration = attribute.resolveToType();
@@ -61,6 +72,7 @@ public class DotNetAttributeUtil
 		return null;
 	}
 
+	@RequiredReadAction
 	public static boolean hasAttribute(@NotNull PsiElement owner, @NotNull String qName)
 	{
 		return findAttribute(owner, qName) != null;

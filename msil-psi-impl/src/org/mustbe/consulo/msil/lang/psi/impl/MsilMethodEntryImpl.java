@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
@@ -28,7 +29,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
 import org.mustbe.consulo.msil.lang.psi.MsilConstantValue;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
@@ -36,6 +36,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilParameterAttributeList;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
+import org.mustbe.consulo.msil.lang.psi.MsilTypeParameterAttributeList;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilMethodEntryStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
@@ -239,6 +240,23 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 			}
 		}
 		return null;
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public MsilCustomAttribute[] getGenericParameterAttributes(@NotNull String name)
+	{
+		MsilTypeParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.TYPE_PARAMETER_ATTRIBUTE_LIST, MsilTypeParameterAttributeList
+				.ARRAY_FACTORY);
+		for(MsilTypeParameterAttributeList attributeList : list)
+		{
+			if(name.equals(attributeList.getGenericParameterName()))
+			{
+				return attributeList.getAttributes();
+			}
+		}
+		return MsilCustomAttribute.EMPTY_ARRAY;
 	}
 
 	@Override

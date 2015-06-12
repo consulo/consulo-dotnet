@@ -20,13 +20,17 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilGenericParameter;
+import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
@@ -173,5 +177,33 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 			return ArrayUtil.find(((DotNetGenericParameterList) parentByStub).getParameters(), this);
 		}
 		return -1;
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public DotNetAttribute[] getAttributes()
+	{
+		PsiElement parentByStub = getStubOrPsiParentOfType(MsilClassEntry.class);
+		if(parentByStub != null)
+		{
+			String name = getName();
+			if(name == null)
+			{
+				return DotNetAttribute.EMPTY_ARRAY;
+			}
+			return ((MsilClassEntry) parentByStub).getGenericParameterAttributes(name);
+		}
+		parentByStub = getStubOrPsiParentOfType(MsilMethodEntry.class);
+		if(parentByStub != null)
+		{
+			String name = getName();
+			if(name == null)
+			{
+				return DotNetAttribute.EMPTY_ARRAY;
+			}
+			return ((MsilMethodEntry) parentByStub).getGenericParameterAttributes(name);
+		}
+		return MsilCustomAttribute.EMPTY_ARRAY;
 	}
 }
