@@ -27,14 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetAttribute;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
-import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
-import org.mustbe.consulo.msil.lang.psi.MsilModifierElementType;
-import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
-import org.mustbe.consulo.msil.lang.psi.MsilParameter;
-import org.mustbe.consulo.msil.lang.psi.MsilParameterList;
-import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
-import org.mustbe.consulo.msil.lang.psi.MsilTokens;
+import org.mustbe.consulo.msil.lang.psi.*;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilModifierListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -117,6 +110,14 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 		else if(parentByStub instanceof MsilMethodEntry)
 		{
 			return ((MsilMethodEntry) parentByStub).getAttributes();
+		}
+		else if(parentByStub instanceof MsilFieldEntry)
+		{
+			return ((MsilFieldEntry) parentByStub).getAttributes();
+		}
+		else if(parentByStub instanceof MsilPropertyEntry)
+		{
+			return ((MsilPropertyEntry) parentByStub).getAttributes();
 		}
 		else if(parentByStub instanceof MsilParameter)
 		{

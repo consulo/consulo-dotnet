@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
@@ -40,6 +41,14 @@ public class MsilFieldEntryImpl extends MsilQVariableImpl implements MsilFieldEn
 	public MsilFieldEntryImpl(@NotNull MsilVariableEntryStub stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public MsilCustomAttribute[] getAttributes()
+	{
+		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
 	}
 
 	@RequiredReadAction

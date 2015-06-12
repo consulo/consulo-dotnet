@@ -39,6 +39,11 @@ public class MsilParsingTest extends ParsingTestCase
 		doTest(true);
 	}
 
+	public void testFieldWithAttribute()
+	{
+		doTest(true);
+	}
+
 	public void testTestCustomAttributeSignature()
 	{
 		doTest(true);

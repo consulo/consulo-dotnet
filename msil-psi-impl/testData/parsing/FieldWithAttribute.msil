@@ -1,0 +1,9 @@
+.class public Program extends System.Object
+{
+	.field private static int32 'type'
+
+	.custom IKVM.Attributes.SignatureAttribute::.ctor(string) =
+	(
+		01 00 06 28 54 45 3B 29 5A 00 00
+	)
+}

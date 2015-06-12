@@ -16,7 +16,9 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
 
 /**
@@ -25,6 +27,10 @@ import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
  */
 public interface MsilPropertyEntry extends MsilEntry, DotNetPropertyDeclaration
 {
+	@NotNull
+	@RequiredReadAction
+	MsilCustomAttribute[] getAttributes();
+
 	@Nullable
 	String getNameFromBytecode();
 }

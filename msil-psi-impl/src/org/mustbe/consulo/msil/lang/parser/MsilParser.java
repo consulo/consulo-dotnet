@@ -247,6 +247,18 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		parseConstantValue(builder);
 
+		while(!builder.eof())
+		{
+			if(builder.getTokenType() == _CUSTOM_KEYWORD)
+			{
+				parseAttribute(builder);
+			}
+			else
+			{
+				break;
+			}
+		}
+
 		mark.done(FIELD);
 	}
 

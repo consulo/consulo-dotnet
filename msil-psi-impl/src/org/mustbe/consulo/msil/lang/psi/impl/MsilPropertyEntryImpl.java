@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilPropertyEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilXXXAcessor;
@@ -93,5 +94,13 @@ public class MsilPropertyEntryImpl extends MsilQVariableImpl implements MsilProp
 	public DotNetTypeRef getTypeRefForImplement()
 	{
 		return DotNetTypeRef.ERROR_TYPE;
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public MsilCustomAttribute[] getAttributes()
+	{
+		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
 	}
 }
