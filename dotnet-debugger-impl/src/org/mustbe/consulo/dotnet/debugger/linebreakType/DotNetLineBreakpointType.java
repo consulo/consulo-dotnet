@@ -16,7 +16,6 @@
 
 package org.mustbe.consulo.dotnet.debugger.linebreakType;
 
-import javax.lang.model.element.UnknownElementException;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +44,7 @@ import mono.debugger.Location;
 import mono.debugger.LocationImpl;
 import mono.debugger.MethodMirror;
 import mono.debugger.TypeMirror;
+import mono.debugger.UnloadedElementException;
 import mono.debugger.protocol.Method_GetDebugInfo;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequestManager;
@@ -239,7 +239,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 				}
 			}
 		}
-		catch(UnknownElementException e)
+		catch(UnloadedElementException e)
 		{
 			throw new TypeMirrorUnloadedException(mirror, e);
 		}

@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.lang.model.element.UnknownElementException;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Comparing;
@@ -34,6 +32,7 @@ import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import mono.debugger.AssemblyMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
+import mono.debugger.UnloadedElementException;
 import mono.debugger.VMDisconnectedException;
 import mono.debugger.VirtualMachine;
 import mono.debugger.event.AssemblyUnloadEvent;
@@ -173,7 +172,7 @@ public class DotNetVirtualMachine
 							return loadedTypeMirror;
 						}
 					}
-					catch(UnknownElementException e)
+					catch(UnloadedElementException e)
 					{
 						throw new TypeMirrorUnloadedException(loadedTypeMirror, e);
 					}
