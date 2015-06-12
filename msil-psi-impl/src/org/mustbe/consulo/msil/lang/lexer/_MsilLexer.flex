@@ -22,10 +22,11 @@ COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 DIGIT = [0-9]+
 SEPARATOR=(\.) | (\/)
 
-IDENTIFIER_PART=[:jletter:] [:jletterdigit:]* (\`[:jletterdigit:]*)?
+IDENTIFIER_PART=[:jletter:]|\@|[:jletterdigit:]
+SIMPLE_IDENTIFIER={IDENTIFIER_PART}+ (\`[:jletterdigit:]*)?
 IDENTIFIER_IN_QUOTES="'"([^\\\'\r\n])*("'"|\\)?
 
-IDENTIFIERS={IDENTIFIER_PART} | {IDENTIFIER_IN_QUOTES}
+IDENTIFIERS={SIMPLE_IDENTIFIER} | {IDENTIFIER_IN_QUOTES}
 
 VALID_IDENTIFIERS={IDENTIFIERS}({SEPARATOR}{IDENTIFIERS})*
 
