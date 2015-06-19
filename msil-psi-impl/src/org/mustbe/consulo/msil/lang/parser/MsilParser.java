@@ -52,6 +52,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		ourConstantValues.put(UINT32_KEYWORD, NUMBER_LITERAL);
 		ourConstantValues.put(INT64_KEYWORD, NUMBER_LITERAL);
 		ourConstantValues.put(UINT64_KEYWORD, NUMBER_LITERAL);
+		ourConstantValues.put(CHAR_KEYWORD, NUMBER_LITERAL);
 	}
 
 	@NotNull
