@@ -51,7 +51,9 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
@@ -253,8 +255,27 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		}
 		else if(orderRootType == DocumentationOrderRootType.getInstance())
 		{
-			String nameWithoutExtension = FileUtil.getNameWithoutExtension(name);
-			return new String[]{sdk.getHomePath() + "/" + nameWithoutExtension + ".xml"};
+			String[] systemLibraryUrls = getSystemLibraryUrls(name, BinariesOrderRootType.getInstance());
+			if(systemLibraryUrls.length != 1)
+			{
+				return ArrayUtil.EMPTY_STRING_ARRAY;
+			}
+			VirtualFile libraryFile = VirtualFileManager.getInstance().findFileByUrl(systemLibraryUrls[0]);
+			if(libraryFile == null)
+			{
+				return ArrayUtil.EMPTY_STRING_ARRAY;
+			}
+			VirtualFile localFile = ArchiveVfsUtil.getVirtualFileForArchive(libraryFile);
+			if(localFile == null)
+			{
+				return ArrayUtil.EMPTY_STRING_ARRAY;
+			}
+			VirtualFile docFile = localFile.getParent().findChild(localFile.getNameWithoutExtension() + ".xml");
+			if(docFile != null)
+			{
+				return new String[] {docFile.getUrl()};
+			}
+			return ArrayUtil.EMPTY_STRING_ARRAY;
 		}
 		else if(orderRootType == ExternalAttributesRootOrderType.getInstance())
 		{
