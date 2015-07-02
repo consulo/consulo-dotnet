@@ -155,6 +155,10 @@ DOUBLE_LITERAL = {DIGIT} "." {DIGIT}
 
 	"static"        { return MsilTokens.STATIC_KEYWORD; }
 
+	"true"          { return MsilTokens.BOOL_LITERAL; }
+
+	"false"         { return MsilTokens.BOOL_LITERAL; }
+
 	"abstract"      { return MsilTokens.ABSTRACT_KEYWORD; }
 
 	"literal"       { return MsilTokens.LITERAL_KEYWORD; }

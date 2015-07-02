@@ -22,7 +22,7 @@ import com.intellij.psi.util.PsiUtilCore;
 public class MsilConstantValueImpl extends MsilStubElementImpl<MsilConstantValueStub> implements MsilConstantValue
 {
 	private static final TokenSet ourValueSet = TokenSet.create(/*MsilTokens.NULLREF_KEYWORD, */MsilTokens.STRING_LITERAL,
-			MsilTokens.DOUBLE_LITERAL, MsilTokens.NUMBER_LITERAL);
+			MsilTokens.DOUBLE_LITERAL, MsilTokens.NUMBER_LITERAL, MsilTokens.BOOL_LITERAL);
 
 	public MsilConstantValueImpl(@NotNull ASTNode node)
 	{
