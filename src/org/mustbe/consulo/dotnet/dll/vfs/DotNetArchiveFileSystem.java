@@ -32,8 +32,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.impl.archive.ArchiveHandler;
 import com.intellij.openapi.vfs.impl.archive.ArchiveHandlerBase;
 import com.intellij.util.messages.MessageBus;
-import edu.arizona.cs.mbel.mbel.ModuleParser;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -62,16 +60,24 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 			@Override
 			protected ArchiveFile createArchiveFile()
 			{
-				val originalFile = getOriginalFile();
+				File originalFile = getOriginalFile();
+				File mirrorFile = getMirrorFile(originalFile);
+				DotNetLibraryOpenCache.Record record = null;
 				try
 				{
-					File mirrorFile = getMirrorFile(originalFile);
-					ModuleParser parser = DotNetLibraryOpenCache.acquire(mirrorFile.getPath());
-					return new DotNetArchiveFile(originalFile, parser, mirrorFile.lastModified());
+					record = DotNetLibraryOpenCache.acquire(mirrorFile.getPath());
+					return new DotNetArchiveFile(originalFile, record.get(), mirrorFile.lastModified());
 				}
 				catch(Exception e)
 				{
 					LOGGER.warn(originalFile.getPath(), e);
+				}
+				finally
+				{
+					if(record != null)
+					{
+						record.finish();
+					}
 				}
 				return ArchiveFile.EMPTY;
 			}

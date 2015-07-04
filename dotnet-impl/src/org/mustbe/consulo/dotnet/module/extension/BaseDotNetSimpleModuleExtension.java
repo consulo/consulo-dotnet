@@ -58,6 +58,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import edu.arizona.cs.mbel.mbel.ModuleParser;
 import lombok.val;
 
 /**
@@ -273,7 +274,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 			VirtualFile docFile = localFile.getParent().findChild(localFile.getNameWithoutExtension() + ".xml");
 			if(docFile != null)
 			{
-				return new String[] {docFile.getUrl()};
+				return new String[]{docFile.getUrl()};
 			}
 			return ArrayUtil.EMPTY_STRING_ARRAY;
 		}
@@ -378,17 +379,25 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	@Nullable
 	private static Couple<String> parseLibrary(File f)
 	{
+		DotNetLibraryOpenCache.Record record = null;
 		try
 		{
-			val moduleParser = DotNetLibraryOpenCache.acquire(f.getPath());
+			record = DotNetLibraryOpenCache.acquire(f.getPath());
+			ModuleParser moduleParser = record.get();
 			return Couple.of(moduleParser.getAssemblyInfo().getName(), moduleParser.getAssemblyInfo().getMajorVersion() + "." + moduleParser
 					.getAssemblyInfo().getMinorVersion() +
-					"." +
-					moduleParser.getAssemblyInfo().getBuildNumber() + "." + moduleParser.getAssemblyInfo().getRevisionNumber());
+					"." + moduleParser.getAssemblyInfo().getBuildNumber() + "." + moduleParser.getAssemblyInfo().getRevisionNumber());
 		}
 		catch(Exception e)
 		{
 			return null;
+		}
+		finally
+		{
+			if(record != null)
+			{
+				record.finish();
+			}
 		}
 	}
 }

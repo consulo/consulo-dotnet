@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.diagnostic.LogUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
@@ -41,26 +40,37 @@ import edu.arizona.cs.mbel.parse.MSILParseException;
  */
 public class DotNetLibraryOpenCache
 {
-	private static final int PERIOD = 10000;   // disposer schedule, ms
-	private static final int TIMEOUT = 60000;  // released file close delay, ms
+	private static final int PERIOD = 5000;   // disposer schedule, ms
+	private static final int TIMEOUT = 5000;  // released file close delay, ms
 
-	private static class CacheRecord
+	public static class Record
 	{
 		private final String path;
 		private final ModuleParser file;
 		private int count = 1;
 		private long released = 0;
 
-		private CacheRecord(@NotNull String path, @NotNull ModuleParser file) throws IOException
+		private Record(@NotNull String path, @NotNull ModuleParser file) throws IOException
 		{
 			this.path = path;
 			this.file = file;
 		}
+
+		public void finish()
+		{
+			release(file);
+		}
+
+		@NotNull
+		public ModuleParser get()
+		{
+			return file;
+		}
 	}
 
 	private static final Object ourLock = new Object();
-	private static final Map<String, CacheRecord> ourPathCache = ContainerUtil.newTroveMap(FileUtil.PATH_HASHING_STRATEGY);
-	private static final Map<ModuleParser, CacheRecord> ourFileCache = ContainerUtil.newHashMap();
+	private static final Map<String, Record> ourPathCache = ContainerUtil.newTroveMap(FileUtil.PATH_HASHING_STRATEGY);
+	private static final Map<ModuleParser, Record> ourFileCache = ContainerUtil.newHashMap();
 	private static final Map<ModuleParser, Integer> ourQueue = ContainerUtil.newHashMap();
 
 	static
@@ -70,27 +80,27 @@ public class DotNetLibraryOpenCache
 			@Override
 			public void run()
 			{
-				getFilesToClose(0, System.currentTimeMillis() - TIMEOUT);
+				closeFiles(System.currentTimeMillis() - TIMEOUT);
 			}
 		}, PERIOD, PERIOD, TimeUnit.MILLISECONDS);
 	}
 
 	@NotNull
-	public static ModuleParser acquire(@NotNull String path) throws IOException, MSILParseException
+	public static Record acquire(@NotNull String path) throws IOException, MSILParseException
 	{
 		path = FileUtil.toCanonicalPath(path);
 
 		synchronized(ourLock)
 		{
-			CacheRecord record = ourPathCache.get(path);
+			Record record = ourPathCache.get(path);
 			if(record != null)
 			{
 				record.count++;
-				return record.file;
+				return record;
 			}
 		}
 
-		CacheRecord record;
+		Record record;
 		ModuleParser file = tryOpen(path);
 
 		synchronized(ourLock)
@@ -98,10 +108,10 @@ public class DotNetLibraryOpenCache
 			record = ourPathCache.get(path);
 			if(record == null)
 			{
-				record = new CacheRecord(path, file);
+				record = new Record(path, file);
 				ourPathCache.put(path, record);
 				ourFileCache.put(file, record);
-				return file;
+				return record;
 			}
 			else
 			{
@@ -109,15 +119,15 @@ public class DotNetLibraryOpenCache
 			}
 		}
 
-		return record.file;
+		return record;
 	}
 
 	@NotNull
-	public static ModuleParser acquireWithNext(@NotNull String path) throws IOException, MSILParseException
+	public static Record acquireWithNext(@NotNull String path) throws IOException, MSILParseException
 	{
-		ModuleParser acquire = acquire(path);
-		acquire.parseNext();
-		return acquire;
+		Record record = acquire(path);
+		record.get().parseNext();
+		return record;
 	}
 
 	private static ModuleParser tryOpen(String path) throws IOException, MSILParseException
@@ -127,49 +137,28 @@ public class DotNetLibraryOpenCache
 		return new ModuleParser(new File(path));
 	}
 
-	private static int tryCloseFiles()
+	private static void closeFiles(long timeout)
 	{
-		List<ModuleParser> toClose = getFilesToClose(5, 0);
-		if(toClose == null)
-		{
-			return 0;
-		}
-		logger().warn("too many open files, closed: " + toClose.size());
-		return toClose.size();
-	}
-
-	@Nullable
-	private static List<ModuleParser> getFilesToClose(int limit, long timeout)
-	{
-		List<ModuleParser> toClose = null;
-
 		synchronized(ourLock)
 		{
-			Iterator<CacheRecord> i = ourPathCache.values().iterator();
-			while(i.hasNext() && (limit == 0 || toClose == null || toClose.size() < limit))
+			Iterator<Record> i = ourPathCache.values().iterator();
+			while(i.hasNext())
 			{
-				CacheRecord record = i.next();
+				Record record = i.next();
 				if(record.count <= 0 && (timeout == 0 || record.released <= timeout))
 				{
 					i.remove();
 					ourFileCache.remove(record.file);
-					if(toClose == null)
-					{
-						toClose = ContainerUtil.newArrayList();
-					}
-					toClose.add(record.file);
 				}
 			}
 		}
-
-		return toClose;
 	}
 
-	public static void release(@NotNull ModuleParser file)
+	private static void release(@NotNull ModuleParser file)
 	{
 		synchronized(ourLock)
 		{
-			CacheRecord record = ourFileCache.get(file);
+			Record record = ourFileCache.get(file);
 			if(record != null)
 			{
 				record.count--;
@@ -208,7 +197,7 @@ public class DotNetLibraryOpenCache
 			for(String path : paths)
 			{
 				path = FileUtil.toCanonicalPath(path);
-				CacheRecord record = ourPathCache.remove(path);
+				Record record = ourPathCache.remove(path);
 				if(record != null)
 				{
 					ourFileCache.remove(record.file);
@@ -224,7 +213,6 @@ public class DotNetLibraryOpenCache
 			}
 		}
 	}
-
 
 	private static Logger logger()
 	{
