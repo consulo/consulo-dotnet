@@ -69,6 +69,7 @@
 
 		<treeStructureProvider implementation="org.mustbe.consulo.msil.representation.projectView.MsilFileRepresentationProjectViewProvider"/>
 
+		<iconDescriptorUpdater implementation="org.mustbe.consulo.msil.ide.MsilIconDescriptorUpdater" />
 		<projectService serviceInterface="org.mustbe.consulo.msil.representation.MsilFileRepresentationManager"
 						serviceImplementation="org.mustbe.consulo.msil.representation.MsilFileRepresentationManagerImpl"/>
 
