@@ -87,6 +87,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	@Override
 	public void indexStub(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull IndexSink indexSink)
 	{
+		indexSink.occurrence(MsilIndexKeys.TYPE_BY_NAME_INDEX, msilClassEntryStub.getName());
 		indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, msilClassEntryStub.getVmQName());
 
 		if(!msilClassEntryStub.isNested())

@@ -58,9 +58,15 @@
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByNameIndex"/>
 		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex"/>
 		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilElementByQNameIndex"/>
 		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex"/>
+
+		<gotoClassContributor implementation="org.mustbe.consulo.msil.ide.navigation.MsilGotoClassContributor" />
+
+		<itemPresentationProvider forClass="org.mustbe.consulo.msil.lang.psi.MsilClassEntry"
+								  implementationClass="org.mustbe.consulo.msil.ide.presentation.MsilClassItemPresentationProvider"/>
 
 		<fileTypeFactory implementation="org.mustbe.consulo.msil.MsilFileTypeFactory"/>
 		<stubElementTypeHolder class="org.mustbe.consulo.msil.lang.psi.MsilStubElements"/>
