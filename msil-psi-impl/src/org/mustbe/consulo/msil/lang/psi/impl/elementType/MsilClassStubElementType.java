@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilClassEntryImpl;
@@ -57,6 +58,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 		return new MsilClassEntryImpl(msilClassEntryStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilClassEntryStub createStub(@NotNull MsilClassEntry msilClassEntry, StubElement stubElement)
 	{
