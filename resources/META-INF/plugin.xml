@@ -22,7 +22,7 @@
 	<depends config-file="com.intellij.xml.xml" optional="true">com.intellij.xml</depends>
 
 	<xi:include href="/META-INF/CompositeFormattingString.xml" xpointer="xpointer(/idea-plugin/*)">
-		<xi:fallback />
+		<xi:fallback/>
 	</xi:include>
 
 	<application-components>
@@ -33,6 +33,7 @@
 
 	<extensionPoints>
 		<extensionPoint name="psiSearcher" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher" area="CONSULO_PROJECT"/>
+		<extensionPoint name="shortNameSearcher" interface="org.mustbe.consulo.dotnet.resolve.DotNetShortNameSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="stubIndexer" interface="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer"/>
 
 		<extensionPoint name="debugger.provider" interface="org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider"/>
@@ -54,7 +55,8 @@
 	</project-components>
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
-		<psiSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilPsiSearcher" />
+		<psiSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilPsiSearcher"/>
+		<shortNameSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilShortNameSearcher"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
@@ -63,7 +65,7 @@
 		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilElementByQNameIndex"/>
 		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex"/>
 
-		<gotoClassContributor implementation="org.mustbe.consulo.msil.ide.navigation.MsilGotoClassContributor" />
+		<gotoClassContributor implementation="org.mustbe.consulo.msil.ide.navigation.MsilGotoClassContributor"/>
 
 		<itemPresentationProvider forClass="org.mustbe.consulo.msil.lang.psi.MsilClassEntry"
 								  implementationClass="org.mustbe.consulo.msil.ide.presentation.MsilClassItemPresentationProvider"/>
@@ -75,7 +77,7 @@
 
 		<treeStructureProvider implementation="org.mustbe.consulo.msil.representation.projectView.MsilFileRepresentationProjectViewProvider"/>
 
-		<iconDescriptorUpdater implementation="org.mustbe.consulo.msil.ide.MsilIconDescriptorUpdater" />
+		<iconDescriptorUpdater implementation="org.mustbe.consulo.msil.ide.MsilIconDescriptorUpdater"/>
 		<projectService serviceInterface="org.mustbe.consulo.msil.representation.MsilFileRepresentationManager"
 						serviceImplementation="org.mustbe.consulo.msil.representation.MsilFileRepresentationManagerImpl"/>
 
@@ -92,8 +94,10 @@
 
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher"
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiSearcherImpl"/>
+		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetShortNameSearcher"
+						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetShortNameSearcherImpl"/>
 
-		<macro implementation="org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro" />
+		<macro implementation="org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro"/>
 
 		<contentFolderSupportPatcher implementation="org.mustbe.consulo.dotnet.module.DotNetContentFolderSupportPatcher"/>
 		<iconDescriptorUpdater implementation="org.mustbe.consulo.dotnet.ide.DotNetIconDescriptorUpdater"/>
@@ -104,11 +108,12 @@
 
 		<xdebugger.breakpointType implementation="org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType"/>
 
-		<orderEntryTypeProvider implementation="org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider" />
-		<addModuleDependencyTabFactory implementation="org.mustbe.consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory" />
+		<orderEntryTypeProvider implementation="org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider"/>
+		<addModuleDependencyTabFactory implementation="org.mustbe.consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>
 
-		<orderRootType implementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType" />
-		<orderRootTypeEditor key="dotNetExternalAttributes" implementationClass="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesOrderRootTypeUIFactory" />
+		<orderRootType implementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType"/>
+		<orderRootTypeEditor key="dotNetExternalAttributes"
+							 implementationClass="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesOrderRootTypeUIFactory"/>
 
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetCompiler"/>
 		<compiler implementation="org.mustbe.consulo.dotnet.compiler.DotNetDependencyCopier"/>
@@ -117,15 +122,15 @@
 
 
 		<multiHostInjector forClass="org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList"
-						   implementationClass="org.mustbe.consulo.dotnet.lang.MultiHostInjectorByAttribute" />
+						   implementationClass="org.mustbe.consulo.dotnet.lang.MultiHostInjectorByAttribute"/>
 
 		<psi.packageSupportProvider implementation="org.mustbe.consulo.dotnet.packageSupport.DotNetPackageSupportProvider"/>
 
-		<moduleRootsProcessor implementation="org.mustbe.consulo.dotnet.module.DotNetModuleRootsProcessor" />
+		<moduleRootsProcessor implementation="org.mustbe.consulo.dotnet.module.DotNetModuleRootsProcessor"/>
 
-		<coverageEngine implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEngine" />
-		<programRunner implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageProgramRunner" />
+		<coverageEngine implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEngine"/>
+		<programRunner implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageProgramRunner"/>
 
-		<sdkType implementation="org.mustbe.consulo.dotnet.sdk.RoslynBundleType" />
+		<sdkType implementation="org.mustbe.consulo.dotnet.sdk.RoslynBundleType"/>
 	</extensions>
 </idea-plugin>
