@@ -19,6 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.resolve;
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
@@ -62,6 +63,7 @@ public class MsilPsiSearcher extends IndexBasedDotNetPsiSearcher
 		return MsilIndexKeys.NAMESPACE_INDEX;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope,

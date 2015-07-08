@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.lang.psi.impl.CompositeDotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
@@ -47,6 +48,7 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 		mySearchers = EP_NAME.getExtensions(project);
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
@@ -72,6 +74,7 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 		return new CompositeDotNetNamespaceAsElement(myProject, qName, namespaceAsElements);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope,

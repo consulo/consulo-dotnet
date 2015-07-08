@@ -16,21 +16,29 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
-import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.consulo.lombok.annotations.LazyInstance;
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
+import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 22.05.14
+ * @since 05.07.15
  */
-public interface MsilIndexKeys
+public class MsilTypeByNameIndex extends StringStubIndexExtension<MsilClassEntry>
 {
-	StubIndexKey<String, MsilClassEntry> TYPE_BY_NAME_INDEX = StubIndexKey.createIndexKey("msil.type.by.name.index");
+	@NotNull
+	@LazyInstance
+	public static MsilTypeByNameIndex getInstance()
+	{
+		return EP_NAME.findExtension(MsilTypeByNameIndex.class);
+	}
 
-	StubIndexKey<String, MsilClassEntry> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("msil.type.by.qname.index");
-
-	StubIndexKey<String, DotNetQualifiedElement> ELEMENT_BY_QNAME_INDEX = StubIndexKey.createIndexKey("msil.element.by.qname.index");
-
-	StubIndexKey<String, DotNetQualifiedElement> NAMESPACE_INDEX = StubIndexKey.createIndexKey("msil.all.namespace.index");
+	@NotNull
+	@Override
+	public StubIndexKey<String, MsilClassEntry> getKey()
+	{
+		return MsilIndexKeys.TYPE_BY_NAME_INDEX;
+	}
 }

@@ -23,6 +23,8 @@ import org.mustbe.consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNameIdentifierOwner;
@@ -46,6 +48,12 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 	protected MsilStubElementImpl(@NotNull T stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
+	}
+
+	@Override
+	public ItemPresentation getPresentation()
+	{
+		return ItemPresentationProviders.getItemPresentation(this);
 	}
 
 	@RequiredReadAction

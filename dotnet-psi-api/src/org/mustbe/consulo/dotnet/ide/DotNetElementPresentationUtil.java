@@ -24,6 +24,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Function;
@@ -41,11 +42,11 @@ public class DotNetElementPresentationUtil
 		String name = el.getName();
 		if(genericParameters.length == 0)
 		{
-			return name == null ? "<null>" : name;
+			return name == null ? "<null>" : MsilHelper.cutGenericMarker(name);
 		}
 
 		StringBuilder builder = new StringBuilder();
-		builder.append(name == null ? "<null>" : name);
+		builder.append(name == null ? "<null>" : MsilHelper.cutGenericMarker(name));
 		formatTypeGenericParameters(genericParameters, builder);
 		return builder.toString();
 	}

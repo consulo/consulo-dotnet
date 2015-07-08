@@ -4,6 +4,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetInheritUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
@@ -42,6 +43,10 @@ public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 				else if(DotNetInheritUtil.isException(typeDeclaration))
 				{
 					main = typeDeclaration.hasModifier(MsilTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractException : AllIcons.Nodes.ExceptionClass;
+				}
+				else if(DotNetInheritUtil.isInheritor(typeDeclaration, DotNetTypes.System.MulticastDelegate, true))
+				{
+					main = AllIcons.Nodes.Method;
 				}
 			}
 
