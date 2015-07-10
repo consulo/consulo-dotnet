@@ -232,6 +232,7 @@
           <orderEntry type="module" module-name="dotnet-psi-impl" exported="" />
           <orderEntry type="library" name="joou" level="project" />
           <orderEntry type="library" name="dotnet-msil-decompiler" level="project" />
+          <orderEntry type="library" name="dotnet-asm" level="project" />
         </module-layer>
       </module>
       <module name="composite-formatting-string" dirurl="file://$PROJECT_DIR$/composite-formatting-string" current-layer="Default">

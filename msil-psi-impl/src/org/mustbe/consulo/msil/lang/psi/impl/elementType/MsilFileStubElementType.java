@@ -19,12 +19,14 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.msil.MsilLanguage;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilFileStub;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
+import com.intellij.psi.impl.source.CharTableImpl;
 import com.intellij.psi.stubs.DefaultStubBuilder;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -36,6 +38,11 @@ import com.intellij.psi.tree.IStubFileElementType;
  */
 public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 {
+	static
+	{
+		CharTableImpl.addStringsFromClassToStatics(DotNetTypes.class);
+	}
+
 	public MsilFileStubElementType()
 	{
 		super("MSIL_FILE", MsilLanguage.INSTANCE);
