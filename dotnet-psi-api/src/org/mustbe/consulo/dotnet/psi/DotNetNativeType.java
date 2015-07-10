@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -26,5 +27,6 @@ import com.intellij.psi.PsiElement;
 public interface DotNetNativeType extends DotNetType
 {
 	@NotNull
+	@RequiredReadAction
 	PsiElement getTypeElement();
 }

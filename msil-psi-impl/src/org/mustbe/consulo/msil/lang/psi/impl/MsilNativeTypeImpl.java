@@ -74,6 +74,7 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 
 	@NotNull
 	@Override
+	@RequiredReadAction
 	public PsiElement getTypeElement()
 	{
 		return findNotNullChildByType(MsilTokenSets.NATIVE_TYPES);

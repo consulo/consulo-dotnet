@@ -1,0 +1,29 @@
+package org.mustbe.consulo.msil.lang.stubbing.values;
+
+import edu.arizona.cs.mbel.signature.TypeSignature;
+
+/**
+ * @author VISTALL
+ * @since 10.07.2015
+ */
+public class MsiCustomAttributeValue
+{
+	private TypeSignature myTypeSignature;
+	private Object myValue;
+
+	public MsiCustomAttributeValue(TypeSignature typeSignature, Object value)
+	{
+		myTypeSignature = typeSignature;
+		myValue = value;
+	}
+
+	public Object getValue()
+	{
+		return myValue;
+	}
+
+	public TypeSignature getTypeSignature()
+	{
+		return myTypeSignature;
+	}
+}
