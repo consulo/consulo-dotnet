@@ -24,6 +24,33 @@ public interface DotNetTypes
 {
 	interface System
 	{
+		interface Linq
+		{
+			String IGrouping$2 = "System.Linq.IGrouping`2";
+		}
+
+		interface Threading
+		{
+			interface Tasks
+			{
+				String Task = "System.Threading.Tasks.Task";
+				String Task$1 = "System.Threading.Tasks.Task`1";
+			}
+		}
+
+		interface Collections
+		{
+			interface Generic
+			{
+				String IEnumerable$1 = "System.Collections.Generic.IEnumerable`1";
+				String IEnumerator$1 = "System.Collections.Generic.IEnumerator`1";
+				String IList$1 = "System.Collections.Generic.IList`1";
+			}
+
+			String IEnumerable = "System.Collections.IEnumerable";
+			String IEnumerator = "System.Collections.IEnumerator";
+		}
+
 		interface Reflection
 		{
 			String AssemblyTitleAttribute = "System.Reflection.AssemblyTitleAttribute";
@@ -38,8 +65,16 @@ public interface DotNetTypes
 
 		interface Runtime
 		{
+			interface InteropServices
+			{
+				String InAttribute = "System.Runtime.InteropServices.InAttribute";
+				String OutAttribute = "System.Runtime.InteropServices.OutAttribute";
+			}
+
 			interface CompilerServices
 			{
+				String InternalsVisibleToAttribute = "System.Runtime.CompilerServices.InternalsVisibleToAttribute";
+				String AsyncStateMachineAttribute = "System.Runtime.CompilerServices.AsyncStateMachineAttribute";
 				String ExtensionAttribute = "System.Runtime.CompilerServices.ExtensionAttribute";
 				String IndexerName = "System.Runtime.CompilerServices.IndexerName";
 			}
@@ -72,10 +107,12 @@ public interface DotNetTypes
 		String Boolean = "System.Boolean";
 		String TypedReference = "System.TypedReference";
 		String IDisposable = "System.IDisposable";
-		String Void = "System.Void";
+		String RuntimeArgumentHandle = "System.RuntimeArgumentHandle";
 
+		String Void = "System.Void";
 		String Attribute = "System.Attribute";
 		String ObsoleteAttribute = "System.ObsoleteAttribute";
 		String ParamArrayAttribute = "System.ParamArrayAttribute";
+		String FlagsAttribute  = "System.FlagsAttribute";
 	}
 }
