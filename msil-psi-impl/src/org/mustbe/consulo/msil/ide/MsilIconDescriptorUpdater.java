@@ -11,6 +11,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
+import org.mustbe.consulo.msil.lang.psi.impl.MsilNamespaceAsElementImpl;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
@@ -29,6 +30,12 @@ public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 	@RequiredReadAction
 	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags)
 	{
+		if(element instanceof MsilNamespaceAsElementImpl)
+		{
+			iconDescriptor.setMainIcon(AllIcons.Nodes.Package);
+			return;
+		}
+
 		if(element instanceof MsilClassEntry)
 		{
 			Icon main = null;
