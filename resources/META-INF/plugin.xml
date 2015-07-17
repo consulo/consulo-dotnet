@@ -37,9 +37,9 @@
 		<extensionPoint name="stubIndexer" interface="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer"/>
 
 		<extensionPoint name="debugger.provider" interface="org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider"/>
-		<extensionPoint name="classInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
-		<extensionPoint name="directClassInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
-		<extensionPoint name="allClassesSearch" interface="com.intellij.util.QueryExecutor"/>
+		<extensionPoint name="typeInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
+		<extensionPoint name="directTypeInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
+		<extensionPoint name="allTypesSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="documentationResolver" interface="org.mustbe.consulo.dotnet.documentation.DotNetDocumentationResolver"/>
 		<extensionPoint name="msilFileRepresentation" interface="org.mustbe.consulo.msil.representation.MsilFileRepresentationProvider"/>
 
@@ -57,6 +57,7 @@
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
 		<psiSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilPsiSearcher"/>
 		<shortNameSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilShortNameSearcher"/>
+		<directTypeInheritorsSearch implementation="org.mustbe.consulo.msil.lang.psi.impl.searchers.MsilDirectTypeInheritorsSearcherExecutor" />
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
@@ -64,6 +65,7 @@
 		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex"/>
 		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilElementByQNameIndex"/>
 		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex"/>
+		<stubIndex implementation="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilExtendsListIndex"/>
 
 		<gotoClassContributor implementation="org.mustbe.consulo.msil.ide.navigation.MsilGotoClassContributor"/>
 

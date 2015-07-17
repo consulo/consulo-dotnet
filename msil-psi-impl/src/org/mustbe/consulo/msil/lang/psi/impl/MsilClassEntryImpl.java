@@ -125,10 +125,11 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return ContainerUtil.toArray(list, DotNetTypeRef.EMPTY_ARRAY);
 	}
 
+	@RequiredReadAction
 	@Override
-	public boolean isInheritor(@NotNull DotNetTypeDeclaration other, boolean deep)
+	public boolean isInheritor(@NotNull String otherVmQName, boolean deep)
 	{
-		return DotNetInheritUtil.isInheritor(this, other, deep);
+		return DotNetInheritUtil.isInheritor(this, otherVmQName, deep);
 	}
 
 	@Override

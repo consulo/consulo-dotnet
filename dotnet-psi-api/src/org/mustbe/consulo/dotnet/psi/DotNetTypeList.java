@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
@@ -26,14 +27,13 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 public interface DotNetTypeList extends DotNetElement
 {
 	@NotNull
+	@RequiredReadAction
 	DotNetType[] getTypes();
 
 	@NotNull
+	@RequiredReadAction
 	DotNetTypeRef[] getTypeRefs();
 
-	@NotNull
-	@Deprecated
-	String[] getTypeTexts();
-
+	@RequiredReadAction
 	int getTypesCount();
 }

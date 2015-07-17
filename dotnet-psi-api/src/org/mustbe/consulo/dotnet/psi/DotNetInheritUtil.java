@@ -18,12 +18,11 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -32,27 +31,32 @@ import lombok.val;
 @Logger
 public class DotNetInheritUtil
 {
+	@RequiredReadAction
 	public static boolean isStruct(DotNetTypeDeclaration typeDeclaration)
 	{
 		return isInheritor(typeDeclaration, DotNetTypes.System.ValueType, true);
 	}
 
+	@RequiredReadAction
 	public static boolean isAttribute(DotNetTypeDeclaration typeDeclaration)
 	{
 		return isInheritor(typeDeclaration, DotNetTypes.System.Attribute, true);
 	}
 
+	@RequiredReadAction
 	public static boolean isException(DotNetTypeDeclaration typeDeclaration)
 	{
 		return isParentOrSelf(DotNetTypes.System.Exception, typeDeclaration, true);
 	}
 
+	@RequiredReadAction
 	public static boolean isEnum(DotNetTypeDeclaration typeDeclaration)
 	{
 		return isInheritor(typeDeclaration, DotNetTypes.System.Enum, true);
 	}
 
-	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, String other, boolean deep)
+	@RequiredReadAction
+	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, @NotNull String other, boolean deep)
 	{
 		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
 		if(anExtends.length > 0)
@@ -85,6 +89,7 @@ public class DotNetInheritUtil
 		return false;
 	}
 
+	@RequiredReadAction
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
 	{
 		PsiElement resolve = typeRef.resolve(element).getElement();
@@ -96,6 +101,7 @@ public class DotNetInheritUtil
 		return isParentOrSelf(parentClass, typeDeclaration, deep);
 	}
 
+	@RequiredReadAction
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
 		if(Comparing.equal(parentClass, typeDeclaration.getVmQName()))
@@ -105,12 +111,13 @@ public class DotNetInheritUtil
 		return isParent(parentClass, typeDeclaration, deep);
 	}
 
+	@RequiredReadAction
 	public static boolean isParent(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
-		val type = DotNetPsiSearcher.getInstance(typeDeclaration.getProject()).findType(parentClass, typeDeclaration.getResolveScope());
-		return type != null && typeDeclaration.isInheritor(type, deep);
+		return typeDeclaration.isInheritor(parentClass, deep);
 	}
 
+	@Deprecated
 	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, DotNetTypeDeclaration other, boolean deep)
 	{
 		if(typeDeclaration.isEquivalentTo(other))

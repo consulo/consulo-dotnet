@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import com.intellij.psi.stubs.StubIndexKey;
 
@@ -33,4 +34,6 @@ public interface MsilIndexKeys
 	StubIndexKey<String, DotNetQualifiedElement> ELEMENT_BY_QNAME_INDEX = StubIndexKey.createIndexKey("msil.element.by.qname.index");
 
 	StubIndexKey<String, DotNetQualifiedElement> NAMESPACE_INDEX = StubIndexKey.createIndexKey("msil.all.namespace.index");
+
+	StubIndexKey<String, DotNetTypeList> EXTENDS_LIST_INDEX = StubIndexKey.createIndexKey("msil.extends.index");
 }

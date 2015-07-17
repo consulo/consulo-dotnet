@@ -21,6 +21,7 @@ package org.mustbe.consulo.dotnet.psi.search.searches;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.searches.ExtensibleQueryFactory;
 import com.intellij.util.Query;
@@ -30,9 +31,9 @@ import com.intellij.util.Query;
  *         <p/>
  *         Copied from Java plugin by Jetbrains (com.intellij.psi.search.searches.ClassInheritorsSearch)
  */
-public class AllClassesSearch extends ExtensibleQueryFactory<DotNetTypeDeclaration, AllClassesSearch.SearchParameters>
+public class AllTypesSearch extends ExtensibleQueryFactory<DotNetTypeDeclaration, AllTypesSearch.SearchParameters>
 {
-	public static final AllClassesSearch INSTANCE = new AllClassesSearch();
+	public static final AllTypesSearch INSTANCE = new AllTypesSearch();
 
 	public static class SearchParameters
 	{
@@ -42,7 +43,7 @@ public class AllClassesSearch extends ExtensibleQueryFactory<DotNetTypeDeclarati
 
 		public SearchParameters(final SearchScope scope, final Project project)
 		{
-			this(scope, project, Condition.TRUE);
+			this(scope, project, Conditions.<String>alwaysTrue());
 		}
 
 		public SearchParameters(final SearchScope scope, final Project project, final Condition<String> shortNameCondition)
@@ -68,7 +69,7 @@ public class AllClassesSearch extends ExtensibleQueryFactory<DotNetTypeDeclarati
 		}
 	}
 
-	private AllClassesSearch()
+	private AllTypesSearch()
 	{
 		super("org.mustbe.consulo.dotnet.core");
 	}

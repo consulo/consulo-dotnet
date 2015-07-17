@@ -16,10 +16,12 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author VISTALL
@@ -27,8 +29,23 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class MsilTypeListStub extends StubBase<DotNetTypeList>
 {
-	public MsilTypeListStub(StubElement parent, IStubElementType elementType)
+	private final StringRef[] myReferences;
+
+	public MsilTypeListStub(StubElement parent, IStubElementType elementType, StringRef[] references)
 	{
 		super(parent, elementType);
+		myReferences = references;
+	}
+
+	@NotNull
+	public String[] geShortReferences()
+	{
+		String[] ar = new String[myReferences.length];
+		for(int i = 0; i < myReferences.length; i++)
+		{
+			StringRef reference = myReferences[i];
+			ar[i] = StringRef.toString(reference);
+		}
+		return ar;
 	}
 }
