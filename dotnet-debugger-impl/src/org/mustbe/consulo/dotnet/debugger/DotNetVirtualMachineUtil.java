@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
-import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
+import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.openapi.project.Project;
 import mono.debugger.TypeMirror;
 
