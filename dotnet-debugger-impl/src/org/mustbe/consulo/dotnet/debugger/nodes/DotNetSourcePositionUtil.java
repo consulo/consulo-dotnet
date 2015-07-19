@@ -23,6 +23,8 @@ import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import mono.debugger.StackFrameMirror;
 
 /**
@@ -45,6 +47,11 @@ public class DotNetSourcePositionUtil
 		{
 			return null;
 		}
-		return DotNetDebuggerUtil.findPsiElement(context.getProject(), fileByPath, myFrame.location().lineNumber() - 1);
+		PsiFile file = PsiManager.getInstance(context.getProject()).findFile(fileByPath);
+		if(file == null)
+		{
+			return null;
+		}
+		return DotNetDebuggerUtil.findPsiElement(file, myFrame.location().lineNumber() - 1);
 	}
 }

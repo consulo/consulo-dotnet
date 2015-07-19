@@ -41,15 +41,6 @@ public class DotNetVirtualMachineUtil
 	}
 
 	@NotNull
-	@RequiredReadAction
-	public static String toVMQualifiedName(DotNetTypeDeclaration qualifiedElement)
-	{
-		String vmQName = qualifiedElement.getVmQName();
-		assert vmQName != null;
-		return vmQName;
-	}
-
-	@NotNull
 	public static String formatNameWithGeneric(@NotNull TypeMirror typeMirror)
 	{
 		StringBuilder builder = new StringBuilder();

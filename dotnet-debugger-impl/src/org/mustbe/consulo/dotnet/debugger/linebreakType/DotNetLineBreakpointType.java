@@ -16,17 +16,13 @@
 
 package org.mustbe.consulo.dotnet.debugger.linebreakType;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
-import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
-import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -35,10 +31,9 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
-import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import mono.debugger.Location;
 import mono.debugger.LocationImpl;
@@ -103,56 +98,8 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		}
 		finally
 		{
-			updateBreakpointPresentation(project, resultPair.getFirst(), breakpoint);
+			DotNetBreakpointUtil.updateBreakpointPresentation(project, resultPair.getFirst() == BreakpointResult.OK, breakpoint);
 		}
-	}
-
-	private void updateBreakpointPresentation(@NotNull Project project,
-			@NotNull BreakpointResult breakpointResult,
-			@NotNull XLineBreakpoint breakpoint)
-	{
-		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
-
-		Icon icon = null;
-		SuspendPolicy suspendPolicy = breakpoint.getSuspendPolicy();
-		if(breakpoint.isTemporary())
-		{
-			if(suspendPolicy == SuspendPolicy.NONE)
-			{
-				icon = AllIcons.Debugger.Db_temporary_breakpoint;
-			}
-			else
-			{
-				icon = AllIcons.Debugger.Db_muted_temporary_breakpoint;
-			}
-		}
-		else
-		{
-			switch(breakpointResult)
-			{
-				default:
-					if(suspendPolicy == SuspendPolicy.NONE)
-					{
-						icon = AllIcons.Debugger.Db_muted_invalid_breakpoint;
-					}
-					else
-					{
-						icon = AllIcons.Debugger.Db_invalid_breakpoint;
-					}
-					break;
-				case OK:
-					if(suspendPolicy == SuspendPolicy.NONE)
-					{
-						icon = AllIcons.Debugger.Db_muted_verified_breakpoint;
-					}
-					else
-					{
-						icon = AllIcons.Debugger.Db_verified_breakpoint;
-					}
-					break;
-			}
-		}
-		breakpointManager.updateBreakpointPresentation(breakpoint, icon, null);
 	}
 
 	@NotNull
@@ -167,46 +114,41 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			return INVALID;
 		}
 
-		PsiElement psiElement = ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>()
+		final PsiFile file = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>()
 		{
 			@Override
-			public PsiElement compute()
+			public PsiFile compute()
 			{
-				return DotNetDebuggerUtil.findPsiElement(project, fileByUrl, lineBreakpoint.getLine());
+				return PsiManager.getInstance(project).findFile(fileByUrl);
 			}
 		});
-		if(psiElement == null)
-		{
-			return INVALID;
-		}
-		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(psiElement, DotNetCodeBlockOwner.class, false);
-		if(codeBlockOwner == null)
-		{
-			return INVALID;
-		}
-		PsiElement codeBlock = codeBlockOwner.getCodeBlock();
-		if(codeBlock == null)
-		{
-			return INVALID;
-		}
-		if(!PsiTreeUtil.isAncestor(codeBlock, psiElement, false))
-		{
-			return INVALID;
-		}
-		final DotNetTypeDeclaration typeDeclaration = PsiTreeUtil.getParentOfType(codeBlockOwner, DotNetTypeDeclaration.class);
-		if(typeDeclaration == null)
+
+		if(file == null)
 		{
 			return INVALID;
 		}
 
-		String vmQualifiedName = ApplicationManager.getApplication().runReadAction(new Computable<String>()
+		final String vmQualifiedName = ApplicationManager.getApplication().runReadAction(new Computable<String>()
 		{
 			@Override
 			public String compute()
 			{
-				return DotNetVirtualMachineUtil.toVMQualifiedName(typeDeclaration);
+				PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(file, lineBreakpoint.getLine());
+				if(psiElement == null)
+				{
+					return null;
+				}
+				DotNetDebuggerSourceLineResolver resolver = DotNetDebuggerSourceLineResolverEP.INSTANCE.forLanguage(file.getLanguage());
+				assert resolver != null;
+				return resolver.resolveParentVmQName(psiElement);
 			}
 		});
+
+		if(vmQualifiedName == null)
+		{
+			return INVALID;
+		}
+
 		if(typeMirror != null && !Comparing.equal(vmQualifiedName, typeMirror.qualifiedName()))
 		{
 			return WRONG_TYPE;

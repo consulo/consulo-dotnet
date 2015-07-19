@@ -21,8 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -36,10 +34,10 @@ public class DotNetDebuggerUtil
 {
 	@Nullable
 	@RequiredReadAction
-	public static PsiElement findPsiElement(@NotNull final Project project, @NotNull final VirtualFile file, final int line)
+	public static PsiElement findPsiElement(@NotNull PsiFile file, final int line)
 	{
-		final Document doc = FileDocumentManager.getInstance().getDocument(file);
-		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(doc);
+		final Document doc = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
+		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(file.getProject()).getPsiFile(doc);
 		if(psi == null)
 		{
 			return null;

@@ -28,6 +28,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetAbstractBreakpointType;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetBreakpointUtil;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -56,7 +57,6 @@ import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
-import lombok.val;
 import mono.debugger.EventKind;
 import mono.debugger.Location;
 import mono.debugger.NotSuspendedException;
@@ -202,14 +202,19 @@ public class DotNetDebugThread extends Thread
 		virtualMachine.enableEvents(EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,
 				EventKind.USER_BREAK, EventKind.USER_LOG);
 
+		Collection<? extends XLineBreakpoint<XBreakpointProperties>> breakpoints = getEnabledBreakpoints();
+		for(XLineBreakpoint<XBreakpointProperties> breakpoint : breakpoints)
+		{
+			DotNetBreakpointUtil.updateBreakpointPresentation(mySession.getProject(), false, breakpoint);
+		}
+
 		TypeLoadRequest typeLoad = virtualMachine.eventRequestManager().createTypeLoad();
 		if(virtualMachine.isAtLeastVersion(2, 9))
 		{
 			Set<String> files = new HashSet<String>();
-			Collection<? extends XLineBreakpoint<XBreakpointProperties>> ourBreakpoints = getEnabledBreakpoints();
-			for(final XLineBreakpoint<XBreakpointProperties> ourBreakpoint : ourBreakpoints)
+			for(final XLineBreakpoint<XBreakpointProperties> breakpoint : breakpoints)
 			{
-				files.add(ourBreakpoint.getPresentableFilePath());
+				files.add(breakpoint.getPresentableFilePath());
 			}
 
 			typeLoad.addSourceFileFilter(ArrayUtil.toStringArray(files));
@@ -379,7 +384,7 @@ public class DotNetDebugThread extends Thread
 						continue;
 					}
 
-					val type = (DotNetLineBreakpointType) breakpoint.getType();
+					DotNetLineBreakpointType type = (DotNetLineBreakpointType) breakpoint.getType();
 
 					type.createRequest(mySession, myVirtualMachine, breakpoint, typeMirror);
 				}
