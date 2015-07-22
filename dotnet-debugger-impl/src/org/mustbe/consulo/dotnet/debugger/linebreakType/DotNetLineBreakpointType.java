@@ -31,7 +31,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
@@ -55,16 +54,6 @@ import mono.debugger.request.EventRequestManager;
  */
 public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 {
-	enum BreakpointResult
-	{
-		INVALID,
-		WRONG_TYPE,
-		OK
-	}
-
-	private static final Pair<BreakpointResult, Location> INVALID = Pair.create(BreakpointResult.INVALID, null);
-	private static final Pair<BreakpointResult, Location> WRONG_TYPE = Pair.create(BreakpointResult.WRONG_TYPE, null);
-
 	@NotNull
 	public static DotNetLineBreakpointType getInstance()
 	{
