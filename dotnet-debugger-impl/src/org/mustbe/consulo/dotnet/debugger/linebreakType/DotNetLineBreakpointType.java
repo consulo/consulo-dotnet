@@ -16,6 +16,10 @@
 
 package org.mustbe.consulo.dotnet.debugger.linebreakType;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
@@ -33,6 +37,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import mono.debugger.Location;
@@ -77,33 +82,29 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException
 	{
-		Pair<BreakpointResult, Location> resultPair = findLocationImpl(project, virtualMachine, breakpoint, typeMirror);
-		try
+		Collection<Location> locationsImpl = findLocationsImpl(project, virtualMachine, breakpoint, typeMirror);
+		if(!locationsImpl.isEmpty())
 		{
-			switch(resultPair.getFirst())
+			if(breakpoint.getSuspendPolicy() != SuspendPolicy.NONE)
 			{
-				default:
-					return false;
-				case OK:
-					if(breakpoint.getSuspendPolicy() != SuspendPolicy.NONE)
-					{
-						EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-						BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(resultPair.getSecond());
-						breakpointRequest.enable();
+				for(Location location : locationsImpl)
+				{
+					EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+					BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
+					breakpointRequest.enable();
 
-						virtualMachine.putRequest(breakpoint, breakpointRequest);
-					}
-					return true;
+					virtualMachine.putRequest(breakpoint, breakpointRequest);
+				}
 			}
 		}
-		finally
-		{
-			DotNetBreakpointUtil.updateBreakpointPresentation(project, resultPair.getFirst() == BreakpointResult.OK, breakpoint);
-		}
+
+		DotNetBreakpointUtil.updateBreakpointPresentation(project, !locationsImpl.isEmpty(), breakpoint);
+
+		return !locationsImpl.isEmpty();
 	}
 
 	@NotNull
-	public Pair<BreakpointResult, Location> findLocationImpl(@NotNull final Project project,
+	public Collection<Location> findLocationsImpl(@NotNull final Project project,
 			@NotNull final DotNetVirtualMachine virtualMachine,
 			@NotNull final XLineBreakpoint<?> lineBreakpoint,
 			@Nullable final TypeMirror typeMirror) throws TypeMirrorUnloadedException
@@ -111,7 +112,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(lineBreakpoint.getFileUrl());
 		if(fileByUrl == null)
 		{
-			return INVALID;
+			return Collections.emptyList();
 		}
 
 		final PsiFile file = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>()
@@ -125,7 +126,7 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 
 		if(file == null)
 		{
-			return INVALID;
+			return Collections.emptyList();
 		}
 
 		final String vmQualifiedName = ApplicationManager.getApplication().runReadAction(new Computable<String>()
@@ -146,37 +147,38 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 
 		if(vmQualifiedName == null)
 		{
-			return INVALID;
+			return Collections.emptyList();
 		}
 
 		if(typeMirror != null && !Comparing.equal(vmQualifiedName, typeMirror.qualifiedName()))
 		{
-			return WRONG_TYPE;
+			return Collections.emptyList();
 		}
 
 		TypeMirror mirror = typeMirror == null ? virtualMachine.findTypeMirror(fileByUrl, vmQualifiedName) : typeMirror;
 
 		if(mirror == null)
 		{
-			return INVALID;
+			return Collections.emptyList();
 		}
 
-		MethodMirror targetMirror = null;
-		int index = 0;
+		Map<MethodMirror, Location> methods = new LinkedHashMap<MethodMirror, Location>();
+
 		try
 		{
-			targetMirror = null;
-			index = -1;
-			highLoop:
+
 			for(MethodMirror methodMirror : mirror.methods())
 			{
+				if(methods.containsKey(methodMirror))
+				{
+					continue;
+				}
+
 				for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
 				{
 					if(entry.line == (lineBreakpoint.getLine() + 1))
 					{
-						targetMirror = methodMirror;
-						index = entry.offset;
-						break highLoop;
+						methods.put(methodMirror, new LocationImpl(virtualMachine.getDelegate(), methodMirror, entry.offset));
 					}
 				}
 			}
@@ -186,11 +188,6 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 			throw new TypeMirrorUnloadedException(mirror, e);
 		}
 
-		if(targetMirror == null)
-		{
-			return INVALID;
-		}
-
-		return Pair.<BreakpointResult, Location>create(BreakpointResult.OK, new LocationImpl(virtualMachine.getDelegate(), targetMirror, index));
+		return methods.values();
 	}
 }

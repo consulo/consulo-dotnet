@@ -38,7 +38,6 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import lombok.val;
 import mono.debugger.ThreadMirror;
 import mono.debugger.event.EventSet;
-import mono.debugger.request.EventRequest;
 import mono.debugger.request.StepRequest;
 
 /**
@@ -74,12 +73,7 @@ public class DotNetDebugProcess extends XDebugProcess
 				@Override
 				public boolean process(DotNetVirtualMachine virtualMachine)
 				{
-					EventRequest eventRequest = virtualMachine.putRequest(breakpoint, null);
-					if(eventRequest != null)
-					{
-						eventRequest.disable();
-						virtualMachine.eventRequestManager().deleteEventRequest(eventRequest);
-					}
+					virtualMachine.stopBreakpointRequests(breakpoint);
 					return false;
 				}
 			});

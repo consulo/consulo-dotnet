@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.MultiMap;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import mono.debugger.AssemblyMirror;
 import mono.debugger.ThreadMirror;
@@ -48,7 +50,7 @@ public class DotNetVirtualMachine
 {
 	private final Map<String, TypeMirror> myLoadedTypeMirrors = ContainerUtil.newConcurrentMap();
 	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
-	private final Map<XBreakpoint, EventRequest> myBreakpointEventRequests = ContainerUtil.newConcurrentMap();
+	private final MultiMap<XBreakpoint, EventRequest> myBreakpointEventRequests = MultiMap.create();
 
 	private final VirtualMachine myVirtualMachine;
 
@@ -88,8 +90,8 @@ public class DotNetVirtualMachine
 		myStepRequests.remove(stepRequest);
 	}
 
-	@Nullable
-	public EventRequest putRequest(@NotNull XBreakpoint<?> breakpoint, @Nullable EventRequest request)
+	@NotNull
+	public Collection<EventRequest> putRequest(@NotNull XBreakpoint<?> breakpoint, @Nullable EventRequest request)
 	{
 		if(request == null)
 		{
@@ -97,15 +99,26 @@ public class DotNetVirtualMachine
 		}
 		else
 		{
-			myBreakpointEventRequests.put(breakpoint, request);
-			return request;
+			myBreakpointEventRequests.putValue(breakpoint, request);
+			return myBreakpointEventRequests.get(breakpoint);
 		}
 	}
 
 	@Nullable
-	public EventRequest getRequest(XBreakpoint<?> breakpoint)
+	public Collection<EventRequest> getRequests(XBreakpoint<?> breakpoint)
 	{
 		return myBreakpointEventRequests.get(breakpoint);
+	}
+
+	public void stopBreakpointRequests(XBreakpoint<?> breakpoint)
+	{
+		Collection<EventRequest> eventRequests = myBreakpointEventRequests.get(breakpoint);
+		for(EventRequest eventRequest : eventRequests)
+		{
+			eventRequest.disable();
+
+			myVirtualMachine.eventRequestManager().deleteEventRequest(eventRequest);
+		}
 	}
 
 	public void stopStepRequests()
