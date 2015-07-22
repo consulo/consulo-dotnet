@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.debugger.linebreakType;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,9 @@ import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
+import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -37,14 +40,16 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.util.containers.hash.LinkedHashMap;
+import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import mono.debugger.Location;
 import mono.debugger.LocationImpl;
 import mono.debugger.MethodMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.UnloadedElementException;
+import mono.debugger.VMDisconnectedException;
 import mono.debugger.protocol.Method_GetDebugInfo;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequestManager;
@@ -53,7 +58,7 @@ import mono.debugger.request.EventRequestManager;
  * @author VISTALL
  * @since 10.04.14
  */
-public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
+public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBreakpointProperties>
 {
 	@NotNull
 	public static DotNetLineBreakpointType getInstance()
@@ -63,11 +68,33 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 
 	public DotNetLineBreakpointType()
 	{
-		super("dotnet-linebreapoint", ".NET Line Breakpoint", null);
+		super("dotnet-linebreapoint", ".NET Line Breakpoint");
 	}
 
-	@Override
-	protected boolean createRequestImpl(@NotNull Project project,
+	public boolean createRequest(@NotNull XDebugSession debugSession,
+			@NotNull DotNetVirtualMachine virtualMachine,
+			@NotNull XLineBreakpoint breakpoint,
+			@Nullable TypeMirror typeMirror)
+	{
+		try
+		{
+			virtualMachine.stopBreakpointRequests(breakpoint);
+
+			return createRequestImpl(debugSession.getProject(), virtualMachine, breakpoint, typeMirror);
+		}
+		catch(VMDisconnectedException ignored)
+		{
+		}
+		catch(TypeMirrorUnloadedException e)
+		{
+			debugSession.getConsoleView().print(e.getFullName(), ConsoleViewContentType.ERROR_OUTPUT);
+			debugSession.getConsoleView().print("You can fix this error - restart debug. If you can repeat this error, " +
+					"please report it here 'https://github.com/consulo/consulo-dotnet/issues'", ConsoleViewContentType.ERROR_OUTPUT);
+		}
+		return false;
+	}
+
+	private boolean createRequestImpl(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException
@@ -200,5 +227,12 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 				methods.put(methodMirror, new LocationImpl(virtualMachine.getDelegate(), methodMirror, entry.offset));
 			}
 		}
+	}
+
+	@Nullable
+	@Override
+	public DotNetLineBreakpointProperties createBreakpointProperties(@NotNull VirtualFile file, int line)
+	{
+		return new DotNetLineBreakpointProperties();
 	}
 }

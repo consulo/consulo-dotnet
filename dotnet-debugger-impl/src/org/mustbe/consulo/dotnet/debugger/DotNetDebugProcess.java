@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.debugger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
@@ -32,7 +33,6 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import lombok.val;
@@ -46,17 +46,17 @@ import mono.debugger.request.StepRequest;
  */
 public class DotNetDebugProcess extends XDebugProcess
 {
-	private class MyXBreakpointListener implements XBreakpointListener<XLineBreakpoint<XBreakpointProperties>>
+	private class MyXBreakpointListener implements XBreakpointListener<XLineBreakpoint<DotNetLineBreakpointProperties>>
 	{
 		@Override
-		public void breakpointAdded(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
+		public void breakpointAdded(@NotNull final XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint)
 		{
 			myDebugThread.processAnyway(new Processor<DotNetVirtualMachine>()
 			{
 				@Override
 				public boolean process(final DotNetVirtualMachine virtualMachine)
 				{
-					val type = (DotNetLineBreakpointType) breakpoint.getType();
+					DotNetLineBreakpointType type = (DotNetLineBreakpointType) breakpoint.getType();
 
 					type.createRequest(getSession(), virtualMachine, breakpoint, null);
 
@@ -66,7 +66,7 @@ public class DotNetDebugProcess extends XDebugProcess
 		}
 
 		@Override
-		public void breakpointRemoved(@NotNull final XLineBreakpoint<XBreakpointProperties> breakpoint)
+		public void breakpointRemoved(@NotNull final XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint)
 		{
 			myDebugThread.processAnyway(new Processor<DotNetVirtualMachine>()
 			{
@@ -80,7 +80,7 @@ public class DotNetDebugProcess extends XDebugProcess
 		}
 
 		@Override
-		public void breakpointChanged(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint)
+		public void breakpointChanged(@NotNull XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint)
 		{
 			if(breakpoint.isEnabled())
 			{
