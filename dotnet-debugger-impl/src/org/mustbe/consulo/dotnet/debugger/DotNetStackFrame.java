@@ -22,6 +22,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
@@ -29,6 +30,7 @@ import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.ObjectReviewer;
 import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldObjectReviewer;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -137,6 +139,13 @@ public class DotNetStackFrame extends XStackFrame
 			name = method.name() + "()";
 		}
 
+		Couple<String> lambdaInfo = DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(method);
+		if(lambdaInfo != null)
+		{
+			name = "lambda$" + lambdaInfo.getSecond();
+			icon = AllIcons.Nodes.Lambda;
+		}
+
 		component.setIcon(icon);
 		component.append(name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
 
@@ -153,7 +162,14 @@ public class DotNetStackFrame extends XStackFrame
 		builder.append(":");
 		builder.append(location.columnNumber());
 		builder.append(", ");
-		builder.append(DotNetVirtualMachineUtil.formatNameWithGeneric(location.method().declaringType()));
+		if(lambdaInfo == null)
+		{
+			builder.append(DotNetVirtualMachineUtil.formatNameWithGeneric(location.method().declaringType()));
+		}
+		else
+		{
+			builder.append(lambdaInfo.getFirst()).append("(...)");
+		}
 
 		component.append(builder.toString(), SimpleTextAttributes.GRAY_ATTRIBUTES);
 	}

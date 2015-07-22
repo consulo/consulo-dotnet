@@ -27,7 +27,7 @@ import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
-import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.DotNetDebuggerCompilerGenerateUtil;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;

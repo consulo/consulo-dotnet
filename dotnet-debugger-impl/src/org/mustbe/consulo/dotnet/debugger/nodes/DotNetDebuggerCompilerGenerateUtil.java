@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes.objectReview;
+package org.mustbe.consulo.dotnet.debugger.nodes;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
+import mono.debugger.MethodMirror;
 import mono.debugger.TypeMirror;
 
 /**
@@ -30,8 +32,20 @@ import mono.debugger.TypeMirror;
  */
 public class DotNetDebuggerCompilerGenerateUtil
 {
+	public static final Pattern LambdaMethodPattern = Pattern.compile("<([\\S\\d]+)>m__([\\d]+)");
 	public static final Pattern YieldNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__Iterator([\\d]+)");
 	public static final Pattern SomeReferenceToOriginalPattern = Pattern.compile("<([\\S\\d]+)>__([\\d]+)");
+
+	@Nullable
+	public static Couple<String> extractLambdaInfo(@NotNull MethodMirror methodMirror)
+	{
+		Matcher matcher = LambdaMethodPattern.matcher(methodMirror.name());
+		if(matcher.matches())
+		{
+			return Couple.of(matcher.group(1), matcher.group(2));
+		}
+		return null;
+	}
 
 	public static boolean isYieldNestedType(@NotNull TypeMirror typeMirror)
 	{
