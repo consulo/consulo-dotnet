@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.Getter;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import mono.debugger.FieldOrPropertyMirror;
@@ -41,31 +42,46 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 {
 	@NotNull
 	private final TypeMirror myTypeMirror;
-	private final ObjectValueMirror myObjectValueMirror;
+	private final Getter<ObjectValueMirror> myObjectValueMirrorGeter;
 
-	public DotNetObjectValueMirrorNode(
-			@NotNull DotNetDebugContext debuggerContext,
+	public DotNetObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull ThreadMirror threadMirror,
 			@NotNull TypeMirror typeMirror,
-			@Nullable ObjectValueMirror objectValueMirror)
+			@Nullable final ObjectValueMirror objectValueMirror)
 	{
-		super(debuggerContext, objectValueMirror == null ? "static" : "this", threadMirror);
+		this(debuggerContext, threadMirror, typeMirror, objectValueMirror == null ? null : new Getter<ObjectValueMirror>()
+		{
+			@Nullable
+			@Override
+			public ObjectValueMirror get()
+			{
+				return objectValueMirror;
+			}
+		});
+	}
+
+	public DotNetObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
+			@NotNull ThreadMirror threadMirror,
+			@NotNull TypeMirror typeMirror,
+			@Nullable Getter<ObjectValueMirror> objectValueMirrorGeter)
+	{
+		super(debuggerContext, objectValueMirrorGeter == null ? "static" : "this", threadMirror);
 		myTypeMirror = typeMirror;
-		myObjectValueMirror = objectValueMirror;
+		myObjectValueMirrorGeter = objectValueMirrorGeter;
 	}
 
 	@NotNull
 	@Override
 	public Icon getIconForVariable()
 	{
-		return myObjectValueMirror == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value;
+		return myObjectValueMirrorGeter == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value;
 	}
 
 	@Nullable
 	@Override
 	public Value<?> getValueOfVariableImpl()
 	{
-		return myObjectValueMirror;
+		return myObjectValueMirrorGeter == null ? null : myObjectValueMirrorGeter.get();
 	}
 
 	@Override
@@ -77,7 +93,7 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 	@Override
 	public boolean canHaveChildren()
 	{
-		return myObjectValueMirror == null || super.canHaveChildren();
+		return myObjectValueMirrorGeter == null || super.canHaveChildren();
 	}
 
 	@Override
@@ -88,7 +104,7 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 		List<FieldOrPropertyMirror> fieldMirrors = myTypeMirror.fieldAndProperties(true);
 		for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
 		{
-			if(!fieldMirror.isStatic() && myObjectValueMirror == null)
+			if(!fieldMirror.isStatic() && myObjectValueMirrorGeter == null)
 			{
 				continue;
 			}
@@ -98,7 +114,7 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 				continue;
 			}
 			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldMirror, myThreadMirror,
-					fieldMirror.isStatic() ? null : myObjectValueMirror));
+					fieldMirror.isStatic() ? null : myObjectValueMirrorGeter.get()));
 		}
 		node.addChildren(childrenList, true);
 	}

@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
+import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.ObjectReviewer;
+import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldObjectReviewer;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
@@ -48,6 +50,10 @@ import mono.debugger.*;
  */
 public class DotNetStackFrame extends XStackFrame
 {
+	private static final ObjectReviewer[] ourObjectReviewers = new ObjectReviewer[]{
+			new YieldObjectReviewer()
+	};
+
 	private final DotNetDebugContext myDebuggerContext;
 	private final StackFrameMirror myFrame;
 
@@ -161,16 +167,28 @@ public class DotNetStackFrame extends XStackFrame
 
 		try
 		{
-			Value value = myFrame.thisObject();
+			final Value value = myFrame.thisObject();
+
+			for(ObjectReviewer objectReviewer : ourObjectReviewers)
+			{
+				if(objectReviewer.reviewObject(myDebuggerContext, value, getFrame(), childrenList))
+				{
+					node.addChildren(childrenList, true);
+					return;
+				}
+			}
+
 			if(value instanceof ObjectValueMirror)
 			{
 				TypeMirror type = value.type();
 				assert type != null;
+
 				childrenList.add(new DotNetObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), type, (ObjectValueMirror) value));
 			}
 			else
 			{
-				childrenList.add(new DotNetObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), myFrame.location().declaringType(), null));
+				childrenList.add(new DotNetObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), myFrame.location().declaringType(),
+						(ObjectValueMirror) null));
 			}
 		}
 		catch(AbsentInformationException e)

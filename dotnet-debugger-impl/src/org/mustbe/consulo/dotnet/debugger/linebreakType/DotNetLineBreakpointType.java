@@ -27,6 +27,7 @@ import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
+import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.DotNetDebuggerCompilerGenerateUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -155,7 +156,6 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 
 		try
 		{
-
 			for(MethodMirror methodMirror : mirror.methods())
 			{
 				if(methods.containsKey(methodMirror))
@@ -163,11 +163,19 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 					continue;
 				}
 
-				for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
+				collectLocations(virtualMachine, lineBreakpoint, methods, methodMirror);
+			}
+
+			TypeMirror[] nestedTypeMirrors = mirror.nestedTypes();
+			for(TypeMirror nestedTypeMirror : nestedTypeMirrors)
+			{
+				if(DotNetDebuggerCompilerGenerateUtil.isYieldNestedType(nestedTypeMirror))
 				{
-					if(entry.line == (lineBreakpoint.getLine() + 1))
+					// we interest only MoveNext method
+					MethodMirror moveNext = nestedTypeMirror.findMethodByName("MoveNext", false);
+					if(moveNext != null)
 					{
-						methods.put(methodMirror, new LocationImpl(virtualMachine.getDelegate(), methodMirror, entry.offset));
+						collectLocations(virtualMachine, lineBreakpoint, methods, moveNext);
 					}
 				}
 			}
@@ -178,5 +186,19 @@ public class DotNetLineBreakpointType extends DotNetAbstractBreakpointType
 		}
 
 		return methods.values();
+	}
+
+	private void collectLocations(DotNetVirtualMachine virtualMachine,
+			XLineBreakpoint<?> lineBreakpoint,
+			Map<MethodMirror, Location> methods,
+			MethodMirror methodMirror)
+	{
+		for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
+		{
+			if(entry.line == (lineBreakpoint.getLine() + 1))
+			{
+				methods.put(methodMirror, new LocationImpl(virtualMachine.getDelegate(), methodMirror, entry.offset));
+			}
+		}
 	}
 }

@@ -35,12 +35,21 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 
 	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
+			@NotNull String name,
 			@NotNull ThreadMirror threadMirror,
 			@Nullable ObjectValueMirror objectValueMirror)
 	{
-		super(debuggerContext, fieldOrPropertyMirror.name(), threadMirror);
+		super(debuggerContext, name, threadMirror);
 		myFieldOrPropertyMirror = fieldOrPropertyMirror;
 		myObjectValueMirror = objectValueMirror;
+	}
+
+	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
+			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
+			@NotNull ThreadMirror threadMirror,
+			@Nullable ObjectValueMirror objectValueMirror)
+	{
+		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.name(), threadMirror, objectValueMirror);
 	}
 
 	@NotNull
