@@ -165,7 +165,7 @@ public class DotNetDebugProcess extends XDebugProcess
 			public boolean process(DotNetVirtualMachine virtualMachine)
 			{
 				virtualMachine.suspend();
-				getSession().positionReached(new DotNetSuspendContext(myDebugThread.createDebugContext(), null));
+				getSession().positionReached(new DotNetSuspendContext(myDebugThread.createDebugContext(null), null));
 				return false;
 			}
 		});

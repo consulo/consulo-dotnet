@@ -17,11 +17,13 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.execution.configurations.ModuleRunProfile;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 
 /**
  * @author VISTALL
@@ -32,14 +34,17 @@ public class DotNetDebugContext
 	private final Project myProject;
 	private final DotNetVirtualMachine myVirtualMachine;
 	private final RunProfile myRunProfile;
+	private XLineBreakpoint<?> myBreakpoint;
 
 	public DotNetDebugContext(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
-			@NotNull RunProfile runProfile)
+			@NotNull RunProfile runProfile,
+			@Nullable XLineBreakpoint<?> breakpoint)
 	{
 		myProject = project;
 		myVirtualMachine = virtualMachine;
 		myRunProfile = runProfile;
+		myBreakpoint = breakpoint;
 	}
 
 	@NotNull
@@ -60,6 +65,12 @@ public class DotNetDebugContext
 		{
 			return GlobalSearchScope.allScope(getProject());
 		}
+	}
+
+	@Nullable
+	public XLineBreakpoint<?> getBreakpoint()
+	{
+		return myBreakpoint;
 	}
 
 	@NotNull

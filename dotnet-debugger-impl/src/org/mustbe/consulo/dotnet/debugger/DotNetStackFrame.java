@@ -22,6 +22,9 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetSourcePositionImpl;
+import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
@@ -30,15 +33,19 @@ import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.ObjectReviewer;
 import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldObjectReviewer;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XStackFrame;
@@ -79,7 +86,41 @@ public class DotNetStackFrame extends XStackFrame
 		{
 			return null;
 		}
-		return XDebuggerUtil.getInstance().createPosition(fileByPath, myFrame.location().lineNumber() - 1);
+
+		XLineBreakpoint<?> breakpoint = myDebuggerContext.getBreakpoint();
+		XSourcePosition originalPosition = XDebuggerUtil.getInstance().createPosition(fileByPath, myFrame.location().lineNumber() - 1);
+		if(originalPosition == null)
+		{
+			return null;
+		}
+		if(breakpoint != null)
+		{
+			DotNetLineBreakpointProperties properties = (DotNetLineBreakpointProperties) breakpoint.getProperties();
+			final Integer executableChildrenAtLineIndex = properties.getExecutableChildrenAtLineIndex();
+			if(executableChildrenAtLineIndex != null && executableChildrenAtLineIndex > -1)
+			{
+				final MethodMirror method = myFrame.location().method();
+				if(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(method) != null)
+				{
+					PsiElement executableElement = ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>()
+					{
+						@Override
+						public PsiElement compute()
+						{
+							return DotNetLineBreakpointType.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), method.debugInfo(),
+									executableChildrenAtLineIndex);
+						}
+					});
+
+					if(executableElement != null)
+					{
+						return new DotNetSourcePositionImpl(originalPosition, executableElement);
+					}
+				}
+			}
+		}
+
+		return originalPosition;
 	}
 
 	@Nullable

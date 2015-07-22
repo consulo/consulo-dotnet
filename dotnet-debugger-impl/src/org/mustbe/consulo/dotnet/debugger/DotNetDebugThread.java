@@ -302,7 +302,7 @@ public class DotNetDebugThread extends Thread
 
 						myDebugProcess.setPausedEventSet(eventSet);
 						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location);
-						DotNetDebugContext debugContext = createDebugContext();
+						DotNetDebugContext debugContext = createDebugContext(xLineBreakpoint);
 						if(xLineBreakpoint != null)
 						{
 							mySession.breakpointReached(xLineBreakpoint, null, new DotNetSuspendContext(debugContext, eventSet.eventThread()));
@@ -357,7 +357,7 @@ public class DotNetDebugThread extends Thread
 
 	private void insertBreakpoints(final TypeMirror typeMirror)
 	{
-		final DotNetDebugContext debugContext = createDebugContext();
+		final DotNetDebugContext debugContext = createDebugContext(null);
 
 		DotNetTypeDeclaration[] typeDeclarations = ApplicationManager.getApplication().runReadAction(new Computable<DotNetTypeDeclaration[]>()
 		{
@@ -413,10 +413,10 @@ public class DotNetDebugThread extends Thread
 	}
 
 	@NotNull
-	public DotNetDebugContext createDebugContext()
+	public DotNetDebugContext createDebugContext(@Nullable XLineBreakpoint<?> breakpoint)
 	{
 		assert myVirtualMachine != null;
-		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile);
+		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile, breakpoint);
 	}
 
 	@Nullable

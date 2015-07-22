@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.debugger.linebreakType.properties;
 
 import org.jetbrains.annotations.Nullable;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 
 /**
@@ -26,7 +27,10 @@ import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
  */
 public class DotNetLineBreakpointProperties extends XBreakpointProperties<DotNetLineBreakpointProperties>
 {
-	private int myLambdaIndex = -1;
+	// null - All, will pause for method and lambdas
+	// -1 - pause only method
+	// 0++ - will pause only lambda by index
+	private Integer myExecutableChildrenAtLineIndex = null;
 
 	@Nullable
 	@Override
@@ -39,5 +43,17 @@ public class DotNetLineBreakpointProperties extends XBreakpointProperties<DotNet
 	public void loadState(DotNetLineBreakpointProperties state)
 	{
 		XmlSerializerUtil.copyBean(state, this);
+	}
+
+	@Nullable
+	@OptionTag("executable-children-at-line-index")
+	public Integer getExecutableChildrenAtLineIndex()
+	{
+		return myExecutableChildrenAtLineIndex;
+	}
+
+	public void setExecutableChildrenAtLineIndex(Integer executableChildrenAtLineIndex)
+	{
+		this.myExecutableChildrenAtLineIndex = executableChildrenAtLineIndex;
 	}
 }

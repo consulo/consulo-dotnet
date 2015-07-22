@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
+import java.util.Set;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
@@ -30,4 +32,8 @@ public abstract class DotNetDebuggerSourceLineResolver
 	@Nullable
 	@RequiredReadAction
 	public abstract String resolveParentVmQName(@NotNull PsiElement element);
+
+	@NotNull
+	@RequiredReadAction
+	public abstract Set<PsiElement> getAllExecutableChildren(@NotNull PsiElement root);
 }
