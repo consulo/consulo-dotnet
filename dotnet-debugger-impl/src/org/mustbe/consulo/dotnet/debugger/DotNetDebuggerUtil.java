@@ -56,4 +56,19 @@ public class DotNetDebuggerUtil
 
 		return null;
 	}
+
+	@Nullable
+	@RequiredReadAction
+	public static PsiElement findPsiElement(@NotNull PsiFile file, final int line, int column)
+	{
+		final Document doc = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
+		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(file.getProject()).getPsiFile(doc);
+		if(psi == null)
+		{
+			return null;
+		}
+
+		int offset = doc.getLineStartOffset(line);
+		return psi.findElementAt(offset + column);
+	}
 }
