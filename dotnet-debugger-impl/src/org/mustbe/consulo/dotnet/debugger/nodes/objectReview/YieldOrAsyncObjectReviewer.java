@@ -27,6 +27,7 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import mono.debugger.FieldMirror;
+import mono.debugger.InvalidObjectException;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.StackFrameMirror;
 import mono.debugger.TypeMirror;
@@ -36,7 +37,7 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 22.07.2015
  */
-public class YieldObjectReviewer implements ObjectReviewer
+public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 {
 	@Override
 	public boolean reviewObject(@NotNull final DotNetDebugContext debugContext,
@@ -46,11 +47,19 @@ public class YieldObjectReviewer implements ObjectReviewer
 	{
 		if(thisObject instanceof ObjectValueMirror)
 		{
-			TypeMirror type = thisObject.type();
+			TypeMirror type = null;
+			try
+			{
+				type = thisObject.type();
+			}
+			catch(InvalidObjectException e)
+			{
+				return false;
+			}
 
 			assert type != null;
 
-			if(DotNetDebuggerCompilerGenerateUtil.isYieldNestedType(type))
+			if(DotNetDebuggerCompilerGenerateUtil.isYieldOrAsyncNestedType(type))
 			{
 				TypeMirror parentType = type.parentType();
 

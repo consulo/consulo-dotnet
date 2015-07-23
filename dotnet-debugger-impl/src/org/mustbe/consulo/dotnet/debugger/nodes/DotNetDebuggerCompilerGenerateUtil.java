@@ -34,6 +34,7 @@ public class DotNetDebuggerCompilerGenerateUtil
 {
 	public static final Pattern LambdaMethodPattern = Pattern.compile("<([\\S\\d]+)>m__([\\d]+)");
 	public static final Pattern YieldNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__Iterator([\\d]+)");
+	public static final Pattern AsyncNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__async([\\d]+)");
 	public static final Pattern SomeReferenceToOriginalPattern = Pattern.compile("<([\\S\\d]+)>__([\\d]+)");
 
 	@Nullable
@@ -47,9 +48,10 @@ public class DotNetDebuggerCompilerGenerateUtil
 		return null;
 	}
 
-	public static boolean isYieldNestedType(@NotNull TypeMirror typeMirror)
+	public static boolean isYieldOrAsyncNestedType(@NotNull TypeMirror typeMirror)
 	{
-		return typeMirror.isNested() && YieldNestedTypePattern.matcher(typeMirror.name()).matches();
+		return typeMirror.isNested() && (YieldNestedTypePattern.matcher(typeMirror.name()).matches() || AsyncNestedTypePattern.matcher(typeMirror
+				.name()).matches());
 	}
 
 	@Nullable

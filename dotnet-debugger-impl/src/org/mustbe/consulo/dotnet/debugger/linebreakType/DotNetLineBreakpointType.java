@@ -447,7 +447,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			TypeMirror[] nestedTypeMirrors = mirror.nestedTypes();
 			for(TypeMirror nestedTypeMirror : nestedTypeMirrors)
 			{
-				if(DotNetDebuggerCompilerGenerateUtil.isYieldNestedType(nestedTypeMirror))
+				if(DotNetDebuggerCompilerGenerateUtil.isYieldOrAsyncNestedType(nestedTypeMirror))
 				{
 					// we interest only MoveNext method
 					MethodMirror moveNext = nestedTypeMirror.findMethodByName("MoveNext", false);

@@ -30,7 +30,7 @@ import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.ObjectReviewer;
-import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldObjectReviewer;
+import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldOrAsyncObjectReviewer;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
@@ -60,7 +60,7 @@ import mono.debugger.*;
 public class DotNetStackFrame extends XStackFrame
 {
 	private static final ObjectReviewer[] ourObjectReviewers = new ObjectReviewer[]{
-			new YieldObjectReviewer()
+			new YieldOrAsyncObjectReviewer()
 	};
 
 	private final DotNetDebugContext myDebuggerContext;
@@ -253,6 +253,10 @@ public class DotNetStackFrame extends XStackFrame
 			node.setMessage("Stack frame info is not available", XDebuggerUIConstants.INFORMATION_MESSAGE_ICON,
 					XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES, null);
 			return;
+		}
+		catch(InvalidObjectException e)
+		{
+			// this object is not available
 		}
 		catch(InvalidStackFrameException e)
 		{
