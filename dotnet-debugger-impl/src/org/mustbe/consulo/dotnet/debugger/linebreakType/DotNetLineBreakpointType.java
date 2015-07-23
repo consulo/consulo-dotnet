@@ -194,6 +194,10 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		DotNetDebuggerSourceLineResolver resolver = DotNetDebuggerSourceLineResolverEP.INSTANCE.forLanguage(psiFile.getLanguage());
 
 		Set<PsiElement> allExecutableChildren = resolver.getAllExecutableChildren(element);
+		if(allExecutableChildren.isEmpty())
+		{
+			return Collections.emptySet();
+		}
 
 		Set<PsiElement> newSet = new LinkedHashSet<PsiElement>(allExecutableChildren.size() + 1);
 		newSet.add(likeMethod);
