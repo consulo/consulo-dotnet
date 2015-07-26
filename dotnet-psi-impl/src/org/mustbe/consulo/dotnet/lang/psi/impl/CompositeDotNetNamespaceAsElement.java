@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
@@ -75,6 +76,7 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 		return true;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public PsiElement[] findChildren(@NotNull String name,
@@ -91,6 +93,7 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 		return list.isEmpty() ? PsiElement.EMPTY_ARRAY : ContainerUtil.toArray(list, PsiElement.ARRAY_FACTORY);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	@SuppressWarnings("unchecked")

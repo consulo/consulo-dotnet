@@ -24,13 +24,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
@@ -40,7 +43,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ArrayListSet;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -66,6 +68,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 	@NotNull
 	@Override
+	@RequiredReadAction
 	public PsiElement[] findChildren(@NotNull final String name,
 			@NotNull GlobalSearchScope globalSearchScope,
 			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
@@ -85,7 +88,8 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 			case ONLY_NAMESPACES:
 				QualifiedName newQualifiedName = QualifiedName.fromDottedString(myQName).append(name);
 
-				val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(), globalSearchScope);
+				DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(),
+						globalSearchScope);
 				if(namespace != null)
 				{
 					return new PsiElement[]{transformer.fun(namespace)};
@@ -110,8 +114,11 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 				DotNetQualifiedElement.class, new Processor<DotNetQualifiedElement>()
 		{
 			@Override
+			@RequiredReadAction
 			public boolean process(DotNetQualifiedElement element)
 			{
+				ProgressManager.checkCanceled();
+
 				String presentableQName = element.getPresentableParentQName();
 				if(Comparing.equal(myQName, presentableQName))
 				{
@@ -126,46 +133,50 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 	@NotNull
 	@Override
-	protected Collection<? extends PsiElement> getOnlyNamespaces(@NotNull GlobalSearchScope globalSearchScope)
+	protected Collection<? extends PsiElement> getOnlyNamespaces(@NotNull final GlobalSearchScope globalSearchScope)
 	{
-		val thisQualifiedName = QualifiedName.fromDottedString(myQName);
+		final QualifiedName thisQualifiedName = QualifiedName.fromDottedString(myQName);
 
-		val namespaceChildren = new ArrayListSet<String>();
-		Collection<DotNetQualifiedElement> otherNamespaces = StubIndex.getElements(mySearcher.getNamespaceIndexKey(), myIndexKey, myProject,
-				globalSearchScope, DotNetQualifiedElement.class);
 
-		for(DotNetQualifiedElement psiElement : otherNamespaces)
+		final Set<String> namespaceChildren = new ArrayListSet<String>();
+		final List<PsiElement> namespaces = new ArrayList<PsiElement>();
+
+		StubIndex.getInstance().processElements(mySearcher.getNamespaceIndexKey(), myIndexKey, myProject, globalSearchScope,
+				DotNetQualifiedElement.class, new Processor<DotNetQualifiedElement>()
 		{
-			ProgressManager.checkCanceled();
-
-			String presentableQName = psiElement.getPresentableQName();
-			if(presentableQName == null)
+			@Override
+			@RequiredReadAction
+			public boolean process(DotNetQualifiedElement psiElement)
 			{
-				continue;
+				ProgressManager.checkCanceled();
+
+				String presentableQName = psiElement.getPresentableQName();
+				if(presentableQName == null)
+				{
+					return true;
+				}
+
+				QualifiedName qualifiedName = QualifiedName.fromDottedString(presentableQName);
+				if(thisQualifiedName.getComponentCount() > 0 && qualifiedName.matchesPrefix(thisQualifiedName) || thisQualifiedName
+						.getComponentCount() == 0)
+				{
+					List<String> childList = qualifiedName.getComponents().subList(0, thisQualifiedName.getComponentCount() + 1);
+
+					String join = StringUtil.join(childList, ".");
+
+					if(namespaceChildren.add(join))
+					{
+						DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(join, globalSearchScope);
+						if(namespace != null)
+						{
+							namespaces.add(namespace);
+						}
+					}
+				}
+
+				return true;
 			}
-
-			QualifiedName qualifiedName = QualifiedName.fromDottedString(presentableQName);
-			if(thisQualifiedName.getComponentCount() > 0 && qualifiedName.matchesPrefix(thisQualifiedName))
-			{
-				List<String> childList = qualifiedName.getComponents().subList(0, thisQualifiedName.getComponentCount() + 1);
-
-				QualifiedName child = QualifiedName.fromComponents(childList);
-
-				namespaceChildren.add(child.toString());
-			}
-		}
-
-		List<PsiElement> newList = new ArrayList<PsiElement>(namespaceChildren.size());
-		for(String namespaceChild : namespaceChildren)
-		{
-			ProgressManager.checkCanceled();
-
-			val namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(namespaceChild, globalSearchScope);
-			if(namespace != null)
-			{
-				newList.add(namespace);
-			}
-		}
-		return newList;
+		});
+		return namespaces;
 	}
 }

@@ -24,6 +24,7 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeTransformer;
 import com.intellij.lang.Language;
@@ -98,6 +99,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 
 	@NotNull
 	@Override
+	@RequiredReadAction
 	public PsiElement[] findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
 	{
 		return findChildren(name, globalSearchScope, DotNetTypeTransformer.INSTANCE, filter);
@@ -105,6 +107,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 
 	@NotNull
 	@Override
+	@RequiredReadAction
 	public PsiElement[] findChildren(@NotNull String name,
 			@NotNull GlobalSearchScope globalSearchScope,
 			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
@@ -126,6 +129,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		}
 	}
 
+	@RequiredReadAction
 	@Override
 	@NotNull
 	@SuppressWarnings("unchecked")
@@ -134,6 +138,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		return getChildren(globalSearchScope, DotNetTypeTransformer.INSTANCE, filter);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@SuppressWarnings("unchecked")
 	@Override
