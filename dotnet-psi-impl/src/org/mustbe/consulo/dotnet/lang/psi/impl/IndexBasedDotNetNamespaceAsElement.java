@@ -18,8 +18,8 @@ package org.mustbe.consulo.dotnet.lang.psi.impl;
 
 import gnu.trove.THashSet;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -43,6 +43,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ArrayListSet;
+import com.intellij.util.indexing.IdFilter;
 
 /**
  * @author VISTALL
@@ -135,48 +136,34 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	@Override
 	protected Collection<? extends PsiElement> getOnlyNamespaces(@NotNull final GlobalSearchScope globalSearchScope)
 	{
-		final QualifiedName thisQualifiedName = QualifiedName.fromDottedString(myQName);
-
-
 		final Set<String> namespaceChildren = new ArrayListSet<String>();
-		final List<PsiElement> namespaces = new ArrayList<PsiElement>();
+		final List<PsiElement> namespaces = new LinkedList<PsiElement>();
 
-		StubIndex.getInstance().processElements(mySearcher.getNamespaceIndexKey(), myIndexKey, myProject, globalSearchScope,
-				DotNetQualifiedElement.class, new Processor<DotNetQualifiedElement>()
+		StubIndex.getInstance().processAllKeys(mySearcher.getNamespaceIndexKey(), new Processor<String>()
 		{
 			@Override
 			@RequiredReadAction
-			public boolean process(DotNetQualifiedElement psiElement)
+			public boolean process(String qName)
 			{
-				ProgressManager.checkCanceled();
-
-				String presentableQName = psiElement.getPresentableQName();
-				if(presentableQName == null)
+				if(qName.startsWith(myQName))
 				{
-					return true;
-				}
-
-				QualifiedName qualifiedName = QualifiedName.fromDottedString(presentableQName);
-				if(thisQualifiedName.getComponentCount() > 0 && qualifiedName.matchesPrefix(thisQualifiedName) || thisQualifiedName
-						.getComponentCount() == 0)
-				{
-					List<String> childList = qualifiedName.getComponents().subList(0, thisQualifiedName.getComponentCount() + 1);
-
-					String join = StringUtil.join(childList, ".");
-
-					if(namespaceChildren.add(join))
+					String packageName = StringUtil.getPackageName(qName);
+					if(packageName.equals(myQName))
 					{
-						DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(join, globalSearchScope);
-						if(namespace != null)
+						if(namespaceChildren.add(qName))
 						{
-							namespaces.add(namespace);
+							DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(qName, globalSearchScope);
+							if(namespace != null)
+							{
+								namespaces.add(namespace);
+							}
 						}
 					}
 				}
 
 				return true;
 			}
-		});
+		}, globalSearchScope, IdFilter.getProjectIdFilter(myProject, false));
 		return namespaces;
 	}
 }
