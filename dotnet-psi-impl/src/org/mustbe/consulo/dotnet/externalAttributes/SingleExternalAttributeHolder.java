@@ -39,7 +39,7 @@ import lombok.val;
  */
 public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 {
-	@Nullable
+	@NotNull
 	public static ExternalAttributeHolder load(VirtualFile file)
 	{
 		try
@@ -88,7 +88,7 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 		{
 			e.printStackTrace();
 		}
-		return null;
+		return EMPTY;
 	}
 
 	private static void readAttributes(Element element, ExternalAttributeSimpleNodeImpl owner)

@@ -25,6 +25,16 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ExternalAttributeHolder
 {
+	ExternalAttributeHolder EMPTY = new ExternalAttributeHolder()
+	{
+		@Nullable
+		@Override
+		public ExternalAttributeWithChildrenNode findClassNode(@NotNull String qname)
+		{
+			return null;
+		}
+	};
+
 	@Nullable
 	ExternalAttributeWithChildrenNode findClassNode(@NotNull String qname);
 }
