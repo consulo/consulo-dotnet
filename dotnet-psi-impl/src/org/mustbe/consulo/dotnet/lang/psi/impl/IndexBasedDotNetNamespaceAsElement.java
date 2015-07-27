@@ -30,9 +30,7 @@ import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import com.intellij.lang.Language;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -75,15 +73,11 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
 			@NotNull ChildrenFilter filter)
 	{
-		StubIndexKey<String, DotNetQualifiedElement> key;
 		switch(filter)
 		{
 			case ONLY_ELEMENTS:
-
-				key = mySearcher.getElementByQNameIndexKey();
-
-				Collection<DotNetQualifiedElement> elements = StubIndex.getElements(key, myIndexKey + "." + name, myProject, globalSearchScope,
-						DotNetQualifiedElement.class);
+				Collection<DotNetQualifiedElement> elements = StubIndex.getElements(mySearcher.getElementByQNameIndexKey(), myIndexKey + "." + name,
+						myProject, globalSearchScope, DotNetQualifiedElement.class);
 
 				return toArray(elements, transformer);
 			case ONLY_NAMESPACES:
@@ -107,27 +101,27 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 	@NotNull
 	@Override
-	protected Collection<? extends PsiElement> getOnlyElements(@NotNull GlobalSearchScope globalSearchScope)
+	protected Collection<? extends PsiElement> getOnlyElements(@NotNull final GlobalSearchScope globalSearchScope)
 	{
 		final Set<PsiElement> set = new THashSet<PsiElement>();
 
-		StubIndex.getInstance().processElements(mySearcher.getNamespaceIndexKey(), myIndexKey, myProject, globalSearchScope,
-				DotNetQualifiedElement.class, new Processor<DotNetQualifiedElement>()
+		final StubIndexKey<String,DotNetQualifiedElement> key = mySearcher.getElementByQNameIndexKey();
+		StubIndex.getInstance().processAllKeys(key, new Processor<String>()
 		{
 			@Override
-			@RequiredReadAction
-			public boolean process(DotNetQualifiedElement element)
+			public boolean process(String qName)
 			{
-				ProgressManager.checkCanceled();
-
-				String presentableQName = element.getPresentableParentQName();
-				if(Comparing.equal(myQName, presentableQName))
+				if(qName.startsWith(myQName))
 				{
-					set.add(element);
+					String packageName = StringUtil.getPackageName(qName);
+					if(packageName.equals(myQName))
+					{
+						set.addAll(StubIndex.getElements(key, qName, myProject, globalSearchScope, DotNetQualifiedElement.class));
+					}
 				}
 				return true;
 			}
-		});
+		}, globalSearchScope, IdFilter.getProjectIdFilter(myProject, false));
 
 		return set;
 	}

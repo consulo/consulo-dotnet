@@ -32,7 +32,8 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.ParameterizedCachedValueProvider;
 import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.util.CommonProcessors;
+import com.intellij.util.Processor;
+import com.intellij.util.indexing.IdFilter;
 
 /**
  * @author VISTALL
@@ -100,12 +101,17 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 	}
 
 	private static boolean isFoundAnyOneElement(@NotNull Project project,
-			@NotNull String indexKey,
+			@NotNull final String indexKey,
 			@NotNull StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
 			@NotNull GlobalSearchScope scope)
 	{
-		CommonProcessors.FindProcessor<DotNetQualifiedElement> processor = new CommonProcessors.FindFirstProcessor<DotNetQualifiedElement>();
-		StubIndex.getInstance().processElements(keyForIndex, indexKey, project, scope, DotNetQualifiedElement.class, processor);
-		return processor.isFound();
+		return !StubIndex.getInstance().processAllKeys(keyForIndex, new Processor<String>()
+		{
+			@Override
+			public boolean process(String s)
+			{
+				return !indexKey.equals(s);
+			}
+		}, scope, IdFilter.getProjectIdFilter(project, false));
 	}
 }
