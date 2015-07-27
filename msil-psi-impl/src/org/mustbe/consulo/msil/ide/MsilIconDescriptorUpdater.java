@@ -6,8 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetInheritUtil;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
@@ -55,14 +53,6 @@ public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 				{
 					main = AllIcons.Nodes.Method;
 				}
-			}
-
-			if(main == null)
-			{
-				if(typeDeclaration.isInterface())
-				{
-					main = AllIcons.Nodes.Interface;
-				}
 				else if(typeDeclaration.isEnum())
 				{
 					main = AllIcons.Nodes.Enum;
@@ -70,6 +60,14 @@ public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 				else if(typeDeclaration.isStruct())
 				{
 					main = AllIcons.Nodes.Struct;
+				}
+			}
+
+			if(main == null)
+			{
+				if(typeDeclaration.isInterface())
+				{
+					main = AllIcons.Nodes.Interface;
 				}
 				else
 				{
@@ -105,12 +103,6 @@ public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 			{
 				iconDescriptor.setRightIcon(AllIcons.Nodes.C_plocal);
 			}
-		}
-
-		DotNetModifierList modifierList = owner.getModifierList();
-		if(modifierList != null && modifierList.hasModifierInTree(DotNetModifier.STATIC))
-		{
-			iconDescriptor.addLayerIcon(AllIcons.Nodes.StaticMark);
 		}
 
 		if(owner.hasModifier(MsilTokens.SEALED_KEYWORD))
