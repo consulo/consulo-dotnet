@@ -28,6 +28,7 @@ import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import org.mustbe.consulo.dotnet.resolve.GlobalSearchScopeFilter;
 import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
@@ -41,7 +42,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ArrayListSet;
-import com.intellij.util.indexing.IdFilter;
 
 /**
  * @author VISTALL
@@ -121,7 +121,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 				}
 				return true;
 			}
-		}, globalSearchScope, IdFilter.getProjectIdFilter(myProject, false));
+		}, globalSearchScope, new GlobalSearchScopeFilter(globalSearchScope));
 
 		return set;
 	}
@@ -157,7 +157,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 				return true;
 			}
-		}, globalSearchScope, IdFilter.getProjectIdFilter(myProject, false));
+		}, globalSearchScope, new GlobalSearchScopeFilter(globalSearchScope));
 		return namespaces;
 	}
 }

@@ -23,6 +23,7 @@ import org.mustbe.consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import org.mustbe.consulo.dotnet.resolve.GlobalSearchScopeFilter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -33,7 +34,6 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.ParameterizedCachedValueProvider;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Processor;
-import com.intellij.util.indexing.IdFilter;
 
 /**
  * @author VISTALL
@@ -112,6 +112,6 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 			{
 				return !indexKey.equals(s);
 			}
-		}, scope, IdFilter.getProjectIdFilter(project, false));
+		}, scope, new GlobalSearchScopeFilter(scope));
 	}
 }
