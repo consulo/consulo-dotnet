@@ -90,35 +90,19 @@ public class DotNetVirtualMachine
 		myStepRequests.remove(stepRequest);
 	}
 
-	@NotNull
-	public Collection<EventRequest> putRequest(@NotNull XBreakpoint<?> breakpoint, @Nullable EventRequest request)
+	public void putRequest(@NotNull XBreakpoint<?> breakpoint, @NotNull EventRequest request)
 	{
-		if(request == null)
-		{
-			return myBreakpointEventRequests.remove(breakpoint);
-		}
-		else
-		{
-			myBreakpointEventRequests.putValue(breakpoint, request);
-			return myBreakpointEventRequests.get(breakpoint);
-		}
-	}
-
-	@Nullable
-	public Collection<EventRequest> getRequests(XBreakpoint<?> breakpoint)
-	{
-		return myBreakpointEventRequests.get(breakpoint);
+		myBreakpointEventRequests.putValue(breakpoint, request);
 	}
 
 	public void stopBreakpointRequests(XBreakpoint<?> breakpoint)
 	{
-		Collection<EventRequest> eventRequests = myBreakpointEventRequests.get(breakpoint);
+		Collection<EventRequest> eventRequests = myBreakpointEventRequests.remove(breakpoint);
 		for(EventRequest eventRequest : eventRequests)
 		{
 			eventRequest.disable();
-
-			myVirtualMachine.eventRequestManager().deleteEventRequest(eventRequest);
 		}
+		myVirtualMachine.eventRequestManager().deleteEventRequests(eventRequests);
 	}
 
 	public void stopStepRequests()
