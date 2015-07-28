@@ -98,6 +98,10 @@ public class DotNetVirtualMachine
 	public void stopBreakpointRequests(XBreakpoint<?> breakpoint)
 	{
 		Collection<EventRequest> eventRequests = myBreakpointEventRequests.remove(breakpoint);
+		if(eventRequests == null)
+		{
+			return;
+		}
 		for(EventRequest eventRequest : eventRequests)
 		{
 			eventRequest.disable();
