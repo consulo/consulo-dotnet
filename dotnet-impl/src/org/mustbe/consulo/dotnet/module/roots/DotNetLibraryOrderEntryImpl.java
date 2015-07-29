@@ -23,14 +23,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderEntryWithTracking;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
+import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.roots.impl.ClonableOrderEntry;
+import com.intellij.openapi.roots.impl.LibraryOrderEntryBaseImpl;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
-import com.intellij.openapi.roots.impl.OrderEntryBaseImpl;
+import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
+import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -42,67 +44,100 @@ import com.intellij.util.SmartList;
  * @author VISTALL
  * @since 21.08.14
  */
-public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements ClonableOrderEntry, OrderEntryWithTracking
+public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements ClonableOrderEntry, OrderEntryWithTracking
 {
+	private RootProvider myRootProvider = new RootProviderBaseImpl()
+	{
+		@NotNull
+		@Override
+		public String[] getUrls(@NotNull OrderRootType rootType)
+		{
+			DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
+			if(extension == null)
+			{
+				return ArrayUtil.EMPTY_STRING_ARRAY;
+			}
+
+			String[] urls = ArrayUtil.EMPTY_STRING_ARRAY;
+			for(ModuleExtension moduleExtension : myModuleRootLayer.getExtensions())
+			{
+				if(moduleExtension instanceof DotNetModuleExtensionWithLibraryProviding)
+				{
+					String[] systemLibraryUrls = ((DotNetModuleExtensionWithLibraryProviding) moduleExtension).getSystemLibraryUrls(getPresentableName()
+							, rootType);
+					urls = ArrayUtil.mergeArrays(urls, systemLibraryUrls);
+				}
+			}
+			return urls;
+		}
+
+		@NotNull
+		@Override
+		public VirtualFile[] getFiles(@NotNull OrderRootType rootType)
+		{
+			DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
+			if(extension == null)
+			{
+				return VirtualFile.EMPTY_ARRAY;
+			}
+
+			List<VirtualFile> virtualFiles = new SmartList<VirtualFile>();
+			for(ModuleExtension moduleExtension : myModuleRootLayer.getExtensions())
+			{
+				if(moduleExtension instanceof DotNetModuleExtensionWithLibraryProviding)
+				{
+					String[] systemLibraryUrls = ((DotNetModuleExtensionWithLibraryProviding) moduleExtension).getSystemLibraryUrls(getPresentableName()
+							, rootType);
+					for(String systemLibraryUrl : systemLibraryUrls)
+					{
+						VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(systemLibraryUrl);
+						if(fileByUrl != null)
+						{
+							virtualFiles.add(fileByUrl);
+						}
+					}
+				}
+			}
+			return VfsUtil.toVirtualFileArray(virtualFiles);
+		}
+	};
+
 	private String myName;
 
 	public DotNetLibraryOrderEntryImpl(@NotNull ModuleRootLayerImpl rootLayer, String name)
 	{
-		super(DotNetLibraryOrderEntryTypeProvider.getInstance(), rootLayer);
-		myName = name;
+		this(rootLayer, name, true);
 	}
 
-	@NotNull
+	public DotNetLibraryOrderEntryImpl(@NotNull ModuleRootLayerImpl rootLayer, String name, boolean init)
+	{
+		super(DotNetLibraryOrderEntryTypeProvider.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+		myName = name;
+		if(init)
+		{
+			init();
+
+			myProjectRootManagerImpl.addOrderWithTracking(this);
+		}
+	}
+
+	@Nullable
 	@Override
-	public VirtualFile[] getFiles(OrderRootType orderRootType)
+	public Object getEqualObject()
 	{
 		DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
 		if(extension == null)
 		{
 			return VirtualFile.EMPTY_ARRAY;
 		}
-
-		List<VirtualFile> virtualFiles = new SmartList<VirtualFile>();
-		for(ModuleExtension moduleExtension : myModuleRootLayer.getExtensions())
-		{
-			if(moduleExtension instanceof DotNetModuleExtensionWithLibraryProviding)
-			{
-				String[] systemLibraryUrls = ((DotNetModuleExtensionWithLibraryProviding) moduleExtension).getSystemLibraryUrls(getPresentableName()
-						, orderRootType);
-				for(String systemLibraryUrl : systemLibraryUrls)
-				{
-					VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(systemLibraryUrl);
-					if(fileByUrl != null)
-					{
-						virtualFiles.add(fileByUrl);
-					}
-				}
-			}
-		}
-		return VfsUtil.toVirtualFileArray(virtualFiles);
+		return extension.getSdk();
 	}
 
-	@NotNull
+	@Nullable
 	@Override
-	public String[] getUrls(OrderRootType orderRootType)
+	public RootProvider getRootProvider()
 	{
-		DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
-		if(extension == null)
-		{
-			return ArrayUtil.EMPTY_STRING_ARRAY;
-		}
-
-		String[] urls = ArrayUtil.EMPTY_STRING_ARRAY;
-		for(ModuleExtension moduleExtension : myModuleRootLayer.getExtensions())
-		{
-			if(moduleExtension instanceof DotNetModuleExtensionWithLibraryProviding)
-			{
-				String[] systemLibraryUrls = ((DotNetModuleExtensionWithLibraryProviding) moduleExtension).getSystemLibraryUrls(getPresentableName()
-						, orderRootType);
-				urls = ArrayUtil.mergeArrays(urls, systemLibraryUrls);
-			}
-		}
-		return urls;
+		return myRootProvider;
 	}
 
 	@NotNull
@@ -116,13 +151,6 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 	public boolean isValid()
 	{
 		return myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class) != null;
-	}
-
-	@NotNull
-	@Override
-	public Module getOwnerModule()
-	{
-		return getRootModel().getModule();
 	}
 
 	@Override
@@ -147,7 +175,7 @@ public class DotNetLibraryOrderEntryImpl extends OrderEntryBaseImpl implements C
 	@Override
 	public boolean isSynthetic()
 	{
-		return false; // allow delete
+		return false;
 	}
 
 	@Override
