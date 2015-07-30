@@ -63,7 +63,10 @@ public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 			{
 				TypeMirror parentType = type.parentType();
 
-				assert parentType != null;
+				if(parentType == null)
+				{
+					return false;
+				}
 
 				childrenList.add(new DotNetObjectValueMirrorNode(debugContext, stackFrameMirror.thread(), parentType, (ObjectValueMirror) null));
 
