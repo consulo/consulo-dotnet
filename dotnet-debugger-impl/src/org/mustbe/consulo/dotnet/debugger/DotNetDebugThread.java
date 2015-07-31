@@ -482,7 +482,13 @@ public class DotNetDebugThread extends Thread
 		{
 			return;
 		}
-		processor.process(myVirtualMachine);
+		try
+		{
+			processor.process(myVirtualMachine);
+		}
+		catch(VMDisconnectedException ignored)
+		{
+		}
 	}
 
 	public void addCommand(Processor<DotNetVirtualMachine> processor)
