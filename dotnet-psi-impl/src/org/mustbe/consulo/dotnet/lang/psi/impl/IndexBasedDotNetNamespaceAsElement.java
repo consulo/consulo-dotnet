@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
@@ -139,6 +140,10 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 			@RequiredReadAction
 			public boolean process(String qName)
 			{
+				if(DotNetNamespaceStubUtil.ROOT_FOR_INDEXING.equals(qName))
+				{
+					return true;
+				}
 				if(qName.startsWith(myQName))
 				{
 					String packageName = StringUtil.getPackageName(qName);
