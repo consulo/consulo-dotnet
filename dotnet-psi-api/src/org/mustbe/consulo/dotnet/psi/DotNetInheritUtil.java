@@ -16,6 +16,10 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import gnu.trove.THashSet;
+
+import java.util.Set;
+
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
@@ -58,6 +62,15 @@ public class DotNetInheritUtil
 	@RequiredReadAction
 	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, @NotNull String other, boolean deep)
 	{
+		return isInheritorImpl(typeDeclaration, other, deep, new THashSet<String>());
+	}
+
+	@RequiredReadAction
+	private static boolean isInheritorImpl(@NotNull DotNetTypeDeclaration typeDeclaration,
+			@NotNull String other,
+			boolean deep,
+			@NotNull Set<String> alreadyProcessedTypes)
+	{
 		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
 		if(anExtends.length > 0)
 		{
@@ -71,16 +84,20 @@ public class DotNetInheritUtil
 						return false;
 					}
 
-					if(Comparing.equal(((DotNetTypeDeclaration) psiElement).getVmQName(), other))
+					String vmQName = ((DotNetTypeDeclaration) psiElement).getVmQName();
+					if(Comparing.equal(vmQName, other))
 					{
 						return true;
 					}
 
 					if(deep)
 					{
-						if(isInheritor((DotNetTypeDeclaration) psiElement, other, true))
+						if(alreadyProcessedTypes.add(vmQName))
 						{
-							return true;
+							if(isInheritorImpl((DotNetTypeDeclaration) psiElement, other, true, alreadyProcessedTypes))
+							{
+								return true;
+							}
 						}
 					}
 				}
