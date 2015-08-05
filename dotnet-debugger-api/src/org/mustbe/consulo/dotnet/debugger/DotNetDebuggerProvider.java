@@ -23,6 +23,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import mono.debugger.StackFrameMirror;
 
@@ -32,21 +33,28 @@ import mono.debugger.StackFrameMirror;
  */
 public abstract class DotNetDebuggerProvider
 {
-	public static final ExtensionPointName<DotNetDebuggerProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.debugger" +
+	public static final ExtensionPointName<DotNetDebuggerProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.debugger" + "" +
 			".provider");
 
 	@NotNull
-	public abstract PsiFile createExpressionCodeFragment(
-			@NotNull Project project, @NotNull PsiElement sourcePosition, @NotNull String text, boolean isPhysical);
+	public abstract PsiFile createExpressionCodeFragment(@NotNull Project project,
+			@NotNull PsiElement sourcePosition,
+			@NotNull String text,
+			boolean isPhysical);
 
-	public abstract void evaluate(
-			@NotNull StackFrameMirror frame,
+	public abstract void evaluate(@NotNull StackFrameMirror frame,
 			@NotNull DotNetDebugContext debuggerContext,
 			@NotNull String expression,
 			@Nullable PsiElement elementAt,
-			@NotNull XDebuggerEvaluator.XEvaluationCallback callback);
+			@NotNull XDebuggerEvaluator.XEvaluationCallback callback,
+			@Nullable XSourcePosition expressionPosition);
 
 	public abstract boolean isSupported(@NotNull PsiFile psiFile);
 
 	public abstract Language getEditorLanguage();
+
+	public boolean isCodeFragmentEvaluationSupported()
+	{
+		return false;
+	}
 }

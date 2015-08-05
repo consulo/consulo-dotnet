@@ -23,6 +23,7 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 
 /**
@@ -34,16 +35,19 @@ public class DotNetDebugContext
 	private final Project myProject;
 	private final DotNetVirtualMachine myVirtualMachine;
 	private final RunProfile myRunProfile;
-	private XLineBreakpoint<?> myBreakpoint;
+	private final XDebugSession mySession;
+	private final XLineBreakpoint<?> myBreakpoint;
 
 	public DotNetDebugContext(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull RunProfile runProfile,
+			@NotNull XDebugSession session,
 			@Nullable XLineBreakpoint<?> breakpoint)
 	{
 		myProject = project;
 		myVirtualMachine = virtualMachine;
 		myRunProfile = runProfile;
+		mySession = session;
 		myBreakpoint = breakpoint;
 	}
 
@@ -89,5 +93,11 @@ public class DotNetDebugContext
 	public RunProfile getRunProfile()
 	{
 		return myRunProfile;
+	}
+
+	@NotNull
+	public XDebugSession getSession()
+	{
+		return mySession;
 	}
 }

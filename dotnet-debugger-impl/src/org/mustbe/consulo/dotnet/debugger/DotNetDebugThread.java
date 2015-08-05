@@ -416,7 +416,7 @@ public class DotNetDebugThread extends Thread
 	public DotNetDebugContext createDebugContext(@Nullable XLineBreakpoint<?> breakpoint)
 	{
 		assert myVirtualMachine != null;
-		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile, breakpoint);
+		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile, mySession, breakpoint);
 	}
 
 	@Nullable

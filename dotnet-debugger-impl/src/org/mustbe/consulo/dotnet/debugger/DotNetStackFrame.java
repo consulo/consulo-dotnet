@@ -137,6 +137,12 @@ public class DotNetStackFrame extends XStackFrame
 		return new XDebuggerEvaluator()
 		{
 			@Override
+			public boolean isCodeFragmentEvaluationSupported()
+			{
+				return false;
+			}
+
+			@Override
 			public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback,
 					@Nullable XSourcePosition expressionPosition)
 			{
@@ -144,7 +150,7 @@ public class DotNetStackFrame extends XStackFrame
 				{
 					if(dotNetDebuggerProvider.getEditorLanguage() == expression.getLanguage())
 					{
-						dotNetDebuggerProvider.evaluate(myFrame, myDebuggerContext, expression.getExpression(), null, callback);
+						dotNetDebuggerProvider.evaluate(myFrame, myDebuggerContext, expression.getExpression(), null, callback, expressionPosition);
 						break;
 					}
 				}

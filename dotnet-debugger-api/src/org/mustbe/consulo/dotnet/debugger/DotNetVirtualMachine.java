@@ -140,7 +140,7 @@ public class DotNetVirtualMachine
 	}
 
 	@Nullable
-	public TypeMirror findTypeMirror(@NotNull final VirtualFile virtualFile, @NotNull final String vmQualifiedName) throws
+	public TypeMirror findTypeMirror(@Nullable final VirtualFile virtualFile, @NotNull final String vmQualifiedName) throws
 			TypeMirrorUnloadedException
 	{
 		try
@@ -150,7 +150,7 @@ public class DotNetVirtualMachine
 				TypeMirror[] typesByQualifiedName = myVirtualMachine.findTypesByQualifiedName(vmQualifiedName, false);
 				return typesByQualifiedName.length == 0 ? null : typesByQualifiedName[0];
 			}
-			else if(mySupportSearchTypesBySourcePaths)
+			else if(mySupportSearchTypesBySourcePaths && virtualFile != null)
 			{
 				TypeMirror[] typesBySourcePath = myVirtualMachine.findTypesBySourcePath(virtualFile.getPath(), SystemInfo.isFileSystemCaseSensitive);
 				return ContainerUtil.find(typesBySourcePath, new Condition<TypeMirror>()
