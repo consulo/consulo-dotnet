@@ -10,12 +10,14 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 
@@ -25,15 +27,37 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
  */
 public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase
 {
+	private XDebugSession mySession;
+
+	public DotNetEditorsProvider(XDebugSession session)
+	{
+		mySession = session;
+	}
+
 	@Override
 	protected PsiFile createExpressionCodeFragment(
 			@NotNull Project project, @NotNull String text, @Nullable PsiElement context, boolean isPhysical)
 	{
+		if(context == null)
+		{
+			XDebugSession session = mySession;
+			XSourcePosition currentPosition = session.getCurrentPosition();
+			if(currentPosition != null)
+			{
+				VirtualFile file = currentPosition.getFile();
+				PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
+				if(psiFile != null)
+				{
+					context = psiFile.findElementAt(currentPosition.getOffset());
+				}
+			}
+		}
+
 		DotNetDebuggerProvider debuggerProvider = context == null ? null : DotNetDebuggerProviders.findByPsiFile(context.getContainingFile());
 		if(debuggerProvider == null)
 		{
 			LightVirtualFile virtualFile = new LightVirtualFile("test.txt", PlainTextFileType.INSTANCE, text);
-			return new PsiPlainTextFileImpl(new SingleRootFileViewProvider(PsiManager.getInstance(project), virtualFile, false));
+			return new PsiPlainTextFileImpl(new SingleRootFileViewProvider(PsiManager.getInstance(project), virtualFile, true));
 		}
 
 		return debuggerProvider.createExpressionCodeFragment(project, context, text, isPhysical);

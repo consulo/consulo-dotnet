@@ -153,7 +153,7 @@ public class DotNetDebugProcess extends XDebugProcess
 	@Override
 	public XDebuggerEditorsProvider getEditorsProvider()
 	{
-		return new DotNetEditorsProvider();
+		return new DotNetEditorsProvider(myDebugThread.getSession());
 	}
 
 	@Override

@@ -454,6 +454,11 @@ public class DotNetDebugThread extends Thread
 		}
 	}
 
+	public XDebugSession getSession()
+	{
+		return mySession;
+	}
+
 	@NotNull
 	public Collection<? extends XLineBreakpoint<?>> getEnabledBreakpoints()
 	{
