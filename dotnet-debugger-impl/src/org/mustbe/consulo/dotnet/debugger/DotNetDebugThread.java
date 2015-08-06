@@ -264,7 +264,7 @@ public class DotNetDebugThread extends Thread
 							TypeMirror typeMirror = ((TypeLoadEvent) event).typeMirror();
 
 							myVirtualMachine.loadTypeMirror(typeMirror);
-							insertBreakpoints(typeMirror);
+							insertBreakpoints(myVirtualMachine, typeMirror);
 							continue l;
 						}
 						else if(event instanceof VMDeathEvent)
@@ -355,7 +355,7 @@ public class DotNetDebugThread extends Thread
 		}
 	}
 
-	private void insertBreakpoints(final TypeMirror typeMirror)
+	private void insertBreakpoints(final DotNetVirtualMachine virtualMachine, final TypeMirror typeMirror)
 	{
 		final DotNetDebugContext debugContext = createDebugContext(null);
 
@@ -385,14 +385,14 @@ public class DotNetDebugThread extends Thread
 
 					DotNetLineBreakpointType type = (DotNetLineBreakpointType) breakpoint.getType();
 
-					type.createRequest(mySession, myVirtualMachine, breakpoint, typeMirror);
+					type.createRequest(mySession, virtualMachine, breakpoint, typeMirror);
 				}
 			}
 		}
 
 		try
 		{
-			myVirtualMachine.resume();
+			virtualMachine.resume();
 		}
 		catch(NotSuspendedException ignored)
 		{
