@@ -95,7 +95,7 @@
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-api" exported="" />
-          <orderEntry type="library" name="dotnet-msil-decompiler" level="project" />
+          <orderEntry type="library" exploded="" name="dotnet-msil-decompiler" level="project" />
         </module-layer>
       </module>
       <module name="dotnet-psi-impl" dirurl="file://$PROJECT_DIR$/dotnet-psi-impl" current-layer="Default">

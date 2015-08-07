@@ -112,7 +112,11 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 			@Override
 			public boolean process(String qName)
 			{
-				if(qName.startsWith(myQName))
+				if(myQName.isEmpty() && qName.startsWith(myIndexKey))
+				{
+					set.addAll(StubIndex.getElements(key, qName, myProject, globalSearchScope, DotNetQualifiedElement.class));
+				}
+				else if(qName.startsWith(myQName))
 				{
 					String packageName = StringUtil.getPackageName(qName);
 					if(packageName.equals(myQName))
