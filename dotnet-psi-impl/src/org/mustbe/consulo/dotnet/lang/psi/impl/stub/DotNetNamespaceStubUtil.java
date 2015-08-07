@@ -51,7 +51,7 @@ public class DotNetNamespaceStubUtil
 	{
 		String indexableNamespace = getIndexableNamespace(namespace);
 
-		name = MsilHelper.cutGenericMarker(name);
+		name = org.mustbe.dotnet.msil.decompiler.util.MsilHelper.cutGenericMarker(name);
 
 		indexSink.occurrence(elementByQNameKey, indexableNamespace + "." + name);
 
