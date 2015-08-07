@@ -49,7 +49,7 @@ public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 				{
 					main = typeDeclaration.hasModifier(MsilTokens.ABSTRACT_KEYWORD) ? AllIcons.Nodes.AbstractException : AllIcons.Nodes.ExceptionClass;
 				}
-				else if(DotNetInheritUtil.isInheritor(typeDeclaration, DotNetTypes.System.MulticastDelegate, true))
+				else if(DotNetInheritUtil.isInheritor(typeDeclaration, DotNetTypes.System.MulticastDelegate, false))
 				{
 					main = AllIcons.Nodes.Method;
 				}
