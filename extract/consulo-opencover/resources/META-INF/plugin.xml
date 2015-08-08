@@ -22,6 +22,7 @@
 	<depends>org.mustbe.consulo.dotnet.microsoft</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
 		<coverageRunner implementation="org.mustbe.consulo.microsoft.dotnet.run.coverage.OpenCoverCoverageRunner" />
 
 	</extensions>
