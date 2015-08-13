@@ -17,10 +17,10 @@
 package org.mustbe.consulo.dotnet.module.roots;
 
 import org.consulo.lombok.annotations.LazyInstance;
-import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
+import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
 import org.mustbe.consulo.roots.impl.OrderEntryTypeProviderEx;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ModuleRootLayer;
