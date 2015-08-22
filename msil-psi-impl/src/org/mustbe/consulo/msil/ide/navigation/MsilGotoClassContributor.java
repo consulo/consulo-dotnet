@@ -1,7 +1,8 @@
 package org.mustbe.consulo.msil.ide.navigation;
 
-import java.util.ArrayList;
-import java.util.List;
+import gnu.trove.THashSet;
+
+import java.util.Set;
 
 import javax.swing.Icon;
 
@@ -115,7 +116,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 				{
 					final Project project = CommonDataKeys.PROJECT.getData(dataContext);
 					assert project != null;
-					final List<LanguageFileType> languageFileTypes = new ArrayList<LanguageFileType>();
+					final Set<LanguageFileType> languageFileTypes = new THashSet<LanguageFileType>();
 					Module[] modules = ModuleManager.getInstance(project).getModules();
 					MsilFileRepresentationProvider[] extensions = MsilFileRepresentationProvider.EP_NAME.getExtensions();
 					for(Module module : modules)
@@ -158,7 +159,8 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 					}
 
 					languageFileTypes.add(MsilFileType.INSTANCE);
-					BaseListPopupStep<LanguageFileType> step = new BaseListPopupStep<LanguageFileType>("Choose language", languageFileTypes)
+					BaseListPopupStep<LanguageFileType> step = new BaseListPopupStep<LanguageFileType>("Choose " +
+							"language", languageFileTypes.toArray(new LanguageFileType[languageFileTypes.size()]))
 					{
 						@NotNull
 						@Override
@@ -190,7 +192,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 					};
 
 					ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(step);
-					listPopup.showInFocusCenter();
+					listPopup.showCenteredInCurrentWindow(project);
 				}
 			});
 		}
