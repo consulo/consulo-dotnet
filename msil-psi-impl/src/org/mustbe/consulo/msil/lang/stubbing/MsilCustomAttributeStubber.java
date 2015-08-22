@@ -314,7 +314,7 @@ public class MsilCustomAttributeStubber
 						{
 							if((l & entry.getKey()) == entry.getKey())
 							{
-								fields.add(vmQName + "." + entry.getValue());
+								fields.add(entry.getValue());
 							}
 						}
 						return new MsilCustomAttributeEnumValue(typeSignature, l, fields);
