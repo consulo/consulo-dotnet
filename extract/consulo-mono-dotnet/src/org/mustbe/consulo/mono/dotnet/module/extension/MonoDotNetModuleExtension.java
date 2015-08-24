@@ -97,7 +97,12 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 		{
 			String[] systemLibraryUrls = super.getSystemLibraryUrlsImpl(sdk, name, orderRootType);
 
-			VirtualFile docDir = sdk.getHomeDirectory().findFileByRelativePath("/../../monodoc/sources");
+			VirtualFile homeDirectory = sdk.getHomeDirectory();
+			if(homeDirectory == null)
+			{
+				return systemLibraryUrls;
+			}
+			VirtualFile docDir = homeDirectory.findFileByRelativePath("/../../monodoc/sources");
 			if(docDir == null)
 			{
 				return systemLibraryUrls;
