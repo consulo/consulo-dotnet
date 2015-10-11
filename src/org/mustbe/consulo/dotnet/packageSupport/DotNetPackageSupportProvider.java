@@ -23,6 +23,7 @@ import org.consulo.psi.PsiPackageSupportProvider;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.psi.impl.DotNetPackage;
+import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiManager;
 
 /**
@@ -35,6 +36,12 @@ public class DotNetPackageSupportProvider implements PsiPackageSupportProvider
 	public boolean isSupported(@NotNull ModuleExtension moduleExtension)
 	{
 		return moduleExtension instanceof DotNetModuleExtension && ((DotNetModuleExtension) moduleExtension).isAllowSourceRoots();
+	}
+
+	@Override
+	public boolean isValidPackageName(@NotNull Module module, @NotNull String packageName)
+	{
+		return true;
 	}
 
 	@NotNull

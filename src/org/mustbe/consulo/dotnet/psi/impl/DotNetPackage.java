@@ -21,6 +21,7 @@ import org.consulo.module.extension.ModuleExtension;
 import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageBase;
@@ -44,6 +45,7 @@ public class DotNetPackage extends PsiPackageBase
 		return DotNetPackage.ARRAY_FACTORY;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public Language getLanguage()
