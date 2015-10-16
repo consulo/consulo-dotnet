@@ -317,7 +317,7 @@ public class DotNetDebugThread extends Thread
 									{
 										if(XDebuggerSettingsManager.getInstanceImpl().getGeneralSettings().isShowDebuggerOnBreakpoint())
 										{
-											sessionTab.toFront(true);
+											sessionTab.toFront(true, null);
 										}
 										sessionTab.getUi().attractBy(XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION);
 									}
