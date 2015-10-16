@@ -47,6 +47,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.Processor;
 import com.intellij.util.ThreeState;
+import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
@@ -341,14 +342,7 @@ public class DotNetDebugThread extends Thread
 				e.printStackTrace();
 			}
 
-			try
-			{
-				Thread.sleep(50);
-			}
-			catch(InterruptedException e)
-			{
-				//
-			}
+			TimeoutUtil.sleep(50);
 		}
 	}
 
