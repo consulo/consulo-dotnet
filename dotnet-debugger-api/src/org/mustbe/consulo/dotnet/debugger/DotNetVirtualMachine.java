@@ -17,27 +17,31 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import mono.debugger.AppDomainMirror;
 import mono.debugger.AssemblyMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
-import mono.debugger.UnloadedElementException;
 import mono.debugger.VMDisconnectedException;
 import mono.debugger.VirtualMachine;
-import mono.debugger.event.AssemblyUnloadEvent;
 import mono.debugger.request.EventRequest;
 import mono.debugger.request.EventRequestManager;
 import mono.debugger.request.StepRequest;
@@ -48,7 +52,7 @@ import mono.debugger.request.StepRequest;
  */
 public class DotNetVirtualMachine
 {
-	private final Map<String, TypeMirror> myLoadedTypeMirrors = ContainerUtil.newConcurrentMap();
+	private final Map<Integer, AppDomainMirror> myLoadedAppDomains = ContainerUtil.newConcurrentMap();
 	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
 	private final MultiMap<XBreakpoint, EventRequest> myBreakpointEventRequests = MultiMap.create();
 
@@ -74,7 +78,6 @@ public class DotNetVirtualMachine
 	public void dispose()
 	{
 		myStepRequests.clear();
-		myLoadedTypeMirrors.clear();
 		myVirtualMachine.dispose();
 		myBreakpointEventRequests.clear();
 	}
@@ -118,16 +121,6 @@ public class DotNetVirtualMachine
 		myStepRequests.clear();
 	}
 
-	public void loadTypeMirror(@NotNull TypeMirror typeMirror)
-	{
-		myLoadedTypeMirrors.put(typeMirror.fullName(), typeMirror);
-	}
-
-	public void unloadTypeMirror(@NotNull TypeMirror typeMirror)
-	{
-		myLoadedTypeMirrors.remove(typeMirror.fullName());
-	}
-
 	public EventRequestManager eventRequestManager()
 	{
 		return myVirtualMachine.eventRequestManager();
@@ -140,8 +133,7 @@ public class DotNetVirtualMachine
 	}
 
 	@Nullable
-	public TypeMirror findTypeMirror(@Nullable final VirtualFile virtualFile, @NotNull final String vmQualifiedName) throws
-			TypeMirrorUnloadedException
+	public TypeMirror findTypeMirror(@NotNull Project project, @NotNull final VirtualFile virtualFile, @NotNull final String vmQualifiedName) throws TypeMirrorUnloadedException
 	{
 		try
 		{
@@ -150,7 +142,7 @@ public class DotNetVirtualMachine
 				TypeMirror[] typesByQualifiedName = myVirtualMachine.findTypesByQualifiedName(vmQualifiedName, false);
 				return typesByQualifiedName.length == 0 ? null : typesByQualifiedName[0];
 			}
-			else if(mySupportSearchTypesBySourcePaths && virtualFile != null)
+			else if(mySupportSearchTypesBySourcePaths)
 			{
 				TypeMirror[] typesBySourcePath = myVirtualMachine.findTypesBySourcePath(virtualFile.getPath(), SystemInfo.isFileSystemCaseSensitive);
 				return ContainerUtil.find(typesBySourcePath, new Condition<TypeMirror>()
@@ -164,18 +156,41 @@ public class DotNetVirtualMachine
 			}
 			else
 			{
-				for(TypeMirror loadedTypeMirror : myLoadedTypeMirrors.values())
+				Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
+				if(moduleForFile == null)
 				{
-					try
+					return null;
+				}
+
+				final DotNetModuleLangExtension<?> extension = ModuleUtilCore.getExtension(moduleForFile, DotNetModuleLangExtension.class);
+				if(extension == null)
+				{
+					return null;
+				}
+
+				final String assemblyTitle = ApplicationManager.getApplication().runReadAction(new Computable<String>()
+				{
+					@Override
+					public String compute()
 					{
-						if(loadedTypeMirror.qualifiedName().equals(vmQualifiedName))
-						{
-							return loadedTypeMirror;
-						}
+						return extension.getAssemblyTitle();
 					}
-					catch(UnloadedElementException e)
+				});
+
+				for(AppDomainMirror appDomainMirror : myLoadedAppDomains.values())
+				{
+					AssemblyMirror[] assemblies = appDomainMirror.assemblies();
+					for(AssemblyMirror assembly : assemblies)
 					{
-						throw new TypeMirrorUnloadedException(loadedTypeMirror, e);
+						String assemblyName = getAssemblyName(assembly.name());
+						if(assemblyTitle.equals(assemblyName))
+						{
+							TypeMirror typeByQualifiedName = assembly.findTypeByQualifiedName(vmQualifiedName, false);
+							if(typeByQualifiedName != null)
+							{
+								return typeByQualifiedName;
+							}
+						}
 					}
 				}
 				return null;
@@ -185,6 +200,17 @@ public class DotNetVirtualMachine
 		{
 			return null;
 		}
+	}
+
+	@NotNull
+	private static String getAssemblyName(String name)
+	{
+		int i = name.indexOf(',');
+		if(i == -1)
+		{
+			return name;
+		}
+		return name.substring(0, i);
 	}
 
 	public void resume()
@@ -203,23 +229,13 @@ public class DotNetVirtualMachine
 		return myVirtualMachine.allThreads();
 	}
 
-	public void unloadTypeMirrorsByAssembly(AssemblyUnloadEvent event)
+	public void loadAppDomain(AppDomainMirror appDomainMirror)
 	{
-		AssemblyMirror assembly = event.getAssembly();
+		myLoadedAppDomains.put(appDomainMirror.id(), appDomainMirror);
+	}
 
-		Iterator<TypeMirror> iterator = myLoadedTypeMirrors.values().iterator();
-		while(iterator.hasNext())
-		{
-			TypeMirror next = iterator.next();
-			AssemblyMirror typeMirrorAssembly = next.assembly();
-			if(typeMirrorAssembly == null)
-			{
-				continue;
-			}
-			if(typeMirrorAssembly.id() == assembly.id())
-			{
-				iterator.remove();
-			}
-		}
+	public void unloadAppDomain(AppDomainMirror appDomainMirror)
+	{
+		myLoadedAppDomains.remove(appDomainMirror.id());
 	}
 }

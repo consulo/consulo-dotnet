@@ -382,7 +382,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			return Collections.emptyList();
 		}
 
-		TypeMirror mirror = typeMirror == null ? virtualMachine.findTypeMirror(fileByUrl, vmQualifiedName) : typeMirror;
+		TypeMirror mirror = typeMirror == null ? virtualMachine.findTypeMirror(project, fileByUrl, vmQualifiedName) : typeMirror;
 
 		if(mirror == null)
 		{

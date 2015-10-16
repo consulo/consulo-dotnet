@@ -56,25 +56,9 @@ import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
-import mono.debugger.EventKind;
-import mono.debugger.Location;
-import mono.debugger.NotSuspendedException;
-import mono.debugger.SocketAttachingConnector;
-import mono.debugger.SocketListeningConnector;
-import mono.debugger.SuspendPolicy;
-import mono.debugger.TypeMirror;
-import mono.debugger.VMDisconnectedException;
-import mono.debugger.VirtualMachine;
+import mono.debugger.*;
 import mono.debugger.connect.Connector;
-import mono.debugger.event.AssemblyUnloadEvent;
-import mono.debugger.event.BreakpointEvent;
-import mono.debugger.event.Event;
-import mono.debugger.event.EventQueue;
-import mono.debugger.event.EventSet;
-import mono.debugger.event.TypeLoadEvent;
-import mono.debugger.event.UserBreakEvent;
-import mono.debugger.event.UserLogEvent;
-import mono.debugger.event.VMDeathEvent;
+import mono.debugger.event.*;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.TypeLoadRequest;
 
@@ -198,8 +182,8 @@ public class DotNetDebugThread extends Thread
 
 		myVirtualMachine = new DotNetVirtualMachine(virtualMachine);
 
-		virtualMachine.enableEvents(EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,
-				EventKind.USER_BREAK, EventKind.USER_LOG);
+		virtualMachine.enableEvents(/*EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,*/
+				EventKind.USER_BREAK, EventKind.USER_LOG, EventKind.APPDOMAIN_CREATE, EventKind.APPDOMAIN_UNLOAD);
 
 		Collection<? extends XLineBreakpoint<?>> breakpoints = getEnabledBreakpoints();
 		for(XLineBreakpoint<?> breakpoint : breakpoints)
@@ -259,11 +243,24 @@ public class DotNetDebugThread extends Thread
 						{
 							location = ((BreakpointRequest) event.request()).location();
 						}
+						else if(event instanceof StepEvent)
+						{
+							location = ((StepEvent) event).location();
+						}
+						else if(event instanceof AppDomainCreateEvent)
+						{
+							AppDomainMirror appDomainMirror = ((AppDomainCreateEvent) event).getAppDomainMirror();
+							myVirtualMachine.loadAppDomain(appDomainMirror);
+						}
+						else if(event instanceof AppDomainUnloadEvent)
+						{
+							AppDomainMirror appDomainMirror = ((AppDomainUnloadEvent) event).getAppDomainMirror();
+							myVirtualMachine.unloadAppDomain(appDomainMirror);
+						}
 						else if(event instanceof TypeLoadEvent)
 						{
 							TypeMirror typeMirror = ((TypeLoadEvent) event).typeMirror();
 
-							myVirtualMachine.loadTypeMirror(typeMirror);
 							insertBreakpoints(myVirtualMachine, typeMirror);
 							continue l;
 						}
@@ -271,10 +268,6 @@ public class DotNetDebugThread extends Thread
 						{
 							connectionStopped();
 							return;
-						}
-						else if(event instanceof AssemblyUnloadEvent)
-						{
-							myVirtualMachine.unloadTypeMirrorsByAssembly((AssemblyUnloadEvent) event);
 						}
 						else if(event instanceof UserBreakEvent)
 						{
@@ -288,6 +281,10 @@ public class DotNetDebugThread extends Thread
 
 							ConsoleView consoleView = mySession.getConsoleView();
 							consoleView.print("[" + category + "] " + message + "\n", ConsoleViewContentType.USER_INPUT);
+						}
+						else
+						{
+							LOGGER.error("Unknown event " + event.getClass().getSimpleName());
 						}
 					}
 
