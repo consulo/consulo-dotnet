@@ -243,6 +243,10 @@ public class DotNetDebugThread extends Thread
 						{
 							location = ((BreakpointRequest) event.request()).location();
 						}
+						else if(event instanceof StepEvent)
+						{
+							location = ((StepEvent) event).location();
+						}
 						else if(event instanceof AppDomainCreateEvent)
 						{
 							AppDomainMirror appDomainMirror = ((AppDomainCreateEvent) event).getAppDomainMirror();
