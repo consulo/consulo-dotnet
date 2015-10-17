@@ -31,7 +31,6 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
@@ -52,9 +51,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 	}
 
 	@Override
-	protected RunContentDescriptor doExecute(
-			Project project, final RunProfileState state, RunContentDescriptor contentToReuse, final ExecutionEnvironment env) throws
-			ExecutionException
+	protected RunContentDescriptor doExecute(@NotNull final RunProfileState state, @NotNull final ExecutionEnvironment env) throws ExecutionException
 	{
 		final DebugConnectionInfo debugConnectionInfo;
 		if(state instanceof UserDataHolder)
@@ -71,7 +68,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			throw new ExecutionException("No debug connect information");
 		}
 		FileDocumentManager.getInstance().saveAllDocuments();
-		final XDebugSession debugSession = XDebuggerManager.getInstance(project).startSession(env, new XDebugProcessStarter()
+		final XDebugSession debugSession = XDebuggerManager.getInstance(env.getProject()).startSession(env, new XDebugProcessStarter()
 		{
 			@NotNull
 			@Override
