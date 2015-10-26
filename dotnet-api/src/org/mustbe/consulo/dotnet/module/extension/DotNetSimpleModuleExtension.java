@@ -23,6 +23,7 @@ import org.consulo.annotations.InheritImmutable;
 import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 
@@ -55,4 +56,7 @@ public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtensi
 	 * FIXME [VISTALL] this method is really needed? We can check it by instanceof DotNetModuleExtension
 	 */
 	boolean isSupportCompilation();
+
+	@NotNull
+	DotNetNamespaceGeneratePolicy getNamespaceGeneratePolicy();
 }

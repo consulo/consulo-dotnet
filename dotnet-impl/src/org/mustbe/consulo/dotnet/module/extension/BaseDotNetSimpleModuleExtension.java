@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
+import org.mustbe.consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
@@ -94,6 +95,13 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	public boolean isSupportCompilation()
 	{
 		return false;
+	}
+
+	@NotNull
+	@Override
+	public DotNetNamespaceGeneratePolicy getNamespaceGeneratePolicy()
+	{
+		return DotNetNamespaceGeneratePolicy.DEFAULT;
 	}
 
 	@NotNull

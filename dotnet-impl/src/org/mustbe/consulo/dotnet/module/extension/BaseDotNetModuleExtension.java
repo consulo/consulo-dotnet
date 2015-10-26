@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTarget;
+import org.mustbe.consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -131,6 +132,17 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 			}
 		}
 		return ContainerUtil.toArray(list, PsiElement.ARRAY_FACTORY);
+	}
+
+	@NotNull
+	@Override
+	public DotNetNamespaceGeneratePolicy getNamespaceGeneratePolicy()
+	{
+		if(isAllowSourceRoots())
+		{
+			return DotNetNamespaceGeneratePolicy.WITH_SOURCE_ROOTS;
+		}
+		return super.getNamespaceGeneratePolicy();
 	}
 
 	@Override
