@@ -8,6 +8,7 @@ import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 
 %{
   private IElementType myArgumentElementType;
+  private int myParenthesesBalance;
 
   public _BaseLexer(IElementType argumentElementType) {
      myArgumentElementType = argumentElementType;
@@ -39,9 +40,21 @@ import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 {
    ":" { yybegin(FORMAT_WAIT); return CfsTokens.COLON; }
 
-   "," { yybegin(ALIGN_WAIT); return CfsTokens.COMMA; }
+   ","
+   {
+       if(myParenthesesBalance == 0)
+       {
+           yybegin(ALIGN_WAIT);
+           return CfsTokens.COMMA;
+       }
+       return myArgumentElementType;
+   }
 
    "}" { yybegin(YYINITIAL); return CfsTokens.END; }
+
+   "(" { myParenthesesBalance ++; return  myArgumentElementType; }
+
+   ")" { myParenthesesBalance --; return  myArgumentElementType; }
 
    [^]   { return myArgumentElementType; }
 }
