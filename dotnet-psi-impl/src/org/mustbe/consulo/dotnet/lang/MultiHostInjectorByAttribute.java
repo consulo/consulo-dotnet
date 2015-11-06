@@ -27,12 +27,15 @@ import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.LanguageVersionUtil;
 
 /**
  * @author VISTALL
@@ -74,8 +77,8 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 					continue;
 				}
 
-				Language languageFromAttribute = findLanguageFromAttribute(attribute);
-				if(languageFromAttribute == null)
+				LanguageVersion<?> languageVersion = findLanguageFromAttribute(attribute);
+				if(languageVersion == null)
 				{
 					continue;
 				}
@@ -87,8 +90,7 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 				}
 
 
-				multiHostRegistrar.startInjecting(languageFromAttribute).addPlace("", "", (PsiLanguageInjectionHost) dotNetExpression,
-						textRangeForInject).doneInjecting();
+				multiHostRegistrar.startInjecting(languageVersion).addPlace("", "", (PsiLanguageInjectionHost) dotNetExpression, textRangeForInject).doneInjecting();
 			}
 		}
 	}
@@ -108,14 +110,34 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 	}
 
 	@Nullable
-	private static Language findLanguageFromAttribute(@NotNull DotNetAttribute attribute)
+	private static LanguageVersion<?> findLanguageFromAttribute(@NotNull DotNetAttribute attribute)
 	{
 		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensions())
 		{
 			String languageId = attributeHelper.getLanguageId(attribute);
 			if(languageId != null)
 			{
-				return Language.findLanguageByID(languageId);
+				if(StringUtil.containsChar(languageId, ':'))
+				{
+					String[] split = languageId.split(":");
+					Language languageByID = Language.findLanguageByID(split[0]);
+					if(languageByID == null)
+					{
+						return null;
+					}
+					String version = split[1];
+					for(LanguageVersion languageVersion : languageByID.getVersions())
+					{
+						if(languageVersion.getName().equals(version))
+						{
+							return languageVersion;
+						}
+					}
+					return null;
+				}
+
+				Language languageByID = Language.findLanguageByID(languageId);
+				return languageByID == null ? null : LanguageVersionUtil.findDefaultVersion(languageByID);
 			}
 		}
 		return null;
