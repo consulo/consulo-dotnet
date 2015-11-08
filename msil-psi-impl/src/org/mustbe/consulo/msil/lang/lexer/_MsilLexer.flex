@@ -19,7 +19,7 @@ SINGLE_LINE_COMMENT="/""/"[^\r\n]*
 MULTI_LINE_STYLE_COMMENT=("/*"{COMMENT_TAIL})|"/*"
 COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 
-DIGIT = [0-9]+
+DIGIT = ("-")?[0-9]+
 SEPARATOR=(\.) | (\/)
 
 IDENTIFIER_PART=[:jletter:]|\@|[:jletterdigit:]
