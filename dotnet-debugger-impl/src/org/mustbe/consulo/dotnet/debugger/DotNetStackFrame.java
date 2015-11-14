@@ -17,11 +17,13 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import java.io.File;
+import java.util.Set;
 
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetSourcePositionImpl;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
@@ -29,8 +31,11 @@ import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUt
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;
 import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.ObjectReviewer;
 import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldOrAsyncObjectReviewer;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
@@ -40,15 +45,20 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiRecursiveElementVisitor;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.util.containers.ArrayListSet;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
+import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XStackFrame;
+import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import mono.debugger.*;
@@ -107,8 +117,7 @@ public class DotNetStackFrame extends XStackFrame
 						@Override
 						public PsiElement compute()
 						{
-							return DotNetLineBreakpointType.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), method.debugInfo(),
-									executableChildrenAtLineIndex);
+							return DotNetLineBreakpointType.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), method.debugInfo(), executableChildrenAtLineIndex);
 						}
 					});
 
@@ -143,15 +152,14 @@ public class DotNetStackFrame extends XStackFrame
 			}
 
 			@Override
-			public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback,
-					@Nullable XSourcePosition expressionPosition)
+			public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 			{
-				for(DotNetDebuggerProvider dotNetDebuggerProvider : DotNetDebuggerProvider.EP_NAME.getExtensions())
+				DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(expression.getLanguage());
+				if(provider != null)
 				{
-					if(dotNetDebuggerProvider.getEditorLanguage() == expression.getLanguage())
+					if(provider.getEditorLanguage() == expression.getLanguage())
 					{
-						dotNetDebuggerProvider.evaluate(myFrame, myDebuggerContext, expression.getExpression(), null, callback, expressionPosition);
-						break;
+						provider.evaluate(myFrame, myDebuggerContext, expression.getExpression(), null, callback, expressionPosition);
 					}
 				}
 			}
@@ -163,6 +171,7 @@ public class DotNetStackFrame extends XStackFrame
 			}
 		};
 	}
+
 
 	@Override
 	public void customizePresentation(ColoredTextContainer component)
@@ -222,11 +231,12 @@ public class DotNetStackFrame extends XStackFrame
 	}
 
 	@Override
+	@RequiredReadAction
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
 		MethodMirror method = myFrame.location().method();
 
-		XValueChildrenList childrenList = new XValueChildrenList();
+		final XValueChildrenList childrenList = new XValueChildrenList();
 
 		try
 		{
@@ -255,8 +265,7 @@ public class DotNetStackFrame extends XStackFrame
 		}
 		catch(AbsentInformationException e)
 		{
-			node.setMessage("Stack frame info is not available", XDebuggerUIConstants.INFORMATION_MESSAGE_ICON,
-					XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES, null);
+			node.setMessage("Stack frame info is not available", XDebuggerUIConstants.INFORMATION_MESSAGE_ICON, XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES, null);
 			return;
 		}
 		catch(InvalidObjectException e)
@@ -295,6 +304,55 @@ public class DotNetStackFrame extends XStackFrame
 		catch(IllegalArgumentException ignored)
 		{
 		}
+
+		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrame);
+		if(psiElement != null)
+		{
+			final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<DotNetReferenceExpression>();
+			DotNetQualifiedElement parentQualifiedElement = PsiTreeUtil.getParentOfType(psiElement, DotNetQualifiedElement.class);
+			if(parentQualifiedElement != null)
+			{
+				parentQualifiedElement.accept(new PsiRecursiveElementVisitor()
+				{
+					@Override
+					public void visitElement(PsiElement element)
+					{
+						super.visitElement(element);
+						if(element instanceof DotNetReferenceExpression)
+						{
+							referenceExpressions.add((DotNetReferenceExpression) element);
+						}
+					}
+				});
+
+				if(!referenceExpressions.isEmpty())
+				{
+					DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(psiElement.getLanguage());
+					if(provider != null)
+					{
+						for(DotNetReferenceExpression referenceExpression : referenceExpressions)
+						{
+							XDebuggerEvaluator.XEvaluationCallback callback = new XDebuggerEvaluator.XEvaluationCallback()
+							{
+								@Override
+								public void evaluated(@NotNull XValue result)
+								{
+									childrenList.add((XNamedValue) result);
+								}
+
+								@Override
+								public void errorOccurred(@NotNull String errorMessage)
+								{
+									throw new UnsupportedOperationException();
+								}
+							};
+							provider.evaluate(myFrame, myDebuggerContext, referenceExpression, callback);
+						}
+					}
+				}
+			}
+		}
+
 		node.addChildren(childrenList, true);
 	}
 
