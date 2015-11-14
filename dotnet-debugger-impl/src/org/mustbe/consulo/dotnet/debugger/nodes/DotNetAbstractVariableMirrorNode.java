@@ -31,7 +31,6 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
-import lombok.val;
 import mono.debugger.*;
 
 /**
@@ -168,11 +167,9 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	}
 
 	@Nullable
-	public abstract Value<?> getValueOfVariableImpl() throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException,
-			InvalidStackFrameException;
+	public abstract Value<?> getValueOfVariableImpl() throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException, InvalidStackFrameException;
 
-	public abstract void setValueForVariableImpl(@NotNull Value<?> value) throws ThrowValueException, InvalidFieldIdException,
-			VMDisconnectedException, InvalidStackFrameException;
+	public abstract void setValueForVariableImpl(@NotNull Value<?> value) throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException, InvalidStackFrameException;
 
 	@Nullable
 	public Value<?> getValueOfVariableSafe()
@@ -260,14 +257,14 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		val typeOfVariable = getTypeOfVariableForChildren();
+		TypeMirror typeOfVariable = getTypeOfVariableForChildren();
 		if(typeOfVariable == null)
 		{
 			return;
 		}
 
 		XValueChildrenList childrenList = new XValueChildrenList();
-		val value = getValueOfVariableSafe();
+		Value<?> value = getValueOfVariableSafe();
 		for(DotNetLogicValueView dotNetLogicValueView : DotNetLogicValueView.IMPL)
 		{
 			if(dotNetLogicValueView.canHandle(myDebugContext, typeOfVariable))
@@ -282,8 +279,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	public boolean canHaveChildren()
 	{
 		final Value<?> valueOfVariable = getValueOfVariableSafe();
-		return valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror || valueOfVariable instanceof
-				StringValueMirror;
+		return valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror || valueOfVariable instanceof StringValueMirror;
 	}
 
 	@Override
@@ -291,7 +287,6 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	{
 		final Value<?> valueOfVariable = getValueOfVariableSafe();
 
-		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myThreadMirror, getTypeOfVariable(), valueOfVariable),
-				canHaveChildren());
+		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myThreadMirror, valueOfVariable), canHaveChildren());
 	}
 }

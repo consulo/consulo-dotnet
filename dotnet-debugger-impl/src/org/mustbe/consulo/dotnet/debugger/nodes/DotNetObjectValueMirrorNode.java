@@ -25,8 +25,13 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Getter;
+import com.intellij.util.CommonProcessors;
+import com.intellij.util.Processor;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
+import com.intellij.xdebugger.frame.XValueNode;
+import com.intellij.xdebugger.frame.XValuePlace;
+import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
 import mono.debugger.FieldOrPropertyMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.PropertyMirror;
@@ -40,9 +45,19 @@ import mono.debugger.Value;
  */
 public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNode
 {
+	public static void addStaticNode(@NotNull XValueChildrenList list, @NotNull DotNetDebugContext debuggerContext, @NotNull ThreadMirror threadMirror, @NotNull TypeMirror typeMirror)
+	{
+		boolean result = processFieldOrProperty(typeMirror, null, CommonProcessors.<FieldOrPropertyMirror>alwaysFalse());
+		if(result)
+		{
+			return;
+		}
+		list.add(new DotNetObjectValueMirrorNode(debuggerContext, threadMirror, typeMirror, (ObjectValueMirror) null));
+	}
+
 	@NotNull
 	private final TypeMirror myTypeMirror;
-	private final Getter<ObjectValueMirror> myObjectValueMirrorGeter;
+	private final Getter<ObjectValueMirror> myObjectValueMirrorGetter;
 
 	public DotNetObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull ThreadMirror threadMirror,
@@ -63,25 +78,25 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 	public DotNetObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull ThreadMirror threadMirror,
 			@NotNull TypeMirror typeMirror,
-			@Nullable Getter<ObjectValueMirror> objectValueMirrorGeter)
+			@Nullable Getter<ObjectValueMirror> objectValueMirrorGetter)
 	{
-		super(debuggerContext, objectValueMirrorGeter == null ? "static" : "this", threadMirror);
+		super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", threadMirror);
 		myTypeMirror = typeMirror;
-		myObjectValueMirrorGeter = objectValueMirrorGeter;
+		myObjectValueMirrorGetter = objectValueMirrorGetter;
 	}
 
 	@NotNull
 	@Override
 	public Icon getIconForVariable()
 	{
-		return myObjectValueMirrorGeter == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value;
+		return myObjectValueMirrorGetter == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value;
 	}
 
 	@Nullable
 	@Override
 	public Value<?> getValueOfVariableImpl()
 	{
-		return myObjectValueMirrorGeter == null ? null : myObjectValueMirrorGeter.get();
+		return myObjectValueMirrorGetter == null ? null : myObjectValueMirrorGetter.get();
 	}
 
 	@Override
@@ -91,20 +106,41 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 	}
 
 	@Override
-	public boolean canHaveChildren()
+	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
-		return myObjectValueMirrorGeter == null || super.canHaveChildren();
+		if(myObjectValueMirrorGetter == null)
+		{
+			xValueNode.setPresentation(null, new XRegularValuePresentation("", null, ""), true);
+		}
+		else
+		{
+			super.computePresentation(xValueNode, xValuePlace);
+		}
 	}
 
 	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		XValueChildrenList childrenList = new XValueChildrenList();
+		final XValueChildrenList childrenList = new XValueChildrenList();
 
-		List<FieldOrPropertyMirror> fieldMirrors = myTypeMirror.fieldAndProperties(true);
+		processFieldOrProperty(myTypeMirror, myObjectValueMirrorGetter, new Processor<FieldOrPropertyMirror>()
+		{
+			@Override
+			public boolean process(FieldOrPropertyMirror fieldOrPropertyMirror)
+			{
+				childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldOrPropertyMirror, myThreadMirror, fieldOrPropertyMirror.isStatic() ? null : myObjectValueMirrorGetter.get()));
+				return true;
+			}
+		});
+		node.addChildren(childrenList, true);
+	}
+
+	private static boolean processFieldOrProperty(@NotNull TypeMirror typeMirror, @Nullable Getter<ObjectValueMirror> objectValueMirrorGetter, @NotNull Processor<FieldOrPropertyMirror> processor)
+	{
+		List<FieldOrPropertyMirror> fieldMirrors = typeMirror.fieldAndProperties(true);
 		for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
 		{
-			if(!fieldMirror.isStatic() && myObjectValueMirrorGeter == null)
+			if(!fieldMirror.isStatic() && objectValueMirrorGetter == null)
 			{
 				continue;
 			}
@@ -113,10 +149,13 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 			{
 				continue;
 			}
-			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldMirror, myThreadMirror,
-					fieldMirror.isStatic() ? null : myObjectValueMirrorGeter.get()));
+
+			if(!processor.process(fieldMirror))
+			{
+				return false;
+			}
 		}
-		node.addChildren(childrenList, true);
+		return true;
 	}
 
 	@NotNull

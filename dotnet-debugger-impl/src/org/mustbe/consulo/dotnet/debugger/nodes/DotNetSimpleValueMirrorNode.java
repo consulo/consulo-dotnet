@@ -58,7 +58,6 @@ public class DotNetSimpleValueMirrorNode extends DotNetAbstractVariableMirrorNod
 	@Override
 	public void setValueForVariableImpl(@NotNull Value<?> value)
 	{
-
 	}
 
 	@Nullable

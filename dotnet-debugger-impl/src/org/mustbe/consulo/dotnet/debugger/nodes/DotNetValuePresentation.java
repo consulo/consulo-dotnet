@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Ref;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import mono.debugger.*;
 
@@ -31,13 +32,11 @@ import mono.debugger.*;
 public class DotNetValuePresentation extends XValuePresentation
 {
 	private ThreadMirror myThreadMirror;
-	private TypeMirror myTypeOfValue;
 	private Value<?> myValue;
 
-	public DotNetValuePresentation(@NotNull ThreadMirror threadMirror, @Nullable TypeMirror typeOfValue, @Nullable Value<?> value)
+	public DotNetValuePresentation(@NotNull ThreadMirror threadMirror, @Nullable Value<?> value)
 	{
 		myThreadMirror = threadMirror;
-		myTypeOfValue = typeOfValue;
 		myValue = value;
 	}
 
@@ -45,12 +44,56 @@ public class DotNetValuePresentation extends XValuePresentation
 	@Override
 	public String getType()
 	{
-		TypeMirror typeOfVariable = myTypeOfValue;
-		if(typeOfVariable == null)
+		if(myValue != null)
 		{
-			return null;
+			final Ref<String> result = Ref.create();
+
+			myValue.accept(new ValueVisitor.Adapter()
+			{
+				@Override
+				public void visitObjectValue(@NotNull ObjectValueMirror value)
+				{
+					if(value.id() == 0)
+					{
+						return;
+					}
+
+					TypeMirror type = null;
+					try
+					{
+						type = value.type();
+					}
+					catch(InvalidObjectException ignored)
+					{
+					}
+
+					if(type == null)
+					{
+						return;
+					}
+					MethodMirror toString = type.findMethodByName("ToString", true);
+					if(toString == null)
+					{
+						return;
+					}
+
+					result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(type) + "@" + value.address());
+				}
+
+				@Override
+				public void visitArrayValue(@NotNull ArrayValueMirror value)
+				{
+					StringBuilder builder = new StringBuilder();
+					String type = DotNetVirtualMachineUtil.formatNameWithGeneric(value.type());
+					builder.append(type.replaceFirst("\\[\\]", "[" + value.length() + "]"));
+					builder.append("@");
+					builder.append(value.object().address());
+					result.set(builder.toString());
+				}
+			});
+			return result.get();
 		}
-		return DotNetVirtualMachineUtil.formatNameWithGeneric(typeOfVariable);
+		return null;
 	}
 
 	@Override
@@ -71,7 +114,7 @@ public class DotNetValuePresentation extends XValuePresentation
 				{
 					if(value.id() == 0)
 					{
-						render.renderKeywordValue("null");
+						render.renderValue("null");
 						return;
 					}
 
@@ -96,11 +139,7 @@ public class DotNetValuePresentation extends XValuePresentation
 
 					String toStringValue = null;
 					String qTypeOfValue = toString.declaringType().qualifiedName();
-					if(Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
-					{
-						toStringValue = "{" + qTypeOfValue + "@" + value.address() + "}";
-					}
-					else
+					if(!Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
 					{
 						Value<?> invoke = toString.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, value);
 						if(invoke instanceof StringValueMirror)
@@ -108,6 +147,7 @@ public class DotNetValuePresentation extends XValuePresentation
 							toStringValue = ((StringValueMirror) invoke).value();
 						}
 					}
+
 					if(toStringValue != null)
 					{
 						render.renderValue(toStringValue);
@@ -115,40 +155,33 @@ public class DotNetValuePresentation extends XValuePresentation
 				}
 
 				@Override
-				public void visitArrayValue(@NotNull ArrayValueMirror value)
-				{
-					StringBuilder builder = new StringBuilder();
-					builder.append("{");
-					String type = DotNetVirtualMachineUtil.formatNameWithGeneric(value.type());
-					builder.append(type.replaceFirst("\\[\\]", "[" + value.length() + "]"));
-					builder.append("@");
-					builder.append(value.object().address());
-					builder.append("}");
-					render.renderValue(builder.toString());
-				}
-
-				@Override
 				public void visitCharValue(@NotNull CharValueMirror valueMirror, @NotNull Character mainValue)
 				{
-					render.renderCharValue(String.valueOf(mainValue));
+					StringBuilder builder = new StringBuilder();
+					builder.append('\'');
+					builder.append(mainValue);
+					builder.append('\'');
+					builder.append(' ');
+					builder.append((int)mainValue.charValue());
+					render.renderValue(builder.toString());
 				}
 
 				@Override
 				public void visitBooleanValue(@NotNull BooleanValueMirror value, @NotNull Boolean mainValue)
 				{
-					render.renderKeywordValue(String.valueOf(mainValue));
+					render.renderValue(String.valueOf(mainValue));
 				}
 
 				@Override
 				public void visitNumberValue(@NotNull NumberValueMirror value, @NotNull Number mainValue)
 				{
-					render.renderNumericValue(String.valueOf(mainValue));
+					render.renderValue(String.valueOf(mainValue));
 				}
 
 				@Override
 				public void visitNoObjectValue(@NotNull NoObjectValueMirror value)
 				{
-					render.renderKeywordValue("null");
+					render.renderValue("null");
 				}
 			});
 		}

@@ -42,7 +42,7 @@ public class DefaultDotNetLogicValueView implements DotNetLogicValueView
 
 			assert type != null;
 
-			childrenList.add(new DotNetObjectValueMirrorNode(debugContext, threadMirror, type, (ObjectValueMirror) null));
+			DotNetObjectValueMirrorNode.addStaticNode(childrenList, debugContext, threadMirror, type);
 
 			List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
 			for(FieldOrPropertyMirror fieldMirror : fieldMirrors)

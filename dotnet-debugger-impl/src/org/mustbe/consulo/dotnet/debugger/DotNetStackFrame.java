@@ -250,8 +250,7 @@ public class DotNetStackFrame extends XStackFrame
 			}
 			else
 			{
-				childrenList.add(new DotNetObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), myFrame.location().declaringType(),
-						(ObjectValueMirror) null));
+				DotNetObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrame.thread(), myFrame.location().declaringType());
 			}
 		}
 		catch(AbsentInformationException e)

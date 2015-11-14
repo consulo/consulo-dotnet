@@ -68,7 +68,7 @@ public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 					return false;
 				}
 
-				childrenList.add(new DotNetObjectValueMirrorNode(debugContext, stackFrameMirror.thread(), parentType, (ObjectValueMirror) null));
+				DotNetObjectValueMirrorNode.addStaticNode(childrenList, debugContext, stackFrameMirror.thread(), parentType);
 
 				FieldMirror[] fields = type.fields();
 
