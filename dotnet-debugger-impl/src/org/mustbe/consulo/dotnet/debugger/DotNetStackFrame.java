@@ -180,7 +180,6 @@ public class DotNetStackFrame extends XStackFrame
 		MethodMirror method = location.method();
 
 		String name = method.name();
-		Icon icon = AllIcons.Nodes.Method;
 		if(name.equals(XStubUtil.CONSTRUCTOR_NAME))
 		{
 			name = method.declaringType().name() + "()";
@@ -188,7 +187,6 @@ public class DotNetStackFrame extends XStackFrame
 		else if(name.equals(XStubUtil.STATIC_CONSTRUCTOR_NAME))
 		{
 			name = method.declaringType().name();
-			icon = AllIcons.Nodes.Static;
 		}
 		else
 		{
@@ -199,10 +197,9 @@ public class DotNetStackFrame extends XStackFrame
 		if(lambdaInfo != null)
 		{
 			name = "lambda$" + lambdaInfo.getSecond();
-			icon = AllIcons.Nodes.Lambda;
 		}
 
-		component.setIcon(icon);
+		component.setIcon(AllIcons.Debugger.Frame);
 		component.append(name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
 
 		StringBuilder builder = new StringBuilder();
