@@ -456,6 +456,19 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 						collectLocations(virtualMachine, lineBreakpoint, methods, moveNext);
 					}
 				}
+				else if(DotNetDebuggerCompilerGenerateUtil.isAsyncLambdaWrapper(nestedTypeMirror))
+				{
+					TypeMirror[] typeMirrors = nestedTypeMirror.nestedTypes();
+					if(typeMirrors.length > 0)
+					{
+						MethodMirror moveNext = typeMirrors[0].findMethodByName("MoveNext", false);
+
+						if(moveNext != null)
+						{
+							collectLocations(virtualMachine, lineBreakpoint, methods, moveNext);
+						}
+					}
+				}
 			}
 		}
 		catch(UnloadedElementException e)

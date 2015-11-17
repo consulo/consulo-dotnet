@@ -37,6 +37,9 @@ public class DotNetDebuggerCompilerGenerateUtil
 	public static final Pattern AsyncNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__async([\\d]+)");
 	public static final Pattern SomeReferenceToOriginalPattern = Pattern.compile("<([\\S\\d]+)>__([\\d]+)");
 
+	private static final Pattern AsyncLambdaFirstWrapperMS = Pattern.compile("<>c__DisplayClass([\\d]+)_([\\d]+)");
+	private static final Pattern AsyncLambdaFirstWrapperMono = Pattern.compile("<([\\S\\d]+)>c__AnonStorey([\\d]+)");
+
 	@Nullable
 	public static Couple<String> extractLambdaInfo(@NotNull MethodMirror methodMirror)
 	{
@@ -46,6 +49,12 @@ public class DotNetDebuggerCompilerGenerateUtil
 			return Couple.of(matcher.group(1), matcher.group(2));
 		}
 		return null;
+	}
+
+	public static boolean isAsyncLambdaWrapper(@NotNull TypeMirror typeMirror)
+	{
+		return typeMirror.isNested() && (AsyncLambdaFirstWrapperMono.matcher(typeMirror.name()).matches() || AsyncLambdaFirstWrapperMS.matcher(typeMirror
+				.name()).matches());
 	}
 
 	public static boolean isYieldOrAsyncNestedType(@NotNull TypeMirror typeMirror)
