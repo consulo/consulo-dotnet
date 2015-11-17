@@ -16,10 +16,10 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
+import gnu.trove.THashSet;
+
 import java.io.File;
 import java.util.Set;
-
-import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +49,7 @@ import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.util.Consumer;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
@@ -58,7 +59,6 @@ import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XStackFrame;
-import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import mono.debugger.*;
@@ -284,6 +284,7 @@ public class DotNetStackFrame extends XStackFrame
 			childrenList.add(parameterMirrorNode);
 		}
 
+		Set<Object> visitedVariables = new THashSet<Object>();
 		try
 		{
 			LocalVariableMirror[] locals = method.locals(myFrame.location().codeIndex());
@@ -293,6 +294,7 @@ public class DotNetStackFrame extends XStackFrame
 				{
 					continue;
 				}
+				visitedVariables.add(local);
 				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(myDebuggerContext, local, myFrame);
 
 				childrenList.add(localVariableMirrorNode);
@@ -327,23 +329,18 @@ public class DotNetStackFrame extends XStackFrame
 					DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(psiElement.getLanguage());
 					if(provider != null)
 					{
+						Consumer<XNamedValue> callback = new Consumer<XNamedValue>()
+						{
+							@Override
+							public void consume(XNamedValue xNamedValue)
+							{
+								childrenList.add(xNamedValue);
+							}
+						};
+
 						for(DotNetReferenceExpression referenceExpression : referenceExpressions)
 						{
-							XDebuggerEvaluator.XEvaluationCallback callback = new XDebuggerEvaluator.XEvaluationCallback()
-							{
-								@Override
-								public void evaluated(@NotNull XValue result)
-								{
-									childrenList.add((XNamedValue) result);
-								}
-
-								@Override
-								public void errorOccurred(@NotNull String errorMessage)
-								{
-									throw new UnsupportedOperationException();
-								}
-							};
-							provider.evaluate(myFrame, myDebuggerContext, referenceExpression, callback);
+							provider.evaluate(myFrame, myDebuggerContext, referenceExpression, visitedVariables, callback);
 						}
 					}
 				}

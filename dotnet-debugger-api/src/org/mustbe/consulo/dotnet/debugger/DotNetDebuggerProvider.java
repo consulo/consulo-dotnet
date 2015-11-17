@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.debugger;
 
+import java.util.Set;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
@@ -24,8 +26,10 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.Consumer;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
+import com.intellij.xdebugger.frame.XNamedValue;
 import mono.debugger.StackFrameMirror;
 
 /**
@@ -71,14 +75,10 @@ public abstract class DotNetDebuggerProvider
 	public abstract void evaluate(@NotNull StackFrameMirror frame,
 			@NotNull DotNetDebugContext debuggerContext,
 			@NotNull DotNetReferenceExpression element,
-			@NotNull XDebuggerEvaluator.XEvaluationCallback callback);
+			@NotNull Set<Object> visitedVariables,
+			@NotNull Consumer<XNamedValue> callback);
 
 	public abstract boolean isSupported(@NotNull PsiFile psiFile);
 
 	public abstract Language getEditorLanguage();
-
-	public boolean isCodeFragmentEvaluationSupported()
-	{
-		return false;
-	}
 }
