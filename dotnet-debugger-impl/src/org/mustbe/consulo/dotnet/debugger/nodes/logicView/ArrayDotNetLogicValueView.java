@@ -1,10 +1,9 @@
 package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.nodes.DotNetArrayValueMirrorNode;
-import com.intellij.xdebugger.frame.XValueChildrenList;
+import com.intellij.xdebugger.frame.XNamedValue;
 import mono.debugger.ArrayValueMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
@@ -14,7 +13,7 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 20.09.14
  */
-public class ArrayDotNetLogicValueView implements DotNetLogicValueView
+public class ArrayDotNetLogicValueView extends LimitableDotNetLogicValueView<ArrayValueMirror>
 {
 	@Override
 	public boolean canHandle(@NotNull DotNetDebugContext debugContext, @NotNull TypeMirror typeMirror)
@@ -23,18 +22,21 @@ public class ArrayDotNetLogicValueView implements DotNetLogicValueView
 	}
 
 	@Override
-	public void computeChildren(@NotNull DotNetDebugContext debugContext, @NotNull ThreadMirror threadMirror, @Nullable Value<?> value, @NotNull XValueChildrenList childrenList)
+	public int getSize(@NotNull ArrayValueMirror value)
 	{
-		ArrayValueMirror arrayValueMirror = (ArrayValueMirror) value;
-		if(arrayValueMirror == null)
-		{
-			return;
-		}
-		int length = arrayValueMirror.length();
-		int min = Math.min(length, 100);
-		for(int i = 0; i < min; i++)
-		{
-			childrenList.add(new DotNetArrayValueMirrorNode(debugContext, "[" + i + "]", threadMirror, arrayValueMirror, i));
-		}
+		return value.length();
+	}
+
+	@Override
+	public boolean isMyValue(@NotNull Value<?> value)
+	{
+		return value instanceof ArrayValueMirror;
+	}
+
+	@NotNull
+	@Override
+	public XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull ThreadMirror threadMirror, @NotNull ArrayValueMirror value)
+	{
+		return new DotNetArrayValueMirrorNode(context, "[" + index + "]", threadMirror, value, index);
 	}
 }

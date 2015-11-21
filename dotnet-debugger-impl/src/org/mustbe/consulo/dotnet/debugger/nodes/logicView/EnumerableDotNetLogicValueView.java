@@ -19,7 +19,7 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 20.09.14
  */
-public class EnumerableDotNetLogicValueView implements DotNetLogicValueView
+public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 {
 	@Override
 	public boolean canHandle(@NotNull DotNetDebugContext debugContext, @NotNull TypeMirror typeMirror)
@@ -28,8 +28,7 @@ public class EnumerableDotNetLogicValueView implements DotNetLogicValueView
 	}
 
 	@Override
-	public void computeChildren(@NotNull DotNetDebugContext debugContext, @NotNull ThreadMirror threadMirror, @Nullable Value<?> value,
-			@NotNull XValueChildrenList childrenList)
+	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext, @NotNull ThreadMirror threadMirror, @Nullable Value<?> value, @NotNull XValueChildrenList childrenList)
 	{
 		if(!(value instanceof ObjectValueMirror) && !(value instanceof StringValueMirror))
 		{

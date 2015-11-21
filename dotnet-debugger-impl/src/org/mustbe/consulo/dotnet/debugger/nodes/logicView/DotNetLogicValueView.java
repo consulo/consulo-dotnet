@@ -3,7 +3,8 @@ package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
-import com.intellij.xdebugger.frame.XValueChildrenList;
+import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.xdebugger.frame.XCompositeNode;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.Value;
@@ -23,6 +24,5 @@ public interface DotNetLogicValueView
 
 	boolean canHandle(@NotNull DotNetDebugContext debugContext, @NotNull TypeMirror typeMirror);
 
-	void computeChildren(@NotNull DotNetDebugContext debugContext, @NotNull ThreadMirror threadMirror, @Nullable Value<?> value,
-			@NotNull XValueChildrenList childrenList);
+	void computeChildren(@NotNull UserDataHolderBase dataHolder, @NotNull DotNetDebugContext debugContext, @NotNull ThreadMirror threadMirror, @Nullable Value<?> value, @NotNull XCompositeNode node);
 }

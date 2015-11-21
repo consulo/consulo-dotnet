@@ -24,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
@@ -125,6 +125,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 	@NotNull
 	protected final ThreadMirror myThreadMirror;
+	private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
 
 	public DotNetAbstractVariableMirrorNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull ThreadMirror threadMirror)
 	{
@@ -260,20 +261,25 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		TypeMirror typeOfVariable = getTypeOfVariableForChildren();
 		if(typeOfVariable == null)
 		{
+			node.setErrorMessage("No type");
 			return;
 		}
 
-		XValueChildrenList childrenList = new XValueChildrenList();
 		Value<?> value = getValueOfVariableSafe();
-		for(DotNetLogicValueView dotNetLogicValueView : DotNetLogicValueView.IMPL)
+
+		DotNetLogicValueView valueView = null;
+		for(DotNetLogicValueView temp : DotNetLogicValueView.IMPL)
 		{
-			if(dotNetLogicValueView.canHandle(myDebugContext, typeOfVariable))
+			if(temp.canHandle(myDebugContext, typeOfVariable))
 			{
-				dotNetLogicValueView.computeChildren(myDebugContext, myThreadMirror, value, childrenList);
+				valueView = temp;
 				break;
 			}
 		}
-		node.addChildren(childrenList, true);
+
+		assert valueView != null : "Required default implementation";
+
+		valueView.computeChildren(myDataHolder, myDebugContext, myThreadMirror, value, node);
 	}
 
 	public boolean canHaveChildren()
