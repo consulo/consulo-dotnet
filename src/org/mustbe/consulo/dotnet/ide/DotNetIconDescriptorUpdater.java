@@ -17,12 +17,13 @@
 package org.mustbe.consulo.dotnet.ide;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.run.DotNetTestFramework;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.psi.PsiElement;
-import com.intellij.testIntegration.TestFramework;
 
 /**
  * @author VISTALL
@@ -30,14 +31,15 @@ import com.intellij.testIntegration.TestFramework;
  */
 public class DotNetIconDescriptorUpdater implements IconDescriptorUpdater
 {
+	@RequiredReadAction
 	@Override
 	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int i)
 	{
 		if(element instanceof DotNetTypeDeclaration)
 		{
-			for(TestFramework testFramework : TestFramework.EXTENSION_NAME.getExtensions())
+			for(DotNetTestFramework testFramework : DotNetTestFramework.EP_NAME.getExtensions())
 			{
-				if(testFramework.isTestClass(element))
+				if(testFramework.isTestType((DotNetTypeDeclaration) element))
 				{
 					iconDescriptor.addLayerIcon(AllIcons.RunConfigurations.TestMark);
 				}
