@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
+import com.intellij.xdebugger.frame.XValueModifier;
 import mono.debugger.*;
 
 /**
@@ -31,25 +32,37 @@ import mono.debugger.*;
 public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirrorNode
 {
 	private final FieldOrPropertyMirror myFieldOrPropertyMirror;
-	private final ObjectValueMirror myObjectValueMirror;
+	private final ObjectValueMirror myThisObjectMirror;
+	@Nullable
+	private Value<?> myFieldValue;
 
 	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
 			@NotNull String name,
 			@NotNull ThreadMirror threadMirror,
-			@Nullable ObjectValueMirror objectValueMirror)
+			@Nullable ObjectValueMirror thisObjectMirror)
 	{
 		super(debuggerContext, name, threadMirror);
 		myFieldOrPropertyMirror = fieldOrPropertyMirror;
-		myObjectValueMirror = objectValueMirror;
+		myThisObjectMirror = thisObjectMirror;
 	}
 
 	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
 			@NotNull ThreadMirror threadMirror,
-			@Nullable ObjectValueMirror objectValueMirror)
+			@Nullable ObjectValueMirror thisObjectMirror)
 	{
-		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.name(), threadMirror, objectValueMirror);
+		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.name(), threadMirror, thisObjectMirror);
+	}
+
+	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
+			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
+			@NotNull ThreadMirror threadMirror,
+			@Nullable ObjectValueMirror thisObjectMirror,
+			@NotNull Value<?> fieldValue)
+	{
+		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.name(), threadMirror, thisObjectMirror);
+		myFieldValue = fieldValue;
 	}
 
 	@NotNull
@@ -57,6 +70,17 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	public TypeMirror getTypeOfVariable()
 	{
 		return myFieldOrPropertyMirror.type();
+	}
+
+	@Nullable
+	@Override
+	public XValueModifier getModifier()
+	{
+		if(myFieldValue != null)
+		{
+			return null;
+		}
+		return super.getModifier();
 	}
 
 	@NotNull
@@ -78,13 +102,17 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	@Override
 	public Value<?> getValueOfVariableImpl() throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException, InvalidStackFrameException
 	{
-		return myFieldOrPropertyMirror.value(myThreadMirror, myObjectValueMirror);
+		if(myFieldValue != null)
+		{
+			return myFieldValue;
+		}
+		return myFieldOrPropertyMirror.value(myThreadMirror, myThisObjectMirror);
 	}
 
 	@Override
 	public void setValueForVariableImpl(@NotNull Value<?> value) throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException,
 			InvalidStackFrameException
 	{
-		myFieldOrPropertyMirror.setValue(myThreadMirror, myObjectValueMirror, value);
+		myFieldOrPropertyMirror.setValue(myThreadMirror, myThisObjectMirror, value);
 	}
 }

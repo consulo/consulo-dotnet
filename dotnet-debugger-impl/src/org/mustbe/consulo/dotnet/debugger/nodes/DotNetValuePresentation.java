@@ -16,13 +16,18 @@
 
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.Function;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
 import mono.debugger.*;
 
 /**
@@ -50,6 +55,12 @@ public class DotNetValuePresentation extends XValuePresentation
 
 			myValue.accept(new ValueVisitor.Adapter()
 			{
+				@Override
+				public void visitStructValue(@NotNull StructValueMirror mirror)
+				{
+					result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(mirror.type()));
+				}
+
 				@Override
 				public void visitObjectValue(@NotNull ObjectValueMirror value)
 				{
@@ -97,7 +108,7 @@ public class DotNetValuePresentation extends XValuePresentation
 	}
 
 	@Override
-	public void renderValue(@NotNull final XValueTextRenderer render)
+	public void renderValue(@NotNull final XValueTextRenderer renderer)
 	{
 		if(myValue != null)
 		{
@@ -106,7 +117,24 @@ public class DotNetValuePresentation extends XValuePresentation
 				@Override
 				public void visitStringValue(@NotNull StringValueMirror value, @NotNull String mainValue)
 				{
-					render.renderStringValue(mainValue);
+					renderer.renderStringValue(mainValue);
+				}
+
+				@Override
+				public void visitStructValue(@NotNull StructValueMirror mirror)
+				{
+					Map<FieldOrPropertyMirror, Value<?>> fields = mirror.values();
+
+					String text = StringUtil.join(fields.entrySet(), new Function<Map.Entry<FieldOrPropertyMirror, Value<?>>, String>()
+					{
+						@Override
+						public String fun(Map.Entry<FieldOrPropertyMirror, Value<?>> entry)
+						{
+							String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myThreadMirror, entry.getValue()));
+							return entry.getKey().name() + " = " + valueText;
+						}
+					}, ", ");
+					renderer.renderValue(text);
 				}
 
 				@Override
@@ -114,7 +142,7 @@ public class DotNetValuePresentation extends XValuePresentation
 				{
 					if(value.id() == 0)
 					{
-						render.renderValue("null");
+						renderer.renderValue("null");
 						return;
 					}
 
@@ -150,7 +178,7 @@ public class DotNetValuePresentation extends XValuePresentation
 
 					if(toStringValue != null)
 					{
-						render.renderValue(toStringValue);
+						renderer.renderValue(toStringValue);
 					}
 				}
 
@@ -163,25 +191,25 @@ public class DotNetValuePresentation extends XValuePresentation
 					builder.append('\'');
 					builder.append(' ');
 					builder.append((int)mainValue.charValue());
-					render.renderValue(builder.toString());
+					renderer.renderValue(builder.toString());
 				}
 
 				@Override
 				public void visitBooleanValue(@NotNull BooleanValueMirror value, @NotNull Boolean mainValue)
 				{
-					render.renderValue(String.valueOf(mainValue));
+					renderer.renderValue(String.valueOf(mainValue));
 				}
 
 				@Override
 				public void visitNumberValue(@NotNull NumberValueMirror value, @NotNull Number mainValue)
 				{
-					render.renderValue(String.valueOf(mainValue));
+					renderer.renderValue(String.valueOf(mainValue));
 				}
 
 				@Override
 				public void visitNoObjectValue(@NotNull NoObjectValueMirror value)
 				{
-					render.renderValue("null");
+					renderer.renderValue("null");
 				}
 			});
 		}

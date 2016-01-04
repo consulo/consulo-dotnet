@@ -285,7 +285,10 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	public boolean canHaveChildren()
 	{
 		final Value<?> valueOfVariable = getValueOfVariableSafe();
-		return valueOfVariable instanceof ObjectValueMirror || valueOfVariable instanceof ArrayValueMirror || valueOfVariable instanceof StringValueMirror;
+		return valueOfVariable instanceof ObjectValueMirror ||
+				valueOfVariable instanceof ArrayValueMirror ||
+				valueOfVariable instanceof StringValueMirror ||
+				valueOfVariable instanceof StructValueMirror && !((StructValueMirror) valueOfVariable).values().isEmpty();
 	}
 
 	@Override
