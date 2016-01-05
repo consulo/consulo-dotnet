@@ -59,7 +59,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 		}
 		else if(value instanceof StructValueMirror)
 		{
-			Map<FieldOrPropertyMirror, Value<?>> fields = ((StructValueMirror) value).values();
+			Map<FieldOrPropertyMirror, Value<?>> fields = ((StructValueMirror) value).map();
 
 			for(Map.Entry<FieldOrPropertyMirror, Value<?>> entry : fields.entrySet())
 			{

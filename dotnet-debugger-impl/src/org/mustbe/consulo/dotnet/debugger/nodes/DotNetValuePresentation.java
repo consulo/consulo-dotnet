@@ -123,18 +123,36 @@ public class DotNetValuePresentation extends XValuePresentation
 				@Override
 				public void visitStructValue(@NotNull StructValueMirror mirror)
 				{
-					Map<FieldOrPropertyMirror, Value<?>> fields = mirror.values();
+					TypeMirror type = mirror.type();
 
-					String text = StringUtil.join(fields.entrySet(), new Function<Map.Entry<FieldOrPropertyMirror, Value<?>>, String>()
+					String toStringValue = null;
+
+					MethodMirror toString = type.findMethodByName("ToString", false);
+					if(toString != null)
 					{
-						@Override
-						public String fun(Map.Entry<FieldOrPropertyMirror, Value<?>> entry)
+						Value<?> invoke = toString.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, mirror);
+						if(invoke instanceof StringValueMirror)
 						{
-							String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myThreadMirror, entry.getValue()));
-							return entry.getKey().name() + " = " + valueText;
+							toStringValue = ((StringValueMirror) invoke).value();
 						}
-					}, ", ");
-					renderer.renderValue(text);
+					}
+
+					if(toStringValue == null)
+					{
+						Map<FieldOrPropertyMirror, Value<?>> fields = mirror.map();
+
+						toStringValue = StringUtil.join(fields.entrySet(), new Function<Map.Entry<FieldOrPropertyMirror, Value<?>>, String>()
+						{
+							@Override
+							public String fun(Map.Entry<FieldOrPropertyMirror, Value<?>> entry)
+							{
+								String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myThreadMirror, entry.getValue()));
+								return entry.getKey().name() + " = " + valueText;
+							}
+						}, ", ");
+					}
+
+					renderer.renderValue(toStringValue);
 				}
 
 				@Override
