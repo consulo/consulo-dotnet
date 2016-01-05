@@ -29,6 +29,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
+import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
@@ -43,7 +44,7 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 11.04.14
  */
-public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNode
+public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMirrorNode
 {
 	public static void addStaticNode(@NotNull XValueChildrenList list, @NotNull DotNetDebugContext debuggerContext, @NotNull ThreadMirror threadMirror, @NotNull TypeMirror typeMirror)
 	{
@@ -52,14 +53,14 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 		{
 			return;
 		}
-		list.add(new DotNetObjectValueMirrorNode(debuggerContext, threadMirror, typeMirror, (ObjectValueMirror) null));
+		list.add(new DotNetThisAsObjectValueMirrorNode(debuggerContext, threadMirror, typeMirror, (ObjectValueMirror) null));
 	}
 
 	@NotNull
 	private final TypeMirror myTypeMirror;
 	private final Getter<ObjectValueMirror> myObjectValueMirrorGetter;
 
-	public DotNetObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
+	public DotNetThisAsObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull ThreadMirror threadMirror,
 			@NotNull TypeMirror typeMirror,
 			@Nullable final ObjectValueMirror objectValueMirror)
@@ -75,7 +76,7 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 		});
 	}
 
-	public DotNetObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
+	public DotNetThisAsObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull ThreadMirror threadMirror,
 			@NotNull TypeMirror typeMirror,
 			@Nullable Getter<ObjectValueMirror> objectValueMirrorGetter)
@@ -83,6 +84,13 @@ public class DotNetObjectValueMirrorNode extends DotNetAbstractVariableMirrorNod
 		super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", threadMirror);
 		myTypeMirror = typeMirror;
 		myObjectValueMirrorGetter = objectValueMirrorGetter;
+	}
+
+	@Nullable
+	@Override
+	public XValueModifier getModifier()
+	{
+		return null;
 	}
 
 	@NotNull

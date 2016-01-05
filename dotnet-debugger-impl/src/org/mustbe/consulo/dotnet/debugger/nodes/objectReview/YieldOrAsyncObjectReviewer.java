@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.ContainerUtil;
@@ -68,7 +68,7 @@ public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 					return false;
 				}
 
-				DotNetObjectValueMirrorNode.addStaticNode(childrenList, debugContext, stackFrameMirror.thread(), parentType);
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, stackFrameMirror.thread(), parentType);
 
 				FieldMirror[] fields = type.fields();
 
@@ -83,7 +83,7 @@ public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 
 				if(thisFieldMirror != null)
 				{
-					childrenList.add(new DotNetObjectValueMirrorNode(debugContext, stackFrameMirror.thread(), parentType,
+					childrenList.add(new DotNetThisAsObjectValueMirrorNode(debugContext, stackFrameMirror.thread(), parentType,
 							new Getter<ObjectValueMirror>()
 					{
 						@Nullable

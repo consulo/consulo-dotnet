@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import mono.debugger.FieldOrPropertyMirror;
 import mono.debugger.InvalidObjectException;
@@ -41,7 +41,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 				assert type != null;
 
-				DotNetObjectValueMirrorNode.addStaticNode(childrenList, debugContext, threadMirror, type);
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, threadMirror, type);
 
 				List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
 				for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
@@ -64,11 +64,6 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 			for(Map.Entry<FieldOrPropertyMirror, Value<?>> entry : fields.entrySet())
 			{
 				FieldOrPropertyMirror fieldMirror = entry.getKey();
-				if(needSkip(fieldMirror))
-				{
-					continue;
-				}
-
 				Value<?> fieldValue = entry.getValue();
 				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldMirror, threadMirror, null, fieldValue));
 			}

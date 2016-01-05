@@ -30,8 +30,9 @@ import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBre
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetObjectValueMirrorNode;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsStructValueMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.ObjectReviewer;
 import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldOrAsyncObjectReviewer;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
@@ -253,11 +254,18 @@ public class DotNetStackFrame extends XStackFrame
 				TypeMirror type = value.type();
 				assert type != null;
 
-				childrenList.add(new DotNetObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), type, (ObjectValueMirror) value));
+				childrenList.add(new DotNetThisAsObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), type, (ObjectValueMirror) value));
+			}
+			else if(value instanceof StructValueMirror)
+			{
+				TypeMirror type = value.type();
+				assert type != null;
+
+				childrenList.add(new DotNetThisAsStructValueMirrorNode(myDebuggerContext, myFrame.thread(), type, (StructValueMirror) value));
 			}
 			else
 			{
-				DotNetObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrame.thread(), myFrame.location().declaringType());
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrame.thread(), myFrame.location().declaringType());
 			}
 		}
 		catch(AbsentInformationException e)
