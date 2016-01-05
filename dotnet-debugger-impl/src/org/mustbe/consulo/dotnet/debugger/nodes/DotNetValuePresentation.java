@@ -25,9 +25,11 @@ import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.BitUtil;
 import com.intellij.util.Function;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
+import edu.arizona.cs.mbel.signature.FieldAttributes;
 import mono.debugger.*;
 
 /**
@@ -121,6 +123,44 @@ public class DotNetValuePresentation extends XValuePresentation
 				}
 
 				@Override
+				public void visitEnumValue(@NotNull EnumValueMirror mirror)
+				{
+					Value<?> value = mirror.value();
+					if(!(value instanceof NumberValueMirror))
+					{
+						return;
+					}
+
+					Number expectedValue = ((NumberValueMirror) value).value();
+					String stringValue = expectedValue.toString();
+
+					FieldMirror[] fields = mirror.type().fields();
+
+					for(FieldMirror field : fields)
+					{
+						if(field.isStatic() && BitUtil.isSet(field.attributes(), FieldAttributes.Literal))
+						{
+							Value<?> fieldValue = field.value(myThreadMirror, null);
+							if(fieldValue instanceof EnumValueMirror)
+							{
+								Value<?> enumValue = ((EnumValueMirror) fieldValue).value();
+								if(enumValue instanceof NumberValueMirror)
+								{
+									Number actualValue = ((NumberValueMirror) enumValue).value();
+									if(expectedValue.equals(actualValue))
+									{
+										stringValue = field.name();
+										break;
+									}
+								}
+							}
+						}
+					}
+
+					renderer.renderValue(stringValue);
+				}
+
+				@Override
 				public void visitStructValue(@NotNull StructValueMirror mirror)
 				{
 					TypeMirror type = mirror.type();
@@ -208,7 +248,7 @@ public class DotNetValuePresentation extends XValuePresentation
 					builder.append(mainValue);
 					builder.append('\'');
 					builder.append(' ');
-					builder.append((int)mainValue.charValue());
+					builder.append((int) mainValue.charValue());
 					renderer.renderValue(builder.toString());
 				}
 

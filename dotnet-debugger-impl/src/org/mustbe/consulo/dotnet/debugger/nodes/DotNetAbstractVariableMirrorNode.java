@@ -21,6 +21,7 @@ import javax.swing.Icon;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import com.intellij.icons.AllIcons;
@@ -160,6 +161,12 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 		TypeTag typeTag = typeTag();
 		if(typeTag != null && typeTag != TypeTag.String)
+		{
+			return AllIcons.Debugger.Db_primitive;
+		}
+
+		TypeMirror baseType = typeOfVariable.baseType();
+		if(baseType != null && DotNetTypes.System.Enum.equals(baseType.qualifiedName()))
 		{
 			return AllIcons.Debugger.Db_primitive;
 		}

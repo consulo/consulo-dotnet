@@ -4,7 +4,7 @@
       <root url="jar://$PROJECT_DIR$/lib/mono-soft-debugging.jar!/" />
     </binaries>
     <sources>
-      <root url="file://$PROJECT_DIR$/../mono-soft-debugging/src" />
+      <root url="file://$PROJECT_DIR$/repo/mono-soft-debugging/src" />
     </sources>
   </library>
 </component>
