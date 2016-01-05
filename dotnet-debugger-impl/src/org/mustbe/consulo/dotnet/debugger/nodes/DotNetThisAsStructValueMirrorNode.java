@@ -87,7 +87,9 @@ public class DotNetThisAsStructValueMirrorNode extends DotNetAbstractVariableMir
 			FieldOrPropertyMirror key = entry.getKey();
 			Value<?> value = entry.getValue();
 
-			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, key, myThreadMirror, null, value));
+			DotNetStructValueInfo valueInfo = new DotNetStructValueInfo(myValue, this, key, value);
+
+			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, key, myThreadMirror, null, valueInfo));
 		}
 
 		node.addChildren(childrenList, true);

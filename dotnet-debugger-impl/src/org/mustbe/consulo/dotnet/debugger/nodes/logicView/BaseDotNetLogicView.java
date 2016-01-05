@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
@@ -38,18 +39,23 @@ public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 		return false;
 	}
 
-	public abstract void computeChildrenImpl(@NotNull DotNetDebugContext debugContext, @NotNull ThreadMirror threadMirror, @Nullable Value<?> value, @NotNull XValueChildrenList childrenList);
+	public abstract void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
+			@NotNull DotNetAbstractVariableMirrorNode parentNode,
+			@NotNull ThreadMirror threadMirror,
+			@Nullable Value<?> value,
+			@NotNull XValueChildrenList childrenList);
 
 	@Override
 	public void computeChildren(@NotNull UserDataHolderBase dataHolder,
 			@NotNull DotNetDebugContext debugContext,
+			@NotNull DotNetAbstractVariableMirrorNode parentNode,
 			@NotNull ThreadMirror threadMirror,
 			@Nullable Value<?> value,
 			@NotNull XCompositeNode node)
 	{
 		XValueChildrenList childrenList = new XValueChildrenList();
 
-		computeChildrenImpl(debugContext, threadMirror, value, childrenList);
+		computeChildrenImpl(debugContext, parentNode, threadMirror, value, childrenList);
 
 		node.addChildren(childrenList, true);
 	}

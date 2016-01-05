@@ -3,6 +3,7 @@ package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetSimpleValueMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.enumerator.CantCreateException;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.enumerator.IEnumeratorAsIterator;
@@ -28,7 +29,11 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 	}
 
 	@Override
-	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext, @NotNull ThreadMirror threadMirror, @Nullable Value<?> value, @NotNull XValueChildrenList childrenList)
+	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
+			@NotNull DotNetAbstractVariableMirrorNode parentNode,
+			@NotNull ThreadMirror threadMirror,
+			@Nullable Value<?> value,
+			@NotNull XValueChildrenList childrenList)
 	{
 		if(!(value instanceof ObjectValueMirror) && !(value instanceof StringValueMirror))
 		{
@@ -83,7 +88,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 				{
 					continue;
 				}
-				childrenList.add(new DotNetSimpleValueMirrorNode(debugContext, String.valueOf(i ++), threadMirror, next));
+				childrenList.add(new DotNetSimpleValueMirrorNode(debugContext, String.valueOf(i++), threadMirror, next));
 			}
 		}
 		catch(CantCreateException e)

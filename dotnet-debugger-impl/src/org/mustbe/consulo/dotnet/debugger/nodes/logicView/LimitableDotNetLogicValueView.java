@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.ObjectUtil;
@@ -47,6 +48,7 @@ public abstract class LimitableDotNetLogicValueView<T extends Value<?>> implemen
 	@SuppressWarnings("unchecked")
 	public void computeChildren(@NotNull UserDataHolderBase dataHolder,
 			@NotNull DotNetDebugContext debugContext,
+			@NotNull DotNetAbstractVariableMirrorNode parentNode,
 			@NotNull ThreadMirror threadMirror,
 			@Nullable Value<?> oldValue,
 			@NotNull XCompositeNode node)

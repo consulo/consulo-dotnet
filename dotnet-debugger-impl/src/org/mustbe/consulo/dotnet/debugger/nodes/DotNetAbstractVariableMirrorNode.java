@@ -286,7 +286,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 		assert valueView != null : "Required default implementation";
 
-		valueView.computeChildren(myDataHolder, myDebugContext, myThreadMirror, value, node);
+		valueView.computeChildren(myDataHolder, myDebugContext, this, myThreadMirror, value, node);
 	}
 
 	public boolean canHaveChildren()

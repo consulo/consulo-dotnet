@@ -6,7 +6,9 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetStructValueInfo;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import mono.debugger.FieldOrPropertyMirror;
@@ -31,7 +33,11 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 	}
 
 	@Override
-	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext, @NotNull ThreadMirror threadMirror, @Nullable Value<?> value, @NotNull XValueChildrenList childrenList)
+	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
+			@NotNull DotNetAbstractVariableMirrorNode parentNode,
+			@NotNull ThreadMirror threadMirror,
+			@Nullable Value<?> value,
+			@NotNull XValueChildrenList childrenList)
 	{
 		if(value instanceof ObjectValueMirror)
 		{
@@ -65,7 +71,10 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 			{
 				FieldOrPropertyMirror fieldMirror = entry.getKey();
 				Value<?> fieldValue = entry.getValue();
-				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldMirror, threadMirror, null, fieldValue));
+
+				DotNetStructValueInfo valueInfo = new DotNetStructValueInfo((StructValueMirror) value, parentNode, fieldMirror, fieldValue);
+
+				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldMirror, threadMirror, null, valueInfo));
 			}
 		}
 	}
