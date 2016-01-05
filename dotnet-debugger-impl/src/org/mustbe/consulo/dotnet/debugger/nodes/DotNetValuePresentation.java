@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.debugger.nodes;
 
 import java.util.Map;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
@@ -36,6 +37,7 @@ import mono.debugger.*;
  * @author VISTALL
  * @since 20.09.14
  */
+@Logger
 public class DotNetValuePresentation extends XValuePresentation
 {
 	private ThreadMirror myThreadMirror;
@@ -170,7 +172,7 @@ public class DotNetValuePresentation extends XValuePresentation
 					MethodMirror toString = type.findMethodByName("ToString", false);
 					if(toString != null)
 					{
-						Value<?> invoke = toString.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, mirror);
+						Value<?> invoke = invokeSafe(toString, myThreadMirror, mirror);
 						if(invoke instanceof StringValueMirror)
 						{
 							toStringValue = ((StringValueMirror) invoke).value();
@@ -227,7 +229,7 @@ public class DotNetValuePresentation extends XValuePresentation
 					String qTypeOfValue = toString.declaringType().qualifiedName();
 					if(!Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
 					{
-						Value<?> invoke = toString.invoke(myThreadMirror, InvokeFlags.DISABLE_BREAKPOINTS, value);
+						Value<?> invoke = invokeSafe(toString, myThreadMirror, value);
 						if(invoke instanceof StringValueMirror)
 						{
 							toStringValue = ((StringValueMirror) invoke).value();
@@ -271,5 +273,34 @@ public class DotNetValuePresentation extends XValuePresentation
 				}
 			});
 		}
+	}
+
+	@Nullable
+	private static Value<?> invokeSafe(MethodMirror methodMirror, ThreadMirror threadMirror, Value<?> thisObject, Value... arguments)
+	{
+		try
+		{
+			return methodMirror.invoke(threadMirror, InvokeFlags.DISABLE_BREAKPOINTS, thisObject, arguments);
+		}
+		catch(IllegalArgumentException ignored)
+		{
+		}
+		catch(ThrowValueException ignored)
+		{
+		}
+		catch(InvalidFieldIdException ignored)
+		{
+		}
+		catch(VMDisconnectedException ignored)
+		{
+		}
+		catch(InvalidStackFrameException ignored)
+		{
+		}
+		catch(Exception e)
+		{
+			LOGGER.error(e);
+		}
+		return null;
 	}
 }
