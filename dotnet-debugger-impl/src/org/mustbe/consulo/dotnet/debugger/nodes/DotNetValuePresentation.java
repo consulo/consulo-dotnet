@@ -16,7 +16,9 @@
 
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -133,8 +135,23 @@ public class DotNetValuePresentation extends XValuePresentation
 						return;
 					}
 
+					TypeMirror type = mirror.type();
+					CustomAttributeMirror[] customAttributeMirrors = type.customAttributes();
+
+					boolean flags = false;
+					for(CustomAttributeMirror customAttributeMirror : customAttributeMirrors)
+					{
+						MethodMirror constructorMirror = customAttributeMirror.getConstructorMirror();
+						TypeMirror typeMirror = constructorMirror.declaringType();
+						if(DotNetTypes.System.FlagsAttribute.equals(typeMirror.qualifiedName()))
+						{
+							flags = true;
+							break;
+						}
+					}
+
+					Set<String> enumFields = new LinkedHashSet<String>();
 					Number expectedValue = ((NumberValueMirror) value).value();
-					String stringValue = expectedValue.toString();
 
 					FieldMirror[] fields = mirror.type().fields();
 
@@ -149,17 +166,35 @@ public class DotNetValuePresentation extends XValuePresentation
 								if(enumValue instanceof NumberValueMirror)
 								{
 									Number actualValue = ((NumberValueMirror) enumValue).value();
-									if(expectedValue.equals(actualValue))
+
+									if(flags)
 									{
-										stringValue = field.name();
-										break;
+										if(BitUtil.isSet(expectedValue.longValue(), actualValue.longValue()))
+										{
+											enumFields.add(field.name());
+										}
+									}
+									else
+									{
+										if(expectedValue.equals(actualValue))
+										{
+											enumFields.add(field.name());
+											break;
+										}
 									}
 								}
 							}
 						}
 					}
 
-					renderer.renderValue(stringValue);
+					if(!enumFields.isEmpty())
+					{
+						renderer.renderValue(StringUtil.join(enumFields, " | "));
+					}
+					else
+					{
+						renderer.renderValue(expectedValue.toString());
+					}
 				}
 
 				@Override
