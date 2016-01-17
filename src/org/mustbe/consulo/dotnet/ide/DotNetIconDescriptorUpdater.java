@@ -18,8 +18,9 @@ package org.mustbe.consulo.dotnet.ide;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.run.DotNetTestFramework;
+import org.mustbe.consulo.dotnet.run.DotNetTestFrameworks;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
@@ -33,16 +34,20 @@ public class DotNetIconDescriptorUpdater implements IconDescriptorUpdater
 {
 	@RequiredReadAction
 	@Override
-	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int i)
+	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags)
 	{
 		if(element instanceof DotNetTypeDeclaration)
 		{
-			for(DotNetTestFramework testFramework : DotNetTestFramework.EP_NAME.getExtensions())
+			if(DotNetTestFrameworks.isTestType((DotNetTypeDeclaration) element))
 			{
-				if(testFramework.isTestType((DotNetTypeDeclaration) element))
-				{
-					iconDescriptor.addLayerIcon(AllIcons.RunConfigurations.TestMark);
-				}
+				iconDescriptor.addLayerIcon(AllIcons.RunConfigurations.TestMark);
+			}
+		}
+		else if(element instanceof DotNetLikeMethodDeclaration)
+		{
+			if(DotNetTestFrameworks.isTestMethod((DotNetLikeMethodDeclaration) element))
+			{
+				iconDescriptor.addLayerIcon(AllIcons.RunConfigurations.TestMark);
 			}
 		}
 	}

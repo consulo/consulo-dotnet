@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,20 @@ package org.mustbe.consulo.dotnet.run;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import com.intellij.openapi.extensions.ExtensionPointName;
 
 /**
  * @author VISTALL
- * @since 19.12.2015
+ * @since 17.01.2016
  */
-public abstract class DotNetTestFramework
+public class DotNetTestFrameworks
 {
-	public static final ExtensionPointName<DotNetTestFramework> EP_NAME = new ExtensionPointName<DotNetTestFramework>("org.mustbe.consulo.dotnet.core.testFramework");
-
 	@RequiredReadAction
-	public boolean isTestType(@NotNull DotNetTypeDeclaration typeDeclaration)
+	public static boolean isTestType(@NotNull DotNetTypeDeclaration typeDeclaration)
 	{
-		DotNetNamedElement[] members = typeDeclaration.getMembers();
-		for(DotNetNamedElement member : members)
+		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensions())
 		{
-			if(member instanceof DotNetLikeMethodDeclaration && isTestMethod((DotNetLikeMethodDeclaration) member))
+			if(framework.isTestType(typeDeclaration))
 			{
 				return true;
 			}
@@ -46,5 +41,15 @@ public abstract class DotNetTestFramework
 	}
 
 	@RequiredReadAction
-	public abstract boolean isTestMethod(@NotNull DotNetLikeMethodDeclaration methodDeclaration);
+	public static boolean isTestMethod(@NotNull DotNetLikeMethodDeclaration methodDeclaration)
+	{
+		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensions())
+		{
+			if(framework.isTestMethod(methodDeclaration))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
