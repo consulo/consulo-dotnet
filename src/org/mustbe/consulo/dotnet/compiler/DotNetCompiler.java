@@ -16,7 +16,6 @@
 
 package org.mustbe.consulo.dotnet.compiler;
 
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.consulo.lombok.annotations.Logger;
@@ -35,12 +34,12 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.problems.Problem;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.util.Chunk;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -114,7 +113,7 @@ public class DotNetCompiler implements TranslatingCompiler
 			return;
 		}
 
-		DotNetCompilerOptionsBuilder builder = null;
+		DotNetCompilerOptionsBuilder builder;
 		try
 		{
 			builder = langDotNetModuleExtension.createCompilerOptionsBuilder();
@@ -129,15 +128,15 @@ public class DotNetCompiler implements TranslatingCompiler
 		{
 			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, dotNetModuleExtension);
 
-			val process = commandLine.createProcess();
-			val processHandler = new CapturingProcessHandler(process, Charset.forName("UTF-8"));
+			Process process = commandLine.createProcess();
+			CapturingProcessHandler processHandler = new CapturingProcessHandler(process, CharsetToolkit.UTF8_CHARSET);
 
 			ProcessOutput processOutput = processHandler.runProcess();
-			for(String s : processOutput.getStdoutLines())
+			for(String line : processOutput.getStdoutLines())
 			{
 				try
 				{
-					DotNetCompilerMessage m = builder.convertToMessage(module, s);
+					DotNetCompilerMessage m = builder.convertToMessage(module, line);
 					if(m == null)
 					{
 						continue;
@@ -159,18 +158,22 @@ public class DotNetCompiler implements TranslatingCompiler
 				}
 				catch(Exception e)
 				{
-					LOGGER.error("Message with : " + s + " cant be parsed", e);
-					compileContext.addMessage(CompilerMessageCategory.ERROR, s, null, -1, -1);
+					LOGGER.error("Message with : " + line + " cant be parsed", e);
+					compileContext.addMessage(CompilerMessageCategory.ERROR, line, null, -1, -1);
 				}
 			}
-			for(String s : processOutput.getStderrLines())
+			for(String line : processOutput.getStderrLines())
 			{
-				compileContext.addMessage(CompilerMessageCategory.ERROR, s, null, -1, -1);
+				compileContext.addMessage(CompilerMessageCategory.ERROR, line, null, -1, -1);
 			}
 			if(processOutput.getExitCode() != 0)
 			{
 				compileContext.addMessage(CompilerMessageCategory.ERROR, "Exit code: " + processOutput.getExitCode(), null, -1, -1);
 			}
+		}
+		catch(DotNetCompileFailedException e)
+		{
+			compileContext.addMessage(CompilerMessageCategory.ERROR, e.getMessage(), null, -1, -1);
 		}
 		catch(Exception e)
 		{
