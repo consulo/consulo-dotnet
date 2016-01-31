@@ -28,7 +28,6 @@ import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.BitUtil;
 import com.intellij.util.Function;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
@@ -157,7 +156,7 @@ public class DotNetValuePresentation extends XValuePresentation
 
 					for(FieldMirror field : fields)
 					{
-						if(field.isStatic() && BitUtil.isSet(field.attributes(), FieldAttributes.Literal))
+						if(field.isStatic() && (field.attributes() & FieldAttributes.Literal) == FieldAttributes.Literal)
 						{
 							Value<?> fieldValue = field.value(myThreadMirror, null);
 							if(fieldValue instanceof EnumValueMirror)
@@ -169,7 +168,9 @@ public class DotNetValuePresentation extends XValuePresentation
 
 									if(flags)
 									{
-										if(BitUtil.isSet(expectedValue.longValue(), actualValue.longValue()))
+										long flagsValue = expectedValue.longValue();
+										long maskValue = actualValue.longValue();
+										if((flagsValue & maskValue) == maskValue)
 										{
 											enumFields.add(field.name());
 										}
