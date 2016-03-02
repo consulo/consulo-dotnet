@@ -52,12 +52,6 @@
 		<extensionPoint name="testFramework" interface="org.mustbe.consulo.dotnet.run.DotNetTestFramework"/>
 	</extensionPoints>
 
-	<project-components>
-		<component>
-			<implementation-class>org.mustbe.consulo.dotnet.module.ModuleTopicsRegister</implementation-class>
-		</component>
-	</project-components>
-
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
 		<psiSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilPsiSearcher"/>
 		<shortNameSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilShortNameSearcher"/>
