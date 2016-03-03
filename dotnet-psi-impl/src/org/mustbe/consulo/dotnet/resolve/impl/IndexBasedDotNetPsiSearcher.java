@@ -25,14 +25,9 @@ import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.GlobalSearchScopeFilter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.ParameterizedCachedValueProvider;
-import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Processor;
 
 /**
@@ -62,27 +57,7 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 	@Nullable
 	public final DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
 	{
-		if(useCache())
-		{
-			return CachedValuesManager.getManager(myProject).createParameterizedCachedValue(new
-																									ParameterizedCachedValueProvider<DotNetNamespaceAsElement, Pair<String, GlobalSearchScope>>()
-			{
-				@Nullable
-				@Override
-				public CachedValueProvider.Result<DotNetNamespaceAsElement> compute(Pair<String, GlobalSearchScope> param)
-				{
-					return CachedValueProvider.Result.create(findNamespaceImpl(DotNetNamespaceStubUtil.getIndexableNamespace(param.getFirst()),
-							param.getFirst(), param.getSecond()), PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
-				}
-
-			}, false).getValue(Pair.create(qName, scope));
-		}
 		return findNamespaceImpl(DotNetNamespaceStubUtil.getIndexableNamespace(qName), qName, scope);
-	}
-
-	public boolean useCache()
-	{
-		return true;
 	}
 
 	@Nullable
@@ -113,5 +88,11 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 				return !indexKey.equals(s);
 			}
 		}, scope, new GlobalSearchScopeFilter(scope));
+	}
+
+	@NotNull
+	public Project getProject()
+	{
+		return myProject;
 	}
 }

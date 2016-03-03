@@ -22,7 +22,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.lang.psi.impl.CompositeDotNetNamespaceAsElement;
+import org.mustbe.consulo.dotnet.lang.psi.impl.DotNetNamespaceCacheManager;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
@@ -40,12 +40,12 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	private static final ExtensionPointName<DotNetPsiSearcher> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.psiSearcher");
 
 	private DotNetPsiSearcher[] mySearchers;
-	private Project myProject;
+	private DotNetNamespaceCacheManager myCacheManager;
 
-	public DotNetPsiSearcherImpl(Project project)
+	public DotNetPsiSearcherImpl(Project project, DotNetNamespaceCacheManager cacheManager)
 	{
-		myProject = project;
 		mySearchers = EP_NAME.getExtensions(project);
+		myCacheManager = cacheManager;
 	}
 
 	@RequiredReadAction
@@ -53,32 +53,13 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	@Override
 	public DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
 	{
-		List<DotNetNamespaceAsElement> namespaceAsElements = new SmartList<DotNetNamespaceAsElement>();
-		for(DotNetPsiSearcher searcher : mySearchers)
-		{
-			DotNetNamespaceAsElement namespace = searcher.findNamespace(qName, scope);
-			if(namespace != null)
-			{
-				namespaceAsElements.add(namespace);
-			}
-		}
-
-		if(namespaceAsElements.isEmpty())
-		{
-			return null;
-		}
-		else if(namespaceAsElements.size() == 1)
-		{
-			return namespaceAsElements.get(0);
-		}
-		return new CompositeDotNetNamespaceAsElement(myProject, qName, namespaceAsElements);
+		return myCacheManager.computeNamespace(mySearchers, qName, scope);
 	}
 
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope,
-			@NotNull TypeResoleKind typeResoleKind)
+	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind)
 	{
 		List<DotNetTypeDeclaration> list = new SmartList<DotNetTypeDeclaration>();
 		for(DotNetPsiSearcher searcher : mySearchers)

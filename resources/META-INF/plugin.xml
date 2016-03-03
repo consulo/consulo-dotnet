@@ -97,6 +97,7 @@
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetShortNameSearcher"
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetShortNameSearcherImpl"/>
 		<projectService serviceImplementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributeManager" />
+		<projectService serviceImplementation="org.mustbe.consulo.dotnet.lang.psi.impl.DotNetNamespaceCacheManager" />
 
 		<macro implementation="org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro"/>
 
