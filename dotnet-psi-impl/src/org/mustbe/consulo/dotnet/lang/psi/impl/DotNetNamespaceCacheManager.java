@@ -86,7 +86,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 					{
 						set.addAll(StubIndex.getElements(key, qName, project, scope, DotNetQualifiedElement.class));
 					}
-					else if(thisQName.startsWith(qName))
+					else if(qName.startsWith(thisQName))
 					{
 						String packageName = StringUtil.getPackageName(qName);
 						if(packageName.equals(thisQName))
@@ -269,7 +269,6 @@ public class DotNetNamespaceCacheManager implements Disposable
 			rootMap.put(key, map = ContainerUtil.<GlobalSearchScope, Set<PsiElement>>newConcurrentMap());
 		}
 
-		System.out.println("computed :" + thisQName + " " + myModificationCount + " / " + rootMap.hashCode());
 		map.put(scope, compute);
 		return compute;
 	}
