@@ -63,6 +63,9 @@ public class DotNetNamespaceCacheManager implements Disposable
 	{
 		@NotNull
 		Set<PsiElement> compute(@Nullable IndexBasedDotNetPsiSearcher searcher, @NotNull final String indexKey, @NotNull final String thisQName, @NotNull final GlobalSearchScope scope);
+
+		@NotNull
+		DotNetNamespaceAsElement.ChildrenFilter getFilter();
 	}
 
 	public static final ItemCalculator ONLY_ELEMENTS = new ItemCalculator()
@@ -99,6 +102,13 @@ public class DotNetNamespaceCacheManager implements Disposable
 			}, scope, new GlobalSearchScopeFilter(scope));
 
 			return set.isEmpty() ? Collections.<PsiElement>emptySet() : set;
+		}
+
+		@NotNull
+		@Override
+		public DotNetNamespaceAsElement.ChildrenFilter getFilter()
+		{
+			return DotNetNamespaceAsElement.ChildrenFilter.ONLY_ELEMENTS;
 		}
 	};
 
@@ -146,6 +156,13 @@ public class DotNetNamespaceCacheManager implements Disposable
 			}, scope, new GlobalSearchScopeFilter(scope));
 
 			return namespaces.isEmpty() ? Collections.<PsiElement>emptySet() : namespaces;
+		}
+
+		@NotNull
+		@Override
+		public DotNetNamespaceAsElement.ChildrenFilter getFilter()
+		{
+			return DotNetNamespaceAsElement.ChildrenFilter.ONLY_NAMESPACES;
 		}
 	};
 
@@ -276,13 +293,14 @@ public class DotNetNamespaceCacheManager implements Disposable
 	@NotNull
 	private Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> selectMap(ItemCalculator calculator)
 	{
-		if(calculator == ONLY_ELEMENTS)
+		switch(calculator.getFilter())
 		{
-			return myElementsCache;
-		}
-		else
-		{
-			return myChildNamespacesCache;
+			case ONLY_ELEMENTS:
+				return myElementsCache;
+			case ONLY_NAMESPACES:
+				return myChildNamespacesCache;
+			default:
+				throw new IllegalArgumentException("Wrong filter: " + calculator.getFilter());
 		}
 	}
 
