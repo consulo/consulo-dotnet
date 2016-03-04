@@ -62,7 +62,11 @@ public class DotNetNamespaceCacheManager implements Disposable
 	public static interface ItemCalculator
 	{
 		@NotNull
-		Set<PsiElement> compute(@Nullable IndexBasedDotNetPsiSearcher searcher, @NotNull final String indexKey, @NotNull final String thisQName, @NotNull final GlobalSearchScope scope);
+		Set<PsiElement> compute(@NotNull Project project,
+				@Nullable final IndexBasedDotNetPsiSearcher searcher,
+				@NotNull final String indexKey,
+				@NotNull final String thisQName,
+				@NotNull final GlobalSearchScope scope);
 
 		@NotNull
 		DotNetNamespaceAsElement.ChildrenFilter getFilter();
@@ -72,11 +76,14 @@ public class DotNetNamespaceCacheManager implements Disposable
 	{
 		@NotNull
 		@Override
-		public Set<PsiElement> compute(@Nullable IndexBasedDotNetPsiSearcher searcher, @NotNull final String indexKey, @NotNull final String thisQName, @NotNull final GlobalSearchScope scope)
+		public Set<PsiElement> compute(@NotNull final Project project,
+				@Nullable final IndexBasedDotNetPsiSearcher searcher,
+				@NotNull final String indexKey,
+				@NotNull final String thisQName,
+				@NotNull final GlobalSearchScope scope)
 		{
 			assert searcher != null;
 
-			final Project project = searcher.getProject();
 			final Set<PsiElement> set = new THashSet<PsiElement>();
 
 			final StubIndexKey<String, DotNetQualifiedElement> key = searcher.getElementByQNameIndexKey();
@@ -116,11 +123,13 @@ public class DotNetNamespaceCacheManager implements Disposable
 	{
 		@NotNull
 		@Override
-		public Set<PsiElement> compute(@Nullable IndexBasedDotNetPsiSearcher searcher, @NotNull final String indexKey, @NotNull final String thisQName, @NotNull final GlobalSearchScope scope)
+		public Set<PsiElement> compute(@NotNull final Project project,
+				@Nullable final IndexBasedDotNetPsiSearcher searcher,
+				@NotNull final String indexKey,
+				@NotNull final String thisQName,
+				@NotNull final GlobalSearchScope scope)
 		{
 			assert searcher != null;
-
-			final Project project = searcher.getProject();
 
 			final Set<String> namespaceChildren = new ArrayListSet<String>();
 			final Set<PsiElement> namespaces = new LinkedHashSet<PsiElement>();
@@ -265,7 +274,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 			@NotNull String indexKey,
 			@NotNull String thisQName,
 			@NotNull GlobalSearchScope scope,
-			ItemCalculator calculator)
+			@NotNull ItemCalculator calculator)
 	{
 		Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> rootMap = selectMap(calculator);
 
@@ -279,7 +288,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 			}
 		}
 
-		Set<PsiElement> compute = calculator.compute(searcher, indexKey, thisQName, scope);
+		Set<PsiElement> compute = calculator.compute(myProject, searcher, indexKey, thisQName, scope);
 
 		if(map == null)
 		{
