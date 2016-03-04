@@ -59,7 +59,7 @@ import com.intellij.util.messages.MessageBusConnection;
 @ProjectService
 public class DotNetNamespaceCacheManager implements Disposable
 {
-	private static interface ItemCalculator
+	public static interface ItemCalculator
 	{
 		@NotNull
 		Set<PsiElement> compute(@Nullable IndexBasedDotNetPsiSearcher searcher, @NotNull final String indexKey, @NotNull final String thisQName, @NotNull final GlobalSearchScope scope);
