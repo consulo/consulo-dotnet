@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -26,4 +27,8 @@ public interface DotNetCallArgumentList extends DotNetElement
 {
 	@NotNull
 	DotNetExpression[] getExpressions();
+
+	@NotNull
+	@RequiredReadAction
+	DotNetElement[] getArguments();
 }
