@@ -66,8 +66,7 @@ public class MsilPsiSearcher extends IndexBasedDotNetPsiSearcher
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope,
-			@NotNull TypeResoleKind typeResoleKind)
+	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
 	{
 		return MsilTypeByQNameIndex.getInstance().get(vmQName, myProject, scope);
 	}

@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -73,12 +74,12 @@ public class DotNetTypeRefByQName extends DotNetTypeRef.Adapter
 		return myQualifiedName;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
-		DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(scope.getProject()).findType(myQualifiedName, scope.getResolveScope(),
-				DotNetPsiSearcher.TypeResoleKind.UNKNOWN, myTransformer);
+		DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(scope.getProject()).findType(myQualifiedName, scope.getResolveScope(), myTransformer);
 		return new SimpleTypeResolveResult(type, myNullable == Boolean.TRUE);
 	}
 }

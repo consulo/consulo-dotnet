@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
@@ -62,6 +63,7 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		return String.valueOf(myIndex);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)

@@ -59,12 +59,12 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind)
+	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
 	{
 		List<DotNetTypeDeclaration> list = new SmartList<DotNetTypeDeclaration>();
 		for(DotNetPsiSearcher searcher : mySearchers)
 		{
-			list.addAll(searcher.findTypesImpl(vmQName, scope, typeResoleKind));
+			list.addAll(searcher.findTypesImpl(vmQName, scope));
 		}
 		return list;
 	}

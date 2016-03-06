@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -43,6 +44,7 @@ public interface DotNetTypeRef
 			return getPresentableText();
 		}
 
+		@RequiredReadAction
 		@NotNull
 		@Override
 		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
@@ -80,6 +82,7 @@ public interface DotNetTypeRef
 			return myDelegate.getQualifiedText();
 		}
 
+		@RequiredReadAction
 		@NotNull
 		@Override
 		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
@@ -136,6 +139,7 @@ public interface DotNetTypeRef
 	@NotNull
 	String getQualifiedText();
 
+	@RequiredReadAction
 	@NotNull
 	DotNetTypeResolveResult resolve(@NotNull PsiElement scope);
 }

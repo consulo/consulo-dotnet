@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
@@ -69,6 +70,7 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 		return myRef;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)

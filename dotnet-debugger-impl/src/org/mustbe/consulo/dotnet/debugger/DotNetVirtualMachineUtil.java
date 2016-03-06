@@ -36,8 +36,7 @@ public class DotNetVirtualMachineUtil
 	{
 		String qualifiedName = typeMirror.qualifiedName();
 		Project project = debugContext.getProject();
-		return DotNetPsiSearcher.getInstance(project).findTypes(qualifiedName, debugContext.getResolveScope(),
-				DotNetPsiSearcher.TypeResoleKind.UNKNOWN);
+		return DotNetPsiSearcher.getInstance(project).findTypes(qualifiedName, debugContext.getResolveScope());
 	}
 
 	@NotNull

@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
@@ -135,6 +136,7 @@ public class SimpleGenericWrapperTypeRef implements DotNetGenericWrapperTypeRef
 		return builder.toString();
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)

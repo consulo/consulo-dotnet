@@ -71,22 +71,14 @@ public abstract class DotNetPsiSearcher
 	@RequiredReadAction
 	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
 	{
-		return findTypes(vmQName, scope, TypeResoleKind.UNKNOWN, DEFAULT_TRANSFORMER);
+		return findTypes(vmQName, scope, DEFAULT_TRANSFORMER);
 	}
 
 	@NotNull
 	@RequiredReadAction
-	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind)
+	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
-		return findTypes(vmQName, scope, typeResoleKind, DEFAULT_TRANSFORMER);
-	}
-
-	@NotNull
-	@RequiredReadAction
-	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind,
-			@NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
-	{
-		Collection<? extends DotNetTypeDeclaration> declarations = findTypesImpl(vmQName, scope, typeResoleKind);
+		Collection<? extends DotNetTypeDeclaration> declarations = findTypesImpl(vmQName, scope);
 		if(declarations.isEmpty())
 		{
 			return DotNetTypeDeclaration.EMPTY_ARRAY;
@@ -95,12 +87,7 @@ public abstract class DotNetPsiSearcher
 
 		for(DotNetTypeDeclaration declaration : declarations)
 		{
-			if(typeResoleKind == TypeResoleKind.UNKNOWN ||
-					declaration.isStruct() && typeResoleKind == TypeResoleKind.STRUCT ||
-					!declaration.isStruct() && typeResoleKind == TypeResoleKind.CLASS)
-			{
-				list.add(transformer.fun(declaration));
-			}
+			list.add(transformer.fun(declaration));
 		}
 
 		return ContainerUtil.toArray(list, DotNetTypeDeclaration.ARRAY_FACTORY);
@@ -108,29 +95,20 @@ public abstract class DotNetPsiSearcher
 
 	@NotNull
 	@RequiredReadAction
-	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope,
-			@NotNull TypeResoleKind typeResoleKind);
+	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope);
 
 	@Nullable
 	@RequiredReadAction
 	public DotNetTypeDeclaration findType(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
 	{
-		return findType(vmQName, scope, TypeResoleKind.UNKNOWN);
+		return findType(vmQName, scope, DEFAULT_TRANSFORMER);
 	}
 
 	@Nullable
 	@RequiredReadAction
-	public DotNetTypeDeclaration findType(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind)
+	public DotNetTypeDeclaration findType(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
-		return findType(vmQName, scope, typeResoleKind, DEFAULT_TRANSFORMER);
-	}
-
-	@Nullable
-	@RequiredReadAction
-	public DotNetTypeDeclaration findType(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull TypeResoleKind typeResoleKind,
-			@NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
-	{
-		DotNetTypeDeclaration[] types = findTypes(vmQName, scope, typeResoleKind, transformer);
+		DotNetTypeDeclaration[] types = findTypes(vmQName, scope, transformer);
 		return ArrayUtil.getFirstElement(types);
 	}
 }

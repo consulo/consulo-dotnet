@@ -17,6 +17,7 @@
 package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
@@ -49,6 +50,7 @@ public class DotNetPointerTypeRefImpl extends DotNetTypeRef.Adapter implements D
 		return myInnerTypeRef.getQualifiedText() + "*";
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
