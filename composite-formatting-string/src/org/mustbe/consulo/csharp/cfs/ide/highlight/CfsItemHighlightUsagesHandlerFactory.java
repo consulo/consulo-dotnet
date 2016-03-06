@@ -16,17 +16,26 @@
 
 package org.mustbe.consulo.csharp.cfs.ide.highlight;
 
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.csharp.cfs.psi.CfsFile;
 import org.mustbe.consulo.csharp.cfs.psi.CfsItem;
+import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
+import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import com.intellij.codeInsight.TargetElementUtil;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactory;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.ArrayUtil;
 
 /**
  * @author VISTALL
@@ -36,17 +45,79 @@ public class CfsItemHighlightUsagesHandlerFactory implements HighlightUsagesHand
 {
 	@Nullable
 	@Override
+	@RequiredReadAction
 	public HighlightUsagesHandlerBase createHighlightUsagesHandler(Editor editor, PsiFile file)
 	{
 		int offset = TargetElementUtil.adjustOffset(file, editor.getDocument(), editor.getCaretModel().getOffset());
 		PsiElement target = file.findElementAt(offset);
-		if(target != null && target.getParent() instanceof PsiLanguageInjectionHost)
+		if(target != null)
 		{
-			PsiElement elementInInjected = InjectedLanguageUtil.findElementInInjected((PsiLanguageInjectionHost) target.getParent(), offset);
-			CfsItem cfsItem = elementInInjected == null ? null : PsiTreeUtil.getParentOfType(elementInInjected, CfsItem.class);
-			if(cfsItem != null)
+			if(target.getParent() instanceof PsiLanguageInjectionHost)
 			{
-				return new CfsItemHighlightUsagesHandler(editor, file, cfsItem);
+				PsiElement elementInInjected = InjectedLanguageUtil.findElementInInjected((PsiLanguageInjectionHost) target.getParent(), offset);
+				CfsItem cfsItem = elementInInjected == null ? null : PsiTreeUtil.getParentOfType(elementInInjected, CfsItem.class);
+				if(cfsItem != null)
+				{
+					return new CfsItemHighlightUsagesFromItemHandler(editor, file, cfsItem);
+				}
+			}
+			else
+			{
+				PsiElement targetElement = null;
+
+				PsiElement parent = target;
+				while(parent != null)
+				{
+					PsiElement nextParent = parent.getParent();
+					if(nextParent instanceof DotNetCallArgumentList)
+					{
+						targetElement = parent;
+						break;
+					}
+
+					parent = nextParent;
+				}
+
+				if(targetElement == null)
+				{
+					return null;
+				}
+
+				DotNetCallArgumentList callArgumentList = (DotNetCallArgumentList) targetElement.getParent();
+				assert callArgumentList != null;
+
+				final Ref<CfsFile> cfsFileRef = Ref.create();
+				DotNetExpression[] expressions = callArgumentList.getExpressions();
+				int thisIndex = ArrayUtil.indexOf(callArgumentList.getArguments(), targetElement);
+				if(thisIndex == -1)
+				{
+					return null;
+				}
+				for(DotNetExpression expression : expressions)
+				{
+					if(expression instanceof PsiLanguageInjectionHost)
+					{
+						InjectedLanguageUtil.enumerate(expression, new PsiLanguageInjectionHost.InjectedPsiVisitor()
+						{
+							@Override
+							public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places)
+							{
+								if(injectedPsi instanceof CfsFile)
+								{
+									cfsFileRef.setIfNull((CfsFile) injectedPsi);
+								}
+							}
+						});
+					}
+				}
+
+				CfsFile cfsFile = cfsFileRef.get();
+				if(cfsFile == null)
+				{
+					return null;
+				}
+
+				return new CfsItemHighlightUsagesFromArgumentHandler(editor, file, targetElement, cfsFile, thisIndex - 1);
 			}
 		}
 		return null;

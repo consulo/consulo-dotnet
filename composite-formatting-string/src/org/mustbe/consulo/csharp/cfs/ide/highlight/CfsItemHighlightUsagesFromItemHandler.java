@@ -19,6 +19,7 @@ package org.mustbe.consulo.csharp.cfs.ide.highlight;
 import java.util.Collections;
 import java.util.List;
 
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.csharp.cfs.psi.CfsFile;
 import org.mustbe.consulo.csharp.cfs.psi.CfsItem;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
@@ -33,11 +34,11 @@ import com.intellij.util.SmartList;
  * @author VISTALL
  * @since 28.03.2015
  */
-public class CfsItemHighlightUsagesHandler extends HighlightUsagesHandlerBase<CfsItem>
+public class CfsItemHighlightUsagesFromItemHandler extends HighlightUsagesHandlerBase<CfsItem>
 {
 	private final CfsItem myCfsItem;
 
-	public CfsItemHighlightUsagesHandler(Editor editor, PsiFile file, CfsItem cfsItem)
+	public CfsItemHighlightUsagesFromItemHandler(Editor editor, PsiFile file, CfsItem cfsItem)
 	{
 		super(editor, file);
 		myCfsItem = cfsItem;
@@ -70,6 +71,7 @@ public class CfsItemHighlightUsagesHandler extends HighlightUsagesHandlerBase<Cf
 	}
 
 	@Override
+	@RequiredReadAction
 	public void computeUsages(List<CfsItem> targets)
 	{
 		for(CfsItem target : targets)
