@@ -17,7 +17,6 @@
 package org.mustbe.consulo.dotnet.resolve.impl;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +28,6 @@ import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.SmartList;
 
 /**
  * @author VISTALL
@@ -61,11 +59,6 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	@Override
 	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
 	{
-		List<DotNetTypeDeclaration> list = new SmartList<DotNetTypeDeclaration>();
-		for(DotNetPsiSearcher searcher : mySearchers)
-		{
-			list.addAll(searcher.findTypesImpl(vmQName, scope));
-		}
-		return list;
+		return myCacheManager.computeTypes(mySearchers, vmQName, scope);
 	}
 }

@@ -30,11 +30,13 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.GlobalSearchScopeFilter;
 import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import com.intellij.ProjectTopics;
+import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
@@ -177,6 +179,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	private final Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> myElementsCache = ContainerUtil.newConcurrentMap();
 	private final Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> myChildNamespacesCache = ContainerUtil.newConcurrentMap();
+	private final Map<String, Map<GlobalSearchScope, Set<DotNetTypeDeclaration>>> myTypesCache = ContainerUtil.newConcurrentMap();
 	private final Map<String, Map<GlobalSearchScope, Ref<DotNetNamespaceAsElement>>> myNamespacesCache = ContainerUtil.newConcurrentMap();
 
 	private long myModificationCount;
@@ -216,6 +219,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		myElementsCache.clear();
 		myChildNamespacesCache.clear();
 		myNamespacesCache.clear();
+		myTypesCache.clear();
 	}
 
 	@RequiredReadAction
@@ -266,6 +270,45 @@ public class DotNetNamespaceCacheManager implements Disposable
 			return namespaceAsElements.get(0);
 		}
 		return new CompositeDotNetNamespaceAsElement(project, qName, namespaceAsElements);
+	}
+
+
+	@RequiredReadAction
+	@NotNull
+	public Set<DotNetTypeDeclaration> computeTypes(@NotNull DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
+	{
+		Map<GlobalSearchScope, Set<DotNetTypeDeclaration>> map = myTypesCache.get(qName);
+		if(map != null)
+		{
+			Set<DotNetTypeDeclaration> set = map.get(scope);
+			if(set != null)
+			{
+				return set;
+			}
+		}
+
+		Set<DotNetTypeDeclaration> compute = computeTypesImpl(searchers, qName, scope);
+
+		if(map == null)
+		{
+			myTypesCache.put(qName, map = ContainerUtil.<GlobalSearchScope, Set<DotNetTypeDeclaration>>newConcurrentMap());
+		}
+
+		map.put(scope, compute);
+		return compute;
+	}
+
+	@NotNull
+	@RequiredReadAction
+	private static Set<DotNetTypeDeclaration> computeTypesImpl(DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
+	{
+		Set<DotNetTypeDeclaration> typeDeclarations = new SmartHashSet<DotNetTypeDeclaration>();
+		for(DotNetPsiSearcher searcher : searchers)
+		{
+			typeDeclarations.addAll(searcher.findTypesImpl(qName, scope));
+		}
+
+		return typeDeclarations.isEmpty() ? Collections.<DotNetTypeDeclaration>emptySet() : typeDeclarations;
 	}
 
 	@NotNull
