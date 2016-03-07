@@ -28,8 +28,10 @@ import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import com.intellij.codeInsight.TargetElementUtil;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactory;
+import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
@@ -122,4 +124,16 @@ public class CfsItemHighlightUsagesHandlerFactory implements HighlightUsagesHand
 		}
 		return null;
 	}
+
+	@RequiredReadAction
+	public static void addOccurrence(@NotNull List<TextRange> ranges, @NotNull PsiElement element)
+	{
+		TextRange range = element.getTextRange();
+		if(range != null)
+		{
+			range = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, range);
+			ranges.add(range);
+		}
+	}
+
 }

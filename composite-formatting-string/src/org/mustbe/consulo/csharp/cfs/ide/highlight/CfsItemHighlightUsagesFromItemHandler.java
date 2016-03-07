@@ -76,7 +76,7 @@ public class CfsItemHighlightUsagesFromItemHandler extends HighlightUsagesHandle
 	{
 		for(CfsItem target : targets)
 		{
-			addOccurrence(target);
+			CfsItemHighlightUsagesHandlerFactory.addOccurrence(myReadUsages, target);
 			PsiReference reference = target.getReference();
 			if(reference == null)
 			{
@@ -87,7 +87,7 @@ public class CfsItemHighlightUsagesFromItemHandler extends HighlightUsagesHandle
 			{
 				continue;
 			}
-			addOccurrence(element);
+			CfsItemHighlightUsagesHandlerFactory.addOccurrence(myWriteUsages, element);
 		}
 	}
 }

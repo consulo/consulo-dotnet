@@ -72,9 +72,9 @@ public class CfsItemHighlightUsagesFromArgumentHandler extends HighlightUsagesHa
 	{
 		for(PsiElement target : targets)
 		{
-			addOccurrence(target);
+			CfsItemHighlightUsagesHandlerFactory.addOccurrence(myReadUsages, target);
 		}
-		addOccurrence(myCallArgument);
+		CfsItemHighlightUsagesHandlerFactory.addOccurrence(myWriteUsages, myCallArgument);
 	}
 
 	@Override
