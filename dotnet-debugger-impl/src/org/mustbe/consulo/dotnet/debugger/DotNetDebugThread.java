@@ -422,7 +422,6 @@ public class DotNetDebugThread extends Thread
 						}, XSourcePositionImpl.createByElement(elementAt));
 						return valueRef.get();
 					}
-
 				});
 
 				if(value instanceof DotNetAbstractVariableMirrorNode)
