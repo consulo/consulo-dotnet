@@ -33,6 +33,7 @@ import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
+import org.mustbe.consulo.dotnet.debugger.DotNetEditorsProvider;
 import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachine;
 import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
@@ -65,6 +66,7 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
+import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import mono.debugger.Location;
 import mono.debugger.LocationImpl;
@@ -133,6 +135,13 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			return null;
 		}
 		return psiElement.getTextRange();
+	}
+
+	@Nullable
+	@Override
+	public XDebuggerEditorsProvider getEditorsProvider(@NotNull XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint, @NotNull Project project)
+	{
+		return new DotNetEditorsProvider(null);
 	}
 
 	@NotNull

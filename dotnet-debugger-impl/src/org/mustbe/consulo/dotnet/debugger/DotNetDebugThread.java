@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.debugger;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
@@ -30,18 +31,25 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetBreakpointUtil;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
@@ -52,8 +60,12 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
+import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
+import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
@@ -166,7 +178,7 @@ public class DotNetDebugThread extends Thread
 				}
 				catch(Exception e)
 				{
-					tryCount --;
+					tryCount--;
 				}
 			}
 		}
@@ -303,7 +315,16 @@ public class DotNetDebugThread extends Thread
 						DotNetDebugContext debugContext = createDebugContext(xLineBreakpoint);
 						if(xLineBreakpoint != null)
 						{
-							mySession.breakpointReached(xLineBreakpoint, null, new DotNetSuspendContext(debugContext, eventSet.eventThread()));
+							DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, eventSet.eventThread());
+
+							if(tryEvaluateBreakpoint(eventSet, xLineBreakpoint, debugContext))
+							{
+								mySession.breakpointReached(xLineBreakpoint, null, suspendContext);
+							}
+							else
+							{
+								myVirtualMachine.resume();
+							}
 						}
 						else
 						{
@@ -344,6 +365,77 @@ public class DotNetDebugThread extends Thread
 
 			TimeoutUtil.sleep(50);
 		}
+	}
+
+	private boolean tryEvaluateBreakpoint(EventSet eventSet, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception
+	{
+		final XExpression conditionExpression = breakpoint.getConditionExpression();
+		if(conditionExpression != null)
+		{
+			final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
+			if(virtualFile == null)
+			{
+				return true;
+			}
+
+			final DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(conditionExpression.getLanguage());
+			if(provider != null)
+			{
+				final List<StackFrameMirror> frames = eventSet.eventThread().frames();
+
+				final XValue value = ApplicationManager.getApplication().runReadAction(new Computable<XValue>()
+				{
+					@Override
+					public XValue compute()
+					{
+						Document document = virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null;
+						if(document == null)
+						{
+							return null;
+						}
+						int line = breakpoint.getLine();
+
+						int offset = line < document.getLineCount() ? document.getLineStartOffset(line) : -1;
+						PsiFile file = PsiManager.getInstance(debugContext.getProject()).findFile(virtualFile);
+						if(file == null)
+						{
+							return null;
+						}
+						PsiElement elementAt = offset >= 0 ? file.findElementAt(offset) : null;
+						if(elementAt == null)
+						{
+							return null;
+						}
+						final Ref<XValue> valueRef = Ref.create();
+						provider.evaluate(frames.get(0), debugContext, conditionExpression.getExpression(), elementAt, new XDebuggerEvaluator.XEvaluationCallback()
+						{
+							@Override
+							public void evaluated(@NotNull XValue result)
+							{
+								valueRef.set(result);
+							}
+
+							@Override
+							public void errorOccurred(@NotNull String errorMessage)
+							{
+							}
+						}, XSourcePositionImpl.createByElement(elementAt));
+						return valueRef.get();
+					}
+
+				});
+
+				if(value instanceof DotNetAbstractVariableMirrorNode)
+				{
+					Value<?> valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
+					if(valueOfVariableSafe instanceof BooleanValueMirror)
+					{
+						return ((BooleanValueMirror) valueOfVariableSafe).value();
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	private void insertBreakpoints(final DotNetVirtualMachine virtualMachine, final TypeMirror typeMirror)
@@ -428,8 +520,8 @@ public class DotNetDebugThread extends Thread
 			return null;
 		}
 
-		XLineBreakpoint<?> breakpointAtLine = myDebuggerManager.getBreakpointManager().findBreakpointAtLine
-				(DotNetLineBreakpointType.getInstance(), fileByPath, location.lineNumber() - 1); // .net asm - 1 index based, consulo - 0 based
+		XLineBreakpoint<?> breakpointAtLine = myDebuggerManager.getBreakpointManager().findBreakpointAtLine(DotNetLineBreakpointType.getInstance(), fileByPath,
+				location.lineNumber() - 1); // .net asm - 1 index based, consulo - 0 based
 		if(breakpointAtLine == null)
 		{
 			return null;
@@ -458,8 +550,7 @@ public class DotNetDebugThread extends Thread
 			@Override
 			public Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>> compute()
 			{
-				Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>> breakpoints = myDebuggerManager.getBreakpointManager().getBreakpoints
-						(DotNetLineBreakpointType.class);
+				Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>> breakpoints = myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetLineBreakpointType.class);
 				return ContainerUtil.filter(breakpoints, new Condition<XLineBreakpoint<DotNetLineBreakpointProperties>>()
 				{
 					@Override

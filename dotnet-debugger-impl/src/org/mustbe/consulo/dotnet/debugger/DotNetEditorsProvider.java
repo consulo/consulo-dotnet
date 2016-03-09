@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
@@ -27,21 +28,22 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
  */
 public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase
 {
+	@Nullable
 	private XDebugSession mySession;
 
-	public DotNetEditorsProvider(XDebugSession session)
+	public DotNetEditorsProvider(@Nullable XDebugSession session)
 	{
 		mySession = session;
 	}
 
 	@Override
-	protected PsiFile createExpressionCodeFragment(
-			@NotNull Project project, @NotNull String text, @Nullable PsiElement context, boolean isPhysical)
+	@RequiredReadAction
+	protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String text, @Nullable PsiElement context, boolean isPhysical)
 	{
 		if(context == null)
 		{
 			XDebugSession session = mySession;
-			XSourcePosition currentPosition = session.getCurrentPosition();
+			XSourcePosition currentPosition = session == null ? null : session.getCurrentPosition();
 			if(currentPosition != null)
 			{
 				VirtualFile file = currentPosition.getFile();
@@ -65,6 +67,7 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase
 
 	@Override
 	@NotNull
+	@RequiredReadAction
 	public Collection<Language> getSupportedLanguages(@NotNull Project project, @Nullable XSourcePosition sourcePosition)
 	{
 		if(sourcePosition == null)
