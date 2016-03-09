@@ -327,6 +327,12 @@ public class DotNetStackFrame extends XStackFrame
 						super.visitElement(element);
 						if(element instanceof DotNetReferenceExpression)
 						{
+							PsiElement parent = element.getParent();
+							if(parent instanceof DotNetReferenceExpression && ((DotNetReferenceExpression) parent).getQualifier() == element)
+							{
+								return;
+							}
+
 							referenceExpressions.add((DotNetReferenceExpression) element);
 						}
 					}
