@@ -17,17 +17,14 @@
 package org.mustbe.consulo.msil.representation;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
-import com.intellij.reference.SoftReference;
+import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.util.Consumer;
 
 /**
  * @author VISTALL
@@ -35,14 +32,29 @@ import com.intellij.reference.SoftReference;
  */
 public class MsilRepresentationNavigateUtil
 {
-	public static Key<SoftReference<PsiElement>> MSIL_ELEMENT = Key.create("msil-element");
+	public static Consumer<PsiFile> DEFAULT_NAVIGATOR = new Consumer<PsiFile>()
+	{
+		@Override
+		public void consume(PsiFile file)
+		{
+			file.navigate(true);
+		}
+	};
 
 	@RequiredReadAction
+	@Exported
 	public static void navigateToRepresentation(@NotNull final PsiElement msilElement, @NotNull FileType fileType)
+	{
+		navigateToRepresentation(msilElement, fileType, DEFAULT_NAVIGATOR);
+	}
+
+	@RequiredReadAction
+	@Exported
+	public static void navigateToRepresentation(@NotNull final PsiElement msilElement, @NotNull FileType fileType, @NotNull Consumer<PsiFile> consumer)
 	{
 		MsilFileRepresentationManager manager = MsilFileRepresentationManager.getInstance(msilElement.getProject());
 
-		VirtualFile virtualFile = msilElement.getContainingFile().getVirtualFile();
+		VirtualFile virtualFile = PsiUtilCore.getVirtualFile(msilElement);
 		if(virtualFile == null)
 		{
 			return;
@@ -54,45 +66,6 @@ public class MsilRepresentationNavigateUtil
 			return;
 		}
 
-		navigateToRepresentation(representationFile, msilElement);
-	}
-
-	public static void navigateToRepresentation(@NotNull PsiFile file, @NotNull final PsiElement msilElement)
-	{
-		final Ref<PsiElement> elementRef = new Ref<PsiElement>(null);
-		file.accept(new PsiRecursiveElementWalkingVisitor()
-		{
-			@Override
-			protected void elementFinished(PsiElement element)
-			{
-				SoftReference<PsiElement> ref = element.getUserData(MSIL_ELEMENT);
-
-				PsiElement psiElement = SoftReference.dereference(ref);
-				if(psiElement == msilElement)
-				{
-					elementRef.set(element);
-					stopWalking();
-				}
-			}
-		});
-
-		PsiElement element = elementRef.get();
-		if(element != null)
-		{
-			if(element instanceof PsiNameIdentifierOwner)
-			{
-				PsiElement nameIdentifier = ((PsiNameIdentifierOwner) element).getNameIdentifier();
-				if(nameIdentifier instanceof Navigatable)
-				{
-					((Navigatable) nameIdentifier).navigate(true);
-					return;
-				}
-			}
-			((Navigatable) element).navigate(true);
-		}
-		else
-		{
-			file.navigate(true);
-		}
+		consumer.consume(representationFile);
 	}
 }
