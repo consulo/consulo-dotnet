@@ -32,7 +32,7 @@ import com.intellij.util.Consumer;
  */
 public class MsilRepresentationNavigateUtil
 {
-	public static Consumer<PsiFile> DEFAULT_NAVIGATOR = new Consumer<PsiFile>()
+	public static final Consumer<PsiFile> DEFAULT_NAVIGATOR = new Consumer<PsiFile>()
 	{
 		@Override
 		public void consume(PsiFile file)
