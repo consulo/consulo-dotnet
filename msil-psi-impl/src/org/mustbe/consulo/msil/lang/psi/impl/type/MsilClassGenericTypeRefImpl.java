@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
@@ -25,6 +26,7 @@ import org.mustbe.consulo.dotnet.resolve.SimpleTypeResolveResult;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.ArrayUtil;
 
 /**
  * @author VISTALL
@@ -55,36 +57,47 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
 
 	public int getIndex()
 	{
-		DotNetGenericParameter[] genericParameters = myParent.getGenericParameters();
-		for(int i = 0; i < genericParameters.length; i++)
+		DotNetGenericParameter genericParameter = findGenericParameter();
+		if(genericParameter != null)
 		{
-			DotNetGenericParameter genericParameter = genericParameters[i];
-			if(Comparing.equal(myName, genericParameter.getName()))
-			{
-				return i;
-			}
+			return genericParameter.getIndex();
 		}
 		return -1;
 	}
+
 	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
 	{
-		for(DotNetGenericParameter parameter : myParent.getGenericParameters())
+		DotNetGenericParameter parameter = findGenericParameter();
+		if(parameter != null)
+		{
+			return new SimpleTypeResolveResult(parameter);
+		}
+		return DotNetTypeResolveResult.EMPTY;
+	}
+
+	@Nullable
+	private DotNetGenericParameter findGenericParameter()
+	{
+		DotNetGenericParameter[] genericParameters = myParent.getGenericParameters();
+		// we need reverse it, due we can have parameters like <T, T> in nested class entry
+		genericParameters = ArrayUtil.reverseArray(genericParameters);
+
+		for(DotNetGenericParameter parameter : genericParameters)
 		{
 			if(Comparing.equal(myName, parameter.getName()))
 			{
-				return new SimpleTypeResolveResult(parameter);
+				return parameter;
 			}
 		}
-		return DotNetTypeResolveResult.EMPTY;
+		return null;
 	}
 
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj instanceof MsilClassGenericTypeRefImpl && myParent.isEquivalentTo(((MsilClassGenericTypeRefImpl) obj).myParent) && myName.equals(
-				((MsilClassGenericTypeRefImpl) obj).myName);
+		return obj instanceof MsilClassGenericTypeRefImpl && myParent.isEquivalentTo(((MsilClassGenericTypeRefImpl) obj).myParent) && myName.equals(((MsilClassGenericTypeRefImpl) obj).myName);
 	}
 }
