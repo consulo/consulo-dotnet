@@ -19,6 +19,7 @@ package org.mustbe.consulo.dotnet.debugger;
 import gnu.trove.THashSet;
 
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
@@ -75,11 +76,13 @@ public class DotNetStackFrame extends XStackFrame
 	};
 
 	private final DotNetDebugContext myDebuggerContext;
+	private final int myIndex;
 	private final StackFrameMirror myFrame;
 
-	public DotNetStackFrame(DotNetDebugContext debuggerContext, StackFrameMirror frame)
+	public DotNetStackFrame(DotNetDebugContext debuggerContext, int index, StackFrameMirror frame)
 	{
 		myDebuggerContext = debuggerContext;
+		myIndex = index;
 		myFrame = frame;
 	}
 
@@ -160,7 +163,7 @@ public class DotNetStackFrame extends XStackFrame
 				{
 					if(provider.getEditorLanguage() == expression.getLanguage())
 					{
-						provider.evaluate(myFrame, myDebuggerContext, expression.getExpression(), null, callback, expressionPosition);
+						provider.evaluate(getRefreshedOrCurrentFrame(), myDebuggerContext, expression.getExpression(), null, callback, expressionPosition);
 					}
 				}
 			}
@@ -232,17 +235,18 @@ public class DotNetStackFrame extends XStackFrame
 	@RequiredReadAction
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		MethodMirror method = myFrame.location().method();
+		StackFrameMirror frame = getRefreshedOrCurrentFrame();
+		MethodMirror method = frame.location().method();
 
 		final XValueChildrenList childrenList = new XValueChildrenList();
 
 		try
 		{
-			final Value value = myFrame.thisObject();
+			final Value value = frame.thisObject();
 
 			for(ObjectReviewer objectReviewer : ourObjectReviewers)
 			{
-				if(objectReviewer.reviewObject(myDebuggerContext, value, getFrame(), childrenList))
+				if(objectReviewer.reviewObject(myDebuggerContext, value, myFrame, childrenList))
 				{
 					node.addChildren(childrenList, true);
 					return;
@@ -254,18 +258,18 @@ public class DotNetStackFrame extends XStackFrame
 				TypeMirror type = value.type();
 				assert type != null;
 
-				childrenList.add(new DotNetThisAsObjectValueMirrorNode(myDebuggerContext, myFrame.thread(), type, (ObjectValueMirror) value));
+				childrenList.add(new DotNetThisAsObjectValueMirrorNode(myDebuggerContext, frame.thread(), type, (ObjectValueMirror) value));
 			}
 			else if(value instanceof StructValueMirror)
 			{
 				TypeMirror type = value.type();
 				assert type != null;
 
-				childrenList.add(new DotNetThisAsStructValueMirrorNode(myDebuggerContext, myFrame.thread(), type, (StructValueMirror) value));
+				childrenList.add(new DotNetThisAsStructValueMirrorNode(myDebuggerContext, frame.thread(), type, (StructValueMirror) value));
 			}
 			else
 			{
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrame.thread(), myFrame.location().declaringType());
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, frame.thread(), frame.location().declaringType());
 			}
 		}
 		catch(AbsentInformationException e)
@@ -287,7 +291,7 @@ public class DotNetStackFrame extends XStackFrame
 
 		for(MethodParameterMirror parameter : parameters)
 		{
-			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(myDebuggerContext, parameter, myFrame);
+			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(myDebuggerContext, parameter, frame);
 
 			childrenList.add(parameterMirrorNode);
 		}
@@ -295,7 +299,7 @@ public class DotNetStackFrame extends XStackFrame
 		Set<Object> visitedVariables = new THashSet<Object>();
 		try
 		{
-			LocalVariableMirror[] locals = method.locals(myFrame.location().codeIndex());
+			LocalVariableMirror[] locals = method.locals(frame.location().codeIndex());
 			for(LocalVariableMirror local : locals)
 			{
 				if(StringUtil.isEmpty(local.name()))
@@ -303,7 +307,7 @@ public class DotNetStackFrame extends XStackFrame
 					continue;
 				}
 				visitedVariables.add(local);
-				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(myDebuggerContext, local, myFrame);
+				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(myDebuggerContext, local, frame);
 
 				childrenList.add(localVariableMirrorNode);
 			}
@@ -312,7 +316,7 @@ public class DotNetStackFrame extends XStackFrame
 		{
 		}
 
-		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrame);
+		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, frame);
 		if(psiElement != null)
 		{
 			final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<DotNetReferenceExpression>();
@@ -354,7 +358,7 @@ public class DotNetStackFrame extends XStackFrame
 
 						for(DotNetReferenceExpression referenceExpression : referenceExpressions)
 						{
-							provider.evaluate(myFrame, myDebuggerContext, referenceExpression, visitedVariables, callback);
+							provider.evaluate(frame, myDebuggerContext, referenceExpression, visitedVariables, callback);
 						}
 					}
 				}
@@ -365,8 +369,16 @@ public class DotNetStackFrame extends XStackFrame
 	}
 
 	@NotNull
-	public StackFrameMirror getFrame()
+	protected StackFrameMirror getRefreshedOrCurrentFrame()
 	{
-		return myFrame;
+		try
+		{
+			List<StackFrameMirror> frames = myFrame.thread().frames();
+			return frames.get(myIndex);
+		}
+		catch(Exception e)
+		{
+			return myFrame;
+		}
 	}
 }

@@ -31,7 +31,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
-import mono.debugger.IncompatibleThreadStateException;
 import mono.debugger.StackFrameMirror;
 import mono.debugger.ThreadMirror;
 
@@ -93,12 +92,7 @@ public class DotNetExecutionStack extends XExecutionStack
 			{
 				return null;
 			}
-			return myTopFrame = new DotNetStackFrame(myDebuggerContext, frame);
-		}
-		catch(IncompatibleThreadStateException e)
-		{
-			LOGGER.error(e);
-			return null;
+			return myTopFrame = new DotNetStackFrame(myDebuggerContext, 0, frame);
 		}
 		finally
 		{
@@ -120,31 +114,24 @@ public class DotNetExecutionStack extends XExecutionStack
 	@Override
 	public void computeStackFrames(int i, XStackFrameContainer frameContainer)
 	{
-		try
+		List<StackFrameMirror> frames = myThreadMirror.frames();
+
+		List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
+		for(int j = 0; j < frames.size(); j++)
 		{
-			List<StackFrameMirror> frames = myThreadMirror.frames();
+			StackFrameMirror stackFrameMirror = frames.get(j);
 
-			List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
-			for(int j = 0; j < frames.size(); j++)
+			DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, j, stackFrameMirror);
+
+			if(j == 0)
 			{
-				StackFrameMirror stackFrameMirror = frames.get(j);
-
-				DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, stackFrameMirror);
-
-				if(j == 0)
-				{
-					myTopFrameCalculated = true;
-					myTopFrame = stackFrame;
-				}
-
-				stackFrames.add(stackFrame);
+				myTopFrameCalculated = true;
+				myTopFrame = stackFrame;
 			}
 
-			frameContainer.addStackFrames(stackFrames, true);
+			stackFrames.add(stackFrame);
 		}
-		catch(IncompatibleThreadStateException e)
-		{
-			frameContainer.errorOccurred("Stack frames not available fot not suspended thread");
-		}
+
+		frameContainer.addStackFrames(stackFrames, true);
 	}
 }
