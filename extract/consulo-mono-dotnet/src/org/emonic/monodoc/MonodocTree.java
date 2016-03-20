@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import com.intellij.openapi.util.io.ZipFileCache;
 
 //import org.emonic.base.codehierarchy.AssemblyParser;
 
@@ -129,7 +128,8 @@ public final class MonodocTree extends MonodocNode
 					}
 				}
 			}
-		} return null;
+		}
+		return null;
 	}
 
 	private ITypeDocumentation find(String entry)
@@ -137,7 +137,7 @@ public final class MonodocTree extends MonodocNode
 		ZipFile zip = null;
 		try
 		{
-			zip = ZipFileCache.acquire(zipFile.getPath());
+			zip = new ZipFile(zipFile);
 			InputStream inputStream = zip.getInputStream(zip.getEntry(entry));
 			return parse(inputStream);
 		}
@@ -149,7 +149,13 @@ public final class MonodocTree extends MonodocNode
 		{
 			if(zip != null)
 			{
-				ZipFileCache.release(zip);
+				try
+				{
+					zip.close();
+				}
+				catch(IOException ignored)
+				{
+				}
 			}
 		}
 	}
@@ -227,8 +233,7 @@ public final class MonodocTree extends MonodocNode
 							}
 							else if(nodeName.equals("Docs"))
 							{
-								if(memberType.equals("Event") || memberType.equals("Constructor") || memberType.equals("Property") || memberType
-										.equals("Method") || memberType.equals("Field"))
+								if(memberType.equals("Event") || memberType.equals("Constructor") || memberType.equals("Property") || memberType.equals("Method") || memberType.equals("Field"))
 								{
 									type.add(new Documentation(name, node));
 								}
