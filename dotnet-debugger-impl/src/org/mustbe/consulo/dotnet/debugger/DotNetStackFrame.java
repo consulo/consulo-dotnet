@@ -63,6 +63,7 @@ import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import mono.debugger.*;
 
 /**
@@ -320,49 +321,52 @@ public class DotNetStackFrame extends XStackFrame
 		{
 		}
 
-		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, frame);
-		if(psiElement != null)
+		if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())
 		{
-			final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<DotNetReferenceExpression>();
-			DotNetQualifiedElement parentQualifiedElement = PsiTreeUtil.getParentOfType(psiElement, DotNetQualifiedElement.class);
-			if(parentQualifiedElement != null)
+			PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, frame);
+			if(psiElement != null)
 			{
-				parentQualifiedElement.accept(new PsiRecursiveElementVisitor()
+				final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<DotNetReferenceExpression>();
+				DotNetQualifiedElement parentQualifiedElement = PsiTreeUtil.getParentOfType(psiElement, DotNetQualifiedElement.class);
+				if(parentQualifiedElement != null)
 				{
-					@Override
-					public void visitElement(PsiElement element)
+					parentQualifiedElement.accept(new PsiRecursiveElementVisitor()
 					{
-						super.visitElement(element);
-						if(element instanceof DotNetReferenceExpression)
+						@Override
+						public void visitElement(PsiElement element)
 						{
-							PsiElement parent = element.getParent();
-							if(parent instanceof DotNetReferenceExpression && ((DotNetReferenceExpression) parent).getQualifier() == element)
+							super.visitElement(element);
+							if(element instanceof DotNetReferenceExpression)
 							{
-								return;
-							}
+								PsiElement parent = element.getParent();
+								if(parent instanceof DotNetReferenceExpression && ((DotNetReferenceExpression) parent).getQualifier() == element)
+								{
+									return;
+								}
 
-							referenceExpressions.add((DotNetReferenceExpression) element);
+								referenceExpressions.add((DotNetReferenceExpression) element);
+							}
 						}
-					}
-				});
+					});
 
-				if(!referenceExpressions.isEmpty())
-				{
-					DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(psiElement.getLanguage());
-					if(provider != null)
+					if(!referenceExpressions.isEmpty())
 					{
-						Consumer<XNamedValue> callback = new Consumer<XNamedValue>()
+						DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(psiElement.getLanguage());
+						if(provider != null)
 						{
-							@Override
-							public void consume(XNamedValue xNamedValue)
+							Consumer<XNamedValue> callback = new Consumer<XNamedValue>()
 							{
-								childrenList.add(xNamedValue);
-							}
-						};
+								@Override
+								public void consume(XNamedValue xNamedValue)
+								{
+									childrenList.add(xNamedValue);
+								}
+							};
 
-						for(DotNetReferenceExpression referenceExpression : referenceExpressions)
-						{
-							provider.evaluate(frame, myDebuggerContext, referenceExpression, visitedVariables, callback);
+							for(DotNetReferenceExpression referenceExpression : referenceExpressions)
+							{
+								provider.evaluate(frame, myDebuggerContext, referenceExpression, visitedVariables, callback);
+							}
 						}
 					}
 				}
