@@ -352,12 +352,11 @@ public class MsilCustomAttributeStubber
 		{
 			qName = ((DotNetTypeDeclaration) resolvedElement).getVmQName();
 		}
-		else
-		{
-			qName = typeRef.getQualifiedText();
-		}
 
-		assert qName != null;
+		if(qName == null)
+		{
+			return null;
+		}
 
 		if(qName.equals(DotNetTypes.System.Int32))
 		{
