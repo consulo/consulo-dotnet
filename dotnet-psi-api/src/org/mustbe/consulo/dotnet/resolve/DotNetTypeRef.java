@@ -32,13 +32,15 @@ public interface DotNetTypeRef
 	{
 		@NotNull
 		@Override
+		@Deprecated
 		public String getPresentableText()
 		{
-			return null;
+			throw new UnsupportedOperationException();
 		}
 
 		@NotNull
 		@Override
+		@Deprecated
 		public String getQualifiedText()
 		{
 			return getPresentableText();
@@ -70,6 +72,7 @@ public interface DotNetTypeRef
 
 		@NotNull
 		@Override
+		@Deprecated
 		public String getPresentableText()
 		{
 			return myDelegate.getPresentableText();
@@ -77,6 +80,7 @@ public interface DotNetTypeRef
 
 		@NotNull
 		@Override
+		@Deprecated
 		public String getQualifiedText()
 		{
 			return myDelegate.getQualifiedText();
@@ -107,6 +111,7 @@ public interface DotNetTypeRef
 	{
 		@NotNull
 		@Override
+		@Deprecated
 		public String getPresentableText()
 		{
 			return "<error>";
@@ -117,6 +122,7 @@ public interface DotNetTypeRef
 	{
 		@NotNull
 		@Override
+		@Deprecated
 		public String getPresentableText()
 		{
 			return "<unknown>";
@@ -127,6 +133,7 @@ public interface DotNetTypeRef
 	{
 		@NotNull
 		@Override
+		@Deprecated
 		public String getPresentableText()
 		{
 			return "var";
@@ -134,9 +141,11 @@ public interface DotNetTypeRef
 	};
 
 	@NotNull
+	@Deprecated
 	String getPresentableText();
 
 	@NotNull
+	@Deprecated
 	String getQualifiedText();
 
 	@RequiredReadAction

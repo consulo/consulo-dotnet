@@ -21,6 +21,7 @@ import java.util.List;
 import org.emonic.base.documentation.IDocumentation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -34,5 +35,6 @@ public interface DotNetDocumentationResolver
 	ExtensionPointName<DotNetDocumentationResolver> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.documentationResolver");
 
 	@Nullable
+	@RequiredReadAction
 	IDocumentation resolveDocumentation(@NotNull List<VirtualFile> orderEntryFiles, @NotNull PsiElement element);
 }

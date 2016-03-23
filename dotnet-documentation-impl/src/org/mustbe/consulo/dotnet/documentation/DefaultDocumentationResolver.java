@@ -22,6 +22,7 @@ import org.emonic.base.documentation.IDocumentation;
 import org.emonic.base.documentation.XMLDocumentationParser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
@@ -40,6 +41,7 @@ import com.intellij.util.Function;
  */
 public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 {
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public IDocumentation resolveDocumentation(@NotNull List<VirtualFile> orderEntryFiles, @NotNull PsiElement element)
