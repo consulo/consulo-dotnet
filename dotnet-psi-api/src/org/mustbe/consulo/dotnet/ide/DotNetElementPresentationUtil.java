@@ -68,13 +68,17 @@ public class DotNetElementPresentationUtil
 		}
 	}
 
+	@Deprecated
 	public static final int METHOD_SCALA_FORMAT = 1 << 0;
+	@Deprecated
 	public static final int METHOD_WITH_RETURN_TYPE = 1 << 1;
+	@Deprecated
 	public static final int METHOD_PARAMETER_NAME = 1 << 2;
 
 	public static final int METHOD_SCALA_LIKE_FULL = METHOD_SCALA_FORMAT | METHOD_WITH_RETURN_TYPE | METHOD_PARAMETER_NAME;
 
 	@NotNull
+	@Deprecated
 	public static String formatMethod(@NotNull DotNetLikeMethodDeclaration methodDeclaration, int flags)
 	{
 		StringBuilder builder = new StringBuilder();
@@ -99,6 +103,7 @@ public class DotNetElementPresentationUtil
 	}
 
 	@NotNull
+	@Deprecated
 	public static String formatField(@NotNull DotNetFieldDeclaration fieldDeclaration)
 	{
 		StringBuilder builder = new StringBuilder();
@@ -108,6 +113,7 @@ public class DotNetElementPresentationUtil
 		return builder.toString();
 	}
 
+	@Deprecated
 	private static void formatParameters(@NotNull DotNetLikeMethodDeclaration methodDeclaration, @NotNull StringBuilder builder, final int flags)
 	{
 		DotNetParameter[] parameters = methodDeclaration.getParameters();
