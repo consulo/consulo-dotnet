@@ -118,7 +118,7 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 	{
 		if(myObjectValueMirrorGetter == null)
 		{
-			xValueNode.setPresentation(null, new XRegularValuePresentation("", null, ""), true);
+			xValueNode.setPresentation(getIconForVariable(), new XRegularValuePresentation("", null, ""), true);
 		}
 		else
 		{
@@ -148,7 +148,7 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 		List<FieldOrPropertyMirror> fieldMirrors = typeMirror.fieldAndProperties(true);
 		for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
 		{
-			if(!fieldMirror.isStatic() && objectValueMirrorGetter == null)
+			if(!fieldMirror.isStatic() && objectValueMirrorGetter == null || fieldMirror.isStatic() && objectValueMirrorGetter != null)
 			{
 				continue;
 			}

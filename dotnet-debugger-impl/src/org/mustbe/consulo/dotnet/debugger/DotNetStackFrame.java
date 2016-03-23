@@ -258,12 +258,16 @@ public class DotNetStackFrame extends XStackFrame
 				TypeMirror type = value.type();
 				assert type != null;
 
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, frame.thread(), type);
+
 				childrenList.add(new DotNetThisAsObjectValueMirrorNode(myDebuggerContext, frame.thread(), type, (ObjectValueMirror) value));
 			}
 			else if(value instanceof StructValueMirror)
 			{
 				TypeMirror type = value.type();
 				assert type != null;
+
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, frame.thread(), type);
 
 				childrenList.add(new DotNetThisAsStructValueMirrorNode(myDebuggerContext, frame.thread(), type, (StructValueMirror) value));
 			}
