@@ -3,6 +3,7 @@ package org.mustbe.consulo.dotnet.debugger.nodes;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import mono.debugger.FieldOrPropertyMirror;
 import mono.debugger.StructValueMirror;
 import mono.debugger.Value;
@@ -14,11 +15,15 @@ import mono.debugger.Value;
 public class DotNetStructValueInfo
 {
 	private StructValueMirror myValueMirror;
+	@Nullable
 	private DotNetAbstractVariableMirrorNode myParentNode;
 	private FieldOrPropertyMirror myFieldOrPropertyMirror;
 	private Value<?> myValue;
 
-	public DotNetStructValueInfo(@NotNull StructValueMirror valueMirror, DotNetAbstractVariableMirrorNode parentNode, @NotNull FieldOrPropertyMirror fieldOrPropertyMirror, @NotNull Value<?> value)
+	public DotNetStructValueInfo(@NotNull StructValueMirror valueMirror,
+			@Nullable DotNetAbstractVariableMirrorNode parentNode,
+			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
+			@NotNull Value<?> value)
 	{
 		myValueMirror = valueMirror;
 		myParentNode = parentNode;
@@ -28,6 +33,10 @@ public class DotNetStructValueInfo
 
 	public boolean canSetValue()
 	{
+		if(myParentNode == null)
+		{
+			return false;
+		}
 		// how set value for struct this object?
 		return !(myParentNode instanceof DotNetThisAsStructValueMirrorNode);
 	}
@@ -39,6 +48,8 @@ public class DotNetStructValueInfo
 
 	public void setValue(Value<?> newValue)
 	{
+		assert myParentNode != null;
+
 		StructValueMirror valueMirror = myValueMirror;
 
 		Map<FieldOrPropertyMirror, Value<?>> map = valueMirror.map();
