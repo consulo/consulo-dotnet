@@ -19,7 +19,6 @@ package org.mustbe.consulo.dotnet.lang.psi.impl;
 import gnu.trove.THashSet;
 
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,7 +49,6 @@ import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 
@@ -64,6 +62,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 	public static interface ItemCalculator
 	{
 		@NotNull
+		@RequiredReadAction
 		Set<PsiElement> compute(@NotNull Project project,
 				@Nullable final IndexBasedDotNetPsiSearcher searcher,
 				@NotNull final String indexKey,
@@ -76,6 +75,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	public static final ItemCalculator ONLY_ELEMENTS = new ItemCalculator()
 	{
+		@RequiredReadAction
 		@NotNull
 		@Override
 		public Set<PsiElement> compute(@NotNull final Project project,
@@ -86,9 +86,8 @@ public class DotNetNamespaceCacheManager implements Disposable
 		{
 			assert searcher != null;
 
-			final Set<PsiElement> set = new THashSet<PsiElement>();
-
 			final StubIndexKey<String, DotNetQualifiedElement> key = searcher.getElementByQNameIndexKey();
+			final Set<String> qNames = new THashSet<String>();
 			StubIndex.getInstance().processAllKeys(key, new Processor<String>()
 			{
 				@Override
@@ -96,21 +95,27 @@ public class DotNetNamespaceCacheManager implements Disposable
 				{
 					if(thisQName.isEmpty() && qName.startsWith(indexKey))
 					{
-						set.addAll(StubIndex.getElements(key, qName, project, scope, DotNetQualifiedElement.class));
+						qNames.add(qName);
 					}
 					else if(qName.startsWith(thisQName))
 					{
 						String packageName = StringUtil.getPackageName(qName);
 						if(packageName.equals(thisQName))
 						{
-							set.addAll(StubIndex.getElements(key, qName, project, scope, DotNetQualifiedElement.class));
+							qNames.add(qName);
 						}
 					}
 					return true;
 				}
 			}, scope, new GlobalSearchScopeFilter(scope));
 
-			return set.isEmpty() ? Collections.<PsiElement>emptySet() : set;
+			final Set<PsiElement> elements = new THashSet<PsiElement>(qNames.size());
+			for(String qName : qNames)
+			{
+				elements.addAll(StubIndex.getElements(key, qName, project, scope, DotNetQualifiedElement.class));
+			}
+
+			return elements.isEmpty() ? Collections.<PsiElement>emptySet() : elements;
 		}
 
 		@NotNull
@@ -123,6 +128,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	public static final ItemCalculator ONLY_NAMESPACES = new ItemCalculator()
 	{
+		@RequiredReadAction
 		@NotNull
 		@Override
 		public Set<PsiElement> compute(@NotNull final Project project,
@@ -133,9 +139,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		{
 			assert searcher != null;
 
-			final Set<String> namespaceChildren = new ArrayListSet<String>();
-			final Set<PsiElement> namespaces = new LinkedHashSet<PsiElement>();
-
+			final Set<String> qNames = new THashSet<String>();
 			StubIndex.getInstance().processAllKeys(searcher.getNamespaceIndexKey(), new Processor<String>()
 			{
 				@Override
@@ -151,14 +155,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 						String packageName = StringUtil.getPackageName(qName);
 						if(packageName.equals(thisQName))
 						{
-							if(namespaceChildren.add(qName))
-							{
-								DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(project).findNamespace(qName, scope);
-								if(namespace != null)
-								{
-									namespaces.add(namespace);
-								}
-							}
+							qNames.add(qName);
 						}
 					}
 
@@ -166,6 +163,16 @@ public class DotNetNamespaceCacheManager implements Disposable
 				}
 			}, scope, new GlobalSearchScopeFilter(scope));
 
+
+			final Set<PsiElement> namespaces = new THashSet<PsiElement>(qNames.size());
+			for(String qName : qNames)
+			{
+				DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(project).findNamespace(qName, scope);
+				if(namespace != null)
+				{
+					namespaces.add(namespace);
+				}
+			}
 			return namespaces.isEmpty() ? Collections.<PsiElement>emptySet() : namespaces;
 		}
 
@@ -312,6 +319,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 	}
 
 	@NotNull
+	@RequiredReadAction
 	public Set<PsiElement> computeElements(@Nullable IndexBasedDotNetPsiSearcher searcher,
 			@NotNull DotNetNamespaceAsElement key,
 			@NotNull String indexKey,

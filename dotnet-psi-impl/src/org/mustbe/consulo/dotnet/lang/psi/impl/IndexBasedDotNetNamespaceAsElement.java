@@ -84,6 +84,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 		return PsiElement.EMPTY_ARRAY;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	protected Collection<? extends PsiElement> getOnlyElements(@NotNull final GlobalSearchScope globalSearchScope)
@@ -91,6 +92,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 		return DotNetNamespaceCacheManager.getInstance(myProject).computeElements(mySearcher, this, myIndexKey, myQName, globalSearchScope, DotNetNamespaceCacheManager.ONLY_ELEMENTS);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	protected Collection<? extends PsiElement> getOnlyNamespaces(@NotNull final GlobalSearchScope globalSearchScope)

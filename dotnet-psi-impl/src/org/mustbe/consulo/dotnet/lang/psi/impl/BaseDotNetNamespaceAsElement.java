@@ -63,6 +63,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	}
 
 	@Override
+	@RequiredReadAction
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
 			@NotNull ResolveState state,
 			PsiElement lastParent,
@@ -164,12 +165,14 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	}
 
 	@NotNull
+	@RequiredReadAction
 	protected Collection<? extends PsiElement> getOnlyElements(@NotNull GlobalSearchScope globalSearchScope)
 	{
 		return Collections.emptyList();
 	}
 
 	@NotNull
+	@RequiredReadAction
 	protected Collection<? extends PsiElement> getOnlyNamespaces(@NotNull GlobalSearchScope globalSearchScope)
 	{
 		return Collections.emptyList();
@@ -203,6 +206,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		return array;
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public String getPresentableParentQName()
@@ -214,6 +218,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		return StringUtil.getPackageName(myQName);
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public String getPresentableQName()
