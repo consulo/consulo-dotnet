@@ -18,7 +18,9 @@ package org.mustbe.consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.openapi.util.Ref;
@@ -33,7 +35,6 @@ import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNavigatable;
 import mono.debugger.LocalVariableMirror;
 import mono.debugger.LocalVariableOrParameterMirror;
-import mono.debugger.StackFrameMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.Value;
 import mono.debugger.util.ImmutablePair;
@@ -45,13 +46,13 @@ import mono.debugger.util.ImmutablePair;
 public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorNode
 {
 	private final LocalVariableMirror myLocal;
-	private final StackFrameMirror myFrame;
+	private final DotNetStackFrameMirrorProxy myFrameProxy;
 
-	public DotNetLocalVariableMirrorNode(DotNetDebugContext debuggerContext, LocalVariableMirror local, StackFrameMirror frame)
+	public DotNetLocalVariableMirrorNode(DotNetDebugContext debuggerContext, LocalVariableMirror local, DotNetStackFrameMirrorProxy frameProxy)
 	{
-		super(debuggerContext, local.name(), frame.thread());
+		super(debuggerContext, local.name(), frameProxy.thread());
 		myLocal = local;
-		myFrame = frame;
+		myFrameProxy = frameProxy;
 	}
 
 	@Override
@@ -61,6 +62,7 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 	}
 
 	@Override
+	@RequiredDispatchThread
 	public void computeSourcePosition(@NotNull XNavigatable navigatable)
 	{
 		final String name = myLocal.name();
@@ -68,7 +70,7 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 		{
 			return;
 		}
-		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebugContext, myFrame);
+		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebugContext, myFrameProxy);
 		if(psiElement == null)
 		{
 			return;
@@ -121,13 +123,13 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 	@Override
 	public Value<?> getValueOfVariableImpl()
 	{
-		return myFrame.localOrParameterValue(myLocal);
+		return myFrameProxy.localOrParameterValue(myLocal);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void setValueForVariableImpl(@NotNull Value<?> value)
 	{
-		myFrame.setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(myLocal, value));
+		myFrameProxy.setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(myLocal, value));
 	}
 }

@@ -18,7 +18,9 @@ package org.mustbe.consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterListOwner;
@@ -31,7 +33,6 @@ import mono.debugger.InvalidFieldIdException;
 import mono.debugger.InvalidStackFrameException;
 import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.MethodParameterMirror;
-import mono.debugger.StackFrameMirror;
 import mono.debugger.ThrowValueException;
 import mono.debugger.TypeMirror;
 import mono.debugger.VMDisconnectedException;
@@ -45,9 +46,9 @@ import mono.debugger.util.ImmutablePair;
 public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirrorNode
 {
 	private final MethodParameterMirror myParameter;
-	private final StackFrameMirror myFrame;
+	private final DotNetStackFrameMirrorProxy myFrame;
 
-	public DotNetMethodParameterMirrorNode(DotNetDebugContext debuggerContext, MethodParameterMirror parameter, StackFrameMirror frame)
+	public DotNetMethodParameterMirrorNode(DotNetDebugContext debuggerContext, MethodParameterMirror parameter, DotNetStackFrameMirrorProxy frame)
 	{
 		super(debuggerContext, parameter.name(), frame.thread());
 		myParameter = parameter;
@@ -55,6 +56,7 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 	}
 
 	@Override
+	@RequiredDispatchThread
 	public void computeSourcePosition(@NotNull XNavigatable navigatable)
 	{
 		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebugContext, myFrame);

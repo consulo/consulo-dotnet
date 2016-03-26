@@ -20,12 +20,12 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
+import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import mono.debugger.StackFrameMirror;
 
 /**
  * @author VISTALL
@@ -35,9 +35,9 @@ public class DotNetSourcePositionUtil
 {
 	@Nullable
 	@RequiredReadAction
-	public static PsiElement resolveTargetPsiElement(DotNetDebugContext context, StackFrameMirror myFrame)
+	public static PsiElement resolveTargetPsiElement(DotNetDebugContext context, DotNetStackFrameMirrorProxy frameMirrorProxy)
 	{
-		String sourcePath = myFrame.location().sourcePath();
+		String sourcePath = frameMirrorProxy.location().sourcePath();
 		if(sourcePath == null)
 		{
 			return null;
@@ -52,8 +52,8 @@ public class DotNetSourcePositionUtil
 		{
 			return null;
 		}
-		int line = myFrame.location().lineNumber() - 1;
-		int column = myFrame.location().columnNumber();
+		int line = frameMirrorProxy.location().lineNumber() - 1;
+		int column = frameMirrorProxy.location().columnNumber();
 		return DotNetDebuggerUtil.findPsiElement(file, line, column);
 	}
 }

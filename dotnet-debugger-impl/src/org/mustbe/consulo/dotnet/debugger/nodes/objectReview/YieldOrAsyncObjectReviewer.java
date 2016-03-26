@@ -22,6 +22,7 @@ import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
+import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.ContainerUtil;
@@ -29,7 +30,6 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import mono.debugger.FieldMirror;
 import mono.debugger.InvalidObjectException;
 import mono.debugger.ObjectValueMirror;
-import mono.debugger.StackFrameMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.Value;
 
@@ -42,12 +42,12 @@ public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 	@Override
 	public boolean reviewObject(@NotNull final DotNetDebugContext debugContext,
 			@Nullable final Value thisObject,
-			@NotNull final StackFrameMirror stackFrameMirror,
+			@NotNull final DotNetStackFrameMirrorProxy stackFrameMirror,
 			@NotNull final XValueChildrenList childrenList)
 	{
 		if(thisObject instanceof ObjectValueMirror)
 		{
-			TypeMirror type = null;
+			TypeMirror type;
 			try
 			{
 				type = thisObject.type();
@@ -83,8 +83,7 @@ public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 
 				if(thisFieldMirror != null)
 				{
-					childrenList.add(new DotNetThisAsObjectValueMirrorNode(debugContext, stackFrameMirror.thread(), parentType,
-							new Getter<ObjectValueMirror>()
+					childrenList.add(new DotNetThisAsObjectValueMirrorNode(debugContext, stackFrameMirror.thread(), parentType, new Getter<ObjectValueMirror>()
 					{
 						@Nullable
 						@Override
@@ -102,8 +101,7 @@ public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 					{
 						continue;
 					}
-					childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, field, name, stackFrameMirror.thread(),
-							(ObjectValueMirror) thisObject));
+					childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, field, name, stackFrameMirror.thread(), (ObjectValueMirror) thisObject));
 				}
 				return true;
 			}

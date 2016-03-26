@@ -25,6 +25,7 @@ import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxyImpl;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
@@ -92,7 +93,7 @@ public class DotNetExecutionStack extends XExecutionStack
 			{
 				return null;
 			}
-			return myTopFrame = new DotNetStackFrame(myDebuggerContext, 0, frame);
+			return myTopFrame = new DotNetStackFrame(myDebuggerContext, new DotNetStackFrameMirrorProxyImpl(frame, 0));
 		}
 		finally
 		{
@@ -121,7 +122,7 @@ public class DotNetExecutionStack extends XExecutionStack
 		{
 			StackFrameMirror stackFrameMirror = frames.get(j);
 
-			DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, j, stackFrameMirror);
+			DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, new DotNetStackFrameMirrorProxyImpl(stackFrameMirror, j));
 
 			if(j == 0)
 			{

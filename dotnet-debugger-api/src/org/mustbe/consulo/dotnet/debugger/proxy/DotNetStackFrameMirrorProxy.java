@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,33 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes.objectReview;
+package org.mustbe.consulo.dotnet.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
-import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
-import com.intellij.xdebugger.frame.XValueChildrenList;
+import mono.debugger.LocalVariableOrParameterMirror;
+import mono.debugger.Location;
+import mono.debugger.ThreadMirror;
 import mono.debugger.Value;
+import mono.debugger.util.ImmutablePair;
 
 /**
  * @author VISTALL
- * @since 22.07.2015
+ * @since 26.03.2016
  */
-public interface ObjectReviewer
+public interface DotNetStackFrameMirrorProxy
 {
-	boolean reviewObject(@NotNull DotNetDebugContext debugContext, @Nullable Value thisObject, @NotNull DotNetStackFrameMirrorProxy frameMirrorProxy, @NotNull XValueChildrenList childrenList);
+	@NotNull
+	Value thisObject();
+
+	@NotNull
+	ThreadMirror thread();
+
+	@NotNull
+	Location location();
+
+	@Nullable
+	Value<?> localOrParameterValue(LocalVariableOrParameterMirror mirror);
+
+	void setLocalOrParameterValues(@NotNull ImmutablePair<LocalVariableOrParameterMirror, Value<?>>... pairs);
 }

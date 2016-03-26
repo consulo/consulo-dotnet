@@ -19,7 +19,6 @@ package org.mustbe.consulo.dotnet.debugger;
 import gnu.trove.THashSet;
 
 import java.io.File;
-import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,11 +30,12 @@ import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBre
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;
+import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsStructValueMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.ObjectReviewer;
 import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldOrAsyncObjectReviewer;
+import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
@@ -77,21 +77,19 @@ public class DotNetStackFrame extends XStackFrame
 	};
 
 	private final DotNetDebugContext myDebuggerContext;
-	private final int myIndex;
-	private final StackFrameMirror myFrame;
+	private final DotNetStackFrameMirrorProxy myFrameProxy;
 
-	public DotNetStackFrame(DotNetDebugContext debuggerContext, int index, StackFrameMirror frame)
+	public DotNetStackFrame(DotNetDebugContext debuggerContext, DotNetStackFrameMirrorProxy frameProxy)
 	{
 		myDebuggerContext = debuggerContext;
-		myIndex = index;
-		myFrame = frame;
+		myFrameProxy = frameProxy;
 	}
 
 	@Nullable
 	@Override
 	public XSourcePosition getSourcePosition()
 	{
-		String fileName = myFrame.location().sourcePath();
+		String fileName = myFrameProxy.location().sourcePath();
 		if(fileName == null)
 		{
 			return null;
@@ -103,7 +101,7 @@ public class DotNetStackFrame extends XStackFrame
 		}
 
 		XLineBreakpoint<?> breakpoint = myDebuggerContext.getBreakpoint();
-		XSourcePosition originalPosition = XDebuggerUtil.getInstance().createPosition(fileByPath, myFrame.location().lineNumber() - 1);
+		XSourcePosition originalPosition = XDebuggerUtil.getInstance().createPosition(fileByPath, myFrameProxy.location().lineNumber() - 1);
 		if(originalPosition == null)
 		{
 			return null;
@@ -114,7 +112,7 @@ public class DotNetStackFrame extends XStackFrame
 			final Integer executableChildrenAtLineIndex = properties.getExecutableChildrenAtLineIndex();
 			if(executableChildrenAtLineIndex != null && executableChildrenAtLineIndex > -1)
 			{
-				final MethodMirror method = myFrame.location().method();
+				final MethodMirror method = myFrameProxy.location().method();
 				if(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(method) != null)
 				{
 					PsiElement executableElement = ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>()
@@ -141,7 +139,7 @@ public class DotNetStackFrame extends XStackFrame
 	@Override
 	public Object getEqualityObject()
 	{
-		return myFrame.location().method().id();
+		return myFrameProxy.location().method().id();
 	}
 
 	@Nullable
@@ -164,7 +162,7 @@ public class DotNetStackFrame extends XStackFrame
 				{
 					if(provider.getEditorLanguage() == expression.getLanguage())
 					{
-						provider.evaluate(getRefreshedOrCurrentFrame(), myDebuggerContext, expression.getExpression(), null, callback, expressionPosition);
+						provider.evaluate(myFrameProxy, myDebuggerContext, expression.getExpression(), null, callback, expressionPosition);
 					}
 				}
 			}
@@ -181,7 +179,7 @@ public class DotNetStackFrame extends XStackFrame
 	@Override
 	public void customizePresentation(ColoredTextContainer component)
 	{
-		Location location = myFrame.location();
+		Location location = myFrameProxy.location();
 		MethodMirror method = location.method();
 
 		String name = method.name();
@@ -236,18 +234,17 @@ public class DotNetStackFrame extends XStackFrame
 	@RequiredReadAction
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		StackFrameMirror frame = getRefreshedOrCurrentFrame();
-		MethodMirror method = frame.location().method();
+		MethodMirror method = myFrameProxy.location().method();
 
 		final XValueChildrenList childrenList = new XValueChildrenList();
 
 		try
 		{
-			final Value value = frame.thisObject();
+			final Value value = myFrameProxy.thisObject();
 
 			for(ObjectReviewer objectReviewer : ourObjectReviewers)
 			{
-				if(objectReviewer.reviewObject(myDebuggerContext, value, myFrame, childrenList))
+				if(objectReviewer.reviewObject(myDebuggerContext, value, myFrameProxy, childrenList))
 				{
 					node.addChildren(childrenList, true);
 					return;
@@ -259,22 +256,22 @@ public class DotNetStackFrame extends XStackFrame
 				TypeMirror type = value.type();
 				assert type != null;
 
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, frame.thread(), type);
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrameProxy.thread(), type);
 
-				childrenList.add(new DotNetThisAsObjectValueMirrorNode(myDebuggerContext, frame.thread(), type, (ObjectValueMirror) value));
+				childrenList.add(new DotNetThisAsObjectValueMirrorNode(myDebuggerContext, myFrameProxy.thread(), type, (ObjectValueMirror) value));
 			}
 			else if(value instanceof StructValueMirror)
 			{
 				TypeMirror type = value.type();
 				assert type != null;
 
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, frame.thread(), type);
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrameProxy.thread(), type);
 
-				childrenList.add(new DotNetThisAsStructValueMirrorNode(myDebuggerContext, frame.thread(), type, (StructValueMirror) value));
+				childrenList.add(new DotNetThisAsStructValueMirrorNode(myDebuggerContext, myFrameProxy.thread(), type, (StructValueMirror) value));
 			}
 			else
 			{
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, frame.thread(), frame.location().declaringType());
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrameProxy.thread(), myFrameProxy.location().declaringType());
 			}
 		}
 		catch(AbsentInformationException e)
@@ -296,7 +293,7 @@ public class DotNetStackFrame extends XStackFrame
 
 		for(MethodParameterMirror parameter : parameters)
 		{
-			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(myDebuggerContext, parameter, frame);
+			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(myDebuggerContext, parameter, myFrameProxy);
 
 			childrenList.add(parameterMirrorNode);
 		}
@@ -304,7 +301,7 @@ public class DotNetStackFrame extends XStackFrame
 		Set<Object> visitedVariables = new THashSet<Object>();
 		try
 		{
-			LocalVariableMirror[] locals = method.locals(frame.location().codeIndex());
+			LocalVariableMirror[] locals = method.locals(myFrameProxy.location().codeIndex());
 			for(LocalVariableMirror local : locals)
 			{
 				if(StringUtil.isEmpty(local.name()))
@@ -312,7 +309,7 @@ public class DotNetStackFrame extends XStackFrame
 					continue;
 				}
 				visitedVariables.add(local);
-				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(myDebuggerContext, local, frame);
+				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(myDebuggerContext, local, myFrameProxy);
 
 				childrenList.add(localVariableMirrorNode);
 			}
@@ -323,7 +320,7 @@ public class DotNetStackFrame extends XStackFrame
 
 		if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())
 		{
-			PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, frame);
+			PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
 			if(psiElement != null)
 			{
 				final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<DotNetReferenceExpression>();
@@ -365,7 +362,7 @@ public class DotNetStackFrame extends XStackFrame
 
 							for(DotNetReferenceExpression referenceExpression : referenceExpressions)
 							{
-								provider.evaluate(frame, myDebuggerContext, referenceExpression, visitedVariables, callback);
+								provider.evaluate(myFrameProxy, myDebuggerContext, referenceExpression, visitedVariables, callback);
 							}
 						}
 					}
@@ -374,19 +371,5 @@ public class DotNetStackFrame extends XStackFrame
 		}
 
 		node.addChildren(childrenList, true);
-	}
-
-	@NotNull
-	protected StackFrameMirror getRefreshedOrCurrentFrame()
-	{
-		try
-		{
-			List<StackFrameMirror> frames = myFrame.thread().frames();
-			return frames.get(myIndex);
-		}
-		catch(Exception e)
-		{
-			return myFrame;
-		}
 	}
 }

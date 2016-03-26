@@ -32,6 +32,7 @@ import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetBreakpointUtil;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxyImpl;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.configurations.RunProfile;
@@ -407,7 +408,8 @@ public class DotNetDebugThread extends Thread
 							return null;
 						}
 						final Ref<XValue> valueRef = Ref.create();
-						provider.evaluate(frames.get(0), debugContext, conditionExpression.getExpression(), elementAt, new XDebuggerEvaluator.XEvaluationCallback()
+						provider.evaluate(new DotNetStackFrameMirrorProxyImpl(frames.get(0), 0), debugContext, conditionExpression.getExpression(), elementAt,
+								new XDebuggerEvaluator.XEvaluationCallback()
 						{
 							@Override
 							public void evaluated(@NotNull XValue result)
