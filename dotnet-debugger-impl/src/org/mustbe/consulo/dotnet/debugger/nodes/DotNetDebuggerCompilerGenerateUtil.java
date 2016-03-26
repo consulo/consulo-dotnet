@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.text.StringUtil;
 import mono.debugger.MethodMirror;
 import mono.debugger.TypeMirror;
 
@@ -53,29 +52,42 @@ public class DotNetDebuggerCompilerGenerateUtil
 
 	public static boolean isAsyncLambdaWrapper(@NotNull TypeMirror typeMirror)
 	{
-		return typeMirror.isNested() && (AsyncLambdaFirstWrapperMono.matcher(typeMirror.name()).matches() || AsyncLambdaFirstWrapperMS.matcher(typeMirror
-				.name()).matches());
+		return typeMirror.isNested() && (AsyncLambdaFirstWrapperMono.matcher(typeMirror.name()).matches() || AsyncLambdaFirstWrapperMS.matcher(typeMirror.name()).matches());
 	}
 
 	public static boolean isYieldOrAsyncNestedType(@NotNull TypeMirror typeMirror)
 	{
-		return typeMirror.isNested() && (YieldNestedTypePattern.matcher(typeMirror.name()).matches() || AsyncNestedTypePattern.matcher(typeMirror
-				.name()).matches());
+		return typeMirror.isNested() && (YieldNestedTypePattern.matcher(typeMirror.name()).matches() || AsyncNestedTypePattern.matcher(typeMirror.name()).matches());
+	}
+
+	public static boolean isYieldOrAsyncThisField(@NotNull String fieldName)
+	{
+		return "$this".equals(fieldName) || "<>f__this".equals(fieldName);
+	}
+
+	public static boolean needSkipVariableByName(@NotNull String name)
+	{
+		if(name.isEmpty())
+		{
+			return true;
+		}
+
+		char firstChar = name.charAt(0);
+		return firstChar == '<' || firstChar == '$';
 	}
 
 	@Nullable
 	public static String extractNotGeneratedName(@NotNull String name)
 	{
-		// generated member
-		if(StringUtil.startsWithChar(name, '$'))
-		{
-			return null;
-		}
-
 		Matcher matcher = SomeReferenceToOriginalPattern.matcher(name);
 		if(matcher.matches())
 		{
 			return matcher.group(1);
+		}
+
+		if(needSkipVariableByName(name))
+		{
+			return null;
 		}
 		return name;
 	}

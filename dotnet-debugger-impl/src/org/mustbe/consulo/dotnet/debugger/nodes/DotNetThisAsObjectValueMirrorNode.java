@@ -158,6 +158,11 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 				continue;
 			}
 
+			if(DotNetDebuggerCompilerGenerateUtil.needSkipVariableByName(fieldMirror.name()))
+			{
+				continue;
+			}
+
 			if(!processor.process(fieldMirror))
 			{
 				return false;

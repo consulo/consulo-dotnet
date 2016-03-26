@@ -77,7 +77,8 @@ public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 					@Override
 					public boolean value(FieldMirror fieldMirror)
 					{
-						return "$this".equals(fieldMirror.name());
+						String name = fieldMirror.name();
+						return DotNetDebuggerCompilerGenerateUtil.isYieldOrAsyncThisField(name);
 					}
 				});
 
