@@ -293,8 +293,8 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	{
 		final Value<?> valueOfVariable = getValueOfVariableSafe();
 		return valueOfVariable instanceof ObjectValueMirror ||
-				valueOfVariable instanceof ArrayValueMirror ||
-				valueOfVariable instanceof StringValueMirror ||
+				valueOfVariable instanceof ArrayValueMirror && ((ArrayValueMirror) valueOfVariable).length() != 0||
+				valueOfVariable instanceof StringValueMirror && !((StringValueMirror) valueOfVariable).value().isEmpty() ||
 				valueOfVariable instanceof StructValueMirror && ((StructValueMirror) valueOfVariable).fieldValues().length != 0;
 	}
 
