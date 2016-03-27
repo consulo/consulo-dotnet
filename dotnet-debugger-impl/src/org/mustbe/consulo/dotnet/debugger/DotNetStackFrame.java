@@ -28,13 +28,10 @@ import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetSourcePositionImpl;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsStructValueMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.ObjectReviewer;
-import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldOrAsyncObjectReviewer;
+import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.DefaultStackFrameComputer;
+import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.StackFrameComputer;
+import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldOrAsyncStackFrameComputer;
 import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
@@ -43,7 +40,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -64,7 +60,12 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
-import mono.debugger.*;
+import mono.debugger.AbsentInformationException;
+import mono.debugger.InvalidObjectException;
+import mono.debugger.InvalidStackFrameException;
+import mono.debugger.Location;
+import mono.debugger.MethodMirror;
+import mono.debugger.Value;
 
 /**
  * @author VISTALL
@@ -72,8 +73,9 @@ import mono.debugger.*;
  */
 public class DotNetStackFrame extends XStackFrame
 {
-	private static final ObjectReviewer[] ourObjectReviewers = new ObjectReviewer[]{
-			new YieldOrAsyncObjectReviewer()
+	private static final StackFrameComputer[] ourStackFrameComputers = new StackFrameComputer[]{
+			new YieldOrAsyncStackFrameComputer(),
+			new DefaultStackFrameComputer()
 	};
 
 	private final DotNetDebugContext myDebuggerContext;
@@ -234,44 +236,18 @@ public class DotNetStackFrame extends XStackFrame
 	@RequiredReadAction
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		MethodMirror method = myFrameProxy.location().method();
-
 		final XValueChildrenList childrenList = new XValueChildrenList();
-
+		final Set<Object> visitedVariables = new THashSet<Object>();
 		try
 		{
 			final Value value = myFrameProxy.thisObject();
 
-			for(ObjectReviewer objectReviewer : ourObjectReviewers)
+			for(StackFrameComputer objectReviewer : ourStackFrameComputers)
 			{
-				if(objectReviewer.reviewObject(myDebuggerContext, value, myFrameProxy, childrenList))
+				if(objectReviewer.computeStackFrame(myDebuggerContext, value, myFrameProxy, visitedVariables, childrenList))
 				{
-					node.addChildren(childrenList, true);
-					return;
+					break;
 				}
-			}
-
-			if(value instanceof ObjectValueMirror)
-			{
-				TypeMirror type = value.type();
-				assert type != null;
-
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrameProxy.thread(), type);
-
-				childrenList.add(new DotNetThisAsObjectValueMirrorNode(myDebuggerContext, myFrameProxy.thread(), type, (ObjectValueMirror) value));
-			}
-			else if(value instanceof StructValueMirror)
-			{
-				TypeMirror type = value.type();
-				assert type != null;
-
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrameProxy.thread(), type);
-
-				childrenList.add(new DotNetThisAsStructValueMirrorNode(myDebuggerContext, myFrameProxy.thread(), type, (StructValueMirror) value));
-			}
-			else
-			{
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, myDebuggerContext, myFrameProxy.thread(), myFrameProxy.location().declaringType());
 			}
 		}
 		catch(AbsentInformationException e)
@@ -287,35 +263,6 @@ public class DotNetStackFrame extends XStackFrame
 		{
 			node.setErrorMessage("Stack frame info is not valid");
 			return;
-		}
-
-		MethodParameterMirror[] parameters = method.parameters();
-
-		for(MethodParameterMirror parameter : parameters)
-		{
-			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(myDebuggerContext, parameter, myFrameProxy);
-
-			childrenList.add(parameterMirrorNode);
-		}
-
-		Set<Object> visitedVariables = new THashSet<Object>();
-		try
-		{
-			LocalVariableMirror[] locals = method.locals(myFrameProxy.location().codeIndex());
-			for(LocalVariableMirror local : locals)
-			{
-				if(StringUtil.isEmpty(local.name()))
-				{
-					continue;
-				}
-				visitedVariables.add(local);
-				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(myDebuggerContext, local, myFrameProxy);
-
-				childrenList.add(localVariableMirrorNode);
-			}
-		}
-		catch(IllegalArgumentException ignored)
-		{
 		}
 
 		if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())

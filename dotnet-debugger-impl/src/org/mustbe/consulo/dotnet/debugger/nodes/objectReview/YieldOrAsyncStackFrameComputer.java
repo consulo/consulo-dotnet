@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.debugger.nodes.objectReview;
 
+import java.util.Set;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
@@ -37,12 +39,13 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 22.07.2015
  */
-public class YieldOrAsyncObjectReviewer implements ObjectReviewer
+public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 {
 	@Override
-	public boolean reviewObject(@NotNull final DotNetDebugContext debugContext,
+	public boolean computeStackFrame(@NotNull final DotNetDebugContext debugContext,
 			@Nullable final Value thisObject,
 			@NotNull final DotNetStackFrameMirrorProxy stackFrameMirror,
+			@NotNull Set<Object> visitedVariables,
 			@NotNull final XValueChildrenList childrenList)
 	{
 		if(thisObject instanceof ObjectValueMirror)
@@ -102,6 +105,9 @@ public class YieldOrAsyncObjectReviewer implements ObjectReviewer
 					{
 						continue;
 					}
+
+					visitedVariables.add(field);
+
 					childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, field, name, stackFrameMirror.thread(), (ObjectValueMirror) thisObject));
 				}
 				return true;

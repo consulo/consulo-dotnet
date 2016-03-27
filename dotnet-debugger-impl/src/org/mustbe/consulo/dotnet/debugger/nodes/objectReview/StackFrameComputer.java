@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.debugger.nodes.objectReview;
 
+import java.util.Set;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
@@ -27,7 +29,11 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 22.07.2015
  */
-public interface ObjectReviewer
+public interface StackFrameComputer
 {
-	boolean reviewObject(@NotNull DotNetDebugContext debugContext, @Nullable Value thisObject, @NotNull DotNetStackFrameMirrorProxy frameMirrorProxy, @NotNull XValueChildrenList childrenList);
+	boolean computeStackFrame(@NotNull DotNetDebugContext debugContext,
+			@Nullable Value thisObject,
+			@NotNull DotNetStackFrameMirrorProxy frameMirrorProxy,
+			@NotNull Set<Object> visitedVariables,
+			@NotNull XValueChildrenList childrenList);
 }
