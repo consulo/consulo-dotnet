@@ -333,6 +333,9 @@ public class DotNetValuePresentation extends XValuePresentation
 		catch(InvalidStackFrameException ignored)
 		{
 		}
+		catch(NotSuspendedException ignored)
+		{
+		}
 		catch(Exception e)
 		{
 			LOGGER.error(e);
