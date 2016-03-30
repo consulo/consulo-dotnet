@@ -37,6 +37,7 @@ import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
@@ -205,6 +206,20 @@ public class DotNetNamespaceCacheManager implements Disposable
 			}
 		});
 
+		connect.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener()
+		{
+			@Override
+			public void enteredDumbMode()
+			{
+			}
+
+			@Override
+			public void exitDumbMode()
+			{
+				clear();
+			}
+		});
+
 		connect.subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener()
 		{
 			@Override
@@ -258,6 +273,11 @@ public class DotNetNamespaceCacheManager implements Disposable
 	@RequiredReadAction
 	private static DotNetNamespaceAsElement computeNamespaceImpl(Project project, DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
 	{
+		if(DumbService.isDumb(project))
+		{
+			return null;
+		}
+
 		List<DotNetNamespaceAsElement> namespaceAsElements = new SmartList<DotNetNamespaceAsElement>();
 		for(DotNetPsiSearcher searcher : searchers)
 		{
