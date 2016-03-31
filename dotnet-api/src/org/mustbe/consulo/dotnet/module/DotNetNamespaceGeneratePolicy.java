@@ -4,6 +4,7 @@ import org.consulo.psi.PsiPackage;
 import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
@@ -17,14 +18,14 @@ import com.intellij.psi.PsiDirectory;
  * @author VISTALL
  * @since 26.10.2015
  */
-public interface DotNetNamespaceGeneratePolicy
+public abstract class DotNetNamespaceGeneratePolicy
 {
-	DotNetNamespaceGeneratePolicy WITH_SOURCE_ROOTS = new DotNetNamespaceGeneratePolicy()
+	public static final DotNetNamespaceGeneratePolicy WITH_SOURCE_ROOTS = new DotNetNamespaceGeneratePolicy()
 	{
 		@RequiredReadAction
 		@Nullable
 		@Override
-		public String calculateNamespace(@NotNull PsiDirectory directory)
+		public String calculateDirtyNamespace(@NotNull PsiDirectory directory)
 		{
 			PsiPackage aPackage = PsiPackageManager.getInstance(directory.getProject()).findPackage(directory, DotNetModuleExtension.class);
 			String namespace = null;
@@ -36,12 +37,12 @@ public interface DotNetNamespaceGeneratePolicy
 		}
 	};
 
-	DotNetNamespaceGeneratePolicy DEFAULT = new DotNetNamespaceGeneratePolicy()
+	public static final DotNetNamespaceGeneratePolicy DEFAULT = new DotNetNamespaceGeneratePolicy()
 	{
 		@RequiredReadAction
 		@Nullable
 		@Override
-		public String calculateNamespace(@NotNull PsiDirectory directory)
+		public String calculateDirtyNamespace(@NotNull PsiDirectory directory)
 		{
 			String namespace = null;
 			Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(directory);
@@ -75,11 +76,29 @@ public interface DotNetNamespaceGeneratePolicy
 					}
 				}
 			}
-			return namespace == null ? null : StringUtil.replaceChar(namespace, ' ', '_');
+			return namespace;
 		}
 	};
 
 	@Nullable
 	@RequiredReadAction
-	String calculateNamespace(@NotNull PsiDirectory directory);
+	@Exported
+	public String calculateNamespace(@NotNull PsiDirectory directory)
+	{
+		String namespace = calculateDirtyNamespace(directory);
+		if(StringUtil.isEmpty(namespace))
+		{
+			return null;
+		}
+
+		namespace = StringUtil.replaceChar(namespace, ' ', '_');
+		if(Character.isDigit(namespace.charAt(0)))
+		{
+			namespace = '_' + namespace;
+		}
+		return namespace;
+	}
+
+	@Nullable
+	protected abstract String calculateDirtyNamespace(@NotNull PsiDirectory directory);
 }
