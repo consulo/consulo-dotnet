@@ -29,6 +29,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
@@ -58,6 +59,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -164,7 +166,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		int i = -1;
 		for(PsiElement allExecutableChild : allExecutableChildren)
 		{
-			variants.add(new SingleExecutableVariant(allExecutableChild, i ++));
+			variants.add(new SingleExecutableVariant(allExecutableChild, i++));
 		}
 		return variants;
 	}
@@ -258,9 +260,22 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		}
 
 		@Override
+		@RequiredDispatchThread
 		public String getText()
 		{
-			return StringUtil.shortenTextWithEllipsis(myExecutableChild.getText(), 100, 0);
+			String text = null;
+			if(myExecutableChild instanceof PsiNameIdentifierOwner)
+			{
+				int textOffset = myExecutableChild.getTextOffset();
+				TextRange textRange = new TextRange(textOffset, myExecutableChild.getTextRange().getEndOffset());
+
+				text = textRange.substring(myExecutableChild.getContainingFile().getText());
+			}
+			else
+			{
+				text = myExecutableChild.getText();
+			}
+			return StringUtil.shortenTextWithEllipsis(text, 100, 0);
 		}
 
 		@Nullable
@@ -287,10 +302,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		}
 	}
 
-	public boolean createRequest(@NotNull XDebugSession debugSession,
-			@NotNull DotNetVirtualMachine virtualMachine,
-			@NotNull XLineBreakpoint breakpoint,
-			@Nullable TypeMirror typeMirror)
+	public boolean createRequest(@NotNull XDebugSession debugSession, @NotNull DotNetVirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint, @Nullable TypeMirror typeMirror)
 	{
 		try
 		{
@@ -304,8 +316,8 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		catch(TypeMirrorUnloadedException e)
 		{
 			debugSession.getConsoleView().print(e.getFullName(), ConsoleViewContentType.ERROR_OUTPUT);
-			debugSession.getConsoleView().print("You can fix this error - restart debug. If you can repeat this error, " +
-					"please report it here 'https://github.com/consulo/consulo-dotnet/issues'", ConsoleViewContentType.ERROR_OUTPUT);
+			debugSession.getConsoleView().print("You can fix this error - restart debug. If you can repeat this error, " + "please report it here 'https://github.com/consulo/consulo-dotnet/issues'",
+					ConsoleViewContentType.ERROR_OUTPUT);
 		}
 		return false;
 	}
@@ -534,10 +546,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 	}
 
 
-	private void collectLocations(DotNetVirtualMachine virtualMachine,
-			XLineBreakpoint<?> lineBreakpoint,
-			Map<MethodMirror, Location> methods,
-			MethodMirror methodMirror)
+	private void collectLocations(DotNetVirtualMachine virtualMachine, XLineBreakpoint<?> lineBreakpoint, Map<MethodMirror, Location> methods, MethodMirror methodMirror)
 	{
 		for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
 		{
