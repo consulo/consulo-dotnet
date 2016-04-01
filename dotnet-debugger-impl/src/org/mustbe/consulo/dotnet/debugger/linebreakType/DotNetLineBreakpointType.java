@@ -266,9 +266,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			String text = null;
 			if(myExecutableChild instanceof PsiNameIdentifierOwner)
 			{
-				int textOffset = myExecutableChild.getTextOffset();
-				TextRange textRange = new TextRange(textOffset, myExecutableChild.getTextRange().getEndOffset());
-
+				TextRange textRange = new TextRange(myExecutableChild.getTextOffset(), myExecutableChild.getTextRange().getEndOffset());
 				text = textRange.substring(myExecutableChild.getContainingFile().getText());
 			}
 			else
@@ -280,6 +278,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 		@Nullable
 		@Override
+		@RequiredDispatchThread
 		public Icon getIcon()
 		{
 			return IconDescriptorUpdaters.getIcon(myExecutableChild, 0);
@@ -287,6 +286,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 		@Nullable
 		@Override
+		@RequiredDispatchThread
 		public TextRange getHighlightRange()
 		{
 			return myExecutableChild.getTextRange();
