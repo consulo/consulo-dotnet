@@ -134,5 +134,7 @@
 		<programRunner implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageProgramRunner"/>
 
 		<sdkType implementation="org.mustbe.consulo.dotnet.sdk.RoslynBundleType"/>
+
+		<testFinder implementation="org.mustbe.consulo.dotnet.testIntegration.DotNetTestFinder" />
 	</extensions>
 </idea-plugin>
