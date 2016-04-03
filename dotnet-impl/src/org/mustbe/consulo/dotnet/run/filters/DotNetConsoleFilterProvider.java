@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.run.filters;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import org.mustbe.consulo.module.extension.ModuleExtensionHelper;
 import com.intellij.execution.filters.ConsoleFilterProviderEx;
 import com.intellij.execution.filters.Filter;
@@ -33,26 +33,12 @@ public class DotNetConsoleFilterProvider implements ConsoleFilterProviderEx
 	@Override
 	public Filter[] getDefaultFilters(@NotNull Project project, @NotNull GlobalSearchScope searchScope)
 	{
-		if(!ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetModuleExtension.class))
+		if(!ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetSimpleModuleExtension.class))
 		{
 			return Filter.EMPTY_ARRAY;
 		}
-		/*
-Unhandled Exception:
-System.IndexOutOfRangeException: Array index is out of range.
-  at Program.inner (System.String[] arg) [0x00001] in C:/Users/VISTALL/ConsuloProjects/untitled30/innerModule2/Program.cs:12
-  at Program.Main (System.String[] arg) [0x00001] in C:/Users/VISTALL/ConsuloProjects/untitled30/innerModule2/Program.cs:7
-[ERROR] FATAL UNHANDLED EXCEPTION: System.IndexOutOfRangeException: Array index is out of range.
-  at Program.inner (System.String[] arg) [0x00001] in C:/Users/VISTALL/ConsuloProjects/untitled30/innerModule2/Program.cs:12
-  at Program.Main (System.String[] arg) [0x00001] in C:/Users/VISTALL/ConsuloProjects/untitled30/innerModule2/Program.cs:7
 
-
-Unhandled Exception: System.IndexOutOfRangeException: Index was outside the bounds of the array.
-   at Program.inner(String[] arg) in c:/Users/VISTALL/ConsuloProjects/untitled30/innerModule2/Program.cs:line 15
-   at Program.Main(String[] arg) in c:/Users/VISTALL/ConsuloProjects/untitled30/innerModule2/Program.cs:line 10
-
-		 */
-		return new Filter[0];
+		return new Filter[]{new DotNetExceptionFilter(project, searchScope)};
 	}
 
 	@NotNull
