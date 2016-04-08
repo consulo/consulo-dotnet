@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -41,6 +41,7 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
@@ -67,7 +68,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
-import com.intellij.xdebugger.impl.settings.XDebuggerSettingsManager;
+import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import mono.debugger.*;
@@ -208,13 +209,16 @@ public class DotNetDebugThread extends Thread
 		TypeLoadRequest typeLoad = virtualMachine.eventRequestManager().createTypeLoad();
 		if(virtualMachine.isAtLeastVersion(2, 9))
 		{
-			Set<String> files = new HashSet<String>();
+			Set<String> types = new LinkedHashSet<String>();
 			for(XLineBreakpoint<?> breakpoint : breakpoints)
 			{
-				files.add(breakpoint.getPresentableFilePath());
+				collectTypeNames(breakpoint, types);
 			}
 
-			typeLoad.addSourceFileFilter(ArrayUtil.toStringArray(files));
+			if(!types.isEmpty())
+			{
+				typeLoad.addTypeNameFilter(ArrayUtil.toStringArray(types));
+			}
 		}
 		typeLoad.enable();
 
@@ -342,7 +346,7 @@ public class DotNetDebugThread extends Thread
 									XDebugSessionTab sessionTab = ((XDebugSessionImpl) mySession).getSessionTab();
 									if(sessionTab != null)
 									{
-										if(XDebuggerSettingsManager.getInstanceImpl().getGeneralSettings().isShowDebuggerOnBreakpoint())
+										if(XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isShowDebuggerOnBreakpoint())
 										{
 											sessionTab.toFront(true, null);
 										}
@@ -366,6 +370,51 @@ public class DotNetDebugThread extends Thread
 
 			TimeoutUtil.sleep(50);
 		}
+	}
+
+	private void collectTypeNames(@NotNull final XLineBreakpoint<?> breakpoint, @NotNull final Set<String> names)
+	{
+		final Project project = mySession.getProject();
+
+		final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
+		if(fileByUrl == null)
+		{
+			return;
+		}
+
+		final PsiFile file = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>()
+		{
+			@Override
+			public PsiFile compute()
+			{
+				return PsiManager.getInstance(project).findFile(fileByUrl);
+			}
+		});
+
+		if(file == null)
+		{
+			return;
+		}
+
+		ApplicationManager.getApplication().runReadAction(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(file, breakpoint.getLine());
+				if(psiElement == null)
+				{
+					return;
+				}
+				DotNetDebuggerSourceLineResolver resolver = DotNetDebuggerSourceLineResolverEP.INSTANCE.forLanguage(file.getLanguage());
+				assert resolver != null;
+				String s = resolver.resolveParentVmQName(psiElement);
+				if(s != null)
+				{
+					names.add(s);
+				}
+			}
+		});
 	}
 
 	private boolean tryEvaluateBreakpoint(EventSet eventSet, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception

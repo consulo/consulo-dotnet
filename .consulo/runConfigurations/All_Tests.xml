@@ -1,6 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="All Tests" type="#ConsuloTestRunConfigurationType" factoryName="Consulo In Sandbox (Test)" singleton="true" target-type="PACKAGE">
-    <option name="PLUGIN_ID" value="org.mustbe.consulo.dotnet.core" />
     <option name="CLASS_NAME" />
     <option name="PACKAGE_NAME" />
     <option name="VM_PARAMETERS" value="" />

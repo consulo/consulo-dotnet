@@ -19,12 +19,14 @@ package org.mustbe.consulo.dotnet.debugger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
+import mono.debugger.TypeMirror;
 
 /**
  * @author VISTALL
@@ -32,6 +34,23 @@ import com.intellij.psi.PsiWhiteSpace;
  */
 public class DotNetDebuggerUtil
 {
+	@NotNull
+	public static String getVmQName(@NotNull TypeMirror typeMirror)
+	{
+		String fullName = typeMirror.fullName();
+
+		// System.List`1[String]
+		int i = fullName.indexOf('[');
+		if(i != -1)
+		{
+			fullName = fullName.substring(0, i);
+		}
+
+		// change + to / separator
+		fullName = fullName.replace('+', DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_NAME);
+		return fullName;
+	}
+
 	@Nullable
 	@RequiredReadAction
 	public static PsiElement findPsiElement(@NotNull PsiFile file, final int line)

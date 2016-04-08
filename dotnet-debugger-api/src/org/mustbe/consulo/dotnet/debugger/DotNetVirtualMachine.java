@@ -150,7 +150,7 @@ public class DotNetVirtualMachine
 					@Override
 					public boolean value(TypeMirror typeMirror)
 					{
-						return Comparing.equal(typeMirror.qualifiedName(), vmQualifiedName);
+						return Comparing.equal(DotNetDebuggerUtil.getVmQName(typeMirror), vmQualifiedName);
 					}
 				});
 			}

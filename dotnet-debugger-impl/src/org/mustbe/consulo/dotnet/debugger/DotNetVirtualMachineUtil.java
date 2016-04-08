@@ -34,9 +34,8 @@ public class DotNetVirtualMachineUtil
 	@RequiredReadAction
 	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
 	{
-		String qualifiedName = typeMirror.qualifiedName();
 		Project project = debugContext.getProject();
-		return DotNetPsiSearcher.getInstance(project).findTypes(qualifiedName, debugContext.getResolveScope());
+		return DotNetPsiSearcher.getInstance(project).findTypes(DotNetDebuggerUtil.getVmQName(typeMirror), debugContext.getResolveScope());
 	}
 
 	@NotNull

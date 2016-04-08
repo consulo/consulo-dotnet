@@ -86,6 +86,29 @@ import mono.debugger.request.EventRequestManager;
  */
 public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBreakpointProperties>
 {
+	public static class FindLocationResult
+	{
+		public static final FindLocationResult WRONG_TARGET = new FindLocationResult();
+
+		public static final FindLocationResult NO_LOCATIONS = new FindLocationResult();
+
+		private Collection<Location> myLocations = Collections.emptyList();
+
+		@NotNull
+		public static FindLocationResult success(@NotNull Collection<Location> locations)
+		{
+			FindLocationResult findLocationResult = new FindLocationResult();
+			findLocationResult.myLocations = locations;
+			return findLocationResult;
+		}
+
+		@NotNull
+		public Collection<Location> getLocations()
+		{
+			return myLocations;
+		}
+	}
+
 	@NotNull
 	public static DotNetLineBreakpointType getInstance()
 	{
@@ -302,13 +325,13 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		}
 	}
 
-	public boolean createRequest(@NotNull XDebugSession debugSession, @NotNull DotNetVirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint, @Nullable TypeMirror typeMirror)
+	public void createRequest(@NotNull XDebugSession debugSession, @NotNull DotNetVirtualMachine virtualMachine, @NotNull XLineBreakpoint breakpoint, @Nullable TypeMirror typeMirror)
 	{
 		try
 		{
 			virtualMachine.stopBreakpointRequests(breakpoint);
 
-			return createRequestImpl(debugSession.getProject(), virtualMachine, breakpoint, typeMirror);
+			createRequestImpl(debugSession.getProject(), virtualMachine, breakpoint, typeMirror);
 		}
 		catch(VMDisconnectedException ignored)
 		{
@@ -319,37 +342,37 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			debugSession.getConsoleView().print("You can fix this error - restart debug. If you can repeat this error, " + "please report it here 'https://github.com/consulo/consulo-dotnet/issues'",
 					ConsoleViewContentType.ERROR_OUTPUT);
 		}
-		return false;
 	}
 
-	private boolean createRequestImpl(@NotNull Project project,
+	private void createRequestImpl(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException
 	{
-		Collection<Location> locationsImpl = findLocationsImpl(project, virtualMachine, breakpoint, typeMirror);
-		if(!locationsImpl.isEmpty())
+		FindLocationResult result = findLocationsImpl(project, virtualMachine, breakpoint, typeMirror);
+		if(result == FindLocationResult.WRONG_TARGET)
 		{
-			if(breakpoint.getSuspendPolicy() != SuspendPolicy.NONE)
-			{
-				for(Location location : locationsImpl)
-				{
-					EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-					BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
-					breakpointRequest.enable();
+			return;
+		}
 
-					virtualMachine.putRequest(breakpoint, breakpointRequest);
-				}
+		Collection<Location> locations = result.getLocations();
+		if(breakpoint.getSuspendPolicy() != SuspendPolicy.NONE)
+		{
+			for(Location location : locations)
+			{
+				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+				BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
+				breakpointRequest.enable();
+
+				virtualMachine.putRequest(breakpoint, breakpointRequest);
 			}
 		}
 
-		DotNetBreakpointUtil.updateBreakpointPresentation(project, !locationsImpl.isEmpty(), breakpoint);
-
-		return !locationsImpl.isEmpty();
+		DotNetBreakpointUtil.updateBreakpointPresentation(project, !locations.isEmpty(), breakpoint);
 	}
 
 	@NotNull
-	public Collection<Location> findLocationsImpl(@NotNull final Project project,
+	public FindLocationResult findLocationsImpl(@NotNull final Project project,
 			@NotNull final DotNetVirtualMachine virtualMachine,
 			@NotNull final XLineBreakpoint<?> lineBreakpoint,
 			@Nullable final TypeMirror typeMirror) throws TypeMirrorUnloadedException
@@ -357,7 +380,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(lineBreakpoint.getFileUrl());
 		if(fileByUrl == null)
 		{
-			return Collections.emptyList();
+			return FindLocationResult.WRONG_TARGET;
 		}
 
 		final PsiFile file = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>()
@@ -371,7 +394,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 		if(file == null)
 		{
-			return Collections.emptyList();
+			return FindLocationResult.WRONG_TARGET;
 		}
 
 		final Ref<DotNetDebuggerSourceLineResolver> resolverRef = Ref.create();
@@ -395,19 +418,19 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 		if(vmQualifiedName == null)
 		{
-			return Collections.emptyList();
+			return FindLocationResult.WRONG_TARGET;
 		}
 
-		if(typeMirror != null && !Comparing.equal(vmQualifiedName, typeMirror.qualifiedName()))
+		if(typeMirror != null && !Comparing.equal(vmQualifiedName, DotNetDebuggerUtil.getVmQName(typeMirror)))
 		{
-			return Collections.emptyList();
+			return FindLocationResult.WRONG_TARGET;
 		}
 
 		TypeMirror mirror = typeMirror == null ? virtualMachine.findTypeMirror(project, fileByUrl, vmQualifiedName) : typeMirror;
 
 		if(mirror == null)
 		{
-			return Collections.emptyList();
+			return FindLocationResult.NO_LOCATIONS;
 		}
 
 		Map<MethodMirror, Location> methods = new LinkedHashMap<MethodMirror, Location>();
@@ -497,7 +520,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			throw new TypeMirrorUnloadedException(mirror, e);
 		}
 
-		return methods.values();
+		return methods.isEmpty() ? FindLocationResult.NO_LOCATIONS : FindLocationResult.success(methods.values());
 	}
 
 	@RequiredReadAction
