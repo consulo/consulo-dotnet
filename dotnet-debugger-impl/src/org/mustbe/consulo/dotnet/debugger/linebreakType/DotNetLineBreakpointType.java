@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.debugger.linebreakType;
 
+import gnu.trove.TIntHashSet;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -329,8 +331,6 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 	{
 		try
 		{
-			virtualMachine.stopBreakpointRequests(breakpoint);
-
 			createRequestImpl(debugSession.getProject(), virtualMachine, breakpoint, typeMirror);
 		}
 		catch(VMDisconnectedException ignored)
@@ -344,7 +344,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		}
 	}
 
-	private void createRequestImpl(@NotNull Project project,
+	public void createRequestImpl(@NotNull Project project,
 			@NotNull DotNetVirtualMachine virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException
@@ -354,6 +354,8 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		{
 			return;
 		}
+
+		virtualMachine.stopBreakpointRequests(breakpoint);
 
 		Collection<Location> locations = result.getLocations();
 		if(breakpoint.getSuspendPolicy() != SuspendPolicy.NONE)
@@ -571,10 +573,15 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 	private void collectLocations(DotNetVirtualMachine virtualMachine, XLineBreakpoint<?> lineBreakpoint, Map<MethodMirror, Location> methods, MethodMirror methodMirror)
 	{
+		TIntHashSet registeredLines = new TIntHashSet();
 		for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
 		{
 			if(entry.line == (lineBreakpoint.getLine() + 1))
 			{
+				if(!registeredLines.add(entry.line))
+				{
+					continue;
+				}
 				methods.put(methodMirror, new LocationImpl(virtualMachine.getDelegate(), methodMirror, entry.offset));
 			}
 		}
