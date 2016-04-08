@@ -16,7 +16,7 @@
 
 package parsing;
 
-import org.mustbe.consulo.testFramework.ParsingTestCase;
+import consulo.testFramework.ParsingTestCase;
 
 /**
  * @author VISTALL
@@ -26,7 +26,7 @@ public class MsilParsingTest extends ParsingTestCase
 {
 	public MsilParsingTest()
 	{
-		super("parsing", "msil");
+		super("/msil-psi-impl/testData/parsing/", "msil");
 	}
 
 	public void testFieldConstWithValue()
@@ -52,11 +52,5 @@ public class MsilParsingTest extends ParsingTestCase
 	public void testGenericParameterCustomAttribute()
 	{
 		doTest(true);
-	}
-
-	@Override
-	protected String getTestDataPath()
-	{
-		return "/msil-psi-impl/testData";
 	}
 }
