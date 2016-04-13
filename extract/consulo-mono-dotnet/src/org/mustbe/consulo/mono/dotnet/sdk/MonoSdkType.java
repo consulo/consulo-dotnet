@@ -27,6 +27,7 @@ import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.mono.dotnet.MonoDotNetIcons;
 import com.intellij.ide.DataManager;
@@ -50,7 +51,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -63,7 +63,7 @@ public class MonoSdkType extends DotNetSdkType
 	@NotNull
 	public String getExecutable(@NotNull Sdk sdk)
 	{
-		String runFile = null;
+		String runFile;
 		if(SystemInfo.isWindows)
 		{
 			runFile = sdk.getHomePath() + "/../../../bin/mono.exe";
@@ -201,8 +201,8 @@ public class MonoSdkType extends DotNetSdkType
 		else if(SystemInfo.isWindows || SystemInfo.isMac)
 		{
 			FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-			val toSelectPath = getDefaultHomePath();
-			val toSelect = toSelectPath == null ? null : LocalFileSystem.getInstance().findFileByPath(toSelectPath);
+			String toSelectPath = getDefaultHomePath();
+			VirtualFile toSelect = toSelectPath == null ? null : LocalFileSystem.getInstance().findFileByPath(toSelectPath);
 			VirtualFile monoDir = FileChooser.chooseFile(singleFolderDescriptor, null, toSelect);
 			if(monoDir == null)
 			{
@@ -224,7 +224,7 @@ public class MonoSdkType extends DotNetSdkType
 			return;
 		}
 
-		val list = new ArrayList<Pair<String, File>>();
+		List<Pair<String, File>> list = new ArrayList<Pair<String, File>>();
 
 		File[] files = monoLib.listFiles();
 		if(files != null)
@@ -239,15 +239,16 @@ public class MonoSdkType extends DotNetSdkType
 		}
 
 		DefaultActionGroup actionGroup = new DefaultActionGroup();
-		for(val pair : list)
+		for(final Pair<String, File> pair : list)
 		{
 			actionGroup.add(new AnAction(pair.getFirst())
 			{
+				@RequiredDispatchThread
 				@Override
-				public void actionPerformed(AnActionEvent anActionEvent)
+				public void actionPerformed(@NotNull AnActionEvent anActionEvent)
 				{
-					val path = pair.getSecond();
-					val absolutePath = path.getAbsolutePath();
+					File path = pair.getSecond();
+					String absolutePath = path.getAbsolutePath();
 
 					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MonoSdkType.this, absolutePath,
 							SdkTable.getInstance().getAllSdks());
