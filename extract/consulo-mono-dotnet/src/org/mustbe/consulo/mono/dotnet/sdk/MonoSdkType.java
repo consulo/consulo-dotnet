@@ -60,6 +60,11 @@ public class MonoSdkType extends DotNetSdkType
 {
 	public static final String LINUX_COMPILER = "/usr/bin/mcs";
 
+	private static final String[] ourMonoPaths = new String[]{
+			"C:/Program Files/Mono/",
+			"C:/Program Files (x86)/Mono/"
+	};
+
 	@NotNull
 	public String getExecutable(@NotNull Sdk sdk)
 	{
@@ -127,7 +132,15 @@ public class MonoSdkType extends DotNetSdkType
 	{
 		if(SystemInfo.isWindows)
 		{
-			return "C:/Program Files (x86)/Mono/";
+			for(String monoPath : ourMonoPaths)
+			{
+				File file = new File(monoPath);
+				if(file.exists())
+				{
+					return monoPath;
+				}
+			}
+			return ourMonoPaths[0];
 		}
 		if(SystemInfo.isMac)
 		{
@@ -250,8 +263,7 @@ public class MonoSdkType extends DotNetSdkType
 					File path = pair.getSecond();
 					String absolutePath = path.getAbsolutePath();
 
-					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MonoSdkType.this, absolutePath,
-							SdkTable.getInstance().getAllSdks());
+					String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(MonoSdkType.this, absolutePath, SdkTable.getInstance().getAllSdks());
 					SdkImpl sdk = new SdkImpl(uniqueSdkName, MonoSdkType.this);
 					sdk.setVersionString(getVersionString(absolutePath));
 					sdk.setHomePath(absolutePath);
@@ -263,8 +275,7 @@ public class MonoSdkType extends DotNetSdkType
 
 		DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
 
-		ListPopup choose = JBPopupFactory.getInstance().createActionGroupPopup("Choose", actionGroup, dataContext,
-				JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+		ListPopup choose = JBPopupFactory.getInstance().createActionGroupPopup("Choose", actionGroup, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
 
 		choose.showInCenterOf(parentComponent);
 	}
