@@ -33,6 +33,7 @@ import org.mustbe.consulo.msil.lang.stubbing.values.MsiCustomAttributeValue;
 import org.mustbe.consulo.msil.lang.stubbing.values.MsilCustomAttributeEnumValue;
 import org.mustbe.dotnet.asm.STypeSignatureParser;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
+import com.google.common.primitives.Longs;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.PsiElement;
@@ -193,6 +194,10 @@ public class MsilCustomAttributeStubber
 			{
 				return TypeSignature.R8;
 			}
+			else if(elementType == MsilTokens.OBJECT_KEYWORD)
+			{
+				return TypeSignature.OBJECT;
+			}
 		}
 		else if(type instanceof MsilUserTypeImpl)
 		{
@@ -256,10 +261,12 @@ public class MsilCustomAttributeStubber
 		{
 			return new MsiCustomAttributeValue(typeSignature, Float.intBitsToFloat(byteBuffer.getInt()));
 		}
-		/*else if(typeSignature == TypeSignature.R8)
+		else if(typeSignature == TypeSignature.R8)
 		{
-			return new MsiCustomAttributeValue(typeSignature, byteBuffer.getDouble());
-		}  */
+			byte[] bytes = byteBuffer.get(8);
+			reverse(bytes);  // correct order
+			return new MsiCustomAttributeValue(typeSignature, Double.longBitsToDouble(Longs.fromByteArray(bytes)));
+		}
 		else if(typeSignature == TypeSignature.BOOLEAN)
 		{
 			return new MsiCustomAttributeValue(typeSignature, byteBuffer.get() == 1);
@@ -277,6 +284,18 @@ public class MsilCustomAttributeStubber
 				TypeSignature stringTypeSignature = STypeSignatureParser.parse(text);
 				return new MsiCustomAttributeValue(typeSignature, stringTypeSignature);
 			}
+		}
+		else if(typeSignature == TypeSignature.OBJECT)
+		{
+			int b = byteBuffer.get() & 0xFF;
+			switch(b)
+			{
+				case 0x55: // enum
+					CharSequence text = XStubUtil.getString(byteBuffer, CharsetToolkit.UTF8_CHARSET);
+					TypeSignature stringTypeSignature = STypeSignatureParser.parse(text);
+					return new MsiCustomAttributeValue(typeSignature, stringTypeSignature);
+			}
+			return new MsiCustomAttributeValue(TypeSignature.OBJECT, null);
 		}
 		else if(typeSignature instanceof ValueTypeSignature)
 		{
@@ -339,8 +358,7 @@ public class MsilCustomAttributeStubber
 			}
 			LOGGER.error("Can't get value for ValueType: " + vmQName);
 			return null;
-		}
-		LOGGER.error("Cant get value for: " + typeSignature);
+		} LOGGER.error("Cant get value for: " + typeSignature);
 		return null;
 	}
 
@@ -386,5 +404,24 @@ public class MsilCustomAttributeStubber
 		}
 		LOGGER.warn("Unknown type: " + qName);
 		return null;
+	}
+
+	public static void reverse(byte[] array)
+	{
+		if(array == null)
+		{
+			return;
+		}
+		int i = 0;
+		int j = array.length - 1;
+		byte tmp;
+		while(j > i)
+		{
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
 	}
 }
