@@ -337,6 +337,8 @@ public class MsilCustomAttributeStubber
 					throw new IllegalArgumentException("Cant get value from enum: " + vmQName);
 				}
 			}
+			LOGGER.error("Can't get value for ValueType: " + vmQName);
+			return null;
 		}
 		LOGGER.error("Cant get value for: " + typeSignature);
 		return null;
