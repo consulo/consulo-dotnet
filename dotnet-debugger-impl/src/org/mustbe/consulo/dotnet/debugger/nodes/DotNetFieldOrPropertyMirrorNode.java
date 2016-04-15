@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptor;
 import com.intellij.xdebugger.frame.XValueModifier;
 import mono.debugger.*;
 
@@ -87,15 +88,23 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	@Override
 	public Icon getIconForVariable()
 	{
+		boolean isStatic = myFieldOrPropertyMirror.isStatic();
+
+		Icon baseIcon =  null;
 		if(myFieldOrPropertyMirror instanceof PropertyMirror)
 		{
-			return AllIcons.Nodes.Property;
+			baseIcon = AllIcons.Nodes.Property;
 		}
-		if(myFieldOrPropertyMirror instanceof FieldMirror && myFieldOrPropertyMirror.isStatic())
+		if(myFieldOrPropertyMirror instanceof FieldMirror)
 		{
-			return AllIcons.Nodes.Field;
+			baseIcon =  AllIcons.Nodes.Field;
 		}
-		return super.getIconForVariable();
+
+		if(isStatic)
+		{
+			return new IconDescriptor(baseIcon).addLayerIcon(AllIcons.Nodes.StaticMark).toIcon();
+		}
+		return baseIcon;
 	}
 
 	@Nullable

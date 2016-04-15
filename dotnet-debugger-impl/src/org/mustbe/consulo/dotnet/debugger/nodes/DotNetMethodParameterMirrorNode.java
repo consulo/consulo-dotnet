@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.dotnet.debugger.nodes;
 
+import javax.swing.Icon;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -24,6 +26,7 @@ import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetParameterListOwner;
+import com.intellij.icons.AllIcons;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
@@ -53,6 +56,13 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 		super(debuggerContext, parameter.name(), frame.thread());
 		myParameter = parameter;
 		myFrame = frame;
+	}
+
+	@NotNull
+	@Override
+	public Icon getIconForVariable()
+	{
+		return AllIcons.Nodes.Parameter;
 	}
 
 	@Override
