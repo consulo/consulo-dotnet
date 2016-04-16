@@ -62,7 +62,7 @@ public class DotNetExecutionStack extends XExecutionStack
 		String name = threadMirror.name();
 		if(StringUtil.isEmpty(name))
 		{
-			return "[" + DotNetSuspendContext.getThreadId(debuggerContext, threadMirror) + "] Unnamed";
+			return "[" + MonoSuspendContext.getThreadId(debuggerContext, threadMirror) + "] Unnamed";
 		}
 		return name;
 	}

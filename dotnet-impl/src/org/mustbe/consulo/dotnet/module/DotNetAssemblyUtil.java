@@ -40,10 +40,17 @@ public class DotNetAssemblyUtil
 			return null;
 		}
 
-		DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(element, DotNetModuleLangExtension.class);
+		return getAssemblyTitle(module);
+	}
+
+	@Nullable
+	@RequiredReadAction
+	public static String getAssemblyTitle(Module module)
+	{
+		DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
 		if(extension == null)
 		{
-			return module.getName();
+			return null;
 		}
 		String assemblyTitle = extension.getAssemblyTitle();
 		if(assemblyTitle == null)

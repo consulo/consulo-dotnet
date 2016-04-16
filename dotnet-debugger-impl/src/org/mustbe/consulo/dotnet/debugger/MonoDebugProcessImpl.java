@@ -127,7 +127,7 @@ public class MonoDebugProcessImpl extends DotNetDebugProcessBase
 			public boolean process(DotNetVirtualMachine virtualMachine)
 			{
 				virtualMachine.suspend();
-				getSession().positionReached(new DotNetSuspendContext(myDebugThread.createDebugContext(null), null));
+				getSession().positionReached(new MonoSuspendContext(myDebugThread.createDebugContext(null), null));
 				return false;
 			}
 		});
@@ -209,7 +209,7 @@ public class MonoDebugProcessImpl extends DotNetDebugProcessBase
 	{
 		myPausedEventSet = null;
 		myDebugThread.setStop();
-		myDebugThread.normalizeBreakpoints();
+		normalizeBreakpoints();
 		myBreakpointManager.removeBreakpointListener(myBreakpointListener);
 	}
 

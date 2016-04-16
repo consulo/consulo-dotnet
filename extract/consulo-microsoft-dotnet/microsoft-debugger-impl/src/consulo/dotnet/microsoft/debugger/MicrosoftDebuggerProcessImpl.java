@@ -11,12 +11,13 @@ import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
  */
 public class MicrosoftDebuggerProcessImpl extends DotNetDebugProcessBase
 {
+
 	private MicrosoftDebuggerClient myClient;
 
 	public MicrosoftDebuggerProcessImpl(@NotNull XDebugSession session, DebugConnectionInfo debugConnectionInfo)
 	{
 		super(session);
-		myClient = new MicrosoftDebuggerClient(debugConnectionInfo);
+		myClient = new MicrosoftDebuggerClient(debugConnectionInfo, new MicrosoftDebuggerEventVisitor(this));
 	}
 
 	@Override
@@ -29,5 +30,7 @@ public class MicrosoftDebuggerProcessImpl extends DotNetDebugProcessBase
 	public void stop()
 	{
 		myClient.disconnect();
+
+		normalizeBreakpoints();
 	}
 }

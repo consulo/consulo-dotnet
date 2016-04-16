@@ -30,14 +30,14 @@ import mono.debugger.ThreadMirror;
  * @author VISTALL
  * @since 10.04.14
  */
-public class DotNetSuspendContext extends XSuspendContext
+public class MonoSuspendContext extends XSuspendContext
 {
 	private final long mySystemThreadId;
 
 	private final DotNetExecutionStack[] myExecutionStacks;
 	private DotNetDebugContext myDebuggerContext;
 
-	public DotNetSuspendContext(@NotNull DotNetDebugContext debuggerContext, @Nullable ThreadMirror threadMirror)
+	public MonoSuspendContext(@NotNull DotNetDebugContext debuggerContext, @Nullable ThreadMirror threadMirror)
 	{
 		myDebuggerContext = debuggerContext;
 		mySystemThreadId = threadMirror == null ? -1 : getThreadId(debuggerContext, threadMirror);
