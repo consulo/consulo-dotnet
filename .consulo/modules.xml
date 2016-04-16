@@ -49,6 +49,7 @@
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-impl" exported="" />
+          <orderEntry type="module" module-name="microsoft-debugger-impl" />
         </module-layer>
       </module>
       <module name="impl/consulo-mono-dotnet" dirurl="file://$PROJECT_DIR$/extract/consulo-mono-dotnet" current-layer="Default">
@@ -66,7 +67,7 @@
           <orderEntry type="module" module-name="dotnet-impl" />
           <orderEntry type="module" module-name="dotnet-documentation-impl" />
           <orderEntry type="module" module-name="dotnet-psi-api" />
-          <orderEntry type="module" module-name="dotnet-debugger-api" />
+          <orderEntry type="module" module-name="mono-debugger-impl" />
         </module-layer>
       </module>
       <module name="dotnet-api" dirurl="file://$PROJECT_DIR$/dotnet-api" current-layer="Default">
@@ -158,7 +159,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-debugger-api" exported="" />
-          <orderEntry type="module" module-name="dotnet-impl" />
+          <orderEntry type="module" module-name="dotnet-impl" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-api" />
           <orderEntry type="module" module-name="consulo-dotnet" />
           <orderEntry type="module" module-name="msil-psi-impl" />
@@ -288,7 +289,20 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="dotnet-debugger-api" />
+          <orderEntry type="module" module-name="dotnet-debugger-impl" exported="" />
+        </module-layer>
+      </module>
+      <module name="impl/mono-debugger-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-mono-dotnet/mono-debugger-impl" current-layer="Default">
+        <module-layer name="Default">
+          <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo 1.SNAPSHOT" />
+          <extension id="java" sdk-module-name="" sdk-name="1.6" language-level-module-name="" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" />
+          <content url="file://$MODULE_DIR$">
+            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+          </content>
+          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
+          <orderEntry type="module-extension-sdk" extension-id="java" />
+          <orderEntry type="sourceFolder" />
+          <orderEntry type="module" module-name="dotnet-debugger-impl" exported="" />
         </module-layer>
       </module>
     </modules>

@@ -17,24 +17,18 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.util.Processor;
-import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
 import lombok.val;
 import mono.debugger.ThreadMirror;
 import mono.debugger.event.EventSet;
@@ -44,7 +38,7 @@ import mono.debugger.request.StepRequest;
  * @author VISTALL
  * @since 10.04.14
  */
-public class MonoDebugProcessImpl extends XDebugProcess
+public class MonoDebugProcessImpl extends DotNetDebugProcessBase
 {
 	private class MyXBreakpointListener implements XBreakpointListener<XLineBreakpoint<DotNetLineBreakpointProperties>>
 	{
@@ -93,7 +87,6 @@ public class MonoDebugProcessImpl extends XDebugProcess
 		}
 	}
 
-	private ExecutionResult myResult;
 	private final DebugConnectionInfo myDebugConnectionInfo;
 	private final DotNetDebugThread myDebugThread;
 
@@ -119,41 +112,10 @@ public class MonoDebugProcessImpl extends XDebugProcess
 		return myDebugThread;
 	}
 
+	@Override
 	public void start()
 	{
 		myDebugThread.start();
-	}
-
-	public void setExecutionResult(ExecutionResult executionResult)
-	{
-		myResult = executionResult;
-	}
-
-	@Override
-	public boolean checkCanInitBreakpoints()
-	{
-		return false;
-	}
-
-	@Nullable
-	@Override
-	protected ProcessHandler doGetProcessHandler()
-	{
-		return myResult.getProcessHandler();
-	}
-
-	@NotNull
-	@Override
-	public ExecutionConsole createConsole()
-	{
-		return myResult.getExecutionConsole();
-	}
-
-	@NotNull
-	@Override
-	public XDebuggerEditorsProvider getEditorsProvider()
-	{
-		return new DotNetEditorsProvider(myDebugThread.getSession());
 	}
 
 	@Override
@@ -249,12 +211,6 @@ public class MonoDebugProcessImpl extends XDebugProcess
 		myDebugThread.setStop();
 		myDebugThread.normalizeBreakpoints();
 		myBreakpointManager.removeBreakpointListener(myBreakpointListener);
-	}
-
-	@Override
-	public void runToPosition(@NotNull XSourcePosition xSourcePosition)
-	{
-
 	}
 
 	public void setPausedEventSet(EventSet pausedEventSet)

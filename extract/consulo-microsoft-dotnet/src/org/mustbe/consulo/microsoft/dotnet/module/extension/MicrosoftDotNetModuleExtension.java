@@ -26,16 +26,21 @@ import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleRootLayer;
+import com.intellij.xdebugger.XDebugSession;
+import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
+import consulo.dotnet.debugger.impl.DotNetModuleExtensionWithDebug;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerProcessImpl;
 
 /**
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<MicrosoftDotNetModuleExtension>
+public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<MicrosoftDotNetModuleExtension> implements DotNetModuleExtensionWithDebug
 {
 	public MicrosoftDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer module)
 	{
@@ -82,5 +87,12 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 			commandLine.setExePath(fileName);
 		}
 		return commandLine;
+	}
+
+	@NotNull
+	@Override
+	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo debugConnectionInfo, @NotNull RunProfile runProfile)
+	{
+		return new MicrosoftDebuggerProcessImpl(session, debugConnectionInfo);
 	}
 }

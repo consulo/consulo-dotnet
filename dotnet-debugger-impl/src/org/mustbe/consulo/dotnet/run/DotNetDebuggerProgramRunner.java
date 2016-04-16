@@ -18,8 +18,6 @@ package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.dotnet.debugger.MonoDebugProcessImpl;
-import org.mustbe.consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
@@ -38,6 +36,8 @@ import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
+import consulo.dotnet.debugger.impl.DotNetModuleExtensionWithDebug;
+import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
 
 /**
  * @author VISTALL
@@ -71,7 +71,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			throw new ExecutionException("No debug connect information");
 		}
 
-		DotNetModuleExtensionWithDebug moduleExtensionWithDebug = null;
+		final DotNetModuleExtensionWithDebug moduleExtensionWithDebug;
 		RunProfile runProfile = env.getRunProfile();
 		if(runProfile instanceof DotNetConfigurationWithCoverage)
 		{
@@ -83,6 +83,10 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 
 			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 			moduleExtensionWithDebug = extension instanceof DotNetModuleExtensionWithDebug ? (DotNetModuleExtensionWithDebug) extension : null;
+		}
+		else
+		{
+			moduleExtensionWithDebug = null;
 		}
 
 		if(moduleExtensionWithDebug == null)
@@ -97,7 +101,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			@Override
 			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
 			{
-				MonoDebugProcessImpl process = new MonoDebugProcessImpl(session, debugConnectionInfo, env.getRunProfile());
+				DotNetDebugProcessBase process = moduleExtensionWithDebug.createDebuggerProcess(session, debugConnectionInfo, env.getRunProfile());
 				if(!debugConnectionInfo.isServer())
 				{
 					process.start();
@@ -135,7 +139,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			{
 				return false;
 			}
-			return true;
+			return extension instanceof DotNetModuleExtensionWithDebug;
 		}
 
 		return false;

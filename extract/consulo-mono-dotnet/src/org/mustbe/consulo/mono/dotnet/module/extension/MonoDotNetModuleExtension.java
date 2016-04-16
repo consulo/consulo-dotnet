@@ -22,12 +22,13 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
-import org.mustbe.consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
+import org.mustbe.consulo.dotnet.debugger.MonoDebugProcessImpl;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleRootLayer;
@@ -37,7 +38,9 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.xdebugger.XDebugProcess;
+import com.intellij.xdebugger.XDebugSession;
+import consulo.dotnet.debugger.impl.DotNetModuleExtensionWithDebug;
+import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
 
 /**
  * @author VISTALL
@@ -59,9 +62,9 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 
 	@NotNull
 	@Override
-	public XDebugProcess createDebuggerProcess()
+	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo debugConnectionInfo, @NotNull RunProfile runProfile)
 	{
-		return null;
+		return new MonoDebugProcessImpl(session, debugConnectionInfo, runProfile);
 	}
 
 	@NotNull
