@@ -17,7 +17,9 @@
 package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebugProcess;
+import org.mustbe.consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
@@ -51,6 +53,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 	}
 
 	@Override
+	@RequiredDispatchThread
 	protected RunContentDescriptor doExecute(@NotNull final RunProfileState state, @NotNull final ExecutionEnvironment env) throws ExecutionException
 	{
 		final DebugConnectionInfo debugConnectionInfo;
@@ -67,6 +70,26 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 		{
 			throw new ExecutionException("No debug connect information");
 		}
+
+		DotNetModuleExtensionWithDebug moduleExtensionWithDebug = null;
+		RunProfile runProfile = env.getRunProfile();
+		if(runProfile instanceof DotNetConfigurationWithCoverage)
+		{
+			Module module = ((DotNetConfigurationWithCoverage) runProfile).getConfigurationModule().getModule();
+			if(module == null)
+			{
+				throw new ExecutionException("No module information");
+			}
+
+			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+			moduleExtensionWithDebug = extension instanceof DotNetModuleExtensionWithDebug ? (DotNetModuleExtensionWithDebug) extension : null;
+		}
+
+		if(moduleExtensionWithDebug == null)
+		{
+			throw new ExecutionException("Debugger is not supported");
+		}
+
 		FileDocumentManager.getInstance().saveAllDocuments();
 		final XDebugSession debugSession = XDebuggerManager.getInstance(env.getProject()).startSession(env, new XDebugProcessStarter()
 		{

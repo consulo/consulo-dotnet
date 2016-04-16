@@ -16,6 +16,8 @@
 
 package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
+import java.io.File;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
@@ -24,6 +26,7 @@ import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleRootLayer;
@@ -52,9 +55,7 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 	{
 		String fileName = DotNetMacroUtil.expandOutputFile(this);
 
-		GeneralCommandLine commandLine = new GeneralCommandLine();
-		commandLine.setExePath(fileName);
-		return commandLine;
+		return createRunCommandLineImpl(fileName, debugConnectionInfo, sdk);
 	}
 
 	@NotNull
@@ -65,10 +66,21 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 	}
 
 	@NotNull
-	public static GeneralCommandLine createRunCommandLineImpl(@NotNull String fileName, @Nullable DebugConnectionInfo d, Sdk sdk)
+	public static GeneralCommandLine createRunCommandLineImpl(@NotNull String fileName, @Nullable DebugConnectionInfo debugConnectionInfo, @NotNull Sdk sdk)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
-		commandLine.setExePath(fileName);
+		if(debugConnectionInfo != null)
+		{
+			File pluginPath = PluginManager.getPluginPath(MicrosoftDotNetModuleExtension.class);
+
+			commandLine.setExePath(new File(pluginPath, "mssdw\\mssdw.exe").getPath());
+			commandLine.addParameter("--port=" + debugConnectionInfo.getPort());
+			commandLine.addParameter(fileName);
+		}
+		else
+		{
+			commandLine.setExePath(fileName);
+		}
 		return commandLine;
 	}
 }

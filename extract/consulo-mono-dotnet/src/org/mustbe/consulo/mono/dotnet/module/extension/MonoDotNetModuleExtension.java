@@ -22,6 +22,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
+import org.mustbe.consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
@@ -36,12 +37,13 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.xdebugger.XDebugProcess;
 
 /**
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDotNetModuleExtension>
+public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDotNetModuleExtension> implements DotNetModuleExtensionWithDebug
 {
 	public MonoDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
 	{
@@ -53,6 +55,13 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 	public Class<? extends SdkType> getSdkTypeClass()
 	{
 		return MonoSdkType.class;
+	}
+
+	@NotNull
+	@Override
+	public XDebugProcess createDebuggerProcess()
+	{
+		return null;
 	}
 
 	@NotNull
