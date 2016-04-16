@@ -86,7 +86,7 @@ public class DotNetDebugThread extends Thread
 {
 	private final XDebugSession mySession;
 	private final XDebuggerManager myDebuggerManager;
-	private final DotNetDebugProcess myDebugProcess;
+	private final MonoDebugProcessImpl myDebugProcess;
 	private final DebugConnectionInfo myDebugConnectionInfo;
 	private final RunProfile myRunProfile;
 	private boolean myStop;
@@ -97,7 +97,7 @@ public class DotNetDebugThread extends Thread
 
 	private EventDispatcher<DotNetVirtualMachineListener> myEventDispatcher = EventDispatcher.create(DotNetVirtualMachineListener.class);
 
-	public DotNetDebugThread(XDebugSession session, DotNetDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
+	public DotNetDebugThread(XDebugSession session, MonoDebugProcessImpl debugProcess, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
 	{
 		super("DotNetDebugThread: " + new Random().nextInt());
 		mySession = session;

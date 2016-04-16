@@ -18,7 +18,7 @@ package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebugProcess;
+import org.mustbe.consulo.dotnet.debugger.MonoDebugProcessImpl;
 import org.mustbe.consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
@@ -97,7 +97,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			@Override
 			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
 			{
-				DotNetDebugProcess process = new DotNetDebugProcess(session, debugConnectionInfo, env.getRunProfile());
+				MonoDebugProcessImpl process = new MonoDebugProcessImpl(session, debugConnectionInfo, env.getRunProfile());
 				if(!debugConnectionInfo.isServer())
 				{
 					process.start();
