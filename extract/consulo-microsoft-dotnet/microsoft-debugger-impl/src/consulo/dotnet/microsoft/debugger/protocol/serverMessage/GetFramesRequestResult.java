@@ -24,6 +24,14 @@ public class GetFramesRequestResult
 {
 	public static class FrameInfo
 	{
+		public static class SourcePosition
+		{
+			public String FilePath;
+
+			public int Line;
+		}
+
+		public SourcePosition Position = new SourcePosition();
 		public String Method;
 	}
 

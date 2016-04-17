@@ -34,9 +34,9 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnModuleLoadEven
  */
 class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 {
-	private MicrosoftDebuggerProcessImpl myDebuggerProcess;
+	private MicrosoftDebuggerProcess myDebuggerProcess;
 
-	public MicrosoftDebuggerEventVisitor(MicrosoftDebuggerProcessImpl debuggerProcess)
+	public MicrosoftDebuggerEventVisitor(MicrosoftDebuggerProcess debuggerProcess)
 	{
 		myDebuggerProcess = debuggerProcess;
 	}
@@ -133,7 +133,7 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 						continue;
 					}
 
-					int i = breakpoint.getLine() - 1;
+					int i = breakpoint.getLine();
 					if(i == event.Line)
 					{
 						return breakpoint;

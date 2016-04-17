@@ -22,7 +22,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
-import org.mustbe.consulo.dotnet.debugger.MonoDebugProcessImpl;
+import org.mustbe.consulo.dotnet.debugger.MonoDebugProcess;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
@@ -64,7 +64,7 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 	@Override
 	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo debugConnectionInfo, @NotNull RunProfile runProfile)
 	{
-		return new MonoDebugProcessImpl(session, debugConnectionInfo, runProfile);
+		return new MonoDebugProcess(session, debugConnectionInfo, runProfile);
 	}
 
 	@NotNull

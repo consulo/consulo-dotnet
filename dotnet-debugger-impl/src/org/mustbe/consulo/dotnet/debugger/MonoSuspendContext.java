@@ -34,7 +34,7 @@ public class MonoSuspendContext extends XSuspendContext
 {
 	private final long mySystemThreadId;
 
-	private final DotNetExecutionStack[] myExecutionStacks;
+	private final MonoExecutionStack[] myExecutionStacks;
 	private DotNetDebugContext myDebuggerContext;
 
 	public MonoSuspendContext(@NotNull DotNetDebugContext debuggerContext, @Nullable ThreadMirror threadMirror)
@@ -43,12 +43,12 @@ public class MonoSuspendContext extends XSuspendContext
 		mySystemThreadId = threadMirror == null ? -1 : getThreadId(debuggerContext, threadMirror);
 
 		List<ThreadMirror> threadMirrors = debuggerContext.getVirtualMachine().allThreads();
-		List<DotNetExecutionStack> list = new ArrayList<DotNetExecutionStack>(threadMirrors.size());
+		List<MonoExecutionStack> list = new ArrayList<MonoExecutionStack>(threadMirrors.size());
 		for(ThreadMirror mirror : threadMirrors)
 		{
-			list.add(new DotNetExecutionStack(debuggerContext, mirror));
+			list.add(new MonoExecutionStack(debuggerContext, mirror));
 		}
-		myExecutionStacks = ContainerUtil.toArray(list, DotNetExecutionStack.ARRAY_FACTORY);
+		myExecutionStacks = ContainerUtil.toArray(list, MonoExecutionStack.ARRAY_FACTORY);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class MonoSuspendContext extends XSuspendContext
 		{
 			return null;
 		}
-		for(DotNetExecutionStack executionStack : myExecutionStacks)
+		for(MonoExecutionStack executionStack : myExecutionStacks)
 		{
 			if(getThreadId(myDebuggerContext, executionStack.getThreadMirror()) == mySystemThreadId)
 			{

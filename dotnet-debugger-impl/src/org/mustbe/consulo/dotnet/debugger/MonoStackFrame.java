@@ -71,7 +71,7 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 11.04.14
  */
-public class DotNetStackFrame extends XStackFrame
+public class MonoStackFrame extends XStackFrame
 {
 	private static final StackFrameComputer[] ourStackFrameComputers = new StackFrameComputer[]{
 			new YieldOrAsyncStackFrameComputer(),
@@ -81,7 +81,7 @@ public class DotNetStackFrame extends XStackFrame
 	private final DotNetDebugContext myDebuggerContext;
 	private final DotNetStackFrameMirrorProxy myFrameProxy;
 
-	public DotNetStackFrame(DotNetDebugContext debuggerContext, DotNetStackFrameMirrorProxy frameProxy)
+	public MonoStackFrame(DotNetDebugContext debuggerContext, DotNetStackFrameMirrorProxy frameProxy)
 	{
 		myDebuggerContext = debuggerContext;
 		myFrameProxy = frameProxy;

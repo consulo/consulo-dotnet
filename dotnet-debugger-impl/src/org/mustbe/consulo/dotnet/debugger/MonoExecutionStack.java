@@ -41,15 +41,15 @@ import mono.debugger.ThreadMirror;
  */
 @ArrayFactoryFields
 @Logger
-public class DotNetExecutionStack extends XExecutionStack
+public class MonoExecutionStack extends XExecutionStack
 {
-	private DotNetStackFrame myTopFrame;
+	private MonoStackFrame myTopFrame;
 	private boolean myTopFrameCalculated;
 
 	private DotNetDebugContext myDebuggerContext;
 	private ThreadMirror myThreadMirror;
 
-	public DotNetExecutionStack(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
+	public MonoExecutionStack(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
 	{
 		super(calcName(debuggerContext, threadMirror), getIcon(threadMirror));
 		myDebuggerContext = debuggerContext;
@@ -93,7 +93,7 @@ public class DotNetExecutionStack extends XExecutionStack
 			{
 				return null;
 			}
-			return myTopFrame = new DotNetStackFrame(myDebuggerContext, new DotNetStackFrameMirrorProxyImpl(frame, 0));
+			return myTopFrame = new MonoStackFrame(myDebuggerContext, new DotNetStackFrameMirrorProxyImpl(frame, 0));
 		}
 		finally
 		{
@@ -113,16 +113,16 @@ public class DotNetExecutionStack extends XExecutionStack
 	}
 
 	@Override
-	public void computeStackFrames(int i, XStackFrameContainer frameContainer)
+	public void computeStackFrames(XStackFrameContainer frameContainer)
 	{
 		List<StackFrameMirror> frames = myThreadMirror.frames();
 
-		List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
+		List<MonoStackFrame> stackFrames = new ArrayList<MonoStackFrame>();
 		for(int j = 0; j < frames.size(); j++)
 		{
 			StackFrameMirror stackFrameMirror = frames.get(j);
 
-			DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, new DotNetStackFrameMirrorProxyImpl(stackFrameMirror, j));
+			MonoStackFrame stackFrame = new MonoStackFrame(myDebuggerContext, new DotNetStackFrameMirrorProxyImpl(stackFrameMirror, j));
 
 			if(j == 0)
 			{
@@ -134,5 +134,11 @@ public class DotNetExecutionStack extends XExecutionStack
 		}
 
 		frameContainer.addStackFrames(stackFrames, true);
+	}
+
+	@Override
+	public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container)
+	{
+		throw new IllegalArgumentException();
 	}
 }

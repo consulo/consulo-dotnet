@@ -38,7 +38,7 @@ import mono.debugger.request.StepRequest;
  * @author VISTALL
  * @since 10.04.14
  */
-public class MonoDebugProcessImpl extends DotNetDebugProcessBase
+public class MonoDebugProcess extends DotNetDebugProcessBase
 {
 	private class MyXBreakpointListener implements XBreakpointListener<XLineBreakpoint<DotNetLineBreakpointProperties>>
 	{
@@ -94,7 +94,7 @@ public class MonoDebugProcessImpl extends DotNetDebugProcessBase
 	private XBreakpointManager myBreakpointManager;
 	private final XBreakpointListener myBreakpointListener = new MyXBreakpointListener();
 
-	public MonoDebugProcessImpl(XDebugSession session, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
+	public MonoDebugProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
 	{
 		super(session);
 		session.setPauseActionSupported(true);

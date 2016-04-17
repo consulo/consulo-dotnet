@@ -34,7 +34,7 @@ import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.xdebugger.XDebugSession;
 import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.impl.DotNetModuleExtensionWithDebug;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerProcessImpl;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerProcess;
 
 /**
  * @author VISTALL
@@ -94,6 +94,6 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 	@Override
 	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo debugConnectionInfo, @NotNull RunProfile runProfile)
 	{
-		return new MicrosoftDebuggerProcessImpl(session, debugConnectionInfo);
+		return new MicrosoftDebuggerProcess(session, debugConnectionInfo);
 	}
 }

@@ -16,6 +16,8 @@
 
 package consulo.dotnet.microsoft.debugger;
 
+import java.util.Arrays;
+
 import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
@@ -30,25 +32,44 @@ public class MicrosoftExecutionStack extends XExecutionStack
 {
 	private int myThreadId;
 
+	private MicrosoftStackFrame[] myFrames;
+
 	public MicrosoftExecutionStack(MicrosoftDebuggerClientContext context, String displayName, int threadId)
 	{
 		super(displayName);
 		myThreadId = threadId;
 
 		GetFramesRequestResult o = context.sendAndReceive(new GetFramesRequest(threadId));
+
+		GetFramesRequestResult.FrameInfo[] frames = o.Frames;
+		myFrames = new MicrosoftStackFrame[frames.length];
+		for(int i = 0; i < frames.length; i++)
+		{
+			myFrames[i] = new MicrosoftStackFrame(i, frames[i]);
+		}
 	}
 
 	@Nullable
 	@Override
 	public XStackFrame getTopFrame()
 	{
+		if(myFrames.length > 0)
+		{
+			return myFrames[0];
+		}
 		return null;
+	}
+
+	@Override
+	public void computeStackFrames(XStackFrameContainer container)
+	{
+		container.addStackFrames(Arrays.asList(myFrames), true);
 	}
 
 	@Override
 	public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container)
 	{
-
+		throw new IllegalArgumentException();
 	}
 
 	public int getThreadId()

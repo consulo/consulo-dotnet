@@ -9,12 +9,12 @@ import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
  * @author VISTALL
  * @since 16.04.2016
  */
-public class MicrosoftDebuggerProcessImpl extends DotNetDebugProcessBase
+public class MicrosoftDebuggerProcess extends DotNetDebugProcessBase
 {
 
 	private MicrosoftDebuggerClient myClient;
 
-	public MicrosoftDebuggerProcessImpl(@NotNull XDebugSession session, DebugConnectionInfo debugConnectionInfo)
+	public MicrosoftDebuggerProcess(@NotNull XDebugSession session, DebugConnectionInfo debugConnectionInfo)
 	{
 		super(session);
 		myClient = new MicrosoftDebuggerClient(debugConnectionInfo, new MicrosoftDebuggerEventVisitor(this));
