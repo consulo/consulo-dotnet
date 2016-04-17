@@ -16,10 +16,15 @@
 
 package consulo.dotnet.microsoft.debugger;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.jboss.netty.channel.Channel;
 import com.google.gson.Gson;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.Ref;
+import com.intellij.util.Consumer;
+import com.intellij.util.concurrency.Semaphore;
 import consulo.dotnet.microsoft.debugger.protocol.ClientMessage;
 
 /**
@@ -28,24 +33,81 @@ import consulo.dotnet.microsoft.debugger.protocol.ClientMessage;
  */
 public class MicrosoftDebuggerClientContext
 {
-	private Channel myChannel;
+	private final Map<String, Consumer<Object>> myWaitMap;
+	private final Channel myChannel;
 
-	public MicrosoftDebuggerClientContext(Channel channel)
+	public MicrosoftDebuggerClientContext(Channel channel, Map<String, Consumer<Object>> waitMap)
 	{
 		myChannel = channel;
+		myWaitMap = waitMap;
 	}
 
-	public void send(Object request)
+	public <T> T sendAndReceive(Object request)
 	{
-		ClientMessage clientMessage = new ClientMessage();
+		final ClientMessage clientMessage = new ClientMessage();
 		clientMessage.Id = UUID.randomUUID().toString();
 
 		clientMessage.Type = request.getClass().getSimpleName();
 		clientMessage.Object = request;
 
-		String s = new Gson().toJson(clientMessage);
+		final String jsonText = new Gson().toJson(clientMessage);
 
-		System.out.println("send " + s);
-		myChannel.write(s);
+		//System.out.println("send " + jsonText);
+		final Ref<Object> ref = Ref.create();
+		final Semaphore semaphore = new Semaphore();
+		semaphore.down();
+
+		myWaitMap.put(clientMessage.Id, new Consumer<Object>()
+		{
+			@Override
+			public void consume(Object o)
+			{
+				ref.set(o);
+				semaphore.up();
+			}
+		});
+
+		myChannel.write(jsonText);
+
+		semaphore.waitFor();
+		return (T) ref.get();
+	}
+
+	public <T> void sendAndReceiveInAnotherThread(Object request, final Consumer<T> after)
+	{
+		final ClientMessage clientMessage = new ClientMessage();
+		clientMessage.Id = UUID.randomUUID().toString();
+
+		clientMessage.Type = request.getClass().getSimpleName();
+		clientMessage.Object = request;
+
+		final String jsonText = new Gson().toJson(clientMessage);
+
+		//System.out.println("send: " + jsonText);
+		ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				final Ref<Object> ref = Ref.create();
+				final Semaphore semaphore = new Semaphore();
+				semaphore.down();
+
+				myWaitMap.put(clientMessage.Id, new Consumer<Object>()
+				{
+					@Override
+					public void consume(Object o)
+					{
+						ref.set(o);
+						semaphore.up();
+					}
+				});
+
+				myChannel.write(jsonText);
+
+				semaphore.waitFor();
+				after.consume((T) ref.get());
+			}
+		});
 	}
 }

@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.microsoft.debugger.protocol.request;
+package consulo.dotnet.microsoft.debugger.protocol.clientMessage;
 
 /**
  * @author VISTALL
- * @since 16.04.2016
+ * @since 18.04.2016
  */
-public class InsertBreakpointRequest
+public class GetFramesRequest
 {
-	public String FilePath;
+	public int ThreadId;
 
-	public int Line;
-
-	public InsertBreakpointRequest(String filePath, int line)
+	public GetFramesRequest(int threadId)
 	{
-		FilePath = filePath;
-		Line = line;
+		ThreadId = threadId;
 	}
 }

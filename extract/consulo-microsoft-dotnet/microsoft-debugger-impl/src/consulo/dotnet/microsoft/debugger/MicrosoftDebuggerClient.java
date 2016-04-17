@@ -2,10 +2,21 @@ package consulo.dotnet.microsoft.debugger;
 
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.channel.*;
+import org.jboss.netty.channel.ChannelFactory;
+import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.channel.Channels;
+import org.jboss.netty.channel.ExceptionEvent;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
@@ -18,9 +29,11 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.intellij.util.ConcurrencyUtil;
+import com.intellij.util.Consumer;
 import consulo.dotnet.microsoft.debugger.protocol.ClientMessage;
-import consulo.dotnet.microsoft.debugger.protocol.event.OnEvent;
-import consulo.dotnet.microsoft.debugger.protocol.event.OnEventVisitor;
+import consulo.dotnet.microsoft.debugger.protocol.ServerMessage;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventVisitor;
 
 /**
  * @author VISTALL
@@ -28,6 +41,62 @@ import consulo.dotnet.microsoft.debugger.protocol.event.OnEventVisitor;
  */
 class MicrosoftDebuggerClient
 {
+	private static class MicrosoftDebuggerNettyHandler extends SimpleChannelUpstreamHandler
+	{
+		private final ExecutorService myExecutorService = Executors.newCachedThreadPool(ConcurrencyUtil.newNamedThreadFactory("MS Task Executors"));
+
+		private Map<String, Consumer<Object>> myWaitMap = new ConcurrentHashMap<String, Consumer<Object>>();
+		private final OnEventVisitor myVisitor;
+
+		public MicrosoftDebuggerNettyHandler(OnEventVisitor visitor)
+		{
+			myVisitor = visitor;
+		}
+
+		@Override
+		public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent e) throws Exception
+		{
+			//System.out.println(e.getMessage() + " " + myWaitMap);
+
+			myExecutorService.execute(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					Object message = e.getMessage();
+					if(message instanceof String)
+					{
+						Gson gson = buildGson();
+
+						ServerMessage event = gson.fromJson((String) message, ServerMessage.class);
+						Consumer<Object> objectConsumer = myWaitMap.remove(event.Id);
+						if(objectConsumer != null)
+						{
+							objectConsumer.consume(event.Object);
+						}
+						else
+						{
+							boolean c = event.accept(myVisitor, new MicrosoftDebuggerClientContext(ctx.getChannel(), myWaitMap));
+
+							ClientMessage clientMessage = new ClientMessage();
+							clientMessage.Id = event.Id;
+							clientMessage.Type = event.Type;
+							clientMessage.Continue = c;
+
+							ctx.getChannel().write(gson.toJson(clientMessage));
+						}
+					}
+				}
+			});
+		}
+
+		@Override
+		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception
+		{
+			e.getCause().printStackTrace();
+		}
+	}
+
 	private ClientBootstrap myClientBootstrap;
 	private DebugConnectionInfo myDebugConnectionInfo;
 
@@ -51,39 +120,7 @@ class MicrosoftDebuggerClient
 				// Encoder
 				pipeline.addLast("stringEncoder", new StringEncoder(CharsetUtil.UTF_8));
 
-				pipeline.addLast("handler", new SimpleChannelUpstreamHandler()
-				{
-					@Override
-					public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception
-					{
-					}
-
-					@Override
-					public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception
-					{
-						Object message = e.getMessage();
-						if(message instanceof String)
-						{
-							Gson gson = buildGson();
-
-							OnEvent event = gson.fromJson((String) message, OnEvent.class);
-
-							boolean c = event.accept(visitor, new MicrosoftDebuggerClientContext(ctx.getChannel()));
-
-							ClientMessage clientMessage = new ClientMessage();
-							clientMessage.Id = event.Id;
-							clientMessage.Type = event.Type;
-							clientMessage.Continue = c;
-
-							ctx.getChannel().write(gson.toJson(clientMessage));
-						}
-					}
-
-					@Override
-					public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception
-					{
-					}
-				});
+				pipeline.addLast("handler", new MicrosoftDebuggerNettyHandler(visitor));
 				return pipeline;
 			}
 		});
@@ -94,20 +131,20 @@ class MicrosoftDebuggerClient
 
 	private static Gson buildGson()
 	{
-		return new GsonBuilder().registerTypeAdapter(OnEvent.class, new JsonDeserializer<OnEvent>()
+		return new GsonBuilder().registerTypeAdapter(ServerMessage.class, new JsonDeserializer<ServerMessage>()
 		{
 			@Override
-			public OnEvent deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
+			public ServerMessage deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
 			{
 				assert jsonElement instanceof JsonObject;
-				OnEvent event = new OnEvent();
+				ServerMessage event = new ServerMessage();
 				event.Id = ((JsonObject) jsonElement).getAsJsonPrimitive("Id").getAsString();
 				event.Type = ((JsonObject) jsonElement).getAsJsonPrimitive("Type").getAsString();
 
 				Class<?> typeClass = null;
 				try
 				{
-					typeClass = Class.forName("consulo.dotnet.microsoft.debugger.protocol.event." + event.Type, true, MicrosoftDebuggerClient.class.getClassLoader());
+					typeClass = Class.forName("consulo.dotnet.microsoft.debugger.protocol.serverMessage." + event.Type, true, MicrosoftDebuggerClient.class.getClassLoader());
 				}
 				catch(ClassNotFoundException e)
 				{

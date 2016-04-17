@@ -1,4 +1,4 @@
-package consulo.dotnet.microsoft.debugger.protocol.event;
+package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
 

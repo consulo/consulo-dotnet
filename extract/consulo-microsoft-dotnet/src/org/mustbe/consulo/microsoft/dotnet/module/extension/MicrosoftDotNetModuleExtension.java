@@ -78,7 +78,8 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 		{
 			File pluginPath = PluginManager.getPluginPath(MicrosoftDotNetModuleExtension.class);
 
-			commandLine.setExePath(new File(pluginPath, "mssdw\\mssdw.exe").getPath());
+			commandLine.setExePath("R:\\_github.com\\consulo\\MonoDevelop.Debugger.Win32\\out\\production\\mssdw\\mssdw.exe");
+			//FIXME [VISTALL] commandLine.setExePath(new File(pluginPath, "mssdw\\mssdw.exe").getPath());
 			commandLine.addParameter("--port=" + debugConnectionInfo.getPort());
 			commandLine.addParameter(fileName);
 		}

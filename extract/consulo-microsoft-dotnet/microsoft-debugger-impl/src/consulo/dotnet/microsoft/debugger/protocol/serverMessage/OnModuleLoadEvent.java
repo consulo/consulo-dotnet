@@ -1,4 +1,4 @@
-package consulo.dotnet.microsoft.debugger.protocol.event;
+package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
 
@@ -6,15 +6,13 @@ import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
  * @author VISTALL
  * @since 16.04.2016
  */
-public class OnBreakpointFire implements OnEventValue
+public class OnModuleLoadEvent implements OnEventValue
 {
-	public String FilePath;
-
-	public int Line;
+	public String ModuleFile;
 
 	@Override
 	public boolean accept(OnEventVisitor visitor, MicrosoftDebuggerClientContext context)
 	{
-		return visitor.visitOnBreakpointFire(this, context);
+		return visitor.visitOnModuleLoad(this, context);
 	}
 }
