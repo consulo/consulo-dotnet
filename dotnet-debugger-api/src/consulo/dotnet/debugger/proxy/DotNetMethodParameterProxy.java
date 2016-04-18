@@ -16,23 +16,14 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetTypeProxy
+@ArrayFactoryFields
+public interface DotNetMethodParameterProxy extends DotNetVariableProxy
 {
-	@NotNull
-	String getName();
-
-	@NotNull
-	String getFullName();
-
-	boolean isArray();
-
-	@Nullable
-	DotNetTypeProxy getBaseType();
+	int getIndex();
 }

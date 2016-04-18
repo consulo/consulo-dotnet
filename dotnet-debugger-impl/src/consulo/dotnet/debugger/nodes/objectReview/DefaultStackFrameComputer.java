@@ -22,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
+import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -73,16 +75,16 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameMirrorProxy.thread(), frameMirrorProxy.location().declaringType());
 		}  */
 
-		/*MethodParameterMirror[] parameters = method.parameters();
+		DotNetMethodParameterProxy[] parameters = method.getParameters();
 
-		for(MethodParameterMirror parameter : parameters)
+		for(DotNetMethodParameterProxy parameter : parameters)
 		{
 			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(debugContext, parameter, frameMirrorProxy);
 
 			visitedVariables.add(parameter);
 
 			childrenList.add(parameterMirrorNode);
-		} */
+		}
 
 	/*	try
 		{

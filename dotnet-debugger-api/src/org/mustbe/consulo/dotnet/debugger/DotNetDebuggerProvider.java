@@ -39,9 +39,7 @@ import consulo.dotnet.debugger.DotNetDebugContext;
  */
 public abstract class DotNetDebuggerProvider
 {
-	public static final ExtensionPointName<DotNetDebuggerProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.debugger" + "" +
-			".provider");
-
+	public static final ExtensionPointName<DotNetDebuggerProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.debugger.provider");
 
 	@Nullable
 	public static DotNetDebuggerProvider getProvider(@Nullable Language language)

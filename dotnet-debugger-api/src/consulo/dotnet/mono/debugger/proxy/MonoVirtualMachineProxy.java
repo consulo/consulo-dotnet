@@ -41,8 +41,14 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetNumberValue;
+import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import mono.debugger.AppDomainMirror;
 import mono.debugger.AssemblyMirror;
+import mono.debugger.BooleanValueMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.VMDisconnectedException;
@@ -87,6 +93,41 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 				return new MonoThreadProxy(MonoVirtualMachineProxy.this, threadMirror);
 			}
 		});
+	}
+
+	@NotNull
+	@Override
+	public DotNetStringValueProxy createStringValue(@NotNull String value)
+	{
+		return MonoValueProxyUtil.wrap(myVirtualMachine.rootAppDomain().createString(value));
+	}
+
+	@NotNull
+	@Override
+	public DotNetCharValueProxy createCharValue(char value)
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetBooleanValueProxy createBooleanValue(boolean value)
+	{
+		return MonoValueProxyUtil.wrap(new BooleanValueMirror(myVirtualMachine, value));
+	}
+
+	@NotNull
+	@Override
+	public DotNetNumberValue createNumberValue(int tag, @NotNull Number value)
+	{
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetNullValueProxy createNullValue()
+	{
+		return null;
 	}
 
 	public boolean isSupportSystemThreadId()

@@ -32,8 +32,8 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.xdebugger.XDebugSession;
-import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
-import consulo.dotnet.debugger.impl.DotNetModuleExtensionWithDebug;
+import consulo.dotnet.debugger.DotNetDebugProcessBase;
+import consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerProcess;
 
 /**

@@ -39,4 +39,9 @@ public interface DotNetStackFrameProxy
 
 	@NotNull
 	DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException;
+
+	@Nullable
+	DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy);
+
+	void setParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy, @NotNull DotNetValueProxy valueProxy);
 }

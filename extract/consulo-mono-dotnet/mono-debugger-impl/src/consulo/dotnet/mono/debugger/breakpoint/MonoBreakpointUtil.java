@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
 import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
@@ -53,6 +52,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.Location;
@@ -190,7 +190,7 @@ public class MonoBreakpointUtil
 			return FindLocationResult.WRONG_TARGET;
 		}
 
-		if(typeMirror != null && !Comparing.equal(vmQualifiedName, DotNetDebuggerUtil.getVmQName(typeMirror)))
+		if(typeMirror != null && !Comparing.equal(vmQualifiedName, org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil.getVmQName(typeMirror)))
 		{
 			return FindLocationResult.WRONG_TARGET;
 		}

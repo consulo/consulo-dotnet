@@ -30,8 +30,6 @@ import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
-import org.mustbe.consulo.dotnet.debugger.DotNetEditorsProvider;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
@@ -55,6 +53,8 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
+import consulo.dotnet.debugger.DotNetDebuggerUtil;
+import consulo.dotnet.debugger.DotNetEditorsProvider;
 
 /**
  * @author VISTALL

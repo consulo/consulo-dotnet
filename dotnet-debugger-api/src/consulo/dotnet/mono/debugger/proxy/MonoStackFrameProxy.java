@@ -21,12 +21,16 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
+import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.InvalidObjectException;
+import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.StackFrameMirror;
+import mono.debugger.Value;
+import mono.debugger.util.ImmutablePair;
 
 /**
  * @author VISTALL
@@ -51,13 +55,33 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	{
 		try
 		{
-			myFrameMirror.thisObject();
+			return MonoValueProxyUtil.wrap(myFrameMirror.thisObject());
 		}
 		catch(InvalidObjectException e)
 		{
 			throw new DotNetInvalidObjectException(e);
 		}
-		return null;
+	}
+
+	@Nullable
+	@Override
+	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
+	{
+		MonoMethodParameterProxy methodParameterProxy = (MonoMethodParameterProxy) parameterProxy;
+		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(methodParameterProxy.getParameter()));
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void setParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy, @NotNull DotNetValueProxy valueProxy)
+	{
+		MonoMethodParameterProxy methodParameterProxy = (MonoMethodParameterProxy) parameterProxy;
+
+		MonoValueProxyBase<?> valueProxyBase = (MonoValueProxyBase) valueProxy;
+
+		Value value = ((MonoValueProxyBase) valueProxy).getMonoValue();
+
+		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(methodParameterProxy.getParameter(), value));
 	}
 
 	@NotNull

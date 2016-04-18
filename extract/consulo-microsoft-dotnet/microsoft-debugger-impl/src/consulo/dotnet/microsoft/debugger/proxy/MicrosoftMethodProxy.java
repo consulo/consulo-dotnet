@@ -17,6 +17,7 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
@@ -49,6 +50,13 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	public DotNetTypeProxy getDeclarationType()
 	{
 		return new MicrosoftTypeProxy(myContext, myModuleToken, myClassToken);
+	}
+
+	@NotNull
+	@Override
+	public DotNetMethodParameterProxy[] getParameters()
+	{
+		return new DotNetMethodParameterProxy[0];
 	}
 
 	@NotNull

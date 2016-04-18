@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
+import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
@@ -82,5 +83,18 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException
 	{
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
+	{
+		return null;
+	}
+
+	@Override
+	public void setParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy, @NotNull DotNetValueProxy valueProxy)
+	{
+
 	}
 }

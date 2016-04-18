@@ -16,23 +16,15 @@
 
 package consulo.dotnet.debugger.proxy;
 
+import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetTypeProxy
+public interface DotNetVariableProxy extends Named
 {
 	@NotNull
-	String getName();
-
-	@NotNull
-	String getFullName();
-
-	boolean isArray();
-
-	@Nullable
-	DotNetTypeProxy getBaseType();
+	DotNetTypeProxy getType();
 }

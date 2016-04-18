@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.proxy;
+package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import mono.debugger.ObjectValueMirror;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetTypeProxy
+public class MonoObjectValueProxy extends MonoValueProxyBase<ObjectValueMirror>
 {
-	@NotNull
-	String getName();
-
-	@NotNull
-	String getFullName();
-
-	boolean isArray();
-
-	@Nullable
-	DotNetTypeProxy getBaseType();
+	public MonoObjectValueProxy(ObjectValueMirror value)
+	{
+		super(value);
+	}
 }

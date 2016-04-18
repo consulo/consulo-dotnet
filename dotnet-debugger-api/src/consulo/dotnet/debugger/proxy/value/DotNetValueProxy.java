@@ -27,4 +27,7 @@ public interface DotNetValueProxy
 {
 	@Nullable
 	DotNetTypeProxy getType();
+
+	@Nullable
+	Object getValue();
 }

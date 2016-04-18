@@ -14,40 +14,37 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
-
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+package consulo.dotnet.debugger.nodes;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Function;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
-import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
-import edu.arizona.cs.mbel.signature.FieldAttributes;
-import mono.debugger.*;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import mono.debugger.InvalidFieldIdException;
+import mono.debugger.InvalidStackFrameException;
+import mono.debugger.InvokeFlags;
+import mono.debugger.MethodMirror;
+import mono.debugger.NotSuspendedException;
+import mono.debugger.ThreadMirror;
+import mono.debugger.ThrowValueException;
+import mono.debugger.VMDisconnectedException;
+import mono.debugger.Value;
 
 /**
  * @author VISTALL
  * @since 20.09.14
  */
 @Logger
-@Deprecated
 public class DotNetValuePresentation extends XValuePresentation
 {
-	private ThreadMirror myThreadMirror;
-	private Value<?> myValue;
+	private DotNetThreadProxy myThreadProxy;
+	private DotNetValueProxy myValue;
 
-	public DotNetValuePresentation(@NotNull ThreadMirror threadMirror, @Nullable Value<?> value)
+	public DotNetValuePresentation(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy value)
 	{
-		myThreadMirror = threadMirror;
+		myThreadProxy = threadProxy;
 		myValue = value;
 	}
 
@@ -55,7 +52,7 @@ public class DotNetValuePresentation extends XValuePresentation
 	@Override
 	public String getType()
 	{
-		if(myValue != null)
+		/*if(myValue != null)
 		{
 			final Ref<String> result = Ref.create();
 
@@ -109,14 +106,14 @@ public class DotNetValuePresentation extends XValuePresentation
 				}
 			});
 			return result.get();
-		}
+		} */
 		return null;
 	}
 
 	@Override
 	public void renderValue(@NotNull final XValueTextRenderer renderer)
 	{
-		if(myValue != null)
+		/*if(myValue != null)
 		{
 			myValue.accept(new ValueVisitor.Adapter()
 			{
@@ -159,7 +156,7 @@ public class DotNetValuePresentation extends XValuePresentation
 					{
 						if(field.isStatic() && (field.attributes() & FieldAttributes.Literal) == FieldAttributes.Literal)
 						{
-							Value<?> fieldValue = field.value(myThreadMirror, null);
+							Value<?> fieldValue = field.value(myThreadProxy, null);
 							if(fieldValue instanceof EnumValueMirror)
 							{
 								Value<?> enumValue = ((EnumValueMirror) fieldValue).value();
@@ -209,7 +206,7 @@ public class DotNetValuePresentation extends XValuePresentation
 					MethodMirror toString = type.findMethodByName("ToString", false);
 					if(toString != null)
 					{
-						Value<?> invoke = invokeSafe(toString, myThreadMirror, mirror);
+						Value<?> invoke = invokeSafe(toString, myThreadProxy, mirror);
 						if(invoke instanceof StringValueMirror)
 						{
 							toStringValue = ((StringValueMirror) invoke).value();
@@ -225,7 +222,7 @@ public class DotNetValuePresentation extends XValuePresentation
 							@Override
 							public String fun(Map.Entry<FieldOrPropertyMirror, Value<?>> entry)
 							{
-								String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myThreadMirror, entry.getValue()));
+								String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myThreadProxy, entry.getValue()));
 								return entry.getKey().name() + " = " + valueText;
 							}
 						}, ", ");
@@ -266,7 +263,7 @@ public class DotNetValuePresentation extends XValuePresentation
 					String qTypeOfValue = toString.declaringType().qualifiedName();
 					if(!Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
 					{
-						Value<?> invoke = invokeSafe(toString, myThreadMirror, value);
+						Value<?> invoke = invokeSafe(toString, myThreadProxy, value);
 						if(invoke instanceof StringValueMirror)
 						{
 							toStringValue = ((StringValueMirror) invoke).value();
@@ -309,7 +306,7 @@ public class DotNetValuePresentation extends XValuePresentation
 					renderer.renderValue("null");
 				}
 			});
-		}
+		} */
 	}
 
 	@Nullable

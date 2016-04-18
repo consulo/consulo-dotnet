@@ -14,25 +14,42 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.proxy;
+package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import mono.debugger.Value;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetTypeProxy
+public class MonoValueProxyBase<T extends Value<?>> implements DotNetValueProxy
 {
-	@NotNull
-	String getName();
+	protected T myValue;
 
-	@NotNull
-	String getFullName();
+	public MonoValueProxyBase(T value)
+	{
+		myValue = value;
+	}
 
-	boolean isArray();
+	public T getMonoValue()
+	{
+		return myValue;
+	}
 
 	@Nullable
-	DotNetTypeProxy getBaseType();
+	@Override
+	public DotNetTypeProxy getType()
+	{
+		return new MonoTypeProxy(myValue.type());
+	}
+
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return null;
+	}
 }

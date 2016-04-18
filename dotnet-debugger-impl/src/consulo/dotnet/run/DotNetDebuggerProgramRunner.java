@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.run;
+package consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import org.mustbe.consulo.dotnet.run.DotNetRunKeys;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.RunProfile;
@@ -36,8 +37,8 @@ import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
-import consulo.dotnet.debugger.impl.DotNetModuleExtensionWithDebug;
-import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
+import consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
+import consulo.dotnet.debugger.DotNetDebugProcessBase;
 
 /**
  * @author VISTALL

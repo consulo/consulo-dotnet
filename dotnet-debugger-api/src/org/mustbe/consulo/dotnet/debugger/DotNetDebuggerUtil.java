@@ -17,15 +17,7 @@
 package org.mustbe.consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
 import mono.debugger.TypeMirror;
 
 /**
@@ -50,45 +42,5 @@ public class DotNetDebuggerUtil
 		// change + to / separator
 		fullName = fullName.replace('+', DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_NAME);
 		return fullName;
-	}
-
-	@Nullable
-	@RequiredReadAction
-	public static PsiElement findPsiElement(@NotNull PsiFile file, final int line)
-	{
-		final Document doc = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
-		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(file.getProject()).getPsiFile(doc);
-		if(psi == null)
-		{
-			return null;
-		}
-
-		int offset = doc.getLineStartOffset(line);
-		int endOffset = doc.getLineEndOffset(line);
-		for(int i = offset + 1; i < endOffset; i++)
-		{
-			PsiElement el = psi.findElementAt(i);
-			if(el != null && !(el instanceof PsiWhiteSpace))
-			{
-				return el;
-			}
-		}
-
-		return null;
-	}
-
-	@Nullable
-	@RequiredReadAction
-	public static PsiElement findPsiElement(@NotNull PsiFile file, final int line, int column)
-	{
-		final Document doc = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
-		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(file.getProject()).getPsiFile(doc);
-		if(psi == null)
-		{
-			return null;
-		}
-
-		int offset = doc.getLineStartOffset(line);
-		return psi.findElementAt(offset + column);
 	}
 }

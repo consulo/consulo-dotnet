@@ -17,6 +17,7 @@
 package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mono.debugger.TypeMirror;
 
@@ -44,6 +45,19 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	@Override
 	public String getFullName()
 	{
-		return null;
+		return myTypeMirror.fullName();
+	}
+
+	@Override
+	public boolean isArray()
+	{
+		return myTypeMirror.isArray();
+	}
+
+	@Nullable
+	@Override
+	public DotNetTypeProxy getBaseType()
+	{
+		return new MonoTypeProxy(myTypeMirror.baseType());
 	}
 }

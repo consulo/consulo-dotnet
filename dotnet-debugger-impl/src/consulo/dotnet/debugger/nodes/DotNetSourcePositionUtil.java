@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
+package consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -26,19 +25,25 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
+import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 
 /**
  * @author VISTALL
  * @since 16.04.2015
  */
-@Deprecated
 public class DotNetSourcePositionUtil
 {
 	@Nullable
 	@RequiredReadAction
-	public static PsiElement resolveTargetPsiElement(DotNetDebugContext context, DotNetStackFrameMirrorProxy frameMirrorProxy)
+	public static PsiElement resolveTargetPsiElement(DotNetDebugContext context, DotNetStackFrameProxy stackFrameProxy)
 	{
-		String sourcePath = frameMirrorProxy.location().sourcePath();
+		DotNetSourceLocation sourceLocation = stackFrameProxy.getSourceLocation();
+		if(sourceLocation == null)
+		{
+			return null;
+		}
+		String sourcePath = sourceLocation.getFilePath();
 		if(sourcePath == null)
 		{
 			return null;
@@ -53,8 +58,8 @@ public class DotNetSourcePositionUtil
 		{
 			return null;
 		}
-		int line = frameMirrorProxy.location().lineNumber() - 1;
-		int column = frameMirrorProxy.location().columnNumber();
+		int line = sourceLocation.getLine();
+		int column = sourceLocation.getColumn();
 		return DotNetDebuggerUtil.findPsiElement(file, line, column);
 	}
 }

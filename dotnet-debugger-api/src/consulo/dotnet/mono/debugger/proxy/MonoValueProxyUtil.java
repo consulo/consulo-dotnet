@@ -14,25 +14,34 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.proxy;
+package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import mono.debugger.ObjectValueMirror;
+import mono.debugger.Value;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetTypeProxy
+public class MonoValueProxyUtil
 {
-	@NotNull
-	String getName();
-
-	@NotNull
-	String getFullName();
-
-	boolean isArray();
-
+	@SuppressWarnings("unchecked")
 	@Nullable
-	DotNetTypeProxy getBaseType();
+	@Contract(value = "null -> null; !null -> !null", pure = true)
+	public static <T extends DotNetValueProxy> T wrap(@Nullable Value<?> value)
+	{
+		if(value == null)
+		{
+			return null;
+		}
+		if(value instanceof ObjectValueMirror)
+		{
+			return (T) new MonoObjectValueProxy((ObjectValueMirror) value);
+		}
+
+		throw new IllegalArgumentException("Value " + value.getClass().getSimpleName() + " can't be wrapped");
+	}
 }

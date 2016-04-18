@@ -1,11 +1,9 @@
-package consulo.dotnet.debugger.impl;
+package consulo.dotnet.debugger;
 
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.DotNetDebugContext;
-import org.mustbe.consulo.dotnet.debugger.DotNetEditorsProvider;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import com.intellij.execution.ExecutionResult;

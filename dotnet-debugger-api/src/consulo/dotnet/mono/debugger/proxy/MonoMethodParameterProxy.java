@@ -18,49 +18,46 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
-import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class MonoMethodProxy implements DotNetMethodProxy
+public class MonoMethodParameterProxy implements DotNetMethodParameterProxy
 {
-	private MethodMirror myMethodMirror;
+	private int myIndex;
+	private MethodParameterMirror myParameter;
 
-	public MonoMethodProxy(MethodMirror methodMirror)
+	public MonoMethodParameterProxy(int index, MethodParameterMirror parameter)
 	{
-		myMethodMirror = methodMirror;
+		myIndex = index;
+		myParameter = parameter;
+	}
+
+	public MethodParameterMirror getParameter()
+	{
+		return myParameter;
+	}
+
+	@Override
+	public int getIndex()
+	{
+		return myIndex;
 	}
 
 	@NotNull
 	@Override
-	public DotNetTypeProxy getDeclarationType()
+	public DotNetTypeProxy getType()
 	{
-		return new MonoTypeProxy(myMethodMirror.declaringType());
-	}
-
-	@NotNull
-	@Override
-	public DotNetMethodParameterProxy[] getParameters()
-	{
-		MethodParameterMirror[] parameters = myMethodMirror.parameters();
-		DotNetMethodParameterProxy[] proxies = new DotNetMethodParameterProxy[parameters.length];
-		for(int i = 0; i < parameters.length; i++)
-		{
-			MethodParameterMirror parameter = parameters[i];
-			proxies[i] = new MonoMethodParameterProxy(i, parameter);
-		}
-		return proxies;
+		return new MonoTypeProxy(myParameter.type());
 	}
 
 	@NotNull
 	@Override
 	public String getName()
 	{
-		return myMethodMirror.name();
+		return myParameter.name();
 	}
 }

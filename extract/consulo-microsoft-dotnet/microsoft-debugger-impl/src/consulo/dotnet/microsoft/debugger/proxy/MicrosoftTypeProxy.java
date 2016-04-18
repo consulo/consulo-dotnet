@@ -17,6 +17,7 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetTypeInfoRequest;
@@ -51,6 +52,19 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@NotNull
 	@Override
 	public String getFullName()
+	{
+		return null;
+	}
+
+	@Override
+	public boolean isArray()
+	{
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public DotNetTypeProxy getBaseType()
 	{
 		return null;
 	}

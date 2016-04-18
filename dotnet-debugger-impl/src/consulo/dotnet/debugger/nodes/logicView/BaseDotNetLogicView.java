@@ -14,44 +14,43 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
+package consulo.dotnet.debugger.nodes.logicView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import mono.debugger.ThreadMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
  * @since 21.11.2015
  */
-@Deprecated
 public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 {
 	@Override
-	public boolean canHandle(@NotNull DotNetDebugContext debugContext, @NotNull TypeMirror typeMirror)
+	public boolean canHandle(@NotNull DotNetDebugContext debugContext, @NotNull DotNetTypeProxy typeMirror)
 	{
 		return false;
 	}
 
 	public abstract void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
 			@NotNull DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull ThreadMirror threadMirror,
-			@Nullable Value<?> value,
+			@NotNull DotNetThreadProxy threadMirror,
+			@Nullable DotNetValueProxy value,
 			@NotNull XValueChildrenList childrenList);
 
 	@Override
 	public void computeChildren(@NotNull UserDataHolderBase dataHolder,
 			@NotNull DotNetDebugContext debugContext,
 			@NotNull DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull ThreadMirror threadMirror,
-			@Nullable Value<?> value,
+			@NotNull DotNetThreadProxy threadMirror,
+			@Nullable DotNetValueProxy value,
 			@NotNull XCompositeNode node)
 	{
 		XValueChildrenList childrenList = new XValueChildrenList();

@@ -19,6 +19,11 @@ package consulo.dotnet.debugger.proxy;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetNumberValue;
+import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 
 /**
  * @author VISTALL
@@ -28,4 +33,19 @@ public interface DotNetVirtualMachineProxy
 {
 	@NotNull
 	List<DotNetThreadProxy> getThreads();
+
+	@NotNull
+	DotNetStringValueProxy createStringValue(@NotNull String value);
+
+	@NotNull
+	DotNetCharValueProxy createCharValue(char value);
+
+	@NotNull
+	DotNetBooleanValueProxy createBooleanValue(boolean value);
+
+	@NotNull
+	DotNetNumberValue createNumberValue(int tag, @NotNull Number value);
+
+	@NotNull
+	DotNetNullValueProxy createNullValue();
 }
