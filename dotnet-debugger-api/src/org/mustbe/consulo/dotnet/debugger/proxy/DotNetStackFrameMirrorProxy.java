@@ -28,6 +28,7 @@ import mono.debugger.util.ImmutablePair;
  * @author VISTALL
  * @since 26.03.2016
  */
+@Deprecated
 public interface DotNetStackFrameMirrorProxy
 {
 	@NotNull

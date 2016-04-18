@@ -39,4 +39,11 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	{
 		return myTypeMirror.name();
 	}
+
+	@NotNull
+	@Override
+	public String getFullName()
+	{
+		return null;
+	}
 }

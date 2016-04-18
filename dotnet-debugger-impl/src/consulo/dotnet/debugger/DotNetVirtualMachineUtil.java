@@ -14,42 +14,41 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
-import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.openapi.project.Project;
-import consulo.dotnet.debugger.DotNetDebugContext;
-import mono.debugger.TypeMirror;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
 /**
  * @author VISTALL
  * @since 19.04.14
  */
-@Deprecated
 public class DotNetVirtualMachineUtil
 {
 	@NotNull
 	@RequiredReadAction
-	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
+	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull DotNetTypeProxy typeMirror, @NotNull DotNetDebugContext debugContext)
 	{
 		Project project = debugContext.getProject();
 		return DotNetPsiSearcher.getInstance(project).findTypes(DotNetDebuggerUtil.getVmQName(typeMirror), debugContext.getResolveScope());
 	}
 
 	@NotNull
-	public static String formatNameWithGeneric(@NotNull TypeMirror typeMirror)
+	public static String formatNameWithGeneric(@NotNull DotNetTypeProxy typeMirror)
 	{
 		StringBuilder builder = new StringBuilder();
 		formatNameWithGeneric(builder, typeMirror);
 		return builder.toString();
 	}
 
-	public static void formatNameWithGeneric(@NotNull StringBuilder builder, @NotNull TypeMirror typeMirror)
+	public static void formatNameWithGeneric(@NotNull StringBuilder builder, @NotNull DotNetTypeProxy typeMirror)
 	{
+		/*
+		TODO [VISTALL]
 		TypeMirror original = typeMirror.original();
 		if(original == null)
 		{
@@ -70,6 +69,7 @@ public class DotNetVirtualMachineUtil
 			TypeMirror mirror = typeMirrors[i];
 			formatNameWithGeneric(builder, mirror);
 		}
-		builder.append(">");
+		builder.append(">");  */
+		builder.append(typeMirror.getName());
 	}
 }

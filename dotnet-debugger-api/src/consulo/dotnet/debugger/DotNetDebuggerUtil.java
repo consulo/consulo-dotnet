@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,19 +26,18 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
-import mono.debugger.TypeMirror;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
 /**
  * @author VISTALL
  * @since 25.04.14
  */
-@Deprecated
 public class DotNetDebuggerUtil
 {
 	@NotNull
-	public static String getVmQName(@NotNull TypeMirror typeMirror)
+	public static String getVmQName(@NotNull DotNetTypeProxy typeMirror)
 	{
-		String fullName = typeMirror.fullName();
+		String fullName = typeMirror.getFullName();
 
 		// System.List`1[String]
 		int i = fullName.indexOf('[');

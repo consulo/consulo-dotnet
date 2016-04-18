@@ -16,17 +16,14 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetTypeProxy
+public class DotNetInvalidObjectException extends Exception
 {
-	@NotNull
-	String getName();
-
-	@NotNull
-	String getFullName();
+	public DotNetInvalidObjectException(Throwable cause)
+	{
+		super(cause);
+	}
 }

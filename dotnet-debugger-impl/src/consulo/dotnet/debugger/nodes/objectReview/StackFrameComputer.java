@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes.objectReview;
+package consulo.dotnet.debugger.nodes.objectReview;
 
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.DotNetDebugContext;
-import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import com.intellij.xdebugger.frame.XValueChildrenList;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
@@ -32,8 +32,8 @@ import mono.debugger.Value;
 public interface StackFrameComputer
 {
 	boolean computeStackFrame(@NotNull DotNetDebugContext debugContext,
-			@Nullable Value thisObject,
-			@NotNull DotNetStackFrameMirrorProxy frameMirrorProxy,
+			@Nullable DotNetValueProxy thisObject,
+			@NotNull DotNetStackFrameProxy frameMirrorProxy,
 			@NotNull Set<Object> visitedVariables,
 			@NotNull XValueChildrenList childrenList);
 }

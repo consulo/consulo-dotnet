@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes.objectReview;
+package consulo.dotnet.debugger.nodes.objectReview;
 
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.DotNetDebugContext;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsStructValueMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
-import mono.debugger.LocalVariableMirror;
-import mono.debugger.MethodMirror;
-import mono.debugger.MethodParameterMirror;
-import mono.debugger.ObjectValueMirror;
-import mono.debugger.StructValueMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
+import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
@@ -44,14 +35,20 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 {
 	@Override
 	public boolean computeStackFrame(@NotNull DotNetDebugContext debugContext,
-			@Nullable Value thisObject,
-			@NotNull DotNetStackFrameMirrorProxy frameMirrorProxy,
+			@Nullable DotNetValueProxy thisObject,
+			@NotNull DotNetStackFrameProxy frameMirrorProxy,
 			@NotNull Set<Object> visitedVariables,
 			@NotNull XValueChildrenList childrenList)
 	{
-		MethodMirror method = frameMirrorProxy.location().method();
+		DotNetSourceLocation sourceLocation = frameMirrorProxy.getSourceLocation();
+		if(sourceLocation == null)
+		{
+			return true;
+		}
 
-		final Value value = frameMirrorProxy.thisObject();
+		DotNetMethodProxy method = sourceLocation.getMethod();
+
+		/*final Value value = frameMirrorProxy.thisObject();
 
 		if(value instanceof ObjectValueMirror)
 		{
@@ -74,9 +71,9 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 		else
 		{
 			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameMirrorProxy.thread(), frameMirrorProxy.location().declaringType());
-		}
+		}  */
 
-		MethodParameterMirror[] parameters = method.parameters();
+		/*MethodParameterMirror[] parameters = method.parameters();
 
 		for(MethodParameterMirror parameter : parameters)
 		{
@@ -85,9 +82,9 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 			visitedVariables.add(parameter);
 
 			childrenList.add(parameterMirrorNode);
-		}
+		} */
 
-		try
+	/*	try
 		{
 			LocalVariableMirror[] locals = method.locals(frameMirrorProxy.location().codeIndex());
 			for(LocalVariableMirror local : locals)
@@ -104,7 +101,7 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 		}
 		catch(IllegalArgumentException ignored)
 		{
-		}
+		}  */
 
 		return true;
 	}

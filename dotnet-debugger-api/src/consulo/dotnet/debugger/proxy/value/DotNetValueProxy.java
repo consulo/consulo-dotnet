@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.proxy;
+package consulo.dotnet.debugger.proxy.value;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetTypeProxy
+public interface DotNetValueProxy
 {
-	@NotNull
-	String getName();
-
-	@NotNull
-	String getFullName();
+	@Nullable
+	DotNetTypeProxy getType();
 }

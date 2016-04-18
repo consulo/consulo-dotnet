@@ -22,7 +22,6 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
-import consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -32,6 +31,7 @@ import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
+import consulo.dotnet.debugger.DotNetDebugContext;
 import mono.debugger.*;
 
 /**
@@ -39,6 +39,7 @@ import mono.debugger.*;
  * @since 11.04.14
  */
 @Logger
+@Deprecated
 public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirrorNode
 {
 	private XValueModifier myValueModifier = new XValueModifier()

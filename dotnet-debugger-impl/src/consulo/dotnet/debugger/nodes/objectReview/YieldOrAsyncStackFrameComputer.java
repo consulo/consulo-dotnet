@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes.objectReview;
+package consulo.dotnet.debugger.nodes.objectReview;
 
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
@@ -29,6 +28,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
+import consulo.dotnet.debugger.DotNetDebugContext;
 import mono.debugger.FieldMirror;
 import mono.debugger.InvalidObjectException;
 import mono.debugger.ObjectValueMirror;
@@ -39,9 +39,9 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 22.07.2015
  */
-public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
+public class YieldOrAsyncStackFrameComputer //implements StackFrameComputer
 {
-	@Override
+	//@Override
 	public boolean computeStackFrame(@NotNull final DotNetDebugContext debugContext,
 			@Nullable final Value thisObject,
 			@NotNull final DotNetStackFrameMirrorProxy stackFrameMirror,

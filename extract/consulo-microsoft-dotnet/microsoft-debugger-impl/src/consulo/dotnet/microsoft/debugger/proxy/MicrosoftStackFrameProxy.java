@@ -16,9 +16,15 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
+import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
+import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
 
@@ -45,6 +51,14 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 		return myIndex;
 	}
 
+	@NotNull
+	@Override
+	public DotNetThreadProxy getThread()
+	{
+		return null;
+	}
+
+	@NotNull
 	@Override
 	public Object getEqualityObject()
 	{
@@ -60,6 +74,13 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 		{
 			return new MicrosoftSourceLocation(myContext, position, myFrame.ModuleToken, myFrame.ClassToken, myFrame.FunctionToken);
 		}
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException
+	{
 		return null;
 	}
 }

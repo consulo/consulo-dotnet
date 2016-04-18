@@ -16,16 +16,15 @@
 
 package consulo.dotnet.debugger;
 
+import gnu.trove.THashSet;
+
 import java.io.File;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
-import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.DefaultStackFrameComputer;
-import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.StackFrameComputer;
-import org.mustbe.consulo.dotnet.debugger.nodes.objectReview.YieldOrAsyncStackFrameComputer;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Couple;
@@ -40,10 +39,17 @@ import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
+import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import consulo.dotnet.debugger.nodes.objectReview.DefaultStackFrameComputer;
+import consulo.dotnet.debugger.nodes.objectReview.StackFrameComputer;
+import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
+import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
+import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
@@ -52,7 +58,7 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 public class DotNetStackFrame extends XStackFrame
 {
 	private static final StackFrameComputer[] ourStackFrameComputers = new StackFrameComputer[]{
-			new YieldOrAsyncStackFrameComputer(),
+			//new YieldOrAsyncStackFrameComputer(),
 			new DefaultStackFrameComputer()
 	};
 
@@ -230,10 +236,10 @@ public class DotNetStackFrame extends XStackFrame
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
 		final XValueChildrenList childrenList = new XValueChildrenList();
-		/*final Set<Object> visitedVariables = new THashSet<Object>();
+		final Set<Object> visitedVariables = new THashSet<Object>();
 		try
 		{
-			final Value value = myFrameProxy.thisObject();
+			final DotNetValueProxy value = myFrameProxy.getThisObject();
 
 			for(StackFrameComputer objectReviewer : ourStackFrameComputers)
 			{
@@ -243,22 +249,22 @@ public class DotNetStackFrame extends XStackFrame
 				}
 			}
 		}
-		catch(AbsentInformationException e)
+		catch(DotNetAbsentInformationException e)
 		{
 			node.setMessage("Stack frame info is not available", XDebuggerUIConstants.INFORMATION_MESSAGE_ICON, XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES, null);
 			return;
 		}
-		catch(InvalidObjectException e)
+		catch(DotNetInvalidObjectException e)
 		{
 			// this object is not available
 		}
-		catch(InvalidStackFrameException e)
+		catch(DotNetInvalidStackFrameException e)
 		{
 			node.setErrorMessage("Stack frame info is not valid");
 			return;
 		}
 
-		if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())
+		/*if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())
 		{
 			PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
 			if(psiElement != null)

@@ -33,12 +33,12 @@ import mono.debugger.ThreadMirror;
  */
 public class MonoThreadProxy implements DotNetThreadProxy
 {
-	private MonoVirtualMachineProxy myMonoVirtualMachineProxy;
+	private MonoVirtualMachineProxy myVirtualMachineProxy;
 	private ThreadMirror myThreadMirror;
 
-	public MonoThreadProxy(MonoVirtualMachineProxy monoVirtualMachineProxy, ThreadMirror threadMirror)
+	public MonoThreadProxy(MonoVirtualMachineProxy virtualMachineProxy, ThreadMirror threadMirror)
 	{
-		myMonoVirtualMachineProxy = monoVirtualMachineProxy;
+		myVirtualMachineProxy = virtualMachineProxy;
 		myThreadMirror = threadMirror;
 	}
 
@@ -57,7 +57,7 @@ public class MonoThreadProxy implements DotNetThreadProxy
 	@Override
 	public long getId()
 	{
-		return getIdFromThread(myMonoVirtualMachineProxy, myThreadMirror);
+		return getIdFromThread(myVirtualMachineProxy, myThreadMirror);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class MonoThreadProxy implements DotNetThreadProxy
 		for(int i = 0; i < frames.size(); i++)
 		{
 			StackFrameMirror frameMirror = frames.get(i);
-			proxies.add(new MonoStackFrameProxy(i, frameMirror));
+			proxies.add(new MonoStackFrameProxy(i, myVirtualMachineProxy, frameMirror));
 		}
 		return proxies;
 	}

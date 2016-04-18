@@ -20,8 +20,12 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import mono.debugger.InvalidObjectException;
 import mono.debugger.StackFrameMirror;
 
 /**
@@ -31,12 +35,36 @@ import mono.debugger.StackFrameMirror;
 public class MonoStackFrameProxy implements DotNetStackFrameProxy
 {
 	private int myIndex;
+	private MonoVirtualMachineProxy myVirtualMachineProxy;
 	private StackFrameMirror myFrameMirror;
 
-	public MonoStackFrameProxy(int index, StackFrameMirror frameMirror)
+	public MonoStackFrameProxy(int index, MonoVirtualMachineProxy virtualMachineProxy, StackFrameMirror frameMirror)
 	{
 		myIndex = index;
+		myVirtualMachineProxy = virtualMachineProxy;
 		myFrameMirror = frameMirror;
+	}
+
+	@NotNull
+	@Override
+	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException
+	{
+		try
+		{
+			myFrameMirror.thisObject();
+		}
+		catch(InvalidObjectException e)
+		{
+			throw new DotNetInvalidObjectException(e);
+		}
+		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetThreadProxy getThread()
+	{
+		return new MonoThreadProxy(myVirtualMachineProxy, myFrameMirror.thread());
 	}
 
 	@Override
@@ -45,6 +73,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 		return myIndex;
 	}
 
+	@NotNull
 	@Override
 	public Object getEqualityObject()
 	{

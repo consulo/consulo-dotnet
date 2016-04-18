@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
+package consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.PsiElement;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XNavigatable;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import mono.debugger.TypeMirror;
+import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
 /**
  * @author VISTALL
  * @since 18.04.14
  */
-@Deprecated
 public abstract class AbstractTypedMirrorNode extends XNamedValue
 {
 	@NotNull
@@ -44,12 +44,13 @@ public abstract class AbstractTypedMirrorNode extends XNamedValue
 	}
 
 	@Nullable
-	public abstract TypeMirror getTypeOfVariable();
+	public abstract DotNetTypeProxy getTypeOfVariable();
 
 	@Override
+	@RequiredDispatchThread
 	public void computeTypeSourcePosition(@NotNull XNavigatable navigatable)
 	{
-		TypeMirror typeOfVariable = getTypeOfVariable();
+		DotNetTypeProxy typeOfVariable = getTypeOfVariable();
 		assert typeOfVariable != null;
 		DotNetTypeDeclaration[] types = findTypesByQualifiedName(typeOfVariable);
 		if(types.length == 0)
@@ -62,12 +63,12 @@ public abstract class AbstractTypedMirrorNode extends XNamedValue
 		{
 			return;
 		}
-		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(type.getContainingFile().getVirtualFile(),
-				nameIdentifier.getTextOffset()));
+		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(type.getContainingFile().getVirtualFile(), nameIdentifier.getTextOffset()));
 	}
 
 	@NotNull
-	public DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror)
+	@RequiredDispatchThread
+	public DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull DotNetTypeProxy typeMirror)
 	{
 		return DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, myDebugContext);
 	}

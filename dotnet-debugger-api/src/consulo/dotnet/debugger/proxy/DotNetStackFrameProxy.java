@@ -16,7 +16,9 @@
 
 package consulo.dotnet.debugger.proxy;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
@@ -26,8 +28,15 @@ public interface DotNetStackFrameProxy
 {
 	int getIndex();
 
+	@NotNull
+	DotNetThreadProxy getThread();
+
+	@NotNull
 	Object getEqualityObject();
 
 	@Nullable
 	DotNetSourceLocation getSourceLocation();
+
+	@NotNull
+	DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException;
 }

@@ -49,6 +49,13 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	}
 
 	@NotNull
+	@Override
+	public String getFullName()
+	{
+		return null;
+	}
+
+	@NotNull
 	private GetTypeInfoRequestResult info()
 	{
 		if(myResult != null)
