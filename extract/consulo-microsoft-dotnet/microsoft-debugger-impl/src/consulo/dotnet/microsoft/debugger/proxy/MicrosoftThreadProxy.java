@@ -34,11 +34,13 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequest
 public class MicrosoftThreadProxy implements DotNetThreadProxy
 {
 	private int myId;
+	private String myName;
 	private MicrosoftDebuggerClient myContext;
 
-	public MicrosoftThreadProxy(int id, MicrosoftDebuggerClient context)
+	public MicrosoftThreadProxy(int id, String name, MicrosoftDebuggerClient context)
 	{
 		myId = id;
+		myName = name;
 		myContext = context;
 	}
 
@@ -58,7 +60,7 @@ public class MicrosoftThreadProxy implements DotNetThreadProxy
 	@Override
 	public String getName()
 	{
-		return null;
+		return myName;
 	}
 
 	@NotNull

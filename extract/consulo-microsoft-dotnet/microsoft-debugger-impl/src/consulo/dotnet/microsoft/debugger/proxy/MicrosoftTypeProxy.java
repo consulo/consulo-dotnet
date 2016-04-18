@@ -52,7 +52,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public String getFullName()
 	{
-		return null;
+		return getName();
 	}
 
 	@Override

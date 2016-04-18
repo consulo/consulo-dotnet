@@ -28,6 +28,7 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
+import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetArgumentRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
 
 /**
@@ -45,20 +46,20 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 			GetFramesRequestResult.FrameInfo.SourcePosition position = myFrame.Position;
 			if(position != null)
 			{
-				return new MicrosoftSourceLocation(myContext, position, myFrame.Type, myFrame.FunctionToken);
+				return new MicrosoftSourceLocation(myClient, position, myFrame.Type, myFrame.FunctionToken);
 			}
 			return null;
 		}
 	};
 
-	private MicrosoftDebuggerClient myContext;
+	private MicrosoftDebuggerClient myClient;
 	private MicrosoftThreadProxy myThreadProxy;
 	private int myIndex;
 	private GetFramesRequestResult.FrameInfo myFrame;
 
-	public MicrosoftStackFrameProxy(MicrosoftDebuggerClient context, MicrosoftThreadProxy threadProxy, int index, GetFramesRequestResult.FrameInfo frame)
+	public MicrosoftStackFrameProxy(MicrosoftDebuggerClient client, MicrosoftThreadProxy threadProxy, int index, GetFramesRequestResult.FrameInfo frame)
 	{
-		myContext = context;
+		myClient = client;
 		myThreadProxy = threadProxy;
 		myIndex = index;
 		myFrame = frame;
@@ -102,7 +103,8 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
 	{
-		return null;
+		Object o = myClient.sendAndReceive(new GetArgumentRequest((int) myThreadProxy.getId(), myIndex, parameterProxy.getIndex()), Object.class);
+		return MicrosoftValueProxyUtil.wrap(o);
 	}
 
 	@Override

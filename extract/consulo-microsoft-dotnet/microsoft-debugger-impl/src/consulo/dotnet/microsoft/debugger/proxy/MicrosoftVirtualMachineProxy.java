@@ -54,7 +54,7 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 		for(GetThreadsRequestResult.ThreadInfo thread : result.Threads)
 		{
-			proxies.add(new MicrosoftThreadProxy(thread.Id, myContext));
+			proxies.add(new MicrosoftThreadProxy(thread.Id, thread.Name, myContext));
 		}
 		return proxies;
 	}

@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
+package consulo.dotnet.microsoft.debugger.protocol.clientMessage;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class GetThreadsRequestResult
+public class GetArgumentRequest
 {
-	public static class ThreadInfo
+	public int ThreadId;
+
+	public int StackFrameIndex;
+
+	public int Index;
+
+	public GetArgumentRequest(int threadId, int stackFrameIndex, int index)
 	{
-		public int Id;
-
-		public String Name;
+		ThreadId = threadId;
+		StackFrameIndex = stackFrameIndex;
+		Index = index;
 	}
-
-	public ThreadInfo[] Threads = new ThreadInfo[0];
 }

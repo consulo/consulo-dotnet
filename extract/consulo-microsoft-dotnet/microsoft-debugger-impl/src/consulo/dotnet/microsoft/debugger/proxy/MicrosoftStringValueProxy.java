@@ -14,20 +14,34 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
+package consulo.dotnet.microsoft.debugger.proxy;
+
+import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class GetThreadsRequestResult
+public class MicrosoftStringValueProxy extends MicrosoftValueProxyBase<String> implements DotNetStringValueProxy
 {
-	public static class ThreadInfo
+	public MicrosoftStringValueProxy(int id, String value)
 	{
-		public int Id;
-
-		public String Name;
+		super(id, value);
 	}
 
-	public ThreadInfo[] Threads = new ThreadInfo[0];
+	@Nullable
+	@Override
+	public DotNetTypeProxy getType()
+	{
+		return null;
+	}
+
+	@Override
+	public void accept(DotNetValueProxyVisitor visitor)
+	{
+		visitor.visitStringValue(this);
+	}
 }
