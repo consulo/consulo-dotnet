@@ -27,7 +27,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetThreadsRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetThreadsRequestResult;
 
@@ -37,9 +37,9 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetThreadsReques
  */
 public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 {
-	private MicrosoftDebuggerClientContext myContext;
+	private MicrosoftDebuggerClient myContext;
 
-	public MicrosoftVirtualMachineProxy(MicrosoftDebuggerClientContext context)
+	public MicrosoftVirtualMachineProxy(MicrosoftDebuggerClient context)
 	{
 		myContext = context;
 	}

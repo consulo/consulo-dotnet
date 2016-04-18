@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
 
@@ -34,7 +34,7 @@ public class MicrosoftSourceLocation implements DotNetSourceLocation
 
 	private final DotNetMethodProxy myMethodProxy;
 
-	public MicrosoftSourceLocation(MicrosoftDebuggerClientContext context, GetFramesRequestResult.FrameInfo.SourcePosition position, TypeRef typeRef, int functionToken)
+	public MicrosoftSourceLocation(MicrosoftDebuggerClient context, GetFramesRequestResult.FrameInfo.SourcePosition position, TypeRef typeRef, int functionToken)
 	{
 		myPosition = position;
 		myMethodProxy = new MicrosoftMethodProxy(context, typeRef, functionToken);

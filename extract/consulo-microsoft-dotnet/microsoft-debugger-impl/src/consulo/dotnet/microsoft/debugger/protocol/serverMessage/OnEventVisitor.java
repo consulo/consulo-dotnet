@@ -1,6 +1,6 @@
 package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 
 /**
  * @author VISTALL
@@ -8,12 +8,12 @@ import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
  */
 public class OnEventVisitor
 {
-	public boolean visitOnModuleLoad(OnModuleLoadEvent event, MicrosoftDebuggerClientContext context)
+	public boolean visitOnModuleLoad(OnModuleLoadEvent event, MicrosoftDebuggerClient context)
 	{
 		return true;
 	}
 
-	public boolean visitOnBreakpointFire(OnBreakpointFire event, MicrosoftDebuggerClientContext context)
+	public boolean visitOnBreakpointFire(OnBreakpointFire event, MicrosoftDebuggerClient context)
 	{
 		return true;
 	}

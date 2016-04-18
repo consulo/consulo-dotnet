@@ -27,7 +27,7 @@ import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
 
 /**
@@ -51,12 +51,12 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 		}
 	};
 
-	private MicrosoftDebuggerClientContext myContext;
+	private MicrosoftDebuggerClient myContext;
 	private MicrosoftThreadProxy myThreadProxy;
 	private int myIndex;
 	private GetFramesRequestResult.FrameInfo myFrame;
 
-	public MicrosoftStackFrameProxy(MicrosoftDebuggerClientContext context, MicrosoftThreadProxy threadProxy, int index, GetFramesRequestResult.FrameInfo frame)
+	public MicrosoftStackFrameProxy(MicrosoftDebuggerClient context, MicrosoftThreadProxy threadProxy, int index, GetFramesRequestResult.FrameInfo frame)
 	{
 		myContext = context;
 		myThreadProxy = threadProxy;

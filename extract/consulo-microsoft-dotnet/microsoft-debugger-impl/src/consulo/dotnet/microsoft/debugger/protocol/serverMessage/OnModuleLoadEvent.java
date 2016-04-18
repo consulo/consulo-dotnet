@@ -1,6 +1,6 @@
 package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 
 /**
  * @author VISTALL
@@ -11,7 +11,7 @@ public class OnModuleLoadEvent implements OnEventValue
 	public String ModuleFile;
 
 	@Override
-	public boolean accept(OnEventVisitor visitor, MicrosoftDebuggerClientContext context)
+	public boolean accept(OnEventVisitor visitor, MicrosoftDebuggerClient context)
 	{
 		return visitor.visitOnModuleLoad(this, context);
 	}

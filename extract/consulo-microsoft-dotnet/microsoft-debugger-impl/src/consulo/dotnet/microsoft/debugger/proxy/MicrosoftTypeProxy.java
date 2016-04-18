@@ -19,7 +19,7 @@ package consulo.dotnet.microsoft.debugger.proxy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetTypeInfoRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoRequestResult;
@@ -30,12 +30,12 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoReque
  */
 public class MicrosoftTypeProxy implements DotNetTypeProxy
 {
-	private MicrosoftDebuggerClientContext myContext;
+	private MicrosoftDebuggerClient myContext;
 	private TypeRef myTypeRef;
 
 	private GetTypeInfoRequestResult myResult;
 
-	public MicrosoftTypeProxy(MicrosoftDebuggerClientContext context, TypeRef typeRef)
+	public MicrosoftTypeProxy(MicrosoftDebuggerClient context, TypeRef typeRef)
 	{
 		myContext = context;
 		myTypeRef = typeRef;

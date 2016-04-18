@@ -1,6 +1,6 @@
 package consulo.dotnet.microsoft.debugger.protocol;
 
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventValue;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventVisitor;
 
@@ -16,7 +16,7 @@ public class ServerMessage
 
 	public Object Object;
 
-	public boolean accept(OnEventVisitor visitor, MicrosoftDebuggerClientContext context)
+	public boolean accept(OnEventVisitor visitor, MicrosoftDebuggerClient context)
 	{
 		assert Object != null;
 

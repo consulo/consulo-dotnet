@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetFramesRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
 
@@ -34,9 +34,9 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequest
 public class MicrosoftThreadProxy implements DotNetThreadProxy
 {
 	private int myId;
-	private MicrosoftDebuggerClientContext myContext;
+	private MicrosoftDebuggerClient myContext;
 
-	public MicrosoftThreadProxy(int id, MicrosoftDebuggerClientContext context)
+	public MicrosoftThreadProxy(int id, MicrosoftDebuggerClient context)
 	{
 		myId = id;
 		myContext = context;

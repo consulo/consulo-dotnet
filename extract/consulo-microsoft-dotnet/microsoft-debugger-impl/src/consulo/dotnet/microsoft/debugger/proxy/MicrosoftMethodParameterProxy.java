@@ -19,7 +19,7 @@ package consulo.dotnet.microsoft.debugger.proxy;
 import org.jetbrains.annotations.NotNull;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoRequestResult;
 
 /**
@@ -32,7 +32,7 @@ public class MicrosoftMethodParameterProxy implements DotNetMethodParameterProxy
 	private GetMethodInfoRequestResult.ParameterInfo myParameterInfo;
 	private DotNetTypeProxy myTypeProxy;
 
-	public MicrosoftMethodParameterProxy(MicrosoftDebuggerClientContext context, int index, GetMethodInfoRequestResult.ParameterInfo parameterInfo)
+	public MicrosoftMethodParameterProxy(MicrosoftDebuggerClient context, int index, GetMethodInfoRequestResult.ParameterInfo parameterInfo)
 	{
 		myIndex = index;
 		myParameterInfo = parameterInfo;

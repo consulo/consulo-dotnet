@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetMethodInfoRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoRequestResult;
@@ -31,7 +31,7 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoReq
  */
 public class MicrosoftMethodProxy implements DotNetMethodProxy
 {
-	private MicrosoftDebuggerClientContext myContext;
+	private MicrosoftDebuggerClient myContext;
 	private TypeRef myTypeRef;
 	private int myFunctionToken;
 
@@ -39,7 +39,7 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 
 	private DotNetTypeProxy myDeclarationType;
 
-	public MicrosoftMethodProxy(MicrosoftDebuggerClientContext context, TypeRef typeRef, int functionToken)
+	public MicrosoftMethodProxy(MicrosoftDebuggerClient context, TypeRef typeRef, int functionToken)
 	{
 		myContext = context;
 		myTypeRef = typeRef;

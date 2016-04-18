@@ -5,6 +5,8 @@ import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.xdebugger.XDebugSession;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
+import consulo.dotnet.microsoft.debugger.protocol.clientMessage.ContinueRequest;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ContinueRequestResult;
 
 /**
  * @author VISTALL
@@ -18,6 +20,12 @@ public class MicrosoftDebuggerProcess extends DotNetDebugProcessBase
 	{
 		super(session, runProfile);
 		myClient = new MicrosoftDebuggerClient(this, debugConnectionInfo);
+	}
+
+	@Override
+	public void resume()
+	{
+		myClient.sendAndReceive(new ContinueRequest(), ContinueRequestResult.class);
 	}
 
 	@Override

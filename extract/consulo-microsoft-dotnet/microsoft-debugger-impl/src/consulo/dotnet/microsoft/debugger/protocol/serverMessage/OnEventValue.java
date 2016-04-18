@@ -1,6 +1,6 @@
 package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 
 /**
  * @author VISTALL
@@ -8,5 +8,5 @@ import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
  */
 public interface OnEventValue
 {
-	boolean accept(OnEventVisitor visitor, MicrosoftDebuggerClientContext context);
+	boolean accept(OnEventVisitor visitor, MicrosoftDebuggerClient context);
 }

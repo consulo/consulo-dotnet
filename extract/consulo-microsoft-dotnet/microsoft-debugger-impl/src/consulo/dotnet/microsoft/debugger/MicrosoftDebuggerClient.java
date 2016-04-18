@@ -3,6 +3,7 @@ package consulo.dotnet.microsoft.debugger;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,8 +22,11 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.intellij.openapi.util.Ref;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
+import com.intellij.util.ReflectionUtil;
+import com.intellij.util.concurrency.Semaphore;
 import consulo.dotnet.microsoft.debugger.protocol.ClientMessage;
 import consulo.dotnet.microsoft.debugger.protocol.ServerMessage;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventVisitor;
@@ -31,9 +35,9 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventVisitor;
  * @author VISTALL
  * @since 16.04.2016
  */
-class MicrosoftDebuggerClient
+public class MicrosoftDebuggerClient
 {
-	private static class MicrosoftDebuggerNettyHandler extends SimpleChannelUpstreamHandler
+	private class MicrosoftDebuggerNettyHandler extends SimpleChannelUpstreamHandler
 	{
 		private final ExecutorService myExecutorService = Executors.newCachedThreadPool(ConcurrencyUtil.newNamedThreadFactory("MS Task Executors"));
 
@@ -80,7 +84,7 @@ class MicrosoftDebuggerClient
 						}
 						else
 						{
-							boolean c = event.accept(myVisitor, new MicrosoftDebuggerClientContext(ctx.getChannel(), myWaitMap));
+							boolean c = event.accept(myVisitor, MicrosoftDebuggerClient.this);
 
 							ClientMessage clientMessage = new ClientMessage();
 							clientMessage.Id = event.Id;
@@ -177,6 +181,44 @@ class MicrosoftDebuggerClient
 				return event;
 			}
 		}).create();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T sendAndReceive(Object request, final Class<T> clazz)
+	{
+		Channel channel = myChannelFuture.getChannel();
+		if(channel == null || !channel.isConnected())
+		{
+			return ReflectionUtil.newInstance(clazz);
+		}
+
+		final ClientMessage clientMessage = new ClientMessage();
+		clientMessage.Id = UUID.randomUUID().toString();
+
+		clientMessage.Type = request.getClass().getSimpleName();
+		clientMessage.Object = request;
+
+		final String jsonText = new Gson().toJson(clientMessage);
+
+		//System.out.println("send " + jsonText);
+		final Ref<Object> ref = Ref.create();
+		final Semaphore semaphore = new Semaphore();
+		semaphore.down();
+
+		myChannelHandler.myWaitMap.put(clientMessage.Id, new Consumer<Object>()
+		{
+			@Override
+			public void consume(Object o)
+			{
+				ref.set(o == null ? ReflectionUtil.newInstance(clazz) : o);
+				semaphore.up();
+			}
+		});
+
+		channel.write(jsonText);
+
+		semaphore.waitFor();
+		return (T) ref.get();
 	}
 
 	public void connect()

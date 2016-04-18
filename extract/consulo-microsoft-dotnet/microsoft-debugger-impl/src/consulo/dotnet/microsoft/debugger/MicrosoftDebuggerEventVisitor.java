@@ -44,7 +44,7 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 	}
 
 	@Override
-	public boolean visitOnModuleLoad(OnModuleLoadEvent event, final MicrosoftDebuggerClientContext context)
+	public boolean visitOnModuleLoad(OnModuleLoadEvent event, final MicrosoftDebuggerClient context)
 	{
 		File file = new File(event.ModuleFile);
 
@@ -114,7 +114,7 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 	}
 
 	@Override
-	public boolean visitOnBreakpointFire(final OnBreakpointFire event, MicrosoftDebuggerClientContext context)
+	public boolean visitOnBreakpointFire(final OnBreakpointFire event, MicrosoftDebuggerClient context)
 	{
 		XLineBreakpoint<?> breakpoint = ApplicationManager.getApplication().runReadAction(new Computable<XLineBreakpoint<?>>()
 		{
