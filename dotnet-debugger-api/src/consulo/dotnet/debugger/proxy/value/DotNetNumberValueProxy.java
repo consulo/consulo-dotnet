@@ -16,20 +16,10 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
-import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetValueProxy
+public interface DotNetNumberValueProxy extends DotNetValueProxy
 {
-	@Nullable
-	DotNetTypeProxy getType();
-
-	@Nullable
-	Object getValue();
-
-	void accept(DotNetValueProxyVisitor visitor);
 }

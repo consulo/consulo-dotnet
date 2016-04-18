@@ -16,40 +16,24 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
+import mono.debugger.NoObjectValueMirror;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class MonoValueProxyBase<T extends Value<?>> implements DotNetValueProxy
+public class MonoNullValueProxy extends MonoValueProxyBase<NoObjectValueMirror> implements DotNetNullValueProxy
 {
-	protected T myValue;
-
-	public MonoValueProxyBase(T value)
+	public MonoNullValueProxy(NoObjectValueMirror value)
 	{
-		myValue = value;
+		super(value);
 	}
 
-	public T getMonoValue()
-	{
-		return myValue;
-	}
-
-	@Nullable
 	@Override
-	public DotNetTypeProxy getType()
+	public void accept(DotNetValueProxyVisitor visitor)
 	{
-		return new MonoTypeProxy(myValue.type());
-	}
-
-	@Nullable
-	@Override
-	public Object getValue()
-	{
-		return null;
+		visitor.visitNullValue(this);
 	}
 }

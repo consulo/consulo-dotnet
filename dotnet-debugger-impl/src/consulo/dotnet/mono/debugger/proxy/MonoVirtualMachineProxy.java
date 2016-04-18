@@ -44,11 +44,12 @@ import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetNumberValue;
+import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import mono.debugger.AppDomainMirror;
 import mono.debugger.AssemblyMirror;
 import mono.debugger.BooleanValueMirror;
+import mono.debugger.NoObjectValueMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.VMDisconnectedException;
@@ -118,7 +119,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 	@NotNull
 	@Override
-	public DotNetNumberValue createNumberValue(int tag, @NotNull Number value)
+	public DotNetNumberValueProxy createNumberValue(int tag, @NotNull Number value)
 	{
 		return null;
 	}
@@ -127,7 +128,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public DotNetNullValueProxy createNullValue()
 	{
-		return null;
+		return MonoValueProxyUtil.wrap(new NoObjectValueMirror(myVirtualMachine));
 	}
 
 	public boolean isSupportSystemThreadId()

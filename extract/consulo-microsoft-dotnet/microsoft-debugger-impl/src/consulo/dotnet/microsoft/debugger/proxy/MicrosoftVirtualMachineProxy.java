@@ -25,7 +25,7 @@ import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetNumberValue;
+import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetThreadsRequest;
@@ -82,7 +82,7 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 	@NotNull
 	@Override
-	public DotNetNumberValue createNumberValue(int tag, @NotNull Number value)
+	public DotNetNumberValueProxy createNumberValue(int tag, @NotNull Number value)
 	{
 		return null;
 	}

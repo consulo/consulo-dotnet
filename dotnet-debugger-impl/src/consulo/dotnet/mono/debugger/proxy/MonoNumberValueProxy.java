@@ -16,32 +16,24 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import mono.debugger.ObjectValueMirror;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
+import mono.debugger.NumberValueMirror;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class MonoValueProxyUtil
+public class MonoNumberValueProxy extends MonoValueProxyBase<NumberValueMirror> implements DotNetNumberValueProxy
 {
-	@SuppressWarnings("unchecked")
-	@Nullable
-	@Contract(value = "null -> null; !null -> !null", pure = true)
-	public static <T extends DotNetValueProxy> T wrap(@Nullable Value<?> value)
+	public MonoNumberValueProxy(NumberValueMirror value)
 	{
-		if(value == null)
-		{
-			return null;
-		}
-		if(value instanceof ObjectValueMirror)
-		{
-			return (T) new MonoObjectValueProxy((ObjectValueMirror) value);
-		}
+		super(value);
+	}
 
-		throw new IllegalArgumentException("Value " + value.getClass().getSimpleName() + " can't be wrapped");
+	@Override
+	public void accept(DotNetValueProxyVisitor visitor)
+	{
+		visitor.visitNumberValue(this);
 	}
 }

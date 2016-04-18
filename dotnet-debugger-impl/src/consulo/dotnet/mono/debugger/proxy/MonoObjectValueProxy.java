@@ -14,12 +14,26 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.proxy.value;
+package consulo.dotnet.mono.debugger.proxy;
+
+import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
+import mono.debugger.ObjectValueMirror;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetNumberValue extends DotNetValueProxy
+public class MonoObjectValueProxy extends MonoValueProxyBase<ObjectValueMirror> implements DotNetObjectValueProxy
 {
+	public MonoObjectValueProxy(ObjectValueMirror value)
+	{
+		super(value);
+	}
+
+	@Override
+	public void accept(DotNetValueProxyVisitor visitor)
+	{
+		visitor.visitObjectValue(this);
+	}
 }

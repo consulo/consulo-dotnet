@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetNumberValue;
+import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 
 /**
@@ -44,7 +44,7 @@ public interface DotNetVirtualMachineProxy
 	DotNetBooleanValueProxy createBooleanValue(boolean value);
 
 	@NotNull
-	DotNetNumberValue createNumberValue(int tag, @NotNull Number value);
+	DotNetNumberValueProxy createNumberValue(int tag, @NotNull Number value);
 
 	@NotNull
 	DotNetNullValueProxy createNullValue();

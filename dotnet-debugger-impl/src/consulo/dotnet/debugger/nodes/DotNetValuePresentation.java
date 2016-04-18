@@ -21,7 +21,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mono.debugger.InvalidFieldIdException;
 import mono.debugger.InvalidStackFrameException;
 import mono.debugger.InvokeFlags;
@@ -113,200 +119,208 @@ public class DotNetValuePresentation extends XValuePresentation
 	@Override
 	public void renderValue(@NotNull final XValueTextRenderer renderer)
 	{
-		/*if(myValue != null)
+		if(myValue == null)
 		{
-			myValue.accept(new ValueVisitor.Adapter()
+			return;
+		}
+
+		myValue.accept(new DotNetValueProxyVisitor()
+		{
+			@Override
+			public void visitStringValue(@NotNull DotNetStringValueProxy proxy)
 			{
-				@Override
-				public void visitStringValue(@NotNull StringValueMirror value, @NotNull String mainValue)
+				renderer.renderStringValue((String) proxy.getValue());
+			}
+
+			@Override
+			public void visitArrayValue(@NotNull DotNetArrayValueProxy proxy)
+			{
+				// nothing
+			}
+
+			/*@Override
+			public void visitEnumValue(@NotNull EnumValueMirror mirror)
+			{
+				Value<?> value = mirror.value();
+				if(!(value instanceof NumberValueMirror))
 				{
-					renderer.renderStringValue(mainValue);
+					return;
 				}
 
-				@Override
-				public void visitEnumValue(@NotNull EnumValueMirror mirror)
+				TypeMirror type = mirror.type();
+				CustomAttributeMirror[] customAttributeMirrors = type.customAttributes();
+
+				boolean flags = false;
+				for(CustomAttributeMirror customAttributeMirror : customAttributeMirrors)
 				{
-					Value<?> value = mirror.value();
-					if(!(value instanceof NumberValueMirror))
+					MethodMirror constructorMirror = customAttributeMirror.getConstructorMirror();
+					TypeMirror typeMirror = constructorMirror.declaringType();
+					if(DotNetTypes.System.FlagsAttribute.equals(typeMirror.qualifiedName()))
 					{
-						return;
+						flags = true;
+						break;
 					}
+				}
 
-					TypeMirror type = mirror.type();
-					CustomAttributeMirror[] customAttributeMirrors = type.customAttributes();
+				Set<String> enumFields = new LinkedHashSet<String>();
+				Number expectedValue = ((NumberValueMirror) value).value();
 
-					boolean flags = false;
-					for(CustomAttributeMirror customAttributeMirror : customAttributeMirrors)
+				FieldMirror[] fields = mirror.type().fields();
+
+				for(FieldMirror field : fields)
+				{
+					if(field.isStatic() && (field.attributes() & FieldAttributes.Literal) == FieldAttributes.Literal)
 					{
-						MethodMirror constructorMirror = customAttributeMirror.getConstructorMirror();
-						TypeMirror typeMirror = constructorMirror.declaringType();
-						if(DotNetTypes.System.FlagsAttribute.equals(typeMirror.qualifiedName()))
+						Value<?> fieldValue = field.value(myThreadProxy, null);
+						if(fieldValue instanceof EnumValueMirror)
 						{
-							flags = true;
-							break;
-						}
-					}
-
-					Set<String> enumFields = new LinkedHashSet<String>();
-					Number expectedValue = ((NumberValueMirror) value).value();
-
-					FieldMirror[] fields = mirror.type().fields();
-
-					for(FieldMirror field : fields)
-					{
-						if(field.isStatic() && (field.attributes() & FieldAttributes.Literal) == FieldAttributes.Literal)
-						{
-							Value<?> fieldValue = field.value(myThreadProxy, null);
-							if(fieldValue instanceof EnumValueMirror)
+							Value<?> enumValue = ((EnumValueMirror) fieldValue).value();
+							if(enumValue instanceof NumberValueMirror)
 							{
-								Value<?> enumValue = ((EnumValueMirror) fieldValue).value();
-								if(enumValue instanceof NumberValueMirror)
-								{
-									Number actualValue = ((NumberValueMirror) enumValue).value();
+								Number actualValue = ((NumberValueMirror) enumValue).value();
 
-									if(flags)
+								if(flags)
+								{
+									long flagsValue = expectedValue.longValue();
+									long maskValue = actualValue.longValue();
+									if((flagsValue & maskValue) == maskValue)
 									{
-										long flagsValue = expectedValue.longValue();
-										long maskValue = actualValue.longValue();
-										if((flagsValue & maskValue) == maskValue)
-										{
-											enumFields.add(field.name());
-										}
+										enumFields.add(field.name());
 									}
-									else
+								}
+								else
+								{
+									if(expectedValue.equals(actualValue))
 									{
-										if(expectedValue.equals(actualValue))
-										{
-											enumFields.add(field.name());
-											break;
-										}
+										enumFields.add(field.name());
+										break;
 									}
 								}
 							}
 						}
 					}
+				}
 
-					if(!enumFields.isEmpty())
+				if(!enumFields.isEmpty())
+				{
+					renderer.renderValue(StringUtil.join(enumFields, " | "));
+				}
+				else
+				{
+					renderer.renderValue(expectedValue.toString());
+				}
+			} */
+
+			/*@Override
+			public void visitStructValue(@NotNull StructValueMirror mirror)
+			{
+				TypeMirror type = mirror.type();
+
+				String toStringValue = null;
+
+				MethodMirror toString = type.findMethodByName("ToString", false);
+				if(toString != null)
+				{
+					Value<?> invoke = invokeSafe(toString, myThreadProxy, mirror);
+					if(invoke instanceof StringValueMirror)
 					{
-						renderer.renderValue(StringUtil.join(enumFields, " | "));
-					}
-					else
-					{
-						renderer.renderValue(expectedValue.toString());
+						toStringValue = ((StringValueMirror) invoke).value();
 					}
 				}
 
-				@Override
-				public void visitStructValue(@NotNull StructValueMirror mirror)
+				if(toStringValue == null)
 				{
-					TypeMirror type = mirror.type();
+					Map<FieldOrPropertyMirror, Value<?>> fields = mirror.map();
 
-					String toStringValue = null;
-
-					MethodMirror toString = type.findMethodByName("ToString", false);
-					if(toString != null)
+					toStringValue = StringUtil.join(fields.entrySet(), new Function<Map.Entry<FieldOrPropertyMirror, Value<?>>, String>()
 					{
-						Value<?> invoke = invokeSafe(toString, myThreadProxy, mirror);
-						if(invoke instanceof StringValueMirror)
+						@Override
+						public String fun(Map.Entry<FieldOrPropertyMirror, Value<?>> entry)
 						{
-							toStringValue = ((StringValueMirror) invoke).value();
+							String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myThreadProxy, entry.getValue()));
+							return entry.getKey().name() + " = " + valueText;
 						}
-					}
-
-					if(toStringValue == null)
-					{
-						Map<FieldOrPropertyMirror, Value<?>> fields = mirror.map();
-
-						toStringValue = StringUtil.join(fields.entrySet(), new Function<Map.Entry<FieldOrPropertyMirror, Value<?>>, String>()
-						{
-							@Override
-							public String fun(Map.Entry<FieldOrPropertyMirror, Value<?>> entry)
-							{
-								String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myThreadProxy, entry.getValue()));
-								return entry.getKey().name() + " = " + valueText;
-							}
-						}, ", ");
-					}
-
-					renderer.renderValue(toStringValue);
+					}, ", ");
 				}
 
-				@Override
-				public void visitObjectValue(@NotNull ObjectValueMirror value)
-				{
-					if(value.id() == 0)
-					{
-						renderer.renderValue("null");
-						return;
-					}
+				renderer.renderValue(toStringValue);
+			}  */
 
-					TypeMirror type = null;
-					try
-					{
-						type = value.type();
-					}
-					catch(InvalidObjectException ignored)
-					{
-					}
-
-					if(type == null)
-					{
-						return;
-					}
-					MethodMirror toString = type.findMethodByName("ToString", true);
-					if(toString == null)
-					{
-						return;
-					}
-
-					String toStringValue = null;
-					String qTypeOfValue = toString.declaringType().qualifiedName();
-					if(!Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
-					{
-						Value<?> invoke = invokeSafe(toString, myThreadProxy, value);
-						if(invoke instanceof StringValueMirror)
-						{
-							toStringValue = ((StringValueMirror) invoke).value();
-						}
-					}
-
-					if(toStringValue != null)
-					{
-						renderer.renderValue(toStringValue);
-					}
-				}
-
-				@Override
-				public void visitCharValue(@NotNull CharValueMirror valueMirror, @NotNull Character mainValue)
-				{
-					StringBuilder builder = new StringBuilder();
-					builder.append('\'');
-					builder.append(mainValue);
-					builder.append('\'');
-					builder.append(' ');
-					builder.append((int) mainValue.charValue());
-					renderer.renderValue(builder.toString());
-				}
-
-				@Override
-				public void visitBooleanValue(@NotNull BooleanValueMirror value, @NotNull Boolean mainValue)
-				{
-					renderer.renderValue(String.valueOf(mainValue));
-				}
-
-				@Override
-				public void visitNumberValue(@NotNull NumberValueMirror value, @NotNull Number mainValue)
-				{
-					renderer.renderValue(String.valueOf(mainValue));
-				}
-
-				@Override
-				public void visitNoObjectValue(@NotNull NoObjectValueMirror value)
+			@Override
+			public void visitObjectValue(@NotNull DotNetObjectValueProxy value)
+			{
+				/*if(value.id() == 0)
 				{
 					renderer.renderValue("null");
+					return;
 				}
-			});
-		} */
+
+				TypeMirror type = null;
+				try
+				{
+					type = value.type();
+				}
+				catch(InvalidObjectException ignored)
+				{
+				}
+
+				if(type == null)
+				{
+					return;
+				}
+				MethodMirror toString = type.findMethodByName("ToString", true);
+				if(toString == null)
+				{
+					return;
+				}
+
+				String toStringValue = null;
+				String qTypeOfValue = toString.declaringType().qualifiedName();
+				if(!Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
+				{
+					Value<?> invoke = invokeSafe(toString, myThreadProxy, value);
+					if(invoke instanceof StringValueMirror)
+					{
+						toStringValue = ((StringValueMirror) invoke).value();
+					}
+				}
+
+				if(toStringValue != null)
+				{
+					renderer.renderValue(toStringValue);
+				}  */
+			}
+
+			/*@Override
+			public void visitCharValue(@NotNull CharValueMirror valueMirror, @NotNull Character mainValue)
+			{
+				StringBuilder builder = new StringBuilder();
+				builder.append('\'');
+				builder.append(mainValue);
+				builder.append('\'');
+				builder.append(' ');
+				builder.append((int) mainValue.charValue());
+				renderer.renderValue(builder.toString());
+			} */
+
+			/*@Override
+			public void visitBooleanValue(@NotNull BooleanValueMirror value, @NotNull Boolean mainValue)
+			{
+				renderer.renderValue(String.valueOf(mainValue));
+			} */
+
+			@Override
+			public void visitNumberValue(@NotNull DotNetNumberValueProxy proxy)
+			{
+				renderer.renderValue(String.valueOf(proxy.getValue()));
+			}
+
+			@Override
+			public void visitNullValue(@NotNull DotNetNullValueProxy value)
+			{
+				renderer.renderValue("null");
+			}
+		});
 	}
 
 	@Nullable
