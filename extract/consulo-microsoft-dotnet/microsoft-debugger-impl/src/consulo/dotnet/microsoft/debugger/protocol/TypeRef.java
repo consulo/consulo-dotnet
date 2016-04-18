@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.microsoft.debugger.protocol.clientMessage;
-
-import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
+package consulo.dotnet.microsoft.debugger.protocol;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class GetTypeInfoRequest
+public class TypeRef
 {
-	public TypeRef Type;
+	public int ModuleToken;
 
-	public GetTypeInfoRequest(int moduleToken, int classToken)
+	public int ClassToken;
+
+	public String VmQName;
+
+	public TypeRef(int moduleToken, int classToken)
 	{
-		Type = new TypeRef(moduleToken, classToken);
+		ModuleToken = moduleToken;
+		ClassToken = classToken;
 	}
 }

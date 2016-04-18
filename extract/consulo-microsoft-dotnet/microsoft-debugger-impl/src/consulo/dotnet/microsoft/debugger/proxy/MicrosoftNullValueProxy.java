@@ -14,20 +14,36 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.microsoft.debugger.protocol.clientMessage;
+package consulo.dotnet.microsoft.debugger.proxy;
 
-import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
+import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class GetTypeInfoRequest
+public class MicrosoftNullValueProxy implements DotNetNullValueProxy
 {
-	public TypeRef Type;
-
-	public GetTypeInfoRequest(int moduleToken, int classToken)
+	@Nullable
+	@Override
+	public DotNetTypeProxy getType()
 	{
-		Type = new TypeRef(moduleToken, classToken);
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return null;
+	}
+
+	@Override
+	public void accept(DotNetValueProxyVisitor visitor)
+	{
+		visitor.visitNullValue(this);
 	}
 }

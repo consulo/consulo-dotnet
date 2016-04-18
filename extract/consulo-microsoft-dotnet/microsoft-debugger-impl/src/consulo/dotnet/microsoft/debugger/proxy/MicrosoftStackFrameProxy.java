@@ -36,12 +36,14 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequest
 public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 {
 	private MicrosoftDebuggerClientContext myContext;
+	private MicrosoftThreadProxy myThreadProxy;
 	private int myIndex;
 	private GetFramesRequestResult.FrameInfo myFrame;
 
-	public MicrosoftStackFrameProxy(MicrosoftDebuggerClientContext context, int index, GetFramesRequestResult.FrameInfo frame)
+	public MicrosoftStackFrameProxy(MicrosoftDebuggerClientContext context, MicrosoftThreadProxy threadProxy, int index, GetFramesRequestResult.FrameInfo frame)
 	{
 		myContext = context;
+		myThreadProxy = threadProxy;
 		myIndex = index;
 		myFrame = frame;
 	}
@@ -56,7 +58,7 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetThreadProxy getThread()
 	{
-		return null;
+		return myThreadProxy;
 	}
 
 	@NotNull
@@ -82,7 +84,7 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException
 	{
-		return null;
+		return new MicrosoftNullValueProxy();
 	}
 
 	@Nullable

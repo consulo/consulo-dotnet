@@ -16,11 +16,22 @@
 
 package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 
+import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
+
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
 public class GetMethodInfoRequestResult
 {
+	public class ParameterInfo
+	{
+		public String Name;
+
+		public TypeRef Type;
+	}
+
+	public ParameterInfo[] Parameters = new ParameterInfo[0];
+
 	public String Name;
 }

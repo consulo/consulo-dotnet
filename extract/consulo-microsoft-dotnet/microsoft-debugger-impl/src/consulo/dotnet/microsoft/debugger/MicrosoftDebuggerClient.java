@@ -98,6 +98,8 @@ class MicrosoftDebuggerClient
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception
 		{
 			e.getCause().printStackTrace();
+
+			stopAllWaiters();
 		}
 
 		public void stopAllWaiters()

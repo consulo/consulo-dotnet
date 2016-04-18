@@ -72,7 +72,7 @@ public class MicrosoftThreadProxy implements DotNetThreadProxy
 		{
 			GetFramesRequestResult.FrameInfo frame = frames[i];
 
-			proxies.add(new MicrosoftStackFrameProxy(myContext, i, frame));
+			proxies.add(new MicrosoftStackFrameProxy(myContext, this, i, frame));
 		}
 		return proxies;
 	}
