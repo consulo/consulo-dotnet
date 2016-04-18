@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.xdebugger.XDebugSession;
-import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
 
 /**
  * @author VISTALL
@@ -13,5 +12,5 @@ import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
 public interface DotNetModuleExtensionWithDebug
 {
 	@NotNull
-	DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo debugConnectionInfo, @NotNull RunProfile runProfile);
+	DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull RunProfile runProfile, @NotNull DebugConnectionInfo debugConnectionInfo);
 }

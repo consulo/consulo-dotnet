@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 
 /**
  * @author VISTALL
@@ -33,13 +34,13 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 public class DotNetDebugContext
 {
 	private final Project myProject;
-	private final DotNetVirtualMachine myVirtualMachine;
+	private final DotNetVirtualMachineProxy myVirtualMachine;
 	private final RunProfile myRunProfile;
 	private final XDebugSession mySession;
 	private final XLineBreakpoint<?> myBreakpoint;
 
 	public DotNetDebugContext(@NotNull Project project,
-			@NotNull DotNetVirtualMachine virtualMachine,
+			@NotNull DotNetVirtualMachineProxy virtualMachine,
 			@NotNull RunProfile runProfile,
 			@NotNull XDebugSession session,
 			@Nullable XLineBreakpoint<?> breakpoint)
@@ -84,7 +85,7 @@ public class DotNetDebugContext
 	}
 
 	@NotNull
-	public DotNetVirtualMachine getVirtualMachine()
+	public DotNetVirtualMachineProxy getVirtualMachine()
 	{
 		return myVirtualMachine;
 	}

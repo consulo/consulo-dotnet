@@ -31,6 +31,7 @@ import com.intellij.util.Consumer;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XNamedValue;
+import consulo.dotnet.debugger.DotNetDebugContext;
 
 /**
  * @author VISTALL

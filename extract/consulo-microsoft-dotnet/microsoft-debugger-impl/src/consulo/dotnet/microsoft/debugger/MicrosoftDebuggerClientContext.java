@@ -21,9 +21,9 @@ import java.util.UUID;
 
 import org.jboss.netty.channel.Channel;
 import com.google.gson.Gson;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.Consumer;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.Semaphore;
 import consulo.dotnet.microsoft.debugger.protocol.ClientMessage;
 
@@ -42,7 +42,8 @@ public class MicrosoftDebuggerClientContext
 		myWaitMap = waitMap;
 	}
 
-	public <T> T sendAndReceive(Object request)
+	@SuppressWarnings("unchecked")
+	public <T> T sendAndReceive(Object request, final Class<T> clazz)
 	{
 		final ClientMessage clientMessage = new ClientMessage();
 		clientMessage.Id = UUID.randomUUID().toString();
@@ -62,7 +63,7 @@ public class MicrosoftDebuggerClientContext
 			@Override
 			public void consume(Object o)
 			{
-				ref.set(o);
+				ref.set(o == null ? ReflectionUtil.newInstance(clazz) : o);
 				semaphore.up();
 			}
 		});
@@ -71,43 +72,5 @@ public class MicrosoftDebuggerClientContext
 
 		semaphore.waitFor();
 		return (T) ref.get();
-	}
-
-	public <T> void sendAndReceiveInAnotherThread(Object request, final Consumer<T> after)
-	{
-		final ClientMessage clientMessage = new ClientMessage();
-		clientMessage.Id = UUID.randomUUID().toString();
-
-		clientMessage.Type = request.getClass().getSimpleName();
-		clientMessage.Object = request;
-
-		final String jsonText = new Gson().toJson(clientMessage);
-
-		//System.out.println("send: " + jsonText);
-		ApplicationManager.getApplication().executeOnPooledThread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				final Ref<Object> ref = Ref.create();
-				final Semaphore semaphore = new Semaphore();
-				semaphore.down();
-
-				myWaitMap.put(clientMessage.Id, new Consumer<Object>()
-				{
-					@Override
-					public void consume(Object o)
-					{
-						ref.set(o);
-						semaphore.up();
-					}
-				});
-
-				myChannel.write(jsonText);
-
-				semaphore.waitFor();
-				after.consume((T) ref.get());
-			}
-		});
 	}
 }

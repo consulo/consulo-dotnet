@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.mono.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
@@ -28,10 +28,13 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
-import lombok.val;
+import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
+import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.ThreadMirror;
 import mono.debugger.event.EventSet;
+import mono.debugger.request.EventRequestManager;
 import mono.debugger.request.StepRequest;
 
 /**
@@ -45,14 +48,12 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 		@Override
 		public void breakpointAdded(@NotNull final XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint)
 		{
-			myDebugThread.processAnyway(new Processor<DotNetVirtualMachine>()
+			myDebugThread.processAnyway(new Processor<MonoVirtualMachineProxy>()
 			{
 				@Override
-				public boolean process(final DotNetVirtualMachine virtualMachine)
+				public boolean process(final MonoVirtualMachineProxy virtualMachine)
 				{
-					DotNetLineBreakpointType type = (DotNetLineBreakpointType) breakpoint.getType();
-
-					type.createRequest(getSession(), virtualMachine, breakpoint, null);
+					MonoBreakpointUtil.createRequest(getSession(), virtualMachine, breakpoint, null);
 
 					return false;
 				}
@@ -62,10 +63,10 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 		@Override
 		public void breakpointRemoved(@NotNull final XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint)
 		{
-			myDebugThread.processAnyway(new Processor<DotNetVirtualMachine>()
+			myDebugThread.processAnyway(new Processor<MonoVirtualMachineProxy>()
 			{
 				@Override
-				public boolean process(DotNetVirtualMachine virtualMachine)
+				public boolean process(MonoVirtualMachineProxy virtualMachine)
 				{
 					virtualMachine.stopBreakpointRequests(breakpoint);
 					return false;
@@ -88,26 +89,25 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 	}
 
 	private final DebugConnectionInfo myDebugConnectionInfo;
-	private final DotNetDebugThread myDebugThread;
+	private final MonoDebugThread myDebugThread;
 
 	private EventSet myPausedEventSet;
 	private XBreakpointManager myBreakpointManager;
 	private final XBreakpointListener myBreakpointListener = new MyXBreakpointListener();
 
-	public MonoDebugProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
+	public MonoDebugProcess(XDebugSession session, RunProfile runProfile, DebugConnectionInfo debugConnectionInfo)
 	{
-		super(session);
+		super(session, runProfile);
 		session.setPauseActionSupported(true);
 		myDebugConnectionInfo = debugConnectionInfo;
-		myDebugThread = new DotNetDebugThread(session, this, myDebugConnectionInfo, runProfile);
+		myDebugThread = new MonoDebugThread(session, this, myDebugConnectionInfo);
 
 		myBreakpointManager = XDebuggerManager.getInstance(session.getProject()).getBreakpointManager();
-
 		myBreakpointManager.addBreakpointListener(DotNetLineBreakpointType.getInstance(), myBreakpointListener);
 	}
 
 	@NotNull
-	public DotNetDebugThread getDebugThread()
+	public MonoDebugThread getDebugThread()
 	{
 		return myDebugThread;
 	}
@@ -121,13 +121,13 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 	@Override
 	public void startPausing()
 	{
-		myDebugThread.addCommand(new Processor<DotNetVirtualMachine>()
+		myDebugThread.addCommand(new Processor<MonoVirtualMachineProxy>()
 		{
 			@Override
-			public boolean process(DotNetVirtualMachine virtualMachine)
+			public boolean process(MonoVirtualMachineProxy virtualMachine)
 			{
 				virtualMachine.suspend();
-				getSession().positionReached(new MonoSuspendContext(myDebugThread.createDebugContext(null), null));
+				getSession().positionReached(new DotNetSuspendContext(createDebugContext(virtualMachine, null), -1));
 				return false;
 			}
 		});
@@ -137,10 +137,10 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 	public void resume()
 	{
 		myPausedEventSet = null;
-		myDebugThread.addCommand(new Processor<DotNetVirtualMachine>()
+		myDebugThread.addCommand(new Processor<MonoVirtualMachineProxy>()
 		{
 			@Override
-			public boolean process(DotNetVirtualMachine virtualMachine)
+			public boolean process(MonoVirtualMachineProxy virtualMachine)
 			{
 				virtualMachine.stopStepRequests();
 
@@ -189,13 +189,13 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 			return;
 		}
 
-		myDebugThread.addCommand(new Processor<DotNetVirtualMachine>()
+		myDebugThread.addCommand(new Processor<MonoVirtualMachineProxy>()
 		{
 			@Override
-			public boolean process(DotNetVirtualMachine virtualMachine)
+			public boolean process(MonoVirtualMachineProxy virtualMachine)
 			{
-				val eventRequestManager = virtualMachine.eventRequestManager();
-				val stepRequest = eventRequestManager.createStepRequest(threadMirror, stepSize, stepDepth);
+				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+				StepRequest stepRequest = eventRequestManager.createStepRequest(threadMirror, stepSize, stepDepth);
 				stepRequest.enable();
 
 				virtualMachine.addStepRequest(stepRequest);

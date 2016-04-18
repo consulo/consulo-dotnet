@@ -18,7 +18,7 @@ package org.mustbe.consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.xdebugger.frame.XValueModifier;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;

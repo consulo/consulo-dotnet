@@ -22,6 +22,8 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.openapi.project.Project;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mono.debugger.TypeMirror;
 
 /**
@@ -36,6 +38,13 @@ public class DotNetVirtualMachineUtil
 	{
 		Project project = debugContext.getProject();
 		return DotNetPsiSearcher.getInstance(project).findTypes(DotNetDebuggerUtil.getVmQName(typeMirror), debugContext.getResolveScope());
+	}
+
+	@NotNull
+	public static String formatNameWithGeneric(@NotNull DotNetTypeProxy typeMirror)
+	{
+		//TODO
+		return typeMirror.getName();
 	}
 
 	@NotNull

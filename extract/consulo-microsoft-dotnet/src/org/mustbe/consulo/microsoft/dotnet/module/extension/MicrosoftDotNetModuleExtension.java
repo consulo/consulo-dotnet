@@ -92,8 +92,8 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 
 	@NotNull
 	@Override
-	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo debugConnectionInfo, @NotNull RunProfile runProfile)
+	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull RunProfile runProfile, @NotNull DebugConnectionInfo debugConnectionInfo)
 	{
-		return new MicrosoftDebuggerProcess(session, debugConnectionInfo);
+		return new MicrosoftDebuggerProcess(session, runProfile, debugConnectionInfo);
 	}
 }

@@ -2,6 +2,7 @@ package consulo.dotnet.microsoft.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.xdebugger.XDebugSession;
 import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
 
@@ -11,13 +12,12 @@ import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
  */
 public class MicrosoftDebuggerProcess extends DotNetDebugProcessBase
 {
-
 	private MicrosoftDebuggerClient myClient;
 
-	public MicrosoftDebuggerProcess(@NotNull XDebugSession session, DebugConnectionInfo debugConnectionInfo)
+	public MicrosoftDebuggerProcess(@NotNull XDebugSession session, @NotNull RunProfile runProfile, DebugConnectionInfo debugConnectionInfo)
 	{
-		super(session);
-		myClient = new MicrosoftDebuggerClient(debugConnectionInfo, new MicrosoftDebuggerEventVisitor(this));
+		super(session, runProfile);
+		myClient = new MicrosoftDebuggerClient(this, debugConnectionInfo);
 	}
 
 	@Override

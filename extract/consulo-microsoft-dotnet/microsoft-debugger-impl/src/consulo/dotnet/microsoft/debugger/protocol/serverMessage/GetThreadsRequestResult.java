@@ -27,7 +27,5 @@ public class GetThreadsRequestResult
 		public int Id;
 	}
 
-	public int ActiveThreadId;
-
 	public ThreadInfo[] Threads = new ThreadInfo[0];
 }

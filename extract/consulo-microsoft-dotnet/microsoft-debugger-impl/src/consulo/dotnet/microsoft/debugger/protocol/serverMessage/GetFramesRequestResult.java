@@ -29,10 +29,17 @@ public class GetFramesRequestResult
 			public String FilePath;
 
 			public int Line;
+
+			public int Column;
 		}
 
-		public SourcePosition Position = new SourcePosition();
-		public String Method;
+		public SourcePosition Position;
+
+		public int ModuleToken;
+
+		public int ClassToken;
+
+		public int FunctionToken;
 	}
 
 	public FrameInfo[] Frames = new FrameInfo[0];

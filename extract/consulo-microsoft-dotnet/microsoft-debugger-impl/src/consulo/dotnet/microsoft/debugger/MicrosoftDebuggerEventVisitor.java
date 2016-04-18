@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetBreakpointUtil;
 import org.mustbe.consulo.dotnet.module.DotNetAssemblyUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
@@ -20,13 +19,16 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetSuspendContext;
+import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.InsertBreakpointRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.InsertBreakpointRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnBreakpointFire;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventVisitor;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnModuleLoadEvent;
+import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxy;
 
 /**
  * @author VISTALL
@@ -97,7 +99,7 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 			final XLineBreakpoint key = entry.getKey();
 			InsertBreakpointRequest value = entry.getValue();
 
-			final InsertBreakpointRequestResult result = context.sendAndReceive(value);
+			final InsertBreakpointRequestResult result = context.sendAndReceive(value, InsertBreakpointRequestResult.class);
 			UIUtil.invokeLaterIfNeeded(new Runnable()
 			{
 				@Override
@@ -114,10 +116,10 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 	@Override
 	public boolean visitOnBreakpointFire(final OnBreakpointFire event, MicrosoftDebuggerClientContext context)
 	{
-		XBreakpoint<?> breakpoint = ApplicationManager.getApplication().runReadAction(new Computable<XBreakpoint<?>>()
+		XLineBreakpoint<?> breakpoint = ApplicationManager.getApplication().runReadAction(new Computable<XLineBreakpoint<?>>()
 		{
 			@Override
-			public XBreakpoint<?> compute()
+			public XLineBreakpoint<?> compute()
 			{
 				VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(event.FilePath);
 				if(fileByPath == null)
@@ -143,7 +145,9 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 			}
 		});
 
-		MicrosoftSuspendContext suspendContext = new MicrosoftSuspendContext(context);
+		MicrosoftVirtualMachineProxy microsoftVirtualMachineProxy = new MicrosoftVirtualMachineProxy(context);
+		DotNetDebugContext debugContext = myDebuggerProcess.createDebugContext(microsoftVirtualMachineProxy, breakpoint);
+		DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, event.ActiveThreadId);
 		XDebugSession session = myDebuggerProcess.getSession();
 		if(breakpoint != null)
 		{

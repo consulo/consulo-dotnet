@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Couple;
+import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import mono.debugger.MethodMirror;
 import mono.debugger.TypeMirror;
 
@@ -43,6 +44,17 @@ public class DotNetDebuggerCompilerGenerateUtil
 	public static Couple<String> extractLambdaInfo(@NotNull MethodMirror methodMirror)
 	{
 		Matcher matcher = LambdaMethodPattern.matcher(methodMirror.name());
+		if(matcher.matches())
+		{
+			return Couple.of(matcher.group(1), matcher.group(2));
+		}
+		return null;
+	}
+
+	@Nullable
+	public static Couple<String> extractLambdaInfo(@NotNull DotNetMethodProxy methodMirror)
+	{
+		Matcher matcher = LambdaMethodPattern.matcher(methodMirror.getName());
 		if(matcher.matches())
 		{
 			return Couple.of(matcher.group(1), matcher.group(2));

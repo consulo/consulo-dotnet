@@ -4,10 +4,12 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.DotNetEditorsProvider;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import com.intellij.execution.ExecutionResult;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.application.ApplicationManager;
@@ -20,6 +22,7 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 
 /**
  * @author VISTALL
@@ -28,13 +31,21 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 public abstract class DotNetDebugProcessBase extends XDebugProcess
 {
 	private ExecutionResult myResult;
+	private final RunProfile myRunProfile;
 	protected final XDebuggerManager myDebuggerManager;
 
-	public DotNetDebugProcessBase(@NotNull XDebugSession session)
+	public DotNetDebugProcessBase(@NotNull XDebugSession session, @NotNull RunProfile runProfile)
 	{
 		super(session);
 
+		myRunProfile = runProfile;
 		myDebuggerManager = XDebuggerManager.getInstance(session.getProject());
+	}
+
+	@NotNull
+	public DotNetDebugContext createDebugContext(@NotNull DotNetVirtualMachineProxy proxy, @Nullable XLineBreakpoint<?> breakpoint)
+	{
+		return new DotNetDebugContext(getSession().getProject(), proxy, myRunProfile, getSession(), breakpoint);
 	}
 
 	public abstract void start();

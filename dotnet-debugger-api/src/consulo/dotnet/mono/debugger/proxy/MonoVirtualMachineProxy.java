@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.mono.debugger.proxy;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +23,8 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
+import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
@@ -33,9 +35,12 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import mono.debugger.AppDomainMirror;
 import mono.debugger.AssemblyMirror;
 import mono.debugger.ThreadMirror;
@@ -50,7 +55,7 @@ import mono.debugger.request.StepRequest;
  * @author VISTALL
  * @since 16.04.2015
  */
-public class DotNetVirtualMachine
+public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 {
 	private final Map<Integer, AppDomainMirror> myLoadedAppDomains = ContainerUtil.newConcurrentMap();
 	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
@@ -62,12 +67,26 @@ public class DotNetVirtualMachine
 	private final boolean mySupportSearchTypesByQualifiedName;
 	private final boolean mySupportSystemThreadId;
 
-	public DotNetVirtualMachine(@NotNull VirtualMachine virtualMachine)
+	public MonoVirtualMachineProxy(@NotNull VirtualMachine virtualMachine)
 	{
 		myVirtualMachine = virtualMachine;
 		mySupportSearchTypesByQualifiedName = myVirtualMachine.isAtLeastVersion(2, 9);
 		mySupportSearchTypesBySourcePaths = myVirtualMachine.isAtLeastVersion(2, 7);
 		mySupportSystemThreadId = myVirtualMachine.isAtLeastVersion(2, 2);
+	}
+
+	@NotNull
+	@Override
+	public List<DotNetThreadProxy> getThreads()
+	{
+		return ContainerUtil.map(myVirtualMachine.allThreads(), new Function<ThreadMirror, DotNetThreadProxy>()
+		{
+			@Override
+			public DotNetThreadProxy fun(ThreadMirror threadMirror)
+			{
+				return new MonoThreadProxy(MonoVirtualMachineProxy.this, threadMirror);
+			}
+		});
 	}
 
 	public boolean isSupportSystemThreadId()

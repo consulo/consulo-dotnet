@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.linebreakType;
+package consulo.dotnet.debugger.breakpoint;
 
 import javax.swing.Icon;
 
@@ -32,9 +32,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
  */
 public class DotNetBreakpointUtil
 {
-	public static void updateBreakpointPresentation(@NotNull Project project,
-			boolean valid,
-			@NotNull XLineBreakpoint breakpoint)
+	public static void updateBreakpointPresentation(@NotNull Project project, boolean valid, @NotNull XLineBreakpoint breakpoint)
 	{
 		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 

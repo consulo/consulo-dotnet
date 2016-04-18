@@ -2,7 +2,7 @@ package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetSimpleValueMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.enumerator.CantCreateException;

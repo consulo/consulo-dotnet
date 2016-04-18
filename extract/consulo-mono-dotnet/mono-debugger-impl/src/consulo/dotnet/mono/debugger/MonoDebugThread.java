@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.mono.debugger;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -28,13 +28,18 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetBreakpointUtil;
+import org.mustbe.consulo.Exported;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
+import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil;
+import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineListener;
+import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxyImpl;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
@@ -68,6 +73,12 @@ import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetSuspendContext;
+import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
+import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
+import consulo.dotnet.mono.debugger.proxy.MonoThreadProxy;
+import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.*;
 import mono.debugger.connect.Connector;
 import mono.debugger.event.*;
@@ -79,34 +90,34 @@ import mono.debugger.request.TypeLoadRequest;
  * @since 10.04.14
  */
 @Logger
-public class DotNetDebugThread extends Thread
+public class MonoDebugThread extends Thread
 {
 	private final XDebugSession mySession;
 	private final MonoDebugProcess myDebugProcess;
 	private final DebugConnectionInfo myDebugConnectionInfo;
-	private final RunProfile myRunProfile;
 	private boolean myStop;
 
-	private Queue<Processor<DotNetVirtualMachine>> myQueue = new ConcurrentLinkedQueue<Processor<DotNetVirtualMachine>>();
+	private Queue<Processor<MonoVirtualMachineProxy>> myQueue = new ConcurrentLinkedQueue<Processor<MonoVirtualMachineProxy>>();
 
-	private DotNetVirtualMachine myVirtualMachine;
+	private MonoVirtualMachineProxy myVirtualMachine;
 
 	private EventDispatcher<DotNetVirtualMachineListener> myEventDispatcher = EventDispatcher.create(DotNetVirtualMachineListener.class);
 
-	public DotNetDebugThread(XDebugSession session, MonoDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo, RunProfile runProfile)
+	public MonoDebugThread(XDebugSession session, MonoDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo)
 	{
 		super("DotNetDebugThread: " + new Random().nextInt());
 		mySession = session;
 		myDebugProcess = debugProcess;
 		myDebugConnectionInfo = debugConnectionInfo;
-		myRunProfile = runProfile;
 	}
 
+	@Exported
 	public void addListener(DotNetVirtualMachineListener listener)
 	{
 		myEventDispatcher.addListener(listener);
 	}
 
+	@Exported
 	public void removeListener(DotNetVirtualMachineListener listener)
 	{
 		myEventDispatcher.removeListener(listener);
@@ -190,7 +201,7 @@ public class DotNetDebugThread extends Thread
 			myEventDispatcher.getMulticaster().connectionSuccess(virtualMachine);
 		}
 
-		myVirtualMachine = new DotNetVirtualMachine(virtualMachine);
+		myVirtualMachine = new MonoVirtualMachineProxy(virtualMachine);
 
 		virtualMachine.enableEvents(/*EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,*/
 				EventKind.USER_BREAK, EventKind.USER_LOG, EventKind.APPDOMAIN_CREATE, EventKind.APPDOMAIN_UNLOAD);
@@ -312,10 +323,10 @@ public class DotNetDebugThread extends Thread
 
 						myDebugProcess.setPausedEventSet(eventSet);
 						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location);
-						DotNetDebugContext debugContext = createDebugContext(xLineBreakpoint);
+						DotNetDebugContext debugContext = myDebugProcess.createDebugContext(myVirtualMachine, xLineBreakpoint);
 						if(xLineBreakpoint != null)
 						{
-							MonoSuspendContext suspendContext = new MonoSuspendContext(debugContext, eventSet.eventThread());
+							DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
 
 							if(tryEvaluateBreakpoint(eventSet, xLineBreakpoint, debugContext))
 							{
@@ -328,7 +339,7 @@ public class DotNetDebugThread extends Thread
 						}
 						else
 						{
-							mySession.positionReached(new MonoSuspendContext(debugContext, eventSet.eventThread()));
+							mySession.positionReached(new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
 						}
 
 						if(state == ThreeState.UNSURE)
@@ -483,9 +494,9 @@ public class DotNetDebugThread extends Thread
 		return true;
 	}
 
-	private void insertBreakpoints(final DotNetVirtualMachine virtualMachine, final TypeMirror typeMirror)
+	private void insertBreakpoints(final MonoVirtualMachineProxy virtualMachine, final TypeMirror typeMirror)
 	{
-		final DotNetDebugContext debugContext = createDebugContext(null);
+		final DotNetDebugContext debugContext = myDebugProcess.createDebugContext(virtualMachine, null);
 
 		DotNetTypeDeclaration[] typeDeclarations = ApplicationManager.getApplication().runReadAction(new Computable<DotNetTypeDeclaration[]>()
 		{
@@ -511,9 +522,7 @@ public class DotNetDebugThread extends Thread
 						continue;
 					}
 
-					DotNetLineBreakpointType type = (DotNetLineBreakpointType) breakpoint.getType();
-
-					type.createRequest(mySession, virtualMachine, breakpoint, typeMirror);
+					MonoBreakpointUtil.createRequest(mySession, virtualMachine, breakpoint, typeMirror);
 				}
 			}
 		}
@@ -528,9 +537,9 @@ public class DotNetDebugThread extends Thread
 		}
 	}
 
-	private void processCommands(DotNetVirtualMachine virtualMachine)
+	private void processCommands(MonoVirtualMachineProxy virtualMachine)
 	{
-		Processor<DotNetVirtualMachine> processor;
+		Processor<MonoVirtualMachineProxy> processor;
 		while((processor = myQueue.poll()) != null)
 		{
 			if(processor.process(virtualMachine))
@@ -538,13 +547,6 @@ public class DotNetDebugThread extends Thread
 				virtualMachine.resume();
 			}
 		}
-	}
-
-	@NotNull
-	public DotNetDebugContext createDebugContext(@Nullable XLineBreakpoint<?> breakpoint)
-	{
-		assert myVirtualMachine != null;
-		return new DotNetDebugContext(mySession.getProject(), myVirtualMachine, myRunProfile, mySession, breakpoint);
 	}
 
 	@Nullable
@@ -580,7 +582,7 @@ public class DotNetDebugThread extends Thread
 		return mySession;
 	}
 
-	public void processAnyway(Processor<DotNetVirtualMachine> processor)
+	public void processAnyway(Processor<MonoVirtualMachineProxy> processor)
 	{
 		if(myVirtualMachine == null)
 		{
@@ -595,7 +597,7 @@ public class DotNetDebugThread extends Thread
 		}
 	}
 
-	public void addCommand(Processor<DotNetVirtualMachine> processor)
+	public void addCommand(Processor<MonoVirtualMachineProxy> processor)
 	{
 		myQueue.add(processor);
 	}

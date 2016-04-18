@@ -8,6 +8,8 @@ import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
  */
 public class OnBreakpointFire implements OnEventValue
 {
+	public int ActiveThreadId;
+
 	public String FilePath;
 
 	public int Line;

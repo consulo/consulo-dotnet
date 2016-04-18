@@ -8,15 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.channel.ExceptionEvent;
-import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
@@ -51,6 +43,18 @@ class MicrosoftDebuggerClient
 		public MicrosoftDebuggerNettyHandler(OnEventVisitor visitor)
 		{
 			myVisitor = visitor;
+		}
+
+		@Override
+		public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception
+		{
+			stopAllWaiters();
+		}
+
+		@Override
+		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception
+		{
+			stopAllWaiters();
 		}
 
 		@Override
@@ -95,6 +99,15 @@ class MicrosoftDebuggerClient
 		{
 			e.getCause().printStackTrace();
 		}
+
+		public void stopAllWaiters()
+		{
+			for(Consumer<Object> objectConsumer : myWaitMap.values())
+			{
+				objectConsumer.consume(null);
+			}
+			myWaitMap.clear();
+		}
 	}
 
 	private ClientBootstrap myClientBootstrap;
@@ -102,12 +115,16 @@ class MicrosoftDebuggerClient
 
 	private ChannelFuture myChannelFuture;
 
-	MicrosoftDebuggerClient(DebugConnectionInfo debugConnectionInfo, final OnEventVisitor visitor)
+	private MicrosoftDebuggerNettyHandler myChannelHandler;
+
+	MicrosoftDebuggerClient(MicrosoftDebuggerProcess debuggerProcess, DebugConnectionInfo debugConnectionInfo)
 	{
 		myDebugConnectionInfo = debugConnectionInfo;
 		ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
 		myClientBootstrap = new ClientBootstrap(factory);
+
+		myChannelHandler = new MicrosoftDebuggerNettyHandler(new MicrosoftDebuggerEventVisitor(debuggerProcess));
 
 		myClientBootstrap.setPipelineFactory(new ChannelPipelineFactory()
 		{
@@ -120,7 +137,7 @@ class MicrosoftDebuggerClient
 				// Encoder
 				pipeline.addLast("stringEncoder", new StringEncoder(CharsetUtil.UTF_8));
 
-				pipeline.addLast("handler", new MicrosoftDebuggerNettyHandler(visitor));
+				pipeline.addLast("handler", myChannelHandler);
 				return pipeline;
 			}
 		});

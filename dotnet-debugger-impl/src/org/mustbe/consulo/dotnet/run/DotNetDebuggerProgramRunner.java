@@ -101,7 +101,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			@Override
 			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
 			{
-				DotNetDebugProcessBase process = moduleExtensionWithDebug.createDebuggerProcess(session, debugConnectionInfo, env.getRunProfile());
+				DotNetDebugProcessBase process = moduleExtensionWithDebug.createDebuggerProcess(session, env.getRunProfile(), debugConnectionInfo);
 				if(!debugConnectionInfo.isServer())
 				{
 					process.start();

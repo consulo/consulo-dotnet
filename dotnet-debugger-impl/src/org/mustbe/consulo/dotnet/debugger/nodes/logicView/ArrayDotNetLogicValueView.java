@@ -1,7 +1,7 @@
 package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.nodes.DotNetArrayValueMirrorNode;
 import com.intellij.xdebugger.frame.XNamedValue;
 import mono.debugger.ArrayValueMirror;

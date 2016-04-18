@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.debugger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +25,13 @@ import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxyImpl;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.BitUtil;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
-import mono.debugger.StackFrameMirror;
-import mono.debugger.ThreadMirror;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 
 /**
  * @author VISTALL
@@ -41,45 +39,39 @@ import mono.debugger.ThreadMirror;
  */
 @ArrayFactoryFields
 @Logger
-public class MonoExecutionStack extends XExecutionStack
+public class DotNetExecutionStack extends XExecutionStack
 {
-	private MonoStackFrame myTopFrame;
+	private DotNetStackFrame myTopFrame;
 	private boolean myTopFrameCalculated;
 
 	private DotNetDebugContext myDebuggerContext;
-	private ThreadMirror myThreadMirror;
+	private DotNetThreadProxy myThreadProxy;
 
-	public MonoExecutionStack(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
+	public DotNetExecutionStack(DotNetDebugContext debuggerContext, DotNetThreadProxy threadProxy)
 	{
-		super(calcName(debuggerContext, threadMirror), getIcon(threadMirror));
+		super(calcName(threadProxy), getIcon(threadProxy));
 		myDebuggerContext = debuggerContext;
-		myThreadMirror = threadMirror;
+		myThreadProxy = threadProxy;
 	}
 
 	@NotNull
-	private static String calcName(DotNetDebugContext debuggerContext, ThreadMirror threadMirror)
+	private static String calcName(DotNetThreadProxy threadMirror)
 	{
-		String name = threadMirror.name();
-		if(StringUtil.isEmpty(name))
-		{
-			return "[" + MonoSuspendContext.getThreadId(debuggerContext, threadMirror) + "] Unnamed";
-		}
-		return name;
+		return "[" + threadMirror.getId() + "] " + StringUtil.defaultIfEmpty(threadMirror.getName(), "Unnamed");
 	}
 
-	private static Icon getIcon(ThreadMirror threadMirror)
+	private static Icon getIcon(DotNetThreadProxy threadProxy)
 	{
-		int state = threadMirror.state();
-		if(BitUtil.isSet(state, ThreadMirror.ThreadState.Running))
+		if(threadProxy.isRunning())
 		{
 			return AllIcons.Debugger.ThreadRunning;
 		}
 		return AllIcons.Debugger.ThreadFrozen;
 	}
 
-	public ThreadMirror getThreadMirror()
+	public DotNetThreadProxy getThreadProxy()
 	{
-		return myThreadMirror;
+		return myThreadProxy;
 	}
 
 	@Nullable
@@ -87,13 +79,13 @@ public class MonoExecutionStack extends XExecutionStack
 	{
 		try
 		{
-			List<StackFrameMirror> frames = myThreadMirror.frames();
-			StackFrameMirror frame = ArrayUtil2.safeGet(frames, 0);
+			List<DotNetStackFrameProxy> frames = myThreadProxy.getFrames();
+			DotNetStackFrameProxy frame = ArrayUtil2.safeGet(frames, 0);
 			if(frame == null)
 			{
 				return null;
 			}
-			return myTopFrame = new MonoStackFrame(myDebuggerContext, new DotNetStackFrameMirrorProxyImpl(frame, 0));
+			return myTopFrame = new DotNetStackFrame(myDebuggerContext, frame);
 		}
 		finally
 		{
@@ -115,14 +107,14 @@ public class MonoExecutionStack extends XExecutionStack
 	@Override
 	public void computeStackFrames(XStackFrameContainer frameContainer)
 	{
-		List<StackFrameMirror> frames = myThreadMirror.frames();
+		List<DotNetStackFrameProxy> frames = myThreadProxy.getFrames();
 
-		List<MonoStackFrame> stackFrames = new ArrayList<MonoStackFrame>();
+		List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
 		for(int j = 0; j < frames.size(); j++)
 		{
-			StackFrameMirror stackFrameMirror = frames.get(j);
+			DotNetStackFrameProxy frameProxy = frames.get(j);
 
-			MonoStackFrame stackFrame = new MonoStackFrame(myDebuggerContext, new DotNetStackFrameMirrorProxyImpl(stackFrameMirror, j));
+			DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, frameProxy);
 
 			if(j == 0)
 			{
