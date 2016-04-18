@@ -29,14 +29,14 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoReq
 public class MicrosoftMethodParameterProxy implements DotNetMethodParameterProxy
 {
 	private int myIndex;
-	private MicrosoftDebuggerClientContext myContext;
 	private GetMethodInfoRequestResult.ParameterInfo myParameterInfo;
+	private DotNetTypeProxy myTypeProxy;
 
 	public MicrosoftMethodParameterProxy(MicrosoftDebuggerClientContext context, int index, GetMethodInfoRequestResult.ParameterInfo parameterInfo)
 	{
-		myContext = context;
 		myIndex = index;
 		myParameterInfo = parameterInfo;
+		myTypeProxy = new MicrosoftTypeProxy(context, myParameterInfo.Type);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class MicrosoftMethodParameterProxy implements DotNetMethodParameterProxy
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return new MicrosoftTypeProxy(myContext, myParameterInfo.Type);
+		return myTypeProxy;
 	}
 
 	@NotNull
