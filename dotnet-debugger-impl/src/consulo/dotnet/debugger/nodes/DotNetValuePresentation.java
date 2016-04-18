@@ -22,21 +22,14 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
-import mono.debugger.InvalidFieldIdException;
-import mono.debugger.InvalidStackFrameException;
-import mono.debugger.InvokeFlags;
-import mono.debugger.MethodMirror;
-import mono.debugger.NotSuspendedException;
-import mono.debugger.ThreadMirror;
-import mono.debugger.ThrowValueException;
-import mono.debugger.VMDisconnectedException;
-import mono.debugger.Value;
+import mono.debugger.*;
 
 /**
  * @author VISTALL
@@ -303,11 +296,11 @@ public class DotNetValuePresentation extends XValuePresentation
 				renderer.renderValue(builder.toString());
 			} */
 
-			/*@Override
-			public void visitBooleanValue(@NotNull BooleanValueMirror value, @NotNull Boolean mainValue)
+			@Override
+			public void visitBooleanValue(@NotNull DotNetBooleanValueProxy value)
 			{
-				renderer.renderValue(String.valueOf(mainValue));
-			} */
+				renderer.renderValue(String.valueOf(value.getValue()));
+			}
 
 			@Override
 			public void visitNumberValue(@NotNull DotNetNumberValueProxy proxy)

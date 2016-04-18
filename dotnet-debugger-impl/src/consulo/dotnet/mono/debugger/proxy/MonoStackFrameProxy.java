@@ -77,8 +77,6 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	{
 		MonoMethodParameterProxy methodParameterProxy = (MonoMethodParameterProxy) parameterProxy;
 
-		MonoValueProxyBase<?> valueProxyBase = (MonoValueProxyBase) valueProxy;
-
 		Value value = ((MonoValueProxyBase) valueProxy).getMonoValue();
 
 		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(methodParameterProxy.getParameter(), value));

@@ -17,27 +17,31 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BooleanValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResult;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class MicrosoftValueProxyUtil
+public class MicrosoftBooleanValueProxy extends MicrosoftValueProxyBase<Boolean> implements DotNetBooleanValueProxy
 {
-	@Nullable
-	public static DotNetValueProxy wrap(@Nullable Object o)
+	public MicrosoftBooleanValueProxy(int id, Boolean value)
 	{
-		if(o instanceof StringValueResult)
-		{
-			return new MicrosoftStringValueProxy(((StringValueResult) o).Id, ((StringValueResult) o).Value);
-		}
-		if(o instanceof BooleanValueResult)
-		{
-			return new MicrosoftBooleanValueProxy(((BooleanValueResult) o).Id, ((BooleanValueResult) o).Value);
-		}
+		super(id, value);
+	}
+
+	@Nullable
+	@Override
+	public DotNetTypeProxy getType()
+	{
 		return null;
+	}
+
+	@Override
+	public void accept(DotNetValueProxyVisitor visitor)
+	{
+		visitor.visitBooleanValue(this);
 	}
 }

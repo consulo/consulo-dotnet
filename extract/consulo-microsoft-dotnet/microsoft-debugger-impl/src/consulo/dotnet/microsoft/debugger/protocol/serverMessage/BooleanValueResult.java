@@ -14,25 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.proxy.value;
-
-import org.jetbrains.annotations.NotNull;
+package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetValueProxyVisitor
+public class BooleanValueResult
 {
-	void visitStringValue(@NotNull DotNetStringValueProxy proxy);
+	public int Id;
 
-	void visitNullValue(@NotNull DotNetNullValueProxy proxy);
-
-	void visitArrayValue(@NotNull DotNetArrayValueProxy proxy);
-
-	void visitObjectValue(@NotNull DotNetObjectValueProxy proxy);
-
-	void visitNumberValue(@NotNull DotNetNumberValueProxy proxy);
-
-	void visitBooleanValue(@NotNull DotNetBooleanValueProxy proxy);
+	public boolean Value;
 }

@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.proxy.value;
+package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
+import mono.debugger.BooleanValueMirror;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetValueProxyVisitor
+public class MonoBooleanValueProxy extends MonoValueProxyBase<BooleanValueMirror> implements DotNetBooleanValueProxy
 {
-	void visitStringValue(@NotNull DotNetStringValueProxy proxy);
+	public MonoBooleanValueProxy(BooleanValueMirror value)
+	{
+		super(value);
+	}
 
-	void visitNullValue(@NotNull DotNetNullValueProxy proxy);
-
-	void visitArrayValue(@NotNull DotNetArrayValueProxy proxy);
-
-	void visitObjectValue(@NotNull DotNetObjectValueProxy proxy);
-
-	void visitNumberValue(@NotNull DotNetNumberValueProxy proxy);
-
-	void visitBooleanValue(@NotNull DotNetBooleanValueProxy proxy);
+	@Override
+	public void accept(DotNetValueProxyVisitor visitor)
+	{
+		visitor.visitBooleanValue(this);
+	}
 }

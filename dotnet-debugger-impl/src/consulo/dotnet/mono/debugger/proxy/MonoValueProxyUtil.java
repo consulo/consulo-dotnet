@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.ArrayValueMirror;
+import mono.debugger.BooleanValueMirror;
 import mono.debugger.NoObjectValueMirror;
 import mono.debugger.NumberValueMirror;
 import mono.debugger.ObjectValueMirror;
@@ -66,6 +67,11 @@ public class MonoValueProxyUtil
 		if(value instanceof StringValueMirror)
 		{
 			valueProxy = new MonoStringValueProxy((StringValueMirror) value);
+		}
+
+		if(value instanceof BooleanValueMirror)
+		{
+			valueProxy = new MonoBooleanValueProxy((BooleanValueMirror) value);
 		}
 
 		if(valueProxy == null)
