@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
 
 /**
@@ -29,19 +30,14 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequest
  */
 public class MicrosoftSourceLocation implements DotNetSourceLocation
 {
-	private MicrosoftDebuggerClientContext myContext;
 	private GetFramesRequestResult.FrameInfo.SourcePosition myPosition;
-	private int myModuleToken;
-	private int myClassToken;
-	private int myFunctionToken;
 
-	public MicrosoftSourceLocation(MicrosoftDebuggerClientContext context, GetFramesRequestResult.FrameInfo.SourcePosition position, int moduleToken, int classToken, int functionToken)
+	private final DotNetMethodProxy myMethodProxy;
+
+	public MicrosoftSourceLocation(MicrosoftDebuggerClientContext context, GetFramesRequestResult.FrameInfo.SourcePosition position, TypeRef typeRef, int functionToken)
 	{
-		myContext = context;
 		myPosition = position;
-		myModuleToken = moduleToken;
-		myClassToken = classToken;
-		myFunctionToken = functionToken;
+		myMethodProxy = new MicrosoftMethodProxy(context, typeRef, functionToken);
 	}
 
 	@Nullable
@@ -67,6 +63,6 @@ public class MicrosoftSourceLocation implements DotNetSourceLocation
 	@Override
 	public DotNetMethodProxy getMethod()
 	{
-		return new MicrosoftMethodProxy(myContext, myModuleToken, myClassToken, myFunctionToken);
+		return myMethodProxy;
 	}
 }

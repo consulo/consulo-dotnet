@@ -18,6 +18,7 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.NullableLazyValue;
 import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
@@ -35,6 +36,21 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequest
  */
 public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 {
+	private NullableLazyValue<DotNetSourceLocation> myLocationValue = new NullableLazyValue<DotNetSourceLocation>()
+	{
+		@Nullable
+		@Override
+		protected DotNetSourceLocation compute()
+		{
+			GetFramesRequestResult.FrameInfo.SourcePosition position = myFrame.Position;
+			if(position != null)
+			{
+				return new MicrosoftSourceLocation(myContext, position, myFrame.Type, myFrame.FunctionToken);
+			}
+			return null;
+		}
+	};
+
 	private MicrosoftDebuggerClientContext myContext;
 	private MicrosoftThreadProxy myThreadProxy;
 	private int myIndex;
@@ -72,12 +88,7 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetSourceLocation getSourceLocation()
 	{
-		GetFramesRequestResult.FrameInfo.SourcePosition position = myFrame.Position;
-		if(position != null)
-		{
-			return new MicrosoftSourceLocation(myContext, position, myFrame.ModuleToken, myFrame.ClassToken, myFrame.FunctionToken);
-		}
-		return null;
+		return myLocationValue.getValue();
 	}
 
 	@NotNull

@@ -21,6 +21,7 @@ import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
+import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetMethodInfoRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoRequestResult;
 
@@ -31,17 +32,17 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoReq
 public class MicrosoftMethodProxy implements DotNetMethodProxy
 {
 	private MicrosoftDebuggerClientContext myContext;
-	private int myModuleToken;
-	private int myClassToken;
+	private TypeRef myTypeRef;
 	private int myFunctionToken;
 
 	private GetMethodInfoRequestResult myResult;
 
-	public MicrosoftMethodProxy(MicrosoftDebuggerClientContext context, int moduleToken, int classToken, int functionToken)
+	private DotNetTypeProxy myDeclarationType;
+
+	public MicrosoftMethodProxy(MicrosoftDebuggerClientContext context, TypeRef typeRef, int functionToken)
 	{
 		myContext = context;
-		myModuleToken = moduleToken;
-		myClassToken = classToken;
+		myTypeRef = typeRef;
 		myFunctionToken = functionToken;
 	}
 
@@ -49,14 +50,25 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public DotNetTypeProxy getDeclarationType()
 	{
-		return new MicrosoftTypeProxy(myContext, myModuleToken, myClassToken);
+		if(myDeclarationType != null)
+		{
+			return myDeclarationType;
+		}
+		return myDeclarationType = new MicrosoftTypeProxy(myContext, myTypeRef);
 	}
 
 	@NotNull
 	@Override
 	public DotNetMethodParameterProxy[] getParameters()
 	{
-		return new DotNetMethodParameterProxy[0];
+		GetMethodInfoRequestResult.ParameterInfo[] parameters = info().Parameters;
+		DotNetMethodParameterProxy[] proxies = new DotNetMethodParameterProxy[parameters.length];
+		for(int i = 0; i < parameters.length; i++)
+		{
+			GetMethodInfoRequestResult.ParameterInfo parameter = parameters[i];
+			proxies[i] = new MicrosoftMethodParameterProxy(myContext, i, parameter);
+		}
+		return proxies;
 	}
 
 	@NotNull
@@ -73,6 +85,6 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 		{
 			return myResult;
 		}
-		return myResult = myContext.sendAndReceive(new GetMethodInfoRequest(myModuleToken, myClassToken, myFunctionToken), GetMethodInfoRequestResult.class);
+		return myResult = myContext.sendAndReceive(new GetMethodInfoRequest(myTypeRef, myFunctionToken), GetMethodInfoRequestResult.class);
 	}
 }

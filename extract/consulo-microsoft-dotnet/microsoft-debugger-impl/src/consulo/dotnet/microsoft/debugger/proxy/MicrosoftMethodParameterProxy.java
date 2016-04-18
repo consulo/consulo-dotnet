@@ -17,64 +17,45 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClientContext;
-import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
-import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetTypeInfoRequest;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoRequestResult;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoRequestResult;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class MicrosoftTypeProxy implements DotNetTypeProxy
+public class MicrosoftMethodParameterProxy implements DotNetMethodParameterProxy
 {
+	private int myIndex;
 	private MicrosoftDebuggerClientContext myContext;
-	private TypeRef myTypeRef;
+	private GetMethodInfoRequestResult.ParameterInfo myParameterInfo;
 
-	private GetTypeInfoRequestResult myResult;
-
-	public MicrosoftTypeProxy(MicrosoftDebuggerClientContext context, TypeRef typeRef)
+	public MicrosoftMethodParameterProxy(MicrosoftDebuggerClientContext context, int index, GetMethodInfoRequestResult.ParameterInfo parameterInfo)
 	{
 		myContext = context;
-		myTypeRef = typeRef;
+		myIndex = index;
+		myParameterInfo = parameterInfo;
+	}
+
+	@Override
+	public int getIndex()
+	{
+		return myIndex;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeProxy getType()
+	{
+		return new MicrosoftTypeProxy(myContext, myParameterInfo.Type);
 	}
 
 	@NotNull
 	@Override
 	public String getName()
 	{
-		return info().Name;
-	}
-
-	@NotNull
-	@Override
-	public String getFullName()
-	{
-		return null;
-	}
-
-	@Override
-	public boolean isArray()
-	{
-		return false;
-	}
-
-	@Nullable
-	@Override
-	public DotNetTypeProxy getBaseType()
-	{
-		return null;
-	}
-
-	@NotNull
-	private GetTypeInfoRequestResult info()
-	{
-		if(myResult != null)
-		{
-			return myResult;
-		}
-		return myResult = myContext.sendAndReceive(new GetTypeInfoRequest(myTypeRef), GetTypeInfoRequestResult.class);
+		return myParameterInfo.Name;
 	}
 }

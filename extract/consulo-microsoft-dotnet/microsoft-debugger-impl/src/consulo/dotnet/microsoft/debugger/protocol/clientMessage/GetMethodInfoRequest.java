@@ -16,22 +16,21 @@
 
 package consulo.dotnet.microsoft.debugger.protocol.clientMessage;
 
+import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
+
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
 public class GetMethodInfoRequest
 {
-	public int ModuleToken;
-
-	public int ClassToken;
+	public TypeRef Type;
 
 	public int FunctionToken;
 
-	public GetMethodInfoRequest(int moduleToken, int classToken, int functionToken)
+	public GetMethodInfoRequest(TypeRef typeRef, int functionToken)
 	{
-		ModuleToken = moduleToken;
-		ClassToken = classToken;
+		Type = typeRef;
 		FunctionToken = functionToken;
 	}
 }

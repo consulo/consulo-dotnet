@@ -16,6 +16,8 @@
 
 package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 
+import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
+
 /**
  * @author VISTALL
  * @since 18.04.2016
@@ -35,9 +37,7 @@ public class GetFramesRequestResult
 
 		public SourcePosition Position;
 
-		public int ModuleToken;
-
-		public int ClassToken;
+		public TypeRef Type;
 
 		public int FunctionToken;
 	}

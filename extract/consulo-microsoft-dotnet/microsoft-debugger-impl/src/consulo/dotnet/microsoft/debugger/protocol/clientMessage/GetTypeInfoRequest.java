@@ -26,8 +26,8 @@ public class GetTypeInfoRequest
 {
 	public TypeRef Type;
 
-	public GetTypeInfoRequest(int moduleToken, int classToken)
+	public GetTypeInfoRequest(TypeRef typeRef)
 	{
-		Type = new TypeRef(moduleToken, classToken);
+		Type = typeRef;
 	}
 }
