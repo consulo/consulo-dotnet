@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
@@ -35,6 +36,7 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventVisitor;
  * @author VISTALL
  * @since 16.04.2016
  */
+@Logger
 public class MicrosoftDebuggerClient
 {
 	private class MicrosoftDebuggerNettyHandler extends SimpleChannelUpstreamHandler
@@ -217,7 +219,16 @@ public class MicrosoftDebuggerClient
 		channel.write(jsonText);
 
 		semaphore.waitFor();
-		return clazz.cast(ref.get());
+		Object value = ref.get();
+		if(clazz.isInstance(value))
+		{
+			return clazz.cast(value);
+		}
+		else
+		{
+			LOGGER.error("Receive wrong value: " + value);
+			return ReflectionUtil.newInstance(clazz);
+		}
 	}
 
 	public void connect()
