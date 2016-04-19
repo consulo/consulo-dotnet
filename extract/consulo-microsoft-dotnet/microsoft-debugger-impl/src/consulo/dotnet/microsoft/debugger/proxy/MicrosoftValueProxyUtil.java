@@ -24,7 +24,7 @@ import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ArrayValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BadRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BooleanValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NullValueRequest;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NullValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ObjectValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.UnknownValueResult;
@@ -68,7 +68,7 @@ public class MicrosoftValueProxyUtil
 		{
 			return new MicrosoftObjectValueProxy(client, (ObjectValueResult) o);
 		}
-		if(o instanceof NullValueRequest)
+		if(o instanceof NullValueResult)
 		{
 			return new MicrosoftNullValueProxy();
 		}

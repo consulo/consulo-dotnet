@@ -8,6 +8,7 @@ import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
+import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetFieldValueRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoRequestResult;
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 
@@ -36,7 +37,8 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	@Override
 	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy proxy)
 	{
-		return null;
+		MicrosoftObjectValueProxy objectValueProxy = (MicrosoftObjectValueProxy) proxy;
+		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetFieldValueRequest(objectValueProxy.getResult().ObjectId, myField.Token));
 	}
 
 	@Override

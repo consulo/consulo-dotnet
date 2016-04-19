@@ -16,6 +16,7 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
+import org.jetbrains.annotations.NotNull;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
@@ -29,5 +30,11 @@ public abstract class MicrosoftValueProxyBase<T> implements DotNetValueProxy
 	public MicrosoftValueProxyBase(T result)
 	{
 		myResult = result;
+	}
+
+	@NotNull
+	public T getResult()
+	{
+		return myResult;
 	}
 }
