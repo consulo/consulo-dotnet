@@ -183,7 +183,6 @@ public class MicrosoftDebuggerClient
 		}).create();
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T sendAndReceive(Object request, final Class<T> clazz)
 	{
 		Channel channel = myChannelFuture.getChannel();
@@ -218,7 +217,7 @@ public class MicrosoftDebuggerClient
 		channel.write(jsonText);
 
 		semaphore.waitFor();
-		return (T) ref.get();
+		return clazz.cast(ref.get());
 	}
 
 	public void connect()

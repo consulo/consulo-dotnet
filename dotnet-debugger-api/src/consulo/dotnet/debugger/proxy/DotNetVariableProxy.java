@@ -17,7 +17,7 @@
 package consulo.dotnet.debugger.proxy;
 
 import org.consulo.util.pointers.Named;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -25,6 +25,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DotNetVariableProxy extends Named
 {
-	@NotNull
+	@Nullable
 	DotNetTypeProxy getType();
 }

@@ -109,7 +109,7 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(containingFile.getVirtualFile(), element.getTextOffset()));
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetTypeProxy getTypeOfVariable()
 	{

@@ -24,7 +24,9 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
+import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetLocalsRequest;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetMethodInfoRequest;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetLocalsRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoRequestResult;
 
 /**
@@ -77,7 +79,15 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy)
 	{
-		return new DotNetLocalVariableProxy[0];
+		GetLocalsRequestResult result = myContext.sendAndReceive(new GetLocalsRequest((int) frameProxy.getThread().getId(), frameProxy.getIndex()), GetLocalsRequestResult.class);
+
+		DotNetLocalVariableProxy[] proxies = new DotNetLocalVariableProxy[result.Locals.length];
+		for(int i = 0; i < result.Locals.length; i++)
+		{
+			GetLocalsRequestResult.LocalInfo local = result.Locals[i];
+			proxies[i] = new MicrosoftLocalVariableProxy(local);
+		}
+		return proxies;
 	}
 
 	@NotNull

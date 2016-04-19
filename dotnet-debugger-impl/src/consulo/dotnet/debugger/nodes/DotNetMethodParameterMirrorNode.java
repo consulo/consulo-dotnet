@@ -98,7 +98,7 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(parameter.getContainingFile().getVirtualFile(), nameIdentifier.getTextOffset()));
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetTypeProxy getTypeOfVariable()
 	{
