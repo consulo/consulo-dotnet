@@ -25,6 +25,7 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
+import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -43,7 +44,7 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 			@Nullable DotNetValueProxy thisObject,
 			@NotNull DotNetStackFrameProxy frameMirrorProxy,
 			@NotNull Set<Object> visitedVariables,
-			@NotNull XValueChildrenList childrenList)
+			@NotNull XValueChildrenList childrenList) throws DotNetInvalidObjectException
 	{
 		DotNetSourceLocation sourceLocation = frameMirrorProxy.getSourceLocation();
 		if(sourceLocation == null)
@@ -53,9 +54,9 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 
 		DotNetMethodProxy method = sourceLocation.getMethod();
 
-		/*final Value value = frameMirrorProxy.thisObject();
+		final DotNetValueProxy value = frameMirrorProxy.getThisObject();
 
-		if(value instanceof ObjectValueMirror)
+		/*if(value instanceof ObjectValueMirror)
 		{
 			TypeMirror type = value.type();
 			assert type != null;

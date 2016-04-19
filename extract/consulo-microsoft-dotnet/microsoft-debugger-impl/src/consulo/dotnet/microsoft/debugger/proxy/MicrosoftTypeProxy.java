@@ -18,6 +18,8 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
+import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
@@ -66,6 +68,20 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	public DotNetTypeProxy getBaseType()
 	{
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public DotNetFieldProxy[] getFields()
+	{
+		return new DotNetFieldProxy[0];
+	}
+
+	@NotNull
+	@Override
+	public DotNetPropertyProxy[] getProperties()
+	{
+		return new DotNetPropertyProxy[0];
 	}
 
 	@NotNull

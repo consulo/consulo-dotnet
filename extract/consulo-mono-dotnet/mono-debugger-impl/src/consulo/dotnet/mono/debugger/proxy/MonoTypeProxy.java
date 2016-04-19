@@ -18,6 +18,8 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
+import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mono.debugger.TypeMirror;
 
@@ -59,5 +61,19 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	public DotNetTypeProxy getBaseType()
 	{
 		return new MonoTypeProxy(myTypeMirror.baseType());
+	}
+
+	@NotNull
+	@Override
+	public DotNetFieldProxy[] getFields()
+	{
+		return new DotNetFieldProxy[0];
+	}
+
+	@NotNull
+	@Override
+	public DotNetPropertyProxy[] getProperties()
+	{
+		return new DotNetPropertyProxy[0];
 	}
 }

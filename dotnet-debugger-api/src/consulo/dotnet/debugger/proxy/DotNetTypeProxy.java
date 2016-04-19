@@ -35,4 +35,10 @@ public interface DotNetTypeProxy
 
 	@Nullable
 	DotNetTypeProxy getBaseType();
+
+	@NotNull
+	DotNetFieldProxy[] getFields();
+
+	@NotNull
+	DotNetPropertyProxy[] getProperties();
 }

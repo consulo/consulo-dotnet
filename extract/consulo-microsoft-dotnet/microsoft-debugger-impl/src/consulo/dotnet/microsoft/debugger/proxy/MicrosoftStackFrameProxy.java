@@ -19,9 +19,7 @@ package consulo.dotnet.microsoft.debugger.proxy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.NullableLazyValue;
-import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
-import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
@@ -96,7 +94,7 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 
 	@NotNull
 	@Override
-	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException
+	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException
 	{
 		if(isStaticFrame())
 		{

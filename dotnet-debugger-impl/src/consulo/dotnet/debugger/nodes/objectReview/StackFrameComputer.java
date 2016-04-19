@@ -22,6 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
+import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
+import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
@@ -35,5 +38,5 @@ public interface StackFrameComputer
 			@Nullable DotNetValueProxy thisObject,
 			@NotNull DotNetStackFrameProxy frameMirrorProxy,
 			@NotNull Set<Object> visitedVariables,
-			@NotNull XValueChildrenList childrenList);
+			@NotNull XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException;
 }
