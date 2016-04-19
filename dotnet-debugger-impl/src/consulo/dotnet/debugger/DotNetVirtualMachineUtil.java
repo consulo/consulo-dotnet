@@ -17,6 +17,7 @@
 package consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
@@ -38,8 +39,12 @@ public class DotNetVirtualMachineUtil
 	}
 
 	@NotNull
-	public static String formatNameWithGeneric(@NotNull DotNetTypeProxy typeMirror)
+	public static String formatNameWithGeneric(@Nullable DotNetTypeProxy typeMirror)
 	{
+		if(typeMirror == null)
+		{
+			return "";
+		}
 		StringBuilder builder = new StringBuilder();
 		formatNameWithGeneric(builder, typeMirror);
 		return builder.toString();

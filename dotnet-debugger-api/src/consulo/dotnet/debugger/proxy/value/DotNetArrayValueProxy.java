@@ -16,10 +16,19 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
 public interface DotNetArrayValueProxy extends DotNetValueProxy
 {
+	int getLength();
+
+	@Nullable
+	DotNetValueProxy get(int index);
+
+	void set(int index, @NotNull DotNetValueProxy proxy);
 }

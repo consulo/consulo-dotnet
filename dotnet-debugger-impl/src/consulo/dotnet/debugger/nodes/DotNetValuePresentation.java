@@ -27,14 +27,7 @@ import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
+import consulo.dotnet.debugger.proxy.value.*;
 
 /**
  * @author VISTALL
@@ -65,11 +58,11 @@ public class DotNetValuePresentation extends XValuePresentation
 
 		myValue.accept(new DotNetValueProxyVisitor.Adaptor()
 		{
-			/*@Override
-			public void visitStructValue(@NotNull StructValueMirror mirror)
+			@Override
+			public void visitStructValue(@NotNull DotNetStructValueProxy proxy)
 			{
-				result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(mirror.type()));
-			}  */
+				result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(proxy.getType()));
+			}
 
 			@Override
 			public void visitObjectValue(@NotNull DotNetObjectValueProxy value)
@@ -89,16 +82,16 @@ public class DotNetValuePresentation extends XValuePresentation
 				result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(type) + "@" + value.getAddress());
 			}
 
-			/*@Override
-			public void visitArrayValue(@NotNull ArrayValueMirror value)
+			@Override
+			public void visitArrayValue(@NotNull DotNetArrayValueProxy proxy)
 			{
 				StringBuilder builder = new StringBuilder();
-				String type = DotNetVirtualMachineUtil.formatNameWithGeneric(value.type());
-				builder.append(type.replaceFirst("\\[\\]", "[" + value.length() + "]"));
-				builder.append("@");
-				builder.append(value.object().address());
+				String type = DotNetVirtualMachineUtil.formatNameWithGeneric(proxy.getType());
+				builder.append(type.replaceFirst("\\[\\]", "[" + proxy.getLength() + "]"));
+				/*builder.append("@");
+				builder.append(value.object().address()); */
 				result.set(builder.toString());
-			}*/
+			}
 		});
 		return result.get();
 	}
@@ -198,10 +191,10 @@ public class DotNetValuePresentation extends XValuePresentation
 				}
 			} */
 
-			/*@Override
-			public void visitStructValue(@NotNull StructValueMirror mirror)
+			@Override
+			public void visitStructValue(@NotNull DotNetStructValueProxy proxy)
 			{
-				TypeMirror type = mirror.type();
+				/*TypeMirror type = mirror.type();
 
 				String toStringValue = null;
 
@@ -230,8 +223,8 @@ public class DotNetValuePresentation extends XValuePresentation
 					}, ", ");
 				}
 
-				renderer.renderValue(toStringValue);
-			}  */
+				renderer.renderValue(toStringValue);*/
+			}
 
 			@Override
 			public void visitObjectValue(@NotNull DotNetObjectValueProxy value)
@@ -265,9 +258,10 @@ public class DotNetValuePresentation extends XValuePresentation
 				}
 			}
 
-			/*@Override
-			public void visitCharValue(@NotNull CharValueMirror valueMirror, @NotNull Character mainValue)
+			@Override
+			public void visitCharValue(@NotNull DotNetCharValueProxy proxy)
 			{
+				Character mainValue = (Character) proxy.getValue();
 				StringBuilder builder = new StringBuilder();
 				builder.append('\'');
 				builder.append(mainValue);
@@ -275,7 +269,7 @@ public class DotNetValuePresentation extends XValuePresentation
 				builder.append(' ');
 				builder.append((int) mainValue.charValue());
 				renderer.renderValue(builder.toString());
-			} */
+			}
 
 			@Override
 			public void visitBooleanValue(@NotNull DotNetBooleanValueProxy value)

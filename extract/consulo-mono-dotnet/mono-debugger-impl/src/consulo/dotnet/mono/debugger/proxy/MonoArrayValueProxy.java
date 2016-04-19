@@ -16,7 +16,10 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mono.debugger.ArrayValueMirror;
 
@@ -35,5 +38,25 @@ public class MonoArrayValueProxy extends MonoValueProxyBase<ArrayValueMirror> im
 	public void accept(DotNetValueProxyVisitor visitor)
 	{
 		visitor.visitArrayValue(this);
+	}
+
+	@Override
+	public int getLength()
+	{
+		return myValue.length();
+	}
+
+	@Nullable
+	@Override
+	public DotNetValueProxy get(int index)
+	{
+		return MonoValueProxyUtil.wrap(myValue.get(index));
+	}
+
+	@Override
+	public void set(int index, @NotNull DotNetValueProxy proxy)
+	{
+		MonoValueProxyBase<?> valueProxyBase = (MonoValueProxyBase<?>) proxy;
+		myValue.set(index, valueProxyBase.getMirror());
 	}
 }

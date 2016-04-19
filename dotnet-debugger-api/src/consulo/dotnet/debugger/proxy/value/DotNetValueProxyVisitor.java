@@ -61,6 +61,18 @@ public interface DotNetValueProxyVisitor
 		{
 
 		}
+
+		@Override
+		public void visitCharValue(@NotNull DotNetCharValueProxy proxy)
+		{
+
+		}
+
+		@Override
+		public void visitStructValue(@NotNull DotNetStructValueProxy proxy)
+		{
+
+		}
 	}
 
 	void visitStringValue(@NotNull DotNetStringValueProxy proxy);
@@ -74,4 +86,8 @@ public interface DotNetValueProxyVisitor
 	void visitNumberValue(@NotNull DotNetNumberValueProxy proxy);
 
 	void visitBooleanValue(@NotNull DotNetBooleanValueProxy proxy);
+
+	void visitCharValue(@NotNull DotNetCharValueProxy proxy);
+
+	void visitStructValue(@NotNull DotNetStructValueProxy proxy);
 }

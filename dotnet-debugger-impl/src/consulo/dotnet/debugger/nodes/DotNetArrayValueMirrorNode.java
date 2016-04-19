@@ -14,60 +14,57 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes.logicView.nodes;
+package consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import mono.debugger.ArrayValueMirror;
-import mono.debugger.ThreadMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
  * @since 26.04.14
  */
-@Deprecated
 public class DotNetArrayValueMirrorNode extends DotNetAbstractVariableMirrorNode
 {
 	@NotNull
-	private final ArrayValueMirror myArrayValueMirror;
+	private final DotNetArrayValueProxy myArrayValueMirror;
 	private final int myIndex;
-	@NotNull
-	private final Value<?> myValue;
+	@Nullable
+	private final DotNetValueProxy myValue;
 
-	public DotNetArrayValueMirrorNode(
-			@NotNull DotNetDebugContext debuggerContext,
+	public DotNetArrayValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull String name,
-			@NotNull ThreadMirror threadMirror,
-			@NotNull ArrayValueMirror arrayValueMirror,
+			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetArrayValueProxy valueMirrorNode,
 			int index)
 	{
 		super(debuggerContext, name, threadMirror);
-		myArrayValueMirror = arrayValueMirror;
+		myArrayValueMirror = valueMirrorNode;
 		myIndex = index;
-		myValue = arrayValueMirror.get(index);
+		myValue = valueMirrorNode.get(index);
 	}
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariableImpl()
+	public DotNetValueProxy getValueOfVariableImpl()
 	{
 		return myValue;
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
 	{
 		myArrayValueMirror.set(myIndex, value);
 	}
 
 	@Nullable
 	@Override
-	public TypeMirror getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariable()
 	{
-		return myValue.type();
+		return myValue == null ? null : myValue.getType();
 	}
 }

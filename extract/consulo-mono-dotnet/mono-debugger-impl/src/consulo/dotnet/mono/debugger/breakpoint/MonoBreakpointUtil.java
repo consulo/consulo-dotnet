@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
-import org.mustbe.consulo.dotnet.debugger.TypeMirrorUnloadedException;
+import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
 import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;

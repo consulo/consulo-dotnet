@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
+package consulo.dotnet.debugger.nodes.logicView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.ObjectUtil;
@@ -26,32 +25,32 @@ import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import mono.debugger.ThreadMirror;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
  * @since 21.11.2015
  */
-@Deprecated
-public abstract class LimitableDotNetLogicValueView<T extends Value<?>> implements DotNetLogicValueView
+public abstract class LimitableDotNetLogicValueView<T extends DotNetValueProxy> implements DotNetLogicValueView
 {
-	private static final Key<Integer> LAST_INDEX = Key.create("dotnet-limit-last-index");
+	private static final Key<Integer> ourLastIndex = Key.create("dotnet-limit-last-index");
 
 	public abstract int getSize(@NotNull T value);
 
-	public abstract boolean isMyValue(@NotNull Value<?> value);
+	public abstract boolean isMyValue(@NotNull DotNetValueProxy value);
 
 	@NotNull
-	public abstract XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull ThreadMirror threadMirror, @NotNull T value);
+	public abstract XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull DotNetThreadProxy threadMirror, @NotNull T value);
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void computeChildren(@NotNull UserDataHolderBase dataHolder,
 			@NotNull DotNetDebugContext debugContext,
 			@NotNull DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull ThreadMirror threadMirror,
-			@Nullable Value<?> oldValue,
+			@NotNull DotNetThreadProxy threadMirror,
+			@Nullable DotNetValueProxy oldValue,
 			@NotNull XCompositeNode node)
 	{
 		if(oldValue == null || !isMyValue(oldValue))
@@ -63,7 +62,7 @@ public abstract class LimitableDotNetLogicValueView<T extends Value<?>> implemen
 		T value = (T) oldValue;
 
 		final int length = getSize(value);
-		final int startIndex = ObjectUtil.notNull(dataHolder.getUserData(LAST_INDEX), 0);
+		final int startIndex = ObjectUtil.notNull(dataHolder.getUserData(ourLastIndex), 0);
 
 		XValueChildrenList childrenList = new XValueChildrenList();
 		int max = Math.min(startIndex + XCompositeNode.MAX_CHILDREN_TO_SHOW, length);
@@ -72,7 +71,7 @@ public abstract class LimitableDotNetLogicValueView<T extends Value<?>> implemen
 			childrenList.add(createChildValue(i, debugContext, threadMirror, value));
 		}
 
-		dataHolder.putUserData(LAST_INDEX, max);
+		dataHolder.putUserData(ourLastIndex, max);
 
 		node.addChildren(childrenList, true);
 

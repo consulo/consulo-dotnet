@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.mono.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import mono.debugger.TypeMirror;

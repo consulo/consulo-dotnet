@@ -35,11 +35,11 @@ import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import mono.debugger.ArrayValueMirror;
 import mono.debugger.StructValueMirror;
 
 /**
@@ -287,7 +287,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	{
 		final DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
 		return valueOfVariable instanceof DotNetObjectValueProxy ||
-				valueOfVariable instanceof ArrayValueMirror && ((ArrayValueMirror) valueOfVariable).length() != 0 ||
+				valueOfVariable instanceof DotNetArrayValueProxy && ((DotNetArrayValueProxy) valueOfVariable).getLength() != 0 ||
 				valueOfVariable instanceof DotNetStringValueProxy && !StringUtil.isEmpty(((String) valueOfVariable.getValue())) ||
 				valueOfVariable instanceof StructValueMirror && ((StructValueMirror) valueOfVariable).fieldValues().length != 0;
 	}
