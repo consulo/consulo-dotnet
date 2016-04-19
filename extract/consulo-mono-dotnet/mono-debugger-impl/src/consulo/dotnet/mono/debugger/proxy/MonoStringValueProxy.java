@@ -16,7 +16,7 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mono.debugger.StringValueMirror;
@@ -32,7 +32,7 @@ public class MonoStringValueProxy extends MonoValueProxyBase<StringValueMirror> 
 		super(value);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getValue()
 	{

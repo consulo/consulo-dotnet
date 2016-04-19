@@ -26,7 +26,7 @@ public class MicrosoftArrayValueProxy extends MicrosoftValueProxyBase<ArrayValue
 		return null;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Object getValue()
 	{

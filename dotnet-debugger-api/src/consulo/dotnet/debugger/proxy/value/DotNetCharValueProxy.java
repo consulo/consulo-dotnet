@@ -16,6 +16,7 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface DotNetCharValueProxy extends DotNetValueProxy
 {
-	@Nullable
+	@NotNull
 	@Override
 	Character getValue();
 }

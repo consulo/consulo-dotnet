@@ -1,5 +1,6 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
@@ -28,7 +29,7 @@ public class MicrosoftObjectValueProxy extends MicrosoftValueProxyBase<ObjectVal
 		return MicrosoftTypeProxy.of(myClient, myResult.Type);
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public Object getValue()
 	{

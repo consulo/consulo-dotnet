@@ -16,6 +16,7 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
@@ -40,7 +41,7 @@ public class MicrosoftStringValueProxy extends MicrosoftValueProxyBase<StringVal
 		return null;
 	}
 
-	@Nullable
+	@NotNull
 	@Override
 	public String getValue()
 	{

@@ -16,6 +16,7 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
@@ -28,7 +29,7 @@ public interface DotNetValueProxy
 	@Nullable
 	DotNetTypeProxy getType();
 
-	@Nullable
+	@NotNull("Need check class before this class")
 	Object getValue();
 
 	void accept(DotNetValueProxyVisitor visitor);
