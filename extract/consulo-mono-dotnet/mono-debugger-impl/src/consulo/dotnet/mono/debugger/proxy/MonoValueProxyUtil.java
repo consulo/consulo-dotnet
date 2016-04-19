@@ -26,6 +26,7 @@ import mono.debugger.NoObjectValueMirror;
 import mono.debugger.NumberValueMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.StringValueMirror;
+import mono.debugger.StructValueMirror;
 import mono.debugger.Value;
 
 /**
@@ -78,6 +79,11 @@ public class MonoValueProxyUtil
 		if(value instanceof CharValueMirror)
 		{
 			valueProxy = new MonoCharValueProxy((CharValueMirror) value);
+		}
+
+		if(value instanceof StructValueMirror)
+		{
+			valueProxy = new MonoStructValueProxy((StructValueMirror) value);
 		}
 
 		if(valueProxy == null)

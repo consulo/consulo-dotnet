@@ -16,14 +16,20 @@
 
 package consulo.dotnet.debugger.nodes;
 
+import java.util.Map;
+
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.Function;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -194,36 +200,40 @@ public class DotNetValuePresentation extends XValuePresentation
 			@Override
 			public void visitStructValue(@NotNull DotNetStructValueProxy proxy)
 			{
-				/*TypeMirror type = mirror.type();
+				DotNetTypeProxy type = proxy.getType();
+				if(type == null)
+				{
+					return;
+				}
 
 				String toStringValue = null;
 
-				MethodMirror toString = type.findMethodByName("ToString", false);
+				DotNetMethodProxy toString = type.findMethodByName("ToString", false);
 				if(toString != null)
 				{
-					Value<?> invoke = invokeSafe(toString, myThreadProxy, mirror);
-					if(invoke instanceof StringValueMirror)
+					DotNetValueProxy invoke = invokeSafe(toString, myThreadProxy, proxy);
+					if(invoke instanceof DotNetStringValueProxy)
 					{
-						toStringValue = ((StringValueMirror) invoke).value();
+						toStringValue = ((DotNetStringValueProxy) invoke).getValue();
 					}
 				}
 
 				if(toStringValue == null)
 				{
-					Map<FieldOrPropertyMirror, Value<?>> fields = mirror.map();
+					Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> fields = proxy.getValues();
 
-					toStringValue = StringUtil.join(fields.entrySet(), new Function<Map.Entry<FieldOrPropertyMirror, Value<?>>, String>()
+					toStringValue = StringUtil.join(fields.entrySet(), new Function<Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy>, String>()
 					{
 						@Override
-						public String fun(Map.Entry<FieldOrPropertyMirror, Value<?>> entry)
+						public String fun(Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy> entry)
 						{
 							String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myThreadProxy, entry.getValue()));
-							return entry.getKey().name() + " = " + valueText;
+							return entry.getKey().getName() + " = " + valueText;
 						}
 					}, ", ");
 				}
 
-				renderer.renderValue(toStringValue);*/
+				renderer.renderValue(toStringValue);
 			}
 
 			@Override
