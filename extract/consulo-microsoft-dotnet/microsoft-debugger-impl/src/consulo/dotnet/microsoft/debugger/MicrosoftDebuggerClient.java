@@ -226,7 +226,7 @@ public class MicrosoftDebuggerClient
 		}
 		else
 		{
-			LOGGER.error("Receive wrong value: " + value);
+			LOGGER.error("Receive wrong value: " + request);
 			return ReflectionUtil.newInstance(clazz);
 		}
 	}

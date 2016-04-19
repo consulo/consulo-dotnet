@@ -30,4 +30,13 @@ public class GetTypeInfoRequest
 	{
 		Type = typeRef;
 	}
+
+	@Override
+	public String toString()
+	{
+		final StringBuilder sb = new StringBuilder("GetTypeInfoRequest{");
+		sb.append("Type=").append(Type);
+		sb.append('}');
+		return sb.toString();
+	}
 }

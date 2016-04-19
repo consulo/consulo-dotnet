@@ -26,7 +26,7 @@ public class TypeRef
 
 	public int ClassToken;
 
-	//public String VmQName; dead
+	public String VmQName;
 
 	public TypeRef(int moduleToken, int classToken)
 	{
@@ -40,6 +40,7 @@ public class TypeRef
 		final StringBuilder sb = new StringBuilder("TypeRef{");
 		sb.append("ModuleToken=").append(ModuleToken);
 		sb.append(", ClassToken=").append(ClassToken);
+		sb.append(", VmQName=").append(VmQName);
 		sb.append('}');
 		return sb.toString();
 	}

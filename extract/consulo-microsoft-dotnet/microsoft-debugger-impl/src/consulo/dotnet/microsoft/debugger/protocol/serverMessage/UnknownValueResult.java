@@ -23,4 +23,13 @@ package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 public class UnknownValueResult
 {
 	public String Type;
+
+	@Override
+	public String toString()
+	{
+		final StringBuilder sb = new StringBuilder("UnknownValueResult{");
+		sb.append("Type='").append(Type).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }
