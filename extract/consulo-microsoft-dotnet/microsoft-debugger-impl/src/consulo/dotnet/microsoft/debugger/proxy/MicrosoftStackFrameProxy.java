@@ -30,6 +30,7 @@ import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetArgumentRequest;
+import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetLocalValueRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
 
 /**
@@ -118,7 +119,9 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
 	{
-		return null;
+		MicrosoftLocalVariableProxy microsoftLocalVariableProxy = (MicrosoftLocalVariableProxy) localVariableProxy;
+		Object o = myClient.sendAndReceive(new GetLocalValueRequest((int) myThreadProxy.getId(), myIndex, microsoftLocalVariableProxy.getIndex()), Object.class);
+		return MicrosoftValueProxyUtil.wrap(o);
 	}
 
 	@Override

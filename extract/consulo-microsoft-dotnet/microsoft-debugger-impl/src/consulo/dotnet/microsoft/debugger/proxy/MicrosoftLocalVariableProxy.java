@@ -19,6 +19,11 @@ public class MicrosoftLocalVariableProxy implements DotNetLocalVariableProxy
 		myLocal = local;
 	}
 
+	public int getIndex()
+	{
+		return myLocal.Index;
+	}
+
 	@Nullable
 	@Override
 	public DotNetTypeProxy getType()
