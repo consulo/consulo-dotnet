@@ -25,6 +25,8 @@ import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
+import consulo.dotnet.microsoft.debugger.protocol.clientMessage.FindTypeInfoRequest;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.FindTypeInfoRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetTypeInfoRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoRequestResult;
 
@@ -34,6 +36,13 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoReque
  */
 public class MicrosoftTypeProxy implements DotNetTypeProxy
 {
+	@Nullable
+	public static MicrosoftTypeProxy of(@NotNull MicrosoftDebuggerClient client, @NotNull String vmQName)
+	{
+		FindTypeInfoRequestResult result = client.sendAndReceive(new FindTypeInfoRequest(vmQName), FindTypeInfoRequestResult.class);
+		return new MicrosoftTypeProxy(client, result.Type);
+	}
+
 	@Nullable
 	@Contract("null -> null; !null -> !null")
 	public static MicrosoftTypeProxy of(@NotNull MicrosoftDebuggerClient client, @Nullable TypeRef typeRef)

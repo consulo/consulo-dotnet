@@ -58,11 +58,11 @@ public class MicrosoftValueProxyUtil
 		}
 		if(o instanceof StringValueResult)
 		{
-			return new MicrosoftStringValueProxy(((StringValueResult) o));
+			return new MicrosoftStringValueProxy(client, ((StringValueResult) o));
 		}
 		if(o instanceof BooleanValueResult)
 		{
-			return new MicrosoftBooleanValueProxy((BooleanValueResult) o);
+			return new MicrosoftBooleanValueProxy(client, (BooleanValueResult) o);
 		}
 		if(o instanceof ObjectValueResult)
 		{

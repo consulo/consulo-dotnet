@@ -35,6 +35,7 @@ public class GetTypeInfoRequestResult
 		public int Attributes;
 	}
 
+	public int Token;
 	public FieldInfo[] Fields = new FieldInfo[0];
 	public String Name;
 	public String FullName;

@@ -18,9 +18,11 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResult;
 
 /**
@@ -29,16 +31,19 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResul
  */
 public class MicrosoftStringValueProxy extends MicrosoftValueProxyBase<StringValueResult> implements DotNetStringValueProxy
 {
-	public MicrosoftStringValueProxy(StringValueResult value)
+	private MicrosoftDebuggerClient myClient;
+
+	public MicrosoftStringValueProxy(MicrosoftDebuggerClient client, StringValueResult value)
 	{
 		super(value);
+		myClient = client;
 	}
 
 	@Nullable
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return null;
+		return MicrosoftTypeProxy.of(myClient, DotNetTypes.System.String);
 	}
 
 	@NotNull
