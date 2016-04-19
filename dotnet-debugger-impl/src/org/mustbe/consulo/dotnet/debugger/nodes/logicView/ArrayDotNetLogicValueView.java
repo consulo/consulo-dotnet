@@ -1,9 +1,9 @@
 package org.mustbe.consulo.dotnet.debugger.nodes.logicView;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.debugger.DotNetDebugContext;
 import org.mustbe.consulo.dotnet.debugger.nodes.logicView.nodes.DotNetArrayValueMirrorNode;
 import com.intellij.xdebugger.frame.XNamedValue;
+import consulo.dotnet.debugger.DotNetDebugContext;
 import mono.debugger.ArrayValueMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.TypeMirror;
@@ -13,6 +13,7 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 20.09.14
  */
+@Deprecated
 public class ArrayDotNetLogicValueView extends LimitableDotNetLogicValueView<ArrayValueMirror>
 {
 	@Override

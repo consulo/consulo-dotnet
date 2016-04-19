@@ -26,6 +26,7 @@ import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetThisAsStructValueMirrorNode;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
@@ -34,6 +35,7 @@ import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
@@ -68,16 +70,16 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 
 			childrenList.add(new DotNetThisAsObjectValueMirrorNode(debugContext, frameMirrorProxy.getThread(), type, (DotNetObjectValueProxy) value));
 		}
-	/*	else if(value instanceof StructValueMirror)
+		else if(value instanceof DotNetStructValueProxy)
 		{
-			TypeMirror type = value.type();
+			DotNetTypeProxy type = value.getType();
 			assert type != null;
 
-			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameMirrorProxy.thread(), type);
+			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameMirrorProxy.getThread(), type);
 
-			childrenList.add(new DotNetThisAsStructValueMirrorNode(debugContext, frameMirrorProxy.thread(), type, (StructValueMirror) value));
+			childrenList.add(new DotNetThisAsStructValueMirrorNode(debugContext, frameMirrorProxy.getThread(), type, (DotNetStructValueProxy) value));
 		}
-		else */
+		else
 		{
 			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameMirrorProxy.getThread(), sourceLocation.getMethod().getDeclarationType());
 		}

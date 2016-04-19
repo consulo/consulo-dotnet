@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
+package consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.xdebugger.frame.XValueModifier;
-import mono.debugger.ThreadMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
  * @since 20.09.14
  */
-@Deprecated
 public class DotNetSimpleValueMirrorNode extends DotNetAbstractVariableMirrorNode
 {
 	@NotNull
-	private final Value<?> myValue;
+	private final DotNetValueProxy myValue;
 
-	public DotNetSimpleValueMirrorNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull ThreadMirror threadMirror,
-			@NotNull Value<?> value)
+	public DotNetSimpleValueMirrorNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy value)
 	{
 		super(debuggerContext, name, threadMirror);
 
@@ -51,20 +49,20 @@ public class DotNetSimpleValueMirrorNode extends DotNetAbstractVariableMirrorNod
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariableImpl()
+	public DotNetValueProxy getValueOfVariableImpl()
 	{
 		return myValue;
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
 	{
 	}
 
 	@Nullable
 	@Override
-	public TypeMirror getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariable()
 	{
-		return myValue.type();
+		return myValue.getType();
 	}
 }

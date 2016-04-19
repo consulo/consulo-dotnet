@@ -1,15 +1,23 @@
 package consulo.dotnet.debugger.nodes.logicView;
 
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetStructValueInfo;
+import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
+import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
+import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import mono.debugger.FieldOrPropertyMirror;
-import mono.debugger.PropertyMirror;
 
 /**
  * @author VISTALL
@@ -30,48 +38,42 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 			@Nullable DotNetValueProxy value,
 			@NotNull XValueChildrenList childrenList)
 	{
-		/*if(value instanceof ObjectValueMirror)
+		if(value instanceof DotNetObjectValueProxy)
 		{
-			try
+			DotNetTypeProxy type = value.getType();
+
+			assert type != null;
+
+			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, threadMirror, type);
+
+			DotNetFieldOrPropertyProxy[] mirrors = DotNetDebuggerUtil.getFieldAndProperties(type, true);
+			for(DotNetFieldOrPropertyProxy fieldOrPropertyProxy : mirrors)
 			{
-				TypeMirror type = value.type();
-
-				assert type != null;
-
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, threadMirror, type);
-
-				List<FieldOrPropertyMirror> fieldMirrors = type.fieldAndProperties(true);
-				for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
+				if(needSkip(fieldOrPropertyProxy))
 				{
-					if(needSkip(fieldMirror))
-					{
-						continue;
-					}
-					childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldMirror, threadMirror, (ObjectValueMirror) value));
+					continue;
 				}
-			}
-			catch(InvalidObjectException ignored)
-			{
+				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldOrPropertyProxy, threadMirror, (DotNetObjectValueProxy) value));
 			}
 		}
-		else if(value instanceof StructValueMirror)
+		else if(value instanceof DotNetStructValueProxy)
 		{
-			Map<FieldOrPropertyMirror, Value<?>> fields = ((StructValueMirror) value).map();
+			Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> fields = ((DotNetStructValueProxy) value).getValues();
 
-			for(Map.Entry<FieldOrPropertyMirror, Value<?>> entry : fields.entrySet())
+			for(Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy> entry : fields.entrySet())
 			{
-				FieldOrPropertyMirror fieldMirror = entry.getKey();
-				Value<?> fieldValue = entry.getValue();
+				DotNetFieldOrPropertyProxy fieldMirror = entry.getKey();
+				DotNetValueProxy fieldValue = entry.getValue();
 
-				DotNetStructValueInfo valueInfo = new DotNetStructValueInfo((StructValueMirror) value, parentNode, fieldMirror, fieldValue);
+				DotNetStructValueInfo valueInfo = new DotNetStructValueInfo((DotNetStructValueProxy) value, parentNode, fieldMirror, fieldValue);
 
 				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldMirror, threadMirror, null, valueInfo));
 			}
-		}  */
+		}
 	}
 
-	private static boolean needSkip(FieldOrPropertyMirror fieldMirror)
+	private static boolean needSkip(DotNetFieldOrPropertyProxy fieldOrPropertyProxy)
 	{
-		return fieldMirror.isStatic() || fieldMirror instanceof PropertyMirror && ((PropertyMirror) fieldMirror).isArrayProperty();
+		return fieldOrPropertyProxy.isStatic() || fieldOrPropertyProxy instanceof DotNetPropertyProxy && ((DotNetPropertyProxy) fieldOrPropertyProxy).isArrayProperty();
 	}
 }

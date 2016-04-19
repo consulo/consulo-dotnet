@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
+package consulo.dotnet.debugger.nodes;
 
 import java.util.Map;
 
@@ -22,29 +22,31 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
-import mono.debugger.FieldOrPropertyMirror;
-import mono.debugger.StructValueMirror;
-import mono.debugger.ThreadMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
  * @since 05.01.16
  */
-@Deprecated
 public class DotNetThisAsStructValueMirrorNode extends DotNetAbstractVariableMirrorNode
 {
 	@NotNull
-	private final TypeMirror myTypeMirror;
-	private final StructValueMirror myValue;
+	private final DotNetTypeProxy myTypeMirror;
+	private final DotNetStructValueProxy myValue;
 
-	public DotNetThisAsStructValueMirrorNode(@NotNull DotNetDebugContext debuggerContext, @NotNull ThreadMirror threadMirror, @NotNull TypeMirror typeMirror, @NotNull StructValueMirror value)
+	public DotNetThisAsStructValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
+			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetTypeProxy typeMirror,
+			@NotNull DotNetStructValueProxy value)
 	{
 		super(debuggerContext, "this", threadMirror);
 		myTypeMirror = typeMirror;
@@ -67,13 +69,13 @@ public class DotNetThisAsStructValueMirrorNode extends DotNetAbstractVariableMir
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariableImpl()
+	public DotNetValueProxy getValueOfVariableImpl()
 	{
 		return myValue;
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
 	{
 	}
 
@@ -82,15 +84,15 @@ public class DotNetThisAsStructValueMirrorNode extends DotNetAbstractVariableMir
 	{
 		final XValueChildrenList childrenList = new XValueChildrenList();
 
-		Map<FieldOrPropertyMirror, Value<?>> map = myValue.map();
-		for(Map.Entry<FieldOrPropertyMirror, Value<?>> entry : map.entrySet())
+		Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map = myValue.getValues();
+		for(Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy> entry : map.entrySet())
 		{
-			FieldOrPropertyMirror key = entry.getKey();
-			Value<?> value = entry.getValue();
+			DotNetFieldOrPropertyProxy key = entry.getKey();
+			DotNetValueProxy value = entry.getValue();
 
 			DotNetStructValueInfo valueInfo = new DotNetStructValueInfo(myValue, this, key, value);
 
-			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, key, myThreadMirror, null, valueInfo));
+			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, key, myThreadProxy, null, valueInfo));
 		}
 
 		node.addChildren(childrenList, true);
@@ -98,7 +100,7 @@ public class DotNetThisAsStructValueMirrorNode extends DotNetAbstractVariableMir
 
 	@NotNull
 	@Override
-	public TypeMirror getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariable()
 	{
 		return myTypeMirror;
 	}

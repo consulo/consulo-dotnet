@@ -175,7 +175,6 @@ public class DotNetStackFrame extends XStackFrame
 			@Override
 			public void evaluate(@NotNull String expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 			{
-
 			}
 		};
 	}

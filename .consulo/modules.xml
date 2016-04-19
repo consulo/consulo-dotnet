@@ -142,7 +142,6 @@
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="library" exploded="" name="mono-soft-debugging" level="project" />
           <orderEntry type="library" exploded="" name="dotnet-asm" level="project" />
           <orderEntry type="module" module-name="dotnet-api" />
           <orderEntry type="module" module-name="dotnet-psi-api" />
@@ -166,6 +165,7 @@
           <orderEntry type="module" module-name="msil-psi-impl" />
           <orderEntry type="library" name="dotnet-msil-decompiler" level="project" />
           <orderEntry type="library" name="joou" level="project" />
+          <orderEntry type="library" exploded="" name="mono-soft-debugging" level="project" />
         </module-layer>
       </module>
       <module name="dotnet-documentation-api" dirurl="file://$PROJECT_DIR$/dotnet-documentation-api" current-layer="Default">
