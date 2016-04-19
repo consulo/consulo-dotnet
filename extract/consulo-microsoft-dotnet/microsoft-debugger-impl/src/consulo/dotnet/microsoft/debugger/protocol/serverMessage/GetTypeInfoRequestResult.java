@@ -16,11 +16,25 @@
 
 package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
 
+import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
+
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
 public class GetTypeInfoRequestResult
 {
+	public class FieldInfo
+	{
+		public int Token;
+
+		public String Name;
+
+		public TypeRef Type;
+
+		public int Attributes;
+	}
+
+	public FieldInfo[] Fields = new FieldInfo[0];
 	public String Name;
 }

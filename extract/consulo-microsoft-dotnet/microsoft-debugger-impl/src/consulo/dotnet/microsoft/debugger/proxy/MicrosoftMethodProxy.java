@@ -17,6 +17,7 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -28,6 +29,7 @@ import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetLocalsRequest
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetMethodInfoRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetLocalsRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoRequestResult;
+import edu.arizona.cs.mbel.signature.MethodAttributes;
 
 /**
  * @author VISTALL
@@ -48,6 +50,12 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 		myContext = context;
 		myTypeRef = typeRef;
 		myFunctionToken = functionToken;
+	}
+
+	@Override
+	public boolean isStatic()
+	{
+		return BitUtil.isSet(info().Attributes, MethodAttributes.Static);
 	}
 
 	@NotNull

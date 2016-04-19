@@ -33,5 +33,6 @@ public class GetMethodInfoRequestResult
 
 	public ParameterInfo[] Parameters = new ParameterInfo[0];
 
+	public int Attributes;
 	public String Name;
 }

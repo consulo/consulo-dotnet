@@ -39,6 +39,12 @@ public class MonoMethodProxy implements DotNetMethodProxy
 		myMethodMirror = methodMirror;
 	}
 
+	@Override
+	public boolean isStatic()
+	{
+		return myMethodMirror.isStatic();
+	}
+
 	@NotNull
 	@Override
 	public DotNetTypeProxy getDeclarationType()

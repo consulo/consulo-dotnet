@@ -26,7 +26,7 @@ public class TypeRef
 
 	public int ClassToken;
 
-	public String VmQName;
+	//public String VmQName; dead
 
 	public TypeRef(int moduleToken, int classToken)
 	{

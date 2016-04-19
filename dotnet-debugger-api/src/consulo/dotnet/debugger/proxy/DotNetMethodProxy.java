@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DotNetMethodProxy extends Named
 {
+	boolean isStatic();
+
 	@NotNull
 	DotNetTypeProxy getDeclarationType();
 

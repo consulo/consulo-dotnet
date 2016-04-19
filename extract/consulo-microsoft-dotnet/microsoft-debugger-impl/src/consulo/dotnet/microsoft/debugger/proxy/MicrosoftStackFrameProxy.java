@@ -98,15 +98,41 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException
 	{
-		return new MicrosoftNullValueProxy();
+		if(isStaticFrame())
+		{
+			return new MicrosoftNullValueProxy();
+		}
+
+		DotNetValueProxy valueProxy = MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetArgumentRequest((int) myThreadProxy.getId(), myIndex, 0));
+		return valueProxy == null ? new MicrosoftNullValueProxy() : valueProxy;
+	}
+
+	private boolean isStaticFrame()
+	{
+		DotNetSourceLocation sourceLocation = getSourceLocation();
+		if(sourceLocation == null)
+		{
+			return true;
+		}
+
+		if(sourceLocation.getMethod().isStatic())
+		{
+			return true;
+		}
+		return false;
 	}
 
 	@Nullable
 	@Override
 	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
 	{
-		Object o = myClient.sendAndReceive(new GetArgumentRequest((int) myThreadProxy.getId(), myIndex, parameterProxy.getIndex()), Object.class);
-		return MicrosoftValueProxyUtil.wrap(o);
+		int parameterIndex = parameterProxy.getIndex();
+		if(!isStaticFrame())
+		{
+			// zero is this
+			parameterIndex++;
+		}
+		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetArgumentRequest((int) myThreadProxy.getId(), myIndex, parameterIndex));
 	}
 
 	@Override
@@ -120,8 +146,7 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
 	{
 		MicrosoftLocalVariableProxy microsoftLocalVariableProxy = (MicrosoftLocalVariableProxy) localVariableProxy;
-		Object o = myClient.sendAndReceive(new GetLocalValueRequest((int) myThreadProxy.getId(), myIndex, microsoftLocalVariableProxy.getIndex()), Object.class);
-		return MicrosoftValueProxyUtil.wrap(o);
+		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetLocalValueRequest((int) myThreadProxy.getId(), myIndex, microsoftLocalVariableProxy.getIndex()));
 	}
 
 	@Override

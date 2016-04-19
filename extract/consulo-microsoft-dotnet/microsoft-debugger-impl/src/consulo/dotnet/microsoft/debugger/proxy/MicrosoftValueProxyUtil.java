@@ -18,6 +18,7 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BooleanValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResult;
 
@@ -27,6 +28,13 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResul
  */
 public class MicrosoftValueProxyUtil
 {
+	@Nullable
+	public static DotNetValueProxy sendAndReceive(MicrosoftDebuggerClient client, Object request)
+	{
+		Object o = client.sendAndReceive(request, Object.class);
+		return wrap(o);
+	}
+
 	@Nullable
 	public static DotNetValueProxy wrap(@Nullable Object o)
 	{
