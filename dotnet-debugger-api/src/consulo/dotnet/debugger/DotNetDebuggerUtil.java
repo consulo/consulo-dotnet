@@ -16,11 +16,6 @@
 
 package consulo.dotnet.debugger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
@@ -31,9 +26,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
 /**
@@ -42,41 +34,6 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
  */
 public class DotNetDebuggerUtil
 {
-	public static DotNetFieldOrPropertyProxy[] getFieldAndProperties(@NotNull DotNetTypeProxy proxy, boolean deep)
-	{
-		List<DotNetFieldOrPropertyProxy> proxies = new ArrayList<DotNetFieldOrPropertyProxy>();
-
-		collectFieldsAndProperties(proxy, proxies);
-
-		Collections.sort(proxies, new Comparator<DotNetFieldOrPropertyProxy>()
-		{
-			@Override
-			public int compare(DotNetFieldOrPropertyProxy o1, DotNetFieldOrPropertyProxy o2)
-			{
-				return weight(o2) - weight(o1);
-			}
-
-			private int weight(DotNetFieldOrPropertyProxy p)
-			{
-				return p instanceof DotNetPropertyProxy ? 2 : 1;
-			}
-		});
-
-		return ContainerUtil.toArray(proxies, DotNetFieldOrPropertyProxy.ARRAY_FACTORY);
-	}
-
-	private static void collectFieldsAndProperties(DotNetTypeProxy proxy, List<DotNetFieldOrPropertyProxy> list)
-	{
-		Collections.addAll(list, proxy.getFields());
-		Collections.addAll(list, proxy.getProperties());
-
-		DotNetTypeProxy baseType = proxy.getBaseType();
-		if(baseType != null)
-		{
-			collectFieldsAndProperties(baseType, list);
-		}
-	}
-
 	@NotNull
 	public static String getVmQName(@NotNull DotNetTypeProxy typeMirror)
 	{

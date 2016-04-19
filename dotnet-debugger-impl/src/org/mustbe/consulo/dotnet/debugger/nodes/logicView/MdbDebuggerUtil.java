@@ -33,6 +33,7 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 20.09.14
  */
+@Deprecated
 public class MdbDebuggerUtil
 {
 	public static void rethrow(ThreadMirror mirror, Exception t)

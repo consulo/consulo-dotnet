@@ -26,12 +26,17 @@ import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
+import mono.debugger.InvokeFlags;
 import mono.debugger.LocalVariableMirror;
 import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
+import mono.debugger.ThreadMirror;
+import mono.debugger.ThrowValueException;
+import mono.debugger.Value;
 
 /**
  * @author VISTALL
@@ -91,9 +96,25 @@ public class MonoMethodProxy implements DotNetMethodProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
+	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy thisObjectProxy, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
 	{
-		return null;
+		ThreadMirror thread = ((MonoThreadProxy) threadProxy).getThreadMirror();
+		Value<?> thisObject = ((MonoValueProxyBase) thisObjectProxy).getMirror();
+
+		Value[] values = new Value[arguments.length];
+		for(int i = 0; i < arguments.length; i++)
+		{
+			DotNetValueProxy argument = arguments[i];
+			values[i] = ((MonoValueProxyBase) argument).getMirror();
+		}
+		try
+		{
+			return MonoValueProxyUtil.wrap(myMethodMirror.invoke(thread, InvokeFlags.DISABLE_BREAKPOINTS, thisObject, values));
+		}
+		catch(ThrowValueException e)
+		{
+			throw new DotNetThrowValueException(MonoValueProxyUtil.wrap(e.getThrowExceptionValue()));
+		}
 	}
 
 	@RequiredReadAction

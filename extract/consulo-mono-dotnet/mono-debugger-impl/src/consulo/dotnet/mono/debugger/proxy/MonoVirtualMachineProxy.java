@@ -38,6 +38,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
@@ -80,6 +81,21 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 		mySupportSearchTypesByQualifiedName = myVirtualMachine.isAtLeastVersion(2, 9);
 		mySupportSearchTypesBySourcePaths = myVirtualMachine.isAtLeastVersion(2, 7);
 		mySupportSystemThreadId = myVirtualMachine.isAtLeastVersion(2, 2);
+	}
+
+	@Nullable
+	@Override
+	public DotNetTypeProxy findType(@NotNull Project project, @NotNull String vmQName, @NotNull VirtualFile virtualFile)
+	{
+		try
+		{
+			TypeMirror typeMirror = findTypeMirror(project, virtualFile, vmQName);
+			return MonoTypeProxy.of(typeMirror);
+		}
+		catch(TypeMirrorUnloadedException ignored)
+		{
+		}
+		return null;
 	}
 
 	@NotNull

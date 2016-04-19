@@ -14,45 +14,34 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.proxy;
+package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
+import mono.debugger.CharValueMirror;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 19.04.2016
  */
-public interface DotNetTypeProxy
+public class MonoCharValueProxy extends MonoValueProxyBase<CharValueMirror> implements DotNetCharValueProxy
 {
-	@Nullable
-	DotNetTypeProxy getDeclarationType();
+	public MonoCharValueProxy(CharValueMirror value)
+	{
+		super(value);
+	}
 
 	@NotNull
-	String getName();
+	@Override
+	public Character getValue()
+	{
+		return (Character) super.getValue();
+	}
 
-	@NotNull
-	String getFullName();
-
-	boolean isArray();
-
-	@Nullable
-	DotNetTypeProxy getBaseType();
-
-	@NotNull
-	DotNetTypeProxy[] getInterfaces();
-
-	@NotNull
-	DotNetFieldProxy[] getFields();
-
-	@NotNull
-	DotNetPropertyProxy[] getProperties();
-
-	@NotNull
-	DotNetMethodProxy[] getMethods();
-
-	boolean isNested();
-
-	@Nullable
-	DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params);
+	@Override
+	public void accept(DotNetValueProxyVisitor visitor)
+	{
+		visitor.visitCharValue(this);
+	}
 }

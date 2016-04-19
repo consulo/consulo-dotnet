@@ -19,6 +19,9 @@ package consulo.dotnet.debugger.proxy;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
@@ -31,6 +34,9 @@ import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
  */
 public interface DotNetVirtualMachineProxy
 {
+	@Nullable
+	DotNetTypeProxy findType(@NotNull Project project, @NotNull String vmQName, @NotNull VirtualFile virtualFile);
+
 	@NotNull
 	List<DotNetThreadProxy> getThreads();
 

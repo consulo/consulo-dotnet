@@ -20,7 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
@@ -42,6 +46,13 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 	public MicrosoftVirtualMachineProxy(MicrosoftDebuggerClient context)
 	{
 		myContext = context;
+	}
+
+	@Nullable
+	@Override
+	public DotNetTypeProxy findType(@NotNull Project project, @NotNull String vmQName, @NotNull VirtualFile virtualFile)
+	{
+		return null;
 	}
 
 	@NotNull

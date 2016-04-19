@@ -17,42 +17,24 @@
 package consulo.dotnet.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 19.04.2016
  */
-public interface DotNetTypeProxy
+public class DotNetThrowValueException extends Exception
 {
-	@Nullable
-	DotNetTypeProxy getDeclarationType();
+	private DotNetValueProxy myThrowValue;
+
+	public DotNetThrowValueException(@NotNull DotNetValueProxy throwValue)
+	{
+		myThrowValue = throwValue;
+	}
 
 	@NotNull
-	String getName();
-
-	@NotNull
-	String getFullName();
-
-	boolean isArray();
-
-	@Nullable
-	DotNetTypeProxy getBaseType();
-
-	@NotNull
-	DotNetTypeProxy[] getInterfaces();
-
-	@NotNull
-	DotNetFieldProxy[] getFields();
-
-	@NotNull
-	DotNetPropertyProxy[] getProperties();
-
-	@NotNull
-	DotNetMethodProxy[] getMethods();
-
-	boolean isNested();
-
-	@Nullable
-	DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params);
+	public DotNetValueProxy getThrowExceptionValue()
+	{
+		return myThrowValue;
+	}
 }

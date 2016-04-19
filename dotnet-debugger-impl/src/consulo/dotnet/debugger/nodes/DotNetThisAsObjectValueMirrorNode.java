@@ -31,7 +31,7 @@ import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.DotNetDebuggerUtil;
+import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
@@ -148,7 +148,7 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 			@Nullable Getter<DotNetObjectValueProxy> objectValueMirrorGetter,
 			@NotNull Processor<DotNetFieldOrPropertyProxy> processor)
 	{
-		DotNetFieldOrPropertyProxy[] fieldMirrors = DotNetDebuggerUtil.getFieldAndProperties(proxy, true);
+		DotNetFieldOrPropertyProxy[] fieldMirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(proxy, true);
 		for(DotNetFieldOrPropertyProxy fieldMirror : fieldMirrors)
 		{
 			if(!fieldMirror.isStatic() && objectValueMirrorGetter == null || fieldMirror.isStatic() && objectValueMirrorGetter != null)

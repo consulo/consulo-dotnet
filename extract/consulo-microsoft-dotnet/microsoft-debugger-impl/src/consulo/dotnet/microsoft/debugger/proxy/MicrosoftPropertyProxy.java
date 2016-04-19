@@ -18,6 +18,7 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -78,5 +79,12 @@ public class MicrosoftPropertyProxy implements DotNetPropertyProxy
 	public boolean isArrayProperty()
 	{
 		return false;
+	}
+
+	@Nullable
+	@Override
+	public DotNetMethodProxy getGetMethod()
+	{
+		return null;
 	}
 }

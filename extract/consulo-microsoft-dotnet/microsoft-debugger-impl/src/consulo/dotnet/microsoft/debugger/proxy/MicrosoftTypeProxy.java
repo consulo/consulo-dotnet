@@ -107,6 +107,13 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 
 	@NotNull
 	@Override
+	public DotNetTypeProxy[] getInterfaces()
+	{
+		return new DotNetTypeProxy[0];
+	}
+
+	@NotNull
+	@Override
 	public DotNetFieldProxy[] getFields()
 	{
 		GetTypeInfoRequestResult.FieldInfo[] fields = info().Fields;
@@ -135,6 +142,13 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		return propertyProxies;
 	}
 
+	@NotNull
+	@Override
+	public DotNetMethodProxy[] getMethods()
+	{
+		return new DotNetMethodProxy[0];
+	}
+
 	@Override
 	public boolean isNested()
 	{
@@ -143,7 +157,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 
 	@Nullable
 	@Override
-	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep)
+	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
 	{
 		return null;
 	}

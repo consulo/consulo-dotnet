@@ -24,6 +24,7 @@ import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mono.debugger.FieldMirror;
+import mono.debugger.MethodMirror;
 import mono.debugger.PropertyMirror;
 import mono.debugger.TypeMirror;
 
@@ -51,7 +52,12 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetTypeProxy getDeclarationType()
 	{
-		return null;
+		TypeMirror parentType = myTypeMirror.parentType();
+		if(parentType == null)
+		{
+			return null;
+		}
+		return new MonoTypeProxy(parentType);
 	}
 
 	@NotNull
@@ -88,6 +94,20 @@ public class MonoTypeProxy implements DotNetTypeProxy
 
 	@NotNull
 	@Override
+	public DotNetTypeProxy[] getInterfaces()
+	{
+		TypeMirror[] interfaces = myTypeMirror.getInterfaces();
+		DotNetTypeProxy[] proxies = new DotNetTypeProxy[interfaces.length];
+		for(int i = 0; i < interfaces.length; i++)
+		{
+			TypeMirror mirror = interfaces[i];
+			proxies[i] = new MonoTypeProxy(mirror);
+		}
+		return proxies;
+	}
+
+	@NotNull
+	@Override
 	public DotNetFieldProxy[] getFields()
 	{
 		FieldMirror[] fields = myTypeMirror.fields();
@@ -114,6 +134,20 @@ public class MonoTypeProxy implements DotNetTypeProxy
 		return proxies;
 	}
 
+	@NotNull
+	@Override
+	public DotNetMethodProxy[] getMethods()
+	{
+		MethodMirror[] methods = myTypeMirror.methods();
+		DotNetMethodProxy[] proxies = new DotNetMethodProxy[methods.length];
+		for(int i = 0; i < methods.length; i++)
+		{
+			MethodMirror method = methods[i];
+			proxies[i] = new MonoMethodProxy(method);
+		}
+		return proxies;
+	}
+
 	@Override
 	public boolean isNested()
 	{
@@ -122,8 +156,19 @@ public class MonoTypeProxy implements DotNetTypeProxy
 
 	@Nullable
 	@Override
-	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep)
+	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
 	{
+		TypeMirror[] typeMirrors = new TypeMirror[params.length];
+		for(int i = 0; i < params.length; i++)
+		{
+			MonoTypeProxy param = (MonoTypeProxy) params[i];
+			typeMirrors[i] = param.myTypeMirror;
+		}
+		MethodMirror methodByName = myTypeMirror.findMethodByName(name, deep, typeMirrors);
+		if(methodByName != null)
+		{
+			return new MonoMethodProxy(methodByName);
+		}
 		return null;
 	}
 }

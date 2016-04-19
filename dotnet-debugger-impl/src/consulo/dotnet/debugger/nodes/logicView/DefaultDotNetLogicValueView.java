@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.DotNetDebuggerUtil;
+import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
 import consulo.dotnet.debugger.nodes.DotNetStructValueInfo;
@@ -46,7 +46,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, threadMirror, type);
 
-			DotNetFieldOrPropertyProxy[] mirrors = DotNetDebuggerUtil.getFieldAndProperties(type, true);
+			DotNetFieldOrPropertyProxy[] mirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(type, true);
 			for(DotNetFieldOrPropertyProxy fieldOrPropertyProxy : mirrors)
 			{
 				if(needSkip(fieldOrPropertyProxy))

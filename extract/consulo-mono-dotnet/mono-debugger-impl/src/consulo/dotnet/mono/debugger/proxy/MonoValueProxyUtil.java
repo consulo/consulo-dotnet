@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.ArrayValueMirror;
 import mono.debugger.BooleanValueMirror;
+import mono.debugger.CharValueMirror;
 import mono.debugger.NoObjectValueMirror;
 import mono.debugger.NumberValueMirror;
 import mono.debugger.ObjectValueMirror;
@@ -72,6 +73,11 @@ public class MonoValueProxyUtil
 		if(value instanceof BooleanValueMirror)
 		{
 			valueProxy = new MonoBooleanValueProxy((BooleanValueMirror) value);
+		}
+
+		if(value instanceof CharValueMirror)
+		{
+			valueProxy = new MonoCharValueProxy((CharValueMirror) value);
 		}
 
 		if(valueProxy == null)

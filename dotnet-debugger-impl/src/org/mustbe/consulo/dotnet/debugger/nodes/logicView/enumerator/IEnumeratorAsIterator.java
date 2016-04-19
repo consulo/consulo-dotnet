@@ -15,6 +15,7 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 20.09.14
  */
+@Deprecated
 public class IEnumeratorAsIterator implements Iterator<Value<?>>
 {
 	private ThreadMirror myThreadMirror;

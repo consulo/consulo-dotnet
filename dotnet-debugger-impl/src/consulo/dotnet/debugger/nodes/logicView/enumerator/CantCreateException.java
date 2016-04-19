@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.proxy.value;
-
-import org.jetbrains.annotations.NotNull;
+package consulo.dotnet.debugger.nodes.logicView.enumerator;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 20.09.14
  */
-public interface DotNetCharValueProxy extends DotNetValueProxy
+public class CantCreateException extends Exception
 {
-	@NotNull
-	@Override
-	Character getValue();
 }

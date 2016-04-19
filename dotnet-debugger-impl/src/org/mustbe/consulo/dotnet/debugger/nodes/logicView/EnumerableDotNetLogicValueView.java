@@ -20,6 +20,7 @@ import mono.debugger.Value;
  * @author VISTALL
  * @since 20.09.14
  */
+@Deprecated
 public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 {
 	@Override

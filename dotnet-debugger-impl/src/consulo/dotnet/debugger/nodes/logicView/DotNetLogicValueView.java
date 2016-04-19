@@ -19,7 +19,7 @@ public interface DotNetLogicValueView
 	//FIXME [VISTALL] extension point?
 	DotNetLogicValueView[] IMPL = new DotNetLogicValueView[]{
 			new ArrayDotNetLogicValueView(),
-			/*new EnumerableDotNetLogicValueView(),*/
+			new EnumerableDotNetLogicValueView(),
 			new DefaultDotNetLogicValueView()
 	};
 
