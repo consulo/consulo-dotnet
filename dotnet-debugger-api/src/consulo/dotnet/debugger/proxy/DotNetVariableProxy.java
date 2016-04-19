@@ -22,9 +22,17 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author VISTALL
  * @since 18.04.2016
+ *
+ * equals() & hashCode() override required
  */
 public interface DotNetVariableProxy extends Named
 {
 	@Nullable
 	DotNetTypeProxy getType();
+
+	@Override
+	boolean equals(Object o);
+
+	@Override
+	int hashCode();
 }

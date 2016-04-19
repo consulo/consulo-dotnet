@@ -1,55 +1,54 @@
-package org.mustbe.consulo.dotnet.debugger.nodes;
+package consulo.dotnet.debugger.nodes;
 
-import java.util.Map;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.FieldOrPropertyMirror;
 import mono.debugger.StructValueMirror;
-import mono.debugger.Value;
 
 /**
  * @author VISTALL
  * @since 05.01.2016
+ *
+ * TODO [VISTALL] restore it
  */
-@Deprecated
 public class DotNetStructValueInfo
 {
 	private StructValueMirror myValueMirror;
 	@Nullable
 	private DotNetAbstractVariableMirrorNode myParentNode;
 	private FieldOrPropertyMirror myFieldOrPropertyMirror;
-	private Value<?> myValue;
+	private DotNetValueProxy myValue;
 
-	public DotNetStructValueInfo(@NotNull StructValueMirror valueMirror,
+	/*public DotNetStructValueInfo(@NotNull StructValueMirror valueMirror,
 			@Nullable DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
-			@NotNull Value<?> value)
+			@NotNull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
+			@NotNull DotNetValueProxy value)
 	{
 		myValueMirror = valueMirror;
 		myParentNode = parentNode;
 		myFieldOrPropertyMirror = fieldOrPropertyMirror;
 		myValue = value;
-	}
+	}      */
 
 	public boolean canSetValue()
 	{
-		if(myParentNode == null)
+		/*if(myParentNode == null)
 		{
 			return false;
 		}
 		// how set value for struct this object?
-		return !(myParentNode instanceof DotNetThisAsStructValueMirrorNode);
+		return !(myParentNode instanceof DotNetThisAsStructValueMirrorNode);    */
+		return false;
 	}
 
-	public Value<?> getValue()
+	public DotNetValueProxy getValue()
 	{
 		return myValue;
 	}
 
-	public void setValue(Value<?> newValue)
+	public void setValue(DotNetValueProxy newValue)
 	{
-		assert myParentNode != null;
+		/*assert myParentNode != null;
 
 		StructValueMirror valueMirror = myValueMirror;
 
@@ -64,6 +63,6 @@ public class DotNetStructValueInfo
 
 		StructValueMirror newStructValue = new StructValueMirror(valueMirror.virtualMachine(), valueMirror.type(), map.values().toArray(new Value[map.size()]));
 
-		myParentNode.setValueForVariable(newStructValue);
+		myParentNode.setValueForVariable(newStructValue);   */
 	}
 }

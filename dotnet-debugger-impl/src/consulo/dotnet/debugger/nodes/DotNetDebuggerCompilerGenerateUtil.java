@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
+package consulo.dotnet.debugger.nodes;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,14 +22,13 @@ import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Couple;
-import mono.debugger.MethodMirror;
-import mono.debugger.TypeMirror;
+import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
 /**
  * @author VISTALL
  * @since 22.07.2015
  */
-@Deprecated
 public class DotNetDebuggerCompilerGenerateUtil
 {
 	public static final Pattern LambdaMethodPattern = Pattern.compile("<([\\S\\d]+)>m__([\\d]+)");
@@ -41,9 +40,9 @@ public class DotNetDebuggerCompilerGenerateUtil
 	private static final Pattern AsyncLambdaFirstWrapperMono = Pattern.compile("<([\\S\\d]+)>c__AnonStorey([\\d]+)");
 
 	@Nullable
-	public static Couple<String> extractLambdaInfo(@NotNull MethodMirror methodMirror)
+	public static Couple<String> extractLambdaInfo(@NotNull DotNetMethodProxy methodMirror)
 	{
-		Matcher matcher = LambdaMethodPattern.matcher(methodMirror.name());
+		Matcher matcher = LambdaMethodPattern.matcher(methodMirror.getName());
 		if(matcher.matches())
 		{
 			return Couple.of(matcher.group(1), matcher.group(2));
@@ -51,15 +50,14 @@ public class DotNetDebuggerCompilerGenerateUtil
 		return null;
 	}
 
-
-	public static boolean isAsyncLambdaWrapper(@NotNull TypeMirror typeMirror)
+	public static boolean isAsyncLambdaWrapper(@NotNull DotNetTypeProxy typeMirror)
 	{
-		return typeMirror.isNested() && (AsyncLambdaFirstWrapperMono.matcher(typeMirror.name()).matches() || AsyncLambdaFirstWrapperMS.matcher(typeMirror.name()).matches());
+		return typeMirror.isNested() && (AsyncLambdaFirstWrapperMono.matcher(typeMirror.getName()).matches() || AsyncLambdaFirstWrapperMS.matcher(typeMirror.getName()).matches());
 	}
 
-	public static boolean isYieldOrAsyncNestedType(@NotNull TypeMirror typeMirror)
+	public static boolean isYieldOrAsyncNestedType(@NotNull DotNetTypeProxy typeMirror)
 	{
-		return typeMirror.isNested() && (YieldNestedTypePattern.matcher(typeMirror.name()).matches() || AsyncNestedTypePattern.matcher(typeMirror.name()).matches());
+		return typeMirror.isNested() && (YieldNestedTypePattern.matcher(typeMirror.getName()).matches() || AsyncNestedTypePattern.matcher(typeMirror.getName()).matches());
 	}
 
 	public static boolean isYieldOrAsyncThisField(@NotNull String fieldName)

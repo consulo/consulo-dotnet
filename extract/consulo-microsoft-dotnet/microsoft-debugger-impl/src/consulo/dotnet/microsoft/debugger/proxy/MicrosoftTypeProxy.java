@@ -84,6 +84,12 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		return new DotNetPropertyProxy[0];
 	}
 
+	@Override
+	public boolean isNested()
+	{
+		return false;
+	}
+
 	@NotNull
 	private GetTypeInfoRequestResult info()
 	{

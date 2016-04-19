@@ -9,43 +9,17 @@ import mono.debugger.LocalVariableMirror;
  * @author VISTALL
  * @since 19.04.2016
  */
-public class MonoLocalVariableProxy implements DotNetLocalVariableProxy
+public class MonoLocalVariableProxy extends MonoVariableProxyBase<LocalVariableMirror> implements DotNetLocalVariableProxy
 {
-	private LocalVariableMirror myLocalVariable;
-
-	public MonoLocalVariableProxy( LocalVariableMirror localVariable)
+	public MonoLocalVariableProxy(LocalVariableMirror localVariable)
 	{
-		myLocalVariable = localVariable;
-	}
-
-	public LocalVariableMirror getLocalVariable()
-	{
-		return myLocalVariable;
+		super(localVariable);
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return new MonoTypeProxy(myLocalVariable.type());
-	}
-
-	@NotNull
-	@Override
-	public String getName()
-	{
-		return myLocalVariable.name();
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		return obj instanceof MonoLocalVariableProxy && myLocalVariable.equals(((MonoLocalVariableProxy) obj).myLocalVariable);
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return myLocalVariable.hashCode();
+		return MonoTypeProxy.of(myMirror.type());
 	}
 }

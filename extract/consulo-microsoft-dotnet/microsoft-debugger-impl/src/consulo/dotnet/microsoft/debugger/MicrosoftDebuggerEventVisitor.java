@@ -136,7 +136,7 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 						continue;
 					}
 
-					int i = breakpoint.getLine();
+					int i = breakpoint.getLine() + 1;
 					if(i == event.Line)
 					{
 						return breakpoint;

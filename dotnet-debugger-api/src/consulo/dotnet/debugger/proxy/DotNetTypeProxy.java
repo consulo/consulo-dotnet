@@ -41,4 +41,6 @@ public interface DotNetTypeProxy
 
 	@NotNull
 	DotNetPropertyProxy[] getProperties();
+
+	boolean isNested();
 }

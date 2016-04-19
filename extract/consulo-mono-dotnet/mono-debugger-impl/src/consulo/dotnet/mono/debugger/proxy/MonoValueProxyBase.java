@@ -34,7 +34,7 @@ public abstract class MonoValueProxyBase<T extends Value<?>> implements DotNetVa
 		myValue = value;
 	}
 
-	public T getMonoValue()
+	public T getMirror()
 	{
 		return myValue;
 	}
@@ -43,7 +43,7 @@ public abstract class MonoValueProxyBase<T extends Value<?>> implements DotNetVa
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return new MonoTypeProxy(myValue.type());
+		return MonoTypeProxy.of(myValue.type());
 	}
 
 	@Nullable

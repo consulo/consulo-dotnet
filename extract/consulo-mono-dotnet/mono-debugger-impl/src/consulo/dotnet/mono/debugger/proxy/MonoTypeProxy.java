@@ -16,11 +16,13 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import mono.debugger.FieldMirror;
 import mono.debugger.TypeMirror;
 
 /**
@@ -29,9 +31,16 @@ import mono.debugger.TypeMirror;
  */
 public class MonoTypeProxy implements DotNetTypeProxy
 {
+	@Nullable
+	@Contract("null -> null; !null -> !null")
+	public static MonoTypeProxy of(@Nullable TypeMirror typeMirror)
+	{
+		return typeMirror == null ? null : new MonoTypeProxy(typeMirror);
+	}
+
 	private TypeMirror myTypeMirror;
 
-	public MonoTypeProxy(TypeMirror typeMirror)
+	private MonoTypeProxy(@NotNull TypeMirror typeMirror)
 	{
 		myTypeMirror = typeMirror;
 	}
@@ -60,14 +69,26 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetTypeProxy getBaseType()
 	{
-		return new MonoTypeProxy(myTypeMirror.baseType());
+		TypeMirror baseType = myTypeMirror.baseType();
+		if(baseType == null)
+		{
+			return null;
+		}
+		return new MonoTypeProxy(baseType);
 	}
 
 	@NotNull
 	@Override
 	public DotNetFieldProxy[] getFields()
 	{
-		return new DotNetFieldProxy[0];
+		FieldMirror[] fields = myTypeMirror.fields();
+		DotNetFieldProxy[] proxies = new DotNetFieldProxy[fields.length];
+		for(int i = 0; i < fields.length; i++)
+		{
+			FieldMirror field = fields[i];
+			proxies[i] = new MonoFieldProxy(field);
+		}
+		return proxies;
 	}
 
 	@NotNull
@@ -75,5 +96,11 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	public DotNetPropertyProxy[] getProperties()
 	{
 		return new DotNetPropertyProxy[0];
+	}
+
+	@Override
+	public boolean isNested()
+	{
+		return myTypeMirror.isNested();
 	}
 }

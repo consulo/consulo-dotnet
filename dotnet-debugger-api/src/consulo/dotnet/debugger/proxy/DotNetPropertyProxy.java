@@ -6,4 +6,5 @@ package consulo.dotnet.debugger.proxy;
  */
 public interface DotNetPropertyProxy extends DotNetFieldOrPropertyProxy
 {
+	boolean isArrayProperty();
 }

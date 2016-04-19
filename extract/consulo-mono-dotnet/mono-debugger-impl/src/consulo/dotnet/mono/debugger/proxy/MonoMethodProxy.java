@@ -49,7 +49,7 @@ public class MonoMethodProxy implements DotNetMethodProxy
 	@Override
 	public DotNetTypeProxy getDeclarationType()
 	{
-		return new MonoTypeProxy(myMethodMirror.declaringType());
+		return MonoTypeProxy.of(myMethodMirror.declaringType());
 	}
 
 	@NotNull

@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
-
-import java.util.List;
+package consulo.dotnet.debugger.nodes;
 
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.CommonProcessors;
@@ -33,44 +30,48 @@ import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
-import mono.debugger.FieldOrPropertyMirror;
-import mono.debugger.ObjectValueMirror;
-import mono.debugger.PropertyMirror;
-import mono.debugger.ThreadMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetDebuggerUtil;
+import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
+import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
  * @since 11.04.14
  */
-@Deprecated
 public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMirrorNode
 {
-	public static void addStaticNode(@NotNull XValueChildrenList list, @NotNull DotNetDebugContext debuggerContext, @NotNull ThreadMirror threadMirror, @NotNull TypeMirror typeMirror)
+	public static void addStaticNode(@NotNull XValueChildrenList list,
+			@NotNull DotNetDebugContext debuggerContext,
+			@NotNull DotNetThreadProxy threadProxy,
+			@NotNull DotNetTypeProxy typeProxy)
 	{
-		boolean result = processFieldOrProperty(typeMirror, null, CommonProcessors.<FieldOrPropertyMirror>alwaysFalse());
+		boolean result = processFieldOrProperty(typeProxy, null, CommonProcessors.<DotNetFieldOrPropertyProxy>alwaysFalse());
 		if(result)
 		{
 			return;
 		}
-		list.add(new DotNetThisAsObjectValueMirrorNode(debuggerContext, threadMirror, typeMirror, (ObjectValueMirror) null));
+		list.add(new DotNetThisAsObjectValueMirrorNode(debuggerContext, threadProxy, typeProxy, (DotNetObjectValueProxy) null));
 	}
 
 	@NotNull
-	private final TypeMirror myTypeMirror;
-	private final Getter<ObjectValueMirror> myObjectValueMirrorGetter;
+	private final DotNetTypeProxy myType;
+	private final Getter<DotNetObjectValueProxy> myObjectValueMirrorGetter;
 
 	public DotNetThisAsObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull ThreadMirror threadMirror,
-			@NotNull TypeMirror typeMirror,
-			@Nullable final ObjectValueMirror objectValueMirror)
+			@NotNull DotNetThreadProxy threadProxy,
+			@NotNull DotNetTypeProxy type,
+			@Nullable final DotNetObjectValueProxy objectValueMirror)
 	{
-		this(debuggerContext, threadMirror, typeMirror, objectValueMirror == null ? null : new Getter<ObjectValueMirror>()
+		this(debuggerContext, threadProxy, type, objectValueMirror == null ? null : new Getter<DotNetObjectValueProxy>()
 		{
 			@Nullable
 			@Override
-			public ObjectValueMirror get()
+			public DotNetObjectValueProxy get()
 			{
 				return objectValueMirror;
 			}
@@ -78,12 +79,12 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 	}
 
 	public DotNetThisAsObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull ThreadMirror threadMirror,
-			@NotNull TypeMirror typeMirror,
-			@Nullable Getter<ObjectValueMirror> objectValueMirrorGetter)
+			@NotNull DotNetThreadProxy threadProxy,
+			@NotNull DotNetTypeProxy type,
+			@Nullable Getter<DotNetObjectValueProxy> objectValueMirrorGetter)
 	{
-		super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", threadMirror);
-		myTypeMirror = typeMirror;
+		super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", threadProxy);
+		myType = type;
 		myObjectValueMirrorGetter = objectValueMirrorGetter;
 	}
 
@@ -103,15 +104,14 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariableImpl()
+	public DotNetValueProxy getValueOfVariableImpl()
 	{
 		return myObjectValueMirrorGetter == null ? null : myObjectValueMirrorGetter.get();
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
 	{
-
 	}
 
 	@Override
@@ -132,34 +132,36 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 	{
 		final XValueChildrenList childrenList = new XValueChildrenList();
 
-		processFieldOrProperty(myTypeMirror, myObjectValueMirrorGetter, new Processor<FieldOrPropertyMirror>()
+		processFieldOrProperty(myType, myObjectValueMirrorGetter, new Processor<DotNetFieldOrPropertyProxy>()
 		{
 			@Override
-			public boolean process(FieldOrPropertyMirror fieldOrPropertyMirror)
+			public boolean process(DotNetFieldOrPropertyProxy fieldOrPropertyMirror)
 			{
-				childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldOrPropertyMirror, myThreadMirror, fieldOrPropertyMirror.isStatic() ? null : myObjectValueMirrorGetter.get()));
+				childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldOrPropertyMirror, myThreadProxy, fieldOrPropertyMirror.isStatic() ? null : myObjectValueMirrorGetter.get()));
 				return true;
 			}
 		});
 		node.addChildren(childrenList, true);
 	}
 
-	private static boolean processFieldOrProperty(@NotNull TypeMirror typeMirror, @Nullable Getter<ObjectValueMirror> objectValueMirrorGetter, @NotNull Processor<FieldOrPropertyMirror> processor)
+	private static boolean processFieldOrProperty(@NotNull DotNetTypeProxy proxy,
+			@Nullable Getter<DotNetObjectValueProxy> objectValueMirrorGetter,
+			@NotNull Processor<DotNetFieldOrPropertyProxy> processor)
 	{
-		List<FieldOrPropertyMirror> fieldMirrors = typeMirror.fieldAndProperties(true);
-		for(FieldOrPropertyMirror fieldMirror : fieldMirrors)
+		DotNetFieldOrPropertyProxy[] fieldMirrors = DotNetDebuggerUtil.getFieldAndProperties(proxy, true);
+		for(DotNetFieldOrPropertyProxy fieldMirror : fieldMirrors)
 		{
 			if(!fieldMirror.isStatic() && objectValueMirrorGetter == null || fieldMirror.isStatic() && objectValueMirrorGetter != null)
 			{
 				continue;
 			}
 
-			if(fieldMirror instanceof PropertyMirror && ((PropertyMirror) fieldMirror).isArrayProperty())
+			if(fieldMirror instanceof DotNetPropertyProxy && ((DotNetPropertyProxy) fieldMirror).isArrayProperty())
 			{
 				continue;
 			}
 
-			if(DotNetDebuggerCompilerGenerateUtil.needSkipVariableByName(fieldMirror.name()))
+			if(DotNetDebuggerCompilerGenerateUtil.needSkipVariableByName(fieldMirror.getName()))
 			{
 				continue;
 			}
@@ -174,8 +176,8 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 
 	@NotNull
 	@Override
-	public TypeMirror getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariable()
 	{
-		return myTypeMirror;
+		return myType;
 	}
 }

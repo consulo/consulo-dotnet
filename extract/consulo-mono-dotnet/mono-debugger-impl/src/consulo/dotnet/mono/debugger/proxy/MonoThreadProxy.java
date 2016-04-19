@@ -42,6 +42,11 @@ public class MonoThreadProxy implements DotNetThreadProxy
 		myThreadMirror = threadMirror;
 	}
 
+	public ThreadMirror getThreadMirror()
+	{
+		return myThreadMirror;
+	}
+
 	public static long getIdFromThread(MonoVirtualMachineProxy proxy, ThreadMirror mirror)
 	{
 		if(proxy.isSupportSystemThreadId())

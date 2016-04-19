@@ -83,7 +83,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	{
 		MonoMethodParameterProxy monoMethodParameterProxy = (MonoMethodParameterProxy) parameterProxy;
 
-		Value value = ((MonoValueProxyBase) valueProxy).getMonoValue();
+		Value value = ((MonoValueProxyBase) valueProxy).getMirror();
 
 		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(monoMethodParameterProxy.getParameter(), value));
 	}
@@ -93,7 +93,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
 	{
 		MonoLocalVariableProxy methodParameterProxy = (MonoLocalVariableProxy) localVariableProxy;
-		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(methodParameterProxy.getLocalVariable()));
+		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(methodParameterProxy.getMirror()));
 
 	}
 
@@ -103,10 +103,9 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	{
 		MonoLocalVariableProxy monoLocalVariableProxy = (MonoLocalVariableProxy) localVariableProxy;
 
-		Value value = ((MonoValueProxyBase) valueProxy).getMonoValue();
+		Value value = ((MonoValueProxyBase) valueProxy).getMirror();
 
-		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(monoLocalVariableProxy.getLocalVariable(), value));
-
+		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(monoLocalVariableProxy.getMirror(), value));
 	}
 
 	@NotNull

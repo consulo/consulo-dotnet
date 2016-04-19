@@ -25,20 +25,19 @@ import mono.debugger.MethodParameterMirror;
  * @author VISTALL
  * @since 18.04.2016
  */
-public class MonoMethodParameterProxy implements DotNetMethodParameterProxy
+public class MonoMethodParameterProxy extends MonoVariableProxyBase<MethodParameterMirror> implements DotNetMethodParameterProxy
 {
 	private int myIndex;
-	private MethodParameterMirror myParameter;
 
 	public MonoMethodParameterProxy(int index, MethodParameterMirror parameter)
 	{
+		super(parameter);
 		myIndex = index;
-		myParameter = parameter;
 	}
 
 	public MethodParameterMirror getParameter()
 	{
-		return myParameter;
+		return myMirror;
 	}
 
 	@Override
@@ -51,25 +50,6 @@ public class MonoMethodParameterProxy implements DotNetMethodParameterProxy
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return new MonoTypeProxy(myParameter.type());
-	}
-
-	@NotNull
-	@Override
-	public String getName()
-	{
-		return myParameter.name();
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		return obj instanceof MonoMethodParameterProxy && myParameter.equals(((MonoMethodParameterProxy) obj).myParameter);
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return myParameter.hashCode();
+		return MonoTypeProxy.of(myMirror.type());
 	}
 }

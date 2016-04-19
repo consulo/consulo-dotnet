@@ -14,35 +14,40 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
+package consulo.dotnet.debugger.nodes;
 
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.DotNetDebugContext;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.xdebugger.frame.XValueModifier;
-import mono.debugger.*;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
+import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
+import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
  * @since 11.04.14
  */
-@Deprecated
 public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirrorNode
 {
-	private final FieldOrPropertyMirror myFieldOrPropertyMirror;
-	private final ObjectValueMirror myThisObjectMirror;
+	private final DotNetFieldOrPropertyProxy myFieldOrPropertyMirror;
+	private final DotNetObjectValueProxy myThisObjectMirror;
 	@Nullable
 	private DotNetStructValueInfo myFieldValue;
 
 	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
+			@NotNull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
 			@NotNull String name,
-			@NotNull ThreadMirror threadMirror,
-			@Nullable ObjectValueMirror thisObjectMirror)
+			@NotNull DotNetThreadProxy threadMirror,
+			@Nullable DotNetObjectValueProxy thisObjectMirror)
 	{
 		super(debuggerContext, name, threadMirror);
 		myFieldOrPropertyMirror = fieldOrPropertyMirror;
@@ -50,28 +55,28 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	}
 
 	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
-			@NotNull ThreadMirror threadMirror,
-			@Nullable ObjectValueMirror thisObjectMirror)
+			@NotNull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
+			@NotNull DotNetThreadProxy threadMirror,
+			@Nullable DotNetObjectValueProxy thisObjectMirror)
 	{
-		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.name(), threadMirror, thisObjectMirror);
+		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.getName(), threadMirror, thisObjectMirror);
 	}
 
 	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull FieldOrPropertyMirror fieldOrPropertyMirror,
-			@NotNull ThreadMirror threadMirror,
-			@Nullable ObjectValueMirror thisObjectMirror,
+			@NotNull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
+			@NotNull DotNetThreadProxy threadMirror,
+			@Nullable DotNetObjectValueProxy thisObjectMirror,
 			@NotNull DotNetStructValueInfo fieldValue)
 	{
-		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.name(), threadMirror, thisObjectMirror);
+		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.getName(), threadMirror, thisObjectMirror);
 		myFieldValue = fieldValue;
 	}
 
-	@NotNull
+	@Nullable
 	@Override
-	public TypeMirror getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariable()
 	{
-		return myFieldOrPropertyMirror.type();
+		return myFieldOrPropertyMirror.getType();
 	}
 
 	@Nullable
@@ -91,16 +96,16 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	{
 		boolean isStatic = myFieldOrPropertyMirror.isStatic();
 
-		Icon baseIcon =  null;
-		if(myFieldOrPropertyMirror instanceof PropertyMirror)
+		Icon baseIcon = null;
+		if(myFieldOrPropertyMirror instanceof DotNetPropertyProxy)
 		{
 			baseIcon = AllIcons.Nodes.Property;
 		}
-		if(myFieldOrPropertyMirror instanceof FieldMirror)
+		if(myFieldOrPropertyMirror instanceof DotNetFieldProxy)
 		{
-			baseIcon =  AllIcons.Nodes.Field;
+			baseIcon = AllIcons.Nodes.Field;
 		}
-
+		assert baseIcon != null;
 		if(isStatic)
 		{
 			return new IconDescriptor(baseIcon).addLayerIcon(AllIcons.Nodes.StaticMark).toIcon();
@@ -110,18 +115,17 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariableImpl() throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException, InvalidStackFrameException
+	public DotNetValueProxy getValueOfVariableImpl()
 	{
 		if(myFieldValue != null)
 		{
 			return myFieldValue.getValue();
 		}
-		return myFieldOrPropertyMirror.value(myThreadMirror, myThisObjectMirror);
+		return myFieldOrPropertyMirror.getValue(myThreadProxy, myThisObjectMirror);
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull Value<?> value) throws ThrowValueException, InvalidFieldIdException, VMDisconnectedException,
-			InvalidStackFrameException
+	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
 	{
 		if(myFieldValue != null)
 		{
@@ -129,7 +133,7 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 		}
 		else
 		{
-			myFieldOrPropertyMirror.setValue(myThreadMirror, myThisObjectMirror, value);
+			myFieldOrPropertyMirror.setValue(myThreadProxy, myThisObjectMirror, value);
 		}
 	}
 }
