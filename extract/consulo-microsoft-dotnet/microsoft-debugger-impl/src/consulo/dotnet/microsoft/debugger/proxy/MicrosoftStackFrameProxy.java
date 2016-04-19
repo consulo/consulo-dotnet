@@ -136,7 +136,6 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public void setParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy, @NotNull DotNetValueProxy valueProxy)
 	{
-
 	}
 
 	@Nullable

@@ -36,7 +36,7 @@ public class MicrosoftMethodParameterProxy implements DotNetMethodParameterProxy
 	{
 		myIndex = index;
 		myParameterInfo = parameterInfo;
-		myTypeProxy = new MicrosoftTypeProxy(context, myParameterInfo.Type);
+		myTypeProxy = MicrosoftTypeProxy.of(context, myParameterInfo.Type);
 	}
 
 	@Override

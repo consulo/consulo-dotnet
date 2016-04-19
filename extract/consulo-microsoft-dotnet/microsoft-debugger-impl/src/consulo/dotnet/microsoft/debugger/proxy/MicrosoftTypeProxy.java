@@ -16,6 +16,7 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
@@ -32,14 +33,30 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoReque
  */
 public class MicrosoftTypeProxy implements DotNetTypeProxy
 {
-	private MicrosoftDebuggerClient myContext;
+	@Nullable
+	@Contract("null -> null; !null -> !null")
+	public static MicrosoftTypeProxy of(@NotNull MicrosoftDebuggerClient client, @Nullable TypeRef typeRef)
+	{
+		if(typeRef == null)
+		{
+			return null;
+		}
+		int classToken = typeRef.ClassToken;
+		if(classToken <= 0)
+		{
+			return null;
+		}
+		return new MicrosoftTypeProxy(client, typeRef);
+	}
+
+	private MicrosoftDebuggerClient myClient;
 	private TypeRef myTypeRef;
 
 	private GetTypeInfoRequestResult myResult;
 
-	public MicrosoftTypeProxy(MicrosoftDebuggerClient context, TypeRef typeRef)
+	private MicrosoftTypeProxy(MicrosoftDebuggerClient client, TypeRef typeRef)
 	{
-		myContext = context;
+		myClient = client;
 		myTypeRef = typeRef;
 	}
 
@@ -74,7 +91,15 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetFieldProxy[] getFields()
 	{
-		return new DotNetFieldProxy[0];
+		GetTypeInfoRequestResult.FieldInfo[] fields = info().Fields;
+
+		MicrosoftFieldProxy[] fieldProxies = new MicrosoftFieldProxy[fields.length];
+		for(int i = 0; i < fields.length; i++)
+		{
+			GetTypeInfoRequestResult.FieldInfo field = fields[i];
+			fieldProxies[i] = new MicrosoftFieldProxy(myClient, field);
+		}
+		return fieldProxies;
 	}
 
 	@NotNull
@@ -97,6 +122,6 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		{
 			return myResult;
 		}
-		return myResult = myContext.sendAndReceive(new GetTypeInfoRequest(myTypeRef), GetTypeInfoRequestResult.class);
+		return myResult = myClient.sendAndReceive(new GetTypeInfoRequest(myTypeRef), GetTypeInfoRequestResult.class);
 	}
 }

@@ -66,7 +66,7 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 		{
 			return myDeclarationType;
 		}
-		return myDeclarationType = new MicrosoftTypeProxy(myContext, myTypeRef);
+		return myDeclarationType = MicrosoftTypeProxy.of(myContext, myTypeRef);
 	}
 
 	@NotNull

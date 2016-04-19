@@ -16,10 +16,12 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BooleanValueResult;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ObjectValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResult;
 
 /**
@@ -32,11 +34,11 @@ public class MicrosoftValueProxyUtil
 	public static DotNetValueProxy sendAndReceive(MicrosoftDebuggerClient client, Object request)
 	{
 		Object o = client.sendAndReceive(request, Object.class);
-		return wrap(o);
+		return wrap(client, o);
 	}
 
 	@Nullable
-	public static DotNetValueProxy wrap(@Nullable Object o)
+	public static DotNetValueProxy wrap(@NotNull MicrosoftDebuggerClient client, @Nullable Object o)
 	{
 		if(o instanceof StringValueResult)
 		{
@@ -45,6 +47,10 @@ public class MicrosoftValueProxyUtil
 		if(o instanceof BooleanValueResult)
 		{
 			return new MicrosoftBooleanValueProxy(((BooleanValueResult) o).Id, ((BooleanValueResult) o).Value);
+		}
+		if(o instanceof ObjectValueResult)
+		{
+			return new MicrosoftObjectValueProxy(client, ((ObjectValueResult) o).ObjectId, ((ObjectValueResult) o).Type, null);
 		}
 		return null;
 	}
