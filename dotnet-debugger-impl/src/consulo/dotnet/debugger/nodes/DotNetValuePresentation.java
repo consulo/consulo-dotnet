@@ -88,8 +88,8 @@ public class DotNetValuePresentation extends XValuePresentation
 				StringBuilder builder = new StringBuilder();
 				String type = DotNetVirtualMachineUtil.formatNameWithGeneric(proxy.getType());
 				builder.append(type.replaceFirst("\\[\\]", "[" + proxy.getLength() + "]"));
-				/*builder.append("@");
-				builder.append(value.object().address()); */
+				builder.append("@");
+				builder.append(proxy.getAddress());
 				result.set(builder.toString());
 			}
 		});

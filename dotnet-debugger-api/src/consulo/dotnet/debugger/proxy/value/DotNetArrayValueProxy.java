@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface DotNetArrayValueProxy extends DotNetValueProxy
 {
+	long getAddress();
+
 	int getLength();
 
 	@Nullable

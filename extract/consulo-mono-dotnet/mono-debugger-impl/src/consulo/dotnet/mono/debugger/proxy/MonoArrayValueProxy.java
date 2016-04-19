@@ -41,6 +41,12 @@ public class MonoArrayValueProxy extends MonoValueProxyBase<ArrayValueMirror> im
 	}
 
 	@Override
+	public long getAddress()
+	{
+		return myValue.object().address();
+	}
+
+	@Override
 	public int getLength()
 	{
 		return myValue.length();
