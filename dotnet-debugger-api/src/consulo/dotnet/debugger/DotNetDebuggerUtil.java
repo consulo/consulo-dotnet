@@ -53,7 +53,7 @@ public class DotNetDebuggerUtil
 			@Override
 			public int compare(DotNetFieldOrPropertyProxy o1, DotNetFieldOrPropertyProxy o2)
 			{
-				return weight(o1) - weight(o2);
+				return weight(o2) - weight(o1);
 			}
 
 			private int weight(DotNetFieldOrPropertyProxy p)

@@ -27,8 +27,8 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.FindTypeInfoRequest;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.FindTypeInfoRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetTypeInfoRequest;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.FindTypeInfoRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoRequestResult;
 
 /**
@@ -117,7 +117,15 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetPropertyProxy[] getProperties()
 	{
-		return new DotNetPropertyProxy[0];
+		GetTypeInfoRequestResult.PropertyInfo[] properties = info().Properties;
+
+		MicrosoftPropertyProxy[] propertyProxies = new MicrosoftPropertyProxy[properties.length];
+		for(int i = 0; i < properties.length; i++)
+		{
+			GetTypeInfoRequestResult.PropertyInfo field = properties[i];
+			propertyProxies[i] = new MicrosoftPropertyProxy(myClient, field);
+		}
+		return propertyProxies;
 	}
 
 	@Override
