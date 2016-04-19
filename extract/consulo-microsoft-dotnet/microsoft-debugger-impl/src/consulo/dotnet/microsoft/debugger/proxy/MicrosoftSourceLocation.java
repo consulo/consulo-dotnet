@@ -48,7 +48,13 @@ public class MicrosoftSourceLocation implements DotNetSourceLocation
 	}
 
 	@Override
-	public int getLine()
+	public int getLineZeroBased()
+	{
+		return myPosition.Line - 1;
+	}
+
+	@Override
+	public int getLineOneBased()
 	{
 		return myPosition.Line;
 	}

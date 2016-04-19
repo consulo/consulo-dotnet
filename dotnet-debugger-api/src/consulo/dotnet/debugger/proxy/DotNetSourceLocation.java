@@ -28,7 +28,9 @@ public interface DotNetSourceLocation
 	@Nullable
 	String getFilePath();
 
-	int getLine();
+	int getLineZeroBased();
+
+	int getLineOneBased();
 
 	int getColumn();
 

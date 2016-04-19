@@ -43,9 +43,15 @@ public class MonoSourceLocation implements DotNetSourceLocation
 	}
 
 	@Override
-	public int getLine()
+	public int getLineZeroBased()
 	{
 		return myLocation.lineNumber() - 1;
+	}
+
+	@Override
+	public int getLineOneBased()
+	{
+		return myLocation.lineNumber();
 	}
 
 	@Override

@@ -20,9 +20,12 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.nodes.DotNetLocalVariableMirrorNode;
 import consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
+import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
@@ -86,24 +89,20 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 			childrenList.add(parameterMirrorNode);
 		}
 
-	/*	try
+		DotNetLocalVariableProxy[] localVariables = method.getLocalVariables(frameMirrorProxy);
+		for(DotNetLocalVariableProxy local : localVariables)
 		{
-			LocalVariableMirror[] locals = method.locals(frameMirrorProxy.location().codeIndex());
-			for(LocalVariableMirror local : locals)
+			if(StringUtil.isEmpty(local.getName()))
 			{
-				if(StringUtil.isEmpty(local.name()))
-				{
-					continue;
-				}
-				visitedVariables.add(local);
-				DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(debugContext, local, frameMirrorProxy);
-
-				childrenList.add(localVariableMirrorNode);
+				continue;
 			}
+
+			visitedVariables.add(local);
+
+			DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(debugContext, local, frameMirrorProxy);
+
+			childrenList.add(localVariableMirrorNode);
 		}
-		catch(IllegalArgumentException ignored)
-		{
-		}  */
 
 		return true;
 	}

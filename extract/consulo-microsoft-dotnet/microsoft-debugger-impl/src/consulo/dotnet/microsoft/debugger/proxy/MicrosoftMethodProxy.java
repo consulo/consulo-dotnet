@@ -17,8 +17,10 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
@@ -69,6 +71,13 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 			proxies[i] = new MicrosoftMethodParameterProxy(myContext, i, parameter);
 		}
 		return proxies;
+	}
+
+	@NotNull
+	@Override
+	public DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy)
+	{
+		return new DotNetLocalVariableProxy[0];
 	}
 
 	@NotNull

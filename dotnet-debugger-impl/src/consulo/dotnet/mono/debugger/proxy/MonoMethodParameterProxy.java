@@ -60,4 +60,16 @@ public class MonoMethodParameterProxy implements DotNetMethodParameterProxy
 	{
 		return myParameter.name();
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof MonoMethodParameterProxy && myParameter.equals(((MonoMethodParameterProxy) obj).myParameter);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return myParameter.hashCode();
+	}
 }

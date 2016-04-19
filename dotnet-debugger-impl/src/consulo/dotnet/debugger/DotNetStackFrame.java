@@ -92,7 +92,7 @@ public class DotNetStackFrame extends XStackFrame
 		}
 
 		XLineBreakpoint<?> breakpoint = myDebuggerContext.getBreakpoint();
-		XSourcePosition originalPosition = XDebuggerUtil.getInstance().createPosition(fileByPath, sourceLocation.getLine());
+		XSourcePosition originalPosition = XDebuggerUtil.getInstance().createPosition(fileByPath, sourceLocation.getLineZeroBased());
 		if(originalPosition == null)
 		{
 			return null;
@@ -215,7 +215,7 @@ public class DotNetStackFrame extends XStackFrame
 		}
 
 		builder.append(":");
-		builder.append(sourceLocation.getLine());
+		builder.append(sourceLocation.getLineOneBased());
 		builder.append(":");
 		builder.append(sourceLocation.getColumn());
 		builder.append(", ");

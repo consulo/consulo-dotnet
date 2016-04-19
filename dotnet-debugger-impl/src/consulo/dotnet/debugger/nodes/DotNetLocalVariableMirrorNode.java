@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.nodes;
+package consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
-import consulo.dotnet.debugger.DotNetDebugContext;
-import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.openapi.util.Ref;
@@ -33,11 +31,11 @@ import com.intellij.psi.scope.util.PsiScopesUtilCore;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNavigatable;
-import mono.debugger.LocalVariableMirror;
-import mono.debugger.LocalVariableOrParameterMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
-import mono.debugger.util.ImmutablePair;
+import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
@@ -45,12 +43,12 @@ import mono.debugger.util.ImmutablePair;
  */
 public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorNode
 {
-	private final LocalVariableMirror myLocal;
-	private final DotNetStackFrameMirrorProxy myFrameProxy;
+	private final DotNetLocalVariableProxy myLocal;
+	private final DotNetStackFrameProxy myFrameProxy;
 
-	public DotNetLocalVariableMirrorNode(DotNetDebugContext debuggerContext, LocalVariableMirror local, DotNetStackFrameMirrorProxy frameProxy)
+	public DotNetLocalVariableMirrorNode(DotNetDebugContext debuggerContext, DotNetLocalVariableProxy local, DotNetStackFrameProxy frameProxy)
 	{
-		super(debuggerContext, local.name(), frameProxy.thread());
+		super(debuggerContext, local.getName(), frameProxy.getThread());
 		myLocal = local;
 		myFrameProxy = frameProxy;
 	}
@@ -65,7 +63,7 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 	@RequiredDispatchThread
 	public void computeSourcePosition(@NotNull XNavigatable navigatable)
 	{
-		final String name = myLocal.name();
+		final String name = myLocal.getName();
 		if(StringUtil.isEmpty(name))
 		{
 			return;
@@ -108,28 +106,26 @@ public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorN
 		{
 			return;
 		}
-		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(containingFile.getVirtualFile(),
-				element.getTextOffset()));
+		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(containingFile.getVirtualFile(), element.getTextOffset()));
 	}
 
 	@NotNull
 	@Override
-	public TypeMirror getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariable()
 	{
-		return myLocal.type();
+		return myLocal.getType();
 	}
 
 	@Nullable
 	@Override
-	public Value<?> getValueOfVariableImpl()
+	public DotNetValueProxy getValueOfVariableImpl()
 	{
-		return myFrameProxy.localOrParameterValue(myLocal);
+		return myFrameProxy.getLocalValue(myLocal);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public void setValueForVariableImpl(@NotNull Value<?> value)
+	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
 	{
-		myFrameProxy.setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(myLocal, value));
+		myFrameProxy.setLocalValue(myLocal, value);
 	}
 }

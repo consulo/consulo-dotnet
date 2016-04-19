@@ -30,4 +30,7 @@ public interface DotNetMethodProxy extends Named
 
 	@NotNull
 	DotNetMethodParameterProxy[] getParameters();
+
+	@NotNull
+	DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy);
 }

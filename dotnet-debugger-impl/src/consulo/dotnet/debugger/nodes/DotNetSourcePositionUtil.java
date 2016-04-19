@@ -58,7 +58,7 @@ public class DotNetSourcePositionUtil
 		{
 			return null;
 		}
-		int line = sourceLocation.getLine();
+		int line = sourceLocation.getLineZeroBased();
 		int column = sourceLocation.getColumn();
 		return DotNetDebuggerUtil.findPsiElement(file, line, column);
 	}

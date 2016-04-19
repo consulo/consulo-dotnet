@@ -44,4 +44,9 @@ public interface DotNetStackFrameProxy
 	DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy);
 
 	void setParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy, @NotNull DotNetValueProxy valueProxy);
+
+	@Nullable
+	DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy);
+
+	void setLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy, @NotNull DotNetValueProxy valueProxy);
 }

@@ -88,7 +88,8 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 						continue;
 					}
 
-					map.put(breakpoint, new InsertBreakpointRequest(FileUtil.toSystemDependentName(fileByUrl.getPath()), breakpoint.getLine()));
+					// lineNumber is zero based, but need send one based line
+					map.put(breakpoint, new InsertBreakpointRequest(FileUtil.toSystemDependentName(fileByUrl.getPath()), breakpoint.getLine() + 1));
 				}
 				return map;
 			}

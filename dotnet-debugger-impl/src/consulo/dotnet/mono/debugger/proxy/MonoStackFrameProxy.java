@@ -21,6 +21,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
+import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -49,6 +50,11 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 		myFrameMirror = frameMirror;
 	}
 
+	public StackFrameMirror getFrameMirror()
+	{
+		return myFrameMirror;
+	}
+
 	@NotNull
 	@Override
 	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException
@@ -75,11 +81,32 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	@SuppressWarnings("unchecked")
 	public void setParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy, @NotNull DotNetValueProxy valueProxy)
 	{
-		MonoMethodParameterProxy methodParameterProxy = (MonoMethodParameterProxy) parameterProxy;
+		MonoMethodParameterProxy monoMethodParameterProxy = (MonoMethodParameterProxy) parameterProxy;
 
 		Value value = ((MonoValueProxyBase) valueProxy).getMonoValue();
 
-		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(methodParameterProxy.getParameter(), value));
+		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(monoMethodParameterProxy.getParameter(), value));
+	}
+
+	@Nullable
+	@Override
+	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
+	{
+		MonoLocalVariableProxy methodParameterProxy = (MonoLocalVariableProxy) localVariableProxy;
+		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(methodParameterProxy.getLocalVariable()));
+
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void setLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy, @NotNull DotNetValueProxy valueProxy)
+	{
+		MonoLocalVariableProxy monoLocalVariableProxy = (MonoLocalVariableProxy) localVariableProxy;
+
+		Value value = ((MonoValueProxyBase) valueProxy).getMonoValue();
+
+		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(monoLocalVariableProxy.getLocalVariable(), value));
+
 	}
 
 	@NotNull
