@@ -25,6 +25,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface DotNetTypeProxy
 {
+	@Nullable
+	DotNetTypeProxy getDeclarationType();
+
 	@NotNull
 	String getName();
 

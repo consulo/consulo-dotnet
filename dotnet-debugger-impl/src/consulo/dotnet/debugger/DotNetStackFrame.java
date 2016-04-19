@@ -56,6 +56,7 @@ import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;
 import consulo.dotnet.debugger.nodes.objectReview.DefaultStackFrameComputer;
 import consulo.dotnet.debugger.nodes.objectReview.StackFrameComputer;
+import consulo.dotnet.debugger.nodes.objectReview.YieldOrAsyncStackFrameComputer;
 import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
@@ -72,7 +73,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public class DotNetStackFrame extends XStackFrame
 {
 	private static final StackFrameComputer[] ourStackFrameComputers = new StackFrameComputer[]{
-			//new YieldOrAsyncStackFrameComputer(),
+			new YieldOrAsyncStackFrameComputer(),
 			new DefaultStackFrameComputer()
 	};
 

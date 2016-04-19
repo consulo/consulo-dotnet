@@ -47,6 +47,13 @@ public class MonoTypeProxy implements DotNetTypeProxy
 		myTypeMirror = typeMirror;
 	}
 
+	@Nullable
+	@Override
+	public DotNetTypeProxy getDeclarationType()
+	{
+		return null;
+	}
+
 	@NotNull
 	@Override
 	public String getName()

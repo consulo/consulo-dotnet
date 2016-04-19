@@ -71,6 +71,13 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		myTypeRef = typeRef;
 	}
 
+	@Nullable
+	@Override
+	public DotNetTypeProxy getDeclarationType()
+	{
+		return null;
+	}
+
 	@NotNull
 	@Override
 	public String getName()
