@@ -27,7 +27,6 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
@@ -53,8 +52,11 @@ import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
+import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.mono.debugger.MonoDebugUtil;
 import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
+import consulo.dotnet.mono.debugger.proxy.MonoMethodProxy;
+import consulo.dotnet.mono.debugger.proxy.MonoTypeProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.Location;
 import mono.debugger.LocationImpl;
@@ -220,7 +222,7 @@ public class MonoBreakpointUtil
 
 				if(executableChildrenAtLineIndex != null)
 				{
-					Couple<String> lambdaInfo = DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(methodMirror);
+					Couple<String> lambdaInfo = DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(new MonoMethodProxy(methodMirror));
 					if(executableChildrenAtLineIndex == -1 && lambdaInfo != null)
 					{
 						// is lambda - we cant enter it with -1
@@ -262,7 +264,8 @@ public class MonoBreakpointUtil
 			TypeMirror[] nestedTypeMirrors = mirror.nestedTypes();
 			for(TypeMirror nestedTypeMirror : nestedTypeMirrors)
 			{
-				if(DotNetDebuggerCompilerGenerateUtil.isYieldOrAsyncNestedType(nestedTypeMirror))
+				MonoTypeProxy typeProxy = MonoTypeProxy.of(nestedTypeMirror);
+				if(DotNetDebuggerCompilerGenerateUtil.isYieldOrAsyncNestedType(typeProxy))
 				{
 					// we interest only MoveNext method
 					MethodMirror moveNext = nestedTypeMirror.findMethodByName("MoveNext", false);
@@ -271,7 +274,7 @@ public class MonoBreakpointUtil
 						collectLocations(virtualMachine, lineBreakpoint, methods, moveNext);
 					}
 				}
-				else if(DotNetDebuggerCompilerGenerateUtil.isAsyncLambdaWrapper(nestedTypeMirror))
+				else if(DotNetDebuggerCompilerGenerateUtil.isAsyncLambdaWrapper(typeProxy))
 				{
 					TypeMirror[] typeMirrors = nestedTypeMirror.nestedTypes();
 					if(typeMirrors.length > 0)

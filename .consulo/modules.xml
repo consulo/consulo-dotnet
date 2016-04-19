@@ -165,7 +165,6 @@
           <orderEntry type="module" module-name="msil-psi-impl" />
           <orderEntry type="library" name="dotnet-msil-decompiler" level="project" />
           <orderEntry type="library" name="joou" level="project" />
-          <orderEntry type="library" exploded="" name="mono-soft-debugging" level="project" />
         </module-layer>
       </module>
       <module name="dotnet-documentation-api" dirurl="file://$PROJECT_DIR$/dotnet-documentation-api" current-layer="Default">
@@ -307,6 +306,7 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-debugger-impl" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-impl" />
+          <orderEntry type="library" name="mono-soft-debugging" level="project" />
         </module-layer>
       </module>
     </modules>
