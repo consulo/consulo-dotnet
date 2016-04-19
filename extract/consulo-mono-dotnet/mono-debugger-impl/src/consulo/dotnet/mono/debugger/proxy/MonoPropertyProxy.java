@@ -2,20 +2,20 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
+import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import mono.debugger.FieldMirror;
 import mono.debugger.ObjectValueMirror;
+import mono.debugger.PropertyMirror;
 
 /**
  * @author VISTALL
  * @since 19.04.2016
  */
-public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implements DotNetFieldProxy
+public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> implements DotNetPropertyProxy
 {
-	public MonoFieldProxy(@NotNull FieldMirror mirror)
+	public MonoPropertyProxy(@NotNull PropertyMirror mirror)
 	{
 		super(mirror);
 	}
@@ -50,5 +50,11 @@ public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implement
 		MonoValueProxyBase<?> monoNewValueProxyBase = (MonoValueProxyBase<?>) newValueProxy;
 
 		myMirror.setValue(monoThreadProxy.getThreadMirror(), monoValueProxyBase == null ? null : monoValueProxyBase.getMirror(), monoNewValueProxyBase.getMirror());
+	}
+
+	@Override
+	public boolean isArrayProperty()
+	{
+		return myMirror.isArrayProperty();
 	}
 }

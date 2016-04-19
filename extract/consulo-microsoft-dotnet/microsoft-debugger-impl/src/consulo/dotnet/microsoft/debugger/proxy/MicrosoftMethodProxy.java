@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
@@ -122,7 +123,7 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public String getName()
 	{
-		return info().Name;
+		return StringUtil.notNullize(info().Name);
 	}
 
 	@NotNull

@@ -24,6 +24,7 @@ import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mono.debugger.FieldMirror;
+import mono.debugger.PropertyMirror;
 import mono.debugger.TypeMirror;
 
 /**
@@ -96,7 +97,14 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetPropertyProxy[] getProperties()
 	{
-		return new DotNetPropertyProxy[0];
+		PropertyMirror[] properties = myTypeMirror.properties();
+		DotNetPropertyProxy[] proxies = new DotNetPropertyProxy[properties.length];
+		for(int i = 0; i < properties.length; i++)
+		{
+			PropertyMirror property = properties[i];
+			proxies[i] = new MonoPropertyProxy(property);
+		}
+		return proxies;
 	}
 
 	@Override

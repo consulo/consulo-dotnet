@@ -42,7 +42,7 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	}
 
 	@Override
-	public void setValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
+	public void setValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
 	{
 	}
 

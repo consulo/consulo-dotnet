@@ -33,4 +33,14 @@ public class TypeRef
 		ModuleToken = moduleToken;
 		ClassToken = classToken;
 	}
+
+	@Override
+	public String toString()
+	{
+		final StringBuilder sb = new StringBuilder("TypeRef{");
+		sb.append("ModuleToken=").append(ModuleToken);
+		sb.append(", ClassToken=").append(ClassToken);
+		sb.append('}');
+		return sb.toString();
+	}
 }

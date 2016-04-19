@@ -17,5 +17,5 @@ public interface DotNetFieldOrPropertyProxy extends DotNetVariableProxy
 	@Nullable
 	DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy proxy);
 
-	void setValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy);
+	void setValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy);
 }
