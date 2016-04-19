@@ -16,7 +16,6 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
@@ -25,24 +24,10 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  */
 public abstract class MicrosoftValueProxyBase<T> implements DotNetValueProxy
 {
-	private int myId;
-	private T myValue;
+	protected T myResult;
 
-	public MicrosoftValueProxyBase(int id, T value)
+	public MicrosoftValueProxyBase(T result)
 	{
-		myId = id;
-		myValue = value;
-	}
-
-	@Nullable
-	@Override
-	public T getValue()
-	{
-		return myValue;
-	}
-
-	public int getId()
-	{
-		return myId;
+		myResult = result;
 	}
 }

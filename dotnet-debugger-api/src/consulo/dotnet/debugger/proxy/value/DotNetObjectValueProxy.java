@@ -16,12 +16,11 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
 public interface DotNetObjectValueProxy extends DotNetValueProxy
 {
+	long getAddress();
 }

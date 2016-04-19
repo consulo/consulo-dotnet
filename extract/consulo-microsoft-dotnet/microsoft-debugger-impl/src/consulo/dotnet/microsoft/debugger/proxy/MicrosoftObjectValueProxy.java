@@ -5,34 +5,45 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ObjectValueResult;
 
 /**
  * @author VISTALL
  * @since 19.04.2016
  */
-public class MicrosoftObjectValueProxy extends MicrosoftValueProxyBase<Object> implements DotNetObjectValueProxy
+public class MicrosoftObjectValueProxy extends MicrosoftValueProxyBase<ObjectValueResult> implements DotNetObjectValueProxy
 {
 	private MicrosoftDebuggerClient myClient;
-	private TypeRef myType;
 
-	public MicrosoftObjectValueProxy(MicrosoftDebuggerClient client, int id, TypeRef type, Object value)
+	public MicrosoftObjectValueProxy(MicrosoftDebuggerClient client, ObjectValueResult result)
 	{
-		super(id, value);
+		super(result);
 		myClient = client;
-		myType = type;
 	}
 
 	@Nullable
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MicrosoftTypeProxy.of(myClient, myType);
+		return MicrosoftTypeProxy.of(myClient, myResult.Type);
+	}
+
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return null;
 	}
 
 	@Override
 	public void accept(DotNetValueProxyVisitor visitor)
 	{
 		visitor.visitObjectValue(this);
+	}
+
+	@Override
+	public long getAddress()
+	{
+		return myResult.Address;
 	}
 }

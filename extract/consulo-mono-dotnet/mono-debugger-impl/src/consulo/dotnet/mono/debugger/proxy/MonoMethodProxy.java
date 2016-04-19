@@ -17,11 +17,14 @@
 package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.LocalVariableMirror;
 import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
@@ -80,6 +83,13 @@ public class MonoMethodProxy implements DotNetMethodProxy
 			proxies[i] = new MonoLocalVariableProxy(local);
 		}
 		return proxies;
+	}
+
+	@Nullable
+	@Override
+	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
+	{
+		return null;
 	}
 
 	@NotNull

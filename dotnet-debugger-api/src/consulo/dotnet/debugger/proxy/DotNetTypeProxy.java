@@ -43,4 +43,7 @@ public interface DotNetTypeProxy
 	DotNetPropertyProxy[] getProperties();
 
 	boolean isNested();
+
+	@Nullable
+	DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep);
 }

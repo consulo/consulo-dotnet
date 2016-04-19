@@ -42,15 +42,15 @@ public class MicrosoftValueProxyUtil
 	{
 		if(o instanceof StringValueResult)
 		{
-			return new MicrosoftStringValueProxy(((StringValueResult) o).Id, ((StringValueResult) o).Value);
+			return new MicrosoftStringValueProxy(((StringValueResult) o));
 		}
 		if(o instanceof BooleanValueResult)
 		{
-			return new MicrosoftBooleanValueProxy(((BooleanValueResult) o).Id, ((BooleanValueResult) o).Value);
+			return new MicrosoftBooleanValueProxy((BooleanValueResult) o);
 		}
 		if(o instanceof ObjectValueResult)
 		{
-			return new MicrosoftObjectValueProxy(client, ((ObjectValueResult) o).ObjectId, ((ObjectValueResult) o).Type, null);
+			return new MicrosoftObjectValueProxy(client, (ObjectValueResult) o);
 		}
 		return null;
 	}

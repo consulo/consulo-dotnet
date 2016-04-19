@@ -19,8 +19,14 @@ package consulo.dotnet.debugger.nodes;
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Ref;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
@@ -29,7 +35,6 @@ import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
-import mono.debugger.*;
 
 /**
  * @author VISTALL
@@ -51,62 +56,51 @@ public class DotNetValuePresentation extends XValuePresentation
 	@Override
 	public String getType()
 	{
-		/*if(myValue != null)
+		if(myValue == null)
 		{
-			final Ref<String> result = Ref.create();
+			return null;
+		}
 
-			myValue.accept(new ValueVisitor.Adapter()
+		final Ref<String> result = Ref.create();
+
+		myValue.accept(new DotNetValueProxyVisitor.Adaptor()
+		{
+			/*@Override
+			public void visitStructValue(@NotNull StructValueMirror mirror)
 			{
-				@Override
-				public void visitStructValue(@NotNull StructValueMirror mirror)
+				result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(mirror.type()));
+			}  */
+
+			@Override
+			public void visitObjectValue(@NotNull DotNetObjectValueProxy value)
+			{
+				DotNetTypeProxy type = value.getType();
+
+				if(type == null)
 				{
-					result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(mirror.type()));
+					return;
+				}
+				DotNetMethodProxy toString = type.findMethodByName("ToString", true);
+				if(toString == null)
+				{
+					return;
 				}
 
-				@Override
-				public void visitObjectValue(@NotNull ObjectValueMirror value)
-				{
-					if(value.id() == 0)
-					{
-						return;
-					}
+				result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(type) + "@" + value.getAddress());
+			}
 
-					TypeMirror type = null;
-					try
-					{
-						type = value.type();
-					}
-					catch(InvalidObjectException ignored)
-					{
-					}
-
-					if(type == null)
-					{
-						return;
-					}
-					MethodMirror toString = type.findMethodByName("ToString", true);
-					if(toString == null)
-					{
-						return;
-					}
-
-					result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(type) + "@" + value.address());
-				}
-
-				@Override
-				public void visitArrayValue(@NotNull ArrayValueMirror value)
-				{
-					StringBuilder builder = new StringBuilder();
-					String type = DotNetVirtualMachineUtil.formatNameWithGeneric(value.type());
-					builder.append(type.replaceFirst("\\[\\]", "[" + value.length() + "]"));
-					builder.append("@");
-					builder.append(value.object().address());
-					result.set(builder.toString());
-				}
-			});
-			return result.get();
-		} */
-		return null;
+			/*@Override
+			public void visitArrayValue(@NotNull ArrayValueMirror value)
+			{
+				StringBuilder builder = new StringBuilder();
+				String type = DotNetVirtualMachineUtil.formatNameWithGeneric(value.type());
+				builder.append(type.replaceFirst("\\[\\]", "[" + value.length() + "]"));
+				builder.append("@");
+				builder.append(value.object().address());
+				result.set(builder.toString());
+			}*/
+		});
+		return result.get();
 	}
 
 	@Override
@@ -242,46 +236,33 @@ public class DotNetValuePresentation extends XValuePresentation
 			@Override
 			public void visitObjectValue(@NotNull DotNetObjectValueProxy value)
 			{
-				/*if(value.id() == 0)
-				{
-					renderer.renderValue("null");
-					return;
-				}
-
-				TypeMirror type = null;
-				try
-				{
-					type = value.type();
-				}
-				catch(InvalidObjectException ignored)
-				{
-				}
+				DotNetTypeProxy type = value.getType();
 
 				if(type == null)
 				{
 					return;
 				}
-				MethodMirror toString = type.findMethodByName("ToString", true);
+				DotNetMethodProxy toString = type.findMethodByName("ToString", true);
 				if(toString == null)
 				{
 					return;
 				}
 
 				String toStringValue = null;
-				String qTypeOfValue = toString.declaringType().qualifiedName();
+				String qTypeOfValue = toString.getDeclarationType().getFullName();
 				if(!Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
 				{
-					Value<?> invoke = invokeSafe(toString, myThreadProxy, value);
-					if(invoke instanceof StringValueMirror)
+					DotNetValueProxy invoke = invokeSafe(toString, myThreadProxy, value);
+					if(invoke instanceof DotNetStringValueProxy)
 					{
-						toStringValue = ((StringValueMirror) invoke).value();
+						toStringValue = (String) invoke.getValue();
 					}
 				}
 
 				if(toStringValue != null)
 				{
 					renderer.renderValue(toStringValue);
-				}  */
+				}
 			}
 
 			/*@Override
@@ -317,33 +298,14 @@ public class DotNetValuePresentation extends XValuePresentation
 	}
 
 	@Nullable
-	private static Value<?> invokeSafe(MethodMirror methodMirror, ThreadMirror threadMirror, Value<?> thisObject, Value... arguments)
+	private static DotNetValueProxy invokeSafe(DotNetMethodProxy methodMirror, DotNetThreadProxy threadMirror, DotNetValueProxy thisObject, DotNetValueProxy... arguments)
 	{
 		try
 		{
-			return methodMirror.invoke(threadMirror, InvokeFlags.DISABLE_BREAKPOINTS, thisObject, arguments);
+			return methodMirror.invoke(threadMirror, thisObject, arguments);
 		}
-		catch(IllegalArgumentException ignored)
+		catch(Exception ignored)
 		{
-		}
-		catch(ThrowValueException ignored)
-		{
-		}
-		catch(InvalidFieldIdException ignored)
-		{
-		}
-		catch(VMDisconnectedException ignored)
-		{
-		}
-		catch(InvalidStackFrameException ignored)
-		{
-		}
-		catch(NotSuspendedException ignored)
-		{
-		}
-		catch(Exception e)
-		{
-			LOGGER.error(e);
 		}
 		return null;
 	}

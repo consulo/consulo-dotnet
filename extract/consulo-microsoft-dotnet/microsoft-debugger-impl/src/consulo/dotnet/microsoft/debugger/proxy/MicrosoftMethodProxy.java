@@ -17,12 +17,15 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetLocalsRequest;
@@ -96,6 +99,13 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 			proxies[i] = new MicrosoftLocalVariableProxy(local);
 		}
 		return proxies;
+	}
+
+	@Nullable
+	@Override
+	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
+	{
+		return null;
 	}
 
 	@NotNull

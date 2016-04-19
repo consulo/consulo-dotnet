@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
+import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
@@ -114,6 +115,13 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	public boolean isNested()
 	{
 		return false;
+	}
+
+	@Nullable
+	@Override
+	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep)
+	{
+		return null;
 	}
 
 	@NotNull

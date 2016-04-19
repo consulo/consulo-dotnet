@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
+import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mono.debugger.FieldMirror;
@@ -102,5 +103,12 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	public boolean isNested()
 	{
 		return myTypeMirror.isNested();
+	}
+
+	@Nullable
+	@Override
+	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep)
+	{
+		return null;
 	}
 }

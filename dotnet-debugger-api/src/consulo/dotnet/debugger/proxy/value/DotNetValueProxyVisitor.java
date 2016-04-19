@@ -24,6 +24,45 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DotNetValueProxyVisitor
 {
+	class Adaptor implements DotNetValueProxyVisitor
+	{
+		@Override
+		public void visitStringValue(@NotNull DotNetStringValueProxy proxy)
+		{
+
+		}
+
+		@Override
+		public void visitNullValue(@NotNull DotNetNullValueProxy proxy)
+		{
+
+		}
+
+		@Override
+		public void visitArrayValue(@NotNull DotNetArrayValueProxy proxy)
+		{
+
+		}
+
+		@Override
+		public void visitObjectValue(@NotNull DotNetObjectValueProxy proxy)
+		{
+
+		}
+
+		@Override
+		public void visitNumberValue(@NotNull DotNetNumberValueProxy proxy)
+		{
+
+		}
+
+		@Override
+		public void visitBooleanValue(@NotNull DotNetBooleanValueProxy proxy)
+		{
+
+		}
+	}
+
 	void visitStringValue(@NotNull DotNetStringValueProxy proxy);
 
 	void visitNullValue(@NotNull DotNetNullValueProxy proxy);

@@ -18,6 +18,8 @@ package consulo.dotnet.debugger.proxy;
 
 import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
@@ -35,4 +37,7 @@ public interface DotNetMethodProxy extends Named
 
 	@NotNull
 	DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy);
+
+	@Nullable
+	DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments);
 }

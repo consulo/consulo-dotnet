@@ -36,4 +36,10 @@ public class MonoObjectValueProxy extends MonoValueProxyBase<ObjectValueMirror> 
 	{
 		visitor.visitObjectValue(this);
 	}
+
+	@Override
+	public long getAddress()
+	{
+		return myValue.address();
+	}
 }

@@ -20,16 +20,17 @@ import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResult;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public class MicrosoftStringValueProxy extends MicrosoftValueProxyBase<String> implements DotNetStringValueProxy
+public class MicrosoftStringValueProxy extends MicrosoftValueProxyBase<StringValueResult> implements DotNetStringValueProxy
 {
-	public MicrosoftStringValueProxy(int id, String value)
+	public MicrosoftStringValueProxy(StringValueResult value)
 	{
-		super(id, value);
+		super(value);
 	}
 
 	@Nullable
@@ -37,6 +38,13 @@ public class MicrosoftStringValueProxy extends MicrosoftValueProxyBase<String> i
 	public DotNetTypeProxy getType()
 	{
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return myResult.Value;
 	}
 
 	@Override
