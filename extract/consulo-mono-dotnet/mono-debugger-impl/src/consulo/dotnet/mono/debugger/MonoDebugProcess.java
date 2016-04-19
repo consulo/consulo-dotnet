@@ -17,8 +17,8 @@
 package consulo.dotnet.mono.debugger;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
+import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.util.Processor;

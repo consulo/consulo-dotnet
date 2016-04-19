@@ -19,9 +19,7 @@ package org.mustbe.consulo.dotnet.debugger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
-import com.intellij.openapi.project.Project;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import mono.debugger.TypeMirror;
 
@@ -36,8 +34,7 @@ public class DotNetVirtualMachineUtil
 	@RequiredReadAction
 	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
 	{
-		Project project = debugContext.getProject();
-		return DotNetPsiSearcher.getInstance(project).findTypes(DotNetDebuggerUtil.getVmQName(typeMirror), debugContext.getResolveScope());
+		throw new UnsupportedOperationException();
 	}
 
 	@NotNull

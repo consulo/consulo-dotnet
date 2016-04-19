@@ -16,6 +16,7 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
+import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mono.debugger.NumberValueMirror;
@@ -29,6 +30,13 @@ public class MonoNumberValueProxy extends MonoValueProxyBase<NumberValueMirror> 
 	public MonoNumberValueProxy(NumberValueMirror value)
 	{
 		super(value);
+	}
+
+	@Nullable
+	@Override
+	public Number getValue()
+	{
+		return (Number) super.getValue();
 	}
 
 	@Override

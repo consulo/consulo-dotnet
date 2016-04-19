@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,26 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.debugger;
+
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
-import mono.debugger.TypeMirror;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 25.04.14
+ * @since 19.07.2015
  */
-@Deprecated
-public class DotNetDebuggerUtil
+public abstract class DotNetDebuggerSourceLineResolver
 {
+	@Nullable
+	@RequiredReadAction
+	public abstract String resolveParentVmQName(@NotNull PsiElement element);
+
 	@NotNull
-	public static String getVmQName(@NotNull TypeMirror typeMirror)
-	{
-		String fullName = typeMirror.fullName();
-
-		// System.List`1[String]
-		int i = fullName.indexOf('[');
-		if(i != -1)
-		{
-			fullName = fullName.substring(0, i);
-		}
-
-		// change + to / separator
-		fullName = fullName.replace('+', DotNetTypeDeclarationUtil.NESTED_SEPARATOR_IN_NAME);
-		return fullName;
-	}
+	@RequiredReadAction
+	public abstract Set<PsiElement> getAllExecutableChildren(@NotNull PsiElement root);
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.linebreakType.properties;
+package consulo.dotnet.debugger.breakpoint.properties;
 
 import org.jetbrains.annotations.Nullable;
 import com.intellij.util.xmlb.XmlSerializerUtil;

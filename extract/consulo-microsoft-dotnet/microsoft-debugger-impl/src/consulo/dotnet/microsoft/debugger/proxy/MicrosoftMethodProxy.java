@@ -18,6 +18,9 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
@@ -104,6 +107,13 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Nullable
 	@Override
 	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
+	{
+		return null;
+	}
+
+	@RequiredReadAction
+	@Override
+	public PsiElement findExecutableElementFromDebugInfo(@NotNull Project project, int executableChildrenAtLineIndex)
 	{
 		return null;
 	}

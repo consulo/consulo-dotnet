@@ -29,14 +29,6 @@ import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.Exported;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
-import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineListener;
-import org.mustbe.consulo.dotnet.debugger.DotNetVirtualMachineUtil;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
-import org.mustbe.consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
-import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxyImpl;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.ui.ConsoleView;
@@ -73,10 +65,18 @@ import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetDebuggerProvider;
+import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
+import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
+import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
+import consulo.dotnet.mono.debugger.proxy.MonoStackFrameProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoThreadProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.*;
@@ -101,7 +101,7 @@ public class MonoDebugThread extends Thread
 
 	private MonoVirtualMachineProxy myVirtualMachine;
 
-	private EventDispatcher<DotNetVirtualMachineListener> myEventDispatcher = EventDispatcher.create(DotNetVirtualMachineListener.class);
+	private EventDispatcher<MonoVirtualMachineListener> myEventDispatcher = EventDispatcher.create(MonoVirtualMachineListener.class);
 
 	public MonoDebugThread(XDebugSession session, MonoDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo)
 	{
@@ -112,13 +112,13 @@ public class MonoDebugThread extends Thread
 	}
 
 	@Exported
-	public void addListener(DotNetVirtualMachineListener listener)
+	public void addListener(MonoVirtualMachineListener listener)
 	{
 		myEventDispatcher.addListener(listener);
 	}
 
 	@Exported
-	public void removeListener(DotNetVirtualMachineListener listener)
+	public void removeListener(MonoVirtualMachineListener listener)
 	{
 		myEventDispatcher.removeListener(listener);
 	}
@@ -414,10 +414,10 @@ public class MonoDebugThread extends Thread
 				}
 				DotNetDebuggerSourceLineResolver resolver = DotNetDebuggerSourceLineResolverEP.INSTANCE.forLanguage(file.getLanguage());
 				assert resolver != null;
-				String s = resolver.resolveParentVmQName(psiElement);
-				if(s != null)
+				String name = resolver.resolveParentVmQName(psiElement);
+				if(name != null)
 				{
-					names.add(s);
+					names.add(name);
 				}
 			}
 		});
@@ -463,7 +463,7 @@ public class MonoDebugThread extends Thread
 							return null;
 						}
 						final Ref<XValue> valueRef = Ref.create();
-						provider.evaluate(new DotNetStackFrameMirrorProxyImpl(frames.get(0), 0), debugContext, conditionExpression.getExpression(), elementAt,
+						provider.evaluate(new MonoStackFrameProxy(0, myVirtualMachine, frames.get(0)), debugContext, conditionExpression.getExpression(), elementAt,
 								new XDebuggerEvaluator.XEvaluationCallback()
 						{
 							@Override
@@ -483,10 +483,11 @@ public class MonoDebugThread extends Thread
 
 				if(value instanceof DotNetAbstractVariableMirrorNode)
 				{
-					Value<?> valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
-					if(valueOfVariableSafe instanceof BooleanValueMirror)
+					DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
+					if(valueOfVariableSafe instanceof DotNetBooleanValueProxy)
 					{
-						return ((BooleanValueMirror) valueOfVariableSafe).value();
+						Boolean boolValue = ((DotNetBooleanValueProxy) valueOfVariableSafe).getValue();
+						return boolValue != null && boolValue;
 					}
 				}
 			}
@@ -503,7 +504,7 @@ public class MonoDebugThread extends Thread
 			@Override
 			public DotNetTypeDeclaration[] compute()
 			{
-				return DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, debugContext);
+				return MonoDebugUtil.findTypesByQualifiedName(typeMirror, debugContext);
 			}
 		});
 

@@ -16,10 +16,15 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
 public interface DotNetCharValueProxy extends DotNetValueProxy
 {
+	@Nullable
+	@Override
+	Character getValue();
 }

@@ -19,7 +19,6 @@ package consulo.dotnet.microsoft.debugger.proxy;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.util.text.StringUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
@@ -66,14 +65,14 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public String getName()
 	{
-		return StringUtil.getShortName(info().Name);
+		return info().FullName;
 	}
 
 	@NotNull
 	@Override
 	public String getFullName()
 	{
-		return info().Name;
+		return info().FullName;
 	}
 
 	@Override

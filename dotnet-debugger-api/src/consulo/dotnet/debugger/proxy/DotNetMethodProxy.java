@@ -19,6 +19,9 @@ package consulo.dotnet.debugger.proxy;
 import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
@@ -40,4 +43,8 @@ public interface DotNetMethodProxy extends Named
 
 	@Nullable
 	DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments);
+
+	@Nullable
+	@RequiredReadAction
+	PsiElement findExecutableElementFromDebugInfo(@NotNull Project project, int executableChildrenAtLineIndex);
 }

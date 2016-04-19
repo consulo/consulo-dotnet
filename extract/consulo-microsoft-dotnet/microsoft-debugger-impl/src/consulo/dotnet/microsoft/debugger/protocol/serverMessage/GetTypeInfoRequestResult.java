@@ -37,4 +37,5 @@ public class GetTypeInfoRequestResult
 
 	public FieldInfo[] Fields = new FieldInfo[0];
 	public String Name;
+	public String FullName;
 }

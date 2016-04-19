@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.debugger;
 
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.proxy.DotNetStackFrameMirrorProxy;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -31,16 +30,15 @@ import com.intellij.util.Consumer;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XNamedValue;
-import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 
 /**
  * @author VISTALL
  * @since 10.04.14
  */
-@Deprecated
 public abstract class DotNetDebuggerProvider
 {
-	public static final ExtensionPointName<DotNetDebuggerProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.debugger.provider");
+	public static final ExtensionPointName<DotNetDebuggerProvider> EP_NAME = ExtensionPointName.create("consulo.dotnet.debuggerProvider");
 
 	@Nullable
 	public static DotNetDebuggerProvider getProvider(@Nullable Language language)
@@ -62,14 +60,14 @@ public abstract class DotNetDebuggerProvider
 	@NotNull
 	public abstract PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull PsiElement sourcePosition, @NotNull String text, boolean isPhysical);
 
-	public abstract void evaluate(@NotNull DotNetStackFrameMirrorProxy frame,
+	public abstract void evaluate(@NotNull DotNetStackFrameProxy frame,
 			@NotNull DotNetDebugContext debuggerContext,
 			@NotNull String expression,
 			@Nullable PsiElement elementAt,
 			@NotNull XDebuggerEvaluator.XEvaluationCallback callback,
 			@Nullable XSourcePosition expressionPosition);
 
-	public abstract void evaluate(@NotNull DotNetStackFrameMirrorProxy frame,
+	public abstract void evaluate(@NotNull DotNetStackFrameProxy frame,
 			@NotNull DotNetDebugContext debuggerContext,
 			@NotNull DotNetReferenceExpression element,
 			@NotNull Set<Object> visitedVariables,

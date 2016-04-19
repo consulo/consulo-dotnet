@@ -22,6 +22,7 @@ import com.intellij.lang.LanguageExtension;
  * @author VISTALL
  * @since 19.07.2015
  */
+@Deprecated
 public class DotNetDebuggerSourceLineResolverEP extends LanguageExtension<DotNetDebuggerSourceLineResolver>
 {
 	public static final DotNetDebuggerSourceLineResolverEP INSTANCE = new DotNetDebuggerSourceLineResolverEP();

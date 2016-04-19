@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
+import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;

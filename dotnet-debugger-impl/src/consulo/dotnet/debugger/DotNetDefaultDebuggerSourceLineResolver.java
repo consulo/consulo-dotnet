@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.debugger;
 
 import java.util.Collections;
 import java.util.Set;
@@ -31,7 +31,6 @@ import com.intellij.psi.util.PsiTreeUtil;
  * @author VISTALL
  * @since 23.07.2015
  */
-@Deprecated
 public class DotNetDefaultDebuggerSourceLineResolver extends DotNetDebuggerSourceLineResolver
 {
 	@RequiredReadAction

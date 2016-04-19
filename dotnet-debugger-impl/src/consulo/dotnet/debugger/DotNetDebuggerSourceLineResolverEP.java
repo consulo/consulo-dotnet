@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.debugger;
 
-import java.util.Set;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import com.intellij.psi.PsiElement;
+import com.intellij.lang.LanguageExtension;
 
 /**
  * @author VISTALL
  * @since 19.07.2015
  */
-@Deprecated
-public abstract class DotNetDebuggerSourceLineResolver
+public class DotNetDebuggerSourceLineResolverEP extends LanguageExtension<DotNetDebuggerSourceLineResolver>
 {
-	@Nullable
-	@RequiredReadAction
-	public abstract String resolveParentVmQName(@NotNull PsiElement element);
+	public static final DotNetDebuggerSourceLineResolverEP INSTANCE = new DotNetDebuggerSourceLineResolverEP();
 
-	@NotNull
-	@RequiredReadAction
-	public abstract Set<PsiElement> getAllExecutableChildren(@NotNull PsiElement root);
+	public DotNetDebuggerSourceLineResolverEP()
+	{
+		super("consulo.dotnet.debuggerSourceLineResolver", new DotNetDefaultDebuggerSourceLineResolver());
+	}
 }

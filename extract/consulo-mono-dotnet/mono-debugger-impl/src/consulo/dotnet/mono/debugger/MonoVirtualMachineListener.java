@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger;
+package consulo.dotnet.mono.debugger;
 
 import java.util.EventListener;
 
@@ -25,7 +25,7 @@ import mono.debugger.VirtualMachine;
  * @author VISTALL
  * @since 21.12.14
  */
-public interface DotNetVirtualMachineListener extends EventListener
+public interface MonoVirtualMachineListener extends EventListener
 {
 	void connectionSuccess(@NotNull VirtualMachine machine);
 

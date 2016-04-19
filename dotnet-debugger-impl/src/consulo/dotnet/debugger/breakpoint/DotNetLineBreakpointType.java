@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.debugger.linebreakType;
+package consulo.dotnet.debugger.breakpoint;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,9 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.ide.IconDescriptorUpdaters;
@@ -53,8 +50,11 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
+import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
+import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.DotNetEditorsProvider;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 
 /**
  * @author VISTALL
@@ -239,7 +239,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		@RequiredDispatchThread
 		public String getText()
 		{
-			String text = null;
+			String text;
 			if(myExecutableChild instanceof PsiNameIdentifierOwner)
 			{
 				TextRange textRange = new TextRange(myExecutableChild.getTextOffset(), myExecutableChild.getTextRange().getEndOffset());

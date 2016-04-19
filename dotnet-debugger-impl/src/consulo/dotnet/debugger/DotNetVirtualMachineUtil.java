@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.openapi.project.Project;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
@@ -59,22 +60,21 @@ public class DotNetVirtualMachineUtil
 		{
 			builder.append(MsilHelper.prepareForUser(typeMirror.qualifiedName()));
 			return;
-		}
+		}     */
 
-		builder.append(MsilHelper.prepareForUser(typeMirror.qualifiedName()));
+		builder.append(MsilHelper.prepareForUser(typeMirror.getFullName()));
 
-		builder.append("<");
-		TypeMirror[] typeMirrors = typeMirror.genericArguments();
+		/*builder.append("<");
+		DotNetTypeProxy[] typeMirrors = typeMirror.genericArguments();
 		for(int i = 0; i < typeMirrors.length; i++)
 		{
 			if(i != 0)
 			{
 				builder.append(", ");
 			}
-			TypeMirror mirror = typeMirrors[i];
+			DotNetTypeProxy mirror = typeMirrors[i];
 			formatNameWithGeneric(builder, mirror);
 		}
 		builder.append(">");  */
-		builder.append(typeMirror.getName());
 	}
 }

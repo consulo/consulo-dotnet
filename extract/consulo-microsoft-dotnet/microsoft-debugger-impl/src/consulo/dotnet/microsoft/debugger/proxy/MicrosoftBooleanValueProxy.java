@@ -42,7 +42,7 @@ public class MicrosoftBooleanValueProxy extends MicrosoftValueProxyBase<BooleanV
 
 	@Nullable
 	@Override
-	public Object getValue()
+	public Boolean getValue()
 	{
 		return myResult.Value;
 	}

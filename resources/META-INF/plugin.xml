@@ -32,6 +32,13 @@
 	</application-components>
 
 	<extensionPoints>
+		<!--extensions with new ids-->
+		<extensionPoint qualifiedName="consulo.dotnet.debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
+		<extensionPoint qualifiedName="consulo.dotnet.debuggerSourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint" >
+			<with attribute="implementationClass" implements="consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver"/>
+		</extensionPoint>
+
+		<!--extensions with old ids-->
 		<extensionPoint name="psiSearcher" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="shortNameSearcher" interface="org.mustbe.consulo.dotnet.resolve.DotNetShortNameSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="stubIndexer" interface="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer"/>
@@ -108,7 +115,7 @@
 		<runConfigurationProducer implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationProducer"/>
 		<programRunner implementation="consulo.dotnet.run.DotNetDebuggerProgramRunner" id="dotnet-debugger"/>
 
-		<xdebugger.breakpointType implementation="org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType"/>
+		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType"/>
 
 		<orderEntryTypeProvider implementation="org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider"/>
 		<addModuleDependencyTabFactory implementation="org.mustbe.consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>

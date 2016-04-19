@@ -24,22 +24,36 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiRecursiveElementVisitor;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.util.Consumer;
+import com.intellij.util.containers.ArrayListSet;
 import com.intellij.xdebugger.XDebuggerUtil;
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
+import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
+import consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;
 import consulo.dotnet.debugger.nodes.objectReview.DefaultStackFrameComputer;
 import consulo.dotnet.debugger.nodes.objectReview.StackFrameComputer;
 import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
@@ -97,13 +111,13 @@ public class DotNetStackFrame extends XStackFrame
 		{
 			return null;
 		}
-		/*if(breakpoint != null)
+		if(breakpoint != null)
 		{
 			DotNetLineBreakpointProperties properties = (DotNetLineBreakpointProperties) breakpoint.getProperties();
 			final Integer executableChildrenAtLineIndex = properties.getExecutableChildrenAtLineIndex();
 			if(executableChildrenAtLineIndex != null && executableChildrenAtLineIndex > -1)
 			{
-				final MethodMirror method = myFrameProxy.location().method();
+				final DotNetMethodProxy method = sourceLocation.getMethod();
 				if(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(method) != null)
 				{
 					PsiElement executableElement = ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>()
@@ -111,17 +125,17 @@ public class DotNetStackFrame extends XStackFrame
 						@Override
 						public PsiElement compute()
 						{
-							return DotNetLineBreakpointType.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), method.debugInfo(), executableChildrenAtLineIndex);
+							return method.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), executableChildrenAtLineIndex);
 						}
 					});
 
 					if(executableElement != null)
 					{
-						return new DotNetSourcePositionImpl(originalPosition, executableElement);
+						return new DotNetSourcePositionByExecutableElement(originalPosition, executableElement);
 					}
 				}
 			}
-		}  */
+		}
 
 		return originalPosition;
 	}
@@ -137,7 +151,7 @@ public class DotNetStackFrame extends XStackFrame
 	@Override
 	public XDebuggerEvaluator getEvaluator()
 	{
-		/*return new XDebuggerEvaluator()
+		return new XDebuggerEvaluator()
 		{
 			@Override
 			public boolean isCodeFragmentEvaluationSupported()
@@ -163,8 +177,7 @@ public class DotNetStackFrame extends XStackFrame
 			{
 
 			}
-		};  */
-		return null;
+		};
 	}
 
 
@@ -264,7 +277,7 @@ public class DotNetStackFrame extends XStackFrame
 			return;
 		}
 
-		/*if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())
+		if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())
 		{
 			PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
 			if(psiElement != null)
@@ -314,7 +327,7 @@ public class DotNetStackFrame extends XStackFrame
 					}
 				}
 			}
-		}*/
+		}
 
 		node.addChildren(childrenList, true);
 	}

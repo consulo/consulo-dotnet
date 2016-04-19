@@ -42,7 +42,7 @@ public class MicrosoftStringValueProxy extends MicrosoftValueProxyBase<StringVal
 
 	@Nullable
 	@Override
-	public Object getValue()
+	public String getValue()
 	{
 		return myResult.Value;
 	}

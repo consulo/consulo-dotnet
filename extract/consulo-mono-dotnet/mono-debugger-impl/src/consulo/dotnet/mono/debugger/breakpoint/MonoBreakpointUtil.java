@@ -27,11 +27,6 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
-import org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
-import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType;
-import org.mustbe.consulo.dotnet.debugger.linebreakType.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.execution.ui.ConsoleViewContentType;
@@ -52,8 +47,14 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
+import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
+import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
+import consulo.dotnet.mono.debugger.MonoDebugUtil;
+import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.Location;
 import mono.debugger.LocationImpl;
@@ -190,7 +191,7 @@ public class MonoBreakpointUtil
 			return FindLocationResult.WRONG_TARGET;
 		}
 
-		if(typeMirror != null && !Comparing.equal(vmQualifiedName, org.mustbe.consulo.dotnet.debugger.DotNetDebuggerUtil.getVmQName(typeMirror)))
+		if(typeMirror != null && !Comparing.equal(vmQualifiedName, MonoDebugUtil.getVmQName(typeMirror)))
 		{
 			return FindLocationResult.WRONG_TARGET;
 		}
@@ -294,7 +295,7 @@ public class MonoBreakpointUtil
 	}
 
 	@RequiredReadAction
-	public static PsiElement findExecutableElementFromDebugInfo(final Project project, Method_GetDebugInfo.Entry[] entries, @NotNull Integer index)
+	public static PsiElement findExecutableElementFromDebugInfo(final Project project, Method_GetDebugInfo.Entry[] entries, @NotNull int index)
 	{
 		Method_GetDebugInfo.Entry entry = entries[0];
 		Method_GetDebugInfo.SourceFile sourceFile = entry.sourceFile;

@@ -18,6 +18,9 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -25,6 +28,7 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import mono.debugger.LocalVariableMirror;
 import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
@@ -90,6 +94,14 @@ public class MonoMethodProxy implements DotNetMethodProxy
 	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
 	{
 		return null;
+	}
+
+	@RequiredReadAction
+	@Nullable
+	@Override
+	public PsiElement findExecutableElementFromDebugInfo(@NotNull Project project, int executableChildrenAtLineIndex)
+	{
+		return MonoBreakpointUtil.findExecutableElementFromDebugInfo(project, myMethodMirror.debugInfo(), executableChildrenAtLineIndex);
 	}
 
 	@NotNull
