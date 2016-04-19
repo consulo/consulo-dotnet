@@ -22,4 +22,5 @@ package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
  */
 public class UnknownValueResult
 {
+	public String Type;
 }

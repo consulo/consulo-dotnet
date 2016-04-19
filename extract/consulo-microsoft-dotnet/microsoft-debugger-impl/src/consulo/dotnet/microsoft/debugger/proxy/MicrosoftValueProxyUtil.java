@@ -16,18 +16,24 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ArrayValueResult;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BadRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BooleanValueResult;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NullValueRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ObjectValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResult;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.UnknownValueResult;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
+@Logger
 public class MicrosoftValueProxyUtil
 {
 	@Nullable
@@ -40,6 +46,16 @@ public class MicrosoftValueProxyUtil
 	@Nullable
 	public static DotNetValueProxy wrap(@NotNull MicrosoftDebuggerClient client, @Nullable Object o)
 	{
+		if(o instanceof BadRequestResult)
+		{
+			LOGGER.error("Receive bad value");
+			return null;
+		}
+		if(o instanceof UnknownValueResult)
+		{
+			LOGGER.error("Receive unknown value: " + ((UnknownValueResult) o).Type);
+			return null;
+		}
 		if(o instanceof StringValueResult)
 		{
 			return new MicrosoftStringValueProxy(((StringValueResult) o));
@@ -52,6 +68,14 @@ public class MicrosoftValueProxyUtil
 		{
 			return new MicrosoftObjectValueProxy(client, (ObjectValueResult) o);
 		}
-		return null;
+		if(o instanceof NullValueRequest)
+		{
+			return new MicrosoftNullValueProxy();
+		}
+		if(o instanceof ArrayValueResult)
+		{
+			return new MicrosoftArrayValueProxy((ArrayValueResult) o);
+		}
+		throw new IllegalArgumentException("Value is not handled " + o.getClass().getName());
 	}
 }
