@@ -109,7 +109,7 @@ public class DotNetValuePresentation extends XValuePresentation
 			@Override
 			public void visitStringValue(@NotNull DotNetStringValueProxy proxy)
 			{
-				renderer.renderStringValue((String) proxy.getValue());
+				renderer.renderStringValue(proxy.getValue());
 			}
 
 			@Override
@@ -261,7 +261,7 @@ public class DotNetValuePresentation extends XValuePresentation
 			@Override
 			public void visitCharValue(@NotNull DotNetCharValueProxy proxy)
 			{
-				Character mainValue = (Character) proxy.getValue();
+				Character mainValue = proxy.getValue();
 				StringBuilder builder = new StringBuilder();
 				builder.append('\'');
 				builder.append(mainValue);
