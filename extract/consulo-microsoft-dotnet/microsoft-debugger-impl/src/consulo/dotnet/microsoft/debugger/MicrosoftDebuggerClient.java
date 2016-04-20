@@ -30,6 +30,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.Semaphore;
 import consulo.dotnet.microsoft.debugger.protocol.ClientMessage;
 import consulo.dotnet.microsoft.debugger.protocol.ServerMessage;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BadRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventVisitor;
 
 /**
@@ -173,7 +174,7 @@ public class MicrosoftDebuggerClient
 				}
 				catch(ClassNotFoundException e)
 				{
-					throw new JsonParseException(e);
+					typeClass = BadRequestResult.class;
 				}
 
 				JsonObject object = ((JsonObject) jsonElement).getAsJsonObject("Object");
