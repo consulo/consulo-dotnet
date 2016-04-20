@@ -17,6 +17,8 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.Getter;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
@@ -30,13 +32,13 @@ public class MicrosoftMethodParameterProxy implements DotNetMethodParameterProxy
 {
 	private int myIndex;
 	private GetMethodInfoRequestResult.ParameterInfo myParameterInfo;
-	private DotNetTypeProxy myTypeProxy;
+	private Getter<DotNetTypeProxy> myType;
 
 	public MicrosoftMethodParameterProxy(MicrosoftDebuggerClient context, int index, GetMethodInfoRequestResult.ParameterInfo parameterInfo)
 	{
 		myIndex = index;
 		myParameterInfo = parameterInfo;
-		myTypeProxy = MicrosoftTypeProxy.of(context, myParameterInfo.Type);
+		myType = MicrosoftTypeProxy.lazyOf(context, myParameterInfo.Type);
 	}
 
 	@Override
@@ -45,11 +47,11 @@ public class MicrosoftMethodParameterProxy implements DotNetMethodParameterProxy
 		return myIndex;
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return myTypeProxy;
+		return myType.get();
 	}
 
 	@NotNull

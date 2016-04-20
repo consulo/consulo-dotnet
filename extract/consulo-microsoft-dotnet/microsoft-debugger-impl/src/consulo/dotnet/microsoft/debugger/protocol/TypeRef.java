@@ -22,15 +22,15 @@ package consulo.dotnet.microsoft.debugger.protocol;
  */
 public class TypeRef
 {
-	public int ModuleToken;
+	public String ModuleName;
 
 	public int ClassToken;
 
 	public String VmQName;
 
-	public TypeRef(int moduleToken, int classToken)
+	public TypeRef(String moduleName, int classToken)
 	{
-		ModuleToken = moduleToken;
+		ModuleName = moduleName;
 		ClassToken = classToken;
 	}
 
@@ -38,7 +38,7 @@ public class TypeRef
 	public String toString()
 	{
 		final StringBuilder sb = new StringBuilder("TypeRef{");
-		sb.append("ModuleToken=").append(ModuleToken);
+		sb.append("ModuleName=").append(ModuleName);
 		sb.append(", ClassToken=").append(ClassToken);
 		sb.append(", VmQName=").append(VmQName);
 		sb.append('}');

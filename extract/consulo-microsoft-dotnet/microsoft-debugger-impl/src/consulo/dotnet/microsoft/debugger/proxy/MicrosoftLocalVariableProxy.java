@@ -2,8 +2,10 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.Getter;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetLocalsRequestResult;
 
 /**
@@ -13,10 +15,12 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetLocalsRequest
 public class MicrosoftLocalVariableProxy implements DotNetLocalVariableProxy
 {
 	private GetLocalsRequestResult.LocalInfo myLocal;
+	private Getter<DotNetTypeProxy> myType;
 
-	public MicrosoftLocalVariableProxy(GetLocalsRequestResult.LocalInfo local)
+	public MicrosoftLocalVariableProxy(MicrosoftDebuggerClient client, GetLocalsRequestResult.LocalInfo local)
 	{
 		myLocal = local;
+		myType = MicrosoftTypeProxy.lazyOf(client, local.Type);
 	}
 
 	public int getIndex()
@@ -28,7 +32,7 @@ public class MicrosoftLocalVariableProxy implements DotNetLocalVariableProxy
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return null;
+		return myType.get();
 	}
 
 	@NotNull

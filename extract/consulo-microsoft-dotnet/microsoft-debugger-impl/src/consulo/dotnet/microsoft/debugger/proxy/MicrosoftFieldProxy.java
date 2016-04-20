@@ -2,6 +2,7 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.Getter;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
@@ -21,10 +22,13 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	private MicrosoftDebuggerClient myClient;
 	private GetTypeInfoRequestResult.FieldInfo myField;
 
+	private Getter<DotNetTypeProxy> myType;
+
 	public MicrosoftFieldProxy(MicrosoftDebuggerClient client, GetTypeInfoRequestResult.FieldInfo field)
 	{
 		myClient = client;
 		myField = field;
+		myType = MicrosoftTypeProxy.lazyOf(myClient, myField.Type);
 	}
 
 	@Override
@@ -50,7 +54,7 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MicrosoftTypeProxy.of(myClient, myField.Type);
+		return myType.get();
 	}
 
 	@NotNull

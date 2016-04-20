@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.BitUtil;
@@ -44,19 +45,20 @@ import edu.arizona.cs.mbel.signature.MethodAttributes;
  */
 public class MicrosoftMethodProxy implements DotNetMethodProxy
 {
-	private MicrosoftDebuggerClient myContext;
+	private MicrosoftDebuggerClient myClient;
 	private TypeRef myTypeRef;
 	private int myFunctionToken;
 
 	private GetMethodInfoRequestResult myResult;
 
-	private DotNetTypeProxy myDeclarationType;
+	private Getter<DotNetTypeProxy> myDeclarationType;
 
-	public MicrosoftMethodProxy(MicrosoftDebuggerClient context, TypeRef typeRef, int functionToken)
+	public MicrosoftMethodProxy(MicrosoftDebuggerClient client, TypeRef typeRef, int functionToken)
 	{
-		myContext = context;
+		myClient = client;
 		myTypeRef = typeRef;
 		myFunctionToken = functionToken;
+		myDeclarationType = MicrosoftTypeProxy.lazyOf(myClient, myTypeRef);
 	}
 
 	@Override
@@ -69,11 +71,9 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public DotNetTypeProxy getDeclarationType()
 	{
-		if(myDeclarationType != null)
-		{
-			return myDeclarationType;
-		}
-		return myDeclarationType = MicrosoftTypeProxy.of(myContext, myTypeRef);
+		DotNetTypeProxy proxy = myDeclarationType.get();
+		assert proxy != null;
+		return proxy;
 	}
 
 	@NotNull
@@ -85,7 +85,7 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 		for(int i = 0; i < parameters.length; i++)
 		{
 			GetMethodInfoRequestResult.ParameterInfo parameter = parameters[i];
-			proxies[i] = new MicrosoftMethodParameterProxy(myContext, i, parameter);
+			proxies[i] = new MicrosoftMethodParameterProxy(myClient, i, parameter);
 		}
 		return proxies;
 	}
@@ -94,13 +94,13 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy)
 	{
-		GetLocalsRequestResult result = myContext.sendAndReceive(new GetLocalsRequest((int) frameProxy.getThread().getId(), frameProxy.getIndex()), GetLocalsRequestResult.class);
+		GetLocalsRequestResult result = myClient.sendAndReceive(new GetLocalsRequest((int) frameProxy.getThread().getId(), frameProxy.getIndex()), GetLocalsRequestResult.class);
 
 		DotNetLocalVariableProxy[] proxies = new DotNetLocalVariableProxy[result.Locals.length];
 		for(int i = 0; i < result.Locals.length; i++)
 		{
 			GetLocalsRequestResult.LocalInfo local = result.Locals[i];
-			proxies[i] = new MicrosoftLocalVariableProxy(local);
+			proxies[i] = new MicrosoftLocalVariableProxy(myClient, local);
 		}
 		return proxies;
 	}
@@ -133,6 +133,6 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 		{
 			return myResult;
 		}
-		return myResult = myContext.sendAndReceive(new GetMethodInfoRequest(myTypeRef, myFunctionToken), GetMethodInfoRequestResult.class);
+		return myResult = myClient.sendAndReceive(new GetMethodInfoRequest(myTypeRef, myFunctionToken), GetMethodInfoRequestResult.class);
 	}
 }

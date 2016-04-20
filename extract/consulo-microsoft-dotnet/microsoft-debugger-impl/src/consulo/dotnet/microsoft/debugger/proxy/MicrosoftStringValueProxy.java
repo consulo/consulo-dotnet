@@ -43,7 +43,7 @@ public class MicrosoftStringValueProxy extends MicrosoftValueProxyBase<StringVal
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MicrosoftTypeProxy.of(myClient, DotNetTypes.System.String);
+		return MicrosoftTypeProxy.byVmQName(myClient, DotNetTypes.System.String);
 	}
 
 	@NotNull

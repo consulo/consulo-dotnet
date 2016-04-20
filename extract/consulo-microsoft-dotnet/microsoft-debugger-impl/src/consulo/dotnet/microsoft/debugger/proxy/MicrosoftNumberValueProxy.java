@@ -33,7 +33,7 @@ public class MicrosoftNumberValueProxy extends MicrosoftValueProxyBase<NumberVal
 	public DotNetTypeProxy getType()
 	{
 		String type = TypeTag.typeByTag(myResult.Type);
-		return MicrosoftTypeProxy.of(myClient, type);
+		return MicrosoftTypeProxy.byVmQName(myClient, type);
 	}
 
 	@NotNull

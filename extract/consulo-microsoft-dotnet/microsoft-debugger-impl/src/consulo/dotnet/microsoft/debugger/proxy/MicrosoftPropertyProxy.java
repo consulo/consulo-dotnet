@@ -18,6 +18,7 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.Getter;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
@@ -35,10 +36,13 @@ public class MicrosoftPropertyProxy implements DotNetPropertyProxy
 	private MicrosoftDebuggerClient myClient;
 	private GetTypeInfoRequestResult.PropertyInfo myProperty;
 
+	private Getter<DotNetTypeProxy> myType;
+
 	public MicrosoftPropertyProxy(MicrosoftDebuggerClient client, GetTypeInfoRequestResult.PropertyInfo property)
 	{
 		myClient = client;
 		myProperty = property;
+		myType = MicrosoftTypeProxy.lazyOf(myClient, myProperty.Type);
 	}
 
 	@Override
@@ -65,7 +69,7 @@ public class MicrosoftPropertyProxy implements DotNetPropertyProxy
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MicrosoftTypeProxy.of(myClient, myProperty.Type);
+		return myType.get();
 	}
 
 	@NotNull

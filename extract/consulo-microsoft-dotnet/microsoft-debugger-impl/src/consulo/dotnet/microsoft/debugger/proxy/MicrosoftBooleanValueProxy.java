@@ -43,7 +43,7 @@ public class MicrosoftBooleanValueProxy extends MicrosoftValueProxyBase<BooleanV
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MicrosoftTypeProxy.of(myClient, DotNetTypes.System.Boolean);
+		return MicrosoftTypeProxy.byVmQName(myClient, DotNetTypes.System.Boolean);
 	}
 
 	@NotNull

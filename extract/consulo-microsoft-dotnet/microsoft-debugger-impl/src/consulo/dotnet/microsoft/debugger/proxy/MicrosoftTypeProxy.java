@@ -16,9 +16,9 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -38,37 +38,35 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoReque
 public class MicrosoftTypeProxy implements DotNetTypeProxy
 {
 	@Nullable
-	public static MicrosoftTypeProxy of(@NotNull MicrosoftDebuggerClient client, @NotNull String vmQName)
+	public static MicrosoftTypeProxy byVmQName(@NotNull MicrosoftDebuggerClient client, @NotNull String vmQName)
 	{
 		FindTypeInfoRequestResult result = client.sendAndReceive(new FindTypeInfoRequest(vmQName), FindTypeInfoRequestResult.class);
-		return new MicrosoftTypeProxy(client, result.Type);
+		if(result.Type == null || result.Type.ClassToken <= 0)
+		{
+			return null;
+		}
+		GetTypeInfoRequestResult requestResult = client.sendAndReceive(new GetTypeInfoRequest(result.Type), GetTypeInfoRequestResult.class);
+		if(StringUtil.isEmpty(requestResult.Name))
+		{
+			return null;
+		}
+		return new MicrosoftTypeProxy(client, requestResult);
 	}
 
-	@Nullable
-	@Contract("null -> null; !null -> !null")
-	public static MicrosoftTypeProxy of(@NotNull MicrosoftDebuggerClient client, @Nullable TypeRef typeRef)
+	@NotNull
+	public static Getter<DotNetTypeProxy> lazyOf(@NotNull final MicrosoftDebuggerClient client, @Nullable final TypeRef typeRef)
 	{
-		if(typeRef == null)
-		{
-			return null;
-		}
-		int classToken = typeRef.ClassToken;
-		if(classToken <= 0)
-		{
-			return null;
-		}
-		return new MicrosoftTypeProxy(client, typeRef);
+		return new MicrosoftTypeProxyPointer(client, typeRef);
 	}
 
 	private MicrosoftDebuggerClient myClient;
-	private TypeRef myTypeRef;
 
 	private GetTypeInfoRequestResult myResult;
 
-	private MicrosoftTypeProxy(MicrosoftDebuggerClient client, TypeRef typeRef)
+	protected MicrosoftTypeProxy(MicrosoftDebuggerClient client, GetTypeInfoRequestResult requestResult)
 	{
 		myClient = client;
-		myTypeRef = typeRef;
+		myResult = requestResult;
 	}
 
 	@Nullable
@@ -82,20 +80,20 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public String getName()
 	{
-		return StringUtil.notNullize(info().Name);
+		return StringUtil.notNullize(myResult.Name);
 	}
 
 	@NotNull
 	@Override
 	public String getFullName()
 	{
-		return StringUtil.notNullize(info().FullName);
+		return StringUtil.notNullize(myResult.FullName);
 	}
 
 	@Override
 	public boolean isArray()
 	{
-		return info().IsArray;
+		return myResult.IsArray;
 	}
 
 	@Nullable
@@ -116,7 +114,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetFieldProxy[] getFields()
 	{
-		GetTypeInfoRequestResult.FieldInfo[] fields = info().Fields;
+		GetTypeInfoRequestResult.FieldInfo[] fields = myResult.Fields;
 
 		MicrosoftFieldProxy[] fieldProxies = new MicrosoftFieldProxy[fields.length];
 		for(int i = 0; i < fields.length; i++)
@@ -131,7 +129,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetPropertyProxy[] getProperties()
 	{
-		GetTypeInfoRequestResult.PropertyInfo[] properties = info().Properties;
+		GetTypeInfoRequestResult.PropertyInfo[] properties = myResult.Properties;
 
 		MicrosoftPropertyProxy[] propertyProxies = new MicrosoftPropertyProxy[properties.length];
 		for(int i = 0; i < properties.length; i++)
@@ -160,15 +158,5 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
 	{
 		return null;
-	}
-
-	@NotNull
-	private GetTypeInfoRequestResult info()
-	{
-		if(myResult != null)
-		{
-			return myResult;
-		}
-		return myResult = myClient.sendAndReceive(new GetTypeInfoRequest(myTypeRef), GetTypeInfoRequestResult.class);
 	}
 }
