@@ -24,6 +24,7 @@ import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ArrayValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BadRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BooleanValueResult;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.CharValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NullValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NumberValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ObjectValueResult;
@@ -80,6 +81,10 @@ public class MicrosoftValueProxyUtil
 		if(o instanceof NumberValueResult)
 		{
 			return new MicrosoftNumberValueProxy(client, (NumberValueResult) o);
+		}
+		if(o instanceof CharValueResult)
+		{
+			return new MicrosoftCharValueProxy(client, (CharValueResult) o);
 		}
 		throw new IllegalArgumentException("Value is not handled " + o.getClass().getName());
 	}
