@@ -16,7 +16,14 @@
 
 package org.mustbe.consulo.msil.representation;
 
+import java.io.IOException;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 
 /**
@@ -25,9 +32,92 @@ import com.intellij.testFramework.LightVirtualFile;
  */
 public class MsilFileRepresentationVirtualFile extends LightVirtualFile
 {
+	private static class MyVirtualFileSystem extends DeprecatedVirtualFileSystem
+	{
+		@NonNls
+		private static final String PROTOCOL = "msil";
+
+		private MyVirtualFileSystem()
+		{
+			startEventPropagation();
+		}
+
+		@Override
+		protected void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException
+		{
+
+		}
+
+		@Override
+		protected void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException
+		{
+
+		}
+
+		@Override
+		protected void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException
+		{
+
+		}
+
+		@Override
+		protected VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException
+		{
+			return null;
+		}
+
+		@NotNull
+		@Override
+		protected VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException
+		{
+			return null;
+		}
+
+		@Override
+		protected VirtualFile copyFile(Object requestor, @NotNull VirtualFile virtualFile, @NotNull VirtualFile newParent, @NotNull String copyName) throws IOException
+		{
+			return null;
+		}
+
+		@Override
+		@NotNull
+		public String getProtocol()
+		{
+			return PROTOCOL;
+		}
+
+		@Override
+		@Nullable
+		public VirtualFile findFileByPath(@NotNull String path)
+		{
+			return null;
+		}
+
+		@Override
+		public void refresh(boolean asynchronous)
+		{
+		}
+
+		@Override
+		@Nullable
+		public VirtualFile refreshAndFindFileByPath(@NotNull String path)
+		{
+			return null;
+		}
+	}
+
+	private static final MyVirtualFileSystem ourFileSystem = new MyVirtualFileSystem();
+
 	public MsilFileRepresentationVirtualFile(String name, FileType fileType, CharSequence text)
 	{
 		super(name, fileType, text);
 		setWritable(false);
+	}
+
+	@NotNull
+	@Override
+	public MyVirtualFileSystem getFileSystem()
+	{
+		return ourFileSystem;
 	}
 }
