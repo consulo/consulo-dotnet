@@ -56,6 +56,12 @@ public class MicrosoftThreadProxy implements DotNetThreadProxy
 		return false;
 	}
 
+	@Override
+	public boolean isSuspended()
+	{
+		return true;
+	}
+
 	@Nullable
 	@Override
 	public String getName()

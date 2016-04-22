@@ -69,11 +69,14 @@ public class MonoThreadProxy implements DotNetThreadProxy
 	public boolean isRunning()
 	{
 		int state = myThreadMirror.state();
-		if(BitUtil.isSet(state, ThreadMirror.ThreadState.Running))
-		{
-			return true;
-		}
-		return false;
+		return BitUtil.isSet(state, ThreadMirror.ThreadState.Running);
+	}
+
+	@Override
+	public boolean isSuspended()
+	{
+		int state = myThreadMirror.state();
+		return BitUtil.isSet(state, ThreadMirror.ThreadState.Suspended);
 	}
 
 	@Nullable

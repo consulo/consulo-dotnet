@@ -62,6 +62,10 @@ public class DotNetExecutionStack extends XExecutionStack
 
 	private static Icon getIcon(DotNetThreadProxy threadProxy)
 	{
+		if(threadProxy.isSuspended())
+		{
+			return AllIcons.Debugger.ThreadSuspended;
+		}
 		if(threadProxy.isRunning())
 		{
 			return AllIcons.Debugger.ThreadRunning;

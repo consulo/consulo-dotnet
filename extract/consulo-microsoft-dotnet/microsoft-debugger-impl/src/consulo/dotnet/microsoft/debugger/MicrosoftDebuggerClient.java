@@ -23,6 +23,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
@@ -79,22 +80,31 @@ public class MicrosoftDebuggerClient
 					{
 						Gson gson = buildGson();
 
-						ServerMessage event = gson.fromJson((String) message, ServerMessage.class);
-						Consumer<Object> objectConsumer = myWaitMap.remove(event.Id);
-						if(objectConsumer != null)
+						try
 						{
-							objectConsumer.consume(event.Object);
+							ServerMessage event = gson.fromJson((String) message, ServerMessage.class);
+							Consumer<Object> objectConsumer = myWaitMap.remove(event.Id);
+							if(objectConsumer != null)
+							{
+								objectConsumer.consume(event.Object);
+							}
+							else
+							{
+								boolean c = event.accept(myVisitor, MicrosoftDebuggerClient.this);
+
+								ClientMessage clientMessage = new ClientMessage();
+								clientMessage.Id = event.Id;
+								clientMessage.Type = event.Type;
+								clientMessage.Continue = c;
+
+								ctx.getChannel().write(gson.toJson(clientMessage));
+							}
 						}
-						else
+						catch(JsonSyntaxException e1)
 						{
-							boolean c = event.accept(myVisitor, MicrosoftDebuggerClient.this);
-
-							ClientMessage clientMessage = new ClientMessage();
-							clientMessage.Id = event.Id;
-							clientMessage.Type = event.Type;
-							clientMessage.Continue = c;
-
-							ctx.getChannel().write(gson.toJson(clientMessage));
+							System.out.println(message);
+							e1.printStackTrace();
+							stopAllWaiters();
 						}
 					}
 				}
@@ -162,7 +172,7 @@ public class MicrosoftDebuggerClient
 			@Override
 			public ServerMessage deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException
 			{
-				assert jsonElement instanceof JsonObject;
+				assert jsonElement instanceof JsonObject : jsonElement.toString();
 				ServerMessage event = new ServerMessage();
 				event.Id = ((JsonObject) jsonElement).getAsJsonPrimitive("Id").getAsString();
 				event.Type = ((JsonObject) jsonElement).getAsJsonPrimitive("Type").getAsString();

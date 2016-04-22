@@ -31,6 +31,8 @@ public interface DotNetThreadProxy
 
 	boolean isRunning();
 
+	boolean isSuspended();
+
 	@Nullable
 	String getName();
 
