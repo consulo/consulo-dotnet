@@ -34,6 +34,13 @@ public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implement
 		return myMirror.isStatic();
 	}
 
+	@NotNull
+	@Override
+	public DotNetTypeProxy getParentType()
+	{
+		return MonoTypeProxy.of(myMirror.parent());
+	}
+
 	@Nullable
 	@Override
 	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)

@@ -57,4 +57,6 @@ public interface DotNetTypeProxy
 
 	@Nullable
 	DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params);
+
+	boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType);
 }

@@ -34,13 +34,15 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoReque
 public class MicrosoftPropertyProxy implements DotNetPropertyProxy
 {
 	private MicrosoftDebuggerClient myClient;
+	private MicrosoftTypeProxy myParentType;
 	private GetTypeInfoRequestResult.PropertyInfo myProperty;
 
 	private Getter<DotNetTypeProxy> myType;
 
-	public MicrosoftPropertyProxy(MicrosoftDebuggerClient client, GetTypeInfoRequestResult.PropertyInfo property)
+	public MicrosoftPropertyProxy(MicrosoftDebuggerClient client, MicrosoftTypeProxy parentType, GetTypeInfoRequestResult.PropertyInfo property)
 	{
 		myClient = client;
+		myParentType = parentType;
 		myProperty = property;
 		myType = MicrosoftTypeProxy.lazyOf(myClient, myProperty.Type);
 	}
@@ -49,6 +51,13 @@ public class MicrosoftPropertyProxy implements DotNetPropertyProxy
 	public boolean isStatic()
 	{
 		return false;
+	}
+
+	@NotNull
+	@Override
+	public MicrosoftTypeProxy getParentType()
+	{
+		return myParentType;
 	}
 
 	@Nullable

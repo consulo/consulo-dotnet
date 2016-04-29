@@ -126,7 +126,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		for(int i = 0; i < fields.length; i++)
 		{
 			GetTypeInfoRequestResult.FieldInfo field = fields[i];
-			fieldProxies[i] = new MicrosoftFieldProxy(myClient, field);
+			fieldProxies[i] = new MicrosoftFieldProxy(myClient, this, field);
 		}
 		return fieldProxies;
 	}
@@ -141,7 +141,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		for(int i = 0; i < properties.length; i++)
 		{
 			GetTypeInfoRequestResult.PropertyInfo field = properties[i];
-			propertyProxies[i] = new MicrosoftPropertyProxy(myClient, field);
+			propertyProxies[i] = new MicrosoftPropertyProxy(myClient, this, field);
 		}
 		return propertyProxies;
 	}
@@ -164,5 +164,11 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
 	{
 		return null;
+	}
+
+	@Override
+	public boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType)
+	{
+		return false;
 	}
 }

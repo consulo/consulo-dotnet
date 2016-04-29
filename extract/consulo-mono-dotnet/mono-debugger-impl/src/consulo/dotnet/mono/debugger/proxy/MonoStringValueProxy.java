@@ -18,6 +18,7 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mono.debugger.StringValueMirror;
 
@@ -37,6 +38,13 @@ public class MonoStringValueProxy extends MonoValueProxyBase<StringValueMirror> 
 	public String getValue()
 	{
 		return (String) super.getValue();
+	}
+
+	@NotNull
+	@Override
+	public DotNetValueProxy getObjectValue()
+	{
+		return MonoValueProxyUtil.wrap(myValue.object());
 	}
 
 	@Override

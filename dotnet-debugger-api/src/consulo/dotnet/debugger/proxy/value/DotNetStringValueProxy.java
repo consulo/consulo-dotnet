@@ -27,4 +27,7 @@ public interface DotNetStringValueProxy extends DotNetValueProxy
 	@NotNull
 	@Override
 	String getValue();
+
+	@NotNull
+	DotNetValueProxy getObjectValue();
 }

@@ -187,4 +187,11 @@ public class MonoTypeProxy implements DotNetTypeProxy
 		}
 		return null;
 	}
+
+	@Override
+	public boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType)
+	{
+		MonoTypeProxy monoTypeProxy = (MonoTypeProxy) otherType;
+		return myTypeMirror.isAssignableFrom(monoTypeProxy.myTypeMirror);
+	}
 }

@@ -29,6 +29,13 @@ public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> imp
 		return MonoTypeProxy.of(myMirror.type());
 	}
 
+	@NotNull
+	@Override
+	public DotNetTypeProxy getParentType()
+	{
+		return MonoTypeProxy.of(myMirror.parent());
+	}
+
 	@Override
 	public boolean isStatic()
 	{

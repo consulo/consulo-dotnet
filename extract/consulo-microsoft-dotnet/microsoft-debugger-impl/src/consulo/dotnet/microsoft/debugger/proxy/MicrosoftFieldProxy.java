@@ -20,15 +20,24 @@ import edu.arizona.cs.mbel.signature.FieldAttributes;
 public class MicrosoftFieldProxy implements DotNetFieldProxy
 {
 	private MicrosoftDebuggerClient myClient;
+	private MicrosoftTypeProxy myParentType;
 	private GetTypeInfoRequestResult.FieldInfo myField;
 
 	private Getter<DotNetTypeProxy> myType;
 
-	public MicrosoftFieldProxy(MicrosoftDebuggerClient client, GetTypeInfoRequestResult.FieldInfo field)
+	public MicrosoftFieldProxy(MicrosoftDebuggerClient client, MicrosoftTypeProxy parentType, GetTypeInfoRequestResult.FieldInfo field)
 	{
 		myClient = client;
+		myParentType = parentType;
 		myField = field;
 		myType = MicrosoftTypeProxy.lazyOf(myClient, myField.Type);
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeProxy getParentType()
+	{
+		return myParentType;
 	}
 
 	@Override

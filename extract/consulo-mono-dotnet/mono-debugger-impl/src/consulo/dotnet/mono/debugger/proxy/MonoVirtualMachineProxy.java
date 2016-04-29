@@ -47,14 +47,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.mono.debugger.MonoDebugUtil;
 import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
-import mono.debugger.AppDomainMirror;
-import mono.debugger.AssemblyMirror;
-import mono.debugger.BooleanValueMirror;
-import mono.debugger.NoObjectValueMirror;
-import mono.debugger.ThreadMirror;
-import mono.debugger.TypeMirror;
-import mono.debugger.VMDisconnectedException;
-import mono.debugger.VirtualMachine;
+import mono.debugger.*;
 import mono.debugger.request.EventRequest;
 import mono.debugger.request.EventRequestManager;
 import mono.debugger.request.StepRequest;
@@ -123,7 +116,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public DotNetCharValueProxy createCharValue(char value)
 	{
-		return null;
+		return MonoValueProxyUtil.wrap(new CharValueMirror(myVirtualMachine, value));
 	}
 
 	@NotNull
@@ -137,7 +130,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public DotNetNumberValueProxy createNumberValue(int tag, @NotNull Number value)
 	{
-		return null;
+		return MonoValueProxyUtil.wrap(new NumberValueMirror(myVirtualMachine, tag, value));
 	}
 
 	@NotNull

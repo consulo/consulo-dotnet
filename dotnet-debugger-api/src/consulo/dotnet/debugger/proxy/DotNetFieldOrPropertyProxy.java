@@ -14,6 +14,9 @@ public interface DotNetFieldOrPropertyProxy extends DotNetVariableProxy
 {
 	boolean isStatic();
 
+	@NotNull
+	DotNetTypeProxy getParentType();
+
 	@Nullable
 	DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy);
 
