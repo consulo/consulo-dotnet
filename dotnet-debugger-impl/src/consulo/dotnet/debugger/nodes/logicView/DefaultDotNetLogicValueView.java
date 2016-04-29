@@ -8,6 +8,7 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
 import consulo.dotnet.debugger.nodes.DotNetStructValueInfo;
 import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
@@ -74,6 +75,21 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 	private static boolean needSkip(DotNetFieldOrPropertyProxy fieldOrPropertyProxy)
 	{
-		return fieldOrPropertyProxy.isStatic() || fieldOrPropertyProxy instanceof DotNetPropertyProxy && ((DotNetPropertyProxy) fieldOrPropertyProxy).isArrayProperty();
+		if(fieldOrPropertyProxy.isStatic())
+		{
+			return true;
+		}
+		if(DotNetDebuggerCompilerGenerateUtil.needSkipVariableByName(fieldOrPropertyProxy.getName()))
+		{
+			return true;
+		}
+		if(fieldOrPropertyProxy instanceof DotNetPropertyProxy)
+		{
+			if(((DotNetPropertyProxy) fieldOrPropertyProxy).isArrayProperty())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
