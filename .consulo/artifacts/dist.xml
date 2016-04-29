@@ -23,7 +23,6 @@
             <element id="module-production-resource-output" name="dotnet-impl" />
           </element>
           <element id="library" level="project" name="dotnet-asm" />
-          <element id="library" level="project" name="mono-soft-debugging" />
           <element id="library" level="project" name="joou" />
           <element id="library" level="project" name="dotnet-msil-decompiler" />
         </element>
@@ -33,6 +32,7 @@
           <element id="zip-archive" name="microsoft-dotnet.jar">
             <element id="module-production-resource-output" name="consulo-microsoft-dotnet" />
             <element id="module-output" name="consulo-microsoft-dotnet" />
+            <element id="module-output" name="microsoft-debugger-impl" />
           </element>
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-microsoft-dotnet/dist" />
@@ -51,7 +51,9 @@
           <element id="zip-archive" name="mono-dotnet.jar">
             <element id="module-output" name="consulo-mono-dotnet" />
             <element id="module-production-resource-output" name="consulo-mono-dotnet" />
+            <element id="module-output" name="mono-debugger-impl" />
           </element>
+          <element id="library" level="project" name="mono-soft-debugging" />
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-mono-dotnet/dist" />
       </element>

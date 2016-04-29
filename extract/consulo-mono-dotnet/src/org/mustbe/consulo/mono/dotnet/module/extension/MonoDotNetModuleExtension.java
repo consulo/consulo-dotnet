@@ -27,6 +27,7 @@ import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ModuleRootLayer;
@@ -36,12 +37,16 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.xdebugger.XDebugSession;
+import consulo.dotnet.debugger.DotNetDebugProcessBase;
+import consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
+import consulo.dotnet.mono.debugger.MonoDebugProcess;
 
 /**
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDotNetModuleExtension>
+public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDotNetModuleExtension> implements DotNetModuleExtensionWithDebug
 {
 	public MonoDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
 	{
@@ -53,6 +58,13 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 	public Class<? extends SdkType> getSdkTypeClass()
 	{
 		return MonoSdkType.class;
+	}
+
+	@NotNull
+	@Override
+	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull RunProfile runProfile, @NotNull DebugConnectionInfo debugConnectionInfo)
+	{
+		return new MonoDebugProcess(session, runProfile, debugConnectionInfo);
 	}
 
 	@NotNull

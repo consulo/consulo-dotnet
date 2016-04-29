@@ -31,15 +31,23 @@
 		</component>
 	</application-components>
 
+	<project-components>
+		<component>
+			<implementation-class>consulo.dotnet.DebuggerNotificationProjectComponent</implementation-class>
+		</component>
+	</project-components>
+
 	<extensionPoints>
+		<!--extensions with new ids-->
+		<extensionPoint qualifiedName="consulo.dotnet.debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
+		<extensionPoint qualifiedName="consulo.dotnet.debuggerSourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint" >
+			<with attribute="implementationClass" implements="consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver"/>
+		</extensionPoint>
+
+		<!--extensions with old ids-->
 		<extensionPoint name="psiSearcher" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="shortNameSearcher" interface="org.mustbe.consulo.dotnet.resolve.DotNetShortNameSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="stubIndexer" interface="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer"/>
-
-		<extensionPoint name="debugger.provider" interface="org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider"/>
-		<extensionPoint name="debugger.sourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint" >
-			<with attribute="implementationClass" implements="org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver"/>
-		</extensionPoint>
 		<extensionPoint name="typeInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="directTypeInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="allTypesSearch" interface="com.intellij.util.QueryExecutor"/>
@@ -98,6 +106,7 @@
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetShortNameSearcherImpl"/>
 		<projectService serviceImplementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributeManager" />
 		<projectService serviceImplementation="org.mustbe.consulo.dotnet.lang.psi.impl.DotNetNamespaceCacheManager" />
+		<projectService serviceInterface="consulo.dotnet.ui.chooser.DotNetTypeChooserFactory" serviceImplementation="consulo.dotnet.ui.chooser.DotNetTypeChooserFactoryImpl" />
 
 		<macro implementation="org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro"/>
 
@@ -106,9 +115,10 @@
 		<consoleFilterProvider implementation="org.mustbe.consulo.dotnet.run.filters.DotNetConsoleFilterProvider"/>
 		<configurationType implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationType"/>
 		<runConfigurationProducer implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationProducer"/>
-		<programRunner implementation="org.mustbe.consulo.dotnet.run.DotNetDebuggerProgramRunner" id="dotnet-debugger"/>
+		<programRunner implementation="consulo.dotnet.run.DotNetDebuggerProgramRunner" id="dotnet-debugger"/>
 
-		<xdebugger.breakpointType implementation="org.mustbe.consulo.dotnet.debugger.linebreakType.DotNetLineBreakpointType"/>
+		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType"/>
+		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType"/>
 
 		<orderEntryTypeProvider implementation="org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider"/>
 		<addModuleDependencyTabFactory implementation="org.mustbe.consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>
