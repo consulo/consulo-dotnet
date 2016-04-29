@@ -50,7 +50,6 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.Processor;
-import com.intellij.util.ThreeState;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
@@ -266,18 +265,50 @@ public class MonoDebugThread extends Thread
 				l:
 				while((eventSet = eventQueue.remove(10)) != null)
 				{
-					ThreeState state = eventSet.suspendPolicy() == SuspendPolicy.ALL ? ThreeState.YES : ThreeState.NO;
-					Location location = null;
-
+					boolean stopped = false;
+					boolean focusUI = false;
 					for(final Event event : eventSet)
 					{
 						if(event instanceof BreakpointEvent)
 						{
-							location = ((BreakpointRequest) event.request()).location();
+							Location location = ((BreakpointRequest) event.request()).location();
+							XLineBreakpoint<?> breakpoint = resolveToBreakpoint(location);
+
+							DotNetDebugContext debugContext = myDebugProcess.createDebugContext(myVirtualMachine, breakpoint);
+							if(breakpoint != null)
+							{
+								DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
+
+								if(tryEvaluateBreakpoint(eventSet, breakpoint, debugContext))
+								{
+									mySession.breakpointReached(breakpoint, null, suspendContext);
+								}
+								else
+								{
+									myVirtualMachine.resume();
+								}
+							}
+							else
+							{
+								mySession.positionReached(new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
+							}
+							stopped = true;
 						}
 						else if(event instanceof StepEvent)
 						{
-							location = ((StepEvent) event).location();
+							DotNetDebugContext context = myDebugProcess.createDebugContext(myVirtualMachine, null);
+
+							mySession.positionReached(new DotNetSuspendContext(context, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
+							stopped = true;
+						}
+						else if(event instanceof UserBreakEvent)
+						{
+							myVirtualMachine.suspend();
+
+							DotNetDebugContext context = myDebugProcess.createDebugContext(myVirtualMachine, null);
+							mySession.positionReached(new DotNetSuspendContext(context, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
+							stopped = true;
+							focusUI = true;
 						}
 						else if(event instanceof AppDomainCreateEvent)
 						{
@@ -301,10 +332,6 @@ public class MonoDebugThread extends Thread
 							connectionStopped();
 							return;
 						}
-						else if(event instanceof UserBreakEvent)
-						{
-							state = ThreeState.UNSURE;
-						}
 						else if(event instanceof UserLogEvent)
 						{
 							//int level = ((UserLogEvent) event).getLevel();
@@ -314,43 +341,26 @@ public class MonoDebugThread extends Thread
 							ConsoleView consoleView = mySession.getConsoleView();
 							consoleView.print("[" + category + "] " + message + "\n", ConsoleViewContentType.USER_INPUT);
 						}
+						else if(event instanceof ExceptionEvent)
+						{
+							DotNetDebugContext context = myDebugProcess.createDebugContext(myVirtualMachine, null);
+							mySession.positionReached(new DotNetSuspendContext(context, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
+							stopped = true;
+							focusUI = true;
+						}
 						else
 						{
 							LOGGER.error("Unknown event " + event.getClass().getSimpleName());
 						}
 					}
 
-					if(state != ThreeState.NO)
+					if(stopped)
 					{
-						if(state == ThreeState.UNSURE)
-						{
-							myVirtualMachine.suspend();
-						}
-
 						myVirtualMachine.stopStepRequests();
 
 						myDebugProcess.setPausedEventSet(eventSet);
-						XLineBreakpoint<?> xLineBreakpoint = resolveToBreakpoint(location);
-						DotNetDebugContext debugContext = myDebugProcess.createDebugContext(myVirtualMachine, xLineBreakpoint);
-						if(xLineBreakpoint != null)
-						{
-							DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
 
-							if(tryEvaluateBreakpoint(eventSet, xLineBreakpoint, debugContext))
-							{
-								mySession.breakpointReached(xLineBreakpoint, null, suspendContext);
-							}
-							else
-							{
-								myVirtualMachine.resume();
-							}
-						}
-						else
-						{
-							mySession.positionReached(new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
-						}
-
-						if(state == ThreeState.UNSURE)
+						if(focusUI)
 						{
 							UIUtil.invokeLaterIfNeeded(new Runnable()
 							{

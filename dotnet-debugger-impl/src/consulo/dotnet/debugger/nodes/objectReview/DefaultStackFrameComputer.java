@@ -28,6 +28,7 @@ import consulo.dotnet.debugger.nodes.DotNetMethodParameterMirrorNode;
 import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
 import consulo.dotnet.debugger.nodes.DotNetThisAsStructValueMirrorNode;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
+import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -49,7 +50,7 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 			@Nullable DotNetValueProxy thisObject,
 			@NotNull DotNetStackFrameProxy frameMirrorProxy,
 			@NotNull Set<Object> visitedVariables,
-			@NotNull XValueChildrenList childrenList) throws DotNetInvalidObjectException
+			@NotNull XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetInvalidStackFrameException
 	{
 		DotNetSourceLocation sourceLocation = frameMirrorProxy.getSourceLocation();
 		if(sourceLocation == null)
