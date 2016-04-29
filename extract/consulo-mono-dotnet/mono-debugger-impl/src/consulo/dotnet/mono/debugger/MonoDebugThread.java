@@ -209,7 +209,7 @@ public class MonoDebugThread extends Thread
 		Collection<? extends XLineBreakpoint<?>> breakpoints = myDebugProcess.getLineBreakpoints();
 		for(XLineBreakpoint<?> breakpoint : breakpoints)
 		{
-			DotNetBreakpointUtil.updateBreakpointPresentation(mySession.getProject(), false, breakpoint);
+			DotNetBreakpointUtil.updateLineBreakpointIcon(mySession.getProject(), false, breakpoint);
 		}
 
 		TypeLoadRequest typeLoad = virtualMachine.eventRequestManager().createTypeLoad();
@@ -523,7 +523,7 @@ public class MonoDebugThread extends Thread
 						continue;
 					}
 
-					MonoBreakpointUtil.createRequest(mySession, virtualMachine, breakpoint, typeMirror, breakpoint.isEnabled());
+					MonoBreakpointUtil.createRequest(mySession, virtualMachine, breakpoint, typeMirror);
 				}
 			}
 		}

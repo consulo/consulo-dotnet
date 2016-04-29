@@ -97,15 +97,11 @@ public class MonoBreakpointUtil
 		}
 	}
 
-	public static void createRequest(@NotNull XDebugSession debugSession,
-			@NotNull MonoVirtualMachineProxy virtualMachine,
-			@NotNull XLineBreakpoint breakpoint,
-			@Nullable TypeMirror typeMirror,
-			boolean enable)
+	public static void createRequest(@NotNull XDebugSession debugSession, @NotNull MonoVirtualMachineProxy virtualMachine, @NotNull XLineBreakpoint breakpoint, @Nullable TypeMirror typeMirror)
 	{
 		try
 		{
-			createRequestImpl(debugSession.getProject(), virtualMachine, breakpoint, typeMirror, enable);
+			createRequestImpl(debugSession.getProject(), virtualMachine, breakpoint, typeMirror);
 		}
 		catch(VMDisconnectedException ignored)
 		{
@@ -121,8 +117,7 @@ public class MonoBreakpointUtil
 	public static void createRequestImpl(@NotNull Project project,
 			@NotNull MonoVirtualMachineProxy virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
-			@Nullable TypeMirror typeMirror,
-			boolean enable) throws TypeMirrorUnloadedException
+			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException
 	{
 		FindLocationResult result = findLocationsImpl(project, virtualMachine, breakpoint, typeMirror);
 		if(result == FindLocationResult.WRONG_TARGET)
@@ -139,7 +134,7 @@ public class MonoBreakpointUtil
 			{
 				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
 				BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
-				if(enable)
+				if(breakpoint.isEnabled())
 				{
 					breakpointRequest.enable();
 				}
@@ -152,7 +147,7 @@ public class MonoBreakpointUtil
 			}
 		}
 
-		DotNetBreakpointUtil.updateBreakpointPresentation(project, !locations.isEmpty(), breakpoint);
+		DotNetBreakpointUtil.updateLineBreakpointIcon(project, !locations.isEmpty(), breakpoint);
 	}
 
 	@NotNull

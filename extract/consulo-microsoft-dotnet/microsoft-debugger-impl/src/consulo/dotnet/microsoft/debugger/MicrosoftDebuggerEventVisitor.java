@@ -110,7 +110,7 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 				@Override
 				public void run()
 				{
-					DotNetBreakpointUtil.updateBreakpointPresentation(project, result.Status == 0, key);
+					DotNetBreakpointUtil.updateLineBreakpointIcon(project, result.Status == 0, key);
 				}
 			});
 		}

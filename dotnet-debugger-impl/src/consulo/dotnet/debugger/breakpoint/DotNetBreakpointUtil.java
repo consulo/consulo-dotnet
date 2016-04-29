@@ -32,7 +32,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
  */
 public class DotNetBreakpointUtil
 {
-	public static void updateBreakpointPresentation(@NotNull Project project, boolean valid, @NotNull XLineBreakpoint breakpoint)
+	public static void updateLineBreakpointIcon(@NotNull Project project, boolean valid, @NotNull XLineBreakpoint breakpoint)
 	{
 		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
@@ -53,7 +53,7 @@ public class DotNetBreakpointUtil
 		{
 			if(valid)
 			{
-				if(suspendPolicy == SuspendPolicy.NONE)
+				if(suspendPolicy == SuspendPolicy.NONE || !breakpoint.isEnabled())
 				{
 					icon = AllIcons.Debugger.Db_muted_verified_breakpoint;
 				}
@@ -64,7 +64,7 @@ public class DotNetBreakpointUtil
 			}
 			else
 			{
-				if(suspendPolicy == SuspendPolicy.NONE)
+				if(suspendPolicy == SuspendPolicy.NONE || !breakpoint.isEnabled())
 				{
 					icon = AllIcons.Debugger.Db_muted_invalid_breakpoint;
 				}

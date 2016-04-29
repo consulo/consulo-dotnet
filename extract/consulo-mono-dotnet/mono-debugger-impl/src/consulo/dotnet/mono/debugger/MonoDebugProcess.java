@@ -53,7 +53,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 				@Override
 				public boolean process(final MonoVirtualMachineProxy virtualMachine)
 				{
-					MonoBreakpointUtil.createRequest(getSession(), virtualMachine, breakpoint, null, true);
+					MonoBreakpointUtil.createRequest(getSession(), virtualMachine, breakpoint, null);
 
 					return false;
 				}
