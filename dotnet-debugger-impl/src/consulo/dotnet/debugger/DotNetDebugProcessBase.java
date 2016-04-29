@@ -127,7 +127,7 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	}
 
 	@NotNull
-	public Collection<? extends XBreakpoint<?>> getExceptionBreakpoints()
+	public Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> getExceptionBreakpoints()
 	{
 		return ApplicationManager.getApplication().runReadAction(new Computable<Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>>>()
 		{

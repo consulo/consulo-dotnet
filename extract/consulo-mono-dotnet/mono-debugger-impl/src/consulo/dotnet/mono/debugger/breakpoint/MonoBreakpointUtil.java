@@ -35,6 +35,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -45,12 +46,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.mono.debugger.MonoDebugUtil;
@@ -67,6 +70,7 @@ import mono.debugger.VMDisconnectedException;
 import mono.debugger.protocol.Method_GetDebugInfo;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequestManager;
+import mono.debugger.request.ExceptionRequest;
 
 /**
  * @author VISTALL
@@ -97,7 +101,30 @@ public class MonoBreakpointUtil
 		}
 	}
 
-	public static void createRequest(@NotNull XDebugSession debugSession, @NotNull MonoVirtualMachineProxy virtualMachine, @NotNull XLineBreakpoint breakpoint, @Nullable TypeMirror typeMirror)
+	public static void createExceptionRequest(@NotNull MonoVirtualMachineProxy virtualMachine, @NotNull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint, @Nullable TypeMirror typeMirror)
+	{
+		DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
+
+		if(typeMirror != null && !Comparing.equal(properties.VM_QNAME, typeMirror.fullName()) || StringUtil.isEmpty(properties.VM_QNAME) && typeMirror != null)
+		{
+			return;
+		}
+
+		virtualMachine.stopBreakpointRequests(breakpoint);
+
+		EventRequestManager eventRequestManager = virtualMachine.getDelegate().eventRequestManager();
+
+		ExceptionRequest exceptionRequest = eventRequestManager.createExceptionRequest(typeMirror, properties.NOTIFY_CAUGHT, properties.NOTIFY_UNCAUGHT, properties.SUBCLASSES);
+		exceptionRequest.setSuspendPolicy(mono.debugger.SuspendPolicy.ALL);
+		exceptionRequest.setEnabled(breakpoint.isEnabled());
+
+		virtualMachine.putRequest(breakpoint, exceptionRequest);
+	}
+
+	public static void createBreakpointRequest(@NotNull XDebugSession debugSession,
+			@NotNull MonoVirtualMachineProxy virtualMachine,
+			@NotNull XLineBreakpoint breakpoint,
+			@Nullable TypeMirror typeMirror)
 	{
 		try
 		{
@@ -114,7 +141,7 @@ public class MonoBreakpointUtil
 		}
 	}
 
-	public static void createRequestImpl(@NotNull Project project,
+	private static void createRequestImpl(@NotNull Project project,
 			@NotNull MonoVirtualMachineProxy virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException
@@ -134,14 +161,7 @@ public class MonoBreakpointUtil
 			{
 				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
 				BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
-				if(breakpoint.isEnabled())
-				{
-					breakpointRequest.enable();
-				}
-				else
-				{
-					breakpointRequest.disable();
-				}
+				breakpointRequest.setEnabled(breakpoint.isEnabled());
 
 				virtualMachine.putRequest(breakpoint, breakpointRequest);
 			}
@@ -151,7 +171,7 @@ public class MonoBreakpointUtil
 	}
 
 	@NotNull
-	public static FindLocationResult findLocationsImpl(@NotNull final Project project,
+	private static FindLocationResult findLocationsImpl(@NotNull final Project project,
 			@NotNull final MonoVirtualMachineProxy virtualMachine,
 			@NotNull final XLineBreakpoint<?> lineBreakpoint,
 			@Nullable final TypeMirror typeMirror) throws TypeMirrorUnloadedException
@@ -305,7 +325,7 @@ public class MonoBreakpointUtil
 	}
 
 	@RequiredReadAction
-	public static PsiElement findExecutableElementFromDebugInfo(final Project project, Method_GetDebugInfo.Entry[] entries, @NotNull int index)
+	public static PsiElement findExecutableElementFromDebugInfo(final Project project, Method_GetDebugInfo.Entry[] entries, int index)
 	{
 		Method_GetDebugInfo.Entry entry = entries[0];
 		Method_GetDebugInfo.SourceFile sourceFile = entry.sourceFile;

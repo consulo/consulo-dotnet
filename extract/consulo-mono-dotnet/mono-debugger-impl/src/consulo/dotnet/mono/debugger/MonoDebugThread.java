@@ -56,6 +56,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XExpression;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XValue;
@@ -72,6 +73,7 @@ import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -207,9 +209,15 @@ public class MonoDebugThread extends Thread
 				EventKind.USER_BREAK, EventKind.USER_LOG, EventKind.APPDOMAIN_CREATE, EventKind.APPDOMAIN_UNLOAD);
 
 		Collection<? extends XLineBreakpoint<?>> breakpoints = myDebugProcess.getLineBreakpoints();
-		for(XLineBreakpoint<?> breakpoint : breakpoints)
+		for(XLineBreakpoint<?> breakpoint : myDebugProcess.getLineBreakpoints())
 		{
 			DotNetBreakpointUtil.updateLineBreakpointIcon(mySession.getProject(), false, breakpoint);
+		}
+
+		Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> exceptionBreakpoints = myDebugProcess.getExceptionBreakpoints();
+		for(XBreakpoint<DotNetExceptionBreakpointProperties> exceptionBreakpoint : exceptionBreakpoints)
+		{
+			MonoBreakpointUtil.createExceptionRequest(myVirtualMachine, exceptionBreakpoint, null);
 		}
 
 		TypeLoadRequest typeLoad = virtualMachine.eventRequestManager().createTypeLoad();
@@ -499,6 +507,12 @@ public class MonoDebugThread extends Thread
 	{
 		final DotNetDebugContext debugContext = myDebugProcess.createDebugContext(virtualMachine, null);
 
+		Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> exceptionBreakpoints = myDebugProcess.getExceptionBreakpoints();
+		for(XBreakpoint<DotNetExceptionBreakpointProperties> exceptionBreakpoint : exceptionBreakpoints)
+		{
+			MonoBreakpointUtil.createExceptionRequest(myVirtualMachine, exceptionBreakpoint, typeMirror);
+		}
+
 		DotNetTypeDeclaration[] typeDeclarations = ApplicationManager.getApplication().runReadAction(new Computable<DotNetTypeDeclaration[]>()
 		{
 			@Override
@@ -523,7 +537,7 @@ public class MonoDebugThread extends Thread
 						continue;
 					}
 
-					MonoBreakpointUtil.createRequest(mySession, virtualMachine, breakpoint, typeMirror);
+					MonoBreakpointUtil.createBreakpointRequest(mySession, virtualMachine, breakpoint, typeMirror);
 				}
 			}
 		}
