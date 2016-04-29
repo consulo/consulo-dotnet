@@ -17,7 +17,6 @@
 package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
 import java.io.File;
-import java.nio.charset.Charset;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,10 +76,16 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		if(debugConnectionInfo != null)
 		{
-			File pluginPath = PluginManager.getPluginPath(MicrosoftDotNetModuleExtension.class);
-
-			commandLine.setExePath("R:\\_github.com\\consulo\\MonoDevelop.Debugger.Win32\\out\\production\\mssdw\\mssdw.exe");
-			//FIXME [VISTALL] commandLine.setExePath(new File(pluginPath, "mssdw\\mssdw.exe").getPath());
+			String mssdwPath = System.getProperty("mssdw.path");
+			if(mssdwPath != null)
+			{
+				commandLine.withExePath(mssdwPath);
+			}
+			else
+			{
+				File pluginPath = PluginManager.getPluginPath(MicrosoftDotNetModuleExtension.class);
+				commandLine.setExePath(new File(pluginPath, "mssdw\\mssdw.exe").getPath());
+			}
 			commandLine.addParameter("--port=" + debugConnectionInfo.getPort());
 			commandLine.addParameter(fileName);
 		}
