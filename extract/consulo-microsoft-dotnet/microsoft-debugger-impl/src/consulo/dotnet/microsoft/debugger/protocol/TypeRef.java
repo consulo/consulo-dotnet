@@ -16,19 +16,22 @@
 
 package consulo.dotnet.microsoft.debugger.protocol;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
 public class TypeRef
 {
+	@NotNull
 	public String ModuleName;
 
 	public int ClassToken;
 
 	public String VmQName;
 
-	public TypeRef(String moduleName, int classToken)
+	public TypeRef(@NotNull String moduleName, int classToken)
 	{
 		ModuleName = moduleName;
 		ClassToken = classToken;
@@ -43,5 +46,39 @@ public class TypeRef
 		sb.append(", VmQName=").append(VmQName);
 		sb.append('}');
 		return sb.toString();
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if(this == o)
+		{
+			return true;
+		}
+		if(o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
+
+		TypeRef typeRef = (TypeRef) o;
+
+		if(ClassToken != typeRef.ClassToken)
+		{
+			return false;
+		}
+		if(!ModuleName.equals(typeRef.ModuleName))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = ModuleName.hashCode();
+		result = 31 * result + ClassToken;
+		return result;
 	}
 }

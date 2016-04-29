@@ -14,44 +14,23 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.microsoft.debugger.protocol.serverMessage;
+package consulo.dotnet.microsoft.debugger.protocol.clientMessage;
 
 import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 29.04.2016
  */
-public class GetTypeInfoRequestResult
+public class GetFieldInfoRequest
 {
-	public class FieldInfo
+	public TypeRef Type;
+
+	public int Token;
+
+	public GetFieldInfoRequest(TypeRef typeRef, int token)
 	{
-		public int Token;
-
-		public String Name;
-
-		//public TypeRef Type;
-
-		//public int Attributes;
+		Type = typeRef;
+		Token = token;
 	}
-
-	public class PropertyInfo
-	{
-		public String Name;
-
-		public TypeRef Type;
-
-		public int Attributes;
-
-		public int GetterToken;
-
-		public int SetterToken;
-	}
-
-	public FieldInfo[] Fields = new FieldInfo[0];
-	public PropertyInfo[] Properties = new PropertyInfo[0];
-
-	public String Name;
-	public String FullName;
-	public boolean IsArray;
 }

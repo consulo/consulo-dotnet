@@ -3,13 +3,16 @@ package consulo.dotnet.microsoft.debugger.proxy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Getter;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
+import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetFieldInfoRequest;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetFieldValueRequest;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFieldInfoRequestResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoRequestResult;
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 
@@ -23,14 +26,23 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	private MicrosoftTypeProxy myParentType;
 	private GetTypeInfoRequestResult.FieldInfo myField;
 
-	private Getter<DotNetTypeProxy> myType;
+	private GetFieldInfoRequestResult myResult;
+
+	private NotNullLazyValue<Getter<DotNetTypeProxy>> myTypeValue = new NotNullLazyValue<Getter<DotNetTypeProxy>>()
+	{
+		@NotNull
+		@Override
+		protected Getter<DotNetTypeProxy> compute()
+		{
+			return MicrosoftTypeProxy.lazyOf(myClient, info().Type);
+		}
+	};
 
 	public MicrosoftFieldProxy(MicrosoftDebuggerClient client, MicrosoftTypeProxy parentType, GetTypeInfoRequestResult.FieldInfo field)
 	{
 		myClient = client;
 		myParentType = parentType;
 		myField = field;
-		myType = MicrosoftTypeProxy.lazyOf(myClient, myField.Type);
 	}
 
 	@NotNull
@@ -43,7 +55,7 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	@Override
 	public boolean isStatic()
 	{
-		return BitUtil.isSet(myField.Attributes, FieldAttributes.Static);
+		return BitUtil.isSet(info().Attributes, FieldAttributes.Static);
 	}
 
 	@Nullable
@@ -63,7 +75,7 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return myType.get();
+		return myTypeValue.getValue().get();
 	}
 
 	@NotNull
@@ -77,5 +89,15 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	public boolean isLiteral()
 	{
 		return false;
+	}
+
+	@NotNull
+	private GetFieldInfoRequestResult info()
+	{
+		if(myResult != null)
+		{
+			return myResult;
+		}
+		return myResult = myClient.sendAndReceive(new GetFieldInfoRequest(myParentType.getTypeRef(), myField.Token), GetFieldInfoRequestResult.class);
 	}
 }

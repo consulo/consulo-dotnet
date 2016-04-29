@@ -12,8 +12,6 @@ import org.consulo.lombok.annotations.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
-import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 import org.jboss.netty.util.CharsetUtil;
@@ -80,7 +78,6 @@ public class MicrosoftDebuggerClient
 					Object message = e.getMessage();
 					if(message instanceof String)
 					{
-						System.out.println(((String) message).length());
 						Gson gson = buildGson();
 
 						try
@@ -155,12 +152,8 @@ public class MicrosoftDebuggerClient
 			{
 				ChannelPipeline pipeline = Channels.pipeline();
 				pipeline.addLast("stringDecoder", new StringDecoder(CharsetUtil.UTF_8));
-				pipeline.addLast("lineDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4));
-
 				// Encoder
 				pipeline.addLast("stringEncoder", new StringEncoder(CharsetUtil.UTF_8));
-
-				pipeline.addLast("lineEncoder", new LengthFieldPrepender(4));
 
 				pipeline.addLast("handler", myChannelHandler);
 				return pipeline;

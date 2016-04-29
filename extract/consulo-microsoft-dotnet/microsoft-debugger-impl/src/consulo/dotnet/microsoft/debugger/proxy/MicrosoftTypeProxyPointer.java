@@ -27,7 +27,7 @@ public class MicrosoftTypeProxyPointer implements Getter<DotNetTypeProxy>
 			{
 				return null;
 			}
-			return new MicrosoftTypeProxy(myClient, requestResult);
+			return new MicrosoftTypeProxy(myClient, myTypeRef, requestResult);
 		}
 	};
 

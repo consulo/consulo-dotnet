@@ -50,7 +50,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		{
 			return null;
 		}
-		return new MicrosoftTypeProxy(client, requestResult);
+		return new MicrosoftTypeProxy(client, result.Type, requestResult);
 	}
 
 	@NotNull
@@ -61,11 +61,14 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 
 	private MicrosoftDebuggerClient myClient;
 
+	private TypeRef myTypeRef;
+
 	private GetTypeInfoRequestResult myResult;
 
-	protected MicrosoftTypeProxy(MicrosoftDebuggerClient client, GetTypeInfoRequestResult requestResult)
+	protected MicrosoftTypeProxy(MicrosoftDebuggerClient client, TypeRef typeRef, GetTypeInfoRequestResult requestResult)
 	{
 		myClient = client;
+		myTypeRef = typeRef;
 		myResult = requestResult;
 	}
 
@@ -170,5 +173,10 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	public boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType)
 	{
 		return false;
+	}
+
+	public TypeRef getTypeRef()
+	{
+		return myTypeRef;
 	}
 }

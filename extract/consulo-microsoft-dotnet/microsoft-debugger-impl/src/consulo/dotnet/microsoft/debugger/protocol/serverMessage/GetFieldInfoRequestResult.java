@@ -20,38 +20,11 @@ import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 29.04.2016
  */
-public class GetTypeInfoRequestResult
+public class GetFieldInfoRequestResult
 {
-	public class FieldInfo
-	{
-		public int Token;
+	public int Attributes;
 
-		public String Name;
-
-		//public TypeRef Type;
-
-		//public int Attributes;
-	}
-
-	public class PropertyInfo
-	{
-		public String Name;
-
-		public TypeRef Type;
-
-		public int Attributes;
-
-		public int GetterToken;
-
-		public int SetterToken;
-	}
-
-	public FieldInfo[] Fields = new FieldInfo[0];
-	public PropertyInfo[] Properties = new PropertyInfo[0];
-
-	public String Name;
-	public String FullName;
-	public boolean IsArray;
+	public TypeRef Type;
 }
