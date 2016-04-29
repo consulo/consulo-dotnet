@@ -97,11 +97,15 @@ public class MonoBreakpointUtil
 		}
 	}
 
-	public static void createRequest(@NotNull XDebugSession debugSession, @NotNull MonoVirtualMachineProxy virtualMachine, @NotNull XLineBreakpoint breakpoint, @Nullable TypeMirror typeMirror)
+	public static void createRequest(@NotNull XDebugSession debugSession,
+			@NotNull MonoVirtualMachineProxy virtualMachine,
+			@NotNull XLineBreakpoint breakpoint,
+			@Nullable TypeMirror typeMirror,
+			boolean enable)
 	{
 		try
 		{
-			createRequestImpl(debugSession.getProject(), virtualMachine, breakpoint, typeMirror);
+			createRequestImpl(debugSession.getProject(), virtualMachine, breakpoint, typeMirror, enable);
 		}
 		catch(VMDisconnectedException ignored)
 		{
@@ -109,7 +113,7 @@ public class MonoBreakpointUtil
 		catch(TypeMirrorUnloadedException e)
 		{
 			debugSession.getConsoleView().print(e.getFullName(), ConsoleViewContentType.ERROR_OUTPUT);
-			debugSession.getConsoleView().print("You can fix this error - restart debug. If you can repeat this error, " + "please report it here 'https://github.com/consulo/consulo-dotnet/issues'",
+			debugSession.getConsoleView().print("You can fix this error - restart debug. If you can repeat this error, please report it here 'https://github.com/consulo/consulo-dotnet/issues'",
 					ConsoleViewContentType.ERROR_OUTPUT);
 		}
 	}
@@ -117,7 +121,8 @@ public class MonoBreakpointUtil
 	public static void createRequestImpl(@NotNull Project project,
 			@NotNull MonoVirtualMachineProxy virtualMachine,
 			@NotNull XLineBreakpoint breakpoint,
-			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException
+			@Nullable TypeMirror typeMirror,
+			boolean enable) throws TypeMirrorUnloadedException
 	{
 		FindLocationResult result = findLocationsImpl(project, virtualMachine, breakpoint, typeMirror);
 		if(result == FindLocationResult.WRONG_TARGET)

@@ -17,8 +17,6 @@
 package consulo.dotnet.mono.debugger;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
-import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.util.Processor;
@@ -28,8 +26,10 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
+import consulo.dotnet.debugger.DotNetSuspendContext;
+import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.ThreadMirror;
@@ -53,7 +53,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 				@Override
 				public boolean process(final MonoVirtualMachineProxy virtualMachine)
 				{
-					MonoBreakpointUtil.createRequest(getSession(), virtualMachine, breakpoint, null);
+					MonoBreakpointUtil.createRequest(getSession(), virtualMachine, breakpoint, null, true);
 
 					return false;
 				}

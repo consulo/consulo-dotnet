@@ -206,7 +206,7 @@ public class MonoDebugThread extends Thread
 		virtualMachine.enableEvents(/*EventKind.ASSEMBLY_LOAD, EventKind.THREAD_START, EventKind.THREAD_DEATH, EventKind.ASSEMBLY_UNLOAD,*/
 				EventKind.USER_BREAK, EventKind.USER_LOG, EventKind.APPDOMAIN_CREATE, EventKind.APPDOMAIN_UNLOAD);
 
-		Collection<? extends XLineBreakpoint<?>> breakpoints = myDebugProcess.getEnabledBreakpoints();
+		Collection<? extends XLineBreakpoint<?>> breakpoints = myDebugProcess.getLineBreakpoints();
 		for(XLineBreakpoint<?> breakpoint : breakpoints)
 		{
 			DotNetBreakpointUtil.updateBreakpointPresentation(mySession.getProject(), false, breakpoint);
@@ -510,7 +510,7 @@ public class MonoDebugThread extends Thread
 
 		if(typeDeclarations.length > 0)
 		{
-			Collection<? extends XLineBreakpoint<?>> breakpoints = myDebugProcess.getEnabledBreakpoints();
+			Collection<? extends XLineBreakpoint<?>> breakpoints = myDebugProcess.getLineBreakpoints();
 			for(DotNetTypeDeclaration dotNetTypeDeclaration : typeDeclarations)
 			{
 				VirtualFile typeVirtualFile = PsiUtilBase.getVirtualFile(dotNetTypeDeclaration);
@@ -523,7 +523,7 @@ public class MonoDebugThread extends Thread
 						continue;
 					}
 
-					MonoBreakpointUtil.createRequest(mySession, virtualMachine, breakpoint, typeMirror);
+					MonoBreakpointUtil.createRequest(mySession, virtualMachine, breakpoint, typeMirror, breakpoint.isEnabled());
 				}
 			}
 		}

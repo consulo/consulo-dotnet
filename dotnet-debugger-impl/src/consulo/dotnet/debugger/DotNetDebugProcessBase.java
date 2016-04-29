@@ -4,22 +4,23 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
-import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType;
+import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 
 /**
@@ -113,30 +114,34 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	public abstract void stop();
 
 	@NotNull
-	public Collection<? extends XLineBreakpoint<?>> getEnabledBreakpoints()
+	public Collection<? extends XLineBreakpoint<?>> getLineBreakpoints()
 	{
 		return ApplicationManager.getApplication().runReadAction(new Computable<Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>>>()
 		{
 			@Override
 			public Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>> compute()
 			{
-				Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>> breakpoints = myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetLineBreakpointType.class);
+				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetLineBreakpointType.class);
+			}
+		});
+	}
 
-				return ContainerUtil.filter(breakpoints, new Condition<XLineBreakpoint<DotNetLineBreakpointProperties>>()
-				{
-					@Override
-					public boolean value(XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint)
-					{
-						return breakpoint.isEnabled();
-					}
-				});
+	@NotNull
+	public Collection<? extends XBreakpoint<?>> getExceptionBreakpoints()
+	{
+		return ApplicationManager.getApplication().runReadAction(new Computable<Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>>>()
+		{
+			@Override
+			public Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> compute()
+			{
+				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetExceptionBreakpointType.class);
 			}
 		});
 	}
 
 	public void normalizeBreakpoints()
 	{
-		for(XLineBreakpoint<?> lineBreakpoint : getEnabledBreakpoints())
+		for(XLineBreakpoint<?> lineBreakpoint : getLineBreakpoints())
 		{
 			myDebuggerManager.getBreakpointManager().updateBreakpointPresentation(lineBreakpoint, null, null);
 		}

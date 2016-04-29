@@ -74,8 +74,12 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 					return Collections.emptyMap();
 				}
 				Map<XLineBreakpoint, InsertBreakpointRequest> map = new HashMap<XLineBreakpoint, InsertBreakpointRequest>();
-				for(XLineBreakpoint<?> breakpoint : myDebuggerProcess.getEnabledBreakpoints())
+				for(XLineBreakpoint<?> breakpoint : myDebuggerProcess.getLineBreakpoints())
 				{
+					if(!breakpoint.isEnabled())
+					{
+						continue;
+					}
 					VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
 					if(fileByUrl == null)
 					{
@@ -128,7 +132,7 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 					return null;
 				}
 
-				for(XLineBreakpoint<?> breakpoint : myDebuggerProcess.getEnabledBreakpoints())
+				for(XLineBreakpoint<?> breakpoint : myDebuggerProcess.getLineBreakpoints())
 				{
 					VirtualFile breakpointFile = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
 					if(breakpointFile == null || !fileByPath.equals(breakpointFile))

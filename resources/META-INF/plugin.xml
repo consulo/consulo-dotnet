@@ -100,6 +100,7 @@
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetShortNameSearcherImpl"/>
 		<projectService serviceImplementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributeManager" />
 		<projectService serviceImplementation="org.mustbe.consulo.dotnet.lang.psi.impl.DotNetNamespaceCacheManager" />
+		<projectService serviceInterface="consulo.dotnet.ui.chooser.DotNetTypeChooserFactory" serviceImplementation="consulo.dotnet.ui.chooser.DotNetTypeChooserFactoryImpl" />
 
 		<macro implementation="org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro"/>
 
@@ -111,6 +112,7 @@
 		<programRunner implementation="consulo.dotnet.run.DotNetDebuggerProgramRunner" id="dotnet-debugger"/>
 
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType"/>
+		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType"/>
 
 		<orderEntryTypeProvider implementation="org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider"/>
 		<addModuleDependencyTabFactory implementation="org.mustbe.consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>
