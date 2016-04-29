@@ -139,7 +139,14 @@ public class MonoBreakpointUtil
 			{
 				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
 				BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
-				breakpointRequest.enable();
+				if(enable)
+				{
+					breakpointRequest.enable();
+				}
+				else
+				{
+					breakpointRequest.disable();
+				}
 
 				virtualMachine.putRequest(breakpoint, breakpointRequest);
 			}
