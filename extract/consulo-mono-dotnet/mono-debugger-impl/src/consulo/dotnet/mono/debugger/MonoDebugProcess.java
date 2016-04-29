@@ -23,13 +23,16 @@ import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
+import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetSuspendContext;
+import consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
-import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.ThreadMirror;
@@ -43,17 +46,26 @@ import mono.debugger.request.StepRequest;
  */
 public class MonoDebugProcess extends DotNetDebugProcessBase
 {
-	private class MyXBreakpointListener implements XBreakpointListener<XLineBreakpoint<DotNetLineBreakpointProperties>>
+	private class MyXBreakpointListener implements XBreakpointListener<XBreakpoint<?>>
 	{
 		@Override
-		public void breakpointAdded(@NotNull final XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint)
+		public void breakpointAdded(@NotNull final XBreakpoint<?> breakpoint)
 		{
 			myDebugThread.processAnyway(new Processor<MonoVirtualMachineProxy>()
 			{
 				@Override
+				@SuppressWarnings("unchecked")
 				public boolean process(final MonoVirtualMachineProxy virtualMachine)
 				{
-					MonoBreakpointUtil.createBreakpointRequest(getSession(), virtualMachine, breakpoint, null);
+					XBreakpointType<?, ?> type = breakpoint.getType();
+					if(type == DotNetLineBreakpointType.getInstance())
+					{
+						MonoBreakpointUtil.createBreakpointRequest(getSession(), virtualMachine, (XLineBreakpoint) breakpoint, null);
+					}
+					else if(type == DotNetExceptionBreakpointType.getInstance())
+					{
+						MonoBreakpointUtil.createExceptionRequest(virtualMachine, (XBreakpoint<DotNetExceptionBreakpointProperties>) breakpoint, null);
+					}
 
 					return false;
 				}
@@ -61,7 +73,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 		}
 
 		@Override
-		public void breakpointRemoved(@NotNull final XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint)
+		public void breakpointRemoved(@NotNull final XBreakpoint<?> breakpoint)
 		{
 			myDebugThread.processAnyway(new Processor<MonoVirtualMachineProxy>()
 			{
@@ -75,7 +87,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 		}
 
 		@Override
-		public void breakpointChanged(@NotNull XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint)
+		public void breakpointChanged(@NotNull XBreakpoint<?> breakpoint)
 		{
 			if(breakpoint.isEnabled())
 			{
@@ -93,7 +105,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 
 	private EventSet myPausedEventSet;
 	private XBreakpointManager myBreakpointManager;
-	private final XBreakpointListener myBreakpointListener = new MyXBreakpointListener();
+	private final XBreakpointListener<XBreakpoint<?>> myBreakpointListener = new MyXBreakpointListener();
 
 	public MonoDebugProcess(XDebugSession session, RunProfile runProfile, DebugConnectionInfo debugConnectionInfo)
 	{
@@ -103,7 +115,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 		myDebugThread = new MonoDebugThread(session, this, myDebugConnectionInfo);
 
 		myBreakpointManager = XDebuggerManager.getInstance(session.getProject()).getBreakpointManager();
-		myBreakpointManager.addBreakpointListener(DotNetLineBreakpointType.getInstance(), myBreakpointListener);
+		myBreakpointManager.addBreakpointListener(myBreakpointListener);
 	}
 
 	@NotNull

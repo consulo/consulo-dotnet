@@ -24,6 +24,7 @@ import java.util.Set;
 
 import javax.swing.Icon;
 
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -63,6 +64,7 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointPropert
 public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBreakpointProperties>
 {
 	@NotNull
+	@LazyInstance
 	public static DotNetLineBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(DotNetLineBreakpointType.class);
