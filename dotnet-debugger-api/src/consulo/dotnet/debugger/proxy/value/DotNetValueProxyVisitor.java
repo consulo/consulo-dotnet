@@ -45,6 +45,12 @@ public interface DotNetValueProxyVisitor
 		}
 
 		@Override
+		public void visitEnumValue(@NotNull DotNetEnumValueProxy proxy)
+		{
+
+		}
+
+		@Override
 		public void visitObjectValue(@NotNull DotNetObjectValueProxy proxy)
 		{
 
@@ -80,6 +86,8 @@ public interface DotNetValueProxyVisitor
 	void visitNullValue(@NotNull DotNetNullValueProxy proxy);
 
 	void visitArrayValue(@NotNull DotNetArrayValueProxy proxy);
+
+	void visitEnumValue(@NotNull DotNetEnumValueProxy proxy);
 
 	void visitObjectValue(@NotNull DotNetObjectValueProxy proxy);
 

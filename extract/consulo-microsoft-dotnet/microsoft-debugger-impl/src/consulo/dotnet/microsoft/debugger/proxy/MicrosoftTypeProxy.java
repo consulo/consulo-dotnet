@@ -69,6 +69,12 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		myResult = requestResult;
 	}
 
+	@Override
+	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	{
+		return false;
+	}
+
 	@Nullable
 	@Override
 	public DotNetTypeProxy getDeclarationType()

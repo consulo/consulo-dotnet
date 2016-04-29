@@ -19,15 +19,7 @@ package consulo.dotnet.mono.debugger.proxy;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import mono.debugger.ArrayValueMirror;
-import mono.debugger.BooleanValueMirror;
-import mono.debugger.CharValueMirror;
-import mono.debugger.NoObjectValueMirror;
-import mono.debugger.NumberValueMirror;
-import mono.debugger.ObjectValueMirror;
-import mono.debugger.StringValueMirror;
-import mono.debugger.StructValueMirror;
-import mono.debugger.Value;
+import mono.debugger.*;
 
 /**
  * @author VISTALL
@@ -84,6 +76,11 @@ public class MonoValueProxyUtil
 		if(value instanceof StructValueMirror)
 		{
 			valueProxy = new MonoStructValueProxy((StructValueMirror) value);
+		}
+
+		if(value instanceof EnumValueMirror)
+		{
+			valueProxy = new MonoEnumValueProxy((EnumValueMirror) value);
 		}
 
 		if(valueProxy == null)

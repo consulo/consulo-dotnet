@@ -297,6 +297,6 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	{
 		final DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
 
-		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myThreadProxy, valueOfVariable), canHaveChildren());
+		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myDebugContext, myThreadProxy, valueOfVariable), canHaveChildren());
 	}
 }

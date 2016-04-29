@@ -15,7 +15,7 @@ public interface DotNetFieldOrPropertyProxy extends DotNetVariableProxy
 	boolean isStatic();
 
 	@Nullable
-	DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy proxy);
+	DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy);
 
 	void setValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy);
 }

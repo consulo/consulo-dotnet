@@ -37,11 +37,11 @@ public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> imp
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)
 	{
 		MonoThreadProxy monoThreadProxy = (MonoThreadProxy) threadProxy;
 		MonoValueProxyBase<?> monoValueProxyBase = (MonoValueProxyBase<?>) proxy;
-		return MonoValueProxyUtil.wrap(myMirror.value(monoThreadProxy.getThreadMirror(), (ObjectValueMirror) monoValueProxyBase.getMirror()));
+		return MonoValueProxyUtil.wrap(myMirror.value(monoThreadProxy.getThreadMirror(), monoValueProxyBase == null ? null : (ObjectValueMirror) monoValueProxyBase.getMirror()));
 	}
 
 	@Override

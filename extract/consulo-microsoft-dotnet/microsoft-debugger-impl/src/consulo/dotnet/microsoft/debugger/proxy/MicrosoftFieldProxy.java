@@ -39,7 +39,7 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)
 	{
 		MicrosoftObjectValueProxy objectValueProxy = (MicrosoftObjectValueProxy) proxy;
 		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetFieldValueRequest(objectValueProxy.getResult().ObjectId, myField.Token));
@@ -62,5 +62,11 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	public String getName()
 	{
 		return myField.Name;
+	}
+
+	@Override
+	public boolean isLiteral()
+	{
+		return false;
 	}
 }

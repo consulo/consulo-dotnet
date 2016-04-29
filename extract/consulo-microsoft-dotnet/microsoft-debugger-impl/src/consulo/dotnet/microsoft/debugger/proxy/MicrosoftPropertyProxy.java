@@ -53,7 +53,7 @@ public class MicrosoftPropertyProxy implements DotNetPropertyProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)
 	{
 		return null;
 		//MicrosoftObjectValueProxy objectValueProxy = (MicrosoftObjectValueProxy) proxy;

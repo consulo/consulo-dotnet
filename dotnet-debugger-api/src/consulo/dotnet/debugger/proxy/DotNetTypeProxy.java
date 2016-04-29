@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface DotNetTypeProxy
 {
+	boolean isAnnotatedBy(@NotNull String attributeVmQName);
+
 	@Nullable
 	DotNetTypeProxy getDeclarationType();
 

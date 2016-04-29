@@ -9,4 +9,5 @@ import org.consulo.lombok.annotations.ArrayFactoryFields;
 @ArrayFactoryFields
 public interface DotNetFieldProxy extends DotNetFieldOrPropertyProxy
 {
+	boolean isLiteral();
 }

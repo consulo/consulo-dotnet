@@ -23,6 +23,7 @@ import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import mono.debugger.CustomAttributeMirror;
 import mono.debugger.FieldMirror;
 import mono.debugger.MethodMirror;
 import mono.debugger.PropertyMirror;
@@ -46,6 +47,21 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	private MonoTypeProxy(@NotNull TypeMirror typeMirror)
 	{
 		myTypeMirror = typeMirror;
+	}
+
+	@Override
+	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	{
+		for(CustomAttributeMirror customAttributeMirror : myTypeMirror.customAttributes())
+		{
+			MethodMirror constructorMirror = customAttributeMirror.getConstructorMirror();
+			TypeMirror typeMirror = constructorMirror.declaringType();
+			if(attributeVmQName.equals(typeMirror.fullName()))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Nullable

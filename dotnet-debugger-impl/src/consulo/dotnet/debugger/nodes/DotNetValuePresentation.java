@@ -16,7 +16,9 @@
 
 package consulo.dotnet.debugger.nodes;
 
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +30,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
+import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
+import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -42,11 +46,13 @@ import consulo.dotnet.debugger.proxy.value.*;
 @Logger
 public class DotNetValuePresentation extends XValuePresentation
 {
-	private DotNetThreadProxy myThreadProxy;
-	private DotNetValueProxy myValue;
+	private final DotNetDebugContext myDebugContext;
+	private final DotNetThreadProxy myThreadProxy;
+	private final DotNetValueProxy myValue;
 
-	public DotNetValuePresentation(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy value)
+	public DotNetValuePresentation(DotNetDebugContext debugContext, @NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy value)
 	{
+		myDebugContext = debugContext;
 		myThreadProxy = threadProxy;
 		myValue = value;
 	}
@@ -124,46 +130,35 @@ public class DotNetValuePresentation extends XValuePresentation
 				// nothing
 			}
 
-			/*@Override
-			public void visitEnumValue(@NotNull EnumValueMirror mirror)
+			@Override
+			public void visitEnumValue(@NotNull DotNetEnumValueProxy mirror)
 			{
-				Value<?> value = mirror.value();
-				if(!(value instanceof NumberValueMirror))
+				Object value = mirror.getValue();
+				if(!(value instanceof DotNetNumberValueProxy))
 				{
 					return;
 				}
 
-				TypeMirror type = mirror.type();
-				CustomAttributeMirror[] customAttributeMirrors = type.customAttributes();
-
-				boolean flags = false;
-				for(CustomAttributeMirror customAttributeMirror : customAttributeMirrors)
-				{
-					MethodMirror constructorMirror = customAttributeMirror.getConstructorMirror();
-					TypeMirror typeMirror = constructorMirror.declaringType();
-					if(DotNetTypes.System.FlagsAttribute.equals(typeMirror.qualifiedName()))
-					{
-						flags = true;
-						break;
-					}
-				}
+				DotNetTypeProxy type = mirror.getType();
+				assert type != null;
+				boolean flags = type.isAnnotatedBy(DotNetTypes.System.FlagsAttribute);
 
 				Set<String> enumFields = new LinkedHashSet<String>();
-				Number expectedValue = ((NumberValueMirror) value).value();
+				Number expectedValue = ((DotNetNumberValueProxy) value).getValue();
 
-				FieldMirror[] fields = mirror.type().fields();
+				DotNetFieldProxy[] fields = type.getFields();
 
-				for(FieldMirror field : fields)
+				for(DotNetFieldProxy field : fields)
 				{
-					if(field.isStatic() && (field.attributes() & FieldAttributes.Literal) == FieldAttributes.Literal)
+					if(field.isStatic() && field.isLiteral())
 					{
-						Value<?> fieldValue = field.value(myThreadProxy, null);
-						if(fieldValue instanceof EnumValueMirror)
+						DotNetValueProxy fieldValue = field.getValue(myThreadProxy, null);
+						if(fieldValue instanceof DotNetEnumValueProxy)
 						{
-							Value<?> enumValue = ((EnumValueMirror) fieldValue).value();
-							if(enumValue instanceof NumberValueMirror)
+							Object enumValue = fieldValue.getValue();
+							if(enumValue instanceof DotNetNumberValueProxy)
 							{
-								Number actualValue = ((NumberValueMirror) enumValue).value();
+								Number actualValue = ((DotNetNumberValueProxy) enumValue).getValue();
 
 								if(flags)
 								{
@@ -171,14 +166,14 @@ public class DotNetValuePresentation extends XValuePresentation
 									long maskValue = actualValue.longValue();
 									if((flagsValue & maskValue) == maskValue)
 									{
-										enumFields.add(field.name());
+										enumFields.add(field.getName());
 									}
 								}
 								else
 								{
 									if(expectedValue.equals(actualValue))
 									{
-										enumFields.add(field.name());
+										enumFields.add(field.getName());
 										break;
 									}
 								}
@@ -195,7 +190,7 @@ public class DotNetValuePresentation extends XValuePresentation
 				{
 					renderer.renderValue(expectedValue.toString());
 				}
-			} */
+			}
 
 			@Override
 			public void visitStructValue(@NotNull DotNetStructValueProxy proxy)
@@ -227,7 +222,7 @@ public class DotNetValuePresentation extends XValuePresentation
 						@Override
 						public String fun(Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy> entry)
 						{
-							String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myThreadProxy, entry.getValue()));
+							String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myDebugContext, myThreadProxy, entry.getValue()));
 							return entry.getKey().getName() + " = " + valueText;
 						}
 					}, ", ");

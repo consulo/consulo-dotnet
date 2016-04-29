@@ -17,6 +17,7 @@
 package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
