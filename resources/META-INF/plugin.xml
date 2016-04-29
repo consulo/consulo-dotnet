@@ -42,11 +42,6 @@
 		<extensionPoint name="psiSearcher" interface="org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="shortNameSearcher" interface="org.mustbe.consulo.dotnet.resolve.DotNetShortNameSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="stubIndexer" interface="org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer"/>
-
-		<extensionPoint name="debugger.provider" interface="org.mustbe.consulo.dotnet.debugger.DotNetDebuggerProvider"/>
-		<extensionPoint name="debugger.sourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint" >
-			<with attribute="implementationClass" implements="org.mustbe.consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver"/>
-		</extensionPoint>
 		<extensionPoint name="typeInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="directTypeInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="allTypesSearch" interface="com.intellij.util.QueryExecutor"/>
