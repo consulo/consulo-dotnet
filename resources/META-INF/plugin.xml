@@ -31,6 +31,12 @@
 		</component>
 	</application-components>
 
+	<project-components>
+		<component>
+			<implementation-class>consulo.dotnet.DebuggerNotificationProjectComponent</implementation-class>
+		</component>
+	</project-components>
+
 	<extensionPoints>
 		<!--extensions with new ids-->
 		<extensionPoint qualifiedName="consulo.dotnet.debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
