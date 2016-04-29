@@ -41,6 +41,7 @@ public class DebuggerNotificationProjectComponent extends AbstractProjectCompone
 	{
 		String text = "Plugin .NET debugging API was greatly changed. <br> It required action for implementing another .NET debuggers. <br>" +
 				"What why you can found some new bugs in already exists functional.<br> Please report it <a href=\"https://github.com/consulo/consulo-dotnet/issues\">here</a>.<br>" +
+				"<b>Unity</b> plugin now required <b>Mono</b> plugin, please install if you don't have it.<br>" +
 				"Introduced initial implementation for <b>Microsoft .NET debugger</b> and <b>Exception Breakpoints</b>. <br> I apologize for the inconvenience, VISTALL";
 		ourGroup.createNotification(".NET Debugging API", text, NotificationType.INFORMATION, NotificationListener.URL_OPENING_LISTENER).notify(myProject);
 	}
