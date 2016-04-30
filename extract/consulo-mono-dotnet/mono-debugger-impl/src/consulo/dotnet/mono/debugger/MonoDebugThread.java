@@ -262,7 +262,6 @@ public class MonoDebugThread extends Thread
 			EventSet eventSet;
 			try
 			{
-				l:
 				while((eventSet = eventQueue.remove(10)) != null)
 				{
 					boolean stopped = false;
@@ -303,8 +302,6 @@ public class MonoDebugThread extends Thread
 						}
 						else if(event instanceof UserBreakEvent)
 						{
-							myVirtualMachine.suspend();
-
 							DotNetDebugContext context = myDebugProcess.createDebugContext(myVirtualMachine, null);
 							mySession.positionReached(new DotNetSuspendContext(context, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
 							stopped = true;
@@ -325,7 +322,6 @@ public class MonoDebugThread extends Thread
 							TypeMirror typeMirror = ((TypeLoadEvent) event).typeMirror();
 
 							insertBreakpoints(myVirtualMachine, typeMirror);
-							continue l;
 						}
 						else if(event instanceof VMDeathEvent)
 						{
@@ -380,6 +376,18 @@ public class MonoDebugThread extends Thread
 							});
 						}
 						break;
+					}
+					else
+					{
+						try
+						{
+							virtualMachine.resume();
+							break;
+						}
+						catch(NotSuspendedException ignored)
+						{
+							// when u attached - app is not suspended
+						}
 					}
 				}
 			}
@@ -505,7 +513,7 @@ public class MonoDebugThread extends Thread
 					if(valueOfVariableSafe instanceof DotNetBooleanValueProxy)
 					{
 						Boolean boolValue = ((DotNetBooleanValueProxy) valueOfVariableSafe).getValue();
-						return boolValue != null && boolValue;
+						return boolValue;
 					}
 				}
 			}
@@ -550,15 +558,6 @@ public class MonoDebugThread extends Thread
 					MonoBreakpointUtil.createBreakpointRequest(mySession, virtualMachine, breakpoint, typeMirror);
 				}
 			}
-		}
-
-		try
-		{
-			virtualMachine.resume();
-		}
-		catch(NotSuspendedException ignored)
-		{
-			// when u attached - app is not suspended
 		}
 	}
 
