@@ -22,6 +22,7 @@ import com.intellij.execution.configurations.ModuleRunProfile;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -38,6 +39,29 @@ public class DotNetDebugContext
 	private final RunProfile myRunProfile;
 	private final XDebugSession mySession;
 	private final XBreakpoint<?> myBreakpoint;
+	private final NotNullLazyValue<GlobalSearchScope> myScopeValue = new NotNullLazyValue<GlobalSearchScope>()
+	{
+		@NotNull
+		@Override
+		protected GlobalSearchScope compute()
+		{
+			if(myRunProfile instanceof ModuleRunProfile)
+			{
+				Module[] modules = ((ModuleRunProfile) myRunProfile).getModules();
+				assert modules.length != 0;
+				GlobalSearchScope globalSearchScope = GlobalSearchScope.EMPTY_SCOPE;
+				for(Module module : modules)
+				{
+					globalSearchScope = globalSearchScope.union(GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, true));
+				}
+				return globalSearchScope;
+			}
+			else
+			{
+				return GlobalSearchScope.allScope(getProject());
+			}
+		}
+	};
 
 	public DotNetDebugContext(@NotNull Project project,
 			@NotNull DotNetVirtualMachineProxy virtualMachine,
@@ -55,21 +79,7 @@ public class DotNetDebugContext
 	@NotNull
 	public GlobalSearchScope getResolveScope()
 	{
-		if(myRunProfile instanceof ModuleRunProfile)
-		{
-			Module[] modules = ((ModuleRunProfile) myRunProfile).getModules();
-			assert modules.length != 0;
-			GlobalSearchScope globalSearchScope = GlobalSearchScope.EMPTY_SCOPE;
-			for(Module module : modules)
-			{
-				globalSearchScope = globalSearchScope.union(GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module, true));
-			}
-			return globalSearchScope;
-		}
-		else
-		{
-			return GlobalSearchScope.allScope(getProject());
-		}
+		return myScopeValue.getValue();
 	}
 
 	@Nullable
