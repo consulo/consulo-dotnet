@@ -52,6 +52,7 @@ import com.intellij.util.containers.ArrayListSet;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
@@ -109,10 +110,10 @@ public class DotNetStackFrame extends XStackFrame
 		final DotNetMethodProxy method = sourceLocation.getMethod();
 		if(fileByPath != null)
 		{
-			XLineBreakpoint<?> breakpoint = myDebuggerContext.getBreakpoint();
+			XBreakpoint<?> breakpoint = myDebuggerContext.getBreakpoint();
 			XSourcePosition originalPosition = XDebuggerUtil.getInstance().createPosition(fileByPath, sourceLocation.getLineZeroBased());
 			assert originalPosition != null;
-			if(breakpoint != null)
+			if(breakpoint instanceof XLineBreakpoint)
 			{
 				DotNetLineBreakpointProperties properties = (DotNetLineBreakpointProperties) breakpoint.getProperties();
 				final Integer executableChildrenAtLineIndex = properties.getExecutableChildrenAtLineIndex();

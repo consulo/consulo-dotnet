@@ -42,7 +42,7 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	}
 
 	@NotNull
-	public DotNetDebugContext createDebugContext(@NotNull DotNetVirtualMachineProxy proxy, @Nullable XLineBreakpoint<?> breakpoint)
+	public DotNetDebugContext createDebugContext(@NotNull DotNetVirtualMachineProxy proxy, @Nullable XBreakpoint<?> breakpoint)
 	{
 		return new DotNetDebugContext(getSession().getProject(), proxy, myRunProfile, getSession(), breakpoint);
 	}

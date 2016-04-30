@@ -24,7 +24,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 
 /**
@@ -37,13 +37,13 @@ public class DotNetDebugContext
 	private final DotNetVirtualMachineProxy myVirtualMachine;
 	private final RunProfile myRunProfile;
 	private final XDebugSession mySession;
-	private final XLineBreakpoint<?> myBreakpoint;
+	private final XBreakpoint<?> myBreakpoint;
 
 	public DotNetDebugContext(@NotNull Project project,
 			@NotNull DotNetVirtualMachineProxy virtualMachine,
 			@NotNull RunProfile runProfile,
 			@NotNull XDebugSession session,
-			@Nullable XLineBreakpoint<?> breakpoint)
+			@Nullable XBreakpoint<?> breakpoint)
 	{
 		myProject = project;
 		myVirtualMachine = virtualMachine;
@@ -73,7 +73,7 @@ public class DotNetDebugContext
 	}
 
 	@Nullable
-	public XLineBreakpoint<?> getBreakpoint()
+	public XBreakpoint<?> getBreakpoint()
 	{
 		return myBreakpoint;
 	}

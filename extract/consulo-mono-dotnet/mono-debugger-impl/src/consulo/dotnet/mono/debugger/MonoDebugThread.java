@@ -27,7 +27,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -40,7 +39,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
@@ -52,7 +50,6 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
@@ -70,7 +67,6 @@ import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
-import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
@@ -79,10 +75,17 @@ import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import consulo.dotnet.mono.debugger.proxy.MonoStackFrameProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoThreadProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
-import mono.debugger.*;
+import mono.debugger.AppDomainMirror;
+import mono.debugger.EventKind;
+import mono.debugger.NotSuspendedException;
+import mono.debugger.SocketAttachingConnector;
+import mono.debugger.SocketListeningConnector;
+import mono.debugger.StackFrameMirror;
+import mono.debugger.TypeMirror;
+import mono.debugger.VMDisconnectedException;
+import mono.debugger.VirtualMachine;
 import mono.debugger.connect.Connector;
 import mono.debugger.event.*;
-import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.TypeLoadRequest;
 
 /**
@@ -270,15 +273,15 @@ public class MonoDebugThread extends Thread
 					{
 						if(event instanceof BreakpointEvent)
 						{
-							Location location = ((BreakpointRequest) event.request()).location();
-							XLineBreakpoint<?> breakpoint = resolveToBreakpoint(location);
+							XBreakpoint<?> breakpoint = myVirtualMachine.findBreakpointByRequest(event.request());
+							assert breakpoint instanceof XLineBreakpoint;
 
 							stopped = true;
 
 							DotNetDebugContext debugContext = myDebugProcess.createDebugContext(myVirtualMachine, breakpoint);
 							if(breakpoint != null)
 							{
-								if(tryEvaluateBreakpoint(eventSet, breakpoint, debugContext))
+								if(tryEvaluateBreakpoint(eventSet, (XLineBreakpoint<?>) breakpoint, debugContext))
 								{
 									DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
 
@@ -341,9 +344,9 @@ public class MonoDebugThread extends Thread
 						}
 						else if(event instanceof ExceptionEvent)
 						{
-							DotNetDebugContext context = myDebugProcess.createDebugContext(myVirtualMachine, null);
+							XBreakpoint<?> breakpoint = myVirtualMachine.findBreakpointByRequest(event.request());
+							DotNetDebugContext context = myDebugProcess.createDebugContext(myVirtualMachine, breakpoint);
 
-							XBreakpoint<?> breakpoint = myVirtualMachine.findBreakpoint(event.request());
 							DotNetSuspendContext suspendContext = new DotNetSuspendContext(context, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
 							if(breakpoint != null)
 							{
@@ -580,34 +583,6 @@ public class MonoDebugThread extends Thread
 				virtualMachine.resume();
 			}
 		}
-	}
-
-	@Nullable
-	private XLineBreakpoint<?> resolveToBreakpoint(@Nullable Location location)
-	{
-		if(location == null)
-		{
-			return null;
-		}
-		String sourcePath = location.sourcePath();
-		if(sourcePath == null)
-		{
-			return null;
-		}
-		VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(sourcePath);
-		if(fileByPath == null)
-		{
-			return null;
-		}
-
-		XDebuggerManager debuggerManager = XDebuggerManager.getInstance(getSession().getProject());
-		XLineBreakpoint<?> breakpointAtLine = debuggerManager.getBreakpointManager().findBreakpointAtLine(DotNetLineBreakpointType.getInstance(), fileByPath,
-				location.lineNumber() - 1); // .net asm - 1 index based, consulo - 0 based
-		if(breakpointAtLine == null)
-		{
-			return null;
-		}
-		return breakpointAtLine;
 	}
 
 	public XDebugSession getSession()
