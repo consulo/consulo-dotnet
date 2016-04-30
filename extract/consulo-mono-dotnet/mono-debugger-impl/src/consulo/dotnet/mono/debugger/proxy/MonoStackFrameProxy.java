@@ -43,20 +43,25 @@ import mono.debugger.util.ImmutablePair;
  */
 public class MonoStackFrameProxy implements DotNetStackFrameProxy
 {
-	private int myIndex;
-	private MonoVirtualMachineProxy myVirtualMachineProxy;
-	private StackFrameMirror myFrameMirror;
+	private final int myIndex;
+	private final MonoVirtualMachineProxy myVirtualMachineProxy;
+	private final StackFrameMirror myFrameMirror;
+
+	private final int myMethodId;
 
 	public MonoStackFrameProxy(int index, MonoVirtualMachineProxy virtualMachineProxy, StackFrameMirror frameMirror)
 	{
 		myIndex = index;
 		myVirtualMachineProxy = virtualMachineProxy;
 		myFrameMirror = frameMirror;
+
+		myMethodId = frameMirror.location().method().id();
 	}
 
+	@NotNull
 	public StackFrameMirror getFrameMirror()
 	{
-		return myFrameMirror;
+		return getRefreshedFrame();
 	}
 
 	@NotNull
@@ -65,7 +70,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	{
 		try
 		{
-			return MonoValueProxyUtil.wrap(myFrameMirror.thisObject());
+			return MonoValueProxyUtil.wrap(getRefreshedFrame().thisObject());
 		}
 		catch(AbsentInformationException e)
 		{
@@ -137,14 +142,14 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public Object getEqualityObject()
 	{
-		return myFrameMirror.location().method().id();
+		return myMethodId;
 	}
 
 	@Nullable
 	@Override
 	public DotNetSourceLocation getSourceLocation()
 	{
-		return new MonoSourceLocation(myFrameMirror.location());
+		return new MonoSourceLocation(getRefreshedFrame().location());
 	}
 
 	@NotNull
