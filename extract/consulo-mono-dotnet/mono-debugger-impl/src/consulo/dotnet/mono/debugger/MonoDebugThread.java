@@ -50,7 +50,6 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.Processor;
-import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -262,10 +261,11 @@ public class MonoDebugThread extends Thread
 			EventSet eventSet;
 			try
 			{
-				while((eventSet = eventQueue.remove(10)) != null)
+				boolean stopped = false;
+				boolean focusUI = false;
+
+				while((eventSet = eventQueue.remove(1)) != null)
 				{
-					boolean stopped = false;
-					boolean focusUI = false;
 					for(final Event event : eventSet)
 					{
 						if(event instanceof BreakpointEvent)
@@ -397,10 +397,8 @@ public class MonoDebugThread extends Thread
 			}
 			catch(Throwable e)
 			{
-				e.printStackTrace();
+				LOGGER.error(e);
 			}
-
-			TimeoutUtil.sleep(50);
 		}
 	}
 
