@@ -40,6 +40,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
@@ -220,6 +221,11 @@ public class MonoDebugThread extends Thread
 		Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> exceptionBreakpoints = myDebugProcess.getExceptionBreakpoints();
 		for(XBreakpoint<DotNetExceptionBreakpointProperties> exceptionBreakpoint : exceptionBreakpoints)
 		{
+			String vmQname = exceptionBreakpoint.getProperties().VM_QNAME;
+			if(!StringUtil.isEmpty(vmQname))
+			{
+				continue;
+			}
 			MonoBreakpointUtil.createExceptionRequest(myVirtualMachine, exceptionBreakpoint, null);
 		}
 
@@ -230,6 +236,15 @@ public class MonoDebugThread extends Thread
 			for(XLineBreakpoint<?> breakpoint : breakpoints)
 			{
 				collectTypeNames(breakpoint, types);
+			}
+
+			for(XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint : exceptionBreakpoints)
+			{
+				String vmQname = breakpoint.getProperties().VM_QNAME;
+				if(!StringUtil.isEmpty(vmQname))
+				{
+					types.add(vmQname);
+				}
 			}
 
 			if(!types.isEmpty())
