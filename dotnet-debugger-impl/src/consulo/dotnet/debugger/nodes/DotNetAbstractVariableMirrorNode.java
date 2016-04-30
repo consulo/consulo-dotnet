@@ -174,7 +174,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		DotNetTypeProxy baseType = typeOfVariable.getBaseType();
 		if(baseType != null && DotNetTypes.System.Enum.equals(baseType.getFullName()))
 		{
-			return AllIcons.Debugger.Db_primitive;
+			return AllIcons.Nodes.Enum;
 		}
 
 		return AllIcons.Debugger.Value;
