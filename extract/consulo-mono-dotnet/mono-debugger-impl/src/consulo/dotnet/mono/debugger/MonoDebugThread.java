@@ -511,8 +511,7 @@ public class MonoDebugThread extends Thread
 					DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
 					if(valueOfVariableSafe instanceof DotNetBooleanValueProxy)
 					{
-						Boolean boolValue = ((DotNetBooleanValueProxy) valueOfVariableSafe).getValue();
-						return boolValue;
+						return ((DotNetBooleanValueProxy) valueOfVariableSafe).getValue();
 					}
 				}
 			}
