@@ -17,12 +17,13 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import consulo.dotnet.psi.DotNetAccessorOwner;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetPropertyDeclaration extends DotNetVariable, DotNetVirtualImplementOwner, DotNetMemberOwner, DotNetQualifiedElement
+public interface DotNetPropertyDeclaration extends DotNetVariable, DotNetVirtualImplementOwner, DotNetMemberOwner, DotNetQualifiedElement, DotNetAccessorOwner
 {
 	String DEFAULT_INDEX_PROPERTY_NAME = "Item";
 

@@ -75,6 +75,7 @@ public class MsilPropertyEntryImpl extends MsilQVariableImpl implements MsilProp
 		return getStubOrPsiChildren(MsilStubElements.XXX_ACCESSOR, MsilXXXAcessor.ARRAY_FACTORY);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetNamedElement[] getMembers()

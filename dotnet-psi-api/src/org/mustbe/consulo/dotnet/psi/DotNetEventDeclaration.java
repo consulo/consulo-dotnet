@@ -17,12 +17,13 @@
 package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import consulo.dotnet.psi.DotNetAccessorOwner;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-public interface DotNetEventDeclaration extends DotNetVariable, DotNetVirtualImplementOwner, DotNetMemberOwner, DotNetQualifiedElement
+public interface DotNetEventDeclaration extends DotNetVariable, DotNetVirtualImplementOwner, DotNetMemberOwner, DotNetQualifiedElement, DotNetAccessorOwner
 {
 	@NotNull
 	DotNetXXXAccessor[] getAccessors();

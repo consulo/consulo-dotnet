@@ -19,16 +19,25 @@ package consulo.dotnet.debugger;
 import gnu.trove.THashSet;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
+import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
+import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
+import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -65,6 +74,7 @@ import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.dotnet.psi.DotNetAccessorOwner;
 
 /**
  * @author VISTALL
@@ -95,50 +105,111 @@ public class DotNetStackFrame extends XStackFrame
 		{
 			return null;
 		}
-		String fileName = sourceLocation.getFilePath();
-		if(fileName == null)
+		VirtualFile fileByPath = sourceLocation.getFilePath() == null ? null : LocalFileSystem.getInstance().findFileByPath(sourceLocation.getFilePath());
+		final DotNetMethodProxy method = sourceLocation.getMethod();
+		if(fileByPath != null)
 		{
-			return null;
-		}
-		VirtualFile fileByPath = LocalFileSystem.getInstance().findFileByPath(fileName);
-		if(fileByPath == null)
-		{
-			return null;
-		}
-
-		XLineBreakpoint<?> breakpoint = myDebuggerContext.getBreakpoint();
-		XSourcePosition originalPosition = XDebuggerUtil.getInstance().createPosition(fileByPath, sourceLocation.getLineZeroBased());
-		if(originalPosition == null)
-		{
-			return null;
-		}
-		if(breakpoint != null)
-		{
-			DotNetLineBreakpointProperties properties = (DotNetLineBreakpointProperties) breakpoint.getProperties();
-			final Integer executableChildrenAtLineIndex = properties.getExecutableChildrenAtLineIndex();
-			if(executableChildrenAtLineIndex != null && executableChildrenAtLineIndex > -1)
+			XLineBreakpoint<?> breakpoint = myDebuggerContext.getBreakpoint();
+			XSourcePosition originalPosition = XDebuggerUtil.getInstance().createPosition(fileByPath, sourceLocation.getLineZeroBased());
+			assert originalPosition != null;
+			if(breakpoint != null)
 			{
-				final DotNetMethodProxy method = sourceLocation.getMethod();
-				if(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(method) != null)
+				DotNetLineBreakpointProperties properties = (DotNetLineBreakpointProperties) breakpoint.getProperties();
+				final Integer executableChildrenAtLineIndex = properties.getExecutableChildrenAtLineIndex();
+				if(executableChildrenAtLineIndex != null && executableChildrenAtLineIndex > -1)
 				{
-					PsiElement executableElement = ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>()
+					if(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(method) != null)
 					{
-						@Override
-						public PsiElement compute()
+						PsiElement executableElement = ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>()
 						{
-							return method.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), executableChildrenAtLineIndex);
-						}
-					});
+							@Override
+							public PsiElement compute()
+							{
+								return method.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), executableChildrenAtLineIndex);
+							}
+						});
 
-					if(executableElement != null)
-					{
-						return new DotNetSourcePositionByExecutableElement(originalPosition, executableElement);
+						if(executableElement != null)
+						{
+							return new DotNetSourcePositionByExecutableElement(originalPosition, executableElement);
+						}
 					}
 				}
 			}
-		}
 
-		return originalPosition;
+			return originalPosition;
+		}
+		else
+		{
+			final DotNetTypeProxy declarationType = method.getDeclarationType();
+
+			return ApplicationManager.getApplication().runReadAction(new Computable<XSourcePosition>()
+			{
+				@Override
+				public XSourcePosition compute()
+				{
+					DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(declarationType.getFullName(), myDebuggerContext.getResolveScope());
+					if(type == null)
+					{
+						return null;
+					}
+
+					PsiElement target = type;
+					for(DotNetNamedElement element : type.getMembers())
+					{
+						if(Comparing.equal(getVmName(element), method.getName()))
+						{
+							target = element;
+							break;
+						}
+
+						if(element instanceof DotNetAccessorOwner)
+						{
+							for(DotNetXXXAccessor accessor : ((DotNetAccessorOwner) element).getAccessors())
+							{
+								if(Comparing.equal(getVmName(accessor), method.getName()))
+								{
+									target = element;
+									break;
+								}
+							}
+						}
+					}
+					return XDebuggerUtil.getInstance().createPositionByOffset(target.getContainingFile().getVirtualFile(), target.getTextOffset());
+				}
+			});
+		}
+	}
+
+	@RequiredReadAction
+	private static String getVmName(DotNetNamedElement element)
+	{
+		if(element instanceof DotNetConstructorDeclaration)
+		{
+			if(((DotNetConstructorDeclaration) element).hasModifier(DotNetModifier.STATIC))
+			{
+				return MsilHelper.STATIC_CONSTRUCTOR_NAME;
+			}
+
+			if(((DotNetConstructorDeclaration) element).isDeConstructor())
+			{
+				return "Finalize";
+			}
+			return MsilHelper.CONSTRUCTOR_NAME;
+		}
+		if(element instanceof DotNetXXXAccessor)
+		{
+			PsiElement parent = element.getParent();
+			if(parent instanceof DotNetNamedElement)
+			{
+				DotNetXXXAccessor.Kind accessorKind = ((DotNetXXXAccessor) element).getAccessorKind();
+				if(accessorKind != null)
+				{
+					return accessorKind.name().toUpperCase(Locale.US) + "_" + ((DotNetNamedElement) parent).getName();
+				}
+			}
+		}
+		return element.getName();
 	}
 
 	@Nullable

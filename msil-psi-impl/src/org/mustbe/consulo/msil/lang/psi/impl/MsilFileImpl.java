@@ -17,6 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.msil.MsilFileType;
 import org.mustbe.consulo.msil.MsilLanguage;
@@ -45,6 +46,7 @@ public class MsilFileImpl extends PsiFileBase implements MsilFile
 		return MsilFileType.INSTANCE;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetNamedElement[] getMembers()
