@@ -20,22 +20,30 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetThreadProxy
+public abstract class DotNetThreadProxy
 {
-	long getId();
+	public abstract long getId();
 
-	boolean isRunning();
+	public abstract boolean isRunning();
 
-	boolean isSuspended();
+	public abstract boolean isSuspended();
 
 	@Nullable
-	String getName();
+	public abstract String getName();
 
 	@NotNull
-	List<DotNetStackFrameProxy> getFrames();
+	public abstract List<DotNetStackFrameProxy> getFrames();
+
+	@Nullable
+	public DotNetStackFrameProxy getFrame(int index)
+	{
+		List<DotNetStackFrameProxy> frames = getFrames();
+		return ArrayUtil2.safeGet(frames, index);
+	}
 }

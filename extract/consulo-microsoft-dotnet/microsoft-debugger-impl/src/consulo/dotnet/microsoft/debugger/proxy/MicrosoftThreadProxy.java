@@ -31,7 +31,7 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequest
  * @author VISTALL
  * @since 18.04.2016
  */
-public class MicrosoftThreadProxy implements DotNetThreadProxy
+public class MicrosoftThreadProxy extends DotNetThreadProxy
 {
 	private int myId;
 	private String myName;

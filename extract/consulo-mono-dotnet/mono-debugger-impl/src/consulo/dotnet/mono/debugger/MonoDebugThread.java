@@ -18,7 +18,6 @@ package consulo.dotnet.mono.debugger;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
@@ -27,19 +26,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -52,30 +47,21 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
-import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.DotNetDebuggerProvider;
-import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.DotNetSuspendContext;
+import consulo.dotnet.debugger.breakpoint.DotNetBreakpointEngine;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
-import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
-import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
-import consulo.dotnet.mono.debugger.proxy.MonoStackFrameProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoThreadProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.AppDomainMirror;
@@ -83,7 +69,6 @@ import mono.debugger.EventKind;
 import mono.debugger.NotSuspendedException;
 import mono.debugger.SocketAttachingConnector;
 import mono.debugger.SocketListeningConnector;
-import mono.debugger.StackFrameMirror;
 import mono.debugger.TypeMirror;
 import mono.debugger.VMDisconnectedException;
 import mono.debugger.VirtualMachine;
@@ -101,17 +86,16 @@ public class MonoDebugThread extends Thread
 	private final XDebugSession mySession;
 	private final MonoDebugProcess myDebugProcess;
 	private final DebugConnectionInfo myDebugConnectionInfo;
-	private boolean myStop;
-
-	private Queue<Processor<MonoVirtualMachineProxy>> myQueue = new ConcurrentLinkedQueue<Processor<MonoVirtualMachineProxy>>();
+	private final DotNetBreakpointEngine myBreakpointEngine = new DotNetBreakpointEngine();
+	private final Queue<Processor<MonoVirtualMachineProxy>> myQueue = new ConcurrentLinkedQueue<Processor<MonoVirtualMachineProxy>>();
+	private final EventDispatcher<MonoVirtualMachineListener> myEventDispatcher = EventDispatcher.create(MonoVirtualMachineListener.class);
 
 	private MonoVirtualMachineProxy myVirtualMachine;
-
-	private EventDispatcher<MonoVirtualMachineListener> myEventDispatcher = EventDispatcher.create(MonoVirtualMachineListener.class);
+	private boolean myStop;
 
 	public MonoDebugThread(XDebugSession session, MonoDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo)
 	{
-		super("DotNetDebugThread: " + new Random().nextInt());
+		super("MonoDebugThread: " + new Random().nextInt());
 		mySession = session;
 		myDebugProcess = debugProcess;
 		myDebugConnectionInfo = debugConnectionInfo;
@@ -298,9 +282,11 @@ public class MonoDebugThread extends Thread
 							DotNetDebugContext debugContext = myDebugProcess.createDebugContext(myVirtualMachine, breakpoint);
 							if(breakpoint != null)
 							{
-								tryEvaluateBreakpointLogMessage(eventSet, (XLineBreakpoint<?>) breakpoint, debugContext);
+								MonoThreadProxy threadProxy = new MonoThreadProxy(myVirtualMachine, eventSet.eventThread());
 
-								if(tryEvaluateBreakpointCondition(eventSet, (XLineBreakpoint<?>) breakpoint, debugContext))
+								myBreakpointEngine.tryEvaluateBreakpointLogMessage(threadProxy, (XLineBreakpoint<?>) breakpoint, debugContext);
+
+								if(myBreakpointEngine.tryEvaluateBreakpointCondition(threadProxy, (XLineBreakpoint<?>) breakpoint, debugContext))
 								{
 									DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
 
@@ -479,121 +465,6 @@ public class MonoDebugThread extends Thread
 				}
 			}
 		});
-	}
-
-	private XValue evaluateBreakpointExpression(@NotNull EventSet eventSet,
-			@NotNull final XLineBreakpoint<?> breakpoint,
-			@Nullable final XExpression conditionExpression,
-			@NotNull final DotNetDebugContext debugContext)
-	{
-		if(conditionExpression == null)
-		{
-			return null;
-		}
-
-		final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
-		if(virtualFile == null)
-		{
-			return null;
-		}
-
-		final DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(conditionExpression.getLanguage());
-		if(provider != null)
-		{
-			final List<StackFrameMirror> frames = eventSet.eventThread().frames();
-
-			return ApplicationManager.getApplication().runReadAction(new Computable<XValue>()
-			{
-				@Override
-				public XValue compute()
-				{
-					Document document = virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null;
-					if(document == null)
-					{
-						return null;
-					}
-					int line = breakpoint.getLine();
-
-					int offset = line < document.getLineCount() ? document.getLineStartOffset(line) : -1;
-					PsiFile file = PsiManager.getInstance(debugContext.getProject()).findFile(virtualFile);
-					if(file == null)
-					{
-						return null;
-					}
-					PsiElement elementAt = offset >= 0 ? file.findElementAt(offset) : null;
-					if(elementAt == null)
-					{
-						return null;
-					}
-					final Ref<XValue> valueRef = Ref.create();
-					provider.evaluate(new MonoStackFrameProxy(0, myVirtualMachine, frames.get(0)), debugContext, conditionExpression.getExpression(), elementAt,
-							new XDebuggerEvaluator.XEvaluationCallback()
-					{
-						@Override
-						public void evaluated(@NotNull XValue result)
-						{
-							valueRef.set(result);
-						}
-
-						@Override
-						public void errorOccurred(@NotNull String errorMessage)
-						{
-						}
-					}, XSourcePositionImpl.createByElement(elementAt));
-					return valueRef.get();
-				}
-			});
-		}
-		return null;
-	}
-
-	private void tryEvaluateBreakpointLogMessage(EventSet eventSet, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext)
-	{
-		XExpression logExpressionObject = breakpoint.getLogExpressionObject();
-		if(logExpressionObject == null)
-		{
-			return;
-		}
-
-		ConsoleView consoleView = mySession.getConsoleView();
-		if(consoleView == null)
-		{
-			return;
-		}
-
-		XValue value = evaluateBreakpointExpression(eventSet, breakpoint, logExpressionObject, debugContext);
-		if(value instanceof DotNetAbstractVariableMirrorNode)
-		{
-			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
-			if(valueOfVariableSafe != null)
-			{
-				String toStringValue = DotNetDebuggerSearchUtil.toStringValue(new MonoThreadProxy(myVirtualMachine, eventSet.eventThread()), valueOfVariableSafe);
-				if(toStringValue != null)
-				{
-					consoleView.print(toStringValue, ConsoleViewContentType.NORMAL_OUTPUT);
-				}
-			}
-		}
-	}
-
-	private boolean tryEvaluateBreakpointCondition(EventSet eventSet, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception
-	{
-		final XExpression conditionExpression = breakpoint.getConditionExpression();
-		if(conditionExpression == null)
-		{
-			return true;
-		}
-
-		XValue value = evaluateBreakpointExpression(eventSet, breakpoint, conditionExpression, debugContext);
-		if(value instanceof DotNetAbstractVariableMirrorNode)
-		{
-			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
-			if(valueOfVariableSafe instanceof DotNetBooleanValueProxy)
-			{
-				return ((DotNetBooleanValueProxy) valueOfVariableSafe).getValue();
-			}
-		}
-		return true;
 	}
 
 	private void insertBreakpoints(final MonoVirtualMachineProxy virtualMachine, final TypeMirror typeMirror)

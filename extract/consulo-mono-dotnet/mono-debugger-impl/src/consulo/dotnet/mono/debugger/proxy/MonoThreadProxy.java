@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
@@ -31,7 +32,7 @@ import mono.debugger.ThreadMirror;
  * @author VISTALL
  * @since 18.04.2016
  */
-public class MonoThreadProxy implements DotNetThreadProxy
+public class MonoThreadProxy extends DotNetThreadProxy
 {
 	private MonoVirtualMachineProxy myVirtualMachineProxy;
 	private ThreadMirror myThreadMirror;
@@ -98,5 +99,19 @@ public class MonoThreadProxy implements DotNetThreadProxy
 			proxies.add(new MonoStackFrameProxy(i, myVirtualMachineProxy, frameMirror));
 		}
 		return proxies;
+	}
+
+	@Nullable
+	@Override
+	public DotNetStackFrameProxy getFrame(int index)
+	{
+		List<StackFrameMirror> frames = myThreadMirror.frames();
+
+		StackFrameMirror frameMirror = ArrayUtil2.safeGet(frames, index);
+		if(frameMirror != null)
+		{
+			return new MonoStackFrameProxy(index, myVirtualMachineProxy, frameMirror);
+		}
+		return null;
 	}
 }
