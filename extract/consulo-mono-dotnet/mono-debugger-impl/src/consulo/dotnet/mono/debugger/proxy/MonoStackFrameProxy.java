@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
@@ -28,6 +29,7 @@ import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import mono.debugger.AbsentInformationException;
 import mono.debugger.InvalidObjectException;
 import mono.debugger.InvalidStackFrameException;
 import mono.debugger.LocalVariableOrParameterMirror;
@@ -59,11 +61,15 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 
 	@NotNull
 	@Override
-	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetInvalidStackFrameException
+	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
 	{
 		try
 		{
 			return MonoValueProxyUtil.wrap(myFrameMirror.thisObject());
+		}
+		catch(AbsentInformationException e)
+		{
+			throw new DotNetAbsentInformationException(e);
 		}
 		catch(InvalidObjectException e)
 		{
