@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -62,6 +63,7 @@ import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerProvider;
+import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
@@ -281,7 +283,9 @@ public class MonoDebugThread extends Thread
 							DotNetDebugContext debugContext = myDebugProcess.createDebugContext(myVirtualMachine, breakpoint);
 							if(breakpoint != null)
 							{
-								if(tryEvaluateBreakpoint(eventSet, (XLineBreakpoint<?>) breakpoint, debugContext))
+								tryEvaluateBreakpointLogMessage(eventSet, (XLineBreakpoint<?>) breakpoint, debugContext);
+
+								if(tryEvaluateBreakpointCondition(eventSet, (XLineBreakpoint<?>) breakpoint, debugContext))
 								{
 									DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
 
@@ -462,72 +466,116 @@ public class MonoDebugThread extends Thread
 		});
 	}
 
-	private boolean tryEvaluateBreakpoint(EventSet eventSet, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception
+	private XValue evaluateBreakpointExpression(@NotNull EventSet eventSet,
+			@NotNull final XLineBreakpoint<?> breakpoint,
+			@Nullable final XExpression conditionExpression,
+			@NotNull final DotNetDebugContext debugContext)
+	{
+		if(conditionExpression == null)
+		{
+			return null;
+		}
+
+		final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
+		if(virtualFile == null)
+		{
+			return null;
+		}
+
+		final DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(conditionExpression.getLanguage());
+		if(provider != null)
+		{
+			final List<StackFrameMirror> frames = eventSet.eventThread().frames();
+
+			return ApplicationManager.getApplication().runReadAction(new Computable<XValue>()
+			{
+				@Override
+				public XValue compute()
+				{
+					Document document = virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null;
+					if(document == null)
+					{
+						return null;
+					}
+					int line = breakpoint.getLine();
+
+					int offset = line < document.getLineCount() ? document.getLineStartOffset(line) : -1;
+					PsiFile file = PsiManager.getInstance(debugContext.getProject()).findFile(virtualFile);
+					if(file == null)
+					{
+						return null;
+					}
+					PsiElement elementAt = offset >= 0 ? file.findElementAt(offset) : null;
+					if(elementAt == null)
+					{
+						return null;
+					}
+					final Ref<XValue> valueRef = Ref.create();
+					provider.evaluate(new MonoStackFrameProxy(0, myVirtualMachine, frames.get(0)), debugContext, conditionExpression.getExpression(), elementAt,
+							new XDebuggerEvaluator.XEvaluationCallback()
+					{
+						@Override
+						public void evaluated(@NotNull XValue result)
+						{
+							valueRef.set(result);
+						}
+
+						@Override
+						public void errorOccurred(@NotNull String errorMessage)
+						{
+						}
+					}, XSourcePositionImpl.createByElement(elementAt));
+					return valueRef.get();
+				}
+			});
+		}
+		return null;
+	}
+
+	private void tryEvaluateBreakpointLogMessage(EventSet eventSet, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext)
+	{
+		XExpression logExpressionObject = breakpoint.getLogExpressionObject();
+		if(logExpressionObject == null)
+		{
+			return;
+		}
+
+		ConsoleView consoleView = mySession.getConsoleView();
+		if(consoleView == null)
+		{
+			return;
+		}
+
+		XValue value = evaluateBreakpointExpression(eventSet, breakpoint, logExpressionObject, debugContext);
+		if(value instanceof DotNetAbstractVariableMirrorNode)
+		{
+			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
+			if(valueOfVariableSafe != null)
+			{
+				String toStringValue = DotNetDebuggerSearchUtil.toStringValue(new MonoThreadProxy(myVirtualMachine, eventSet.eventThread()), valueOfVariableSafe);
+				if(toStringValue != null)
+				{
+					consoleView.print(toStringValue, ConsoleViewContentType.NORMAL_OUTPUT);
+				}
+			}
+		}
+	}
+
+	private boolean tryEvaluateBreakpointCondition(EventSet eventSet, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception
 	{
 		final XExpression conditionExpression = breakpoint.getConditionExpression();
-		if(conditionExpression != null)
+		if(conditionExpression == null)
 		{
-			final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
-			if(virtualFile == null)
+			return true;
+		}
+
+		XValue value = evaluateBreakpointExpression(eventSet, breakpoint, conditionExpression, debugContext);
+		if(value instanceof DotNetAbstractVariableMirrorNode)
+		{
+			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
+			if(valueOfVariableSafe instanceof DotNetBooleanValueProxy)
 			{
-				return true;
-			}
-
-			final DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(conditionExpression.getLanguage());
-			if(provider != null)
-			{
-				final List<StackFrameMirror> frames = eventSet.eventThread().frames();
-
-				final XValue value = ApplicationManager.getApplication().runReadAction(new Computable<XValue>()
-				{
-					@Override
-					public XValue compute()
-					{
-						Document document = virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null;
-						if(document == null)
-						{
-							return null;
-						}
-						int line = breakpoint.getLine();
-
-						int offset = line < document.getLineCount() ? document.getLineStartOffset(line) : -1;
-						PsiFile file = PsiManager.getInstance(debugContext.getProject()).findFile(virtualFile);
-						if(file == null)
-						{
-							return null;
-						}
-						PsiElement elementAt = offset >= 0 ? file.findElementAt(offset) : null;
-						if(elementAt == null)
-						{
-							return null;
-						}
-						final Ref<XValue> valueRef = Ref.create();
-						provider.evaluate(new MonoStackFrameProxy(0, myVirtualMachine, frames.get(0)), debugContext, conditionExpression.getExpression(), elementAt,
-								new XDebuggerEvaluator.XEvaluationCallback()
-						{
-							@Override
-							public void evaluated(@NotNull XValue result)
-							{
-								valueRef.set(result);
-							}
-
-							@Override
-							public void errorOccurred(@NotNull String errorMessage)
-							{
-							}
-						}, XSourcePositionImpl.createByElement(elementAt));
-						return valueRef.get();
-					}
-				});
-
-				if(value instanceof DotNetAbstractVariableMirrorNode)
-				{
-					DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
-					if(valueOfVariableSafe instanceof DotNetBooleanValueProxy)
-					{
-						return ((DotNetBooleanValueProxy) valueOfVariableSafe).getValue();
-					}
-				}
+				return ((DotNetBooleanValueProxy) valueOfVariableSafe).getValue();
 			}
 		}
 		return true;

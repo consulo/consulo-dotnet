@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -80,25 +81,38 @@ public class DotNetDebuggerSearchUtil
 			return;
 		}
 		DotNetValueProxy throwExceptionValue = ((DotNetThrowValueException) t).getThrowExceptionValue();
-		DotNetTypeProxy type = throwExceptionValue.getType();
 
-		assert type != null;
-		DotNetMethodProxy toString = type.findMethodByName("ToString", true);
-		DotNetValueProxy invoke = null;
+		String value = toStringValue(mirror, throwExceptionValue);
+		if(value != null)
+		{
+			throw new IllegalArgumentException(value);
+		}
+	}
+
+	@Nullable
+	public static String toStringValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy valueProxy)
+	{
 		try
 		{
+			DotNetTypeProxy type = valueProxy.getType();
+			if(type == null)
+			{
+				return null;
+			}
+			DotNetMethodProxy toString = type.findMethodByName("ToString", true);
+			DotNetValueProxy invoke = null;
 			assert toString != null;
-			invoke = toString.invoke(mirror, throwExceptionValue);
+			invoke = toString.invoke(threadProxy, valueProxy);
 			if(!(invoke instanceof DotNetStringValueProxy))
 			{
-				return;
+				return null;
 			}
-			throw new IllegalArgumentException(((DotNetStringValueProxy) invoke).getValue());
+			return (String) invoke.getValue();
 		}
-		catch(DotNetThrowValueException e)
+		catch(DotNetThrowValueException ignored)
 		{
-			e.printStackTrace();
 		}
+		return null;
 	}
 
 	public static boolean isInImplementList(DotNetTypeProxy typeMirror, String qName)
