@@ -273,25 +273,26 @@ public class MonoDebugThread extends Thread
 							Location location = ((BreakpointRequest) event.request()).location();
 							XLineBreakpoint<?> breakpoint = resolveToBreakpoint(location);
 
+							stopped = true;
+
 							DotNetDebugContext debugContext = myDebugProcess.createDebugContext(myVirtualMachine, breakpoint);
 							if(breakpoint != null)
 							{
-								DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
-
 								if(tryEvaluateBreakpoint(eventSet, breakpoint, debugContext))
 								{
+									DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
+
 									mySession.breakpointReached(breakpoint, null, suspendContext);
 								}
 								else
 								{
-									myVirtualMachine.resume();
+									stopped = false;
 								}
 							}
 							else
 							{
 								mySession.positionReached(new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
 							}
-							stopped = true;
 						}
 						else if(event instanceof StepEvent)
 						{
