@@ -168,6 +168,19 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 		myBreakpointEventRequests.putValue(breakpoint, request);
 	}
 
+	@Nullable
+	public XBreakpoint<?> findBreakpoint(@NotNull EventRequest eventRequest)
+	{
+		for(Map.Entry<XBreakpoint, Collection<EventRequest>> entry : myBreakpointEventRequests.entrySet())
+		{
+			if(entry.getValue().contains(eventRequest))
+			{
+				return entry.getKey();
+			}
+		}
+		return null;
+	}
+
 	public void stopBreakpointRequests(XBreakpoint<?> breakpoint)
 	{
 		Collection<EventRequest> eventRequests = myBreakpointEventRequests.remove(breakpoint);

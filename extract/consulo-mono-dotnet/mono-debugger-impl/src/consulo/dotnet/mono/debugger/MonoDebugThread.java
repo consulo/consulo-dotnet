@@ -292,6 +292,7 @@ public class MonoDebugThread extends Thread
 							else
 							{
 								mySession.positionReached(new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
+								focusUI = true;
 							}
 						}
 						else if(event instanceof StepEvent)
@@ -341,9 +342,19 @@ public class MonoDebugThread extends Thread
 						else if(event instanceof ExceptionEvent)
 						{
 							DotNetDebugContext context = myDebugProcess.createDebugContext(myVirtualMachine, null);
-							mySession.positionReached(new DotNetSuspendContext(context, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
+
+							XBreakpoint<?> breakpoint = myVirtualMachine.findBreakpoint(event.request());
+							DotNetSuspendContext suspendContext = new DotNetSuspendContext(context, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
+							if(breakpoint != null)
+							{
+								mySession.breakpointReached(breakpoint, null, suspendContext);
+							}
+							else
+							{
+								mySession.positionReached(suspendContext);
+								focusUI = true;
+							}
 							stopped = true;
-							focusUI = true;
 						}
 						else
 						{
