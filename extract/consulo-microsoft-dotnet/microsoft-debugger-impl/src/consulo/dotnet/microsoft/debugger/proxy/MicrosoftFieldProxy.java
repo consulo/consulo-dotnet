@@ -63,7 +63,8 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)
 	{
 		MicrosoftObjectValueProxy objectValueProxy = (MicrosoftObjectValueProxy) proxy;
-		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetFieldValueRequest(objectValueProxy.getResult().ObjectId, myField.Token));
+		int objectId = objectValueProxy == null ? 0 : objectValueProxy.getResult().ObjectId;
+		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetFieldValueRequest((int) threadProxy.getId(), 0, myParentType.getTypeRef(), objectId, myField.Token));
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	@Override
 	public boolean isLiteral()
 	{
-		return false;
+		return BitUtil.isSet(info().Attributes, FieldAttributes.Literal);
 	}
 
 	@NotNull

@@ -22,6 +22,7 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.SandboxUtil;
 
 /**
  * @author VISTALL
@@ -39,6 +40,10 @@ public class DebuggerNotificationProjectComponent extends AbstractProjectCompone
 	@Override
 	public void projectOpened()
 	{
+		if(SandboxUtil.isInsideSandbox())
+		{
+			return;
+		}
 		String text = "Plugin .NET debugging API was greatly changed. <br> It required action for implementing another .NET debuggers. <br>" +
 				"What why you can found some new bugs in already exists functional.<br> Please report it <a href=\"https://github.com/consulo/consulo-dotnet/issues\">here</a>.<br>" +
 				"<b>Unity</b> plugin now required <b>Mono</b> plugin, please install if you don't have it.<br>" +

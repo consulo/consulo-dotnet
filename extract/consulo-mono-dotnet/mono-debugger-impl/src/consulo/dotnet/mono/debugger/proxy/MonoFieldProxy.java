@@ -2,6 +2,7 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -63,6 +64,6 @@ public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implement
 	@Override
 	public boolean isLiteral()
 	{
-		return (myMirror.attributes() & FieldAttributes.Literal) == FieldAttributes.Literal;
+		return BitUtil.isSet(myMirror.attributes(), FieldAttributes.Literal);
 	}
 }
