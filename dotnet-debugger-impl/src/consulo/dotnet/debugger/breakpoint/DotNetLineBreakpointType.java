@@ -72,7 +72,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 	public DotNetLineBreakpointType()
 	{
-		super("dotnet-line-breapoint", ".NET Line Breakpoint");
+		super("dotnet-line-breakpoint", ".NET Line Breakpoint");
 	}
 
 	@Nullable

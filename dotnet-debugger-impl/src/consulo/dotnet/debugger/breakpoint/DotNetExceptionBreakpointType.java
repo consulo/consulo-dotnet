@@ -55,7 +55,7 @@ public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<D
 
 	public DotNetExceptionBreakpointType()
 	{
-		super("dotnet-exception-breapoint", ".NET Exception Breakpoint");
+		super("dotnet-exception-breakpoint", ".NET Exception Breakpoint");
 	}
 
 	@NotNull
