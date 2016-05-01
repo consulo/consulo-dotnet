@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
+import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -65,11 +66,14 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 
 	private GetTypeInfoRequestResult myResult;
 
+	private Getter<DotNetTypeProxy> myBaseTypeGetter;
+
 	protected MicrosoftTypeProxy(MicrosoftDebuggerClient client, TypeRef typeRef, GetTypeInfoRequestResult requestResult)
 	{
 		myClient = client;
 		myTypeRef = typeRef;
 		myResult = requestResult;
+		myBaseTypeGetter = lazyOf(client, requestResult.BaseType);
 	}
 
 	@Override
@@ -109,7 +113,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetTypeProxy getBaseType()
 	{
-		return null;
+		return myBaseTypeGetter.get();
 	}
 
 	@NotNull
@@ -143,8 +147,8 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		MicrosoftPropertyProxy[] propertyProxies = new MicrosoftPropertyProxy[properties.length];
 		for(int i = 0; i < properties.length; i++)
 		{
-			GetTypeInfoRequestResult.PropertyInfo field = properties[i];
-			propertyProxies[i] = new MicrosoftPropertyProxy(myClient, this, field);
+			GetTypeInfoRequestResult.PropertyInfo property = properties[i];
+			propertyProxies[i] = new MicrosoftPropertyProxy(myClient, this, property);
 		}
 		return propertyProxies;
 	}
@@ -153,7 +157,14 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetMethodProxy[] getMethods()
 	{
-		return new DotNetMethodProxy[0];
+		int[] methods = myResult.Methods;
+
+		MicrosoftMethodProxy[] methodProxies = new MicrosoftMethodProxy[methods.length];
+		for(int i = 0; i < methods.length; i++)
+		{
+			methodProxies[i] = new MicrosoftMethodProxy(myClient, myTypeRef, methods[i]);
+		}
+		return methodProxies;
 	}
 
 	@Override
@@ -166,6 +177,24 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
 	{
+		for(DotNetMethodProxy proxy : getMethods())
+		{
+			DotNetMethodParameterProxy[] parameters = proxy.getParameters();
+			//TODO [VISTALL] dummy
+			if(proxy.getName().equals(name) && params.length == parameters.length)
+			{
+				return proxy;
+			}
+		}
+
+		if(deep)
+		{
+			DotNetTypeProxy baseType = getBaseType();
+			if(baseType != null)
+			{
+				return baseType.findMethodByName(name, true, params);
+			}
+		}
 		return null;
 	}
 

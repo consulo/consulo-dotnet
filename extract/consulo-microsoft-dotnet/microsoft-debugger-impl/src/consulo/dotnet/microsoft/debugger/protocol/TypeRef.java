@@ -18,7 +18,6 @@ package consulo.dotnet.microsoft.debugger.protocol;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -27,8 +26,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TypeRef
 {
-	@NotNull
-	public String ModuleName;
+	public int ModuleNameId;
 
 	public int ClassToken;
 
@@ -44,17 +42,11 @@ public class TypeRef
 	@Nullable
 	public List<Integer> ArrayLowerBounds;
 
-	public TypeRef(@NotNull String moduleName, int classToken)
-	{
-		ModuleName = moduleName;
-		ClassToken = classToken;
-	}
-
 	@Override
 	public String toString()
 	{
 		final StringBuilder sb = new StringBuilder("TypeRef{");
-		sb.append("ModuleName='").append(ModuleName).append('\'');
+		sb.append("ModuleNameId='").append(ModuleNameId).append('\'');
 		sb.append(", ClassToken=").append(ClassToken);
 		sb.append(", VmQName='").append(VmQName).append('\'');
 		sb.append(", IsPointer=").append(IsPointer);
@@ -91,7 +83,7 @@ public class TypeRef
 		{
 			return false;
 		}
-		if(!ModuleName.equals(typeRef.ModuleName))
+		if(ModuleNameId != typeRef.ModuleNameId)
 		{
 			return false;
 		}
@@ -114,7 +106,7 @@ public class TypeRef
 	@Override
 	public int hashCode()
 	{
-		int result = ModuleName.hashCode();
+		int result = ModuleNameId;
 		result = 31 * result + ClassToken;
 		result = 31 * result + (VmQName != null ? VmQName.hashCode() : 0);
 		result = 31 * result + (IsPointer ? 1 : 0);

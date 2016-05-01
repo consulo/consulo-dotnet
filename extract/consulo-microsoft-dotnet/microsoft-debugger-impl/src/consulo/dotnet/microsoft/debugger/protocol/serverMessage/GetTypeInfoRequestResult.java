@@ -50,8 +50,10 @@ public class GetTypeInfoRequestResult
 
 	public FieldInfo[] Fields = new FieldInfo[0];
 	public PropertyInfo[] Properties = new PropertyInfo[0];
+	public int[] Methods = new int[0];
 
 	public String Name;
 	public String FullName;
 	public boolean IsArray;
+	public TypeRef BaseType;
 }
