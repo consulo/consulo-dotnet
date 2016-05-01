@@ -16,7 +16,10 @@
 
 package consulo.dotnet.microsoft.debugger.protocol;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,6 +34,16 @@ public class TypeRef
 
 	public String VmQName;
 
+	public boolean IsPointer;
+
+	public boolean IsByRef;
+
+	@Nullable
+	public List<Integer> ArraySizes;
+
+	@Nullable
+	public List<Integer> ArrayLowerBounds;
+
 	public TypeRef(@NotNull String moduleName, int classToken)
 	{
 		ModuleName = moduleName;
@@ -41,9 +54,13 @@ public class TypeRef
 	public String toString()
 	{
 		final StringBuilder sb = new StringBuilder("TypeRef{");
-		sb.append("ModuleName=").append(ModuleName);
+		sb.append("ModuleName='").append(ModuleName).append('\'');
 		sb.append(", ClassToken=").append(ClassToken);
-		sb.append(", VmQName=").append(VmQName);
+		sb.append(", VmQName='").append(VmQName).append('\'');
+		sb.append(", IsPointer=").append(IsPointer);
+		sb.append(", IsByRef=").append(IsByRef);
+		sb.append(", ArraySizes=").append(ArraySizes);
+		sb.append(", ArrayLowerBounds=").append(ArrayLowerBounds);
 		sb.append('}');
 		return sb.toString();
 	}
@@ -66,7 +83,27 @@ public class TypeRef
 		{
 			return false;
 		}
+		if(IsPointer != typeRef.IsPointer)
+		{
+			return false;
+		}
+		if(IsByRef != typeRef.IsByRef)
+		{
+			return false;
+		}
 		if(!ModuleName.equals(typeRef.ModuleName))
+		{
+			return false;
+		}
+		if(VmQName != null ? !VmQName.equals(typeRef.VmQName) : typeRef.VmQName != null)
+		{
+			return false;
+		}
+		if(ArraySizes != null ? !ArraySizes.equals(typeRef.ArraySizes) : typeRef.ArraySizes != null)
+		{
+			return false;
+		}
+		if(ArrayLowerBounds != null ? !ArrayLowerBounds.equals(typeRef.ArrayLowerBounds) : typeRef.ArrayLowerBounds != null)
 		{
 			return false;
 		}
@@ -79,6 +116,11 @@ public class TypeRef
 	{
 		int result = ModuleName.hashCode();
 		result = 31 * result + ClassToken;
+		result = 31 * result + (VmQName != null ? VmQName.hashCode() : 0);
+		result = 31 * result + (IsPointer ? 1 : 0);
+		result = 31 * result + (IsByRef ? 1 : 0);
+		result = 31 * result + (ArraySizes != null ? ArraySizes.hashCode() : 0);
+		result = 31 * result + (ArrayLowerBounds != null ? ArrayLowerBounds.hashCode() : 0);
 		return result;
 	}
 }

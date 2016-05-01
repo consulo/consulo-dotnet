@@ -2,10 +2,12 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.Getter;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
+import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ArrayValueResult;
 
 /**
@@ -14,23 +16,28 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ArrayValueResult
  */
 public class MicrosoftArrayValueProxy extends MicrosoftValueProxyBase<ArrayValueResult> implements DotNetArrayValueProxy
 {
-	public MicrosoftArrayValueProxy(ArrayValueResult result)
+	private Getter<DotNetTypeProxy> myType;
+	private MicrosoftDebuggerClient myClient;
+
+	public MicrosoftArrayValueProxy(MicrosoftDebuggerClient client, ArrayValueResult result)
 	{
 		super(result);
+		myClient = client;
+		myType = MicrosoftTypeProxy.lazyOf(client, myResult.Type);
 	}
 
 	@Nullable
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return null;
+		return myType.get();
 	}
 
 	@NotNull
 	@Override
 	public Object getValue()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

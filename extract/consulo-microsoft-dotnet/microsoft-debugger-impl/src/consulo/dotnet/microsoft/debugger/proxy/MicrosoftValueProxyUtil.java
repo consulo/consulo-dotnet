@@ -76,7 +76,7 @@ public class MicrosoftValueProxyUtil
 		}
 		if(o instanceof ArrayValueResult)
 		{
-			return new MicrosoftArrayValueProxy((ArrayValueResult) o);
+			return new MicrosoftArrayValueProxy(client, (ArrayValueResult) o);
 		}
 		if(o instanceof NumberValueResult)
 		{
