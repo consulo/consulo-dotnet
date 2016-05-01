@@ -33,6 +33,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
 import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetThreadsRequest;
+import consulo.dotnet.microsoft.debugger.protocol.serverMessage.CharValueResult;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetThreadsRequestResult;
 
 /**
@@ -81,7 +82,10 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public DotNetCharValueProxy createCharValue(char value)
 	{
-		return null;
+		CharValueResult valueResult = new CharValueResult();
+		valueResult.Id = -1;
+		valueResult.Value = value;
+		return new MicrosoftCharValueProxy(myContext, valueResult);
 	}
 
 	@NotNull
