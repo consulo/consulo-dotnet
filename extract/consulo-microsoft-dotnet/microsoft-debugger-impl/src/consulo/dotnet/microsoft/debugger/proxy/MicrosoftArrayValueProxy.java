@@ -8,6 +8,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
+import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetOrSetArrayValueAtRequest;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ArrayValueResult;
 
 /**
@@ -62,7 +63,7 @@ public class MicrosoftArrayValueProxy extends MicrosoftValueProxyBase<ArrayValue
 	@Override
 	public DotNetValueProxy get(int index)
 	{
-		return null;
+		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetOrSetArrayValueAtRequest(myResult.ObjectId, index, 0));
 	}
 
 	@Override
