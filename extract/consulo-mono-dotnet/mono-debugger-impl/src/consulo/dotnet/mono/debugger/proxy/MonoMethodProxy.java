@@ -96,10 +96,10 @@ public class MonoMethodProxy implements DotNetMethodProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy thisObjectProxy, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
+	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy thisObjectProxy, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
 	{
 		ThreadMirror thread = ((MonoThreadProxy) threadProxy).getThreadMirror();
-		Value<?> thisObject = ((MonoValueProxyBase) thisObjectProxy).getMirror();
+		Value<?> thisObject = thisObjectProxy == null ? null : ((MonoValueProxyBase) thisObjectProxy).getMirror();
 
 		Value[] values = new Value[arguments.length];
 		for(int i = 0; i < arguments.length; i++)

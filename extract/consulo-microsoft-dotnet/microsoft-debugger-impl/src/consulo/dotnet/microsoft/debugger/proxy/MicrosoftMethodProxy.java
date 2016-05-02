@@ -107,7 +107,7 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
+	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @Nullable DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
 	{
 		return null;
 	}
