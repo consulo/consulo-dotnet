@@ -55,6 +55,7 @@ import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.mono.debugger.MonoDebugUtil;
 import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
@@ -99,6 +100,20 @@ public class MonoBreakpointUtil
 		{
 			return myLocations;
 		}
+	}
+
+	public static void createMethodRequest(final XDebugSession session, @NotNull MonoVirtualMachineProxy virtualMachine, @NotNull final XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
+	{
+		/*
+		virtualMachine.stopBreakpointRequests(breakpoint);
+
+		EventRequestManager eventRequestManager = virtualMachine.getDelegate().eventRequestManager();
+
+		MethodEntryRequest methodEntryRequest = eventRequestManager.createMethodEntryRequest();
+		methodEntryRequest.setSuspendPolicy(mono.debugger.SuspendPolicy.ALL);
+		methodEntryRequest.setEnabled(breakpoint.isEnabled());
+
+		virtualMachine.putRequest(breakpoint, methodEntryRequest); */
 	}
 
 	public static void createExceptionRequest(@NotNull MonoVirtualMachineProxy virtualMachine, @NotNull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint, @Nullable TypeMirror typeMirror)

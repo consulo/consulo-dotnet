@@ -35,6 +35,9 @@
 		<component>
 			<implementation-class>consulo.dotnet.DebuggerNotificationProjectComponent</implementation-class>
 		</component>
+		<component>
+			<implementation-class>consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent</implementation-class>
+		</component>
 	</project-components>
 
 	<extensionPoints>
@@ -119,6 +122,7 @@
 
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType"/>
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType"/>
+		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetMethodBreakpointType"/>
 
 		<orderEntryTypeProvider implementation="org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider"/>
 		<addModuleDependencyTabFactory implementation="org.mustbe.consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>

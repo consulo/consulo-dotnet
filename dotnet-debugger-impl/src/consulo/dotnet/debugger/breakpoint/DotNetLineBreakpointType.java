@@ -280,8 +280,6 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		}
 	}
 
-
-
 	@Nullable
 	@Override
 	public DotNetLineBreakpointProperties createProperties()

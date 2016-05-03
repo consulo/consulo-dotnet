@@ -19,8 +19,10 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.breakpoint.DotNetMethodBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 
 /**
@@ -121,7 +123,20 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 			@Override
 			public Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>> compute()
 			{
-				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetLineBreakpointType.class);
+				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetLineBreakpointType.getInstance());
+			}
+		});
+	}
+
+	@NotNull
+	public Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>> getMethodBreakpoints()
+	{
+		return ApplicationManager.getApplication().runReadAction(new Computable<Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>>>()
+		{
+			@Override
+			public Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>> compute()
+			{
+				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetMethodBreakpointType.getInstance());
 			}
 		});
 	}
@@ -134,7 +149,7 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 			@Override
 			public Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> compute()
 			{
-				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetExceptionBreakpointType.class);
+				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetExceptionBreakpointType.getInstance());
 			}
 		});
 	}

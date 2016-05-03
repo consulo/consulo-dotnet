@@ -61,6 +61,7 @@ import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointEngine;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import consulo.dotnet.mono.debugger.proxy.MonoThreadProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
@@ -205,12 +206,18 @@ public class MonoDebugThread extends Thread
 		Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> exceptionBreakpoints = myDebugProcess.getExceptionBreakpoints();
 		for(XBreakpoint<DotNetExceptionBreakpointProperties> exceptionBreakpoint : exceptionBreakpoints)
 		{
-			String vmQname = exceptionBreakpoint.getProperties().VM_QNAME;
-			if(!StringUtil.isEmpty(vmQname))
+			String vmQName = exceptionBreakpoint.getProperties().VM_QNAME;
+			if(!StringUtil.isEmpty(vmQName))
 			{
 				continue;
 			}
 			MonoBreakpointUtil.createExceptionRequest(myVirtualMachine, exceptionBreakpoint, null);
+		}
+
+		Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>> methodBreakpoints = myDebugProcess.getMethodBreakpoints();
+		for(XLineBreakpoint<DotNetMethodBreakpointProperties> lineBreakpoint : methodBreakpoints)
+		{
+			MonoBreakpointUtil.createMethodRequest(mySession, myVirtualMachine, lineBreakpoint);
 		}
 
 		TypeLoadRequest typeLoadRequest = virtualMachine.eventRequestManager().createTypeLoadRequest();
@@ -363,6 +370,14 @@ public class MonoDebugThread extends Thread
 								focusUI = true;
 							}
 							stopped = true;
+						}
+						else if(event instanceof MethodEntryEvent)
+						{
+							//
+						}
+						else if(event instanceof MethodExitEvent)
+						{
+							//
 						}
 						else
 						{
