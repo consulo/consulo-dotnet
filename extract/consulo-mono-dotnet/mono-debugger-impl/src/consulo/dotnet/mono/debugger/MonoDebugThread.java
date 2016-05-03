@@ -213,7 +213,7 @@ public class MonoDebugThread extends Thread
 			MonoBreakpointUtil.createExceptionRequest(myVirtualMachine, exceptionBreakpoint, null);
 		}
 
-		TypeLoadRequest typeLoad = virtualMachine.eventRequestManager().createTypeLoad();
+		TypeLoadRequest typeLoadRequest = virtualMachine.eventRequestManager().createTypeLoadRequest();
 		if(virtualMachine.isAtLeastVersion(2, 9))
 		{
 			Set<String> types = new LinkedHashSet<String>();
@@ -224,19 +224,19 @@ public class MonoDebugThread extends Thread
 
 			for(XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint : exceptionBreakpoints)
 			{
-				String vmQname = breakpoint.getProperties().VM_QNAME;
-				if(!StringUtil.isEmpty(vmQname))
+				String vmQName = breakpoint.getProperties().VM_QNAME;
+				if(!StringUtil.isEmpty(vmQName))
 				{
-					types.add(vmQname);
+					types.add(vmQName);
 				}
 			}
 
 			if(!types.isEmpty())
 			{
-				typeLoad.addTypeNameFilter(ArrayUtil.toStringArray(types));
+				typeLoadRequest.addTypeNameFilter(ArrayUtil.toStringArray(types));
 			}
 		}
-		typeLoad.enable();
+		typeLoadRequest.enable();
 
 		try
 		{
