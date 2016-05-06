@@ -16,12 +16,21 @@
 
 package org.mustbe.consulo.dotnet.psi;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiModificationTracker;
 
 /**
  * @author VISTALL
@@ -29,6 +38,8 @@ import com.intellij.psi.PsiElement;
  */
 public class DotNetAttributeUtil
 {
+	private static Key<ConcurrentMap<String, CachedValue<Boolean>>> ourAttributesKey = Key.create("ourAttributesKey");
+
 	@Nullable
 	@RequiredReadAction
 	public static DotNetAttribute findAttribute(@NotNull PsiElement owner, @NotNull String qName)
@@ -73,8 +84,38 @@ public class DotNetAttributeUtil
 	}
 
 	@RequiredReadAction
-	public static boolean hasAttribute(@NotNull PsiElement owner, @NotNull String qName)
+	public static boolean hasAttribute(@NotNull final PsiElement owner, @NotNull final String qName)
 	{
-		return findAttribute(owner, qName) != null;
+		ConcurrentMap<String, CachedValue<Boolean>> map = owner.getUserData(ourAttributesKey);
+		if(map == null)
+		{
+			owner.putUserData(ourAttributesKey, map = new ConcurrentHashMap<String, CachedValue<Boolean>>());
+		}
+
+		CachedValue<Boolean> provider = map.get(qName);
+		if(provider != null)
+		{
+			return provider.getValue();
+		}
+		else
+		{
+			provider = CachedValuesManager.getManager(owner.getProject()).createCachedValue(new CachedValueProvider<Boolean>()
+			{
+				@Nullable
+				@Override
+				@RequiredReadAction
+				public Result<Boolean> compute()
+				{
+					Key key =  PsiModificationTracker.MODIFICATION_COUNT;
+					if(owner instanceof StubBasedPsiElement)
+					{
+						key = PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT;
+					}
+					return Result.create(findAttribute(owner, qName) != null, key);
+				}
+			}, false);
+			map.putIfAbsent(qName, provider);
+			return provider.getValue();
+		}
 	}
 }
