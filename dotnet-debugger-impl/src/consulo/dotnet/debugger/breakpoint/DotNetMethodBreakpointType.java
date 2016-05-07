@@ -44,7 +44,7 @@ public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethod
 
 	private DotNetMethodBreakpointType()
 	{
-		super("dotnet-method-breakpoint", ".NET Method Breakpoint");
+		super("dotnet-method-breakpoint", ".NET Method Breakpoints");
 	}
 
 	@NotNull
