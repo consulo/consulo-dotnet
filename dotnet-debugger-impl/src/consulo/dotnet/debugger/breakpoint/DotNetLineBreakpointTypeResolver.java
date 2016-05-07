@@ -23,14 +23,14 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.breakpoints.XLineBreakpointResolver;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
+import consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver;
 
 /**
  * @author VISTALL
  * @since 19.03.2015
  */
-public class DotNetLineBreakpointResolver implements XLineBreakpointResolver
+public class DotNetLineBreakpointTypeResolver implements XLineBreakpointTypeResolver
 {
 	@Nullable
 	@Override
