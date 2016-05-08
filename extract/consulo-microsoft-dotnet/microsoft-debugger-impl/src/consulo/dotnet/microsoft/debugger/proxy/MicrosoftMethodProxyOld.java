@@ -86,7 +86,7 @@ public class MicrosoftMethodProxyOld implements DotNetMethodProxy
 		for(int i = 0; i < parameters.length; i++)
 		{
 			GetMethodInfoRequestResult.ParameterInfo parameter = parameters[i];
-			proxies[i] = new MicrosoftMethodParameterProxy(myClient, i, parameter);
+			proxies[i] = new MicrosoftMethodParameterProxyOld(myClient, i, parameter);
 		}
 		return proxies;
 	}

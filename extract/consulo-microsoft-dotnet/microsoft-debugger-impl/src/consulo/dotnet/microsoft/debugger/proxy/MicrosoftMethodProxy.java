@@ -31,6 +31,7 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mssdw.LocalVariableMirror;
 import mssdw.MethodMirror;
+import mssdw.MethodParameterMirror;
 
 /**
  * @author VISTALL
@@ -62,15 +63,14 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public DotNetMethodParameterProxy[] getParameters()
 	{
-		/*MethodParameterMirror[] parameters = myMethodMirror.parameters();
+		MethodParameterMirror[] parameters = myMethodMirror.parameters();
 		DotNetMethodParameterProxy[] proxies = new DotNetMethodParameterProxy[parameters.length];
 		for(int i = 0; i < parameters.length; i++)
 		{
 			MethodParameterMirror parameter = parameters[i];
-			proxies[i] = new MonoMethodParameterProxy(i, parameter);
+			proxies[i] = new MicrosoftMethodParameterProxy(parameter);
 		}
-		return proxies;    */
-		return new DotNetMethodParameterProxy[0];
+		return proxies;
 	}
 
 	@NotNull

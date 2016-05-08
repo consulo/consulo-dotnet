@@ -85,7 +85,8 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
 	{
-		return null;
+		MicrosoftMethodParameterProxy proxy = (MicrosoftMethodParameterProxy) parameterProxy;
+		return MicrosoftValueProxyUtil.wrap(myFrameMirror.argumentValue(proxy.getMirror()));
 	}
 
 	@Override
