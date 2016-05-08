@@ -30,6 +30,7 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResul
  * @author VISTALL
  * @since 18.04.2016
  */
+@Deprecated
 public class MicrosoftStringValueProxyOld extends MicrosoftValueProxyBaseOld<StringValueResult> implements DotNetStringValueProxy
 {
 	private MicrosoftDebuggerClient myClient;

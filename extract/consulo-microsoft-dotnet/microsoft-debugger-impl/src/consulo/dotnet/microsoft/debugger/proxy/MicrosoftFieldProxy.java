@@ -62,7 +62,7 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	@Override
 	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)
 	{
-		MicrosoftObjectValueProxy objectValueProxy = (MicrosoftObjectValueProxy) proxy;
+		MicrosoftObjectValueProxyOld objectValueProxy = (MicrosoftObjectValueProxyOld) proxy;
 		int objectId = objectValueProxy == null ? 0 : objectValueProxy.getResult().ObjectId;
 		return MicrosoftValueProxyUtilOld.sendAndReceive(myClient, new GetFieldValueRequest((int) threadProxy.getId(), 0, myParentType.getTypeRef(), objectId, myField.Token));
 	}

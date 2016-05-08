@@ -27,6 +27,9 @@ import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import mssdw.AbsentInformationException;
+import mssdw.InvalidObjectException;
+import mssdw.InvalidStackFrameException;
 import mssdw.StackFrameMirror;
 
 /**
@@ -60,8 +63,7 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
 	{
-		return new MicrosoftNullValueProxy();
-		/*try
+		try
 		{
 			return MicrosoftValueProxyUtil.wrap(myFrameMirror.thisObject());
 		}
@@ -76,7 +78,7 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 		catch(InvalidStackFrameException e)
 		{
 			throw new DotNetInvalidStackFrameException(e);
-		}  */
+		}
 	}
 
 	@Nullable

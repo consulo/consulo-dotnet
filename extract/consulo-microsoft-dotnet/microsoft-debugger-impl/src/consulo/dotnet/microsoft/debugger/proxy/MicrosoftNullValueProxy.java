@@ -39,7 +39,7 @@ public class MicrosoftNullValueProxy implements DotNetNullValueProxy
 	@Override
 	public Object getValue()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

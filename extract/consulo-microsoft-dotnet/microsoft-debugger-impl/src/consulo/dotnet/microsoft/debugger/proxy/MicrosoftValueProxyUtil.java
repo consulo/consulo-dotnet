@@ -38,17 +38,17 @@ public class MicrosoftValueProxyUtil
 		}
 
 		DotNetValueProxy valueProxy = null;
-		/*if(value instanceof ObjectValueMirror)
+		if(value instanceof ObjectValueMirror)
 		{
-			valueProxy = new MonoObjectValueProxy((ObjectValueMirror) value);
+			valueProxy = new MicrosoftObjectValueProxy((ObjectValueMirror) value);
 		}
 
 		if(value instanceof NoObjectValueMirror)
 		{
-			valueProxy = new MonoNullValueProxy((NoObjectValueMirror) value);
+			valueProxy = new MicrosoftNullValueProxy();
 		}
 
-		if(value instanceof NumberValueMirror)
+		/*if(value instanceof NumberValueMirror)
 		{
 			valueProxy = new MonoNumberValueProxy((NumberValueMirror) value);
 		}

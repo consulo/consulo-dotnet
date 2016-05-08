@@ -69,7 +69,7 @@ public class MicrosoftValueProxyUtilOld
 		}
 		if(o instanceof ObjectValueResult)
 		{
-			return new MicrosoftObjectValueProxy(client, (ObjectValueResult) o);
+			return new MicrosoftObjectValueProxyOld(client, (ObjectValueResult) o);
 		}
 		if(o instanceof NullValueResult)
 		{
