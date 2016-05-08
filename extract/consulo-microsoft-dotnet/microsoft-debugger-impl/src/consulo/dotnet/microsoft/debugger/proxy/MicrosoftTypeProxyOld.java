@@ -130,11 +130,11 @@ public class MicrosoftTypeProxyOld implements DotNetTypeProxy
 	{
 		GetTypeInfoRequestResult.FieldInfo[] fields = myResult.Fields;
 
-		MicrosoftFieldProxy[] fieldProxies = new MicrosoftFieldProxy[fields.length];
+		MicrosoftFieldProxyOld[] fieldProxies = new MicrosoftFieldProxyOld[fields.length];
 		for(int i = 0; i < fields.length; i++)
 		{
 			GetTypeInfoRequestResult.FieldInfo field = fields[i];
-			fieldProxies[i] = new MicrosoftFieldProxy(myClient, this, field);
+			fieldProxies[i] = new MicrosoftFieldProxyOld(myClient, this, field);
 		}
 		return fieldProxies;
 	}

@@ -24,6 +24,7 @@ import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mssdw.CustomAttributeMirror;
+import mssdw.FieldMirror;
 import mssdw.MethodMirror;
 import mssdw.TypeMirror;
 
@@ -120,15 +121,14 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetFieldProxy[] getFields()
 	{
-		/*FieldMirror[] fields = myTypeMirror.fields();
+		FieldMirror[] fields = myTypeMirror.fields();
 		DotNetFieldProxy[] proxies = new DotNetFieldProxy[fields.length];
 		for(int i = 0; i < fields.length; i++)
 		{
 			FieldMirror field = fields[i];
-			proxies[i] = new MonoFieldProxy(field);
+			proxies[i] = new MicrosoftFieldProxy(field);
 		}
-		return proxies;*/
-		return new DotNetFieldProxy[0];
+		return proxies;
 	}
 
 	@NotNull
@@ -150,15 +150,14 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetMethodProxy[] getMethods()
 	{
-		/*MethodMirror[] methods = myTypeMirror.methods();
+		MethodMirror[] methods = myTypeMirror.methods();
 		DotNetMethodProxy[] proxies = new DotNetMethodProxy[methods.length];
 		for(int i = 0; i < methods.length; i++)
 		{
 			MethodMirror method = methods[i];
 			proxies[i] = new MicrosoftMethodProxy(method);
 		}
-		return proxies; */
-		return new DotNetMethodProxy[0];
+		return proxies;
 	}
 
 	@Override
