@@ -90,39 +90,38 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
 	{
-		MonoMethodParameterProxy methodParameterProxy = (MonoMethodParameterProxy) parameterProxy;
-		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(methodParameterProxy.getParameter()));
+		MonoMethodParameterProxy proxy = (MonoMethodParameterProxy) parameterProxy;
+		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(proxy.getParameter()));
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void setParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy, @NotNull DotNetValueProxy valueProxy)
 	{
-		MonoMethodParameterProxy monoMethodParameterProxy = (MonoMethodParameterProxy) parameterProxy;
+		MonoMethodParameterProxy proxy = (MonoMethodParameterProxy) parameterProxy;
 
 		Value value = ((MonoValueProxyBase) valueProxy).getMirror();
 
-		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(monoMethodParameterProxy.getParameter(), value));
+		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(proxy.getParameter(), value));
 	}
 
 	@Nullable
 	@Override
 	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
 	{
-		MonoLocalVariableProxy methodParameterProxy = (MonoLocalVariableProxy) localVariableProxy;
-		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(methodParameterProxy.getMirror()));
-
+		MonoLocalVariableProxy proxy = (MonoLocalVariableProxy) localVariableProxy;
+		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(proxy.getMirror()));
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void setLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy, @NotNull DotNetValueProxy valueProxy)
 	{
-		MonoLocalVariableProxy monoLocalVariableProxy = (MonoLocalVariableProxy) localVariableProxy;
+		MonoLocalVariableProxy proxy = (MonoLocalVariableProxy) localVariableProxy;
 
 		Value value = ((MonoValueProxyBase) valueProxy).getMirror();
 
-		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(monoLocalVariableProxy.getMirror(), value));
+		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(proxy.getMirror(), value));
 	}
 
 	@NotNull

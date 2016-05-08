@@ -19,7 +19,7 @@ package consulo.dotnet.microsoft.debugger.proxy;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import mssdw.Value;
+import mssdw.*;
 
 /**
  * @author VISTALL
@@ -37,6 +37,56 @@ public class MicrosoftValueProxyUtil
 			return null;
 		}
 
-		throw new UnsupportedOperationException();
+		DotNetValueProxy valueProxy = null;
+		/*if(value instanceof ObjectValueMirror)
+		{
+			valueProxy = new MonoObjectValueProxy((ObjectValueMirror) value);
+		}
+
+		if(value instanceof NoObjectValueMirror)
+		{
+			valueProxy = new MonoNullValueProxy((NoObjectValueMirror) value);
+		}
+
+		if(value instanceof NumberValueMirror)
+		{
+			valueProxy = new MonoNumberValueProxy((NumberValueMirror) value);
+		}
+
+		if(value instanceof ArrayValueMirror)
+		{
+			valueProxy = new MonoArrayValueProxy((ArrayValueMirror) value);
+		} */
+
+		if(value instanceof StringValueMirror)
+		{
+			valueProxy = new MicrosoftStringValueProxy((StringValueMirror) value);
+		}
+
+		if(value instanceof BooleanValueMirror)
+		{
+			valueProxy = new MicrosoftBooleanValueProxy((BooleanValueMirror) value);
+		}
+
+		/*if(value instanceof CharValueMirror)
+		{
+			valueProxy = new MonoCharValueProxy((CharValueMirror) value);
+		}
+
+		if(value instanceof StructValueMirror)
+		{
+			valueProxy = new MonoStructValueProxy((StructValueMirror) value);
+		}
+
+		if(value instanceof EnumValueMirror)
+		{
+			valueProxy = new MonoEnumValueProxy((EnumValueMirror) value);
+		}  */
+
+		if(valueProxy == null)
+		{
+			throw new IllegalArgumentException("Value " + value.getClass().getSimpleName() + " can't be wrapped");
+		}
+		return (T) valueProxy;
 	}
 }

@@ -13,7 +13,7 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.CharValueResult;
  * @author VISTALL
  * @since 20.04.2016
  */
-public class MicrosoftCharValueProxy extends MicrosoftValueProxyBase<CharValueResult> implements DotNetCharValueProxy
+public class MicrosoftCharValueProxy extends MicrosoftValueProxyBaseOld<CharValueResult> implements DotNetCharValueProxy
 {
 	private MicrosoftDebuggerClient myClient;
 

@@ -95,7 +95,8 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
 	{
-		return null;
+		MicrosoftLocalVariableProxy proxy = (MicrosoftLocalVariableProxy) localVariableProxy;
+		return MicrosoftValueProxyUtil.wrap(myFrameMirror.localValue(proxy.getMirror()));
 	}
 
 	@Override

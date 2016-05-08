@@ -240,6 +240,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			// ignore all
 		}
 		return null;

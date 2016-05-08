@@ -20,6 +20,11 @@ public class MicrosoftLocalVariableProxy implements DotNetLocalVariableProxy
 		myLocalVariableMirror = localVariableMirror;
 	}
 
+	public LocalVariableMirror getMirror()
+	{
+		return myLocalVariableMirror;
+	}
+
 	public int getIndex()
 	{
 		return myLocalVariableMirror.id();

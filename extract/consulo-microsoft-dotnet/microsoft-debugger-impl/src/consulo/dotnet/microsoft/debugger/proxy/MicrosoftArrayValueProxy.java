@@ -15,7 +15,7 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ArrayValueResult
  * @author VISTALL
  * @since 19.04.2016
  */
-public class MicrosoftArrayValueProxy extends MicrosoftValueProxyBase<ArrayValueResult> implements DotNetArrayValueProxy
+public class MicrosoftArrayValueProxy extends MicrosoftValueProxyBaseOld<ArrayValueResult> implements DotNetArrayValueProxy
 {
 	private Getter<DotNetTypeProxy> myType;
 	private MicrosoftDebuggerClient myClient;

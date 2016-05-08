@@ -13,7 +13,7 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ObjectValueResul
  * @author VISTALL
  * @since 19.04.2016
  */
-public class MicrosoftObjectValueProxy extends MicrosoftValueProxyBase<ObjectValueResult> implements DotNetObjectValueProxy
+public class MicrosoftObjectValueProxy extends MicrosoftValueProxyBaseOld<ObjectValueResult> implements DotNetObjectValueProxy
 {
 	private MicrosoftDebuggerClient myClient;
 	private Getter<DotNetTypeProxy> myType;

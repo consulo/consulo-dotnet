@@ -18,7 +18,7 @@ import edu.arizona.cs.mbel.signature.SignatureConstants;
  * @author VISTALL
  * @since 20.04.2016
  */
-public class MicrosoftNumberValueProxy extends MicrosoftValueProxyBase<NumberValueResult> implements DotNetNumberValueProxy
+public class MicrosoftNumberValueProxy extends MicrosoftValueProxyBaseOld<NumberValueResult> implements DotNetNumberValueProxy
 {
 	private MicrosoftDebuggerClient myClient;
 
