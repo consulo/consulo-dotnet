@@ -22,7 +22,7 @@ public class MicrosoftObjectValueProxy extends MicrosoftValueProxyBase<ObjectVal
 	{
 		super(result);
 		myClient = client;
-		myType = MicrosoftTypeProxy.lazyOf(myClient, myResult.Type);
+		myType = MicrosoftTypeProxyOld.lazyOf(myClient, myResult.Type);
 	}
 
 	@Nullable

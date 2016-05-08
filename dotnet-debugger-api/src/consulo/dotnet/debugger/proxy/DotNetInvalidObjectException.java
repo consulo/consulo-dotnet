@@ -22,6 +22,10 @@ package consulo.dotnet.debugger.proxy;
  */
 public class DotNetInvalidObjectException extends Exception
 {
+	public DotNetInvalidObjectException()
+	{
+	}
+
 	public DotNetInvalidObjectException(Throwable cause)
 	{
 		super(cause);

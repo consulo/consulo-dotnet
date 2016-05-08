@@ -200,7 +200,7 @@ public class MonoDebugThread extends Thread
 		Collection<? extends XLineBreakpoint<?>> breakpoints = myDebugProcess.getLineBreakpoints();
 		for(XLineBreakpoint<?> breakpoint : myDebugProcess.getLineBreakpoints())
 		{
-			DotNetBreakpointUtil.updateLineBreakpointIcon(mySession.getProject(), false, breakpoint);
+			DotNetBreakpointUtil.updateLineBreakpointIcon(mySession.getProject(), null, breakpoint);
 		}
 
 		Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> exceptionBreakpoints = myDebugProcess.getExceptionBreakpoints();

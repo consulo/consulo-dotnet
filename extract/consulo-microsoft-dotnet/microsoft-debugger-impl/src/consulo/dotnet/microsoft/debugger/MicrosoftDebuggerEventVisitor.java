@@ -28,12 +28,13 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.InsertBreakpoint
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnBreakpointFire;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventVisitor;
 import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnModuleLoadEvent;
-import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxy;
+import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxyOld;
 
 /**
  * @author VISTALL
  * @since 16.04.2016
  */
+@Deprecated
 class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 {
 	private MicrosoftDebuggerProcess myDebuggerProcess;
@@ -150,7 +151,7 @@ class MicrosoftDebuggerEventVisitor extends OnEventVisitor
 			}
 		});
 
-		MicrosoftVirtualMachineProxy microsoftVirtualMachineProxy = new MicrosoftVirtualMachineProxy(context);
+		MicrosoftVirtualMachineProxyOld microsoftVirtualMachineProxy = new MicrosoftVirtualMachineProxyOld(context);
 		DotNetDebugContext debugContext = myDebuggerProcess.createDebugContext(microsoftVirtualMachineProxy, breakpoint);
 		DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, event.ActiveThreadId);
 		XDebugSession session = myDebuggerProcess.getSession();

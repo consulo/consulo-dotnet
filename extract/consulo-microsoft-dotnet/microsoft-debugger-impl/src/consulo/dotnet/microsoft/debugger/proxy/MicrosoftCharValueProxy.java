@@ -27,7 +27,7 @@ public class MicrosoftCharValueProxy extends MicrosoftValueProxyBase<CharValueRe
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MicrosoftTypeProxy.byVmQName(myClient, DotNetTypes.System.Char);
+		return MicrosoftTypeProxyOld.byVmQName(myClient, DotNetTypes.System.Char);
 	}
 
 	@NotNull

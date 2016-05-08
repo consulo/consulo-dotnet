@@ -16,76 +16,27 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.consulo.lombok.annotations.Logger;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ArrayValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BadRequestResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BooleanValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.CharValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NullValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NumberValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ObjectValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.UnknownValueResult;
+import mssdw.Value;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 5/8/2016
  */
-@Logger
 public class MicrosoftValueProxyUtil
 {
+	@SuppressWarnings("unchecked")
 	@Nullable
-	public static DotNetValueProxy sendAndReceive(MicrosoftDebuggerClient client, Object request)
+	@Contract(value = "null -> null; !null -> !null", pure = true)
+	public static <T extends DotNetValueProxy> T wrap(@Nullable Value<?> value)
 	{
-		Object o = client.sendAndReceive(request, Object.class);
-		return wrap(client, o);
-	}
+		if(value == null)
+		{
+			return null;
+		}
 
-	@Nullable
-	public static DotNetValueProxy wrap(@NotNull MicrosoftDebuggerClient client, @Nullable Object o)
-	{
-		if(o instanceof BadRequestResult)
-		{
-			LOGGER.error("Receive bad value");
-			return null;
-		}
-		if(o instanceof UnknownValueResult)
-		{
-			LOGGER.error("Receive unknown value: " + ((UnknownValueResult) o).Type);
-			return null;
-		}
-		if(o instanceof StringValueResult)
-		{
-			return new MicrosoftStringValueProxy(client, ((StringValueResult) o));
-		}
-		if(o instanceof BooleanValueResult)
-		{
-			return new MicrosoftBooleanValueProxy(client, (BooleanValueResult) o);
-		}
-		if(o instanceof ObjectValueResult)
-		{
-			return new MicrosoftObjectValueProxy(client, (ObjectValueResult) o);
-		}
-		if(o instanceof NullValueResult)
-		{
-			return new MicrosoftNullValueProxy();
-		}
-		if(o instanceof ArrayValueResult)
-		{
-			return new MicrosoftArrayValueProxy(client, (ArrayValueResult) o);
-		}
-		if(o instanceof NumberValueResult)
-		{
-			return new MicrosoftNumberValueProxy(client, (NumberValueResult) o);
-		}
-		if(o instanceof CharValueResult)
-		{
-			return new MicrosoftCharValueProxy(client, (CharValueResult) o);
-		}
-		throw new IllegalArgumentException("Value is not handled " + o.getClass().getName());
+		throw new UnsupportedOperationException();
 	}
 }

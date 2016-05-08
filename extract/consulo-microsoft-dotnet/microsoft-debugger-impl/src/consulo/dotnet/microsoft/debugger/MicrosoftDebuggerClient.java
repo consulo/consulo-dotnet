@@ -39,6 +39,7 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.OnEventVisitor;
  * @since 16.04.2016
  */
 @Logger
+@Deprecated
 public class MicrosoftDebuggerClient
 {
 	private class MicrosoftDebuggerNettyHandler extends SimpleChannelUpstreamHandler

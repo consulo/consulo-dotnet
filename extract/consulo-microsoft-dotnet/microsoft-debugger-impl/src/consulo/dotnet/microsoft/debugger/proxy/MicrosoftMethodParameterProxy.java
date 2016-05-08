@@ -38,7 +38,7 @@ public class MicrosoftMethodParameterProxy implements DotNetMethodParameterProxy
 	{
 		myIndex = index;
 		myParameterInfo = parameterInfo;
-		myType = MicrosoftTypeProxy.lazyOf(context, myParameterInfo.Type);
+		myType = MicrosoftTypeProxyOld.lazyOf(context, myParameterInfo.Type);
 	}
 
 	@Override

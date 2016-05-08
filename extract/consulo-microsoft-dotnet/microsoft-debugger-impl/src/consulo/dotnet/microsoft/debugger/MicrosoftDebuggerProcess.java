@@ -12,6 +12,7 @@ import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ContinueRequestR
  * @author VISTALL
  * @since 16.04.2016
  */
+@Deprecated
 public class MicrosoftDebuggerProcess extends DotNetDebugProcessBase
 {
 	private MicrosoftDebuggerClient myClient;

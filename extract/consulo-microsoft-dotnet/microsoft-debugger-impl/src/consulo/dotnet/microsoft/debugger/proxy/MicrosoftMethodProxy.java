@@ -20,99 +20,84 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Getter;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
-import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetLocalsRequest;
-import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetMethodInfoRequest;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetLocalsRequestResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetMethodInfoRequestResult;
-import edu.arizona.cs.mbel.signature.MethodAttributes;
+import mssdw.MethodMirror;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 5/8/2016
  */
 public class MicrosoftMethodProxy implements DotNetMethodProxy
 {
-	private MicrosoftDebuggerClient myClient;
-	private TypeRef myTypeRef;
-	private int myFunctionToken;
+	private MethodMirror myMethodMirror;
 
-	private GetMethodInfoRequestResult myResult;
-
-	private Getter<DotNetTypeProxy> myDeclarationType;
-
-	public MicrosoftMethodProxy(MicrosoftDebuggerClient client, TypeRef typeRef, int functionToken)
+	public MicrosoftMethodProxy(MethodMirror methodMirror)
 	{
-		myClient = client;
-		myTypeRef = typeRef;
-		myFunctionToken = functionToken;
-		myDeclarationType = MicrosoftTypeProxy.lazyOf(myClient, myTypeRef);
+		myMethodMirror = methodMirror;
 	}
 
 	@Override
 	public boolean isStatic()
 	{
-		return BitUtil.isSet(info().Attributes, MethodAttributes.Static);
+		return myMethodMirror.isStatic();
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeProxy getDeclarationType()
 	{
-		DotNetTypeProxy proxy = myDeclarationType.get();
-		assert proxy != null;
-		return proxy;
+		return MicrosoftTypeProxy.of(myMethodMirror.declaringType());
 	}
 
 	@NotNull
 	@Override
 	public DotNetMethodParameterProxy[] getParameters()
 	{
-		GetMethodInfoRequestResult.ParameterInfo[] parameters = info().Parameters;
+		/*MethodParameterMirror[] parameters = myMethodMirror.parameters();
 		DotNetMethodParameterProxy[] proxies = new DotNetMethodParameterProxy[parameters.length];
 		for(int i = 0; i < parameters.length; i++)
 		{
-			GetMethodInfoRequestResult.ParameterInfo parameter = parameters[i];
-			proxies[i] = new MicrosoftMethodParameterProxy(myClient, i, parameter);
+			MethodParameterMirror parameter = parameters[i];
+			proxies[i] = new MonoMethodParameterProxy(i, parameter);
 		}
-		return proxies;
+		return proxies;    */
+		return new DotNetMethodParameterProxy[0];
 	}
 
 	@NotNull
 	@Override
 	public DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy)
 	{
-		GetLocalsRequestResult result = myClient.sendAndReceive(new GetLocalsRequest((int) frameProxy.getThread().getId(), frameProxy.getIndex()), GetLocalsRequestResult.class);
+		/*MicrosoftStackFrameProxy proxy = (MicrosoftStackFrameProxy) frameProxy;
 
-		DotNetLocalVariableProxy[] proxies = new DotNetLocalVariableProxy[result.Locals.length];
-		for(int i = 0; i < result.Locals.length; i++)
+		LocalVariableMirror[] locals = myMethodMirror.locals(proxy.getFrameMirror().location().codeIndex());
+		DotNetLocalVariableProxy[] proxies = new DotNetLocalVariableProxy[locals.length];
+		for(int i = 0; i < locals.length; i++)
 		{
-			GetLocalsRequestResult.LocalInfo local = result.Locals[i];
-			proxies[i] = new MicrosoftLocalVariableProxy(myClient, local);
+			LocalVariableMirror local = locals[i];
+			proxies[i] = new MicrosoftStackFrameProxy(local);
 		}
-		return proxies;
+		return proxies;*/
+		return new DotNetLocalVariableProxy[0];
 	}
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @Nullable DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
+	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy thisObjectProxy, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
 	{
 		return null;
 	}
 
 	@RequiredReadAction
+	@Nullable
 	@Override
 	public PsiElement findExecutableElementFromDebugInfo(@NotNull Project project, int executableChildrenAtLineIndex)
 	{
@@ -123,16 +108,6 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public String getName()
 	{
-		return StringUtil.notNullize(info().Name);
-	}
-
-	@NotNull
-	private GetMethodInfoRequestResult info()
-	{
-		if(myResult != null)
-		{
-			return myResult;
-		}
-		return myResult = myClient.sendAndReceive(new GetMethodInfoRequest(myTypeRef, myFunctionToken), GetMethodInfoRequestResult.class);
+		return myMethodMirror.name();
 	}
 }

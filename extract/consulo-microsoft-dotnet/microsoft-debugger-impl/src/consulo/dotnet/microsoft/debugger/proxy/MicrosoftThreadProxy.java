@@ -21,67 +21,77 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetFramesRequest;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
+import mssdw.StackFrameMirror;
+import mssdw.ThreadMirror;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 5/8/2016
  */
 public class MicrosoftThreadProxy extends DotNetThreadProxy
 {
-	private int myId;
-	private String myName;
-	private MicrosoftDebuggerClient myContext;
+	private MicrosoftVirtualMachineProxy myVirtualMachineProxy;
+	private ThreadMirror myThreadMirror;
 
-	public MicrosoftThreadProxy(int id, String name, MicrosoftDebuggerClient context)
+	public MicrosoftThreadProxy(MicrosoftVirtualMachineProxy virtualMachineProxy, ThreadMirror threadMirror)
 	{
-		myId = id;
-		myName = name;
-		myContext = context;
+		myVirtualMachineProxy = virtualMachineProxy;
+		myThreadMirror = threadMirror;
 	}
 
 	@Override
 	public long getId()
 	{
-		return myId;
+		return myThreadMirror.id();
 	}
 
 	@Override
 	public boolean isRunning()
 	{
-		return false;
+		return myThreadMirror.isRunning();
 	}
 
 	@Override
 	public boolean isSuspended()
 	{
-		return true;
+		return myThreadMirror.isSuspended();
 	}
 
 	@Nullable
 	@Override
 	public String getName()
 	{
-		return myName;
+		return myThreadMirror.name();
 	}
 
 	@NotNull
 	@Override
 	public List<DotNetStackFrameProxy> getFrames()
 	{
-		GetFramesRequestResult o = myContext.sendAndReceive(new GetFramesRequest(myId), GetFramesRequestResult.class);
-		GetFramesRequestResult.FrameInfo[] frames = o.Frames;
-		List<DotNetStackFrameProxy> proxies = new ArrayList<DotNetStackFrameProxy>(frames.length);
-		for(int i = 0; i < frames.length; i++)
+		List<StackFrameMirror> frames = myThreadMirror.frames();
+		List<DotNetStackFrameProxy> proxies = new ArrayList<DotNetStackFrameProxy>(frames.size());
+		for(int i = 0; i < frames.size(); i++)
 		{
-			GetFramesRequestResult.FrameInfo frame = frames[i];
-
-			proxies.add(new MicrosoftStackFrameProxy(myContext, this, i, frame));
+			StackFrameMirror frameMirror = frames.get(i);
+			proxies.add(new MicrosoftStackFrameProxy(i, myVirtualMachineProxy, frameMirror));
 		}
 		return proxies;
+	}
+
+	@Nullable
+	@Override
+	public DotNetStackFrameProxy getFrame(int index)
+	{
+		List<StackFrameMirror> frames = myThreadMirror.frames();
+
+		StackFrameMirror frameMirror = ArrayUtil2.safeGet(frames, index);
+		if(frameMirror != null)
+		{
+			return new MicrosoftStackFrameProxy(index, myVirtualMachineProxy, frameMirror);
+		}
+		return null;
 	}
 }

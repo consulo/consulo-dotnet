@@ -18,119 +18,75 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.util.NullableLazyValue;
+import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
+import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetArgumentRequest;
-import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetLocalValueRequest;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
+import mssdw.AbsentInformationException;
+import mssdw.InvalidObjectException;
+import mssdw.InvalidStackFrameException;
+import mssdw.StackFrameMirror;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 5/8/2016
  */
 public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 {
-	private NullableLazyValue<DotNetSourceLocation> myLocationValue = new NullableLazyValue<DotNetSourceLocation>()
-	{
-		@Nullable
-		@Override
-		protected DotNetSourceLocation compute()
-		{
-			GetFramesRequestResult.FrameInfo.SourcePosition position = myFrame.Position;
-			if(position != null)
-			{
-				return new MicrosoftSourceLocation(myClient, position, myFrame.Type, myFrame.FunctionToken);
-			}
-			return null;
-		}
-	};
+	private final int myIndex;
+	private final MicrosoftVirtualMachineProxy myVirtualMachineProxy;
+	private final StackFrameMirror myFrameMirror;
 
-	private MicrosoftDebuggerClient myClient;
-	private MicrosoftThreadProxy myThreadProxy;
-	private int myIndex;
-	private GetFramesRequestResult.FrameInfo myFrame;
+	private final int myMethodId;
 
-	public MicrosoftStackFrameProxy(MicrosoftDebuggerClient client, MicrosoftThreadProxy threadProxy, int index, GetFramesRequestResult.FrameInfo frame)
+	public MicrosoftStackFrameProxy(int index, MicrosoftVirtualMachineProxy virtualMachineProxy, StackFrameMirror frameMirror)
 	{
-		myClient = client;
-		myThreadProxy = threadProxy;
 		myIndex = index;
-		myFrame = frame;
+		myVirtualMachineProxy = virtualMachineProxy;
+		myFrameMirror = frameMirror;
+
+		myMethodId = frameMirror.getFunctionId();
 	}
 
-	@Override
-	public int getIndex()
+	@NotNull
+	public StackFrameMirror getFrameMirror()
 	{
-		return myIndex;
+		return myFrameMirror;
 	}
 
 	@NotNull
 	@Override
-	public DotNetThreadProxy getThread()
+	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
 	{
-		return myThreadProxy;
-	}
-
-	@NotNull
-	@Override
-	public Object getEqualityObject()
-	{
-		return myFrame.FunctionToken;
-	}
-
-	@Nullable
-	@Override
-	public DotNetSourceLocation getSourceLocation()
-	{
-		return myLocationValue.getValue();
-	}
-
-	@NotNull
-	@Override
-	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException
-	{
-		if(isStaticFrame())
+		throw new DotNetInvalidObjectException();
+		/*try
 		{
-			return new MicrosoftNullValueProxy();
+			return MicrosoftValueProxyUtil.wrap(myFrameMirror.thisObject());
 		}
-
-		DotNetValueProxy valueProxy = MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetArgumentRequest((int) myThreadProxy.getId(), myIndex, 0));
-		return valueProxy == null ? new MicrosoftNullValueProxy() : valueProxy;
-	}
-
-	private boolean isStaticFrame()
-	{
-		DotNetSourceLocation sourceLocation = getSourceLocation();
-		if(sourceLocation == null)
+		catch(AbsentInformationException e)
 		{
-			return true;
+			throw new DotNetAbsentInformationException(e);
 		}
-
-		if(sourceLocation.getMethod().isStatic())
+		catch(InvalidObjectException e)
 		{
-			return true;
+			throw new DotNetInvalidObjectException(e);
 		}
-		return false;
+		catch(InvalidStackFrameException e)
+		{
+			throw new DotNetInvalidStackFrameException(e);
+		}  */
 	}
 
 	@Nullable
 	@Override
 	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
 	{
-		int parameterIndex = parameterProxy.getIndex();
-		if(!isStaticFrame())
-		{
-			// zero is this
-			parameterIndex++;
-		}
-		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetArgumentRequest((int) myThreadProxy.getId(), myIndex, parameterIndex));
+		return null;
 	}
 
 	@Override
@@ -142,13 +98,38 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
 	{
-		MicrosoftLocalVariableProxy microsoftLocalVariableProxy = (MicrosoftLocalVariableProxy) localVariableProxy;
-		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetLocalValueRequest((int) myThreadProxy.getId(), myIndex, microsoftLocalVariableProxy.getIndex()));
+		return null;
 	}
 
 	@Override
 	public void setLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy, @NotNull DotNetValueProxy valueProxy)
 	{
+	}
 
+	@NotNull
+	@Override
+	public DotNetThreadProxy getThread()
+	{
+		return new MicrosoftThreadProxy(myVirtualMachineProxy, myFrameMirror.thread());
+	}
+
+	@Override
+	public int getIndex()
+	{
+		return myIndex;
+	}
+
+	@NotNull
+	@Override
+	public Object getEqualityObject()
+	{
+		return myMethodId;
+	}
+
+	@Nullable
+	@Override
+	public DotNetSourceLocation getSourceLocation()
+	{
+		return new MicrosoftSourceLocation(myFrameMirror);
 	}
 }

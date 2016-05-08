@@ -16,69 +16,49 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.util.Getter;
-import com.intellij.openapi.util.text.StringUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
-import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
-import consulo.dotnet.microsoft.debugger.protocol.clientMessage.FindTypeInfoRequest;
-import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetTypeInfoRequest;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.FindTypeInfoRequestResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetTypeInfoRequestResult;
+import mssdw.CustomAttributeMirror;
+import mssdw.MethodMirror;
+import mssdw.TypeMirror;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 5/8/2016
  */
 public class MicrosoftTypeProxy implements DotNetTypeProxy
 {
 	@Nullable
-	public static MicrosoftTypeProxy byVmQName(@NotNull MicrosoftDebuggerClient client, @NotNull String vmQName)
+	@Contract("null -> null; !null -> !null")
+	public static MicrosoftTypeProxy of(@Nullable TypeMirror typeMirror)
 	{
-		FindTypeInfoRequestResult result = client.sendAndReceive(new FindTypeInfoRequest(vmQName), FindTypeInfoRequestResult.class);
-		if(result.Type == null || result.Type.ClassToken <= 0)
-		{
-			return null;
-		}
-		GetTypeInfoRequestResult requestResult = client.sendAndReceive(new GetTypeInfoRequest(result.Type), GetTypeInfoRequestResult.class);
-		if(StringUtil.isEmpty(requestResult.Name))
-		{
-			return null;
-		}
-		return new MicrosoftTypeProxy(client, result.Type, requestResult);
+		return typeMirror == null ? null : new MicrosoftTypeProxy(typeMirror);
 	}
 
-	@NotNull
-	public static Getter<DotNetTypeProxy> lazyOf(@NotNull final MicrosoftDebuggerClient client, @Nullable final TypeRef typeRef)
+	private TypeMirror myTypeMirror;
+
+	private MicrosoftTypeProxy(@NotNull TypeMirror typeMirror)
 	{
-		return new MicrosoftTypeProxyPointer(client, typeRef);
-	}
-
-	private MicrosoftDebuggerClient myClient;
-
-	private TypeRef myTypeRef;
-
-	private GetTypeInfoRequestResult myResult;
-
-	private Getter<DotNetTypeProxy> myBaseTypeGetter;
-
-	protected MicrosoftTypeProxy(MicrosoftDebuggerClient client, TypeRef typeRef, GetTypeInfoRequestResult requestResult)
-	{
-		myClient = client;
-		myTypeRef = typeRef;
-		myResult = requestResult;
-		myBaseTypeGetter = lazyOf(client, requestResult.BaseType);
+		myTypeMirror = typeMirror;
 	}
 
 	@Override
 	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
 	{
+		for(CustomAttributeMirror customAttributeMirror : myTypeMirror.customAttributes())
+		{
+			MethodMirror constructorMirror = customAttributeMirror.getConstructorMirror();
+			TypeMirror typeMirror = constructorMirror.declaringType();
+			if(attributeVmQName.equals(typeMirror.fullName()))
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -93,33 +73,46 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public String getName()
 	{
-		return StringUtil.notNullize(myResult.Name);
+		return myTypeMirror.name();
 	}
 
 	@NotNull
 	@Override
 	public String getFullName()
 	{
-		return StringUtil.notNullize(myResult.FullName);
+		return myTypeMirror.fullName();
 	}
 
 	@Override
 	public boolean isArray()
 	{
-		return myResult.IsArray;
-	}
+		return myTypeMirror.isArray();
+	}                                                                              0
 
 	@Nullable
 	@Override
 	public DotNetTypeProxy getBaseType()
 	{
-		return myBaseTypeGetter.get();
+		TypeMirror baseType = myTypeMirror.baseType();
+		if(baseType == null)
+		{
+			return null;
+		}
+		return new MicrosoftTypeProxy(baseType);
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeProxy[] getInterfaces()
 	{
+		/*TypeMirror[] interfaces = myTypeMirror.getInterfaces();
+		DotNetTypeProxy[] proxies = new DotNetTypeProxy[interfaces.length];
+		for(int i = 0; i < interfaces.length; i++)
+		{
+			TypeMirror mirror = interfaces[i];
+			proxies[i] = new MicrosoftTypeProxy(mirror);
+		}
+		return proxies;    */
 		return new DotNetTypeProxy[0];
 	}
 
@@ -127,85 +120,76 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetFieldProxy[] getFields()
 	{
-		GetTypeInfoRequestResult.FieldInfo[] fields = myResult.Fields;
-
-		MicrosoftFieldProxy[] fieldProxies = new MicrosoftFieldProxy[fields.length];
+		/*FieldMirror[] fields = myTypeMirror.fields();
+		DotNetFieldProxy[] proxies = new DotNetFieldProxy[fields.length];
 		for(int i = 0; i < fields.length; i++)
 		{
-			GetTypeInfoRequestResult.FieldInfo field = fields[i];
-			fieldProxies[i] = new MicrosoftFieldProxy(myClient, this, field);
+			FieldMirror field = fields[i];
+			proxies[i] = new MonoFieldProxy(field);
 		}
-		return fieldProxies;
+		return proxies;*/
+		return new DotNetFieldProxy[0];
 	}
 
 	@NotNull
 	@Override
 	public DotNetPropertyProxy[] getProperties()
 	{
-		GetTypeInfoRequestResult.PropertyInfo[] properties = myResult.Properties;
-
-		MicrosoftPropertyProxy[] propertyProxies = new MicrosoftPropertyProxy[properties.length];
+		/*PropertyMirror[] properties = myTypeMirror.properties();
+		DotNetPropertyProxy[] proxies = new DotNetPropertyProxy[properties.length];
 		for(int i = 0; i < properties.length; i++)
 		{
-			GetTypeInfoRequestResult.PropertyInfo property = properties[i];
-			propertyProxies[i] = new MicrosoftPropertyProxy(myClient, this, property);
+			PropertyMirror property = properties[i];
+			proxies[i] = new MonoPropertyProxy(property);
 		}
-		return propertyProxies;
+		return proxies; */
+		return new DotNetPropertyProxy[0];
 	}
 
 	@NotNull
 	@Override
 	public DotNetMethodProxy[] getMethods()
 	{
-		int[] methods = myResult.Methods;
-
-		MicrosoftMethodProxy[] methodProxies = new MicrosoftMethodProxy[methods.length];
+		/*MethodMirror[] methods = myTypeMirror.methods();
+		DotNetMethodProxy[] proxies = new DotNetMethodProxy[methods.length];
 		for(int i = 0; i < methods.length; i++)
 		{
-			methodProxies[i] = new MicrosoftMethodProxy(myClient, myTypeRef, methods[i]);
+			MethodMirror method = methods[i];
+			proxies[i] = new MicrosoftMethodProxy(method);
 		}
-		return methodProxies;
+		return proxies; */
+		return new DotNetMethodProxy[0];
 	}
 
 	@Override
 	public boolean isNested()
 	{
-		return false;
+		return myTypeMirror.isNested();
 	}
 
 	@Nullable
 	@Override
 	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
 	{
-		for(DotNetMethodProxy proxy : getMethods())
+		/*TypeMirror[] typeMirrors = new TypeMirror[params.length];
+		for(int i = 0; i < params.length; i++)
 		{
-			DotNetMethodParameterProxy[] parameters = proxy.getParameters();
-			//TODO [VISTALL] dummy
-			if(proxy.getName().equals(name) && params.length == parameters.length)
-			{
-				return proxy;
-			}
+			MicrosoftTypeProxy param = (MicrosoftTypeProxy) params[i];
+			typeMirrors[i] = param.myTypeMirror;
 		}
-
-		if(deep)
+		MethodMirror methodByName = myTypeMirror.findMethodByName(name, deep, typeMirrors);
+		if(methodByName != null)
 		{
-			DotNetTypeProxy baseType = getBaseType();
-			if(baseType != null)
-			{
-				return baseType.findMethodByName(name, true, params);
-			}
-		}
+			return new MicrosoftMethodProxy(methodByName);
+		}    */
 		return null;
 	}
 
 	@Override
 	public boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType)
 	{
+		/*MicrosoftTypeProxy MicrosoftTypeProxy = (MicrosoftTypeProxy) otherType;
+		return myTypeMirror.isAssignableFrom(MicrosoftTypeProxy.myTypeMirror);   */
 		return false;
-	}
-
-	public TypeRef getTypeRef()
-	{
-		return myTypeRef;
 	}
 }

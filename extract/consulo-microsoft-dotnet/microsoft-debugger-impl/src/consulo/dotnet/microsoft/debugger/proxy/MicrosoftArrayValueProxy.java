@@ -24,7 +24,7 @@ public class MicrosoftArrayValueProxy extends MicrosoftValueProxyBase<ArrayValue
 	{
 		super(result);
 		myClient = client;
-		myType = MicrosoftTypeProxy.lazyOf(client, myResult.Type);
+		myType = MicrosoftTypeProxyOld.lazyOf(client, myResult.Type);
 	}
 
 	@Nullable
@@ -63,7 +63,7 @@ public class MicrosoftArrayValueProxy extends MicrosoftValueProxyBase<ArrayValue
 	@Override
 	public DotNetValueProxy get(int index)
 	{
-		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetOrSetArrayValueAtRequest(myResult.ObjectId, index, 0));
+		return MicrosoftValueProxyUtilOld.sendAndReceive(myClient, new GetOrSetArrayValueAtRequest(myResult.ObjectId, index, 0));
 	}
 
 	@Override

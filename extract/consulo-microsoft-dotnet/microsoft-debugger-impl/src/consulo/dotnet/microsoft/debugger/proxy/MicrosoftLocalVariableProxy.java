@@ -20,7 +20,7 @@ public class MicrosoftLocalVariableProxy implements DotNetLocalVariableProxy
 	public MicrosoftLocalVariableProxy(MicrosoftDebuggerClient client, GetLocalsRequestResult.LocalInfo local)
 	{
 		myLocal = local;
-		myType = MicrosoftTypeProxy.lazyOf(client, local.Type);
+		myType = MicrosoftTypeProxyOld.lazyOf(client, local.Type);
 	}
 
 	public int getIndex()

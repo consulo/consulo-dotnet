@@ -23,7 +23,7 @@ import edu.arizona.cs.mbel.signature.FieldAttributes;
 public class MicrosoftFieldProxy implements DotNetFieldProxy
 {
 	private MicrosoftDebuggerClient myClient;
-	private MicrosoftTypeProxy myParentType;
+	private MicrosoftTypeProxyOld myParentType;
 	private GetTypeInfoRequestResult.FieldInfo myField;
 
 	private GetFieldInfoRequestResult myResult;
@@ -34,11 +34,11 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 		@Override
 		protected Getter<DotNetTypeProxy> compute()
 		{
-			return MicrosoftTypeProxy.lazyOf(myClient, info().Type);
+			return MicrosoftTypeProxyOld.lazyOf(myClient, info().Type);
 		}
 	};
 
-	public MicrosoftFieldProxy(MicrosoftDebuggerClient client, MicrosoftTypeProxy parentType, GetTypeInfoRequestResult.FieldInfo field)
+	public MicrosoftFieldProxy(MicrosoftDebuggerClient client, MicrosoftTypeProxyOld parentType, GetTypeInfoRequestResult.FieldInfo field)
 	{
 		myClient = client;
 		myParentType = parentType;
@@ -64,7 +64,7 @@ public class MicrosoftFieldProxy implements DotNetFieldProxy
 	{
 		MicrosoftObjectValueProxy objectValueProxy = (MicrosoftObjectValueProxy) proxy;
 		int objectId = objectValueProxy == null ? 0 : objectValueProxy.getResult().ObjectId;
-		return MicrosoftValueProxyUtil.sendAndReceive(myClient, new GetFieldValueRequest((int) threadProxy.getId(), 0, myParentType.getTypeRef(), objectId, myField.Token));
+		return MicrosoftValueProxyUtilOld.sendAndReceive(myClient, new GetFieldValueRequest((int) threadProxy.getId(), 0, myParentType.getTypeRef(), objectId, myField.Token));
 	}
 
 	@Override
