@@ -29,6 +29,7 @@ import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import mssdw.LocalVariableMirror;
 import mssdw.MethodMirror;
 
 /**
@@ -76,17 +77,16 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy)
 	{
-		/*MicrosoftStackFrameProxy proxy = (MicrosoftStackFrameProxy) frameProxy;
+		MicrosoftStackFrameProxy proxy = (MicrosoftStackFrameProxy) frameProxy;
 
-		LocalVariableMirror[] locals = myMethodMirror.locals(proxy.getFrameMirror().location().codeIndex());
+		LocalVariableMirror[] locals = myMethodMirror.locals(proxy.getFrameMirror());
 		DotNetLocalVariableProxy[] proxies = new DotNetLocalVariableProxy[locals.length];
 		for(int i = 0; i < locals.length; i++)
 		{
 			LocalVariableMirror local = locals[i];
-			proxies[i] = new MicrosoftStackFrameProxy(local);
+			proxies[i] = new MicrosoftLocalVariableProxy(local);
 		}
-		return proxies;*/
-		return new DotNetLocalVariableProxy[0];
+		return proxies;
 	}
 
 	@Nullable

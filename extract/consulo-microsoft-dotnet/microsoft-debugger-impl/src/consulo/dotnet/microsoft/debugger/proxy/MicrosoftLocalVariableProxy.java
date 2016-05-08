@@ -2,43 +2,44 @@ package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.util.Getter;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetLocalsRequestResult;
+import mssdw.LocalVariableMirror;
 
 /**
  * @author VISTALL
- * @since 19.04.2016
+ * @since 5/8/2016
  */
 public class MicrosoftLocalVariableProxy implements DotNetLocalVariableProxy
 {
-	private GetLocalsRequestResult.LocalInfo myLocal;
-	private Getter<DotNetTypeProxy> myType;
+	private final LocalVariableMirror myLocalVariableMirror;
+	private DotNetTypeProxy myTypeProxy;
 
-	public MicrosoftLocalVariableProxy(MicrosoftDebuggerClient client, GetLocalsRequestResult.LocalInfo local)
+	public MicrosoftLocalVariableProxy(LocalVariableMirror localVariableMirror)
 	{
-		myLocal = local;
-		myType = MicrosoftTypeProxyOld.lazyOf(client, local.Type);
+		myLocalVariableMirror = localVariableMirror;
 	}
 
 	public int getIndex()
 	{
-		return myLocal.Index;
+		return myLocalVariableMirror.id();
 	}
 
 	@Nullable
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return myType.get();
+		if(myTypeProxy != null)
+		{
+			return myTypeProxy;
+		}
+		return myTypeProxy = MicrosoftTypeProxy.of(myLocalVariableMirror.type());
 	}
 
 	@NotNull
 	@Override
 	public String getName()
 	{
-		return myLocal.Name;
+		return myLocalVariableMirror.name();
 	}
 }

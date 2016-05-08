@@ -87,7 +87,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	public boolean isArray()
 	{
 		return myTypeMirror.isArray();
-	}                                                                              0
+	}
 
 	@Nullable
 	@Override

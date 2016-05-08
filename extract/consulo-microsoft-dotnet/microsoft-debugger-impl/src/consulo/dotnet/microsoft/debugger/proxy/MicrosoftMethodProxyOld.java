@@ -101,7 +101,7 @@ public class MicrosoftMethodProxyOld implements DotNetMethodProxy
 		for(int i = 0; i < result.Locals.length; i++)
 		{
 			GetLocalsRequestResult.LocalInfo local = result.Locals[i];
-			proxies[i] = new MicrosoftLocalVariableProxy(myClient, local);
+			proxies[i] = new MicrosoftLocalVariableProxyOld(myClient, local);
 		}
 		return proxies;
 	}
