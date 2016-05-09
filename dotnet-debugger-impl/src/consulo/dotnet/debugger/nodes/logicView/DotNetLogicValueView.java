@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetAbstractVariableValueNode;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -28,7 +28,7 @@ public interface DotNetLogicValueView
 
 	void computeChildren(@NotNull UserDataHolderBase dataHolder,
 			@NotNull DotNetDebugContext debugContext,
-			@NotNull DotNetAbstractVariableMirrorNode parentNode,
+			@NotNull DotNetAbstractVariableValueNode parentNode,
 			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@NotNull XCompositeNode node);

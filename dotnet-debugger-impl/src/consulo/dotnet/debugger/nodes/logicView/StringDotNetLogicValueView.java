@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import com.intellij.xdebugger.frame.XNamedValue;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.nodes.DotNetSimpleValueMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetSimpleValueNode;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
@@ -39,6 +39,6 @@ public class StringDotNetLogicValueView extends LimitableDotNetLogicValueView<Do
 	public XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull DotNetStackFrameProxy frameProxy, @NotNull DotNetStringValueProxy value)
 	{
 		char c = value.getValue().charAt(index);
-		return new DotNetSimpleValueMirrorNode(context, "[" + index + "]", frameProxy, context.getVirtualMachine().createCharValue(c));
+		return new DotNetSimpleValueNode(context, "[" + index + "]", frameProxy, context.getVirtualMachine().createCharValue(c));
 	}
 }

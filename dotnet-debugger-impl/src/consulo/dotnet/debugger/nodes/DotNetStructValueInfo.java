@@ -16,12 +16,12 @@ public class DotNetStructValueInfo
 {
 	private DotNetStructValueProxy myValueMirror;
 	@Nullable
-	private DotNetAbstractVariableMirrorNode myParentNode;
+	private DotNetAbstractVariableValueNode myParentNode;
 	private DotNetFieldOrPropertyProxy myFieldOrPropertyMirror;
 	private DotNetValueProxy myValue;
 
 	public DotNetStructValueInfo(@NotNull DotNetStructValueProxy valueMirror,
-			@Nullable DotNetAbstractVariableMirrorNode parentNode,
+			@Nullable DotNetAbstractVariableValueNode parentNode,
 			@NotNull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
 			@NotNull DotNetValueProxy value)
 	{
@@ -38,7 +38,7 @@ public class DotNetStructValueInfo
 			return false;
 		}
 		// how set value for struct this object?
-		return !(myParentNode instanceof DotNetThisAsStructValueMirrorNode);
+		return !(myParentNode instanceof DotNetThisAsStructValueNode);
 	}
 
 	public DotNetValueProxy getValue()

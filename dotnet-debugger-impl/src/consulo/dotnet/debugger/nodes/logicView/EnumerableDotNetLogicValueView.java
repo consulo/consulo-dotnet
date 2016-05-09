@@ -5,8 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
-import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
-import consulo.dotnet.debugger.nodes.DotNetSimpleValueMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetAbstractVariableValueNode;
+import consulo.dotnet.debugger.nodes.DotNetSimpleValueNode;
 import consulo.dotnet.debugger.nodes.logicView.enumerator.CantCreateException;
 import consulo.dotnet.debugger.nodes.logicView.enumerator.IEnumeratorAsIterator;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -30,7 +30,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 
 	@Override
 	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
-			@NotNull DotNetAbstractVariableMirrorNode parentNode,
+			@NotNull DotNetAbstractVariableValueNode parentNode,
 			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@NotNull XValueChildrenList childrenList)
@@ -88,7 +88,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 				{
 					continue;
 				}
-				childrenList.add(new DotNetSimpleValueMirrorNode(debugContext, String.valueOf(i++), frameProxy, next));
+				childrenList.add(new DotNetSimpleValueNode(debugContext, String.valueOf(i++), frameProxy, next));
 			}
 		}
 		catch(CantCreateException e)

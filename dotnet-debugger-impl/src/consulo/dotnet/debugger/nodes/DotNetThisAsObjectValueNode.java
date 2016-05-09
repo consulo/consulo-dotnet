@@ -43,7 +43,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  * @author VISTALL
  * @since 11.04.14
  */
-public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMirrorNode
+public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 {
 	public static void addStaticNode(@NotNull XValueChildrenList list,
 			@NotNull DotNetDebugContext debuggerContext,
@@ -55,14 +55,14 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 		{
 			return;
 		}
-		list.add(new DotNetThisAsObjectValueMirrorNode(debuggerContext, frameProxy, typeProxy, (DotNetObjectValueProxy) null));
+		list.add(new DotNetThisAsObjectValueNode(debuggerContext, frameProxy, typeProxy, (DotNetObjectValueProxy) null));
 	}
 
 	@NotNull
 	private final DotNetTypeProxy myType;
 	private final Getter<DotNetObjectValueProxy> myObjectValueMirrorGetter;
 
-	public DotNetThisAsObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
+	public DotNetThisAsObjectValueNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull DotNetStackFrameProxy frameProxy,
 			@NotNull DotNetTypeProxy type,
 			@Nullable final DotNetObjectValueProxy objectValueMirror)
@@ -78,7 +78,7 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 		});
 	}
 
-	public DotNetThisAsObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
+	public DotNetThisAsObjectValueNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull DotNetStackFrameProxy frameProxy,
 			@NotNull DotNetTypeProxy type,
 			@Nullable Getter<DotNetObjectValueProxy> objectValueMirrorGetter)
@@ -137,7 +137,7 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 			@Override
 			public boolean process(DotNetFieldOrPropertyProxy fieldOrPropertyMirror)
 			{
-				childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldOrPropertyMirror, myFrameProxy, fieldOrPropertyMirror.isStatic() ? null : myObjectValueMirrorGetter.get()));
+				childrenList.add(new DotNetFieldOrPropertyValueNode(myDebugContext, fieldOrPropertyMirror, myFrameProxy, fieldOrPropertyMirror.isStatic() ? null : myObjectValueMirrorGetter.get()));
 				return true;
 			}
 		});

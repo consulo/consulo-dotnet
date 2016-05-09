@@ -18,34 +18,33 @@ package consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.xdebugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
- * @since 26.04.14
+ * @since 20.09.14
  */
-public class DotNetArrayValueMirrorNode extends DotNetAbstractVariableMirrorNode
+public class DotNetSimpleValueNode extends DotNetAbstractVariableValueNode
 {
 	@NotNull
-	private final DotNetArrayValueProxy myArrayValueMirror;
-	private final int myIndex;
-	@Nullable
 	private final DotNetValueProxy myValue;
 
-	public DotNetArrayValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull String name,
-			@NotNull DotNetStackFrameProxy frameProxy,
-			@NotNull DotNetArrayValueProxy valueMirrorNode,
-			int index)
+	public DotNetSimpleValueNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetStackFrameProxy frameProxy, @NotNull DotNetValueProxy value)
 	{
 		super(debuggerContext, name, frameProxy);
-		myArrayValueMirror = valueMirrorNode;
-		myIndex = index;
-		myValue = valueMirrorNode.get(index);
+
+		myValue = value;
+	}
+
+	@Nullable
+	@Override
+	public XValueModifier getModifier()
+	{
+		return null;
 	}
 
 	@Nullable
@@ -58,13 +57,12 @@ public class DotNetArrayValueMirrorNode extends DotNetAbstractVariableMirrorNode
 	@Override
 	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
 	{
-		myArrayValueMirror.set(myIndex, value);
 	}
 
 	@Nullable
 	@Override
 	public DotNetTypeProxy getTypeOfVariable()
 	{
-		return myValue == null ? null : myValue.getType();
+		return myValue.getType();
 	}
 }

@@ -7,11 +7,11 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
-import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetAbstractVariableValueNode;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
-import consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyValueNode;
 import consulo.dotnet.debugger.nodes.DotNetStructValueInfo;
-import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueNode;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -34,7 +34,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 	@Override
 	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
-			@NotNull DotNetAbstractVariableMirrorNode parentNode,
+			@NotNull DotNetAbstractVariableValueNode parentNode,
 			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@NotNull XValueChildrenList childrenList)
@@ -45,7 +45,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 			assert type != null;
 
-			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameProxy, type);
+			DotNetThisAsObjectValueNode.addStaticNode(childrenList, debugContext, frameProxy, type);
 
 			DotNetFieldOrPropertyProxy[] mirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(type, true);
 			for(DotNetFieldOrPropertyProxy fieldOrPropertyProxy : mirrors)
@@ -54,7 +54,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 				{
 					continue;
 				}
-				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldOrPropertyProxy, frameProxy, (DotNetObjectValueProxy) value));
+				childrenList.add(new DotNetFieldOrPropertyValueNode(debugContext, fieldOrPropertyProxy, frameProxy, (DotNetObjectValueProxy) value));
 			}
 		}
 		else if(value instanceof DotNetStructValueProxy)
@@ -68,7 +68,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 				DotNetStructValueInfo valueInfo = new DotNetStructValueInfo((DotNetStructValueProxy) value, parentNode, fieldMirror, fieldValue);
 
-				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldMirror, frameProxy, null, valueInfo));
+				childrenList.add(new DotNetFieldOrPropertyValueNode(debugContext, fieldMirror, frameProxy, null, valueInfo));
 			}
 		}
 	}

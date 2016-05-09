@@ -47,7 +47,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  * @since 11.04.14
  */
 @Logger
-public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirrorNode
+public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValueNode
 {
 	private XValueModifier myValueModifier = new XValueModifier()
 	{
@@ -134,7 +134,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	protected final DotNetStackFrameProxy myFrameProxy;
 	private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
 
-	public DotNetAbstractVariableMirrorNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetStackFrameProxy frameProxy)
+	public DotNetAbstractVariableValueNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetStackFrameProxy frameProxy)
 	{
 		super(debuggerContext, name);
 		myFrameProxy = frameProxy;

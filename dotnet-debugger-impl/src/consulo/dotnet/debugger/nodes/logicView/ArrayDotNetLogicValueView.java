@@ -19,7 +19,7 @@ package consulo.dotnet.debugger.nodes.logicView;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.xdebugger.frame.XNamedValue;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.nodes.DotNetArrayValueMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetArrayValueNode;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
@@ -53,6 +53,6 @@ public class ArrayDotNetLogicValueView extends LimitableDotNetLogicValueView<Dot
 	@Override
 	public XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull DotNetStackFrameProxy frameProxy, @NotNull DotNetArrayValueProxy value)
 	{
-		return new DotNetArrayValueMirrorNode(context, "[" + index + "]", frameProxy, value, index);
+		return new DotNetArrayValueNode(context, "[" + index + "]", frameProxy, value, index);
 	}
 }

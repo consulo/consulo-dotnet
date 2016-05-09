@@ -40,12 +40,12 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  * @author VISTALL
  * @since 11.04.14
  */
-public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirrorNode
+public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueNode
 {
 	private final DotNetMethodParameterProxy myParameter;
 	private final DotNetStackFrameProxy myFrame;
 
-	public DotNetMethodParameterMirrorNode(DotNetDebugContext debuggerContext, DotNetMethodParameterProxy parameter, DotNetStackFrameProxy frame)
+	public DotNetMethodParameterValueNode(DotNetDebugContext debuggerContext, DotNetMethodParameterProxy parameter, DotNetStackFrameProxy frame)
 	{
 		super(debuggerContext, parameter.getName(), frame);
 		myParameter = parameter;

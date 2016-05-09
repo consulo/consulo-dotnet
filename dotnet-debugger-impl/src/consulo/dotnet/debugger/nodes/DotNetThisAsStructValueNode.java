@@ -37,13 +37,13 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  * @author VISTALL
  * @since 05.01.16
  */
-public class DotNetThisAsStructValueMirrorNode extends DotNetAbstractVariableMirrorNode
+public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
 {
 	@NotNull
 	private final DotNetTypeProxy myTypeMirror;
 	private final DotNetStructValueProxy myValue;
 
-	public DotNetThisAsStructValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
+	public DotNetThisAsStructValueNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull DotNetStackFrameProxy frameProxy,
 			@NotNull DotNetTypeProxy typeMirror,
 			@NotNull DotNetStructValueProxy value)
@@ -92,7 +92,7 @@ public class DotNetThisAsStructValueMirrorNode extends DotNetAbstractVariableMir
 
 			DotNetStructValueInfo valueInfo = new DotNetStructValueInfo(myValue, this, key, value);
 
-			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, key, myFrameProxy, null, valueInfo));
+			childrenList.add(new DotNetFieldOrPropertyValueNode(myDebugContext, key, myFrameProxy, null, valueInfo));
 		}
 
 		node.addChildren(childrenList, true);

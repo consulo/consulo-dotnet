@@ -39,7 +39,7 @@ import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerProvider;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
-import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetAbstractVariableValueNode;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
@@ -137,9 +137,9 @@ public class DotNetBreakpointEngine
 		}
 
 		XValue value = evaluateBreakpointExpression(frame, breakpoint, logExpressionObject, debugContext);
-		if(value instanceof DotNetAbstractVariableMirrorNode)
+		if(value instanceof DotNetAbstractVariableValueNode)
 		{
-			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
+			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableValueNode) value).getValueOfVariableSafe();
 			if(valueOfVariableSafe != null)
 			{
 				String toStringValue = DotNetDebuggerSearchUtil.toStringValue(frame, valueOfVariableSafe);
@@ -166,9 +166,9 @@ public class DotNetBreakpointEngine
 		}
 
 		XValue value = evaluateBreakpointExpression(frame, breakpoint, conditionExpression, debugContext);
-		if(value instanceof DotNetAbstractVariableMirrorNode)
+		if(value instanceof DotNetAbstractVariableValueNode)
 		{
-			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
+			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableValueNode) value).getValueOfVariableSafe();
 			if(valueOfVariableSafe instanceof DotNetBooleanValueProxy)
 			{
 				return ((DotNetBooleanValueProxy) valueOfVariableSafe).getValue();

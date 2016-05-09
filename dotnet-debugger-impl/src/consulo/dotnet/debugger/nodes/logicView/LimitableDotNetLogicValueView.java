@@ -25,7 +25,7 @@ import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetAbstractVariableValueNode;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
@@ -48,7 +48,7 @@ public abstract class LimitableDotNetLogicValueView<T extends DotNetValueProxy> 
 	@SuppressWarnings("unchecked")
 	public void computeChildren(@NotNull UserDataHolderBase dataHolder,
 			@NotNull DotNetDebugContext debugContext,
-			@NotNull DotNetAbstractVariableMirrorNode parentNode,
+			@NotNull DotNetAbstractVariableValueNode parentNode,
 			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy oldValue,
 			@NotNull XCompositeNode node)
