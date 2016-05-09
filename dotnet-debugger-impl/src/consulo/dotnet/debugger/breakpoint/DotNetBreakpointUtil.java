@@ -32,7 +32,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
  */
 public class DotNetBreakpointUtil
 {
-	public static void updateLineBreakpointIcon(@NotNull Project project, boolean valid, @NotNull XLineBreakpoint breakpoint)
+	public static void updateLineBreakpointIcon(@NotNull Project project, Boolean result, @NotNull XLineBreakpoint breakpoint)
 	{
 		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
@@ -51,7 +51,11 @@ public class DotNetBreakpointUtil
 		}
 		else
 		{
-			if(valid)
+			if(result == null)
+			{
+				// cleanup it
+			}
+			else if(result)
 			{
 				if(suspendPolicy == SuspendPolicy.NONE || !breakpoint.isEnabled())
 				{

@@ -16,13 +16,19 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.MultiMap;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
@@ -31,22 +37,32 @@ import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.clientMessage.GetThreadsRequest;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.CharValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetThreadsRequestResult;
+import mssdw.AppDomainMirror;
+import mssdw.BooleanValueMirror;
+import mssdw.CharValueMirror;
+import mssdw.NoObjectValueMirror;
+import mssdw.NumberValueMirror;
+import mssdw.ThreadMirror;
+import mssdw.VirtualMachine;
+import mssdw.request.EventRequest;
+import mssdw.request.EventRequestManager;
+import mssdw.request.StepRequest;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 5/8/2016
  */
 public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 {
-	private MicrosoftDebuggerClient myContext;
+	private final Map<Integer, AppDomainMirror> myLoadedAppDomains = ContainerUtil.newConcurrentMap();
+	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
+	private final MultiMap<XBreakpoint, EventRequest> myBreakpointEventRequests = MultiMap.create();
 
-	public MicrosoftVirtualMachineProxy(MicrosoftDebuggerClient context)
+	private final VirtualMachine myVirtualMachine;
+
+	public MicrosoftVirtualMachineProxy(@NotNull VirtualMachine virtualMachine)
 	{
-		myContext = context;
+		myVirtualMachine = virtualMachine;
 	}
 
 	@Nullable
@@ -60,52 +76,155 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public List<DotNetThreadProxy> getThreads()
 	{
-		List<DotNetThreadProxy> proxies = new ArrayList<DotNetThreadProxy>();
-
-		GetThreadsRequestResult result = myContext.sendAndReceive(new GetThreadsRequest(), GetThreadsRequestResult.class);
-
-		for(GetThreadsRequestResult.ThreadInfo thread : result.Threads)
+		return ContainerUtil.map(myVirtualMachine.allThreads(), new Function<ThreadMirror, DotNetThreadProxy>()
 		{
-			proxies.add(new MicrosoftThreadProxy(thread.Id, thread.Name, myContext));
-		}
-		return proxies;
+			@Override
+			public DotNetThreadProxy fun(ThreadMirror threadMirror)
+			{
+				return new MicrosoftThreadProxy(MicrosoftVirtualMachineProxy.this, threadMirror);
+			}
+		});
 	}
 
 	@NotNull
 	@Override
 	public DotNetStringValueProxy createStringValue(@NotNull String value)
 	{
-		return null;
+		return MicrosoftValueProxyUtil.wrap(myVirtualMachine.rootAppDomain().createString(value));
 	}
 
 	@NotNull
 	@Override
 	public DotNetCharValueProxy createCharValue(char value)
 	{
-		CharValueResult valueResult = new CharValueResult();
-		valueResult.Id = -1;
-		valueResult.Value = value;
-		return new MicrosoftCharValueProxy(myContext, valueResult);
+		return MicrosoftValueProxyUtil.wrap(new CharValueMirror(myVirtualMachine, value));
 	}
 
 	@NotNull
 	@Override
 	public DotNetBooleanValueProxy createBooleanValue(boolean value)
 	{
-		return null;
+		return MicrosoftValueProxyUtil.wrap(new BooleanValueMirror(myVirtualMachine, value));
 	}
 
 	@NotNull
 	@Override
 	public DotNetNumberValueProxy createNumberValue(int tag, @NotNull Number value)
 	{
-		return null;
+		return MicrosoftValueProxyUtil.wrap(new NumberValueMirror(myVirtualMachine, tag, value));
 	}
 
 	@NotNull
 	@Override
 	public DotNetNullValueProxy createNullValue()
 	{
+		return MicrosoftValueProxyUtil.wrap(new NoObjectValueMirror(myVirtualMachine));
+	}
+
+	public void dispose()
+	{
+		myStepRequests.clear();
+		myVirtualMachine.dispose();
+		myBreakpointEventRequests.clear();
+	}
+
+	public void addStepRequest(@NotNull StepRequest stepRequest)
+	{
+		myStepRequests.add(stepRequest);
+	}
+
+	public void stopStepRequest(@NotNull StepRequest stepRequest)
+	{
+		stepRequest.disable();
+		myStepRequests.remove(stepRequest);
+	}
+
+	public void putRequest(@NotNull XBreakpoint<?> breakpoint, @NotNull EventRequest request)
+	{
+		myBreakpointEventRequests.putValue(breakpoint, request);
+	}
+
+	@Nullable
+	public XBreakpoint<?> findBreakpointByRequest(@NotNull EventRequest eventRequest)
+	{
+		for(Map.Entry<XBreakpoint, Collection<EventRequest>> entry : myBreakpointEventRequests.entrySet())
+		{
+			if(entry.getValue().contains(eventRequest))
+			{
+				return entry.getKey();
+			}
+		}
 		return null;
+	}
+
+	public void stopBreakpointRequests(XBreakpoint<?> breakpoint)
+	{
+		Collection<EventRequest> eventRequests = myBreakpointEventRequests.remove(breakpoint);
+		if(eventRequests == null)
+		{
+			return;
+		}
+		for(EventRequest eventRequest : eventRequests)
+		{
+			eventRequest.disable();
+		}
+		myVirtualMachine.eventRequestManager().deleteEventRequests(eventRequests);
+	}
+
+	public void stopStepRequests()
+	{
+		for(StepRequest stepRequest : myStepRequests)
+		{
+			stepRequest.disable();
+		}
+		myStepRequests.clear();
+	}
+
+	public EventRequestManager eventRequestManager()
+	{
+		return myVirtualMachine.eventRequestManager();
+	}
+
+	@NotNull
+	public VirtualMachine getDelegate()
+	{
+		return myVirtualMachine;
+	}
+
+	@NotNull
+	private static String getAssemblyName(String name)
+	{
+		int i = name.indexOf(',');
+		if(i == -1)
+		{
+			return name;
+		}
+		return name.substring(0, i);
+	}
+
+	public void resume()
+	{
+		myVirtualMachine.resume();
+	}
+
+	public void suspend()
+	{
+		myVirtualMachine.suspend();
+	}
+
+	@NotNull
+	public List<ThreadMirror> allThreads()
+	{
+		return myVirtualMachine.allThreads();
+	}
+
+	public void loadAppDomain(AppDomainMirror appDomainMirror)
+	{
+		myLoadedAppDomains.put(appDomainMirror.id(), appDomainMirror);
+	}
+
+	public void unloadAppDomain(AppDomainMirror appDomainMirror)
+	{
+		myLoadedAppDomains.remove(appDomainMirror.id());
 	}
 }

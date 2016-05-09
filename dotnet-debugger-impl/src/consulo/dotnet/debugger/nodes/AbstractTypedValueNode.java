@@ -32,12 +32,12 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
  * @author VISTALL
  * @since 18.04.14
  */
-public abstract class AbstractTypedMirrorNode extends XNamedValue
+public abstract class AbstractTypedValueNode extends XNamedValue
 {
 	@NotNull
 	protected final DotNetDebugContext myDebugContext;
 
-	public AbstractTypedMirrorNode(@NotNull DotNetDebugContext debugContext, @NotNull String name)
+	public AbstractTypedValueNode(@NotNull DotNetDebugContext debugContext, @NotNull String name)
 	{
 		super(name);
 		myDebugContext = debugContext;

@@ -32,7 +32,7 @@ import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
@@ -47,7 +47,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  * @since 11.04.14
  */
 @Logger
-public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirrorNode
+public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValueNode
 {
 	private XValueModifier myValueModifier = new XValueModifier()
 	{
@@ -131,13 +131,13 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	};
 
 	@NotNull
-	protected final DotNetThreadProxy myThreadProxy;
+	protected final DotNetStackFrameProxy myFrameProxy;
 	private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
 
-	public DotNetAbstractVariableMirrorNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetThreadProxy threadProxy)
+	public DotNetAbstractVariableValueNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetStackFrameProxy frameProxy)
 	{
 		super(debuggerContext, name);
-		myThreadProxy = threadProxy;
+		myFrameProxy = frameProxy;
 	}
 
 	@Nullable
@@ -240,6 +240,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			// ignore all
 		}
 		return null;
@@ -280,7 +281,7 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 
 		assert valueView != null : "Required default implementation";
 
-		valueView.computeChildren(myDataHolder, myDebugContext, this, myThreadProxy, value, node);
+		valueView.computeChildren(myDataHolder, myDebugContext, this, myFrameProxy, value, node);
 	}
 
 	public boolean canHaveChildren()
@@ -297,6 +298,6 @@ public abstract class DotNetAbstractVariableMirrorNode extends AbstractTypedMirr
 	{
 		final DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
 
-		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myDebugContext, myThreadProxy, valueOfVariable), canHaveChildren());
+		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren());
 	}
 }

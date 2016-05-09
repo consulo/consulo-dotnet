@@ -26,8 +26,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
-import consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyMirrorNode;
-import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
+import consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyValueNode;
+import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueNode;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -62,7 +62,7 @@ public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 					return false;
 				}
 
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, stackFrameMirror.getThread(), parentType);
+				DotNetThisAsObjectValueNode.addStaticNode(childrenList, debugContext, stackFrameMirror, parentType);
 
 				DotNetFieldProxy[] fields = type.getFields();
 
@@ -78,13 +78,13 @@ public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 
 				if(thisFieldMirror != null)
 				{
-					childrenList.add(new DotNetThisAsObjectValueMirrorNode(debugContext, stackFrameMirror.getThread(), parentType, new Getter<DotNetObjectValueProxy>()
+					childrenList.add(new DotNetThisAsObjectValueNode(debugContext, stackFrameMirror, parentType, new Getter<DotNetObjectValueProxy>()
 					{
 						@Nullable
 						@Override
 						public DotNetObjectValueProxy get()
 						{
-							return (DotNetObjectValueProxy) thisFieldMirror.getValue(stackFrameMirror.getThread(), thisObject);
+							return (DotNetObjectValueProxy) thisFieldMirror.getValue(stackFrameMirror, thisObject);
 						}
 					}));
 				}
@@ -99,7 +99,7 @@ public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 
 					visitedVariables.add(field);
 
-					childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, field, name, stackFrameMirror.getThread(), (DotNetObjectValueProxy) thisObject));
+					childrenList.add(new DotNetFieldOrPropertyValueNode(debugContext, field, name, stackFrameMirror, (DotNetObjectValueProxy) thisObject));
 				}
 				return true;
 			}

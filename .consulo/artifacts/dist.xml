@@ -34,6 +34,7 @@
             <element id="module-output" name="consulo-microsoft-dotnet" />
             <element id="module-output" name="microsoft-debugger-impl" />
           </element>
+          <element id="file-copy" path="$PROJECT_DIR$/extract/consulo-microsoft-dotnet/lib/mssdw-java-client.jar" />
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-microsoft-dotnet/dist" />
       </element>

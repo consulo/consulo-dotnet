@@ -42,7 +42,7 @@ public interface DotNetMethodProxy extends Named
 	DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy);
 
 	@Nullable
-	DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @Nullable DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException;
+	DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException;
 
 	@Nullable
 	@RequiredReadAction

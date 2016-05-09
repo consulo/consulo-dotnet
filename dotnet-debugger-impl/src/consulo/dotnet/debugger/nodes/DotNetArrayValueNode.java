@@ -19,7 +19,7 @@ package consulo.dotnet.debugger.nodes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -28,7 +28,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  * @author VISTALL
  * @since 26.04.14
  */
-public class DotNetArrayValueMirrorNode extends DotNetAbstractVariableMirrorNode
+public class DotNetArrayValueNode extends DotNetAbstractVariableValueNode
 {
 	@NotNull
 	private final DotNetArrayValueProxy myArrayValueMirror;
@@ -36,13 +36,10 @@ public class DotNetArrayValueMirrorNode extends DotNetAbstractVariableMirrorNode
 	@Nullable
 	private final DotNetValueProxy myValue;
 
-	public DotNetArrayValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull String name,
-			@NotNull DotNetThreadProxy threadMirror,
-			@NotNull DotNetArrayValueProxy valueMirrorNode,
+	public DotNetArrayValueNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetStackFrameProxy frameProxy, @NotNull DotNetArrayValueProxy valueMirrorNode,
 			int index)
 	{
-		super(debuggerContext, name, threadMirror);
+		super(debuggerContext, name, frameProxy);
 		myArrayValueMirror = valueMirrorNode;
 		myIndex = index;
 		myValue = valueMirrorNode.get(index);

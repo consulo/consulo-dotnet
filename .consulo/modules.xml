@@ -291,6 +291,13 @@
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-debugger-impl" exported="" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/../lib/mssdw-java-client.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
         </module-layer>
       </module>
       <module name="impl/mono-debugger-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-mono-dotnet/mono-debugger-impl" current-layer="Default">

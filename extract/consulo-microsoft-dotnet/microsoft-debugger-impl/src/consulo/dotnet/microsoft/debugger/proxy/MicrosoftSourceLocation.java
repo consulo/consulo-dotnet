@@ -20,55 +20,51 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.TypeRef;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.GetFramesRequestResult;
+import mssdw.MethodMirror;
+import mssdw.StackFrameMirror;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 5/8/2016
  */
 public class MicrosoftSourceLocation implements DotNetSourceLocation
 {
-	private GetFramesRequestResult.FrameInfo.SourcePosition myPosition;
+	private StackFrameMirror myFrameMirror;
 
-	private final DotNetMethodProxy myMethodProxy;
-
-	public MicrosoftSourceLocation(MicrosoftDebuggerClient context, GetFramesRequestResult.FrameInfo.SourcePosition position, TypeRef typeRef, int functionToken)
+	public MicrosoftSourceLocation(StackFrameMirror frameMirror)
 	{
-		myPosition = position;
-		myMethodProxy = new MicrosoftMethodProxy(context, typeRef, functionToken);
+		myFrameMirror = frameMirror;
 	}
 
 	@Nullable
 	@Override
 	public String getFilePath()
 	{
-		return myPosition.FilePath;
+		return myFrameMirror.getFilePath();
 	}
 
 	@Override
 	public int getLineZeroBased()
 	{
-		return myPosition.Line - 1;
+		return myFrameMirror.getLine() - 1;
 	}
 
 	@Override
 	public int getLineOneBased()
 	{
-		return myPosition.Line;
+		return myFrameMirror.getLine();
 	}
 
 	@Override
 	public int getColumn()
 	{
-		return myPosition.Column;
+		return myFrameMirror.getColumn();
 	}
 
 	@NotNull
 	@Override
 	public DotNetMethodProxy getMethod()
 	{
-		return myMethodProxy;
+		return new MicrosoftMethodProxy(new MethodMirror(myFrameMirror.virtualMachine(), myFrameMirror.getTypeRef(), myFrameMirror.getFunctionId()));
 	}
 }

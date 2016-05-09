@@ -16,76 +16,77 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.consulo.lombok.annotations.Logger;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ArrayValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BadRequestResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.BooleanValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.CharValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NullValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NumberValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.ObjectValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.StringValueResult;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.UnknownValueResult;
+import mssdw.*;
 
 /**
  * @author VISTALL
- * @since 18.04.2016
+ * @since 5/8/2016
  */
-@Logger
 public class MicrosoftValueProxyUtil
 {
+	@SuppressWarnings("unchecked")
 	@Nullable
-	public static DotNetValueProxy sendAndReceive(MicrosoftDebuggerClient client, Object request)
+	@Contract(value = "null -> null; !null -> !null", pure = true)
+	public static <T extends DotNetValueProxy> T wrap(@Nullable Value<?> value)
 	{
-		Object o = client.sendAndReceive(request, Object.class);
-		return wrap(client, o);
-	}
+		if(value == null)
+		{
+			return null;
+		}
 
-	@Nullable
-	public static DotNetValueProxy wrap(@NotNull MicrosoftDebuggerClient client, @Nullable Object o)
-	{
-		if(o instanceof BadRequestResult)
+		DotNetValueProxy valueProxy = null;
+		if(value instanceof ObjectValueMirror)
 		{
-			LOGGER.error("Receive bad value");
-			return null;
+			valueProxy = new MicrosoftObjectValueProxy((ObjectValueMirror) value);
 		}
-		if(o instanceof UnknownValueResult)
+
+		if(value instanceof NoObjectValueMirror)
 		{
-			LOGGER.error("Receive unknown value: " + ((UnknownValueResult) o).Type);
-			return null;
+			valueProxy = new MicrosoftNullValueProxy();
 		}
-		if(o instanceof StringValueResult)
+
+		if(value instanceof NumberValueMirror)
 		{
-			return new MicrosoftStringValueProxy(client, ((StringValueResult) o));
+			valueProxy = new MicrosoftNumberValueProxy((NumberValueMirror) value);
 		}
-		if(o instanceof BooleanValueResult)
+
+		if(value instanceof ArrayValueMirror)
 		{
-			return new MicrosoftBooleanValueProxy(client, (BooleanValueResult) o);
+			valueProxy = new MicrosoftArrayValueProxy((ArrayValueMirror) value);
 		}
-		if(o instanceof ObjectValueResult)
+
+		if(value instanceof StringValueMirror)
 		{
-			return new MicrosoftObjectValueProxy(client, (ObjectValueResult) o);
+			valueProxy = new MicrosoftStringValueProxy((StringValueMirror) value);
 		}
-		if(o instanceof NullValueResult)
+
+		if(value instanceof BooleanValueMirror)
 		{
-			return new MicrosoftNullValueProxy();
+			valueProxy = new MicrosoftBooleanValueProxy((BooleanValueMirror) value);
 		}
-		if(o instanceof ArrayValueResult)
+
+		if(value instanceof CharValueMirror)
 		{
-			return new MicrosoftArrayValueProxy(client, (ArrayValueResult) o);
+			valueProxy = new MicrosoftCharValueProxy((CharValueMirror) value);
 		}
-		if(o instanceof NumberValueResult)
+
+		/*if(value instanceof StructValueMirror)
 		{
-			return new MicrosoftNumberValueProxy(client, (NumberValueResult) o);
+			valueProxy = new MonoStructValueProxy((StructValueMirror) value);
 		}
-		if(o instanceof CharValueResult)
+
+		if(value instanceof EnumValueMirror)
 		{
-			return new MicrosoftCharValueProxy(client, (CharValueResult) o);
+			valueProxy = new MonoEnumValueProxy((EnumValueMirror) value);
+		}  */
+
+		if(valueProxy == null)
+		{
+			throw new IllegalArgumentException("Value " + value.getClass().getSimpleName() + " can't be wrapped");
 		}
-		throw new IllegalArgumentException("Value is not handled " + o.getClass().getName());
+		return (T) valueProxy;
 	}
 }

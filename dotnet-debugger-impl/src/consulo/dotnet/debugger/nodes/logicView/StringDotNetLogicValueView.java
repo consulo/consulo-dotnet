@@ -4,8 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import com.intellij.xdebugger.frame.XNamedValue;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.nodes.DotNetSimpleValueMirrorNode;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.nodes.DotNetSimpleValueNode;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -14,7 +14,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  * @author VISTALL
  * @since 01.05.2016
  */
-public class StringDotNetLogicValueView extends  LimitableDotNetLogicValueView<DotNetStringValueProxy>
+public class StringDotNetLogicValueView extends LimitableDotNetLogicValueView<DotNetStringValueProxy>
 {
 	@Override
 	public boolean canHandle(@NotNull DotNetDebugContext debugContext, @NotNull DotNetTypeProxy typeMirror)
@@ -36,9 +36,9 @@ public class StringDotNetLogicValueView extends  LimitableDotNetLogicValueView<D
 
 	@NotNull
 	@Override
-	public XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull DotNetThreadProxy threadMirror, @NotNull DotNetStringValueProxy value)
+	public XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull DotNetStackFrameProxy frameProxy, @NotNull DotNetStringValueProxy value)
 	{
 		char c = value.getValue().charAt(index);
-		return new DotNetSimpleValueMirrorNode(context, "[" + index + "]", threadMirror, context.getVirtualMachine().createCharValue(c));
+		return new DotNetSimpleValueNode(context, "[" + index + "]", frameProxy, context.getVirtualMachine().createCharValue(c));
 	}
 }

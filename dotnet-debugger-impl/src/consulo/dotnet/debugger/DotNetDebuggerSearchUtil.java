@@ -27,7 +27,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
@@ -74,7 +74,7 @@ public class DotNetDebuggerSearchUtil
 		}
 	}
 
-	public static void rethrow(DotNetThreadProxy mirror, Exception t)
+	public static void rethrow(DotNetStackFrameProxy mirror, Exception t)
 	{
 		if(!(t instanceof DotNetThrowValueException))
 		{
@@ -90,7 +90,7 @@ public class DotNetDebuggerSearchUtil
 	}
 
 	@Nullable
-	public static String toStringValue(@NotNull DotNetThreadProxy threadProxy, @NotNull DotNetValueProxy valueProxy)
+	public static String toStringValue(@NotNull DotNetStackFrameProxy threadProxy, @NotNull DotNetValueProxy valueProxy)
 	{
 		try
 		{
