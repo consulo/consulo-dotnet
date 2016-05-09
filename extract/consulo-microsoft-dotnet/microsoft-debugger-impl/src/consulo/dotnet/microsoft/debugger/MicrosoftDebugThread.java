@@ -48,6 +48,7 @@ import consulo.dotnet.debugger.breakpoint.DotNetBreakpointEngine;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftThreadProxy;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxy;
+import mssdw.DebugInformationResult;
 import mssdw.EventKind;
 import mssdw.NotSuspendedException;
 import mssdw.SocketAttachingConnector;
@@ -233,9 +234,15 @@ public class MicrosoftDebugThread extends Thread
 							Collection<XLineBreakpoint<?>> targetBreakpoints = map.get(path);
 							for(XLineBreakpoint<?> targetBreakpoint : targetBreakpoints)
 							{
-								BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(targetBreakpoint.getPresentableFilePath(), targetBreakpoint.getLine() + 1, -1);
-								myVirtualMachine.putRequest(targetBreakpoint, breakpointRequest);
-								breakpointRequest.enable();
+								DebugInformationResult debugOffset = myVirtualMachine.getDelegate().findDebugOffset(targetBreakpoint.getPresentableFilePath(), targetBreakpoint.getLine() + 1, -1);
+								if(debugOffset != null)
+								{
+									BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(debugOffset);
+									myVirtualMachine.putRequest(targetBreakpoint, breakpointRequest);
+									breakpointRequest.enable();
+								}
+
+								DotNetBreakpointUtil.updateLineBreakpointIcon(mySession.getProject(), debugOffset != null, targetBreakpoint);
 							}
 						}
 						else if(event instanceof BreakpointEvent)
