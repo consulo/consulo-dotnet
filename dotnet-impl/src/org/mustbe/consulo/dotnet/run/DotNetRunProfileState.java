@@ -26,6 +26,7 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
+import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
@@ -47,6 +48,8 @@ public class DotNetRunProfileState extends PatchableRunProfileState
 	{
 		TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
 		OSProcessHandler handler = patchHandler(new OSProcessHandler(getCommandLineForRun()));
+		ProcessTerminatedListener.attach(handler, myExecutionEnvironment.getProject());
+
 		ConsoleView console = builder.getConsole();
 		console.attachToProcess(handler);
 		return new DefaultExecutionResult(console, handler);
