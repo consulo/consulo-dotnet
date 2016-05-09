@@ -31,6 +31,9 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mssdw.LocalVariableMirror;
 import mssdw.MethodMirror;
 import mssdw.MethodParameterMirror;
+import mssdw.StackFrameMirror;
+import mssdw.ThrowValueException;
+import mssdw.Value;
 
 /**
  * @author VISTALL
@@ -92,7 +95,23 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy thisObjectProxy, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
 	{
-		return null;
+		StackFrameMirror frameMirror = ((MicrosoftStackFrameProxy) frameProxy).getFrameMirror();
+		Value<?> thisObject = thisObjectProxy == null ? null : ((MicrosoftValueProxyBase) thisObjectProxy).getMirror();
+
+		Value[] values = new Value[arguments.length];
+		for(int i = 0; i < arguments.length; i++)
+		{
+			DotNetValueProxy argument = arguments[i];
+			values[i] = ((MicrosoftValueProxyBase) argument).getMirror();
+		}
+		try
+		{
+			return MicrosoftValueProxyUtil.wrap(myMethodMirror.invoke(frameMirror, thisObject, values));
+		}
+		catch(ThrowValueException e)
+		{
+			throw new IllegalArgumentException(e); //TODO [VISTALL] throw new DotNetThrowValueException(MonoValueProxyUtil.wrap(e.getThrowExceptionValue()));
+		}
 	}
 
 	@RequiredReadAction
