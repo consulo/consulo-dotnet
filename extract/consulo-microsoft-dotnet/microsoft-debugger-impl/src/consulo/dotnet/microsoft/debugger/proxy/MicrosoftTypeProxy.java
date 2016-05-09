@@ -26,6 +26,7 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mssdw.CustomAttributeMirror;
 import mssdw.FieldMirror;
 import mssdw.MethodMirror;
+import mssdw.PropertyMirror;
 import mssdw.TypeMirror;
 
 /**
@@ -135,15 +136,14 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetPropertyProxy[] getProperties()
 	{
-		/*PropertyMirror[] properties = myTypeMirror.properties();
+		PropertyMirror[] properties = myTypeMirror.properties();
 		DotNetPropertyProxy[] proxies = new DotNetPropertyProxy[properties.length];
 		for(int i = 0; i < properties.length; i++)
 		{
 			PropertyMirror property = properties[i];
-			proxies[i] = new MonoPropertyProxy(property);
+			proxies[i] = new MicrosoftPropertyProxy(property);
 		}
-		return proxies; */
-		return new DotNetPropertyProxy[0];
+		return proxies;
 	}
 
 	@NotNull
@@ -170,7 +170,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	@Override
 	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
 	{
-		/*TypeMirror[] typeMirrors = new TypeMirror[params.length];
+		TypeMirror[] typeMirrors = new TypeMirror[params.length];
 		for(int i = 0; i < params.length; i++)
 		{
 			MicrosoftTypeProxy param = (MicrosoftTypeProxy) params[i];
@@ -180,15 +180,14 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		if(methodByName != null)
 		{
 			return new MicrosoftMethodProxy(methodByName);
-		}    */
+		}
 		return null;
 	}
 
 	@Override
 	public boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType)
 	{
-		/*MicrosoftTypeProxy MicrosoftTypeProxy = (MicrosoftTypeProxy) otherType;
-		return myTypeMirror.isAssignableFrom(MicrosoftTypeProxy.myTypeMirror);   */
-		return false;
+		MicrosoftTypeProxy MicrosoftTypeProxy = (MicrosoftTypeProxy) otherType;
+		return myTypeMirror.isAssignableFrom(MicrosoftTypeProxy.myTypeMirror);
 	}
 }
