@@ -1,73 +1,42 @@
+/*
+ * Copyright 2013-2016 must-be.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package consulo.dotnet.microsoft.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.joou.UByte;
-import org.joou.UInteger;
-import org.joou.ULong;
-import org.joou.UShort;
-import consulo.dotnet.debugger.nodes.TypeTag;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
-import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
-import consulo.dotnet.microsoft.debugger.protocol.serverMessage.NumberValueResult;
-import edu.arizona.cs.mbel.signature.SignatureConstants;
+import mssdw.NumberValueMirror;
 
 /**
  * @author VISTALL
- * @since 20.04.2016
+ * @since 5/9/2016
  */
-public class MicrosoftNumberValueProxy extends MicrosoftValueProxyBaseOld<NumberValueResult> implements DotNetNumberValueProxy
+public class MicrosoftNumberValueProxy extends MicrosoftValueProxyBase<NumberValueMirror> implements DotNetNumberValueProxy
 {
-	private MicrosoftDebuggerClient myClient;
-
-	public MicrosoftNumberValueProxy(MicrosoftDebuggerClient client, NumberValueResult result)
+	public MicrosoftNumberValueProxy(NumberValueMirror value)
 	{
-		super(result);
-		myClient = client;
-	}
-
-	@Nullable
-	@Override
-	public DotNetTypeProxy getType()
-	{
-		String type = TypeTag.typeByTag(myResult.Type);
-		return MicrosoftTypeProxyOld.byVmQName(myClient, type);
+		super(value);
 	}
 
 	@NotNull
 	@Override
 	public Number getValue()
 	{
-		switch(myResult.Type)
-		{
-			case SignatureConstants.ELEMENT_TYPE_I:
-				return Long.parseLong(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_U:
-				return ULong.valueOf(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_I1:
-				return Byte.parseByte(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_U1:
-				return UByte.valueOf(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_I2:
-				return Short.parseShort(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_U2:
-				return UShort.valueOf(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_I4:
-				return Integer.parseInt(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_U4:
-				return UInteger.valueOf(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_I8:
-				return Long.parseLong(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_U8:
-				return ULong.valueOf(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_R4:
-				return Float.parseFloat(myResult.Value);
-			case SignatureConstants.ELEMENT_TYPE_R8:
-				return Double.parseDouble(myResult.Value);
-		}
-		throw new IllegalArgumentException(String.valueOf(myResult.Type));
+		return (Number) super.getValue();
 	}
 
 	@Override

@@ -81,11 +81,11 @@ public class MicrosoftValueProxyUtilOld
 		}
 		if(o instanceof NumberValueResult)
 		{
-			return new MicrosoftNumberValueProxy(client, (NumberValueResult) o);
+			return new MicrosoftNumberValueProxyOld(client, (NumberValueResult) o);
 		}
 		if(o instanceof CharValueResult)
 		{
-			return new MicrosoftCharValueProxy(client, (CharValueResult) o);
+			return new MicrosoftCharValueProxyOld(client, (CharValueResult) o);
 		}
 		throw new IllegalArgumentException("Value is not handled " + o.getClass().getName());
 	}

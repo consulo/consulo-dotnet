@@ -86,7 +86,7 @@ public class MicrosoftVirtualMachineProxyOld implements DotNetVirtualMachineProx
 		CharValueResult valueResult = new CharValueResult();
 		valueResult.Id = -1;
 		valueResult.Value = value;
-		return new MicrosoftCharValueProxy(myContext, valueResult);
+		return new MicrosoftCharValueProxyOld(myContext, valueResult);
 	}
 
 	@NotNull

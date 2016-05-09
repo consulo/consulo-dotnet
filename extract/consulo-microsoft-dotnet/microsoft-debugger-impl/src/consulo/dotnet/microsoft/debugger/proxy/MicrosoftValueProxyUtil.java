@@ -48,12 +48,12 @@ public class MicrosoftValueProxyUtil
 			valueProxy = new MicrosoftNullValueProxy();
 		}
 
-		/*if(value instanceof NumberValueMirror)
+		if(value instanceof NumberValueMirror)
 		{
-			valueProxy = new MonoNumberValueProxy((NumberValueMirror) value);
+			valueProxy = new MicrosoftNumberValueProxy((NumberValueMirror) value);
 		}
 
-		if(value instanceof ArrayValueMirror)
+		/*if(value instanceof ArrayValueMirror)
 		{
 			valueProxy = new MonoArrayValueProxy((ArrayValueMirror) value);
 		} */
@@ -68,12 +68,12 @@ public class MicrosoftValueProxyUtil
 			valueProxy = new MicrosoftBooleanValueProxy((BooleanValueMirror) value);
 		}
 
-		/*if(value instanceof CharValueMirror)
+		if(value instanceof CharValueMirror)
 		{
-			valueProxy = new MonoCharValueProxy((CharValueMirror) value);
+			valueProxy = new MicrosoftCharValueProxy((CharValueMirror) value);
 		}
 
-		if(value instanceof StructValueMirror)
+		/*if(value instanceof StructValueMirror)
 		{
 			valueProxy = new MonoStructValueProxy((StructValueMirror) value);
 		}
