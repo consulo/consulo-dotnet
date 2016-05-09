@@ -35,6 +35,7 @@ import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.*;
@@ -47,13 +48,13 @@ import consulo.dotnet.debugger.proxy.value.*;
 public class DotNetValuePresentation extends XValuePresentation
 {
 	private final DotNetDebugContext myDebugContext;
-	private final DotNetThreadProxy myThreadProxy;
+	private final DotNetStackFrameProxy myStackFrame;
 	private final DotNetValueProxy myValue;
 
-	public DotNetValuePresentation(DotNetDebugContext debugContext, @NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy value)
+	public DotNetValuePresentation(DotNetDebugContext debugContext, @NotNull DotNetStackFrameProxy stackFrame, @Nullable DotNetValueProxy value)
 	{
 		myDebugContext = debugContext;
-		myThreadProxy = threadProxy;
+		myStackFrame = stackFrame;
 		myValue = value;
 	}
 
@@ -152,7 +153,7 @@ public class DotNetValuePresentation extends XValuePresentation
 				{
 					if(field.isStatic() && field.isLiteral())
 					{
-						DotNetValueProxy fieldValue = field.getValue(myThreadProxy, null);
+						DotNetValueProxy fieldValue = field.getValue(myStackFrame, null);
 						if(fieldValue instanceof DotNetEnumValueProxy)
 						{
 							Object enumValue = fieldValue.getValue();
@@ -206,7 +207,7 @@ public class DotNetValuePresentation extends XValuePresentation
 				DotNetMethodProxy toString = type.findMethodByName("ToString", false);
 				if(toString != null)
 				{
-					DotNetValueProxy invoke = invokeSafe(toString, myThreadProxy, proxy);
+					DotNetValueProxy invoke = invokeSafe(toString, myStackFrame, proxy);
 					if(invoke instanceof DotNetStringValueProxy)
 					{
 						toStringValue = ((DotNetStringValueProxy) invoke).getValue();
@@ -222,7 +223,7 @@ public class DotNetValuePresentation extends XValuePresentation
 						@Override
 						public String fun(Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy> entry)
 						{
-							String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myDebugContext, myThreadProxy, entry.getValue()));
+							String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myDebugContext, myStackFrame, entry.getValue()));
 							return entry.getKey().getName() + " = " + valueText;
 						}
 					}, ", ");
@@ -250,7 +251,7 @@ public class DotNetValuePresentation extends XValuePresentation
 				String qTypeOfValue = toString.getDeclarationType().getFullName();
 				if(!Comparing.equal(qTypeOfValue, DotNetTypes.System.Object))
 				{
-					DotNetValueProxy invoke = invokeSafe(toString, myThreadProxy, value);
+					DotNetValueProxy invoke = invokeSafe(toString, myStackFrame, value);
 					if(invoke instanceof DotNetStringValueProxy)
 					{
 						toStringValue = (String) invoke.getValue();
@@ -297,11 +298,11 @@ public class DotNetValuePresentation extends XValuePresentation
 	}
 
 	@Nullable
-	private static DotNetValueProxy invokeSafe(DotNetMethodProxy methodMirror, DotNetThreadProxy threadMirror, DotNetValueProxy thisObject, DotNetValueProxy... arguments)
+	private static DotNetValueProxy invokeSafe(DotNetMethodProxy methodMirror, DotNetStackFrameProxy frameProxy, DotNetValueProxy thisObject, DotNetValueProxy... arguments)
 	{
 		try
 		{
-			return methodMirror.invoke(threadMirror, thisObject, arguments);
+			return methodMirror.invoke(frameProxy, thisObject, arguments);
 		}
 		catch(Exception ignored)
 		{

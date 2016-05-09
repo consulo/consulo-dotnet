@@ -62,7 +62,7 @@ public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 					return false;
 				}
 
-				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, stackFrameMirror.getThread(), parentType);
+				DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, stackFrameMirror, parentType);
 
 				DotNetFieldProxy[] fields = type.getFields();
 
@@ -78,13 +78,13 @@ public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 
 				if(thisFieldMirror != null)
 				{
-					childrenList.add(new DotNetThisAsObjectValueMirrorNode(debugContext, stackFrameMirror.getThread(), parentType, new Getter<DotNetObjectValueProxy>()
+					childrenList.add(new DotNetThisAsObjectValueMirrorNode(debugContext, stackFrameMirror, parentType, new Getter<DotNetObjectValueProxy>()
 					{
 						@Nullable
 						@Override
 						public DotNetObjectValueProxy get()
 						{
-							return (DotNetObjectValueProxy) thisFieldMirror.getValue(stackFrameMirror.getThread(), thisObject);
+							return (DotNetObjectValueProxy) thisFieldMirror.getValue(stackFrameMirror, thisObject);
 						}
 					}));
 				}
@@ -99,7 +99,7 @@ public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 
 					visitedVariables.add(field);
 
-					childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, field, name, stackFrameMirror.getThread(), (DotNetObjectValueProxy) thisObject));
+					childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, field, name, stackFrameMirror, (DotNetObjectValueProxy) thisObject));
 				}
 				return true;
 			}

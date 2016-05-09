@@ -44,13 +44,11 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public class DotNetLocalVariableMirrorNode extends DotNetAbstractVariableMirrorNode
 {
 	private final DotNetLocalVariableProxy myLocal;
-	private final DotNetStackFrameProxy myFrameProxy;
 
 	public DotNetLocalVariableMirrorNode(DotNetDebugContext debuggerContext, DotNetLocalVariableProxy local, DotNetStackFrameProxy frameProxy)
 	{
-		super(debuggerContext, local.getName(), frameProxy.getThread());
+		super(debuggerContext, local.getName(), frameProxy);
 		myLocal = local;
-		myFrameProxy = frameProxy;
 	}
 
 	@Override

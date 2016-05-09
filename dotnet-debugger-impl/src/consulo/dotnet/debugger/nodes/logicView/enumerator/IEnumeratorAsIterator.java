@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
@@ -32,14 +32,14 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  */
 public class IEnumeratorAsIterator implements Iterator<DotNetValueProxy>
 {
-	private DotNetThreadProxy myThreadMirror;
+	private DotNetStackFrameProxy myFrameProxy;
 	private DotNetValueProxy myValue;
 	private DotNetMethodProxy myMoveNextMethod;
 	private DotNetMethodProxy myCurrent;
 
-	public IEnumeratorAsIterator(DotNetThreadProxy threadMirror, DotNetValueProxy value) throws CantCreateException
+	public IEnumeratorAsIterator(DotNetStackFrameProxy frameProxy, DotNetValueProxy value) throws CantCreateException
 	{
-		myThreadMirror = threadMirror;
+		myFrameProxy = frameProxy;
 		myValue = value;
 
 		DotNetTypeProxy typeMirror = myValue.getType();
@@ -62,7 +62,7 @@ public class IEnumeratorAsIterator implements Iterator<DotNetValueProxy>
 	{
 		try
 		{
-			DotNetValueProxy invoke = myMoveNextMethod.invoke(myThreadMirror, myValue);
+			DotNetValueProxy invoke = myMoveNextMethod.invoke(myFrameProxy, myValue);
 			return invoke instanceof DotNetBooleanValueProxy && ((DotNetBooleanValueProxy) invoke).getValue();
 		}
 		catch(DotNetThrowValueException ignored)
@@ -76,7 +76,7 @@ public class IEnumeratorAsIterator implements Iterator<DotNetValueProxy>
 	{
 		try
 		{
-			return myCurrent.invoke(myThreadMirror, myValue);
+			return myCurrent.invoke(myFrameProxy, myValue);
 		}
 		catch(DotNetThrowValueException ignored)
 		{

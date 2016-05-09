@@ -47,7 +47,7 @@ public class DotNetMethodParameterMirrorNode extends DotNetAbstractVariableMirro
 
 	public DotNetMethodParameterMirrorNode(DotNetDebugContext debuggerContext, DotNetMethodParameterProxy parameter, DotNetStackFrameProxy frame)
 	{
-		super(debuggerContext, parameter.getName(), frame.getThread());
+		super(debuggerContext, parameter.getName(), frame);
 		myParameter = parameter;
 		myFrame = frame;
 	}

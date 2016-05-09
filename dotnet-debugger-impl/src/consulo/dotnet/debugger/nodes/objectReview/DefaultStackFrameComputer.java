@@ -49,11 +49,11 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 	@Override
 	public boolean computeStackFrame(@NotNull DotNetDebugContext debugContext,
 			@Nullable DotNetValueProxy thisObject,
-			@NotNull DotNetStackFrameProxy frameMirrorProxy,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@NotNull Set<Object> visitedVariables,
 			@NotNull XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
 	{
-		DotNetSourceLocation sourceLocation = frameMirrorProxy.getSourceLocation();
+		DotNetSourceLocation sourceLocation = frameProxy.getSourceLocation();
 		if(sourceLocation == null)
 		{
 			return true;
@@ -61,43 +61,43 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 
 		DotNetMethodProxy method = sourceLocation.getMethod();
 
-		DotNetValueProxy value = frameMirrorProxy.getThisObject();
+		DotNetValueProxy value = frameProxy.getThisObject();
 
 		if(value instanceof DotNetObjectValueProxy)
 		{
 			DotNetTypeProxy type = value.getType();
 			assert type != null;
 
-			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameMirrorProxy.getThread(), type);
+			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameProxy, type);
 
-			childrenList.add(new DotNetThisAsObjectValueMirrorNode(debugContext, frameMirrorProxy.getThread(), type, (DotNetObjectValueProxy) value));
+			childrenList.add(new DotNetThisAsObjectValueMirrorNode(debugContext, frameProxy, type, (DotNetObjectValueProxy) value));
 		}
 		else if(value instanceof DotNetStructValueProxy)
 		{
 			DotNetTypeProxy type = value.getType();
 			assert type != null;
 
-			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameMirrorProxy.getThread(), type);
+			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameProxy, type);
 
-			childrenList.add(new DotNetThisAsStructValueMirrorNode(debugContext, frameMirrorProxy.getThread(), type, (DotNetStructValueProxy) value));
+			childrenList.add(new DotNetThisAsStructValueMirrorNode(debugContext, frameProxy, type, (DotNetStructValueProxy) value));
 		}
 		else
 		{
-			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameMirrorProxy.getThread(), sourceLocation.getMethod().getDeclarationType());
+			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameProxy, sourceLocation.getMethod().getDeclarationType());
 		}
 
 		DotNetMethodParameterProxy[] parameters = method.getParameters();
 
 		for(DotNetMethodParameterProxy parameter : parameters)
 		{
-			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(debugContext, parameter, frameMirrorProxy);
+			DotNetMethodParameterMirrorNode parameterMirrorNode = new DotNetMethodParameterMirrorNode(debugContext, parameter, frameProxy);
 
 			visitedVariables.add(parameter);
 
 			childrenList.add(parameterMirrorNode);
 		}
 
-		DotNetLocalVariableProxy[] localVariables = method.getLocalVariables(frameMirrorProxy);
+		DotNetLocalVariableProxy[] localVariables = method.getLocalVariables(frameProxy);
 		for(DotNetLocalVariableProxy local : localVariables)
 		{
 			if(StringUtil.isEmpty(local.getName()))
@@ -107,7 +107,7 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 
 			visitedVariables.add(local);
 
-			DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(debugContext, local, frameMirrorProxy);
+			DotNetLocalVariableMirrorNode localVariableMirrorNode = new DotNetLocalVariableMirrorNode(debugContext, local, frameProxy);
 
 			childrenList.add(localVariableMirrorNode);
 		}

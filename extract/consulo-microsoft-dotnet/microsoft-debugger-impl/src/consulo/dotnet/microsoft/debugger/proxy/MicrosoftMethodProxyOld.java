@@ -28,7 +28,6 @@ import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
@@ -108,7 +107,7 @@ public class MicrosoftMethodProxyOld implements DotNetMethodProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadMirror, @Nullable DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
+	public DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy threadMirror, @Nullable DotNetValueProxy thisObject, @NotNull DotNetValueProxy... arguments)
 	{
 		return null;
 	}

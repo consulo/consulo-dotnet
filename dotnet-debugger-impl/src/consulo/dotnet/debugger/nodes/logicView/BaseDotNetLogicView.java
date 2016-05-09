@@ -23,7 +23,7 @@ import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
@@ -41,7 +41,7 @@ public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 
 	public abstract void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
 			@NotNull DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@NotNull XValueChildrenList childrenList);
 
@@ -49,13 +49,13 @@ public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 	public void computeChildren(@NotNull UserDataHolderBase dataHolder,
 			@NotNull DotNetDebugContext debugContext,
 			@NotNull DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@NotNull XCompositeNode node)
 	{
 		XValueChildrenList childrenList = new XValueChildrenList();
 
-		computeChildrenImpl(debugContext, parentNode, threadMirror, value, childrenList);
+		computeChildrenImpl(debugContext, parentNode, frameProxy, value, childrenList);
 
 		node.addChildren(childrenList, true);
 	}

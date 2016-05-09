@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.MethodMirror;
@@ -44,17 +44,17 @@ public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> imp
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
 	{
-		MonoThreadProxy monoThreadProxy = (MonoThreadProxy) threadProxy;
+		MonoThreadProxy monoThreadProxy = (MonoThreadProxy) frameProxy.getThread();
 		MonoValueProxyBase<?> monoValueProxyBase = (MonoValueProxyBase<?>) proxy;
 		return MonoValueProxyUtil.wrap(myMirror.value(monoThreadProxy.getThreadMirror(), monoValueProxyBase == null ? null : (ObjectValueMirror) monoValueProxyBase.getMirror()));
 	}
 
 	@Override
-	public void setValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
+	public void setValue(@NotNull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
 	{
-		MonoThreadProxy monoThreadProxy = (MonoThreadProxy) threadProxy;
+		MonoThreadProxy monoThreadProxy = (MonoThreadProxy) threadProxy.getThread();
 		MonoObjectValueProxy monoValueProxyBase = (MonoObjectValueProxy) proxy;
 		MonoValueProxyBase<?> monoNewValueProxyBase = (MonoValueProxyBase<?>) newValueProxy;
 

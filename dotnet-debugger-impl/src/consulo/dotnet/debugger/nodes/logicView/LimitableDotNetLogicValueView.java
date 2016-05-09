@@ -26,7 +26,7 @@ import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
@@ -42,14 +42,14 @@ public abstract class LimitableDotNetLogicValueView<T extends DotNetValueProxy> 
 	public abstract boolean isMyValue(@NotNull DotNetValueProxy value);
 
 	@NotNull
-	public abstract XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull DotNetThreadProxy threadMirror, @NotNull T value);
+	public abstract XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull DotNetStackFrameProxy frameProxy, @NotNull T value);
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void computeChildren(@NotNull UserDataHolderBase dataHolder,
 			@NotNull DotNetDebugContext debugContext,
 			@NotNull DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy oldValue,
 			@NotNull XCompositeNode node)
 	{
@@ -68,7 +68,7 @@ public abstract class LimitableDotNetLogicValueView<T extends DotNetValueProxy> 
 		int max = Math.min(startIndex + XCompositeNode.MAX_CHILDREN_TO_SHOW, length);
 		for(int i = startIndex; i < max; i++)
 		{
-			childrenList.add(createChildValue(i, debugContext, threadMirror, value));
+			childrenList.add(createChildValue(i, debugContext, frameProxy, value));
 		}
 
 		dataHolder.putUserData(ourLastIndex, max);

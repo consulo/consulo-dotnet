@@ -52,7 +52,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public class DotNetBreakpointEngine
 {
 	@Nullable
-	private XValue evaluateBreakpointExpression(@NotNull DotNetThreadProxy threadProxy,
+	private XValue evaluateBreakpointExpression(@NotNull final DotNetStackFrameProxy frameProxy,
 			@NotNull final XLineBreakpoint<?> breakpoint,
 			@Nullable final XExpression conditionExpression,
 			@NotNull final DotNetDebugContext debugContext)
@@ -71,12 +71,6 @@ public class DotNetBreakpointEngine
 		final DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(conditionExpression.getLanguage());
 		if(provider != null)
 		{
-			final DotNetStackFrameProxy frame = threadProxy.getFrame(0);
-			if(frame == null)
-			{
-				return null;
-			}
-
 			return ApplicationManager.getApplication().runReadAction(new Computable<XValue>()
 			{
 				@Override
@@ -101,7 +95,7 @@ public class DotNetBreakpointEngine
 						return null;
 					}
 					final Ref<XValue> valueRef = Ref.create();
-					provider.evaluate(frame, debugContext, conditionExpression.getExpression(), elementAt, new XDebuggerEvaluator.XEvaluationCallback()
+					provider.evaluate(frameProxy, debugContext, conditionExpression.getExpression(), elementAt, new XDebuggerEvaluator.XEvaluationCallback()
 					{
 						@Override
 						public void evaluated(@NotNull XValue result)
@@ -136,13 +130,19 @@ public class DotNetBreakpointEngine
 			return;
 		}
 
-		XValue value = evaluateBreakpointExpression(threadProxy, breakpoint, logExpressionObject, debugContext);
+		final DotNetStackFrameProxy frame = threadProxy.getFrame(0);
+		if(frame == null)
+		{
+			return;
+		}
+
+		XValue value = evaluateBreakpointExpression(frame, breakpoint, logExpressionObject, debugContext);
 		if(value instanceof DotNetAbstractVariableMirrorNode)
 		{
 			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();
 			if(valueOfVariableSafe != null)
 			{
-				String toStringValue = DotNetDebuggerSearchUtil.toStringValue(threadProxy, valueOfVariableSafe);
+				String toStringValue = DotNetDebuggerSearchUtil.toStringValue(frame, valueOfVariableSafe);
 				if(toStringValue != null)
 				{
 					consoleView.print(toStringValue, ConsoleViewContentType.NORMAL_OUTPUT);
@@ -159,7 +159,13 @@ public class DotNetBreakpointEngine
 			return true;
 		}
 
-		XValue value = evaluateBreakpointExpression(threadProxy, breakpoint, conditionExpression, debugContext);
+		DotNetStackFrameProxy frame = threadProxy.getFrame(0);
+		if(frame == null)
+		{
+			return true;
+		}
+
+		XValue value = evaluateBreakpointExpression(frame, breakpoint, conditionExpression, debugContext);
 		if(value instanceof DotNetAbstractVariableMirrorNode)
 		{
 			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableMirrorNode) value).getValueOfVariableSafe();

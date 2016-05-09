@@ -42,6 +42,11 @@ public class MicrosoftThreadProxy extends DotNetThreadProxy
 		myThreadMirror = threadMirror;
 	}
 
+	public ThreadMirror getThreadMirror()
+	{
+		return myThreadMirror;
+	}
+
 	@Override
 	public long getId()
 	{

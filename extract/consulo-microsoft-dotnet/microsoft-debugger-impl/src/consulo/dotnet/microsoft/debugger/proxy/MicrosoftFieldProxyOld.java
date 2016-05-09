@@ -6,7 +6,7 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
@@ -61,15 +61,15 @@ public class MicrosoftFieldProxyOld implements DotNetFieldProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
 	{
 		MicrosoftObjectValueProxyOld objectValueProxy = (MicrosoftObjectValueProxyOld) proxy;
 		int objectId = objectValueProxy == null ? 0 : objectValueProxy.getResult().ObjectId;
-		return MicrosoftValueProxyUtilOld.sendAndReceive(myClient, new GetFieldValueRequest((int) threadProxy.getId(), 0, myParentType.getTypeRef(), objectId, myField.Token));
+		return MicrosoftValueProxyUtilOld.sendAndReceive(myClient, new GetFieldValueRequest((int) frameProxy.getThread().getId(), 0, myParentType.getTypeRef(), objectId, myField.Token));
 	}
 
 	@Override
-	public void setValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
+	public void setValue(@NotNull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
 	{
 	}
 

@@ -27,7 +27,7 @@ import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -38,6 +38,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  */
 public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirrorNode
 {
+	@NotNull
 	private final DotNetFieldOrPropertyProxy myFieldOrPropertyMirror;
 	private final DotNetObjectValueProxy myThisObjectMirror;
 	@Nullable
@@ -46,17 +47,17 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
 			@NotNull String name,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy stackFrame,
 			@Nullable DotNetObjectValueProxy thisObjectMirror)
 	{
-		super(debuggerContext, name, threadMirror);
+		super(debuggerContext, name, stackFrame);
 		myFieldOrPropertyMirror = fieldOrPropertyMirror;
 		myThisObjectMirror = thisObjectMirror;
 	}
 
 	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy threadMirror,
 			@Nullable DotNetObjectValueProxy thisObjectMirror)
 	{
 		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.getName(), threadMirror, thisObjectMirror);
@@ -64,11 +65,11 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 
 	public DotNetFieldOrPropertyMirrorNode(@NotNull DotNetDebugContext debuggerContext,
 			@NotNull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy stackFrame,
 			@Nullable DotNetObjectValueProxy thisObjectMirror,
 			@NotNull DotNetStructValueInfo fieldValue)
 	{
-		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.getName(), threadMirror, thisObjectMirror);
+		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.getName(), stackFrame, thisObjectMirror);
 		myFieldValue = fieldValue;
 	}
 
@@ -121,7 +122,7 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 		{
 			return myFieldValue.getValue();
 		}
-		return myFieldOrPropertyMirror.getValue(myThreadProxy, myThisObjectMirror);
+		return myFieldOrPropertyMirror.getValue(myFrameProxy, myThisObjectMirror);
 	}
 
 	@Override
@@ -133,7 +134,7 @@ public class DotNetFieldOrPropertyMirrorNode extends DotNetAbstractVariableMirro
 		}
 		else
 		{
-			myFieldOrPropertyMirror.setValue(myThreadProxy, myThisObjectMirror, value);
+			myFieldOrPropertyMirror.setValue(myFrameProxy, myThisObjectMirror, value);
 		}
 	}
 }

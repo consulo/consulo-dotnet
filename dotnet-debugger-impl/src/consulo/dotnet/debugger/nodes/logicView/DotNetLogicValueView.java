@@ -6,7 +6,7 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableMirrorNode;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
@@ -29,7 +29,7 @@ public interface DotNetLogicValueView
 	void computeChildren(@NotNull UserDataHolderBase dataHolder,
 			@NotNull DotNetDebugContext debugContext,
 			@NotNull DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@NotNull XCompositeNode node);
 }

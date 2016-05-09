@@ -28,7 +28,7 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -44,11 +44,11 @@ public class DotNetThisAsStructValueMirrorNode extends DotNetAbstractVariableMir
 	private final DotNetStructValueProxy myValue;
 
 	public DotNetThisAsStructValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@NotNull DotNetTypeProxy typeMirror,
 			@NotNull DotNetStructValueProxy value)
 	{
-		super(debuggerContext, "this", threadMirror);
+		super(debuggerContext, "this", frameProxy);
 		myTypeMirror = typeMirror;
 		myValue = value;
 	}
@@ -92,7 +92,7 @@ public class DotNetThisAsStructValueMirrorNode extends DotNetAbstractVariableMir
 
 			DotNetStructValueInfo valueInfo = new DotNetStructValueInfo(myValue, this, key, value);
 
-			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, key, myThreadProxy, null, valueInfo));
+			childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, key, myFrameProxy, null, valueInfo));
 		}
 
 		node.addChildren(childrenList, true);

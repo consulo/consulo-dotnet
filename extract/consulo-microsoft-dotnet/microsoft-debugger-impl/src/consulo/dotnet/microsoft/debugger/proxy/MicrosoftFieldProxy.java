@@ -4,11 +4,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 import mssdw.FieldMirror;
+import mssdw.ObjectValueMirror;
 
 /**
  * @author VISTALL
@@ -43,16 +44,15 @@ public class MicrosoftFieldProxy extends MicrosoftVariableProxyBase<FieldMirror>
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
 	{
-		return null;
-		//MonoThreadProxy monoThreadProxy = (MonoThreadProxy) threadProxy;
-		//MonoValueProxyBase<?> monoValueProxyBase = (MonoValueProxyBase<?>) proxy;
-		//return MonoValueProxyUtil.wrap(myMirror.value(monoThreadProxy.getThreadMirror(), monoValueProxyBase == null ? null : (ObjectValueMirror) monoValueProxyBase.getMirror()));
+		MicrosoftStackFrameProxy microsoftThreadProxy = (MicrosoftStackFrameProxy) frameProxy;
+		MicrosoftValueProxyBase<?> microsoftValueProxyBase = (MicrosoftValueProxyBase<?>) proxy;
+		return MicrosoftValueProxyUtil.wrap(myMirror.value(microsoftThreadProxy.getFrameMirror(), microsoftValueProxyBase == null ? null : (ObjectValueMirror) microsoftValueProxyBase.getMirror()));
 	}
 
 	@Override
-	public void setValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
+	public void setValue(@NotNull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
 	{
 		//MonoThreadProxy monoThreadProxy = (MonoThreadProxy) threadProxy;
 		//MonoObjectValueProxy monoValueProxyBase = (MonoObjectValueProxy) proxy;

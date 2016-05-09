@@ -25,7 +25,6 @@ import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -96,9 +95,9 @@ public class MonoMethodProxy implements DotNetMethodProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy thisObjectProxy, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
+	public DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy thisObjectProxy, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
 	{
-		ThreadMirror thread = ((MonoThreadProxy) threadProxy).getThreadMirror();
+		ThreadMirror thread = ((MonoThreadProxy) frameProxy.getThread()).getThreadMirror();
 		Value<?> thisObject = thisObjectProxy == null ? null : ((MonoValueProxyBase) thisObjectProxy).getMirror();
 
 		Value[] values = new Value[arguments.length];

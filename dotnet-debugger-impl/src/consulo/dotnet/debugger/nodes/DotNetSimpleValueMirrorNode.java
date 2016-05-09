@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
@@ -33,9 +33,9 @@ public class DotNetSimpleValueMirrorNode extends DotNetAbstractVariableMirrorNod
 	@NotNull
 	private final DotNetValueProxy myValue;
 
-	public DotNetSimpleValueMirrorNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetThreadProxy threadMirror, @NotNull DotNetValueProxy value)
+	public DotNetSimpleValueMirrorNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetStackFrameProxy frameProxy, @NotNull DotNetValueProxy value)
 	{
-		super(debuggerContext, name, threadMirror);
+		super(debuggerContext, name, frameProxy);
 
 		myValue = value;
 	}

@@ -14,7 +14,7 @@ import consulo.dotnet.debugger.nodes.DotNetStructValueInfo;
 import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueMirrorNode;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
@@ -35,7 +35,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 	@Override
 	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
 			@NotNull DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@NotNull XValueChildrenList childrenList)
 	{
@@ -45,7 +45,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 			assert type != null;
 
-			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, threadMirror, type);
+			DotNetThisAsObjectValueMirrorNode.addStaticNode(childrenList, debugContext, frameProxy, type);
 
 			DotNetFieldOrPropertyProxy[] mirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(type, true);
 			for(DotNetFieldOrPropertyProxy fieldOrPropertyProxy : mirrors)
@@ -54,7 +54,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 				{
 					continue;
 				}
-				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldOrPropertyProxy, threadMirror, (DotNetObjectValueProxy) value));
+				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldOrPropertyProxy, frameProxy, (DotNetObjectValueProxy) value));
 			}
 		}
 		else if(value instanceof DotNetStructValueProxy)
@@ -68,7 +68,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 				DotNetStructValueInfo valueInfo = new DotNetStructValueInfo((DotNetStructValueProxy) value, parentNode, fieldMirror, fieldValue);
 
-				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldMirror, threadMirror, null, valueInfo));
+				childrenList.add(new DotNetFieldOrPropertyMirrorNode(debugContext, fieldMirror, frameProxy, null, valueInfo));
 			}
 		}
 	}

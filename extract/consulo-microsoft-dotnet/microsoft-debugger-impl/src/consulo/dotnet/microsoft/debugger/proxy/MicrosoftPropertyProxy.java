@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Getter;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebuggerClient;
@@ -62,7 +62,7 @@ public class MicrosoftPropertyProxy implements DotNetPropertyProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@NotNull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy)
 	{
 		return null;
 		//MicrosoftObjectValueProxy objectValueProxy = (MicrosoftObjectValueProxy) proxy;
@@ -70,7 +70,7 @@ public class MicrosoftPropertyProxy implements DotNetPropertyProxy
 	}
 
 	@Override
-	public void setValue(@NotNull DotNetThreadProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
+	public void setValue(@NotNull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
 	{
 	}
 

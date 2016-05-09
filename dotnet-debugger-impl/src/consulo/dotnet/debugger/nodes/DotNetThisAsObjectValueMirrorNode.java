@@ -34,7 +34,7 @@ import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -47,7 +47,7 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 {
 	public static void addStaticNode(@NotNull XValueChildrenList list,
 			@NotNull DotNetDebugContext debuggerContext,
-			@NotNull DotNetThreadProxy threadProxy,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@NotNull DotNetTypeProxy typeProxy)
 	{
 		boolean result = processFieldOrProperty(typeProxy, null, CommonProcessors.<DotNetFieldOrPropertyProxy>alwaysFalse());
@@ -55,7 +55,7 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 		{
 			return;
 		}
-		list.add(new DotNetThisAsObjectValueMirrorNode(debuggerContext, threadProxy, typeProxy, (DotNetObjectValueProxy) null));
+		list.add(new DotNetThisAsObjectValueMirrorNode(debuggerContext, frameProxy, typeProxy, (DotNetObjectValueProxy) null));
 	}
 
 	@NotNull
@@ -63,11 +63,11 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 	private final Getter<DotNetObjectValueProxy> myObjectValueMirrorGetter;
 
 	public DotNetThisAsObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull DotNetThreadProxy threadProxy,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@NotNull DotNetTypeProxy type,
 			@Nullable final DotNetObjectValueProxy objectValueMirror)
 	{
-		this(debuggerContext, threadProxy, type, objectValueMirror == null ? null : new Getter<DotNetObjectValueProxy>()
+		this(debuggerContext, frameProxy, type, objectValueMirror == null ? null : new Getter<DotNetObjectValueProxy>()
 		{
 			@Nullable
 			@Override
@@ -79,11 +79,11 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 	}
 
 	public DotNetThisAsObjectValueMirrorNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull DotNetThreadProxy threadProxy,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@NotNull DotNetTypeProxy type,
 			@Nullable Getter<DotNetObjectValueProxy> objectValueMirrorGetter)
 	{
-		super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", threadProxy);
+		super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", frameProxy);
 		myType = type;
 		myObjectValueMirrorGetter = objectValueMirrorGetter;
 	}
@@ -137,7 +137,7 @@ public class DotNetThisAsObjectValueMirrorNode extends DotNetAbstractVariableMir
 			@Override
 			public boolean process(DotNetFieldOrPropertyProxy fieldOrPropertyMirror)
 			{
-				childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldOrPropertyMirror, myThreadProxy, fieldOrPropertyMirror.isStatic() ? null : myObjectValueMirrorGetter.get()));
+				childrenList.add(new DotNetFieldOrPropertyMirrorNode(myDebugContext, fieldOrPropertyMirror, myFrameProxy, fieldOrPropertyMirror.isStatic() ? null : myObjectValueMirrorGetter.get()));
 				return true;
 			}
 		});

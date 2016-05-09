@@ -10,7 +10,7 @@ import consulo.dotnet.debugger.nodes.DotNetSimpleValueMirrorNode;
 import consulo.dotnet.debugger.nodes.logicView.enumerator.CantCreateException;
 import consulo.dotnet.debugger.nodes.logicView.enumerator.IEnumeratorAsIterator;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
@@ -31,7 +31,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 	@Override
 	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
 			@NotNull DotNetAbstractVariableMirrorNode parentNode,
-			@NotNull DotNetThreadProxy threadMirror,
+			@NotNull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@NotNull XValueChildrenList childrenList)
 	{
@@ -54,11 +54,11 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 		DotNetValueProxy getEnumeratorValue = null;
 		try
 		{
-			getEnumeratorValue = getEnumerator.invoke(threadMirror, value);
+			getEnumeratorValue = getEnumerator.invoke(frameProxy, value);
 		}
 		catch(Exception e)
 		{
-			DotNetDebuggerSearchUtil.rethrow(threadMirror, e);
+			DotNetDebuggerSearchUtil.rethrow(frameProxy, e);
 		}
 
 		// need test returned object
@@ -77,7 +77,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 
 		try
 		{
-			IEnumeratorAsIterator iterator = new IEnumeratorAsIterator(threadMirror, getEnumeratorValue);
+			IEnumeratorAsIterator iterator = new IEnumeratorAsIterator(frameProxy, getEnumeratorValue);
 
 			int i = 0;
 			while(iterator.hasNext())
@@ -88,7 +88,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 				{
 					continue;
 				}
-				childrenList.add(new DotNetSimpleValueMirrorNode(debugContext, String.valueOf(i++), threadMirror, next));
+				childrenList.add(new DotNetSimpleValueMirrorNode(debugContext, String.valueOf(i++), frameProxy, next));
 			}
 		}
 		catch(CantCreateException e)
