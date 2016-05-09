@@ -53,10 +53,10 @@ public class MicrosoftValueProxyUtil
 			valueProxy = new MicrosoftNumberValueProxy((NumberValueMirror) value);
 		}
 
-		/*if(value instanceof ArrayValueMirror)
+		if(value instanceof ArrayValueMirror)
 		{
-			valueProxy = new MonoArrayValueProxy((ArrayValueMirror) value);
-		} */
+			valueProxy = new MicrosoftArrayValueProxy((ArrayValueMirror) value);
+		}
 
 		if(value instanceof StringValueMirror)
 		{
