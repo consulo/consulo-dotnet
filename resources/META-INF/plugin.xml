@@ -16,7 +16,7 @@
 
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
 	<id>org.mustbe.consulo.dotnet.core</id>
-	<name>.NET Core</name>
+	<name>.NET API</name>
 	<version>SNAPSHOT</version>
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
 	<depends config-file="com.intellij.xml.xml" optional="true">com.intellij.xml</depends>
