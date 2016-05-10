@@ -54,7 +54,7 @@
             <element id="module-production-resource-output" name="consulo-mono-dotnet" />
             <element id="module-output" name="mono-debugger-impl" />
           </element>
-          <element id="library" level="project" name="mono-soft-debugging" />
+          <element id="file-copy" path="$PROJECT_DIR$/extract/consulo-mono-dotnet/lib/mono-soft-debugging.jar" />
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-mono-dotnet/dist" />
       </element>

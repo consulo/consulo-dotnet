@@ -313,7 +313,13 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="dotnet-debugger-impl" exported="" />
           <orderEntry type="module" module-name="dotnet-psi-impl" />
-          <orderEntry type="library" name="mono-soft-debugging" level="project" />
+          <orderEntry type="module-library">
+            <library>
+              <binaries>
+                <root url="jar://$MODULE_DIR$/../lib/mono-soft-debugging.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
         </module-layer>
       </module>
     </modules>
