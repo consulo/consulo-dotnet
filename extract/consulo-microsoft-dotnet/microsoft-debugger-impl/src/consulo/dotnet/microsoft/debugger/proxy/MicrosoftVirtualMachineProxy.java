@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,6 +56,7 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 {
 	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
 	private final MultiMap<XBreakpoint, EventRequest> myBreakpointEventRequests = MultiMap.create();
+	private final List<String> myLoadedModules = new CopyOnWriteArrayList<String>();
 
 	private final VirtualMachine myVirtualMachine;
 
@@ -214,5 +216,15 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 	public List<ThreadMirror> allThreads()
 	{
 		return myVirtualMachine.allThreads();
+	}
+
+	public void addLoadedModule(String path)
+	{
+		myLoadedModules.add(path);
+	}
+
+	public List<String> getLoadedModules()
+	{
+		return myLoadedModules;
 	}
 }

@@ -24,13 +24,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.consulo.lombok.annotations.Logger;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.Processor;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.MultiMap;
@@ -46,6 +41,7 @@ import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointEngine;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
+import consulo.dotnet.microsoft.debugger.breakpoint.MicrosoftBreakpointUtil;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftThreadProxy;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxy;
 import mssdw.DebugInformationResult;
@@ -160,16 +156,10 @@ public class MicrosoftDebugThread extends Thread
 			{
 				for(XLineBreakpoint<?> breakpoint : breakpoints)
 				{
-					VirtualFile breakpointFile = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
-					if(breakpointFile == null)
+					String modulePath = MicrosoftBreakpointUtil.getModulePath(mySession.getProject(), breakpoint);
+					if(modulePath != null)
 					{
-						continue;
-					}
-
-					DotNetModuleExtension extension = ModuleUtilCore.getExtension(mySession.getProject(), breakpointFile, DotNetModuleExtension.class);
-					if(extension != null)
-					{
-						map.putValue(DotNetMacroUtil.expandOutputFile(extension), breakpoint);
+						map.putValue(modulePath, breakpoint);
 					}
 				}
 			}
@@ -231,6 +221,7 @@ public class MicrosoftDebugThread extends Thread
 						if(event instanceof ModuleLoadEvent)
 						{
 							String path = ((ModuleLoadEvent) event).getPath();
+							myVirtualMachine.addLoadedModule(path);
 							Collection<XLineBreakpoint<?>> targetBreakpoints = map.get(path);
 							for(XLineBreakpoint<?> targetBreakpoint : targetBreakpoints)
 							{

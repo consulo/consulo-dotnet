@@ -27,8 +27,13 @@ import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetSuspendContext;
+import consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType;
+import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
+import consulo.dotnet.microsoft.debugger.breakpoint.MicrosoftBreakpointUtil;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxy;
 import mssdw.ThreadMirror;
 import mssdw.event.EventSet;
@@ -53,14 +58,14 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 				public boolean process(final MicrosoftVirtualMachineProxy virtualMachine)
 				{
 					XBreakpointType<?, ?> type = breakpoint.getType();
-					/*if(type == DotNetLineBreakpointType.getInstance())
+					if(type == DotNetLineBreakpointType.getInstance())
 					{
-						MonoBreakpointUtil.createBreakpointRequest(getSession(), virtualMachine, (XLineBreakpoint) breakpoint, null);
+						MicrosoftBreakpointUtil.createBreakpointRequest(getSession(), virtualMachine, (XLineBreakpoint) breakpoint);
 					}
 					else if(type == DotNetExceptionBreakpointType.getInstance())
 					{
-						MonoBreakpointUtil.createExceptionRequest(virtualMachine, (XBreakpoint<DotNetExceptionBreakpointProperties>) breakpoint, null);
-					}    */
+						MicrosoftBreakpointUtil.createExceptionRequest(virtualMachine, (XBreakpoint<DotNetExceptionBreakpointProperties>) breakpoint);
+					}
 
 					return false;
 				}
@@ -169,22 +174,22 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 	@Override
 	public void startStepOver()
 	{
-		stepRequest(StepRequest.StepDepth.Over, StepRequest.StepSize.Line);
+		stepRequest(StepRequest.StepDepth.Over);
 	}
 
 	@Override
 	public void startStepInto()
 	{
-		stepRequest(StepRequest.StepDepth.Into, StepRequest.StepSize.Line);
+		stepRequest(StepRequest.StepDepth.Into);
 	}
 
 	@Override
 	public void startStepOut()
 	{
-		stepRequest(StepRequest.StepDepth.Out, StepRequest.StepSize.Line);
+		stepRequest(StepRequest.StepDepth.Out);
 	}
 
-	private void stepRequest(final StepRequest.StepDepth stepDepth, final StepRequest.StepSize stepSize)
+	private void stepRequest(final StepRequest.StepDepth stepDepth)
 	{
 		if(myPausedEventSet == null)
 		{
@@ -202,7 +207,7 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 			public boolean process(MicrosoftVirtualMachineProxy virtualMachine)
 			{
 				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-				StepRequest stepRequest = eventRequestManager.createStepRequest(threadMirror, stepSize, stepDepth);
+				StepRequest stepRequest = eventRequestManager.createStepRequest(threadMirror, stepDepth);
 				stepRequest.enable();
 
 				virtualMachine.addStepRequest(stepRequest);
