@@ -8,12 +8,10 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableValueNode;
-import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyValueNode;
 import consulo.dotnet.debugger.nodes.DotNetStructValueInfo;
 import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueNode;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
@@ -50,10 +48,11 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 			DotNetFieldOrPropertyProxy[] mirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(type, true);
 			for(DotNetFieldOrPropertyProxy fieldOrPropertyProxy : mirrors)
 			{
-				if(needSkip(fieldOrPropertyProxy))
+				if(fieldOrPropertyProxy.isStatic() || DotNetThisAsObjectValueNode.isHiddenPropertyOrField(fieldOrPropertyProxy))
 				{
 					continue;
 				}
+
 				childrenList.add(new DotNetFieldOrPropertyValueNode(debugContext, fieldOrPropertyProxy, frameProxy, (DotNetObjectValueProxy) value));
 			}
 		}
@@ -73,23 +72,4 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 		}
 	}
 
-	private static boolean needSkip(DotNetFieldOrPropertyProxy fieldOrPropertyProxy)
-	{
-		if(fieldOrPropertyProxy.isStatic())
-		{
-			return true;
-		}
-		if(DotNetDebuggerCompilerGenerateUtil.needSkipVariableByName(fieldOrPropertyProxy.getName()))
-		{
-			return true;
-		}
-		if(fieldOrPropertyProxy instanceof DotNetPropertyProxy)
-		{
-			if(((DotNetPropertyProxy) fieldOrPropertyProxy).isArrayProperty())
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 }

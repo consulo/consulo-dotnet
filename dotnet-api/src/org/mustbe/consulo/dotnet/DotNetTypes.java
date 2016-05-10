@@ -73,6 +73,7 @@ public interface DotNetTypes
 
 			interface CompilerServices
 			{
+				String CompilerGeneratedAttribute = "System.Runtime.CompilerServices.CompilerGeneratedAttribute";
 				String InternalsVisibleToAttribute = "System.Runtime.CompilerServices.InternalsVisibleToAttribute";
 				String AsyncStateMachineAttribute = "System.Runtime.CompilerServices.AsyncStateMachineAttribute";
 				String ExtensionAttribute = "System.Runtime.CompilerServices.ExtensionAttribute";

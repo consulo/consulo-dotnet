@@ -32,6 +32,10 @@ public interface DotNetMethodProxy extends Named
 {
 	boolean isStatic();
 
+	boolean isAbstract();
+
+	boolean isAnnotatedBy(@NotNull String attributeVmQName);
+
 	@NotNull
 	DotNetTypeProxy getDeclarationType();
 

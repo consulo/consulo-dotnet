@@ -29,12 +29,14 @@ import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
+import mono.debugger.CustomAttributeMirror;
 import mono.debugger.InvokeFlags;
 import mono.debugger.LocalVariableMirror;
 import mono.debugger.MethodMirror;
 import mono.debugger.MethodParameterMirror;
 import mono.debugger.ThreadMirror;
 import mono.debugger.ThrowValueException;
+import mono.debugger.TypeMirror;
 import mono.debugger.Value;
 
 /**
@@ -54,6 +56,27 @@ public class MonoMethodProxy implements DotNetMethodProxy
 	public boolean isStatic()
 	{
 		return myMethodMirror.isStatic();
+	}
+
+	@Override
+	public boolean isAbstract()
+	{
+		return myMethodMirror.isAbstract();
+	}
+
+	@Override
+	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	{
+		for(CustomAttributeMirror customAttributeMirror : myMethodMirror.customAttributes())
+		{
+			MethodMirror constructorMirror = customAttributeMirror.getConstructorMirror();
+			TypeMirror typeMirror = constructorMirror.declaringType();
+			if(attributeVmQName.equals(typeMirror.fullName()))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@NotNull

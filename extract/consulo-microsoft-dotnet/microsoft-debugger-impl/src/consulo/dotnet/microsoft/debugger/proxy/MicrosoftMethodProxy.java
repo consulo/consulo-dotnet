@@ -54,6 +54,18 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 		return myMethodMirror.isStatic();
 	}
 
+	@Override
+	public boolean isAbstract()
+	{
+		return myMethodMirror.isAbstract();
+	}
+
+	@Override
+	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	{
+		return false;
+	}
+
 	@NotNull
 	@Override
 	public DotNetTypeProxy getDeclarationType()

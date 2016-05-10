@@ -20,6 +20,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.dotnet.DotNetTypes;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.CommonProcessors;
@@ -33,6 +34,7 @@ import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
+import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -156,12 +158,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 				continue;
 			}
 
-			if(fieldMirror instanceof DotNetPropertyProxy && ((DotNetPropertyProxy) fieldMirror).isArrayProperty())
-			{
-				continue;
-			}
-
-			if(DotNetDebuggerCompilerGenerateUtil.needSkipVariableByName(fieldMirror.getName()))
+			if(isHiddenPropertyOrField(fieldMirror))
 			{
 				continue;
 			}
@@ -172,6 +169,30 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 			}
 		}
 		return true;
+	}
+
+	public static boolean isHiddenPropertyOrField(DotNetFieldOrPropertyProxy proxy)
+	{
+		if(proxy instanceof DotNetPropertyProxy)
+		{
+			if(((DotNetPropertyProxy) proxy).isArrayProperty())
+			{
+				return true;
+			}
+
+			DotNetMethodProxy getMethod = ((DotNetPropertyProxy) proxy).getGetMethod();
+			// if get accessor is abstract - it will generate dummy impl with backend field
+			if(getMethod == null || getMethod.isAnnotatedBy(DotNetTypes.System.Runtime.CompilerServices.CompilerGeneratedAttribute))
+			{
+				return true;
+			}
+		}
+
+		if(DotNetDebuggerCompilerGenerateUtil.needSkipVariableByName(proxy.getName()))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	@NotNull
