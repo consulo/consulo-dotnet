@@ -37,8 +37,12 @@ public class DotNetDebuggerUtil
 	@NotNull
 	public static String getVmQName(@NotNull DotNetTypeProxy typeMirror)
 	{
-		String fullName = typeMirror.getFullName();
+		return getVmQName(typeMirror.getFullName());
+	}
 
+	@NotNull
+	public static String getVmQName(@NotNull String fullName)
+	{
 		// System.List`1[String]
 		int i = fullName.indexOf('[');
 		if(i != -1)

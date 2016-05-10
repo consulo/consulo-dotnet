@@ -73,15 +73,15 @@ public class MicrosoftValueProxyUtil
 			valueProxy = new MicrosoftCharValueProxy((CharValueMirror) value);
 		}
 
-		/*if(value instanceof StructValueMirror)
+		if(value instanceof StructValueMirror)
 		{
-			valueProxy = new MonoStructValueProxy((StructValueMirror) value);
+			valueProxy = new MicrosoftStructValueProxy((StructValueMirror) value);
 		}
 
 		if(value instanceof EnumValueMirror)
 		{
-			valueProxy = new MonoEnumValueProxy((EnumValueMirror) value);
-		}  */
+			valueProxy = new MicrosoftEnumValueProxy((EnumValueMirror) value);
+		}
 
 		if(valueProxy == null)
 		{

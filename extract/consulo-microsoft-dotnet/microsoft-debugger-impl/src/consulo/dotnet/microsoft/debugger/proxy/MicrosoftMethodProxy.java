@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.ArrayUtil;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -63,7 +64,7 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@Override
 	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
 	{
-		return false;
+		return ArrayUtil.contains(attributeVmQName, myMethodMirror.customAttributes());
 	}
 
 	@NotNull

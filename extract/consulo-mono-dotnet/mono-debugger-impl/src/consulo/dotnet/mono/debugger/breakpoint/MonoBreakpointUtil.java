@@ -57,7 +57,6 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointPr
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
-import consulo.dotnet.mono.debugger.MonoDebugUtil;
 import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
 import consulo.dotnet.mono.debugger.proxy.MonoMethodProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoTypeProxy;
@@ -235,7 +234,7 @@ public class MonoBreakpointUtil
 			return FindLocationResult.WRONG_TARGET;
 		}
 
-		if(typeMirror != null && !Comparing.equal(vmQualifiedName, MonoDebugUtil.getVmQName(typeMirror)))
+		if(typeMirror != null && !Comparing.equal(vmQualifiedName, DotNetDebuggerUtil.getVmQName(typeMirror.fullName())))
 		{
 			return FindLocationResult.WRONG_TARGET;
 		}

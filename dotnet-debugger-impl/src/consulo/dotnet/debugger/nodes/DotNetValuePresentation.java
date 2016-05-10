@@ -36,7 +36,6 @@ import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.*;
 
@@ -153,30 +152,24 @@ public class DotNetValuePresentation extends XValuePresentation
 				{
 					if(field.isStatic() && field.isLiteral())
 					{
-						DotNetValueProxy fieldValue = field.getValue(myStackFrame, null);
-						if(fieldValue instanceof DotNetEnumValueProxy)
+						Number actualValue = field.getEnumConstantValue(myStackFrame);
+						if(actualValue != null)
 						{
-							Object enumValue = fieldValue.getValue();
-							if(enumValue instanceof DotNetNumberValueProxy)
+							if(flags)
 							{
-								Number actualValue = ((DotNetNumberValueProxy) enumValue).getValue();
-
-								if(flags)
+								long flagsValue = expectedValue.longValue();
+								long maskValue = actualValue.longValue();
+								if((flagsValue & maskValue) == maskValue)
 								{
-									long flagsValue = expectedValue.longValue();
-									long maskValue = actualValue.longValue();
-									if((flagsValue & maskValue) == maskValue)
-									{
-										enumFields.add(field.getName());
-									}
+									enumFields.add(field.getName());
 								}
-								else
+							}
+							else
+							{
+								if(expectedValue.longValue() == actualValue.longValue())
 								{
-									if(expectedValue.equals(actualValue))
-									{
-										enumFields.add(field.getName());
-										break;
-									}
+									enumFields.add(field.getName());
+									break;
 								}
 							}
 						}

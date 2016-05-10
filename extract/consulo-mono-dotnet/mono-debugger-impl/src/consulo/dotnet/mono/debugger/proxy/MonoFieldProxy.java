@@ -2,10 +2,13 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joou.ULong;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetEnumValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 import mono.debugger.FieldMirror;
@@ -65,5 +68,23 @@ public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implement
 	public boolean isLiteral()
 	{
 		return BitUtil.isSet(myMirror.attributes(), FieldAttributes.Literal);
+	}
+
+	@Override
+	@Nullable
+	public ULong getEnumConstantValue(@NotNull DotNetStackFrameProxy stackFrameProxy)
+	{
+		DotNetValueProxy fieldValue = getValue(stackFrameProxy, null);
+		if(fieldValue instanceof DotNetEnumValueProxy)
+		{
+			Object enumValue = fieldValue.getValue();
+			if(enumValue instanceof DotNetNumberValueProxy)
+			{
+				Number actualValue = ((DotNetNumberValueProxy) enumValue).getValue();
+
+				return ULong.valueOf(actualValue.longValue());
+			}
+		}
+		return null;
 	}
 }

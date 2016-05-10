@@ -6,6 +6,7 @@ import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import edu.arizona.cs.mbel.signature.FieldAttributes;
 import mssdw.FieldMirror;
@@ -65,5 +66,17 @@ public class MicrosoftFieldProxy extends MicrosoftVariableProxyBase<FieldMirror>
 	public boolean isLiteral()
 	{
 		return BitUtil.isSet(myMirror.attributes(), FieldAttributes.Literal);
+	}
+
+	@Nullable
+	@Override
+	public Number getEnumConstantValue(@NotNull DotNetStackFrameProxy stackFrameProxy)
+	{
+		DotNetValueProxy fieldValue = getValue(stackFrameProxy, null);
+		if(fieldValue instanceof DotNetNumberValueProxy)
+		{
+			return (Number) fieldValue.getValue();
+		}
+		return null;
 	}
 }

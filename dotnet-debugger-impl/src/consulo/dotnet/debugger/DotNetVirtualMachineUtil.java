@@ -53,28 +53,6 @@ public class DotNetVirtualMachineUtil
 
 	public static void formatNameWithGeneric(@NotNull StringBuilder builder, @NotNull DotNetTypeProxy typeMirror)
 	{
-		/*
-		TODO [VISTALL]
-		TypeMirror original = typeMirror.original();
-		if(original == null)
-		{
-			builder.append(MsilHelper.prepareForUser(typeMirror.qualifiedName()));
-			return;
-		}     */
-
-		builder.append(MsilHelper.prepareForUser(typeMirror.getFullName()));
-
-		/*builder.append("<");
-		DotNetTypeProxy[] typeMirrors = typeMirror.genericArguments();
-		for(int i = 0; i < typeMirrors.length; i++)
-		{
-			if(i != 0)
-			{
-				builder.append(", ");
-			}
-			DotNetTypeProxy mirror = typeMirrors[i];
-			formatNameWithGeneric(builder, mirror);
-		}
-		builder.append(">");  */
+		builder.append(MsilHelper.prepareForUser(DotNetDebuggerUtil.getVmQName(typeMirror.getFullName())));
 	}
 }

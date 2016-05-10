@@ -37,6 +37,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
@@ -45,7 +46,6 @@ import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
-import consulo.dotnet.mono.debugger.MonoDebugUtil;
 import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
 import mono.debugger.*;
 import mono.debugger.request.EventRequest;
@@ -233,7 +233,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 					@Override
 					public boolean value(TypeMirror typeMirror)
 					{
-						return Comparing.equal(MonoDebugUtil.getVmQName(typeMirror), vmQualifiedName);
+						return Comparing.equal(DotNetDebuggerUtil.getVmQName(typeMirror.fullName()), vmQualifiedName);
 					}
 				});
 			}
