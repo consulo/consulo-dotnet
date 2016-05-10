@@ -69,7 +69,7 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public DotNetTypeProxy findType(@NotNull Project project, @NotNull String vmQName, @NotNull VirtualFile virtualFile)
 	{
-		return null;
+		return MicrosoftTypeProxy.of(myVirtualMachine.findTypeByQualifiedName(vmQName));
 	}
 
 	@NotNull
