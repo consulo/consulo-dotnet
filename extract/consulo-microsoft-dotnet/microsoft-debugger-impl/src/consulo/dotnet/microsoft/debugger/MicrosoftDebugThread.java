@@ -56,6 +56,7 @@ import mssdw.event.Event;
 import mssdw.event.EventQueue;
 import mssdw.event.EventSet;
 import mssdw.event.ModuleLoadEvent;
+import mssdw.event.StepEvent;
 import mssdw.event.VMDeathEvent;
 import mssdw.request.BreakpointRequest;
 import mssdw.request.EventRequestManager;
@@ -267,14 +268,14 @@ public class MicrosoftDebugThread extends Thread
 								focusUI = true;
 							}
 						}
-						/*else if(event instanceof StepEvent)
+						else if(event instanceof StepEvent)
 						{
 							DotNetDebugContext context = myDebugProcess.createDebugContext(myVirtualMachine, null);
 
-							mySession.positionReached(new DotNetSuspendContext(context, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
+							mySession.positionReached(new DotNetSuspendContext(context, eventSet.eventThread().id()));
 							stopped = true;
 						}
-						else if(event instanceof UserBreakEvent)
+						/*else if(event instanceof UserBreakEvent)
 						{
 							DotNetDebugContext context = myDebugProcess.createDebugContext(myVirtualMachine, null);
 							mySession.positionReached(new DotNetSuspendContext(context, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
