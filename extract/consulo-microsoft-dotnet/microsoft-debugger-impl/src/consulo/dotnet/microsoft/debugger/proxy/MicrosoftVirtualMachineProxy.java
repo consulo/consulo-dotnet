@@ -37,7 +37,6 @@ import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
-import mssdw.AppDomainMirror;
 import mssdw.BooleanValueMirror;
 import mssdw.CharValueMirror;
 import mssdw.NoObjectValueMirror;
@@ -54,7 +53,6 @@ import mssdw.request.StepRequest;
  */
 public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 {
-	private final Map<Integer, AppDomainMirror> myLoadedAppDomains = ContainerUtil.newConcurrentMap();
 	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
 	private final MultiMap<XBreakpoint, EventRequest> myBreakpointEventRequests = MultiMap.create();
 
@@ -90,7 +88,7 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public DotNetStringValueProxy createStringValue(@NotNull String value)
 	{
-		return MicrosoftValueProxyUtil.wrap(myVirtualMachine.rootAppDomain().createString(value));
+		throw new UnsupportedOperationException();
 	}
 
 	@NotNull
@@ -216,15 +214,5 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 	public List<ThreadMirror> allThreads()
 	{
 		return myVirtualMachine.allThreads();
-	}
-
-	public void loadAppDomain(AppDomainMirror appDomainMirror)
-	{
-		myLoadedAppDomains.put(appDomainMirror.id(), appDomainMirror);
-	}
-
-	public void unloadAppDomain(AppDomainMirror appDomainMirror)
-	{
-		myLoadedAppDomains.remove(appDomainMirror.id());
 	}
 }
