@@ -1,6 +1,8 @@
 package consulo.dotnet.debugger.nodes.logicView;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,6 +47,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 			DotNetThisAsObjectValueNode.addStaticNode(childrenList, debugContext, frameProxy, type);
 
+			final Set<String> visited = new HashSet<String>();
 			DotNetFieldOrPropertyProxy[] mirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(type, true);
 			for(DotNetFieldOrPropertyProxy fieldOrPropertyProxy : mirrors)
 			{
@@ -52,7 +55,10 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 				{
 					continue;
 				}
-
+				if(!visited.add(fieldOrPropertyProxy.getName()))
+				{
+					continue;
+				}
 				childrenList.add(new DotNetFieldOrPropertyValueNode(debugContext, fieldOrPropertyProxy, frameProxy, (DotNetObjectValueProxy) value));
 			}
 		}

@@ -16,6 +16,9 @@
 
 package consulo.dotnet.debugger.nodes;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
@@ -134,12 +137,17 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 	{
 		final XValueChildrenList childrenList = new XValueChildrenList();
 
+		final Set<String> visited = new HashSet<String>();
 		processFieldOrProperty(myType, myObjectValueMirrorGetter, new Processor<DotNetFieldOrPropertyProxy>()
 		{
 			@Override
-			public boolean process(DotNetFieldOrPropertyProxy fieldOrPropertyMirror)
+			public boolean process(DotNetFieldOrPropertyProxy fieldOrPropertyProxy)
 			{
-				childrenList.add(new DotNetFieldOrPropertyValueNode(myDebugContext, fieldOrPropertyMirror, myFrameProxy, fieldOrPropertyMirror.isStatic() ? null : myObjectValueMirrorGetter.get()));
+				if(!visited.add(fieldOrPropertyProxy.getName()))
+				{
+					return true;
+				}
+				childrenList.add(new DotNetFieldOrPropertyValueNode(myDebugContext, fieldOrPropertyProxy, myFrameProxy, fieldOrPropertyProxy.isStatic() ? null : myObjectValueMirrorGetter.get()));
 				return true;
 			}
 		});
