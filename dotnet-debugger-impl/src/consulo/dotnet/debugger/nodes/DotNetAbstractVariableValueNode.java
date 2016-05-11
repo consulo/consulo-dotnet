@@ -240,7 +240,6 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			// ignore all
 		}
 		return null;
