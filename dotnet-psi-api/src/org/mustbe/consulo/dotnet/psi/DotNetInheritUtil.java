@@ -76,7 +76,7 @@ public class DotNetInheritUtil
 		{
 			for(DotNetTypeRef dotNetType : anExtends)
 			{
-				PsiElement psiElement = dotNetType.resolve(typeDeclaration).getElement();
+				PsiElement psiElement = dotNetType.resolve().getElement();
 				if(psiElement instanceof DotNetTypeDeclaration)
 				{
 					if(psiElement.isEquivalentTo(typeDeclaration))
@@ -109,7 +109,7 @@ public class DotNetInheritUtil
 	@RequiredReadAction
 	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
 	{
-		PsiElement resolve = typeRef.resolve(element).getElement();
+		PsiElement resolve = typeRef.resolve().getElement();
 		if(!(resolve instanceof DotNetTypeDeclaration))
 		{
 			return false;
@@ -132,43 +132,5 @@ public class DotNetInheritUtil
 	public static boolean isParent(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
 		return typeDeclaration.isInheritor(parentClass, deep);
-	}
-
-	@Deprecated
-	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, DotNetTypeDeclaration other, boolean deep)
-	{
-		if(typeDeclaration.isEquivalentTo(other))
-		{
-			return true;
-		}
-		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
-		if(anExtends.length > 0)
-		{
-			for(DotNetTypeRef dotNetType : anExtends)
-			{
-				PsiElement psiElement = dotNetType.resolve(typeDeclaration).getElement();
-				if(psiElement instanceof DotNetTypeDeclaration)
-				{
-					if(psiElement.isEquivalentTo(typeDeclaration))
-					{
-						return false;
-					}
-
-					if(psiElement.isEquivalentTo(other))
-					{
-						return true;
-					}
-
-					if(deep)
-					{
-						if(isInheritor((DotNetTypeDeclaration) psiElement, other, true))
-						{
-							return true;
-						}
-					}
-				}
-			}
-		}
-		return false;
 	}
 }

@@ -32,7 +32,7 @@ import com.intellij.psi.stubs.IStubElementType;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilClassGenericTypeImpl extends MsilStubElementImpl<MsilClassGenericTypeStub> implements MsilClassGenericType
+public class MsilClassGenericTypeImpl extends MsilTypeImpl<MsilClassGenericTypeStub> implements MsilClassGenericType
 {
 	public MsilClassGenericTypeImpl(@NotNull ASTNode node)
 	{
@@ -42,12 +42,6 @@ public class MsilClassGenericTypeImpl extends MsilStubElementImpl<MsilClassGener
 	public MsilClassGenericTypeImpl(@NotNull MsilClassGenericTypeStub stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
-	}
-
-	@Override
-	public void accept(MsilVisitor visitor)
-	{
-
 	}
 
 	@Override
@@ -65,7 +59,7 @@ public class MsilClassGenericTypeImpl extends MsilStubElementImpl<MsilClassGener
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRefImpl()
 	{
 		MsilClassEntry parent = getStubOrPsiParentOfType(MsilClassEntry.class);
 		assert parent != null;

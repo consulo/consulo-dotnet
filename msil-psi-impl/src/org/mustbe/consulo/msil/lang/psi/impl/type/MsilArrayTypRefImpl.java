@@ -20,15 +20,15 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 23.05.14
  */
-public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
+public class MsilArrayTypRefImpl extends DotNetTypeRefWithCachedResult implements DotNetArrayTypeRef
 {
 	private final DotNetTypeRef myInnerTypeRef;
 	private final int[] myLowerValues;
@@ -39,24 +39,18 @@ public class MsilArrayTypRefImpl implements DotNetArrayTypeRef
 		myLowerValues = lowerValues;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
-	public String getPresentableText()
+	public String toString()
 	{
-		return myInnerTypeRef.getPresentableText() + "[]";
-	}
-
-	@NotNull
-	@Override
-	public String getQualifiedText()
-	{
-		return myInnerTypeRef.getQualifiedText() + "[]";
+		return myInnerTypeRef.toString() + "[]";
 	}
 
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolveResult()
 	{
 		return DotNetTypeResolveResult.EMPTY;
 	}

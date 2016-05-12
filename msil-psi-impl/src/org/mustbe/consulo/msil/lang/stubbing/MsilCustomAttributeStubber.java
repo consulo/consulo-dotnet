@@ -366,7 +366,7 @@ public class MsilCustomAttributeStubber
 	@RequiredReadAction
 	private static Number getValue(PsiElement scope, ByteBuffer byteBuffer, DotNetTypeRef typeRef)
 	{
-		PsiElement resolvedElement = typeRef.resolve(scope).getElement();
+		PsiElement resolvedElement = typeRef.resolve().getElement();
 		String qName = null;
 		if(resolvedElement instanceof DotNetTypeDeclaration)
 		{

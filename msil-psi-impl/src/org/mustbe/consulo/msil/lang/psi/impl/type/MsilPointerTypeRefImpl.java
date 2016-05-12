@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,48 +14,42 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
+package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 06.01.14.
+ * @since 12-May-16
  */
-public class DotNetPointerTypeRefImpl extends DotNetTypeRef.Adapter implements DotNetPointerTypeRef
+public class MsilPointerTypeRefImpl extends DotNetTypeRefWithCachedResult implements DotNetPointerTypeRef
 {
 	private final DotNetTypeRef myInnerTypeRef;
 
-	public DotNetPointerTypeRefImpl(DotNetTypeRef innerTypeRef)
+	public MsilPointerTypeRefImpl(DotNetTypeRef innerTypeRef)
 	{
 		myInnerTypeRef = innerTypeRef;
-	}
-
-	@NotNull
-	@Override
-	public String getPresentableText()
-	{
-		return myInnerTypeRef.getPresentableText() + "*";
-	}
-
-	@NotNull
-	@Override
-	public String getQualifiedText()
-	{
-		return myInnerTypeRef.getQualifiedText() + "*";
 	}
 
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
+	protected DotNetTypeResolveResult resolveResult()
 	{
-		return myInnerTypeRef.resolve(scope);
+		return myInnerTypeRef.resolve();
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public String toString()
+	{
+		return myInnerTypeRef.toString() + "*";
 	}
 
 	@Override
@@ -68,6 +62,6 @@ public class DotNetPointerTypeRefImpl extends DotNetTypeRef.Adapter implements D
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj instanceof DotNetPointerTypeRef && myInnerTypeRef.equals(((DotNetPointerTypeRef) obj).getInnerTypeRef());
+		return obj instanceof MsilPointerTypeRefImpl && myInnerTypeRef.equals(((MsilPointerTypeRefImpl) obj).getInnerTypeRef());
 	}
 }

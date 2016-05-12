@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,50 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.psi;
+package org.mustbe.consulo.dotnet.resolve;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
- * @since 13.12.13.
+ * @since 12-May-16
  */
-public interface DotNetTypeWithTypeArguments extends DotNetType
+public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 {
-	@NotNull
-	@RequiredReadAction
-	DotNetType getInnerType();
-
-	@Nullable
-	@RequiredReadAction
-	DotNetTypeList getArgumentsList();
+	private DotNetTypeResolveResult myResult;
 
 	@NotNull
+	@Override
+	public final String getPresentableText()
+	{
+		return toString();
+	}
+
+	@NotNull
+	@Override
+	public final String getQualifiedText()
+	{
+		return toString();
+	}
+
 	@RequiredReadAction
-	DotNetType[] getArguments();
+	@NotNull
+	@Override
+	public final DotNetTypeResolveResult resolve()
+	{
+		if(myResult == null)
+		{
+			myResult = resolveResult();
+		}
+		return myResult;
+	}
+
+	@RequiredReadAction
+	@NotNull
+	protected abstract DotNetTypeResolveResult resolveResult();
+
+	@RequiredReadAction
+	@NotNull
+	public abstract String toString();
 }

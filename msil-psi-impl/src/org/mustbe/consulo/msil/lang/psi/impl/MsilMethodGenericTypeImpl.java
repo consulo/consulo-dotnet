@@ -19,12 +19,10 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilMethodGenericType;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilMethodGenericTypeStub;
-import org.mustbe.consulo.msil.lang.psi.impl.type.MsilClassGenericTypeRefImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.type.MsilMethodGenericTypeRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -34,7 +32,7 @@ import com.intellij.psi.stubs.IStubElementType;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilMethodGenericTypeImpl extends MsilStubElementImpl<MsilMethodGenericTypeStub> implements MsilMethodGenericType
+public class MsilMethodGenericTypeImpl extends MsilTypeImpl<MsilMethodGenericTypeStub> implements MsilMethodGenericType
 {
 	public MsilMethodGenericTypeImpl(@NotNull ASTNode node)
 	{
@@ -49,17 +47,11 @@ public class MsilMethodGenericTypeImpl extends MsilStubElementImpl<MsilMethodGen
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRefImpl()
 	{
 		MsilMethodEntry parent = getStubOrPsiParentOfType(MsilMethodEntry.class);
 		assert parent != null;
 		return new MsilMethodGenericTypeRefImpl(parent, getIndex());
-	}
-
-	@Override
-	public void accept(MsilVisitor visitor)
-	{
-
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type;
+package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,13 +27,13 @@ import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
- * @since 13.01.14
+ * @since 12-May-16
  */
-public class SimpleGenericExtractorImpl implements DotNetGenericExtractor
+public class MsilGenericExtractorImpl implements DotNetGenericExtractor
 {
 	private Map<DotNetGenericParameter, DotNetTypeRef> myMap;
 
-	public SimpleGenericExtractorImpl(DotNetGenericParameter[] genericParameters, DotNetTypeRef[] arguments)
+	public MsilGenericExtractorImpl(DotNetGenericParameter[] genericParameters, DotNetTypeRef[] arguments)
 	{
 		myMap = new HashMap<DotNetGenericParameter, DotNetTypeRef>(genericParameters.length);
 		for(int i = 0; i < genericParameters.length; i++)

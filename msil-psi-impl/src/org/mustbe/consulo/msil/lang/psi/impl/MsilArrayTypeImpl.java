@@ -34,7 +34,7 @@ import com.intellij.util.ArrayUtil;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilArrayTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> implements MsilArrayType
+public class MsilArrayTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implements MsilArrayType
 {
 	public MsilArrayTypeImpl(@NotNull ASTNode node)
 	{
@@ -63,7 +63,7 @@ public class MsilArrayTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> im
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	protected DotNetTypeRef toTypeRefImpl()
 	{
 		int[] lowerValues = ArrayUtil.EMPTY_INT_ARRAY;
 		MsilArrayDimension[] dimensions = getDimensions();

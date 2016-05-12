@@ -38,6 +38,7 @@ import com.intellij.util.containers.ContainerUtil;
 @ProjectService
 public abstract class DotNetPsiSearcher
 {
+	@Deprecated
 	public static enum TypeResoleKind
 	{
 		CLASS,

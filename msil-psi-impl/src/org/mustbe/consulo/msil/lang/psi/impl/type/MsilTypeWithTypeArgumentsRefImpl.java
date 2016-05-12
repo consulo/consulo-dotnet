@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,22 +18,25 @@ package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.resolve.DotNetRefTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericWrapperTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 23.05.14
+ * @since 12-May-16
  */
-public class MsilRefTypeRefImpl extends DotNetTypeRefWithCachedResult implements DotNetRefTypeRef
+public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedResult implements DotNetGenericWrapperTypeRef
 {
 	private DotNetTypeRef myTypeRef;
+	private DotNetTypeRef[] myArguments;
 
-	public MsilRefTypeRefImpl(DotNetTypeRef typeRef)
+	public MsilTypeWithTypeArgumentsRefImpl(DotNetTypeRef typeRef, DotNetTypeRef[] arguments)
 	{
 		myTypeRef = typeRef;
+		myArguments = arguments;
 	}
 
 	@RequiredReadAction
@@ -41,7 +44,12 @@ public class MsilRefTypeRefImpl extends DotNetTypeRefWithCachedResult implements
 	@Override
 	protected DotNetTypeResolveResult resolveResult()
 	{
-		return myTypeRef.resolve();
+		PsiElement element = myTypeRef.resolve().getElement();
+		if(element == null)
+		{
+			return DotNetTypeResolveResult.EMPTY;
+		}
+		return new MsilTypeResolveResult(element, myArguments);
 	}
 
 	@RequiredReadAction
@@ -49,7 +57,27 @@ public class MsilRefTypeRefImpl extends DotNetTypeRefWithCachedResult implements
 	@Override
 	public String toString()
 	{
-		return myTypeRef.toString() + "&";
+		StringBuilder builder = new StringBuilder();
+		builder.append(myTypeRef.toString());
+		builder.append("<");
+		for(int i = 0; i < myArguments.length; i++)
+		{
+			if(i != 0)
+			{
+				builder.append(", ");
+			}
+			DotNetTypeRef argument = myArguments[i];
+			builder.append(argument.toString());
+		}
+		builder.append(">");
+		return builder.toString();
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef[] getArgumentTypeRefs()
+	{
+		return myArguments;
 	}
 
 	@NotNull
@@ -57,11 +85,5 @@ public class MsilRefTypeRefImpl extends DotNetTypeRefWithCachedResult implements
 	public DotNetTypeRef getInnerTypeRef()
 	{
 		return myTypeRef;
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		return obj instanceof MsilRefTypeRefImpl && getInnerTypeRef().equals(((MsilRefTypeRefImpl) obj).getInnerTypeRef());
 	}
 }

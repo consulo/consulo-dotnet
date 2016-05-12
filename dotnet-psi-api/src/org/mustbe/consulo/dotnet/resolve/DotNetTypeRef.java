@@ -19,7 +19,6 @@ package org.mustbe.consulo.dotnet.resolve;
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import com.intellij.psi.PsiElement;
 @ArrayFactoryFields
 public interface DotNetTypeRef
 {
-	public class Adapter implements DotNetTypeRef
+	public class AdapterInternal implements DotNetTypeRef
 	{
 		@NotNull
 		@Override
@@ -49,7 +48,7 @@ public interface DotNetTypeRef
 		@RequiredReadAction
 		@NotNull
 		@Override
-		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
+		public DotNetTypeResolveResult resolve()
 		{
 			return DotNetTypeResolveResult.EMPTY;
 		}
@@ -89,9 +88,9 @@ public interface DotNetTypeRef
 		@RequiredReadAction
 		@NotNull
 		@Override
-		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
+		public DotNetTypeResolveResult resolve()
 		{
-			return myDelegate.resolve(scope);
+			return myDelegate.resolve();
 		}
 
 		@NotNull
@@ -107,7 +106,7 @@ public interface DotNetTypeRef
 		}
 	}
 
-	DotNetTypeRef ERROR_TYPE = new Adapter()
+	DotNetTypeRef ERROR_TYPE = new AdapterInternal()
 	{
 		@NotNull
 		@Override
@@ -118,7 +117,7 @@ public interface DotNetTypeRef
 		}
 	};
 
-	DotNetTypeRef UNKNOWN_TYPE = new Adapter()
+	DotNetTypeRef UNKNOWN_TYPE = new AdapterInternal()
 	{
 		@NotNull
 		@Override
@@ -129,7 +128,7 @@ public interface DotNetTypeRef
 		}
 	};
 
-	DotNetTypeRef AUTO_TYPE = new Adapter()
+	DotNetTypeRef AUTO_TYPE = new AdapterInternal()
 	{
 		@NotNull
 		@Override
@@ -148,7 +147,8 @@ public interface DotNetTypeRef
 	@Deprecated
 	String getQualifiedText();
 
+
 	@RequiredReadAction
 	@NotNull
-	DotNetTypeResolveResult resolve(@NotNull PsiElement scope);
+	DotNetTypeResolveResult resolve();
 }

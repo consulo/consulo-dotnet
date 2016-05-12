@@ -155,6 +155,7 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 		return fullName;
 	}
 
+	@RequiredReadAction
 	private String typeToDocName(PsiElement element, DotNetTypeRef typeRef)
 	{
 		if(typeRef instanceof DotNetArrayTypeRef)
@@ -167,7 +168,7 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 		}
 		else
 		{
-			PsiElement resolve = typeRef.resolve(element).getElement();
+			PsiElement resolve = typeRef.resolve().getElement();
 			if(resolve == null)
 			{
 				return "<error>";

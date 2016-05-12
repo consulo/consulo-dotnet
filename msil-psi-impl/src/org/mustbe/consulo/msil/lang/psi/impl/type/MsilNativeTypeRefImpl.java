@@ -16,7 +16,9 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -24,15 +26,14 @@ import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
  */
 public class MsilNativeTypeRefImpl extends MsilReferenceTypeRefImpl
 {
-	public MsilNativeTypeRefImpl(String ref, DotNetPsiSearcher.TypeResoleKind typeResoleKind)
+	public MsilNativeTypeRefImpl(@NotNull PsiElement element, @NotNull String ref, @NotNull DotNetPsiSearcher.TypeResoleKind typeResoleKind)
 	{
-		super(ref, typeResoleKind);
+		super(element, ref, typeResoleKind);
 	}
 
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj instanceof MsilNativeTypeRefImpl && myRef.equals(((MsilNativeTypeRefImpl) obj).myRef) && myTypeResoleKind == (
-				(MsilNativeTypeRefImpl) obj).myTypeResoleKind;
+		return obj instanceof MsilNativeTypeRefImpl && myRef.equals(((MsilNativeTypeRefImpl) obj).myRef) && myTypeResoleKind == ((MsilNativeTypeRefImpl) obj).myTypeResoleKind;
 	}
 }
