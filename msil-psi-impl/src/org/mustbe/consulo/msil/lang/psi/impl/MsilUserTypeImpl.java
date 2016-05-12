@@ -35,7 +35,7 @@ import com.intellij.psi.stubs.IStubElementType;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilUserTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub> implements MsilUserType
+public class MsilUserTypeImpl extends MsilTypeImpl<MsilReferenceTypeStub> implements MsilUserType
 {
 	public MsilUserTypeImpl(@NotNull ASTNode node)
 	{
@@ -45,12 +45,6 @@ public class MsilUserTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub>
 	public MsilUserTypeImpl(@NotNull MsilReferenceTypeStub stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
-	}
-
-	@Override
-	public void accept(MsilVisitor visitor)
-	{
-
 	}
 
 	@NotNull
@@ -109,9 +103,8 @@ public class MsilUserTypeImpl extends MsilStubElementImpl<MsilReferenceTypeStub>
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRefImpl()
 	{
-		String fullTypeName = getReferenceText();
-		return new MsilReferenceTypeRefImpl(fullTypeName, getTypeResoleKind());
+		return new MsilReferenceTypeRefImpl(this, getReferenceText(), getTypeResoleKind());
 	}
 }

@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * @author VISTALL
@@ -26,11 +27,14 @@ import org.jetbrains.annotations.Nullable;
 public interface DotNetTypeWithTypeArguments extends DotNetType
 {
 	@NotNull
+	@RequiredReadAction
 	DotNetType getInnerType();
 
 	@Nullable
+	@RequiredReadAction
 	DotNetTypeList getArgumentsList();
 
 	@NotNull
+	@RequiredReadAction
 	DotNetType[] getArguments();
 }

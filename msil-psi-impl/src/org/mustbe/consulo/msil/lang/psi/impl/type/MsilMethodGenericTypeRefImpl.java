@@ -19,7 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.type;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
 import org.mustbe.consulo.dotnet.resolve.SimpleTypeResolveResult;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
@@ -30,7 +30,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 23.05.14
  */
-public class MsilMethodGenericTypeRefImpl extends DotNetTypeRef.Adapter
+public class MsilMethodGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 {
 	private final MsilMethodEntry myParent;
 	private final int myIndex;
@@ -51,11 +51,12 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		return myIndex;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
-	public String getPresentableText()
+	public String toString()
 	{
-		PsiElement resolve = resolve(myParent).getElement();
+		PsiElement resolve = resolve().getElement();
 		if(resolve instanceof DotNetGenericParameter)
 		{
 			return ((DotNetGenericParameter) resolve).getName();
@@ -66,7 +67,7 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRef.Adapter
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolveResult()
 	{
 		DotNetGenericParameter dotNetGenericParameter = ArrayUtil2.safeGet(myParent.getGenericParameters(), myIndex);
 		if(dotNetGenericParameter == null)

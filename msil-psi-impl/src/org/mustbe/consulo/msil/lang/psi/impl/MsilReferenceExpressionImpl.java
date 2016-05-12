@@ -40,14 +40,14 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 	@Override
 	public void accept(MsilVisitor visitor)
 	{
-
+		visitor.visitElement(this);
 	}
 
 	@NotNull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
-		return null;
+		return DotNetTypeRef.ERROR_TYPE;
 	}
 
 	@NotNull

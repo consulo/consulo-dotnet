@@ -20,19 +20,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
 import org.mustbe.consulo.dotnet.resolve.SimpleTypeResolveResult;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
 import com.intellij.util.ArrayUtil;
 
 /**
  * @author VISTALL
  * @since 23.05.14
  */
-public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
+public class MsilClassGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 {
 	private final MsilClassEntry myParent;
 	private final String myName;
@@ -43,9 +42,10 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		myName = name;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
-	public String getPresentableText()
+	public String toString()
 	{
 		return myName;
 	}
@@ -55,6 +55,7 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
 		return myParent;
 	}
 
+	@RequiredReadAction
 	public int getIndex()
 	{
 		DotNetGenericParameter genericParameter = findGenericParameter();
@@ -68,7 +69,7 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
+	public DotNetTypeResolveResult resolveResult()
 	{
 		DotNetGenericParameter parameter = findGenericParameter();
 		if(parameter != null)
@@ -79,6 +80,7 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRef.Adapter
 	}
 
 	@Nullable
+	@RequiredReadAction
 	private DotNetGenericParameter findGenericParameter()
 	{
 		DotNetGenericParameter[] genericParameters = myParent.getGenericParameters();

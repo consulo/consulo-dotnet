@@ -18,6 +18,7 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
@@ -28,6 +29,7 @@ import com.intellij.psi.PsiElement;
 @ArrayFactoryFields
 public interface DotNetTypeRef
 {
+	@Deprecated
 	public class Adapter implements DotNetTypeRef
 	{
 		@NotNull
@@ -49,9 +51,18 @@ public interface DotNetTypeRef
 		@RequiredReadAction
 		@NotNull
 		@Override
-		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
+		public DotNetTypeResolveResult resolve()
 		{
 			return DotNetTypeResolveResult.EMPTY;
+		}
+
+		@RequiredReadAction
+		@NotNull
+		@Deprecated
+		@Override
+		public DotNetTypeResolveResult resolve(@Nullable("always null") @Deprecated PsiElement scope)
+		{
+			return resolve();
 		}
 
 		@Override
@@ -89,7 +100,15 @@ public interface DotNetTypeRef
 		@RequiredReadAction
 		@NotNull
 		@Override
-		public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
+		public DotNetTypeResolveResult resolve()
+		{
+			return myDelegate.resolve();
+		}
+
+		@RequiredReadAction
+		@NotNull
+		@Override
+		public DotNetTypeResolveResult resolve(@Nullable("always null") @Deprecated PsiElement scope)
 		{
 			return myDelegate.resolve(scope);
 		}
@@ -150,5 +169,10 @@ public interface DotNetTypeRef
 
 	@RequiredReadAction
 	@NotNull
-	DotNetTypeResolveResult resolve(@NotNull PsiElement scope);
+	@Deprecated
+	DotNetTypeResolveResult resolve(@Nullable("always null") @Deprecated PsiElement scope);
+
+	@RequiredReadAction
+	@NotNull
+	DotNetTypeResolveResult resolve();
 }

@@ -37,7 +37,7 @@ import com.intellij.psi.tree.IElementType;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> implements DotNetNativeType
+public class MsilNativeTypeImpl extends MsilTypeImpl<MsilNativeTypeStub> implements DotNetNativeType
 {
 	private static final Map<IElementType, String> ourTypes = new HashMap<IElementType, String>()
 	{
@@ -83,7 +83,7 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRefImpl()
 	{
 		IElementType elementType = null;
 		MsilNativeTypeStub stub = getStub();
@@ -97,12 +97,6 @@ public class MsilNativeTypeImpl extends MsilStubElementImpl<MsilNativeTypeStub> 
 		}
 		String ref = ourTypes.get(elementType);
 		assert ref != null : elementType.toString();
-		return new MsilNativeTypeRefImpl(ref, DotNetPsiSearcher.TypeResoleKind.UNKNOWN);
-	}
-
-	@Override
-	public void accept(MsilVisitor visitor)
-	{
-
+		return new MsilNativeTypeRefImpl(this, ref, DotNetPsiSearcher.TypeResoleKind.UNKNOWN);
 	}
 }

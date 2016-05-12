@@ -18,13 +18,13 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type.SimpleGenericWrapperTypeRef;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeWithTypeArguments;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilTypeWithTypeArgumentsRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 
@@ -32,7 +32,7 @@ import com.intellij.psi.stubs.IStubElementType;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilTypeWithTypeArgumentsImpl extends MsilStubElementImpl<MsilEmptyTypeStub> implements DotNetTypeWithTypeArguments
+public class MsilTypeWithTypeArgumentsImpl extends MsilTypeImpl<MsilEmptyTypeStub> implements DotNetTypeWithTypeArguments
 {
 	public MsilTypeWithTypeArgumentsImpl(@NotNull ASTNode node)
 	{
@@ -50,6 +50,7 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilStubElementImpl<MsilEmpty
 		visitor.visitTypeWithTypeArguments(this);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetType getInnerType()
@@ -57,6 +58,7 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilStubElementImpl<MsilEmpty
 		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeList getArgumentsList()
@@ -64,6 +66,7 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilStubElementImpl<MsilEmpty
 		return getRequiredStubOrPsiChild(MsilStubTokenSets.TYPE_ARGUMENTS_TYPE_LIST);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetType[] getArguments()
@@ -74,7 +77,7 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilStubElementImpl<MsilEmpty
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	public DotNetTypeRef toTypeRefImpl()
 	{
 		DotNetType innerType = getInnerType();
 		DotNetType[] arguments = getArguments();
@@ -90,6 +93,6 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilStubElementImpl<MsilEmpty
 			rArguments[i] = argument.toTypeRef();
 		}
 
-		return new SimpleGenericWrapperTypeRef(innerType.toTypeRef(), rArguments);
+		return new MsilTypeWithTypeArgumentsRefImpl(innerType.toTypeRef(), rArguments);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,40 +18,58 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.lang.psi.impl.DotNetTypeRefCacheUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
-import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
-import org.mustbe.consulo.msil.lang.psi.impl.type.MsilRefTypeRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.NotNullFunction;
 
 /**
  * @author VISTALL
- * @since 22.05.14
+ * @since 12-May-16
  */
-public class MsilTypeByRefImpl extends MsilTypeImpl<MsilEmptyTypeStub> implements DotNetType
+public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElementImpl<T> implements DotNetType
 {
-	public MsilTypeByRefImpl(@NotNull ASTNode node)
+	private static class Resolver implements NotNullFunction<MsilTypeImpl<?>, DotNetTypeRef>
+	{
+		private static final Resolver INSTANCE = new Resolver();
+
+		@Override
+		@NotNull
+		@RequiredReadAction
+		public DotNetTypeRef fun(MsilTypeImpl<?> msilType)
+		{
+			return msilType.toTypeRefImpl();
+		}
+	}
+
+	protected MsilTypeImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilTypeByRefImpl(@NotNull MsilEmptyTypeStub stub, @NotNull IStubElementType nodeType)
+	protected MsilTypeImpl(@NotNull T stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
-	}
-
-	public DotNetType getInnerType()
-	{
-		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
 	@RequiredReadAction
 	@NotNull
 	@Override
-	protected DotNetTypeRef toTypeRefImpl()
+	public final DotNetTypeRef toTypeRef()
 	{
-		return new MsilRefTypeRefImpl(getInnerType().toTypeRef());
+		return DotNetTypeRefCacheUtil.cacheTypeRef(this, Resolver.INSTANCE);
+	}
+
+	@RequiredReadAction
+	@NotNull
+	protected abstract DotNetTypeRef toTypeRefImpl();
+
+	@Override
+	public void accept(MsilVisitor visitor)
+	{
+		visitor.visitElement(this);
 	}
 }

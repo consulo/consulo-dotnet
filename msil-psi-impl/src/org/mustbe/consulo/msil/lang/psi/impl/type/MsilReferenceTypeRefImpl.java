@@ -20,12 +20,12 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
-import org.mustbe.consulo.dotnet.resolve.SimpleTypeResolveResult;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex;
 import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.CommonProcessors;
@@ -34,38 +34,30 @@ import com.intellij.util.CommonProcessors;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
+public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 {
+	private final PsiElement myElement;
 	protected final String myRef;
 	protected final DotNetPsiSearcher.TypeResoleKind myTypeResoleKind;
 
-	public MsilReferenceTypeRefImpl(String ref, DotNetPsiSearcher.TypeResoleKind typeResoleKind)
+	public MsilReferenceTypeRefImpl(@NotNull PsiElement element, @NotNull String ref, @NotNull DotNetPsiSearcher.TypeResoleKind typeResoleKind)
 	{
+		myElement = element;
 		myRef = ref;
 		myTypeResoleKind = typeResoleKind;
 	}
 
 	@NotNull
+	@Deprecated
 	public DotNetPsiSearcher.TypeResoleKind getTypeResoleKind()
 	{
 		return myTypeResoleKind;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
-	public String getPresentableText()
-	{
-		int i = myRef.lastIndexOf("/");
-		if(i != -1)
-		{
-			return myRef.substring(i + 1, myRef.length());
-		}
-		return StringUtil.getShortName(myRef);
-	}
-
-	@NotNull
-	@Override
-	public String getQualifiedText()
+	public String toString()
 	{
 		return myRef;
 	}
@@ -73,29 +65,28 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRef.Adapter
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeResolveResult resolve(@NotNull PsiElement scope)
+	protected DotNetTypeResolveResult resolveResult()
 	{
-		if(DumbService.isDumb(scope.getProject()))
+		Project project = myElement.getProject();
+		if(DumbService.isDumb(project))
 		{
 			return DotNetTypeResolveResult.EMPTY;
 		}
 
 		CommonProcessors.FindFirstProcessor<MsilClassEntry> processor = new CommonProcessors.FindFirstProcessor<MsilClassEntry>();
-		StubIndex.getInstance().processElements(MsilTypeByQNameIndex.getInstance().getKey(), myRef, scope.getProject(),
-				scope.getResolveScope(), MsilClassEntry.class, processor);
+		StubIndex.getInstance().processElements(MsilTypeByQNameIndex.getInstance().getKey(), myRef, project, myElement.getResolveScope(), MsilClassEntry.class, processor);
 
 		MsilClassEntry foundValue = processor.getFoundValue();
 		if(foundValue == null)
 		{
 			return DotNetTypeResolveResult.EMPTY;
 		}
-		return new SimpleTypeResolveResult(foundValue, myTypeResoleKind != DotNetPsiSearcher.TypeResoleKind.STRUCT);
+		return new MsilTypeResolveResult(foundValue, DotNetTypeRef.EMPTY_ARRAY);
 	}
 
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj instanceof MsilReferenceTypeRefImpl && myRef.equals(((MsilReferenceTypeRefImpl) obj).myRef) && myTypeResoleKind == (
-				(MsilReferenceTypeRefImpl) obj).myTypeResoleKind;
+		return obj instanceof MsilReferenceTypeRefImpl && myRef.equals(((MsilReferenceTypeRefImpl) obj).myRef) && myTypeResoleKind == ((MsilReferenceTypeRefImpl) obj).myTypeResoleKind;
 	}
 }

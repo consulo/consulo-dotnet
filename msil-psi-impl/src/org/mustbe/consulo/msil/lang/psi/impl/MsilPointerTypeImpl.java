@@ -19,12 +19,12 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.lang.psi.impl.source.resolve.type.DotNetPointerTypeRefImpl;
 import org.mustbe.consulo.dotnet.psi.DotNetPointerType;
 import org.mustbe.consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilStubTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
+import org.mustbe.consulo.msil.lang.psi.impl.type.MsilPointerTypeRefImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -33,7 +33,7 @@ import com.intellij.psi.stubs.IStubElementType;
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilPointerTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> implements DotNetPointerType
+public class MsilPointerTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implements DotNetPointerType
 {
 	public MsilPointerTypeImpl(@NotNull ASTNode node)
 	{
@@ -62,14 +62,19 @@ public class MsilPointerTypeImpl extends MsilStubElementImpl<MsilEmptyTypeStub> 
 	@Override
 	public PsiElement getAsterisk()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetTypeRef toTypeRef()
+	protected DotNetTypeRef toTypeRefImpl()
 	{
-		return new DotNetPointerTypeRefImpl(getInnerType().toTypeRef());
+		DotNetType innerType = getInnerType();
+		if(innerType == null)
+		{
+			return DotNetTypeRef.ERROR_TYPE;
+		}
+		return new MsilPointerTypeRefImpl(innerType.toTypeRef());
 	}
 }
