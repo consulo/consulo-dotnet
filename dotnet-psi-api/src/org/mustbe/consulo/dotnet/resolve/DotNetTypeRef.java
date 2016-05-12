@@ -18,9 +18,7 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -29,8 +27,7 @@ import com.intellij.psi.PsiElement;
 @ArrayFactoryFields
 public interface DotNetTypeRef
 {
-	@Deprecated
-	public class Adapter implements DotNetTypeRef
+	public class AdapterInternal implements DotNetTypeRef
 	{
 		@NotNull
 		@Override
@@ -54,15 +51,6 @@ public interface DotNetTypeRef
 		public DotNetTypeResolveResult resolve()
 		{
 			return DotNetTypeResolveResult.EMPTY;
-		}
-
-		@RequiredReadAction
-		@NotNull
-		@Deprecated
-		@Override
-		public DotNetTypeResolveResult resolve(@Nullable("always null") @Deprecated PsiElement scope)
-		{
-			return resolve();
 		}
 
 		@Override
@@ -105,14 +93,6 @@ public interface DotNetTypeRef
 			return myDelegate.resolve();
 		}
 
-		@RequiredReadAction
-		@NotNull
-		@Override
-		public DotNetTypeResolveResult resolve(@Nullable("always null") @Deprecated PsiElement scope)
-		{
-			return myDelegate.resolve(scope);
-		}
-
 		@NotNull
 		public DotNetTypeRef getDelegate()
 		{
@@ -126,7 +106,7 @@ public interface DotNetTypeRef
 		}
 	}
 
-	DotNetTypeRef ERROR_TYPE = new Adapter()
+	DotNetTypeRef ERROR_TYPE = new AdapterInternal()
 	{
 		@NotNull
 		@Override
@@ -137,7 +117,7 @@ public interface DotNetTypeRef
 		}
 	};
 
-	DotNetTypeRef UNKNOWN_TYPE = new Adapter()
+	DotNetTypeRef UNKNOWN_TYPE = new AdapterInternal()
 	{
 		@NotNull
 		@Override
@@ -148,7 +128,7 @@ public interface DotNetTypeRef
 		}
 	};
 
-	DotNetTypeRef AUTO_TYPE = new Adapter()
+	DotNetTypeRef AUTO_TYPE = new AdapterInternal()
 	{
 		@NotNull
 		@Override
@@ -167,10 +147,6 @@ public interface DotNetTypeRef
 	@Deprecated
 	String getQualifiedText();
 
-	@RequiredReadAction
-	@NotNull
-	@Deprecated
-	DotNetTypeResolveResult resolve(@Nullable("always null") @Deprecated PsiElement scope);
 
 	@RequiredReadAction
 	@NotNull

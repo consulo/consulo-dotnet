@@ -58,9 +58,12 @@ public class DotNetTypeRefCacheUtil
 		public Result<DotNetTypeRef> compute()
 		{
 			DotNetTypeRef result = myResolver.fun(myElement);
-			if(!(result instanceof DotNetTypeRefWithCachedResult))
+			if(result != DotNetTypeRef.ERROR_TYPE && result != DotNetTypeRef.UNKNOWN_TYPE && result != DotNetTypeRef.AUTO_TYPE)
 			{
-				throw new IllegalArgumentException("Expected type ref as child of 'DotNetTypeRefWithCachedResult'");
+				if(!(result instanceof DotNetTypeRefWithCachedResult))
+				{
+					throw new IllegalArgumentException("Expected " + result.getClass().getName() + " ref as child of 'DotNetTypeRefWithCachedResult'");
+				}
 			}
 			return new Result<DotNetTypeRef>(result, myDropKey);
 		}
@@ -73,7 +76,15 @@ public class DotNetTypeRefCacheUtil
 	@RequiredReadAction
 	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(@NotNull E element, @NotNull final NotNullFunction<E, DotNetTypeRef> resolver)
 	{
-		return getResultCacheResultImpl(ourDefaultCacheKey, element, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT, resolver);
+		return cacheTypeRef(ourDefaultCacheKey, element, resolver);
+	}
+
+	@Exported
+	@NotNull
+	@RequiredReadAction
+	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(@NotNull Key<CachedValue<DotNetTypeRef>> key, @NotNull E element, @NotNull final NotNullFunction<E, DotNetTypeRef> resolver)
+	{
+		return getResultCacheResultImpl(key, element, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT, resolver);
 	}
 
 	@Exported
@@ -81,7 +92,15 @@ public class DotNetTypeRefCacheUtil
 	@RequiredReadAction
 	public static <E extends PsiElement> DotNetTypeRef localCacheTypeRef(@NotNull E element, @NotNull final NotNullFunction<E, DotNetTypeRef> resolver)
 	{
-		return getResultCacheResultImpl(ourDefaultCacheKey, element, PsiModificationTracker.MODIFICATION_COUNT, resolver);
+		return localCacheTypeRef(ourDefaultCacheKey, element, resolver);
+	}
+
+	@Exported
+	@NotNull
+	@RequiredReadAction
+	public static <E extends PsiElement> DotNetTypeRef localCacheTypeRef(@NotNull Key<CachedValue<DotNetTypeRef>> key, @NotNull E element, @NotNull final NotNullFunction<E, DotNetTypeRef> resolver)
+	{
+		return getResultCacheResultImpl(key, element, PsiModificationTracker.MODIFICATION_COUNT, resolver);
 	}
 
 	@Exported

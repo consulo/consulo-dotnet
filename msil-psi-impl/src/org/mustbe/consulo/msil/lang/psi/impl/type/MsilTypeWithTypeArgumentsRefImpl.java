@@ -18,6 +18,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.dotnet.resolve.DotNetGenericWrapperTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
@@ -27,14 +28,13 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 12-May-16
  */
-public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedResult
+public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedResult implements DotNetGenericWrapperTypeRef
 {
 	private DotNetTypeRef myTypeRef;
 	private DotNetTypeRef[] myArguments;
 
 	public MsilTypeWithTypeArgumentsRefImpl(DotNetTypeRef typeRef, DotNetTypeRef[] arguments)
 	{
-		super();
 		myTypeRef = typeRef;
 		myArguments = arguments;
 	}
@@ -71,5 +71,19 @@ public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedRes
 		}
 		builder.append(">");
 		return builder.toString();
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef[] getArgumentTypeRefs()
+	{
+		return myArguments;
+	}
+
+	@NotNull
+	@Override
+	public DotNetTypeRef getInnerTypeRef()
+	{
+		return myTypeRef;
 	}
 }

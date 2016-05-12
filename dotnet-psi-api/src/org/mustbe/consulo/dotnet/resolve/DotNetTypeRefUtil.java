@@ -40,13 +40,13 @@ public class DotNetTypeRefUtil
 		}
 
 		DotNetTypeRef typeRef = type.toTypeRef();
-		return typeRef.resolve(type).getElement();
+		return typeRef.resolve().getElement();
 	}
 
 	@RequiredReadAction
 	public static boolean isVmQNameEqual(@NotNull DotNetTypeRef typeRef, @NotNull PsiElement element, @NotNull String expectedVmQName)
 	{
-		DotNetTypeResolveResult typeResolveResult = typeRef.resolve(element);
+		DotNetTypeResolveResult typeResolveResult = typeRef.resolve();
 		PsiElement typeResolveResultElement = typeResolveResult.getElement();
 		if(typeResolveResultElement instanceof DotNetTypeDeclaration)
 		{

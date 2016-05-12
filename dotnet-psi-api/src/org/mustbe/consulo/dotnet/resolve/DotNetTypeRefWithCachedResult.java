@@ -17,9 +17,7 @@
 package org.mustbe.consulo.dotnet.resolve;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -53,15 +51,6 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 			myResult = resolveResult();
 		}
 		return myResult;
-	}
-
-	@RequiredReadAction
-	@NotNull
-	@Override
-	@Deprecated
-	public final DotNetTypeResolveResult resolve(@Nullable("always null") @Deprecated PsiElement scope)
-	{
-		return resolve();
 	}
 
 	@RequiredReadAction

@@ -80,7 +80,7 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 		{
 			return null;
 		}
-		PsiElement resolve = type.toTypeRef().resolve(this).getElement();
+		PsiElement resolve = type.toTypeRef().resolve().getElement();
 		if(resolve instanceof DotNetTypeDeclaration)
 		{
 			return (DotNetTypeDeclaration) resolve;

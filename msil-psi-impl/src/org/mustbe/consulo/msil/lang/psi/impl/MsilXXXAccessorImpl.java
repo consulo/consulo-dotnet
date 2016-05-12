@@ -68,7 +68,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 				return null;
 			}
 
-			PsiElement element = targetType.toTypeRef().resolve(MsilXXXAccessorImpl.this).getElement();
+			PsiElement element = targetType.toTypeRef().resolve().getElement();
 			if(!(element instanceof MsilClassEntry))
 			{
 				return null;
