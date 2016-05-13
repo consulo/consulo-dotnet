@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.psi.PsiElement;
@@ -58,13 +57,6 @@ public class DotNetTypeRefCacheUtil
 		public Result<DotNetTypeRef> compute()
 		{
 			DotNetTypeRef result = myResolver.fun(myElement);
-			if(result != DotNetTypeRef.ERROR_TYPE && result != DotNetTypeRef.UNKNOWN_TYPE && result != DotNetTypeRef.AUTO_TYPE)
-			{
-				if(!(result instanceof DotNetTypeRefWithCachedResult))
-				{
-					throw new IllegalArgumentException("Expected " + result.getClass().getName() + " ref as child of 'DotNetTypeRefWithCachedResult'");
-				}
-			}
 			return new Result<DotNetTypeRef>(result, myDropKey);
 		}
 	}
