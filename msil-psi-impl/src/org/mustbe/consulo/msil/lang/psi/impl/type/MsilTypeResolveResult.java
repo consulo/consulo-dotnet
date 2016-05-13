@@ -77,6 +77,6 @@ public class MsilTypeResolveResult implements DotNetTypeResolveResult
 	@Override
 	public boolean isNullable()
 	{
-		throw new UnsupportedOperationException("We can't calculate it");
+		return true;
 	}
 }
