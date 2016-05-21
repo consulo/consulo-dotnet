@@ -33,9 +33,6 @@
 
 	<project-components>
 		<component>
-			<implementation-class>consulo.dotnet.DebuggerNotificationProjectComponent</implementation-class>
-		</component>
-		<component>
 			<implementation-class>consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent</implementation-class>
 		</component>
 	</project-components>
