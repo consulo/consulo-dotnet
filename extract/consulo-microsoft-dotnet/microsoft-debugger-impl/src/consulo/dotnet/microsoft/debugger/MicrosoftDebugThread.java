@@ -38,6 +38,7 @@ import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointEngine;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
@@ -240,8 +241,6 @@ public class MicrosoftDebugThread extends Thread
 						else if(event instanceof BreakpointEvent)
 						{
 							XBreakpoint<?> breakpoint = myVirtualMachine.findBreakpointByRequest(event.request());
-							assert breakpoint instanceof XLineBreakpoint;
-
 							stopped = true;
 
 							DotNetDebugContext debugContext = myDebugProcess.createDebugContext(myVirtualMachine, breakpoint);
@@ -249,13 +248,13 @@ public class MicrosoftDebugThread extends Thread
 							{
 								MicrosoftThreadProxy threadProxy = new MicrosoftThreadProxy(myVirtualMachine, eventSet.eventThread());
 
-								myBreakpointEngine.tryEvaluateBreakpointLogMessage(threadProxy, (XLineBreakpoint<?>) breakpoint, debugContext);
+								final String logMessage = myBreakpointEngine.tryEvaluateBreakpointLogMessage(threadProxy, (XLineBreakpoint<?>) breakpoint, debugContext);
 
 								if(myBreakpointEngine.tryEvaluateBreakpointCondition(threadProxy, (XLineBreakpoint<?>) breakpoint, debugContext))
 								{
 									DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, eventSet.eventThread().id());
 
-									mySession.breakpointReached(breakpoint, null, suspendContext);
+									mySession.breakpointReached(breakpoint, logMessage, suspendContext);
 								}
 								else
 								{
@@ -264,6 +263,12 @@ public class MicrosoftDebugThread extends Thread
 							}
 							else
 							{
+								final Object property = event.request().getProperty(DotNetDebugProcessBase.RUN_TO_CURSOR);
+								if(property != null)
+								{
+									event.request().delete();
+								}
+
 								mySession.positionReached(new DotNetSuspendContext(debugContext, eventSet.eventThread().id()));
 								focusUI = true;
 							}

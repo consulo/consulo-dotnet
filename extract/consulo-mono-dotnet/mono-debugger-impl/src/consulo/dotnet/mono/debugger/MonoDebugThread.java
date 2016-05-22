@@ -54,6 +54,7 @@ import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
@@ -84,8 +85,6 @@ import mono.debugger.request.TypeLoadRequest;
 @Logger
 public class MonoDebugThread extends Thread
 {
-	public static final String RUN_TO_CURSOR = "runToCursor";
-
 	private final XDebugSession mySession;
 	private final MonoDebugProcess myDebugProcess;
 	private final DebugConnectionInfo myDebugConnectionInfo;
@@ -306,7 +305,7 @@ public class MonoDebugThread extends Thread
 							}
 							else
 							{
-								final Object property = event.request().getProperty(RUN_TO_CURSOR);
+								final Object property = event.request().getProperty(DotNetDebugProcessBase.RUN_TO_CURSOR);
 								if(property != null)
 								{
 									event.request().delete();

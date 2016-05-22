@@ -31,6 +31,8 @@ import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
  */
 public abstract class DotNetDebugProcessBase extends XDebugProcess
 {
+	public static final String RUN_TO_CURSOR = "runToCursor";
+
 	private ExecutionResult myResult;
 	private final RunProfile myRunProfile;
 	protected final XDebuggerManager myDebuggerManager;

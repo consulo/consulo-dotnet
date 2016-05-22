@@ -183,7 +183,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 					{
 						EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
 						BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
-						breakpointRequest.putProperty(MonoDebugThread.RUN_TO_CURSOR, Boolean.TRUE);
+						breakpointRequest.putProperty(RUN_TO_CURSOR, Boolean.TRUE);
 						breakpointRequest.setEnabled(true);
 					}
 				}

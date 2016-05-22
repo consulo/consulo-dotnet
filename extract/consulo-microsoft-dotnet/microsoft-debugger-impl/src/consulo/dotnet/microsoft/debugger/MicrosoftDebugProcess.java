@@ -23,6 +23,7 @@ import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
@@ -35,8 +36,10 @@ import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.microsoft.debugger.breakpoint.MicrosoftBreakpointUtil;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxy;
+import mssdw.DebugInformationResult;
 import mssdw.ThreadMirror;
 import mssdw.event.EventSet;
+import mssdw.request.BreakpointRequest;
 import mssdw.request.EventRequestManager;
 import mssdw.request.StepRequest;
 
@@ -141,6 +144,35 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 				virtualMachine.suspend();
 				getSession().positionReached(new DotNetSuspendContext(createDebugContext(virtualMachine, null), -1));
 				return false;
+			}
+		});
+	}
+
+	@Override
+	public void runToPosition(@NotNull final XSourcePosition position)
+	{
+		if(myPausedEventSet == null)
+		{
+			return;
+		}
+
+		myDebugThread.addCommand(new Processor<MicrosoftVirtualMachineProxy>()
+		{
+			@Override
+			public boolean process(MicrosoftVirtualMachineProxy virtualMachine)
+			{
+				virtualMachine.stopStepRequests();
+
+				DebugInformationResult debugOffset = virtualMachine.getDelegate().findDebugOffset(position.getFile().getPath(), position.getLine() + 1, -1);
+				if(debugOffset != null)
+				{
+					EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+
+					BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(debugOffset);
+					breakpointRequest.putProperty(RUN_TO_CURSOR, Boolean.TRUE);
+					breakpointRequest.enable();
+				}
+				return true;
 			}
 		});
 	}
