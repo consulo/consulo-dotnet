@@ -19,7 +19,6 @@ package consulo.dotnet.debugger.breakpoint;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -115,25 +114,26 @@ public class DotNetBreakpointEngine
 		return null;
 	}
 
-	public void tryEvaluateBreakpointLogMessage(@NotNull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext)
+	@Nullable
+	public String tryEvaluateBreakpointLogMessage(@NotNull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext)
 	{
 		XExpression logExpressionObject = breakpoint.getLogExpressionObject();
 		if(logExpressionObject == null)
 		{
-			return;
+			return null;
 		}
 
 		XDebugSession session = debugContext.getSession();
 		ConsoleView consoleView = session.getConsoleView();
 		if(consoleView == null)
 		{
-			return;
+			return null;
 		}
 
 		final DotNetStackFrameProxy frame = threadProxy.getFrame(0);
 		if(frame == null)
 		{
-			return;
+			return null;
 		}
 
 		XValue value = evaluateBreakpointExpression(frame, breakpoint, logExpressionObject, debugContext);
@@ -145,10 +145,11 @@ public class DotNetBreakpointEngine
 				String toStringValue = DotNetDebuggerSearchUtil.toStringValue(frame, valueOfVariableSafe);
 				if(toStringValue != null)
 				{
-					consoleView.print(toStringValue, ConsoleViewContentType.NORMAL_OUTPUT);
+					return toStringValue;
 				}
 			}
 		}
+		return null;
 	}
 
 	public boolean tryEvaluateBreakpointCondition(@NotNull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception

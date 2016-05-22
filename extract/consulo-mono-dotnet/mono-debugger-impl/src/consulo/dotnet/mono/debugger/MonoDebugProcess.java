@@ -16,13 +16,17 @@
 
 package consulo.dotnet.mono.debugger;
 
+import java.util.Collection;
+
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
@@ -35,8 +39,10 @@ import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
+import mono.debugger.Location;
 import mono.debugger.ThreadMirror;
 import mono.debugger.event.EventSet;
+import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequestManager;
 import mono.debugger.request.StepRequest;
 
@@ -141,6 +147,50 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 				virtualMachine.suspend();
 				getSession().positionReached(new DotNetSuspendContext(createDebugContext(virtualMachine, null), -1));
 				return false;
+			}
+		});
+	}
+
+	@Override
+	@RequiredReadAction
+	public void runToPosition(@NotNull final XSourcePosition position)
+	{
+		if(myPausedEventSet == null)
+		{
+			return;
+		}
+
+		myDebugThread.addCommand(new Processor<MonoVirtualMachineProxy>()
+		{
+			@Override
+			public boolean process(MonoVirtualMachineProxy virtualMachine)
+			{
+				virtualMachine.stopStepRequests();
+
+				try
+				{
+					final MonoBreakpointUtil.FindLocationResult result = MonoBreakpointUtil.findLocationsImpl(getSession().getProject(), virtualMachine, position.getFile(),
+							position.getLine(), null, null);
+
+					// no target for execution
+					final Collection<Location> locations = result.getLocations();
+					if(locations.isEmpty())
+					{
+						return true;
+					}
+
+					for(Location location : locations)
+					{
+						EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+						BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
+						breakpointRequest.putProperty(MonoDebugThread.RUN_TO_CURSOR, Boolean.TRUE);
+						breakpointRequest.setEnabled(true);
+					}
+				}
+				catch(TypeMirrorUnloadedException ignored)
+				{
+				}
+				return true;
 			}
 		});
 	}

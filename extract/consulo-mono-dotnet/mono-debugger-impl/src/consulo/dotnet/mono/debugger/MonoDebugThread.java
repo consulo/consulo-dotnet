@@ -84,6 +84,8 @@ import mono.debugger.request.TypeLoadRequest;
 @Logger
 public class MonoDebugThread extends Thread
 {
+	public static final String RUN_TO_CURSOR = "runToCursor";
+
 	private final XDebugSession mySession;
 	private final MonoDebugProcess myDebugProcess;
 	private final DebugConnectionInfo myDebugConnectionInfo;
@@ -281,23 +283,21 @@ public class MonoDebugThread extends Thread
 					{
 						if(event instanceof BreakpointEvent)
 						{
-							XBreakpoint<?> breakpoint = myVirtualMachine.findBreakpointByRequest(event.request());
-							assert breakpoint instanceof XLineBreakpoint;
-
 							stopped = true;
 
+							XBreakpoint<?> breakpoint = myVirtualMachine.findBreakpointByRequest(event.request());
 							DotNetDebugContext debugContext = myDebugProcess.createDebugContext(myVirtualMachine, breakpoint);
 							if(breakpoint != null)
 							{
 								MonoThreadProxy threadProxy = new MonoThreadProxy(myVirtualMachine, eventSet.eventThread());
 
-								myBreakpointEngine.tryEvaluateBreakpointLogMessage(threadProxy, (XLineBreakpoint<?>) breakpoint, debugContext);
+								final String message = myBreakpointEngine.tryEvaluateBreakpointLogMessage(threadProxy, (XLineBreakpoint<?>) breakpoint, debugContext);
 
 								if(myBreakpointEngine.tryEvaluateBreakpointCondition(threadProxy, (XLineBreakpoint<?>) breakpoint, debugContext))
 								{
 									DotNetSuspendContext suspendContext = new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread()));
 
-									mySession.breakpointReached(breakpoint, null, suspendContext);
+									mySession.breakpointReached(breakpoint, message, suspendContext);
 								}
 								else
 								{
@@ -306,6 +306,12 @@ public class MonoDebugThread extends Thread
 							}
 							else
 							{
+								final Object property = event.request().getProperty(RUN_TO_CURSOR);
+								if(property != null)
+								{
+									event.request().delete();
+								}
+
 								mySession.positionReached(new DotNetSuspendContext(debugContext, MonoThreadProxy.getIdFromThread(myVirtualMachine, eventSet.eventThread())));
 								focusUI = true;
 							}

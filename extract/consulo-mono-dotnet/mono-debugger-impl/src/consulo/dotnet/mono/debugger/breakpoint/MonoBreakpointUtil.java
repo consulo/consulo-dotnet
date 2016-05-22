@@ -190,7 +190,20 @@ public class MonoBreakpointUtil
 			@NotNull final XLineBreakpoint<?> lineBreakpoint,
 			@Nullable final TypeMirror typeMirror) throws TypeMirrorUnloadedException
 	{
+		final int line = lineBreakpoint.getLine();
 		final VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(lineBreakpoint.getFileUrl());
+		final DotNetLineBreakpointProperties properties = (DotNetLineBreakpointProperties) lineBreakpoint.getProperties();
+		return findLocationsImpl(project, virtualMachine, fileByUrl, line, properties.getExecutableChildrenAtLineIndex(), typeMirror);
+	}
+
+	@NotNull
+	public static FindLocationResult findLocationsImpl(@NotNull final Project project,
+			@NotNull final MonoVirtualMachineProxy virtualMachine,
+			@Nullable final VirtualFile fileByUrl,
+			final int breakpointLine,
+			@Nullable final Integer executableChildrenAtLineIndex,
+			@Nullable final TypeMirror typeMirror) throws TypeMirrorUnloadedException
+	{
 		if(fileByUrl == null)
 		{
 			return FindLocationResult.WRONG_TARGET;
@@ -217,7 +230,7 @@ public class MonoBreakpointUtil
 			@Override
 			public String compute()
 			{
-				PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(file, lineBreakpoint.getLine());
+				PsiElement psiElement = DotNetDebuggerUtil.findPsiElement(file, breakpointLine);
 				if(psiElement == null)
 				{
 					return null;
@@ -251,9 +264,6 @@ public class MonoBreakpointUtil
 
 		try
 		{
-			DotNetLineBreakpointProperties properties = (DotNetLineBreakpointProperties) lineBreakpoint.getProperties();
-
-			final Integer executableChildrenAtLineIndex = properties.getExecutableChildrenAtLineIndex();
 			for(MethodMirror methodMirror : mirror.methods())
 			{
 				if(methods.containsKey(methodMirror))
@@ -299,7 +309,7 @@ public class MonoBreakpointUtil
 					}
 				}
 
-				collectLocations(virtualMachine, lineBreakpoint, methods, methodMirror);
+				collectLocations(virtualMachine, breakpointLine, methods, methodMirror);
 			}
 
 			TypeMirror[] nestedTypeMirrors = mirror.nestedTypes();
@@ -312,7 +322,7 @@ public class MonoBreakpointUtil
 					MethodMirror moveNext = nestedTypeMirror.findMethodByName("MoveNext", false);
 					if(moveNext != null)
 					{
-						collectLocations(virtualMachine, lineBreakpoint, methods, moveNext);
+						collectLocations(virtualMachine, breakpointLine, methods, moveNext);
 					}
 				}
 				else if(DotNetDebuggerCompilerGenerateUtil.isAsyncLambdaWrapper(typeProxy))
@@ -324,7 +334,7 @@ public class MonoBreakpointUtil
 
 						if(moveNext != null)
 						{
-							collectLocations(virtualMachine, lineBreakpoint, methods, moveNext);
+							collectLocations(virtualMachine, breakpointLine, methods, moveNext);
 						}
 					}
 				}
@@ -383,12 +393,12 @@ public class MonoBreakpointUtil
 		return PsiTreeUtil.isAncestor(executableTarget, psiElement, true) ? executableTarget : null;
 	}
 
-	private static void collectLocations(MonoVirtualMachineProxy virtualMachine, XLineBreakpoint<?> lineBreakpoint, Map<MethodMirror, Location> methods, MethodMirror methodMirror)
+	private static void collectLocations(MonoVirtualMachineProxy virtualMachine, int breakpointLine, Map<MethodMirror, Location> methods, MethodMirror methodMirror)
 	{
 		TIntHashSet registeredLines = new TIntHashSet();
 		for(Method_GetDebugInfo.Entry entry : methodMirror.debugInfo())
 		{
-			if(entry.line == (lineBreakpoint.getLine() + 1))
+			if(entry.line == (breakpointLine + 1))
 			{
 				if(!registeredLines.add(entry.line))
 				{
