@@ -298,7 +298,13 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 	public void resume()
 	{
-		myVirtualMachine.resume();
+		try
+		{
+			myVirtualMachine.resume();
+		}
+		catch(NotSuspendedException ignored)
+		{
+		}
 	}
 
 	public void suspend()

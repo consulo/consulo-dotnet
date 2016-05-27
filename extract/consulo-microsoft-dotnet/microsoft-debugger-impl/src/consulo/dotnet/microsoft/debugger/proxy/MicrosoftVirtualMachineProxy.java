@@ -41,6 +41,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import mssdw.BooleanValueMirror;
 import mssdw.CharValueMirror;
 import mssdw.NoObjectValueMirror;
+import mssdw.NotSuspendedException;
 import mssdw.NumberValueMirror;
 import mssdw.ThreadMirror;
 import mssdw.VirtualMachine;
@@ -204,7 +205,13 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 	public void resume()
 	{
-		myVirtualMachine.resume();
+		try
+		{
+			myVirtualMachine.resume();
+		}
+		catch(NotSuspendedException ignored)
+		{
+		}
 	}
 
 	public void suspend()
