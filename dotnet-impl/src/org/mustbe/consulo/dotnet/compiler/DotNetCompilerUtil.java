@@ -23,8 +23,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryImpl;
-import org.mustbe.consulo.dotnet.module.roots.DotNetRootPolicy;
+import consulo.dotnet.roots.orderEntry.DotNetRootPolicy;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -41,6 +40,7 @@ import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
+import consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryImpl;
 import lombok.val;
 
 /**

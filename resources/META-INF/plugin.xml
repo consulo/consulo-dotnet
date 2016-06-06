@@ -40,7 +40,7 @@
 	<extensionPoints>
 		<!--extensions with new ids-->
 		<extensionPoint qualifiedName="consulo.dotnet.debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
-		<extensionPoint qualifiedName="consulo.dotnet.debuggerSourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint" >
+		<extensionPoint qualifiedName="consulo.dotnet.debuggerSourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
 			<with attribute="implementationClass" implements="consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver"/>
 		</extensionPoint>
 
@@ -63,7 +63,13 @@
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
 		<psiSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilPsiSearcher"/>
 		<shortNameSearcher implementation="org.mustbe.consulo.msil.lang.psi.impl.resolve.MsilShortNameSearcher"/>
-		<directTypeInheritorsSearch implementation="org.mustbe.consulo.msil.lang.psi.impl.searchers.MsilDirectTypeInheritorsSearcherExecutor" />
+		<directTypeInheritorsSearch implementation="org.mustbe.consulo.msil.lang.psi.impl.searchers.MsilDirectTypeInheritorsSearcherExecutor"/>
+	</extensions>
+
+	<extensions defaultExtensionNs="consulo">
+		<orderEntryType implementation="consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryType"/>
+
+		<orderEntryTypeEditor key="dot-net-library" implementationClass="consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryTypeEditor"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
@@ -104,9 +110,9 @@
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetPsiSearcherImpl"/>
 		<projectService serviceInterface="org.mustbe.consulo.dotnet.resolve.DotNetShortNameSearcher"
 						serviceImplementation="org.mustbe.consulo.dotnet.resolve.impl.DotNetShortNameSearcherImpl"/>
-		<projectService serviceImplementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributeManager" />
-		<projectService serviceImplementation="org.mustbe.consulo.dotnet.lang.psi.impl.DotNetNamespaceCacheManager" />
-		<projectService serviceInterface="consulo.dotnet.ui.chooser.DotNetTypeChooserFactory" serviceImplementation="consulo.dotnet.ui.chooser.DotNetTypeChooserFactoryImpl" />
+		<projectService serviceImplementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributeManager"/>
+		<projectService serviceImplementation="org.mustbe.consulo.dotnet.lang.psi.impl.DotNetNamespaceCacheManager"/>
+		<projectService serviceInterface="consulo.dotnet.ui.chooser.DotNetTypeChooserFactory" serviceImplementation="consulo.dotnet.ui.chooser.DotNetTypeChooserFactoryImpl"/>
 
 		<macro implementation="org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro"/>
 
@@ -121,7 +127,6 @@
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType"/>
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetMethodBreakpointType"/>
 
-		<orderEntryTypeProvider implementation="org.mustbe.consulo.dotnet.module.roots.DotNetLibraryOrderEntryTypeProvider"/>
 		<addModuleDependencyTabFactory implementation="org.mustbe.consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>
 
 		<orderRootType implementation="org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType"/>
@@ -146,7 +151,7 @@
 
 		<sdkType implementation="org.mustbe.consulo.dotnet.sdk.RoslynBundleType"/>
 
-		<testFinder implementation="org.mustbe.consulo.dotnet.testIntegration.DotNetTestFinder" />
+		<testFinder implementation="org.mustbe.consulo.dotnet.testIntegration.DotNetTestFinder"/>
 
 		<pathMacroExpendableProtocol protocol="netdll"/>
 	</extensions>

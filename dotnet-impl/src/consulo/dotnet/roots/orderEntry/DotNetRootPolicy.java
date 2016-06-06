@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.roots;
+package consulo.dotnet.roots.orderEntry;
 
 import com.intellij.openapi.roots.RootPolicy;
 

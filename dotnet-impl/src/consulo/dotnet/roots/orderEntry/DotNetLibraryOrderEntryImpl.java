@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.roots;
+package consulo.dotnet.roots.orderEntry;
 
 import java.util.List;
 
@@ -111,7 +111,7 @@ public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 
 	public DotNetLibraryOrderEntryImpl(@NotNull ModuleRootLayerImpl rootLayer, String name, boolean init)
 	{
-		super(DotNetLibraryOrderEntryTypeProvider.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
+		super(DotNetLibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
 		myName = name;
 		if(init)
 		{

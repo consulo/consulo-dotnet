@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,60 +14,23 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.dotnet.module.roots;
+package consulo.dotnet.roots.orderEntry;
 
-import org.consulo.lombok.annotations.LazyInstance;
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
-import org.mustbe.consulo.roots.impl.OrderEntryTypeProviderEx;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
-import com.intellij.openapi.util.InvalidDataException;
+import consulo.roots.orderEntry.OrderEntryTypeEditor;
 
 /**
  * @author VISTALL
- * @since 21.08.14
+ * @since 06-Jun-16
  */
-public class DotNetLibraryOrderEntryTypeProvider extends OrderEntryTypeProviderEx<DotNetLibraryOrderEntryImpl>
+public class DotNetLibraryOrderEntryTypeEditor extends OrderEntryTypeEditor<DotNetLibraryOrderEntryImpl>
 {
-	@NotNull
-	@LazyInstance
-	public static DotNetLibraryOrderEntryTypeProvider getInstance()
-	{
-		return EP_NAME.findExtension(DotNetLibraryOrderEntryTypeProvider.class);
-	}
-
-	@NotNull
-	@Override
-	public String getId()
-	{
-		return "dot-net-library";
-	}
-
-	@NotNull
-	@Override
-	public DotNetLibraryOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException
-	{
-		String name = element.getAttributeValue("name");
-		if(name.endsWith(".dll"))
-		{
-			int lastIndex = name.lastIndexOf(".dll");
-			name = name.substring(0, lastIndex);
-		}
-		return new DotNetLibraryOrderEntryImpl((ModuleRootLayerImpl) moduleRootLayer, name);
-	}
-
-	@Override
-	public void storeOrderEntry(@NotNull Element element, @NotNull DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry)
-	{
-		element.setAttribute("name", dotNetLibraryOrderEntry.getPresentableName());
-	}
-
 	@NotNull
 	@Override
 	public CellAppearanceEx getCellAppearance(@NotNull DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry)
