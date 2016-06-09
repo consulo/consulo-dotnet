@@ -34,6 +34,7 @@ import mono.debugger.InvalidObjectException;
 import mono.debugger.InvalidStackFrameException;
 import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.StackFrameMirror;
+import mono.debugger.VMDisconnectedException;
 import mono.debugger.Value;
 import mono.debugger.util.ImmutablePair;
 
@@ -71,6 +72,10 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 		try
 		{
 			return MonoValueProxyUtil.wrap(getRefreshedFrame().thisObject());
+		}
+		catch(VMDisconnectedException e)
+		{
+			throw new DotNetInvalidObjectException(e);
 		}
 		catch(AbsentInformationException e)
 		{
