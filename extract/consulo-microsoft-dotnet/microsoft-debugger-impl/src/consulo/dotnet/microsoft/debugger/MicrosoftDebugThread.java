@@ -22,7 +22,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.openapi.application.ApplicationManager;

@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.dotnet.resolve;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 

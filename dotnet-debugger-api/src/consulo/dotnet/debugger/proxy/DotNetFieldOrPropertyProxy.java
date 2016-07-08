@@ -1,9 +1,9 @@
 package consulo.dotnet.debugger.proxy;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.lombok.annotations.ArrayFactoryFields;
 
 /**
  * @author VISTALL

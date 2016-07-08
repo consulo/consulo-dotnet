@@ -1,6 +1,6 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.msil.lang.psi.MsilArrayDimension;

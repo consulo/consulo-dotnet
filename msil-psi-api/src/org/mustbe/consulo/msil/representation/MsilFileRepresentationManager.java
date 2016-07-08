@@ -19,7 +19,7 @@ package org.mustbe.consulo.msil.representation;
 import java.util.Collections;
 import java.util.List;
 
-import org.consulo.lombok.annotations.ProjectService;
+import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;

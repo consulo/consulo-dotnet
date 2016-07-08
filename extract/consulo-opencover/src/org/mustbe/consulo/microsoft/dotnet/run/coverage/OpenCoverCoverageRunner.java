@@ -26,7 +26,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
@@ -47,6 +46,7 @@ import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.NotNullPairFunction;
 import com.intellij.util.execution.ParametersListUtil;
+import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -55,7 +55,7 @@ import com.intellij.util.execution.ParametersListUtil;
 public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 {
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static File getOpenCoverConsoleExecutable()
 	{
 		PluginClassLoader classLoader = (PluginClassLoader) OpenCoverCoverageRunner.class.getClassLoader();

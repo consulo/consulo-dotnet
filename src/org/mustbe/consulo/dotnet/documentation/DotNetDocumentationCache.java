@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.consulo.lombok.annotations.ApplicationService;
+import consulo.lombok.annotations.ApplicationService;
 import org.emonic.base.documentation.IDocumentation;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.roots.OrderEntry;

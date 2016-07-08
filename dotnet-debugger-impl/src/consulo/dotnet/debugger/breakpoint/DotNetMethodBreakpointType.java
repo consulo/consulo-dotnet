@@ -18,7 +18,6 @@ package consulo.dotnet.debugger.breakpoint;
 
 import javax.swing.Icon;
 
-import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
@@ -28,6 +27,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.ui.DotNetMethodBreakpointPropertiesPanel;
+import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -36,7 +36,7 @@ import consulo.dotnet.debugger.breakpoint.ui.DotNetMethodBreakpointPropertiesPan
 public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethodBreakpointProperties>
 {
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static DotNetMethodBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(DotNetMethodBreakpointType.class);

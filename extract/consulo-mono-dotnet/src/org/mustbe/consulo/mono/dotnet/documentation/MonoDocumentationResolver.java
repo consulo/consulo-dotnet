@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.emonic.base.documentation.IDocumentation;
 import org.emonic.base.documentation.ITypeDocumentation;
 import org.emonic.monodoc.MonodocTree;

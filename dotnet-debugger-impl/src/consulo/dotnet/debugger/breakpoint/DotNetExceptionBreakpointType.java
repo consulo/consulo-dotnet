@@ -19,7 +19,6 @@ package consulo.dotnet.debugger.breakpoint;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
-import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredDispatchThread;
@@ -39,6 +38,7 @@ import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.ui.DotNetExceptionBreakpointPropertiesPanel;
 import consulo.dotnet.ui.chooser.DotNetTypeChooserFactory;
+import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -47,7 +47,7 @@ import consulo.dotnet.ui.chooser.DotNetTypeChooserFactory;
 public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<DotNetExceptionBreakpointProperties>, DotNetExceptionBreakpointProperties>
 {
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static DotNetExceptionBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(DotNetExceptionBreakpointType.class);

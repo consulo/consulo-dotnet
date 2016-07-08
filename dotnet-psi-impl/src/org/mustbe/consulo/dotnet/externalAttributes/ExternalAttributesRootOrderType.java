@@ -16,9 +16,9 @@
 
 package org.mustbe.consulo.dotnet.externalAttributes;
 
-import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.roots.OrderRootType;
+import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -27,7 +27,7 @@ import com.intellij.openapi.roots.OrderRootType;
 public class ExternalAttributesRootOrderType extends OrderRootType
 {
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static ExternalAttributesRootOrderType getInstance()
 	{
 		return getOrderRootType(ExternalAttributesRootOrderType.class);

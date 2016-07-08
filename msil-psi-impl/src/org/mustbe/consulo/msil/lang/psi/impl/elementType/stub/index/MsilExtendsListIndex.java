@@ -16,12 +16,12 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
-import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
+import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -30,7 +30,7 @@ import com.intellij.psi.stubs.StubIndexKey;
 public class MsilExtendsListIndex extends StringStubIndexExtension<DotNetTypeList>
 {
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static MsilExtendsListIndex getInstance()
 	{
 		return StubIndexExtension.EP_NAME.findExtension(MsilExtendsListIndex.class);
