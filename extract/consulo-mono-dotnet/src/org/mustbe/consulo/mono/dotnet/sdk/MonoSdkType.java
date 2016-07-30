@@ -58,7 +58,8 @@ import com.intellij.util.Consumer;
  */
 public class MonoSdkType extends DotNetSdkType
 {
-	public static final String LINUX_COMPILER = "/usr/bin/mcs";
+	public static final String ourDefaultLinuxCompilerPath = "/usr/bin/mcs";
+	public static final String ourDefaultFreeBSDCompilerPath = "/usr/local/bin/mcs";
 
 	private static final String[] ourMonoPaths = new String[]{
 			"C:/Program Files/Mono/",
@@ -76,6 +77,10 @@ public class MonoSdkType extends DotNetSdkType
 		else if(SystemInfo.isMac)
 		{
 			runFile = sdk.getHomePath() + "/../../../bin/mono";
+		}
+		else if(SystemInfo.isFreeBSD)
+		{
+			runFile = "/usr/local/bin/mono";
 		}
 		else if(SystemInfo.isLinux)
 		{
@@ -142,13 +147,24 @@ public class MonoSdkType extends DotNetSdkType
 			}
 			return ourMonoPaths[0];
 		}
+
 		if(SystemInfo.isMac)
 		{
 			return "/Library/Frameworks/Mono.framework/Home/";
 		}
+
+		if(SystemInfo.isFreeBSD)
+		{
+			File file = new File(ourDefaultFreeBSDCompilerPath);
+			if(file.exists())
+			{
+				return "/usr/local/";
+			}
+		}
+
 		if(SystemInfo.isLinux)
 		{
-			File file = new File(LINUX_COMPILER);
+			File file = new File(ourDefaultLinuxCompilerPath);
 			if(file.exists())
 			{
 				return "/usr/";
@@ -201,12 +217,22 @@ public class MonoSdkType extends DotNetSdkType
 	public void showCustomCreateUI(SdkModel sdkModel, JComponent parentComponent, final Consumer<Sdk> sdkCreatedCallback)
 	{
 		File monoLib = null;
-		if(SystemInfo.isLinux)
+		if(SystemInfo.isFreeBSD)
 		{
-			File file = new File(LINUX_COMPILER);
+			File file = new File(ourDefaultFreeBSDCompilerPath);
 			if(!file.exists())
 			{
-				Messages.showErrorDialog(parentComponent, "\'" + LINUX_COMPILER + "\' not found.");
+				Messages.showErrorDialog(parentComponent, "\'" + ourDefaultFreeBSDCompilerPath + "\' not found.");
+				return;
+			}
+			monoLib = new File("/usr/local/lib/mono");
+		}
+		else if(SystemInfo.isLinux)
+		{
+			File file = new File(ourDefaultLinuxCompilerPath);
+			if(!file.exists())
+			{
+				Messages.showErrorDialog(parentComponent, "\'" + ourDefaultLinuxCompilerPath + "\' not found.");
 				return;
 			}
 			monoLib = new File("/usr/lib/mono");
