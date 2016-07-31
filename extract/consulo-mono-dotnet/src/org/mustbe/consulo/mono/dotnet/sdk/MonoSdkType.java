@@ -222,7 +222,7 @@ public class MonoSdkType extends DotNetSdkType
 			File file = new File(ourDefaultFreeBSDCompilerPath);
 			if(!file.exists())
 			{
-				Messages.showErrorDialog(parentComponent, "\'" + ourDefaultFreeBSDCompilerPath + "\' not found.");
+				Messages.showErrorDialog(parentComponent, "\'" + ourDefaultFreeBSDCompilerPath + "\' not found. OS: " + SystemInfo.OS_NAME);
 				return;
 			}
 			monoLib = new File("/usr/local/lib/mono");
@@ -232,7 +232,7 @@ public class MonoSdkType extends DotNetSdkType
 			File file = new File(ourDefaultLinuxCompilerPath);
 			if(!file.exists())
 			{
-				Messages.showErrorDialog(parentComponent, "\'" + ourDefaultLinuxCompilerPath + "\' not found.");
+				Messages.showErrorDialog(parentComponent, "\'" + ourDefaultLinuxCompilerPath + "\' not found. OS: " + SystemInfo.OS_NAME);
 				return;
 			}
 			monoLib = new File("/usr/lib/mono");
