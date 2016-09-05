@@ -19,8 +19,6 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.dotnet.lang.psi.impl.stub.MsilHelper;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
 import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterList;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
@@ -45,6 +43,8 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredReadAction;
+import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
 /**
  * @author VISTALL
@@ -230,8 +230,7 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	{
 		index ++;  // index is zero based, but in file it started with one
 
-		MsilParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.PARAMETER_ATTRIBUTE_LIST, MsilParameterAttributeList
-				.ARRAY_FACTORY);
+		MsilParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.PARAMETER_ATTRIBUTE_LIST, MsilParameterAttributeList.ARRAY_FACTORY);
 		for(MsilParameterAttributeList attributeList : list)
 		{
 			if(attributeList.getIndex() == index)

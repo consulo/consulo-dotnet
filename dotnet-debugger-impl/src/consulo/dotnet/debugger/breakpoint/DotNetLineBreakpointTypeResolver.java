@@ -2,7 +2,7 @@ package consulo.dotnet.debugger.breakpoint;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetCompositeStatement;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;

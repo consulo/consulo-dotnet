@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
@@ -48,6 +47,7 @@ import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;

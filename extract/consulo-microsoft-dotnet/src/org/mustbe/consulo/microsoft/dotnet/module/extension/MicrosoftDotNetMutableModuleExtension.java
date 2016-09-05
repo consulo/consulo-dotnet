@@ -18,14 +18,14 @@ package org.mustbe.consulo.microsoft.dotnet.module.extension;
 
 import javax.swing.JComponent;
 
-import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.module.extension.DotNetConfigurationPanel;
 import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootLayer;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.module.extension.MutableModuleInheritableNamedPointer;
+import consulo.roots.ModuleRootLayer;
 
 /**
  * @author VISTALL

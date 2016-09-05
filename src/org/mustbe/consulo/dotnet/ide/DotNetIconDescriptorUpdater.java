@@ -17,14 +17,14 @@
 package org.mustbe.consulo.dotnet.ide;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.run.DotNetTestFrameworks;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptor;
-import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredReadAction;
+import consulo.ide.IconDescriptor;
+import consulo.ide.IconDescriptorUpdater;
 
 /**
  * @author VISTALL

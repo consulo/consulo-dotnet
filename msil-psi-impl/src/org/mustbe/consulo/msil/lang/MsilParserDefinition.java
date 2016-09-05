@@ -17,7 +17,6 @@
 package org.mustbe.consulo.msil.lang;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.msil.lang.lexer.MsilLexer;
 import org.mustbe.consulo.msil.lang.parser.MsilParser;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
@@ -25,16 +24,15 @@ import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilFileImpl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.lang.LanguageVersion;
 
 /**
  * @author VISTALL
@@ -44,14 +42,14 @@ public class MsilParserDefinition implements ParserDefinition
 {
 	@NotNull
 	@Override
-	public Lexer createLexer(@Nullable Project project, @NotNull LanguageVersion languageVersion)
+	public Lexer createLexer(@NotNull LanguageVersion languageVersion)
 	{
 		return new MsilLexer();
 	}
 
 	@NotNull
 	@Override
-	public PsiParser createParser(@Nullable Project project, @NotNull LanguageVersion languageVersion)
+	public PsiParser createParser(@NotNull LanguageVersion languageVersion)
 	{
 		return new MsilParser();
 	}

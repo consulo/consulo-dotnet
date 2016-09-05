@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.project.Project;
@@ -12,16 +11,17 @@ import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.lombok.annotations.ProjectService;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.vfs.util.ArchiveVfsUtil;
 
 /**
  * @author VISTALL

@@ -18,18 +18,18 @@ package consulo.dotnet.roots.orderEntry;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
+import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
 
 /**
  * @author VISTALL
  * @since 06-Jun-16
  */
-public class DotNetLibraryOrderEntryTypeEditor extends OrderEntryTypeEditor<DotNetLibraryOrderEntryImpl>
+public class DotNetLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<DotNetLibraryOrderEntryImpl>
 {
 	@NotNull
 	@Override

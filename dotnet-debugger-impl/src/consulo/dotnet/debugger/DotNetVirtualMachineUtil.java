@@ -18,12 +18,12 @@ package consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
-import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
 /**
  * @author VISTALL

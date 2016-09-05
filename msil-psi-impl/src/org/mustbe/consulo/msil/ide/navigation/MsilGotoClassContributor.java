@@ -8,8 +8,6 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.msil.MsilFileType;
@@ -17,7 +15,6 @@ import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import org.mustbe.consulo.msil.representation.MsilFileRepresentationManager;
 import org.mustbe.consulo.msil.representation.MsilFileRepresentationProvider;
-import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.ide.DataManager;
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.GotoClassContributor;
@@ -47,6 +44,9 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
+import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
 /**
  * @author VISTALL

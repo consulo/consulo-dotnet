@@ -17,14 +17,14 @@
 package org.mustbe.consulo.msil.representation;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.Exported;
-import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.Consumer;
+import consulo.annotations.Exported;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL

@@ -24,10 +24,10 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.bundle.PredefinedBundlesProvider;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Consumer;
+import consulo.bundle.PredefinedBundlesProvider;
 
 /**
  * @author VISTALL

@@ -19,7 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.msil.lang.psi.MsilParameterAttributeList;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilParameterAttributeListImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilParameterAttributeListStub;

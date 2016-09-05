@@ -24,10 +24,10 @@ import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Function;
+import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
 /**
  * @author VISTALL

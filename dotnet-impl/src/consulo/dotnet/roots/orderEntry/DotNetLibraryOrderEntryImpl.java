@@ -18,19 +18,16 @@ package consulo.dotnet.roots.orderEntry;
 
 import java.util.List;
 
-import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderEntryWithTracking;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.roots.impl.ClonableOrderEntry;
 import com.intellij.openapi.roots.impl.LibraryOrderEntryBaseImpl;
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import com.intellij.openapi.util.Comparing;
@@ -39,6 +36,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
+import consulo.module.extension.ModuleExtension;
+import consulo.roots.OrderEntryWithTracking;
+import consulo.roots.impl.ModuleRootLayerImpl;
 
 /**
  * @author VISTALL

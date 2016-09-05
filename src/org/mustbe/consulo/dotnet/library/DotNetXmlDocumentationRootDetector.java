@@ -25,11 +25,11 @@ import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.roots.libraries.ui.RootDetector;
-import com.intellij.openapi.roots.types.DocumentationOrderRootType;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
+import consulo.roots.types.DocumentationOrderRootType;
+import consulo.vfs.ArchiveFileSystem;
+import consulo.vfs.util.ArchiveVfsUtil;
 
 /**
  * @author VISTALL

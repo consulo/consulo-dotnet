@@ -27,7 +27,6 @@ import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.mono.dotnet.MonoDotNetIcons;
 import com.intellij.ide.DataManager;
@@ -51,6 +50,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
+import consulo.annotations.RequiredDispatchThread;
 
 /**
  * @author VISTALL

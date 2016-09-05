@@ -16,13 +16,13 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.util.pointers.Named;
 
 /**
  * @author VISTALL

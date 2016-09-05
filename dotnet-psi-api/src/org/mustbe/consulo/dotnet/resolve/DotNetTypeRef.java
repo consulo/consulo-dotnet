@@ -16,9 +16,9 @@
 
 package org.mustbe.consulo.dotnet.resolve;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
+import consulo.lombok.annotations.ArrayFactoryFields;
 
 /**
  * @author VISTALL

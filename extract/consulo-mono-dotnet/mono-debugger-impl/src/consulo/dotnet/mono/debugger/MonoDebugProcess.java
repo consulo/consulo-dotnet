@@ -19,7 +19,6 @@ package consulo.dotnet.mono.debugger;
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.util.Processor;
@@ -32,6 +31,7 @@ import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType;

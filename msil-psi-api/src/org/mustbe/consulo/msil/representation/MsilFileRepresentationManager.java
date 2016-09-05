@@ -22,7 +22,7 @@ import java.util.List;
 import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.msil.MsilFileType;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import com.intellij.openapi.fileTypes.FileType;

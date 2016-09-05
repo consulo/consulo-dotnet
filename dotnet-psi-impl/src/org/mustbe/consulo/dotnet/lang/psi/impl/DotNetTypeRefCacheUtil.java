@@ -20,8 +20,6 @@ import java.lang.reflect.Modifier;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.Exported;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderEx;
@@ -32,6 +30,8 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.BitUtil;
 import com.intellij.util.NotNullFunction;
+import consulo.annotations.Exported;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL

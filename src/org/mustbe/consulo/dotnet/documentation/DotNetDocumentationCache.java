@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import consulo.lombok.annotations.ApplicationService;
 import org.emonic.base.documentation.IDocumentation;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.lombok.annotations.ApplicationService;
+import consulo.roots.types.DocumentationOrderRootType;
 
 /**
  * @author VISTALL

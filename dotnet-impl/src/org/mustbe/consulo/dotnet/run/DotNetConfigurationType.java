@@ -18,16 +18,16 @@ package org.mustbe.consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.module.extension.ModuleExtensionHelper;
 import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import lombok.val;
+import consulo.module.extension.ModuleExtensionHelper;
 
 /**
  * @author VISTALL
@@ -57,7 +57,7 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 			{
 				DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
 
-				for(val module : ModuleManager.getInstance(configuration.getProject()).getModules())
+				for(Module module : ModuleManager.getInstance(configuration.getProject()).getModules())
 				{
 					DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 					if(extension != null)

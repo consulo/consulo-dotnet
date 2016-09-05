@@ -19,11 +19,11 @@ package org.mustbe.consulo.dotnet.module.dependency;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabContext;
-import com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabContext;
+import consulo.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory;
 
 /**
  * @author VISTALL

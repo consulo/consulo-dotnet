@@ -18,9 +18,9 @@ package org.mustbe.consulo.dotnet.module.extension;
 
 import java.util.Map;
 
-import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.roots.OrderRootType;
+import consulo.module.extension.ModuleExtension;
 
 /**
  * @author VISTALL

@@ -21,7 +21,7 @@ import java.util.List;
 import org.emonic.base.documentation.IDocumentation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;

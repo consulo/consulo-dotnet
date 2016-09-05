@@ -30,11 +30,11 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.xdebugger.XDebugSession;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
 import consulo.dotnet.microsoft.debugger.MicrosoftDebugProcess;
+import consulo.roots.ModuleRootLayer;
 
 /**
  * @author VISTALL

@@ -25,7 +25,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderUtil;
 import com.intellij.lang.PsiParser;

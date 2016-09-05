@@ -54,7 +54,7 @@ public class CfsSyntaxHighlighter extends SyntaxHighlighterBase
 	@Override
 	public Lexer getHighlightingLexer()
 	{
-		return myLanguageVersion.createLexer(null);
+		return myLanguageVersion.createLexer();
 	}
 
 	@NotNull

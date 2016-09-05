@@ -18,13 +18,13 @@ package org.mustbe.consulo.dotnet.module.extension;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.psi.PsiElement;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL

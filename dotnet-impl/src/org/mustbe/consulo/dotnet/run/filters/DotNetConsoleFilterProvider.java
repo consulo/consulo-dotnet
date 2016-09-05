@@ -18,11 +18,11 @@ package org.mustbe.consulo.dotnet.run.filters;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import org.mustbe.consulo.module.extension.ModuleExtensionHelper;
 import com.intellij.execution.filters.ConsoleFilterProviderEx;
 import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import consulo.module.extension.ModuleExtensionHelper;
 
 /**
  * @author VISTALL

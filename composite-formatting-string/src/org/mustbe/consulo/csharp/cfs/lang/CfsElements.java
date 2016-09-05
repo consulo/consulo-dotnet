@@ -17,8 +17,8 @@
 package org.mustbe.consulo.csharp.cfs.lang;
 
 import org.mustbe.consulo.csharp.cfs.psi.CfsItem;
-import com.intellij.psi.tree.ElementTypeAsPsiFactory;
 import com.intellij.psi.tree.IElementType;
+import consulo.psi.tree.ElementTypeAsPsiFactory;
 
 /**
  * @author VISTALL

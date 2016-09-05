@@ -16,15 +16,15 @@
 
 package org.mustbe.consulo.dotnet.compiler;
 
-import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import com.intellij.compiler.impl.TranslatingCompilerFilesMonitorHelper;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
+import consulo.module.extension.ModuleExtension;
 
 /**
  * @author VISTALL

@@ -17,13 +17,11 @@
 package org.mustbe.consulo.csharp.cfs.lang;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.lang.BaseLanguageVersion;
-import com.intellij.lang.LanguageVersionWithParsing;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.TokenSet;
+import consulo.lang.BaseLanguageVersion;
+import consulo.lang.LanguageVersionWithParsing;
 
 /**
  * @author VISTALL
@@ -38,7 +36,7 @@ public abstract class BaseCfsLanguageVersion extends BaseLanguageVersion<CfsLang
 
 	@NotNull
 	@Override
-	public Lexer createLexer(@Nullable Project project)
+	public Lexer createLexer()
 	{
 		return new MergingLexerAdapter(createInnerLexer(), TokenSet.create(CfsTokens.TEXT));
 	}

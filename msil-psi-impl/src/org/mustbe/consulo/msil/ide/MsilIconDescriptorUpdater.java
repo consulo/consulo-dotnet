@@ -3,7 +3,6 @@ package org.mustbe.consulo.msil.ide;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetInheritUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
@@ -11,12 +10,13 @@ import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilNamespaceAsElementImpl;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptor;
-import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.BitUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.ide.IconDescriptor;
+import consulo.ide.IconDescriptorUpdater;
 
 /**
  * @author VISTALL

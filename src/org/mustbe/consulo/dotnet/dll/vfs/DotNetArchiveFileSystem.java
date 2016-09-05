@@ -17,21 +17,17 @@
 package org.mustbe.consulo.dotnet.dll.vfs;
 
 import java.io.File;
+import java.io.IOException;
 
-import consulo.lombok.annotations.Logger;
-import org.consulo.vfs.ArchiveFileSystemBase;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import org.mustbe.consulo.dotnet.module.extension.DotNetLibraryOpenCache;
-import org.mustbe.dotnet.msil.decompiler.file.DotNetArchiveFile;
 import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.vfs.ArchiveFile;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.impl.archive.ArchiveHandler;
-import com.intellij.openapi.vfs.impl.archive.ArchiveHandlerBase;
-import com.intellij.util.messages.MessageBus;
+import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
+import consulo.lombok.annotations.Logger;
+import consulo.vfs.impl.archive.ArchiveFile;
+import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 
 /**
  * @author VISTALL
@@ -46,67 +42,32 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 		return (DotNetArchiveFileSystem) VirtualFileManager.getInstance().getFileSystem(DotNetModuleFileType.PROTOCOL);
 	}
 
-	public DotNetArchiveFileSystem(MessageBus bus)
+	public DotNetArchiveFileSystem()
 	{
-		super(bus);
+		super(DotNetModuleFileType.PROTOCOL);
 	}
 
+	@NotNull
 	@Override
-	public ArchiveHandler createHandler(ArchiveFileSystem archiveFileSystem, String s)
+	public ArchiveFile createArchiveFile(@NotNull String path) throws IOException
 	{
-		return new ArchiveHandlerBase(archiveFileSystem, s)
+		DotNetLibraryOpenCache.Record record = null;
+		try
 		{
-			@Nullable
-			@Override
-			protected ArchiveFile createArchiveFile()
+			File file = new File(path);
+			record = DotNetLibraryOpenCache.acquire(path);
+			return new DotNetArchiveFile(file, record.get(), file.lastModified());
+		}
+		catch(Exception e)
+		{
+			throw new IOException(e);
+		}
+		finally
+		{
+			if(record != null)
 			{
-				File originalFile = getOriginalFile();
-				File mirrorFile = getMirrorFile(originalFile);
-				DotNetLibraryOpenCache.Record record = null;
-				try
-				{
-					record = DotNetLibraryOpenCache.acquire(mirrorFile.getPath());
-					return new DotNetArchiveFile(originalFile, record.get(), mirrorFile.lastModified());
-				}
-				catch(Exception e)
-				{
-					LOGGER.warn(originalFile.getPath(), e);
-				}
-				finally
-				{
-					if(record != null)
-					{
-						record.finish();
-					}
-				}
-				return ArchiveFile.EMPTY;
+				record.finish();
 			}
-		};
-	}
-
-	@NotNull
-	@Override
-	public String getProtocol()
-	{
-		return DotNetModuleFileType.PROTOCOL;
-	}
-
-	@Override
-	public void initComponent()
-	{
-
-	}
-
-	@Override
-	public void disposeComponent()
-	{
-
-	}
-
-	@NotNull
-	@Override
-	public String getComponentName()
-	{
-		return "DotNetArchiveFileSystem";
+		}
 	}
 }

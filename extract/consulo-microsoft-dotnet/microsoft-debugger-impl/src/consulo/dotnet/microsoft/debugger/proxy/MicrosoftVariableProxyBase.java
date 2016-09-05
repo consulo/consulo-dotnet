@@ -1,8 +1,8 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.NotNull;
 import consulo.dotnet.debugger.proxy.DotNetVariableProxy;
+import consulo.util.pointers.Named;
 import mssdw.MirrorWithIdAndName;
 
 /**

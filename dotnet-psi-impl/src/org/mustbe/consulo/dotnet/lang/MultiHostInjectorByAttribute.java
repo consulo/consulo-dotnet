@@ -27,7 +27,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetParameter;
 import org.mustbe.consulo.dotnet.util.ArrayUtil2;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.util.TextRange;
@@ -35,7 +34,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.LanguageVersionUtil;
+import consulo.lang.LanguageVersion;
+import consulo.lang.util.LanguageVersionUtil;
 
 /**
  * @author VISTALL

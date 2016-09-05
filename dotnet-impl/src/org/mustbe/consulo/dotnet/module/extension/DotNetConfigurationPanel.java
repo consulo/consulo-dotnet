@@ -25,16 +25,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 
-import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
-import org.consulo.module.extension.ui.ModuleExtensionSdkBoxBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.DotNetBundle;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -61,6 +57,10 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.extension.ui.ModuleExtensionSdkBoxBuilder;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import lombok.val;
 
 /**
@@ -75,8 +75,7 @@ public class DotNetConfigurationPanel extends JPanel
 		super(new VerticalFlowLayout(true, true));
 		val moduleExtensionSdkBoxBuilder = ModuleExtensionSdkBoxBuilder.<DotNetMutableModuleExtension<?>>create(extension, updater);
 		moduleExtensionSdkBoxBuilder.sdkTypeClass(extension.getSdkTypeClass());
-		moduleExtensionSdkBoxBuilder.sdkPointerFunc(new NullableFunction<DotNetMutableModuleExtension<?>,
-				MutableModuleInheritableNamedPointer<Sdk>>()
+		moduleExtensionSdkBoxBuilder.sdkPointerFunc(new NullableFunction<DotNetMutableModuleExtension<?>, MutableModuleInheritableNamedPointer<Sdk>>()
 		{
 			@Nullable
 			@Override

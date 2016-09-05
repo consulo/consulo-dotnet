@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import org.picocontainer.Disposable;
 import com.intellij.openapi.fileTypes.FileType;

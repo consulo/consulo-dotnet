@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.dll;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.ide.highlighter.ArchiveFileType;
+import consulo.fileTypes.ArchiveFileType;
 
 /**
  * @author VISTALL
@@ -28,6 +28,7 @@ public class DotNetModuleFileType extends ArchiveFileType
 	public static final DotNetModuleFileType INSTANCE = new DotNetModuleFileType();
 	public static final String PROTOCOL = "netdll";
 
+	@NotNull
 	@Override
 	public String getProtocol()
 	{

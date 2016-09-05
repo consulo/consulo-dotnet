@@ -1,21 +1,20 @@
 package org.mustbe.consulo.mono.dotnet.module.extension;
 
-import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.consulo.module.extension.ModuleInheritableNamedPointer;
-import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModifiableModuleRootLayer;
-import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.extension.impl.ModuleExtensionImpl;
+import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.module.extension.ModuleInheritableNamedPointer;
+import consulo.roots.ModifiableModuleRootLayer;
+import consulo.roots.ModuleRootLayer;
 
 /**
  * @author VISTALL
  * @since 05.05.14
  */
-public abstract class InnerMonoModuleExtension<T extends InnerMonoModuleExtension<T>> extends ModuleExtensionImpl<T> implements
-		ModuleExtensionWithSdk<T>
+public abstract class InnerMonoModuleExtension<T extends InnerMonoModuleExtension<T>> extends ModuleExtensionImpl<T> implements ModuleExtensionWithSdk<T>
 {
 	private ModuleInheritableNamedPointer<Sdk> myPointer;
 

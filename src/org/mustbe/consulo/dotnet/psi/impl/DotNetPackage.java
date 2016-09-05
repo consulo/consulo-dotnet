@@ -16,16 +16,16 @@
 
 package org.mustbe.consulo.dotnet.psi.impl;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageBase;
 import com.intellij.util.ArrayFactory;
+import consulo.annotations.RequiredReadAction;
+import consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.module.extension.ModuleExtension;
+import consulo.psi.PsiPackage;
+import consulo.psi.PsiPackageManager;
 
 /**
  * @author VISTALL

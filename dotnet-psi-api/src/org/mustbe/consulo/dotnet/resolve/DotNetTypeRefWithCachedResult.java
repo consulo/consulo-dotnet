@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.resolve;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL

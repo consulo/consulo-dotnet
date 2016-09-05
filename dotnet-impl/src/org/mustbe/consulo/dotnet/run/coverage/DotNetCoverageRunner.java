@@ -27,8 +27,8 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.util.NotNullPairFunction;
 import com.intellij.util.SmartList;
+import consulo.util.NotNullPairFunction;
 
 /**
  * @author VISTALL

@@ -1,6 +1,6 @@
 package org.mustbe.consulo.msil.lang.stubbing.values;
 
-import edu.arizona.cs.mbel.signature.TypeSignature;
+import consulo.internal.dotnet.asm.signature.TypeSignature;
 
 /**
  * @author VISTALL

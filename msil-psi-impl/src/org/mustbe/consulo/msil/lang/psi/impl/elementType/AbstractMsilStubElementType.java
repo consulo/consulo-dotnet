@@ -23,7 +23,7 @@ import org.mustbe.consulo.msil.MsilLanguage;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementTypeAsPsiFactory;
+import consulo.psi.tree.IElementTypeAsPsiFactory;
 
 /**
  * @author VISTALL

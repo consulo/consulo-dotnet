@@ -25,18 +25,13 @@ import java.util.TreeMap;
 import javax.swing.JComponent;
 import javax.swing.JList;
 
-import org.consulo.module.extension.ModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryImpl;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.roots.ModifiableModuleRootLayer;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import com.intellij.openapi.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Computable;
@@ -45,6 +40,11 @@ import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
+import consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryImpl;
+import consulo.module.extension.ModuleExtension;
+import consulo.roots.ModifiableModuleRootLayer;
+import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabContext;
 
 /**
  * @author VISTALL

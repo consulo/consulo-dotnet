@@ -20,20 +20,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.cfs.lang.lexer.CfsLexer;
 import org.mustbe.consulo.csharp.cfs.lang.parser.CfsParser;
-import com.intellij.lang.LanguageVersionWithDefinition;
-import com.intellij.lang.LanguageVersionWithParsing;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import consulo.lang.LanguageVersionWithDefinition;
+import consulo.lang.LanguageVersionWithParsing;
 
 /**
  * @author VISTALL
  * @since 12.03.2015
  */
-public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements LanguageVersionWithParsing<CfsLanguage>,
-		LanguageVersionWithDefinition<CfsLanguage>
+public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements LanguageVersionWithParsing<CfsLanguage>, LanguageVersionWithDefinition<CfsLanguage>
 {
 	public IndexCfsLanguageVersion()
 	{
@@ -61,7 +60,7 @@ public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements L
 
 	@NotNull
 	@Override
-	public PsiParser createParser(@Nullable Project project)
+	public PsiParser createParser()
 	{
 		return new CfsParser(CfsTokens.INDEX);
 	}

@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;
 import org.mustbe.consulo.msil.representation.MsilFileRepresentationManager;
 import com.intellij.ide.projectView.PresentationData;

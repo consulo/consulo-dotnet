@@ -6,13 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joou.UByte;
 import org.joou.UInteger;
 import org.joou.UShort;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTypes;
 import org.mustbe.consulo.dotnet.psi.DotNetAttributeUtil;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
@@ -31,8 +29,6 @@ import org.mustbe.consulo.msil.lang.psi.impl.MsilNativeTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilUserTypeImpl;
 import org.mustbe.consulo.msil.lang.stubbing.values.MsiCustomAttributeValue;
 import org.mustbe.consulo.msil.lang.stubbing.values.MsilCustomAttributeEnumValue;
-import org.mustbe.dotnet.asm.STypeSignatureParser;
-import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import com.google.common.primitives.Longs;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -40,13 +36,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import edu.arizona.cs.mbel.io.ByteBuffer;
-import edu.arizona.cs.mbel.mbel.AbstractTypeReference;
-import edu.arizona.cs.mbel.mbel.AssemblyTypeRef;
-import edu.arizona.cs.mbel.signature.ClassTypeSignature;
-import edu.arizona.cs.mbel.signature.TypeSignature;
-import edu.arizona.cs.mbel.signature.TypeSignatureParser;
-import edu.arizona.cs.mbel.signature.ValueTypeSignature;
+import consulo.annotations.RequiredReadAction;
+import consulo.internal.dotnet.asm.STypeSignatureParser;
+import consulo.internal.dotnet.asm.io.ByteBuffer;
+import consulo.internal.dotnet.asm.mbel.AbstractTypeReference;
+import consulo.internal.dotnet.asm.mbel.AssemblyTypeRef;
+import consulo.internal.dotnet.asm.signature.ClassTypeSignature;
+import consulo.internal.dotnet.asm.signature.TypeSignature;
+import consulo.internal.dotnet.asm.signature.TypeSignatureParser;
+import consulo.internal.dotnet.asm.signature.ValueTypeSignature;
+import consulo.internal.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
+import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL

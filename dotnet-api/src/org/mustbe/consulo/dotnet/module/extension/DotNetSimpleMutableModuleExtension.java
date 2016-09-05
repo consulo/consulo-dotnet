@@ -18,17 +18,16 @@ package org.mustbe.consulo.dotnet.module.extension;
 
 import java.util.List;
 
-import org.consulo.module.extension.MutableModuleExtension;
-import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.projectRoots.Sdk;
+import consulo.module.extension.MutableModuleExtension;
+import consulo.module.extension.MutableModuleInheritableNamedPointer;
 
 /**
  * @author VISTALL
  * @since 22.02.2015
  */
-public interface DotNetSimpleMutableModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends DotNetSimpleModuleExtension<T>,
-		MutableModuleExtension<T>
+public interface DotNetSimpleMutableModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends DotNetSimpleModuleExtension<T>, MutableModuleExtension<T>
 {
 	@NotNull
 	@Override

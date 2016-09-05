@@ -1,7 +1,7 @@
 package org.mustbe.consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import com.intellij.psi.tree.IElementType;
 

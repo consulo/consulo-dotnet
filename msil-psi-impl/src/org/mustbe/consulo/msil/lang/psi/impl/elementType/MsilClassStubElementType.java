@@ -19,20 +19,20 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilClassEntryImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
-import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import consulo.annotations.RequiredReadAction;
+import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
 /**
  * @author VISTALL

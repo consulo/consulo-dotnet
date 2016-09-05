@@ -20,18 +20,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.DotNetTarget;
 import org.mustbe.consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
-import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.module.extension.ModuleExtension;
+import consulo.roots.ModuleRootLayer;
 
 /**
  * @author VISTALL

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.cfs.lang.CfsElements;
 import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderUtil;
 import com.intellij.lang.PsiParser;

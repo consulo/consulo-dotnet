@@ -5,14 +5,14 @@ import gnu.trove.TObjectProcedure;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.roots.impl.ModuleRootsProcessor;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.ModuleRootsProcessor;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 /**
  * @author VISTALL

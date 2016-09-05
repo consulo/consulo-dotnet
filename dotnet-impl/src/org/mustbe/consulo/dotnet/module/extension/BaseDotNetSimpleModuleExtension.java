@@ -24,14 +24,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import consulo.lombok.annotations.Logger;
-import org.consulo.module.extension.ModuleInheritableNamedPointer;
-import org.consulo.module.extension.impl.ModuleExtensionImpl;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.dll.DotNetModuleFileType;
 import org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import org.mustbe.consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
@@ -39,10 +35,7 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
-import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Couple;
@@ -50,16 +43,23 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.vfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.util.ArchiveVfsUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import edu.arizona.cs.mbel.mbel.ModuleParser;
+import com.intellij.util.io.URLUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.extension.impl.ModuleExtensionImpl;
+import consulo.internal.dotnet.asm.mbel.ModuleParser;
+import consulo.lombok.annotations.Logger;
+import consulo.module.extension.ModuleInheritableNamedPointer;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.DocumentationOrderRootType;
+import consulo.vfs.util.ArchiveVfsUtil;
 import lombok.val;
 
 /**
@@ -67,8 +67,7 @@ import lombok.val;
  * @since 22.02.2015
  */
 @Logger
-public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionImpl<S> implements
-		DotNetSimpleModuleExtension<S>
+public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionImpl<S> implements DotNetSimpleModuleExtension<S>
 {
 	public static final File[] EMPTY_FILE_ARRAY = new File[0];
 
@@ -258,8 +257,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 			}
 
 			return new String[]{
-					VirtualFileManager.constructUrl(DotNetModuleFileType.PROTOCOL, libraryByAssemblyName.getPath()) + ArchiveFileSystem
-							.ARCHIVE_SEPARATOR
+					VirtualFileManager.constructUrl(DotNetModuleFileType.PROTOCOL, libraryByAssemblyName.getPath()) + URLUtil.ARCHIVE_SEPARATOR
 			};
 		}
 		else if(orderRootType == DocumentationOrderRootType.getInstance())
@@ -392,8 +390,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		{
 			record = DotNetLibraryOpenCache.acquire(f.getPath());
 			ModuleParser moduleParser = record.get();
-			return Couple.of(moduleParser.getAssemblyInfo().getName(), moduleParser.getAssemblyInfo().getMajorVersion() + "." + moduleParser
-					.getAssemblyInfo().getMinorVersion() +
+			return Couple.of(moduleParser.getAssemblyInfo().getName(), moduleParser.getAssemblyInfo().getMajorVersion() + "." + moduleParser.getAssemblyInfo().getMinorVersion() +
 					"." + moduleParser.getAssemblyInfo().getBuildNumber() + "." + moduleParser.getAssemblyInfo().getRevisionNumber());
 		}
 		catch(Exception e)

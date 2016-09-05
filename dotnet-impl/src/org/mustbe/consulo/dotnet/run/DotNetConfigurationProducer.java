@@ -27,7 +27,6 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -43,7 +42,7 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 	@Override
 	protected boolean setupConfigurationFromContext(DotNetConfiguration configuration, ConfigurationContext context, Ref<PsiElement> sourceElement)
 	{
-		val contextInfo = getModuleForRun(context);
+		Trinity<Module, String, PsiFile> contextInfo = getModuleForRun(context);
 		if(contextInfo != null)
 		{
 			configuration.setName(contextInfo.getFirst().getName());
@@ -58,7 +57,7 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 	@Override
 	public boolean isConfigurationFromContext(DotNetConfiguration configuration, ConfigurationContext context)
 	{
-		val contextInfo = getModuleForRun(context);
+		Trinity<Module, String, PsiFile> contextInfo = getModuleForRun(context);
 		if(contextInfo == null)
 		{
 			return false;

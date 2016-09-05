@@ -8,7 +8,7 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import edu.arizona.cs.mbel.signature.FieldAttributes;
+import consulo.internal.dotnet.asm.signature.FieldAttributes;
 import mssdw.FieldMirror;
 import mssdw.ObjectValueMirror;
 

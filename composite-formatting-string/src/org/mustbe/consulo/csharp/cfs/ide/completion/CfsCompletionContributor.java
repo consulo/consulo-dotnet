@@ -6,7 +6,7 @@ import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
+import consulo.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
@@ -28,10 +28,10 @@ public class CfsCompletionContributor extends CompletionContributor
 {
 	public CfsCompletionContributor()
 	{
-		extend(CompletionType.BASIC, StandardPatterns.psiElement().withElementType(CfsTokens.INDEX), new CompletionProvider<CompletionParameters>()
+		extend(CompletionType.BASIC, StandardPatterns.psiElement().withElementType(CfsTokens.INDEX), new CompletionProvider()
 		{
 			@Override
-			protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
 			{
 				int thisArgumentInex = -1;
 				DotNetExpression[] callArguments = null;

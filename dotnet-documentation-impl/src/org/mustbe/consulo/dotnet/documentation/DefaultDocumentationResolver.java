@@ -22,7 +22,7 @@ import org.emonic.base.documentation.IDocumentation;
 import org.emonic.base.documentation.XMLDocumentationParser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.*;
 import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
 import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;

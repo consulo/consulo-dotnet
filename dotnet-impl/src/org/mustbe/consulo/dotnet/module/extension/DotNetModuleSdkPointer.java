@@ -16,20 +16,20 @@
 
 package org.mustbe.consulo.dotnet.module.extension;
 
-import org.consulo.module.extension.ModuleInheritableNamedPointer;
-import org.consulo.module.extension.MutableModuleInheritableNamedPointer;
-import org.consulo.util.pointers.NamedPointer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.sdk.SdkUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.bundle.SdkUtil;
+import consulo.module.extension.ModuleInheritableNamedPointer;
+import consulo.module.extension.MutableModuleInheritableNamedPointer;
+import consulo.util.pointers.NamedPointer;
 
 /**
  * @author VISTALL

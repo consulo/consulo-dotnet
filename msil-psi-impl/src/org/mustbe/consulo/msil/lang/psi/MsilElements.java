@@ -18,8 +18,8 @@ package org.mustbe.consulo.msil.lang.psi;
 
 import org.mustbe.consulo.msil.MsilLanguage;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilReferenceExpressionImpl;
-import com.intellij.psi.tree.ElementTypeAsPsiFactory;
 import com.intellij.psi.tree.IElementType;
+import consulo.psi.tree.ElementTypeAsPsiFactory;
 
 /**
  * @author VISTALL

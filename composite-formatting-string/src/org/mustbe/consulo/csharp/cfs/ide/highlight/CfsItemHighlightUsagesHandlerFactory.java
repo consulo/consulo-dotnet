@@ -20,12 +20,12 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.csharp.cfs.psi.CfsFile;
 import org.mustbe.consulo.csharp.cfs.psi.CfsItem;
 import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import com.intellij.codeInsight.TargetElementUtil;
+import consulo.codeInsight.TargetElementUtil;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactory;
 import com.intellij.lang.injection.InjectedLanguageManager;

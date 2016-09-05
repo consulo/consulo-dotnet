@@ -26,7 +26,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.dotnet.psi.search.searches.DirectTypeInheritorsSearch;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilExtendsListIndex;
-import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Computable;
@@ -37,6 +36,7 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
 import com.intellij.util.containers.HashMap;
+import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
 /**
  * @author max

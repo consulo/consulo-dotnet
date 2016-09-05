@@ -30,8 +30,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import edu.arizona.cs.mbel.mbel.ModuleParser;
-import edu.arizona.cs.mbel.parse.MSILParseException;
+import consulo.internal.dotnet.asm.mbel.ModuleParser;
+import consulo.internal.dotnet.asm.parse.MSILParseException;
 
 /**
  * @author VISTALL

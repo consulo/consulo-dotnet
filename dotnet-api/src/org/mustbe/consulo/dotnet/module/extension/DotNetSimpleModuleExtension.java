@@ -18,14 +18,14 @@ package org.mustbe.consulo.dotnet.module.extension;
 
 import java.util.List;
 
-import org.consulo.annotations.Immutable;
-import org.consulo.annotations.InheritImmutable;
-import org.consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
+import consulo.annotations.Immutable;
+import consulo.annotations.InheritImmutable;
+import consulo.module.extension.ModuleInheritableNamedPointer;
 
 /**
  * @author VISTALL

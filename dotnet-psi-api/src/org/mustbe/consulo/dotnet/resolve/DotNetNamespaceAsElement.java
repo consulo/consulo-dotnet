@@ -2,7 +2,7 @@ package org.mustbe.consulo.dotnet.resolve;
 
 import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;

@@ -17,7 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**

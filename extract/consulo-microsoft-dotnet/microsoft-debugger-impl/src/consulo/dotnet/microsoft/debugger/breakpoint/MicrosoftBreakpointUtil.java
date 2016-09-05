@@ -2,7 +2,6 @@ package consulo.dotnet.microsoft.debugger.breakpoint;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.application.ApplicationManager;
@@ -14,6 +13,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxy;

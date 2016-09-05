@@ -18,10 +18,10 @@ package consulo.dotnet.roots.orderEntry;
 
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.roots.ModuleRootLayer;
-import com.intellij.openapi.roots.impl.ModuleRootLayerImpl;
 import com.intellij.openapi.util.InvalidDataException;
 import consulo.lombok.annotations.Lazy;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.OrderEntryType;
 
 /**

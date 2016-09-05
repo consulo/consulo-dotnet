@@ -2,7 +2,7 @@ package org.mustbe.consulo.dotnet.library;
 
 import org.mustbe.consulo.msil.MsilFileType;
 import com.intellij.openapi.roots.libraries.ui.FileTypeBasedRootFilter;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import consulo.roots.types.BinariesOrderRootType;
 
 /**
  * @author VISTALL

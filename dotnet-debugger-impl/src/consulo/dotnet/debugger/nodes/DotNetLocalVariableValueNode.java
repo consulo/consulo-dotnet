@@ -18,7 +18,7 @@ package consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import consulo.annotations.RequiredDispatchThread;
 import org.mustbe.consulo.dotnet.psi.DotNetCodeBlockOwner;
 import org.mustbe.consulo.dotnet.psi.DotNetVariable;
 import com.intellij.openapi.util.Ref;

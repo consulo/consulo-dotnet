@@ -19,7 +19,7 @@ package org.mustbe.consulo.csharp.cfs.ide.highlight;
 import java.util.Collections;
 import java.util.List;
 
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.csharp.cfs.psi.CfsFile;
 import org.mustbe.consulo.csharp.cfs.psi.CfsItem;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;

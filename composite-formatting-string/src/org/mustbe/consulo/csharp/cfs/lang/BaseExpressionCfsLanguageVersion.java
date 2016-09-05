@@ -17,13 +17,11 @@
 package org.mustbe.consulo.csharp.cfs.lang;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.csharp.cfs.lang.lexer.CfsLexer;
 import org.mustbe.consulo.csharp.cfs.lang.parser.CfsParser;
 import com.intellij.lang.Language;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -43,7 +41,7 @@ public abstract class BaseExpressionCfsLanguageVersion extends BaseCfsLanguageVe
 
 	@NotNull
 	@Override
-	public PsiParser createParser(@Nullable Project project)
+	public PsiParser createParser()
 	{
 		if(myExpressionElementType == null)
 		{

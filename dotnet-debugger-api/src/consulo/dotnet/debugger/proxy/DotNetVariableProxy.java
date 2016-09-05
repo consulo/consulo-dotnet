@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import org.consulo.util.pointers.Named;
 import org.jetbrains.annotations.Nullable;
+import consulo.util.pointers.Named;
 
 /**
  * @author VISTALL

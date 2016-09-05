@@ -18,7 +18,6 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
@@ -26,6 +25,7 @@ import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL

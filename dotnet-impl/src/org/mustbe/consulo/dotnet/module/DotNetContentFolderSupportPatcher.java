@@ -20,10 +20,10 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
-import org.mustbe.consulo.roots.ContentFolderSupportPatcher;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.roots.ContentFolderSupportPatcher;
+import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
 
 /**
  * @author VISTALL

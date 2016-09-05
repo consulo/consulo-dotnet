@@ -30,9 +30,7 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.types.DocumentationOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
@@ -41,6 +39,8 @@ import com.intellij.xdebugger.XDebugSession;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
 import consulo.dotnet.mono.debugger.MonoDebugProcess;
+import consulo.roots.ModuleRootLayer;
+import consulo.roots.types.DocumentationOrderRootType;
 
 /**
  * @author VISTALL

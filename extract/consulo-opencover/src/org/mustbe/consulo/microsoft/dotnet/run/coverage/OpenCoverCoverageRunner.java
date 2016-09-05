@@ -44,9 +44,9 @@ import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
-import com.intellij.util.NotNullPairFunction;
 import com.intellij.util.execution.ParametersListUtil;
 import consulo.lombok.annotations.Lazy;
+import consulo.util.NotNullPairFunction;
 
 /**
  * @author VISTALL

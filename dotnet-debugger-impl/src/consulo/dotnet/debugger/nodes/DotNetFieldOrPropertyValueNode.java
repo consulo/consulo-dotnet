@@ -21,7 +21,6 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptor;
 import com.intellij.xdebugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
@@ -31,6 +30,7 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.ide.IconDescriptor;
 
 /**
  * @author VISTALL

@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;

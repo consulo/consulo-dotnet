@@ -16,12 +16,12 @@
 
 package org.mustbe.consulo.csharp.cfs.ide.highlight;
 
-import org.consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.cfs.lang.BaseCfsLanguageVersion;
 import org.mustbe.consulo.csharp.cfs.lang.CfsLanguage;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
+import consulo.lang.LanguageVersion;
 
 /**
  * @author VISTALL

@@ -24,9 +24,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.Exported;
 import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.ui.ConsoleView;
@@ -53,6 +51,7 @@ import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import com.intellij.xdebugger.impl.ui.XDebugSessionTab;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import consulo.annotations.Exported;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
@@ -66,6 +65,7 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointPrope
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import consulo.dotnet.mono.debugger.proxy.MonoThreadProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
+import consulo.lombok.annotations.Logger;
 import mono.debugger.AppDomainMirror;
 import mono.debugger.EventKind;
 import mono.debugger.NotSuspendedException;

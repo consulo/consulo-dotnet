@@ -1,11 +1,7 @@
 package org.mustbe.consulo.dotnet.module;
 
-import org.consulo.psi.PsiPackage;
-import org.consulo.psi.PsiPackageManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.Exported;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -13,6 +9,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
+import consulo.annotations.Exported;
+import consulo.annotations.RequiredReadAction;
+import consulo.psi.PsiPackage;
+import consulo.psi.PsiPackageManager;
 
 /**
  * @author VISTALL

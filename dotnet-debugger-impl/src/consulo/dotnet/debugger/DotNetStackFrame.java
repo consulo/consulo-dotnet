@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.dotnet.psi.DotNetConstructorDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
@@ -33,8 +32,6 @@ import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
 import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
 import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
-import org.mustbe.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
-import org.mustbe.dotnet.msil.decompiler.util.MsilHelper;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
@@ -61,6 +58,7 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;
@@ -76,6 +74,8 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.psi.DotNetAccessorOwner;
+import consulo.internal.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
+import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
 /**
  * @author VISTALL
