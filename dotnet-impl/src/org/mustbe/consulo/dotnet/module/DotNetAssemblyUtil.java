@@ -19,7 +19,7 @@ package org.mustbe.consulo.dotnet.module;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.psi.PsiElement;

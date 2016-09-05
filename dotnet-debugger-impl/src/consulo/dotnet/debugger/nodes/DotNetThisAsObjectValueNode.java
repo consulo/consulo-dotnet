@@ -23,7 +23,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTypes;
+import consulo.dotnet.DotNetTypes;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.CommonProcessors;

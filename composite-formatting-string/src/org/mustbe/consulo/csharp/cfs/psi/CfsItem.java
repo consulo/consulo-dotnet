@@ -18,9 +18,9 @@ package org.mustbe.consulo.csharp.cfs.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
-import org.mustbe.consulo.dotnet.util.ArrayUtil2;
+import consulo.dotnet.psi.DotNetCallArgumentList;
+import consulo.dotnet.psi.DotNetExpression;
+import consulo.dotnet.util.ArrayUtil2;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;

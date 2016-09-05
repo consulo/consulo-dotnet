@@ -19,7 +19,7 @@ package consulo.dotnet.debugger.nodes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.PsiElement;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNamedValue;

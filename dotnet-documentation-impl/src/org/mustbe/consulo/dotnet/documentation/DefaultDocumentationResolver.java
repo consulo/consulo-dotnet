@@ -23,10 +23,9 @@ import org.emonic.base.documentation.XMLDocumentationParser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.psi.*;
-import org.mustbe.consulo.dotnet.resolve.DotNetArrayTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetPointerTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.resolve.DotNetArrayTypeRef;
+import consulo.dotnet.resolve.DotNetPointerTypeRef;
+import consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -34,6 +33,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
+import consulo.dotnet.documentation.DotNetDocumentationResolver;
+import consulo.dotnet.psi.*;
 
 /**
  * @author VISTALL

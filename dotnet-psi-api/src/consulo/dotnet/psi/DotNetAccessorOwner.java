@@ -2,8 +2,6 @@ package consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
-import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
 
 /**
  * @author VISTALL

@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageRunner;
 import com.intellij.execution.configurations.GeneralCommandLine;

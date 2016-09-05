@@ -17,7 +17,7 @@
 package consulo.dotnet.ui.chooser;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.ide.util.TreeChooser;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;

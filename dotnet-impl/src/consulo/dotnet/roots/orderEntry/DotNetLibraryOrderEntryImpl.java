@@ -20,8 +20,8 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
-import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
+import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootPolicy;

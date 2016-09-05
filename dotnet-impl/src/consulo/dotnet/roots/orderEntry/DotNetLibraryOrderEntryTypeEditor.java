@@ -17,7 +17,7 @@
 package consulo.dotnet.roots.orderEntry;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
+import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;

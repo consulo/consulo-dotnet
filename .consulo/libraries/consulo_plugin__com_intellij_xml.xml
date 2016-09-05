@@ -1,0 +1,8 @@
+<component name="libraryTable">
+  <library name="consulo-plugin: com.intellij.xml">
+    <binaries>
+      <root url="file://$PROJECT_DIR$/dep/xml/lib" />
+    </binaries>
+    <jarDirectory url="file://$PROJECT_DIR$/dep/xml/lib" recursive="false" />
+  </library>
+</component>

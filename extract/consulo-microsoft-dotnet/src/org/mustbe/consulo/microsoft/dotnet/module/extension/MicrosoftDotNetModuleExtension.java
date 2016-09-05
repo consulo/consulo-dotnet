@@ -21,7 +21,7 @@ import java.io.File;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
-import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType;
 import com.intellij.execution.ExecutionException;

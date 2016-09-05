@@ -18,8 +18,8 @@ package consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredDispatchThread;
-import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.run.DotNetRunKeys;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import com.intellij.execution.ExecutionException;

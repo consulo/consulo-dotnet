@@ -19,7 +19,7 @@ package org.mustbe.consulo.msil.lang.psi;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import consulo.dotnet.psi.DotNetModifier;
 import com.intellij.lang.Language;
 import com.intellij.psi.tree.IElementType;
 

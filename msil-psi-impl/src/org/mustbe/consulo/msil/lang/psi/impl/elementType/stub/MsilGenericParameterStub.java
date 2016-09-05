@@ -18,9 +18,9 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.dotnet.psi.DotNetGenericParameter;
+import consulo.dotnet.psi.DotNetModifier;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.msil.lang.psi.MsilGenericParameter;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.NamedStubBase;

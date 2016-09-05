@@ -19,7 +19,7 @@ package org.mustbe.consulo.dotnet.module;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import consulo.roots.ContentFolderSupportPatcher;
 import consulo.roots.ContentFolderTypeProvider;

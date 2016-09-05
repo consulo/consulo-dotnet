@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.compiler;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;

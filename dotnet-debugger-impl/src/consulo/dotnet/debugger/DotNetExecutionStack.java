@@ -25,7 +25,7 @@ import consulo.lombok.annotations.ArrayFactoryFields;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.util.ArrayUtil2;
+import consulo.dotnet.util.ArrayUtil2;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XExecutionStack;

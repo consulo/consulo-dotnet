@@ -17,7 +17,7 @@
 package org.mustbe.consulo.dotnet.run.filters;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
+import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.execution.filters.ConsoleFilterProviderEx;
 import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;

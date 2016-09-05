@@ -17,7 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetEventDeclaration;
+import consulo.dotnet.psi.DotNetEventDeclaration;
 
 /**
  * @author VISTALL

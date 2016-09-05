@@ -22,7 +22,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.Processor;
 import com.intellij.util.TimeoutUtil;

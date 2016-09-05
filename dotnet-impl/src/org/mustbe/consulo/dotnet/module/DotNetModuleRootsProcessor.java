@@ -4,7 +4,7 @@ import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectProcedure;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.vfs.VfsUtil;

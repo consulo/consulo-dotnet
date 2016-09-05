@@ -17,7 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.psi.PsiElement;
 
 /**

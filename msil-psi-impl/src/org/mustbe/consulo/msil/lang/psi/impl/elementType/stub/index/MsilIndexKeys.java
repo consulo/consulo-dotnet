@@ -16,8 +16,8 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
-import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import consulo.dotnet.psi.DotNetQualifiedElement;
+import consulo.dotnet.psi.DotNetTypeList;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import com.intellij.psi.stubs.StubIndexKey;
 

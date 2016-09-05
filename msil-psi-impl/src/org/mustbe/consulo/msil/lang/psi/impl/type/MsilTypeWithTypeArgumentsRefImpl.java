@@ -18,10 +18,10 @@ package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericWrapperTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import consulo.dotnet.resolve.DotNetGenericWrapperTypeRef;
+import consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
+import consulo.dotnet.resolve.DotNetTypeResolveResult;
 import com.intellij.psi.PsiElement;
 
 /**

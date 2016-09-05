@@ -23,13 +23,15 @@ import java.util.List;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTarget;
-import org.mustbe.consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
+import consulo.dotnet.DotNetTarget;
+import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.module.extension.ModuleExtension;
 import consulo.roots.ModuleRootLayer;
 
@@ -37,8 +39,7 @@ import consulo.roots.ModuleRootLayer;
  * @author VISTALL
  * @since 10.01.14
  */
-public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtension<S>> extends BaseDotNetSimpleModuleExtension<S> implements
-		DotNetModuleExtension<S>
+public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtension<S>> extends BaseDotNetSimpleModuleExtension<S> implements DotNetModuleExtension<S>
 {
 	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 	protected boolean myAllowDebugInfo;

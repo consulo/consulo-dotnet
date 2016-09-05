@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.msil.lang.psi.MsilUserType;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;

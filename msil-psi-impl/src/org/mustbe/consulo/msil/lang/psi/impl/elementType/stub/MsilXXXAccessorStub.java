@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
+import consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.msil.lang.psi.MsilXXXAcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;

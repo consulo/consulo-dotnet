@@ -2,8 +2,8 @@ package org.mustbe.consulo.csharp.cfs.ide.completion;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
-import org.mustbe.consulo.dotnet.psi.DotNetCallArgumentList;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import consulo.dotnet.psi.DotNetCallArgumentList;
+import consulo.dotnet.psi.DotNetExpression;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import consulo.codeInsight.completion.CompletionProvider;

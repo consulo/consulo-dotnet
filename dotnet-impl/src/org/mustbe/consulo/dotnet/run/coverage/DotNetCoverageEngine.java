@@ -24,8 +24,8 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetFile;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.psi.DotNetFile;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.coverage.CoverageAnnotator;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageFileProvider;

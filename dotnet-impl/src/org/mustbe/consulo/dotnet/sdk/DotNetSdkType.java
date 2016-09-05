@@ -20,7 +20,7 @@ import java.io.File;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
+import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;

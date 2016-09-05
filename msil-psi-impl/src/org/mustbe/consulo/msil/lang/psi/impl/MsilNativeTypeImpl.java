@@ -21,9 +21,9 @@ import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.psi.DotNetNativeType;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.psi.DotNetNativeType;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilNativeTypeStub;

@@ -18,8 +18,8 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetReferenceExpression;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.psi.DotNetReferenceExpression;
+import consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;

@@ -22,7 +22,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
-import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.execution.DebugConnectionInfo;
 import org.mustbe.consulo.dotnet.module.extension.BaseDotNetModuleExtension;
 import org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType;
 import com.intellij.execution.ExecutionException;

@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.util.ArrayUtil2;
+import consulo.dotnet.util.ArrayUtil2;
 
 /**
  * @author VISTALL

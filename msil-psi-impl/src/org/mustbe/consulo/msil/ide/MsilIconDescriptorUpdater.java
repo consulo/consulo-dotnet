@@ -3,9 +3,9 @@ package org.mustbe.consulo.msil.ide;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.DotNetTypes;
-import org.mustbe.consulo.dotnet.psi.DotNetInheritUtil;
-import org.mustbe.consulo.dotnet.psi.DotNetModifierListOwner;
+import consulo.dotnet.DotNetTypes;
+import consulo.dotnet.psi.DotNetInheritUtil;
+import consulo.dotnet.psi.DotNetModifierListOwner;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilTokens;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilNamespaceAsElementImpl;

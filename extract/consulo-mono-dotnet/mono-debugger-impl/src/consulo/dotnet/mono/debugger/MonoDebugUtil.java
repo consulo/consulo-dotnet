@@ -1,8 +1,8 @@
 package consulo.dotnet.mono.debugger;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.DotNetDebugContext;

@@ -17,7 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi;
 
 import consulo.lombok.annotations.ArrayFactoryFields;
-import org.mustbe.consulo.dotnet.psi.DotNetParameter;
+import consulo.dotnet.psi.DotNetParameter;
 
 /**
  * @author VISTALL

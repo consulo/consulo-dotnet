@@ -20,7 +20,7 @@ import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import consulo.dotnet.psi.DotNetElement;
 
 /**
  * @author VISTALL

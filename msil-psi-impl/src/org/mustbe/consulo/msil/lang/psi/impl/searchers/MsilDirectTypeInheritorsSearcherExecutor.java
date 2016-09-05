@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
-import org.mustbe.consulo.dotnet.psi.search.searches.DirectTypeInheritorsSearch;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.psi.DotNetTypeList;
+import consulo.dotnet.psi.search.searches.DirectTypeInheritorsSearch;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilExtendsListIndex;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;

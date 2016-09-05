@@ -25,8 +25,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;

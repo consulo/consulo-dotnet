@@ -1,7 +1,7 @@
 package consulo.dotnet.debugger.nodes.logicView;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.DotNetTypes;
+import consulo.dotnet.DotNetTypes;
 import com.intellij.xdebugger.frame.XNamedValue;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.DotNetSimpleValueNode;

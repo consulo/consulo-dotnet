@@ -19,9 +19,9 @@ package org.mustbe.consulo.msil.lang.psi;
 import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.psi.DotNetParameter;
+import consulo.dotnet.psi.DotNetXXXAccessor;
+import consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL

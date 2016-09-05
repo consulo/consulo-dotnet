@@ -28,7 +28,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageRunner;

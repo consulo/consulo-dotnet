@@ -18,7 +18,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import consulo.dotnet.psi.DotNetElement;
 import org.mustbe.consulo.msil.MsilLanguage;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;

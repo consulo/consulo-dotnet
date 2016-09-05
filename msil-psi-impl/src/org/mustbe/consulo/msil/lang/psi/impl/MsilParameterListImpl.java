@@ -17,15 +17,15 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.lang.psi.impl.DotNetPsiCountUtil;
-import org.mustbe.consulo.dotnet.psi.DotNetParameter;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilParameter;
 import org.mustbe.consulo.msil.lang.psi.MsilParameterList;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilParameterListStub;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
+import consulo.dotnet.lang.psi.impl.DotNetPsiCountUtil;
+import consulo.dotnet.psi.DotNetParameter;
+import consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL

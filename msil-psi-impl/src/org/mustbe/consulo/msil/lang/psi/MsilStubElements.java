@@ -17,7 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
+import consulo.dotnet.psi.DotNetType;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilArrayTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilPointerTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilTypeByRefImpl;

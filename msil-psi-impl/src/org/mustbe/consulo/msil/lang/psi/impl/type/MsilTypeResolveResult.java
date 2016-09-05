@@ -18,11 +18,11 @@ package org.mustbe.consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameterListOwner;
-import org.mustbe.consulo.dotnet.resolve.DotNetGenericExtractor;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeResolveResult;
+import consulo.dotnet.psi.DotNetGenericParameter;
+import consulo.dotnet.psi.DotNetGenericParameterListOwner;
+import consulo.dotnet.resolve.DotNetGenericExtractor;
+import consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.resolve.DotNetTypeResolveResult;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 

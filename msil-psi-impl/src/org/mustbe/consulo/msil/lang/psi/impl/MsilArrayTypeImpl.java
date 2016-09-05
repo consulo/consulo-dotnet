@@ -18,8 +18,8 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.psi.DotNetType;
-import org.mustbe.consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.psi.DotNetType;
+import consulo.dotnet.resolve.DotNetTypeRef;
 import org.mustbe.consulo.msil.lang.psi.MsilArrayDimension;
 import org.mustbe.consulo.msil.lang.psi.MsilArrayType;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;

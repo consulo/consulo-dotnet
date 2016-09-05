@@ -16,8 +16,8 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl;
 
-import org.mustbe.consulo.dotnet.psi.DotNetPointerType;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeWithTypeArguments;
+import consulo.dotnet.psi.DotNetPointerType;
+import consulo.dotnet.psi.DotNetTypeWithTypeArguments;
 import org.mustbe.consulo.msil.lang.psi.*;
 import com.intellij.psi.PsiElementVisitor;
 

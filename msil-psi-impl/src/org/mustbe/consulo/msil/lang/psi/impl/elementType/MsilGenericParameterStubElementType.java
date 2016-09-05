@@ -19,8 +19,8 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetGenericParameter;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.dotnet.psi.DotNetGenericParameter;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.msil.lang.psi.MsilGenericParameter;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilGenericParameterImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterStub;

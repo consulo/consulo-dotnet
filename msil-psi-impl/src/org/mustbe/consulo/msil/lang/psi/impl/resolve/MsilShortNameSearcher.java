@@ -18,8 +18,8 @@ package org.mustbe.consulo.msil.lang.psi.impl.resolve;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetShortNameSearcher;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.resolve.DotNetShortNameSearcher;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByNameIndex;

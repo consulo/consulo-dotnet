@@ -8,8 +8,8 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleLangExtension;
-import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
+import consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import consulo.dotnet.psi.DotNetQualifiedElement;
 import org.mustbe.consulo.msil.MsilFileType;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;

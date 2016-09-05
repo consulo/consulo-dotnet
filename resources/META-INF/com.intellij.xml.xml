@@ -16,10 +16,10 @@
 
 <idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
-		<defaultLibraryRootDetector implementation="org.mustbe.consulo.dotnet.library.DotNetXmlDocumentationRootDetector"/>
+		<defaultLibraryRootDetector implementation="consulo.dotnet.library.DotNetXmlDocumentationRootDetector"/>
 	</extensions>
 
-	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
+	<extensions defaultExtensionNs="consulo.dotnet">
 		<documentationResolver implementation="org.mustbe.consulo.dotnet.documentation.DefaultDocumentationResolver"/>
 	</extensions>
 </idea-plugin>

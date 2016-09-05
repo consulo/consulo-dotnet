@@ -1,4 +1,4 @@
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclarationUtil;
+import consulo.dotnet.psi.DotNetTypeDeclarationUtil;
 
 /**
  * @author VISTALL

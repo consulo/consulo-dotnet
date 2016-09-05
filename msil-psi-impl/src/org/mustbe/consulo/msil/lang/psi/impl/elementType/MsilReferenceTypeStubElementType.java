@@ -19,7 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import org.mustbe.consulo.msil.lang.psi.MsilUserType;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilUserTypeImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;

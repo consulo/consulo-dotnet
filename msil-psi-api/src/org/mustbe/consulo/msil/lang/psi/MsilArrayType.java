@@ -18,7 +18,7 @@ package org.mustbe.consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.psi.DotNetArrayType;
+import consulo.dotnet.psi.DotNetArrayType;
 
 /**
  * @author VISTALL

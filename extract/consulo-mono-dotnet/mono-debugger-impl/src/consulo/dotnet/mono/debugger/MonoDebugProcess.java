@@ -19,7 +19,7 @@ package consulo.dotnet.mono.debugger;
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;

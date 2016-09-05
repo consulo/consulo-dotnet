@@ -18,7 +18,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
+import consulo.dotnet.psi.DotNetNamedElement;
 import org.mustbe.consulo.msil.MsilFileType;
 import org.mustbe.consulo.msil.MsilLanguage;
 import org.mustbe.consulo.msil.lang.psi.MsilFile;

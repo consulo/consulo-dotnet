@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.dotnet.run;
 
-import org.mustbe.consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.openapi.util.Key;
 
 /**

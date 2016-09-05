@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
-import org.mustbe.consulo.dotnet.psi.DotNetMemberOwner;
+import consulo.dotnet.psi.DotNetMemberOwner;
 import com.intellij.psi.PsiFile;
 
 /**

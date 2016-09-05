@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.mustbe.consulo.dotnet.psi.DotNetModifier;
+import consulo.dotnet.psi.DotNetModifier;
 import org.mustbe.consulo.msil.lang.psi.MsilModifierElementType;
 import org.mustbe.consulo.msil.lang.psi.MsilModifierList;
 import org.mustbe.consulo.msil.lang.psi.MsilTokenSets;

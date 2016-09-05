@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.msil.lang.psi;
 
-import org.mustbe.consulo.dotnet.psi.DotNetElement;
+import consulo.dotnet.psi.DotNetElement;
 
 /**
  * @author VISTALL

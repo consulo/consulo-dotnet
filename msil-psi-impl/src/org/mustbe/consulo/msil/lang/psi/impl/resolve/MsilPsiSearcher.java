@@ -20,11 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.psi.DotNetQualifiedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
-import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilNamespaceAsElementImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex;
@@ -32,6 +27,11 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndexKey;
+import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.psi.DotNetQualifiedElement;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.resolve.DotNetNamespaceAsElement;
+import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 
 /**
  * @author VISTALL

@@ -24,8 +24,8 @@ import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.filters.HyperlinkInfoFactory;

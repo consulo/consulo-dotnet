@@ -26,8 +26,8 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
-import org.mustbe.consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
+import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;

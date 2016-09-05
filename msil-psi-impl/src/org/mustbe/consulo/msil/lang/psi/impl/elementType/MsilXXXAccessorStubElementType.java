@@ -19,7 +19,7 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetXXXAccessor;
+import consulo.dotnet.psi.DotNetXXXAccessor;
 import org.mustbe.consulo.msil.lang.psi.MsilXXXAcessor;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilXXXAccessorImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilXXXAccessorStub;

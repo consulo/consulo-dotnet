@@ -1,6 +1,6 @@
 package org.mustbe.consulo.dotnet.module.macro;
 
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.ide.macro.Macro;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataKey;

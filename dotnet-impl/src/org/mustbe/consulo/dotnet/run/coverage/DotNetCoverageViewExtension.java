@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetNamedElement;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeDeclaration;
-import org.mustbe.consulo.dotnet.resolve.DotNetNamespaceAsElement;
-import org.mustbe.consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.dotnet.psi.DotNetNamedElement;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.resolve.DotNetNamespaceAsElement;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.coverage.view.CoverageListRootNode;
 import com.intellij.coverage.view.CoverageViewExtension;

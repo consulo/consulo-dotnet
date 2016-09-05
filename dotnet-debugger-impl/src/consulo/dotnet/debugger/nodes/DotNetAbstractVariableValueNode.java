@@ -21,7 +21,7 @@ import javax.swing.Icon;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.DotNetTypes;
+import consulo.dotnet.DotNetTypes;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;

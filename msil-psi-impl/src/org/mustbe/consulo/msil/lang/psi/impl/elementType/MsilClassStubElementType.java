@@ -19,7 +19,6 @@ package org.mustbe.consulo.msil.lang.psi.impl.elementType;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import org.mustbe.consulo.msil.lang.psi.MsilClassEntry;
 import org.mustbe.consulo.msil.lang.psi.impl.MsilClassEntryImpl;
 import org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
@@ -32,6 +31,7 @@ import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
 import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
 /**

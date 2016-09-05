@@ -23,7 +23,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.application.options.ModuleListCellRenderer;
 import com.intellij.execution.ui.CommonProgramParametersPanel;
 import com.intellij.openapi.module.Module;

@@ -18,7 +18,7 @@ package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.psi.DotNetExpression;
+import consulo.dotnet.psi.DotNetExpression;
 import org.mustbe.consulo.msil.lang.psi.MsilCustomAttribute;
 import org.mustbe.consulo.msil.lang.psi.MsilFieldEntry;
 import org.mustbe.consulo.msil.lang.psi.MsilStubElements;

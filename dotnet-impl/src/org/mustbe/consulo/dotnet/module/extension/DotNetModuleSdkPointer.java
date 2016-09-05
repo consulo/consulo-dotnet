@@ -27,6 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.bundle.SdkUtil;
+import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.util.pointers.NamedPointer;

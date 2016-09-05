@@ -21,7 +21,7 @@ import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.dotnet.module.extension.DotNetConfigurationPanel;
-import org.mustbe.consulo.dotnet.module.extension.DotNetMutableModuleExtension;
+import consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;

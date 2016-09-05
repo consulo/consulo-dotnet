@@ -19,7 +19,7 @@ package org.mustbe.consulo.msil.lang.psi;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.dotnet.psi.DotNetPropertyDeclaration;
+import consulo.dotnet.psi.DotNetPropertyDeclaration;
 
 /**
  * @author VISTALL

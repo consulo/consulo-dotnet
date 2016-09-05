@@ -17,10 +17,10 @@
 package org.mustbe.consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.lang.psi.impl.IndexBasedDotNetNamespaceAsElement;
-import org.mustbe.consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import org.mustbe.consulo.msil.MsilLanguage;
 import com.intellij.openapi.project.Project;
+import consulo.dotnet.lang.psi.impl.IndexBasedDotNetNamespaceAsElement;
+import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 
 /**
  * @author VISTALL

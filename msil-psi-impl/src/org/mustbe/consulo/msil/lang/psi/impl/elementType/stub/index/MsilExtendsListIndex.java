@@ -17,7 +17,7 @@
 package org.mustbe.consulo.msil.lang.psi.impl.elementType.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.psi.DotNetTypeList;
+import consulo.dotnet.psi.DotNetTypeList;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
