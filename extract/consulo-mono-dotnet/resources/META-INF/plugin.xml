@@ -21,7 +21,7 @@
 	<depends>org.mustbe.consulo.dotnet.core</depends>
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
-		<documentationResolver implementation="org.mustbe.consulo.mono.dotnet.documentation.MonoDocumentationResolver" />
+		<documentationResolver implementation="consulo.mono.dotnet.documentation.MonoDocumentationResolver" />
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
@@ -30,9 +30,9 @@
 		<moduleExtensionProvider key="mono-dotnet"
 								 name="Mono"
 								 icon="/icons/mono.png"
-								 immutableClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension"
-								 mutableClass="org.mustbe.consulo.mono.dotnet.module.extension.MonoDotNetMutableModuleExtension"/>
+								 immutableClass="consulo.mono.dotnet.module.extension.MonoDotNetModuleExtension"
+								 mutableClass="consulo.mono.dotnet.module.extension.MonoDotNetMutableModuleExtension"/>
 
-		<sdkType implementation="org.mustbe.consulo.mono.dotnet.sdk.MonoSdkType"/>
+		<sdkType implementation="consulo.mono.dotnet.sdk.MonoSdkType"/>
 	</extensions>
 </idea-plugin>

@@ -20,6 +20,6 @@
 	</extensions>
 
 	<extensions defaultExtensionNs="consulo.dotnet">
-		<documentationResolver implementation="org.mustbe.consulo.dotnet.documentation.DefaultDocumentationResolver"/>
+		<documentationResolver implementation="consulo.dotnet.documentation.DefaultDocumentationResolver"/>
 	</extensions>
 </idea-plugin>

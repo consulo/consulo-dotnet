@@ -23,6 +23,6 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
-		<sdkType implementation="org.mustbe.consulo.msbuild.bundle.MSBuildBundleType" />
+		<sdkType implementation="consulo.msbuild.bundle.MSBuildBundleType" />
 	</extensions>
 </idea-plugin>

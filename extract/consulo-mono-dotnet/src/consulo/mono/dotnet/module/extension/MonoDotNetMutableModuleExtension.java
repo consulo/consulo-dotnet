@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.microsoft.dotnet.module.extension;
+package consulo.mono.dotnet.module.extension;
 
 import javax.swing.JComponent;
 
@@ -31,17 +31,11 @@ import consulo.roots.ModuleRootLayer;
  * @author VISTALL
  * @since 20.11.13.
  */
-public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModuleExtension implements DotNetMutableModuleExtension<MicrosoftDotNetModuleExtension>
+public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension implements DotNetMutableModuleExtension<MonoDotNetModuleExtension>
 {
-	public MicrosoftDotNetMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer module)
+	public MonoDotNetMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
 	{
-		super(id, module);
-	}
-
-	@Override
-	public void setEnabled(boolean b)
-	{
-		myIsEnabled = b;
+		super(id, rootModel);
 	}
 
 	@NotNull
@@ -60,7 +54,13 @@ public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModule
 	}
 
 	@Override
-	public boolean isModified(@NotNull MicrosoftDotNetModuleExtension extension)
+	public void setEnabled(boolean b)
+	{
+		myIsEnabled = b;
+	}
+
+	@Override
+	public boolean isModified(@NotNull MonoDotNetModuleExtension extension)
 	{
 		return isModifiedImpl(extension);
 	}

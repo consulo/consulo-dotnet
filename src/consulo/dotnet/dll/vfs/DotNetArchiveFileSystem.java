@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.dotnet.module.extension.DotNetLibraryOpenCache;
+import consulo.dotnet.module.extension.DotNetLibraryOpenCache;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.dotnet.dll.DotNetModuleFileType;

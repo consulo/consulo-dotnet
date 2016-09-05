@@ -113,20 +113,20 @@
 		<projectService serviceImplementation="org.mustbe.consulo.dotnet.lang.psi.impl.DotNetNamespaceCacheManager"/>
 		<projectService serviceInterface="consulo.dotnet.ui.chooser.DotNetTypeChooserFactory" serviceImplementation="consulo.dotnet.ui.chooser.DotNetTypeChooserFactoryImpl"/>
 
-		<macro implementation="org.mustbe.consulo.dotnet.module.macro.TargetFileExtensionMacro"/>
+		<macro implementation="consulo.dotnet.module.macro.TargetFileExtensionMacro"/>
 
-		<contentFolderSupportPatcher implementation="org.mustbe.consulo.dotnet.module.DotNetContentFolderSupportPatcher"/>
+		<contentFolderSupportPatcher implementation="consulo.dotnet.module.DotNetContentFolderSupportPatcher"/>
 		<iconDescriptorUpdater implementation="consulo.dotnet.ide.DotNetIconDescriptorUpdater"/>
-		<consoleFilterProvider implementation="org.mustbe.consulo.dotnet.run.filters.DotNetConsoleFilterProvider"/>
-		<configurationType implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationType"/>
-		<runConfigurationProducer implementation="org.mustbe.consulo.dotnet.run.DotNetConfigurationProducer"/>
+		<consoleFilterProvider implementation="consulo.dotnet.run.filters.DotNetConsoleFilterProvider"/>
+		<configurationType implementation="consulo.dotnet.run.DotNetConfigurationType"/>
+		<runConfigurationProducer implementation="consulo.dotnet.run.DotNetConfigurationProducer"/>
 		<programRunner implementation="consulo.dotnet.run.DotNetDebuggerProgramRunner" id="dotnet-debugger"/>
 
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType"/>
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType"/>
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetMethodBreakpointType"/>
 
-		<addModuleDependencyTabFactory implementation="org.mustbe.consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>
+		<addModuleDependencyTabFactory implementation="consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>
 
 		<orderRootType implementation="consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType"/>
 		<orderRootTypeEditor key="dotNetExternalAttributes"
@@ -143,14 +143,14 @@
 
 		<psi.packageSupportProvider implementation="consulo.dotnet.packageSupport.DotNetPackageSupportProvider"/>
 
-		<moduleRootsProcessor implementation="org.mustbe.consulo.dotnet.module.DotNetModuleRootsProcessor"/>
+		<moduleRootsProcessor implementation="consulo.dotnet.module.DotNetModuleRootsProcessor"/>
 
-		<coverageEngine implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageEngine"/>
-		<programRunner implementation="org.mustbe.consulo.dotnet.run.coverage.DotNetCoverageProgramRunner"/>
+		<coverageEngine implementation="consulo.dotnet.run.coverage.DotNetCoverageEngine"/>
+		<programRunner implementation="consulo.dotnet.run.coverage.DotNetCoverageProgramRunner"/>
 
-		<sdkType implementation="org.mustbe.consulo.dotnet.sdk.RoslynBundleType"/>
+		<sdkType implementation="consulo.dotnet.sdk.RoslynBundleType"/>
 
-		<testFinder implementation="org.mustbe.consulo.dotnet.testIntegration.DotNetTestFinder"/>
+		<testFinder implementation="consulo.dotnet.testIntegration.DotNetTestFinder"/>
 
 		<pathMacroExpendableProtocol protocol="netdll"/>
 	</extensions>

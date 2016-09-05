@@ -23,7 +23,7 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
-		<coverageRunner implementation="org.mustbe.consulo.microsoft.dotnet.run.coverage.OpenCoverCoverageRunner" />
+		<coverageRunner implementation="consulo.microsoft.dotnet.run.coverage.OpenCoverCoverageRunner" />
 
 	</extensions>
 </idea-plugin>

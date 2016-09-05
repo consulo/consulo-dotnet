@@ -2,7 +2,7 @@ package consulo.dotnet.microsoft.debugger.breakpoint;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.compiler.DotNetMacroUtil;
+import consulo.dotnet.compiler.DotNetMacroUtil;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModuleUtilCore;

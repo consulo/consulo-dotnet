@@ -22,7 +22,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.dotnet.sdk.DotNetSdkType;
+import consulo.dotnet.sdk.DotNetSdkType;
 import org.mustbe.consulo.microsoft.dotnet.MicrosoftDotNetIcons;
 import org.mustbe.consulo.microsoft.dotnet.util.MicrosoftDotNetUtil;
 import com.intellij.openapi.projectRoots.Sdk;
