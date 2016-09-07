@@ -71,7 +71,7 @@ public class AllTypesSearch extends ExtensibleQueryFactory<DotNetTypeDeclaration
 
 	private AllTypesSearch()
 	{
-		super("org.mustbe.consulo.dotnet.core");
+		super("consulo.dotnet");
 	}
 
 	public static Query<DotNetTypeDeclaration> search(SearchScope scope, Project project)

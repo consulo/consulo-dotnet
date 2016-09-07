@@ -32,8 +32,7 @@ import com.intellij.util.indexing.IdFilter;
  */
 public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 {
-	private static final ExtensionPointName<DotNetShortNameSearcher> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core" + "" +
-			".shortNameSearcher");
+	private static final ExtensionPointName<DotNetShortNameSearcher> EP_NAME = ExtensionPointName.create("consulo.dotnet.shortNameSearcher");
 
 	public DotNetShortNameSearcherImpl(Project project)
 	{

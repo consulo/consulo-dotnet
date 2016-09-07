@@ -15,22 +15,20 @@
   -->
 
 <idea-plugin>
-	<id>org.mustbe.consulo.dotnet.microsoft</id>
+	<id>consulo.dotnet.microsoft</id>
 	<name>Microsoft .NET</name>
 	<version>SNAPSHOT</version>
-	<depends>org.mustbe.consulo.dotnet.core</depends>
+	<depends>consulo.dotnet</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
-
 		<moduleExtensionProvider key="microsoft-dotnet"
 								 name=".NET"
 								 icon="/icons/dotnet.png"
-								 immutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension"
-								 mutableClass="org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />
+								 immutableClass="consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension"
+								 mutableClass="consulo.microsoft.dotnet.module.extension.MicrosoftDotNetMutableModuleExtension" />
 
-		<sdkType implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
+		<sdkType implementation="consulo.microsoft.dotnet.sdk.MicrosoftDotNetSdkType" />
 
-		<predefinedBundlesProvider implementation="org.mustbe.consulo.microsoft.dotnet.sdk.MicrosoftDotNetPredefinedBundlesProvider" />
+		<predefinedBundlesProvider implementation="consulo.microsoft.dotnet.sdk.MicrosoftDotNetPredefinedBundlesProvider" />
 	</extensions>
 </idea-plugin>

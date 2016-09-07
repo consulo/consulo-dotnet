@@ -29,8 +29,7 @@ import com.intellij.openapi.util.TextRange;
  */
 public interface MultiHostInjectorByAttributeHelper
 {
-	ExtensionPointName<MultiHostInjectorByAttributeHelper> EP_NAME =
-			ExtensionPointName.create("org.mustbe.consulo.dotnet.core.injectionByAttributeHelper");
+	ExtensionPointName<MultiHostInjectorByAttributeHelper> EP_NAME = ExtensionPointName.create("consulo.dotnet.injectionByAttributeHelper");
 
 	@Nullable
 	String getLanguageId(@NotNull DotNetAttribute attribute);

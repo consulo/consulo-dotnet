@@ -15,18 +15,16 @@
   -->
 
 <idea-plugin>
-	<id>org.mustbe.consulo.dotnet.mono</id>
+	<id>consulo.dotnet.mono</id>
 	<name>Mono .NET</name>
 	<version>SNAPSHOT</version>
-	<depends>org.mustbe.consulo.dotnet.core</depends>
+	<depends>consulo.dotnet</depends>
 
-	<extensions defaultExtensionNs="org.mustbe.consulo.dotnet.core">
+	<extensions defaultExtensionNs="consulo.dotnet">
 		<documentationResolver implementation="consulo.mono.dotnet.documentation.MonoDocumentationResolver" />
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
-
 		<moduleExtensionProvider key="mono-dotnet"
 								 name="Mono"
 								 icon="/icons/mono.png"

@@ -78,7 +78,7 @@ public class DirectTypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTyp
 
 	private DirectTypeInheritorsSearch()
 	{
-		super("org.mustbe.consulo.dotnet.core");
+		super("consulo.dotnet");
 	}
 
 	public static Query<DotNetTypeDeclaration> search(Project project, final String aClass)

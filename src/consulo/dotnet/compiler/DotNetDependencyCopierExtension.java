@@ -29,7 +29,7 @@ import com.intellij.openapi.module.Module;
  */
 public interface DotNetDependencyCopierExtension
 {
-	ExtensionPointName<DotNetDependencyCopierExtension> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.dependencyCopierExtension");
+	ExtensionPointName<DotNetDependencyCopierExtension> EP_NAME = ExtensionPointName.create("consulo.dotnet.dependencyCopierExtension");
 
 	@NotNull
 	List<File> collectDependencies(@NotNull Module module);

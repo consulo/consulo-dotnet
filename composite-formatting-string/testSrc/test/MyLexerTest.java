@@ -16,8 +16,8 @@
 
 package test;
 
-import org.mustbe.consulo.csharp.cfs.lang.CfsTokens;
-import org.mustbe.consulo.csharp.cfs.lang.lexer.CfsLexer;
+import consulo.csharp.cfs.lang.CfsTokens;
+import consulo.csharp.cfs.lang.lexer.CfsLexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.psi.tree.IElementType;
 

@@ -16,14 +16,14 @@
 
 <idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
-		<colorSettingsPage implementation="org.mustbe.consulo.csharp.cfs.ide.highlight.CfsColorSettingsPage" />
-		<highlightUsagesHandlerFactory implementation="org.mustbe.consulo.csharp.cfs.ide.highlight.CfsItemHighlightUsagesHandlerFactory"/>
-		<completion.contributor language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.ide.completion.CfsCompletionContributor" />
-		<fileTypeFactory implementation="org.mustbe.consulo.csharp.cfs.lang.CfsFileTypeFactory" />
-		<lang.parserDefinition language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.lang.CfsParserDefinition" />
-		<lang.braceMatcher language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.lang.CfsPairedBraceMatcher" />
-		<lang.syntaxHighlighterFactory key="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.ide.highlight.CfsSyntaxHighlighterFactory" />
+		<colorSettingsPage implementation="consulo.csharp.cfs.ide.highlight.CfsColorSettingsPage" />
+		<highlightUsagesHandlerFactory implementation="consulo.csharp.cfs.ide.highlight.CfsItemHighlightUsagesHandlerFactory"/>
+		<completion.contributor language="CFS" implementationClass="consulo.csharp.cfs.ide.completion.CfsCompletionContributor" />
+		<fileTypeFactory implementation="consulo.csharp.cfs.lang.CfsFileTypeFactory" />
+		<lang.parserDefinition language="CFS" implementationClass="consulo.csharp.cfs.lang.CfsParserDefinition" />
+		<lang.braceMatcher language="CFS" implementationClass="consulo.csharp.cfs.lang.CfsPairedBraceMatcher" />
+		<lang.syntaxHighlighterFactory key="CFS" implementationClass="consulo.csharp.cfs.ide.highlight.CfsSyntaxHighlighterFactory" />
 
-		<lang.defineVersion language="CFS" implementationClass="org.mustbe.consulo.csharp.cfs.lang.IndexCfsLanguageVersion" />
+		<lang.defineVersion language="CFS" implementationClass="consulo.csharp.cfs.lang.IndexCfsLanguageVersion" />
 	</extensions>
 </idea-plugin>

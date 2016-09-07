@@ -32,7 +32,7 @@ import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import consulo.dotnet.run.coverage.DotNetCoverageRunner;
-import org.mustbe.consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension;
+import consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension;
 import com.intellij.coverage.CoverageSuite;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;

@@ -35,7 +35,7 @@ import consulo.dotnet.resolve.DotNetPsiSearcher;
  */
 public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 {
-	private static final ExtensionPointName<DotNetPsiSearcher> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.dotnet.core.psiSearcher");
+	private static final ExtensionPointName<DotNetPsiSearcher> EP_NAME = ExtensionPointName.create("consulo.dotnet.psiSearcher");
 
 	private DotNetPsiSearcher[] mySearchers;
 	private DotNetNamespaceCacheManager myCacheManager;

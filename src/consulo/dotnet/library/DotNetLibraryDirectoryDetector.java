@@ -1,6 +1,6 @@
 package consulo.dotnet.library;
 
-import org.mustbe.consulo.msil.MsilFileType;
+import consulo.msil.MsilFileType;
 import com.intellij.openapi.roots.libraries.ui.FileTypeBasedRootFilter;
 import consulo.roots.types.BinariesOrderRootType;
 

@@ -15,15 +15,13 @@
   -->
 
 <idea-plugin>
-	<id>org.mustbe.consulo.opencover</id>
+	<id>consulo.opencover</id>
 	<name>OpenCover</name>
 	<category>Coverage</category>
 	<version>SNAPSHOT</version>
-	<depends>org.mustbe.consulo.dotnet.microsoft</depends>
+	<depends>consulo.dotnet.microsoft</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<errorHandler implementation="com.intellij.diagnostic.ITNReporter" />
 		<coverageRunner implementation="consulo.microsoft.dotnet.run.coverage.OpenCoverCoverageRunner" />
-
 	</extensions>
 </idea-plugin>

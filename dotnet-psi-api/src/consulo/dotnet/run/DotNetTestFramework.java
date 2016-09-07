@@ -29,7 +29,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
  */
 public abstract class DotNetTestFramework
 {
-	public static final ExtensionPointName<DotNetTestFramework> EP_NAME = new ExtensionPointName<DotNetTestFramework>("org.mustbe.consulo.dotnet.core.testFramework");
+	public static final ExtensionPointName<DotNetTestFramework> EP_NAME = new ExtensionPointName<>("consulo.dotnet.testFramework");
 
 	@RequiredReadAction
 	public boolean isTestType(@NotNull DotNetTypeDeclaration typeDeclaration)
