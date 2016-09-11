@@ -16,15 +16,10 @@
 
 package consulo.dotnet.compiler;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import consulo.dotnet.compiler.DotNetCompileFailedException;
-import consulo.dotnet.compiler.DotNetCompilerMessage;
-import consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
@@ -37,12 +32,14 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.problems.Problem;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.util.Chunk;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
@@ -130,9 +127,9 @@ public class DotNetCompiler implements TranslatingCompiler
 		try
 		{
 			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, dotNetModuleExtension);
+			commandLine = commandLine.withCharset(StandardCharsets.UTF_8);
 
-			Process process = commandLine.createProcess();
-			CapturingProcessHandler processHandler = new CapturingProcessHandler(process, CharsetToolkit.UTF8_CHARSET);
+			CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine);
 
 			ProcessOutput processOutput = processHandler.runProcess();
 			for(String line : processOutput.getStdoutLines())
