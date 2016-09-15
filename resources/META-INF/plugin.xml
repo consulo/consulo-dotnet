@@ -38,13 +38,11 @@
 	</project-components>
 
 	<extensionPoints>
-		<!--extensions with new ids-->
-		<extensionPoint qualifiedName="consulo.dotnet.debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
-		<extensionPoint qualifiedName="consulo.dotnet.debuggerSourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
+		<extensionPoint name="debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
+		<extensionPoint name="debuggerSourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
 			<with attribute="implementationClass" implements="consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver"/>
 		</extensionPoint>
 
-		<!--extensions with old ids-->
 		<extensionPoint name="psiSearcher" interface="consulo.dotnet.resolve.DotNetPsiSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="shortNameSearcher" interface="consulo.dotnet.resolve.DotNetShortNameSearcher" area="CONSULO_PROJECT"/>
 		<extensionPoint name="stubIndexer" interface="consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer"/>
