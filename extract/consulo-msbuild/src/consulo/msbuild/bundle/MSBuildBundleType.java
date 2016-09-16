@@ -17,7 +17,6 @@
 package consulo.msbuild.bundle;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -27,13 +26,14 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.msbuild.MicrosoftVisualStudioVersion;
 import com.intellij.execution.ExecutionException;
+import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.msbuild.MicrosoftVisualStudioVersion;
 
 /**
  * @author VISTALL
@@ -110,7 +110,7 @@ public class MSBuildBundleType  extends BaseMSBuildBundleType
 	{
 		try
 		{
-			ProcessOutput processOutput = ExecUtil.execAndGetOutput(Arrays.asList(getExecutable(sdkHome), "/version"), sdkHome);
+			ProcessOutput processOutput = ExecUtil.execAndGetOutput(new GeneralCommandLine(getExecutable(sdkHome), "/version").withWorkDirectory(sdkHome));
 			return ContainerUtil.getLastItem(processOutput.getStdoutLines());
 		}
 		catch(ExecutionException e)
