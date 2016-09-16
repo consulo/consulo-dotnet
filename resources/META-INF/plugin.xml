@@ -64,12 +64,6 @@
 		<directTypeInheritorsSearch implementation="consulo.msil.lang.psi.impl.searchers.MsilDirectTypeInheritorsSearcherExecutor"/>
 	</extensions>
 
-	<extensions defaultExtensionNs="consulo">
-		<orderEntryType implementation="consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryType"/>
-
-		<orderEntryTypeEditor key="dot-net-library" implementationClass="consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryTypeEditor"/>
-	</extensions>
-
 	<extensions defaultExtensionNs="com.intellij">
 		<stubIndex implementation="consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByNameIndex"/>
 		<stubIndex implementation="consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex"/>
@@ -123,6 +117,9 @@
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType"/>
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType"/>
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.breakpoint.DotNetMethodBreakpointType"/>
+
+		<orderEntryType implementation="consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryType"/>
+		<orderEntryTypeEditor key="dot-net-library" implementationClass="consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryTypeEditor"/>
 
 		<addModuleDependencyTabFactory implementation="consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>
 
