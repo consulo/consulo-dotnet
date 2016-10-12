@@ -27,25 +27,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
+import com.intellij.openapi.application.RunResult;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
-import com.intellij.openapi.compiler.EmptyValidityState;
 import com.intellij.openapi.compiler.FileProcessingCompiler;
 import com.intellij.openapi.compiler.PackagingCompiler;
+import com.intellij.openapi.compiler.TimestampValidityState;
 import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.lombok.annotations.Logger;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -84,7 +81,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 	@Override
 	public ProcessingItem[] getProcessingItems(final CompileContext compileContext)
 	{
-		List<ProcessingItem> itemList = new ArrayList<ProcessingItem>();
+		List<ProcessingItem> itemList = new ArrayList<>();
 		for(Module module : compileContext.getCompileScope().getAffectedModules())
 		{
 			DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
@@ -101,15 +98,13 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				continue;
 			}
 
-			val r = new ReadAction<Set<File>>()
+			RunResult<Set<File>> r = new ReadAction<Set<File>>()
 			{
 				@Override
 				protected void run(Result<Set<File>> listResult) throws Throwable
 				{
-					Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true,
-							DotNetCompilerUtil.SKIP_STD_LIBRARIES);
-					files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true,
-							DotNetCompilerUtil.SKIP_STD_LIBRARIES));
+					Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES);
+					files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES));
 
 					for(DotNetDependencyCopierExtension copierExtension : DotNetDependencyCopierExtension.EP_NAME.getExtensions())
 					{
@@ -119,16 +114,15 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				}
 			}.execute();
 
-			val list = r.getResultObject();
+			Set<File> list = r.getResultObject();
 
-			for(val file : list)
+			for(File file : list)
 			{
-				VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(file, true);
-				if(fileByIoFile == null)
+				if(!file.exists())
 				{
 					continue;
 				}
-				itemList.add(new DotNetProcessingItem(fileByIoFile, (DotNetModuleExtension<?>) dotNetModuleExtension));
+				itemList.add(new DotNetProcessingItem(file, (DotNetModuleExtension<?>) dotNetModuleExtension));
 			}
 		}
 
@@ -143,7 +137,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			return ProcessingItem.EMPTY_ARRAY;
 		}
 
-		List<ProcessingItem> items = new ArrayList<ProcessingItem>(processingItems.length);
+		List<ProcessingItem> items = new ArrayList<>(processingItems.length);
 		for(ProcessingItem processingItem : processingItems)
 		{
 			DotNetProcessingItem dotNetProcessingItem = (DotNetProcessingItem) processingItem;
@@ -151,13 +145,13 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 
 			File copyFile = new File(moduleOutputDir, processingItem.getFile().getName());
 
-			File file = VfsUtilCore.virtualToIoFile(processingItem.getFile());
+			File file = processingItem.getFile();
 
 			try
 			{
 				FileUtil.copy(file, copyFile);
 
-				items.add(new DotNetProcessingItem(VfsUtil.findFileByIoFile(copyFile, true), null));
+				items.add(new DotNetProcessingItem(copyFile, null));
 			}
 			catch(IOException e)
 			{
@@ -170,11 +164,12 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 	@Override
 	public ValidityState createValidityState(DataInput dataInput) throws IOException
 	{
-		return new EmptyValidityState();
+		long l = dataInput.readLong();
+		return new TimestampValidityState(l);
 	}
 
 	@Override
-	public void processOutdatedItem(CompileContext compileContext, String s, @Nullable ValidityState validityState)
+	public void processOutdatedItem(CompileContext compileContext, File s, @Nullable ValidityState validityState)
 	{
 	}
 }

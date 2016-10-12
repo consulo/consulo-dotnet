@@ -16,13 +16,14 @@
 
 package consulo.dotnet.compiler;
 
+import java.io.File;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import com.intellij.openapi.compiler.EmptyValidityState;
 import com.intellij.openapi.compiler.FileProcessingCompiler;
+import com.intellij.openapi.compiler.TimestampValidityState;
 import com.intellij.openapi.compiler.ValidityState;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 
 /**
  * @author VISTALL
@@ -30,27 +31,27 @@ import com.intellij.openapi.vfs.VirtualFile;
  */
 public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingItem
 {
-	private final VirtualFile myVirtualFile;
+	private final File myFile;
 	private final DotNetModuleExtension<?> myExtension;
 
-	public DotNetProcessingItem(VirtualFile virtualFile, DotNetModuleExtension<?> dotNetModuleExtension)
+	public DotNetProcessingItem(File file, DotNetModuleExtension<?> dotNetModuleExtension)
 	{
-		myVirtualFile = virtualFile;
+		myFile = file;
 		myExtension = dotNetModuleExtension;
 	}
 
 	@NotNull
 	@Override
-	public VirtualFile getFile()
+	public File getFile()
 	{
-		return myVirtualFile;
+		return myFile;
 	}
 
 	@Nullable
 	@Override
 	public ValidityState getValidityState()
 	{
-		return new EmptyValidityState();
+		return new TimestampValidityState(myFile.lastModified());
 	}
 
 	public DotNetModuleExtension<?> getExtension()

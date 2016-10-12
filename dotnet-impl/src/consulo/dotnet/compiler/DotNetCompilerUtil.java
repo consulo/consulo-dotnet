@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.DotNetTarget;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -37,11 +35,13 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotations.Exported;
+import consulo.dotnet.DotNetTarget;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryImpl;
 import consulo.dotnet.roots.orderEntry.DotNetRootPolicy;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -49,25 +49,16 @@ import lombok.val;
  */
 public class DotNetCompilerUtil
 {
+	@Exported
 	public static final Condition<OrderEntry> ACCEPT_ALL = Conditions.alwaysFalse();
-	public static final Condition<OrderEntry> SKIP_STD_LIBRARIES = new Condition<OrderEntry>()
-	{
-		@Override
-		public boolean value(OrderEntry orderEntry)
-		{
-			return orderEntry instanceof DotNetLibraryOrderEntryImpl;
-		}
-	};
+	public static final Condition<OrderEntry> SKIP_STD_LIBRARIES = orderEntry -> orderEntry instanceof DotNetLibraryOrderEntryImpl;
 
 	@NotNull
-	public static Set<File> collectDependencies(@NotNull final Module module,
-			@NotNull final DotNetTarget target,
-			final boolean debugSymbol,
-			@NotNull final Condition<OrderEntry> skipCondition)
+	public static Set<File> collectDependencies(@NotNull final Module module, @NotNull final DotNetTarget target, final boolean debugSymbol, @NotNull final Condition<OrderEntry> skipCondition)
 	{
-		val set = new HashSet<File>();
+		Set<File> set = new HashSet<>();
 
-		val processed = new HashSet<Object>();
+		Set<Object> processed = new HashSet<>();
 
 		processed.add(module);
 
