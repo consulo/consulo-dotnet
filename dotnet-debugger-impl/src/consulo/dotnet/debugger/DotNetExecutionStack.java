@@ -21,17 +21,17 @@ import java.util.List;
 
 import javax.swing.Icon;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.util.ArrayUtil2;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.util.ArrayUtil2;
+import consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
@@ -130,11 +130,5 @@ public class DotNetExecutionStack extends XExecutionStack
 		}
 
 		frameContainer.addStackFrames(stackFrames, true);
-	}
-
-	@Override
-	public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container)
-	{
-		throw new IllegalArgumentException();
 	}
 }
