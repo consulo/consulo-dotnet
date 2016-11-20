@@ -4,8 +4,8 @@
     <modules>
       <module name="consulo-dotnet" dirurl="file://$PROJECT_DIR$" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo SNAPSHOT" />
-          <extension id="java" sdk-module-name="" sdk-name="1.8" language-level-module-name="" language-level-name="JDK_1_8" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
+          <extension id="consulo-plugin" sdk-name="Consulo SNAPSHOT" />
+          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/.consulo/sandbox" />
@@ -29,8 +29,8 @@
       </module>
       <module name="impl/consulo-microsoft-dotnet" dirurl="file://$PROJECT_DIR$/extract/consulo-microsoft-dotnet" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
@@ -45,8 +45,8 @@
       </module>
       <module name="impl/consulo-mono-dotnet" dirurl="file://$PROJECT_DIR$/extract/consulo-mono-dotnet" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
@@ -63,8 +63,8 @@
       </module>
       <module name="dotnet-api" dirurl="file://$PROJECT_DIR$/dotnet-api" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
@@ -77,8 +77,8 @@
       </module>
       <module name="dotnet-psi-api" dirurl="file://$PROJECT_DIR$/dotnet-psi-api" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
@@ -93,8 +93,8 @@
       </module>
       <module name="dotnet-psi-impl" dirurl="file://$PROJECT_DIR$/dotnet-psi-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -107,8 +107,8 @@
       </module>
       <module name="dotnet-impl" dirurl="file://$PROJECT_DIR$/dotnet-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
@@ -124,8 +124,8 @@
       </module>
       <module name="dotnet-debugger-api" dirurl="file://$PROJECT_DIR$/dotnet-debugger-api" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -141,11 +141,12 @@
       </module>
       <module name="dotnet-debugger-impl" dirurl="file://$PROJECT_DIR$/dotnet-debugger-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+            <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
           </content>
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
@@ -161,8 +162,8 @@
       </module>
       <module name="dotnet-documentation-api" dirurl="file://$PROJECT_DIR$/dotnet-documentation-api" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -173,8 +174,8 @@
       </module>
       <module name="dotnet-documentation-impl" dirurl="file://$PROJECT_DIR$/dotnet-documentation-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -188,8 +189,8 @@
       </module>
       <module name="msil-psi-api" dirurl="file://$PROJECT_DIR$/msil-psi-api" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -202,8 +203,8 @@
       </module>
       <module name="msil-psi-impl" dirurl="file://$PROJECT_DIR$/msil-psi-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -223,8 +224,8 @@
       </module>
       <module name="composite-formatting-string" dirurl="file://$PROJECT_DIR$/composite-formatting-string" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
             <content-folder type="TEST" url="file://$MODULE_DIR$/testSrc" />
@@ -237,8 +238,8 @@
       </module>
       <module name="impl/consulo-opencover" dirurl="file://$PROJECT_DIR$/extract/consulo-opencover" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -251,8 +252,8 @@
       </module>
       <module name="impl/consulo-msbuild" dirurl="file://$PROJECT_DIR$/extract/consulo-msbuild" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -264,8 +265,8 @@
       </module>
       <module name="impl/microsoft-debugger-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-microsoft-dotnet/microsoft-debugger-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -285,8 +286,8 @@
       </module>
       <module name="impl/mono-debugger-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-mono-dotnet/mono-debugger-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" sdk-name="" />
-          <extension id="java" sdk-module-name="consulo-dotnet" sdk-name="" language-level-module-name="consulo-dotnet" language-level-name="" special-dir-location="SOURCE_DIR" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
+          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
