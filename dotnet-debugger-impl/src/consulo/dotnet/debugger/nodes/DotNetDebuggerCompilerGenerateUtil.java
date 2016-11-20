@@ -32,8 +32,8 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 public class DotNetDebuggerCompilerGenerateUtil
 {
 	public static final Pattern LambdaMethodPattern = Pattern.compile("<([\\S\\d]+)>m__([\\d]+)");
-	public static final Pattern YieldNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__Iterator([\\d]+)");
-	public static final Pattern AsyncNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__async([\\d]+)");
+	public static final Pattern YieldNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__Iterator(\\p{XDigit}+)");
+	public static final Pattern AsyncNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__async(\\p{XDigit}+)");
 	public static final Pattern SomeReferenceToOriginalPattern = Pattern.compile("<([\\S\\d]+)>__([\\d]+)");
 
 	private static final Pattern AsyncLambdaFirstWrapperMS = Pattern.compile("<>c__DisplayClass([\\d]+)_([\\d]+)");
