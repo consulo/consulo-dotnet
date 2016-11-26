@@ -45,7 +45,9 @@ public class RoslynBundleType extends SdkType
 	@Override
 	public boolean isValidSdkHome(String path)
 	{
-		return new File(path, "Roslyn.Diagnostics.Analyzers.dll").exists() || new File(path, "Roslyn.Compilers.Extension.dll").exists();
+		return new File(path, "Roslyn.Diagnostics.Analyzers.dll").exists() ||
+				new File(path, "Roslyn.Diagnostics.Analyzers.dll").exists() ||
+				new File(path, "csc.exe").exists();
 	}
 
 	@Nullable
