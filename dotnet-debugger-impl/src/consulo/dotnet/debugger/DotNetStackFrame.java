@@ -24,6 +24,8 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import consulo.dotnet.psi.DotNetConstructorDeclaration;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.dotnet.psi.DotNetNamedElement;
@@ -248,6 +250,20 @@ public class DotNetStackFrame extends XStackFrame
 			@Override
 			public void evaluate(@NotNull String expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 			{
+				if(expressionPosition == null)
+				{
+					return;
+				}
+
+				FileType fileType = expressionPosition.getFile().getFileType();
+				if(fileType instanceof LanguageFileType)
+				{
+					DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(((LanguageFileType) fileType).getLanguage());
+					if(provider != null)
+					{
+						provider.evaluate(myFrameProxy, myDebuggerContext, expression, null, callback, expressionPosition);
+					}
+				}
 			}
 		};
 	}
@@ -321,7 +337,7 @@ public class DotNetStackFrame extends XStackFrame
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
 		final XValueChildrenList childrenList = new XValueChildrenList();
-		final Set<Object> visitedVariables = new THashSet<Object>();
+		final Set<Object> visitedVariables = new THashSet<>();
 		try
 		{
 			final DotNetValueProxy value = myFrameProxy.getThisObject();
@@ -354,7 +370,7 @@ public class DotNetStackFrame extends XStackFrame
 			PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
 			if(psiElement != null)
 			{
-				final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<DotNetReferenceExpression>();
+				final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<>();
 				DotNetQualifiedElement parentQualifiedElement = PsiTreeUtil.getParentOfType(psiElement, DotNetQualifiedElement.class);
 				if(parentQualifiedElement != null)
 				{
@@ -382,14 +398,7 @@ public class DotNetStackFrame extends XStackFrame
 						DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(psiElement.getLanguage());
 						if(provider != null)
 						{
-							Consumer<XNamedValue> callback = new Consumer<XNamedValue>()
-							{
-								@Override
-								public void consume(XNamedValue xNamedValue)
-								{
-									childrenList.add(xNamedValue);
-								}
-							};
+							Consumer<XNamedValue> callback = xNamedValue -> childrenList.add(xNamedValue);
 
 							for(DotNetReferenceExpression referenceExpression : referenceExpressions)
 							{
