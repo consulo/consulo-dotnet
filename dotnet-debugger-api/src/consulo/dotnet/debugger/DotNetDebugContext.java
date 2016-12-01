@@ -111,4 +111,9 @@ public class DotNetDebugContext
 	{
 		return mySession;
 	}
+
+	public void invoke(@NotNull Runnable runnable)
+	{
+		myVirtualMachine.invoke(runnable);
+	}
 }

@@ -50,8 +50,13 @@ public class DotNetExecutionStack extends XExecutionStack
 	public DotNetExecutionStack(DotNetDebugContext debuggerContext, DotNetThreadProxy threadProxy)
 	{
 		super(calcName(threadProxy), getIcon(threadProxy));
+
+		DotNetVirtualMachineUtil.checkCallForUIThread();
+
 		myDebuggerContext = debuggerContext;
 		myThreadProxy = threadProxy;
+
+		calcTopFrame(); // calc top frame
 	}
 
 	@NotNull
@@ -83,6 +88,8 @@ public class DotNetExecutionStack extends XExecutionStack
 	{
 		try
 		{
+			DotNetVirtualMachineUtil.checkCallForUIThread();
+
 			List<DotNetStackFrameProxy> frames = myThreadProxy.getFrames();
 			DotNetStackFrameProxy frame = ArrayUtil2.safeGet(frames, 0);
 			if(frame == null)
@@ -111,24 +118,26 @@ public class DotNetExecutionStack extends XExecutionStack
 	@Override
 	public void computeStackFrames(XStackFrameContainer frameContainer)
 	{
-		List<DotNetStackFrameProxy> frames = myThreadProxy.getFrames();
+		myDebuggerContext.invoke(() -> {
+			List<DotNetStackFrameProxy> frames = myThreadProxy.getFrames();
 
-		List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
-		for(int j = 0; j < frames.size(); j++)
-		{
-			DotNetStackFrameProxy frameProxy = frames.get(j);
-
-			DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, frameProxy);
-
-			if(j == 0)
+			List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
+			for(int j = 0; j < frames.size(); j++)
 			{
-				myTopFrameCalculated = true;
-				myTopFrame = stackFrame;
+				DotNetStackFrameProxy frameProxy = frames.get(j);
+
+				DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, frameProxy);
+
+				if(j == 0)
+				{
+					myTopFrameCalculated = true;
+					myTopFrame = stackFrame;
+				}
+
+				stackFrames.add(stackFrame);
 			}
 
-			stackFrames.add(stackFrame);
-		}
-
-		frameContainer.addStackFrames(stackFrames, true);
+			frameContainer.addStackFrames(stackFrames, true);
+		});
 	}
 }

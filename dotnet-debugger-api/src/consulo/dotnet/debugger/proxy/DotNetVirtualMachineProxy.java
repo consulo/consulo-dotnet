@@ -37,6 +37,8 @@ public interface DotNetVirtualMachineProxy
 	@Nullable
 	DotNetTypeProxy findType(@NotNull Project project, @NotNull String vmQName, @NotNull VirtualFile virtualFile);
 
+	void invoke(@NotNull Runnable runnable);
+
 	@NotNull
 	List<DotNetThreadProxy> getThreads();
 

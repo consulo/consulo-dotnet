@@ -24,21 +24,14 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import consulo.dotnet.psi.DotNetConstructorDeclaration;
-import consulo.dotnet.psi.DotNetModifier;
-import consulo.dotnet.psi.DotNetNamedElement;
-import consulo.dotnet.psi.DotNetQualifiedElement;
-import consulo.dotnet.psi.DotNetReferenceExpression;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.psi.DotNetXXXAccessor;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Couple;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -46,7 +39,6 @@ import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.Consumer;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XExpression;
@@ -55,11 +47,11 @@ import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
@@ -76,6 +68,14 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.psi.DotNetAccessorOwner;
+import consulo.dotnet.psi.DotNetConstructorDeclaration;
+import consulo.dotnet.psi.DotNetModifier;
+import consulo.dotnet.psi.DotNetNamedElement;
+import consulo.dotnet.psi.DotNetQualifiedElement;
+import consulo.dotnet.psi.DotNetReferenceExpression;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.psi.DotNetXXXAccessor;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.internal.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
@@ -92,23 +92,40 @@ public class DotNetStackFrame extends XStackFrame
 
 	private final DotNetDebugContext myDebuggerContext;
 	private final DotNetStackFrameProxy myFrameProxy;
+	private final XSourcePosition myXSourcePosition;
+
+	private final DotNetSourceLocation mySourceLocation;
 
 	public DotNetStackFrame(DotNetDebugContext debuggerContext, DotNetStackFrameProxy frameProxy)
 	{
 		myDebuggerContext = debuggerContext;
 		myFrameProxy = frameProxy;
+
+		DotNetSourceLocation location = myFrameProxy.getSourceLocation();
+		mySourceLocation = location == null ? null : location.lightCopy();
+		myXSourcePosition = calcSourcePosition();
 	}
 
 	@Nullable
 	@Override
+	@RequiredDispatchThread
 	public XSourcePosition getSourcePosition()
 	{
-		DotNetSourceLocation sourceLocation = myFrameProxy.getSourceLocation();
-		if(sourceLocation == null)
+		return myXSourcePosition;
+	}
+
+	@Nullable
+	private XSourcePosition calcSourcePosition()
+	{
+		DotNetVirtualMachineUtil.checkCallForUIThread();
+
+		DotNetSourceLocation sourceLocation = mySourceLocation;
+		if(mySourceLocation == null)
 		{
 			return null;
 		}
-		VirtualFile fileByPath = sourceLocation.getFilePath() == null ? null : LocalFileSystem.getInstance().findFileByPath(sourceLocation.getFilePath());
+		VirtualFile fileByPath = sourceLocation.getFilePath() == null ? null : LocalFileSystem.getInstance().findFileByPath(sourceLocation
+				.getFilePath());
 		final DotNetMethodProxy method = sourceLocation.getMethod();
 		if(fileByPath != null)
 		{
@@ -151,7 +168,8 @@ public class DotNetStackFrame extends XStackFrame
 				@Override
 				public XSourcePosition compute()
 				{
-					DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(declarationType.getFullName(), myDebuggerContext.getResolveScope());
+					DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(declarationType.getFullName
+							(), myDebuggerContext.getResolveScope());
 					if(type == null)
 					{
 						return null;
@@ -235,7 +253,8 @@ public class DotNetStackFrame extends XStackFrame
 			}
 
 			@Override
-			public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+			public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition
+					expressionPosition)
 			{
 				DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(expression.getLanguage());
 				if(provider != null)
@@ -272,7 +291,7 @@ public class DotNetStackFrame extends XStackFrame
 	@Override
 	public void customizePresentation(ColoredTextContainer component)
 	{
-		DotNetSourceLocation sourceLocation = myFrameProxy.getSourceLocation();
+		DotNetSourceLocation sourceLocation = mySourceLocation;
 		if(sourceLocation == null)
 		{
 			component.setIcon(AllIcons.Debugger.Frame);
@@ -336,6 +355,13 @@ public class DotNetStackFrame extends XStackFrame
 	@RequiredReadAction
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
+		myDebuggerContext.invoke(() -> computeChildrenImpl(node));
+	}
+
+	private void computeChildrenImpl(@NotNull XCompositeNode node)
+	{
+		DotNetVirtualMachineUtil.checkCallForUIThread();
+
 		final XValueChildrenList childrenList = new XValueChildrenList();
 		final Set<Object> visitedVariables = new THashSet<>();
 		try
@@ -352,7 +378,8 @@ public class DotNetStackFrame extends XStackFrame
 		}
 		catch(DotNetAbsentInformationException e)
 		{
-			node.setMessage("Stack frame info is not available", XDebuggerUIConstants.INFORMATION_MESSAGE_ICON, XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES, null);
+			node.setMessage("Stack frame info is not available", XDebuggerUIConstants.INFORMATION_MESSAGE_ICON, XDebuggerUIConstants
+					.VALUE_NAME_ATTRIBUTES, null);
 			return;
 		}
 		catch(DotNetInvalidObjectException e)
@@ -367,44 +394,57 @@ public class DotNetStackFrame extends XStackFrame
 
 		if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())
 		{
-			PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
-			if(psiElement != null)
-			{
-				final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<>();
-				DotNetQualifiedElement parentQualifiedElement = PsiTreeUtil.getParentOfType(psiElement, DotNetQualifiedElement.class);
-				if(parentQualifiedElement != null)
+			final Ref<DotNetDebuggerProvider> providerRef = Ref.create();
+			final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<>();
+
+			ApplicationManager.getApplication().runReadAction(() -> {
+				PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
+				if(psiElement != null)
 				{
-					parentQualifiedElement.accept(new PsiRecursiveElementVisitor()
+					DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(psiElement.getLanguage());
+					if(provider == null)
 					{
-						@Override
-						public void visitElement(PsiElement element)
+						return;
+					}
+					providerRef.set(provider);
+
+					DotNetQualifiedElement parentQualifiedElement = PsiTreeUtil.getParentOfType(psiElement, DotNetQualifiedElement.class);
+					if(parentQualifiedElement != null)
+					{
+						parentQualifiedElement.accept(new PsiRecursiveElementVisitor()
 						{
-							super.visitElement(element);
-							if(element instanceof DotNetReferenceExpression)
+							@Override
+							public void visitElement(PsiElement element)
 							{
-								PsiElement parent = element.getParent();
-								if(parent instanceof DotNetReferenceExpression && ((DotNetReferenceExpression) parent).getQualifier() == element)
+								super.visitElement(element);
+								if(element instanceof DotNetReferenceExpression)
 								{
-									return;
+									PsiElement parent = element.getParent();
+									if(parent instanceof DotNetReferenceExpression && ((DotNetReferenceExpression) parent).getQualifier() == element)
+									{
+										return;
+									}
+
+									referenceExpressions.add((DotNetReferenceExpression) element);
 								}
-
-								referenceExpressions.add((DotNetReferenceExpression) element);
 							}
-						}
-					});
+						});
+					}
+				}
+			});
 
-					if(!referenceExpressions.isEmpty())
+			if(!referenceExpressions.isEmpty())
+			{
+				DotNetDebuggerProvider provider = providerRef.get();
+				assert provider != null;
+				for(DotNetReferenceExpression referenceExpression : referenceExpressions)
+				{
+					try
 					{
-						DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(psiElement.getLanguage());
-						if(provider != null)
-						{
-							Consumer<XNamedValue> callback = xNamedValue -> childrenList.add(xNamedValue);
-
-							for(DotNetReferenceExpression referenceExpression : referenceExpressions)
-							{
-								provider.evaluate(myFrameProxy, myDebuggerContext, referenceExpression, visitedVariables, callback);
-							}
-						}
+						provider.evaluate(myFrameProxy, myDebuggerContext, referenceExpression, visitedVariables, childrenList::add);
+					}
+					catch(IllegalArgumentException ignored)
+					{
 					}
 				}
 			}
