@@ -27,8 +27,8 @@ import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.impl.source.tree.injected.Place;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredReadAction;
 import consulo.csharp.cfs.lang.CfsTokens;
 import consulo.dotnet.psi.DotNetCallArgumentList;
 import consulo.dotnet.psi.DotNetExpression;
@@ -45,6 +45,7 @@ public class CfsItem extends ASTWrapperPsiElement
 		super(node);
 	}
 
+	@RequiredReadAction
 	public int getIndex()
 	{
 		PsiElement childByType = findChildByType(CfsTokens.INDEX);
@@ -58,6 +59,7 @@ public class CfsItem extends ASTWrapperPsiElement
 		}
 	}
 
+	@RequiredReadAction
 	@Override
 	public PsiReference getReference()
 	{
@@ -76,16 +78,25 @@ public class CfsItem extends ASTWrapperPsiElement
 			{
 				continue;
 			}
-			DotNetCallArgumentList callArgumentList = PsiTreeUtil.getParentOfType(host, DotNetCallArgumentList.class);
+			DotNetCallArgumentList callArgumentList = PsiTreeUtil.getTopmostParentOfType(host, DotNetCallArgumentList.class);
 			if(callArgumentList == null)
 			{
 				continue;
 			}
+			int k = -1;
 			DotNetExpression[] expressions = callArgumentList.getExpressions();
-			int i = ArrayUtil.find(expressions, host);
-			assert i != -1;
+			for(int i = 0; i < expressions.length; i++)
+			{
+				DotNetExpression expression = expressions[i];
+				if(PsiTreeUtil.isAncestor(expression, host, false))
+				{
+					k = i;
+					break;
+				}
+			}
+			assert k != -1;
 
-			element = ArrayUtil2.safeGet(expressions, i + index + 1);
+			element = ArrayUtil2.safeGet(expressions, k + index + 1);
 			break;
 		}
 

@@ -16,12 +16,18 @@
 
 package consulo.dotnet.lang;
 
+import java.util.function.Consumer;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiLanguageInjectionHost;
+import consulo.annotations.DeprecationInfo;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetAttribute;
 import consulo.dotnet.psi.DotNetExpression;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.TextRange;
 
 /**
  * @author VISTALL
@@ -32,8 +38,29 @@ public interface MultiHostInjectorByAttributeHelper
 	ExtensionPointName<MultiHostInjectorByAttributeHelper> EP_NAME = ExtensionPointName.create("consulo.dotnet.injectionByAttributeHelper");
 
 	@Nullable
+	@RequiredReadAction
 	String getLanguageId(@NotNull DotNetAttribute attribute);
 
+	@RequiredReadAction
+	default void fillExpressionsForInject(@NotNull DotNetExpression expression, @NotNull Consumer<Pair<PsiLanguageInjectionHost, TextRange>> list)
+	{
+		if(expression instanceof PsiLanguageInjectionHost)
+		{
+			TextRange textRangeForInject = getTextRangeForInject(expression);
+			if(textRangeForInject == null)
+			{
+				return;
+			}
+			list.accept(Pair.create((PsiLanguageInjectionHost) expression, textRangeForInject));
+		}
+	}
+
+	@Deprecated
+	@DeprecationInfo("see #fillExpressionsForInject(DotNetExpression)")
 	@Nullable
-	TextRange getTextRangeForInject(@NotNull DotNetExpression expression);
+	@RequiredReadAction
+	default TextRange getTextRangeForInject(@NotNull DotNetExpression expression)
+	{
+		return null;
+	}
 }

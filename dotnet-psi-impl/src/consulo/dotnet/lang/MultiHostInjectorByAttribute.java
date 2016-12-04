@@ -16,8 +16,21 @@
 
 package consulo.dotnet.lang;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.lang.Language;
+import com.intellij.lang.injection.MultiHostInjector;
+import com.intellij.lang.injection.MultiHostRegistrar;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.SmartList;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetAttribute;
 import consulo.dotnet.psi.DotNetAttributeUtil;
 import consulo.dotnet.psi.DotNetCallArgumentList;
@@ -26,14 +39,6 @@ import consulo.dotnet.psi.DotNetExpression;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetParameter;
 import consulo.dotnet.util.ArrayUtil2;
-import com.intellij.lang.Language;
-import com.intellij.lang.injection.MultiHostInjector;
-import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.util.PsiTreeUtil;
 import consulo.lang.LanguageVersion;
 import consulo.lang.util.LanguageVersionUtil;
 
@@ -44,6 +49,7 @@ import consulo.lang.util.LanguageVersionUtil;
 public class MultiHostInjectorByAttribute implements MultiHostInjector
 {
 	@Override
+	@RequiredReadAction
 	public void injectLanguages(@NotNull MultiHostRegistrar multiHostRegistrar, @NotNull PsiElement element)
 	{
 		DotNetCallArgumentList argumentList = (DotNetCallArgumentList) element;
@@ -71,8 +77,8 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 			DotNetAttribute attribute = DotNetAttributeUtil.findAttribute(parameter, "MustBe.Consulo.Attributes.InjectLanguageAttribute");
 			if(attribute != null)
 			{
-				DotNetExpression dotNetExpression = ArrayUtil2.safeGet(expressions, i);
-				if(dotNetExpression == null)
+				DotNetExpression exp = ArrayUtil2.safeGet(expressions, i);
+				if(exp == null)
 				{
 					continue;
 				}
@@ -83,33 +89,30 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 					continue;
 				}
 
-				TextRange textRangeForInject = findTextRangeForInject(dotNetExpression);
-				if(textRangeForInject == null)
+				List<Pair<PsiLanguageInjectionHost, TextRange>> list = new SmartList<>();
+				for(MultiHostInjectorByAttributeHelper helper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensions())
+				{
+					helper.fillExpressionsForInject(exp, list::add);
+				}
+
+				if(list.isEmpty())
 				{
 					continue;
 				}
 
+				MultiHostRegistrar registrar = multiHostRegistrar.startInjecting(languageVersion);
+				for(Pair<PsiLanguageInjectionHost, TextRange> pair : list)
+				{
+					registrar.addPlace(null, null, pair.getFirst(), pair.getSecond());
+				}
 
-				multiHostRegistrar.startInjecting(languageVersion).addPlace("", "", (PsiLanguageInjectionHost) dotNetExpression, textRangeForInject).doneInjecting();
+				registrar.doneInjecting();
 			}
 		}
 	}
 
 	@Nullable
-	private static TextRange findTextRangeForInject(@NotNull DotNetExpression expression)
-	{
-		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensions())
-		{
-			TextRange textRange = attributeHelper.getTextRangeForInject(expression);
-			if(textRange != null)
-			{
-				return textRange;
-			}
-		}
-		return null;
-	}
-
-	@Nullable
+	@RequiredReadAction
 	private static LanguageVersion<?> findLanguageFromAttribute(@NotNull DotNetAttribute attribute)
 	{
 		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensions())
