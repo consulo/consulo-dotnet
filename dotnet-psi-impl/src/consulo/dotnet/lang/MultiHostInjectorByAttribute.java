@@ -77,7 +77,7 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 					continue;
 				}
 
-				LanguageVersion<?> languageVersion = findLanguageFromAttribute(attribute);
+				LanguageVersion languageVersion = findLanguageFromAttribute(attribute);
 				if(languageVersion == null)
 				{
 					continue;
@@ -110,7 +110,7 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 	}
 
 	@Nullable
-	private static LanguageVersion<?> findLanguageFromAttribute(@NotNull DotNetAttribute attribute)
+	private static LanguageVersion findLanguageFromAttribute(@NotNull DotNetAttribute attribute)
 	{
 		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensions())
 		{

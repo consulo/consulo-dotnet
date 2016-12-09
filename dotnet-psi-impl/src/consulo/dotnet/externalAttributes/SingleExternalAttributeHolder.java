@@ -31,7 +31,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeNodeImpl;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeSimpleNodeImpl;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenNodeImpl;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -65,12 +64,12 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 					String classChildrenName = classChildren.getName();
 					if("method".equals(classChildrenName))
 					{
-						val methodNode = new ExternalAttributeWithChildrenNodeImpl(classChildren.getAttributeValue("name"));
+						ExternalAttributeWithChildrenNodeImpl methodNode = new ExternalAttributeWithChildrenNodeImpl(classChildren.getAttributeValue("name"));
 						readAttributes(classChildren, methodNode);
 
 						for(Element methodChild : classChildren.getChildren())
 						{
-							val parameterNode = new ExternalAttributeSimpleNodeImpl(methodChild.getAttributeValue("type"));
+							ExternalAttributeSimpleNodeImpl parameterNode = new ExternalAttributeSimpleNodeImpl(methodChild.getAttributeValue("type"));
 							readAttributes(methodChild, parameterNode);
 							methodNode.addChild(parameterNode);
 						}
@@ -80,11 +79,7 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 			}
 			return holder;
 		}
-		catch(JDOMException e)
-		{
-			e.printStackTrace();
-		}
-		catch(IOException e)
+		catch(JDOMException | IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -109,7 +104,7 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 		}
 	}
 
-	private Map<String, ExternalAttributeWithChildrenNode> myClasses = new THashMap<String, ExternalAttributeWithChildrenNode>();
+	private Map<String, ExternalAttributeWithChildrenNode> myClasses = new THashMap<>();
 
 	@Nullable
 	@Override
