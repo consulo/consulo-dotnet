@@ -18,19 +18,30 @@ package consulo.dotnet.debugger;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
+import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 19.04.14
  */
+@Logger
 public class DotNetVirtualMachineUtil
 {
+	public static void checkCallForUIThread()
+	{
+		if(ApplicationManager.getApplication().isDispatchThread())
+		{
+			LOGGER.error("Calls from UI thread is prohibited", new Exception());
+		}
+	}
+
 	@NotNull
 	@RequiredReadAction
 	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull DotNetTypeProxy typeMirror, @NotNull DotNetDebugContext debugContext)

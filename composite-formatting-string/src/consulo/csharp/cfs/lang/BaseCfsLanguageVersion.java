@@ -20,18 +20,18 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.psi.tree.TokenSet;
-import consulo.lang.BaseLanguageVersion;
+import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionWithParsing;
 
 /**
  * @author VISTALL
  * @since 12.03.2015
  */
-public abstract class BaseCfsLanguageVersion extends BaseLanguageVersion<CfsLanguage> implements LanguageVersionWithParsing<CfsLanguage>
+public abstract class BaseCfsLanguageVersion extends LanguageVersion implements LanguageVersionWithParsing
 {
 	public BaseCfsLanguageVersion(String name, CfsLanguage language)
 	{
-		super(name, language);
+		super(name, name, language);
 	}
 
 	@NotNull

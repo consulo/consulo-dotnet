@@ -21,12 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Function;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -38,6 +39,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
+import consulo.lombok.annotations.Logger;
 import mssdw.BooleanValueMirror;
 import mssdw.CharValueMirror;
 import mssdw.NoObjectValueMirror;
@@ -53,13 +55,15 @@ import mssdw.request.StepRequest;
  * @author VISTALL
  * @since 5/8/2016
  */
+@Logger
 public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 {
 	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
 	private final MultiMap<XBreakpoint, EventRequest> myBreakpointEventRequests = MultiMap.create();
 	private final List<String> myLoadedModules = new CopyOnWriteArrayList<String>();
-
 	private final VirtualMachine myVirtualMachine;
+
+	private final ExecutorService myExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("mono vm invoker", 1);
 
 	public MicrosoftVirtualMachineProxy(@NotNull VirtualMachine virtualMachine)
 	{
@@ -73,17 +77,26 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 		return MicrosoftTypeProxy.of(myVirtualMachine.findTypeByQualifiedName(vmQName));
 	}
 
+	@Override
+	public void invoke(@NotNull Runnable runnable)
+	{
+		myExecutor.execute(() -> {
+			try
+			{
+				runnable.run();
+			}
+			catch(Exception e)
+			{
+				LOGGER.error(e);
+			}
+		});	}
+
 	@NotNull
 	@Override
 	public List<DotNetThreadProxy> getThreads()
 	{
-		return ContainerUtil.map(myVirtualMachine.allThreads(), new Function<ThreadMirror, DotNetThreadProxy>()
-		{
-			@Override
-			public DotNetThreadProxy fun(ThreadMirror threadMirror)
-			{
-				return new MicrosoftThreadProxy(MicrosoftVirtualMachineProxy.this, threadMirror);
-			}
+		return ContainerUtil.map(myVirtualMachine.allThreads(), threadMirror -> {
+			return new MicrosoftThreadProxy(MicrosoftVirtualMachineProxy.this, threadMirror);
 		});
 	}
 
@@ -124,6 +137,7 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 	public void dispose()
 	{
+		myExecutor.shutdown();
 		myStepRequests.clear();
 		myVirtualMachine.dispose();
 		myBreakpointEventRequests.clear();

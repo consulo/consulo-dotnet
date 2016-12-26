@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.nodes.DotNetLocalVariableValueNode;
 import consulo.dotnet.debugger.nodes.DotNetMethodParameterValueNode;
 import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueNode;
@@ -53,6 +54,8 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 			@NotNull Set<Object> visitedVariables,
 			@NotNull XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
 	{
+		DotNetVirtualMachineUtil.checkCallForUIThread();
+
 		DotNetSourceLocation sourceLocation = frameProxy.getSourceLocation();
 		if(sourceLocation == null)
 		{

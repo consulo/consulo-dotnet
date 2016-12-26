@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.debugger.proxy.light.LightMethodProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.util.pointers.Named;
 
@@ -51,4 +52,10 @@ public interface DotNetMethodProxy extends Named
 	@Nullable
 	@RequiredReadAction
 	PsiElement findExecutableElementFromDebugInfo(@NotNull Project project, int executableChildrenAtLineIndex);
+
+	@NotNull
+	default DotNetMethodProxy lightCopy()
+	{
+		return new LightMethodProxy(this);
+	}
 }

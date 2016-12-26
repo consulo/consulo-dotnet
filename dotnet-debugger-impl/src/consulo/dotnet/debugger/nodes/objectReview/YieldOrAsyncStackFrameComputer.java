@@ -25,6 +25,7 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
+import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.debugger.nodes.DotNetFieldOrPropertyValueNode;
 import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueNode;
@@ -47,6 +48,8 @@ public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 			@NotNull Set<Object> visitedVariables,
 			@NotNull final XValueChildrenList childrenList)
 	{
+		DotNetVirtualMachineUtil.checkCallForUIThread();
+
 		if(thisObject instanceof DotNetObjectValueProxy)
 		{
 			DotNetTypeProxy type = thisObject.getType();

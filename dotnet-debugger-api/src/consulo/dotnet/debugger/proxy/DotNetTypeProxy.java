@@ -18,6 +18,7 @@ package consulo.dotnet.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.dotnet.debugger.proxy.light.LightTypeProxy;
 
 /**
  * @author VISTALL
@@ -59,4 +60,10 @@ public interface DotNetTypeProxy
 	DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params);
 
 	boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType);
+
+	@NotNull
+	default DotNetTypeProxy lightCopy()
+	{
+		return new LightTypeProxy(this);
+	}
 }

@@ -20,20 +20,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Function;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -46,7 +45,9 @@ import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
+import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
+import consulo.lombok.annotations.Logger;
 import mono.debugger.*;
 import mono.debugger.request.EventRequest;
 import mono.debugger.request.EventRequestManager;
@@ -56,6 +57,7 @@ import mono.debugger.request.StepRequest;
  * @author VISTALL
  * @since 16.04.2015
  */
+@Logger
 public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 {
 	private final Map<Integer, AppDomainMirror> myLoadedAppDomains = ContainerUtil.newConcurrentMap();
@@ -68,12 +70,29 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 	private final boolean mySupportSearchTypesByQualifiedName;
 	private final boolean mySupportSystemThreadId;
 
+	private final ExecutorService myExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("mono vm invoker", 1);
+
 	public MonoVirtualMachineProxy(@NotNull VirtualMachine virtualMachine)
 	{
 		myVirtualMachine = virtualMachine;
 		mySupportSearchTypesByQualifiedName = myVirtualMachine.isAtLeastVersion(2, 9);
 		mySupportSearchTypesBySourcePaths = myVirtualMachine.isAtLeastVersion(2, 7);
 		mySupportSystemThreadId = myVirtualMachine.isAtLeastVersion(2, 2);
+	}
+
+	@Override
+	public void invoke(@NotNull Runnable runnable)
+	{
+		myExecutor.execute(() -> {
+			try
+			{
+				runnable.run();
+			}
+			catch(Exception e)
+			{
+				LOGGER.error(e);
+			}
+		});
 	}
 
 	@Nullable
@@ -95,13 +114,8 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public List<DotNetThreadProxy> getThreads()
 	{
-		return ContainerUtil.map(myVirtualMachine.allThreads(), new Function<ThreadMirror, DotNetThreadProxy>()
-		{
-			@Override
-			public DotNetThreadProxy fun(ThreadMirror threadMirror)
-			{
-				return new MonoThreadProxy(MonoVirtualMachineProxy.this, threadMirror);
-			}
+		return ContainerUtil.map(myVirtualMachine.allThreads(), threadMirror -> {
+			return new MonoThreadProxy(MonoVirtualMachineProxy.this, threadMirror);
 		});
 	}
 
@@ -147,6 +161,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 	public void dispose()
 	{
+		myExecutor.shutdown();
 		myStepRequests.clear();
 		myVirtualMachine.dispose();
 		myBreakpointEventRequests.clear();
@@ -228,13 +243,8 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 			else if(mySupportSearchTypesBySourcePaths)
 			{
 				TypeMirror[] typesBySourcePath = myVirtualMachine.findTypesBySourcePath(virtualFile.getPath(), SystemInfo.isFileSystemCaseSensitive);
-				return ContainerUtil.find(typesBySourcePath, new Condition<TypeMirror>()
-				{
-					@Override
-					public boolean value(TypeMirror typeMirror)
-					{
-						return Comparing.equal(DotNetDebuggerUtil.getVmQName(typeMirror.fullName()), vmQualifiedName);
-					}
+				return ContainerUtil.find(typesBySourcePath, typeMirror -> {
+					return Comparing.equal(DotNetDebuggerUtil.getVmQName(typeMirror.fullName()), vmQualifiedName);
 				});
 			}
 			else
@@ -251,14 +261,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 					return null;
 				}
 
-				final String assemblyTitle = ApplicationManager.getApplication().runReadAction(new Computable<String>()
-				{
-					@Override
-					public String compute()
-					{
-						return extension.getAssemblyTitle();
-					}
-				});
+				final String assemblyTitle = ApplicationManager.getApplication().runReadAction((Computable<String>) extension::getAssemblyTitle);
 
 				for(AppDomainMirror appDomainMirror : myLoadedAppDomains.values())
 				{

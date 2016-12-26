@@ -166,7 +166,7 @@ public class MonoDebugThread extends Thread
 			Map<String, Connector.Argument> argumentMap = l.defaultArguments();
 			argumentMap.get("hostname").setValue(myDebugConnectionInfo.getHost());
 			argumentMap.get("port").setValue(String.valueOf(myDebugConnectionInfo.getPort()));
-			argumentMap.get("timeout").setValue("10");
+			argumentMap.get("timeout").setValue("10000");
 
 			int tryCount = 5;
 			while(tryCount != 0)

@@ -32,7 +32,7 @@ import consulo.lang.LanguageVersionWithParsing;
  * @author VISTALL
  * @since 12.03.2015
  */
-public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements LanguageVersionWithParsing<CfsLanguage>, LanguageVersionWithDefinition<CfsLanguage>
+public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements LanguageVersionWithParsing, LanguageVersionWithDefinition
 {
 	public IndexCfsLanguageVersion()
 	{
