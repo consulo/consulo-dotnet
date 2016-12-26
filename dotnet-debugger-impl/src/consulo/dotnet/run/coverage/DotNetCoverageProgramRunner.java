@@ -18,7 +18,6 @@ package consulo.dotnet.run.coverage;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.run.PatchableRunProfileState;
 import com.intellij.coverage.CoverageExecutor;
 import com.intellij.coverage.CoverageHelper;
 import com.intellij.coverage.CoverageRunner;
@@ -37,6 +36,7 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.util.Consumer;
 import com.intellij.util.NotNullFunction;
+import consulo.dotnet.run.PatchableRunProfileState;
 import lombok.val;
 
 /**

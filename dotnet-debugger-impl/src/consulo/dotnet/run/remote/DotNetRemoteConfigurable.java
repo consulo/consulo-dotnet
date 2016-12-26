@@ -16,9 +16,21 @@
 
 package consulo.dotnet.run.remote;
 
+import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
+import consulo.ui.ComboBox;
+import consulo.ui.ComboBoxes;
+import consulo.ui.Component;
+import consulo.ui.Components;
+import consulo.ui.Labels;
+import consulo.ui.Layouts;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.TextField;
+import consulo.ui.VerticalLayout;
 
 /**
  * @author VISTALL
@@ -26,19 +38,73 @@ import com.intellij.openapi.project.Project;
  */
 public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> extends SettingsEditor<C>
 {
+	private final Project myProject;
+
+	private TextField myHostField;
+	private TextField myPortField;
+	private ComboBox<Module> myModuleComboBox;
+	private ComboBox<Boolean> myModeBox;
+
 	public DotNetRemoteConfigurable(Project project)
 	{
+		myProject = project;
+	}
+
+	@Nullable
+	@Override
+	@RequiredUIAccess
+	protected Component createUIComponent()
+	{
+		VerticalLayout vertical = Layouts.vertical();
+		vertical.add(Labels.leftFilled("Host: ", myHostField = Components.textField()));
+		vertical.add(Labels.leftFilled("Port: ", myPortField = Components.textField()));
+		vertical.add(Labels.leftFilled("Module: ", myModuleComboBox = Components.comboBox(ModuleManager.getInstance(myProject).getSortedModules())));
+
+		ComboBoxes.SimpleBuilder<Boolean> modeBuilder = ComboBoxes.simple();
+		modeBuilder.add(Boolean.TRUE, "attach");
+		modeBuilder.add(Boolean.FALSE, "listen");
+		myModeBox = modeBuilder.build();
+
+		vertical.add(Labels.left("Mode: ", myModeBox));
+
+		myModuleComboBox.setRender((listItemPresentation, i, module) -> {
+			if(module == null)
+			{
+				listItemPresentation.append("<none>");
+			}
+			else
+			{
+				listItemPresentation.append(module.getName());
+			}
+		});
+		return vertical;
 	}
 
 	@Override
+	@RequiredUIAccess
 	protected void resetEditorFrom(C remoteConfiguration)
 	{
-
+		myHostField.setValue(remoteConfiguration.HOST);
+		myPortField.setValue(String.valueOf(remoteConfiguration.PORT));
+		Module module = remoteConfiguration.getConfigurationModule().getModule();
+		myModuleComboBox.setValue(module != null ? module : null);
+		myModeBox.setValue(remoteConfiguration.SERVER_MODE);
 	}
 
 	@Override
+	@RequiredUIAccess
 	protected void applyEditorTo(C remoteConfiguration) throws ConfigurationException
 	{
-
+		remoteConfiguration.HOST = myHostField.getValue();
+		try
+		{
+			remoteConfiguration.PORT = Integer.parseInt(myPortField.getValue());
+		}
+		catch(NumberFormatException e)
+		{
+			//
+		}
+		remoteConfiguration.SERVER_MODE = myModeBox.getValue();
+		remoteConfiguration.getConfigurationModule().setModule(myModuleComboBox.getValue());
 	}
 }

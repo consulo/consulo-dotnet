@@ -261,7 +261,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 					return null;
 				}
 
-				final String assemblyTitle = ApplicationManager.getApplication().runReadAction((Computable<String>) extension::getAssemblyTitle);
+				final String assemblyTitle = getAssemblyTitle(extension);
 
 				for(AppDomainMirror appDomainMirror : myLoadedAppDomains.values())
 				{
@@ -286,6 +286,19 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 		{
 			return null;
 		}
+	}
+
+	@NotNull
+	private static String getAssemblyTitle(@NotNull DotNetModuleLangExtension<?> extension)
+	{
+		return ApplicationManager.getApplication().runReadAction((Computable<String>) () -> {
+			String assemblyTitle = extension.getAssemblyTitle();
+			if(assemblyTitle != null)
+			{
+				return assemblyTitle;
+			}
+			return extension.getModule().getName();
+		});
 	}
 
 	@NotNull

@@ -25,6 +25,8 @@
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<configurationType implementation="consulo.dotnet.mono.run.MonoRemoteConfiguration"/>
+
 		<moduleExtensionProvider key="mono-dotnet"
 								 name="Mono"
 								 icon="/icons/mono.png"

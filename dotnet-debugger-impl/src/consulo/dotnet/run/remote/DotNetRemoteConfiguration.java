@@ -39,16 +39,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
+import consulo.dotnet.debugger.DotNetConfigurationWithDebug;
 import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.run.DotNetRunKeys;
-import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 
 /**
  * @author VISTALL
  * @since 27-Dec-16
  */
-public class DotNetRemoteConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements RunConfigurationWithSuppressedDefaultRunAction, CompileStepBeforeRun.Suppressor,
-		RemoteRunProfile, DotNetConfigurationWithCoverage
+public abstract class DotNetRemoteConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements RunConfigurationWithSuppressedDefaultRunAction, CompileStepBeforeRun.Suppressor,
+		RemoteRunProfile, DotNetConfigurationWithDebug
 {
 	public boolean SERVER_MODE;
 	public String HOST;
@@ -82,7 +82,7 @@ public class DotNetRemoteConfiguration extends ModuleBasedConfiguration<RunConfi
 	@Override
 	public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException
 	{
-		DotNetRemoteRunState state = new DotNetRemoteRunState();
+		DotNetRemoteRunState state = new DotNetRemoteRunState(env);
 		state.putUserData(DotNetRunKeys.DEBUG_CONNECTION_INFO_KEY, new DebugConnectionInfo(HOST, PORT, SERVER_MODE));
 		return state;
 	}
