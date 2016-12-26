@@ -17,10 +17,6 @@
 package consulo.dotnet.run;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.dotnet.execution.DebugConnectionInfo;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
@@ -29,15 +25,15 @@ import com.intellij.execution.runners.DefaultProgramRunner;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
-import consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.dotnet.debugger.DotNetConfigurationWithDebug;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
+import consulo.dotnet.execution.DebugConnectionInfo;
 
 /**
  * @author VISTALL
@@ -71,25 +67,12 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			throw new ExecutionException("No debug connect information");
 		}
 
-		final DotNetModuleExtensionWithDebug moduleExtensionWithDebug;
-		RunProfile runProfile = env.getRunProfile();
-		if(runProfile instanceof DotNetConfigurationWithCoverage)
+		final DotNetConfigurationWithDebug configurationWithDebug;
+		if(env.getRunProfile() instanceof DotNetConfigurationWithDebug)
 		{
-			Module module = ((DotNetConfigurationWithCoverage) runProfile).getConfigurationModule().getModule();
-			if(module == null)
-			{
-				throw new ExecutionException("No module information");
-			}
-
-			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-			moduleExtensionWithDebug = extension instanceof DotNetModuleExtensionWithDebug ? (DotNetModuleExtensionWithDebug) extension : null;
+			configurationWithDebug = (DotNetConfigurationWithDebug) env.getRunProfile();
 		}
 		else
-		{
-			moduleExtensionWithDebug = null;
-		}
-
-		if(moduleExtensionWithDebug == null)
 		{
 			throw new ExecutionException("Debugger is not supported");
 		}
@@ -101,7 +84,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			@Override
 			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
 			{
-				DotNetDebugProcessBase process = moduleExtensionWithDebug.createDebuggerProcess(session, env.getRunProfile(), debugConnectionInfo);
+				DotNetDebugProcessBase process = configurationWithDebug.createDebuggerProcess(session, debugConnectionInfo);
 				if(!debugConnectionInfo.isServer())
 				{
 					process.start();
@@ -126,20 +109,9 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			return false;
 		}
 
-		if(runProfile instanceof DotNetConfigurationWithCoverage)
+		if(runProfile instanceof DotNetConfigurationWithDebug)
 		{
-			Module module = ((DotNetConfigurationWithCoverage) runProfile).getConfigurationModule().getModule();
-			if(module == null)
-			{
-				return false;
-			}
-
-			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-			if(extension != null && !extension.isAllowDebugInfo())
-			{
-				return false;
-			}
-			return extension instanceof DotNetModuleExtensionWithDebug;
+			return ((DotNetConfigurationWithDebug) runProfile).canRun();
 		}
 
 		return false;

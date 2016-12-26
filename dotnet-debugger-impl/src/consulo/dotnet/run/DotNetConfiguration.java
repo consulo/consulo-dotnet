@@ -19,17 +19,12 @@ package consulo.dotnet.run;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.compiler.DotNetMacroUtil;
-import consulo.dotnet.execution.DebugConnectionInfo;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
-import consulo.dotnet.run.coverage.DotNetCoverageConfigurationEditor;
-import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
@@ -52,13 +47,25 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.XmlSerializer;
+import com.intellij.xdebugger.XDebugSession;
+import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.compiler.DotNetMacroUtil;
+import consulo.dotnet.debugger.DotNetConfigurationWithDebug;
+import consulo.dotnet.debugger.DotNetDebugProcessBase;
+import consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
+import consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
+import consulo.dotnet.run.coverage.DotNetCoverageConfigurationEditor;
+import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import lombok.val;
 
 /**
  * @author VISTALL
  * @since 26.11.13.
  */
-public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements CommonProgramRunConfigurationParameters, DotNetConfigurationWithCoverage
+public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements CommonProgramRunConfigurationParameters, DotNetConfigurationWithCoverage,
+		DotNetConfigurationWithDebug
 {
 	private String myProgramParameters;
 	private String myWorkingDir = "";
@@ -76,10 +83,11 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	}
 
 	@Override
+	@RequiredReadAction
 	public Collection<Module> getValidModules()
 	{
-		val list = new ArrayList<Module>();
-		for(val module : ModuleManager.getInstance(getProject()).getModules())
+		List<Module> list = new ArrayList<>();
+		for(Module module : ModuleManager.getInstance(getProject()).getModules())
 		{
 			if(ModuleUtilCore.getExtension(module, DotNetModuleExtension.class) != null)
 			{
@@ -228,5 +236,42 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	public boolean isPassParentEnvs()
 	{
 		return myPassParentEnvs;
+	}
+
+	@Override
+	public boolean canRun()
+	{
+		Module module = getConfigurationModule().getModule();
+		if(module == null)
+		{
+			return false;
+		}
+
+		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		if(extension != null && !extension.isAllowDebugInfo())
+		{
+			return false;
+		}
+		return extension instanceof DotNetModuleExtensionWithDebug;
+	}
+
+	@NotNull
+	@Override
+	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo debugConnectionInfo) throws ExecutionException
+	{
+		Module module = getConfigurationModule().getModule();
+		if(module == null)
+		{
+			throw new ExecutionException("No module information");
+		}
+
+		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		DotNetModuleExtensionWithDebug moduleExtensionWithDebug = extension instanceof DotNetModuleExtensionWithDebug ? (DotNetModuleExtensionWithDebug) extension : null;
+
+		if(moduleExtensionWithDebug == null)
+		{
+			throw new ExecutionException("Debugger is not supported");
+		}
+		return moduleExtensionWithDebug.createDebuggerProcess(session, this, debugConnectionInfo);
 	}
 }
