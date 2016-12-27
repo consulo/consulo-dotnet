@@ -19,7 +19,7 @@ package consulo.dotnet.mono.run;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.actions.StopProcessAction;
-import com.intellij.execution.configurations.ConfigurationFactory;
+import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.process.ProcessHandler;
@@ -29,9 +29,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebugSession;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.mono.debugger.MonoDebugProcess;
 import consulo.dotnet.mono.debugger.MonoVirtualMachineListener;
 import consulo.dotnet.run.remote.DotNetRemoteConfiguration;
+import consulo.module.extension.ModuleExtensionHelper;
 import mono.debugger.VirtualMachine;
 
 /**
@@ -44,7 +46,7 @@ public class MonoRemoteConfiguration extends ConfigurationTypeBase
 	{
 		super("MonoRemoteConfiguration", "Mono Remote", "", AllIcons.RunConfigurations.Remote);
 
-		addFactory(new ConfigurationFactory(this)
+		addFactory(new ConfigurationFactoryEx(this)
 		{
 			@Override
 			public RunConfiguration createTemplateConfiguration(Project project)
@@ -81,6 +83,12 @@ public class MonoRemoteConfiguration extends ConfigurationTypeBase
 						return process;
 					}
 				};
+			}
+
+			@Override
+			public boolean isApplicable(@NotNull Project project)
+			{
+				return ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetModuleExtension.class);
 			}
 		});
 	}
