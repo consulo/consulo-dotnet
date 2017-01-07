@@ -43,8 +43,8 @@
 			<with attribute="implementationClass" implements="consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver"/>
 		</extensionPoint>
 
-		<extensionPoint name="psiSearcher" interface="consulo.dotnet.resolve.DotNetPsiSearcher" area="CONSULO_PROJECT"/>
-		<extensionPoint name="shortNameSearcher" interface="consulo.dotnet.resolve.DotNetShortNameSearcher" area="CONSULO_PROJECT"/>
+		<extensionPoint name="psiSearcher" interface="consulo.dotnet.resolve.DotNetPsiSearcher" area="PROJECT"/>
+		<extensionPoint name="shortNameSearcher" interface="consulo.dotnet.resolve.DotNetShortNameSearcher" area="PROJECT"/>
 		<extensionPoint name="stubIndexer" interface="consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer"/>
 		<extensionPoint name="typeInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
 		<extensionPoint name="directTypeInheritorsSearch" interface="com.intellij.util.QueryExecutor"/>
