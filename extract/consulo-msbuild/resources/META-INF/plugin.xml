@@ -18,7 +18,7 @@
 	<id>consulo.msbuild</id>
 	<name>MSBuild/XBuild</name>
 	<version>SNAPSHOT</version>
-	<vendor>Must-Be.org</vendor>
+	<vendor>consulo.io</vendor>
 	<category>Build</category>
 
 	<extensions defaultExtensionNs="com.intellij">
