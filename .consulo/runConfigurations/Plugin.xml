@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Plugin" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Consulo In Sandbox" singleton="true">
-    <option name="VM_PARAMETERS" value="-Xms3G -Xmx3G -XX:+UseCodeCacheFlushing -ea -XX:MaxPermSize=512M -XX:+HeapDumpOnOutOfMemoryError -Didea.is.internal=true" />
+    <option name="VM_PARAMETERS" value="-Xms3G -Xmx3G -XX:+UseCodeCacheFlushing -ea -XX:MaxPermSize=512M -XX:+HeapDumpOnOutOfMemoryError -Didea.is.internal=true -Didea.jars.nocopy=true" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="USE_ALT_CONSULO_SDK" value="false" />
     <option name="ALT_CONSULO_SDK_PATH" />
