@@ -20,10 +20,11 @@ import java.io.File;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.module.extension.DotNetLibraryOpenCache;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.dotnet.dll.DotNetModuleFileType;
+import consulo.dotnet.module.extension.DotNetLibraryOpenCache;
+import consulo.internal.dotnet.asm.parse.MSILParseException;
 import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
 import consulo.lombok.annotations.Logger;
 import consulo.vfs.impl.archive.ArchiveFile;
@@ -57,6 +58,11 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 			File file = new File(path);
 			record = DotNetLibraryOpenCache.acquire(path);
 			return new DotNetArchiveFile(file, record.get(), file.lastModified());
+		}
+		catch(MSILParseException e)
+		{
+			// ignore initial parse exception
+			return ArchiveFile.EMPTY;
 		}
 		catch(Exception e)
 		{
