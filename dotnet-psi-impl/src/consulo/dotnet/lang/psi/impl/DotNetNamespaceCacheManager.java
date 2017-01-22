@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
@@ -51,15 +52,19 @@ import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.GlobalSearchScopeFilter;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
-import consulo.lombok.annotations.ProjectService;
 
 /**
  * @author VISTALL
  * @since 03.03.2016
  */
-@ProjectService
 public class DotNetNamespaceCacheManager implements Disposable
 {
+	@NotNull
+	public static DotNetNamespaceCacheManager getInstance(@NotNull Project project)
+	{
+		return ServiceManager.getService(project, DotNetNamespaceCacheManager.class);
+	}
+
 	public static interface ItemCalculator
 	{
 		@NotNull

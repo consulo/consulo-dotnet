@@ -24,11 +24,12 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.representation.MsilFileRepresentationManager;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -66,7 +67,7 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 			Object value = n.getValue();
 			if(value instanceof MsilFile)
 			{
-				val representFiles = MsilFileRepresentationManager.getInstance(myProject).getRepresentFileInfos((MsilFile) value);
+				List<Pair<String, ? extends FileType>> representFiles = MsilFileRepresentationManager.getInstance(myProject).getRepresentFileInfos((MsilFile) value);
 				if(representFiles.isEmpty())
 				{
 					newList.add(n);

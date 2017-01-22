@@ -17,10 +17,9 @@
 package consulo.msil.lang.psi.impl.elementType.stub.index;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
-import consulo.lombok.annotations.Lazy;
+import consulo.dotnet.psi.DotNetQualifiedElement;
 
 /**
  * @author VISTALL
@@ -29,7 +28,6 @@ import consulo.lombok.annotations.Lazy;
 public class MsilNamespaceIndex extends StringStubIndexExtension<DotNetQualifiedElement>
 {
 	@NotNull
-	@Lazy
 	public static MsilNamespaceIndex getInstance()
 	{
 		return EP_NAME.findExtension(MsilNamespaceIndex.class);

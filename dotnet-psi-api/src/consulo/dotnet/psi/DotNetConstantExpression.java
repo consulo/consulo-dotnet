@@ -16,18 +16,29 @@
 
 package consulo.dotnet.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.ArrayFactory;
 
 /**
  * @author VISTALL
  * @since 08.05.14
  */
-@ArrayFactoryFields
 public interface DotNetConstantExpression extends DotNetExpression
 {
+	public static final DotNetConstantExpression[] EMPTY_ARRAY = new DotNetConstantExpression[0];
+
+	public static ArrayFactory<DotNetConstantExpression> ARRAY_FACTORY = new ArrayFactory<DotNetConstantExpression>()
+	{
+		@NotNull
+		@Override
+		public DotNetConstantExpression[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetConstantExpression[count];
+		}
+	};
+
 	@Nullable
 	Object getValue();
 

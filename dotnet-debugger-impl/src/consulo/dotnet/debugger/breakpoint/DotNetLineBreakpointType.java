@@ -26,11 +26,6 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.annotations.RequiredReadAction;
-import consulo.dotnet.psi.DotNetQualifiedElement;
-import consulo.dotnet.util.ArrayUtil2;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -50,12 +45,16 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.DotNetEditorsProvider;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
-import consulo.lombok.annotations.Lazy;
+import consulo.dotnet.psi.DotNetQualifiedElement;
+import consulo.dotnet.util.ArrayUtil2;
+import consulo.ide.IconDescriptorUpdaters;
 
 /**
  * @author VISTALL
@@ -64,7 +63,6 @@ import consulo.lombok.annotations.Lazy;
 public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBreakpointProperties>
 {
 	@NotNull
-	@Lazy
 	public static DotNetLineBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(DotNetLineBreakpointType.class);

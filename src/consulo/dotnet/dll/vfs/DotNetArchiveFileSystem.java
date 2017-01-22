@@ -21,12 +21,12 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.dotnet.module.extension.DotNetLibraryOpenCache;
 import consulo.internal.dotnet.asm.parse.MSILParseException;
 import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
-import consulo.lombok.annotations.Logger;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 
@@ -34,9 +34,10 @@ import consulo.vfs.impl.archive.ArchiveFileSystemBase;
  * @author VISTALL
  * @since 28.11.13.
  */
-@Logger
 public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements ApplicationComponent
 {
+	public static final Logger LOGGER = Logger.getInstance(DotNetArchiveFileSystem.class);
+
 	@NotNull
 	public static DotNetArchiveFileSystem getInstance()
 	{

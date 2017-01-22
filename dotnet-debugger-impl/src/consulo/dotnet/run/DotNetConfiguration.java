@@ -58,7 +58,6 @@ import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.dotnet.run.coverage.DotNetCoverageConfigurationEditor;
 import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -142,7 +141,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	@Override
 	public RunProfileState getState(@NotNull Executor executor, @NotNull final ExecutionEnvironment executionEnvironment) throws ExecutionException
 	{
-		val module = getConfigurationModule().getModule();
+		Module module = getConfigurationModule().getModule();
 		if(module == null)
 		{
 			throw new ExecutionException("Module is null");

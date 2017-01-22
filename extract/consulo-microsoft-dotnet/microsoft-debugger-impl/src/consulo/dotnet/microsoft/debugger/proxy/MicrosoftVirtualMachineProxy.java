@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -39,7 +40,6 @@ import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
-import consulo.lombok.annotations.Logger;
 import mssdw.BooleanValueMirror;
 import mssdw.CharValueMirror;
 import mssdw.NoObjectValueMirror;
@@ -55,9 +55,10 @@ import mssdw.request.StepRequest;
  * @author VISTALL
  * @since 5/8/2016
  */
-@Logger
 public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 {
+	private static final Logger LOGGER = Logger.getInstance(MicrosoftVirtualMachineProxy.class);
+
 	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
 	private final MultiMap<XBreakpoint, EventRequest> myBreakpointEventRequests = MultiMap.create();
 	private final List<String> myLoadedModules = new CopyOnWriteArrayList<String>();

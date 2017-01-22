@@ -18,24 +18,29 @@ package consulo.dotnet.resolve;
 
 import java.util.Collection;
 
-import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.IdFilter;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**
  * @author VISTALL
  * @since 08.07.2015
  */
-@ProjectService
 public abstract class DotNetShortNameSearcher
 {
-	protected Project myProject;
+	@NotNull
+	public static DotNetShortNameSearcher getInstance(@NotNull Project project)
+	{
+		return ServiceManager.getService(project, DotNetShortNameSearcher.class);
+	}
+
+	protected final Project myProject;
 
 	public DotNetShortNameSearcher(Project project)
 	{

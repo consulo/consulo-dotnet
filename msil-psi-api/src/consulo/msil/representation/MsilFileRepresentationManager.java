@@ -19,26 +19,31 @@ package consulo.msil.representation;
 import java.util.Collections;
 import java.util.List;
 
-import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.msil.MsilFileType;
-import consulo.msil.lang.psi.MsilFile;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import consulo.annotations.RequiredReadAction;
+import consulo.msil.MsilFileType;
+import consulo.msil.lang.psi.MsilFile;
 
 /**
  * @author VISTALL
  * @since 27.05.14
  */
-@ProjectService
 public abstract class MsilFileRepresentationManager
 {
+	@NotNull
+	public static MsilFileRepresentationManager getInstance(@NotNull Project project)
+	{
+		return ServiceManager.getService(project, MsilFileRepresentationManager.class);
+	}
+
 	protected final Project myProject;
 
 	protected MsilFileRepresentationManager(Project project)

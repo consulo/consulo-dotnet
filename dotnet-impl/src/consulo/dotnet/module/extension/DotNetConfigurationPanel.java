@@ -27,9 +27,6 @@ import javax.swing.event.DocumentEvent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.DotNetBundle;
-import consulo.dotnet.DotNetTarget;
-import consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
@@ -58,10 +55,12 @@ import com.intellij.ui.components.JBTextField;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.dotnet.DotNetBundle;
+import consulo.dotnet.DotNetTarget;
+import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.extension.ui.ModuleExtensionSdkBoxBuilder;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -73,7 +72,7 @@ public class DotNetConfigurationPanel extends JPanel
 	public DotNetConfigurationPanel(final DotNetMutableModuleExtension<?> extension, final List<String> variables, final Runnable updater)
 	{
 		super(new VerticalFlowLayout(true, true));
-		val moduleExtensionSdkBoxBuilder = ModuleExtensionSdkBoxBuilder.<DotNetMutableModuleExtension<?>>create(extension, updater);
+		ModuleExtensionSdkBoxBuilder<DotNetMutableModuleExtension<?>> moduleExtensionSdkBoxBuilder = ModuleExtensionSdkBoxBuilder.create(extension, updater);
 		moduleExtensionSdkBoxBuilder.sdkTypeClass(extension.getSdkTypeClass());
 		moduleExtensionSdkBoxBuilder.sdkPointerFunc(new NullableFunction<DotNetMutableModuleExtension<?>, MutableModuleInheritableNamedPointer<Sdk>>()
 		{
@@ -87,7 +86,7 @@ public class DotNetConfigurationPanel extends JPanel
 
 		add(moduleExtensionSdkBoxBuilder.build());
 
-		val fileNameField = new JBTextField(extension.getFileName());
+		JBTextField fileNameField = new JBTextField(extension.getFileName());
 		fileNameField.getEmptyText().setText(DotNetModuleExtension.DEFAULT_FILE_NAME);
 		fileNameField.getDocument().addDocumentListener(new DocumentAdapter()
 		{
@@ -100,7 +99,7 @@ public class DotNetConfigurationPanel extends JPanel
 
 		add(LabeledComponent.left(fileNameField, DotNetBundle.message("file.label")));
 
-		val outputDirectoryField = new JBTextField(extension.getOutputDir());
+		JBTextField outputDirectoryField = new JBTextField(extension.getOutputDir());
 		outputDirectoryField.getEmptyText().setText(DotNetModuleExtension.DEFAULT_OUTPUT_DIR);
 		outputDirectoryField.getDocument().addDocumentListener(new DocumentAdapter()
 		{
@@ -113,7 +112,7 @@ public class DotNetConfigurationPanel extends JPanel
 
 		add(LabeledComponent.left(outputDirectoryField, DotNetBundle.message("output.dir.label")));
 
-		val comp = new ComboBox(DotNetTarget.values());
+		ComboBox comp = new ComboBox(DotNetTarget.values());
 		comp.setRenderer(new ListCellRendererWrapper<DotNetTarget>()
 		{
 			@Override
@@ -136,7 +135,7 @@ public class DotNetConfigurationPanel extends JPanel
 
 		final List<Object> items = new ArrayList<Object>();
 		final CollectionComboBoxModel model = new CollectionComboBoxModel(items);
-		val mainClassList = new ComboBox(model);
+		ComboBox mainClassList = new ComboBox(model);
 		mainClassList.setEnabled(false);
 		mainClassList.setRenderer(new ColoredListCellRenderer()
 		{
@@ -265,7 +264,7 @@ public class DotNetConfigurationPanel extends JPanel
 
 		add(LabeledComponent.left(mainClassList, DotNetBundle.message("main.type.label")));
 
-		val debugCombobox = new JBCheckBox(DotNetBundle.message("generate.debug.info.label"), extension.isAllowDebugInfo());
+		JBCheckBox debugCombobox = new JBCheckBox(DotNetBundle.message("generate.debug.info.label"), extension.isAllowDebugInfo());
 		debugCombobox.addActionListener(new ActionListener()
 		{
 			@Override
@@ -276,7 +275,7 @@ public class DotNetConfigurationPanel extends JPanel
 		});
 		add(debugCombobox);
 
-		val namespacePrefixField = new JBTextField(extension.getNamespacePrefix());
+		JBTextField namespacePrefixField = new JBTextField(extension.getNamespacePrefix());
 		namespacePrefixField.getDocument().addDocumentListener(new DocumentAdapter()
 		{
 			@Override
@@ -288,7 +287,7 @@ public class DotNetConfigurationPanel extends JPanel
 
 		final LabeledComponent<JBTextField> namespaceComponent = LabeledComponent.left(namespacePrefixField, "Namespace:");
 
-		val allowSourceRootsBox = new JBCheckBox(DotNetBundle.message("allow.source.roots.label"), extension.isAllowSourceRoots());
+		JBCheckBox allowSourceRootsBox = new JBCheckBox(DotNetBundle.message("allow.source.roots.label"), extension.isAllowSourceRoots());
 		allowSourceRootsBox.addActionListener(new ActionListener()
 		{
 			@Override
@@ -303,7 +302,7 @@ public class DotNetConfigurationPanel extends JPanel
 		add(allowSourceRootsBox);
 		add(namespaceComponent);
 
-		val dataModel = new CollectionListModel<String>(variables)
+		CollectionListModel<String> dataModel = new CollectionListModel<String>(variables)
 		{
 			@Override
 			public int getSize()
@@ -341,15 +340,15 @@ public class DotNetConfigurationPanel extends JPanel
 			}
 		};
 
-		val variableList = new JBList(dataModel);
+		JBList variableList = new JBList(dataModel);
 		ToolbarDecorator variableDecorator = ToolbarDecorator.createDecorator(variableList);
 		variableDecorator.setAddAction(new AnActionButtonRunnable()
 		{
 			@Override
 			public void run(AnActionButton anActionButton)
 			{
-				String name = Messages.showInputDialog(DotNetConfigurationPanel.this, DotNetBundle.message("new.variable.message"),
-						DotNetBundle.message("new.variable.title"), null, null, new InputValidator()
+				String name = Messages.showInputDialog(DotNetConfigurationPanel.this, DotNetBundle.message("new.variable.message"), DotNetBundle.message("new.variable.title"), null, null, new
+						InputValidator()
 				{
 					@Override
 					public boolean checkInput(String s)

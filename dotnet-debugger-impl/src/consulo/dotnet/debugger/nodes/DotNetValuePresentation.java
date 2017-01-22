@@ -20,16 +20,16 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.DotNetTypes;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
+import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
@@ -43,9 +43,10 @@ import consulo.dotnet.debugger.proxy.value.*;
  * @author VISTALL
  * @since 20.09.14
  */
-@Logger
 public class DotNetValuePresentation extends XValuePresentation
 {
+	private static final Logger LOGGER = Logger.getInstance(DotNetValuePresentation.class);
+
 	private final DotNetDebugContext myDebugContext;
 	private final DotNetStackFrameProxy myStackFrame;
 	private final DotNetValueProxy myValue;

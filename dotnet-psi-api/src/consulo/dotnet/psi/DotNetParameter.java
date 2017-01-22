@@ -16,16 +16,28 @@
 
 package consulo.dotnet.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.util.ArrayFactory;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-@ArrayFactoryFields
 public interface DotNetParameter extends DotNetVariable
 {
+	public static final DotNetParameter[] EMPTY_ARRAY = new DotNetParameter[0];
+
+	public static ArrayFactory<DotNetParameter> ARRAY_FACTORY = new ArrayFactory<DotNetParameter>()
+	{
+		@NotNull
+		@Override
+		public DotNetParameter[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetParameter[count];
+		}
+	};
+
 	@Nullable
 	DotNetParameterListOwner getOwner();
 

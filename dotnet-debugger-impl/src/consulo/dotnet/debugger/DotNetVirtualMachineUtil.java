@@ -19,21 +19,22 @@ package consulo.dotnet.debugger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 19.04.14
  */
-@Logger
 public class DotNetVirtualMachineUtil
 {
+	private static final Logger LOGGER = Logger.getInstance(DotNetVirtualMachineUtil.class);
+
 	public static void checkCallForUIThread()
 	{
 		if(ApplicationManager.getApplication().isDispatchThread())

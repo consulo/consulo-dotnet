@@ -28,11 +28,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
-import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
-import consulo.dotnet.run.coverage.DotNetCoverageRunner;
-import consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension;
 import com.intellij.coverage.CoverageSuite;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
@@ -45,7 +40,11 @@ import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.execution.ParametersListUtil;
-import consulo.lombok.annotations.Lazy;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
+import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
+import consulo.dotnet.run.coverage.DotNetCoverageRunner;
+import consulo.microsoft.dotnet.module.extension.MicrosoftDotNetModuleExtension;
 import consulo.util.NotNullPairFunction;
 
 /**
@@ -55,7 +54,6 @@ import consulo.util.NotNullPairFunction;
 public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 {
 	@NotNull
-	@Lazy
 	public static File getOpenCoverConsoleExecutable()
 	{
 		PluginClassLoader classLoader = (PluginClassLoader) OpenCoverCoverageRunner.class.getClassLoader();

@@ -19,7 +19,6 @@ package consulo.msil.lang.psi.impl.elementType.stub.index;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
-import consulo.lombok.annotations.Lazy;
 import consulo.msil.lang.psi.MsilClassEntry;
 
 /**
@@ -29,7 +28,6 @@ import consulo.msil.lang.psi.MsilClassEntry;
 public class MsilTypeByQNameIndex extends StringStubIndexExtension<MsilClassEntry>
 {
 	@NotNull
-	@Lazy
 	public static MsilTypeByQNameIndex getInstance()
 	{
 		return EP_NAME.findExtension(MsilTypeByQNameIndex.class);

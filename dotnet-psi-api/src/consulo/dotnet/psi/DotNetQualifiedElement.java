@@ -16,17 +16,29 @@
 
 package consulo.dotnet.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 
 /**
  * @author VISTALL
  * @since 19.12.13.
  */
-@ArrayFactoryFields
 public interface DotNetQualifiedElement extends DotNetNamedElement
 {
+	public static final DotNetQualifiedElement[] EMPTY_ARRAY = new DotNetQualifiedElement[0];
+
+	public static ArrayFactory<DotNetQualifiedElement> ARRAY_FACTORY = new ArrayFactory<DotNetQualifiedElement>()
+	{
+		@NotNull
+		@Override
+		public DotNetQualifiedElement[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetQualifiedElement[count];
+		}
+	};
+
 	@Nullable
 	@RequiredReadAction
 	String getPresentableParentQName();

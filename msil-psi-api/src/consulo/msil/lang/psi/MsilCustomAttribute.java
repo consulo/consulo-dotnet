@@ -16,9 +16,9 @@
 
 package consulo.msil.lang.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetAttribute;
 import consulo.dotnet.psi.DotNetParameterList;
@@ -28,9 +28,20 @@ import consulo.dotnet.psi.DotNetType;
  * @author VISTALL
  * @since 21.05.14
  */
-@ArrayFactoryFields
 public interface MsilCustomAttribute extends DotNetAttribute
 {
+	public static final MsilCustomAttribute[] EMPTY_ARRAY = new MsilCustomAttribute[0];
+
+	public static ArrayFactory<MsilCustomAttribute> ARRAY_FACTORY = new ArrayFactory<MsilCustomAttribute>()
+	{
+		@NotNull
+		@Override
+		public MsilCustomAttribute[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new MsilCustomAttribute[count];
+		}
+	};
+
 	@Nullable
 	@RequiredReadAction
 	DotNetType getType();

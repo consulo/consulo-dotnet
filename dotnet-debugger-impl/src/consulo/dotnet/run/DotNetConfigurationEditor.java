@@ -23,7 +23,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.application.options.ModuleListCellRenderer;
 import com.intellij.execution.ui.CommonProgramParametersPanel;
 import com.intellij.openapi.module.Module;
@@ -33,7 +32,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
-import lombok.val;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 
 /**
  * @author VISTALL
@@ -74,7 +73,7 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 
 		myModuleComboBox = new JComboBox();
 		myModuleComboBox.setRenderer(new ModuleListCellRenderer());
-		for(val module : ModuleManager.getInstance(myProject).getModules())
+		for(Module module : ModuleManager.getInstance(myProject).getModules())
 		{
 			if(ModuleUtilCore.getExtension(module, DotNetModuleExtension.class) != null)
 			{

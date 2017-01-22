@@ -17,16 +17,27 @@
 package consulo.dotnet.resolve;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
-import consulo.lombok.annotations.ArrayFactoryFields;
 
 /**
  * @author VISTALL
  * @since 16.12.13.
  */
-@ArrayFactoryFields
 public interface DotNetTypeRef
 {
+	public static final DotNetTypeRef[] EMPTY_ARRAY = new DotNetTypeRef[0];
+
+	public static ArrayFactory<DotNetTypeRef> ARRAY_FACTORY = new ArrayFactory<DotNetTypeRef>()
+	{
+		@NotNull
+		@Override
+		public DotNetTypeRef[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetTypeRef[count];
+		}
+	};
+
 	public class AdapterInternal implements DotNetTypeRef
 	{
 		@NotNull

@@ -28,6 +28,7 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.TranslatingCompiler;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -39,15 +40,15 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.util.Chunk;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 26.11.13.
  */
-@Logger
 public class DotNetCompiler implements TranslatingCompiler
 {
+	public static final Logger LOGGER = Logger.getInstance(DotNetCompiler.class);
+
 	@NotNull
 	@Override
 	public String getDescription()

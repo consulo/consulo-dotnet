@@ -31,7 +31,6 @@ import consulo.msil.lang.psi.MsilElements;
 import consulo.msil.lang.psi.MsilStubElements;
 import consulo.msil.lang.psi.MsilTokenSets;
 import consulo.msil.lang.psi.MsilTokens;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -672,7 +671,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 	public void parseGeneric(PsiBuilder builder)
 	{
-		val marker = builder.mark();
+		PsiBuilder.Marker marker = builder.mark();
 
 		expect(builder, GENERIC_CONSTRAINT_KEYWORDS, null);
 

@@ -20,19 +20,17 @@ import gnu.trove.THashSet;
 
 import java.util.Set;
 
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 31.12.13.
  */
-@Logger
 public class DotNetInheritUtil
 {
 	@RequiredReadAction

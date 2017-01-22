@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.util.ArrayFactory;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.DotNetTypeRef;
@@ -26,9 +26,20 @@ import consulo.dotnet.resolve.DotNetTypeRef;
  * @author VISTALL
  * @since 13.12.14
  */
-@ArrayFactoryFields
 public interface MsilGenericParameter extends DotNetGenericParameter
 {
+	public static final MsilGenericParameter[] EMPTY_ARRAY = new MsilGenericParameter[0];
+
+	public static ArrayFactory<MsilGenericParameter> ARRAY_FACTORY = new ArrayFactory<MsilGenericParameter>()
+	{
+		@NotNull
+		@Override
+		public MsilGenericParameter[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new MsilGenericParameter[count];
+		}
+	};
+
 	@NotNull
 	DotNetTypeRef[] getExtendTypeRefs();
 

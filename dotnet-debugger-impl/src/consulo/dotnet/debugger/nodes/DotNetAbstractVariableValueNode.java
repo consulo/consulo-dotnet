@@ -21,6 +21,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.NullableFunction;
@@ -40,15 +41,15 @@ import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 11.04.14
  */
-@Logger
 public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValueNode
 {
+	private static final Logger LOGGER = Logger.getInstance(DotNetAbstractVariableValueNode.class);
+
 	private XValueModifier myValueModifier = new XValueModifier()
 	{
 		@Override

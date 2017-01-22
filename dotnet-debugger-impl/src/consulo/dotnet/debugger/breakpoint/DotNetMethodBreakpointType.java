@@ -27,7 +27,6 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.ui.DotNetMethodBreakpointPropertiesPanel;
-import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -36,7 +35,6 @@ import consulo.lombok.annotations.Lazy;
 public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethodBreakpointProperties>
 {
 	@NotNull
-	@Lazy
 	public static DotNetMethodBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(DotNetMethodBreakpointType.class);

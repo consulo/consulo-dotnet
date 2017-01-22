@@ -16,14 +16,26 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.util.ArrayFactory;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-@ArrayFactoryFields
 public interface DotNetMethodParameterProxy extends DotNetVariableProxy
 {
+	public static final DotNetMethodParameterProxy[] EMPTY_ARRAY = new DotNetMethodParameterProxy[0];
+
+	public static ArrayFactory<DotNetMethodParameterProxy> ARRAY_FACTORY = new ArrayFactory<DotNetMethodParameterProxy>()
+	{
+		@NotNull
+		@Override
+		public DotNetMethodParameterProxy[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetMethodParameterProxy[count];
+		}
+	};
+
 	int getIndex();
 }

@@ -16,19 +16,25 @@
 
 package consulo.dotnet.ui.chooser;
 
-import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.ide.util.TreeChooser;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**
  * @author VISTALL
  * @since 29.04.2016
  */
-@ProjectService
 public abstract class DotNetTypeChooserFactory
 {
+	@NotNull
+	public static DotNetTypeChooserFactory getInstance(@NotNull Project project)
+	{
+		return ServiceManager.getService(project, DotNetTypeChooserFactory.class);
+	}
+
 	@NotNull
 	public abstract TreeChooser<DotNetTypeDeclaration> createChooser(@NotNull GlobalSearchScope scope);
 

@@ -19,7 +19,6 @@ package consulo.dotnet.roots.orderEntry;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.util.InvalidDataException;
-import consulo.lombok.annotations.Lazy;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.orderEntry.OrderEntryType;
@@ -31,7 +30,6 @@ import consulo.roots.orderEntry.OrderEntryType;
 public class DotNetLibraryOrderEntryType implements OrderEntryType<DotNetLibraryOrderEntryImpl>
 {
 	@NotNull
-	@Lazy
 	public static DotNetLibraryOrderEntryType getInstance()
 	{
 		return EP_NAME.findExtension(DotNetLibraryOrderEntryType.class);

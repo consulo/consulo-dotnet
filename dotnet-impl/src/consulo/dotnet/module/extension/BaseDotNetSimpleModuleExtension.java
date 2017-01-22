@@ -28,12 +28,10 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.dll.DotNetModuleFileType;
-import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
-import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.Comparing;
@@ -52,23 +50,25 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.dll.DotNetModuleFileType;
+import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
+import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import consulo.extension.impl.ModuleExtensionImpl;
 import consulo.internal.dotnet.asm.mbel.ModuleParser;
-import consulo.lombok.annotations.Logger;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
-import lombok.val;
 
 /**
  * @author VISTALL
  * @since 22.02.2015
  */
-@Logger
 public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionImpl<S> implements DotNetSimpleModuleExtension<S>
 {
+	public static final Logger LOGGER = Logger.getInstance(BaseDotNetSimpleModuleExtension.class);
+
 	public static final File[] EMPTY_FILE_ARRAY = new File[0];
 
 	protected Sdk myLastSdk;
@@ -220,7 +220,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	private File getLibraryByAssemblyName(@NotNull final String name, @Nullable Ref<Couple<String>> cache)
 	{
 		File[] filesForLibraries = getFilesForLibraries();
-		val nameWithExtension = name + ".dll";
+		String nameWithExtension = name + ".dll";
 		File singleFile = ContainerUtil.find(filesForLibraries, new Condition<File>()
 		{
 			@Override
@@ -302,8 +302,8 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 				assert plugin != null;
 				File dir = new File(plugin.getPath(), "externalAttributes");
 
-				val urls = new SmartList<String>();
-				val requiredFileName = name + ".xml";
+				List<String> urls = new SmartList<String>();
+				String requiredFileName = name + ".xml";
 				FileUtil.visitFiles(dir, new Processor<File>()
 				{
 					@Override

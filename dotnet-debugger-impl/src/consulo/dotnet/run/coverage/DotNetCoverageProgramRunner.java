@@ -30,14 +30,11 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
-import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.DefaultProgramRunner;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.util.Consumer;
-import com.intellij.util.NotNullFunction;
 import consulo.dotnet.run.PatchableRunProfileState;
-import lombok.val;
+import consulo.util.NotNullPairFunction;
 
 /**
  * @author VISTALL
@@ -87,13 +84,11 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 
 	@Nullable
 	@Override
-	protected RunContentDescriptor doExecute(@NotNull RunProfileState state,
-			@NotNull final ExecutionEnvironment environment) throws ExecutionException
+	protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull final ExecutionEnvironment environment) throws ExecutionException
 	{
 		if(state instanceof PatchableRunProfileState)
 		{
-			CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase)
-					environment.getRunProfile());
+			CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) environment.getRunProfile());
 
 			CoverageRunner coverageRunner = coverageEnabledConfiguration.getCoverageRunner();
 			if(!coverageEnabledConfiguration.isCoverageEnabled() || coverageRunner == null)
@@ -103,29 +98,14 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 
 			DotNetCoverageRunner dotNetCoverageRunner = (DotNetCoverageRunner) coverageRunner;
 
-			val modifierForCommandLine = dotNetCoverageRunner.getModifierForCommandLine();
+			NotNullPairFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine> modifierForCommandLine = dotNetCoverageRunner.getModifierForCommandLine();
 
-			val runProfile = (DotNetConfigurationWithCoverage) environment.getRunProfile();
+			DotNetConfigurationWithCoverage runProfile = (DotNetConfigurationWithCoverage) environment.getRunProfile();
 
 			PatchableRunProfileState patchableRunProfileState = (PatchableRunProfileState) state;
-			patchableRunProfileState.modifyCommandLine(new NotNullFunction<GeneralCommandLine, GeneralCommandLine>()
-			{
-				@NotNull
-				@Override
-				public GeneralCommandLine fun(GeneralCommandLine generalCommandLine)
-				{
-					return modifierForCommandLine.fun(runProfile, generalCommandLine);
-				}
-			});
+			patchableRunProfileState.modifyCommandLine(generalCommandLine -> modifierForCommandLine.fun(runProfile, generalCommandLine));
 
-			patchableRunProfileState.setProcessHandlerConsumer(new Consumer<ProcessHandler>()
-			{
-				@Override
-				public void consume(ProcessHandler osProcessHandler)
-				{
-					CoverageHelper.attachToProcess((RunConfigurationBase) runProfile, osProcessHandler, environment.getRunnerSettings());
-				}
-			});
+			patchableRunProfileState.setProcessHandlerConsumer(osProcessHandler -> CoverageHelper.attachToProcess((RunConfigurationBase) runProfile, osProcessHandler, environment.getRunnerSettings()));
 		}
 		else
 		{

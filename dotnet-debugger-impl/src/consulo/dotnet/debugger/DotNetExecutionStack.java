@@ -25,22 +25,31 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayFactory;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.util.ArrayUtil2;
-import consulo.lombok.annotations.ArrayFactoryFields;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 10.04.14
  */
-@ArrayFactoryFields
-@Logger
 public class DotNetExecutionStack extends XExecutionStack
 {
+	public static final DotNetExecutionStack[] EMPTY_ARRAY = new DotNetExecutionStack[0];
+
+	public static ArrayFactory<DotNetExecutionStack> ARRAY_FACTORY = new ArrayFactory<DotNetExecutionStack>()
+	{
+		@NotNull
+		@Override
+		public DotNetExecutionStack[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetExecutionStack[count];
+		}
+	};
+
 	private DotNetStackFrame myTopFrame;
 	private boolean myTopFrameCalculated;
 

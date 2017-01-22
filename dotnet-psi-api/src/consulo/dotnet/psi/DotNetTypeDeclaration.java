@@ -16,21 +16,31 @@
 
 package consulo.dotnet.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetTypeRef;
-import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-@ArrayFactoryFields
-public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetModifierListOwner, DotNetGenericParameterListOwner,
-		PsiNameIdentifierOwner, DotNetMemberOwner
+public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetModifierListOwner, DotNetGenericParameterListOwner, PsiNameIdentifierOwner, DotNetMemberOwner
 {
+	public static final DotNetTypeDeclaration[] EMPTY_ARRAY = new DotNetTypeDeclaration[0];
+
+	public static ArrayFactory<DotNetTypeDeclaration> ARRAY_FACTORY = new ArrayFactory<DotNetTypeDeclaration>()
+	{
+		@NotNull
+		@Override
+		public DotNetTypeDeclaration[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetTypeDeclaration[count];
+		}
+	};
+
 	boolean isInterface();
 
 	boolean isStruct();

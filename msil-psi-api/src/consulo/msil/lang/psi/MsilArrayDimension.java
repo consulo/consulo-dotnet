@@ -16,15 +16,27 @@
 
 package consulo.msil.lang.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.util.ArrayFactory;
 import consulo.dotnet.psi.DotNetElement;
 
 /**
  * @author VISTALL
  * @since 19.05.2015
  */
-@ArrayFactoryFields
 public interface MsilArrayDimension extends DotNetElement
 {
+	public static final MsilArrayDimension[] EMPTY_ARRAY = new MsilArrayDimension[0];
+
+	public static ArrayFactory<MsilArrayDimension> ARRAY_FACTORY = new ArrayFactory<MsilArrayDimension>()
+	{
+		@NotNull
+		@Override
+		public MsilArrayDimension[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new MsilArrayDimension[count];
+		}
+	};
+
 	int getLowerValue();
 }

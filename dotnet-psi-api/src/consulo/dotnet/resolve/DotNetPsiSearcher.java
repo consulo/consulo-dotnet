@@ -22,22 +22,28 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.Immutable;
 import consulo.annotations.RequiredReadAction;
-import consulo.lombok.annotations.ProjectService;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**
  * @author VISTALL
  * @since 13.07.14
  */
-@ProjectService
 public abstract class DotNetPsiSearcher
 {
+	@NotNull
+	public static DotNetPsiSearcher getInstance(@NotNull Project project)
+	{
+		return ServiceManager.getService(project, DotNetPsiSearcher.class);
+	}
+
 	@Deprecated
 	public static enum TypeResoleKind
 	{

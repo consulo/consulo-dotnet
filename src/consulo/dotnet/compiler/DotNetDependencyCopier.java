@@ -35,6 +35,7 @@ import com.intellij.openapi.compiler.FileProcessingCompiler;
 import com.intellij.openapi.compiler.PackagingCompiler;
 import com.intellij.openapi.compiler.TimestampValidityState;
 import com.intellij.openapi.compiler.ValidityState;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.io.FileUtil;
@@ -42,15 +43,15 @@ import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 26.11.13.
  */
-@Logger
 public class DotNetDependencyCopier implements FileProcessingCompiler, PackagingCompiler
 {
+	public static final Logger LOGGER = Logger.getInstance(DotNetDependencyCopier.class);
+
 	@NotNull
 	@Override
 	public String getDescription()

@@ -16,15 +16,27 @@
 
 package consulo.dotnet.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.util.ArrayFactory;
 
 /**
  * @author VISTALL
  * @since 30.11.13.
  */
-@ArrayFactoryFields
 public interface DotNetGenericParameter extends DotNetNamedElement, DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetAttributeListOwner
 {
+	public static final DotNetGenericParameter[] EMPTY_ARRAY = new DotNetGenericParameter[0];
+
+	public static ArrayFactory<DotNetGenericParameter> ARRAY_FACTORY = new ArrayFactory<DotNetGenericParameter>()
+	{
+		@NotNull
+		@Override
+		public DotNetGenericParameter[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetGenericParameter[count];
+		}
+	};
+
 	int getIndex();
 }

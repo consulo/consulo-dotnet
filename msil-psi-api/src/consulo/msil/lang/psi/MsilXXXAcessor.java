@@ -16,9 +16,9 @@
 
 package consulo.msil.lang.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.util.ArrayFactory;
 import consulo.dotnet.psi.DotNetParameter;
 import consulo.dotnet.psi.DotNetXXXAccessor;
 import consulo.dotnet.resolve.DotNetTypeRef;
@@ -27,9 +27,20 @@ import consulo.dotnet.resolve.DotNetTypeRef;
  * @author VISTALL
  * @since 24.05.14
  */
-@ArrayFactoryFields
 public interface MsilXXXAcessor extends DotNetXXXAccessor
 {
+	public static final MsilXXXAcessor[] EMPTY_ARRAY = new MsilXXXAcessor[0];
+
+	public static ArrayFactory<MsilXXXAcessor> ARRAY_FACTORY = new ArrayFactory<MsilXXXAcessor>()
+	{
+		@NotNull
+		@Override
+		public MsilXXXAcessor[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new MsilXXXAcessor[count];
+		}
+	};
+
 	@Nullable
 	DotNetTypeRef getReturnType();
 

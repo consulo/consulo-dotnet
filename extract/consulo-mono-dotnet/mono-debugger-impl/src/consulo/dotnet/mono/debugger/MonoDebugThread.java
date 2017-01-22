@@ -25,11 +25,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.execution.DebugConnectionInfo;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
@@ -62,10 +61,11 @@ import consulo.dotnet.debugger.breakpoint.DotNetBreakpointEngine;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
+import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import consulo.dotnet.mono.debugger.proxy.MonoThreadProxy;
 import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
-import consulo.lombok.annotations.Logger;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 import mono.debugger.AppDomainMirror;
 import mono.debugger.EventKind;
 import mono.debugger.NotSuspendedException;
@@ -82,9 +82,10 @@ import mono.debugger.request.TypeLoadRequest;
  * @author VISTALL
  * @since 10.04.14
  */
-@Logger
 public class MonoDebugThread extends Thread
 {
+	private static final Logger LOGGER = Logger.getInstance(MonoDebugThread.class);
+
 	private final XDebugSession mySession;
 	private final MonoDebugProcess myDebugProcess;
 	private final DebugConnectionInfo myDebugConnectionInfo;

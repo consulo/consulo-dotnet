@@ -33,7 +33,6 @@ import consulo.dotnet.psi.DotNetAttribute;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.msil.lang.psi.*;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilModifierListStub;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -86,7 +85,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	@Override
 	public DotNetModifier[] getModifiers()
 	{
-		val modifiers = new ArrayList<DotNetModifier>();
+		List<DotNetModifier> modifiers = new ArrayList<DotNetModifier>();
 		for(MsilModifierElementType modifierElementType : MsilTokenSets.MODIFIERS_AS_ARRAY)
 		{
 			if(hasModifier(modifierElementType))

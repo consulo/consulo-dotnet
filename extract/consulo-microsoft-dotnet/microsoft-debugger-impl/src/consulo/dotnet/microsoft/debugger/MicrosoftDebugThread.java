@@ -22,8 +22,8 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Processor;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.MultiMap;
@@ -41,10 +41,10 @@ import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointEngine;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
+import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.microsoft.debugger.breakpoint.MicrosoftBreakpointUtil;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftThreadProxy;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxy;
-import consulo.lombok.annotations.Logger;
 import mssdw.DebugInformationResult;
 import mssdw.EventKind;
 import mssdw.NotSuspendedException;
@@ -66,9 +66,10 @@ import mssdw.request.EventRequestManager;
  * @author VISTALL
  * @since 5/8/2016
  */
-@Logger
 public class MicrosoftDebugThread extends Thread
 {
+	private static final Logger LOGGER = Logger.getInstance(MicrosoftDebugThread.class);
+
 	private final XDebugSession mySession;
 	private final MicrosoftDebugProcess myDebugProcess;
 	private final DebugConnectionInfo myDebugConnectionInfo;

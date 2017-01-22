@@ -16,18 +16,29 @@
 
 package consulo.dotnet.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.util.ArrayFactory;
 import consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
  * @since 19.12.13.
  */
-@ArrayFactoryFields
 public interface DotNetAttribute extends DotNetElement
 {
+	public static final DotNetAttribute[] EMPTY_ARRAY = new DotNetAttribute[0];
+
+	public static ArrayFactory<DotNetAttribute> ARRAY_FACTORY = new ArrayFactory<DotNetAttribute>()
+	{
+		@NotNull
+		@Override
+		public DotNetAttribute[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetAttribute[count];
+		}
+	};
+
 	@Nullable
 	DotNetTypeDeclaration resolveToType();
 

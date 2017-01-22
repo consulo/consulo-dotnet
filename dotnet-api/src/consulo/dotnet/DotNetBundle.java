@@ -16,13 +16,29 @@
 
 package consulo.dotnet;
 
-import consulo.lombok.annotations.Bundle;
+import org.jetbrains.annotations.PropertyKey;
+import com.intellij.AbstractBundle;
 
 /**
  * @author VISTALL
  * @since 20.12.13.
  */
-@Bundle("messages.DotNetBundle")
-public class DotNetBundle
+public class DotNetBundle extends AbstractBundle
 {
+	private static final DotNetBundle ourInstance = new DotNetBundle();
+
+	private DotNetBundle()
+	{
+		super("messages.DotNetBundle");
+	}
+
+	public static String message(@PropertyKey(resourceBundle = "messages.DotNetBundle") String key)
+	{
+		return ourInstance.getMessage(key);
+	}
+
+	public static String message(@PropertyKey(resourceBundle = "messages.DotNetBundle") String key, Object... params)
+	{
+		return ourInstance.getMessage(key, params);
+	}
 }

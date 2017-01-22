@@ -18,7 +18,6 @@ package consulo.dotnet.externalAttributes;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.roots.OrderRootType;
-import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -27,7 +26,6 @@ import consulo.lombok.annotations.Lazy;
 public class ExternalAttributesRootOrderType extends OrderRootType
 {
 	@NotNull
-	@Lazy
 	public static ExternalAttributesRootOrderType getInstance()
 	{
 		return getOrderRootType(ExternalAttributesRootOrderType.class);

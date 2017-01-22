@@ -29,7 +29,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.representation.MsilFileRepresentationManager;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -45,7 +44,7 @@ public class MsilFileNode extends PsiFileNode
 	@Override
 	public Collection<AbstractTreeNode> getChildrenImpl()
 	{
-		val representFiles = MsilFileRepresentationManager.getInstance(getProject()).getRepresentFileInfos((MsilFile) getValue());
+		List<Pair<String, ? extends FileType>> representFiles = MsilFileRepresentationManager.getInstance(getProject()).getRepresentFileInfos((MsilFile) getValue());
 		if(representFiles.isEmpty())
 		{
 			return Collections.emptyList();

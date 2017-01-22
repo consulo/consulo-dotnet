@@ -12,6 +12,7 @@ import org.joou.UByte;
 import org.joou.UInteger;
 import org.joou.UShort;
 import com.google.common.primitives.Longs;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.PsiElement;
@@ -37,7 +38,6 @@ import consulo.internal.dotnet.asm.signature.TypeSignature;
 import consulo.internal.dotnet.asm.signature.TypeSignatureParser;
 import consulo.internal.dotnet.asm.signature.ValueTypeSignature;
 import consulo.internal.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
-import consulo.lombok.annotations.Logger;
 import consulo.msil.lang.psi.MsilConstantValue;
 import consulo.msil.lang.psi.MsilCustomAttribute;
 import consulo.msil.lang.psi.MsilCustomAttributeSignature;
@@ -52,9 +52,10 @@ import consulo.msil.lang.stubbing.values.MsilCustomAttributeEnumValue;
  * @author VISTALL
  * @since 10.07.2015
  */
-@Logger
 public class MsilCustomAttributeStubber
 {
+	public static final Logger LOGGER = Logger.getInstance(MsilCustomAttributeStubber.class);
+
 	@NotNull
 	@RequiredReadAction
 	public static MsilCustomAttributeArgumentList build(MsilCustomAttribute attribute)
@@ -358,7 +359,8 @@ public class MsilCustomAttributeStubber
 			}
 			MsilCustomAttributeStubber.LOGGER.error("Can't get value for ValueType: " + vmQName);
 			return null;
-		} MsilCustomAttributeStubber.LOGGER.error("Cant get value for: " + typeSignature);
+		}
+		MsilCustomAttributeStubber.LOGGER.error("Cant get value for: " + typeSignature);
 		return null;
 	}
 

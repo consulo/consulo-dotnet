@@ -23,6 +23,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
@@ -46,16 +47,16 @@ import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  *         <p/>
  *         Inspired by Jetbrains from java-impl (com.intellij.psi.search.searches.ClassInheritorsSearch) by max
  */
-@Logger
 public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDeclaration, TypeInheritorsSearch.SearchParameters>
 {
+	public static final Logger LOGGER = Logger.getInstance(TypeInheritorsSearch.class);
+
 	public static final TypeInheritorsSearch INSTANCE = new TypeInheritorsSearch();
 
 	static

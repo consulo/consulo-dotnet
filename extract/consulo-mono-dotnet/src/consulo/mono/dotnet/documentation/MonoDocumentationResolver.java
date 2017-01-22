@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import consulo.lombok.annotations.Logger;
 import org.emonic.base.documentation.IDocumentation;
 import org.emonic.base.documentation.ITypeDocumentation;
 import org.emonic.monodoc.MonodocTree;
@@ -30,25 +29,27 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import consulo.dotnet.documentation.DotNetDocumentationResolver;
-import consulo.dotnet.psi.DotNetMethodDeclaration;
-import consulo.dotnet.psi.DotNetQualifiedElement;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ConcurrentWeakHashMap;
+import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.documentation.DotNetDocumentationResolver;
+import consulo.dotnet.psi.DotNetMethodDeclaration;
+import consulo.dotnet.psi.DotNetQualifiedElement;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**
  * @author VISTALL
  * @since 13.05.14
  */
-@Logger
 public class MonoDocumentationResolver implements DotNetDocumentationResolver
 {
+	private static final Logger LOGGER = Logger.getInstance(MonoDocumentationResolver.class);
+
 	private Map<VirtualFile, MonodocTree[]> myCache = new ConcurrentWeakHashMap<VirtualFile, MonodocTree[]>();
 
 	@RequiredReadAction

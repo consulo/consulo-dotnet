@@ -21,9 +21,6 @@ import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.dotnet.DotNetTypes;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.TreeChooser;
 import com.intellij.openapi.application.ApplicationManager;
@@ -35,10 +32,12 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.ui.DotNetExceptionBreakpointPropertiesPanel;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.ui.chooser.DotNetTypeChooserFactory;
-import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -47,7 +46,6 @@ import consulo.lombok.annotations.Lazy;
 public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<DotNetExceptionBreakpointProperties>, DotNetExceptionBreakpointProperties>
 {
 	@NotNull
-	@Lazy
 	public static DotNetExceptionBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(DotNetExceptionBreakpointType.class);

@@ -22,7 +22,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageBase;
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
-import consulo.lombok.annotations.ArrayFactoryFields;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
@@ -31,9 +30,20 @@ import consulo.psi.PsiPackageManager;
  * @author VISTALL
  * @since 10.01.14
  */
-@ArrayFactoryFields
 public class DotNetPackage extends PsiPackageBase
 {
+	public static final DotNetPackage[] EMPTY_ARRAY = new DotNetPackage[0];
+
+	public static ArrayFactory<DotNetPackage> ARRAY_FACTORY = new ArrayFactory<DotNetPackage>()
+	{
+		@NotNull
+		@Override
+		public DotNetPackage[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetPackage[count];
+		}
+	};
+
 	public DotNetPackage(PsiManager manager, PsiPackageManager packageManager, Class<? extends ModuleExtension> extensionClass, String qualifiedName)
 	{
 		super(manager, packageManager, extensionClass, qualifiedName);

@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutorService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -47,7 +48,6 @@ import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
-import consulo.lombok.annotations.Logger;
 import mono.debugger.*;
 import mono.debugger.request.EventRequest;
 import mono.debugger.request.EventRequestManager;
@@ -57,9 +57,10 @@ import mono.debugger.request.StepRequest;
  * @author VISTALL
  * @since 16.04.2015
  */
-@Logger
 public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 {
+	private static final Logger LOGGER = Logger.getInstance(MonoVirtualMachineProxy.class);
+
 	private final Map<Integer, AppDomainMirror> myLoadedAppDomains = ContainerUtil.newConcurrentMap();
 	private final Set<StepRequest> myStepRequests = ContainerUtil.newLinkedHashSet();
 	private final MultiMap<XBreakpoint, EventRequest> myBreakpointEventRequests = MultiMap.create();

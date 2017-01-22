@@ -16,17 +16,28 @@
 
 package consulo.dotnet.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.util.ArrayFactory;
 import consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
  * @author VISTALL
  * @since 16.12.13.
  */
-@ArrayFactoryFields
 public interface DotNetExpression extends DotNetElement
 {
+	public static final DotNetExpression[] EMPTY_ARRAY = new DotNetExpression[0];
+
+	public static ArrayFactory<DotNetExpression> ARRAY_FACTORY = new ArrayFactory<DotNetExpression>()
+	{
+		@NotNull
+		@Override
+		public DotNetExpression[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetExpression[count];
+		}
+	};
+
 	@NotNull
 	DotNetTypeRef toTypeRef(boolean resolveFromParent);
 }

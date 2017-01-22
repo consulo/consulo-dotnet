@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.ProjectTopics;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
@@ -19,8 +20,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.dotnet.externalAttributes.ExternalAttributeHolder;
-import consulo.lombok.annotations.ProjectService;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
 
@@ -28,11 +27,16 @@ import consulo.vfs.util.ArchiveVfsUtil;
  * @author VISTALL
  * @since 27.07.2015
  */
-@ProjectService
 public class ExternalAttributeManager
 {
+	@NotNull
+	public static ExternalAttributeManager getInstance(@NotNull Project project)
+	{
+		return ServiceManager.getService(project, ExternalAttributeManager.class);
+	}
+
 	private Map<VirtualFile, ExternalAttributeHolder> myCache = ContainerUtil.createConcurrentWeakMap();
-	private Project myProject;
+	private final Project myProject;
 
 	ExternalAttributeManager(Project project)
 	{

@@ -5,22 +5,28 @@ import java.util.Collections;
 import java.util.List;
 
 import org.emonic.base.documentation.IDocumentation;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import consulo.lombok.annotations.ApplicationService;
 import consulo.roots.types.DocumentationOrderRootType;
 
 /**
  * @author VISTALL
  * @since 13.05.14
  */
-@ApplicationService
 public class DotNetDocumentationCache
 {
+	@NotNull
+	public static DotNetDocumentationCache getInstance()
+	{
+		return ServiceManager.getService(DotNetDocumentationCache.class);
+	}
+
 	public DotNetDocumentationCache()
 	{
 	}

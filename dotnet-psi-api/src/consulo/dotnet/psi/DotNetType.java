@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetTypeRef;
 
@@ -25,9 +25,20 @@ import consulo.dotnet.resolve.DotNetTypeRef;
  * @author VISTALL
  * @since 28.11.13.
  */
-@ArrayFactoryFields
 public interface DotNetType extends DotNetElement
 {
+	public static final DotNetType[] EMPTY_ARRAY = new DotNetType[0];
+
+	public static ArrayFactory<DotNetType> ARRAY_FACTORY = new ArrayFactory<DotNetType>()
+	{
+		@NotNull
+		@Override
+		public DotNetType[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetType[count];
+		}
+	};
+
 	@NotNull
 	@RequiredReadAction
 	DotNetTypeRef toTypeRef();

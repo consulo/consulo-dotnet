@@ -16,14 +16,25 @@
 
 package consulo.dotnet.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.ArrayFactory;
 
 /**
  * @author VISTALL
  * @since 28.11.13.
  */
-@ArrayFactoryFields
 public interface DotNetElement extends PsiElement
 {
+	public static final DotNetElement[] EMPTY_ARRAY = new DotNetElement[0];
+
+	public static ArrayFactory<DotNetElement> ARRAY_FACTORY = new ArrayFactory<DotNetElement>()
+	{
+		@NotNull
+		@Override
+		public DotNetElement[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetElement[count];
+		}
+	};
 }

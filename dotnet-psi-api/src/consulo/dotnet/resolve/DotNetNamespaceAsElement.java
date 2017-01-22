@@ -1,20 +1,31 @@
 package consulo.dotnet.resolve;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
-import consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.ArrayFactory;
 import com.intellij.util.NotNullFunction;
+import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.psi.DotNetQualifiedElement;
 
 /**
  * @author VISTALL
  * @since 11.02.14
  */
-@ArrayFactoryFields
 public interface DotNetNamespaceAsElement extends DotNetQualifiedElement
 {
+	public static final DotNetNamespaceAsElement[] EMPTY_ARRAY = new DotNetNamespaceAsElement[0];
+
+	public static ArrayFactory<DotNetNamespaceAsElement> ARRAY_FACTORY = new ArrayFactory<DotNetNamespaceAsElement>()
+	{
+		@NotNull
+		@Override
+		public DotNetNamespaceAsElement[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new DotNetNamespaceAsElement[count];
+		}
+	};
+
 	enum ChildrenFilter
 	{
 		ONLY_ELEMENTS,
