@@ -4,7 +4,6 @@
 package consulo.msbuild.dom;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.paths.PathReference;
 import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
@@ -20,7 +19,7 @@ import com.intellij.util.xml.converters.PathReferenceConverter;
  */
 @NameStrategy(MSBuildNameStrategy.class)
 @NameStrategyForAttributes(MSBuildNameStrategy.class)
-public interface Compile extends DomElement
+public interface Compile extends DomElement, SimpleItem
 {
 
 	/**
@@ -51,7 +50,7 @@ public interface Compile extends DomElement
 	 */
 	@NotNull
 	@Convert(PathReferenceConverter.class)
-	GenericAttributeValue<PathReference> getInclude();
+	GenericAttributeValue<String> getInclude();
 
 
 	/**
@@ -65,6 +64,4 @@ public interface Compile extends DomElement
 	 */
 	@NotNull
 	GenericAttributeValue<String> getCondition();
-
-
 }

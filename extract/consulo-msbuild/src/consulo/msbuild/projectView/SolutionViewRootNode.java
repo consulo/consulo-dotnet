@@ -65,7 +65,7 @@ public class SolutionViewRootNode extends ProjectViewNode<Project>
 		List<SolutionProjectViewPane> list = new ArrayList<>(myProjects.size());
 		for(VisualStudioProjectInfo projectInfo : myProjects)
 		{
-			list.add(new SolutionProjectViewPane(myProject, projectInfo.getProject(), projectInfo.getName(), getSettings()));
+			list.add(new SolutionProjectViewPane(myProject, projectInfo.getProject(), projectInfo.getName(), projectInfo.getVirtualFile(), getSettings()));
 		}
 		return list;
 	}

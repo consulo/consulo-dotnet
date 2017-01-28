@@ -14,48 +14,31 @@
  * limitations under the License.
  */
 
-package consulo.msbuild.solution.reader;
+package consulo.msbuild.solution;
 
-import java.io.File;
-
-import com.intellij.openapi.vfs.LocalFileSystem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.msbuild.dom.Project;
+import com.intellij.util.xml.DomElement;
 
 /**
  * @author VISTALL
  * @since 28-Jan-17
  */
-public class VisualStudioProjectInfo
+public class SolutionVirtualFile extends SolutionVirtualItem
 {
-	private String myName;
-	private File myFile;
-	private Project myProject;
+	@Nullable
+	private VirtualFile myVirtualFile;
 
-	public VisualStudioProjectInfo(String name, File file, Project project)
+	public SolutionVirtualFile(@NotNull String name, @Nullable SolutionVirtualDirectory parent, @Nullable DomElement element, @Nullable VirtualFile virtualFile)
 	{
-		myName = name;
-		myFile = file;
-		myProject = project;
+		super(name, parent, element);
+		myVirtualFile = virtualFile;
 	}
 
-	public String getName()
-	{
-		return myName;
-	}
-
-	public File getFile()
-	{
-		return myFile;
-	}
-
+	@Nullable
 	public VirtualFile getVirtualFile()
 	{
-		return LocalFileSystem.getInstance().findFileByIoFile(myFile);
-	}
-
-	public Project getProject()
-	{
-		return myProject;
+		return myVirtualFile;
 	}
 }

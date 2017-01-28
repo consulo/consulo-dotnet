@@ -16,6 +16,7 @@
 
 package consulo.msbuild.projectView;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -24,10 +25,16 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
+import com.intellij.ide.projectView.impl.nodes.PsiFileNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.msbuild.dom.Project;
+import consulo.msbuild.solution.SolutionVirtualDirectory;
+import consulo.msbuild.solution.SolutionVirtualFile;
+import consulo.msbuild.solution.SolutionVirtualItem;
 
 /**
  * @author VISTALL
@@ -35,12 +42,14 @@ import consulo.msbuild.dom.Project;
  */
 public class SolutionProjectViewPane extends ProjectViewNode<Project>
 {
-	private String myName;
+	private final VirtualFile myProjectFile;
+	private final String myName;
 
-	public SolutionProjectViewPane(com.intellij.openapi.project.Project project, Project project2, String name, ViewSettings viewSettings)
+	public SolutionProjectViewPane(com.intellij.openapi.project.Project project, Project project2, String name, VirtualFile projectFile, ViewSettings viewSettings)
 	{
 		super(project, project2, viewSettings);
 		myName = name;
+		myProjectFile = projectFile;
 	}
 
 	@Override
@@ -53,7 +62,44 @@ public class SolutionProjectViewPane extends ProjectViewNode<Project>
 	@Override
 	public Collection<? extends AbstractTreeNode> getChildren()
 	{
-		return Collections.emptyList();
+		VirtualFile parent = myProjectFile.getParent();
+		if(parent == null)
+		{
+			return Collections.emptyList();
+		}
+
+		SolutionVirtualDirectory directory = SolutionVirtualDirectory.get(getValue(), parent);
+
+		return buildNodes(myProject, directory, getSettings());
+	}
+
+	@NotNull
+	public static Collection<? extends AbstractTreeNode> buildNodes(com.intellij.openapi.project.Project project, SolutionVirtualDirectory directory, ViewSettings settings)
+	{
+		Collection<SolutionVirtualItem> items = directory.getChildren();
+		Collection<AbstractTreeNode> list = new ArrayList<>(items.size());
+		for(SolutionVirtualItem item : items)
+		{
+			if(item instanceof SolutionVirtualDirectory)
+			{
+				list.add(new SolutionViewDirectoryNode(project, (SolutionVirtualDirectory) item, settings));
+			}
+			else if(item instanceof SolutionVirtualFile)
+			{
+				VirtualFile virtualFile = ((SolutionVirtualFile) item).getVirtualFile();
+				if(virtualFile == null)
+				{
+					list.add(new SolutionViewInvalidFileNode(project, (SolutionVirtualFile) item, settings));
+				}
+				else
+				{
+					PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
+					assert file != null;
+					list.add(new PsiFileNode(project, file, settings));
+				}
+			}
+		}
+		return list;
 	}
 
 	@Override

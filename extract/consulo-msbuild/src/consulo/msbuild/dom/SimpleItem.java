@@ -32,7 +32,7 @@ public interface SimpleItem extends DomElement
 	 * Returns the value of the Include child.
 	 * <pre>
 	 * <h3>Attribute null:Include documentation</h3>
-	 * <!-- _locID_text="SimpleItemType_Include" _locComment="" -->Semi-colon separated list of files (wildcards are allowed) or other item names to include in this item list
+	 * <!-- _locID_text="Compile_Include" _locComment="" -->Semi-colon separated list of source files (wildcards are allowed)
 	 * </pre>
 	 *
 	 * @return the value of the Include child.
