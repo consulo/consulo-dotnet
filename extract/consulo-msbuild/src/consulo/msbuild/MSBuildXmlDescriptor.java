@@ -36,7 +36,9 @@ public class MSBuildXmlDescriptor extends DomFileDescription<Project>
 {
 	public MSBuildXmlDescriptor()
 	{
-		super(Project.class, "Project", "http://schemas.microsoft.com/developer/msbuild/2003");
+		super(Project.class, "Project");
+
+		registerNamespacePolicy(null, "http://schemas.microsoft.com/developer/msbuild/2003");
 	}
 
 	@Override

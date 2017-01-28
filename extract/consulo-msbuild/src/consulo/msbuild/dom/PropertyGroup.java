@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.GenericDomValue;
+import com.intellij.util.xml.NameStrategy;
+import com.intellij.util.xml.NameStrategyForAttributes;
 
 /**
  * http://schemas.microsoft.com/developer/msbuild/2003:PropertyGroupType interface.
@@ -19,6 +21,8 @@ import com.intellij.util.xml.GenericDomValue;
  *
  * @author VISTALL
  */
+@NameStrategy(MSBuildNameStrategy.class)
+@NameStrategyForAttributes(MSBuildNameStrategy.class)
 public interface PropertyGroup extends DomElement
 {
 

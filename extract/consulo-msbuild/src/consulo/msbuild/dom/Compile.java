@@ -4,15 +4,22 @@
 package consulo.msbuild.dom;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.paths.PathReference;
+import com.intellij.util.xml.Convert;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.NameStrategy;
+import com.intellij.util.xml.NameStrategyForAttributes;
 import com.intellij.util.xml.Required;
+import com.intellij.util.xml.converters.PathReferenceConverter;
 
 /**
  * http://schemas.microsoft.com/developer/msbuild/2003:CompileElemType interface.
  *
  * @author VISTALL
  */
+@NameStrategy(MSBuildNameStrategy.class)
+@NameStrategyForAttributes(MSBuildNameStrategy.class)
 public interface Compile extends DomElement
 {
 
@@ -43,7 +50,8 @@ public interface Compile extends DomElement
 	 * @return the value of the Include child.
 	 */
 	@NotNull
-	GenericAttributeValue<String> getInclude();
+	@Convert(PathReferenceConverter.class)
+	GenericAttributeValue<PathReference> getInclude();
 
 
 	/**

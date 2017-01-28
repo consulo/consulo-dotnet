@@ -29,7 +29,7 @@
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="consulo.msbuild">
-		<projectTypeDescriptor key="csproj" implementationClass="consulo.msbuild.MSBuildProjectTypeDescritor$Default" />
+		<projectTypeDescriptor key="csproj" implementationClass="consulo.msbuild.MSBuildProjectTypeDescritor$Default"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij.xml">
@@ -41,6 +41,8 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<sdkType implementation="consulo.msbuild.bundle.MSBuildBundleType"/>
 
-		<fileTypeFactory implementation="consulo.msbuild.MSBuildFileTypeFactory" />
+		<fileTypeFactory implementation="consulo.msbuild.MSBuildFileTypeFactory"/>
+
+		<localInspection language="XML" implementationClass="consulo.msbuild.codeInspection.MSBuildDomElementsInspection" displayName="MSBuild validation" groupName="MSBuild"/>
 	</extensions>
 </idea-plugin>

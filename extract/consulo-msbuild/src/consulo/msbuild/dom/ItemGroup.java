@@ -8,6 +8,9 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.NameStrategy;
+import com.intellij.util.xml.NameStrategyForAttributes;
+import com.intellij.util.xml.SubTagList;
 
 /**
  * http://schemas.microsoft.com/developer/msbuild/2003:ItemGroupType interface.
@@ -18,6 +21,8 @@ import com.intellij.util.xml.GenericAttributeValue;
  *
  * @author VISTALL
  */
+@NameStrategy(MSBuildNameStrategy.class)
+@NameStrategyForAttributes(MSBuildNameStrategy.class)
 public interface ItemGroup extends DomElement
 {
 
@@ -96,6 +101,30 @@ public interface ItemGroup extends DomElement
 
 
 	/**
+	 * Returns the list of ResourceCompile children.
+	 *
+	 * @return the list of ResourceCompile children.
+	 */
+	@NotNull
+	List<Compile> getCompiles();
+
+	/**
+	 * Adds new child to the list of ResourceCompile children.
+	 *
+	 * @return created child
+	 */
+	Compile addCompile();
+
+	@NotNull
+	List<None> getNones();
+
+	@NotNull
+	List<ProjectReference> getProjectReferences();
+
+	@NotNull
+	List<PackageReference> getPackageReferences();
+
+	/**
 	 * Returns the list of PreBuildEvent children.
 	 *
 	 * @return the list of PreBuildEvent children.
@@ -127,4 +156,9 @@ public interface ItemGroup extends DomElement
 	PostBuildEventItem addPostBuildEvent();
 
 
+	/**
+	 * @return references
+	 */
+	@SubTagList("Reference")
+	List<Reference> getReferences();
 }

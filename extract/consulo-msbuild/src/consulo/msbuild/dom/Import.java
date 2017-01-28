@@ -6,6 +6,8 @@ package consulo.msbuild.dom;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.NameStrategy;
+import com.intellij.util.xml.NameStrategyForAttributes;
 import com.intellij.util.xml.Required;
 
 /**
@@ -17,6 +19,8 @@ import com.intellij.util.xml.Required;
  *
  * @author VISTALL
  */
+@NameStrategy(MSBuildNameStrategy.class)
+@NameStrategyForAttributes(MSBuildNameStrategy.class)
 public interface Import extends DomElement
 {
 

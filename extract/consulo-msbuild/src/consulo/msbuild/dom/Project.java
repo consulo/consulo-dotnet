@@ -6,16 +6,22 @@ package consulo.msbuild.dom;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.util.xml.DefinesXml;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.GenericDomValue;
-import com.intellij.util.xml.SubTag;
+import com.intellij.util.xml.NameStrategy;
+import com.intellij.util.xml.NameStrategyForAttributes;
+import com.intellij.util.xml.SubTagList;
 
 /**
  * http://schemas.microsoft.com/developer/msbuild/2003:ProjectElemType interface.
  *
  * @author VISTALL
  */
+@DefinesXml
+@NameStrategy(MSBuildNameStrategy.class)
+@NameStrategyForAttributes(MSBuildNameStrategy.class)
 public interface Project extends DomElement
 {
 
@@ -64,7 +70,7 @@ public interface Project extends DomElement
 	 * @return the list of PropertyGroup children.
 	 */
 	@NotNull
-	@SubTag("PropertyGroup")
+	@SubTagList("PropertyGroup")
 	List<PropertyGroup> getPropertyGroups();
 
 	/**
@@ -72,7 +78,7 @@ public interface Project extends DomElement
 	 *
 	 * @return created child
 	 */
-	@SubTag("PropertyGroup")
+	@SubTagList("PropertyGroup")
 	PropertyGroup addPropertyGroup();
 
 
@@ -82,7 +88,7 @@ public interface Project extends DomElement
 	 * @return the list of ItemGroup children.
 	 */
 	@NotNull
-	@SubTag("ItemGroup")
+	@SubTagList("ItemGroup")
 	List<ItemGroup> getItemGroups();
 
 	/**
@@ -90,7 +96,7 @@ public interface Project extends DomElement
 	 *
 	 * @return created child
 	 */
-	@SubTag("ItemGroup")
+	@SubTagList("ItemGroup")
 	ItemGroup addItemGroup();
 
 
@@ -100,7 +106,7 @@ public interface Project extends DomElement
 	 * @return the list of ItemDefinitionGroup children.
 	 */
 	@NotNull
-	@SubTag("ItemDefinitionGroup")
+	@SubTagList("ItemDefinitionGroup")
 	List<ItemDefinitionGroup> getItemDefinitionGroups();
 
 	/**
@@ -108,7 +114,7 @@ public interface Project extends DomElement
 	 *
 	 * @return created child
 	 */
-	@SubTag("ItemDefinitionGroup")
+	@SubTagList("ItemDefinitionGroup")
 	ItemDefinitionGroup addItemDefinitionGroup();
 
 
@@ -118,7 +124,7 @@ public interface Project extends DomElement
 	 * @return the list of Choose children.
 	 */
 	@NotNull
-	@SubTag("Choose")
+	@SubTagList("Choose")
 	List<Choose> getChooses();
 
 	/**
@@ -126,7 +132,7 @@ public interface Project extends DomElement
 	 *
 	 * @return created child
 	 */
-	@SubTag("Choose")
+	@SubTagList("Choose")
 	Choose addChoose();
 
 
@@ -136,7 +142,7 @@ public interface Project extends DomElement
 	 * @return the list of UsingTask children.
 	 */
 	@NotNull
-	@SubTag("UsingTask")
+	@SubTagList("UsingTask")
 	List<UsingTask> getUsingTasks();
 
 	/**
@@ -144,7 +150,7 @@ public interface Project extends DomElement
 	 *
 	 * @return created child
 	 */
-	@SubTag("UsingTask")
+	@SubTagList("UsingTask")
 	UsingTask addUsingTask();
 
 
@@ -158,7 +164,7 @@ public interface Project extends DomElement
 	 * @return the list of ProjectExtensions children.
 	 */
 	@NotNull
-	@SubTag("ProjectExtensions")
+	@SubTagList("ProjectExtensions")
 	List<GenericDomValue<String>> getProjectExtensionses();
 
 	/**
@@ -166,7 +172,7 @@ public interface Project extends DomElement
 	 *
 	 * @return created child
 	 */
-	@SubTag("ProjectExtensions")
+	@SubTagList("ProjectExtensions")
 	GenericDomValue<String> addProjectExtensions();
 
 
