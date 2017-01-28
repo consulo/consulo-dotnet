@@ -32,9 +32,9 @@ import consulo.msbuild.dom.Project;
  * @author VISTALL
  * @since 28-Jan-17
  */
-public class MSBuildXmlDescriptor extends DomFileDescription<Project>
+public class MSBuildDomDescriptor extends DomFileDescription<Project>
 {
-	public MSBuildXmlDescriptor()
+	public MSBuildDomDescriptor()
 	{
 		super(Project.class, "Project");
 

@@ -31,6 +31,8 @@ public class MSBuildFileTypeFactory extends FileTypeFactory
 	@Override
 	public void createFileTypes(@NotNull FileTypeConsumer consumer)
 	{
+		consumer.consume(VisualStudioSolutionFileType.INSTANCE);
+
 		for(KeyedLazyInstanceEP<MSBuildProjectTypeDescritor> ep : MSBuildProjectTypeDescritor.EP_NAME.getExtensions())
 		{
 			String key = ep.getKey();

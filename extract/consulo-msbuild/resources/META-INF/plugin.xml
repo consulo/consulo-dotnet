@@ -35,13 +35,19 @@
 	<extensions defaultExtensionNs="com.intellij.xml">
 		<standardResource url="http://schemas.microsoft.com/developer/msbuild/2003" path="/standardSchemes/Microsoft.Build.xsd"/>
 
-		<dom.fileDescription implementation="consulo.msbuild.MSBuildXmlDescriptor"/>
+		<dom.fileDescription implementation="consulo.msbuild.MSBuildDomDescriptor"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<sdkType implementation="consulo.msbuild.bundle.MSBuildBundleType"/>
 
 		<fileTypeFactory implementation="consulo.msbuild.MSBuildFileTypeFactory"/>
+
+		<projectViewPane implementation="consulo.msbuild.projectView.SolutionViewPane" />
+
+		<projectService serviceImplementation="consulo.msbuild.MSBuildSolutionManager" />
+
+		<projectImportProvider implementation="consulo.msbuild.importProvider.MSBuildProjectImportProvider"/>
 
 		<localInspection language="XML" implementationClass="consulo.msbuild.codeInspection.MSBuildDomElementsInspection" displayName="MSBuild validation" groupName="MSBuild"/>
 	</extensions>

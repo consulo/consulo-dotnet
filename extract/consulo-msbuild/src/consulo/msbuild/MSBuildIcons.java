@@ -7,4 +7,5 @@ import consulo.ui.migration.SwingImageRef;
 public interface MSBuildIcons
 {
 	SwingImageRef Msbuild = IconLoader.getIcon("/icons/msbuild.png");  // 16x16
+	SwingImageRef VisualStudio = IconLoader.getIcon("/icons/visualStudio.png");  // 16x16
 }
