@@ -19,19 +19,22 @@ package consulo.msbuild.projectView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Supplier;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.PsiFileNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import consulo.msbuild.dom.Project;
+import consulo.msbuild.solution.SolutionVirtualBuilder;
 import consulo.msbuild.solution.SolutionVirtualDirectory;
 import consulo.msbuild.solution.SolutionVirtualFile;
 import consulo.msbuild.solution.SolutionVirtualItem;
@@ -60,6 +63,7 @@ public class SolutionProjectViewPane extends ProjectViewNode<Project>
 
 	@NotNull
 	@Override
+	@RequiredDispatchThread
 	public Collection<? extends AbstractTreeNode> getChildren()
 	{
 		VirtualFile parent = myProjectFile.getParent();
@@ -68,15 +72,19 @@ public class SolutionProjectViewPane extends ProjectViewNode<Project>
 			return Collections.emptyList();
 		}
 
-		SolutionVirtualDirectory directory = SolutionVirtualDirectory.get(getValue(), parent);
+		SolutionVirtualDirectory directory = SolutionVirtualBuilder.build(getValue(), parent);
 
-		return buildNodes(myProject, directory, getSettings());
+		return buildNodes(myProject, directory::getChildren, getSettings(), false);
 	}
 
 	@NotNull
-	public static Collection<? extends AbstractTreeNode> buildNodes(com.intellij.openapi.project.Project project, SolutionVirtualDirectory directory, ViewSettings settings)
+	@RequiredReadAction
+	public static Collection<? extends AbstractTreeNode> buildNodes(com.intellij.openapi.project.Project project,
+			Supplier<Collection<SolutionVirtualItem>> values,
+			ViewSettings settings,
+			boolean restrictPatcher)
 	{
-		Collection<SolutionVirtualItem> items = directory.getChildren();
+		Collection<SolutionVirtualItem> items = values.get();
 		Collection<AbstractTreeNode> list = new ArrayList<>(items.size());
 		for(SolutionVirtualItem item : items)
 		{
@@ -95,7 +103,7 @@ public class SolutionProjectViewPane extends ProjectViewNode<Project>
 				{
 					PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
 					assert file != null;
-					list.add(new PsiFileNode(project, file, settings));
+					list.add(new SolutionViewFileNode(project, file, settings, (SolutionVirtualFile) item, restrictPatcher));
 				}
 			}
 		}

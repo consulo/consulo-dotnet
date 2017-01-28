@@ -26,6 +26,7 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
 import consulo.msbuild.MSBuildSolutionManager;
+import consulo.msbuild.solution.SolutionVirtualBuilder;
 import consulo.msbuild.solution.SolutionVirtualDirectory;
 import consulo.msbuild.solution.SolutionVirtualFile;
 import consulo.msbuild.solution.reader.VisualStudioProjectInfo;
@@ -41,6 +42,11 @@ public class MSBuildGeneratedSourcesFilter extends GeneratedSourcesFilter
 	@Override
 	public boolean isGeneratedSource(@NotNull VirtualFile virtualFile, @NotNull Project project)
 	{
+		return isGeneratedFile(virtualFile, project);
+	}
+
+	public static boolean isGeneratedFile(@NotNull VirtualFile virtualFile, @NotNull Project project)
+	{
 		MSBuildSolutionManager solutionManager = MSBuildSolutionManager.getInstance(project);
 
 		VirtualFile solutionFile = solutionManager.getSolutionFile();
@@ -55,7 +61,7 @@ public class MSBuildGeneratedSourcesFilter extends GeneratedSourcesFilter
 				continue;
 			}
 
-			SolutionVirtualDirectory directory = SolutionVirtualDirectory.get(projectInfo.getProject(), projectFile.getParent());
+			SolutionVirtualDirectory directory = SolutionVirtualBuilder.build(projectInfo.getProject(), projectFile.getParent());
 
 			Ref<Boolean> ref = Ref.create(Boolean.FALSE);
 			directory.visitRecursive(solutionVirtualItem ->
@@ -77,6 +83,7 @@ public class MSBuildGeneratedSourcesFilter extends GeneratedSourcesFilter
 			{
 				return true;
 			}
-		} return false;
+		}
+		return false;
 	}
 }

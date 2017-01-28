@@ -4,9 +4,9 @@
 package consulo.msbuild.dom;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.GenericDomValue;
 
 /**
  * http://schemas.microsoft.com/developer/msbuild/2003:SimpleItemType interface.
@@ -94,6 +94,14 @@ public interface SimpleItem extends DomElement
 	@NotNull
 	GenericAttributeValue<String> getLabel();
 
-	@Nullable
-	SimpleTag getAutoGen();
+	@NotNull
+	GenericDomValue<String> getAutoGen();
+
+	@NotNull
+	GenericDomValue<String> getSubType();
+
+	@NotNull
+	GenericDomValue<String> getDependentUpon();
+
+	GenericDomValue<String> getGenerator();
 }

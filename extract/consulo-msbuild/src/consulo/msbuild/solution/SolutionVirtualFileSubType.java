@@ -20,18 +20,22 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
- * @since 28-Jan-17
+ * @since 29-Jan-17
  */
-public class SolutionVirtualDirectory extends SolutionVirtualCompositeItem
+public enum SolutionVirtualFileSubType
 {
-	public SolutionVirtualDirectory(String name, SolutionVirtualDirectory parent)
-	{
-		super(name, parent, null);
-	}
+	Form, Designer, __generator, __unknown;
 
 	@NotNull
-	public SolutionVirtualDirectory createOrGetDirectory(@NotNull String name)
+	public static SolutionVirtualFileSubType find(@NotNull String name)
 	{
-		return (SolutionVirtualDirectory) myChildren.computeIfAbsent(name, s -> new SolutionVirtualDirectory(name, this));
+		for(SolutionVirtualFileSubType type : values())
+		{
+			if(name.equals(type.name()))
+			{
+				return type;
+			}
+		}
+		return __unknown;
 	}
 }

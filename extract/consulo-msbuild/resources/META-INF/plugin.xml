@@ -43,13 +43,17 @@
 
 		<fileTypeFactory implementation="consulo.msbuild.MSBuildFileTypeFactory"/>
 
-		<projectViewPane implementation="consulo.msbuild.projectView.SolutionViewPane" />
+		<projectViewPane implementation="consulo.msbuild.projectView.SolutionViewPane"/>
 
-		<projectService serviceImplementation="consulo.msbuild.MSBuildSolutionManager" />
+		<projectService serviceImplementation="consulo.msbuild.MSBuildSolutionManager"/>
 
 		<projectImportProvider implementation="consulo.msbuild.importProvider.MSBuildProjectImportProvider"/>
 
-		<generatedSourcesFilter implementation="consulo.msbuild.roots.MSBuildGeneratedSourcesFilter" />
+		<generatedSourcesFilter implementation="consulo.msbuild.roots.MSBuildGeneratedSourcesFilter"/>
+
+		<treeStructureProvider implementation="consulo.msbuild.projectView.SolutionViewTreePatcher"/>
+
+		<iconDescriptorUpdater implementation="consulo.msbuild.MSBuildIconDescriptorUpdater"/>
 
 		<localInspection language="XML" implementationClass="consulo.msbuild.codeInspection.MSBuildDomElementsInspection" displayName="MSBuild validation" groupName="MSBuild"/>
 	</extensions>

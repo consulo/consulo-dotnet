@@ -16,34 +16,34 @@
 
 package consulo.msbuild.projectView;
 
+import java.util.ArrayList;
 import java.util.Collection;
-
-import javax.swing.Icon;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.ProjectViewImpl;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.RequiredReadAction;
-import consulo.msbuild.solution.SolutionVirtualDirectory;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.msbuild.solution.SolutionVirtualFile;
+import consulo.msbuild.solution.SolutionVirtualItem;
 
 /**
  * @author VISTALL
- * @since 28-Jan-17
+ * @since 29-Jan-17
  */
-public class SolutionViewDirectoryNode extends ProjectViewNode<SolutionVirtualDirectory>
+public class SolutionViewGroupNode extends ProjectViewNode<SolutionVirtualFile>
 {
-	public SolutionViewDirectoryNode(Project project, SolutionVirtualDirectory solutionVirtualDirectory, ViewSettings viewSettings)
+	private final List<SolutionVirtualItem> myItems = new ArrayList<>();
+
+	public SolutionViewGroupNode(Project project, SolutionVirtualFile solutionVirtualGroup, ViewSettings viewSettings)
 	{
-		super(project, solutionVirtualDirectory, viewSettings);
+		super(project, solutionVirtualGroup, viewSettings);
 	}
 
 	@Override
@@ -52,38 +52,38 @@ public class SolutionViewDirectoryNode extends ProjectViewNode<SolutionVirtualDi
 		return false;
 	}
 
-	@Override
-	public int getWeight()
-	{
-		final ProjectView projectView = ProjectView.getInstance(myProject);
-		if(projectView instanceof ProjectViewImpl && !((ProjectViewImpl) projectView).isFoldersAlwaysOnTop())
-		{
-			return 20;
-		}
-		return 0;
-	}
-
 	@NotNull
 	@Override
-	@RequiredReadAction
+	@RequiredDispatchThread
 	public Collection<? extends AbstractTreeNode> getChildren()
 	{
-		return SolutionProjectViewPane.buildNodes(myProject, getValue()::getChildren, getSettings(), false);
+		return SolutionProjectViewPane.buildNodes(myProject, () -> myItems, getSettings(), true);
 	}
 
 	@Override
 	protected void update(PresentationData presentation)
 	{
-		SolutionVirtualDirectory value = getValue();
+		SolutionVirtualFile value = getValue();
 
-		Icon icon = AllIcons.Nodes.TreeOpen;
-
-		SolutionVirtualDirectory parent = value.getParent();
-		if(parent != null && StringUtil.isEmpty(parent.getName()) && Comparing.equal(value.getName(), "Properties"))
+		switch(value.getSubType())
 		{
-			icon = AllIcons.General.ProjectSettings;
+			case Form:
+				presentation.setIcon(AllIcons.FileTypes.UiForm);
+				break;
+			case Designer:
+				presentation.setIcon(AllIcons.Actions.RealIntentionBulb);
+				break;
+			case __generator:
+				if(Comparing.equal(value.getName(), "Settings.settings"))
+				{
+					presentation.setIcon(AllIcons.General.SecondaryGroup);
+				}
+				break;
+			case __unknown:
+				presentation.setIcon(AllIcons.Toolbar.Unknown);
+				break;
 		}
-		presentation.setIcon(icon);
+
 		presentation.setPresentableText(getValue().getName());
 	}
 
@@ -96,7 +96,11 @@ public class SolutionViewDirectoryNode extends ProjectViewNode<SolutionVirtualDi
 	@Override
 	public boolean isAlwaysShowPlus()
 	{
-		SolutionVirtualDirectory value = getValue();
-		return !value.getChildren().isEmpty();
+		return !myItems.isEmpty();
+	}
+
+	public void addChildren(SolutionVirtualItem item)
+	{
+		myItems.add(item);
 	}
 }

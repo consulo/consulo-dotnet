@@ -29,6 +29,12 @@ public class SolutionVirtualFile extends SolutionVirtualItem
 {
 	@Nullable
 	private VirtualFile myVirtualFile;
+	@Nullable
+	private SolutionVirtualFileSubType mySubType;
+	@Nullable
+	private String myDependentUpon;
+	@Nullable
+	private String myGenerator;
 
 	private boolean myGenerated;
 
@@ -49,9 +55,45 @@ public class SolutionVirtualFile extends SolutionVirtualItem
 		return myGenerated;
 	}
 
+	public SolutionVirtualFile setGenerator(@Nullable String generator)
+	{
+		myGenerator = generator;
+		return this;
+	}
+
+	@Nullable
+	public String getGenerator()
+	{
+		return myGenerator;
+	}
+
+	public SolutionVirtualFile setSubType(@Nullable SolutionVirtualFileSubType subType)
+	{
+		mySubType = subType;
+		return this;
+	}
+
+	@Nullable
+	public SolutionVirtualFileSubType getSubType()
+	{
+		return mySubType;
+	}
+
 	@Nullable
 	public VirtualFile getVirtualFile()
 	{
 		return myVirtualFile;
+	}
+
+	public SolutionVirtualFile setDependentUpon(@Nullable String dependentUpon)
+	{
+		myDependentUpon = dependentUpon;
+		return this;
+	}
+
+	@Nullable
+	public String getDependentUpon()
+	{
+		return myDependentUpon;
 	}
 }
