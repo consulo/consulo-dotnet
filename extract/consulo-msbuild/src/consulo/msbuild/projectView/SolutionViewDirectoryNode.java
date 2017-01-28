@@ -81,7 +81,7 @@ public class SolutionViewDirectoryNode extends ProjectViewNode<SolutionVirtualDi
 		SolutionVirtualDirectory parent = value.getParent();
 		if(parent != null && StringUtil.isEmpty(parent.getName()) && Comparing.equal(value.getName(), "Properties"))
 		{
-			icon = AllIcons.General.ProjectSettings;
+			icon = AllIcons.General.Settings;
 		}
 		presentation.setIcon(icon);
 		presentation.setPresentableText(getValue().getName());
