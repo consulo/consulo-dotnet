@@ -74,12 +74,14 @@ public class SolutionProjectViewPane extends ProjectViewNode<Project>
 
 		SolutionVirtualDirectory directory = SolutionVirtualBuilder.build(getValue(), parent);
 
-		return buildNodes(myProject, directory::getChildren, getSettings(), false);
+		Collection<AbstractTreeNode> nodes = buildNodes(myProject, directory::getChildren, getSettings(), false);
+		nodes.add(new SolutionViewRefencesNode(myProject, getValue(), getSettings()));
+		return nodes;
 	}
 
 	@NotNull
 	@RequiredReadAction
-	public static Collection<? extends AbstractTreeNode> buildNodes(com.intellij.openapi.project.Project project,
+	public static Collection<AbstractTreeNode> buildNodes(com.intellij.openapi.project.Project project,
 			Supplier<Collection<SolutionVirtualItem>> values,
 			ViewSettings settings,
 			boolean restrictPatcher)
