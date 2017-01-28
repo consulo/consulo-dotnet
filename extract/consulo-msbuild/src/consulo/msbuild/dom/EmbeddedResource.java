@@ -13,7 +13,7 @@ import com.intellij.util.xml.Required;
  *
  * @author VISTALL
  */
-public interface EmbeddedResource extends DomElement
+public interface EmbeddedResource extends DomElement, SimpleItem
 {
 
 	/**
@@ -57,6 +57,4 @@ public interface EmbeddedResource extends DomElement
 	 */
 	@NotNull
 	GenericAttributeValue<String> getCondition();
-
-
 }

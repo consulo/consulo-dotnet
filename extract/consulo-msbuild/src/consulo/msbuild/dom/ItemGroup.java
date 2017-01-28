@@ -106,6 +106,21 @@ public interface ItemGroup extends DomElement
 	 * @return the list of ResourceCompile children.
 	 */
 	@NotNull
+	List<EmbeddedResource> getEmbeddedResources();
+
+	/**
+	 * Adds new child to the list of ResourceCompile children.
+	 *
+	 * @return created child
+	 */
+	EmbeddedResource addEmbeddedResource();
+
+	/**
+	 * Returns the list of ResourceCompile children.
+	 *
+	 * @return the list of ResourceCompile children.
+	 */
+	@NotNull
 	List<Compile> getCompiles();
 
 	/**

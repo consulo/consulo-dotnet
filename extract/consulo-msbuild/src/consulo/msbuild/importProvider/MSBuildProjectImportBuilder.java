@@ -16,22 +16,27 @@
 
 package consulo.msbuild.importProvider;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
+import consulo.annotations.RequiredReadAction;
 import consulo.msbuild.MSBuildIcons;
 import consulo.msbuild.MSBuildSolutionManager;
 
@@ -80,12 +85,40 @@ public class MSBuildProjectImportBuilder extends ProjectImportBuilder
 
 	@Nullable
 	@Override
-	public List<Module> commit(Project project, ModifiableModuleModel model, ModulesProvider modulesProvider, ModifiableArtifactModel artifactModel)
+	@RequiredReadAction
+	public List<Module> commit(Project project, ModifiableModuleModel old, ModulesProvider modulesProvider, ModifiableArtifactModel artifactModel)
 	{
 		String fileToImport = getFileToImport();
 
 		VirtualFile solutionFile = LocalFileSystem.getInstance().findFileByPath(fileToImport);
+		assert solutionFile != null;
 		MSBuildSolutionManager.getInstance(project).setUrl(solutionFile);
-		return Collections.emptyList();
+		VirtualFile parent = solutionFile.getParent();
+
+		List<Module> modules = new ArrayList<>();
+
+		final ModifiableModuleModel modifiableModuleModel = old == null ? ModuleManager.getInstance(project).getModifiableModel() : old;
+
+		final ModifiableRootModel mainModuleModel = createModuleWithSingleContent(parent.getName() + " (Solution)", parent, modifiableModuleModel);
+		modules.add(mainModuleModel.getModule());
+		WriteAction.run(mainModuleModel::commit);
+
+		if(modifiableModuleModel != old)
+		{
+			WriteAction.run(modifiableModuleModel::commit);
+		}
+		return modules;
+	}
+
+	@RequiredReadAction
+	private ModifiableRootModel createModuleWithSingleContent(String name, VirtualFile dir, ModifiableModuleModel modifiableModuleModel)
+	{
+		Module module = modifiableModuleModel.newModule(name, dir.getPath());
+
+		ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+		ModifiableRootModel modifiableModel = moduleRootManager.getModifiableModel();
+		modifiableModel.addContentEntry(dir);
+
+		return modifiableModel;
 	}
 }

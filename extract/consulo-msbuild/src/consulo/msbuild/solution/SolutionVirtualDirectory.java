@@ -46,6 +46,7 @@ public class SolutionVirtualDirectory extends SolutionVirtualItem
 			addAll(group.getCompiles(), baseDir, root);
 			addAll(group.getNones(), baseDir, root);
 			addAll(group.getResourceCompiles(), baseDir, root);
+			addAll(group.getEmbeddedResources(), baseDir, root);
 			addAll(group.getItems(), baseDir, root);
 		}
 
