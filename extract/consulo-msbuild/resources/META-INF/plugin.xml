@@ -30,6 +30,7 @@
 
 	<extensions defaultExtensionNs="consulo.msbuild">
 		<projectTypeDescriptor key="csproj" implementationClass="consulo.msbuild.MSBuildProjectTypeDescritor$Default"/>
+		<projectTypeDescriptor key="shproj" implementationClass="consulo.msbuild.MSBuildProjectTypeDescritor$Default"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij.xml">
