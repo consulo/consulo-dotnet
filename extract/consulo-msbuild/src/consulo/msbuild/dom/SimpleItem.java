@@ -4,6 +4,7 @@
 package consulo.msbuild.dom;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 
@@ -93,5 +94,6 @@ public interface SimpleItem extends DomElement
 	@NotNull
 	GenericAttributeValue<String> getLabel();
 
-
+	@Nullable
+	SimpleTag getAutoGen();
 }

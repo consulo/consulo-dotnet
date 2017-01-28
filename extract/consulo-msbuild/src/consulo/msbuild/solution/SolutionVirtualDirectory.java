@@ -20,8 +20,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Predicate;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -30,6 +32,7 @@ import com.intellij.util.xml.GenericAttributeValue;
 import consulo.msbuild.dom.ItemGroup;
 import consulo.msbuild.dom.Project;
 import consulo.msbuild.dom.SimpleItem;
+import consulo.msbuild.dom.SimpleTag;
 
 /**
  * @author VISTALL
@@ -37,11 +40,11 @@ import consulo.msbuild.dom.SimpleItem;
  */
 public class SolutionVirtualDirectory extends SolutionVirtualItem
 {
-	public static SolutionVirtualDirectory get(Project p, @NotNull VirtualFile baseDir)
+	public static SolutionVirtualDirectory get(@NotNull Project domProject, @NotNull VirtualFile baseDir)
 	{
 		SolutionVirtualDirectory root = new SolutionVirtualDirectory("", null);
 
-		for(ItemGroup group : p.getItemGroups())
+		for(ItemGroup group : domProject.getItemGroups())
 		{
 			addAll(group.getCompiles(), baseDir, root);
 			addAll(group.getNones(), baseDir, root);
@@ -96,7 +99,38 @@ public class SolutionVirtualDirectory extends SolutionVirtualItem
 
 			String name = ContainerUtil.getLastItem(split);
 			assert name != null;
-			target.myChildren.put(name, new SolutionVirtualFile(name, target, null, file));
+
+			SolutionVirtualFile solutionVirtualFile = new SolutionVirtualFile(name, target, null, file);
+
+			target.myChildren.put(name, solutionVirtualFile);
+
+			SimpleTag autoGen = simpleItem.getAutoGen();
+			if(autoGen != null)
+			{
+				String autoGenValue = autoGen.getText();
+				if(Comparing.equal(autoGenValue, "True"))
+				{
+					solutionVirtualFile.setGenerated(true);
+				}
+			}
 		}
+	}
+
+	@Override
+	public boolean visitRecursive(@NotNull Predicate<SolutionVirtualItem> processor)
+	{
+		if(!processor.test(this))
+		{
+			return false;
+		}
+
+		for(SolutionVirtualItem item : myChildren.values())
+		{
+			if(!item.visitRecursive(processor))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }

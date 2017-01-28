@@ -49,6 +49,8 @@
 
 		<projectImportProvider implementation="consulo.msbuild.importProvider.MSBuildProjectImportProvider"/>
 
+		<generatedSourcesFilter implementation="consulo.msbuild.roots.MSBuildGeneratedSourcesFilter" />
+
 		<localInspection language="XML" implementationClass="consulo.msbuild.codeInspection.MSBuildDomElementsInspection" displayName="MSBuild validation" groupName="MSBuild"/>
 	</extensions>
 </idea-plugin>

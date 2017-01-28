@@ -16,6 +16,8 @@
 
 package consulo.msbuild.solution;
 
+import java.util.function.Predicate;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.util.xml.DomElement;
@@ -24,7 +26,7 @@ import com.intellij.util.xml.DomElement;
  * @author VISTALL
  * @since 28-Jan-17
  */
-public class SolutionVirtualItem
+public abstract class SolutionVirtualItem
 {
 	private String myName;
 	@Nullable
@@ -48,5 +50,10 @@ public class SolutionVirtualItem
 	public String getName()
 	{
 		return myName;
+	}
+
+	public boolean visitRecursive(@NotNull Predicate<SolutionVirtualItem> processor)
+	{
+		return processor.test(this);
 	}
 }

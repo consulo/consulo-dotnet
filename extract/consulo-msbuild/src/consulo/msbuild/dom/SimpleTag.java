@@ -14,44 +14,19 @@
  * limitations under the License.
  */
 
-package consulo.msbuild.solution;
+package consulo.msbuild.dom;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.TagValue;
 
 /**
  * @author VISTALL
  * @since 28-Jan-17
  */
-public class SolutionVirtualFile extends SolutionVirtualItem
+public interface SimpleTag extends DomElement
 {
 	@Nullable
-	private VirtualFile myVirtualFile;
-
-	private boolean myGenerated;
-
-	public SolutionVirtualFile(@NotNull String name, @Nullable SolutionVirtualDirectory parent, @Nullable DomElement element, @Nullable VirtualFile virtualFile)
-	{
-		super(name, parent, element);
-		myVirtualFile = virtualFile;
-	}
-
-	public SolutionVirtualFile setGenerated(boolean generated)
-	{
-		myGenerated = generated;
-		return this;
-	}
-
-	public boolean isGenerated()
-	{
-		return myGenerated;
-	}
-
-	@Nullable
-	public VirtualFile getVirtualFile()
-	{
-		return myVirtualFile;
-	}
+	@TagValue
+	String getText();
 }
