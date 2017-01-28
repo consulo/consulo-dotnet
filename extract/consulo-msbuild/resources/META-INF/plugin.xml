@@ -20,8 +20,27 @@
 	<version>SNAPSHOT</version>
 	<vendor>consulo.io</vendor>
 	<category>Build</category>
+	<depends>com.intellij.xml</depends>
+
+	<extensionPoints>
+		<extensionPoint name="projectTypeDescriptor" beanClass="com.intellij.util.KeyedLazyInstanceEP">
+			<with attribute="implementationClass" implements="consulo.msbuild.MSBuildProjectTypeDescritor"/>
+		</extensionPoint>
+	</extensionPoints>
+
+	<extensions defaultExtensionNs="consulo.msbuild">
+		<projectTypeDescriptor key="csproj" implementationClass="consulo.msbuild.MSBuildProjectTypeDescritor$Default" />
+	</extensions>
+
+	<extensions defaultExtensionNs="com.intellij.xml">
+		<standardResource url="http://schemas.microsoft.com/developer/msbuild/2003" path="/standardSchemes/Microsoft.Build.xsd"/>
+
+		<dom.fileDescription implementation="consulo.msbuild.MSBuildXmlDescriptor"/>
+	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<sdkType implementation="consulo.msbuild.bundle.MSBuildBundleType" />
+		<sdkType implementation="consulo.msbuild.bundle.MSBuildBundleType"/>
+
+		<fileTypeFactory implementation="consulo.msbuild.MSBuildFileTypeFactory" />
 	</extensions>
 </idea-plugin>
