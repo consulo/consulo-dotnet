@@ -63,7 +63,11 @@ public class SolutionVirtualBuilder
 				continue;
 			}
 
-			List<String> split = StringUtil.split(value, "\\");
+			String linkValue = simpleItem.getLink().getStringValue();
+
+			String presentationPath = linkValue == null ? value : linkValue;
+
+			List<String> split = StringUtil.split(presentationPath, "\\");
 
 			SolutionVirtualDirectory target = root;
 			for(int i = 0; i < (split.size() - 1); i++)

@@ -103,5 +103,9 @@ public interface SimpleItem extends DomElement
 	@NotNull
 	GenericDomValue<String> getDependentUpon();
 
+	@NotNull
 	GenericDomValue<String> getGenerator();
+
+	@NotNull
+	GenericDomValue<String> getLink();
 }
