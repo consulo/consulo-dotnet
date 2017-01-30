@@ -30,8 +30,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.msbuild.MSBuildIcons;
-import consulo.msbuild.solution.reader.VisualStudioProjectInfo;
-import consulo.msbuild.solution.reader.VisualStudioSolutionParser;
+import consulo.msbuild.solution.model.WProject;
+import consulo.msbuild.solution.model.WSolution;
 
 /**
  * @author VISTALL
@@ -39,7 +39,7 @@ import consulo.msbuild.solution.reader.VisualStudioSolutionParser;
  */
 public class SolutionViewRootNode extends ProjectViewNode<Project>
 {
-	private List<VisualStudioProjectInfo> myProjects;
+	private WSolution myWSolution;
 	private VirtualFile mySolutionFile;
 
 	@RequiredReadAction
@@ -48,7 +48,7 @@ public class SolutionViewRootNode extends ProjectViewNode<Project>
 		super(project, project, viewSettings);
 		mySolutionFile = solutionFile;
 
-		myProjects = VisualStudioSolutionParser.parse(myProject, solutionFile);
+		myWSolution = WSolution.build(myProject, solutionFile);
 	}
 
 	@Override
@@ -62,10 +62,12 @@ public class SolutionViewRootNode extends ProjectViewNode<Project>
 	@RequiredDispatchThread
 	public Collection<? extends AbstractTreeNode> getChildren()
 	{
-		List<SolutionProjectViewPane> list = new ArrayList<>(myProjects.size());
-		for(VisualStudioProjectInfo projectInfo : myProjects)
+		Collection<WProject> projects = myWSolution.getProjects();
+
+		List<SolutionProjectViewPane> list = new ArrayList<>(projects.size());
+		for(WProject wProject : myWSolution.getProjects())
 		{
-			list.add(new SolutionProjectViewPane(myProject, projectInfo.getProject(), projectInfo.getName(), projectInfo.getVirtualFile(), getSettings()));
+			list.add(new SolutionProjectViewPane(myProject, wProject.getDomProject(), wProject.getName(), wProject.getVirtualFile(), getSettings()));
 		}
 		return list;
 	}
@@ -76,7 +78,7 @@ public class SolutionViewRootNode extends ProjectViewNode<Project>
 		presentation.setIcon(MSBuildIcons.VisualStudio);
 		presentation.setPresentableText("Solution");
 
-		String solName = String.format("Solution '%s' (%s project(s))", mySolutionFile.getNameWithoutExtension(), myProjects.size());
+		String solName = String.format("Solution '%s' (%s project(s))", mySolutionFile.getNameWithoutExtension(), myWSolution.getProjects().size());
 
 		presentation.setPresentableText(solName);
 	}

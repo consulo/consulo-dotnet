@@ -14,29 +14,32 @@
  * limitations under the License.
  */
 
-package consulo.msbuild;
+package consulo.msbuild.solution.reader;
 
-import org.jetbrains.annotations.NotNull;
-import com.intellij.ide.highlighter.XmlFileType;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+import java.util.ArrayList;
 
 /**
  * @author VISTALL
- * @since 28-Jan-17
+ * @since 30-Jan-17
+ *
+ * https://github.com/mono/monodevelop/blob/master/main/src/core/MonoDevelop.Core/MonoDevelop.Projects.MSBuild/SlnFile.cs
  */
-public class MSBuildFileTypeFactory extends FileTypeFactory
+public class SlnProjectCollection extends ArrayList<SlnProject>
 {
-	@Override
-	public void createFileTypes(@NotNull FileTypeConsumer consumer)
+	private SlnFile myParentFile;
+
+	public SlnFile getParentFile()
 	{
-		consumer.consume(VisualStudioSolutionFileType.INSTANCE);
+		return myParentFile;
+	}
 
-		for(MSBuildProjectTypeEP<MSBuildProjectType> ep : MSBuildProjectType.EP_NAME.getExtensions())
+	public SlnProjectCollection setParentFile(SlnFile parentFile)
+	{
+		myParentFile = parentFile;
+		for(SlnProject project : this)
 		{
-			String key = ep.getExt();
-
-			consumer.consume(XmlFileType.INSTANCE, key);
+			project.setParentFile(parentFile);
 		}
+		return this;
 	}
 }

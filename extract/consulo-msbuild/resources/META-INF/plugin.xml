@@ -23,14 +23,14 @@
 	<depends>com.intellij.xml</depends>
 
 	<extensionPoints>
-		<extensionPoint name="projectTypeDescriptor" beanClass="com.intellij.util.KeyedLazyInstanceEP">
-			<with attribute="implementationClass" implements="consulo.msbuild.MSBuildProjectTypeDescritor"/>
+		<extensionPoint name="projectType" beanClass="consulo.msbuild.MSBuildProjectTypeEP">
+			<with attribute="implementationClass" implements="consulo.msbuild.MSBuildProjectType"/>
 		</extensionPoint>
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="consulo.msbuild">
-		<projectTypeDescriptor key="csproj" implementationClass="consulo.msbuild.MSBuildProjectTypeDescritor$Default"/>
-		<projectTypeDescriptor key="shproj" implementationClass="consulo.msbuild.MSBuildProjectTypeDescritor$Default"/>
+		<projectType ext="csproj" guid="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" implementationClass="consulo.msbuild.MSBuildProjectType$Default"/>
+		<projectType ext="shproj" guid="{D954291E-2A0B-460D-934E-DC6B0785DB48}" implementationClass="consulo.msbuild.MSBuildProjectType$Default"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij.xml">

@@ -18,7 +18,6 @@ package consulo.msbuild.importProvider;
 
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.ide.util.newProjectWizard.ProjectNameStep;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.project.Project;
@@ -26,6 +25,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectImportProvider;
 import consulo.msbuild.VisualStudioSolutionFileType;
+import consulo.msbuild.importProvider.ui.MSBuildSetupTargetStep;
 
 /**
  * @author VISTALL
@@ -46,7 +46,7 @@ public class MSBuildProjectImportProvider extends ProjectImportProvider
 		context.setProjectName(fileByPath.getNameWithoutExtension());
 		context.setProjectFileDirectory(fileByPath.getParent().getPath());
 
-		return new ModuleWizardStep[]{new ProjectNameStep(context, null)};
+		return new ModuleWizardStep[]{new MSBuildSetupTargetStep(context, null, fileByPath)};
 	}
 
 	@Override

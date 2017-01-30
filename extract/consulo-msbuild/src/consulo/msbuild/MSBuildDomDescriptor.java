@@ -24,7 +24,6 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.xml.XmlFile;
-import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.xml.DomFileDescription;
 import consulo.msbuild.dom.Project;
 
@@ -50,9 +49,9 @@ public class MSBuildDomDescriptor extends DomFileDescription<Project>
 			return false;
 		}
 
-		for(KeyedLazyInstanceEP<MSBuildProjectTypeDescritor> ep : MSBuildProjectTypeDescritor.EP_NAME.getExtensions())
+		for(MSBuildProjectTypeEP<MSBuildProjectType> ep : MSBuildProjectType.EP_NAME.getExtensions())
 		{
-			String key = ep.getKey();
+			String key = ep.getExt();
 			if(Comparing.equal(virtualFile.getExtension(), key))
 			{
 				return true;

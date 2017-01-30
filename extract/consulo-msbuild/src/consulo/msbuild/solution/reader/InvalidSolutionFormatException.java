@@ -14,29 +14,21 @@
  * limitations under the License.
  */
 
-package consulo.msbuild;
-
-import org.jetbrains.annotations.NotNull;
-import com.intellij.ide.highlighter.XmlFileType;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+package consulo.msbuild.solution.reader;
 
 /**
  * @author VISTALL
- * @since 28-Jan-17
+ * @since 30-Jan-17
  */
-public class MSBuildFileTypeFactory extends FileTypeFactory
+public class InvalidSolutionFormatException extends RuntimeException
 {
-	@Override
-	public void createFileTypes(@NotNull FileTypeConsumer consumer)
+	public InvalidSolutionFormatException(int line)
 	{
-		consumer.consume(VisualStudioSolutionFileType.INSTANCE);
+		super("Invalid format in line " + line);
+	}
 
-		for(MSBuildProjectTypeEP<MSBuildProjectType> ep : MSBuildProjectType.EP_NAME.getExtensions())
-		{
-			String key = ep.getExt();
-
-			consumer.consume(XmlFileType.INSTANCE, key);
-		}
+	public InvalidSolutionFormatException(int line, String msg)
+	{
+		super("Invalid format in line " + line + ": " + msg);
 	}
 }

@@ -16,46 +16,20 @@
 
 package consulo.msbuild.solution.reader;
 
-import java.io.File;
-
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import consulo.msbuild.dom.Project;
+import java.util.ArrayList;
 
 /**
  * @author VISTALL
- * @since 28-Jan-17
+ * @since 30-Jan-17
+ *
+ * https://github.com/mono/monodevelop/blob/master/main/src/core/MonoDevelop.Core/MonoDevelop.Projects.MSBuild/SlnFile.cs
  */
-public class VisualStudioProjectInfo
+public class SlnPropertySetCollection extends ArrayList<SlnPropertySet>
 {
-	private String myName;
-	private File myFile;
-	private Project myProject;
+	SlnSection parentSection;
 
-	public VisualStudioProjectInfo(String name, File file, Project project)
+	public SlnPropertySetCollection (SlnSection parentSection)
 	{
-		myName = name;
-		myFile = file;
-		myProject = project;
-	}
-
-	public String getName()
-	{
-		return myName;
-	}
-
-	public File getFile()
-	{
-		return myFile;
-	}
-
-	public VirtualFile getVirtualFile()
-	{
-		return LocalFileSystem.getInstance().findFileByIoFile(myFile);
-	}
-
-	public Project getProject()
-	{
-		return myProject;
+		this.parentSection = parentSection;
 	}
 }

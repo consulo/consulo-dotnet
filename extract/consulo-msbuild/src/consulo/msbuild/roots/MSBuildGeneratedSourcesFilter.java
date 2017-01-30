@@ -16,8 +16,6 @@
 
 package consulo.msbuild.roots;
 
-import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
@@ -29,8 +27,8 @@ import consulo.msbuild.MSBuildSolutionManager;
 import consulo.msbuild.solution.SolutionVirtualBuilder;
 import consulo.msbuild.solution.SolutionVirtualDirectory;
 import consulo.msbuild.solution.SolutionVirtualFile;
-import consulo.msbuild.solution.reader.VisualStudioProjectInfo;
-import consulo.msbuild.solution.reader.VisualStudioSolutionParser;
+import consulo.msbuild.solution.model.WProject;
+import consulo.msbuild.solution.model.WSolution;
 
 /**
  * @author VISTALL
@@ -45,23 +43,28 @@ public class MSBuildGeneratedSourcesFilter extends GeneratedSourcesFilter
 		return isGeneratedFile(virtualFile, project);
 	}
 
+	@RequiredReadAction
 	public static boolean isGeneratedFile(@NotNull VirtualFile virtualFile, @NotNull Project project)
 	{
 		MSBuildSolutionManager solutionManager = MSBuildSolutionManager.getInstance(project);
 
-		VirtualFile solutionFile = solutionManager.getSolutionFile();
+		WSolution slnFile = WSolution.build(project, solutionManager.getSolutionFile());
 
-		List<VisualStudioProjectInfo> projectInfos = VisualStudioSolutionParser.parse(project, solutionFile);
-
-		for(VisualStudioProjectInfo projectInfo : projectInfos)
+		for(WProject wProject : slnFile.getProjects())
 		{
-			VirtualFile projectFile = projectInfo.getVirtualFile();
+			VirtualFile projectFile = wProject.getVirtualFile();
 			if(projectFile == null)
 			{
 				continue;
 			}
 
-			SolutionVirtualDirectory directory = SolutionVirtualBuilder.build(projectInfo.getProject(), projectFile.getParent());
+			consulo.msbuild.dom.Project domProject = wProject.getDomProject();
+			if(domProject == null)
+			{
+				continue;
+			}
+
+			SolutionVirtualDirectory directory = SolutionVirtualBuilder.build(domProject, projectFile.getParent());
 
 			Ref<Boolean> ref = Ref.create(Boolean.FALSE);
 			directory.visitRecursive(solutionVirtualItem ->

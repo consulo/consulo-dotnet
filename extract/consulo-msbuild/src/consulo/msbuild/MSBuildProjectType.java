@@ -17,17 +17,16 @@
 package consulo.msbuild;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.util.KeyedLazyInstanceEP;
 
 /**
  * @author VISTALL
  * @since 28-Jan-17
  */
-public interface MSBuildProjectTypeDescritor
+public interface MSBuildProjectType
 {
-	public static class Default implements MSBuildProjectTypeDescritor
+	public static class Default implements MSBuildProjectType
 	{
 	}
 
-	ExtensionPointName<KeyedLazyInstanceEP<MSBuildProjectTypeDescritor>> EP_NAME = ExtensionPointName.create("consulo.msbuild.projectTypeDescriptor");
+	ExtensionPointName<MSBuildProjectTypeEP<MSBuildProjectType>> EP_NAME = ExtensionPointName.create("consulo.msbuild.projectType");
 }

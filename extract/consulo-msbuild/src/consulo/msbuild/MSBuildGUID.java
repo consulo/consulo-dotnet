@@ -16,27 +16,11 @@
 
 package consulo.msbuild;
 
-import org.jetbrains.annotations.NotNull;
-import com.intellij.ide.highlighter.XmlFileType;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
-
 /**
  * @author VISTALL
- * @since 28-Jan-17
+ * @since 30-Jan-17
  */
-public class MSBuildFileTypeFactory extends FileTypeFactory
+public interface MSBuildGUID
 {
-	@Override
-	public void createFileTypes(@NotNull FileTypeConsumer consumer)
-	{
-		consumer.consume(VisualStudioSolutionFileType.INSTANCE);
-
-		for(MSBuildProjectTypeEP<MSBuildProjectType> ep : MSBuildProjectType.EP_NAME.getExtensions())
-		{
-			String key = ep.getExt();
-
-			consumer.consume(XmlFileType.INSTANCE, key);
-		}
-	}
+	String SolutionFolder = "{2150E333-8FDC-42A3-9474-1A3956D46DE8}";
 }
