@@ -68,7 +68,7 @@ public class SolutionViewDirectoryNode extends ProjectViewNode<SolutionVirtualDi
 	@RequiredReadAction
 	public Collection<? extends AbstractTreeNode> getChildren()
 	{
-		return SolutionViewProjectViewPane.buildNodes(myProject, getValue()::getChildren, getSettings(), false);
+		return SolutionViewProjectNode.buildNodes(myProject, getValue()::getChildren, getSettings(), false);
 	}
 
 	@Override

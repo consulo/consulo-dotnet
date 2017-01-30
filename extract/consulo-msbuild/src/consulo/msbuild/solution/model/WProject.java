@@ -16,6 +16,7 @@
 
 package consulo.msbuild.solution.model;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -26,6 +27,7 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.xml.DomFileElement;
 import com.intellij.util.xml.DomManager;
 import consulo.annotations.RequiredReadAction;
+import consulo.msbuild.MSBuildGUID;
 import consulo.msbuild.dom.Project;
 import consulo.msbuild.solution.reader.SlnProject;
 
@@ -35,24 +37,32 @@ import consulo.msbuild.solution.reader.SlnProject;
  */
 public class WProject
 {
+	public static enum FailReason
+	{
+		not_supported, project_not_found
+	}
+
 	private SlnProject myProject;
 
 	private Project myDomProject;
 
 	private VirtualFile myFile;
 
+	private FailReason myFailReason;
+
 	@RequiredReadAction
 	public WProject(com.intellij.openapi.project.Project project, VirtualFile solutionVirtualFile, SlnProject slnProject)
 	{
 		myProject = slnProject;
 
-		if(!StringUtil.isEmpty(slnProject.FilePath))
+		if(!StringUtil.isEmpty(slnProject.FilePath) && !MSBuildGUID.SolutionFolder.equals(slnProject.TypeGuid))
 		{
 			VirtualFile parent = solutionVirtualFile.getParent();
 
 			myFile = parent.findFileByRelativePath(FileUtil.toSystemIndependentName(slnProject.FilePath));
 			if(myFile == null)
 			{
+				myFailReason = FailReason.project_not_found;
 				return;
 			}
 
@@ -64,14 +74,34 @@ public class WProject
 				if(fileElement != null)
 				{
 					myDomProject = fileElement.getRootElement();
+					return;
 				}
 			}
+			myFailReason = FailReason.not_supported;
 		}
 	}
 
 	public Project getDomProject()
 	{
 		return myDomProject;
+	}
+
+	@Nullable
+	public FailReason getFailReason()
+	{
+		return myFailReason;
+	}
+
+	@NotNull
+	public String getTypeGUID()
+	{
+		return myProject.TypeGuid;
+	}
+
+	@NotNull
+	public String getId()
+	{
+		return myProject.Id;
 	}
 
 	public String getName()

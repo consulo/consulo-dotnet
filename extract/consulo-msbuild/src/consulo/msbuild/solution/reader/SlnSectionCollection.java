@@ -35,7 +35,7 @@ public class SlnSectionCollection extends ArrayList<SlnSection>
 		return myParentFile;
 	}
 
-	public SlnSection GetSection (String id)
+	public SlnSection GetSection(String id)
 	{
 		return ContainerUtil.find(this, s -> s.Id.equals(id));
 	}

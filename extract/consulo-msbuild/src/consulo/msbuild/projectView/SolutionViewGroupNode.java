@@ -57,7 +57,7 @@ public class SolutionViewGroupNode extends ProjectViewNode<SolutionVirtualFile>
 	@RequiredDispatchThread
 	public Collection<? extends AbstractTreeNode> getChildren()
 	{
-		return SolutionViewProjectViewPane.buildNodes(myProject, () -> myItems, getSettings(), true);
+		return SolutionViewProjectNode.buildNodes(myProject, () -> myItems, getSettings(), true);
 	}
 
 	@Override

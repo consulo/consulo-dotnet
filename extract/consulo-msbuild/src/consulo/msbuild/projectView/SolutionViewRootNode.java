@@ -16,9 +16,12 @@
 
 package consulo.msbuild.projectView;
 
-import java.util.ArrayList;
+import gnu.trove.THashMap;
+import gnu.trove.THashSet;
+
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.ide.projectView.PresentationData;
@@ -29,9 +32,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.msbuild.MSBuildGUID;
 import consulo.msbuild.MSBuildIcons;
 import consulo.msbuild.solution.model.WProject;
 import consulo.msbuild.solution.model.WSolution;
+import consulo.msbuild.solution.reader.SlnSection;
 
 /**
  * @author VISTALL
@@ -64,12 +69,55 @@ public class SolutionViewRootNode extends ProjectViewNode<Project>
 	{
 		Collection<WProject> projects = myWSolution.getProjects();
 
-		List<SolutionViewProjectViewPane> list = new ArrayList<>(projects.size());
+		Map<String, AbstractTreeNode> nodes = new THashMap<>(projects.size());
 		for(WProject wProject : myWSolution.getProjects())
 		{
-			list.add(new SolutionViewProjectViewPane(myProject, wProject.getDomProject(), wProject.getName(), wProject.getVirtualFile(), getSettings()));
+			AbstractTreeNode node;
+			if(MSBuildGUID.SolutionFolder.equals(wProject.getTypeGUID()))
+			{
+				node = new SolutionViewProjectFolderNode(myProject, wProject, getSettings());
+			}
+			else
+			{
+				consulo.msbuild.dom.Project domProject = wProject.getDomProject();
+				if(domProject == null)
+				{
+					node = new SolutionViewInvalidProjectNode(myProject, wProject, getSettings());
+				}
+				else
+				{
+					node = new SolutionViewProjectNode(myProject, wProject, getSettings());
+				}
+			}
+
+			nodes.put(wProject.getId(), node);
 		}
-		return list;
+
+		SlnSection section = myWSolution.getSection(WSolution.SECTION_NESTED_PROJECTS);
+		if(section != null)
+		{
+			Set<String> toRemove = new THashSet<>();
+			for(Map.Entry<String, String> entry : section.getProperties().getValues().entrySet())
+			{
+				AbstractTreeNode left = nodes.get(entry.getKey());
+				AbstractTreeNode right = nodes.get(entry.getValue());
+
+				if(right == null)
+				{
+					continue;
+				}
+
+				((SolutionViewProjectFolderNode) right).addChildren(left);
+
+				toRemove.add(((SolutionViewProjectNodeBase) left).getProjectId());
+			}
+
+			for(String id : toRemove)
+			{
+				nodes.remove(id);
+			}
+		}
+		return nodes.values();
 	}
 
 	@Override

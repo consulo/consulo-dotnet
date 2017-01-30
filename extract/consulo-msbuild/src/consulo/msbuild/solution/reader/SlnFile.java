@@ -45,6 +45,11 @@ public class SlnFile
 		sections.setParentFile(this);
 	}
 
+	public SlnSectionCollection getSections()
+	{
+		return sections;
+	}
+
 	@NotNull
 	public Collection<SlnProject> getProjects()
 	{

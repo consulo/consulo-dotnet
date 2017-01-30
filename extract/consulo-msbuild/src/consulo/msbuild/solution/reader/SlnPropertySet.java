@@ -77,4 +77,9 @@ public class SlnPropertySet
 			}
 		}
 	}
+
+	public Map<String, String> getValues()
+	{
+		return values;
+	}
 }

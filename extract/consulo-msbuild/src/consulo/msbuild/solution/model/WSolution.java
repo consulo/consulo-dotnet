@@ -25,12 +25,14 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.google.common.base.Throwables;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.RequiredReadAction;
 import consulo.msbuild.solution.reader.SlnFile;
 import consulo.msbuild.solution.reader.SlnProject;
+import consulo.msbuild.solution.reader.SlnSection;
 
 /**
  * @author VISTALL
@@ -40,6 +42,8 @@ import consulo.msbuild.solution.reader.SlnProject;
  */
 public class WSolution
 {
+	public static final String SECTION_NESTED_PROJECTS = "NestedProjects";
+
 	@NotNull
 	@RequiredReadAction
 	public static WSolution build(@NotNull Project project, @NotNull VirtualFile solutionVirtualFile)
@@ -57,15 +61,24 @@ public class WSolution
 		return new WSolution(project, solutionVirtualFile, slnFile);
 	}
 
+	private final SlnFile myFile;
+
 	private List<WProject> myProjects = new ArrayList<>();
 
 	@RequiredReadAction
 	public WSolution(Project project, VirtualFile solutionVirtualFile, SlnFile file)
 	{
+		myFile = file;
 		for(SlnProject slnProject : file.getProjects())
 		{
 			myProjects.add(new WProject(project, solutionVirtualFile, slnProject));
 		}
+	}
+
+	@Nullable
+	public SlnSection getSection(String id)
+	{
+		return myFile.getSections().GetSection(id);
 	}
 
 	public Collection<WProject> getProjects()

@@ -30,7 +30,8 @@
 
 	<extensions defaultExtensionNs="consulo.msbuild">
 		<projectType ext="csproj" guid="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" implementationClass="consulo.msbuild.MSBuildProjectType$Default"/>
-		<projectType ext="shproj" guid="{D954291E-2A0B-460D-934E-DC6B0785DB48}" implementationClass="consulo.msbuild.MSBuildProjectType$Default"/>
+		<!--<projectType ext="shproj" guid="{D954291E-2A0B-460D-934E-DC6B0785DB48}" implementationClass="consulo.msbuild.MSBuildProjectType$Default"/>  -->
+		<!--<projectType ext="vbproj" guid="{F184B08F-C81C-45F6-A57F-5ABD9991F28F}" implementationClass="consulo.msbuild.MSBuildProjectType$Default"/> -->
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij.xml">

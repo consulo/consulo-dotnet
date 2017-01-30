@@ -33,26 +33,22 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
-import consulo.msbuild.dom.Project;
 import consulo.msbuild.solution.SolutionVirtualBuilder;
 import consulo.msbuild.solution.SolutionVirtualDirectory;
 import consulo.msbuild.solution.SolutionVirtualFile;
 import consulo.msbuild.solution.SolutionVirtualItem;
+import consulo.msbuild.solution.model.WProject;
 
 /**
  * @author VISTALL
  * @since 28-Jan-17
  */
-public class SolutionViewProjectViewPane extends ProjectViewNode<Project>
+public class SolutionViewProjectNode extends ProjectViewNode<WProject> implements SolutionViewProjectNodeBase
 {
-	private final VirtualFile myProjectFile;
-	private final String myName;
-
-	public SolutionViewProjectViewPane(com.intellij.openapi.project.Project project, Project project2, String name, VirtualFile projectFile, ViewSettings viewSettings)
+	public SolutionViewProjectNode(com.intellij.openapi.project.Project project, WProject wProject, ViewSettings viewSettings)
 	{
-		super(project, project2, viewSettings);
-		myName = name;
-		myProjectFile = projectFile;
+		super(project, wProject, viewSettings);
+		myName = getValue().getName();
 	}
 
 	@Override
@@ -61,21 +57,28 @@ public class SolutionViewProjectViewPane extends ProjectViewNode<Project>
 		return false;
 	}
 
+	@Override
+	public String getProjectId()
+	{
+		return getValue().getId();
+	}
+
 	@NotNull
 	@Override
 	@RequiredDispatchThread
 	public Collection<? extends AbstractTreeNode> getChildren()
 	{
-		VirtualFile parent = myProjectFile.getParent();
+		VirtualFile projectFile = getValue().getVirtualFile();
+		VirtualFile parent = projectFile.getParent();
 		if(parent == null)
 		{
 			return Collections.emptyList();
 		}
 
-		SolutionVirtualDirectory directory = SolutionVirtualBuilder.build(getValue(), parent);
+		SolutionVirtualDirectory directory = SolutionVirtualBuilder.build(getValue().getDomProject(), parent);
 
 		Collection<AbstractTreeNode> nodes = buildNodes(myProject, directory::getChildren, getSettings(), false);
-		nodes.add(new SolutionViewRefencesNode(myProject, getValue(), getSettings()));
+		nodes.add(new SolutionViewRefencesNode(myProject, getValue().getDomProject(), getSettings()));
 		return nodes;
 	}
 
@@ -116,6 +119,6 @@ public class SolutionViewProjectViewPane extends ProjectViewNode<Project>
 	protected void update(PresentationData presentation)
 	{
 		presentation.setIcon(AllIcons.Nodes.Module);
-		presentation.addText(myName, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+		presentation.addText(getValue().getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
 	}
 }
