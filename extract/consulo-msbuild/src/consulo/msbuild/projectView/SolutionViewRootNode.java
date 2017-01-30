@@ -64,10 +64,10 @@ public class SolutionViewRootNode extends ProjectViewNode<Project>
 	{
 		Collection<WProject> projects = myWSolution.getProjects();
 
-		List<SolutionProjectViewPane> list = new ArrayList<>(projects.size());
+		List<SolutionViewProjectViewPane> list = new ArrayList<>(projects.size());
 		for(WProject wProject : myWSolution.getProjects())
 		{
-			list.add(new SolutionProjectViewPane(myProject, wProject.getDomProject(), wProject.getName(), wProject.getVirtualFile(), getSettings()));
+			list.add(new SolutionViewProjectViewPane(myProject, wProject.getDomProject(), wProject.getName(), wProject.getVirtualFile(), getSettings()));
 		}
 		return list;
 	}

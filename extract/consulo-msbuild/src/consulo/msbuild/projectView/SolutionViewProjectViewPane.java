@@ -43,12 +43,12 @@ import consulo.msbuild.solution.SolutionVirtualItem;
  * @author VISTALL
  * @since 28-Jan-17
  */
-public class SolutionProjectViewPane extends ProjectViewNode<Project>
+public class SolutionViewProjectViewPane extends ProjectViewNode<Project>
 {
 	private final VirtualFile myProjectFile;
 	private final String myName;
 
-	public SolutionProjectViewPane(com.intellij.openapi.project.Project project, Project project2, String name, VirtualFile projectFile, ViewSettings viewSettings)
+	public SolutionViewProjectViewPane(com.intellij.openapi.project.Project project, Project project2, String name, VirtualFile projectFile, ViewSettings viewSettings)
 	{
 		super(project, project2, viewSettings);
 		myName = name;
