@@ -30,9 +30,9 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.execution.util.ExecUtil;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.msbuild.MSBuildIcons;
 import consulo.msbuild.MicrosoftVisualStudioVersion;
 
 /**
@@ -130,6 +130,6 @@ public class MSBuildBundleType  extends BaseMSBuildBundleType
 	@Override
 	public Icon getIcon()
 	{
-		return AllIcons.Providers.Microsoft;
+		return MSBuildIcons.Msbuild;
 	}
 }

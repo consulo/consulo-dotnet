@@ -34,7 +34,8 @@ public enum MicrosoftVisualStudioVersion
 	Visual_Studio_2010("10.0"),
 	Visual_Studio_2012("11.0"),
 	Visual_Studio_2013("12.0"),
-	Visual_Studio_2015("14.0");
+	Visual_Studio_2015("14.0"),
+	Visual_Studio_2017("15.0");
 
 	private final String myInternalVersion;
 	private final String myPresentableName;

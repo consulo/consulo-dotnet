@@ -260,6 +260,7 @@
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
+          <orderEntry type="library" name="consulo-plugin: com.intellij.xml" level="project" />
         </module-layer>
       </module>
       <module name="impl/microsoft-debugger-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-microsoft-dotnet/microsoft-debugger-impl" current-layer="Default">
