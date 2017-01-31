@@ -58,14 +58,6 @@
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/extract/consulo-mono-dotnet/dist" />
       </element>
-      <element id="directory" name="consulo.msbuild">
-        <element id="directory" name="lib">
-          <element id="zip-archive" name="msbuild.jar">
-            <element id="module-output" name="consulo-msbuild" />
-            <element id="module-production-resource-output" name="consulo-msbuild" />
-          </element>
-        </element>
-      </element>
     </root>
   </artifact>
 </component>

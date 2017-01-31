@@ -249,19 +249,6 @@
           <orderEntry type="module" module-name="consulo-microsoft-dotnet" />
         </module-layer>
       </module>
-      <module name="impl/consulo-msbuild" dirurl="file://$PROJECT_DIR$/extract/consulo-msbuild" current-layer="Default">
-        <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
-          <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <content url="file://$MODULE_DIR$">
-            <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
-            <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
-          </content>
-          <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
-          <orderEntry type="module-extension-sdk" extension-id="java" />
-          <orderEntry type="sourceFolder" />
-        </module-layer>
-      </module>
       <module name="impl/microsoft-debugger-impl" dirurl="file://$PROJECT_DIR$/extract/consulo-microsoft-dotnet/microsoft-debugger-impl" current-layer="Default">
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
