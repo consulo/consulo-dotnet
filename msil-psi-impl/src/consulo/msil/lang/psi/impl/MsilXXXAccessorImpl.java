@@ -79,11 +79,16 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 			MsilMethodEntry method = null;
 			for(DotNetNamedElement namedElement : ((MsilClassEntry) element).getMembers())
 			{
-				if(namedElement instanceof MsilMethodEntry && Comparing.equal(((MsilMethodEntry) namedElement).getNameFromBytecode(),
-						name) && Comparing.equal(((MsilMethodEntry) namedElement).getParameterTypeRefs(), parameterTypeRefs))
+				if(namedElement instanceof MsilMethodEntry)
 				{
-					method = (MsilMethodEntry) namedElement;
-					break;
+					if(Comparing.equal(((MsilMethodEntry) namedElement).getNameFromBytecode(), name))
+					{
+						if(Comparing.equal(((MsilMethodEntry) namedElement).getParameterTypeRefs(), parameterTypeRefs))
+						{
+							method = (MsilMethodEntry) namedElement;
+							break;
+						}
+					}
 				}
 			}
 

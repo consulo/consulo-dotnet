@@ -17,12 +17,13 @@
 package consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetGenericWrapperTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import consulo.dotnet.resolve.DotNetTypeResolveResult;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -85,5 +86,16 @@ public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedRes
 	public DotNetTypeRef getInnerTypeRef()
 	{
 		return myTypeRef;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj instanceof MsilTypeWithTypeArgumentsRefImpl)
+		{
+			MsilTypeWithTypeArgumentsRefImpl other = (MsilTypeWithTypeArgumentsRefImpl) obj;
+			return myTypeRef.equals(other.myTypeRef) && Comparing.equal(myArguments, other.myArguments);
+		}
+		return false;
 	}
 }
