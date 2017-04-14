@@ -61,6 +61,7 @@ import consulo.dotnet.debugger.breakpoint.DotNetBreakpointEngine;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
+import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import consulo.dotnet.mono.debugger.proxy.MonoThreadProxy;
@@ -432,7 +433,7 @@ public class MonoDebugThread extends Thread
 					}
 				}
 			}
-			catch(VMDisconnectedException e)
+			catch(VMDisconnectedException | DotNetNotSuspendedException e)
 			{
 				// dont interest
 			}

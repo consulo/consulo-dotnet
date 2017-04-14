@@ -41,6 +41,7 @@ import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointEngine;
 import consulo.dotnet.debugger.breakpoint.DotNetBreakpointUtil;
+import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.microsoft.debugger.breakpoint.MicrosoftBreakpointUtil;
 import consulo.dotnet.microsoft.debugger.proxy.MicrosoftThreadProxy;
@@ -374,7 +375,7 @@ public class MicrosoftDebugThread extends Thread
 					}
 				}
 			}
-			catch(VMDisconnectedException e)
+			catch(VMDisconnectedException | DotNetNotSuspendedException e)
 			{
 				// dont interest
 			}

@@ -39,6 +39,7 @@ import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerProvider;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableValueNode;
+import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
@@ -115,7 +116,8 @@ public class DotNetBreakpointEngine
 	}
 
 	@Nullable
-	public String tryEvaluateBreakpointLogMessage(@NotNull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext)
+	public String tryEvaluateBreakpointLogMessage(@NotNull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws
+			DotNetNotSuspendedException
 	{
 		XExpression logExpressionObject = breakpoint.getLogExpressionObject();
 		if(logExpressionObject == null)

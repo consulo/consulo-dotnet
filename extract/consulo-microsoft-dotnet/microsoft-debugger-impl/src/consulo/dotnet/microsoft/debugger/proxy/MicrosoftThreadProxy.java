@@ -21,9 +21,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.util.ArrayUtil2;
+import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.util.ArrayUtil2;
+import mssdw.NotSuspendedException;
 import mssdw.StackFrameMirror;
 import mssdw.ThreadMirror;
 
@@ -74,29 +76,43 @@ public class MicrosoftThreadProxy extends DotNetThreadProxy
 
 	@NotNull
 	@Override
-	public List<DotNetStackFrameProxy> getFrames()
+	public List<DotNetStackFrameProxy> getFrames() throws DotNetNotSuspendedException
 	{
-		List<StackFrameMirror> frames = myThreadMirror.frames();
-		List<DotNetStackFrameProxy> proxies = new ArrayList<DotNetStackFrameProxy>(frames.size());
-		for(int i = 0; i < frames.size(); i++)
+		try
 		{
-			StackFrameMirror frameMirror = frames.get(i);
-			proxies.add(new MicrosoftStackFrameProxy(i, myVirtualMachineProxy, frameMirror));
+			List<StackFrameMirror> frames = myThreadMirror.frames();
+			List<DotNetStackFrameProxy> proxies = new ArrayList<DotNetStackFrameProxy>(frames.size());
+			for(int i = 0; i < frames.size(); i++)
+			{
+				StackFrameMirror frameMirror = frames.get(i);
+				proxies.add(new MicrosoftStackFrameProxy(i, myVirtualMachineProxy, frameMirror));
+			}
+			return proxies;
 		}
-		return proxies;
+		catch(NotSuspendedException e)
+		{
+			throw new DotNetNotSuspendedException(e);
+		}
 	}
 
 	@Nullable
 	@Override
-	public DotNetStackFrameProxy getFrame(int index)
+	public DotNetStackFrameProxy getFrame(int index) throws DotNetNotSuspendedException
 	{
-		List<StackFrameMirror> frames = myThreadMirror.frames();
-
-		StackFrameMirror frameMirror = ArrayUtil2.safeGet(frames, index);
-		if(frameMirror != null)
+		try
 		{
-			return new MicrosoftStackFrameProxy(index, myVirtualMachineProxy, frameMirror);
+			List<StackFrameMirror> frames = myThreadMirror.frames();
+
+			StackFrameMirror frameMirror = ArrayUtil2.safeGet(frames, index);
+			if(frameMirror != null)
+			{
+				return new MicrosoftStackFrameProxy(index, myVirtualMachineProxy, frameMirror);
+			}
+			return null;
 		}
-		return null;
+		catch(NotSuspendedException e)
+		{
+			throw new DotNetNotSuspendedException(e);
+		}
 	}
 }

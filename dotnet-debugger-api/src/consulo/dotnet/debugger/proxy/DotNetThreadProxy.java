@@ -38,10 +38,10 @@ public abstract class DotNetThreadProxy
 	public abstract String getName();
 
 	@NotNull
-	public abstract List<DotNetStackFrameProxy> getFrames();
+	public abstract List<DotNetStackFrameProxy> getFrames() throws DotNetNotSuspendedException;
 
 	@Nullable
-	public DotNetStackFrameProxy getFrame(int index)
+	public DotNetStackFrameProxy getFrame(int index) throws DotNetNotSuspendedException
 	{
 		List<DotNetStackFrameProxy> frames = getFrames();
 		return ArrayUtil2.safeGet(frames, index);

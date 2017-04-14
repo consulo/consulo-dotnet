@@ -17,6 +17,7 @@
 package consulo.dotnet.debugger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -28,6 +29,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayFactory;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
+import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.util.ArrayUtil2;
@@ -107,6 +109,10 @@ public class DotNetExecutionStack extends XExecutionStack
 			}
 			return myTopFrame = new DotNetStackFrame(myDebuggerContext, frame);
 		}
+		catch(DotNetNotSuspendedException ignored)
+		{
+			return null;
+		}
 		finally
 		{
 			myTopFrameCalculated = true;
@@ -128,9 +134,16 @@ public class DotNetExecutionStack extends XExecutionStack
 	public void computeStackFrames(XStackFrameContainer frameContainer)
 	{
 		myDebuggerContext.invoke(() -> {
-			List<DotNetStackFrameProxy> frames = myThreadProxy.getFrames();
+			List<DotNetStackFrameProxy> frames = Collections.emptyList();
+			try
+			{
+				frames = myThreadProxy.getFrames();
+			}
+			catch(DotNetNotSuspendedException ignored)
+			{
+			}
 
-			List<DotNetStackFrame> stackFrames = new ArrayList<DotNetStackFrame>();
+			List<DotNetStackFrame> stackFrames = new ArrayList<>();
 			for(int j = 0; j < frames.size(); j++)
 			{
 				DotNetStackFrameProxy frameProxy = frames.get(j);
