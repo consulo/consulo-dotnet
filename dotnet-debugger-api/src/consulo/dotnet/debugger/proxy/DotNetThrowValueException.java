@@ -17,6 +17,9 @@
 package consulo.dotnet.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
+import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
@@ -25,11 +28,47 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  */
 public class DotNetThrowValueException extends Exception
 {
-	private DotNetValueProxy myThrowValue;
+	private final DotNetStackFrameProxy myFrameProxy;
+	private final DotNetValueProxy myThrowValue;
 
-	public DotNetThrowValueException(@NotNull DotNetValueProxy throwValue)
+	public DotNetThrowValueException(DotNetStackFrameProxy frameProxy, @NotNull DotNetValueProxy throwValue)
 	{
+		myFrameProxy = frameProxy;
 		myThrowValue = throwValue;
+	}
+
+	@Override
+	public String getMessage()
+	{
+		DotNetTypeProxy type = myThrowValue.getType();
+		if(type == null)
+		{
+			return "unknown exception";
+		}
+		DotNetMethodProxy getMethod = DotNetDebuggerSearchUtil.findGetterForProperty("Message", type);
+		if(getMethod == null)
+		{
+			return "throw " + type.getFullName();
+		}
+
+		try
+		{
+			DotNetValueProxy invoke = getMethod.invoke(myFrameProxy, myThrowValue);
+			if(invoke instanceof DotNetStringValueProxy)
+			{
+				String value = ((DotNetStringValueProxy) invoke).getValue();
+				if(StringUtil.isEmptyOrSpaces(value))
+				{
+					return "throw " + type.getFullName();
+				}
+				return "throw " + type.getFullName() + "(" + value + ")";
+			}
+		}
+		catch(Exception ignored)
+		{
+		}
+
+		return "throw " + type.getFullName();
 	}
 
 	@NotNull

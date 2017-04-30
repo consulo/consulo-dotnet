@@ -81,13 +81,7 @@ public class DotNetDebuggerSearchUtil
 		{
 			return;
 		}
-		DotNetValueProxy throwExceptionValue = ((DotNetThrowValueException) t).getThrowExceptionValue();
-
-		String value = toStringValue(mirror, throwExceptionValue);
-		if(value != null)
-		{
-			throw new IllegalArgumentException(value);
-		}
+		throw new IllegalArgumentException(t.getMessage());
 	}
 
 	@Nullable

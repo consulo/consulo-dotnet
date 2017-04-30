@@ -134,7 +134,7 @@ public class MonoMethodProxy implements DotNetMethodProxy
 		}
 		catch(ThrowValueException e)
 		{
-			throw new DotNetThrowValueException(MonoValueProxyUtil.wrap(e.getThrowExceptionValue()));
+			throw new DotNetThrowValueException(frameProxy, MonoValueProxyUtil.wrap(e.getThrowExceptionValue()));
 		}
 	}
 
