@@ -17,6 +17,7 @@
 package consulo.dotnet.debugger.proxy;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
@@ -28,8 +29,11 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  */
 public class DotNetThrowValueException extends Exception
 {
-	private final DotNetStackFrameProxy myFrameProxy;
-	private final DotNetValueProxy myThrowValue;
+	private DotNetStackFrameProxy myFrameProxy;
+	private DotNetValueProxy myThrowValue;
+
+	private String myType;
+	private String myForceMessage;
 
 	public DotNetThrowValueException(DotNetStackFrameProxy frameProxy, @NotNull DotNetValueProxy throwValue)
 	{
@@ -37,9 +41,20 @@ public class DotNetThrowValueException extends Exception
 		myThrowValue = throwValue;
 	}
 
+	public DotNetThrowValueException(@NotNull String type, @Nullable String message)
+	{
+		myType = type;
+		myForceMessage = message;
+	}
+
 	@Override
 	public String getMessage()
 	{
+		if(myType != null)
+		{
+			return "throw " + myType + (myForceMessage != null ? "(" + myForceMessage + ")" : " ");
+		}
+
 		DotNetTypeProxy type = myThrowValue.getType();
 		if(type == null)
 		{
@@ -71,7 +86,19 @@ public class DotNetThrowValueException extends Exception
 		return "throw " + type.getFullName();
 	}
 
-	@NotNull
+	@Nullable
+	public String getForceMessage()
+	{
+		return myForceMessage;
+	}
+
+	@Nullable
+	public String getType()
+	{
+		return myType;
+	}
+
+	@Nullable
 	public DotNetValueProxy getThrowExceptionValue()
 	{
 		return myThrowValue;
