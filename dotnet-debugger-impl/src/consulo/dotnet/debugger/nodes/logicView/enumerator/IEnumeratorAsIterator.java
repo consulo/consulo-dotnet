@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
+import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -65,7 +66,7 @@ public class IEnumeratorAsIterator implements Iterator<DotNetValueProxy>
 			DotNetValueProxy invoke = myMoveNextMethod.invoke(myFrameProxy, myValue);
 			return invoke instanceof DotNetBooleanValueProxy && ((DotNetBooleanValueProxy) invoke).getValue();
 		}
-		catch(DotNetThrowValueException ignored)
+		catch(DotNetThrowValueException | DotNetNotSuspendedException ignored)
 		{
 			return false;
 		}
@@ -78,7 +79,7 @@ public class IEnumeratorAsIterator implements Iterator<DotNetValueProxy>
 		{
 			return myCurrent.invoke(myFrameProxy, myValue);
 		}
-		catch(DotNetThrowValueException ignored)
+		catch(DotNetThrowValueException | DotNetNotSuspendedException ignored)
 		{
 		}
 		return null;

@@ -24,20 +24,13 @@ import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
+import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
-import mono.debugger.CustomAttributeMirror;
-import mono.debugger.InvokeFlags;
-import mono.debugger.LocalVariableMirror;
-import mono.debugger.MethodMirror;
-import mono.debugger.MethodParameterMirror;
-import mono.debugger.ThreadMirror;
-import mono.debugger.ThrowValueException;
-import mono.debugger.TypeMirror;
-import mono.debugger.Value;
+import mono.debugger.*;
 
 /**
  * @author VISTALL
@@ -118,7 +111,9 @@ public class MonoMethodProxy implements DotNetMethodProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy thisObjectProxy, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
+	public DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy frameProxy,
+			@Nullable DotNetValueProxy thisObjectProxy,
+			@NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException
 	{
 		ThreadMirror thread = ((MonoThreadProxy) frameProxy.getThread()).getThreadMirror();
 		Value<?> thisObject = thisObjectProxy == null ? null : ((MonoValueProxyBase) thisObjectProxy).getMirror();
@@ -132,6 +127,10 @@ public class MonoMethodProxy implements DotNetMethodProxy
 		try
 		{
 			return MonoValueProxyUtil.wrap(myMethodMirror.invoke(thread, InvokeFlags.DISABLE_BREAKPOINTS, thisObject, values));
+		}
+		catch(NotSuspendedException e)
+		{
+			throw new DotNetNotSuspendedException(e);
 		}
 		catch(ThrowValueException e)
 		{

@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
+import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
@@ -109,7 +110,7 @@ public class DotNetDebuggerSearchUtil
 			}
 			return (String) invoke.getValue();
 		}
-		catch(DotNetThrowValueException ignored)
+		catch(DotNetThrowValueException | DotNetNotSuspendedException ignored)
 		{
 		}
 		return null;

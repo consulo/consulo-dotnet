@@ -17,6 +17,7 @@
 package consulo.dotnet.mono.debugger.proxy;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,10 +30,12 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
@@ -48,6 +51,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.mono.debugger.TypeMirrorUnloadedException;
+import consulo.vfs.util.ArchiveVfsUtil;
 import mono.debugger.*;
 import mono.debugger.request.EventRequest;
 import mono.debugger.request.EventRequestManager;
@@ -84,7 +88,8 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public void invoke(@NotNull Runnable runnable)
 	{
-		myExecutor.execute(() -> {
+		myExecutor.execute(() ->
+		{
 			try
 			{
 				runnable.run();
@@ -115,9 +120,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public List<DotNetThreadProxy> getThreads()
 	{
-		return ContainerUtil.map(myVirtualMachine.allThreads(), threadMirror -> {
-			return new MonoThreadProxy(MonoVirtualMachineProxy.this, threadMirror);
-		});
+		return ContainerUtil.map(myVirtualMachine.allThreads(), threadMirror -> new MonoThreadProxy(MonoVirtualMachineProxy.this, threadMirror));
 	}
 
 	@NotNull
@@ -234,65 +237,89 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Nullable
 	public TypeMirror findTypeMirror(@NotNull Project project, @NotNull final VirtualFile virtualFile, @NotNull final String vmQualifiedName) throws TypeMirrorUnloadedException
 	{
+		List<TypeMirror> typeMirrors = findTypeMirrors(project, virtualFile, vmQualifiedName);
+		return ContainerUtil.getFirstItem(typeMirrors);
+	}
+
+	@Nullable
+	private List<TypeMirror> findTypeMirrors(@NotNull Project project, @NotNull final VirtualFile virtualFile, @NotNull final String vmQualifiedName) throws TypeMirrorUnloadedException
+	{
 		try
 		{
+			List<TypeMirror> list = new SmartList<>();
 			if(mySupportSearchTypesByQualifiedName)
 			{
 				TypeMirror[] typesByQualifiedName = myVirtualMachine.findTypesByQualifiedName(vmQualifiedName, false);
-				return typesByQualifiedName.length == 0 ? null : typesByQualifiedName[0];
+				Collections.addAll(list, typesByQualifiedName);
 			}
-			else if(mySupportSearchTypesBySourcePaths)
+
+			if(mySupportSearchTypesBySourcePaths)
 			{
 				TypeMirror[] typesBySourcePath = myVirtualMachine.findTypesBySourcePath(virtualFile.getPath(), SystemInfo.isFileSystemCaseSensitive);
-				return ContainerUtil.find(typesBySourcePath, typeMirror -> {
-					return Comparing.equal(DotNetDebuggerUtil.getVmQName(typeMirror.fullName()), vmQualifiedName);
-				});
+				for(TypeMirror typeMirror : typesBySourcePath)
+				{
+					if(Comparing.equal(DotNetDebuggerUtil.getVmQName(typeMirror.fullName()), vmQualifiedName))
+					{
+						list.add(typeMirror);
+					}
+				}
+			}
+
+			String assemblyTitle = null;
+			if(ProjectFileIndex.SERVICE.getInstance(project).isInLibraryClasses(virtualFile))
+			{
+				VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
+				if(archiveRoot != null)
+				{
+					assemblyTitle = archiveRoot.getNameWithoutExtension();
+				}
 			}
 			else
 			{
 				Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
 				if(moduleForFile == null)
 				{
-					return null;
+					return list;
 				}
 
 				final DotNetModuleLangExtension<?> extension = ModuleUtilCore.getExtension(moduleForFile, DotNetModuleLangExtension.class);
 				if(extension == null)
 				{
-					return null;
+					return list;
 				}
 
-				final String assemblyTitle = getAssemblyTitle(extension);
+				assemblyTitle = getAssemblyTitle(extension);
+			}
 
-				for(AppDomainMirror appDomainMirror : myLoadedAppDomains.values())
+			for(AppDomainMirror appDomainMirror : myLoadedAppDomains.values())
+			{
+				AssemblyMirror[] assemblies = appDomainMirror.assemblies();
+				for(AssemblyMirror assembly : assemblies)
 				{
-					AssemblyMirror[] assemblies = appDomainMirror.assemblies();
-					for(AssemblyMirror assembly : assemblies)
+					String assemblyName = getAssemblyName(assembly.name());
+					if(Comparing.equal(assemblyTitle, assemblyName))
 					{
-						String assemblyName = getAssemblyName(assembly.name());
-						if(assemblyTitle.equals(assemblyName))
+						TypeMirror typeByQualifiedName = assembly.findTypeByQualifiedName(vmQualifiedName, false);
+						if(typeByQualifiedName != null)
 						{
-							TypeMirror typeByQualifiedName = assembly.findTypeByQualifiedName(vmQualifiedName, false);
-							if(typeByQualifiedName != null)
-							{
-								return typeByQualifiedName;
-							}
+							list.add(typeByQualifiedName);
 						}
 					}
 				}
-				return null;
 			}
+			return list;
 		}
 		catch(VMDisconnectedException e)
 		{
-			return null;
+			return Collections.emptyList();
 		}
 	}
 
 	@NotNull
 	private static String getAssemblyTitle(@NotNull DotNetModuleLangExtension<?> extension)
 	{
-		return ApplicationManager.getApplication().runReadAction((Computable<String>) () -> {
+		return ApplicationManager.getApplication().runReadAction((Computable<String>) () ->
+		{
 			String assemblyTitle = extension.getAssemblyTitle();
 			if(assemblyTitle != null)
 			{
