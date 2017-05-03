@@ -26,7 +26,7 @@ import consulo.ui.ComboBox;
 import consulo.ui.ComboBoxes;
 import consulo.ui.Component;
 import consulo.ui.Components;
-import consulo.ui.Labels;
+import consulo.ui.LabeledComponents;
 import consulo.ui.Layouts;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextField;
@@ -56,16 +56,16 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
 	protected Component createUIComponent()
 	{
 		VerticalLayout vertical = Layouts.vertical();
-		vertical.add(Labels.leftFilled("Host: ", myHostField = Components.textField()));
-		vertical.add(Labels.leftFilled("Port: ", myPortField = Components.textField()));
-		vertical.add(Labels.leftFilled("Module: ", myModuleComboBox = Components.comboBox(ModuleManager.getInstance(myProject).getSortedModules())));
+		vertical.add(LabeledComponents.leftFilled("Host", myHostField = Components.textField()));
+		vertical.add(LabeledComponents.leftFilled("Port", myPortField = Components.textField()));
+		vertical.add(LabeledComponents.leftFilled("Module", myModuleComboBox = Components.comboBox(ModuleManager.getInstance(myProject).getSortedModules())));
 
 		ComboBoxes.SimpleBuilder<Boolean> modeBuilder = ComboBoxes.simple();
 		modeBuilder.add(Boolean.TRUE, "attach");
 		modeBuilder.add(Boolean.FALSE, "listen");
 		myModeBox = modeBuilder.build();
 
-		vertical.add(Labels.left("Mode: ", myModeBox));
+		vertical.add(LabeledComponents.left("Mode", myModeBox));
 
 		myModuleComboBox.setRender((listItemPresentation, i, module) -> {
 			if(module == null)
