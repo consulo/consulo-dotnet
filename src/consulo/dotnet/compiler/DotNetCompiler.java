@@ -25,7 +25,6 @@ import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.TranslatingCompiler;
 import com.intellij.openapi.diagnostic.Logger;
@@ -54,11 +53,6 @@ public class DotNetCompiler implements TranslatingCompiler
 	public String getDescription()
 	{
 		return "DotNetCompiler";
-	}
-
-	@Override
-	public void init(@NotNull CompilerManager compilerManager)
-	{
 	}
 
 	@Override

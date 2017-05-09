@@ -30,7 +30,6 @@ import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.RunResult;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.FileProcessingCompiler;
 import com.intellij.openapi.compiler.PackagingCompiler;
 import com.intellij.openapi.compiler.TimestampValidityState;
@@ -71,11 +70,6 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public void init(@NotNull CompilerManager compilerManager)
-	{
 	}
 
 	@NotNull
