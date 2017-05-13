@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import mssdw.MirrorWithId;
 import mssdw.Value;
 
 /**
@@ -17,6 +18,20 @@ public abstract class MicrosoftValueProxyBase<T extends Value<?>> implements Dot
 	public MicrosoftValueProxyBase(T value)
 	{
 		myValue = value;
+	}
+
+	@Override
+	public boolean isEqualTo(@NotNull DotNetValueProxy proxy)
+	{
+		if(proxy instanceof MicrosoftValueProxyBase)
+		{
+			Value<?> value = ((MicrosoftValueProxyBase<?>) proxy).myValue;
+			if(value instanceof MirrorWithId && myValue instanceof MirrorWithId)
+			{
+				return ((MirrorWithId) value).id() == ((MirrorWithId) myValue).id();
+			}
+		}
+		return false;
 	}
 
 	public T getMirror()

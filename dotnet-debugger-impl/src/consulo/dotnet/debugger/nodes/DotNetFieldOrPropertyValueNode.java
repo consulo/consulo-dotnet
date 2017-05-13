@@ -100,6 +100,11 @@ public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueN
 		Icon baseIcon = null;
 		if(myFieldOrPropertyMirror instanceof DotNetPropertyProxy)
 		{
+			DotNetValueProxy valueOfVariableSafe = getValueOfVariableSafe();
+			if(valueOfVariableSafe != null && myThisObjectMirror != null && valueOfVariableSafe.isEqualTo(myThisObjectMirror))
+			{
+				baseIcon = AllIcons.Debugger.Selfreference;
+			}
 			baseIcon = AllIcons.Nodes.Property;
 		}
 		if(myFieldOrPropertyMirror instanceof DotNetFieldProxy)

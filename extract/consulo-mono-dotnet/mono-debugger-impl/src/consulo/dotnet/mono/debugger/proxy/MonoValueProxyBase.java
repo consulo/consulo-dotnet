@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import mono.debugger.MirrorWithId;
 import mono.debugger.Value;
 
 /**
@@ -38,6 +39,20 @@ public abstract class MonoValueProxyBase<T extends Value<?>> implements DotNetVa
 	public T getMirror()
 	{
 		return myValue;
+	}
+
+	@Override
+	public boolean isEqualTo(@NotNull DotNetValueProxy proxy)
+	{
+		if(proxy instanceof MonoValueProxyBase)
+		{
+			Value<?> value = ((MonoValueProxyBase<?>) proxy).myValue;
+			if(value instanceof MirrorWithId && myValue instanceof MirrorWithId)
+			{
+				return ((MirrorWithId) value).id() == ((MirrorWithId) myValue).id();
+			}
+		}
+		return false;
 	}
 
 	@Nullable

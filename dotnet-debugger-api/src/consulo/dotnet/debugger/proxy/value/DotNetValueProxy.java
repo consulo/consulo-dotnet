@@ -33,4 +33,9 @@ public interface DotNetValueProxy
 	Object getValue();
 
 	void accept(DotNetValueProxyVisitor visitor);
+
+	default boolean isEqualTo(@NotNull DotNetValueProxy proxy)
+	{
+		return false;
+	}
 }
