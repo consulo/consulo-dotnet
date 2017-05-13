@@ -26,6 +26,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -54,7 +55,6 @@ import consulo.dotnet.debugger.DotNetEditorsProvider;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.util.ArrayUtil2;
-import consulo.ide.IconDescriptorUpdaters;
 
 /**
  * @author VISTALL
@@ -196,12 +196,15 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 	class AllBreakpointVariant extends XLineBreakpointVariant
 	{
+		@NotNull
+		@RequiredReadAction
 		@Override
 		public String getText()
 		{
 			return "All";
 		}
 
+		@RequiredReadAction
 		@Nullable
 		@Override
 		public Icon getIcon()
@@ -209,6 +212,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			return null;
 		}
 
+		@RequiredReadAction
 		@Nullable
 		@Override
 		public TextRange getHighlightRange()
@@ -235,6 +239,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			myIndex = index;
 		}
 
+		@NotNull
 		@Override
 		@RequiredDispatchThread
 		public String getText()
@@ -257,7 +262,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		@RequiredDispatchThread
 		public Icon getIcon()
 		{
-			return IconDescriptorUpdaters.getIcon(myExecutableChild, 0);
+			return AllIcons.Debugger.LambdaBreakpoint;
 		}
 
 		@Nullable
