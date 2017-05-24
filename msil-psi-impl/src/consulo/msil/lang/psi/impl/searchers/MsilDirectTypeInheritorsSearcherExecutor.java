@@ -1,6 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
- * Copyright 2013-2014 must-be.org
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +22,7 @@ import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.text.StringUtil;
@@ -32,17 +32,13 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
 import com.intellij.util.containers.HashMap;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.DotNetTypeList;
 import consulo.dotnet.psi.search.searches.DirectTypeInheritorsSearch;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.msil.lang.psi.impl.elementType.stub.index.MsilExtendsListIndex;
 
-/**
- * @author max
- *         <p/>
- *         Copied from Java plugin by Jetbrains (com.intellij.psi.search.searches.ClassInheritorsSearch)
- */
 public class MsilDirectTypeInheritorsSearcherExecutor implements QueryExecutor<DotNetTypeDeclaration, DirectTypeInheritorsSearch.SearchParameters>
 {
 	@Override
@@ -81,8 +77,7 @@ public class MsilDirectTypeInheritorsSearcherExecutor implements QueryExecutor<D
 		}  */
 
 		SearchScope useScope = p.getScope();
-		final GlobalSearchScope scope = useScope instanceof GlobalSearchScope ? (GlobalSearchScope) useScope : new EverythingGlobalScope(p
-				.getProject());
+		final GlobalSearchScope scope = useScope instanceof GlobalSearchScope ? (GlobalSearchScope) useScope : new EverythingGlobalScope(p.getProject());
 		final String searchKey = MsilHelper.cutGenericMarker(StringUtil.getShortName(vmQName));
 
 		if(StringUtil.isEmpty(searchKey))
@@ -90,41 +85,32 @@ public class MsilDirectTypeInheritorsSearcherExecutor implements QueryExecutor<D
 			return true;
 		}
 
-		Collection<DotNetTypeList> candidates = ApplicationManager.getApplication().runReadAction(new Computable<Collection<DotNetTypeList>>()
-		{
-			@Override
-			public Collection<DotNetTypeList> compute()
-			{
-				return MsilExtendsListIndex.getInstance().get(searchKey, p.getProject(), scope);
-			}
-		});
+		Collection<DotNetTypeList> candidates = ApplicationManager.getApplication().runReadAction((Computable<Collection<DotNetTypeList>>) () -> MsilExtendsListIndex.getInstance().get(searchKey, p
+				.getProject(), scope));
 
-		Map<String, List<DotNetTypeDeclaration>> classes = new HashMap<String, List<DotNetTypeDeclaration>>();
+		Map<String, List<DotNetTypeDeclaration>> classes = new HashMap<>();
 
 		for(DotNetTypeList referenceList : candidates)
 		{
 			ProgressIndicatorProvider.checkCanceled();
-			final DotNetTypeDeclaration candidate = (DotNetTypeDeclaration) referenceList.getParent();
-			if(!checkInheritance(p, vmQName, candidate))
-			{
-				continue;
-			}
 
-			String fqn = ApplicationManager.getApplication().runReadAction(new Computable<String>()
+			ReadAction.run(() ->
 			{
-				@Override
-				public String compute()
+				final DotNetTypeDeclaration candidate = (DotNetTypeDeclaration) referenceList.getParent();
+				if(!checkInheritance(p, vmQName, candidate))
 				{
-					return candidate.getPresentableQName();
+					return;
 				}
+
+				String fqn = candidate.getPresentableQName();
+				List<DotNetTypeDeclaration> list = classes.get(fqn);
+				if(list == null)
+				{
+					list = new ArrayList<>();
+					classes.put(fqn, list);
+				}
+				list.add(candidate);
 			});
-			List<DotNetTypeDeclaration> list = classes.get(fqn);
-			if(list == null)
-			{
-				list = new ArrayList<DotNetTypeDeclaration>();
-				classes.put(fqn, list);
-			}
-			list.add(candidate);
 		}
 
 		for(List<DotNetTypeDeclaration> sameNamedClasses : classes.values())
@@ -141,17 +127,9 @@ public class MsilDirectTypeInheritorsSearcherExecutor implements QueryExecutor<D
 		return true;
 	}
 
-	private static boolean checkInheritance(final DirectTypeInheritorsSearch.SearchParameters p,
-			final String vmQName,
-			final DotNetTypeDeclaration candidate)
+	@RequiredReadAction
+	private static boolean checkInheritance(final DirectTypeInheritorsSearch.SearchParameters p, final String vmQName, final DotNetTypeDeclaration candidate)
 	{
-		return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>()
-		{
-			@Override
-			public Boolean compute()
-			{
-				return !p.isCheckInheritance() || candidate.isInheritor(vmQName, false);
-			}
-		});
+		return !p.isCheckInheritance() || candidate.isInheritor(vmQName, false);
 	}
 }
