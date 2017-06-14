@@ -142,7 +142,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 			boolean nonNested = parent.getParent() instanceof MsilFile;
 
 			// special case for internal
-			if(modifier == DotNetModifier.INTERNAL && nonNested && hasModifier(MsilTokens.PRIVATE_KEYWORD))
+			if((modifier == DotNetModifier.INTERNAL || modifier == MsilTokens.ASSEMBLY_KEYWORD) && nonNested && hasModifier(MsilTokens.PRIVATE_KEYWORD))
 			{
 				return true;
 			}
