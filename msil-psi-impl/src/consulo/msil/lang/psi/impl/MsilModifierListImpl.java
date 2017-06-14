@@ -85,7 +85,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	@Override
 	public DotNetModifier[] getModifiers()
 	{
-		List<DotNetModifier> modifiers = new ArrayList<DotNetModifier>();
+		List<DotNetModifier> modifiers = new ArrayList<>();
 		for(MsilModifierElementType modifierElementType : MsilTokenSets.MODIFIERS_AS_ARRAY)
 		{
 			if(hasModifier(modifierElementType))

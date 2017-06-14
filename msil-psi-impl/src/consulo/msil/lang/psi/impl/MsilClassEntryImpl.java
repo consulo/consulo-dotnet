@@ -188,15 +188,10 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
-		return CachedValuesManager.getCachedValue(this, new CachedValueProvider<DotNetNamedElement[]>()
+		return CachedValuesManager.getCachedValue(this, () ->
 		{
-			@Nullable
-			@Override
-			public Result<DotNetNamedElement[]> compute()
-			{
-				DotNetNamedElement[] stubOrPsiChildren = getStubOrPsiChildren(MsilStubTokenSets.MEMBER_STUBS, DotNetNamedElement.ARRAY_FACTORY);
-				return Result.create(stubOrPsiChildren, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
-			}
+			DotNetNamedElement[] stubOrPsiChildren = getStubOrPsiChildren(MsilStubTokenSets.MEMBER_STUBS, DotNetNamedElement.ARRAY_FACTORY);
+			return CachedValueProvider.Result.create(stubOrPsiChildren, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
 		});
 	}
 
@@ -204,6 +199,10 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
+		if(modifier == DotNetModifier.INTERNAL && getModifierList().hasModifier(MsilTokens.PRIVATE_KEYWORD))
+		{
+			return true;
+		}
 		return getModifierList().hasModifier(modifier);
 	}
 
