@@ -148,12 +148,17 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 			}
 
 			// special case for internal
-			if((modifier == DotNetModifier.INTERNAL || modifier == MsilTokens.ASSEMBLY_KEYWORD) && nonNested && hasModifier(MsilTokens.PRIVATE_KEYWORD))
+			if((modifier == DotNetModifier.INTERNAL || modifier == MsilTokens.ASSEMBLY_KEYWORD) && nonNested && hasModifierImpl(MsilTokens.PRIVATE_KEYWORD))
 			{
 				return true;
 			}
 		}
 
+		return hasModifierImpl(modifier);
+	}
+
+	private boolean hasModifierImpl(@NotNull DotNetModifier modifier)
+	{
 		MsilModifierElementType elementType = asMsilModifier(modifier);
 		if(elementType == null)
 		{
