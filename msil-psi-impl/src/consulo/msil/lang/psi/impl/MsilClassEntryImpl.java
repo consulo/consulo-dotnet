@@ -199,16 +199,6 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
-		if(modifier == DotNetModifier.INTERNAL && getModifierList().hasModifier(MsilTokens.PRIVATE_KEYWORD))
-		{
-			return true;
-		}
-
-		// skip PRIVATE for non nested classes, due it internal modifier
-		if((modifier == DotNetModifier.PRIVATE || modifier == MsilTokens.PRIVATE_KEYWORD) && !(getParent() instanceof MsilClassEntry))
-		{
-			return false;
-		}
 		return getModifierList().hasModifier(modifier);
 	}
 

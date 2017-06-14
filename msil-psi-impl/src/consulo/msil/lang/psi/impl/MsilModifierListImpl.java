@@ -136,13 +136,31 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
+		PsiElement parent = getParent();
+		if(parent instanceof MsilClassEntry)
+		{
+			boolean nonNested = parent.getParent() instanceof MsilFile;
+
+			// special case for internal
+			if(modifier == DotNetModifier.INTERNAL && nonNested && hasModifier(MsilTokens.PRIVATE_KEYWORD))
+			{
+				return true;
+			}
+
+			// skip PRIVATE for non nested classes, due it internal modifier
+			if((modifier == DotNetModifier.PRIVATE || modifier == MsilTokens.PRIVATE_KEYWORD) && nonNested)
+			{
+				return false;
+			}
+		}
+
 		MsilModifierElementType elementType = asMsilModifier(modifier);
 		if(elementType == null)
 		{
 			return false;
 		}
 
-		MsilModifierListStub stub = getStub();
+		MsilModifierListStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.hasModififer(elementType);
@@ -183,6 +201,12 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 			return Collections.emptyList();
 		}
 		return findChildrenByType(elementType);
+	}
+
+	@Override
+	public PsiElement getParent()
+	{
+		return getParentByStub();
 	}
 
 	@Nullable
