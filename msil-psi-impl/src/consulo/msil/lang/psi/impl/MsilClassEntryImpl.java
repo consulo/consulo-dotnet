@@ -205,7 +205,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		}
 
 		// skip PRIVATE for non nested classes, due it internal modifier
-		if(modifier == DotNetModifier.PRIVATE && !(getParent() instanceof MsilClassEntry))
+		if((modifier == DotNetModifier.PRIVATE || modifier == MsilTokens.PRIVATE_KEYWORD) && !(getParent() instanceof MsilClassEntry))
 		{
 			return false;
 		}
