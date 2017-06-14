@@ -203,6 +203,12 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		{
 			return true;
 		}
+
+		// skip PRIVATE for non nested classes, due it internal modifier
+		if(modifier == DotNetModifier.PRIVATE && !(getParent() instanceof MsilClassEntry))
+		{
+			return false;
+		}
 		return getModifierList().hasModifier(modifier);
 	}
 
