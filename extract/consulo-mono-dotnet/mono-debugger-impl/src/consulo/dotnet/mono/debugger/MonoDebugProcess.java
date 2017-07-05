@@ -19,9 +19,7 @@ package consulo.dotnet.mono.debugger;
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
-import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -37,8 +35,8 @@ import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
+import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
-import consulo.dotnet.mono.debugger.proxy.MonoVirtualMachineProxy;
 import mono.debugger.Location;
 import mono.debugger.ThreadMirror;
 import mono.debugger.event.EventSet;
@@ -57,38 +55,29 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 		@Override
 		public void breakpointAdded(@NotNull final XBreakpoint<?> breakpoint)
 		{
-			myDebugThread.processAnyway(new Processor<MonoVirtualMachineProxy>()
+			myDebugThread.processAnyway(virtualMachine ->
 			{
-				@Override
-				@SuppressWarnings("unchecked")
-				public boolean process(final MonoVirtualMachineProxy virtualMachine)
+				XBreakpointType<?, ?> type = breakpoint.getType();
+				if(type == DotNetLineBreakpointType.getInstance())
 				{
-					XBreakpointType<?, ?> type = breakpoint.getType();
-					if(type == DotNetLineBreakpointType.getInstance())
-					{
-						MonoBreakpointUtil.createBreakpointRequest(getSession(), virtualMachine, (XLineBreakpoint) breakpoint, null);
-					}
-					else if(type == DotNetExceptionBreakpointType.getInstance())
-					{
-						MonoBreakpointUtil.createExceptionRequest(virtualMachine, (XBreakpoint<DotNetExceptionBreakpointProperties>) breakpoint, null);
-					}
-
-					return false;
+					MonoBreakpointUtil.createBreakpointRequest(getSession(), virtualMachine, (XLineBreakpoint) breakpoint, null);
 				}
+				else if(type == DotNetExceptionBreakpointType.getInstance())
+				{
+					MonoBreakpointUtil.createExceptionRequest(virtualMachine, (XBreakpoint<DotNetExceptionBreakpointProperties>) breakpoint, null);
+				}
+
+				return false;
 			});
 		}
 
 		@Override
 		public void breakpointRemoved(@NotNull final XBreakpoint<?> breakpoint)
 		{
-			myDebugThread.processAnyway(new Processor<MonoVirtualMachineProxy>()
+			myDebugThread.processAnyway(virtualMachine ->
 			{
-				@Override
-				public boolean process(MonoVirtualMachineProxy virtualMachine)
-				{
-					virtualMachine.stopBreakpointRequests(breakpoint);
-					return false;
-				}
+				virtualMachine.stopBreakpointRequests(breakpoint);
+				return false;
 			});
 		}
 
@@ -139,15 +128,11 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 	@Override
 	public void startPausing()
 	{
-		myDebugThread.addCommand(new Processor<MonoVirtualMachineProxy>()
+		myDebugThread.addCommand(virtualMachine ->
 		{
-			@Override
-			public boolean process(MonoVirtualMachineProxy virtualMachine)
-			{
-				virtualMachine.suspend();
-				getSession().positionReached(new DotNetSuspendContext(createDebugContext(virtualMachine, null), -1));
-				return false;
-			}
+			virtualMachine.suspend();
+			getSession().positionReached(new DotNetSuspendContext(createDebugContext(virtualMachine, null), -1));
+			return false;
 		});
 	}
 
@@ -160,38 +145,34 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 			return;
 		}
 
-		myDebugThread.addCommand(new Processor<MonoVirtualMachineProxy>()
+		myDebugThread.addCommand(virtualMachine ->
 		{
-			@Override
-			public boolean process(MonoVirtualMachineProxy virtualMachine)
+			virtualMachine.stopStepRequests();
+
+			try
 			{
-				virtualMachine.stopStepRequests();
+				final MonoBreakpointUtil.FindLocationResult result = MonoBreakpointUtil.findLocationsImpl(getSession().getProject(), virtualMachine, position.getFile(),
+						position.getLine(), null, null);
 
-				try
+				// no target for execution
+				final Collection<Location> locations = result.getLocations();
+				if(locations.isEmpty())
 				{
-					final MonoBreakpointUtil.FindLocationResult result = MonoBreakpointUtil.findLocationsImpl(getSession().getProject(), virtualMachine, position.getFile(),
-							position.getLine(), null, null);
-
-					// no target for execution
-					final Collection<Location> locations = result.getLocations();
-					if(locations.isEmpty())
-					{
-						return true;
-					}
-
-					for(Location location : locations)
-					{
-						EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-						BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
-						breakpointRequest.putProperty(RUN_TO_CURSOR, Boolean.TRUE);
-						breakpointRequest.setEnabled(true);
-					}
+					return true;
 				}
-				catch(TypeMirrorUnloadedException ignored)
+
+				for(Location location : locations)
 				{
+					EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+					BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(location);
+					breakpointRequest.putProperty(RUN_TO_CURSOR, Boolean.TRUE);
+					breakpointRequest.setEnabled(true);
 				}
-				return true;
 			}
+			catch(TypeMirrorUnloadedException ignored)
+			{
+			}
+			return true;
 		});
 	}
 
@@ -199,15 +180,11 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 	public void resume()
 	{
 		myPausedEventSet = null;
-		myDebugThread.addCommand(new Processor<MonoVirtualMachineProxy>()
+		myDebugThread.addCommand(virtualMachine ->
 		{
-			@Override
-			public boolean process(MonoVirtualMachineProxy virtualMachine)
-			{
-				virtualMachine.stopStepRequests();
+			virtualMachine.stopStepRequests();
 
-				return true;
-			}
+			return true;
 		});
 	}
 
@@ -251,18 +228,14 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 			return;
 		}
 
-		myDebugThread.addCommand(new Processor<MonoVirtualMachineProxy>()
+		myDebugThread.addCommand(virtualMachine ->
 		{
-			@Override
-			public boolean process(MonoVirtualMachineProxy virtualMachine)
-			{
-				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-				StepRequest stepRequest = eventRequestManager.createStepRequest(threadMirror, stepSize, stepDepth);
-				stepRequest.enable();
+			EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+			StepRequest stepRequest = eventRequestManager.createStepRequest(threadMirror, stepSize, stepDepth);
+			stepRequest.enable();
 
-				virtualMachine.addStepRequest(stepRequest);
-				return true;
-			}
+			virtualMachine.addStepRequest(stepRequest);
+			return true;
 		});
 	}
 
