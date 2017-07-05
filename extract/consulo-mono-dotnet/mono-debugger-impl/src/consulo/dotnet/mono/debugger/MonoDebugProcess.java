@@ -38,6 +38,7 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointPr
 import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import mono.debugger.Location;
+import mono.debugger.NoInvocationException;
 import mono.debugger.ThreadMirror;
 import mono.debugger.event.EventSet;
 import mono.debugger.request.BreakpointRequest;
@@ -230,11 +231,17 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 
 		myDebugThread.addCommand(virtualMachine ->
 		{
-			EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-			StepRequest stepRequest = eventRequestManager.createStepRequest(threadMirror, stepSize, stepDepth);
-			stepRequest.enable();
+			try
+			{
+				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+				StepRequest stepRequest = eventRequestManager.createStepRequest(threadMirror, stepSize, stepDepth);
+				stepRequest.enable();
 
-			virtualMachine.addStepRequest(stepRequest);
+				virtualMachine.addStepRequest(stepRequest);
+			}
+			catch(NoInvocationException ignored)
+			{
+			}
 			return true;
 		});
 	}
