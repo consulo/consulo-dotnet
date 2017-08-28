@@ -1,15 +1,15 @@
 package consulo.msil.ide.presentation;
 
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.ide.DotNetElementPresentationUtil;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProvider;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.dotnet.ide.DotNetElementPresentationUtil;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.ide.IconDescriptorUpdaters;
 
 /**
  * @author VISTALL
@@ -38,7 +38,7 @@ public class MsilClassItemPresentationProvider implements ItemPresentationProvid
 		public String getLocationString()
 		{
 			String presentableParentQName = myDeclaration.getPresentableParentQName();
-			if(StringUtils.isEmpty(presentableParentQName))
+			if(StringUtil.isEmpty(presentableParentQName))
 			{
 				return null;
 			}
