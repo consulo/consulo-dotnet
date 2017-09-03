@@ -16,17 +16,24 @@
 
 package consulo.dotnet.compiler;
 
+import gnu.trove.THashMap;
+
+import java.util.Map;
+
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import consulo.dotnet.module.macro.TargetFileExtensionMacro;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.testFramework.MapDataContext;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.macro.TargetFileExtensionMacro;
 
 /**
  * @author VISTALL
@@ -34,6 +41,23 @@ import com.intellij.testFramework.MapDataContext;
  */
 public class DotNetMacroUtil
 {
+	private static class MapDataContext extends UserDataHolderBase implements DataContext
+	{
+		private Map<String, Object> myMap = new THashMap<>();
+
+		private <T> void put(DataKey<T> key, T value)
+		{
+			myMap.put(key.getName(), value);
+		}
+
+		@Nullable
+		@Override
+		public Object getData(@NonNls String key)
+		{
+			return myMap.get(key);
+		}
+	}
+
 	@NotNull
 	public static DataContext createContext(@NotNull Module module, boolean debugSymbols)
 	{
