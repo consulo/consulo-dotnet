@@ -22,15 +22,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import consulo.ui.ComboBox;
-import consulo.ui.ComboBoxes;
-import consulo.ui.Component;
-import consulo.ui.Components;
-import consulo.ui.LabeledComponents;
-import consulo.ui.Layouts;
-import consulo.ui.RequiredUIAccess;
-import consulo.ui.TextField;
-import consulo.ui.VerticalLayout;
+import consulo.ui.*;
 
 /**
  * @author VISTALL
@@ -40,8 +32,8 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
 {
 	private final Project myProject;
 
-	private TextField myHostField;
-	private TextField myPortField;
+	private TextBox myHostField;
+	private TextBox myPortField;
 	private ComboBox<Module> myModuleComboBox;
 	private ComboBox<Boolean> myModeBox;
 
@@ -56,8 +48,8 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
 	protected Component createUIComponent()
 	{
 		VerticalLayout vertical = Layouts.vertical();
-		vertical.add(LabeledComponents.leftFilled("Host", myHostField = Components.textField()));
-		vertical.add(LabeledComponents.leftFilled("Port", myPortField = Components.textField()));
+		vertical.add(LabeledComponents.leftFilled("Host", myHostField = Components.textBox()));
+		vertical.add(LabeledComponents.leftFilled("Port", myPortField = Components.textBox()));
 		vertical.add(LabeledComponents.leftFilled("Module", myModuleComboBox = Components.comboBox(ModuleManager.getInstance(myProject).getSortedModules())));
 
 		ComboBoxes.SimpleBuilder<Boolean> modeBuilder = ComboBoxes.simple();
