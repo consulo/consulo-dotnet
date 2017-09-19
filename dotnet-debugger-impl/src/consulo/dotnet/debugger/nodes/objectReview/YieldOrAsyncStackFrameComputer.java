@@ -20,8 +20,6 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Getter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
@@ -69,27 +67,11 @@ public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 
 				DotNetFieldProxy[] fields = type.getFields();
 
-				final DotNetFieldProxy thisFieldMirror = ContainerUtil.find(fields, new Condition<DotNetFieldProxy>()
-				{
-					@Override
-					public boolean value(DotNetFieldProxy fieldMirror)
-					{
-						String name = fieldMirror.getName();
-						return DotNetDebuggerCompilerGenerateUtil.isYieldOrAsyncThisField(name);
-					}
-				});
+				final DotNetFieldProxy thisFieldMirror = ContainerUtil.find(fields, fieldMirror -> DotNetDebuggerCompilerGenerateUtil.isYieldOrAsyncThisField(fieldMirror.getName()));
 
 				if(thisFieldMirror != null)
 				{
-					childrenList.add(new DotNetThisAsObjectValueNode(debugContext, stackFrameMirror, parentType, new Getter<DotNetObjectValueProxy>()
-					{
-						@Nullable
-						@Override
-						public DotNetObjectValueProxy get()
-						{
-							return (DotNetObjectValueProxy) thisFieldMirror.getValue(stackFrameMirror, thisObject);
-						}
-					}));
+					childrenList.add(new DotNetThisAsObjectValueNode(debugContext, stackFrameMirror, parentType, () -> (DotNetObjectValueProxy) thisFieldMirror.getValue(stackFrameMirror, thisObject)));
 				}
 
 				for(final DotNetFieldProxy field : fields)

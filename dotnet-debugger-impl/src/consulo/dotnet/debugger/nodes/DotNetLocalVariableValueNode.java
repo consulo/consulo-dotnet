@@ -19,6 +19,7 @@ package consulo.dotnet.debugger.nodes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetVariable;
 import com.intellij.openapi.util.Ref;
@@ -61,12 +62,17 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 	@RequiredDispatchThread
 	public void computeSourcePosition(@NotNull XNavigatable navigatable)
 	{
-		final String name = myLocal.getName();
+		computeSourcePosition(navigatable, getName(), myDebugContext, myFrameProxy);
+	}
+
+	@RequiredReadAction
+	public static void computeSourcePosition(@NotNull XNavigatable navigatable, String name, DotNetDebugContext debugContext, DotNetStackFrameProxy proxy)
+	{
 		if(StringUtil.isEmpty(name))
 		{
 			return;
 		}
-		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebugContext, myFrameProxy);
+		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(debugContext, proxy);
 		if(psiElement == null)
 		{
 			return;
@@ -77,7 +83,6 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 		{
 			return;
 		}
-
 
 		final Ref<DotNetVariable> elementRef = Ref.create();
 		PsiScopesUtilCore.treeWalkUp(new BaseScopeProcessor()

@@ -24,19 +24,13 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.debugger.nodes.DotNetLocalVariableValueNode;
+import consulo.dotnet.debugger.nodes.DotNetLocalVariableValueWrapperNode;
 import consulo.dotnet.debugger.nodes.DotNetMethodParameterValueNode;
 import consulo.dotnet.debugger.nodes.DotNetThisAsObjectValueNode;
 import consulo.dotnet.debugger.nodes.DotNetThisAsStructValueNode;
-import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
-import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
-import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
-import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
-import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
-import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
-import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
-import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.*;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -103,16 +97,35 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 		DotNetLocalVariableProxy[] localVariables = method.getLocalVariables(frameProxy);
 		for(DotNetLocalVariableProxy local : localVariables)
 		{
-			if(StringUtil.isEmpty(local.getName()))
+			String name = local.getName();
+			if(StringUtil.isEmpty(name))
 			{
 				continue;
 			}
 
 			visitedVariables.add(local);
 
-			DotNetLocalVariableValueNode localVariableMirrorNode = new DotNetLocalVariableValueNode(debugContext, local, frameProxy);
+			if(DotNetDebuggerCompilerGenerateUtil.isLocalVarWrapper(name))
+			{
+				DotNetTypeProxy type = local.getType();
+				if(type == null)
+				{
+					continue;
+				}
 
-			childrenList.add(localVariableMirrorNode);
+				DotNetFieldProxy[] fields = type.getFields();
+				if(fields.length != 1)
+				{
+					continue;
+				}
+
+				childrenList.add(new DotNetLocalVariableValueWrapperNode(debugContext, fields[0], () -> (DotNetObjectValueProxy) frameProxy.getLocalValue(local), frameProxy));
+			}
+			else
+			{
+
+				childrenList.add(new DotNetLocalVariableValueNode(debugContext, local, frameProxy));
+			}
 		}
 
 		return true;

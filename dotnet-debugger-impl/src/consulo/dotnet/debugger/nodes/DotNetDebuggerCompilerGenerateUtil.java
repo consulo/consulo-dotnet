@@ -39,6 +39,9 @@ public class DotNetDebuggerCompilerGenerateUtil
 	private static final Pattern AsyncLambdaFirstWrapperMS = Pattern.compile("<>c__DisplayClass([\\d]+)_([\\d]+)");
 	private static final Pattern AsyncLambdaFirstWrapperMono = Pattern.compile("<([\\S\\d]+)>c__AnonStorey([\\d]+)");
 
+	private static final Pattern LocalVarWrapperPatternMono = Pattern.compile("\\$locvar\\p{XDigit}+");
+	private static final Pattern LocalVarWrapperPatternMS = Pattern.compile("CS\\$<>\\p{XDigit}+__locals\\p{XDigit}+");
+
 	@Nullable
 	public static Couple<String> extractLambdaInfo(@NotNull DotNetMethodProxy methodMirror)
 	{
@@ -48,6 +51,11 @@ public class DotNetDebuggerCompilerGenerateUtil
 			return Couple.of(matcher.group(1), matcher.group(2));
 		}
 		return null;
+	}
+
+	public static boolean isLocalVarWrapper(@NotNull String name)
+	{
+		return LocalVarWrapperPatternMono.matcher(name).matches() || LocalVarWrapperPatternMS.matcher(name).matches();
 	}
 
 	public static boolean isAsyncLambdaWrapper(@NotNull DotNetTypeProxy typeMirror)
