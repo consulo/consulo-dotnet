@@ -119,7 +119,7 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 					continue;
 				}
 
-				childrenList.add(new DotNetLocalVariableValueWrapperNode(debugContext, fields[0], () -> (DotNetObjectValueProxy) frameProxy.getLocalValue(local), frameProxy));
+				childrenList.add(new DotNetLocalVariableValueWrapperNode(debugContext, fields[0], () -> frameProxy.getLocalValue(local), frameProxy));
 			}
 			else
 			{

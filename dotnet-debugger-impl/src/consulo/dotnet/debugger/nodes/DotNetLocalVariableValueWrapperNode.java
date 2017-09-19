@@ -26,7 +26,6 @@ import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
@@ -36,9 +35,9 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public class DotNetLocalVariableValueWrapperNode extends DotNetAbstractVariableValueNode
 {
 	private final DotNetFieldProxy myField;
-	private final Supplier<DotNetObjectValueProxy> myObjectGetter;
+	private final Supplier<DotNetValueProxy> myObjectGetter;
 
-	public DotNetLocalVariableValueWrapperNode(DotNetDebugContext debuggerContext, DotNetFieldProxy field, Supplier<DotNetObjectValueProxy> objectGetter, DotNetStackFrameProxy frameProxy)
+	public DotNetLocalVariableValueWrapperNode(DotNetDebugContext debuggerContext, DotNetFieldProxy field, Supplier<DotNetValueProxy> objectGetter, DotNetStackFrameProxy frameProxy)
 	{
 		super(debuggerContext, field.getName(), frameProxy);
 		myField = field;
