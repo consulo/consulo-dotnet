@@ -29,6 +29,7 @@ import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootAdapter;
@@ -36,10 +37,11 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.impl.AnyPsiChangeListener;
+import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
@@ -93,31 +95,29 @@ public class DotNetNamespaceCacheManager implements Disposable
 			assert searcher != null;
 
 			final StubIndexKey<String, DotNetQualifiedElement> key = searcher.getElementByQNameIndexKey();
-			final Set<String> qNames = new THashSet<String>();
-			StubIndex.getInstance().processAllKeys(key, new Processor<String>()
+			final Set<String> qNames = new THashSet<>();
+			StubIndex.getInstance().processAllKeys(key, qName ->
 			{
-				@Override
-				public boolean process(String qName)
+				if(thisQName.isEmpty() && qName.startsWith(indexKey))
 				{
-					if(thisQName.isEmpty() && qName.startsWith(indexKey))
+					qNames.add(qName);
+				}
+				else if(qName.startsWith(thisQName))
+				{
+					String packageName = StringUtil.getPackageName(qName);
+					if(packageName.equals(thisQName))
 					{
 						qNames.add(qName);
 					}
-					else if(qName.startsWith(thisQName))
-					{
-						String packageName = StringUtil.getPackageName(qName);
-						if(packageName.equals(thisQName))
-						{
-							qNames.add(qName);
-						}
-					}
-					return true;
 				}
+				return true;
 			}, scope, new GlobalSearchScopeFilter(scope));
 
-			final Set<PsiElement> elements = new THashSet<PsiElement>(qNames.size());
+			final Set<PsiElement> elements = new THashSet<>(qNames.size());
 			for(String qName : qNames)
 			{
+				ProgressManager.checkCanceled();
+
 				elements.addAll(StubIndex.getElements(key, qName, project, scope, DotNetQualifiedElement.class));
 			}
 
@@ -145,7 +145,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		{
 			assert searcher != null;
 
-			final Set<String> qNames = new THashSet<String>();
+			final Set<String> qNames = new THashSet<>();
 			StubIndex.getInstance().processAllKeys(searcher.getNamespaceIndexKey(), new Processor<String>()
 			{
 				@Override
@@ -170,9 +170,11 @@ public class DotNetNamespaceCacheManager implements Disposable
 			}, scope, new GlobalSearchScopeFilter(scope));
 
 
-			final Set<PsiElement> namespaces = new THashSet<PsiElement>(qNames.size());
+			final Set<PsiElement> namespaces = new THashSet<>(qNames.size());
 			for(String qName : qNames)
 			{
+				ProgressManager.checkCanceled();
+
 				DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(project).findNamespace(qName, scope);
 				if(namespace != null)
 				{
@@ -195,10 +197,9 @@ public class DotNetNamespaceCacheManager implements Disposable
 	private final Map<String, Map<GlobalSearchScope, Set<DotNetTypeDeclaration>>> myTypesCache = ContainerUtil.newConcurrentMap();
 	private final Map<String, Map<GlobalSearchScope, Ref<DotNetNamespaceAsElement>>> myNamespacesCache = ContainerUtil.newConcurrentMap();
 
-	private long myModificationCount;
-	private Project myProject;
+	private final Project myProject;
 
-	DotNetNamespaceCacheManager(Project project, final PsiModificationTracker tracker)
+	DotNetNamespaceCacheManager(Project project)
 	{
 		myProject = project;
 		MessageBusConnection connect = project.getMessageBus().connect();
@@ -225,18 +226,12 @@ public class DotNetNamespaceCacheManager implements Disposable
 			}
 		});
 
-		connect.subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener()
+		connect.subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener.Adapter()
 		{
 			@Override
-			public void modificationCountChanged()
+			public void beforePsiChanged(boolean isPhysical)
 			{
-				long outOfCodeBlockModificationCount = tracker.getOutOfCodeBlockModificationCount();
-
-				if(myModificationCount != outOfCodeBlockModificationCount)
-				{
-					myModificationCount = outOfCodeBlockModificationCount;
-					clear();
-				}
+				clear();
 			}
 		});
 	}
@@ -283,7 +278,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 			return null;
 		}
 
-		List<DotNetNamespaceAsElement> namespaceAsElements = new SmartList<DotNetNamespaceAsElement>();
+		List<DotNetNamespaceAsElement> namespaceAsElements = new SmartList<>();
 		for(DotNetPsiSearcher searcher : searchers)
 		{
 			DotNetNamespaceAsElement namespace = searcher.findNamespace(qName, scope);
@@ -334,7 +329,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 	@RequiredReadAction
 	private static Set<DotNetTypeDeclaration> computeTypesImpl(DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
 	{
-		Set<DotNetTypeDeclaration> typeDeclarations = new SmartHashSet<DotNetTypeDeclaration>();
+		Set<DotNetTypeDeclaration> typeDeclarations = new SmartHashSet<>();
 		for(DotNetPsiSearcher searcher : searchers)
 		{
 			typeDeclarations.addAll(searcher.findTypesImpl(qName, scope));

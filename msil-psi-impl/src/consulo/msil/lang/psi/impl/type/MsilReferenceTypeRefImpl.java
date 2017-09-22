@@ -20,15 +20,13 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.util.CommonProcessors;
 import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import consulo.dotnet.resolve.DotNetTypeResolveResult;
 import consulo.msil.lang.psi.MsilClassEntry;
-import consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex;
 
 /**
  * @author VISTALL
@@ -74,15 +72,16 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 			return DotNetTypeResolveResult.EMPTY;
 		}
 
-		CommonProcessors.FindFirstProcessor<MsilClassEntry> processor = new CommonProcessors.FindFirstProcessor<MsilClassEntry>();
-		StubIndex.getInstance().processElements(MsilTypeByQNameIndex.getInstance().getKey(), myRef, project, myElement.getResolveScope(), MsilClassEntry.class, processor);
-
-		MsilClassEntry foundValue = processor.getFoundValue();
-		if(foundValue == null)
+		DotNetTypeDeclaration[] types = DotNetPsiSearcher.getInstance(project).findTypes(myRef, myElement.getResolveScope());
+		for(DotNetTypeDeclaration type : types)
 		{
-			return DotNetTypeResolveResult.EMPTY;
+			if(type instanceof MsilClassEntry)
+			{
+				return new MsilTypeResolveResult(type, DotNetTypeRef.EMPTY_ARRAY);
+			}
 		}
-		return new MsilTypeResolveResult(foundValue, DotNetTypeRef.EMPTY_ARRAY);
+
+		return DotNetTypeResolveResult.EMPTY;
 	}
 
 	@Override

@@ -56,16 +56,7 @@ public abstract class DotNetPsiSearcher
 		public static TypeResoleKind[] VALUES = values();
 	}
 
-	public static final NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> DEFAULT_TRANSFORMER = new
-			NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration>()
-	{
-		@NotNull
-		@Override
-		public DotNetTypeDeclaration fun(DotNetTypeDeclaration typeDeclaration)
-		{
-			return typeDeclaration;
-		}
-	};
+	public static final NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> DEFAULT_TRANSFORMER = typeDeclaration -> typeDeclaration;
 
 	@Nullable
 	@RequiredReadAction
