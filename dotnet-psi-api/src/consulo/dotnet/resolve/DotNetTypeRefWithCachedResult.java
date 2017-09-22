@@ -67,17 +67,24 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 
 		long current = modificationTracker.getModificationCount();
 
+		DotNetTypeResolveResult thisResult = myResult;
 		if(myLastComputedCount != current)
 		{
 			myResult = null;
+			thisResult = null;
 		}
 
-		if(myResult == null)
+		if(thisResult == null)
 		{
-			myResult = resolveResult();
+			DotNetTypeResolveResult result = resolveResult();
+			myResult = result;
 			myLastComputedCount = current;
+			return result;
 		}
-		return myResult;
+		else
+		{
+			return thisResult;
+		}
 	}
 
 	@RequiredReadAction
