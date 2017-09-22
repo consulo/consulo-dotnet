@@ -17,6 +17,7 @@
 package consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
@@ -34,8 +35,9 @@ public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedRes
 	private DotNetTypeRef myTypeRef;
 	private DotNetTypeRef[] myArguments;
 
-	public MsilTypeWithTypeArgumentsRefImpl(DotNetTypeRef typeRef, DotNetTypeRef[] arguments)
+	public MsilTypeWithTypeArgumentsRefImpl(Project project, DotNetTypeRef typeRef, DotNetTypeRef[] arguments)
 	{
+		super(project);
 		myTypeRef = typeRef;
 		myArguments = arguments;
 	}

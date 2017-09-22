@@ -17,6 +17,7 @@
 package consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetArrayTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRef;
@@ -33,8 +34,9 @@ public class MsilArrayTypRefImpl extends DotNetTypeRefWithCachedResult implement
 	private final DotNetTypeRef myInnerTypeRef;
 	private final int[] myLowerValues;
 
-	public MsilArrayTypRefImpl(DotNetTypeRef innerTypeRef, int[] lowerValues)
+	public MsilArrayTypRefImpl(Project project, DotNetTypeRef innerTypeRef, int[] lowerValues)
 	{
+		super(project);
 		myInnerTypeRef = innerTypeRef;
 		myLowerValues = lowerValues;
 	}

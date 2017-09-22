@@ -37,6 +37,7 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 
 	public MsilMethodGenericTypeRefImpl(MsilMethodEntry parent, int index)
 	{
+		super(parent.getProject());
 		myParent = parent;
 		myIndex = index;
 	}

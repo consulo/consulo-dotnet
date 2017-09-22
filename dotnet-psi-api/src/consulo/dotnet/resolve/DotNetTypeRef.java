@@ -17,6 +17,7 @@
 package consulo.dotnet.resolve;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 
@@ -28,24 +29,30 @@ public interface DotNetTypeRef
 {
 	public static final DotNetTypeRef[] EMPTY_ARRAY = new DotNetTypeRef[0];
 
-	public static ArrayFactory<DotNetTypeRef> ARRAY_FACTORY = new ArrayFactory<DotNetTypeRef>()
-	{
-		@NotNull
-		@Override
-		public DotNetTypeRef[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new DotNetTypeRef[count];
-		}
-	};
+	public static ArrayFactory<DotNetTypeRef> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetTypeRef[count];
 
 	public class AdapterInternal implements DotNetTypeRef
 	{
+		private String myText;
+
+		public AdapterInternal(String text)
+		{
+			myText = text;
+		}
+
+		@NotNull
+		@Override
+		public Project getProject()
+		{
+			throw new UnsupportedOperationException();
+		}
+
 		@NotNull
 		@Override
 		@Deprecated
 		public String getPresentableText()
 		{
-			throw new UnsupportedOperationException();
+			return myText;
 		}
 
 		@NotNull
@@ -105,6 +112,13 @@ public interface DotNetTypeRef
 		}
 
 		@NotNull
+		@Override
+		public Project getProject()
+		{
+			return myDelegate.getProject();
+		}
+
+		@NotNull
 		public DotNetTypeRef getDelegate()
 		{
 			return myDelegate;
@@ -117,38 +131,14 @@ public interface DotNetTypeRef
 		}
 	}
 
-	DotNetTypeRef ERROR_TYPE = new AdapterInternal()
-	{
-		@NotNull
-		@Override
-		@Deprecated
-		public String getPresentableText()
-		{
-			return "<error>";
-		}
-	};
+	DotNetTypeRef ERROR_TYPE = new AdapterInternal("<error>");
 
-	DotNetTypeRef UNKNOWN_TYPE = new AdapterInternal()
-	{
-		@NotNull
-		@Override
-		@Deprecated
-		public String getPresentableText()
-		{
-			return "<unknown>";
-		}
-	};
+	DotNetTypeRef UNKNOWN_TYPE = new AdapterInternal("<unknown>");
 
-	DotNetTypeRef AUTO_TYPE = new AdapterInternal()
-	{
-		@NotNull
-		@Override
-		@Deprecated
-		public String getPresentableText()
-		{
-			return "var";
-		}
-	};
+	DotNetTypeRef AUTO_TYPE = new AdapterInternal("var");
+
+	@NotNull
+	Project getProject();
 
 	@NotNull
 	@Deprecated

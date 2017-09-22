@@ -75,6 +75,6 @@ public class MsilPointerTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> impleme
 		{
 			return DotNetTypeRef.ERROR_TYPE;
 		}
-		return new MsilPointerTypeRefImpl(innerType.toTypeRef());
+		return new MsilPointerTypeRefImpl(getProject(), innerType.toTypeRef());
 	}
 }

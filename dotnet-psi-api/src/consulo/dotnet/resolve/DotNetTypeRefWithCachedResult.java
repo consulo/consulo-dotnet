@@ -17,6 +17,8 @@
 package consulo.dotnet.resolve;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -25,7 +27,22 @@ import consulo.annotations.RequiredReadAction;
  */
 public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 {
-	private DotNetTypeResolveResult myResult;
+	private final Project myProject;
+
+	private volatile DotNetTypeResolveResult myResult;
+	private volatile long myLastComputedCount = -1;
+
+	protected DotNetTypeRefWithCachedResult(Project project)
+	{
+		myProject = project;
+	}
+
+	@NotNull
+	@Override
+	public Project getProject()
+	{
+		return myProject;
+	}
 
 	@NotNull
 	@Override
@@ -46,9 +63,19 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 	@Override
 	public final DotNetTypeResolveResult resolve()
 	{
+		PsiModificationTracker modificationTracker = PsiModificationTracker.SERVICE.getInstance(myProject);
+
+		long current = modificationTracker.getModificationCount();
+
+		if(myResult != null && myLastComputedCount != current)
+		{
+			myResult = null;
+		}
+
 		if(myResult == null)
 		{
 			myResult = resolveResult();
+			myLastComputedCount = modificationTracker.getModificationCount();
 		}
 		return myResult;
 	}

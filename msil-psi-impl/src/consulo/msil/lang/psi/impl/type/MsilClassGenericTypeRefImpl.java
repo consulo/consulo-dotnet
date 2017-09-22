@@ -38,6 +38,7 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 
 	public MsilClassGenericTypeRefImpl(MsilClassEntry parent, String name)
 	{
+		super(parent.getProject());
 		myParent = parent;
 		myName = name;
 	}

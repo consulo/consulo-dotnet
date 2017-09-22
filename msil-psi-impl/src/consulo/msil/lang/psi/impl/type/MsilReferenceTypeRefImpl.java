@@ -42,6 +42,7 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 
 	public MsilReferenceTypeRefImpl(@NotNull PsiElement element, @NotNull String ref, @NotNull DotNetPsiSearcher.TypeResoleKind typeResoleKind)
 	{
+		super(element.getProject());
 		myElement = element;
 		myRef = ref;
 		myTypeResoleKind = typeResoleKind;

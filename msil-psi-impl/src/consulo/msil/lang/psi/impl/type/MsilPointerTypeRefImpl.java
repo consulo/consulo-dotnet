@@ -17,6 +17,7 @@
 package consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetPointerTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRef;
@@ -31,8 +32,9 @@ public class MsilPointerTypeRefImpl extends DotNetTypeRefWithCachedResult implem
 {
 	private final DotNetTypeRef myInnerTypeRef;
 
-	public MsilPointerTypeRefImpl(DotNetTypeRef innerTypeRef)
+	public MsilPointerTypeRefImpl(Project project, DotNetTypeRef innerTypeRef)
 	{
+		super(project);
 		myInnerTypeRef = innerTypeRef;
 	}
 
