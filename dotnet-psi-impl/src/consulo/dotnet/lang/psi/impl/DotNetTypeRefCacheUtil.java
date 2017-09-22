@@ -57,12 +57,12 @@ public class DotNetTypeRefCacheUtil
 		public Result<DotNetTypeRef> compute()
 		{
 			DotNetTypeRef result = myResolver.fun(myElement);
-			return new Result<DotNetTypeRef>(result, myDropKey);
+			return new Result<>(result, myDropKey);
 		}
 	}
 
 	private static final Key<CachedValue<DotNetTypeRef>> ourDefaultCacheKey = Key.create("DotNetTypeRefCacheUtil.ourDefaultCacheKey");
-	private static final boolean ENABLED = false;
+	private static final boolean ourCacheEnabled = Boolean.parseBoolean(System.getProperty("dotnet.typeref.cache", "false"));
 
 	@Exported
 	@NotNull
@@ -110,7 +110,7 @@ public class DotNetTypeRefCacheUtil
 			throw new IllegalArgumentException("Accepted only static resolver");
 		}
 
-		if(!ENABLED)
+		if(!ourCacheEnabled)
 		{
 			return resolver.fun(element);
 		}
@@ -118,7 +118,7 @@ public class DotNetTypeRefCacheUtil
 		CachedValue<DotNetTypeRef> cachedValue = element.getUserData(cachedValueKey);
 		if(cachedValue == null)
 		{
-			DotNetTypeRefCachedValueProvider<E> provider = new DotNetTypeRefCachedValueProvider<E>(dropKey, element, resolver);
+			DotNetTypeRefCachedValueProvider<E> provider = new DotNetTypeRefCachedValueProvider<>(dropKey, element, resolver);
 
 			cachedValue = ((UserDataHolderEx) element).putUserDataIfAbsent(cachedValueKey, CachedValuesManager.getManager(element.getProject()).createCachedValue(provider, false));
 
