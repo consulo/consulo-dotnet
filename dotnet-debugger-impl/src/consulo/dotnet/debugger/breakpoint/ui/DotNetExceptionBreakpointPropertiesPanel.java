@@ -16,20 +16,17 @@
 
 package consulo.dotnet.debugger.breakpoint.ui;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Box;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import org.jetbrains.annotations.NotNull;
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.Components;
+import consulo.ui.Layouts;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.ValueComponent;
+import consulo.ui.VerticalLayout;
 
 /**
  * @author VISTALL
@@ -37,72 +34,59 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointPr
  */
 public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomPropertiesPanel<XBreakpoint<DotNetExceptionBreakpointProperties>>
 {
-	private JCheckBox myNotifyCaughtCheckBox;
-	private JCheckBox myNotifyUncaughtCheckBox;
+	private CheckBox myNotifyCaughtCheckBox;
+	private CheckBox myNotifyUncaughtCheckBox;
 
 	@NotNull
 	@Override
-	public JComponent getComponent()
+	@RequiredUIAccess
+	public Component getUIComponent()
 	{
-		myNotifyCaughtCheckBox = new JCheckBox("Caught exception");
-		myNotifyUncaughtCheckBox = new JCheckBox("Uncaught exception");
+		myNotifyCaughtCheckBox = Components.checkBox("Caught exception");
+		myNotifyUncaughtCheckBox = Components.checkBox("Uncaught exception");
 
-		Box notificationsBox = Box.createVerticalBox();
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(myNotifyCaughtCheckBox, BorderLayout.NORTH);
-		notificationsBox.add(panel);
-		panel = new JPanel(new BorderLayout());
-		panel.add(myNotifyUncaughtCheckBox, BorderLayout.NORTH);
-		notificationsBox.add(panel);
+		VerticalLayout notificationLayout = Layouts.vertical();
+		notificationLayout.add(myNotifyCaughtCheckBox);
+		notificationLayout.add(myNotifyUncaughtCheckBox);
 
-		panel = new JPanel(new BorderLayout());
-		JPanel notifyPanel = new JPanel(new BorderLayout());
-		notifyPanel.add(notificationsBox, BorderLayout.CENTER);
-		notifyPanel.add(Box.createHorizontalStrut(3), BorderLayout.WEST);
-		notifyPanel.add(Box.createHorizontalStrut(3), BorderLayout.EAST);
-		panel.add(notifyPanel, BorderLayout.NORTH);
-		panel.setBorder(IdeBorderFactory.createTitledBorder("Notifications", true));
-
-		ActionListener listener = new ActionListener()
+		ValueComponent.ValueListener<Boolean> listener = valueEvent ->
 		{
-			@Override
-			public void actionPerformed(ActionEvent e)
+			Component source = valueEvent.getComponent();
+			if(!myNotifyCaughtCheckBox.getValue() && !myNotifyUncaughtCheckBox.getValue())
 			{
-				if(!myNotifyCaughtCheckBox.isSelected() && !myNotifyUncaughtCheckBox.isSelected())
+				CheckBox toCheck = null;
+				if(myNotifyCaughtCheckBox.equals(source))
 				{
-					Object source = e.getSource();
-					JCheckBox toCheck = null;
-					if(myNotifyCaughtCheckBox.equals(source))
-					{
-						toCheck = myNotifyUncaughtCheckBox;
-					}
-					else if(myNotifyUncaughtCheckBox.equals(source))
-					{
-						toCheck = myNotifyCaughtCheckBox;
-					}
-					if(toCheck != null)
-					{
-						toCheck.setSelected(true);
-					}
+					toCheck = myNotifyUncaughtCheckBox;
+				}
+				else if(myNotifyUncaughtCheckBox.equals(source))
+				{
+					toCheck = myNotifyCaughtCheckBox;
+				}
+				if(toCheck != null)
+				{
+					toCheck.setValue(true);
 				}
 			}
 		};
-		myNotifyCaughtCheckBox.addActionListener(listener);
-		myNotifyUncaughtCheckBox.addActionListener(listener);
-		return panel;
+		myNotifyCaughtCheckBox.addValueListener(listener);
+		myNotifyUncaughtCheckBox.addValueListener(listener);
+		return Layouts.labeled("Notifications").set(notificationLayout);
 	}
 
 	@Override
+	@RequiredUIAccess
 	public void loadFrom(@NotNull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
 	{
-		myNotifyCaughtCheckBox.setSelected(breakpoint.getProperties().NOTIFY_CAUGHT);
-		myNotifyUncaughtCheckBox.setSelected(breakpoint.getProperties().NOTIFY_UNCAUGHT);
+		myNotifyCaughtCheckBox.setValue(breakpoint.getProperties().NOTIFY_CAUGHT);
+		myNotifyUncaughtCheckBox.setValue(breakpoint.getProperties().NOTIFY_UNCAUGHT);
 	}
 
 	@Override
+	@RequiredUIAccess
 	public void saveTo(@NotNull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
 	{
-		breakpoint.getProperties().NOTIFY_CAUGHT = myNotifyCaughtCheckBox.isSelected();
-		breakpoint.getProperties().NOTIFY_UNCAUGHT = myNotifyUncaughtCheckBox.isSelected();
+		breakpoint.getProperties().NOTIFY_CAUGHT = myNotifyCaughtCheckBox.getValue();
+		breakpoint.getProperties().NOTIFY_UNCAUGHT = myNotifyUncaughtCheckBox.getValue();
 	}
 }
