@@ -42,7 +42,6 @@ import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
@@ -98,6 +97,8 @@ public class DotNetNamespaceCacheManager implements Disposable
 			final Set<String> qNames = new THashSet<>();
 			StubIndex.getInstance().processAllKeys(key, qName ->
 			{
+				ProgressManager.checkCanceled();
+
 				if(thisQName.isEmpty() && qName.startsWith(indexKey))
 				{
 					qNames.add(qName);
@@ -146,27 +147,23 @@ public class DotNetNamespaceCacheManager implements Disposable
 			assert searcher != null;
 
 			final Set<String> qNames = new THashSet<>();
-			StubIndex.getInstance().processAllKeys(searcher.getNamespaceIndexKey(), new Processor<String>()
+			StubIndex.getInstance().processAllKeys(searcher.getNamespaceIndexKey(), qName ->
 			{
-				@Override
-				@RequiredReadAction
-				public boolean process(String qName)
+				ProgressManager.checkCanceled();
+				if(DotNetNamespaceStubUtil.ROOT_FOR_INDEXING.equals(qName))
 				{
-					if(DotNetNamespaceStubUtil.ROOT_FOR_INDEXING.equals(qName))
-					{
-						return true;
-					}
-					if(qName.startsWith(thisQName))
-					{
-						String packageName = StringUtil.getPackageName(qName);
-						if(packageName.equals(thisQName))
-						{
-							qNames.add(qName);
-						}
-					}
-
 					return true;
 				}
+				if(qName.startsWith(thisQName))
+				{
+					String packageName = StringUtil.getPackageName(qName);
+					if(packageName.equals(thisQName))
+					{
+						qNames.add(qName);
+					}
+				}
+
+				return true;
 			}, scope, new GlobalSearchScopeFilter(scope));
 
 

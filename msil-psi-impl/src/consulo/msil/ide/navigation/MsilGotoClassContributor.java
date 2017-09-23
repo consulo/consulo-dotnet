@@ -19,6 +19,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -151,16 +152,14 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 					if(languageFileTypes.size() == 1)
 					{
 						LanguageFileType languageFileType = ContainerUtil.getFirstItem(languageFileTypes);
-						PsiFile representationFile = representationManager.getRepresentationFile(languageFileType,
-						myMsilClassEntry.getContainingFile()
-								.getVirtualFile());
+						PsiFile representationFile = representationManager.getRepresentationFile(languageFileType, myMsilClassEntry.getContainingFile().getVirtualFile());
 						representationFile.navigate(requestFocus);
 						return;
 					}
 
 					languageFileTypes.add(MsilFileType.INSTANCE);
-					BaseListPopupStep<LanguageFileType> step = new BaseListPopupStep<LanguageFileType>("Choose " +
-							"language", languageFileTypes.toArray(new LanguageFileType[languageFileTypes.size()]))
+					BaseListPopupStep<LanguageFileType> step = new BaseListPopupStep<LanguageFileType>("Choose " + "language", languageFileTypes.toArray(new LanguageFileType[languageFileTypes.size
+							()]))
 					{
 						@NotNull
 						@Override
@@ -184,8 +183,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 								return FINAL_CHOICE;
 							}
 
-							PsiFile representationFile = representationManager.getRepresentationFile(selectedValue,
-									myMsilClassEntry.getContainingFile().getVirtualFile());
+							PsiFile representationFile = representationManager.getRepresentationFile(selectedValue, myMsilClassEntry.getContainingFile().getVirtualFile());
 							representationFile.navigate(requestFocus);
 							return FINAL_CHOICE;
 						}
@@ -219,29 +217,21 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 	@Override
 	public void processNames(@NotNull final Processor<String> processor, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter)
 	{
-		StubIndex.getInstance().processAllKeys(MsilIndexKeys.TYPE_BY_NAME_INDEX, new Processor<String>()
+		StubIndex.getInstance().processAllKeys(MsilIndexKeys.TYPE_BY_NAME_INDEX, s ->
 		{
-			@Override
-			public boolean process(String s)
-			{
-				return processor.process(MsilHelper.cutGenericMarker(s));
-			}
+			ProgressManager.checkCanceled();
+			return processor.process(MsilHelper.cutGenericMarker(s));
 		}, scope, filter);
 	}
 
 	@Override
-	public void processElementsWithName(@NotNull String name,
-			@NotNull final Processor<NavigationItem> processor,
-			@NotNull FindSymbolParameters parameters)
+	public void processElementsWithName(@NotNull String name, @NotNull final Processor<NavigationItem> processor, @NotNull FindSymbolParameters parameters)
 	{
-		StubIndex.getInstance().processElements(MsilIndexKeys.TYPE_BY_NAME_INDEX, name, parameters.getProject(), parameters.getSearchScope(),
-				parameters.getIdFilter(), MsilClassEntry.class, new Processor<MsilClassEntry>()
+		StubIndex.getInstance().processElements(MsilIndexKeys.TYPE_BY_NAME_INDEX, name, parameters.getProject(), parameters.getSearchScope(), parameters.getIdFilter(), MsilClassEntry.class,
+				msilClassEntry ->
 		{
-			@Override
-			public boolean process(MsilClassEntry msilClassEntry)
-			{
-				return processor.process(new NavigatableWithRepresentation(msilClassEntry));
-			}
+			ProgressManager.checkCanceled();
+			return processor.process(new NavigatableWithRepresentation(msilClassEntry));
 		});
 	}
 
@@ -268,19 +258,17 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 	@Override
 	public String[] getNames(Project project, boolean includeNonProjectItems)
 	{
-		CommonProcessors.CollectProcessor<String> processor = new CommonProcessors.CollectProcessor<String>(ContainerUtil.<String>newTroveSet());
+		CommonProcessors.CollectProcessor<String> processor = new CommonProcessors.CollectProcessor<>(ContainerUtil.<String>newTroveSet());
 		processNames(processor, GlobalSearchScope.allScope(project), IdFilter.getProjectIdFilter(project, includeNonProjectItems));
-		return processor.toArray(ArrayUtil.EMPTY_STRING_ARRAY);
+		return processor.toArray(ArrayUtil.STRING_ARRAY_FACTORY);
 	}
 
 	@NotNull
 	@Override
 	public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems)
 	{
-		CommonProcessors.CollectProcessor<NavigationItem> processor = new CommonProcessors.CollectProcessor<NavigationItem>(ContainerUtil
-				.<NavigationItem>newTroveSet());
-		processElementsWithName(name, processor, new FindSymbolParameters(pattern, name, GlobalSearchScope.allScope(project),
-				IdFilter.getProjectIdFilter(project, includeNonProjectItems)));
-		return processor.toArray(NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY);
+		CommonProcessors.CollectProcessor<NavigationItem> processor = new CommonProcessors.CollectProcessor<>(ContainerUtil.<NavigationItem>newTroveSet());
+		processElementsWithName(name, processor, new FindSymbolParameters(pattern, name, GlobalSearchScope.allScope(project), IdFilter.getProjectIdFilter(project, includeNonProjectItems)));
+		return processor.toArray(NavigationItem.ARRAY_FACTORY);
 	}
 }

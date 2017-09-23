@@ -18,11 +18,11 @@ package consulo.dotnet.resolve.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.util.Processor;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.dotnet.psi.DotNetQualifiedElement;
@@ -80,13 +80,10 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 			@NotNull StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
 			@NotNull GlobalSearchScope scope)
 	{
-		return !StubIndex.getInstance().processAllKeys(keyForIndex, new Processor<String>()
+		return !StubIndex.getInstance().processAllKeys(keyForIndex, s ->
 		{
-			@Override
-			public boolean process(String s)
-			{
-				return !indexKey.equals(s);
-			}
+			ProgressManager.checkCanceled();
+			return !indexKey.equals(s);
 		}, scope, new GlobalSearchScopeFilter(scope));
 	}
 
