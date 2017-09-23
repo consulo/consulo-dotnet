@@ -16,15 +16,18 @@
 
 package consulo.dotnet.resolve;
 
+import gnu.trove.THashSet;
+
 import java.util.Collection;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
+import com.intellij.util.Processors;
 import com.intellij.util.indexing.IdFilter;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 
@@ -50,9 +53,9 @@ public abstract class DotNetShortNameSearcher
 	@NotNull
 	public Collection<String> getTypeNames(@NotNull GlobalSearchScope scope, @Nullable IdFilter filter)
 	{
-		CommonProcessors.CollectProcessor<String> collectProcessor = new CommonProcessors.CollectProcessor<String>();
-		collectTypeNames(collectProcessor, scope, filter);
-		return collectProcessor.getResults();
+		Set<String> types = new THashSet<>();
+		collectTypeNames(Processors.cancelableCollectProcessor(types), scope, filter);
+		return types;
 	}
 
 
@@ -63,8 +66,8 @@ public abstract class DotNetShortNameSearcher
 	@NotNull
 	public Collection<DotNetTypeDeclaration> getTypes(@NotNull String key, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter)
 	{
-		CommonProcessors.CollectProcessor<DotNetTypeDeclaration> collectProcessor = new CommonProcessors.CollectProcessor<DotNetTypeDeclaration>();
-		collectTypes(key, scope, filter, collectProcessor);
-		return collectProcessor.getResults();
+		Set<DotNetTypeDeclaration> types = new THashSet<>();
+		collectTypes(key, scope, filter, Processors.cancelableCollectProcessor(types));
+		return types;
 	}
 }
