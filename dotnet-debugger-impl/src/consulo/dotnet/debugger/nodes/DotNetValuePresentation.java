@@ -27,6 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
+import com.intellij.util.ObjectUtil;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
 import consulo.dotnet.DotNetTypes;
@@ -69,7 +70,7 @@ public class DotNetValuePresentation extends XValuePresentation
 
 		final Ref<String> result = Ref.create();
 
-		myValue.accept(new DotNetValueProxyVisitor.Adaptor()
+		myValue.accept(new DotNetValueProxyVisitor()
 		{
 			@Override
 			public void visitStructValue(@NotNull DotNetStructValueProxy proxy)
@@ -123,12 +124,6 @@ public class DotNetValuePresentation extends XValuePresentation
 			public void visitStringValue(@NotNull DotNetStringValueProxy proxy)
 			{
 				renderer.renderStringValue(proxy.getValue());
-			}
-
-			@Override
-			public void visitArrayValue(@NotNull DotNetArrayValueProxy proxy)
-			{
-				// nothing
 			}
 
 			@Override
@@ -287,6 +282,12 @@ public class DotNetValuePresentation extends XValuePresentation
 			public void visitNullValue(@NotNull DotNetNullValueProxy value)
 			{
 				renderer.renderValue("null");
+			}
+
+			@Override
+			public void visitErrorValue(@NotNull DotNetErrorValueProxy proxy)
+			{
+				renderer.renderError(ObjectUtil.notNull(proxy.getErrorMessage(), "Unknown error"));
 			}
 		});
 	}

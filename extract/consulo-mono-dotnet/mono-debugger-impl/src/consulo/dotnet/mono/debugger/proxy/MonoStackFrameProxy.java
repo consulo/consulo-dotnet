@@ -28,12 +28,13 @@ import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.AbsentInformationException;
 import mono.debugger.InvalidObjectException;
 import mono.debugger.InvalidStackFrameException;
-import mono.debugger.LocalVariableOrParameterMirror;
 import mono.debugger.StackFrameMirror;
+import mono.debugger.ThrowValueException;
 import mono.debugger.VMDisconnectedException;
 import mono.debugger.Value;
 import mono.debugger.util.ImmutablePair;
@@ -95,8 +96,15 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 	@Override
 	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
 	{
-		MonoMethodParameterProxy proxy = (MonoMethodParameterProxy) parameterProxy;
-		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(proxy.getParameter()));
+		try
+		{
+			MonoMethodParameterProxy proxy = (MonoMethodParameterProxy) parameterProxy;
+			return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(proxy.getParameter()));
+		}
+		catch(ThrowValueException e)
+		{
+			throw new DotNetThrowValueException(this, MonoValueProxyUtil.wrap(e.getThrowExceptionValue()));
+		}
 	}
 
 	@Override
@@ -107,15 +115,22 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 
 		Value value = ((MonoValueProxyBase) valueProxy).getMirror();
 
-		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(proxy.getParameter(), value));
+		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<>(proxy.getParameter(), value));
 	}
 
 	@Nullable
 	@Override
 	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
 	{
-		MonoLocalVariableProxy proxy = (MonoLocalVariableProxy) localVariableProxy;
-		return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(proxy.getMirror()));
+		try
+		{
+			MonoLocalVariableProxy proxy = (MonoLocalVariableProxy) localVariableProxy;
+			return MonoValueProxyUtil.wrap(getRefreshedFrame().localOrParameterValue(proxy.getMirror()));
+		}
+		catch(ThrowValueException e)
+		{
+			throw new DotNetThrowValueException(this, MonoValueProxyUtil.wrap(e.getThrowExceptionValue()));
+		}
 	}
 
 	@Override
@@ -126,7 +141,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 
 		Value value = ((MonoValueProxyBase) valueProxy).getMirror();
 
-		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<LocalVariableOrParameterMirror, Value<?>>(proxy.getMirror(), value));
+		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<>(proxy.getMirror(), value));
 	}
 
 	@NotNull

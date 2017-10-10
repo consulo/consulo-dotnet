@@ -1,7 +1,7 @@
 /*
  * Copyright 2013-2016 must-be.org
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License") {}
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -24,78 +24,43 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DotNetValueProxyVisitor
 {
-	class Adaptor implements DotNetValueProxyVisitor
+	default void visitStringValue(@NotNull DotNetStringValueProxy proxy)
 	{
-		@Override
-		public void visitStringValue(@NotNull DotNetStringValueProxy proxy)
-		{
-
-		}
-
-		@Override
-		public void visitNullValue(@NotNull DotNetNullValueProxy proxy)
-		{
-
-		}
-
-		@Override
-		public void visitArrayValue(@NotNull DotNetArrayValueProxy proxy)
-		{
-
-		}
-
-		@Override
-		public void visitEnumValue(@NotNull DotNetEnumValueProxy proxy)
-		{
-
-		}
-
-		@Override
-		public void visitObjectValue(@NotNull DotNetObjectValueProxy proxy)
-		{
-
-		}
-
-		@Override
-		public void visitNumberValue(@NotNull DotNetNumberValueProxy proxy)
-		{
-
-		}
-
-		@Override
-		public void visitBooleanValue(@NotNull DotNetBooleanValueProxy proxy)
-		{
-
-		}
-
-		@Override
-		public void visitCharValue(@NotNull DotNetCharValueProxy proxy)
-		{
-
-		}
-
-		@Override
-		public void visitStructValue(@NotNull DotNetStructValueProxy proxy)
-		{
-
-		}
 	}
 
-	void visitStringValue(@NotNull DotNetStringValueProxy proxy);
+	default void visitNullValue(@NotNull DotNetNullValueProxy proxy)
+	{
+	}
 
-	void visitNullValue(@NotNull DotNetNullValueProxy proxy);
+	default void visitArrayValue(@NotNull DotNetArrayValueProxy proxy)
+	{
+	}
 
-	void visitArrayValue(@NotNull DotNetArrayValueProxy proxy);
+	default void visitEnumValue(@NotNull DotNetEnumValueProxy proxy)
+	{
+	}
 
-	void visitEnumValue(@NotNull DotNetEnumValueProxy proxy);
+	default void visitObjectValue(@NotNull DotNetObjectValueProxy proxy)
+	{
+	}
 
-	void visitObjectValue(@NotNull DotNetObjectValueProxy proxy);
+	default void visitNumberValue(@NotNull DotNetNumberValueProxy proxy)
+	{
+	}
 
-	void visitNumberValue(@NotNull DotNetNumberValueProxy proxy);
+	default void visitBooleanValue(@NotNull DotNetBooleanValueProxy proxy)
+	{
+	}
 
-	void visitBooleanValue(@NotNull DotNetBooleanValueProxy proxy);
+	default void visitCharValue(@NotNull DotNetCharValueProxy proxy)
+	{
+	}
 
-	void visitCharValue(@NotNull DotNetCharValueProxy proxy);
+	default void visitStructValue(@NotNull DotNetStructValueProxy proxy)
+	{
+	}
 
-	void visitStructValue(@NotNull DotNetStructValueProxy proxy);
+	default void visitErrorValue(@NotNull DotNetErrorValueProxy proxy)
+	{
+	}
 }

@@ -32,6 +32,7 @@ import com.intellij.xdebugger.frame.XValuePlace;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
+import consulo.dotnet.debugger.proxy.DotNetErrorValueProxyImpl;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
@@ -135,9 +136,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	protected final DotNetStackFrameProxy myFrameProxy;
 	private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
 
-	public DotNetAbstractVariableValueNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull String name,
-			@NotNull DotNetStackFrameProxy frameProxy)
+	public DotNetAbstractVariableValueNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetStackFrameProxy frameProxy)
 	{
 		super(debuggerContext, name);
 		myFrameProxy = frameProxy;
@@ -191,7 +190,14 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	@Nullable
 	public DotNetValueProxy getValueOfVariableSafe()
 	{
-		return invoke(o -> getValueOfVariableImpl(), null);
+		try
+		{
+			return getValueOfVariableImpl();
+		}
+		catch(Throwable e)
+		{
+			return new DotNetErrorValueProxyImpl(e);
+		}
 	}
 
 	@Nullable
@@ -214,7 +220,8 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 
 	public void setValueForVariable(@NotNull DotNetValueProxy value)
 	{
-		invoke(o -> {
+		invoke(o ->
+		{
 			setValueForVariableImpl(o);
 			return null;
 		}, value);
@@ -248,7 +255,8 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
-		myDebugContext.invoke(() -> {
+		myDebugContext.invoke(() ->
+		{
 			DotNetTypeProxy typeOfVariable = getTypeOfVariableForChildren();
 			if(typeOfVariable == null)
 			{
@@ -277,10 +285,9 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	public boolean canHaveChildren()
 	{
 		final DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
-		return valueOfVariable instanceof DotNetObjectValueProxy ||
-				valueOfVariable instanceof DotNetArrayValueProxy && ((DotNetArrayValueProxy) valueOfVariable).getLength() != 0 ||
-				valueOfVariable instanceof DotNetStringValueProxy && !StringUtil.isEmpty(((String) valueOfVariable.getValue())) ||
-				valueOfVariable instanceof DotNetStructValueProxy && !((DotNetStructValueProxy) valueOfVariable).getValues().isEmpty();
+		return valueOfVariable instanceof DotNetObjectValueProxy || valueOfVariable instanceof DotNetArrayValueProxy && ((DotNetArrayValueProxy) valueOfVariable).getLength() != 0 || valueOfVariable
+				instanceof DotNetStringValueProxy && !StringUtil.isEmpty(((String) valueOfVariable.getValue())) || valueOfVariable instanceof DotNetStructValueProxy && !((DotNetStructValueProxy)
+				valueOfVariable).getValues().isEmpty();
 	}
 
 	@Override
@@ -288,7 +295,6 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	{
 		final DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
 
-		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren
-				());
+		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren());
 	}
 }

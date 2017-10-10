@@ -27,7 +27,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  * @author VISTALL
  * @since 19.04.2016
  */
-public class DotNetThrowValueException extends Exception
+public class DotNetThrowValueException extends RuntimeException
 {
 	private DotNetStackFrameProxy myFrameProxy;
 	private DotNetValueProxy myThrowValue;

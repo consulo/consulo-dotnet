@@ -5,11 +5,13 @@ import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.MethodMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.PropertyMirror;
+import mono.debugger.ThrowValueException;
 
 /**
  * @author VISTALL
@@ -46,9 +48,16 @@ public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> imp
 	@Override
 	public DotNetValueProxy getValue(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
 	{
-		MonoThreadProxy monoThreadProxy = (MonoThreadProxy) frameProxy.getThread();
-		MonoValueProxyBase<?> monoValueProxyBase = (MonoValueProxyBase<?>) proxy;
-		return MonoValueProxyUtil.wrap(myMirror.value(monoThreadProxy.getThreadMirror(), monoValueProxyBase == null ? null : (ObjectValueMirror) monoValueProxyBase.getMirror()));
+		try
+		{
+			MonoThreadProxy monoThreadProxy = (MonoThreadProxy) frameProxy.getThread();
+			MonoValueProxyBase<?> monoValueProxyBase = (MonoValueProxyBase<?>) proxy;
+			return MonoValueProxyUtil.wrap(myMirror.value(monoThreadProxy.getThreadMirror(), monoValueProxyBase == null ? null : (ObjectValueMirror) monoValueProxyBase.getMirror()));
+		}
+		catch(ThrowValueException e)
+		{
+			throw new DotNetThrowValueException(frameProxy, MonoValueProxyUtil.wrap(e.getThrowExceptionValue()));
+		}
 	}
 
 	@Override
