@@ -1,6 +1,6 @@
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mono.debugger.LocalVariableMirror;
@@ -16,10 +16,10 @@ public class MonoLocalVariableProxy extends MonoVariableProxyBase<LocalVariableM
 		super(localVariable);
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MonoTypeProxy.of(myMirror.type());
+		return MonoTypeProxy.of(myMirror::type);
 	}
 }

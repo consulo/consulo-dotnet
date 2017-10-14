@@ -59,7 +59,7 @@ public abstract class MonoValueProxyBase<T extends Value<?>> implements DotNetVa
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MonoTypeProxy.of(myValue.type());
+		return MonoTypeProxy.of(myValue::type);
 	}
 
 	@NotNull

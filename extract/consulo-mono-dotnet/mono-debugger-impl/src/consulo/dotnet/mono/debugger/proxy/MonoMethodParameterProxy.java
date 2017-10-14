@@ -16,7 +16,7 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mono.debugger.MethodParameterMirror;
@@ -46,10 +46,10 @@ public class MonoMethodParameterProxy extends MonoVariableProxyBase<MethodParame
 		return myIndex;
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MonoTypeProxy.of(myMirror.type());
+		return MonoTypeProxy.of(myMirror::type);
 	}
 }

@@ -16,6 +16,8 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
+import java.util.function.Supplier;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +42,20 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	public static MonoTypeProxy of(@Nullable TypeMirror typeMirror)
 	{
 		return typeMirror == null ? null : new MonoTypeProxy(typeMirror);
+	}
+
+	@Nullable
+	public static MonoTypeProxy of(@NotNull Supplier<TypeMirror> supplier)
+	{
+		try
+		{
+			TypeMirror typeMirror = supplier.get();
+			return typeMirror == null ? null : new MonoTypeProxy(typeMirror);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
 	}
 
 	private TypeMirror myTypeMirror;
