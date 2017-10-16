@@ -27,8 +27,6 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Ref;
@@ -41,7 +39,6 @@ import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
@@ -231,46 +228,7 @@ public class DotNetStackFrame extends XStackFrame
 	@Override
 	public XDebuggerEvaluator getEvaluator()
 	{
-		return new XDebuggerEvaluator()
-		{
-			@Override
-			public boolean isCodeFragmentEvaluationSupported()
-			{
-				return false;
-			}
-
-			@Override
-			public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
-			{
-				DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(expression.getLanguage());
-				if(provider != null)
-				{
-					if(provider.getEditorLanguage() == expression.getLanguage())
-					{
-						provider.evaluate(myFrameProxy, myDebuggerContext, expression.getExpression(), null, callback, expressionPosition);
-					}
-				}
-			}
-
-			@Override
-			public void evaluate(@NotNull String expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
-			{
-				if(expressionPosition == null)
-				{
-					return;
-				}
-
-				FileType fileType = expressionPosition.getFile().getFileType();
-				if(fileType instanceof LanguageFileType)
-				{
-					DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(((LanguageFileType) fileType).getLanguage());
-					if(provider != null)
-					{
-						provider.evaluate(myFrameProxy, myDebuggerContext, expression, null, callback, expressionPosition);
-					}
-				}
-			}
-		};
+		return new DotNetDebuggerEvaluator(myFrameProxy, myDebuggerContext);
 	}
 
 

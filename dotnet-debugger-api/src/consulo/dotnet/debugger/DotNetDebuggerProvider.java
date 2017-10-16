@@ -20,17 +20,22 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.psi.DotNetReferenceExpression;
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Consumer;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XNamedValue;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.psi.DotNetReferenceExpression;
+import consulo.dotnet.psi.DotNetType;
 
 /**
  * @author VISTALL
@@ -72,6 +77,40 @@ public abstract class DotNetDebuggerProvider
 			@NotNull DotNetReferenceExpression element,
 			@NotNull Set<Object> visitedVariables,
 			@NotNull Consumer<XNamedValue> callback);
+
+	@RequiredReadAction
+	@Nullable
+	public TextRange getExpressionRangeAtOffset(@NotNull PsiFile psiFile, int offset, boolean sideEffectsAllowed)
+	{
+		PsiElement elementAt = psiFile.findElementAt(offset);
+		if(elementAt == null)
+		{
+			return null;
+		}
+
+		PsiNameIdentifierOwner owner = PsiTreeUtil.getParentOfType(elementAt, PsiNameIdentifierOwner.class);
+		if(owner != null)
+		{
+			PsiElement nameIdentifier = owner.getNameIdentifier();
+			TextRange textRange = nameIdentifier == null ? null : nameIdentifier.getTextRange();
+			if(textRange != null && textRange.contains(offset))
+			{
+				return textRange;
+			}
+		}
+
+		DotNetReferenceExpression referenceExpression = PsiTreeUtil.getParentOfType(elementAt, DotNetReferenceExpression.class);
+		if(referenceExpression != null)
+		{
+			// skip type references
+			if(PsiTreeUtil.getParentOfType(referenceExpression, DotNetType.class) != null)
+			{
+				return null;
+			}
+			return referenceExpression.getTextRange();
+		}
+		return null;
+	}
 
 	public abstract boolean isSupported(@NotNull PsiFile psiFile);
 
