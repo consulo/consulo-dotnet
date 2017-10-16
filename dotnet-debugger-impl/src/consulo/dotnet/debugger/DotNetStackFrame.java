@@ -26,10 +26,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -124,8 +124,7 @@ public class DotNetStackFrame extends XStackFrame
 		{
 			return null;
 		}
-		VirtualFile fileByPath = sourceLocation.getFilePath() == null ? null : LocalFileSystem.getInstance().findFileByPath(sourceLocation
-				.getFilePath());
+		VirtualFile fileByPath = sourceLocation.getFilePath() == null ? null : LocalFileSystem.getInstance().findFileByPath(sourceLocation.getFilePath());
 		final DotNetMethodProxy method = sourceLocation.getMethod();
 		if(fileByPath != null)
 		{
@@ -140,14 +139,7 @@ public class DotNetStackFrame extends XStackFrame
 				{
 					if(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(method) != null)
 					{
-						PsiElement executableElement = ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>()
-						{
-							@Override
-							public PsiElement compute()
-							{
-								return method.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), executableChildrenAtLineIndex);
-							}
-						});
+						PsiElement executableElement = ReadAction.compute(() -> method.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), executableChildrenAtLineIndex));
 
 						if(executableElement != null)
 						{
@@ -163,41 +155,36 @@ public class DotNetStackFrame extends XStackFrame
 		{
 			final DotNetTypeProxy declarationType = method.getDeclarationType();
 
-			return ApplicationManager.getApplication().runReadAction(new Computable<XSourcePosition>()
+			return ReadAction.compute(() ->
 			{
-				@Override
-				public XSourcePosition compute()
+				DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(declarationType.getFullName(), myDebuggerContext.getResolveScope());
+				if(type == null)
 				{
-					DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(declarationType.getFullName
-							(), myDebuggerContext.getResolveScope());
-					if(type == null)
+					return null;
+				}
+
+				PsiElement target = type;
+				for(DotNetNamedElement element : type.getMembers())
+				{
+					if(Comparing.equal(getVmName(element), method.getName()))
 					{
-						return null;
+						target = element;
+						break;
 					}
 
-					PsiElement target = type;
-					for(DotNetNamedElement element : type.getMembers())
+					if(element instanceof DotNetAccessorOwner)
 					{
-						if(Comparing.equal(getVmName(element), method.getName()))
+						for(DotNetXXXAccessor accessor : ((DotNetAccessorOwner) element).getAccessors())
 						{
-							target = element;
-							break;
-						}
-
-						if(element instanceof DotNetAccessorOwner)
-						{
-							for(DotNetXXXAccessor accessor : ((DotNetAccessorOwner) element).getAccessors())
+							if(Comparing.equal(getVmName(accessor), method.getName()))
 							{
-								if(Comparing.equal(getVmName(accessor), method.getName()))
-								{
-									target = element;
-									break;
-								}
+								target = element;
+								break;
 							}
 						}
 					}
-					return XDebuggerUtil.getInstance().createPositionByOffset(target.getContainingFile().getVirtualFile(), target.getTextOffset());
 				}
+				return XDebuggerUtil.getInstance().createPositionByOffset(target.getContainingFile().getVirtualFile(), target.getTextOffset());
 			});
 		}
 	}
@@ -253,8 +240,7 @@ public class DotNetStackFrame extends XStackFrame
 			}
 
 			@Override
-			public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition
-					expressionPosition)
+			public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 			{
 				DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(expression.getLanguage());
 				if(provider != null)
@@ -378,8 +364,7 @@ public class DotNetStackFrame extends XStackFrame
 		}
 		catch(DotNetAbsentInformationException e)
 		{
-			node.setMessage("Stack frame info is not available", XDebuggerUIConstants.INFORMATION_MESSAGE_ICON, XDebuggerUIConstants
-					.VALUE_NAME_ATTRIBUTES, null);
+			node.setMessage("Stack frame info is not available", XDebuggerUIConstants.INFORMATION_MESSAGE_ICON, XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES, null);
 			return;
 		}
 		catch(DotNetInvalidObjectException e)
@@ -397,7 +382,8 @@ public class DotNetStackFrame extends XStackFrame
 			final Ref<DotNetDebuggerProvider> providerRef = Ref.create();
 			final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<>();
 
-			ApplicationManager.getApplication().runReadAction(() -> {
+			ApplicationManager.getApplication().runReadAction(() ->
+			{
 				PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
 				if(psiElement != null)
 				{
