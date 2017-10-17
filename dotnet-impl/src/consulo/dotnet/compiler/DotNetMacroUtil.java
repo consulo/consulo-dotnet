@@ -20,17 +20,15 @@ import gnu.trove.THashMap;
 
 import java.util.Map;
 
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.macro.TargetFileExtensionMacro;
@@ -41,34 +39,17 @@ import consulo.dotnet.module.macro.TargetFileExtensionMacro;
  */
 public class DotNetMacroUtil
 {
-	private static class MapDataContext extends UserDataHolderBase implements DataContext
-	{
-		private Map<String, Object> myMap = new THashMap<>();
-
-		private <T> void put(DataKey<T> key, T value)
-		{
-			myMap.put(key.getName(), value);
-		}
-
-		@Nullable
-		@Override
-		public Object getData(@NonNls String key)
-		{
-			return myMap.get(key);
-		}
-	}
-
 	@NotNull
 	public static DataContext createContext(@NotNull Module module, boolean debugSymbols)
 	{
-		MapDataContext context = new MapDataContext();
-		context.put(CommonDataKeys.PROJECT, module.getProject());
-		context.put(LangDataKeys.MODULE, module);
+		Map<Key, Object> map = new THashMap<>();
+		map.put(CommonDataKeys.PROJECT, module.getProject());
+		map.put(LangDataKeys.MODULE, module);
 		if(debugSymbols)
 		{
-			context.put(TargetFileExtensionMacro.DEBUG_SYMBOLS, Boolean.TRUE);
+			map.put(TargetFileExtensionMacro.DEBUG_SYMBOLS, Boolean.TRUE);
 		}
-		return context;
+		return SimpleDataContext.getSimpleContext(map, null);
 	}
 
 	@NotNull
@@ -92,7 +73,7 @@ public class DotNetMacroUtil
 	@NotNull
 	public static String expand(@NotNull Module module, @NotNull String path, boolean debugSymbols)
 	{
-		String newPath = null;
+		String newPath;
 		try
 		{
 			newPath = MacroManager.getInstance().expandSilentMarcos(path, true, createContext(module, debugSymbols));

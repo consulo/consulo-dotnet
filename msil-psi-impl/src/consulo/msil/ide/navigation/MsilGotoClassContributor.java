@@ -25,7 +25,6 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.FakePsiElement;
@@ -115,9 +114,9 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 				@Override
 				public void consume(DataContext dataContext)
 				{
-					final Project project = CommonDataKeys.PROJECT.getData(dataContext);
+					final Project project = dataContext.getData(CommonDataKeys.PROJECT);
 					assert project != null;
-					final Set<LanguageFileType> languageFileTypes = new THashSet<LanguageFileType>();
+					final Set<LanguageFileType> languageFileTypes = new THashSet<>();
 					Module[] modules = ModuleManager.getInstance(project).getModules();
 					MsilFileRepresentationProvider[] extensions = MsilFileRepresentationProvider.EP_NAME.getExtensions();
 					for(Module module : modules)
@@ -127,14 +126,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 						{
 							continue;
 						}
-						MsilFileRepresentationProvider provider = ContainerUtil.find(extensions, new Condition<MsilFileRepresentationProvider>()
-						{
-							@Override
-							public boolean value(MsilFileRepresentationProvider msilFileRepresentationProvider)
-							{
-								return msilFileRepresentationProvider.getFileType() == extension.getFileType();
-							}
-						});
+						MsilFileRepresentationProvider provider = ContainerUtil.find(extensions, it -> it.getFileType() == extension.getFileType());
 						if(provider == null)
 						{
 							continue;

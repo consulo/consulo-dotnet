@@ -1,12 +1,12 @@
 package consulo.dotnet.module.macro;
 
-import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.ide.macro.Macro;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.util.Key;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 
 /**
  * @author VISTALL
@@ -14,7 +14,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
  */
 public class TargetFileExtensionMacro extends Macro
 {
-	public static DataKey<Boolean> DEBUG_SYMBOLS = DataKey.create("debug.symbols");
+	public static Key<Boolean> DEBUG_SYMBOLS = Key.create("debug.symbols");
 
 	@Override
 	public String getName()
@@ -31,7 +31,7 @@ public class TargetFileExtensionMacro extends Macro
 	@Override
 	public String expand(DataContext dataContext)
 	{
-		final Module module = LangDataKeys.MODULE.getData(dataContext);
+		final Module module = dataContext.getData(LangDataKeys.MODULE);
 		if(module == null)
 		{
 			return null;
@@ -39,7 +39,7 @@ public class TargetFileExtensionMacro extends Macro
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		if(extension != null)
 		{
-			Boolean data = DEBUG_SYMBOLS.getData(dataContext);
+			Boolean data = dataContext.getData(DEBUG_SYMBOLS);
 			if(data == Boolean.TRUE)
 			{
 				return extension.getDebugFileExtension();

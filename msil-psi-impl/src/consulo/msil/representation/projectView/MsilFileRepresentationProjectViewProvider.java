@@ -84,11 +84,4 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 		}
 		return newList;
 	}
-
-	@Nullable
-	@Override
-	public Object getData(Collection<AbstractTreeNode> selected, String dataName)
-	{
-		return null;
-	}
 }
