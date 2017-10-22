@@ -37,7 +37,7 @@ public class DotNetThrowValueNode extends DotNetAbstractVariableValueNode
 
 	public DotNetThrowValueNode(@NotNull DotNetDebugContext debuggerContext, @NotNull DotNetStackFrameProxy frameProxy, @NotNull DotNetValueProxy throwObject)
 	{
-		super(debuggerContext, "threw object", frameProxy);
+		super(debuggerContext, "exception", frameProxy);
 		myThrowObject = throwObject;
 	}
 
