@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.UserDataHolderBase;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
@@ -37,7 +38,11 @@ import consulo.dotnet.debugger.proxy.DotNetErrorValueProxyImpl;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetErrorValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
@@ -225,10 +230,15 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 		});
 	}
 
-	private boolean canHaveChildren()
+	private boolean canHaveChildren(@Nullable DotNetValueProxy valueOfVariable)
 	{
-		TypeTag typeTag = typeTag(null);
-		return typeTag == null || typeTag == TypeTag.String;
+		DotNetVirtualMachineUtil.checkCallForUIThread();
+
+		return valueOfVariable instanceof DotNetObjectValueProxy ||
+				valueOfVariable instanceof DotNetErrorValueProxy && ((DotNetErrorValueProxy) valueOfVariable).getThrowObject() != null ||
+				valueOfVariable instanceof DotNetArrayValueProxy && ((DotNetArrayValueProxy) valueOfVariable).getLength() != 0 ||
+				valueOfVariable instanceof DotNetStringValueProxy && !StringUtil.isEmpty(((String) valueOfVariable.getValue())) ||
+				valueOfVariable instanceof DotNetStructValueProxy && !((DotNetStructValueProxy) valueOfVariable).getValues().isEmpty();
 	}
 
 	@Override
@@ -243,6 +253,6 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 
 		myLastValueRef.set(valueOfVariable);
 
-		xValueNode.setPresentation(getIconForVariable(Ref.create(valueOfVariable)), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren());
+		xValueNode.setPresentation(getIconForVariable(Ref.create(valueOfVariable)), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren(valueOfVariable));
 	}
 }
