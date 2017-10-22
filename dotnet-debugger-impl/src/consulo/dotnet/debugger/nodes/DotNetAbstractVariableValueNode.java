@@ -293,6 +293,11 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	@Override
 	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
+		computePresentationImpl(xValueNode, xValuePlace);
+	}
+
+	protected void computePresentationImpl(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
+	{
 		final DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
 
 		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren());

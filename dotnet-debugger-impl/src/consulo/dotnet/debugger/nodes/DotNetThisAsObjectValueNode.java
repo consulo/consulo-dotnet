@@ -120,7 +120,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 	}
 
 	@Override
-	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
+	protected void computePresentationImpl(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
 		if(myObjectValueMirrorGetter == null)
 		{
@@ -128,7 +128,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 		}
 		else
 		{
-			super.computePresentation(xValueNode, xValuePlace);
+			super.computePresentationImpl(xValueNode, xValuePlace);
 		}
 	}
 
