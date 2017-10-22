@@ -75,7 +75,7 @@ public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueN
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariableImpl()
 	{
 		return myFieldOrPropertyMirror.getType();
 	}

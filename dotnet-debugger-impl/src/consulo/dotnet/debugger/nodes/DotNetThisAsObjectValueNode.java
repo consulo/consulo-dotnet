@@ -205,7 +205,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 
 	@NotNull
 	@Override
-	public DotNetTypeProxy getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariableImpl()
 	{
 		return myType;
 	}

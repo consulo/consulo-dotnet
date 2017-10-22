@@ -100,7 +100,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariableImpl()
 	{
 		return myParameter.getType();
 	}

@@ -114,7 +114,7 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariableImpl()
 	{
 		return myLocal.getType();
 	}

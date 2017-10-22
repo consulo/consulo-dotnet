@@ -59,7 +59,7 @@ public class DotNetLocalVariableValueWrapperNode extends DotNetAbstractVariableV
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariableImpl()
 	{
 		return myField.getType();
 	}

@@ -18,15 +18,16 @@ package consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.ObjectUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XNavigatable;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 
 /**
  * @author VISTALL
@@ -37,6 +38,9 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 	@NotNull
 	protected final DotNetDebugContext myDebugContext;
 
+	@Nullable
+	private Object myTypeProxy;
+
 	public AbstractTypedValueNode(@NotNull DotNetDebugContext debugContext, @NotNull String name)
 	{
 		super(name);
@@ -44,7 +48,28 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 	}
 
 	@Nullable
-	public abstract DotNetTypeProxy getTypeOfVariable();
+	public DotNetTypeProxy getTypeOfVariable()
+	{
+		if(myTypeProxy != null)
+		{
+			Object typeProxy = myTypeProxy;
+			return typeProxy == ObjectUtil.NULL ? null : (DotNetTypeProxy) typeProxy;
+		}
+		DotNetTypeProxy proxy = getTypeOfVariableImpl();
+		if(proxy == null)
+		{
+			myTypeProxy = ObjectUtil.NULL;
+			return null;
+		}
+		else
+		{
+			myTypeProxy = proxy;
+			return proxy;
+		}
+	}
+
+	@Nullable
+	public abstract DotNetTypeProxy getTypeOfVariableImpl();
 
 	@Override
 	@RequiredDispatchThread

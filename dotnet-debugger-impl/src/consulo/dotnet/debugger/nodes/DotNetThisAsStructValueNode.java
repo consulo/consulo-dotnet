@@ -100,7 +100,7 @@ public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
 
 	@NotNull
 	@Override
-	public DotNetTypeProxy getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariableImpl()
 	{
 		return myTypeMirror;
 	}

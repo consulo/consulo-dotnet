@@ -60,7 +60,7 @@ public class DotNetArrayValueNode extends DotNetAbstractVariableValueNode
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariableImpl()
 	{
 		return myValue == null ? null : myValue.getType();
 	}

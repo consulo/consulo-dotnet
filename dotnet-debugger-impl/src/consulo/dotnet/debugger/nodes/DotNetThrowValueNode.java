@@ -57,7 +57,7 @@ public class DotNetThrowValueNode extends DotNetAbstractVariableValueNode
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariableImpl()
 	{
 		return myThrowObject.getType();
 	}

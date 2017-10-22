@@ -61,7 +61,7 @@ public class DotNetSimpleValueNode extends DotNetAbstractVariableValueNode
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getTypeOfVariable()
+	public DotNetTypeProxy getTypeOfVariableImpl()
 	{
 		return myValue.getType();
 	}
