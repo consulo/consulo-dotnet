@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
@@ -46,8 +45,6 @@ import consulo.dotnet.debugger.proxy.value.*;
  */
 public class DotNetValuePresentation extends XValuePresentation
 {
-	private static final Logger LOGGER = Logger.getInstance(DotNetValuePresentation.class);
-
 	private final DotNetDebugContext myDebugContext;
 	private final DotNetStackFrameProxy myStackFrame;
 	private final DotNetValueProxy myValue;

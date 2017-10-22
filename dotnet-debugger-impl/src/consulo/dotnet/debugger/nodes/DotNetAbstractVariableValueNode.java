@@ -26,6 +26,7 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.xdebugger.frame.XCompositeNode;
+import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
@@ -34,13 +35,11 @@ import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import consulo.dotnet.debugger.proxy.DotNetErrorValueProxyImpl;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetErrorValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
@@ -196,7 +195,12 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 		}
 		catch(Throwable e)
 		{
-			return new DotNetErrorValueProxyImpl(e);
+			DotNetValueProxy proxy = null;
+			if(e instanceof DotNetThrowValueException)
+			{
+				proxy = ((DotNetThrowValueException) e).getThrowExceptionValue();
+			}
+			return new DotNetErrorValueProxyImpl(e, proxy);
 		}
 	}
 
@@ -257,14 +261,32 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	{
 		myDebugContext.invoke(() ->
 		{
-			DotNetTypeProxy typeOfVariable = getTypeOfVariableForChildren();
-			if(typeOfVariable == null)
+			DotNetValueProxy value = getValueOfVariableSafe();
+			if(value instanceof DotNetErrorValueProxy)
 			{
-				node.setErrorMessage("No type");
-				return;
+				DotNetValueProxy throwObject = ((DotNetErrorValueProxy) value).getThrowObject();
+
+				if(throwObject == null)
+				{
+					node.setErrorMessage("No children for error value");
+					return;
+				}
+				else
+				{
+					XValueChildrenList list = new XValueChildrenList(1);
+					list.add(new DotNetThrowValueNode(myDebugContext, myFrameProxy, throwObject));
+					node.addChildren(list, true);
+					return;
+				}
 			}
 
-			DotNetValueProxy value = getValueOfVariableSafe();
+			DotNetTypeProxy typeOfVariable = getTypeOfVariableForChildren();
+
+			if(typeOfVariable == null)
+			{
+				node.setErrorMessage("Variable type is not resolved");
+				return;
+			}
 
 			DotNetLogicValueView valueView = null;
 			for(DotNetLogicValueView temp : DotNetLogicValueView.IMPL)
@@ -282,12 +304,15 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 		});
 	}
 
-	public boolean canHaveChildren()
+	private boolean canHaveChildren()
 	{
-		final DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
-		return valueOfVariable instanceof DotNetObjectValueProxy || valueOfVariable instanceof DotNetArrayValueProxy && ((DotNetArrayValueProxy) valueOfVariable).getLength() != 0 || valueOfVariable
-				instanceof DotNetStringValueProxy && !StringUtil.isEmpty(((String) valueOfVariable.getValue())) || valueOfVariable instanceof DotNetStructValueProxy && !((DotNetStructValueProxy)
-				valueOfVariable).getValues().isEmpty();
+		TypeTag typeTag = typeTag();
+		if(typeTag == null)
+		{
+			return true;
+		}
+
+		return typeTag == TypeTag.String;
 	}
 
 	@Override

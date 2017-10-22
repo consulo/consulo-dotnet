@@ -19,6 +19,7 @@ package consulo.dotnet.debugger.proxy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetErrorValueProxy;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 
 /**
@@ -28,10 +29,13 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 public class DotNetErrorValueProxyImpl implements DotNetErrorValueProxy
 {
 	private final Throwable myThrowable;
+	@Nullable
+	private DotNetValueProxy myThrowObjectProxy;
 
-	public DotNetErrorValueProxyImpl(@NotNull Throwable throwable)
+	public DotNetErrorValueProxyImpl(@NotNull Throwable throwable, @Nullable DotNetValueProxy throwObjectProxy)
 	{
 		myThrowable = throwable;
+		myThrowObjectProxy = throwObjectProxy;
 	}
 
 	@NotNull
@@ -39,6 +43,13 @@ public class DotNetErrorValueProxyImpl implements DotNetErrorValueProxy
 	public String getErrorMessage()
 	{
 		return myThrowable.getMessage();
+	}
+
+	@Nullable
+	@Override
+	public DotNetValueProxy getThrowObject()
+	{
+		return myThrowObjectProxy;
 	}
 
 	@Nullable
