@@ -23,9 +23,9 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.dotnet.DotNetTypes;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Getter;
+import com.intellij.openapi.util.Ref;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.frame.XCompositeNode;
@@ -34,6 +34,7 @@ import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
+import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
@@ -102,7 +103,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 
 	@NotNull
 	@Override
-	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
+	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
 		return myObjectValueMirrorGetter == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value;
 	}

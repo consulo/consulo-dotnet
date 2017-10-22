@@ -20,21 +20,22 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredDispatchThread;
-import consulo.dotnet.psi.DotNetCodeBlockOwner;
-import consulo.dotnet.psi.DotNetParameter;
-import consulo.dotnet.psi.DotNetParameterListOwner;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNavigatable;
+import consulo.annotations.RequiredDispatchThread;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.dotnet.psi.DotNetCodeBlockOwner;
+import consulo.dotnet.psi.DotNetParameter;
+import consulo.dotnet.psi.DotNetParameterListOwner;
 
 /**
  * @author VISTALL
@@ -54,7 +55,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 
 	@NotNull
 	@Override
-	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
+	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
 		return AllIcons.Nodes.Parameter;
 	}

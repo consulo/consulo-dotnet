@@ -23,6 +23,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.Ref;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
@@ -62,7 +63,7 @@ public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
 
 	@NotNull
 	@Override
-	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
+	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
 		return AllIcons.Debugger.Value;
 	}

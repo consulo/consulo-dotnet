@@ -21,6 +21,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.Ref;
 import com.intellij.xdebugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
@@ -93,14 +94,14 @@ public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueN
 
 	@NotNull
 	@Override
-	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
+	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
 		boolean isStatic = myFieldOrPropertyMirror.isStatic();
 
 		Icon baseIcon = null;
 		if(myFieldOrPropertyMirror instanceof DotNetPropertyProxy)
 		{
-			DotNetValueProxy valueOfVariableSafe = alreadyCalledValue != null ? alreadyCalledValue : getValueOfVariable();
+			DotNetValueProxy valueOfVariableSafe = alreadyCalledValue != null ? alreadyCalledValue.get() : getValueOfVariable();
 			if(valueOfVariableSafe != null && myThisObjectMirror != null && valueOfVariableSafe.isEqualTo(myThisObjectMirror))
 			{
 				baseIcon = AllIcons.Debugger.Selfreference;
@@ -114,7 +115,7 @@ public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueN
 
 		if(myFieldOrPropertyMirror instanceof DotNetFieldProxy)
 		{
-			DotNetValueProxy valueOfVariableSafe = alreadyCalledValue != null ? alreadyCalledValue : getValueOfVariable();
+			DotNetValueProxy valueOfVariableSafe = alreadyCalledValue != null ? alreadyCalledValue.get() : getValueOfVariable();
 			if(valueOfVariableSafe != null && myThisObjectMirror != null && valueOfVariableSafe.isEqualTo(myThisObjectMirror))
 			{
 				baseIcon = AllIcons.Debugger.Selfreference;

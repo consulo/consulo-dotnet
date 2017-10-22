@@ -21,6 +21,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.NullableFunction;
@@ -150,9 +151,9 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	@NotNull
-	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
+	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
-		DotNetTypeProxy typeOfVariable = getTypeOfVariableValue(alreadyCalledValue);
+		DotNetTypeProxy typeOfVariable = getTypeOfVariableOrValue(alreadyCalledValue);
 		if(typeOfVariable == null)
 		{
 			return AllIcons.Debugger.Value;
@@ -202,9 +203,9 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	@Nullable
-	public DotNetTypeProxy getTypeOfVariableValue(@Nullable DotNetValueProxy alreadyCalledValue)
+	public DotNetTypeProxy getTypeOfVariableOrValue(@Nullable("null if value not fetched. null inside ref mean null from vm") Ref<DotNetValueProxy> alreadyCalledValue)
 	{
-		DotNetValueProxy valueOfVariable = alreadyCalledValue != null ? alreadyCalledValue : getValueOfVariable();
+		DotNetValueProxy valueOfVariable = alreadyCalledValue != null ? alreadyCalledValue.get() : getValueOfVariable();
 		if(valueOfVariable == null)
 		{
 			return getTypeOfVariable();
@@ -277,7 +278,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 				}
 			}
 
-			DotNetTypeProxy typeOfVariable = getTypeOfVariableValue(null);
+			DotNetTypeProxy typeOfVariable = getTypeOfVariableOrValue(Ref.create(value));
 
 			if(typeOfVariable == null)
 			{
@@ -315,8 +316,8 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 
 	protected void computePresentationImpl(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
-		final DotNetValueProxy valueOfVariable = getValueOfVariable();
+		DotNetValueProxy valueOfVariable = getValueOfVariable();
 
-		xValueNode.setPresentation(getIconForVariable(null), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren());
+		xValueNode.setPresentation(getIconForVariable(Ref.create(valueOfVariable)), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren());
 	}
 }
