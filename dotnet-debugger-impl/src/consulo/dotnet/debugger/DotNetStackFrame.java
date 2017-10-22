@@ -154,7 +154,7 @@ public class DotNetStackFrame extends XStackFrame
 
 			return ReadAction.compute(() ->
 			{
-				DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(declarationType.getFullName(), myDebuggerContext.getResolveScope());
+				DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(DotNetDebuggerUtil.getVmQName(declarationType), myDebuggerContext.getResolveScope());
 				if(type == null)
 				{
 					return null;

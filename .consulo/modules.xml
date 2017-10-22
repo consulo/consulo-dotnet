@@ -6,7 +6,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-name="Consulo SNAPSHOT" />
           <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="EXCLUDED" url="file://$MODULE_DIR$/.consulo/sandbox" />
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
@@ -31,7 +30,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -47,7 +45,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -65,7 +62,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -79,7 +75,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -95,7 +90,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -109,7 +103,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -126,7 +119,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -143,7 +135,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -190,7 +181,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -204,7 +194,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
             <content-folder type="TEST_RESOURCE" url="file://$MODULE_DIR$/testData" />
@@ -253,7 +242,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -274,7 +262,6 @@
         <module-layer name="Default">
           <extension id="consulo-plugin" sdk-module-name="consulo-dotnet" />
           <extension id="java" sdk-module-name="consulo-dotnet" language-level-module-name="consulo-dotnet" />
-          <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
