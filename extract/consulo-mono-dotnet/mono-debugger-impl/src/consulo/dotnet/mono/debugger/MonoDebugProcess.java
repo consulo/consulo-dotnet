@@ -40,6 +40,7 @@ import consulo.dotnet.mono.debugger.breakpoint.MonoBreakpointUtil;
 import mono.debugger.Location;
 import mono.debugger.NoInvocationException;
 import mono.debugger.ThreadMirror;
+import mono.debugger.VMDisconnectedException;
 import mono.debugger.event.EventSet;
 import mono.debugger.request.BreakpointRequest;
 import mono.debugger.request.EventRequestManager;
@@ -239,7 +240,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 
 				virtualMachine.addStepRequest(stepRequest);
 			}
-			catch(NoInvocationException ignored)
+			catch(NoInvocationException | VMDisconnectedException ignored)
 			{
 			}
 			return true;
