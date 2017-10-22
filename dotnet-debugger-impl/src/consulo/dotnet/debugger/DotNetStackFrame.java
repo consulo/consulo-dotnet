@@ -154,7 +154,8 @@ public class DotNetStackFrame extends XStackFrame
 
 			return ReadAction.compute(() ->
 			{
-				DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(DotNetDebuggerUtil.getVmQName(declarationType), myDebuggerContext.getResolveScope());
+				DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(DotNetDebuggerUtil.getVmQName(declarationType), myDebuggerContext.getResolveScope
+						());
 				if(type == null)
 				{
 					return null;
@@ -247,17 +248,17 @@ public class DotNetStackFrame extends XStackFrame
 		DotNetTypeProxy declarationType = method.getDeclarationType();
 
 		String name = method.getName();
-		if(name.equals(XStubUtil.CONSTRUCTOR_NAME))
+		switch(name)
 		{
-			name = declarationType.getName() + "()";
-		}
-		else if(name.equals(XStubUtil.STATIC_CONSTRUCTOR_NAME))
-		{
-			name = declarationType.getName();
-		}
-		else
-		{
-			name = method.getName() + "()";
+			case XStubUtil.CONSTRUCTOR_NAME:
+				name = declarationType.getName() + "()";
+				break;
+			case XStubUtil.STATIC_CONSTRUCTOR_NAME:
+				name = declarationType.getName();
+				break;
+			default:
+				name = method.getName() + "()";
+				break;
 		}
 
 		Couple<String> lambdaInfo = DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(method);

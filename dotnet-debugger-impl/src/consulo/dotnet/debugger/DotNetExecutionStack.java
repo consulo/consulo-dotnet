@@ -42,15 +42,7 @@ public class DotNetExecutionStack extends XExecutionStack
 {
 	public static final DotNetExecutionStack[] EMPTY_ARRAY = new DotNetExecutionStack[0];
 
-	public static ArrayFactory<DotNetExecutionStack> ARRAY_FACTORY = new ArrayFactory<DotNetExecutionStack>()
-	{
-		@NotNull
-		@Override
-		public DotNetExecutionStack[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new DotNetExecutionStack[count];
-		}
-	};
+	public static ArrayFactory<DotNetExecutionStack> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetExecutionStack[count];
 
 	private DotNetStackFrame myTopFrame;
 	private boolean myTopFrameCalculated;
@@ -133,7 +125,8 @@ public class DotNetExecutionStack extends XExecutionStack
 	@Override
 	public void computeStackFrames(XStackFrameContainer frameContainer)
 	{
-		myDebuggerContext.invoke(() -> {
+		myDebuggerContext.invoke(() ->
+		{
 			List<DotNetStackFrameProxy> frames = Collections.emptyList();
 			try
 			{
