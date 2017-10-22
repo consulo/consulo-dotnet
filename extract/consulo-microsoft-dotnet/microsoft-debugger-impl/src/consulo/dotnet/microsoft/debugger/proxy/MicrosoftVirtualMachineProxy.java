@@ -81,22 +81,25 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 	@Override
 	public void invoke(@NotNull Runnable runnable)
 	{
-		myExecutor.execute(() -> {
+		myExecutor.execute(() ->
+		{
 			try
 			{
 				runnable.run();
 			}
-			catch(Exception e)
+			catch(Throwable e)
 			{
 				LOGGER.error(e);
 			}
-		});	}
+		});
+	}
 
 	@NotNull
 	@Override
 	public List<DotNetThreadProxy> getThreads()
 	{
-		return ContainerUtil.map(myVirtualMachine.allThreads(), threadMirror -> {
+		return ContainerUtil.map(myVirtualMachine.allThreads(), threadMirror ->
+		{
 			return new MicrosoftThreadProxy(MicrosoftVirtualMachineProxy.this, threadMirror);
 		});
 	}

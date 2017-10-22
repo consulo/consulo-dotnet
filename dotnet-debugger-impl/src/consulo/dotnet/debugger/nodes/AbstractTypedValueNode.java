@@ -18,6 +18,7 @@ package consulo.dotnet.debugger.nodes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ObjectUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
@@ -39,7 +40,7 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 	protected final DotNetDebugContext myDebugContext;
 
 	@Nullable
-	private Object myTypeProxy;
+	private Ref<DotNetTypeProxy> myTypeProxy;
 
 	public AbstractTypedValueNode(@NotNull DotNetDebugContext debugContext, @NotNull String name)
 	{
@@ -50,21 +51,19 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 	@Nullable
 	public DotNetTypeProxy getTypeOfVariable()
 	{
-		if(myTypeProxy != null)
+		DotNetVirtualMachineUtil.checkCallForUIThread();
+
+		Ref<DotNetTypeProxy> typeProxy = myTypeProxy;
+		if(typeProxy != null)
 		{
-			Object typeProxy = myTypeProxy;
-			return typeProxy == ObjectUtil.NULL ? null : (DotNetTypeProxy) typeProxy;
-		}
-		DotNetTypeProxy proxy = getTypeOfVariableImpl();
-		if(proxy == null)
-		{
-			myTypeProxy = ObjectUtil.NULL;
-			return null;
+			return typeProxy.get();
 		}
 		else
 		{
-			myTypeProxy = proxy;
-			return proxy;
+			DotNetTypeProxy value = getTypeOfVariableImpl();
+			typeProxy = Ref.create(value);
+			myTypeProxy = typeProxy;
+			return value;
 		}
 	}
 
@@ -101,6 +100,6 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 	@Override
 	public boolean canNavigateToTypeSource()
 	{
-		return getTypeOfVariable() != null;
+		return myTypeProxy != ObjectUtil.NULL;
 	}
 }

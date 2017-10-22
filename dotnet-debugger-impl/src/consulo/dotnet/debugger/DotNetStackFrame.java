@@ -231,7 +231,6 @@ public class DotNetStackFrame extends XStackFrame
 		return new DotNetDebuggerEvaluator(myFrameProxy, myDebuggerContext);
 	}
 
-
 	@Override
 	public void customizePresentation(ColoredTextContainer component)
 	{

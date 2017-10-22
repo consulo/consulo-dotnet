@@ -25,13 +25,13 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
+import consulo.dotnet.debugger.nodes.valueRender.DotNetValueTextRendererProxy;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -49,16 +49,35 @@ public class DotNetValuePresentation extends XValuePresentation
 	private final DotNetStackFrameProxy myStackFrame;
 	private final DotNetValueProxy myValue;
 
+	private String myRenderedTypeText;
+
+	@Nullable
+	private DotNetValueTextRendererProxy myProxy;
+
 	public DotNetValuePresentation(DotNetDebugContext debugContext, @NotNull DotNetStackFrameProxy stackFrame, @Nullable DotNetValueProxy value)
 	{
 		myDebugContext = debugContext;
 		myStackFrame = stackFrame;
 		myValue = value;
+
+		myRenderedTypeText = renderType();
+
+		if(myValue != null)
+		{
+			myProxy = new DotNetValueTextRendererProxy();
+			renderValueImpl(myProxy);
+		}
 	}
 
 	@Nullable
 	@Override
 	public String getType()
+	{
+		return myRenderedTypeText;
+	}
+
+	@Nullable
+	private String renderType()
 	{
 		if(myValue == null)
 		{
@@ -110,11 +129,14 @@ public class DotNetValuePresentation extends XValuePresentation
 	@Override
 	public void renderValue(@NotNull final XValueTextRenderer renderer)
 	{
-		if(myValue == null)
+		if(myProxy != null)
 		{
-			return;
+			myProxy.renderBack(renderer);
 		}
+	}
 
+	private void renderValueImpl(@NotNull final XValueTextRenderer renderer)
+	{
 		myValue.accept(new DotNetValueProxyVisitor()
 		{
 			@Override
@@ -136,7 +158,7 @@ public class DotNetValuePresentation extends XValuePresentation
 				assert type != null;
 				boolean flags = type.isAnnotatedBy(DotNetTypes.System.FlagsAttribute);
 
-				Set<String> enumFields = new LinkedHashSet<String>();
+				Set<String> enumFields = new LinkedHashSet<>();
 				Number expectedValue = ((DotNetNumberValueProxy) value).getValue();
 
 				DotNetFieldProxy[] fields = type.getFields();
@@ -204,14 +226,10 @@ public class DotNetValuePresentation extends XValuePresentation
 				{
 					Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> fields = proxy.getValues();
 
-					toStringValue = StringUtil.join(fields.entrySet(), new Function<Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy>, String>()
+					toStringValue = StringUtil.join(fields.entrySet(), entry ->
 					{
-						@Override
-						public String fun(Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy> entry)
-						{
-							String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myDebugContext, myStackFrame, entry.getValue()));
-							return entry.getKey().getName() + " = " + valueText;
-						}
+						String valueText = XValuePresentationUtil.computeValueText(new DotNetValuePresentation(myDebugContext, myStackFrame, entry.getValue()));
+						return entry.getKey().getName() + " = " + valueText;
 					}, ", ");
 				}
 

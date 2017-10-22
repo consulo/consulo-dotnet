@@ -97,7 +97,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 			catch(VMDisconnectedException ignored)
 			{
 			}
-			catch(Exception e)
+			catch(Throwable e)
 			{
 				LOGGER.error(e);
 			}
