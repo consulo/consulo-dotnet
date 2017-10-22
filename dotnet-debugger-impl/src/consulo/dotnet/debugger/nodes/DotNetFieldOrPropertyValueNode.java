@@ -93,24 +93,39 @@ public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueN
 
 	@NotNull
 	@Override
-	public Icon getIconForVariable()
+	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
 	{
 		boolean isStatic = myFieldOrPropertyMirror.isStatic();
 
 		Icon baseIcon = null;
 		if(myFieldOrPropertyMirror instanceof DotNetPropertyProxy)
 		{
-			DotNetValueProxy valueOfVariableSafe = getValueOfVariableSafe();
+			DotNetValueProxy valueOfVariableSafe = alreadyCalledValue != null ? alreadyCalledValue : getValueOfVariable();
 			if(valueOfVariableSafe != null && myThisObjectMirror != null && valueOfVariableSafe.isEqualTo(myThisObjectMirror))
 			{
 				baseIcon = AllIcons.Debugger.Selfreference;
 			}
-			baseIcon = AllIcons.Nodes.Property;
+
+			if(baseIcon == null)
+			{
+				baseIcon = AllIcons.Nodes.Property;
+			}
 		}
+
 		if(myFieldOrPropertyMirror instanceof DotNetFieldProxy)
 		{
-			baseIcon = AllIcons.Nodes.Field;
+			DotNetValueProxy valueOfVariableSafe = alreadyCalledValue != null ? alreadyCalledValue : getValueOfVariable();
+			if(valueOfVariableSafe != null && myThisObjectMirror != null && valueOfVariableSafe.isEqualTo(myThisObjectMirror))
+			{
+				baseIcon = AllIcons.Debugger.Selfreference;
+			}
+
+			if(baseIcon == null)
+			{
+				baseIcon = AllIcons.Nodes.Field;
+			}
 		}
+
 		assert baseIcon != null;
 		if(isStatic)
 		{

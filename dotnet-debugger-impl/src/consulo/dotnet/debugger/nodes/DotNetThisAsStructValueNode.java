@@ -62,7 +62,7 @@ public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
 
 	@NotNull
 	@Override
-	public Icon getIconForVariable()
+	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
 	{
 		return AllIcons.Debugger.Value;
 	}

@@ -54,7 +54,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 
 	@NotNull
 	@Override
-	public Icon getIconForVariable()
+	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
 	{
 		return AllIcons.Nodes.Parameter;
 	}

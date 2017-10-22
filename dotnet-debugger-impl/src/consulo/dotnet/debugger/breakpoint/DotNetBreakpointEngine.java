@@ -141,7 +141,7 @@ public class DotNetBreakpointEngine
 		XValue value = evaluateBreakpointExpression(frame, breakpoint, logExpressionObject, debugContext);
 		if(value instanceof DotNetAbstractVariableValueNode)
 		{
-			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableValueNode) value).getValueOfVariableSafe();
+			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableValueNode) value).getValueOfVariable();
 			if(valueOfVariableSafe != null)
 			{
 				String toStringValue = DotNetDebuggerSearchUtil.toStringValue(frame, valueOfVariableSafe);
@@ -171,7 +171,7 @@ public class DotNetBreakpointEngine
 		XValue value = evaluateBreakpointExpression(frame, breakpoint, conditionExpression, debugContext);
 		if(value instanceof DotNetAbstractVariableValueNode)
 		{
-			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableValueNode) value).getValueOfVariableSafe();
+			DotNetValueProxy valueOfVariableSafe = ((DotNetAbstractVariableValueNode) value).getValueOfVariable();
 			if(valueOfVariableSafe instanceof DotNetBooleanValueProxy)
 			{
 				return ((DotNetBooleanValueProxy) valueOfVariableSafe).getValue();

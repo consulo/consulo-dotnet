@@ -43,7 +43,7 @@ public class DotNetThrowValueNode extends DotNetAbstractVariableValueNode
 
 	@NotNull
 	@Override
-	public Icon getIconForVariable()
+	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
 	{
 		return AllIcons.Nodes.ExceptionClass;
 	}

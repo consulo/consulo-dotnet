@@ -56,7 +56,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 			assert typeOfVariable != null;
 			DotNetVirtualMachineProxy virtualMachine = myDebugContext.getVirtualMachine();
 
-			TypeTag typeTag = typeTag();
+			TypeTag typeTag = typeTag(typeOfVariable);
 			assert typeTag != null;
 
 			DotNetValueProxy setValue = null;
@@ -101,7 +101,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 		@Nullable
 		public String getInitialValueEditorText()
 		{
-			DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
+			DotNetValueProxy valueOfVariable = getValueOfVariable();
 			if(valueOfVariable == null)
 			{
 				return null;
@@ -113,7 +113,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 			}
 
 			String valueOfString = String.valueOf(valueOfVariable.getValue());
-			TypeTag typeTag = typeTag();
+			TypeTag typeTag = typeTag(null);
 			assert typeTag != null;
 
 			if(typeTag == TypeTag.String)
@@ -139,9 +139,9 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	@Nullable
-	public TypeTag typeTag()
+	public TypeTag typeTag(@Nullable DotNetTypeProxy alreadyCalledType)
 	{
-		DotNetTypeProxy typeOfVariable = getTypeOfVariable();
+		DotNetTypeProxy typeOfVariable = alreadyCalledType != null ? alreadyCalledType : getTypeOfVariable();
 		if(typeOfVariable == null)
 		{
 			return null;
@@ -150,9 +150,9 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	@NotNull
-	public Icon getIconForVariable()
+	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
 	{
-		DotNetTypeProxy typeOfVariable = getTypeOfVariableForChildren();
+		DotNetTypeProxy typeOfVariable = getTypeOfVariableValue(alreadyCalledValue);
 		if(typeOfVariable == null)
 		{
 			return AllIcons.Debugger.Value;
@@ -163,7 +163,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 			return AllIcons.Debugger.Db_array;
 		}
 
-		TypeTag typeTag = typeTag();
+		TypeTag typeTag = typeTag(typeOfVariable);
 		if(typeTag != null && typeTag != TypeTag.String)
 		{
 			return AllIcons.Debugger.Db_primitive;
@@ -184,7 +184,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	public abstract void setValueForVariableImpl(@NotNull DotNetValueProxy value);
 
 	@Nullable
-	public DotNetValueProxy getValueOfVariableSafe()
+	public DotNetValueProxy getValueOfVariable()
 	{
 		try
 		{
@@ -202,9 +202,9 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	@Nullable
-	public DotNetTypeProxy getTypeOfVariableForChildren()
+	public DotNetTypeProxy getTypeOfVariableValue(@Nullable DotNetValueProxy alreadyCalledValue)
 	{
-		DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
+		DotNetValueProxy valueOfVariable = alreadyCalledValue != null ? alreadyCalledValue : getValueOfVariable();
 		if(valueOfVariable == null)
 		{
 			return getTypeOfVariable();
@@ -246,7 +246,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	@Override
 	public XValueModifier getModifier()
 	{
-		if(typeTag() != null)
+		if(typeTag(null) != null)
 		{
 			return myValueModifier;
 		}
@@ -258,7 +258,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	{
 		myDebugContext.invoke(() ->
 		{
-			DotNetValueProxy value = getValueOfVariableSafe();
+			DotNetValueProxy value = getValueOfVariable();
 			if(value instanceof DotNetErrorValueProxy)
 			{
 				DotNetValueProxy throwObject = ((DotNetErrorValueProxy) value).getThrowObject();
@@ -277,7 +277,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 				}
 			}
 
-			DotNetTypeProxy typeOfVariable = getTypeOfVariableForChildren();
+			DotNetTypeProxy typeOfVariable = getTypeOfVariableValue(null);
 
 			if(typeOfVariable == null)
 			{
@@ -303,13 +303,8 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 
 	private boolean canHaveChildren()
 	{
-		TypeTag typeTag = typeTag();
-		if(typeTag == null)
-		{
-			return true;
-		}
-
-		return typeTag == TypeTag.String;
+		TypeTag typeTag = typeTag(null);
+		return typeTag == null || typeTag == TypeTag.String;
 	}
 
 	@Override
@@ -320,8 +315,8 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 
 	protected void computePresentationImpl(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
-		final DotNetValueProxy valueOfVariable = getValueOfVariableSafe();
+		final DotNetValueProxy valueOfVariable = getValueOfVariable();
 
-		xValueNode.setPresentation(getIconForVariable(), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren());
+		xValueNode.setPresentation(getIconForVariable(null), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren());
 	}
 }

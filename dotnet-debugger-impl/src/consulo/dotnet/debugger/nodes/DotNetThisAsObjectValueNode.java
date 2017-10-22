@@ -102,7 +102,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 
 	@NotNull
 	@Override
-	public Icon getIconForVariable()
+	public Icon getIconForVariable(@Nullable DotNetValueProxy alreadyCalledValue)
 	{
 		return myObjectValueMirrorGetter == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value;
 	}
@@ -124,7 +124,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 	{
 		if(myObjectValueMirrorGetter == null)
 		{
-			xValueNode.setPresentation(getIconForVariable(), new XRegularValuePresentation("", null, ""), true);
+			xValueNode.setPresentation(getIconForVariable(null), new XRegularValuePresentation("", null, ""), true);
 		}
 		else
 		{
