@@ -44,7 +44,7 @@ public class DotNetModuleFileType extends ArchiveFileType
 
 	@NotNull
 	@Override
-	public String getName()
+	public String getId()
 	{
 		return "DLL_ARCHIVE";
 	}

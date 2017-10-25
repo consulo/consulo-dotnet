@@ -72,7 +72,7 @@ public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<D
 
 	@Nullable
 	@Override
-	public XBreakpointCustomPropertiesPanel<XBreakpoint<DotNetExceptionBreakpointProperties>> createCustomPropertiesPanel()
+	public XBreakpointCustomPropertiesPanel<XBreakpoint<DotNetExceptionBreakpointProperties>> createCustomPropertiesPanel(@NotNull Project project)
 	{
 		return new DotNetExceptionBreakpointPropertiesPanel();
 	}

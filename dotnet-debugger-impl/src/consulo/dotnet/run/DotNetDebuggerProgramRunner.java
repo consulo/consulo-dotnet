@@ -26,8 +26,6 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.UserDataHolder;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import consulo.annotations.RequiredDispatchThread;
@@ -78,25 +76,20 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 		}
 
 		FileDocumentManager.getInstance().saveAllDocuments();
-		final XDebugSession debugSession = XDebuggerManager.getInstance(env.getProject()).startSession(env, new XDebugProcessStarter()
+		XDebugSession debugSession = XDebuggerManager.getInstance(env.getProject()).startSession(env, session ->
 		{
-			@NotNull
-			@Override
-			public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException
+			DotNetDebugProcessBase process = configurationWithDebug.createDebuggerProcess(session, debugConnectionInfo);
+			if(!debugConnectionInfo.isServer())
 			{
-				DotNetDebugProcessBase process = configurationWithDebug.createDebuggerProcess(session, debugConnectionInfo);
-				if(!debugConnectionInfo.isServer())
-				{
-					process.start();
-				}
-
-				process.setExecutionResult(state.execute(env.getExecutor(), DotNetDebuggerProgramRunner.this));
-				if(debugConnectionInfo.isServer())
-				{
-					process.start();
-				}
-				return process;
+				process.start();
 			}
+
+			process.setExecutionResult(state.execute(env.getExecutor(), DotNetDebuggerProgramRunner.this));
+			if(debugConnectionInfo.isServer())
+			{
+				process.start();
+			}
+			return process;
 		});
 		return debugSession.getRunContentDescriptor();
 	}

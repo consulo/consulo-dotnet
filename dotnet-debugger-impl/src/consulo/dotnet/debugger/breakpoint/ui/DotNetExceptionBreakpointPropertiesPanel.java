@@ -22,8 +22,7 @@ import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
-import consulo.ui.Components;
-import consulo.ui.Layouts;
+import consulo.ui.LabeledLayout;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.VerticalLayout;
@@ -42,10 +41,10 @@ public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomP
 	@RequiredUIAccess
 	public Component getUIComponent()
 	{
-		myNotifyCaughtCheckBox = Components.checkBox("Caught exception");
-		myNotifyUncaughtCheckBox = Components.checkBox("Uncaught exception");
+		myNotifyCaughtCheckBox = CheckBox.create("Caught exception");
+		myNotifyUncaughtCheckBox = CheckBox.create("Uncaught exception");
 
-		VerticalLayout notificationLayout = Layouts.vertical();
+		VerticalLayout notificationLayout = VerticalLayout.create();
 		notificationLayout.add(myNotifyCaughtCheckBox);
 		notificationLayout.add(myNotifyUncaughtCheckBox);
 
@@ -71,7 +70,7 @@ public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomP
 		};
 		myNotifyCaughtCheckBox.addValueListener(listener);
 		myNotifyUncaughtCheckBox.addValueListener(listener);
-		return Layouts.labeled("Notifications").set(notificationLayout);
+		return LabeledLayout.create("Notifications", notificationLayout);
 	}
 
 	@Override

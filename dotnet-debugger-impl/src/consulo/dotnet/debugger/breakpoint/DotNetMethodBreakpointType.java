@@ -21,6 +21,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
@@ -61,7 +62,7 @@ public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethod
 
 	@Nullable
 	@Override
-	public XBreakpointCustomPropertiesPanel<XLineBreakpoint<DotNetMethodBreakpointProperties>> createCustomPropertiesPanel()
+	public XBreakpointCustomPropertiesPanel<XLineBreakpoint<DotNetMethodBreakpointProperties>> createCustomPropertiesPanel(@NotNull Project project)
 	{
 		return new DotNetMethodBreakpointPropertiesPanel();
 	}

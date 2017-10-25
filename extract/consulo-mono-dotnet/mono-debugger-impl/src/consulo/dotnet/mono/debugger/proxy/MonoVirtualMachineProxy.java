@@ -269,7 +269,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 			}
 
 			String assemblyTitle = null;
-			if(ProjectFileIndex.SERVICE.getInstance(project).isInLibraryClasses(virtualFile))
+			if(ProjectFileIndex.getInstance(project).isInLibraryClasses(virtualFile))
 			{
 				VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
 				if(archiveRoot != null)

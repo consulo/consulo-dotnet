@@ -35,7 +35,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.containers.ConcurrentWeakHashMap;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.documentation.DotNetDocumentationResolver;
 import consulo.dotnet.psi.DotNetMethodDeclaration;
@@ -50,7 +50,7 @@ public class MonoDocumentationResolver implements DotNetDocumentationResolver
 {
 	private static final Logger LOGGER = Logger.getInstance(MonoDocumentationResolver.class);
 
-	private Map<VirtualFile, MonodocTree[]> myCache = new ConcurrentWeakHashMap<VirtualFile, MonodocTree[]>();
+	private Map<VirtualFile, MonodocTree[]> myCache = ContainerUtil.createConcurrentWeakMap();
 
 	@RequiredReadAction
 	@Nullable

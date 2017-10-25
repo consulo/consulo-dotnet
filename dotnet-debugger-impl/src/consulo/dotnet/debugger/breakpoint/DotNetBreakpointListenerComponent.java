@@ -21,7 +21,7 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.breakpoints.XBreakpointAdapter;
+import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
@@ -43,7 +43,7 @@ public class DotNetBreakpointListenerComponent extends AbstractProjectComponent
 	{
 		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(myProject).getBreakpointManager();
 
-		breakpointManager.addBreakpointListener(DotNetMethodBreakpointType.getInstance(), new XBreakpointAdapter<XLineBreakpoint<DotNetMethodBreakpointProperties>>()
+		breakpointManager.addBreakpointListener(DotNetMethodBreakpointType.getInstance(), new XBreakpointListener<XLineBreakpoint<DotNetMethodBreakpointProperties>>()
 		{
 			@Override
 			public void breakpointAdded(@NotNull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)

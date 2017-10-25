@@ -47,12 +47,12 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
 	@RequiredUIAccess
 	protected Component createUIComponent()
 	{
-		VerticalLayout vertical = Layouts.vertical();
-		vertical.add(LabeledComponents.leftFilled("Host", myHostField = Components.textBox()));
-		vertical.add(LabeledComponents.leftFilled("Port", myPortField = Components.textBox()));
-		vertical.add(LabeledComponents.leftFilled("Module", myModuleComboBox = Components.comboBox(ModuleManager.getInstance(myProject).getSortedModules())));
+		VerticalLayout vertical = VerticalLayout.create();
+		vertical.add(LabeledComponents.leftFilled("Host", myHostField = TextBox.create()));
+		vertical.add(LabeledComponents.leftFilled("Port", myPortField = TextBox.create()));
+		vertical.add(LabeledComponents.leftFilled("Module", myModuleComboBox = ComboBox.create(ModuleManager.getInstance(myProject).getSortedModules())));
 
-		ComboBoxes.SimpleBuilder<Boolean> modeBuilder = ComboBoxes.simple();
+		ComboBox.Builder<Boolean> modeBuilder = ComboBox.builder();
 		modeBuilder.add(Boolean.TRUE, "attach");
 		modeBuilder.add(Boolean.FALSE, "listen");
 		myModeBox = modeBuilder.build();

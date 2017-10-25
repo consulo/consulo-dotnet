@@ -38,7 +38,7 @@ public class MsilFileType extends LanguageFileType
 
 	@NotNull
 	@Override
-	public String getName()
+	public String getId()
 	{
 		return "MSIL";
 	}

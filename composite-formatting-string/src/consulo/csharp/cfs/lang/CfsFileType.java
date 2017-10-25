@@ -38,7 +38,7 @@ public class CfsFileType extends LanguageFileType
 
 	@NotNull
 	@Override
-	public String getName()
+	public String getId()
 	{
 		return "CFS";
 	}

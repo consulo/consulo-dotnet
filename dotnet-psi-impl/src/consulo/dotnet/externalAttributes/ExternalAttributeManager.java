@@ -94,7 +94,7 @@ public class ExternalAttributeManager
 			return ExternalAttributeHolder.EMPTY;
 		}
 
-		List<OrderEntry> orderEntriesForFile = ProjectFileIndex.SERVICE.getInstance(myProject).getOrderEntriesForFile(virtualFile);
+		List<OrderEntry> orderEntriesForFile = ProjectFileIndex.getInstance(myProject).getOrderEntriesForFile(virtualFile);
 
 		List<VirtualFile> externalAttributeFiles = new SmartList<VirtualFile>();
 		for(OrderEntry orderEntry : orderEntriesForFile)

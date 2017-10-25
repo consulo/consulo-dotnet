@@ -21,8 +21,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
-import consulo.msil.lang.psi.MsilFile;
 import org.picocontainer.Disposable;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -34,6 +32,8 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ConcurrentMultiMap;
 import com.intellij.util.containers.MultiMap;
+import consulo.annotations.RequiredReadAction;
+import consulo.msil.lang.psi.MsilFile;
 
 /**
  * @author VISTALL
@@ -46,7 +46,7 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 	public MsilFileRepresentationManagerImpl(Project project)
 	{
 		super(project);
-		project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter()
+		project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener()
 		{
 			@Override
 			public void before(@NotNull List<? extends VFileEvent> events)

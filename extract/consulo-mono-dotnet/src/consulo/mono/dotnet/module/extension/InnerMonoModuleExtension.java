@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.extension.impl.ModuleExtensionImpl;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.ModuleInheritableNamedPointer;
+import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.ModuleRootLayer;
 
