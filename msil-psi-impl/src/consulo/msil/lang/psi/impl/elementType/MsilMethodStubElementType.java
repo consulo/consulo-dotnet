@@ -20,13 +20,16 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilMethodEntry;
 import consulo.msil.lang.psi.impl.MsilMethodEntryImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilMethodEntryStub;
+import consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer;
 
 /**
  * @author VISTALL
@@ -53,6 +56,7 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 		return new MsilMethodEntryImpl(msilMethodEntryStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilMethodEntryStub createStub(@NotNull MsilMethodEntry msilMethodEntry, StubElement stubElement)
 	{
@@ -68,10 +72,18 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 
 	@NotNull
 	@Override
-	public MsilMethodEntryStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilMethodEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilMethodEntryStub(stubElement, this, ref);
+	}
+
+	@Override
+	public void indexStub(@NotNull MsilMethodEntryStub msilMethodEntryStub, @NotNull IndexSink indexSink)
+	{
+		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())
+		{
+			indexer.indexMethod(msilMethodEntryStub, indexSink);
+		}
 	}
 }

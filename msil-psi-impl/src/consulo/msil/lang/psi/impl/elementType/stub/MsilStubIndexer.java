@@ -30,7 +30,12 @@ public class MsilStubIndexer
 
 	public void indexClass(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull IndexSink indexSink)
 	{
-		// empty body
+		// nothing
+	}
+
+	public void indexMethod(@NotNull MsilMethodEntryStub stub,  @NotNull IndexSink indexSink)
+	{
+		// nothing
 	}
 
 	public int getVersion()
