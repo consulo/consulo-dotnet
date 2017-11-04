@@ -224,6 +224,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 		{
 			return;
 		}
+
 		final ThreadMirror threadMirror = myPausedEventSet.eventThread();
 		if(threadMirror == null)
 		{

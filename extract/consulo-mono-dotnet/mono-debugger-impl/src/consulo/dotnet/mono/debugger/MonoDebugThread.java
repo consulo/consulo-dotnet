@@ -16,6 +16,7 @@
 
 package consulo.dotnet.mono.debugger;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -433,7 +434,11 @@ public class MonoDebugThread extends Thread
 					}
 				}
 			}
-			catch(VMDisconnectedException | DotNetNotSuspendedException e)
+			catch(VMDisconnectedException | IOException e)
+			{
+				connectionStopped();
+			}
+			catch(DotNetNotSuspendedException e)
 			{
 				// dont interest
 			}
@@ -563,6 +568,11 @@ public class MonoDebugThread extends Thread
 
 	public void addCommand(Processor<MonoVirtualMachineProxy> processor)
 	{
+		if(!isConnected())
+		{
+			return;
+		}
+
 		myQueue.add(processor);
 	}
 

@@ -16,6 +16,7 @@
 
 package consulo.dotnet.microsoft.debugger;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Queue;
@@ -375,7 +376,11 @@ public class MicrosoftDebugThread extends Thread
 					}
 				}
 			}
-			catch(VMDisconnectedException | DotNetNotSuspendedException e)
+			catch(VMDisconnectedException | IOException e)
+			{
+				connectionStopped();
+			}
+			catch(DotNetNotSuspendedException e)
 			{
 				// dont interest
 			}
