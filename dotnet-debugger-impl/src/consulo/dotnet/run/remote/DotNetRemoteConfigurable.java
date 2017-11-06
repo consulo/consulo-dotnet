@@ -17,12 +17,17 @@
 package consulo.dotnet.run.remote;
 
 import org.jetbrains.annotations.Nullable;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import consulo.ui.*;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.FormBuilder;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.TextBox;
 
 /**
  * @author VISTALL
@@ -47,29 +52,32 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
 	@RequiredUIAccess
 	protected Component createUIComponent()
 	{
-		VerticalLayout vertical = VerticalLayout.create();
-		vertical.add(LabeledComponents.leftFilled("Host", myHostField = TextBox.create()));
-		vertical.add(LabeledComponents.leftFilled("Port", myPortField = TextBox.create()));
-		vertical.add(LabeledComponents.leftFilled("Module", myModuleComboBox = ComboBox.create(ModuleManager.getInstance(myProject).getSortedModules())));
+		FormBuilder formBuilder = FormBuilder.create();
+
+		formBuilder.addLabeled("Host", myHostField = TextBox.create());
+		formBuilder.addLabeled("Port", myPortField = TextBox.create());
+		formBuilder.addLabeled("Module", myModuleComboBox = ComboBox.create(ModuleManager.getInstance(myProject).getSortedModules()));
 
 		ComboBox.Builder<Boolean> modeBuilder = ComboBox.builder();
 		modeBuilder.add(Boolean.TRUE, "attach");
 		modeBuilder.add(Boolean.FALSE, "listen");
 		myModeBox = modeBuilder.build();
 
-		vertical.add(LabeledComponents.left("Mode", myModeBox));
+		formBuilder.addLabeled("Mode", myModeBox);
 
-		myModuleComboBox.setRender((listItemPresentation, i, module) -> {
+		myModuleComboBox.setRender((listItemPresentation, i, module) ->
+		{
 			if(module == null)
 			{
 				listItemPresentation.append("<none>");
 			}
 			else
 			{
+				listItemPresentation.setIcon(AllIcons.Nodes.Module);
 				listItemPresentation.append(module.getName());
 			}
 		});
-		return vertical;
+		return formBuilder.build();
 	}
 
 	@Override
