@@ -62,7 +62,6 @@ public class DotNetTypeRefCacheUtil
 	}
 
 	private static final Key<CachedValue<DotNetTypeRef>> ourDefaultCacheKey = Key.create("DotNetTypeRefCacheUtil.ourDefaultCacheKey");
-	private static final boolean ourCacheEnabled = Boolean.parseBoolean(System.getProperty("dotnet.typeref.cache", "false"));
 
 	@Exported
 	@NotNull
@@ -108,11 +107,6 @@ public class DotNetTypeRefCacheUtil
 		if(!BitUtil.isSet(aClass.getModifiers(), Modifier.STATIC))
 		{
 			throw new IllegalArgumentException("Accepted only static resolver");
-		}
-
-		if(!ourCacheEnabled)
-		{
-			return resolver.fun(element);
 		}
 
 		CachedValue<DotNetTypeRef> cachedValue = element.getUserData(cachedValueKey);
