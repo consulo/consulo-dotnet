@@ -37,11 +37,10 @@ import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.AnyPsiChangeListener;
-import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
+import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
@@ -196,9 +195,17 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	private final Project myProject;
 
-	DotNetNamespaceCacheManager(Project project)
+	private long myLastOutOfCodeCount;
+
+	DotNetNamespaceCacheManager(Project project, PsiModificationTracker modificationTracker)
 	{
 		myProject = project;
+
+		if(project.isDefault())
+		{
+			return;
+		}
+
 		MessageBusConnection connect = project.getMessageBus().connect();
 		connect.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter()
 		{
@@ -223,11 +230,13 @@ public class DotNetNamespaceCacheManager implements Disposable
 			}
 		});
 
-		connect.subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener.Adapter()
+		connect.subscribe(PsiModificationTracker.TOPIC, () ->
 		{
-			@Override
-			public void beforePsiChanged(boolean isPhysical)
+			long outOfCodeBlockModificationCount = modificationTracker.getOutOfCodeBlockModificationCount();
+			if(myLastOutOfCodeCount != outOfCodeBlockModificationCount)
 			{
+				myLastOutOfCodeCount = outOfCodeBlockModificationCount;
+
 				clear();
 			}
 		});
