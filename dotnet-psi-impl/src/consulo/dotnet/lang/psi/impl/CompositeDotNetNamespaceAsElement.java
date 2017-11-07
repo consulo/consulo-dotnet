@@ -16,22 +16,22 @@
 
 package consulo.dotnet.lang.psi.impl;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
-import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 
 /**
  * @author VISTALL
@@ -60,11 +60,9 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 		return false;
 	}
 
+	@RequiredReadAction
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-			@NotNull ResolveState state,
-			PsiElement lastParent,
-			@NotNull PsiElement place)
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place)
 	{
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
@@ -79,34 +77,32 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	@RequiredReadAction
 	@NotNull
 	@Override
-	public PsiElement[] findChildren(@NotNull String name,
+	public Collection<PsiElement> findChildren(@NotNull String name,
 			@NotNull GlobalSearchScope globalSearchScope,
 			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
 			@NotNull ChildrenFilter filter)
 	{
-		List<PsiElement> list = new SmartList<PsiElement>();
+		Collection<Collection<PsiElement>> list = new SmartList<>();
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
-			PsiElement[] children = dotNetNamespaceAsElement.findChildren(name, globalSearchScope, transformer, filter);
-			Collections.addAll(list, children);
+			Collection<PsiElement> children = dotNetNamespaceAsElement.findChildren(name, globalSearchScope, transformer, filter);
+			list.add(children);
 		}
-		return list.isEmpty() ? PsiElement.EMPTY_ARRAY : ContainerUtil.toArray(list, PsiElement.ARRAY_FACTORY);
+		return list.isEmpty() ? Collections.emptyList() : ContainerUtil.concat(list);
 	}
 
 	@RequiredReadAction
 	@NotNull
 	@Override
 	@SuppressWarnings("unchecked")
-	public PsiElement[] getChildren(@NotNull GlobalSearchScope globalSearchScope,
-			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
-			@NotNull ChildrenFilter filter)
+	public Collection<PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull NotNullFunction<PsiElement, PsiElement> transformer, @NotNull ChildrenFilter filter)
 	{
-		PsiElement[] array = PsiElement.EMPTY_ARRAY;
-		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
+		List<Collection<PsiElement>> list = new SmartList<>();
+		for(DotNetNamespaceAsElement element : myList)
 		{
-			PsiElement[] children = dotNetNamespaceAsElement.getChildren(globalSearchScope, transformer, filter);
-			array = ArrayUtil.mergeArrays(array, children);
+			Collection<PsiElement> children = element.getChildren(globalSearchScope, transformer, filter);
+			list.add(children);
 		}
-		return array;
+		return list.isEmpty() ? Collections.emptyList() : ContainerUtil.concat(list);
 	}
 }

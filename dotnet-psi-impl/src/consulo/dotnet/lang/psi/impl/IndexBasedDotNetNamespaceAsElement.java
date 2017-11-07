@@ -17,6 +17,9 @@
 package consulo.dotnet.lang.psi.impl;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
@@ -25,8 +28,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.QualifiedName;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
@@ -54,7 +57,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	@NotNull
 	@Override
 	@RequiredReadAction
-	public PsiElement[] findChildren(@NotNull final String name,
+	public List<PsiElement> findChildren(@NotNull final String name,
 			@NotNull GlobalSearchScope globalSearchScope,
 			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
 			@NotNull ChildrenFilter filter)
@@ -65,29 +68,29 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 				Collection<DotNetQualifiedElement> elements = StubIndex.getElements(mySearcher.getElementByQNameIndexKey(), myIndexKey + "." + name, myProject, globalSearchScope,
 						DotNetQualifiedElement.class);
 
-				return toArray(elements, transformer);
+				return transformData(elements, elements.size(), transformer);
 			case ONLY_NAMESPACES:
 				QualifiedName newQualifiedName = QualifiedName.fromDottedString(myQName).append(name);
 
 				DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(myProject).findNamespace(newQualifiedName.toString(), globalSearchScope);
 				if(namespace != null)
 				{
-					return new PsiElement[]{transformer.fun(namespace)};
+					return Collections.singletonList(transformer.fun(namespace));
 				}
-				return PsiElement.EMPTY_ARRAY;
+				return Collections.emptyList();
 			case NONE:
-				PsiElement[] onlyElements = findChildren(name, globalSearchScope, transformer, ChildrenFilter.ONLY_ELEMENTS);
-				PsiElement[] onlyNamespaces = findChildren(name, globalSearchScope, transformer, ChildrenFilter.ONLY_NAMESPACES);
-				return ArrayUtil.mergeArrays(onlyElements, onlyNamespaces);
+				List<PsiElement> onlyElements = findChildren(name, globalSearchScope, transformer, ChildrenFilter.ONLY_ELEMENTS);
+				List<PsiElement> onlyNamespaces = findChildren(name, globalSearchScope, transformer, ChildrenFilter.ONLY_NAMESPACES);
+				return ContainerUtil.concat(onlyElements, onlyNamespaces);
 		}
 
-		return PsiElement.EMPTY_ARRAY;
+		return Collections.emptyList();
 	}
 
 	@RequiredReadAction
 	@NotNull
 	@Override
-	protected Collection<? extends PsiElement> getOnlyElements(@NotNull final GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyElements(@NotNull final GlobalSearchScope globalSearchScope)
 	{
 		return DotNetNamespaceCacheManager.getInstance(myProject).computeElements(mySearcher, this, myIndexKey, myQName, globalSearchScope, DotNetNamespaceCacheManager.ONLY_ELEMENTS);
 	}
@@ -95,7 +98,7 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	@RequiredReadAction
 	@NotNull
 	@Override
-	protected Collection<? extends PsiElement> getOnlyNamespaces(@NotNull final GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyNamespaces(@NotNull final GlobalSearchScope globalSearchScope)
 	{
 		return DotNetNamespaceCacheManager.getInstance(myProject).computeElements(mySearcher, this, myIndexKey, myQName, globalSearchScope, DotNetNamespaceCacheManager.ONLY_NAMESPACES);
 	}

@@ -17,6 +17,7 @@
 package consulo.dotnet.run.coverage;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -128,14 +129,14 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension
 		}
 		else if(value instanceof DotNetNamespaceAsElement)
 		{
-			PsiElement[] children = ((DotNetNamespaceAsElement) value).getChildren(mySearchScope, DotNetNamespaceAsElement.ChildrenFilter.NONE);
+			Collection<PsiElement> children = ((DotNetNamespaceAsElement) value).getChildren(mySearchScope, DotNetNamespaceAsElement.ChildrenFilter.NONE);
 			double all = 0;
 			for(PsiElement temp : children)
 			{
 				all += getPercentValue(temp, 0);
 			}
 
-			return all / children.length;
+			return all / children.size();
 		}
 		return unknownValue;
 	}
@@ -152,7 +153,7 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension
 				Object element = node.getValue();
 				if(element instanceof DotNetNamespaceAsElement)
 				{
-					PsiElement[] children = ((DotNetNamespaceAsElement) element).getChildren(mySearchScope, DotNetNamespaceAsElement.ChildrenFilter.NONE);
+					Collection<PsiElement> children = ((DotNetNamespaceAsElement) element).getChildren(mySearchScope, DotNetNamespaceAsElement.ChildrenFilter.NONE);
 					for(PsiElement element1 : children)
 					{
 						if(element1 instanceof PsiNamedElement)
