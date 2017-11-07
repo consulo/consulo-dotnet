@@ -83,6 +83,24 @@ public class MsilNativeTypeImpl extends MsilTypeImpl<MsilNativeTypeStub> impleme
 	@RequiredReadAction
 	@NotNull
 	@Override
+	public IElementType getTypeElementType()
+	{
+		IElementType elementType = null;
+		MsilNativeTypeStub stub = getStub();
+		if(stub != null)
+		{
+			elementType = stub.getTypeElementType();
+		}
+		else
+		{
+			elementType = getTypeElement().getNode().getElementType();
+		}
+		return elementType;
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
 	public DotNetTypeRef toTypeRefImpl()
 	{
 		IElementType elementType = null;

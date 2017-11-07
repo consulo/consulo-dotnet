@@ -17,6 +17,7 @@
 package consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.tree.IElementType;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
@@ -29,4 +30,8 @@ public interface DotNetNativeType extends DotNetType
 	@NotNull
 	@RequiredReadAction
 	PsiElement getTypeElement();
+
+	@NotNull
+	@RequiredReadAction
+	IElementType getTypeElementType();
 }

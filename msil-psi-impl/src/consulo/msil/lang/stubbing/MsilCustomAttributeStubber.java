@@ -17,8 +17,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.hash.LinkedHashMap;
+import consulo.annotations.Exported;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.DotNetAttributeUtil;
@@ -52,9 +52,10 @@ import consulo.msil.lang.stubbing.values.MsilCustomAttributeEnumValue;
  * @author VISTALL
  * @since 10.07.2015
  */
+@Exported
 public class MsilCustomAttributeStubber
 {
-	public static final Logger LOGGER = Logger.getInstance(MsilCustomAttributeStubber.class);
+	private static final Logger LOGGER = Logger.getInstance(MsilCustomAttributeStubber.class);
 
 	@NotNull
 	@RequiredReadAction
@@ -65,8 +66,8 @@ public class MsilCustomAttributeStubber
 
 		ByteBuffer byteBuffer = new ByteBuffer(bytes);
 
-		List<MsiCustomAttributeValue> constructorArguments = new ArrayList<MsiCustomAttributeValue>();
-		Map<String, MsiCustomAttributeValue> namedArguments = new LinkedHashMap<String, MsiCustomAttributeValue>();
+		List<MsiCustomAttributeValue> constructorArguments = new ArrayList<>();
+		Map<String, MsiCustomAttributeValue> namedArguments = new LinkedHashMap<>();
 		if(byteBuffer.canRead() && byteBuffer.getShort() == 1)
 		{
 			boolean failed = false;
@@ -125,7 +126,7 @@ public class MsilCustomAttributeStubber
 				}
 				catch(Exception e)
 				{
-					MsilCustomAttributeStubber.LOGGER.warn(e);
+					LOGGER.warn(e);
 				}
 			}
 		}
@@ -138,7 +139,7 @@ public class MsilCustomAttributeStubber
 	{
 		if(type instanceof MsilNativeTypeImpl)
 		{
-			IElementType elementType = PsiUtilCore.getElementType(((MsilNativeTypeImpl) type).getTypeElement());
+			IElementType elementType = ((MsilNativeTypeImpl) type).getTypeElementType();
 			if(elementType == MsilTokens.STRING_KEYWORD)
 			{
 				return TypeSignature.STRING;
@@ -213,7 +214,7 @@ public class MsilCustomAttributeStubber
 					return new ClassTypeSignature(parse(referenceText));
 			}
 		}
-		MsilCustomAttributeStubber.LOGGER.error("Unknown how convert: " + type);
+		LOGGER.error("Unknown how convert: " + type);
 		return null;
 	}
 
@@ -308,7 +309,7 @@ public class MsilCustomAttributeStubber
 				Number value = getValue(scope, byteBuffer, resolvedElement.getTypeRefForEnumConstants());
 				if(value != null)
 				{
-					Map<Long, String> map = new HashMap<Long, String>();
+					Map<Long, String> map = new HashMap<>();
 
 					long l = value.longValue();
 					DotNetNamedElement[] members = resolvedElement.getMembers();
@@ -328,7 +329,7 @@ public class MsilCustomAttributeStubber
 
 					if(DotNetAttributeUtil.hasAttribute(resolvedElement, DotNetTypes.System.FlagsAttribute))
 					{
-						List<String> fields = new ArrayList<String>();
+						List<String> fields = new ArrayList<>();
 
 						for(Map.Entry<Long, String> entry : map.entrySet())
 						{
