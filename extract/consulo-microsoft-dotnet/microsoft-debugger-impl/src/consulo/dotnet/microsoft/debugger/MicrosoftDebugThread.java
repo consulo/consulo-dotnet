@@ -22,7 +22,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Processor;
@@ -408,19 +410,13 @@ public class MicrosoftDebugThread extends Thread
 		return mySession;
 	}
 
-	public void processAnyway(Processor<MicrosoftVirtualMachineProxy> processor)
+	public void invoke(@NotNull Consumer<MicrosoftVirtualMachineProxy> processor)
 	{
 		if(myVirtualMachine == null)
 		{
 			return;
 		}
-		try
-		{
-			processor.process(myVirtualMachine);
-		}
-		catch(VMDisconnectedException ignored)
-		{
-		}
+		myVirtualMachine.invoke(() -> processor.accept(myVirtualMachine));
 	}
 
 	public void addCommand(Processor<MicrosoftVirtualMachineProxy> processor)

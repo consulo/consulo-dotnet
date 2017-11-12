@@ -17,9 +17,7 @@
 package consulo.dotnet.microsoft.debugger;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
-import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -34,8 +32,8 @@ import consulo.dotnet.debugger.DotNetSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
+import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.microsoft.debugger.breakpoint.MicrosoftBreakpointUtil;
-import consulo.dotnet.microsoft.debugger.proxy.MicrosoftVirtualMachineProxy;
 import mssdw.DebugInformationResult;
 import mssdw.ThreadMirror;
 import mssdw.event.EventSet;
@@ -54,23 +52,16 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 		@Override
 		public void breakpointAdded(@NotNull final XBreakpoint<?> breakpoint)
 		{
-			myDebugThread.processAnyway(new Processor<MicrosoftVirtualMachineProxy>()
+			myDebugThread.invoke(virtualMachine ->
 			{
-				@Override
-				@SuppressWarnings("unchecked")
-				public boolean process(final MicrosoftVirtualMachineProxy virtualMachine)
+				XBreakpointType<?, ?> type = breakpoint.getType();
+				if(type == DotNetLineBreakpointType.getInstance())
 				{
-					XBreakpointType<?, ?> type = breakpoint.getType();
-					if(type == DotNetLineBreakpointType.getInstance())
-					{
-						MicrosoftBreakpointUtil.createBreakpointRequest(getSession(), virtualMachine, (XLineBreakpoint) breakpoint);
-					}
-					else if(type == DotNetExceptionBreakpointType.getInstance())
-					{
-						MicrosoftBreakpointUtil.createExceptionRequest(virtualMachine, (XBreakpoint<DotNetExceptionBreakpointProperties>) breakpoint);
-					}
-
-					return false;
+					MicrosoftBreakpointUtil.createBreakpointRequest(getSession(), virtualMachine, (XLineBreakpoint) breakpoint);
+				}
+				else if(type == DotNetExceptionBreakpointType.getInstance())
+				{
+					MicrosoftBreakpointUtil.createExceptionRequest(virtualMachine, (XBreakpoint<DotNetExceptionBreakpointProperties>) breakpoint);
 				}
 			});
 		}
@@ -78,15 +69,7 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 		@Override
 		public void breakpointRemoved(@NotNull final XBreakpoint<?> breakpoint)
 		{
-			myDebugThread.processAnyway(new Processor<MicrosoftVirtualMachineProxy>()
-			{
-				@Override
-				public boolean process(MicrosoftVirtualMachineProxy virtualMachine)
-				{
-					virtualMachine.stopBreakpointRequests(breakpoint);
-					return false;
-				}
-			});
+			myDebugThread.invoke(virtualMachine -> virtualMachine.stopBreakpointRequests(breakpoint));
 		}
 
 		@Override
@@ -136,15 +119,11 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 	@Override
 	public void startPausing()
 	{
-		myDebugThread.addCommand(new Processor<MicrosoftVirtualMachineProxy>()
+		myDebugThread.addCommand(virtualMachine ->
 		{
-			@Override
-			public boolean process(MicrosoftVirtualMachineProxy virtualMachine)
-			{
-				virtualMachine.suspend();
-				getSession().positionReached(new DotNetSuspendContext(createDebugContext(virtualMachine, null), -1));
-				return false;
-			}
+			virtualMachine.suspend();
+			getSession().positionReached(new DotNetSuspendContext(createDebugContext(virtualMachine, null), -1));
+			return false;
 		});
 	}
 
@@ -156,24 +135,20 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 			return;
 		}
 
-		myDebugThread.addCommand(new Processor<MicrosoftVirtualMachineProxy>()
+		myDebugThread.addCommand(virtualMachine ->
 		{
-			@Override
-			public boolean process(MicrosoftVirtualMachineProxy virtualMachine)
+			virtualMachine.stopStepRequests();
+
+			DebugInformationResult debugOffset = virtualMachine.getDelegate().findDebugOffset(position.getFile().getPath(), position.getLine() + 1, -1);
+			if(debugOffset != null)
 			{
-				virtualMachine.stopStepRequests();
+				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
 
-				DebugInformationResult debugOffset = virtualMachine.getDelegate().findDebugOffset(position.getFile().getPath(), position.getLine() + 1, -1);
-				if(debugOffset != null)
-				{
-					EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-
-					BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(debugOffset);
-					breakpointRequest.putProperty(RUN_TO_CURSOR, Boolean.TRUE);
-					breakpointRequest.enable();
-				}
-				return true;
+				BreakpointRequest breakpointRequest = eventRequestManager.createBreakpointRequest(debugOffset);
+				breakpointRequest.putProperty(RUN_TO_CURSOR, Boolean.TRUE);
+				breakpointRequest.enable();
 			}
+			return true;
 		});
 	}
 
@@ -181,15 +156,11 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 	public void resume()
 	{
 		myPausedEventSet = null;
-		myDebugThread.addCommand(new Processor<MicrosoftVirtualMachineProxy>()
+		myDebugThread.addCommand(virtualMachine ->
 		{
-			@Override
-			public boolean process(MicrosoftVirtualMachineProxy virtualMachine)
-			{
-				virtualMachine.stopStepRequests();
+			virtualMachine.stopStepRequests();
 
-				return true;
-			}
+			return true;
 		});
 	}
 
@@ -233,18 +204,14 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 			return;
 		}
 
-		myDebugThread.addCommand(new Processor<MicrosoftVirtualMachineProxy>()
+		myDebugThread.addCommand(virtualMachine ->
 		{
-			@Override
-			public boolean process(MicrosoftVirtualMachineProxy virtualMachine)
-			{
-				EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
-				StepRequest stepRequest = eventRequestManager.createStepRequest(threadMirror, stepDepth);
-				stepRequest.enable();
+			EventRequestManager eventRequestManager = virtualMachine.eventRequestManager();
+			StepRequest stepRequest = eventRequestManager.createStepRequest(threadMirror, stepDepth);
+			stepRequest.enable();
 
-				virtualMachine.addStepRequest(stepRequest);
-				return true;
-			}
+			virtualMachine.addStepRequest(stepRequest);
+			return true;
 		});
 	}
 

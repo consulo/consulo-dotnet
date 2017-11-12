@@ -24,6 +24,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.execution.ui.ConsoleView;
@@ -551,19 +552,13 @@ public class MonoDebugThread extends Thread
 		return mySession;
 	}
 
-	public void processAnyway(Processor<MonoVirtualMachineProxy> processor)
+	public void invoke(@NotNull Consumer<MonoVirtualMachineProxy> processor)
 	{
 		if(myVirtualMachine == null)
 		{
 			return;
 		}
-		try
-		{
-			processor.process(myVirtualMachine);
-		}
-		catch(VMDisconnectedException ignored)
-		{
-		}
+		myVirtualMachine.invoke(() -> processor.accept(myVirtualMachine));
 	}
 
 	public void addCommand(Processor<MonoVirtualMachineProxy> processor)

@@ -57,7 +57,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 		@Override
 		public void breakpointAdded(@NotNull final XBreakpoint<?> breakpoint)
 		{
-			myDebugThread.processAnyway(virtualMachine ->
+			myDebugThread.invoke(virtualMachine ->
 			{
 				XBreakpointType<?, ?> type = breakpoint.getType();
 				if(type == DotNetLineBreakpointType.getInstance())
@@ -68,19 +68,13 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 				{
 					MonoBreakpointUtil.createExceptionRequest(virtualMachine, (XBreakpoint<DotNetExceptionBreakpointProperties>) breakpoint, null);
 				}
-
-				return false;
 			});
 		}
 
 		@Override
 		public void breakpointRemoved(@NotNull final XBreakpoint<?> breakpoint)
 		{
-			myDebugThread.processAnyway(virtualMachine ->
-			{
-				virtualMachine.stopBreakpointRequests(breakpoint);
-				return false;
-			});
+			myDebugThread.invoke(virtualMachine -> virtualMachine.stopBreakpointRequests(breakpoint));
 		}
 
 		@Override
