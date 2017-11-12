@@ -120,40 +120,22 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	@NotNull
 	public Collection<? extends XLineBreakpoint<?>> getLineBreakpoints()
 	{
-		return ApplicationManager.getApplication().runReadAction(new Computable<Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>>>()
-		{
-			@Override
-			public Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>> compute()
-			{
-				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetLineBreakpointType.getInstance());
-			}
-		});
+		return ApplicationManager.getApplication().runReadAction((Computable<Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>>>) () -> myDebuggerManager.getBreakpointManager()
+				.getBreakpoints(DotNetLineBreakpointType.getInstance()));
 	}
 
 	@NotNull
 	public Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>> getMethodBreakpoints()
 	{
-		return ApplicationManager.getApplication().runReadAction(new Computable<Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>>>()
-		{
-			@Override
-			public Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>> compute()
-			{
-				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetMethodBreakpointType.getInstance());
-			}
-		});
+		return ApplicationManager.getApplication().runReadAction((Computable<Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>>>) () -> myDebuggerManager.getBreakpointManager()
+				.getBreakpoints(DotNetMethodBreakpointType.getInstance()));
 	}
 
 	@NotNull
 	public Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> getExceptionBreakpoints()
 	{
-		return ApplicationManager.getApplication().runReadAction(new Computable<Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>>>()
-		{
-			@Override
-			public Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> compute()
-			{
-				return myDebuggerManager.getBreakpointManager().getBreakpoints(DotNetExceptionBreakpointType.getInstance());
-			}
-		});
+		return ApplicationManager.getApplication().runReadAction((Computable<Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>>>) () -> myDebuggerManager.getBreakpointManager()
+				.getBreakpoints(DotNetExceptionBreakpointType.getInstance()));
 	}
 
 	public void normalizeBreakpoints()
