@@ -245,7 +245,7 @@ public class MonoDebugProcess extends DotNetDebugProcessBase
 	}
 
 	@Override
-	public void stop()
+	public void stopImpl()
 	{
 		myPausedEventSet = null;
 		myDebugThread.setStop();

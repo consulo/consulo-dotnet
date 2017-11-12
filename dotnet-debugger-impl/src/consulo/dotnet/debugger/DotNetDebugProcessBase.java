@@ -4,11 +4,14 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.concurrency.AsyncPromise;
+import org.jetbrains.concurrency.Promise;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.Computable;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
@@ -115,8 +118,20 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	{
 	}
 
+	@NotNull
 	@Override
-	public abstract void stop();
+	public Promise stopAsync()
+	{
+		AsyncPromise<Boolean> promise = new AsyncPromise<>();
+		Task.Backgroundable.queue(getSession().getProject(), "Waiting for debugger response...", indicator ->
+		{
+			stopImpl();
+			promise.setResult(Boolean.TRUE);
+		});
+		return promise;
+	}
+
+	protected abstract void stopImpl();
 
 	@NotNull
 	public Collection<? extends XLineBreakpoint<?>> getLineBreakpoints()
