@@ -17,6 +17,7 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import com.intellij.xdebugger.frame.XSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
 import consulo.dotnet.debugger.breakpoint.DotNetMethodBreakpointType;
@@ -86,31 +87,31 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	}
 
 	@Override
-	public void startStepOver()
+	public void startStepOver(@Nullable XSuspendContext context)
 	{
 
 	}
 
 	@Override
-	public void startStepInto()
+	public void startStepInto(@Nullable XSuspendContext context)
 	{
 
 	}
 
 	@Override
-	public void startStepOut()
+	public void startStepOut(@Nullable XSuspendContext context)
 	{
 
 	}
 
 	@Override
-	public void resume()
+	public void resume(@Nullable XSuspendContext context)
 	{
 
 	}
 
 	@Override
-	public void runToPosition(@NotNull XSourcePosition position)
+	public void runToPosition(@NotNull XSourcePosition position, @Nullable XSuspendContext context)
 	{
 	}
 
