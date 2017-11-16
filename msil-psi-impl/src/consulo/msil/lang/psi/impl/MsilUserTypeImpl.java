@@ -51,7 +51,7 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements 
 	@Override
 	public Target getTarget()
 	{
-		MsilUserTypeStub stub = getStub();
+		MsilUserTypeStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getTarget();
@@ -76,7 +76,7 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements 
 	@Override
 	public String getReferenceText()
 	{
-		MsilUserTypeStub stub = getStub();
+		MsilUserTypeStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getReferenceText();

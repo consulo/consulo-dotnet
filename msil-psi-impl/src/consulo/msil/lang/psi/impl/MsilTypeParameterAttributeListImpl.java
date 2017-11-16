@@ -55,7 +55,7 @@ public class MsilTypeParameterAttributeListImpl extends MsilStubElementImpl<Msil
 	@RequiredReadAction
 	public String getGenericParameterName()
 	{
-		MsilTypeParameterAttributeListStub stub = getStub();
+		MsilTypeParameterAttributeListStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getGenericParameterName();

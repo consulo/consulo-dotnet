@@ -166,7 +166,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 	@Override
 	public String getMethodName()
 	{
-		MsilXXXAccessorStub stub = getStub();
+		MsilXXXAccessorStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getMethodName();
@@ -217,7 +217,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 	@Override
 	public Kind getAccessorKind()
 	{
-		MsilXXXAccessorStub stub = getStub();
+		MsilXXXAccessorStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getAccessorType();

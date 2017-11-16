@@ -57,7 +57,7 @@ public class MsilMethodGenericTypeImpl extends MsilTypeImpl<MsilMethodGenericTyp
 	@Override
 	public int getIndex()
 	{
-		MsilMethodGenericTypeStub stub = getStub();
+		MsilMethodGenericTypeStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getIndex();

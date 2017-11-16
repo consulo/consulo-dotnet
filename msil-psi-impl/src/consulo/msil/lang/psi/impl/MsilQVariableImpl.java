@@ -137,7 +137,7 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 	@NotNull
 	public String getNameFromBytecode()
 	{
-		MsilVariableEntryStub stub = getStub();
+		MsilVariableEntryStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getNameFromBytecode();

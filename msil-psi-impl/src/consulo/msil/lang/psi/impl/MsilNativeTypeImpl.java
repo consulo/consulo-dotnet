@@ -85,7 +85,7 @@ public class MsilNativeTypeImpl extends MsilTypeImpl<MsilNativeTypeStub> impleme
 	public IElementType getTypeElementType()
 	{
 		IElementType elementType = null;
-		MsilNativeTypeStub stub = getStub();
+		MsilNativeTypeStub stub = getGreenStub();
 		if(stub != null)
 		{
 			elementType = stub.getTypeElementType();
@@ -103,7 +103,7 @@ public class MsilNativeTypeImpl extends MsilTypeImpl<MsilNativeTypeStub> impleme
 	public DotNetTypeRef toTypeRefImpl()
 	{
 		IElementType elementType = null;
-		MsilNativeTypeStub stub = getStub();
+		MsilNativeTypeStub stub = getGreenStub();
 		if(stub != null)
 		{
 			elementType = stub.getTypeElementType();

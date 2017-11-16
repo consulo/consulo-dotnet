@@ -45,7 +45,7 @@ public class MsilConstantValueImpl extends MsilStubElementImpl<MsilConstantValue
 	@Override
 	public IElementType getValueType()
 	{
-		MsilConstantValueStub stub = getStub();
+		MsilConstantValueStub stub = getGreenStub();
 		if(stub != null)
 		{
 			int valueIndex = stub.getValueIndex();

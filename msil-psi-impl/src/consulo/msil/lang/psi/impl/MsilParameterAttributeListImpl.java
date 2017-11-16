@@ -55,7 +55,7 @@ public class MsilParameterAttributeListImpl extends MsilStubElementImpl<MsilPara
 	@RequiredReadAction
 	public int getIndex()
 	{
-		MsilParameterAttributeListStub stub = getStub();
+		MsilParameterAttributeListStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getIndex();

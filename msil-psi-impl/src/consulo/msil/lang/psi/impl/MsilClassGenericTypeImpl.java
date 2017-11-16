@@ -44,10 +44,11 @@ public class MsilClassGenericTypeImpl extends MsilTypeImpl<MsilClassGenericTypeS
 		super(stub, nodeType);
 	}
 
+	@RequiredReadAction
 	@Override
 	public String getGenericName()
 	{
-		MsilClassGenericTypeStub stub = getStub();
+		MsilClassGenericTypeStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getName();

@@ -129,7 +129,7 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	@Override
 	public String getName()
 	{
-		MsilParameterStub stub = getStub();
+		MsilParameterStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getName();

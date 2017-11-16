@@ -69,7 +69,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	@Override
 	public boolean hasModifier(@NotNull DotNetModifier modifier)
 	{
-		MsilGenericParameterStub stub = getStub();
+		MsilGenericParameterStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.hasModifier(modifier);
@@ -106,7 +106,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	@Override
 	public String getName()
 	{
-		MsilGenericParameterStub stub = getStub();
+		MsilGenericParameterStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getName();
@@ -140,7 +140,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	@Override
 	public MsilUserType.Target getTarget()
 	{
-		MsilGenericParameterStub stub = getStub();
+		MsilGenericParameterStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getTarget();
@@ -187,7 +187,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	@Override
 	public boolean hasDefaultConstructor()
 	{
-		MsilGenericParameterStub stub = getStub();
+		MsilGenericParameterStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.hasDefaultConstructor();

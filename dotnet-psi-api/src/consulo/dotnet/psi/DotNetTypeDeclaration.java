@@ -29,27 +29,24 @@ import consulo.dotnet.resolve.DotNetTypeRef;
  */
 public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetModifierListOwner, DotNetGenericParameterListOwner, PsiNameIdentifierOwner, DotNetMemberOwner
 {
-	public static final DotNetTypeDeclaration[] EMPTY_ARRAY = new DotNetTypeDeclaration[0];
+	final DotNetTypeDeclaration[] EMPTY_ARRAY = new DotNetTypeDeclaration[0];
 
-	public static ArrayFactory<DotNetTypeDeclaration> ARRAY_FACTORY = new ArrayFactory<DotNetTypeDeclaration>()
-	{
-		@NotNull
-		@Override
-		public DotNetTypeDeclaration[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new DotNetTypeDeclaration[count];
-		}
-	};
+	ArrayFactory<DotNetTypeDeclaration> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetTypeDeclaration[count];
 
+	@RequiredReadAction
 	boolean isInterface();
 
+	@RequiredReadAction
 	boolean isStruct();
 
+	@RequiredReadAction
 	boolean isEnum();
 
+	@RequiredReadAction
 	boolean isNested();
 
 	@Nullable
+	@RequiredReadAction
 	DotNetTypeList getExtendList();
 
 	@NotNull

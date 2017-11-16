@@ -42,7 +42,7 @@ public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensi
 	@RequiredReadAction
 	public int getLowerValue()
 	{
-		MsilArrayDimensionStub stub = getStub();
+		MsilArrayDimensionStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getLowerValue();

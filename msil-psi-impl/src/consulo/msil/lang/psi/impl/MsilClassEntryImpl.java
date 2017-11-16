@@ -37,6 +37,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.lang.psi.impl.DotNetTypeRefCacheUtil;
 import consulo.dotnet.psi.DotNetFieldDeclaration;
@@ -104,24 +105,28 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		visitor.visitClassEntry(this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isInterface()
 	{
 		return hasModifier(MsilTokens.INTERFACE_KEYWORD);
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isStruct()
 	{
 		return DotNetInheritUtil.isStruct(this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isEnum()
 	{
 		return DotNetInheritUtil.isEnum(this);
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public DotNetTypeList getExtendList()
@@ -222,11 +227,12 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return getRequiredStubOrPsiChild(MsilStubElements.MODIFIER_LIST);
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public String getPresentableParentQName()
 	{
-		MsilClassEntryStub stub = getStub();
+		MsilClassEntryStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getNamespace();
@@ -234,11 +240,12 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return StringUtil.getPackageName(getNameFromBytecode());
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public String getPresentableQName()
 	{
-		MsilClassEntryStub stub = getStub();
+		MsilClassEntryStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return MsilHelper.append(stub.getNamespace(), stub.getName());
@@ -250,7 +257,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@RequiredReadAction
 	public String getVmQName()
 	{
-		MsilClassEntryStub stub = getStub();
+		MsilClassEntryStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getVmQName();
@@ -274,10 +281,11 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return getName();
 	}
 
+	@RequiredReadAction
 	@Override
 	public String getName()
 	{
-		MsilClassEntryStub stub = getStub();
+		MsilClassEntryStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getName();
@@ -285,6 +293,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return StringUtil.getShortName(getNameFromBytecode());
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public PsiElement getNameIdentifier()
@@ -292,12 +301,14 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return findChildByType(MsilTokenSets.IDENTIFIERS);
 	}
 
+	@RequiredWriteAction
 	@Override
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isNested()
 	{

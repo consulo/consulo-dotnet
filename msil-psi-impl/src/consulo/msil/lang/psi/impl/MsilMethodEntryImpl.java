@@ -189,7 +189,7 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	@NotNull
 	public String getNameFromBytecode()
 	{
-		MsilMethodEntryStub stub = getStub();
+		MsilMethodEntryStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getNameFromBytecode();

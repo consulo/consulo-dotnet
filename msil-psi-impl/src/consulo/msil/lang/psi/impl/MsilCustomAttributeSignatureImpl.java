@@ -36,7 +36,7 @@ public class MsilCustomAttributeSignatureImpl extends MsilStubElementImpl<MsilCu
 	@RequiredReadAction
 	public byte[] getBytes()
 	{
-		MsilCustomAttributeSignatureStub stub = getStub();
+		MsilCustomAttributeSignatureStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getBytes();

@@ -16,6 +16,8 @@
 
 package consulo.msil.lang.psi;
 
+import org.jetbrains.annotations.Nullable;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetType;
 
 /**
@@ -24,5 +26,7 @@ import consulo.dotnet.psi.DotNetType;
  */
 public interface MsilClassGenericType extends DotNetType
 {
+	@RequiredReadAction
+	@Nullable
 	String getGenericName();
 }
