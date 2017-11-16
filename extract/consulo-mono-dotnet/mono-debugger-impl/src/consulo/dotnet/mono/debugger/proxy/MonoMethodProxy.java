@@ -128,6 +128,10 @@ public class MonoMethodProxy implements DotNetMethodProxy
 		{
 			return MonoValueProxyUtil.wrap(myMethodMirror.invoke(thread, InvokeFlags.DISABLE_BREAKPOINTS, thisObject, values));
 		}
+		catch(IllegalArgumentException e)
+		{
+			return null;
+		}
 		catch(NotSuspendedException e)
 		{
 			throw new DotNetNotSuspendedException(e);
