@@ -23,6 +23,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetGenericParameterList;
 import consulo.msil.lang.psi.impl.MsilGenericParameterListImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterListStub;
@@ -52,6 +53,7 @@ public class MsilGenericParameterListStubElementType extends AbstractMsilStubEle
 		return new MsilGenericParameterListImpl(msilGenericParameterListStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilGenericParameterListStub createStub(@NotNull DotNetGenericParameterList dotNetGenericParameterList, StubElement stubElement)
 	{
@@ -66,8 +68,7 @@ public class MsilGenericParameterListStubElementType extends AbstractMsilStubEle
 
 	@NotNull
 	@Override
-	public MsilGenericParameterListStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilGenericParameterListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		return new MsilGenericParameterListStub(stubElement, this);
 	}

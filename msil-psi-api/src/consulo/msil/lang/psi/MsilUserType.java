@@ -16,6 +16,9 @@
 
 package consulo.msil.lang.psi;
 
+import org.jetbrains.annotations.NotNull;
+import consulo.annotations.Immutable;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetUserType;
 
 /**
@@ -24,4 +27,16 @@ import consulo.dotnet.psi.DotNetUserType;
  */
 public interface MsilUserType extends DotNetUserType
 {
+	enum Target
+	{
+		CLASS,
+		STRUCT;
+
+		@Immutable
+		public static final Target[] VALUES = values();
+	}
+
+	@NotNull
+	@RequiredReadAction
+	Target getTarget();
 }

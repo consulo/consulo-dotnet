@@ -16,7 +16,6 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
@@ -31,17 +30,9 @@ import com.intellij.util.ArrayFactory;
  */
 public interface DotNetXXXAccessor extends DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetNamedElement, DotNetCodeBlockOwner
 {
-	public static final DotNetXXXAccessor[] EMPTY_ARRAY = new DotNetXXXAccessor[0];
+	DotNetXXXAccessor[] EMPTY_ARRAY = new DotNetXXXAccessor[0];
 
-	public static ArrayFactory<DotNetXXXAccessor> ARRAY_FACTORY = new ArrayFactory<DotNetXXXAccessor>()
-	{
-		@NotNull
-		@Override
-		public DotNetXXXAccessor[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new DotNetXXXAccessor[count];
-		}
-	};
+	ArrayFactory<DotNetXXXAccessor> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetXXXAccessor[count];
 
 	String VALUE = "value";
 

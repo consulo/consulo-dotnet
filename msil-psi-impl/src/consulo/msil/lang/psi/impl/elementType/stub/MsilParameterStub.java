@@ -16,11 +16,11 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub;
 
-import consulo.msil.lang.psi.MsilParameter;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
+import consulo.msil.lang.psi.MsilParameter;
 
 /**
  * @author VISTALL
@@ -28,22 +28,17 @@ import com.intellij.util.io.StringRef;
  */
 public class MsilParameterStub extends StubBase<MsilParameter>
 {
-	private final StringRef myName;
-
-	public MsilParameterStub(StubElement parent, IStubElementType elementType, StringRef ref)
-	{
-		super(parent, elementType);
-		myName = ref;
-	}
+	private final String myName;
 
 	public MsilParameterStub(StubElement parent, IStubElementType elementType, String name)
 	{
 		super(parent, elementType);
-		myName = StringRef.fromNullableString(name);
+		myName = name;
 	}
 
+	@Nullable
 	public String getName()
 	{
-		return StringRef.toString(myName);
+		return myName;
 	}
 }

@@ -23,6 +23,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilModifierList;
 import consulo.msil.lang.psi.impl.MsilModifierListImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilModifierListStub;
@@ -52,6 +53,7 @@ public class MsilModifierListStubElementType extends AbstractMsilStubElementType
 		return new MsilModifierListImpl(msilModifierListStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilModifierListStub createStub(@NotNull MsilModifierList msilModifierList, StubElement stubElement)
 	{
@@ -61,14 +63,14 @@ public class MsilModifierListStubElementType extends AbstractMsilStubElementType
 	@Override
 	public void serialize(@NotNull MsilModifierListStub msilModifierListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-		stubOutputStream.writeInt(msilModifierListStub.getModifiers());
+		stubOutputStream.writeVarInt(msilModifierListStub.getModifiers());
 	}
 
 	@NotNull
 	@Override
 	public MsilModifierListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		int modifiers = inputStream.readInt();
+		int modifiers = inputStream.readVarInt();
 		return new MsilModifierListStub(stubElement, this, modifiers);
 	}
 }

@@ -27,7 +27,7 @@ import consulo.msil.lang.psi.MsilMethodGenericType;
  */
 public class MsilMethodGenericTypeStub extends StubBase<MsilMethodGenericType>
 {
-	private int myIndex;
+	private final int myIndex;
 
 	public MsilMethodGenericTypeStub(StubElement parent, IStubElementType elementType, int index)
 	{

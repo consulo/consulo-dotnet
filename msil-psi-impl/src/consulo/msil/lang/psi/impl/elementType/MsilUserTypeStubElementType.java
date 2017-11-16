@@ -24,18 +24,18 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilUserType;
 import consulo.msil.lang.psi.impl.MsilUserTypeImpl;
-import consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
+import consulo.msil.lang.psi.impl.elementType.stub.MsilUserTypeStub;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementType<MsilReferenceTypeStub, MsilUserType>
+public class MsilUserTypeStubElementType extends AbstractMsilStubElementType<MsilUserTypeStub, MsilUserType>
 {
-	public MsilReferenceTypeStubElementType()
+	public MsilUserTypeStubElementType()
 	{
 		super("MSIL_USER_TYPE");
 	}
@@ -49,34 +49,33 @@ public class MsilReferenceTypeStubElementType extends AbstractMsilStubElementTyp
 
 	@NotNull
 	@Override
-	public MsilUserType createPsi(@NotNull MsilReferenceTypeStub msilReferenceTypeStub)
+	public MsilUserType createPsi(@NotNull MsilUserTypeStub msilUserTypeStub)
 	{
-		return new MsilUserTypeImpl(msilReferenceTypeStub, this);
+		return new MsilUserTypeImpl(msilUserTypeStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
-	public MsilReferenceTypeStub createStub(@NotNull MsilUserType dotNetReferenceType, StubElement stubElement)
+	public MsilUserTypeStub createStub(@NotNull MsilUserType dotNetReferenceType, StubElement stubElement)
 	{
-		DotNetPsiSearcher.TypeResoleKind typeResoleKind = dotNetReferenceType.getTypeResoleKind();
+		MsilUserType.Target target = dotNetReferenceType.getTarget();
 		String referenceText = dotNetReferenceType.getReferenceText();
-		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText);
+		return new MsilUserTypeStub(stubElement, this, target, referenceText);
 	}
 
 	@Override
-	public void serialize(
-			@NotNull MsilReferenceTypeStub msilReferenceTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilUserTypeStub msilUserTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-		stubOutputStream.writeByte(msilReferenceTypeStub.getTypeResoleKind().ordinal());
-		stubOutputStream.writeName(msilReferenceTypeStub.getReferenceText());
+		stubOutputStream.writeByte(msilUserTypeStub.getTarget().ordinal());
+		stubOutputStream.writeName(msilUserTypeStub.getReferenceText());
 	}
 
 	@NotNull
 	@Override
-	public MsilReferenceTypeStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilUserTypeStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		DotNetPsiSearcher.TypeResoleKind typeResoleKind = DotNetPsiSearcher.TypeResoleKind.VALUES[inputStream.readByte()];
+		MsilUserType.Target typeResoleKind = MsilUserType.Target.VALUES[inputStream.readByte()];
 		StringRef referenceText = inputStream.readName();
-		return new MsilReferenceTypeStub(stubElement, this, typeResoleKind, referenceText);
+		return new MsilUserTypeStub(stubElement, this, typeResoleKind, referenceText);
 	}
 }

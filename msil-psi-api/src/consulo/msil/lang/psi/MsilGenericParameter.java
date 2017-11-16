@@ -17,7 +17,9 @@
 package consulo.msil.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.util.ArrayFactory;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.DotNetTypeRef;
@@ -28,23 +30,23 @@ import consulo.dotnet.resolve.DotNetTypeRef;
  */
 public interface MsilGenericParameter extends DotNetGenericParameter
 {
-	public static final MsilGenericParameter[] EMPTY_ARRAY = new MsilGenericParameter[0];
+	MsilGenericParameter[] EMPTY_ARRAY = new MsilGenericParameter[0];
 
-	public static ArrayFactory<MsilGenericParameter> ARRAY_FACTORY = new ArrayFactory<MsilGenericParameter>()
-	{
-		@NotNull
-		@Override
-		public MsilGenericParameter[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new MsilGenericParameter[count];
-		}
-	};
+	ArrayFactory<MsilGenericParameter> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new MsilGenericParameter[count];
 
 	@NotNull
+	@RequiredReadAction
 	DotNetTypeRef[] getExtendTypeRefs();
 
 	@NotNull
+	@Deprecated
+	@RequiredReadAction
 	DotNetPsiSearcher.TypeResoleKind getTypeKind();
 
+	@Nullable
+	@RequiredReadAction
+	MsilUserType.Target getTarget();
+
+	@RequiredReadAction
 	boolean hasDefaultConstructor();
 }

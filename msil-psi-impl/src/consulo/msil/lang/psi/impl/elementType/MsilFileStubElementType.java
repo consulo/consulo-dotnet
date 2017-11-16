@@ -76,7 +76,7 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		int version = 71;
+		int version = 72;
 		for(MsilStubIndexer msilStubIndexer : MsilStubIndexer.EP_NAME.getExtensions())
 		{
 			version += msilStubIndexer.getVersion();

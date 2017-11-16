@@ -26,6 +26,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.dotnet.psi.DotNetAttribute;
 import consulo.dotnet.psi.DotNetGenericParameterList;
 import consulo.dotnet.psi.DotNetModifier;
@@ -40,6 +41,7 @@ import consulo.msil.lang.psi.MsilMethodEntry;
 import consulo.msil.lang.psi.MsilStubElements;
 import consulo.msil.lang.psi.MsilTokenSets;
 import consulo.msil.lang.psi.MsilTokens;
+import consulo.msil.lang.psi.MsilUserType;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterStub;
 
 /**
@@ -61,7 +63,6 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	@Override
 	public void accept(MsilVisitor visitor)
 	{
-
 	}
 
 	@RequiredReadAction
@@ -93,6 +94,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 		return null;
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public PsiElement getNameIdentifier()
@@ -100,6 +102,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 		return findChildByType(MsilTokenSets.IDENTIFIERS);
 	}
 
+	@RequiredReadAction
 	@Override
 	public String getName()
 	{
@@ -112,12 +115,14 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 		return nameIdentifier == null ? null : nameIdentifier.getText();
 	}
 
+	@RequiredWriteAction
 	@Override
 	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public DotNetTypeRef[] getExtendTypeRefs()
@@ -130,33 +135,55 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 		return typeList.getTypeRefs();
 	}
 
-	@NotNull
+	@RequiredReadAction
+	@Nullable
 	@Override
-	public DotNetPsiSearcher.TypeResoleKind getTypeKind()
+	public MsilUserType.Target getTarget()
 	{
 		MsilGenericParameterStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.getTypeKind();
+			return stub.getTarget();
 		}
-
 		PsiElement constraintElement = findChildByType(MsilTokenSets.GENERIC_CONSTRAINT_KEYWORDS);
 		if(constraintElement == null)
 		{
-			return DotNetPsiSearcher.TypeResoleKind.UNKNOWN;
+			return null;
 		}
 		IElementType elementType = constraintElement.getNode().getElementType();
 		if(elementType == MsilTokens.CLASS_KEYWORD)
 		{
-			return DotNetPsiSearcher.TypeResoleKind.CLASS;
+			return MsilUserType.Target.CLASS;
 		}
 		else if(elementType == MsilTokens.VALUETYPE_KEYWORD)
 		{
-			return DotNetPsiSearcher.TypeResoleKind.STRUCT;
+			return MsilUserType.Target.STRUCT;
 		}
-		return DotNetPsiSearcher.TypeResoleKind.UNKNOWN;
+		return null;
 	}
 
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public DotNetPsiSearcher.TypeResoleKind getTypeKind()
+	{
+		MsilUserType.Target target = getTarget();
+		if(target == null)
+		{
+			return DotNetPsiSearcher.TypeResoleKind.UNKNOWN;
+		}
+		switch(target)
+		{
+			case CLASS:
+				return DotNetPsiSearcher.TypeResoleKind.CLASS;
+			case STRUCT:
+				return DotNetPsiSearcher.TypeResoleKind.STRUCT;
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
+
+	@RequiredReadAction
 	@Override
 	public boolean hasDefaultConstructor()
 	{

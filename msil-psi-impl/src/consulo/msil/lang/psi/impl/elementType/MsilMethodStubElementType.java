@@ -75,7 +75,7 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 	public MsilMethodEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
-		return new MsilMethodEntryStub(stubElement, this, ref);
+		return new MsilMethodEntryStub(stubElement, this, StringRef.toString(ref));
 	}
 
 	@Override

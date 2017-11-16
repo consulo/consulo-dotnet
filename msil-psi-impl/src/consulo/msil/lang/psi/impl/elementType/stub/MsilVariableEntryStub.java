@@ -28,22 +28,21 @@ import consulo.msil.lang.psi.MsilFieldEntry;
  */
 public class MsilVariableEntryStub extends StubBase<MsilFieldEntry>
 {
-	private StringRef myName;
+	private String myName;
 
 	public MsilVariableEntryStub(StubElement parent, IStubElementType elementType, StringRef name)
 	{
-		super(parent, elementType);
-		myName = name;
+		this(parent, elementType, StringRef.toString(name));
 	}
 
 	public MsilVariableEntryStub(StubElement parent, IStubElementType elementType, String name)
 	{
 		super(parent, elementType);
-		myName = StringRef.fromNullableString(name);
+		myName = name;
 	}
 
 	public String getNameFromBytecode()
 	{
-		return StringRef.toString(myName);
+		return myName;
 	}
 }

@@ -64,14 +64,14 @@ public class MsilParameterAttributeListStubElementType extends AbstractMsilStubE
 	@Override
 	public void serialize(@NotNull MsilParameterAttributeListStub list, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-		stubOutputStream.writeInt(list.getIndex());
+		stubOutputStream.writeVarInt(list.getIndex());
 	}
 
 	@NotNull
 	@Override
 	public MsilParameterAttributeListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		int index = inputStream.readInt();
+		int index = inputStream.readVarInt();
 		return new MsilParameterAttributeListStub(stubElement, this, index);
 	}
 }

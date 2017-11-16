@@ -24,6 +24,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilClassGenericType;
 import consulo.msil.lang.psi.impl.MsilClassGenericTypeImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilClassGenericTypeStub;
@@ -53,6 +54,7 @@ public class MsilClassGenericTypeStubElementType extends AbstractMsilStubElement
 		return new MsilClassGenericTypeImpl(msilClassGenericTypeStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilClassGenericTypeStub createStub(@NotNull MsilClassGenericType msilClassGenericType, StubElement stubElement)
 	{

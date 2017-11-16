@@ -23,6 +23,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilAssemblyEntry;
 import consulo.msil.lang.psi.impl.MsilAssemblyEntryImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilAssemblyEntryStub;
@@ -52,6 +53,7 @@ public class MsilAssemblyStubElementType extends AbstractMsilStubElementType<Msi
 		return new MsilAssemblyEntryImpl(msilAssemblyEntryStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilAssemblyEntryStub createStub(@NotNull MsilAssemblyEntry msilAssemblyEntry, StubElement stubElement)
 	{

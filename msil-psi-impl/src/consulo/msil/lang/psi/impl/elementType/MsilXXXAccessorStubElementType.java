@@ -24,6 +24,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetXXXAccessor;
 import consulo.msil.lang.psi.MsilXXXAcessor;
 import consulo.msil.lang.psi.impl.MsilXXXAccessorImpl;
@@ -54,18 +55,19 @@ public class MsilXXXAccessorStubElementType extends AbstractMsilStubElementType<
 		return new MsilXXXAccessorImpl(msilXXXAccessorStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilXXXAccessorStub createStub(@NotNull MsilXXXAcessor accessor, StubElement stubElement)
 	{
 		DotNetXXXAccessor.Kind accessorType = accessor.getAccessorKind();
 		String name = accessor.getMethodName();
-		return new MsilXXXAccessorStub(stubElement, this, accessorType, name);
+		return new MsilXXXAccessorStub(stubElement, this, accessorType == null ? -1 : accessorType.ordinal(), name);
 	}
 
 	@Override
 	public void serialize(@NotNull MsilXXXAccessorStub stub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-		stubOutputStream.writeInt(stub.getIndex());
+		stubOutputStream.writeVarInt(stub.getIndex());
 		stubOutputStream.writeName(stub.getMethodName());
 	}
 
@@ -73,7 +75,7 @@ public class MsilXXXAccessorStubElementType extends AbstractMsilStubElementType<
 	@Override
 	public MsilXXXAccessorStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
-		int i = inputStream.readInt();
+		int i = inputStream.readVarInt();
 		StringRef ref = inputStream.readName();
 		return new MsilXXXAccessorStub(stubElement, this, i, ref);
 	}

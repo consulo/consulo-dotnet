@@ -35,7 +35,7 @@ public class MsilGenericExtractorImpl implements DotNetGenericExtractor
 
 	public MsilGenericExtractorImpl(DotNetGenericParameter[] genericParameters, DotNetTypeRef[] arguments)
 	{
-		myMap = new HashMap<DotNetGenericParameter, DotNetTypeRef>(genericParameters.length);
+		myMap = new HashMap<>(genericParameters.length);
 		for(int i = 0; i < genericParameters.length; i++)
 		{
 			DotNetGenericParameter genericParameter = genericParameters[i];

@@ -48,8 +48,7 @@ public class MsilShortNameSearcher extends DotNetShortNameSearcher
 	}
 
 	@Override
-	public void collectTypes(@NotNull String name, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter, @NotNull Processor<DotNetTypeDeclaration>
-			processor)
+	public void collectTypes(@NotNull String name, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter, @NotNull Processor<DotNetTypeDeclaration> processor)
 	{
 		StubIndex.getInstance().processElements(MsilIndexKeys.TYPE_BY_NAME_INDEX, name, myProject, scope, MsilClassEntry.class, processor);
 	}

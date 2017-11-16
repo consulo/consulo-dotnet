@@ -24,9 +24,10 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetGenericParameter;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.msil.lang.psi.MsilGenericParameter;
+import consulo.msil.lang.psi.MsilUserType;
 import consulo.msil.lang.psi.impl.MsilGenericParameterImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterStub;
 
@@ -55,12 +56,13 @@ public class MsilGenericParameterStubElementType extends AbstractMsilStubElement
 		return new MsilGenericParameterImpl(msilGenericParameterStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilGenericParameterStub createStub(@NotNull MsilGenericParameter parameter, StubElement stubElement)
 	{
 		String name = parameter.getName();
 		int mod = MsilGenericParameterStub.toModifiers(parameter);
-		DotNetPsiSearcher.TypeResoleKind typeKind = parameter.getTypeKind();
+		MsilUserType.Target typeKind = parameter.getTarget();
 		return new MsilGenericParameterStub(stubElement, this, name, mod, typeKind);
 	}
 
@@ -69,13 +71,12 @@ public class MsilGenericParameterStubElementType extends AbstractMsilStubElement
 	{
 		stubOutputStream.writeName(msilGenericParameterStub.getName());
 		stubOutputStream.writeVarInt(msilGenericParameterStub.getModifierMask());
-		stubOutputStream.writeVarInt(msilGenericParameterStub.getTypeKindIndex());
+		stubOutputStream.writeVarInt(msilGenericParameterStub.getTargetIndex());
 	}
 
 	@NotNull
 	@Override
-	public MsilGenericParameterStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilGenericParameterStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		int mod = inputStream.readVarInt();

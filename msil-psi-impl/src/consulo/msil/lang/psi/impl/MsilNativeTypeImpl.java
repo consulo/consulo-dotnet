@@ -26,7 +26,6 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetNativeType;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.msil.lang.psi.MsilTokenSets;
 import consulo.msil.lang.psi.MsilTokens;
@@ -115,6 +114,6 @@ public class MsilNativeTypeImpl extends MsilTypeImpl<MsilNativeTypeStub> impleme
 		}
 		String ref = ourTypes.get(elementType);
 		assert ref != null : elementType.toString();
-		return new MsilNativeTypeRefImpl(this, ref, DotNetPsiSearcher.TypeResoleKind.UNKNOWN);
+		return new MsilNativeTypeRefImpl(this, ref);
 	}
 }

@@ -30,24 +30,23 @@ import consulo.msil.lang.psi.MsilXXXAcessor;
 public class MsilXXXAccessorStub extends StubBase<MsilXXXAcessor>
 {
 	private int myIndex;
-	private StringRef myName;
+	private String myName;
 
-	public MsilXXXAccessorStub(StubElement parent, IStubElementType elementType, DotNetXXXAccessor.Kind accessor, String name)
+	public MsilXXXAccessorStub(StubElement parent, IStubElementType elementType, int index, String name)
 	{
-		this(parent, elementType, accessor == null ? -1 : accessor.ordinal(), StringRef.fromNullableString(name));
+		super(parent, elementType);
+		myIndex = index;
+		myName = name;
 	}
 
 	public MsilXXXAccessorStub(StubElement parent, IStubElementType elementType, int i, StringRef name)
 	{
-		super(parent, elementType);
-		myIndex = i;
-		assert myIndex != -1;
-		myName = name;
+		this(parent, elementType, i, StringRef.toString(name));
 	}
 
 	public String getMethodName()
 	{
-		return StringRef.toString(myName);
+		return myName;
 	}
 
 	public int getIndex()

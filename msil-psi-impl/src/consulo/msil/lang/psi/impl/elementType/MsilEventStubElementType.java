@@ -24,6 +24,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilEventEntry;
 import consulo.msil.lang.psi.impl.MsilEventEntryImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
@@ -53,6 +54,7 @@ public class MsilEventStubElementType extends AbstractMsilStubElementType<MsilVa
 		return new MsilEventEntryImpl(msilEventEntryStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilVariableEntryStub createStub(@NotNull MsilEventEntry eventEntry, StubElement stubElement)
 	{
@@ -68,9 +70,9 @@ public class MsilEventStubElementType extends AbstractMsilStubElementType<MsilVa
 
 	@NotNull
 	@Override
-	public MsilVariableEntryStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilVariableEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilVariableEntryStub(stubElement, this, ref);
-	}}
+	}
+}

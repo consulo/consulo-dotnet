@@ -17,7 +17,6 @@
 package consulo.dotnet.psi;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
 
 /**
  * @author VISTALL
@@ -25,9 +24,6 @@ import consulo.dotnet.resolve.DotNetPsiSearcher;
  */
 public interface DotNetUserType extends DotNetType
 {
-	@NotNull
-	DotNetPsiSearcher.TypeResoleKind getTypeResoleKind();
-
 	@NotNull
 	String getReferenceText();
 

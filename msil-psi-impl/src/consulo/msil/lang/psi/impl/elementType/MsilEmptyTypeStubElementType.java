@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetType;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 
@@ -37,6 +38,7 @@ public abstract class MsilEmptyTypeStubElementType extends AbstractMsilStubEleme
 		super(debugName);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilEmptyTypeStub createStub(@NotNull DotNetType type, StubElement stubElement)
 	{

@@ -24,6 +24,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilParameter;
 import consulo.msil.lang.psi.impl.MsilParameterImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilParameterStub;
@@ -53,6 +54,7 @@ public class MsilParameterStubElementType extends AbstractMsilStubElementType<Ms
 		return new MsilParameterImpl(msilParameterStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilParameterStub createStub(@NotNull MsilParameter msilParameter, StubElement stubElement)
 	{
@@ -71,6 +73,6 @@ public class MsilParameterStubElementType extends AbstractMsilStubElementType<Ms
 	public MsilParameterStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef name = inputStream.readName();
-		return new MsilParameterStub(stubElement, this, name);
+		return new MsilParameterStub(stubElement, this, StringRef.toString(name));
 	}
 }

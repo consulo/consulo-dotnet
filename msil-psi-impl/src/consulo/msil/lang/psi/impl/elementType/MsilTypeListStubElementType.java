@@ -28,7 +28,7 @@ import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.StringRef;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetType;
@@ -70,7 +70,7 @@ public class MsilTypeListStubElementType extends AbstractMsilStubElementType<Msi
 	public MsilTypeListStub createStub(@NotNull DotNetTypeList dotNetTypeList, StubElement stubElement)
 	{
 		DotNetType[] types = dotNetTypeList.getTypes();
-		List<StringRef> typeRefs = new ArrayList<StringRef>(types.length);
+		List<String> typeRefs = new ArrayList<>(types.length);
 		for(DotNetType type : types)
 		{
 			if(type instanceof DotNetTypeWithTypeArguments)
@@ -82,10 +82,10 @@ public class MsilTypeListStubElementType extends AbstractMsilStubElementType<Msi
 				collectTypeRefs(typeRefs, type);
 			}
 		}
-		return new MsilTypeListStub(stubElement, this, ContainerUtil.toArray(typeRefs, StringRef.EMPTY_ARRAY));
+		return new MsilTypeListStub(stubElement, this, ArrayUtil.toStringArray(typeRefs));
 	}
 
-	private void collectTypeRefs(List<StringRef> typeRefs, DotNetType type)
+	private void collectTypeRefs(List<String> typeRefs, DotNetType type)
 	{
 		if(type instanceof DotNetUserType)
 		{
@@ -93,7 +93,7 @@ public class MsilTypeListStubElementType extends AbstractMsilStubElementType<Msi
 			referenceText = StringUtil.unquoteString(referenceText, '\'');
 			referenceText = referenceText.replace('/', '.');
 			referenceText = StringUtil.getShortName(referenceText);
-			typeRefs.add(StringRef.fromString(referenceText));
+			typeRefs.add(referenceText);
 		}
 	}
 
@@ -113,12 +113,12 @@ public class MsilTypeListStubElementType extends AbstractMsilStubElementType<Msi
 	public MsilTypeListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		byte value = inputStream.readByte();
-		StringRef[] refs = new StringRef[value];
+		String[] strings = new String[value];
 		for(int i = 0; i < value; i++)
 		{
-			refs[i] = inputStream.readName();
+			strings[i] = StringRef.toString(inputStream.readName());
 		}
-		return new MsilTypeListStub(stubElement, this, refs);
+		return new MsilTypeListStub(stubElement, this, strings);
 	}
 
 	@Override
@@ -126,9 +126,9 @@ public class MsilTypeListStubElementType extends AbstractMsilStubElementType<Msi
 	{
 		if(this == MsilStubElements.EXTENDS_TYPE_LIST || this == MsilStubElements.IMPLEMENTS_TYPE_LIST)
 		{
-			for(String s : msilTypeListStub.geShortReferences())
+			for(String ref : msilTypeListStub.geShortReferences())
 			{
-				indexSink.occurrence(MsilIndexKeys.EXTENDS_LIST_INDEX, s);
+				indexSink.occurrence(MsilIndexKeys.EXTENDS_LIST_INDEX, ref);
 			}
 		}
 	}

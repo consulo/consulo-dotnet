@@ -8,6 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilArrayDimension;
 import consulo.msil.lang.psi.impl.MsilArrayDimensionImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilArrayDimensionStub;
@@ -30,6 +31,7 @@ public class MsilArrayDimensionStubElementType extends AbstractMsilStubElementTy
 		return new MsilArrayDimensionImpl(msilArrayDimensionStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilArrayDimensionStub createStub(@NotNull MsilArrayDimension psi, StubElement parentStub)
 	{

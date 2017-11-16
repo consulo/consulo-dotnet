@@ -95,8 +95,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 
 		if(!msilClassEntryStub.isNested())
 		{
-			DotNetNamespaceStubUtil.indexStub(indexSink, MsilIndexKeys.ELEMENT_BY_QNAME_INDEX, MsilIndexKeys.NAMESPACE_INDEX,
-					msilClassEntryStub.getNamespace(), msilClassEntryStub.getName());
+			DotNetNamespaceStubUtil.indexStub(indexSink, MsilIndexKeys.ELEMENT_BY_QNAME_INDEX, MsilIndexKeys.NAMESPACE_INDEX, msilClassEntryStub.getNamespace(), msilClassEntryStub.getName());
 		}
 
 		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())

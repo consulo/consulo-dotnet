@@ -28,39 +28,36 @@ import consulo.msil.lang.psi.MsilClassEntry;
  */
 public class MsilClassEntryStub extends StubBase<MsilClassEntry>
 {
-	private final StringRef myNamespace;
-	private final StringRef myName;
-	private final StringRef myVmQName;
+	private final String myNamespace;
+	private final String myName;
+	private final String myVmQName;
 
 	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, String namespace, String name, String vmQNamed)
 	{
 		super(parent, elementType);
-		myName = StringRef.fromNullableString(name);
-		myNamespace = StringRef.fromNullableString(namespace);
-		myVmQName = StringRef.fromNullableString(vmQNamed);
+		myName = name;
+		myNamespace = namespace;
+		myVmQName = vmQNamed;
 	}
 
 	public MsilClassEntryStub(StubElement parent, IStubElementType elementType, StringRef namespace, StringRef name, StringRef vmQName)
 	{
-		super(parent, elementType);
-		myName = name;
-		myNamespace = namespace;
-		myVmQName = vmQName;
+		this(parent, elementType, StringRef.toString(namespace), StringRef.toString(name), StringRef.toString(vmQName));
 	}
 
 	public String getName()
 	{
-		return StringRef.toString(myName);
+		return myName;
 	}
 
 	public String getVmQName()
 	{
-		return StringRef.toString(myVmQName);
+		return myVmQName;
 	}
 
 	public String getNamespace()
 	{
-		return StringRef.toString(myNamespace);
+		return myNamespace;
 	}
 
 	public boolean isNested()

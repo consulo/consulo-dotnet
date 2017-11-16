@@ -205,11 +205,10 @@ public class MsilCustomAttributeStubber
 		{
 			String referenceText = ((MsilUserTypeImpl) type).getReferenceText();
 
-			switch(((MsilUserTypeImpl) type).getTypeResoleKind())
+			switch(((MsilUserTypeImpl) type).getTarget())
 			{
 				case STRUCT:
 					return new ValueTypeSignature(parse(referenceText));
-				case UNKNOWN:
 				case CLASS:
 					return new ClassTypeSignature(parse(referenceText));
 			}

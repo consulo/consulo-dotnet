@@ -16,11 +16,11 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub;
 
-import consulo.msil.lang.psi.MsilClassGenericType;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
+import consulo.msil.lang.psi.MsilClassGenericType;
 
 /**
  * @author VISTALL
@@ -28,22 +28,21 @@ import com.intellij.util.io.StringRef;
  */
 public class MsilClassGenericTypeStub extends StubBase<MsilClassGenericType>
 {
-	private StringRef myName;
+	private String myName;
 
 	public MsilClassGenericTypeStub(StubElement parent, IStubElementType elementType, StringRef name)
 	{
-		super(parent, elementType);
-		myName = name;
+		this(parent, elementType, StringRef.toString(name));
 	}
 
 	public MsilClassGenericTypeStub(StubElement parent, IStubElementType elementType, String name)
 	{
 		super(parent, elementType);
-		myName = StringRef.fromNullableString(name);
+		myName = name;
 	}
 
 	public String getName()
 	{
-		return StringRef.toString(myName);
+		return myName;
 	}
 }

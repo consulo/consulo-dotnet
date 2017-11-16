@@ -28,21 +28,21 @@ import com.intellij.util.io.StringRef;
  */
 public class MsilTypeParameterAttributeListStub extends StubBase<MsilParameterAttributeList>
 {
-	private final StringRef myGenericParameterName;
+	private final String myGenericParameterName;
 
 	public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, String genericParameterName)
-	{
-		this(parent, elementType, StringRef.fromNullableString(genericParameterName));
-	}
-
-	public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, StringRef genericParameterName)
 	{
 		super(parent, elementType);
 		myGenericParameterName = genericParameterName;
 	}
 
+	public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, StringRef genericParameterName)
+	{
+		this(parent, elementType, StringRef.toString(genericParameterName));
+	}
+
 	public String getGenericParameterName()
 	{
-		return StringRef.toString(myGenericParameterName);
+		return myGenericParameterName;
 	}
 }

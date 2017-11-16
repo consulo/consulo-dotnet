@@ -48,7 +48,6 @@ import consulo.dotnet.psi.DotNetModifierList;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.DotNetTypeList;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.msil.lang.psi.MsilClassEntry;
@@ -77,7 +76,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		public DotNetTypeRef fun(MsilClassEntryImpl msilClassEntry)
 		{
 			DotNetFieldDeclaration value = findFieldByName(msilClassEntry, "__value");
-			return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(msilClassEntry, DotNetTypes.System.Int32, DotNetPsiSearcher.TypeResoleKind.STRUCT);
+			return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(msilClassEntry, DotNetTypes.System.Int32);
 		}
 	}
 

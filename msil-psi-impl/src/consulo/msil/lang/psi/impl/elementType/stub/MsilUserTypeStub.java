@@ -16,49 +16,42 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.msil.lang.psi.MsilUserType;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilReferenceTypeStub extends StubBase<MsilUserType>
+public class MsilUserTypeStub extends StubBase<MsilUserType>
 {
-	private final DotNetPsiSearcher.TypeResoleKind myTypeResoleKind;
-	private final StringRef myReferenceText;
+	private final MsilUserType.Target myTarget;
+	private final String myReferenceText;
 
-	public MsilReferenceTypeStub(StubElement parent,
-			IStubElementType elementType,
-			DotNetPsiSearcher.TypeResoleKind typeResoleKind,
-			String referenceText)
+	public MsilUserTypeStub(StubElement parent, IStubElementType elementType, MsilUserType.Target target, String referenceText)
 	{
 		super(parent, elementType);
-		myTypeResoleKind = typeResoleKind;
-		myReferenceText = StringRef.fromNullableString(referenceText);
+		myTarget = target;
+		myReferenceText = referenceText;
 	}
 
-	public MsilReferenceTypeStub(StubElement parent,
-			IStubElementType elementType,
-			DotNetPsiSearcher.TypeResoleKind typeResoleKind,
-			StringRef referenceText)
+	public MsilUserTypeStub(StubElement parent, IStubElementType elementType, MsilUserType.Target target, StringRef referenceText)
 	{
-		super(parent, elementType);
-		myTypeResoleKind = typeResoleKind;
-		myReferenceText = referenceText;
+		this(parent, elementType, target, StringRef.toString(referenceText));
 	}
 
 	public String getReferenceText()
 	{
-		return StringRef.toString(myReferenceText);
+		return myReferenceText;
 	}
 
-	public DotNetPsiSearcher.TypeResoleKind getTypeResoleKind()
+	@NotNull
+	public MsilUserType.Target getTarget()
 	{
-		return myTypeResoleKind;
+		return myTarget;
 	}
 }

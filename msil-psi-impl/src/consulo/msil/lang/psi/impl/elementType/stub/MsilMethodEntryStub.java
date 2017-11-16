@@ -16,11 +16,11 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub;
 
-import consulo.msil.lang.psi.MsilMethodEntry;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
+import consulo.msil.lang.psi.MsilMethodEntry;
 
 /**
  * @author VISTALL
@@ -28,22 +28,17 @@ import com.intellij.util.io.StringRef;
  */
 public class MsilMethodEntryStub extends StubBase<MsilMethodEntry>
 {
-	private StringRef myName;
+	private String myName;
 
-	public MsilMethodEntryStub(StubElement parent, IStubElementType elementType, StringRef name)
+	public MsilMethodEntryStub(StubElement parent, IStubElementType elementType, String name)
 	{
 		super(parent, elementType);
 		myName = name;
 	}
 
-	public MsilMethodEntryStub(StubElement parent, IStubElementType elementType, String name)
-	{
-		super(parent, elementType);
-		myName = StringRef.fromNullableString(name);
-	}
-
+	@Nullable
 	public String getNameFromBytecode()
 	{
-		return StringRef.toString(myName);
+		return myName;
 	}
 }

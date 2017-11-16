@@ -23,60 +23,60 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetReferenceExpression;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.msil.lang.psi.MsilTokenSets;
 import consulo.msil.lang.psi.MsilTokens;
 import consulo.msil.lang.psi.MsilUserType;
-import consulo.msil.lang.psi.impl.elementType.stub.MsilReferenceTypeStub;
+import consulo.msil.lang.psi.impl.elementType.stub.MsilUserTypeStub;
 import consulo.msil.lang.psi.impl.type.MsilReferenceTypeRefImpl;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilUserTypeImpl extends MsilTypeImpl<MsilReferenceTypeStub> implements MsilUserType
+public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements MsilUserType
 {
 	public MsilUserTypeImpl(@NotNull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilUserTypeImpl(@NotNull MsilReferenceTypeStub stub, @NotNull IStubElementType nodeType)
+	public MsilUserTypeImpl(@NotNull MsilUserTypeStub stub, @NotNull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
-	public DotNetPsiSearcher.TypeResoleKind getTypeResoleKind()
+	public Target getTarget()
 	{
-		MsilReferenceTypeStub stub = getStub();
+		MsilUserTypeStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.getTypeResoleKind();
+			return stub.getTarget();
 		}
 		PsiElement childByType = findChildByType(MsilTokenSets.REFERENCE_TYPE_START);
 		if(childByType == null)
 		{
-			return DotNetPsiSearcher.TypeResoleKind.UNKNOWN;
+			return Target.CLASS;
 		}
 		if(childByType.getNode().getElementType() == MsilTokens.VALUETYPE_KEYWORD)
 		{
-			return DotNetPsiSearcher.TypeResoleKind.STRUCT;
+			return Target.STRUCT;
 		}
 		else if(childByType.getNode().getElementType() == MsilTokens.CLASS_KEYWORD)
 		{
-			return DotNetPsiSearcher.TypeResoleKind.CLASS;
+			return Target.CLASS;
 		}
-		return DotNetPsiSearcher.TypeResoleKind.UNKNOWN;
+		return Target.CLASS;
 	}
 
 	@NotNull
 	@Override
 	public String getReferenceText()
 	{
-		MsilReferenceTypeStub stub = getStub();
+		MsilUserTypeStub stub = getStub();
 		if(stub != null)
 		{
 			return stub.getReferenceText();
@@ -105,6 +105,6 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilReferenceTypeStub> implem
 	@Override
 	public DotNetTypeRef toTypeRefImpl()
 	{
-		return new MsilReferenceTypeRefImpl(this, getReferenceText(), getTypeResoleKind());
+		return new MsilReferenceTypeRefImpl(this, getReferenceText());
 	}
 }

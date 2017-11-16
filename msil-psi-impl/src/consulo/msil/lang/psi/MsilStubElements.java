@@ -46,7 +46,7 @@ public interface MsilStubElements
 	MsilTypeListStubElementType GENERIC_PARAM_EXTENDS_LIST = new MsilTypeListStubElementType("MSIL_GENERIC_PARAM_EXTENDS_LIST");
 	MsilTypeListStubElementType TYPE_ARGUMENTS_TYPE_LIST = new MsilTypeListStubElementType("MSIL_TYPE_ARGUMENTS_TYPE_LIST");
 	MsilNativeTypeStubElementType NATIVE_TYPE = new MsilNativeTypeStubElementType();
-	MsilReferenceTypeStubElementType REFERENCE_TYPE = new MsilReferenceTypeStubElementType();
+	MsilUserTypeStubElementType REFERENCE_TYPE = new MsilUserTypeStubElementType();
 	MsilParameterListStubElementType PARAMETER_LIST = new MsilParameterListStubElementType();
 	MsilParameterStubElementType PARAMETER = new MsilParameterStubElementType();
 	MsilParameterAttributeListStubElementType PARAMETER_ATTRIBUTE_LIST = new MsilParameterAttributeListStubElementType();

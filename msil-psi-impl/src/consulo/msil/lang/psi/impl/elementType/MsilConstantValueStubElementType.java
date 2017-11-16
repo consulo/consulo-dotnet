@@ -40,6 +40,7 @@ public class MsilConstantValueStubElementType extends AbstractMsilStubElementTyp
 			MsilTokens.CHAR_KEYWORD,
 			MsilTokens.BOOL_KEYWORD
 	};
+
 	public static TokenSet ourSet = TokenSet.create(ourElements);
 
 	public MsilConstantValueStubElementType()

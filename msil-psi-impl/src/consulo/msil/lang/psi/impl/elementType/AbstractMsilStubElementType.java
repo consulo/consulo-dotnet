@@ -29,8 +29,7 @@ import consulo.psi.tree.IElementTypeAsPsiFactory;
  * @author VISTALL
  * @since 21.05.14
  */
-public abstract class AbstractMsilStubElementType<T extends StubElement, E extends DotNetElement> extends IStubElementType<T,
-		E> implements IElementTypeAsPsiFactory
+public abstract class AbstractMsilStubElementType<T extends StubElement, E extends DotNetElement> extends IStubElementType<T, E> implements IElementTypeAsPsiFactory
 {
 	public AbstractMsilStubElementType(@NotNull @NonNls String debugName)
 	{
@@ -48,10 +47,8 @@ public abstract class AbstractMsilStubElementType<T extends StubElement, E exten
 		return "msil." + toString();
 	}
 
-
 	@Override
 	public void indexStub(@NotNull T t, @NotNull IndexSink indexSink)
 	{
-
 	}
 }

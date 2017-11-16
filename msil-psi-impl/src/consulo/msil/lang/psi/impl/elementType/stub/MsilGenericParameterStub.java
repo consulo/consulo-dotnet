@@ -16,44 +16,45 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.NamedStubBase;
+import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.BitUtil;
 import com.intellij.util.io.StringRef;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.psi.DotNetModifier;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.msil.lang.psi.MsilGenericParameter;
+import consulo.msil.lang.psi.MsilUserType;
 
 /**
  * @author VISTALL
  * @since 23.05.14
  */
-public class MsilGenericParameterStub extends NamedStubBase<DotNetGenericParameter>
+public class MsilGenericParameterStub extends StubBase<DotNetGenericParameter>
 {
 	private static final int COVARIANT = 1 << 0;
 	private static final int CONTRAVARIANT = 1 << 1;
 	private static final int HAS_DEFAULT_CONSTRUCTOR = 1 << 2;
 
+	private String myName;
 	private int myModifierMask;
-	private int myTypeKindIndex;
+	private int myTargetIndex;
 
-	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, int modifierMask, int typeKindIndex)
+	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable StringRef name, int modifierMask, int targetIndex)
 	{
-		super(parent, elementType, name);
+		super(parent, elementType);
 		myModifierMask = modifierMask;
-		myTypeKindIndex = typeKindIndex;
+		myTargetIndex = targetIndex;
+		myName = StringRef.toString(name);
 	}
 
-	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable String name, int modifierMask,
-			@NotNull DotNetPsiSearcher.TypeResoleKind typeKind)
+	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable String name, int modifierMask, @Nullable MsilUserType.Target typeKind)
 	{
-		super(parent, elementType, name);
+		super(parent, elementType);
 		myModifierMask = modifierMask;
-		myTypeKindIndex = typeKind.ordinal();
+		myName = name;
+		myTargetIndex = typeKind == null ? -1 : typeKind.ordinal();
 	}
 
 	public static int toModifiers(MsilGenericParameter parameter)
@@ -70,15 +71,21 @@ public class MsilGenericParameterStub extends NamedStubBase<DotNetGenericParamet
 		return myModifierMask;
 	}
 
-	public int getTypeKindIndex()
+	public int getTargetIndex()
 	{
-		return myTypeKindIndex;
+		return myTargetIndex;
 	}
 
-	@NotNull
-	public DotNetPsiSearcher.TypeResoleKind getTypeKind()
+	@Nullable
+	public String getName()
 	{
-		return DotNetPsiSearcher.TypeResoleKind.VALUES[myTypeKindIndex];
+		return myName;
+	}
+
+	@Nullable
+	public MsilUserType.Target getTarget()
+	{
+		return myTargetIndex == -1 ? null : MsilUserType.Target.VALUES[myTargetIndex];
 	}
 
 	public boolean hasDefaultConstructor()

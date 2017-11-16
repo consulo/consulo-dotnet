@@ -29,23 +29,22 @@ import com.intellij.util.io.StringRef;
  */
 public class MsilCustomAttributeStub extends StubBase<MsilCustomAttribute>
 {
-	private final StringRef myTypeRef;
+	private final String myTypeRef;
 
 	public MsilCustomAttributeStub(StubElement parent, IStubElementType elementType, StringRef typeRef)
 	{
-		super(parent, elementType);
-		myTypeRef = typeRef;
+		this(parent, elementType, StringRef.toString(typeRef));
 	}
 
 	public MsilCustomAttributeStub(StubElement parent, IStubElementType elementType, String typeRef)
 	{
 		super(parent, elementType);
-		myTypeRef = StringRef.fromNullableString(typeRef);
+		myTypeRef = typeRef;
 	}
 
 	@Nullable
 	public String getTypeRef()
 	{
-		return StringRef.toString(myTypeRef);
+		return myTypeRef;
 	}
 }

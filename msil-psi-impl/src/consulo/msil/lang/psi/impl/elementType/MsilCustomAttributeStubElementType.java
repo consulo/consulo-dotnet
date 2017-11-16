@@ -24,6 +24,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
+import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetType;
 import consulo.msil.lang.psi.MsilCustomAttribute;
 import consulo.msil.lang.psi.impl.MsilCustomAttributeImpl;
@@ -54,9 +55,9 @@ public class MsilCustomAttributeStubElementType extends AbstractMsilStubElementT
 		return new MsilCustomAttributeImpl(msilCustomAttributeStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
-	public MsilCustomAttributeStub createStub(
-			@NotNull MsilCustomAttribute msilCustomAttribute, StubElement stubElement)
+	public MsilCustomAttributeStub createStub(@NotNull MsilCustomAttribute msilCustomAttribute, StubElement stubElement)
 	{
 		DotNetType type = msilCustomAttribute.getType();
 		String ref = type == null ? null : type.getText();
@@ -64,16 +65,14 @@ public class MsilCustomAttributeStubElementType extends AbstractMsilStubElementT
 	}
 
 	@Override
-	public void serialize(
-			@NotNull MsilCustomAttributeStub msilCustomAttributeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilCustomAttributeStub msilCustomAttributeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilCustomAttributeStub.getTypeRef());
 	}
 
 	@NotNull
 	@Override
-	public MsilCustomAttributeStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilCustomAttributeStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilCustomAttributeStub(stubElement, this, ref);

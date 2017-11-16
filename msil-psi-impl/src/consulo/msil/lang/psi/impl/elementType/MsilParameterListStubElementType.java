@@ -23,6 +23,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilParameterList;
 import consulo.msil.lang.psi.impl.MsilParameterListImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilParameterListStub;
@@ -52,24 +53,21 @@ public class MsilParameterListStubElementType extends AbstractMsilStubElementTyp
 		return new MsilParameterListImpl(msilParameterListStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
-	public MsilParameterListStub createStub(
-			@NotNull MsilParameterList msilParameterList, StubElement stubElement)
+	public MsilParameterListStub createStub(@NotNull MsilParameterList msilParameterList, StubElement stubElement)
 	{
 		return new MsilParameterListStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(
-			@NotNull MsilParameterListStub msilParameterListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@NotNull MsilParameterListStub msilParameterListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
 	{
-
 	}
 
 	@NotNull
 	@Override
-	public MsilParameterListStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilParameterListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		return new MsilParameterListStub(stubElement, this);
 	}

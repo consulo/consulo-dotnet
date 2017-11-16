@@ -11,7 +11,7 @@ import com.intellij.psi.stubs.StubElement;
  */
 public class MsilCustomAttributeSignatureStub extends StubBase<MsilCustomAttributeSignature>
 {
-	private byte[] myBytes;
+	private final byte[] myBytes;
 
 	public MsilCustomAttributeSignatureStub(StubElement parent, IStubElementType elementType, byte[] bytes)
 	{

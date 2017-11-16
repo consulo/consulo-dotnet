@@ -23,6 +23,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
+import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilMethodGenericType;
 import consulo.msil.lang.psi.impl.MsilMethodGenericTypeImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilMethodGenericTypeStub;
@@ -52,6 +53,7 @@ public class MsilMethodGenericTypeStubElementType extends AbstractMsilStubElemen
 		return new MsilMethodGenericTypeImpl(msilMethodGenericTypeStub, this);
 	}
 
+	@RequiredReadAction
 	@Override
 	public MsilMethodGenericTypeStub createStub(@NotNull MsilMethodGenericType msilMethodGenericType, StubElement stubElement)
 	{
@@ -67,8 +69,7 @@ public class MsilMethodGenericTypeStubElementType extends AbstractMsilStubElemen
 
 	@NotNull
 	@Override
-	public MsilMethodGenericTypeStub deserialize(
-			@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilMethodGenericTypeStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		int index = inputStream.readInt();
 		return new MsilMethodGenericTypeStub(stubElement, this, index);

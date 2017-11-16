@@ -36,21 +36,12 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 {
 	private final PsiElement myElement;
 	protected final String myRef;
-	protected final DotNetPsiSearcher.TypeResoleKind myTypeResoleKind;
 
-	public MsilReferenceTypeRefImpl(@NotNull PsiElement element, @NotNull String ref, @NotNull DotNetPsiSearcher.TypeResoleKind typeResoleKind)
+	public MsilReferenceTypeRefImpl(@NotNull PsiElement element, @NotNull String ref)
 	{
 		super(element.getProject());
 		myElement = element;
 		myRef = ref;
-		myTypeResoleKind = typeResoleKind;
-	}
-
-	@NotNull
-	@Deprecated
-	public DotNetPsiSearcher.TypeResoleKind getTypeResoleKind()
-	{
-		return myTypeResoleKind;
 	}
 
 	@RequiredReadAction
@@ -87,6 +78,6 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj instanceof MsilReferenceTypeRefImpl && myRef.equals(((MsilReferenceTypeRefImpl) obj).myRef) && myTypeResoleKind == ((MsilReferenceTypeRefImpl) obj).myTypeResoleKind;
+		return obj instanceof MsilReferenceTypeRefImpl && myRef.equals(((MsilReferenceTypeRefImpl) obj).myRef);
 	}
 }

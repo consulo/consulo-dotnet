@@ -17,7 +17,6 @@
 package consulo.msil.lang.psi.impl.type;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -26,14 +25,14 @@ import com.intellij.psi.PsiElement;
  */
 public class MsilNativeTypeRefImpl extends MsilReferenceTypeRefImpl
 {
-	public MsilNativeTypeRefImpl(@NotNull PsiElement element, @NotNull String ref, @NotNull DotNetPsiSearcher.TypeResoleKind typeResoleKind)
+	public MsilNativeTypeRefImpl(@NotNull PsiElement element, @NotNull String ref)
 	{
-		super(element, ref, typeResoleKind);
+		super(element, ref);
 	}
 
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj instanceof MsilNativeTypeRefImpl && myRef.equals(((MsilNativeTypeRefImpl) obj).myRef) && myTypeResoleKind == ((MsilNativeTypeRefImpl) obj).myTypeResoleKind;
+		return obj instanceof MsilNativeTypeRefImpl && myRef.equals(((MsilNativeTypeRefImpl) obj).myRef);
 	}
 }

@@ -210,7 +210,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 	@Override
 	public PsiElement getAccessorElement()
 	{
-		return null;
+		return findNotNullChildByFilter(MsilTokenSets.XXX_ACCESSOR_START);
 	}
 
 	@Nullable
