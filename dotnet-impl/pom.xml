@@ -56,6 +56,11 @@
 						<skip>${dev.mode}</skip>
 						<version>${build.number}</version>
 					</packaging>
+					<execution>
+						<pluginDirectories>
+							<pluginDirectory>${project.basedir}/../extract/consulo-microsoft-dotnet/target/consulo-plugin-extracted</pluginDirectory>
+						</pluginDirectories>
+					</execution>
 				</configuration>
 				<executions>
 					<execution>
@@ -112,6 +117,11 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>consulo.dotnet-composite.formatting.string</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>consulo.dotnet-dotnet.psi.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -124,6 +134,17 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>consulo.dotnet-dotnet.msil.impl</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>consulo.internal</groupId>
+			<artifactId>dotnet.asm</artifactId>
+			<version>2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>consulo.internal</groupId>
+			<artifactId>dotnet.msil.decompiler</artifactId>
+			<version>2-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
