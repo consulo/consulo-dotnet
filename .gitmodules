@@ -1,9 +1,0 @@
-[submodule "repo/dotnet-msil-decompiler"]
-	path = repo/dotnet-msil-decompiler
-	url = git@github.com:consulo/dotnet-msil-decompiler.git
-[submodule "repo/dotnet-asm"]
-	path = repo/dotnet-asm
-	url = git@github.com:consulo/dotnet-asm.git
-[submodule "repo/mono-soft-debugging"]
-	path = repo/mono-soft-debugging
-	url = git@github.com:consulo/mono-soft-debugging.git
