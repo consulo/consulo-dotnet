@@ -148,6 +148,11 @@
 			<artifactId>dotnet.msil.decompiler</artifactId>
 			<version>2-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>joou-java-6</artifactId>
+			<version>0.9.3</version>
+		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
