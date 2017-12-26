@@ -59,6 +59,7 @@
 					<execution>
 						<pluginDirectories>
 							<pluginDirectory>${project.basedir}/../extract/consulo-microsoft-dotnet/target/consulo-plugin-extracted</pluginDirectory>
+							<pluginDirectory>${project.basedir}/../extract/consulo-mono-dotnet/target/consulo-plugin-extracted</pluginDirectory>
 						</pluginDirectories>
 					</execution>
 				</configuration>

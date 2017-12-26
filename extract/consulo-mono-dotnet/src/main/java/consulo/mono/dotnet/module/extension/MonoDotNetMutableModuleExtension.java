@@ -24,6 +24,7 @@ import consulo.dotnet.module.extension.DotNetConfigurationPanel;
 import consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.dotnet.module.extension.DotNetQualifiedElementQualifierProducer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.roots.ModuleRootLayer;
 
@@ -50,7 +51,7 @@ public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension 
 	@RequiredDispatchThread
 	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
 	{
-		return new DotNetConfigurationPanel(this, myVariables, runnable);
+		return new DotNetConfigurationPanel(this, DotNetQualifiedElementQualifierProducer.INSTANCE, myVariables, runnable);
 	}
 
 	@Override

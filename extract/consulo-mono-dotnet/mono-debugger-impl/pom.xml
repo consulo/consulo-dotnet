@@ -20,7 +20,7 @@
 
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.managment</artifactId>
+		<artifactId>arch.ide-provided</artifactId>
 		<version>2-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
@@ -37,30 +37,32 @@
 	</repositories>
 
 	<groupId>consulo.plugin</groupId>
-	<artifactId>consulo.dotnet.parent</artifactId>
+	<artifactId>consulo.dotnet.mono-debugger-impl</artifactId>
 	<version>2-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 
-	<modules>
-		<module>dotnet-api</module>
-		<module>dotnet-debugger-api</module>
-		<module>dotnet-psi-api</module>
-		<module>dotnet-documentation-api</module>
-		<module>dotnet-exectution-api</module>
-		<module>msil-psi-api</module>
+	<dependencies>
+		<dependency>
+			<groupId>consulo.internal</groupId>
+			<artifactId>mono-soft-debugging</artifactId>
+			<version>2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>consulo.dotnet-dotnet.execution.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>consulo.dotnet-dotnet.debugger.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-		<module>dotnet-execution-impl</module>
-		<module>dotnet-debugger-impl</module>
-		<module>dotnet-documentation-impl</module>
-		<module>dotnet-psi-impl</module>
-		<module>msil-psi-impl</module>
-		<module>composite-formatting-string</module>
-
-		<module>extract/consulo-microsoft-dotnet</module>
-		<module>extract/consulo-microsoft-dotnet/microsoft-debugger-impl</module>
-		<module>extract/consulo-mono-dotnet</module>
-		<module>extract/consulo-mono-dotnet/mono-debugger-impl</module>
-
-		<module>dotnet-impl</module>
-	</modules>
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>joou-java-6</artifactId>
+			<version>0.9.3</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>
