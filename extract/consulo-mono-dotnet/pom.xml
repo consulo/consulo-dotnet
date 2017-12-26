@@ -49,9 +49,6 @@
 				<extensions>true</extensions>
 				<configuration>
 					<repositoryChannel>nightly</repositoryChannel>
-					<dependencies>
-						<dependency>com.intellij.xml</dependency>
-					</dependencies>
 					<packaging>
 						<skip>${dev.mode}</skip>
 						<version>${build.number}</version>

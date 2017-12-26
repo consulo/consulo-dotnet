@@ -17,17 +17,13 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>consulo</groupId>
 		<artifactId>arch.ide-provided</artifactId>
 		<version>2-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
-
-	<groupId>consulo.plugin</groupId>
-	<artifactId>consulo.dotnet.microsoft</artifactId>
-	<version>2-SNAPSHOT</version>
-	<packaging>consulo-plugin</packaging>
 
 	<repositories>
 		<repository>
@@ -40,31 +36,10 @@
 		</repository>
 	</repositories>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>consulo.maven</groupId>
-				<artifactId>consulo-maven-plugin</artifactId>
-				<version>2-SNAPSHOT</version>
-				<extensions>true</extensions>
-				<configuration>
-					<repositoryChannel>nightly</repositoryChannel>
-					<packaging>
-						<skip>${dev.mode}</skip>
-						<version>${build.number}</version>
-					</packaging>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>workspace</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+	<groupId>consulo.plugin</groupId>
+	<artifactId>consulo.dotnet.microsoft-dotnet-impl</artifactId>
+	<version>2-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<dependencies>
 		<dependency>
@@ -72,28 +47,15 @@
 			<artifactId>consulo.dotnet.microsoft-debugger-impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.dotnet.microsoft-dotnet-impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>consulo.internal</groupId>
-			<artifactId>mssdw-java-client</artifactId>
-			<version>2-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.dotnet-dotnet.debugger.impl</artifactId>
+			<artifactId>consulo.dotnet-dotnet.api</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.dotnet-dotnet.psi.impl</artifactId>
+			<artifactId>consulo.dotnet-dotnet.debugger.impl</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>

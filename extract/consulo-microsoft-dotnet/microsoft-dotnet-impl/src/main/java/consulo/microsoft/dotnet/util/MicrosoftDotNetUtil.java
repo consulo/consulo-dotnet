@@ -31,8 +31,7 @@ public class MicrosoftDotNetUtil
 	{
 		try
 		{
-			return Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
-					"InstallPath");
+			return Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", "InstallPath");
 		}
 		catch(Exception ignored)
 		{
@@ -45,8 +44,7 @@ public class MicrosoftDotNetUtil
 	{
 		try
 		{
-			return Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full",
-					"TargetVersion");
+			return Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", "TargetVersion");
 		}
 		catch(Exception ignored)
 		{
