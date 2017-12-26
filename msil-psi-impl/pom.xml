@@ -62,5 +62,12 @@
 			<artifactId>joou-java-6</artifactId>
 			<version>0.9.3</version>
 		</dependency>
+
+		<dependency>
+			<groupId>consulo</groupId>
+			<artifactId>consulo-lang-impl-testing</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
