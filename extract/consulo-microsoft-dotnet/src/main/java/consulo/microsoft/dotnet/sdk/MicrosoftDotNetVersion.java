@@ -31,7 +31,11 @@ public enum MicrosoftDotNetVersion
 	_4_5,
 	_4_5_1,
 	_4_5_2,
-	_4_6;
+	_4_6,
+	_4_6_1,
+	_4_6_2,
+	_4_7,
+	_4_7_1;
 
 	private String myPresentableName;
 

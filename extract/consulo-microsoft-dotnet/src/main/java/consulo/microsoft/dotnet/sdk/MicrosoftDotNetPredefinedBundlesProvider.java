@@ -55,7 +55,7 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 	{
 		if(SystemInfo.isWindows)
 		{
-			List<MicrosoftDotNetFramework> list = new ArrayList<MicrosoftDotNetFramework>();
+			List<MicrosoftDotNetFramework> list = new ArrayList<>();
 
 			// first of all, we try to collect sdk from Windows dir, where compilers are located at same dir
 			File framework = new File(System.getenv("windir"), "Microsoft.NET/Framework");
