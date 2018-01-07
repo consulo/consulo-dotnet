@@ -96,7 +96,7 @@ public class MonoDebugThread extends Thread
 	private final Queue<Processor<MonoVirtualMachineProxy>> myQueue = new ConcurrentLinkedQueue<Processor<MonoVirtualMachineProxy>>();
 	private final EventDispatcher<MonoVirtualMachineListener> myEventDispatcher = EventDispatcher.create(MonoVirtualMachineListener.class);
 
-	private MonoVirtualMachineProxy myVirtualMachine;
+	private volatile MonoVirtualMachineProxy myVirtualMachine;
 	private boolean myStop;
 
 	public MonoDebugThread(XDebugSession session, MonoDebugProcess debugProcess, DebugConnectionInfo debugConnectionInfo)
@@ -554,11 +554,12 @@ public class MonoDebugThread extends Thread
 
 	public void invoke(@NotNull Consumer<MonoVirtualMachineProxy> processor)
 	{
-		if(myVirtualMachine == null)
+		MonoVirtualMachineProxy vm = myVirtualMachine;
+		if(vm == null)
 		{
 			return;
 		}
-		myVirtualMachine.invoke(() -> processor.accept(myVirtualMachine));
+		vm.invoke(() -> processor.accept(vm));
 	}
 
 	public void addCommand(Processor<MonoVirtualMachineProxy> processor)
