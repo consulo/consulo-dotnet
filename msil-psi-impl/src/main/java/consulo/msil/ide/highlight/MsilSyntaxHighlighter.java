@@ -16,7 +16,8 @@
 
 package consulo.msil.ide.highlight;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -32,14 +33,14 @@ import consulo.msil.lang.psi.MsilTokens;
  */
 public class MsilSyntaxHighlighter extends SyntaxHighlighterBase
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer getHighlightingLexer()
 	{
 		return new MsilLexer();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public TextAttributesKey[] getTokenHighlights(IElementType elementType)
 	{

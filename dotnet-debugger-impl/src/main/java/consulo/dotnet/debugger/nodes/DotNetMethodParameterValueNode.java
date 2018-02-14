@@ -16,10 +16,10 @@
 
 package consulo.dotnet.debugger.nodes;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
@@ -53,7 +53,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 		myFrame = frame;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
@@ -62,7 +62,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 
 	@Override
 	@RequiredDispatchThread
-	public void computeSourcePosition(@NotNull XNavigatable navigatable)
+	public void computeSourcePosition(@Nonnull XNavigatable navigatable)
 	{
 		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebugContext, myFrame);
 		if(psiElement == null)
@@ -114,7 +114,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
+	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
 	{
 		myFrame.setParameterValue(myParameter, value);
 	}

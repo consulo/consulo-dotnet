@@ -19,7 +19,8 @@ package consulo.dotnet.externalAttributes.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.externalAttributes.ExternalAttributeNode;
 import consulo.dotnet.externalAttributes.ExternalAttributeSimpleNode;
 import consulo.dotnet.externalAttributes.ExternalAttributeWithChildrenNode;
@@ -37,7 +38,7 @@ public class ExternalAttributeWithChildrenCompositeNodeImpl implements ExternalA
 		myNodes = nodes;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public List<ExternalAttributeSimpleNode> getChildren()
 	{
@@ -49,7 +50,7 @@ public class ExternalAttributeWithChildrenCompositeNodeImpl implements ExternalA
 		return list;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public List<ExternalAttributeNode> getAttributes()
 	{
@@ -61,7 +62,7 @@ public class ExternalAttributeWithChildrenCompositeNodeImpl implements ExternalA
 		return list;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

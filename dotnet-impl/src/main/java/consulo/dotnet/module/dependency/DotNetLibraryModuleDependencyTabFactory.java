@@ -16,7 +16,8 @@
 
 package consulo.dotnet.module.dependency;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
@@ -32,14 +33,14 @@ import consulo.roots.ui.configuration.classpath.dependencyTab.AddModuleDependenc
 public class DotNetLibraryModuleDependencyTabFactory implements AddModuleDependencyTabFactory
 {
 	@Override
-	public boolean isAvailable(@NotNull ModuleRootLayer layer)
+	public boolean isAvailable(@Nonnull ModuleRootLayer layer)
 	{
 		return layer.getExtension(DotNetSimpleModuleExtension.class) != null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public AddModuleDependencyTabContext createTabContext(@NotNull Disposable parent, @NotNull ClasspathPanel panel, @NotNull StructureConfigurableContext context)
+	public AddModuleDependencyTabContext createTabContext(@Nonnull Disposable parent, @Nonnull ClasspathPanel panel, @Nonnull StructureConfigurableContext context)
 	{
 		return new DotNetLibraryModuleDependencyTabContext(panel, context);
 	}

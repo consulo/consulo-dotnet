@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.psi.stubs.PsiFileStubImpl;
 import com.intellij.psi.tree.IStubFileElementType;
 import consulo.msil.lang.psi.MsilFile;
@@ -33,7 +33,7 @@ public class MsilFileStub extends PsiFileStubImpl<MsilFile>
 		super(file);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public IStubFileElementType getType()
 	{

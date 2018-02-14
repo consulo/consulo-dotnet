@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joou.UByte;
 import org.joou.UInteger;
 import org.joou.UShort;
@@ -57,7 +58,7 @@ public class MsilCustomAttributeStubber
 {
 	private static final Logger LOGGER = Logger.getInstance(MsilCustomAttributeStubber.class);
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	public static MsilCustomAttributeArgumentList build(MsilCustomAttribute attribute)
 	{
@@ -135,7 +136,7 @@ public class MsilCustomAttributeStubber
 	}
 
 	@RequiredReadAction
-	private static TypeSignature toTypeSignature(@NotNull DotNetType type)
+	private static TypeSignature toTypeSignature(@Nonnull DotNetType type)
 	{
 		if(type instanceof MsilNativeTypeImpl)
 		{
@@ -217,14 +218,14 @@ public class MsilCustomAttributeStubber
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	private static AbstractTypeReference parse(String referenceText)
 	{
 		return new AssemblyTypeRef(null, StringUtil.getPackageName(referenceText), StringUtil.getShortName(referenceText));
 	}
 
 	@RequiredReadAction
-	private static MsiCustomAttributeValue buildArgument(@NotNull PsiElement scope, TypeSignature typeSignature, ByteBuffer byteBuffer)
+	private static MsiCustomAttributeValue buildArgument(@Nonnull PsiElement scope, TypeSignature typeSignature, ByteBuffer byteBuffer)
 	{
 		if(typeSignature == TypeSignature.I1)
 		{

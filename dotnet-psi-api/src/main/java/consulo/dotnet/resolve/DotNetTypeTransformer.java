@@ -16,7 +16,7 @@
 
 package consulo.dotnet.resolve;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.NotNullFunction;
 
@@ -28,7 +28,7 @@ public class DotNetTypeTransformer implements NotNullFunction<PsiElement, PsiEle
 {
 	public static final DotNetTypeTransformer INSTANCE = new DotNetTypeTransformer();
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiElement fun(PsiElement element)
 	{

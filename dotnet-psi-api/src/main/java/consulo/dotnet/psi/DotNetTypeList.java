@@ -16,7 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetTypeRef;
 
@@ -26,11 +27,11 @@ import consulo.dotnet.resolve.DotNetTypeRef;
  */
 public interface DotNetTypeList extends DotNetElement
 {
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	DotNetType[] getTypes();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef[] getTypeRefs();
 

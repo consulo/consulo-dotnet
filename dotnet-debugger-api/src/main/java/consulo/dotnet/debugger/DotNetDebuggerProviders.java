@@ -1,7 +1,7 @@
 package consulo.dotnet.debugger;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -16,14 +16,14 @@ public class DotNetDebuggerProviders
 {
 	@Nullable
 	@RequiredReadAction
-	public static DotNetDebuggerProvider findByVirtualFile(@NotNull Project project, @NotNull VirtualFile virtualFile)
+	public static DotNetDebuggerProvider findByVirtualFile(@Nonnull Project project, @Nonnull VirtualFile virtualFile)
 	{
 		PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
 		return file != null ? findByPsiFile(file) : null;
 	}
 
 	@Nullable
-	public static DotNetDebuggerProvider findByPsiFile(@NotNull PsiFile psiFile)
+	public static DotNetDebuggerProvider findByPsiFile(@Nonnull PsiFile psiFile)
 	{
 		for(DotNetDebuggerProvider provider : DotNetDebuggerProvider.EP_NAME.getExtensions())
 		{

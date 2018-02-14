@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.emonic.base.documentation.IDocumentation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -21,7 +22,7 @@ import consulo.roots.types.DocumentationOrderRootType;
  */
 public class DotNetDocumentationCache
 {
-	@NotNull
+	@Nonnull
 	public static DotNetDocumentationCache getInstance()
 	{
 		return ServiceManager.getService(DotNetDocumentationCache.class);

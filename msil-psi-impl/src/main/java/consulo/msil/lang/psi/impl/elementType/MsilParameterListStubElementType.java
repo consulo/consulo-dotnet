@@ -18,7 +18,7 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -39,35 +39,35 @@ public class MsilParameterListStubElementType extends AbstractMsilStubElementTyp
 		super("MSIL_PARAMETER_LIST");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilParameterList createElement(@NotNull ASTNode astNode)
+	public MsilParameterList createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilParameterListImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilParameterList createPsi(@NotNull MsilParameterListStub msilParameterListStub)
+	public MsilParameterList createPsi(@Nonnull MsilParameterListStub msilParameterListStub)
 	{
 		return new MsilParameterListImpl(msilParameterListStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilParameterListStub createStub(@NotNull MsilParameterList msilParameterList, StubElement stubElement)
+	public MsilParameterListStub createStub(@Nonnull MsilParameterList msilParameterList, StubElement stubElement)
 	{
 		return new MsilParameterListStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilParameterListStub msilParameterListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilParameterListStub msilParameterListStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilParameterListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilParameterListStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		return new MsilParameterListStub(stubElement, this);
 	}

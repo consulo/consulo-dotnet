@@ -16,7 +16,7 @@
 
 package consulo.microsoft.dotnet.sdk;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,24 +25,24 @@ import org.jetbrains.annotations.NotNull;
 public class MicrosoftDotNetFramework
 {
 	private final MicrosoftDotNetVersion myVersion;
-	@NotNull
+	@Nonnull
 	private final String myPath;
 	private boolean myWindir;
 
-	public MicrosoftDotNetFramework(@NotNull MicrosoftDotNetVersion version, @NotNull String path, boolean windir)
+	public MicrosoftDotNetFramework(@Nonnull MicrosoftDotNetVersion version, @Nonnull String path, boolean windir)
 	{
 		myVersion = version;
 		myPath = path;
 		myWindir = windir;
 	}
 
-	@NotNull
+	@Nonnull
 	public MicrosoftDotNetVersion getVersion()
 	{
 		return myVersion;
 	}
 
-	@NotNull
+	@Nonnull
 	public String getPath()
 	{
 		return myPath;

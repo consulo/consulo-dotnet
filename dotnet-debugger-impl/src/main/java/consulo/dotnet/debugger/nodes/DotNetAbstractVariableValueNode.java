@@ -16,10 +16,10 @@
 
 package consulo.dotnet.debugger.nodes;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -51,7 +51,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  */
 public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValueNode
 {
-	@NotNull
+	@Nonnull
 	protected final DotNetStackFrameProxy myFrameProxy;
 	private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
 
@@ -59,7 +59,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 
 	private final Ref<DotNetValueProxy> myLastValueRef = Ref.create();
 
-	public DotNetAbstractVariableValueNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetStackFrameProxy frameProxy)
+	public DotNetAbstractVariableValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull String name, @Nonnull DotNetStackFrameProxy frameProxy)
 	{
 		super(debuggerContext, name);
 		myFrameProxy = frameProxy;
@@ -87,7 +87,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 		return typeTag;
 	}
 
-	@NotNull
+	@Nonnull
 	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
@@ -141,8 +141,11 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 		}
 	}
 
+	/**
+	 * @param alreadyCalledValue  null if value not fetched. null inside ref mean null from vm
+	 */
 	@Nullable
-	public DotNetTypeProxy getTypeOfVariableOrValue(@Nullable("null if value not fetched. null inside ref mean null from vm") Ref<DotNetValueProxy> alreadyCalledValue)
+	public DotNetTypeProxy getTypeOfVariableOrValue(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 
@@ -161,9 +164,9 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 		}
 	}
 
-	protected abstract void setValueForVariableImpl(@NotNull DotNetValueProxy value);
+	protected abstract void setValueForVariableImpl(@Nonnull DotNetValueProxy value);
 
-	public void setValueForVariable(@NotNull DotNetValueProxy value)
+	public void setValueForVariable(@Nonnull DotNetValueProxy value)
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 
@@ -183,7 +186,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	@Override
-	public void computeChildren(@NotNull XCompositeNode node)
+	public void computeChildren(@Nonnull XCompositeNode node)
 	{
 		myDebugContext.invoke(() ->
 		{
@@ -242,12 +245,12 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	@Override
-	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
+	public void computePresentation(@Nonnull XValueNode xValueNode, @Nonnull XValuePlace xValuePlace)
 	{
 		myDebugContext.invoke(() -> computePresentationImpl(xValueNode, xValuePlace));
 	}
 
-	protected void computePresentationImpl(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
+	protected void computePresentationImpl(@Nonnull XValueNode xValueNode, @Nonnull XValuePlace xValuePlace)
 	{
 		DotNetValueProxy valueOfVariable = getValueOfVariable();
 

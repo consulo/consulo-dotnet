@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.util.ArrayFactory;
 import consulo.dotnet.psi.DotNetElement;
 
@@ -30,7 +30,7 @@ public interface MsilArrayDimension extends DotNetElement
 
 	public static ArrayFactory<MsilArrayDimension> ARRAY_FACTORY = new ArrayFactory<MsilArrayDimension>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public MsilArrayDimension[] create(int count)
 		{

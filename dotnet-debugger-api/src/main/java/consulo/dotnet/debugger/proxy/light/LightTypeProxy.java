@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.proxy.light;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
@@ -39,7 +39,7 @@ public class LightTypeProxy implements DotNetTypeProxy
 	}
 
 	@Override
-	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	public boolean isAnnotatedBy(@Nonnull String attributeVmQName)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -51,14 +51,14 @@ public class LightTypeProxy implements DotNetTypeProxy
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{
 		return myName;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getFullName()
 	{
@@ -78,28 +78,28 @@ public class LightTypeProxy implements DotNetTypeProxy
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy[] getInterfaces()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetFieldProxy[] getFields()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetPropertyProxy[] getProperties()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetMethodProxy[] getMethods()
 	{
@@ -114,13 +114,13 @@ public class LightTypeProxy implements DotNetTypeProxy
 
 	@Nullable
 	@Override
-	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
+	public DotNetMethodProxy findMethodByName(@Nonnull String name, boolean deep, DotNetTypeProxy... params)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType)
+	public boolean isAssignableFrom(@Nonnull DotNetTypeProxy otherType)
 	{
 		throw new UnsupportedOperationException();
 	}

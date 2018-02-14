@@ -16,7 +16,7 @@
 
 package consulo.dotnet.externalAttributes;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.dotnet.DotNetTypes;
 
 /**
@@ -44,7 +44,7 @@ public class ExternalAttributeArgumentNode
 		return myType;
 	}
 
-	@NotNull
+	@Nonnull
 	public Object toJavaObject()
 	{
 		if(DotNetTypes.System.String.equals(myType))

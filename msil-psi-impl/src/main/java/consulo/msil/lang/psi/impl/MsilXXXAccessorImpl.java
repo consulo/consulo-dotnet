@@ -17,8 +17,9 @@
 package consulo.msil.lang.psi.impl;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -97,12 +98,12 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 
 	private CacheValueProvider myCacheValueProvider = new CacheValueProvider();
 
-	public MsilXXXAccessorImpl(@NotNull ASTNode node)
+	public MsilXXXAccessorImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilXXXAccessorImpl(@NotNull MsilXXXAccessorStub stub, @NotNull IStubElementType nodeType)
+	public MsilXXXAccessorImpl(@Nonnull MsilXXXAccessorStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -122,7 +123,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	public boolean hasModifier(@Nonnull DotNetModifier modifier)
 	{
 		MsilMethodEntry msilMethodEntry = resolveToMethod();
 		return msilMethodEntry != null && msilMethodEntry.hasModifier(modifier);
@@ -145,7 +146,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
 	{
 		return null;
 	}
@@ -175,7 +176,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 		return childByType == null ? null : StringUtil.unquoteString(childByType.getText());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetParameter[] getParameters()
 	{
@@ -187,7 +188,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 		return stubOrPsiChild.getParameters();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef[] getParameterTypeRefs()
 	{

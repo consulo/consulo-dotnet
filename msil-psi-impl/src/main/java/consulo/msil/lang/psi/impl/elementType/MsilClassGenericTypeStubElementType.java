@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -40,37 +41,37 @@ public class MsilClassGenericTypeStubElementType extends AbstractMsilStubElement
 		super("MSIL_CLASS_GENERIC_TYPE");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilClassGenericType createElement(@NotNull ASTNode astNode)
+	public MsilClassGenericType createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilClassGenericTypeImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilClassGenericType createPsi(@NotNull MsilClassGenericTypeStub msilClassGenericTypeStub)
+	public MsilClassGenericType createPsi(@Nonnull MsilClassGenericTypeStub msilClassGenericTypeStub)
 	{
 		return new MsilClassGenericTypeImpl(msilClassGenericTypeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilClassGenericTypeStub createStub(@NotNull MsilClassGenericType msilClassGenericType, StubElement stubElement)
+	public MsilClassGenericTypeStub createStub(@Nonnull MsilClassGenericType msilClassGenericType, StubElement stubElement)
 	{
 		String name = msilClassGenericType.getGenericName();
 		return new MsilClassGenericTypeStub(stubElement, this, name);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilClassGenericTypeStub msilClassGenericTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilClassGenericTypeStub msilClassGenericTypeStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilClassGenericTypeStub.getName());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilClassGenericTypeStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilClassGenericTypeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef name = inputStream.readName();
 		return new MsilClassGenericTypeStub(stubElement, this, name);

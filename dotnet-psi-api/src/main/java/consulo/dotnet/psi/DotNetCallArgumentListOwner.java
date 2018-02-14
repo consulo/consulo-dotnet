@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveResult;
 
@@ -30,12 +30,12 @@ public interface DotNetCallArgumentListOwner extends DotNetElement
 	@Nullable
 	DotNetCallArgumentList getParameterList();
 
-	@NotNull
+	@Nonnull
 	DotNetExpression[] getParameterExpressions();
 
 	@Nullable
 	PsiElement resolveToCallable();
 
-	@NotNull
+	@Nonnull
 	ResolveResult[] multiResolve(final boolean incompleteCode);
 }

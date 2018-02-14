@@ -16,8 +16,9 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetGenericParameter;
@@ -34,11 +35,11 @@ public interface MsilGenericParameter extends DotNetGenericParameter
 
 	ArrayFactory<MsilGenericParameter> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new MsilGenericParameter[count];
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef[] getExtendTypeRefs();
 
-	@NotNull
+	@Nonnull
 	@Deprecated
 	@RequiredReadAction
 	DotNetPsiSearcher.TypeResoleKind getTypeKind();

@@ -16,8 +16,9 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetMethodDeclaration;
 
@@ -27,23 +28,23 @@ import consulo.dotnet.psi.DotNetMethodDeclaration;
  */
 public interface MsilMethodEntry extends MsilEntry, DotNetMethodDeclaration
 {
-	@NotNull
+	@Nonnull
 	String getNameFromBytecode();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	MsilCustomAttribute[] getAttributes();
 
 	/**
 	 * @param index zero based index
 	 */
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	MsilCustomAttribute[] getParameterAttributes(int index);
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	MsilCustomAttribute[] getGenericParameterAttributes(@NotNull String name);
+	MsilCustomAttribute[] getGenericParameterAttributes(@Nonnull String name);
 
 	/**
 	 * @param index zero based index

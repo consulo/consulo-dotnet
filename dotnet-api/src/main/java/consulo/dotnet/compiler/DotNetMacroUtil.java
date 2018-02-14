@@ -20,7 +20,8 @@ import gnu.trove.THashMap;
 
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -39,8 +40,8 @@ import consulo.dotnet.module.macro.TargetFileExtensionMacro;
  */
 public class DotNetMacroUtil
 {
-	@NotNull
-	public static DataContext createContext(@NotNull Module module, boolean debugSymbols)
+	@Nonnull
+	public static DataContext createContext(@Nonnull Module module, boolean debugSymbols)
 	{
 		Map<Key, Object> map = new THashMap<>();
 		map.put(CommonDataKeys.PROJECT, module.getProject());
@@ -52,26 +53,26 @@ public class DotNetMacroUtil
 		return SimpleDataContext.getSimpleContext(map, null);
 	}
 
-	@NotNull
-	public static String expandOutputFile(@NotNull DotNetModuleExtension<?> extension)
+	@Nonnull
+	public static String expandOutputFile(@Nonnull DotNetModuleExtension<?> extension)
 	{
 		return expandOutputFile(extension, false);
 	}
 
-	@NotNull
-	public static String expandOutputFile(@NotNull DotNetModuleExtension<?> extension, boolean debugSymbols)
+	@Nonnull
+	public static String expandOutputFile(@Nonnull DotNetModuleExtension<?> extension, boolean debugSymbols)
 	{
 		return expand(extension.getModule(), extension.getOutputDir() + "/" + extension.getFileName(), debugSymbols);
 	}
 
-	@NotNull
-	public static String expandOutputDir(@NotNull DotNetModuleExtension<?> extension)
+	@Nonnull
+	public static String expandOutputDir(@Nonnull DotNetModuleExtension<?> extension)
 	{
 		return expand(extension.getModule(), extension.getOutputDir(), false);
 	}
 
-	@NotNull
-	public static String expand(@NotNull Module module, @NotNull String path, boolean debugSymbols)
+	@Nonnull
+	public static String expand(@Nonnull Module module, @Nonnull String path, boolean debugSymbols)
 	{
 		String newPath;
 		try

@@ -20,7 +20,8 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -53,8 +54,8 @@ public class DotNetCompilerUtil
 	public static final Condition<OrderEntry> ACCEPT_ALL = Conditions.alwaysFalse();
 	public static final Condition<OrderEntry> SKIP_STD_LIBRARIES = orderEntry -> orderEntry instanceof DotNetLibraryOrderEntryImpl;
 
-	@NotNull
-	public static Set<File> collectDependencies(@NotNull final Module module, @NotNull final DotNetTarget target, final boolean debugSymbol, @NotNull final Condition<OrderEntry> skipCondition)
+	@Nonnull
+	public static Set<File> collectDependencies(@Nonnull final Module module, @Nonnull final DotNetTarget target, final boolean debugSymbol, @Nonnull final Condition<OrderEntry> skipCondition)
 	{
 		Set<File> set = new HashSet<>();
 

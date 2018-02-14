@@ -18,7 +18,7 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.source.CharTableImpl;
@@ -53,9 +53,9 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 	{
 		return new DefaultStubBuilder()
 		{
-			@NotNull
+			@Nonnull
 			@Override
-			protected StubElement createStubForFile(@NotNull PsiFile file)
+			protected StubElement createStubForFile(@Nonnull PsiFile file)
 			{
 				if(file instanceof MsilFile)
 				{
@@ -66,9 +66,9 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 		};
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilFileStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public MsilFileStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		return new MsilFileStub(null);
 	}
@@ -84,7 +84,7 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 		return version;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getExternalId()
 	{

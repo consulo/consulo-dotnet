@@ -22,8 +22,8 @@ import java.util.List;
 
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayFactory;
@@ -62,7 +62,7 @@ public class DotNetExecutionStack extends XExecutionStack
 		calcTopFrame(); // calc top frame
 	}
 
-	@NotNull
+	@Nonnull
 	private static String calcName(DotNetThreadProxy threadMirror)
 	{
 		return "[" + threadMirror.getId() + "] " + StringUtil.defaultIfEmpty(threadMirror.getName(), "Unnamed");

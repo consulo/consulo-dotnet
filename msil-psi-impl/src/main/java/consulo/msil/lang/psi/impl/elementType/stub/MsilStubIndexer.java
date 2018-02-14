@@ -16,7 +16,8 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.stubs.IndexSink;
 
@@ -28,12 +29,12 @@ public class MsilStubIndexer
 {
 	public static final ExtensionPointName<MsilStubIndexer> EP_NAME = ExtensionPointName.create("consulo.dotnet.stubIndexer");
 
-	public void indexClass(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull IndexSink indexSink)
+	public void indexClass(@Nonnull MsilClassEntryStub msilClassEntryStub, @Nonnull IndexSink indexSink)
 	{
 		// nothing
 	}
 
-	public void indexMethod(@NotNull MsilMethodEntryStub stub,  @NotNull IndexSink indexSink)
+	public void indexMethod(@Nonnull MsilMethodEntryStub stub,  @Nonnull IndexSink indexSink)
 	{
 		// nothing
 	}

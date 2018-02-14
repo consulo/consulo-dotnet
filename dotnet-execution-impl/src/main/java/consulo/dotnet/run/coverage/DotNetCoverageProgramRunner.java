@@ -16,8 +16,8 @@
 
 package consulo.dotnet.run.coverage;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.coverage.CoverageExecutor;
 import com.intellij.coverage.CoverageHelper;
 import com.intellij.coverage.CoverageRunner;
@@ -42,7 +42,7 @@ import consulo.util.NotNullPairFunction;
  */
 public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public String getRunnerId()
 	{
@@ -50,7 +50,7 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 	}
 
 	@Override
-	public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile)
+	public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile)
 	{
 		if(!CoverageExecutor.EXECUTOR_ID.equals(executorId))
 		{
@@ -84,7 +84,7 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 
 	@Nullable
 	@Override
-	protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull final ExecutionEnvironment environment) throws ExecutionException
+	protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull final ExecutionEnvironment environment) throws ExecutionException
 	{
 		if(state instanceof PatchableRunProfileState)
 		{

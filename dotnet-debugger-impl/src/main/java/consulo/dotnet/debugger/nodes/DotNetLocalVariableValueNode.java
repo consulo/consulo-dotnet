@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
@@ -60,13 +60,13 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 
 	@Override
 	@RequiredDispatchThread
-	public void computeSourcePosition(@NotNull XNavigatable navigatable)
+	public void computeSourcePosition(@Nonnull XNavigatable navigatable)
 	{
 		computeSourcePosition(navigatable, getName(), myDebugContext, myFrameProxy);
 	}
 
 	@RequiredReadAction
-	public static void computeSourcePosition(@NotNull XNavigatable navigatable, String name, DotNetDebugContext debugContext, DotNetStackFrameProxy proxy)
+	public static void computeSourcePosition(@Nonnull XNavigatable navigatable, String name, DotNetDebugContext debugContext, DotNetStackFrameProxy proxy)
 	{
 		if(StringUtil.isEmpty(name))
 		{
@@ -88,7 +88,7 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 		PsiScopesUtilCore.treeWalkUp(new BaseScopeProcessor()
 		{
 			@Override
-			public boolean execute(@NotNull PsiElement element, ResolveState state)
+			public boolean execute(@Nonnull PsiElement element, ResolveState state)
 			{
 				if(element instanceof DotNetVariable && name.equals(((DotNetVariable) element).getName()))
 				{
@@ -127,7 +127,7 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
+	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
 	{
 		myFrameProxy.setLocalValue(myLocal, value);
 	}

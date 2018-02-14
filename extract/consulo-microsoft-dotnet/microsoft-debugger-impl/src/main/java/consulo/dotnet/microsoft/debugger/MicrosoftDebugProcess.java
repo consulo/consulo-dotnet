@@ -16,8 +16,8 @@
 
 package consulo.dotnet.microsoft.debugger;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
@@ -52,7 +52,7 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 	private class MyXBreakpointListener implements XBreakpointListener<XBreakpoint<?>>
 	{
 		@Override
-		public void breakpointAdded(@NotNull final XBreakpoint<?> breakpoint)
+		public void breakpointAdded(@Nonnull final XBreakpoint<?> breakpoint)
 		{
 			myDebugThread.invoke(virtualMachine ->
 			{
@@ -69,13 +69,13 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 		}
 
 		@Override
-		public void breakpointRemoved(@NotNull final XBreakpoint<?> breakpoint)
+		public void breakpointRemoved(@Nonnull final XBreakpoint<?> breakpoint)
 		{
 			myDebugThread.invoke(virtualMachine -> virtualMachine.stopBreakpointRequests(breakpoint));
 		}
 
 		@Override
-		public void breakpointChanged(@NotNull XBreakpoint<?> breakpoint)
+		public void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint)
 		{
 			if(breakpoint.isEnabled())
 			{
@@ -106,7 +106,7 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 		myBreakpointManager.addBreakpointListener(myBreakpointListener);
 	}
 
-	@NotNull
+	@Nonnull
 	public MicrosoftDebugThread getDebugThread()
 	{
 		return myDebugThread;
@@ -130,7 +130,7 @@ public class MicrosoftDebugProcess extends DotNetDebugProcessBase
 	}
 
 	@Override
-	public void runToPosition(@NotNull final XSourcePosition position, @Nullable XSuspendContext context)
+	public void runToPosition(@Nonnull final XSourcePosition position, @Nullable XSuspendContext context)
 	{
 		if(myPausedEventSet == null)
 		{

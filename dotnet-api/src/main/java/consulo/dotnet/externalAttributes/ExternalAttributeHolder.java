@@ -16,8 +16,8 @@
 
 package consulo.dotnet.externalAttributes;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -29,12 +29,12 @@ public interface ExternalAttributeHolder
 	{
 		@Nullable
 		@Override
-		public ExternalAttributeWithChildrenNode findClassNode(@NotNull String qname)
+		public ExternalAttributeWithChildrenNode findClassNode(@Nonnull String qname)
 		{
 			return null;
 		}
 	};
 
 	@Nullable
-	ExternalAttributeWithChildrenNode findClassNode(@NotNull String qname);
+	ExternalAttributeWithChildrenNode findClassNode(@Nonnull String qname);
 }

@@ -16,8 +16,8 @@
 
 package consulo.mono.dotnet.module.extension;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.module.Module;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
@@ -49,7 +49,7 @@ public abstract class DummyModuleInheritableNamedPointer<T extends Named> implem
 		return get() == null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

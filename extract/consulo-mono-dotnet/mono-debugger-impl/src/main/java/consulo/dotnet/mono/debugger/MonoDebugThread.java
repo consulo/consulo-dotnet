@@ -26,7 +26,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
@@ -450,7 +451,7 @@ public class MonoDebugThread extends Thread
 		}
 	}
 
-	private void collectTypeNames(@NotNull final XLineBreakpoint<?> breakpoint, @NotNull final Set<String> names)
+	private void collectTypeNames(@Nonnull final XLineBreakpoint<?> breakpoint, @Nonnull final Set<String> names)
 	{
 		final Project project = mySession.getProject();
 
@@ -552,7 +553,7 @@ public class MonoDebugThread extends Thread
 		return mySession;
 	}
 
-	public void invoke(@NotNull Consumer<MonoVirtualMachineProxy> processor)
+	public void invoke(@Nonnull Consumer<MonoVirtualMachineProxy> processor)
 	{
 		MonoVirtualMachineProxy vm = myVirtualMachine;
 		if(vm == null)

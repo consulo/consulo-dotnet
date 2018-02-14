@@ -22,8 +22,8 @@ import java.io.File;
 import java.util.Locale;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
@@ -297,12 +297,12 @@ public class DotNetStackFrame extends XStackFrame
 
 	@Override
 	@RequiredReadAction
-	public void computeChildren(@NotNull XCompositeNode node)
+	public void computeChildren(@Nonnull XCompositeNode node)
 	{
 		myDebuggerContext.invoke(() -> computeChildrenImpl(node));
 	}
 
-	private void computeChildrenImpl(@NotNull XCompositeNode node)
+	private void computeChildrenImpl(@Nonnull XCompositeNode node)
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 

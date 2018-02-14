@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -40,23 +41,23 @@ public class MsilUserTypeStubElementType extends AbstractMsilStubElementType<Msi
 		super("MSIL_USER_TYPE");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilUserType createElement(@NotNull ASTNode astNode)
+	public MsilUserType createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilUserTypeImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilUserType createPsi(@NotNull MsilUserTypeStub msilUserTypeStub)
+	public MsilUserType createPsi(@Nonnull MsilUserTypeStub msilUserTypeStub)
 	{
 		return new MsilUserTypeImpl(msilUserTypeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilUserTypeStub createStub(@NotNull MsilUserType dotNetReferenceType, StubElement stubElement)
+	public MsilUserTypeStub createStub(@Nonnull MsilUserType dotNetReferenceType, StubElement stubElement)
 	{
 		MsilUserType.Target target = dotNetReferenceType.getTarget();
 		String referenceText = dotNetReferenceType.getReferenceText();
@@ -64,15 +65,15 @@ public class MsilUserTypeStubElementType extends AbstractMsilStubElementType<Msi
 	}
 
 	@Override
-	public void serialize(@NotNull MsilUserTypeStub msilUserTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilUserTypeStub msilUserTypeStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeByte(msilUserTypeStub.getTarget().ordinal());
 		stubOutputStream.writeName(msilUserTypeStub.getReferenceText());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilUserTypeStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilUserTypeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		MsilUserType.Target typeResoleKind = MsilUserType.Target.VALUES[inputStream.readByte()];
 		StringRef referenceText = inputStream.readName();

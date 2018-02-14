@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -31,6 +31,6 @@ public interface DotNetPointerType extends DotNetType
 	@Nullable
 	DotNetType getInnerType();
 
-	@NotNull
+	@Nonnull
 	PsiElement getAsterisk();
 }

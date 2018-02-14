@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import consulo.dotnet.lang.psi.impl.DotNetPsiCountUtil;
@@ -31,12 +31,12 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterListStub;
  */
 public class MsilGenericParameterListImpl extends MsilStubElementImpl<MsilGenericParameterListStub> implements DotNetGenericParameterList
 {
-	public MsilGenericParameterListImpl(@NotNull ASTNode node)
+	public MsilGenericParameterListImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilGenericParameterListImpl(@NotNull MsilGenericParameterListStub stub, @NotNull IStubElementType nodeType)
+	public MsilGenericParameterListImpl(@Nonnull MsilGenericParameterListStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -47,7 +47,7 @@ public class MsilGenericParameterListImpl extends MsilStubElementImpl<MsilGeneri
 
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public MsilGenericParameter[] getParameters()
 	{

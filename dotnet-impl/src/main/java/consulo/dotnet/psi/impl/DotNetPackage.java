@@ -16,7 +16,8 @@
 
 package consulo.dotnet.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.file.PsiPackageBase;
@@ -36,7 +37,7 @@ public class DotNetPackage extends PsiPackageBase
 
 	public static ArrayFactory<DotNetPackage> ARRAY_FACTORY = new ArrayFactory<DotNetPackage>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetPackage[] create(int count)
 		{
@@ -56,7 +57,7 @@ public class DotNetPackage extends PsiPackageBase
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public Language getLanguage()
 	{

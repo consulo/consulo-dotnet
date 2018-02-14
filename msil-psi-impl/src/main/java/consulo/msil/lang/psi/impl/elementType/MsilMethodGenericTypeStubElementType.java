@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -39,37 +40,37 @@ public class MsilMethodGenericTypeStubElementType extends AbstractMsilStubElemen
 		super("MSIL_METHOD_GENERIC_TYPE");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilMethodGenericType createElement(@NotNull ASTNode astNode)
+	public MsilMethodGenericType createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilMethodGenericTypeImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilMethodGenericType createPsi(@NotNull MsilMethodGenericTypeStub msilMethodGenericTypeStub)
+	public MsilMethodGenericType createPsi(@Nonnull MsilMethodGenericTypeStub msilMethodGenericTypeStub)
 	{
 		return new MsilMethodGenericTypeImpl(msilMethodGenericTypeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilMethodGenericTypeStub createStub(@NotNull MsilMethodGenericType msilMethodGenericType, StubElement stubElement)
+	public MsilMethodGenericTypeStub createStub(@Nonnull MsilMethodGenericType msilMethodGenericType, StubElement stubElement)
 	{
 		int index = msilMethodGenericType.getIndex();
 		return new MsilMethodGenericTypeStub(stubElement, this, index);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilMethodGenericTypeStub stub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilMethodGenericTypeStub stub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeInt(stub.getIndex());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilMethodGenericTypeStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilMethodGenericTypeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		int index = inputStream.readInt();
 		return new MsilMethodGenericTypeStub(stubElement, this, index);

@@ -18,10 +18,10 @@ package consulo.microsoft.dotnet.sdk;
 
 import java.io.File;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.sdk.DotNetSdkType;
 import consulo.microsoft.dotnet.MicrosoftDotNetIcons;
 import consulo.microsoft.dotnet.util.MicrosoftDotNetUtil;
@@ -33,7 +33,7 @@ import com.intellij.openapi.projectRoots.Sdk;
  */
 public class MicrosoftDotNetSdkType extends DotNetSdkType
 {
-	@NotNull
+	@Nonnull
 	public static MicrosoftDotNetSdkType getInstance()
 	{
 		return EP_NAME.findExtension(MicrosoftDotNetSdkType.class);
@@ -69,16 +69,16 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{
 		return ".NET";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public File getLoaderFile(@NotNull Sdk sdk)
+	public File getLoaderFile(@Nonnull Sdk sdk)
 	{
 		String targetVersion = MicrosoftDotNetUtil.getTargetVersion();
 		if("4.0.0".equals(targetVersion))

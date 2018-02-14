@@ -18,10 +18,10 @@ package consulo.dotnet.debugger.nodes;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Ref;
 import com.intellij.xdebugger.frame.XCompositeNode;
@@ -40,14 +40,14 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  */
 public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
 {
-	@NotNull
+	@Nonnull
 	private final DotNetTypeProxy myTypeMirror;
 	private final DotNetStructValueProxy myValue;
 
-	public DotNetThisAsStructValueNode(@NotNull DotNetDebugContext debuggerContext,
-			@NotNull DotNetStackFrameProxy frameProxy,
-			@NotNull DotNetTypeProxy typeMirror,
-			@NotNull DotNetStructValueProxy value)
+	public DotNetThisAsStructValueNode(@Nonnull DotNetDebugContext debuggerContext,
+			@Nonnull DotNetStackFrameProxy frameProxy,
+			@Nonnull DotNetTypeProxy typeMirror,
+			@Nonnull DotNetStructValueProxy value)
 	{
 		super(debuggerContext, "this", frameProxy);
 		myTypeMirror = typeMirror;
@@ -61,7 +61,7 @@ public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
@@ -76,12 +76,12 @@ public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
+	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
 	{
 	}
 
 	@Override
-	public void computeChildren(@NotNull XCompositeNode node)
+	public void computeChildren(@Nonnull XCompositeNode node)
 	{
 		final XValueChildrenList childrenList = new XValueChildrenList();
 
@@ -99,7 +99,7 @@ public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
 		node.addChildren(childrenList, true);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy getTypeOfVariableImpl()
 	{

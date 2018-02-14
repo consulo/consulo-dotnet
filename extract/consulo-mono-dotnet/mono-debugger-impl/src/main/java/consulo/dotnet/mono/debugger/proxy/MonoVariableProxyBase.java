@@ -1,6 +1,6 @@
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.dotnet.debugger.proxy.DotNetVariableProxy;
 import consulo.util.pointers.Named;
 import mono.debugger.MirrorWithIdAndName;
@@ -13,12 +13,12 @@ public abstract class MonoVariableProxyBase<T extends MirrorWithIdAndName> imple
 {
 	protected T myMirror;
 
-	public MonoVariableProxyBase(@NotNull T mirror)
+	public MonoVariableProxyBase(@Nonnull T mirror)
 	{
 		myMirror = mirror;
 	}
 
-	@NotNull
+	@Nonnull
 	public T getMirror()
 	{
 		return myMirror;
@@ -36,7 +36,7 @@ public abstract class MonoVariableProxyBase<T extends MirrorWithIdAndName> imple
 		return myMirror.hashCode();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

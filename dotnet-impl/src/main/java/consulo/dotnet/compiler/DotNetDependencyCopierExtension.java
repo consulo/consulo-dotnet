@@ -19,7 +19,8 @@ package consulo.dotnet.compiler;
 import java.io.File;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 
@@ -31,6 +32,6 @@ public interface DotNetDependencyCopierExtension
 {
 	ExtensionPointName<DotNetDependencyCopierExtension> EP_NAME = ExtensionPointName.create("consulo.dotnet.dependencyCopierExtension");
 
-	@NotNull
-	List<File> collectDependencies(@NotNull Module module);
+	@Nonnull
+	List<File> collectDependencies(@Nonnull Module module);
 }

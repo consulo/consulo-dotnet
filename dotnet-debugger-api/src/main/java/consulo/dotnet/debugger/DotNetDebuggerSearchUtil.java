@@ -21,8 +21,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.containers.ContainerUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -40,7 +41,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  */
 public class DotNetDebuggerSearchUtil
 {
-	public static DotNetFieldOrPropertyProxy[] getFieldAndProperties(@NotNull DotNetTypeProxy proxy, boolean deep)
+	public static DotNetFieldOrPropertyProxy[] getFieldAndProperties(@Nonnull DotNetTypeProxy proxy, boolean deep)
 	{
 		List<DotNetFieldOrPropertyProxy> proxies = new ArrayList<DotNetFieldOrPropertyProxy>();
 
@@ -85,7 +86,7 @@ public class DotNetDebuggerSearchUtil
 	}
 
 	@Nullable
-	public static String toStringValue(@NotNull DotNetStackFrameProxy threadProxy, @NotNull DotNetValueProxy valueProxy)
+	public static String toStringValue(@Nonnull DotNetStackFrameProxy threadProxy, @Nonnull DotNetValueProxy valueProxy)
 	{
 		try
 		{

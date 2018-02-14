@@ -1,7 +1,7 @@
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joou.ULong;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
@@ -22,7 +22,7 @@ import mono.debugger.ThrowValueException;
  */
 public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implements DotNetFieldProxy
 {
-	public MonoFieldProxy(@NotNull FieldMirror mirror)
+	public MonoFieldProxy(@Nonnull FieldMirror mirror)
 	{
 		super(mirror);
 	}
@@ -40,7 +40,7 @@ public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implement
 		return myMirror.isStatic();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy getParentType()
 	{
@@ -49,7 +49,7 @@ public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implement
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@Nonnull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
 	{
 		try
 		{
@@ -64,7 +64,7 @@ public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implement
 	}
 
 	@Override
-	public void setValue(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
+	public void setValue(@Nonnull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy, @Nonnull DotNetValueProxy newValueProxy)
 	{
 		MonoThreadProxy monoThreadProxy = (MonoThreadProxy) frameProxy.getThread();
 		MonoObjectValueProxy monoValueProxyBase = (MonoObjectValueProxy) proxy;
@@ -81,7 +81,7 @@ public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implement
 
 	@Override
 	@Nullable
-	public ULong getEnumConstantValue(@NotNull DotNetStackFrameProxy stackFrameProxy)
+	public ULong getEnumConstantValue(@Nonnull DotNetStackFrameProxy stackFrameProxy)
 	{
 		DotNetValueProxy fieldValue = getValue(stackFrameProxy, null);
 		if(fieldValue instanceof DotNetEnumValueProxy)

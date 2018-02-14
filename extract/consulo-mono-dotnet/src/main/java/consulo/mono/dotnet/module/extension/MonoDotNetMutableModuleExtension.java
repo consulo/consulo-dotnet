@@ -16,10 +16,10 @@
 
 package consulo.mono.dotnet.module.extension;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.module.extension.DotNetConfigurationPanel;
 import consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -34,12 +34,12 @@ import consulo.roots.ModuleRootLayer;
  */
 public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension implements DotNetMutableModuleExtension<MonoDotNetModuleExtension>
 {
-	public MonoDotNetMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
+	public MonoDotNetMutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel)
 	{
 		super(id, rootModel);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
@@ -49,7 +49,7 @@ public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension 
 	@Nullable
 	@Override
 	@RequiredDispatchThread
-	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
+	public JComponent createConfigurablePanel(@Nonnull Runnable runnable)
 	{
 		return new DotNetConfigurationPanel(this, DotNetQualifiedElementQualifierProducer.INSTANCE, myVariables, runnable);
 	}
@@ -61,7 +61,7 @@ public class MonoDotNetMutableModuleExtension extends MonoDotNetModuleExtension 
 	}
 
 	@Override
-	public boolean isModified(@NotNull MonoDotNetModuleExtension extension)
+	public boolean isModified(@Nonnull MonoDotNetModuleExtension extension)
 	{
 		return isModifiedImpl(extension);
 	}

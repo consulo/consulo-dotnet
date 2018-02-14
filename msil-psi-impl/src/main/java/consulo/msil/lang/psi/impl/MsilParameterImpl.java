@@ -16,9 +16,11 @@
 
 package consulo.msil.lang.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -46,12 +48,12 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilParameterStub;
  */
 public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> implements MsilParameter
 {
-	public MsilParameterImpl(@NotNull ASTNode node)
+	public MsilParameterImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilParameterImpl(@NotNull MsilParameterStub stub, @NotNull IStubElementType nodeType)
+	public MsilParameterImpl(@Nonnull MsilParameterStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -72,7 +74,7 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
@@ -80,7 +82,7 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetType getType()
 	{
@@ -107,13 +109,13 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	public boolean hasModifier(@Nonnull DotNetModifier modifier)
 	{
 		return getModifierList().hasModifier(modifier);
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetModifierList getModifierList()
 	{
@@ -146,7 +148,7 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
 	{
 		return null;
 	}

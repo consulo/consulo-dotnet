@@ -2,7 +2,7 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
@@ -24,31 +24,31 @@ public class MsilCustomAttributeSignatureElementType extends AbstractMsilStubEle
 		super("CUSTOM_ATTRIBUTE_SIGNATURE");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilCustomAttributeSignature createPsi(@NotNull MsilCustomAttributeSignatureStub msilCustomAttributeSignatureStub)
+	public MsilCustomAttributeSignature createPsi(@Nonnull MsilCustomAttributeSignatureStub msilCustomAttributeSignatureStub)
 	{
 		return new MsilCustomAttributeSignatureImpl(msilCustomAttributeSignatureStub, this);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilCustomAttributeSignatureImpl(astNode);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilCustomAttributeSignatureStub createStub(@NotNull MsilCustomAttributeSignature psi, StubElement parentStub)
+	public MsilCustomAttributeSignatureStub createStub(@Nonnull MsilCustomAttributeSignature psi, StubElement parentStub)
 	{
 		byte[] bytes = psi.getBytes();
 		return new MsilCustomAttributeSignatureStub(parentStub, this, bytes);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilCustomAttributeSignatureStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public MsilCustomAttributeSignatureStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		int count = dataStream.readVarInt();
 		byte[] data = new byte[count];
@@ -60,7 +60,7 @@ public class MsilCustomAttributeSignatureElementType extends AbstractMsilStubEle
 	}
 
 	@Override
-	public void serialize(@NotNull MsilCustomAttributeSignatureStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull MsilCustomAttributeSignatureStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		byte[] bytes = stub.getBytes();
 		dataStream.writeVarInt(bytes.length);

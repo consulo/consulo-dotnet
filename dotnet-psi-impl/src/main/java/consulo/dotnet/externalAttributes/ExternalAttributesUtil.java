@@ -16,12 +16,11 @@
 
 package consulo.dotnet.externalAttributes;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import consulo.dotnet.externalAttributes.ExternalAttributeHolder;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import consulo.dotnet.externalAttributes.ExternalAttributeHolder;
 public class ExternalAttributesUtil
 {
 	@Nullable
-	public static ExternalAttributeHolder findHolder(@NotNull PsiElement element)
+	public static ExternalAttributeHolder findHolder(@Nonnull PsiElement element)
 	{
 		PsiFile containingFile = element.getContainingFile();
 

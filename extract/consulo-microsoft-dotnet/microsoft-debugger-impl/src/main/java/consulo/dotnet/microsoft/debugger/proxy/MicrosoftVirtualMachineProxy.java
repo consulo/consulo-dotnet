@@ -23,8 +23,9 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -66,20 +67,20 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 	private final ExecutorService myExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("mono vm invoker", 1);
 
-	public MicrosoftVirtualMachineProxy(@NotNull VirtualMachine virtualMachine)
+	public MicrosoftVirtualMachineProxy(@Nonnull VirtualMachine virtualMachine)
 	{
 		myVirtualMachine = virtualMachine;
 	}
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy findType(@NotNull Project project, @NotNull String vmQName, @NotNull VirtualFile virtualFile)
+	public DotNetTypeProxy findType(@Nonnull Project project, @Nonnull String vmQName, @Nonnull VirtualFile virtualFile)
 	{
 		return MicrosoftTypeProxy.of(myVirtualMachine.findTypeByQualifiedName(vmQName));
 	}
 
 	@Override
-	public void invoke(@NotNull Runnable runnable)
+	public void invoke(@Nonnull Runnable runnable)
 	{
 		myExecutor.execute(() ->
 		{
@@ -94,7 +95,7 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 		});
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public List<DotNetThreadProxy> getThreads()
 	{
@@ -104,35 +105,35 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 		});
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetStringValueProxy createStringValue(@NotNull String value)
+	public DotNetStringValueProxy createStringValue(@Nonnull String value)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetCharValueProxy createCharValue(char value)
 	{
 		return MicrosoftValueProxyUtil.wrap(new CharValueMirror(myVirtualMachine, value));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetBooleanValueProxy createBooleanValue(boolean value)
 	{
 		return MicrosoftValueProxyUtil.wrap(new BooleanValueMirror(myVirtualMachine, value));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetNumberValueProxy createNumberValue(int tag, @NotNull Number value)
+	public DotNetNumberValueProxy createNumberValue(int tag, @Nonnull Number value)
 	{
 		return MicrosoftValueProxyUtil.wrap(new NumberValueMirror(myVirtualMachine, tag, value));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetNullValueProxy createNullValue()
 	{
@@ -147,24 +148,24 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 		myBreakpointEventRequests.clear();
 	}
 
-	public void addStepRequest(@NotNull StepRequest stepRequest)
+	public void addStepRequest(@Nonnull StepRequest stepRequest)
 	{
 		myStepRequests.add(stepRequest);
 	}
 
-	public void stopStepRequest(@NotNull StepRequest stepRequest)
+	public void stopStepRequest(@Nonnull StepRequest stepRequest)
 	{
 		stepRequest.disable();
 		myStepRequests.remove(stepRequest);
 	}
 
-	public void putRequest(@NotNull XBreakpoint<?> breakpoint, @NotNull EventRequest request)
+	public void putRequest(@Nonnull XBreakpoint<?> breakpoint, @Nonnull EventRequest request)
 	{
 		myBreakpointEventRequests.putValue(breakpoint, request);
 	}
 
 	@Nullable
-	public XBreakpoint<?> findBreakpointByRequest(@NotNull EventRequest eventRequest)
+	public XBreakpoint<?> findBreakpointByRequest(@Nonnull EventRequest eventRequest)
 	{
 		for(Map.Entry<XBreakpoint, Collection<EventRequest>> entry : myBreakpointEventRequests.entrySet())
 		{
@@ -204,13 +205,13 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 		return myVirtualMachine.eventRequestManager();
 	}
 
-	@NotNull
+	@Nonnull
 	public VirtualMachine getDelegate()
 	{
 		return myVirtualMachine;
 	}
 
-	@NotNull
+	@Nonnull
 	private static String getAssemblyName(String name)
 	{
 		int i = name.indexOf(',');
@@ -237,7 +238,7 @@ public class MicrosoftVirtualMachineProxy implements DotNetVirtualMachineProxy
 		myVirtualMachine.suspend();
 	}
 
-	@NotNull
+	@Nonnull
 	public List<ThreadMirror> allThreads()
 	{
 		return myVirtualMachine.allThreads();

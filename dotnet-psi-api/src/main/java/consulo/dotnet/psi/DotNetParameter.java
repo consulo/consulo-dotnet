@@ -16,8 +16,9 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.ArrayFactory;
 
 /**
@@ -30,7 +31,7 @@ public interface DotNetParameter extends DotNetVariable
 
 	public static ArrayFactory<DotNetParameter> ARRAY_FACTORY = new ArrayFactory<DotNetParameter>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetParameter[] create(int count)
 		{

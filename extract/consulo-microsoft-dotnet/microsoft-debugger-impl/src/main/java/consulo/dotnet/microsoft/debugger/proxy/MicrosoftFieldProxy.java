@@ -1,7 +1,8 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -18,7 +19,7 @@ import mssdw.ObjectValueMirror;
  */
 public class MicrosoftFieldProxy extends MicrosoftVariableProxyBase<FieldMirror> implements DotNetFieldProxy
 {
-	public MicrosoftFieldProxy(@NotNull FieldMirror mirror)
+	public MicrosoftFieldProxy(@Nonnull FieldMirror mirror)
 	{
 		super(mirror);
 	}
@@ -36,7 +37,7 @@ public class MicrosoftFieldProxy extends MicrosoftVariableProxyBase<FieldMirror>
 		return myMirror.isStatic();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy getParentType()
 	{
@@ -45,7 +46,7 @@ public class MicrosoftFieldProxy extends MicrosoftVariableProxyBase<FieldMirror>
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@Nonnull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
 	{
 		MicrosoftStackFrameProxy microsoftThreadProxy = (MicrosoftStackFrameProxy) frameProxy;
 		MicrosoftValueProxyBase<?> microsoftValueProxyBase = (MicrosoftValueProxyBase<?>) proxy;
@@ -53,7 +54,7 @@ public class MicrosoftFieldProxy extends MicrosoftVariableProxyBase<FieldMirror>
 	}
 
 	@Override
-	public void setValue(@NotNull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
+	public void setValue(@Nonnull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @Nonnull DotNetValueProxy newValueProxy)
 	{
 		//MonoThreadProxy monoThreadProxy = (MonoThreadProxy) threadProxy;
 		//MonoObjectValueProxy monoValueProxyBase = (MonoObjectValueProxy) proxy;
@@ -70,7 +71,7 @@ public class MicrosoftFieldProxy extends MicrosoftVariableProxyBase<FieldMirror>
 
 	@Nullable
 	@Override
-	public Number getEnumConstantValue(@NotNull DotNetStackFrameProxy stackFrameProxy)
+	public Number getEnumConstantValue(@Nonnull DotNetStackFrameProxy stackFrameProxy)
 	{
 		DotNetValueProxy fieldValue = getValue(stackFrameProxy, null);
 		if(fieldValue instanceof DotNetNumberValueProxy)

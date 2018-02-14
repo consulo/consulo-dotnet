@@ -4,10 +4,10 @@ import gnu.trove.THashSet;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.ide.DataManager;
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.GotoClassContributor;
@@ -153,7 +153,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 					BaseListPopupStep<LanguageFileType> step = new BaseListPopupStep<LanguageFileType>("Choose " + "language", languageFileTypes.toArray(new LanguageFileType[languageFileTypes.size
 							()]))
 					{
-						@NotNull
+						@Nonnull
 						@Override
 						public String getTextFor(LanguageFileType value)
 						{
@@ -207,7 +207,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 	}
 
 	@Override
-	public void processNames(@NotNull final Processor<String> processor, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter)
+	public void processNames(@Nonnull final Processor<String> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter)
 	{
 		StubIndex.getInstance().processAllKeys(MsilIndexKeys.TYPE_BY_NAME_INDEX, s ->
 		{
@@ -217,7 +217,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 	}
 
 	@Override
-	public void processElementsWithName(@NotNull String name, @NotNull final Processor<NavigationItem> processor, @NotNull FindSymbolParameters parameters)
+	public void processElementsWithName(@Nonnull String name, @Nonnull final Processor<NavigationItem> processor, @Nonnull FindSymbolParameters parameters)
 	{
 		StubIndex.getInstance().processElements(MsilIndexKeys.TYPE_BY_NAME_INDEX, name, parameters.getProject(), parameters.getSearchScope(), parameters.getIdFilter(), MsilClassEntry.class,
 				msilClassEntry ->
@@ -246,7 +246,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 		return ".";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String[] getNames(Project project, boolean includeNonProjectItems)
 	{
@@ -255,7 +255,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 		return processor.toArray(ArrayUtil.STRING_ARRAY_FACTORY);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems)
 	{

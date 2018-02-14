@@ -1,7 +1,7 @@
 package consulo.dotnet.debugger.nodes.logicView;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import consulo.dotnet.debugger.DotNetDebugContext;
@@ -24,12 +24,12 @@ public interface DotNetLogicValueView
 			new DefaultDotNetLogicValueView()
 	};
 
-	boolean canHandle(@NotNull DotNetDebugContext debugContext, @NotNull DotNetTypeProxy typeMirror);
+	boolean canHandle(@Nonnull DotNetDebugContext debugContext, @Nonnull DotNetTypeProxy typeMirror);
 
-	void computeChildren(@NotNull UserDataHolderBase dataHolder,
-			@NotNull DotNetDebugContext debugContext,
-			@NotNull DotNetAbstractVariableValueNode parentNode,
-			@NotNull DotNetStackFrameProxy frameProxy,
+	void computeChildren(@Nonnull UserDataHolderBase dataHolder,
+			@Nonnull DotNetDebugContext debugContext,
+			@Nonnull DotNetAbstractVariableValueNode parentNode,
+			@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
-			@NotNull XCompositeNode node);
+			@Nonnull XCompositeNode node);
 }

@@ -16,7 +16,8 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import consulo.dotnet.lang.psi.impl.DotNetPsiCountUtil;
@@ -33,12 +34,12 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilParameterListStub;
  */
 public class MsilParameterListImpl extends MsilStubElementImpl<MsilParameterListStub> implements MsilParameterList
 {
-	public MsilParameterListImpl(@NotNull ASTNode node)
+	public MsilParameterListImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilParameterListImpl(@NotNull MsilParameterListStub stub, @NotNull IStubElementType nodeType)
+	public MsilParameterListImpl(@Nonnull MsilParameterListStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -49,14 +50,14 @@ public class MsilParameterListImpl extends MsilStubElementImpl<MsilParameterList
 		return DotNetPsiCountUtil.countChildrenOfType(this, MsilStubElements.PARAMETER);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public MsilParameter[] getParameters()
 	{
 		return getStubOrPsiChildren(MsilStubElements.PARAMETER, MsilParameter.ARRAY_FACTORY);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef[] getParameterTypeRefs()
 	{

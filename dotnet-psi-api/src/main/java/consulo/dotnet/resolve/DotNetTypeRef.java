@@ -16,7 +16,8 @@
 
 package consulo.dotnet.resolve;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
@@ -40,14 +41,14 @@ public interface DotNetTypeRef
 			myText = text;
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		public Project getProject()
 		{
 			throw new UnsupportedOperationException();
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		@Deprecated
 		public String getPresentableText()
@@ -55,7 +56,7 @@ public interface DotNetTypeRef
 			return myText;
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		@Deprecated
 		public String getQualifiedText()
@@ -64,7 +65,7 @@ public interface DotNetTypeRef
 		}
 
 		@RequiredReadAction
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetTypeResolveResult resolve()
 		{
@@ -87,7 +88,7 @@ public interface DotNetTypeRef
 			myDelegate = delegate;
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		@Deprecated
 		public String getPresentableText()
@@ -95,7 +96,7 @@ public interface DotNetTypeRef
 			return myDelegate.getPresentableText();
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		@Deprecated
 		public String getQualifiedText()
@@ -104,21 +105,21 @@ public interface DotNetTypeRef
 		}
 
 		@RequiredReadAction
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetTypeResolveResult resolve()
 		{
 			return myDelegate.resolve();
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		public Project getProject()
 		{
 			return myDelegate.getProject();
 		}
 
-		@NotNull
+		@Nonnull
 		public DotNetTypeRef getDelegate()
 		{
 			return myDelegate;
@@ -137,19 +138,19 @@ public interface DotNetTypeRef
 
 	DotNetTypeRef AUTO_TYPE = new AdapterInternal("var");
 
-	@NotNull
+	@Nonnull
 	Project getProject();
 
-	@NotNull
+	@Nonnull
 	@Deprecated
 	String getPresentableText();
 
-	@NotNull
+	@Nonnull
 	@Deprecated
 	String getQualifiedText();
 
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	DotNetTypeResolveResult resolve();
 }

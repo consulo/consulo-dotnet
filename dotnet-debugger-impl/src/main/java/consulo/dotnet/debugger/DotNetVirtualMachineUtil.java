@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -43,15 +43,15 @@ public class DotNetVirtualMachineUtil
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull DotNetTypeProxy typeMirror, @NotNull DotNetDebugContext debugContext)
+	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@Nonnull DotNetTypeProxy typeMirror, @Nonnull DotNetDebugContext debugContext)
 	{
 		Project project = debugContext.getProject();
 		return DotNetPsiSearcher.getInstance(project).findTypes(DotNetDebuggerUtil.getVmQName(typeMirror), debugContext.getResolveScope());
 	}
 
-	@NotNull
+	@Nonnull
 	public static String formatNameWithGeneric(@Nullable DotNetTypeProxy typeMirror)
 	{
 		if(typeMirror == null)
@@ -63,7 +63,7 @@ public class DotNetVirtualMachineUtil
 		return builder.toString();
 	}
 
-	public static void formatNameWithGeneric(@NotNull StringBuilder builder, @NotNull DotNetTypeProxy typeMirror)
+	public static void formatNameWithGeneric(@Nonnull StringBuilder builder, @Nonnull DotNetTypeProxy typeMirror)
 	{
 		builder.append(MsilHelper.prepareForUser(DotNetDebuggerUtil.getVmQName(typeMirror.getFullName())));
 	}

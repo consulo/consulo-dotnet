@@ -19,7 +19,8 @@ package consulo.msil.lang.psi.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -61,17 +62,17 @@ public class MsilNativeTypeImpl extends MsilTypeImpl<MsilNativeTypeStub> impleme
 		}
 	};
 
-	public MsilNativeTypeImpl(@NotNull ASTNode node)
+	public MsilNativeTypeImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilNativeTypeImpl(@NotNull MsilNativeTypeStub stub, @NotNull IStubElementType nodeType)
+	public MsilNativeTypeImpl(@Nonnull MsilNativeTypeStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public PsiElement getTypeElement()
@@ -80,7 +81,7 @@ public class MsilNativeTypeImpl extends MsilTypeImpl<MsilNativeTypeStub> impleme
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public IElementType getTypeElementType()
 	{
@@ -98,7 +99,7 @@ public class MsilNativeTypeImpl extends MsilTypeImpl<MsilNativeTypeStub> impleme
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRefImpl()
 	{

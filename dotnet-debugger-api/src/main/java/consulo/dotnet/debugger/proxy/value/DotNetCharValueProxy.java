@@ -16,7 +16,7 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DotNetCharValueProxy extends DotNetValueProxy
 {
-	@NotNull
+	@Nonnull
 	@Override
 	Character getValue();
 }

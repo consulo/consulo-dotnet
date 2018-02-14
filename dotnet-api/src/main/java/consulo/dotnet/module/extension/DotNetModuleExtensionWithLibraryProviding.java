@@ -18,7 +18,7 @@ package consulo.dotnet.module.extension;
 
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.roots.OrderRootType;
 import consulo.module.extension.ModuleExtension;
 
@@ -28,9 +28,9 @@ import consulo.module.extension.ModuleExtension;
  */
 public interface DotNetModuleExtensionWithLibraryProviding<T extends DotNetModuleExtensionWithLibraryProviding<T>> extends ModuleExtension<T>
 {
-	@NotNull
+	@Nonnull
 	Map<String, String> getAvailableSystemLibraries();
 
-	@NotNull
-	String[] getSystemLibraryUrls(@NotNull String name, @NotNull OrderRootType orderRootType);
+	@Nonnull
+	String[] getSystemLibraryUrls(@Nonnull String name, @Nonnull OrderRootType orderRootType);
 }

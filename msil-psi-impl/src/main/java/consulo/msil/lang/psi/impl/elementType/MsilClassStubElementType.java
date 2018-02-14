@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
@@ -45,23 +46,23 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 		super("MSIL_CLASS_ENTRY");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilClassEntry createElement(@NotNull ASTNode astNode)
+	public MsilClassEntry createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilClassEntryImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilClassEntry createPsi(@NotNull MsilClassEntryStub msilClassEntryStub)
+	public MsilClassEntry createPsi(@Nonnull MsilClassEntryStub msilClassEntryStub)
 	{
 		return new MsilClassEntryImpl(msilClassEntryStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilClassEntryStub createStub(@NotNull MsilClassEntry msilClassEntry, StubElement stubElement)
+	public MsilClassEntryStub createStub(@Nonnull MsilClassEntry msilClassEntry, StubElement stubElement)
 	{
 		String namespace = msilClassEntry.getPresentableParentQName();
 		String name = msilClassEntry.getName();
@@ -70,16 +71,16 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	}
 
 	@Override
-	public void serialize(@NotNull MsilClassEntryStub stub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilClassEntryStub stub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(stub.getNamespace());
 		stubOutputStream.writeName(stub.getName());
 		stubOutputStream.writeName(stub.getVmQName());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilClassEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilClassEntryStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef namespace = inputStream.readName();
 		StringRef name = inputStream.readName();
@@ -88,7 +89,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	}
 
 	@Override
-	public void indexStub(@NotNull MsilClassEntryStub msilClassEntryStub, @NotNull IndexSink indexSink)
+	public void indexStub(@Nonnull MsilClassEntryStub msilClassEntryStub, @Nonnull IndexSink indexSink)
 	{
 		indexSink.occurrence(MsilIndexKeys.TYPE_BY_NAME_INDEX, MsilHelper.cutGenericMarker(msilClassEntryStub.getName()));
 		indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, msilClassEntryStub.getVmQName());

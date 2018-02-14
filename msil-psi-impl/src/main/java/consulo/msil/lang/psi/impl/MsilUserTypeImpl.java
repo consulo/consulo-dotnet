@@ -16,7 +16,8 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -36,18 +37,18 @@ import consulo.msil.lang.psi.impl.type.MsilReferenceTypeRefImpl;
  */
 public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements MsilUserType
 {
-	public MsilUserTypeImpl(@NotNull ASTNode node)
+	public MsilUserTypeImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilUserTypeImpl(@NotNull MsilUserTypeStub stub, @NotNull IStubElementType nodeType)
+	public MsilUserTypeImpl(@Nonnull MsilUserTypeStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public Target getTarget()
 	{
@@ -72,7 +73,7 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements 
 		return Target.CLASS;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getReferenceText()
 	{
@@ -93,7 +94,7 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements 
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetReferenceExpression getReferenceExpression()
 	{
@@ -101,7 +102,7 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements 
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRefImpl()
 	{

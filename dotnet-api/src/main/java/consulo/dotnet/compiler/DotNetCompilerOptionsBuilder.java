@@ -16,8 +16,8 @@
 
 package consulo.dotnet.compiler;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.module.Module;
@@ -32,6 +32,6 @@ public interface DotNetCompilerOptionsBuilder
 	@Nullable
 	DotNetCompilerMessage convertToMessage(Module module, String line);
 
-	@NotNull
-	GeneralCommandLine createCommandLine(@NotNull Module module, @NotNull VirtualFile[] results, @NotNull DotNetModuleExtension<?> dotNetLayer) throws Exception;
+	@Nonnull
+	GeneralCommandLine createCommandLine(@Nonnull Module module, @Nonnull VirtualFile[] results, @Nonnull DotNetModuleExtension<?> dotNetLayer) throws Exception;
 }

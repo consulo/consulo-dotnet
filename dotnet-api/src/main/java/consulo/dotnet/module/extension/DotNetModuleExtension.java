@@ -16,8 +16,8 @@
 
 package consulo.dotnet.module.extension;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.ExecutionException;
@@ -47,30 +47,30 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	boolean isAllowSourceRoots();
 
-	@NotNull
+	@Nonnull
 	DotNetTarget getTarget();
 
 	boolean isAllowDebugInfo();
 
-	@NotNull
+	@Nonnull
 	String getFileName();
 
-	@NotNull
+	@Nonnull
 	String getNamespacePrefix();
 
-	@NotNull
+	@Nonnull
 	String getOutputDir();
 
 	@Nullable
 	String getMainType();
 
-	@NotNull
-	GeneralCommandLine createDefaultCommandLine(@NotNull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
+	@Nonnull
+	GeneralCommandLine createDefaultCommandLine(@Nonnull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
 
-	@NotNull
+	@Nonnull
 	String getDebugFileExtension();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	PsiElement[] getEntryPointElements();
 }

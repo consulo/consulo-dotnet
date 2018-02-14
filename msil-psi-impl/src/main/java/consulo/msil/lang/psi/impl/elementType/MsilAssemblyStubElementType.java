@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -39,36 +40,36 @@ public class MsilAssemblyStubElementType extends AbstractMsilStubElementType<Msi
 		super("MSIL_ASSEMBLY_ENTRY");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilAssemblyEntry createElement(@NotNull ASTNode astNode)
+	public MsilAssemblyEntry createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilAssemblyEntryImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilAssemblyEntry createPsi(@NotNull MsilAssemblyEntryStub msilAssemblyEntryStub)
+	public MsilAssemblyEntry createPsi(@Nonnull MsilAssemblyEntryStub msilAssemblyEntryStub)
 	{
 		return new MsilAssemblyEntryImpl(msilAssemblyEntryStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilAssemblyEntryStub createStub(@NotNull MsilAssemblyEntry msilAssemblyEntry, StubElement stubElement)
+	public MsilAssemblyEntryStub createStub(@Nonnull MsilAssemblyEntry msilAssemblyEntry, StubElement stubElement)
 	{
 		return new MsilAssemblyEntryStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilAssemblyEntryStub msilAssemblyEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilAssemblyEntryStub msilAssemblyEntryStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilAssemblyEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilAssemblyEntryStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		return new MsilAssemblyEntryStub(stubElement, this);
 	}

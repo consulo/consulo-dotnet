@@ -1,7 +1,8 @@
 package consulo.dotnet.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.ArrayFactory;
 
 /**
@@ -14,7 +15,7 @@ public interface DotNetFieldProxy extends DotNetFieldOrPropertyProxy
 
 	public static ArrayFactory<DotNetFieldProxy> ARRAY_FACTORY = new ArrayFactory<DotNetFieldProxy>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetFieldProxy[] create(int count)
 		{
@@ -25,5 +26,5 @@ public interface DotNetFieldProxy extends DotNetFieldOrPropertyProxy
 	boolean isLiteral();
 
 	@Nullable
-	Number getEnumConstantValue(@NotNull DotNetStackFrameProxy stackFrameProxy);
+	Number getEnumConstantValue(@Nonnull DotNetStackFrameProxy stackFrameProxy);
 }

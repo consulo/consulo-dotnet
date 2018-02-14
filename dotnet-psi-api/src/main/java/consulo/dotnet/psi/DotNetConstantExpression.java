@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayFactory;
 
@@ -31,7 +31,7 @@ public interface DotNetConstantExpression extends DotNetExpression
 
 	public static ArrayFactory<DotNetConstantExpression> ARRAY_FACTORY = new ArrayFactory<DotNetConstantExpression>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetConstantExpression[] create(int count)
 		{
@@ -42,6 +42,6 @@ public interface DotNetConstantExpression extends DotNetExpression
 	@Nullable
 	Object getValue();
 
-	@NotNull
+	@Nonnull
 	IElementType getLiteralType();
 }

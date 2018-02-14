@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ArrayUtil;
 import consulo.annotations.RequiredReadAction;
@@ -44,7 +44,7 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public String toString()
 	{
@@ -68,7 +68,7 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeResolveResult resolveResult()
 	{

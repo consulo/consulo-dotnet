@@ -16,8 +16,9 @@
 
 package consulo.dotnet.module.extension;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.dotnet.compiler.DotNetCompileFailedException;
 import consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import com.intellij.openapi.fileTypes.LanguageFileType;
@@ -31,17 +32,17 @@ import consulo.module.extension.ModuleExtension;
  */
 public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T>> extends ModuleExtension<T>
 {
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	PsiElement[] getEntryPointElements();
 
-	@NotNull
+	@Nonnull
 	LanguageFileType getFileType();
 
 	@Nullable
 	@RequiredReadAction
 	String getAssemblyTitle();
 
-	@NotNull
+	@Nonnull
 	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder() throws DotNetCompileFailedException;
 }

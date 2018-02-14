@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
@@ -42,44 +43,44 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 		super("MSIL_METHOD_ENTRY");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilMethodEntry createElement(@NotNull ASTNode astNode)
+	public MsilMethodEntry createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilMethodEntryImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilMethodEntry createPsi(@NotNull MsilMethodEntryStub msilMethodEntryStub)
+	public MsilMethodEntry createPsi(@Nonnull MsilMethodEntryStub msilMethodEntryStub)
 	{
 		return new MsilMethodEntryImpl(msilMethodEntryStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilMethodEntryStub createStub(@NotNull MsilMethodEntry msilMethodEntry, StubElement stubElement)
+	public MsilMethodEntryStub createStub(@Nonnull MsilMethodEntry msilMethodEntry, StubElement stubElement)
 	{
 		String name = msilMethodEntry.getNameFromBytecode();
 		return new MsilMethodEntryStub(stubElement, this, name);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilMethodEntryStub msilMethodEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilMethodEntryStub msilMethodEntryStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilMethodEntryStub.getNameFromBytecode());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilMethodEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilMethodEntryStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilMethodEntryStub(stubElement, this, StringRef.toString(ref));
 	}
 
 	@Override
-	public void indexStub(@NotNull MsilMethodEntryStub msilMethodEntryStub, @NotNull IndexSink indexSink)
+	public void indexStub(@Nonnull MsilMethodEntryStub msilMethodEntryStub, @Nonnull IndexSink indexSink)
 	{
 		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())
 		{

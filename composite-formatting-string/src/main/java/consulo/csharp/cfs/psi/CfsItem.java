@@ -16,7 +16,7 @@
 
 package consulo.csharp.cfs.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
@@ -40,7 +40,7 @@ import consulo.dotnet.util.ArrayUtil2;
  */
 public class CfsItem extends ASTWrapperPsiElement
 {
-	public CfsItem(@NotNull ASTNode node)
+	public CfsItem(@Nonnull ASTNode node)
 	{
 		super(node);
 	}

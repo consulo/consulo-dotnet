@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import com.intellij.openapi.util.Comparing;
@@ -47,7 +48,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	protected String myFileName = DEFAULT_FILE_NAME;
 	protected String myOutputDirectory = DEFAULT_OUTPUT_DIR;
 
-	public BaseDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer moduleRootLayer)
+	public BaseDotNetModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer)
 	{
 		super(id, moduleRootLayer);
 	}
@@ -72,7 +73,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	}
 
 	@Override
-	public void commit(@NotNull S mutableModuleExtension)
+	public void commit(@Nonnull S mutableModuleExtension)
 	{
 		super.commit(mutableModuleExtension);
 
@@ -87,7 +88,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 
 	@RequiredReadAction
 	@Override
-	protected void loadStateImpl(@NotNull Element element)
+	protected void loadStateImpl(@Nonnull Element element)
 	{
 		super.loadStateImpl(element);
 
@@ -101,7 +102,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	}
 
 	@Override
-	protected void getStateImpl(@NotNull Element element)
+	protected void getStateImpl(@Nonnull Element element)
 	{
 		super.getStateImpl(element);
 
@@ -117,7 +118,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public PsiElement[] getEntryPointElements()
@@ -133,7 +134,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		return ContainerUtil.toArray(list, PsiElement.ARRAY_FACTORY);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetNamespaceGeneratePolicy getNamespaceGeneratePolicy()
 	{
@@ -163,38 +164,38 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		return myAllowSourceRoots;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getNamespacePrefix()
 	{
 		return StringUtil.notNullize(myNamespacePrefix);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getFileName()
 	{
 		return StringUtil.notNullizeIfEmpty(myFileName, DEFAULT_FILE_NAME);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getOutputDir()
 	{
 		return StringUtil.notNullizeIfEmpty(myOutputDirectory, DEFAULT_OUTPUT_DIR);
 	}
 
-	public void setFileName(@NotNull String name)
+	public void setFileName(@Nonnull String name)
 	{
 		myFileName = name;
 	}
 
-	public void setNamespacePrefix(@NotNull String namespacePrefix)
+	public void setNamespacePrefix(@Nonnull String namespacePrefix)
 	{
 		myNamespacePrefix = namespacePrefix;
 	}
 
-	public void setOutputDir(@NotNull String dir)
+	public void setOutputDir(@Nonnull String dir)
 	{
 		myOutputDirectory = dir;
 	}
@@ -215,13 +216,13 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public DotNetTarget getTarget()
 	{
 		return myTarget;
 	}
 
-	public void setTarget(@NotNull DotNetTarget target)
+	public void setTarget(@Nonnull DotNetTarget target)
 	{
 		myTarget = target;
 	}

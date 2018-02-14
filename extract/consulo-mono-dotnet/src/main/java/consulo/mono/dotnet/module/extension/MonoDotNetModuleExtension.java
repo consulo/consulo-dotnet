@@ -19,8 +19,8 @@ package consulo.mono.dotnet.module.extension;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.compiler.DotNetMacroUtil;
 import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.module.extension.BaseDotNetModuleExtension;
@@ -48,37 +48,37 @@ import consulo.roots.types.DocumentationOrderRootType;
  */
 public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDotNetModuleExtension> implements DotNetModuleExtensionWithDebug
 {
-	public MonoDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
+	public MonoDotNetModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel)
 	{
 		super(id, rootModel);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Class<? extends SdkType> getSdkTypeClass()
 	{
 		return MonoSdkType.class;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull RunProfile runProfile, @NotNull DebugConnectionInfo debugConnectionInfo)
+	public DotNetDebugProcessBase createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile, @Nonnull DebugConnectionInfo debugConnectionInfo)
 	{
 		return new MonoDebugProcess(session, runProfile, debugConnectionInfo);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public GeneralCommandLine createDefaultCommandLine(@NotNull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException
+	public GeneralCommandLine createDefaultCommandLine(@Nonnull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException
 	{
 		String fileName = DotNetMacroUtil.expandOutputFile(this);
 		return createDefaultCommandLineImpl(sdk, debugConnectionInfo, fileName);
 	}
 
-	@NotNull
-	public static GeneralCommandLine createDefaultCommandLineImpl(@NotNull Sdk sdk,
+	@Nonnull
+	public static GeneralCommandLine createDefaultCommandLineImpl(@Nonnull Sdk sdk,
 			@Nullable DebugConnectionInfo debugConnectionInfo,
-			@NotNull String fileName)
+			@Nonnull String fileName)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 
@@ -94,16 +94,16 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 		return commandLine;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDebugFileExtension()
 	{
 		return getTarget().getExtension() + ".mdb";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public String[] getSystemLibraryUrlsImpl(@NotNull Sdk sdk, @NotNull String name, @NotNull OrderRootType orderRootType)
+	public String[] getSystemLibraryUrlsImpl(@Nonnull Sdk sdk, @Nonnull String name, @Nonnull OrderRootType orderRootType)
 	{
 		if(orderRootType == DocumentationOrderRootType.getInstance())
 		{
@@ -135,7 +135,7 @@ public class MonoDotNetModuleExtension extends BaseDotNetModuleExtension<MonoDot
 		return super.getSystemLibraryUrlsImpl(sdk, name, orderRootType);
 	}
 
-	private static String generateParameterForRun(@NotNull DebugConnectionInfo debugConnectionInfo)
+	private static String generateParameterForRun(@Nonnull DebugConnectionInfo debugConnectionInfo)
 	{
 		StringBuilder builder = new StringBuilder("--debugger-agent=transport=dt_socket,address=");
 		builder.append(debugConnectionInfo.getHost());

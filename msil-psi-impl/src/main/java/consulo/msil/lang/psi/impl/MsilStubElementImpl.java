@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetElement;
 import consulo.dotnet.util.ArrayUtil2;
@@ -40,12 +40,12 @@ import com.intellij.util.ArrayFactory;
  */
 public abstract class MsilStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements StubBasedPsiElement<T>, DotNetElement
 {
-	protected MsilStubElementImpl(@NotNull ASTNode node)
+	protected MsilStubElementImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	protected MsilStubElementImpl(@NotNull T stub, @NotNull IStubElementType nodeType)
+	protected MsilStubElementImpl(@Nonnull T stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -69,7 +69,7 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof MsilVisitor)
 		{

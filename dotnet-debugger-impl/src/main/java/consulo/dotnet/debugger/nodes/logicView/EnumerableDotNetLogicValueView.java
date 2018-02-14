@@ -1,7 +1,8 @@
 package consulo.dotnet.debugger.nodes.logicView;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
@@ -23,17 +24,17 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 {
 	@Override
-	public boolean canHandle(@NotNull DotNetDebugContext debugContext, @NotNull DotNetTypeProxy typeMirror)
+	public boolean canHandle(@Nonnull DotNetDebugContext debugContext, @Nonnull DotNetTypeProxy typeMirror)
 	{
 		return DotNetDebuggerSearchUtil.isInImplementList(typeMirror, "System.Collections.IEnumerable");
 	}
 
 	@Override
-	public void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
-			@NotNull DotNetAbstractVariableValueNode parentNode,
-			@NotNull DotNetStackFrameProxy frameProxy,
+	public void computeChildrenImpl(@Nonnull DotNetDebugContext debugContext,
+			@Nonnull DotNetAbstractVariableValueNode parentNode,
+			@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
-			@NotNull XValueChildrenList childrenList)
+			@Nonnull XValueChildrenList childrenList)
 	{
 		if(!(value instanceof DotNetObjectValueProxy) && !(value instanceof DotNetStringValueProxy))
 		{

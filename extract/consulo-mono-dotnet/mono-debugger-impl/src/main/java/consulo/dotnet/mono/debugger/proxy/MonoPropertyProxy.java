@@ -1,7 +1,7 @@
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -19,7 +19,7 @@ import mono.debugger.ThrowValueException;
  */
 public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> implements DotNetPropertyProxy
 {
-	public MonoPropertyProxy(@NotNull PropertyMirror mirror)
+	public MonoPropertyProxy(@Nonnull PropertyMirror mirror)
 	{
 		super(mirror);
 	}
@@ -31,7 +31,7 @@ public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> imp
 		return MonoTypeProxy.of(myMirror.type());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy getParentType()
 	{
@@ -46,7 +46,7 @@ public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> imp
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@Nonnull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
 	{
 		try
 		{
@@ -61,7 +61,7 @@ public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> imp
 	}
 
 	@Override
-	public void setValue(@NotNull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
+	public void setValue(@Nonnull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @Nonnull DotNetValueProxy newValueProxy)
 	{
 		MonoThreadProxy monoThreadProxy = (MonoThreadProxy) threadProxy.getThread();
 		MonoObjectValueProxy monoValueProxyBase = (MonoObjectValueProxy) proxy;

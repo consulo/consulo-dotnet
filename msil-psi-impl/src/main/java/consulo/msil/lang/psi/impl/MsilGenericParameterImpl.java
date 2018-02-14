@@ -16,9 +16,11 @@
 
 package consulo.msil.lang.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -50,12 +52,12 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterStub;
  */
 public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericParameterStub> implements MsilGenericParameter
 {
-	public MsilGenericParameterImpl(@NotNull ASTNode node)
+	public MsilGenericParameterImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilGenericParameterImpl(@NotNull MsilGenericParameterStub stub, @NotNull IStubElementType nodeType)
+	public MsilGenericParameterImpl(@Nonnull MsilGenericParameterStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -67,7 +69,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	public boolean hasModifier(@Nonnull DotNetModifier modifier)
 	{
 		MsilGenericParameterStub stub = getGreenStub();
 		if(stub != null)
@@ -117,13 +119,13 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 
 	@RequiredWriteAction
 	@Override
-	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
 	{
 		return null;
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef[] getExtendTypeRefs()
 	{
@@ -163,7 +165,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetPsiSearcher.TypeResoleKind getTypeKind()
 	{
@@ -207,7 +209,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetAttribute[] getAttributes()
 	{

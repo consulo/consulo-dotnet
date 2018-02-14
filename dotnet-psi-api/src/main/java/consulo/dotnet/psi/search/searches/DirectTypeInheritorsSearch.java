@@ -16,7 +16,8 @@
  */
 package consulo.dotnet.psi.search.searches;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -40,7 +41,7 @@ public class DirectTypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTyp
 		private final SearchScope myScope;
 		private final boolean myCheckInheritance;
 
-		public SearchParameters(@NotNull Project project, @NotNull String vmQName, SearchScope scope, boolean checkInheritance)
+		public SearchParameters(@Nonnull Project project, @Nonnull String vmQName, SearchScope scope, boolean checkInheritance)
 		{
 			myProject = project;
 			myVmQName = vmQName;
@@ -48,18 +49,18 @@ public class DirectTypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTyp
 			myCheckInheritance = checkInheritance;
 		}
 
-		public SearchParameters(@NotNull Project project, String vmQName, final SearchScope scope)
+		public SearchParameters(@Nonnull Project project, String vmQName, final SearchScope scope)
 		{
 			this(project, vmQName, scope, true);
 		}
 
-		@NotNull
+		@Nonnull
 		public Project getProject()
 		{
 			return myProject;
 		}
 
-		@NotNull
+		@Nonnull
 		public String getVmQName()
 		{
 			return myVmQName;

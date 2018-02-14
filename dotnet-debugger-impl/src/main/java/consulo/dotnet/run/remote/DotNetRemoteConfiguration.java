@@ -18,8 +18,9 @@ package consulo.dotnet.run.remote;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.compiler.options.CompileStepBeforeRun;
 import com.intellij.diagnostic.logging.LogConfigurationPanel;
 import com.intellij.execution.ExecutionBundle;
@@ -80,7 +81,7 @@ public abstract class DotNetRemoteConfiguration extends ModuleBasedConfiguration
 	}
 
 	@Override
-	public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException
+	public RunProfileState getState(@Nonnull final Executor executor, @Nonnull final ExecutionEnvironment env) throws ExecutionException
 	{
 		DotNetRemoteRunState state = new DotNetRemoteRunState(env);
 		state.putUserData(DotNetRunKeys.DEBUG_CONNECTION_INFO_KEY, new DebugConnectionInfo(HOST, PORT, SERVER_MODE));
@@ -88,7 +89,7 @@ public abstract class DotNetRemoteConfiguration extends ModuleBasedConfiguration
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public SettingsEditor<? extends DotNetRemoteConfiguration> getConfigurationEditor()
 	{
 		SettingsEditorGroup<DotNetRemoteConfiguration> group = new SettingsEditorGroup<>();

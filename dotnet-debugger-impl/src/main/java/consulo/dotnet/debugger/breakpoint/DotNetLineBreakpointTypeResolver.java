@@ -1,7 +1,8 @@
 package consulo.dotnet.debugger.breakpoint;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetCompositeStatement;
@@ -35,7 +36,7 @@ public class DotNetLineBreakpointTypeResolver implements XLineBreakpointTypeReso
 	@Nullable
 	@Override
 	@RequiredReadAction
-	public XLineBreakpointType<?> resolveBreakpointType(@NotNull Project project, @NotNull VirtualFile virtualFile, final int line)
+	public XLineBreakpointType<?> resolveBreakpointType(@Nonnull Project project, @Nonnull VirtualFile virtualFile, final int line)
 	{
 		final Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
 		if(document == null)
@@ -47,8 +48,8 @@ public class DotNetLineBreakpointTypeResolver implements XLineBreakpointTypeReso
 	}
 
 	@RequiredReadAction
-	@NotNull
-	public static Pair<XLineBreakpointType<?>, PsiElement> tryResolveBreakpointType(@NotNull final Project project, @NotNull final VirtualFile virtualFile, final int line)
+	@Nonnull
+	public static Pair<XLineBreakpointType<?>, PsiElement> tryResolveBreakpointType(@Nonnull final Project project, @Nonnull final VirtualFile virtualFile, final int line)
 	{
 		final Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
 		if(document == null)

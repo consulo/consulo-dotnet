@@ -16,7 +16,8 @@
 
 package consulo.dotnet.debugger.breakpoint.ui;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
@@ -36,7 +37,7 @@ public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomP
 	private CheckBox myNotifyCaughtCheckBox;
 	private CheckBox myNotifyUncaughtCheckBox;
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredUIAccess
 	public Component getUIComponent()
@@ -75,7 +76,7 @@ public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomP
 
 	@Override
 	@RequiredUIAccess
-	public void loadFrom(@NotNull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
+	public void loadFrom(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
 	{
 		myNotifyCaughtCheckBox.setValue(breakpoint.getProperties().NOTIFY_CAUGHT);
 		myNotifyUncaughtCheckBox.setValue(breakpoint.getProperties().NOTIFY_UNCAUGHT);
@@ -83,7 +84,7 @@ public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomP
 
 	@Override
 	@RequiredUIAccess
-	public void saveTo(@NotNull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
+	public void saveTo(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
 	{
 		breakpoint.getProperties().NOTIFY_CAUGHT = myNotifyCaughtCheckBox.getValue();
 		breakpoint.getProperties().NOTIFY_UNCAUGHT = myNotifyUncaughtCheckBox.getValue();

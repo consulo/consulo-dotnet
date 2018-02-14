@@ -16,8 +16,9 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetElement;
@@ -32,7 +33,7 @@ public interface MsilTypeParameterAttributeList extends DotNetElement
 
 	public static ArrayFactory<MsilTypeParameterAttributeList> ARRAY_FACTORY = new ArrayFactory<MsilTypeParameterAttributeList>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public MsilTypeParameterAttributeList[] create(int count)
 		{
@@ -44,7 +45,7 @@ public interface MsilTypeParameterAttributeList extends DotNetElement
 	@RequiredReadAction
 	String getGenericParameterName();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	MsilCustomAttribute[] getAttributes();
 }

@@ -21,7 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -44,23 +45,23 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 {
 	protected String myIndexKey;
 
-	@NotNull
+	@Nonnull
 	private final IndexBasedDotNetPsiSearcher mySearcher;
 
-	protected IndexBasedDotNetNamespaceAsElement(@NotNull Project project, @NotNull Language language, @NotNull String indexKey, @NotNull String qName, @NotNull IndexBasedDotNetPsiSearcher searcher)
+	protected IndexBasedDotNetNamespaceAsElement(@Nonnull Project project, @Nonnull Language language, @Nonnull String indexKey, @Nonnull String qName, @Nonnull IndexBasedDotNetPsiSearcher searcher)
 	{
 		super(project, language, qName);
 		myIndexKey = indexKey;
 		mySearcher = searcher;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
-	public List<PsiElement> findChildren(@NotNull final String name,
-			@NotNull GlobalSearchScope globalSearchScope,
-			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
-			@NotNull ChildrenFilter filter)
+	public List<PsiElement> findChildren(@Nonnull final String name,
+			@Nonnull GlobalSearchScope globalSearchScope,
+			@Nonnull NotNullFunction<PsiElement, PsiElement> transformer,
+			@Nonnull ChildrenFilter filter)
 	{
 		switch(filter)
 		{
@@ -88,17 +89,17 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
-	protected Set<? extends PsiElement> getOnlyElements(@NotNull final GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyElements(@Nonnull final GlobalSearchScope globalSearchScope)
 	{
 		return DotNetNamespaceCacheManager.getInstance(myProject).computeElements(mySearcher, this, myIndexKey, myQName, globalSearchScope, DotNetNamespaceCacheManager.ONLY_ELEMENTS);
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
-	protected Set<? extends PsiElement> getOnlyNamespaces(@NotNull final GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyNamespaces(@Nonnull final GlobalSearchScope globalSearchScope)
 	{
 		return DotNetNamespaceCacheManager.getInstance(myProject).computeElements(mySearcher, this, myIndexKey, myQName, globalSearchScope, DotNetNamespaceCacheManager.ONLY_NAMESPACES);
 	}

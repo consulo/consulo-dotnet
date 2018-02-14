@@ -16,7 +16,8 @@
 
 package consulo.csharp.cfs.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.psi.tree.TokenSet;
@@ -34,31 +35,31 @@ public abstract class BaseCfsLanguageVersion extends LanguageVersion implements 
 		super(name, name, language);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createLexer()
 	{
 		return new MergingLexerAdapter(createInnerLexer(), TokenSet.create(CfsTokens.TEXT));
 	}
 
-	@NotNull
+	@Nonnull
 	public abstract Lexer createInnerLexer();
 
-	@NotNull
+	@Nonnull
 	@Override
 	public TokenSet getWhitespaceTokens()
 	{
 		return TokenSet.EMPTY;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public TokenSet getCommentTokens()
 	{
 		return TokenSet.EMPTY;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public TokenSet getStringLiteralElements()
 	{

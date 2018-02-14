@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import consulo.annotations.RequiredReadAction;
@@ -38,19 +38,19 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
  */
 public class MsilPropertyEntryImpl extends MsilQVariableImpl implements MsilPropertyEntry
 {
-	public MsilPropertyEntryImpl(@NotNull ASTNode node)
+	public MsilPropertyEntryImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilPropertyEntryImpl(@NotNull MsilVariableEntryStub stub, @NotNull IStubElementType nodeType)
+	public MsilPropertyEntryImpl(@Nonnull MsilVariableEntryStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	public boolean hasModifier(@Nonnull DotNetModifier modifier)
 	{
 		for(DotNetXXXAccessor dotNetXXXAccessor : getAccessors())
 		{
@@ -68,7 +68,7 @@ public class MsilPropertyEntryImpl extends MsilQVariableImpl implements MsilProp
 		visitor.visitPropertyEntry(this);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetXXXAccessor[] getAccessors()
 	{
@@ -76,7 +76,7 @@ public class MsilPropertyEntryImpl extends MsilQVariableImpl implements MsilProp
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
@@ -90,7 +90,7 @@ public class MsilPropertyEntryImpl extends MsilQVariableImpl implements MsilProp
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef getTypeRefForImplement()
 	{
@@ -98,7 +98,7 @@ public class MsilPropertyEntryImpl extends MsilQVariableImpl implements MsilProp
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public MsilCustomAttribute[] getAttributes()
 	{

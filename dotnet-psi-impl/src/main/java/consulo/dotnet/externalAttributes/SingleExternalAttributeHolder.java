@@ -24,8 +24,9 @@ import java.util.Map;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeNodeImpl;
@@ -38,7 +39,7 @@ import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenNode
  */
 public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 {
-	@NotNull
+	@Nonnull
 	public static ExternalAttributeHolder load(VirtualFile file)
 	{
 		try
@@ -108,7 +109,7 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 
 	@Nullable
 	@Override
-	public ExternalAttributeWithChildrenNode findClassNode(@NotNull String qname)
+	public ExternalAttributeWithChildrenNode findClassNode(@Nonnull String qname)
 	{
 		return myClasses.get(qname);
 	}

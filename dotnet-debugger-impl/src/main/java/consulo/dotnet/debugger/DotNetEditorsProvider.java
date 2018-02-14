@@ -3,8 +3,8 @@ package consulo.dotnet.debugger;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
@@ -38,7 +38,7 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase
 
 	@Override
 	@RequiredReadAction
-	protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String text, @Nullable PsiElement context, boolean isPhysical)
+	protected PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull String text, @Nullable PsiElement context, boolean isPhysical)
 	{
 		if(context == null)
 		{
@@ -66,9 +66,9 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	public Collection<Language> getSupportedLanguages(@NotNull Project project, @Nullable XSourcePosition sourcePosition)
+	public Collection<Language> getSupportedLanguages(@Nonnull Project project, @Nullable XSourcePosition sourcePosition)
 	{
 		if(sourcePosition == null)
 		{
@@ -83,7 +83,7 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase
 		return Collections.singletonList(dotNetDebuggerProvider.getEditorLanguage());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public FileType getFileType()
 	{

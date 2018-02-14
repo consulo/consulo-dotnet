@@ -20,12 +20,12 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.annotation.Nonnull;
 import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.jetbrains.annotations.NotNull;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ui.DialogUtil;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
@@ -41,7 +41,7 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 	private JCheckBox myWatchEntryCheckBox;
 	private JCheckBox myWatchExitCheckBox;
 
-	@NotNull
+	@Nonnull
 	@Override
 	public JComponent getComponent()
 	{
@@ -100,14 +100,14 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 	}
 
 	@Override
-	public void loadFrom(@NotNull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
+	public void loadFrom(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 	{
 		myWatchEntryCheckBox.setSelected(breakpoint.getProperties().METHOD_ENTRY);
 		myWatchExitCheckBox.setSelected(breakpoint.getProperties().METHOD_EXIT);
 	}
 
 	@Override
-	public void saveTo(@NotNull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
+	public void saveTo(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 	{
 		breakpoint.getProperties().METHOD_ENTRY = myWatchEntryCheckBox.isSelected();
 		breakpoint.getProperties().METHOD_EXIT = myWatchExitCheckBox.isSelected();

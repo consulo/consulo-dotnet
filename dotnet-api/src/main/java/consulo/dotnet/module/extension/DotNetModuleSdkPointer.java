@@ -16,9 +16,11 @@
 
 package consulo.dotnet.module.extension;
 
+import javax.annotation.Nonnull;
+
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -50,7 +52,7 @@ public class DotNetModuleSdkPointer implements MutableModuleInheritableNamedPoin
 	}
 
 	@Nullable
-	public String getItemNameFromModule(@NotNull Module module)
+	public String getItemNameFromModule(@Nonnull Module module)
 	{
 		final DotNetSimpleModuleExtension<?> extension = (DotNetSimpleModuleExtension) ModuleUtilCore.getExtension(module, myModuleExtensionId);
 		if(extension != null)
@@ -61,7 +63,7 @@ public class DotNetModuleSdkPointer implements MutableModuleInheritableNamedPoin
 	}
 
 	@Nullable
-	public Sdk getItemFromModule(@NotNull Module module)
+	public Sdk getItemFromModule(@Nonnull Module module)
 	{
 		final DotNetSimpleModuleExtension<?> extension = (DotNetSimpleModuleExtension) ModuleUtilCore.getExtension(module, myModuleExtensionId);
 		if(extension != null)
@@ -71,8 +73,8 @@ public class DotNetModuleSdkPointer implements MutableModuleInheritableNamedPoin
 		return null;
 	}
 
-	@NotNull
-	public NamedPointer<Sdk> getPointer(@NotNull Project project, @NotNull String name)
+	@Nonnull
+	public NamedPointer<Sdk> getPointer(@Nonnull Project project, @Nonnull String name)
 	{
 		return SdkUtil.createPointer(name);
 	}

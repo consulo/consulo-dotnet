@@ -22,8 +22,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.psi.DotNetFile;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.coverage.CoverageAnnotator;
@@ -72,7 +72,7 @@ public class DotNetCoverageEngine extends CoverageEngine
 		return false;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public CoverageEnabledConfiguration createCoverageEnabledConfiguration(@Nullable RunConfigurationBase conf)
 	{
@@ -85,9 +85,9 @@ public class DotNetCoverageEngine extends CoverageEngine
 
 	@Nullable
 	@Override
-	public CoverageSuite createCoverageSuite(@NotNull CoverageRunner covRunner,
-			@NotNull String name,
-			@NotNull CoverageFileProvider coverageDataFileProvider,
+	public CoverageSuite createCoverageSuite(@Nonnull CoverageRunner covRunner,
+			@Nonnull String name,
+			@Nonnull CoverageFileProvider coverageDataFileProvider,
 			@Nullable String[] filters,
 			long lastCoverageTimeStamp,
 			@Nullable String suiteToMerge,
@@ -102,7 +102,7 @@ public class DotNetCoverageEngine extends CoverageEngine
 
 	@Nullable
 	@Override
-	public String getQualifiedName(@NotNull File outputFile, @NotNull final PsiFile sourceFile)
+	public String getQualifiedName(@Nonnull File outputFile, @Nonnull final PsiFile sourceFile)
 	{
 
 		return ApplicationManager.getApplication().runReadAction(new Computable<String>()
@@ -130,22 +130,22 @@ public class DotNetCoverageEngine extends CoverageEngine
 
 	@Nullable
 	@Override
-	public CoverageSuite createCoverageSuite(@NotNull CoverageRunner covRunner,
-			@NotNull String name,
-			@NotNull CoverageFileProvider coverageDataFileProvider,
-			@NotNull CoverageEnabledConfiguration config)
+	public CoverageSuite createCoverageSuite(@Nonnull CoverageRunner covRunner,
+			@Nonnull String name,
+			@Nonnull CoverageFileProvider coverageDataFileProvider,
+			@Nonnull CoverageEnabledConfiguration config)
 	{
 		return new DotNetCoverageSuite(name, coverageDataFileProvider, System.currentTimeMillis(), false, false, true, covRunner, this);
 	}
 
 	@Nullable
 	@Override
-	public CoverageSuite createEmptyCoverageSuite(@NotNull CoverageRunner coverageRunner)
+	public CoverageSuite createEmptyCoverageSuite(@Nonnull CoverageRunner coverageRunner)
 	{
 		return new DotNetCoverageSuite(this);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public CoverageAnnotator getCoverageAnnotator(Project project)
 	{
@@ -153,26 +153,26 @@ public class DotNetCoverageEngine extends CoverageEngine
 	}
 
 	@Override
-	public boolean coverageEditorHighlightingApplicableTo(@NotNull PsiFile psiFile)
+	public boolean coverageEditorHighlightingApplicableTo(@Nonnull PsiFile psiFile)
 	{
 		return psiFile instanceof DotNetFile;
 	}
 
 	@Override
-	public boolean acceptedByFilters(@NotNull PsiFile psiFile, @NotNull CoverageSuitesBundle suite)
+	public boolean acceptedByFilters(@Nonnull PsiFile psiFile, @Nonnull CoverageSuitesBundle suite)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean recompileProjectAndRerunAction(@NotNull Module module, @NotNull CoverageSuitesBundle suite, @NotNull Runnable chooseSuiteAction)
+	public boolean recompileProjectAndRerunAction(@Nonnull Module module, @Nonnull CoverageSuitesBundle suite, @Nonnull Runnable chooseSuiteAction)
 	{
 		return false;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public Set<String> getQualifiedNames(@NotNull final PsiFile sourceFile)
+	public Set<String> getQualifiedNames(@Nonnull final PsiFile sourceFile)
 	{
 		return ApplicationManager.getApplication().runReadAction(new Computable<Set<String>>()
 		{
@@ -198,14 +198,14 @@ public class DotNetCoverageEngine extends CoverageEngine
 	}
 
 	@Override
-	public List<PsiElement> findTestsByNames(@NotNull String[] testNames, @NotNull Project project)
+	public List<PsiElement> findTestsByNames(@Nonnull String[] testNames, @Nonnull Project project)
 	{
 		return null;
 	}
 
 	@Nullable
 	@Override
-	public String getTestMethodName(@NotNull PsiElement element, @NotNull AbstractTestProxy testProxy)
+	public String getTestMethodName(@Nonnull PsiElement element, @Nonnull AbstractTestProxy testProxy)
 	{
 		return null;
 	}

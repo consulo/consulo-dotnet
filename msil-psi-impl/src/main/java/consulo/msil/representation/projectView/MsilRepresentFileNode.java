@@ -19,7 +19,8 @@ package consulo.msil.representation.projectView;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.fileTypes.FileType;
@@ -44,7 +45,7 @@ public class MsilRepresentFileNode extends AbstractTreeNode<Pair<String, ? exten
 		myPsiFile = psiFile;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Collection<? extends AbstractTreeNode> getChildren()
 	{

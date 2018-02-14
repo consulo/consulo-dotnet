@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import consulo.msil.lang.psi.MsilCustomAttribute;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;

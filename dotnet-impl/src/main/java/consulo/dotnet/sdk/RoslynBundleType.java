@@ -20,8 +20,8 @@ import java.io.File;
 
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.DotNetIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 
@@ -31,7 +31,7 @@ import com.intellij.openapi.projectRoots.SdkType;
  */
 public class RoslynBundleType extends SdkType
 {
-	@NotNull
+	@Nonnull
 	public static RoslynBundleType getInstance()
 	{
 		return EP_NAME.findExtension(RoslynBundleType.class);
@@ -63,7 +63,7 @@ public class RoslynBundleType extends SdkType
 		return getPresentableName();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{

@@ -19,8 +19,8 @@ package consulo.msil.representation;
 import java.util.Collections;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -38,8 +38,8 @@ import consulo.msil.lang.psi.MsilFile;
  */
 public abstract class MsilFileRepresentationManager
 {
-	@NotNull
-	public static MsilFileRepresentationManager getInstance(@NotNull Project project)
+	@Nonnull
+	public static MsilFileRepresentationManager getInstance(@Nonnull Project project)
 	{
 		return ServiceManager.getService(project, MsilFileRepresentationManager.class);
 	}
@@ -51,8 +51,8 @@ public abstract class MsilFileRepresentationManager
 		myProject = project;
 	}
 
-	@NotNull
-	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@NotNull MsilFile msilFile)
+	@Nonnull
+	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@Nonnull MsilFile msilFile)
 	{
 		VirtualFile virtualFile = msilFile.getVirtualFile();
 		if(virtualFile == null)
@@ -62,16 +62,16 @@ public abstract class MsilFileRepresentationManager
 		return getRepresentFileInfos(msilFile, virtualFile);
 	}
 
-	@NotNull
-	public abstract List<Pair<String, ? extends FileType>> getRepresentFileInfos(@NotNull MsilFile msilFile, @NotNull VirtualFile virtualFile);
+	@Nonnull
+	public abstract List<Pair<String, ? extends FileType>> getRepresentFileInfos(@Nonnull MsilFile msilFile, @Nonnull VirtualFile virtualFile);
 
 	@Nullable
 	@RequiredReadAction
-	public abstract PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull MsilFile msilFile);
+	public abstract PsiFile getRepresentationFile(@Nonnull FileType fileType, @Nonnull MsilFile msilFile);
 
 	@Nullable
 	@RequiredReadAction
-	public PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull VirtualFile virtualFile)
+	public PsiFile getRepresentationFile(@Nonnull FileType fileType, @Nonnull VirtualFile virtualFile)
 	{
 		if(virtualFile.getFileType() != MsilFileType.INSTANCE)
 		{

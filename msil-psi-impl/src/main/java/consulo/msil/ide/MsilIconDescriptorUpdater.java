@@ -2,7 +2,7 @@ package consulo.msil.ide;
 
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
@@ -26,7 +26,7 @@ public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 {
 	@Override
 	@RequiredReadAction
-	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags)
+	public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags)
 	{
 		if(element instanceof MsilNamespaceAsElementImpl)
 		{

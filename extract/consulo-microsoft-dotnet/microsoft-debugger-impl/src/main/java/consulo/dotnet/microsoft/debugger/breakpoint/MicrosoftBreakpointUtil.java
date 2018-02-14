@@ -1,7 +1,8 @@
 package consulo.dotnet.microsoft.debugger.breakpoint;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.dotnet.compiler.DotNetMacroUtil;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.application.ApplicationManager;
@@ -28,7 +29,7 @@ public class MicrosoftBreakpointUtil
 {
 	@Nullable
 	@RequiredReadAction
-	public static String getModulePath(@NotNull Project project, @NotNull XLineBreakpoint<?> breakpoint)
+	public static String getModulePath(@Nonnull Project project, @Nonnull XLineBreakpoint<?> breakpoint)
 	{
 		VirtualFile breakpointFile = VirtualFileManager.getInstance().findFileByUrl(breakpoint.getFileUrl());
 		if(breakpointFile == null)
@@ -44,7 +45,7 @@ public class MicrosoftBreakpointUtil
 		return null;
 	}
 
-	public static void createBreakpointRequest(@NotNull final XDebugSession debugSession, @NotNull MicrosoftVirtualMachineProxy virtualMachine, @NotNull final XLineBreakpoint breakpoint)
+	public static void createBreakpointRequest(@Nonnull final XDebugSession debugSession, @Nonnull MicrosoftVirtualMachineProxy virtualMachine, @Nonnull final XLineBreakpoint breakpoint)
 	{
 		String modulePath = ApplicationManager.getApplication().runReadAction(new Computable<String>()
 		{

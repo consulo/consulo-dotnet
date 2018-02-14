@@ -16,8 +16,8 @@
 
 package consulo.csharp.cfs.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.csharp.cfs.lang.lexer.CfsLexer;
 import consulo.csharp.cfs.lang.parser.CfsParser;
 import com.intellij.lang.PsiParser;
@@ -39,7 +39,7 @@ public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements L
 		super("INDEX", CfsLanguage.INSTANCE);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createInnerLexer()
 	{
@@ -58,7 +58,7 @@ public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements L
 		return true;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiParser createParser()
 	{

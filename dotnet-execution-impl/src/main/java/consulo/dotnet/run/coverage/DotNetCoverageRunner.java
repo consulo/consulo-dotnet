@@ -19,7 +19,8 @@ package consulo.dotnet.run.coverage;
 import java.util.Collections;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageRunner;
@@ -36,8 +37,8 @@ import consulo.util.NotNullPairFunction;
  */
 public abstract class DotNetCoverageRunner extends CoverageRunner
 {
-	@NotNull
-	public static List<DotNetCoverageRunner> findAvailableRunners(@NotNull RunProfile configuration)
+	@Nonnull
+	public static List<DotNetCoverageRunner> findAvailableRunners(@Nonnull RunProfile configuration)
 	{
 		if(!(configuration instanceof DotNetConfigurationWithCoverage))
 		{
@@ -64,13 +65,13 @@ public abstract class DotNetCoverageRunner extends CoverageRunner
 		return Collections.emptyList();
 	}
 
-	@NotNull
+	@Nonnull
 	public abstract NotNullPairFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine();
 
-	public abstract boolean acceptModuleExtension(@NotNull DotNetModuleExtension<?> moduleExtension);
+	public abstract boolean acceptModuleExtension(@Nonnull DotNetModuleExtension<?> moduleExtension);
 
 	@Override
-	public boolean acceptsCoverageEngine(@NotNull CoverageEngine engine)
+	public boolean acceptsCoverageEngine(@Nonnull CoverageEngine engine)
 	{
 		return engine instanceof DotNetCoverageEngine;
 	}

@@ -1,6 +1,7 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.debugger.proxy.DotNetVariableProxy;
 import consulo.util.pointers.Named;
 import mssdw.MirrorWithIdAndName;
@@ -13,12 +14,12 @@ public abstract class MicrosoftVariableProxyBase<T extends MirrorWithIdAndName> 
 {
 	protected T myMirror;
 
-	public MicrosoftVariableProxyBase(@NotNull T mirror)
+	public MicrosoftVariableProxyBase(@Nonnull T mirror)
 	{
 		myMirror = mirror;
 	}
 
-	@NotNull
+	@Nonnull
 	public T getMirror()
 	{
 		return myMirror;
@@ -36,7 +37,7 @@ public abstract class MicrosoftVariableProxyBase<T extends MirrorWithIdAndName> 
 		return myMirror.hashCode();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

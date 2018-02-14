@@ -16,8 +16,8 @@
 
 package consulo.microsoft.dotnet.sdk;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
 * @author VISTALL
@@ -46,7 +46,7 @@ public enum MicrosoftDotNetVersion
 	}
 
 	@Nullable
-	public static MicrosoftDotNetVersion findVersion(@NotNull String version, boolean startWith)
+	public static MicrosoftDotNetVersion findVersion(@Nonnull String version, boolean startWith)
 	{
 		version = version.charAt(0) == 'v' ? version.substring(1, version.length()) : version;
 		for(MicrosoftDotNetVersion microsoftDotNetVersion : values())

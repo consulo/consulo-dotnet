@@ -16,7 +16,8 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;

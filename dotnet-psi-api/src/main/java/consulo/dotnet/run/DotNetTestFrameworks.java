@@ -16,7 +16,8 @@
 
 package consulo.dotnet.run;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -28,7 +29,7 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 public class DotNetTestFrameworks
 {
 	@RequiredReadAction
-	public static boolean isTestType(@NotNull DotNetTypeDeclaration typeDeclaration)
+	public static boolean isTestType(@Nonnull DotNetTypeDeclaration typeDeclaration)
 	{
 		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensions())
 		{
@@ -41,7 +42,7 @@ public class DotNetTestFrameworks
 	}
 
 	@RequiredReadAction
-	public static boolean isTestMethod(@NotNull DotNetLikeMethodDeclaration methodDeclaration)
+	public static boolean isTestMethod(@Nonnull DotNetLikeMethodDeclaration methodDeclaration)
 	{
 		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensions())
 		{

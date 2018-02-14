@@ -18,7 +18,7 @@ package consulo.dotnet.externalAttributes.nodes;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.dotnet.externalAttributes.ExternalAttributeNode;
 import consulo.dotnet.externalAttributes.ExternalAttributeSimpleNode;
 import com.intellij.util.SmartList;
@@ -38,19 +38,19 @@ public class ExternalAttributeSimpleNodeImpl implements ExternalAttributeSimpleN
 		myName = name;
 	}
 
-	public void addAttribute(@NotNull ExternalAttributeNode a)
+	public void addAttribute(@Nonnull ExternalAttributeNode a)
 	{
 		myAttributes.add(a);
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public List<ExternalAttributeNode> getAttributes()
 	{
 		return myAttributes;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

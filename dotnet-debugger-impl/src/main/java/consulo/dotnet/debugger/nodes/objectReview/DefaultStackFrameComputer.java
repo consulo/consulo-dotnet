@@ -18,8 +18,8 @@ package consulo.dotnet.debugger.nodes.objectReview;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
@@ -42,11 +42,11 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public class DefaultStackFrameComputer implements StackFrameComputer
 {
 	@Override
-	public boolean computeStackFrame(@NotNull DotNetDebugContext debugContext,
+	public boolean computeStackFrame(@Nonnull DotNetDebugContext debugContext,
 			@Nullable DotNetValueProxy thisObject,
-			@NotNull DotNetStackFrameProxy frameProxy,
-			@NotNull Set<Object> visitedVariables,
-			@NotNull XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
+			@Nonnull DotNetStackFrameProxy frameProxy,
+			@Nonnull Set<Object> visitedVariables,
+			@Nonnull XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 

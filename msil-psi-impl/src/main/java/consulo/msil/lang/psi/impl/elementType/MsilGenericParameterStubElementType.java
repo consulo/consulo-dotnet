@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -42,23 +43,23 @@ public class MsilGenericParameterStubElementType extends AbstractMsilStubElement
 		super("MSIL_GENERIC_PARAMETER");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetGenericParameter createElement(@NotNull ASTNode astNode)
+	public DotNetGenericParameter createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilGenericParameterImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilGenericParameter createPsi(@NotNull MsilGenericParameterStub msilGenericParameterStub)
+	public MsilGenericParameter createPsi(@Nonnull MsilGenericParameterStub msilGenericParameterStub)
 	{
 		return new MsilGenericParameterImpl(msilGenericParameterStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilGenericParameterStub createStub(@NotNull MsilGenericParameter parameter, StubElement stubElement)
+	public MsilGenericParameterStub createStub(@Nonnull MsilGenericParameter parameter, StubElement stubElement)
 	{
 		String name = parameter.getName();
 		int mod = MsilGenericParameterStub.toModifiers(parameter);
@@ -67,16 +68,16 @@ public class MsilGenericParameterStubElementType extends AbstractMsilStubElement
 	}
 
 	@Override
-	public void serialize(@NotNull MsilGenericParameterStub msilGenericParameterStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilGenericParameterStub msilGenericParameterStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilGenericParameterStub.getName());
 		stubOutputStream.writeVarInt(msilGenericParameterStub.getModifierMask());
 		stubOutputStream.writeVarInt(msilGenericParameterStub.getTargetIndex());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilGenericParameterStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilGenericParameterStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		int mod = inputStream.readVarInt();

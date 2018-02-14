@@ -18,8 +18,9 @@ package consulo.dotnet.sdk;
 
 import java.io.File;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
@@ -45,13 +46,13 @@ public abstract class DotNetSdkType extends SdkType
 		return type == ExternalAttributesRootOrderType.getInstance();
 	}
 
-	@NotNull
-	public File getLoaderFile(@NotNull Sdk sdk)
+	@Nonnull
+	public File getLoaderFile(@Nonnull Sdk sdk)
 	{
 		return getLoaderFile(getClass(), "loader.exe");
 	}
 
-	@NotNull
+	@Nonnull
 	protected static File getLoaderFile(Class<?> clazz, String fileName)
 	{
 		PluginClassLoader classLoader = (PluginClassLoader) clazz.getClassLoader();

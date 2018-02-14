@@ -16,8 +16,9 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 
@@ -31,7 +32,7 @@ public interface DotNetQualifiedElement extends DotNetNamedElement
 
 	public static ArrayFactory<DotNetQualifiedElement> ARRAY_FACTORY = new ArrayFactory<DotNetQualifiedElement>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetQualifiedElement[] create(int count)
 		{

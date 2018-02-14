@@ -16,7 +16,8 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
@@ -37,7 +38,7 @@ public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElemen
 		private static final Resolver INSTANCE = new Resolver();
 
 		@Override
-		@NotNull
+		@Nonnull
 		@RequiredReadAction
 		public DotNetTypeRef fun(MsilTypeImpl<?> msilType)
 		{
@@ -45,18 +46,18 @@ public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElemen
 		}
 	}
 
-	protected MsilTypeImpl(@NotNull ASTNode node)
+	protected MsilTypeImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	protected MsilTypeImpl(@NotNull T stub, @NotNull IStubElementType nodeType)
+	protected MsilTypeImpl(@Nonnull T stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public final DotNetTypeRef toTypeRef()
 	{
@@ -64,7 +65,7 @@ public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElemen
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	protected abstract DotNetTypeRef toTypeRefImpl();
 
 	@Override

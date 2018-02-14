@@ -1,6 +1,6 @@
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetElement;
 
@@ -10,7 +10,7 @@ import consulo.dotnet.psi.DotNetElement;
  */
 public interface MsilCustomAttributeSignature extends DotNetElement
 {
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	byte[] getBytes();
 }

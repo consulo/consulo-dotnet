@@ -16,8 +16,8 @@
 
 package consulo.dotnet.compiler;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.compiler.impl.FileIndexCompileScope;
 import com.intellij.openapi.module.Module;
@@ -33,7 +33,7 @@ public class DotNetCompileModuleScopeFactory implements CompileModuleScopeFactor
 {
 	@Nullable
 	@Override
-	public FileIndexCompileScope createScope(@NotNull Module module, boolean b)
+	public FileIndexCompileScope createScope(@Nonnull Module module, boolean b)
 	{
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		if(extension != null && !extension.isAllowSourceRoots())

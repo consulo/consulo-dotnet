@@ -18,8 +18,9 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -33,27 +34,27 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
  */
 public abstract class MsilEmptyTypeStubElementType extends AbstractMsilStubElementType<MsilEmptyTypeStub, DotNetType>
 {
-	public MsilEmptyTypeStubElementType(@NotNull @NonNls String debugName)
+	public MsilEmptyTypeStubElementType(@Nonnull @NonNls String debugName)
 	{
 		super(debugName);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilEmptyTypeStub createStub(@NotNull DotNetType type, StubElement stubElement)
+	public MsilEmptyTypeStub createStub(@Nonnull DotNetType type, StubElement stubElement)
 	{
 		return new MsilEmptyTypeStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilEmptyTypeStub msilEmptyTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilEmptyTypeStub msilEmptyTypeStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilEmptyTypeStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilEmptyTypeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		return new MsilEmptyTypeStub(stubElement, this);
 	}

@@ -18,8 +18,9 @@ package consulo.dotnet.debugger.nodes;
 
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.xdebugger.frame.XNavigatable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.dotnet.debugger.DotNetDebugContext;
@@ -52,7 +53,7 @@ public class DotNetLocalVariableValueWrapperNode extends DotNetAbstractVariableV
 
 	@Override
 	@RequiredDispatchThread
-	public void computeSourcePosition(@NotNull XNavigatable navigatable)
+	public void computeSourcePosition(@Nonnull XNavigatable navigatable)
 	{
 		DotNetLocalVariableValueNode.computeSourcePosition(navigatable, getName(), myDebugContext, myFrameProxy);
 	}
@@ -72,7 +73,7 @@ public class DotNetLocalVariableValueWrapperNode extends DotNetAbstractVariableV
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
+	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
 	{
 		myField.setValue(myFrameProxy, myObjectGetter.get(), value);
 	}

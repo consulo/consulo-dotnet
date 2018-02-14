@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -40,37 +41,37 @@ public class MsilPropertyStubElementType extends AbstractMsilStubElementType<Msi
 		super("MSIL_PROPERTY_ENTRY");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilPropertyEntry createElement(@NotNull ASTNode astNode)
+	public MsilPropertyEntry createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilPropertyEntryImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilPropertyEntry createPsi(@NotNull MsilVariableEntryStub msilPropertyEntryStub)
+	public MsilPropertyEntry createPsi(@Nonnull MsilVariableEntryStub msilPropertyEntryStub)
 	{
 		return new MsilPropertyEntryImpl(msilPropertyEntryStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilVariableEntryStub createStub(@NotNull MsilPropertyEntry msilPropertyEntry, StubElement stubElement)
+	public MsilVariableEntryStub createStub(@Nonnull MsilPropertyEntry msilPropertyEntry, StubElement stubElement)
 	{
 		String nameFromBytecode = msilPropertyEntry.getNameFromBytecode();
 		return new MsilVariableEntryStub(stubElement, this, nameFromBytecode);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilVariableEntryStub msilPropertyEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilVariableEntryStub msilPropertyEntryStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilPropertyEntryStub.getNameFromBytecode());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilVariableEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilVariableEntryStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilVariableEntryStub(stubElement, this, ref);

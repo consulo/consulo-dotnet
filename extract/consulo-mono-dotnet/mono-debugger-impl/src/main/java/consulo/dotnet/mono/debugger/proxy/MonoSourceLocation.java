@@ -16,8 +16,8 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import mono.debugger.Location;
@@ -60,7 +60,7 @@ public class MonoSourceLocation implements DotNetSourceLocation
 		return myLocation.columnNumber();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetMethodProxy getMethod()
 	{

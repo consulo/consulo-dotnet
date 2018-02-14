@@ -16,7 +16,8 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
@@ -34,12 +35,12 @@ import consulo.msil.lang.psi.MsilStubTokenSets;
  */
 public class MsilFileImpl extends PsiFileBase implements MsilFile
 {
-	public MsilFileImpl(@NotNull FileViewProvider viewProvider)
+	public MsilFileImpl(@Nonnull FileViewProvider viewProvider)
 	{
 		super(viewProvider, MsilLanguage.INSTANCE);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public FileType getFileType()
 	{
@@ -47,7 +48,7 @@ public class MsilFileImpl extends PsiFileBase implements MsilFile
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{

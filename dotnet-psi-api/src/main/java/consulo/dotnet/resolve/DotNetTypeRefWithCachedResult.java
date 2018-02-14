@@ -16,7 +16,8 @@
 
 package consulo.dotnet.resolve;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredReadAction;
 
@@ -35,21 +36,21 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 		myProject = project;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Project getProject()
 	{
 		return myProject;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public final String getPresentableText()
 	{
 		return toString();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public final String getQualifiedText()
 	{
@@ -57,7 +58,7 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public final DotNetTypeResolveResult resolve()
 	{
@@ -76,10 +77,10 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	protected abstract DotNetTypeResolveResult resolveResult();
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	public abstract String toString();
 }

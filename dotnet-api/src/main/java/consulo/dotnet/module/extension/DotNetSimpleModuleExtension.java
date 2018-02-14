@@ -18,8 +18,8 @@ package consulo.dotnet.module.extension;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -35,7 +35,7 @@ import consulo.module.extension.ModuleInheritableNamedPointer;
  */
 public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends DotNetModuleExtensionWithLibraryProviding<T>
 {
-	@NotNull
+	@Nonnull
 	ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 
 	@Nullable
@@ -44,12 +44,12 @@ public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtensi
 	@Nullable
 	String getSdkName();
 
-	@NotNull
+	@Nonnull
 	Class<? extends SdkType> getSdkTypeClass();
 
 	@InheritImmutable
 	@Immutable
-	@NotNull
+	@Nonnull
 	List<String> getVariables();
 
 	/**
@@ -57,6 +57,6 @@ public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtensi
 	 */
 	boolean isSupportCompilation();
 
-	@NotNull
+	@Nonnull
 	DotNetNamespaceGeneratePolicy getNamespaceGeneratePolicy();
 }

@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -42,9 +42,9 @@ public class DotNetXmlDocumentationRootDetector extends RootDetector
 		super(DocumentationOrderRootType.getInstance(), false, ".NET xml documentation");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public Collection<VirtualFile> detectRoots(@NotNull VirtualFile rootCandidate, @NotNull ProgressIndicator progressIndicator)
+	public Collection<VirtualFile> detectRoots(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator)
 	{
 		if(rootCandidate.getFileSystem() instanceof ArchiveFileSystem)
 		{

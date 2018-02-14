@@ -16,7 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.ArrayFactory;
 
@@ -30,7 +31,7 @@ public interface DotNetGenericParameter extends DotNetNamedElement, DotNetModifi
 
 	public static ArrayFactory<DotNetGenericParameter> ARRAY_FACTORY = new ArrayFactory<DotNetGenericParameter>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetGenericParameter[] create(int count)
 		{

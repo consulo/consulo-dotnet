@@ -16,8 +16,8 @@
 
 package consulo.dotnet.module;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.module.Module;
@@ -32,7 +32,7 @@ public class DotNetAssemblyUtil
 {
 	@Nullable
 	@RequiredReadAction
-	public static String getAssemblyTitle(@NotNull PsiElement element)
+	public static String getAssemblyTitle(@Nonnull PsiElement element)
 	{
 		Module module = ModuleUtilCore.findModuleForPsiElement(element);
 		if(module == null)

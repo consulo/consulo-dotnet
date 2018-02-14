@@ -16,8 +16,8 @@
 
 package consulo.dotnet.run.remote;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -47,7 +47,7 @@ public class DotNetRemoteRunState extends UserDataHolderBase implements RunProfi
 
 	@Nullable
 	@Override
-	public ExecutionResult execute(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException
+	public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
 	{
 		TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(myEnv.getProject());
 		ProcessHandler handler = new DefaultDebugProcessHandler();

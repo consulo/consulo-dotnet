@@ -1,7 +1,7 @@
 package consulo.msil.ide.presentation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProvider;
 import com.intellij.navigation.NavigationItem;
@@ -21,7 +21,7 @@ public class MsilClassItemPresentationProvider implements ItemPresentationProvid
 	{
 		private final DotNetTypeDeclaration myDeclaration;
 
-		public Item(@NotNull DotNetTypeDeclaration declaration)
+		public Item(@Nonnull DotNetTypeDeclaration declaration)
 		{
 			myDeclaration = declaration;
 		}

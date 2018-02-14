@@ -18,8 +18,9 @@ package consulo.dotnet.externalAttributes;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.SmartList;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenCompositeNodeImpl;
 
@@ -31,14 +32,14 @@ public class CompositeExternalAttributeHolder implements ExternalAttributeHolder
 {
 	private List<ExternalAttributeHolder> myHolders;
 
-	public CompositeExternalAttributeHolder(@NotNull List<ExternalAttributeHolder> holders)
+	public CompositeExternalAttributeHolder(@Nonnull List<ExternalAttributeHolder> holders)
 	{
 		myHolders = holders;
 	}
 
 	@Nullable
 	@Override
-	public ExternalAttributeWithChildrenNode findClassNode(@NotNull String qname)
+	public ExternalAttributeWithChildrenNode findClassNode(@Nonnull String qname)
 	{
 		List<ExternalAttributeWithChildrenNode> list = new SmartList<ExternalAttributeWithChildrenNode>();
 		for(ExternalAttributeHolder holder : myHolders)

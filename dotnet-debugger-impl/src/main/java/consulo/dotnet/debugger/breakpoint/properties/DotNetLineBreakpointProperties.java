@@ -16,7 +16,7 @@
 
 package consulo.dotnet.debugger.breakpoint.properties;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;

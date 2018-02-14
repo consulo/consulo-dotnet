@@ -18,7 +18,8 @@ package consulo.dotnet.module.extension;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.projectRoots.Sdk;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
@@ -29,11 +30,11 @@ import consulo.module.extension.MutableModuleInheritableNamedPointer;
  */
 public interface DotNetSimpleMutableModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends DotNetSimpleModuleExtension<T>, MutableModuleExtension<T>
 {
-	@NotNull
+	@Nonnull
 	@Override
 	List<String> getVariables();
 
 	@Override
-	@NotNull
+	@Nonnull
 	MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 }

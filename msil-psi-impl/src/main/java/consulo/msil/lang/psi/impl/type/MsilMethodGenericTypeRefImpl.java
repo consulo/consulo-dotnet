@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
@@ -53,7 +53,7 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public String toString()
 	{
@@ -66,7 +66,7 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeResolveResult resolveResult()
 	{

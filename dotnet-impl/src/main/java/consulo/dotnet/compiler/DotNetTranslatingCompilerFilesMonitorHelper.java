@@ -16,8 +16,8 @@
 
 package consulo.dotnet.compiler;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -34,7 +34,7 @@ public class DotNetTranslatingCompilerFilesMonitorHelper implements TranslatingC
 {
 	@Nullable
 	@Override
-	public VirtualFile[] getRootsForModule(@NotNull Module module)
+	public VirtualFile[] getRootsForModule(@Nonnull Module module)
 	{
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		if(extension == null || extension.isAllowSourceRoots())

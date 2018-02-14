@@ -1,6 +1,6 @@
 package consulo.dotnet.resolve;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -8,6 +8,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DotNetGenericWrapperTypeRef extends DotNetTypeRef, DotNetTypeRefWithInnerTypeRef
 {
-	@NotNull
+	@Nonnull
 	DotNetTypeRef[] getArgumentTypeRefs();
 }

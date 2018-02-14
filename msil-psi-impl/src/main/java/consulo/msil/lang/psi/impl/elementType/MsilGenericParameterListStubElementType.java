@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -39,36 +40,36 @@ public class MsilGenericParameterListStubElementType extends AbstractMsilStubEle
 		super("MSIL_GENERIC_PARAMETER_LIST");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetGenericParameterList createElement(@NotNull ASTNode astNode)
+	public DotNetGenericParameterList createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilGenericParameterListImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetGenericParameterList createPsi(@NotNull MsilGenericParameterListStub msilGenericParameterListStub)
+	public DotNetGenericParameterList createPsi(@Nonnull MsilGenericParameterListStub msilGenericParameterListStub)
 	{
 		return new MsilGenericParameterListImpl(msilGenericParameterListStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilGenericParameterListStub createStub(@NotNull DotNetGenericParameterList dotNetGenericParameterList, StubElement stubElement)
+	public MsilGenericParameterListStub createStub(@Nonnull DotNetGenericParameterList dotNetGenericParameterList, StubElement stubElement)
 	{
 		return new MsilGenericParameterListStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilGenericParameterListStub msilGenericParameterListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilGenericParameterListStub msilGenericParameterListStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilGenericParameterListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilGenericParameterListStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		return new MsilGenericParameterListStub(stubElement, this);
 	}

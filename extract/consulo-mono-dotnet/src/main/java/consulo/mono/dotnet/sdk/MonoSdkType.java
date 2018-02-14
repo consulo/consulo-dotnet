@@ -22,11 +22,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import consulo.dotnet.sdk.DotNetSdkType;
 import consulo.mono.dotnet.MonoDotNetIcons;
 import com.intellij.ide.DataManager;
@@ -66,8 +66,8 @@ public class MonoSdkType extends DotNetSdkType
 			"C:/Program Files (x86)/Mono/"
 	};
 
-	@NotNull
-	public String getExecutable(@NotNull Sdk sdk)
+	@Nonnull
+	public String getExecutable(@Nonnull Sdk sdk)
 	{
 		String runFile;
 		if(SystemInfo.isWindows)
@@ -93,7 +93,7 @@ public class MonoSdkType extends DotNetSdkType
 		return runFile;
 	}
 
-	@NotNull
+	@Nonnull
 	public static MonoSdkType getInstance()
 	{
 		return EP_NAME.findExtension(MonoSdkType.class);
@@ -104,7 +104,7 @@ public class MonoSdkType extends DotNetSdkType
 		super("MONO_DOTNET_SDK");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Collection<String> suggestHomePaths()
 	{
@@ -193,7 +193,7 @@ public class MonoSdkType extends DotNetSdkType
 		return getPresentableName() + " " + file.getName();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{
@@ -284,7 +284,7 @@ public class MonoSdkType extends DotNetSdkType
 			{
 				@RequiredDispatchThread
 				@Override
-				public void actionPerformed(@NotNull AnActionEvent anActionEvent)
+				public void actionPerformed(@Nonnull AnActionEvent anActionEvent)
 				{
 					File path = pair.getSecond();
 					String absolutePath = path.getAbsolutePath();

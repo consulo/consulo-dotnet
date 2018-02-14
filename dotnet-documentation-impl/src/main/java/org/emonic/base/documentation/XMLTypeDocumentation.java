@@ -13,7 +13,7 @@ package org.emonic.base.documentation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 final class XMLTypeDocumentation extends XMLDocumentation implements ITypeDocumentation
 {
@@ -30,7 +30,7 @@ final class XMLTypeDocumentation extends XMLDocumentation implements ITypeDocume
 		myMemberDocumentation.add(documentation);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public List<IDocumentation> getDocumentation()
 	{

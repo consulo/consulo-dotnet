@@ -21,14 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.emonic.base.documentation.IDocumentation;
 import org.emonic.base.documentation.ITypeDocumentation;
 import org.emonic.monodoc.MonodocTree;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
@@ -55,7 +56,7 @@ public class MonoDocumentationResolver implements DotNetDocumentationResolver
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public IDocumentation resolveDocumentation(@NotNull List<VirtualFile> orderEntryFiles, @NotNull PsiElement element)
+	public IDocumentation resolveDocumentation(@Nonnull List<VirtualFile> orderEntryFiles, @Nonnull PsiElement element)
 	{
 		for(VirtualFile orderEntryFile : orderEntryFiles)
 		{
@@ -70,7 +71,7 @@ public class MonoDocumentationResolver implements DotNetDocumentationResolver
 
 	@Nullable
 	@RequiredReadAction
-	private IDocumentation resolveDocumentation(@NotNull VirtualFile virtualFile, @NotNull PsiElement element)
+	private IDocumentation resolveDocumentation(@Nonnull VirtualFile virtualFile, @Nonnull PsiElement element)
 	{
 		if(!Comparing.equal(virtualFile.getExtension(), "source"))
 		{

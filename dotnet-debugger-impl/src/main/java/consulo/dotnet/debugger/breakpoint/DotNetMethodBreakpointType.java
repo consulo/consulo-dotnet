@@ -16,10 +16,10 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -35,7 +35,7 @@ import consulo.dotnet.debugger.breakpoint.ui.DotNetMethodBreakpointPropertiesPan
  */
 public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethodBreakpointProperties>
 {
-	@NotNull
+	@Nonnull
 	public static DotNetMethodBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(DotNetMethodBreakpointType.class);
@@ -46,14 +46,14 @@ public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethod
 		super("dotnet-method-breakpoint", ".NET Method Breakpoints");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Icon getEnabledIcon()
 	{
 		return AllIcons.Debugger.Db_method_breakpoint;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Icon getDisabledIcon()
 	{
@@ -62,14 +62,14 @@ public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethod
 
 	@Nullable
 	@Override
-	public XBreakpointCustomPropertiesPanel<XLineBreakpoint<DotNetMethodBreakpointProperties>> createCustomPropertiesPanel(@NotNull Project project)
+	public XBreakpointCustomPropertiesPanel<XLineBreakpoint<DotNetMethodBreakpointProperties>> createCustomPropertiesPanel(@Nonnull Project project)
 	{
 		return new DotNetMethodBreakpointPropertiesPanel();
 	}
 
 	@Nullable
 	@Override
-	public DotNetMethodBreakpointProperties createBreakpointProperties(@NotNull VirtualFile file, int line)
+	public DotNetMethodBreakpointProperties createBreakpointProperties(@Nonnull VirtualFile file, int line)
 	{
 		return new DotNetMethodBreakpointProperties();
 	}

@@ -16,8 +16,8 @@
 
 package consulo.dotnet.resolve.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetShortNameSearcher;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -40,7 +40,7 @@ public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 	}
 
 	@Override
-	public void collectTypeNames(@NotNull Processor<String> processor, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter)
+	public void collectTypeNames(@Nonnull Processor<String> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter)
 	{
 		for(DotNetShortNameSearcher nameSearcher : EP_NAME.getExtensions(myProject))
 		{
@@ -49,10 +49,10 @@ public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 	}
 
 	@Override
-	public void collectTypes(@NotNull String key,
-			@NotNull GlobalSearchScope scope,
+	public void collectTypes(@Nonnull String key,
+			@Nonnull GlobalSearchScope scope,
 			@Nullable IdFilter filter,
-			@NotNull Processor<DotNetTypeDeclaration> processor)
+			@Nonnull Processor<DotNetTypeDeclaration> processor)
 	{
 		for(DotNetShortNameSearcher nameSearcher : EP_NAME.getExtensions(myProject))
 		{

@@ -1,7 +1,8 @@
 package consulo.dotnet.module.extension;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
 
@@ -11,9 +12,9 @@ import consulo.annotations.RequiredReadAction;
  */
 public interface DotNetElementQualifierProducer
 {
-	boolean isMyElement(@NotNull PsiElement element);
+	boolean isMyElement(@Nonnull PsiElement element);
 
 	@Nullable
 	@RequiredReadAction
-	String getQualifiedName(@NotNull PsiElement element);
+	String getQualifiedName(@Nonnull PsiElement element);
 }

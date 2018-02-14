@@ -24,8 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.util.ArrayUtil2;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
@@ -86,22 +86,22 @@ public class MonoBreakpointUtil
 
 		private Collection<Location> myLocations = Collections.emptyList();
 
-		@NotNull
-		public static FindLocationResult success(@NotNull Collection<Location> locations)
+		@Nonnull
+		public static FindLocationResult success(@Nonnull Collection<Location> locations)
 		{
 			FindLocationResult findLocationResult = new FindLocationResult();
 			findLocationResult.myLocations = locations;
 			return findLocationResult;
 		}
 
-		@NotNull
+		@Nonnull
 		public Collection<Location> getLocations()
 		{
 			return myLocations;
 		}
 	}
 
-	public static void createMethodRequest(final XDebugSession session, @NotNull MonoVirtualMachineProxy virtualMachine, @NotNull final XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
+	public static void createMethodRequest(final XDebugSession session, @Nonnull MonoVirtualMachineProxy virtualMachine, @Nonnull final XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 	{
 		/*
 		virtualMachine.stopBreakpointRequests(breakpoint);
@@ -115,7 +115,7 @@ public class MonoBreakpointUtil
 		virtualMachine.putRequest(breakpoint, methodEntryRequest); */
 	}
 
-	public static void createExceptionRequest(@NotNull MonoVirtualMachineProxy virtualMachine, @NotNull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint, @Nullable TypeMirror typeMirror)
+	public static void createExceptionRequest(@Nonnull MonoVirtualMachineProxy virtualMachine, @Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint, @Nullable TypeMirror typeMirror)
 	{
 		DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
 
@@ -135,9 +135,9 @@ public class MonoBreakpointUtil
 		virtualMachine.putRequest(breakpoint, exceptionRequest);
 	}
 
-	public static void createBreakpointRequest(@NotNull XDebugSession debugSession,
-			@NotNull MonoVirtualMachineProxy virtualMachine,
-			@NotNull XLineBreakpoint breakpoint,
+	public static void createBreakpointRequest(@Nonnull XDebugSession debugSession,
+			@Nonnull MonoVirtualMachineProxy virtualMachine,
+			@Nonnull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror)
 	{
 		try
@@ -155,9 +155,9 @@ public class MonoBreakpointUtil
 		}
 	}
 
-	private static void createRequestImpl(@NotNull Project project,
-			@NotNull MonoVirtualMachineProxy virtualMachine,
-			@NotNull XLineBreakpoint breakpoint,
+	private static void createRequestImpl(@Nonnull Project project,
+			@Nonnull MonoVirtualMachineProxy virtualMachine,
+			@Nonnull XLineBreakpoint breakpoint,
 			@Nullable TypeMirror typeMirror) throws TypeMirrorUnloadedException
 	{
 		FindLocationResult result = findLocationsImpl(project, virtualMachine, breakpoint, typeMirror);
@@ -184,10 +184,10 @@ public class MonoBreakpointUtil
 		DotNetBreakpointUtil.updateLineBreakpointIcon(project, !locations.isEmpty(), breakpoint);
 	}
 
-	@NotNull
-	private static FindLocationResult findLocationsImpl(@NotNull final Project project,
-			@NotNull final MonoVirtualMachineProxy virtualMachine,
-			@NotNull final XLineBreakpoint<?> lineBreakpoint,
+	@Nonnull
+	private static FindLocationResult findLocationsImpl(@Nonnull final Project project,
+			@Nonnull final MonoVirtualMachineProxy virtualMachine,
+			@Nonnull final XLineBreakpoint<?> lineBreakpoint,
 			@Nullable final TypeMirror typeMirror) throws TypeMirrorUnloadedException
 	{
 		final int line = lineBreakpoint.getLine();
@@ -196,9 +196,9 @@ public class MonoBreakpointUtil
 		return findLocationsImpl(project, virtualMachine, fileByUrl, line, properties.getExecutableChildrenAtLineIndex(), typeMirror);
 	}
 
-	@NotNull
-	public static FindLocationResult findLocationsImpl(@NotNull final Project project,
-			@NotNull final MonoVirtualMachineProxy virtualMachine,
+	@Nonnull
+	public static FindLocationResult findLocationsImpl(@Nonnull final Project project,
+			@Nonnull final MonoVirtualMachineProxy virtualMachine,
 			@Nullable final VirtualFile fileByUrl,
 			final int breakpointLine,
 			@Nullable final Integer executableChildrenAtLineIndex,

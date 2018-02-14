@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -38,8 +38,8 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
  */
 public abstract class DotNetPsiSearcher
 {
-	@NotNull
-	public static DotNetPsiSearcher getInstance(@NotNull Project project)
+	@Nonnull
+	public static DotNetPsiSearcher getInstance(@Nonnull Project project)
 	{
 		return ServiceManager.getService(project, DotNetPsiSearcher.class);
 	}
@@ -52,7 +52,7 @@ public abstract class DotNetPsiSearcher
 		UNKNOWN;
 
 		@Immutable
-		@NotNull
+		@Nonnull
 		public static TypeResoleKind[] VALUES = values();
 	}
 
@@ -60,21 +60,21 @@ public abstract class DotNetPsiSearcher
 
 	@Nullable
 	@RequiredReadAction
-	public DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
+	public DotNetNamespaceAsElement findNamespace(@Nonnull String qName, @Nonnull GlobalSearchScope scope)
 	{
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
+	public DotNetTypeDeclaration[] findTypes(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope)
 	{
 		return findTypes(vmQName, scope, DEFAULT_TRANSFORMER);
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	public DotNetTypeDeclaration[] findTypes(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	public DotNetTypeDeclaration[] findTypes(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope, @Nonnull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		Collection<? extends DotNetTypeDeclaration> declarations = findTypesImpl(vmQName, scope);
 		if(declarations.isEmpty())
@@ -91,20 +91,20 @@ public abstract class DotNetPsiSearcher
 		return ContainerUtil.toArray(list, DotNetTypeDeclaration.ARRAY_FACTORY);
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope);
+	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope);
 
 	@Nullable
 	@RequiredReadAction
-	public DotNetTypeDeclaration findType(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
+	public DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope)
 	{
 		return findType(vmQName, scope, DEFAULT_TRANSFORMER);
 	}
 
 	@Nullable
 	@RequiredReadAction
-	public DotNetTypeDeclaration findType(@NotNull String vmQName, @NotNull GlobalSearchScope scope, @NotNull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	public DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope, @Nonnull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		DotNetTypeDeclaration[] types = findTypes(vmQName, scope, transformer);
 		return ArrayUtil.getFirstElement(types);

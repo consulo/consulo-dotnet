@@ -22,10 +22,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
@@ -62,7 +62,7 @@ import consulo.dotnet.util.ArrayUtil2;
  */
 public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBreakpointProperties>
 {
-	@NotNull
+	@Nonnull
 	public static DotNetLineBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(DotNetLineBreakpointType.class);
@@ -117,15 +117,15 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 	@Nullable
 	@Override
-	public XDebuggerEditorsProvider getEditorsProvider(@NotNull XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint, @NotNull Project project)
+	public XDebuggerEditorsProvider getEditorsProvider(@Nonnull XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint, @Nonnull Project project)
 	{
 		return new DotNetEditorsProvider(null);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
-	public List<? extends XLineBreakpointVariant> computeVariants(@NotNull Project project, @NotNull XSourcePosition position)
+	public List<? extends XLineBreakpointVariant> computeVariants(@Nonnull Project project, @Nonnull XSourcePosition position)
 	{
 		VirtualFile virtualFile = position.getFile();
 
@@ -196,7 +196,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 	class AllBreakpointVariant extends XLineBreakpointVariant
 	{
-		@NotNull
+		@Nonnull
 		@RequiredReadAction
 		@Override
 		public String getText()
@@ -239,7 +239,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			myIndex = index;
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		@RequiredDispatchThread
 		public String getText()
@@ -292,7 +292,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 	@Nullable
 	@Override
-	public DotNetLineBreakpointProperties createBreakpointProperties(@NotNull VirtualFile file, int line)
+	public DotNetLineBreakpointProperties createBreakpointProperties(@Nonnull VirtualFile file, int line)
 	{
 		return new DotNetLineBreakpointProperties();
 	}

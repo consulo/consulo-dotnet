@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -71,7 +73,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	{
 		private static final Resolver INSTANCE = new Resolver();
 
-		@NotNull
+		@Nonnull
 		@Override
 		@RequiredReadAction
 		public DotNetTypeRef fun(MsilClassEntryImpl msilClassEntry)
@@ -81,18 +83,18 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		}
 	}
 
-	public MsilClassEntryImpl(@NotNull MsilClassEntryStub stub, @NotNull IStubElementType nodeType)
+	public MsilClassEntryImpl(@Nonnull MsilClassEntryStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
-	public MsilClassEntryImpl(@NotNull ASTNode node)
+	public MsilClassEntryImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getNameFromBytecode()
 	{
 		PsiElement element = getNameIdentifier();
@@ -135,7 +137,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef[] getExtendTypeRefs()
 	{
@@ -152,12 +154,12 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 
 	@RequiredReadAction
 	@Override
-	public boolean isInheritor(@NotNull String otherVmQName, boolean deep)
+	public boolean isInheritor(@Nonnull String otherVmQName, boolean deep)
 	{
 		return DotNetInheritUtil.isInheritor(this, otherVmQName, deep);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public DotNetTypeRef getTypeRefForEnumConstants()
@@ -172,7 +174,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return getStubOrPsiChild(MsilStubElements.GENERIC_PARAMETER_LIST);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetGenericParameter[] getGenericParameters()
 	{
@@ -188,7 +190,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
@@ -201,13 +203,13 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@NotNull DotNetModifier modifier)
+	public boolean hasModifier(@Nonnull DotNetModifier modifier)
 	{
 		return getModifierList().hasModifier(modifier);
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place)
+	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
 	{
 		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
 		{
@@ -220,7 +222,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetModifierList getModifierList()
 	{
@@ -303,7 +305,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 
 	@RequiredWriteAction
 	@Override
-	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
 	{
 		return null;
 	}
@@ -326,7 +328,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		return super.isEquivalentTo(another);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public MsilCustomAttribute[] getAttributes()
 	{
@@ -334,9 +336,9 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilCustomAttribute[] getGenericParameterAttributes(@NotNull String name)
+	public MsilCustomAttribute[] getGenericParameterAttributes(@Nonnull String name)
 	{
 		MsilTypeParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.TYPE_PARAMETER_ATTRIBUTE_LIST, MsilTypeParameterAttributeList.ARRAY_FACTORY);
 		for(MsilTypeParameterAttributeList attributeList : list)
@@ -350,7 +352,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	}
 
 	@Nullable
-	private static DotNetFieldDeclaration findFieldByName(@NotNull DotNetTypeDeclaration tp, @NotNull String name)
+	private static DotNetFieldDeclaration findFieldByName(@Nonnull DotNetTypeDeclaration tp, @Nonnull String name)
 	{
 		for(DotNetNamedElement element : tp.getMembers())
 		{

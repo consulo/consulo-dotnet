@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
 /**
@@ -29,12 +29,15 @@ public interface DotNetValueProxy
 	@Nullable
 	DotNetTypeProxy getType();
 
-	@NotNull("Need check class before this class")
+	/**
+	 * Need check type before calling this method
+	 */
+	@Nonnull
 	Object getValue();
 
 	void accept(DotNetValueProxyVisitor visitor);
 
-	default boolean isEqualTo(@NotNull DotNetValueProxy proxy)
+	default boolean isEqualTo(@Nonnull DotNetValueProxy proxy)
 	{
 		return false;
 	}

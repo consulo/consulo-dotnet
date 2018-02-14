@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclarationUtil;
 import com.intellij.openapi.editor.Document;
@@ -34,14 +34,14 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
  */
 public class DotNetDebuggerUtil
 {
-	@NotNull
-	public static String getVmQName(@NotNull DotNetTypeProxy typeMirror)
+	@Nonnull
+	public static String getVmQName(@Nonnull DotNetTypeProxy typeMirror)
 	{
 		return getVmQName(typeMirror.getFullName());
 	}
 
-	@NotNull
-	public static String getVmQName(@NotNull String fullName)
+	@Nonnull
+	public static String getVmQName(@Nonnull String fullName)
 	{
 		// System.List`1[String]
 		int i = fullName.indexOf('[');
@@ -57,7 +57,7 @@ public class DotNetDebuggerUtil
 
 	@Nullable
 	@RequiredReadAction
-	public static PsiElement findPsiElement(@NotNull PsiFile file, final int line)
+	public static PsiElement findPsiElement(@Nonnull PsiFile file, final int line)
 	{
 		final Document doc = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
 		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(file.getProject()).getPsiFile(doc);
@@ -82,7 +82,7 @@ public class DotNetDebuggerUtil
 
 	@Nullable
 	@RequiredReadAction
-	public static PsiElement findPsiElement(@NotNull PsiFile file, final int line, int column)
+	public static PsiElement findPsiElement(@Nonnull PsiFile file, final int line, int column)
 	{
 		final Document doc = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
 		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(file.getProject()).getPsiFile(doc);

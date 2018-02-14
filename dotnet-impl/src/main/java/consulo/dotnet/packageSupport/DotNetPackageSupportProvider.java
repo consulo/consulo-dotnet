@@ -16,7 +16,8 @@
 
 package consulo.dotnet.packageSupport;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.psi.impl.DotNetPackage;
 import com.intellij.openapi.module.Module;
@@ -33,21 +34,21 @@ import consulo.psi.PsiPackageSupportProvider;
 public class DotNetPackageSupportProvider implements PsiPackageSupportProvider
 {
 	@Override
-	public boolean isSupported(@NotNull ModuleExtension moduleExtension)
+	public boolean isSupported(@Nonnull ModuleExtension moduleExtension)
 	{
 		return moduleExtension instanceof DotNetModuleExtension && ((DotNetModuleExtension) moduleExtension).isAllowSourceRoots();
 	}
 
 	@Override
-	public boolean isValidPackageName(@NotNull Module module, @NotNull String packageName)
+	public boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName)
 	{
 		return true;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiPackage createPackage(@NotNull PsiManager psiManager, @NotNull PsiPackageManager psiPackageManager, @NotNull Class<? extends
-			ModuleExtension> aClass, @NotNull String s)
+	public PsiPackage createPackage(@Nonnull PsiManager psiManager, @Nonnull PsiPackageManager psiPackageManager, @Nonnull Class<? extends
+			ModuleExtension> aClass, @Nonnull String s)
 	{
 		return new DotNetPackage(psiManager, psiPackageManager, aClass, s);
 	}

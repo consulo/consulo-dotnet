@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -42,36 +43,36 @@ public class MsilNativeTypeStubElementType extends AbstractMsilStubElementType<M
 		super("MSIL_NATIVE_TYPE");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetNativeType createElement(@NotNull ASTNode astNode)
+	public DotNetNativeType createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilNativeTypeImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetNativeType createPsi(@NotNull MsilNativeTypeStub msilNativeTypeStub)
+	public DotNetNativeType createPsi(@Nonnull MsilNativeTypeStub msilNativeTypeStub)
 	{
 		return new MsilNativeTypeImpl(msilNativeTypeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilNativeTypeStub createStub(@NotNull DotNetNativeType dotNetNativeType, StubElement stubElement)
+	public MsilNativeTypeStub createStub(@Nonnull DotNetNativeType dotNetNativeType, StubElement stubElement)
 	{
 		return new MsilNativeTypeStub(stubElement, this, dotNetNativeType.getTypeElement().getNode().getElementType());
 	}
 
 	@Override
-	public void serialize(@NotNull MsilNativeTypeStub msilNativeTypeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilNativeTypeStub msilNativeTypeStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeVarInt(ArrayUtil.indexOf(MsilTokenSets.NATIVE_TYPES_AS_ARRAY, msilNativeTypeStub.getTypeElementType()));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilNativeTypeStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilNativeTypeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		IElementType elementType = MsilTokenSets.NATIVE_TYPES_AS_ARRAY[inputStream.readVarInt()];
 		return new MsilNativeTypeStub(stubElement, this, elementType);

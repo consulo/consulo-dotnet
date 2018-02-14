@@ -16,8 +16,9 @@
 
 package consulo.dotnet.roots.orderEntry;
 
+import javax.annotation.Nonnull;
+
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.util.InvalidDataException;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
@@ -29,22 +30,22 @@ import consulo.roots.orderEntry.OrderEntryType;
  */
 public class DotNetLibraryOrderEntryType implements OrderEntryType<DotNetLibraryOrderEntryImpl>
 {
-	@NotNull
+	@Nonnull
 	public static DotNetLibraryOrderEntryType getInstance()
 	{
 		return EP_NAME.findExtension(DotNetLibraryOrderEntryType.class);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getId()
 	{
 		return "dot-net-library";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetLibraryOrderEntryImpl loadOrderEntry(@NotNull Element element, @NotNull ModuleRootLayer moduleRootLayer) throws InvalidDataException
+	public DotNetLibraryOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException
 	{
 		String name = element.getAttributeValue("name");
 		if(name.endsWith(".dll"))
@@ -56,7 +57,7 @@ public class DotNetLibraryOrderEntryType implements OrderEntryType<DotNetLibrary
 	}
 
 	@Override
-	public void storeOrderEntry(@NotNull Element element, @NotNull DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry)
+	public void storeOrderEntry(@Nonnull Element element, @Nonnull DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry)
 	{
 		element.setAttribute("name", dotNetLibraryOrderEntry.getPresentableName());
 	}

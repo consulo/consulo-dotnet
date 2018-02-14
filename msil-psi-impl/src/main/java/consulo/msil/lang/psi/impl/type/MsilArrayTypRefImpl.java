@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.project.Project;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetArrayTypeRef;
@@ -42,7 +42,7 @@ public class MsilArrayTypRefImpl extends DotNetTypeRefWithCachedResult implement
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public String toString()
 	{
@@ -50,14 +50,14 @@ public class MsilArrayTypRefImpl extends DotNetTypeRefWithCachedResult implement
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeResolveResult resolveResult()
 	{
 		return DotNetTypeResolveResult.EMPTY;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef getInnerTypeRef()
 	{

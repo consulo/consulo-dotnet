@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -28,6 +28,6 @@ public interface DotNetAttributeList extends DotNetElement
 	@Nullable
 	DotNetAttributeTargetType getTargetType();
 
-	@NotNull
+	@Nonnull
 	DotNetAttribute[] getAttributes();
 }

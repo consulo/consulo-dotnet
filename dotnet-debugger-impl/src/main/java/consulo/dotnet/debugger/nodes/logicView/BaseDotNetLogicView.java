@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.nodes.logicView;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
@@ -34,24 +34,24 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 {
 	@Override
-	public boolean canHandle(@NotNull DotNetDebugContext debugContext, @NotNull DotNetTypeProxy typeMirror)
+	public boolean canHandle(@Nonnull DotNetDebugContext debugContext, @Nonnull DotNetTypeProxy typeMirror)
 	{
 		return false;
 	}
 
-	public abstract void computeChildrenImpl(@NotNull DotNetDebugContext debugContext,
-			@NotNull DotNetAbstractVariableValueNode parentNode,
-			@NotNull DotNetStackFrameProxy frameProxy,
+	public abstract void computeChildrenImpl(@Nonnull DotNetDebugContext debugContext,
+			@Nonnull DotNetAbstractVariableValueNode parentNode,
+			@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
-			@NotNull XValueChildrenList childrenList);
+			@Nonnull XValueChildrenList childrenList);
 
 	@Override
-	public void computeChildren(@NotNull UserDataHolderBase dataHolder,
-			@NotNull DotNetDebugContext debugContext,
-			@NotNull DotNetAbstractVariableValueNode parentNode,
-			@NotNull DotNetStackFrameProxy frameProxy,
+	public void computeChildren(@Nonnull UserDataHolderBase dataHolder,
+			@Nonnull DotNetDebugContext debugContext,
+			@Nonnull DotNetAbstractVariableValueNode parentNode,
+			@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
-			@NotNull XCompositeNode node)
+			@Nonnull XCompositeNode node)
 	{
 		XValueChildrenList childrenList = new XValueChildrenList();
 

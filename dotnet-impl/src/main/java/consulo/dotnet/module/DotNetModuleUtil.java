@@ -16,7 +16,8 @@
 
 package consulo.dotnet.module;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.ModuleFileIndex;
@@ -31,7 +32,7 @@ import com.intellij.psi.PsiFile;
  */
 public class DotNetModuleUtil
 {
-	public static boolean isUnderSourceRoot(@NotNull PsiElement element)
+	public static boolean isUnderSourceRoot(@Nonnull PsiElement element)
 	{
 		Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(element);
 		if(moduleForPsiElement == null)

@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.psi.DotNetReferenceExpression;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
@@ -32,7 +32,7 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotNetReferenceExpression
 {
-	public MsilReferenceExpressionImpl(@NotNull ASTNode node)
+	public MsilReferenceExpressionImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
@@ -43,14 +43,14 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 		visitor.visitElement(this);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
 		return DotNetTypeRef.ERROR_TYPE;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public ResolveResult[] multiResolve(boolean b)
 	{
@@ -90,7 +90,7 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getCanonicalText()
 	{
@@ -104,7 +104,7 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 	}
 
 	@Override
-	public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
+	public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		return null;
 	}
@@ -115,7 +115,7 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 		return false;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Object[] getVariants()
 	{

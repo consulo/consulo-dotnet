@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
@@ -72,7 +72,7 @@ public class DotNetDebuggerEvaluator extends XDebuggerEvaluator
 	}
 
 	@Override
-	public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+	public void evaluate(@Nonnull XExpression expression, @Nonnull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 	{
 		DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(expression.getLanguage());
 		if(provider != null)
@@ -85,7 +85,7 @@ public class DotNetDebuggerEvaluator extends XDebuggerEvaluator
 	}
 
 	@Override
-	public void evaluate(@NotNull String expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+	public void evaluate(@Nonnull String expression, @Nonnull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 	{
 		if(expressionPosition == null)
 		{

@@ -16,11 +16,11 @@
 
 package consulo.dotnet.run.coverage;
 
+import javax.annotation.Nonnull;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import org.jetbrains.annotations.NotNull;
 import com.intellij.coverage.CoverageRunner;
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
@@ -114,7 +114,7 @@ public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConf
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	protected JComponent createEditor()
 	{

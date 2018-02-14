@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
@@ -35,27 +35,27 @@ public interface DotNetMethodProxy extends Named
 
 	boolean isAbstract();
 
-	boolean isAnnotatedBy(@NotNull String attributeVmQName);
+	boolean isAnnotatedBy(@Nonnull String attributeVmQName);
 
-	@NotNull
+	@Nonnull
 	DotNetTypeProxy getDeclarationType();
 
-	@NotNull
+	@Nonnull
 	DotNetMethodParameterProxy[] getParameters();
 
-	@NotNull
-	DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy);
+	@Nonnull
+	DotNetLocalVariableProxy[] getLocalVariables(@Nonnull DotNetStackFrameProxy frameProxy);
 
 	@Nullable
-	DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy frameProxy,
+	DotNetValueProxy invoke(@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy thisObject,
-			@NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException;
+			@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException;
 
 	@Nullable
 	@RequiredReadAction
-	PsiElement findExecutableElementFromDebugInfo(@NotNull Project project, int executableChildrenAtLineIndex);
+	PsiElement findExecutableElementFromDebugInfo(@Nonnull Project project, int executableChildrenAtLineIndex);
 
-	@NotNull
+	@Nonnull
 	default DotNetMethodProxy lightCopy()
 	{
 		return new LightMethodProxy(this);

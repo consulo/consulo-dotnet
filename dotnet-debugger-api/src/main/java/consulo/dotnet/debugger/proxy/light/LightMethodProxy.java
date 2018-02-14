@@ -16,8 +16,9 @@
 
 package consulo.dotnet.debugger.proxy.light;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
@@ -57,37 +58,37 @@ public class LightMethodProxy implements DotNetMethodProxy
 	}
 
 	@Override
-	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	public boolean isAnnotatedBy(@Nonnull String attributeVmQName)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy getDeclarationType()
 	{
 		return myTypeProxy;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetMethodParameterProxy[] getParameters()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy)
+	public DotNetLocalVariableProxy[] getLocalVariables(@Nonnull DotNetStackFrameProxy frameProxy)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy frameProxy,
+	public DotNetValueProxy invoke(@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy thisObject,
-			@NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
+			@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -95,12 +96,12 @@ public class LightMethodProxy implements DotNetMethodProxy
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public PsiElement findExecutableElementFromDebugInfo(@NotNull Project project, int executableChildrenAtLineIndex)
+	public PsiElement findExecutableElementFromDebugInfo(@Nonnull Project project, int executableChildrenAtLineIndex)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

@@ -1,6 +1,7 @@
 package consulo.dotnet.debugger;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.execution.DebugConnectionInfo;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.xdebugger.XDebugSession;
@@ -11,6 +12,6 @@ import com.intellij.xdebugger.XDebugSession;
  */
 public interface DotNetModuleExtensionWithDebug
 {
-	@NotNull
-	DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull RunProfile runProfile, @NotNull DebugConnectionInfo debugConnectionInfo);
+	@Nonnull
+	DotNetDebugProcessBase createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile, @Nonnull DebugConnectionInfo debugConnectionInfo);
 }

@@ -2,7 +2,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
@@ -48,16 +49,16 @@ public class MsilConstantValueStubElementType extends AbstractMsilStubElementTyp
 		super("CONSTANT_VALUE");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilConstantValue createPsi(@NotNull MsilConstantValueStub msilConstantValueStub)
+	public MsilConstantValue createPsi(@Nonnull MsilConstantValueStub msilConstantValueStub)
 	{
 		return new MsilConstantValueImpl(msilConstantValueStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilConstantValueStub createStub(@NotNull MsilConstantValue psi, StubElement parentStub)
+	public MsilConstantValueStub createStub(@Nonnull MsilConstantValue psi, StubElement parentStub)
 	{
 		IElementType valueType = psi.getValueType();
 		int index = valueType == null ? -1 : ArrayUtil.indexOf(ourElements, valueType);
@@ -65,23 +66,23 @@ public class MsilConstantValueStubElementType extends AbstractMsilStubElementTyp
 		return new MsilConstantValueStub(parentStub, this, index, valueText);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilConstantValueImpl(astNode);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilConstantValueStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull MsilConstantValueStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeVarInt(stub.getValueIndex());
 		dataStream.writeName(stub.getValue());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilConstantValueStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public MsilConstantValueStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		int valueIndex = dataStream.readVarInt();
 		StringRef valueText = dataStream.readName();

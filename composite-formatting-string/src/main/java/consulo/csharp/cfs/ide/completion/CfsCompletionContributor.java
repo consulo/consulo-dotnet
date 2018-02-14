@@ -1,6 +1,6 @@
 package consulo.csharp.cfs.ide.completion;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.csharp.cfs.lang.CfsTokens;
 import consulo.dotnet.psi.DotNetCallArgumentList;
 import consulo.dotnet.psi.DotNetExpression;
@@ -31,7 +31,7 @@ public class CfsCompletionContributor extends CompletionContributor
 		extend(CompletionType.BASIC, StandardPatterns.psiElement().withElementType(CfsTokens.INDEX), new CompletionProvider()
 		{
 			@Override
-			public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result)
 			{
 				int thisArgumentInex = -1;
 				DotNetExpression[] callArguments = null;

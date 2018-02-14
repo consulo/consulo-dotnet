@@ -2,7 +2,8 @@ package consulo.dotnet.resolve;
 
 import java.util.Collection;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
@@ -27,19 +28,19 @@ public interface DotNetNamespaceAsElement extends DotNetQualifiedElement
 		NONE
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	Collection<PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter);
+	Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull ChildrenFilter filter);
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	Collection<PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull NotNullFunction<PsiElement, PsiElement> transformer, @NotNull ChildrenFilter filter);
+	Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull NotNullFunction<PsiElement, PsiElement> transformer, @Nonnull ChildrenFilter filter);
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	Collection<PsiElement> findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter);
+	Collection<PsiElement> findChildren(@Nonnull String name, @Nonnull GlobalSearchScope globalSearchScope, @Nonnull ChildrenFilter filter);
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	Collection<PsiElement> findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull NotNullFunction<PsiElement, PsiElement> transformer, @NotNull ChildrenFilter filter);
+	Collection<PsiElement> findChildren(@Nonnull String name, @Nonnull GlobalSearchScope globalSearchScope, @Nonnull NotNullFunction<PsiElement, PsiElement> transformer, @Nonnull ChildrenFilter filter);
 }

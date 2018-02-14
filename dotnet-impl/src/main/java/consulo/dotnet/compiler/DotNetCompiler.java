@@ -19,7 +19,7 @@ package consulo.dotnet.compiler;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
@@ -48,7 +48,7 @@ public class DotNetCompiler implements TranslatingCompiler
 {
 	public static final Logger LOGGER = Logger.getInstance(DotNetCompiler.class);
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDescription()
 	{
@@ -176,14 +176,14 @@ public class DotNetCompiler implements TranslatingCompiler
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public FileType[] getInputFileTypes()
 	{
 		return FileType.EMPTY_ARRAY;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public FileType[] getOutputFileTypes()
 	{

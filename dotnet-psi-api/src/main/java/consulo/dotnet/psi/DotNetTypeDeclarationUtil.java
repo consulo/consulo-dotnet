@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -35,7 +35,7 @@ public class DotNetTypeDeclarationUtil
 
 	@Nullable
 	@RequiredReadAction
-	public static String getVmQName(@NotNull DotNetTypeDeclaration typeDeclaration)
+	public static String getVmQName(@Nonnull DotNetTypeDeclaration typeDeclaration)
 	{
 		String vmQName;
 
@@ -66,7 +66,7 @@ public class DotNetTypeDeclarationUtil
 	}
 
 	@Nullable
-	public static String getVmName(@NotNull DotNetTypeDeclaration typeDeclaration)
+	public static String getVmName(@Nonnull DotNetTypeDeclaration typeDeclaration)
 	{
 		String name = typeDeclaration.getName();
 

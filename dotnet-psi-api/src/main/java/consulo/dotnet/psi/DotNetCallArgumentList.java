@@ -16,7 +16,7 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -25,10 +25,10 @@ import consulo.annotations.RequiredReadAction;
  */
 public interface DotNetCallArgumentList extends DotNetElement
 {
-	@NotNull
+	@Nonnull
 	DotNetExpression[] getExpressions();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	DotNetElement[] getArguments();
 }

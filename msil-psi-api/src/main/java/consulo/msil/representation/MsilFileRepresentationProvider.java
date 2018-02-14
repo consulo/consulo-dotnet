@@ -16,8 +16,9 @@
 
 package consulo.msil.representation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.msil.lang.psi.MsilFile;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
@@ -32,11 +33,11 @@ public interface MsilFileRepresentationProvider
 	ExtensionPointName<MsilFileRepresentationProvider> EP_NAME = ExtensionPointName.create("consulo.dotnet.msilFileRepresentation");
 
 	@Nullable
-	String getRepresentFileName(@NotNull MsilFile msilFile);
+	String getRepresentFileName(@Nonnull MsilFile msilFile);
 
-	@NotNull
-	PsiFile transform(String fileName, @NotNull MsilFile msilFile);
+	@Nonnull
+	PsiFile transform(String fileName, @Nonnull MsilFile msilFile);
 
-	@NotNull
+	@Nonnull
 	FileType getFileType();
 }

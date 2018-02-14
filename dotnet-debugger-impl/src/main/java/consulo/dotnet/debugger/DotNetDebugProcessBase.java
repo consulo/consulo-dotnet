@@ -2,8 +2,8 @@ package consulo.dotnet.debugger;
 
 import java.util.Collection;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
@@ -40,7 +40,7 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	private final RunProfile myRunProfile;
 	protected final XDebuggerManager myDebuggerManager;
 
-	public DotNetDebugProcessBase(@NotNull XDebugSession session, @NotNull RunProfile runProfile)
+	public DotNetDebugProcessBase(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile)
 	{
 		super(session);
 
@@ -48,8 +48,8 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 		myDebuggerManager = XDebuggerManager.getInstance(session.getProject());
 	}
 
-	@NotNull
-	public DotNetDebugContext createDebugContext(@NotNull DotNetVirtualMachineProxy proxy, @Nullable XBreakpoint<?> breakpoint)
+	@Nonnull
+	public DotNetDebugContext createDebugContext(@Nonnull DotNetVirtualMachineProxy proxy, @Nullable XBreakpoint<?> breakpoint)
 	{
 		return new DotNetDebugContext(getSession().getProject(), proxy, myRunProfile, getSession(), breakpoint);
 	}
@@ -74,14 +74,14 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 		return myResult.getProcessHandler();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public ExecutionConsole createConsole()
 	{
 		return myResult.getExecutionConsole();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public XDebuggerEditorsProvider getEditorsProvider()
 	{
@@ -113,11 +113,11 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	}
 
 	@Override
-	public void runToPosition(@NotNull XSourcePosition position, @Nullable XSuspendContext context)
+	public void runToPosition(@Nonnull XSourcePosition position, @Nullable XSuspendContext context)
 	{
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public AsyncResult<Void> stopAsync()
 	{
@@ -132,21 +132,21 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 
 	protected abstract void stopImpl();
 
-	@NotNull
+	@Nonnull
 	public Collection<? extends XLineBreakpoint<?>> getLineBreakpoints()
 	{
 		return ApplicationManager.getApplication().runReadAction((Computable<Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>>>) () -> myDebuggerManager.getBreakpointManager()
 				.getBreakpoints(DotNetLineBreakpointType.getInstance()));
 	}
 
-	@NotNull
+	@Nonnull
 	public Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>> getMethodBreakpoints()
 	{
 		return ApplicationManager.getApplication().runReadAction((Computable<Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>>>) () -> myDebuggerManager.getBreakpointManager()
 				.getBreakpoints(DotNetMethodBreakpointType.getInstance()));
 	}
 
-	@NotNull
+	@Nonnull
 	public Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> getExceptionBreakpoints()
 	{
 		return ApplicationManager.getApplication().runReadAction((Computable<Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>>>) () -> myDebuggerManager.getBreakpointManager()

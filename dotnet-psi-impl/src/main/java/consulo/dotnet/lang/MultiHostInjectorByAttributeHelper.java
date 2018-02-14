@@ -16,8 +16,9 @@
 
 package consulo.dotnet.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.dotnet.psi.DotNetAttribute;
 import consulo.dotnet.psi.DotNetExpression;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -32,8 +33,8 @@ public interface MultiHostInjectorByAttributeHelper
 	ExtensionPointName<MultiHostInjectorByAttributeHelper> EP_NAME = ExtensionPointName.create("consulo.dotnet.injectionByAttributeHelper");
 
 	@Nullable
-	String getLanguageId(@NotNull DotNetAttribute attribute);
+	String getLanguageId(@Nonnull DotNetAttribute attribute);
 
 	@Nullable
-	TextRange getTextRangeForInject(@NotNull DotNetExpression expression);
+	TextRange getTextRangeForInject(@Nonnull DotNetExpression expression);
 }

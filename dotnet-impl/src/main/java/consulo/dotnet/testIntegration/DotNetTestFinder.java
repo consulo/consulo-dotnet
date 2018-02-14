@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetInheritUtil;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -48,15 +49,15 @@ public class DotNetTestFinder implements TestFinder
 {
 	@Nullable
 	@Override
-	public DotNetTypeDeclaration findSourceElement(@NotNull PsiElement from)
+	public DotNetTypeDeclaration findSourceElement(@Nonnull PsiElement from)
 	{
 		return PsiTreeUtil.getParentOfType(from, DotNetTypeDeclaration.class);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
-	public Collection<PsiElement> findTestsForClass(@NotNull PsiElement element)
+	public Collection<PsiElement> findTestsForClass(@Nonnull PsiElement element)
 	{
 		DotNetTypeDeclaration sourceElement = findSourceElement(element);
 		if(sourceElement == null)
@@ -92,10 +93,10 @@ public class DotNetTestFinder implements TestFinder
 		return elements;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
-	public Collection<PsiElement> findClassesForTest(@NotNull PsiElement element)
+	public Collection<PsiElement> findClassesForTest(@Nonnull PsiElement element)
 	{
 		DotNetTypeDeclaration sourceElement = findSourceElement(element);
 		if(sourceElement == null)
@@ -144,7 +145,7 @@ public class DotNetTestFinder implements TestFinder
 
 	@Override
 	@RequiredReadAction
-	public boolean isTest(@NotNull PsiElement element)
+	public boolean isTest(@Nonnull PsiElement element)
 	{
 		DotNetTypeDeclaration sourceElement = findSourceElement(element);
 		if(sourceElement == null)

@@ -16,8 +16,9 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
@@ -52,10 +53,10 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public class DotNetBreakpointEngine
 {
 	@Nullable
-	private XValue evaluateBreakpointExpression(@NotNull final DotNetStackFrameProxy frameProxy,
-			@NotNull final XLineBreakpoint<?> breakpoint,
+	private XValue evaluateBreakpointExpression(@Nonnull final DotNetStackFrameProxy frameProxy,
+			@Nonnull final XLineBreakpoint<?> breakpoint,
 			@Nullable final XExpression conditionExpression,
-			@NotNull final DotNetDebugContext debugContext)
+			@Nonnull final DotNetDebugContext debugContext)
 	{
 		if(conditionExpression == null)
 		{
@@ -98,13 +99,13 @@ public class DotNetBreakpointEngine
 					provider.evaluate(frameProxy, debugContext, conditionExpression.getExpression(), elementAt, new XDebuggerEvaluator.XEvaluationCallback()
 					{
 						@Override
-						public void evaluated(@NotNull XValue result)
+						public void evaluated(@Nonnull XValue result)
 						{
 							valueRef.set(result);
 						}
 
 						@Override
-						public void errorOccurred(@NotNull String errorMessage)
+						public void errorOccurred(@Nonnull String errorMessage)
 						{
 						}
 					}, XSourcePositionImpl.createByElement(elementAt));
@@ -116,7 +117,7 @@ public class DotNetBreakpointEngine
 	}
 
 	@Nullable
-	public String tryEvaluateBreakpointLogMessage(@NotNull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws
+	public String tryEvaluateBreakpointLogMessage(@Nonnull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws
 			DotNetNotSuspendedException
 	{
 		XExpression logExpressionObject = breakpoint.getLogExpressionObject();
@@ -154,7 +155,7 @@ public class DotNetBreakpointEngine
 		return null;
 	}
 
-	public boolean tryEvaluateBreakpointCondition(@NotNull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception
+	public boolean tryEvaluateBreakpointCondition(@Nonnull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception
 	{
 		final XExpression conditionExpression = breakpoint.getConditionExpression();
 		if(conditionExpression == null)

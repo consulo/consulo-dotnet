@@ -16,7 +16,7 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.dotnet.debugger.proxy.value.DotNetEnumValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mono.debugger.EnumValueMirror;
@@ -32,7 +32,7 @@ public class MonoEnumValueProxy extends MonoValueProxyBase<EnumValueMirror> impl
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Object getValue()
 	{

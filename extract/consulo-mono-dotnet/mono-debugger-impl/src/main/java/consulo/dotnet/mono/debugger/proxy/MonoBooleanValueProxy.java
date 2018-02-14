@@ -16,8 +16,8 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mono.debugger.BooleanValueMirror;
@@ -33,7 +33,7 @@ public class MonoBooleanValueProxy extends MonoValueProxyBase<BooleanValueMirror
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Boolean getValue()
 	{

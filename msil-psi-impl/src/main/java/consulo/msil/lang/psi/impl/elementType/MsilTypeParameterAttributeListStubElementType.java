@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -40,37 +41,37 @@ public class MsilTypeParameterAttributeListStubElementType extends AbstractMsilS
 		super("MSIL_TYPE_PARAMETER_ATTRIBUTE_LIST");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilTypeParameterAttributeList createElement(@NotNull ASTNode astNode)
+	public MsilTypeParameterAttributeList createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilTypeParameterAttributeListImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilTypeParameterAttributeList createPsi(@NotNull MsilTypeParameterAttributeListStub msilParameterAttributeListStub)
+	public MsilTypeParameterAttributeList createPsi(@Nonnull MsilTypeParameterAttributeListStub msilParameterAttributeListStub)
 	{
 		return new MsilTypeParameterAttributeListImpl(msilParameterAttributeListStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilTypeParameterAttributeListStub createStub(@NotNull MsilTypeParameterAttributeList list, StubElement stubElement)
+	public MsilTypeParameterAttributeListStub createStub(@Nonnull MsilTypeParameterAttributeList list, StubElement stubElement)
 	{
 		String name = list.getGenericParameterName();
 		return new MsilTypeParameterAttributeListStub(stubElement, this, name);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilTypeParameterAttributeListStub list, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilTypeParameterAttributeListStub list, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(list.getGenericParameterName());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilTypeParameterAttributeListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilTypeParameterAttributeListStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef name = inputStream.readName();
 		return new MsilTypeParameterAttributeListStub(stubElement, this, name);

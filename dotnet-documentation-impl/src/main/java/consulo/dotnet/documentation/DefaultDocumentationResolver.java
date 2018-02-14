@@ -18,10 +18,12 @@ package consulo.dotnet.documentation;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.emonic.base.documentation.IDocumentation;
 import org.emonic.base.documentation.XMLDocumentationParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -44,7 +46,7 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public IDocumentation resolveDocumentation(@NotNull List<VirtualFile> orderEntryFiles, @NotNull PsiElement element)
+	public IDocumentation resolveDocumentation(@Nonnull List<VirtualFile> orderEntryFiles, @Nonnull PsiElement element)
 	{
 		for(VirtualFile orderEntryFile : orderEntryFiles)
 		{
@@ -59,7 +61,7 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 
 	@Nullable
 	private IDocumentation resolveDocumentation(
-			@NotNull VirtualFile virtualFile, @NotNull PsiElement element)
+			@Nonnull VirtualFile virtualFile, @Nonnull PsiElement element)
 	{
 		if(virtualFile.getFileType() != XmlFileType.INSTANCE)
 		{

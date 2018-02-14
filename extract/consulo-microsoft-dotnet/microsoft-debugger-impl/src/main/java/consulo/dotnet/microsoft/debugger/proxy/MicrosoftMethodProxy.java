@@ -16,8 +16,8 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ArrayUtil;
@@ -62,19 +62,19 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	}
 
 	@Override
-	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	public boolean isAnnotatedBy(@Nonnull String attributeVmQName)
 	{
 		return ArrayUtil.contains(attributeVmQName, myMethodMirror.customAttributes());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy getDeclarationType()
 	{
 		return MicrosoftTypeProxy.of(myMethodMirror.declaringType());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetMethodParameterProxy[] getParameters()
 	{
@@ -88,9 +88,9 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 		return proxies;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy)
+	public DotNetLocalVariableProxy[] getLocalVariables(@Nonnull DotNetStackFrameProxy frameProxy)
 	{
 		MicrosoftStackFrameProxy proxy = (MicrosoftStackFrameProxy) frameProxy;
 
@@ -106,7 +106,7 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy thisObjectProxy, @NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException
+	public DotNetValueProxy invoke(@Nonnull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy thisObjectProxy, @Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException
 	{
 		StackFrameMirror frameMirror = ((MicrosoftStackFrameProxy) frameProxy).getFrameMirror();
 		Value<?> thisObject = thisObjectProxy == null ? null : ((MicrosoftValueProxyBase) thisObjectProxy).getMirror();
@@ -130,12 +130,12 @@ public class MicrosoftMethodProxy implements DotNetMethodProxy
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public PsiElement findExecutableElementFromDebugInfo(@NotNull Project project, int executableChildrenAtLineIndex)
+	public PsiElement findExecutableElementFromDebugInfo(@Nonnull Project project, int executableChildrenAtLineIndex)
 	{
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

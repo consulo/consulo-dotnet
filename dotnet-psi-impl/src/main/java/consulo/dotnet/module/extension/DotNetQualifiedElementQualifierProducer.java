@@ -1,7 +1,8 @@
 package consulo.dotnet.module.extension;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetQualifiedElement;
@@ -15,7 +16,7 @@ public class DotNetQualifiedElementQualifierProducer implements DotNetElementQua
 	public static final DotNetQualifiedElementQualifierProducer INSTANCE = new DotNetQualifiedElementQualifierProducer();
 
 	@Override
-	public boolean isMyElement(@NotNull PsiElement element)
+	public boolean isMyElement(@Nonnull PsiElement element)
 	{
 		return element instanceof DotNetQualifiedElement;
 	}
@@ -23,7 +24,7 @@ public class DotNetQualifiedElementQualifierProducer implements DotNetElementQua
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public String getQualifiedName(@NotNull PsiElement element)
+	public String getQualifiedName(@Nonnull PsiElement element)
 	{
 		return ((DotNetQualifiedElement) element).getPresentableQName();
 	}

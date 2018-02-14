@@ -3,7 +3,8 @@ package consulo.dotnet.microsoft.debugger.proxy;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
@@ -25,9 +26,9 @@ public class MicrosoftStructValueProxy extends MicrosoftValueProxyBase<StructVal
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetStructValueProxy createNewStructValue(@NotNull Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map)
+	public DotNetStructValueProxy createNewStructValue(@Nonnull Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map)
 	{
 		throw new UnsupportedOperationException();
 		/*Collection<DotNetValueProxy> proxies = map.values();
@@ -43,7 +44,7 @@ public class MicrosoftStructValueProxy extends MicrosoftValueProxyBase<StructVal
 		return new MicrosoftStructValueProxy(new StructValueMirror(myValue.virtualMachine(), myValue.type(), values.toArray(new Value[values.size()]))); */
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> getValues()
 	{

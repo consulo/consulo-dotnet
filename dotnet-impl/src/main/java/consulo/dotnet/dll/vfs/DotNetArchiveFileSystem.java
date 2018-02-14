@@ -19,7 +19,7 @@ package consulo.dotnet.dll.vfs;
 import java.io.File;
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -38,7 +38,7 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 {
 	public static final Logger LOGGER = Logger.getInstance(DotNetArchiveFileSystem.class);
 
-	@NotNull
+	@Nonnull
 	public static DotNetArchiveFileSystem getInstance()
 	{
 		return (DotNetArchiveFileSystem) VirtualFileManager.getInstance().getFileSystem(DotNetModuleFileType.PROTOCOL);
@@ -49,9 +49,9 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Ap
 		super(DotNetModuleFileType.PROTOCOL);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public ArchiveFile createArchiveFile(@NotNull String path) throws IOException
+	public ArchiveFile createArchiveFile(@Nonnull String path) throws IOException
 	{
 		DotNetLibraryOpenCache.Record record = null;
 		try

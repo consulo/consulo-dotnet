@@ -19,10 +19,10 @@ package consulo.dotnet.run;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.annotation.Nonnull;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
-import org.jetbrains.annotations.NotNull;
 import com.intellij.application.options.ModuleListCellRenderer;
 import com.intellij.execution.ui.CommonProgramParametersPanel;
 import com.intellij.openapi.module.Module;
@@ -65,7 +65,7 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 		runConfiguration.getConfigurationModule().setModule((Module) myModuleComboBox.getSelectedItem());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	protected JComponent createEditor()
 	{

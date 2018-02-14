@@ -19,8 +19,8 @@ package consulo.dotnet.debugger.nodes;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.util.Couple;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -43,7 +43,7 @@ public class DotNetDebuggerCompilerGenerateUtil
 	private static final Pattern LocalVarWrapperPatternMS = Pattern.compile("CS\\$<>\\p{XDigit}+__locals\\p{XDigit}+");
 
 	@Nullable
-	public static Couple<String> extractLambdaInfo(@NotNull DotNetMethodProxy methodMirror)
+	public static Couple<String> extractLambdaInfo(@Nonnull DotNetMethodProxy methodMirror)
 	{
 		Matcher matcher = LambdaMethodPattern.matcher(methodMirror.getName());
 		if(matcher.matches())
@@ -53,27 +53,27 @@ public class DotNetDebuggerCompilerGenerateUtil
 		return null;
 	}
 
-	public static boolean isLocalVarWrapper(@NotNull String name)
+	public static boolean isLocalVarWrapper(@Nonnull String name)
 	{
 		return LocalVarWrapperPatternMono.matcher(name).matches() || LocalVarWrapperPatternMS.matcher(name).matches();
 	}
 
-	public static boolean isAsyncLambdaWrapper(@NotNull DotNetTypeProxy typeMirror)
+	public static boolean isAsyncLambdaWrapper(@Nonnull DotNetTypeProxy typeMirror)
 	{
 		return typeMirror.isNested() && (AsyncLambdaFirstWrapperMono.matcher(typeMirror.getName()).matches() || AsyncLambdaFirstWrapperMS.matcher(typeMirror.getName()).matches());
 	}
 
-	public static boolean isYieldOrAsyncNestedType(@NotNull DotNetTypeProxy typeMirror)
+	public static boolean isYieldOrAsyncNestedType(@Nonnull DotNetTypeProxy typeMirror)
 	{
 		return typeMirror.isNested() && (YieldNestedTypePattern.matcher(typeMirror.getName()).matches() || AsyncNestedTypePattern.matcher(typeMirror.getName()).matches());
 	}
 
-	public static boolean isYieldOrAsyncThisField(@NotNull String fieldName)
+	public static boolean isYieldOrAsyncThisField(@Nonnull String fieldName)
 	{
 		return "$this".equals(fieldName) || "<>f__this".equals(fieldName);
 	}
 
-	public static boolean needSkipVariableByName(@NotNull String name)
+	public static boolean needSkipVariableByName(@Nonnull String name)
 	{
 		if(name.isEmpty())
 		{
@@ -85,7 +85,7 @@ public class DotNetDebuggerCompilerGenerateUtil
 	}
 
 	@Nullable
-	public static String extractNotGeneratedName(@NotNull String name)
+	public static String extractNotGeneratedName(@Nonnull String name)
 	{
 		Matcher matcher = SomeReferenceToOriginalPattern.matcher(name);
 		if(matcher.matches())

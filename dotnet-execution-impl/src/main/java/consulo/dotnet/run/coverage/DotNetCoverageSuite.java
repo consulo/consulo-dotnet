@@ -16,8 +16,8 @@
 
 package consulo.dotnet.run.coverage;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.coverage.BaseCoverageSuite;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageFileProvider;
@@ -64,7 +64,7 @@ public class DotNetCoverageSuite extends BaseCoverageSuite
 		myEngine = engine;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public CoverageEngine getCoverageEngine()
 	{

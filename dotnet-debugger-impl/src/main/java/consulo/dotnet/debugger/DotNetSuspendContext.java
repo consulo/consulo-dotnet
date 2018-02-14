@@ -19,8 +19,8 @@ package consulo.dotnet.debugger;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XSuspendContext;
@@ -36,7 +36,7 @@ public class DotNetSuspendContext extends XSuspendContext
 
 	private final DotNetExecutionStack[] myExecutionStacks;
 
-	public DotNetSuspendContext(@NotNull DotNetDebugContext debuggerContext, long activeThreadId)
+	public DotNetSuspendContext(@Nonnull DotNetDebugContext debuggerContext, long activeThreadId)
 	{
 		myActiveThreadId = activeThreadId;
 

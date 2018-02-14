@@ -18,8 +18,8 @@ package consulo.dotnet.debugger.nodes.valueRender;
 
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XValueModifier;
@@ -40,7 +40,7 @@ public class DotNetValueModifier extends XValueModifier
 	private final DotNetDebugContext myDebugContext;
 	private final TypeTag myTypeTag;
 
-	public DotNetValueModifier(@NotNull Consumer<DotNetValueProxy> valueSetFunction, @NotNull Ref<DotNetValueProxy> valueProxyRef, @NotNull DotNetDebugContext debugContext, @NotNull TypeTag typeTag)
+	public DotNetValueModifier(@Nonnull Consumer<DotNetValueProxy> valueSetFunction, @Nonnull Ref<DotNetValueProxy> valueProxyRef, @Nonnull DotNetDebugContext debugContext, @Nonnull TypeTag typeTag)
 	{
 		myValueSetFunction = valueSetFunction;
 		myValueProxyRef = valueProxyRef;
@@ -49,7 +49,7 @@ public class DotNetValueModifier extends XValueModifier
 	}
 
 	@Override
-	public void setValue(@NotNull String expression, @NotNull XModificationCallback callback)
+	public void setValue(@Nonnull String expression, @Nonnull XModificationCallback callback)
 	{
 		DotNetVirtualMachineProxy virtualMachine = myDebugContext.getVirtualMachine();
 

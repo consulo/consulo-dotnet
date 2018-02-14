@@ -16,8 +16,8 @@
 
 package consulo.dotnet.resolve;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetType;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -44,7 +44,7 @@ public class DotNetTypeRefUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isVmQNameEqual(@NotNull DotNetTypeRef typeRef, @NotNull PsiElement element, @NotNull String expectedVmQName)
+	public static boolean isVmQNameEqual(@Nonnull DotNetTypeRef typeRef, @Nonnull PsiElement element, @Nonnull String expectedVmQName)
 	{
 		DotNetTypeResolveResult typeResolveResult = typeRef.resolve();
 		PsiElement typeResolveResultElement = typeResolveResult.getElement();
@@ -56,9 +56,9 @@ public class DotNetTypeRefUtil
 		return false;
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	public static DotNetTypeRef[] toArray(@NotNull DotNetType[] arguments)
+	public static DotNetTypeRef[] toArray(@Nonnull DotNetType[] arguments)
 	{
 		if(arguments.length == 0)
 		{

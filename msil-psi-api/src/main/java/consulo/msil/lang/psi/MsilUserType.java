@@ -16,7 +16,8 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.Immutable;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetUserType;
@@ -36,7 +37,7 @@ public interface MsilUserType extends DotNetUserType
 		public static final Target[] VALUES = values();
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	Target getTarget();
 }

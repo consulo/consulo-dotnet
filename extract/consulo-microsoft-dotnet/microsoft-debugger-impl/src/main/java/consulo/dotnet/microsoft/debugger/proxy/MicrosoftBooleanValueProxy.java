@@ -1,6 +1,7 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mssdw.BooleanValueMirror;
@@ -16,7 +17,7 @@ public class MicrosoftBooleanValueProxy extends MicrosoftValueProxyBase<BooleanV
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Boolean getValue()
 	{

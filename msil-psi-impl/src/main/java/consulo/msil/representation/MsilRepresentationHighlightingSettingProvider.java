@@ -16,8 +16,9 @@
 
 package consulo.msil.representation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import com.intellij.openapi.project.Project;
@@ -31,7 +32,7 @@ public class MsilRepresentationHighlightingSettingProvider extends DefaultHighli
 {
 	@Nullable
 	@Override
-	public FileHighlightingSetting getDefaultSetting(@NotNull Project project, @NotNull VirtualFile file)
+	public FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file)
 	{
 		if(file instanceof MsilFileRepresentationVirtualFile)
 		{

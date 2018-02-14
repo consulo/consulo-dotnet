@@ -16,8 +16,8 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
@@ -53,13 +53,13 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 		myMethodId = frameMirror.getFunctionId();
 	}
 
-	@NotNull
+	@Nonnull
 	public StackFrameMirror getFrameMirror()
 	{
 		return myFrameMirror;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
 	{
@@ -83,31 +83,31 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
+	public DotNetValueProxy getParameterValue(@Nonnull DotNetMethodParameterProxy parameterProxy)
 	{
 		MicrosoftMethodParameterProxy proxy = (MicrosoftMethodParameterProxy) parameterProxy;
 		return MicrosoftValueProxyUtil.wrap(myFrameMirror.argumentValue(proxy.getMirror()));
 	}
 
 	@Override
-	public void setParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy, @NotNull DotNetValueProxy valueProxy)
+	public void setParameterValue(@Nonnull DotNetMethodParameterProxy parameterProxy, @Nonnull DotNetValueProxy valueProxy)
 	{
 	}
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
+	public DotNetValueProxy getLocalValue(@Nonnull DotNetLocalVariableProxy localVariableProxy)
 	{
 		MicrosoftLocalVariableProxy proxy = (MicrosoftLocalVariableProxy) localVariableProxy;
 		return MicrosoftValueProxyUtil.wrap(myFrameMirror.localValue(proxy.getMirror()));
 	}
 
 	@Override
-	public void setLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy, @NotNull DotNetValueProxy valueProxy)
+	public void setLocalValue(@Nonnull DotNetLocalVariableProxy localVariableProxy, @Nonnull DotNetValueProxy valueProxy)
 	{
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetThreadProxy getThread()
 	{
@@ -120,7 +120,7 @@ public class MicrosoftStackFrameProxy implements DotNetStackFrameProxy
 		return myIndex;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Object getEqualityObject()
 	{

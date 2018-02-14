@@ -16,7 +16,8 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
@@ -46,7 +47,7 @@ public class DotNetBreakpointListenerComponent extends AbstractProjectComponent
 		breakpointManager.addBreakpointListener(DotNetMethodBreakpointType.getInstance(), new XBreakpointListener<XLineBreakpoint<DotNetMethodBreakpointProperties>>()
 		{
 			@Override
-			public void breakpointAdded(@NotNull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
+			public void breakpointAdded(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 			{
 				XDebugSessionImpl.NOTIFICATION_GROUP.createNotification("Method breakpoints may dramatically slow down debugging", MessageType.WARNING).notify((myProject));
 			}

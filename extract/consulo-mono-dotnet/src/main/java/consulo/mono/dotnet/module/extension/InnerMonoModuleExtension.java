@@ -1,7 +1,7 @@
 package consulo.mono.dotnet.module.extension;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.module.extension.ModuleExtensionWithSdk;
@@ -22,7 +22,7 @@ public abstract class InnerMonoModuleExtension<T extends InnerMonoModuleExtensio
 
 	private Sdk myLazySdk;
 
-	public InnerMonoModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
+	public InnerMonoModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel)
 	{
 		super(id, rootModel);
 		myPointer = new DummyModuleInheritableNamedPointer<Sdk>()
@@ -68,7 +68,7 @@ public abstract class InnerMonoModuleExtension<T extends InnerMonoModuleExtensio
 
 	protected abstract Sdk createSdk(VirtualFile virtualFile);
 
-	@NotNull
+	@Nonnull
 	@Override
 	public ModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{

@@ -20,8 +20,9 @@ import gnu.trove.THashSet;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -64,7 +65,7 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 		INSTANCE.registerExecutor(new QueryExecutor<DotNetTypeDeclaration, SearchParameters>()
 		{
 			@Override
-			public boolean execute(@NotNull final SearchParameters parameters, @NotNull final Processor<DotNetTypeDeclaration> consumer)
+			public boolean execute(@Nonnull final SearchParameters parameters, @Nonnull final Processor<DotNetTypeDeclaration> consumer)
 			{
 				final String baseVmQName = parameters.getVmQName();
 				final SearchScope searchScope = parameters.getScope();
@@ -101,8 +102,8 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 		private final Condition<String> myNameCondition;
 
 		public SearchParameters(Project project,
-				@NotNull final String aClassQName,
-				@NotNull SearchScope scope,
+				@Nonnull final String aClassQName,
+				@Nonnull SearchScope scope,
 				final boolean checkDeep,
 				final boolean checkInheritance,
 				Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
@@ -110,12 +111,12 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 			this(project, aClassQName, scope, checkDeep, checkInheritance, Conditions.<String>alwaysTrue(), transformer);
 		}
 
-		public SearchParameters(@NotNull Project project,
-				@NotNull final String aClassQName,
-				@NotNull SearchScope scope,
+		public SearchParameters(@Nonnull Project project,
+				@Nonnull final String aClassQName,
+				@Nonnull SearchScope scope,
 				final boolean checkDeep,
 				final boolean checkInheritance,
-				@NotNull final Condition<String> nameCondition,
+				@Nonnull final Condition<String> nameCondition,
 				Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 		{
 			myProject = project;
@@ -127,13 +128,13 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 			myTransformer = transformer;
 		}
 
-		@NotNull
+		@Nonnull
 		public String getVmQName()
 		{
 			return myVmQName;
 		}
 
-		@NotNull
+		@Nonnull
 		public Condition<String> getNameCondition()
 		{
 			return myNameCondition;
@@ -165,9 +166,9 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 		super("consulo.dotnet");
 	}
 
-	@NotNull
-	public static Query<DotNetTypeDeclaration> search(@NotNull final DotNetTypeDeclaration typeDeclaration,
-			@NotNull SearchScope scope,
+	@Nonnull
+	public static Query<DotNetTypeDeclaration> search(@Nonnull final DotNetTypeDeclaration typeDeclaration,
+			@Nonnull SearchScope scope,
 			final boolean checkDeep,
 			final boolean checkInheritance,
 			Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
@@ -191,46 +192,46 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 		return search(new SearchParameters(typeDeclaration.getProject(), vmQName, scope, checkDeep, checkInheritance, transformer));
 	}
 
-	public static Query<DotNetTypeDeclaration> search(@NotNull SearchParameters parameters)
+	public static Query<DotNetTypeDeclaration> search(@Nonnull SearchParameters parameters)
 	{
 		return INSTANCE.createQuery(parameters);
 	}
 
-	@NotNull
-	public static Query<DotNetTypeDeclaration> search(@NotNull final DotNetTypeDeclaration typeDeclaration,
-			@NotNull SearchScope scope,
+	@Nonnull
+	public static Query<DotNetTypeDeclaration> search(@Nonnull final DotNetTypeDeclaration typeDeclaration,
+			@Nonnull SearchScope scope,
 			final boolean checkDeep,
 			Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		return search(typeDeclaration, scope, checkDeep, true, transformer);
 	}
 
-	@NotNull
-	public static Query<DotNetTypeDeclaration> search(@NotNull final DotNetTypeDeclaration typeDeclaration, final boolean checkDeep)
+	@Nonnull
+	public static Query<DotNetTypeDeclaration> search(@Nonnull final DotNetTypeDeclaration typeDeclaration, final boolean checkDeep)
 	{
 		return search(typeDeclaration, typeDeclaration.getUseScope(), checkDeep, DotNetPsiSearcher.DEFAULT_TRANSFORMER);
 	}
 
-	@NotNull
-	public static Query<DotNetTypeDeclaration> search(@NotNull final DotNetTypeDeclaration typeDeclaration,
+	@Nonnull
+	public static Query<DotNetTypeDeclaration> search(@Nonnull final DotNetTypeDeclaration typeDeclaration,
 			final boolean checkDeep,
-			@NotNull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+			@Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		return search(typeDeclaration, typeDeclaration.getUseScope(), checkDeep, transformer);
 	}
 
-	@NotNull
-	public static Query<DotNetTypeDeclaration> search(@NotNull DotNetTypeDeclaration typeDeclaration,
-			@NotNull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	@Nonnull
+	public static Query<DotNetTypeDeclaration> search(@Nonnull DotNetTypeDeclaration typeDeclaration,
+			@Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		return search(typeDeclaration, true, transformer);
 	}
 
 	@RequiredReadAction
-	private static boolean processInheritors(@NotNull final Processor<DotNetTypeDeclaration> consumer,
-			@NotNull final String baseVmQName,
-			@NotNull final SearchScope searchScope,
-			@NotNull final SearchParameters parameters)
+	private static boolean processInheritors(@Nonnull final Processor<DotNetTypeDeclaration> consumer,
+			@Nonnull final String baseVmQName,
+			@Nonnull final SearchScope searchScope,
+			@Nonnull final SearchParameters parameters)
 	{
 
 		if(DotNetTypes.System.Object.equals(baseVmQName))
@@ -332,7 +333,7 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 		return true;
 	}
 
-	private static boolean isSealed(@NotNull final DotNetTypeDeclaration baseClass)
+	private static boolean isSealed(@Nonnull final DotNetTypeDeclaration baseClass)
 	{
 		return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>()
 		{

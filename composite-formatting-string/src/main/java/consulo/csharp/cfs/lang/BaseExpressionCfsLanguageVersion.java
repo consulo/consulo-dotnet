@@ -16,7 +16,8 @@
 
 package consulo.csharp.cfs.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.csharp.cfs.lang.lexer.CfsLexer;
 import consulo.csharp.cfs.lang.parser.CfsParser;
 import com.intellij.lang.Language;
@@ -32,14 +33,14 @@ public abstract class BaseExpressionCfsLanguageVersion extends BaseCfsLanguageVe
 {
 	private IElementType myExpressionElementType;
 
-	public BaseExpressionCfsLanguageVersion(@NotNull Language baseLanguage)
+	public BaseExpressionCfsLanguageVersion(@Nonnull Language baseLanguage)
 	{
 		super(baseLanguage.getName() + "_EXPRESSION", CfsLanguage.INSTANCE);
 	}
 
 	public abstract IElementType createExpressionElementType();
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiParser createParser()
 	{
@@ -50,7 +51,7 @@ public abstract class BaseExpressionCfsLanguageVersion extends BaseCfsLanguageVe
 		return new CfsParser(myExpressionElementType);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createInnerLexer()
 	{

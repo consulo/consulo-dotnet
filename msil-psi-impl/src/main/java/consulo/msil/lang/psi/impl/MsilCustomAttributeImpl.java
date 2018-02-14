@@ -16,8 +16,9 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -38,12 +39,12 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilCustomAttributeStub;
  */
 public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttributeStub> implements MsilCustomAttribute
 {
-	public MsilCustomAttributeImpl(@NotNull ASTNode node)
+	public MsilCustomAttributeImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilCustomAttributeImpl(@NotNull MsilCustomAttributeStub stub, @NotNull IStubElementType nodeType)
+	public MsilCustomAttributeImpl(@Nonnull MsilCustomAttributeStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -55,7 +56,7 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public DotNetParameterList getParameterList()
@@ -63,7 +64,7 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 		return getRequiredStubOrPsiChild(MsilStubElements.PARAMETER_LIST);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public MsilCustomAttributeSignature getSignature()
@@ -88,7 +89,7 @@ public class MsilCustomAttributeImpl extends MsilStubElementImpl<MsilCustomAttri
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRef()
 	{

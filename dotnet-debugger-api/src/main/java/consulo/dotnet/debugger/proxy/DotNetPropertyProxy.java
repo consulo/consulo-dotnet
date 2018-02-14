@@ -1,6 +1,6 @@
 package consulo.dotnet.debugger.proxy;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

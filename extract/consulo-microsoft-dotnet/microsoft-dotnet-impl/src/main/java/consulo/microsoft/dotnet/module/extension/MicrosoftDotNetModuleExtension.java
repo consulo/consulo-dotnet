@@ -18,8 +18,8 @@ package consulo.microsoft.dotnet.module.extension;
 
 import java.io.File;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.compiler.DotNetMacroUtil;
 import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.module.extension.BaseDotNetModuleExtension;
@@ -42,36 +42,36 @@ import consulo.roots.ModuleRootLayer;
  */
 public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<MicrosoftDotNetModuleExtension> implements DotNetModuleExtensionWithDebug
 {
-	public MicrosoftDotNetModuleExtension(@NotNull String id, @NotNull ModuleRootLayer module)
+	public MicrosoftDotNetModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer module)
 	{
 		super(id, module);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Class<? extends SdkType> getSdkTypeClass()
 	{
 		return MicrosoftDotNetSdkType.class;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public GeneralCommandLine createDefaultCommandLine(@NotNull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException
+	public GeneralCommandLine createDefaultCommandLine(@Nonnull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException
 	{
 		String fileName = DotNetMacroUtil.expandOutputFile(this);
 
 		return createRunCommandLineImpl(fileName, debugConnectionInfo, sdk);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDebugFileExtension()
 	{
 		return "pdb";
 	}
 
-	@NotNull
-	public static GeneralCommandLine createRunCommandLineImpl(@NotNull String fileName, @Nullable DebugConnectionInfo debugConnectionInfo, @NotNull Sdk sdk)
+	@Nonnull
+	public static GeneralCommandLine createRunCommandLineImpl(@Nonnull String fileName, @Nullable DebugConnectionInfo debugConnectionInfo, @Nonnull Sdk sdk)
 	{
 		GeneralCommandLine commandLine = new GeneralCommandLine();
 		if(debugConnectionInfo != null)
@@ -96,9 +96,9 @@ public class MicrosoftDotNetModuleExtension extends BaseDotNetModuleExtension<Mi
 		return commandLine;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull RunProfile runProfile, @NotNull DebugConnectionInfo debugConnectionInfo)
+	public DotNetDebugProcessBase createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile, @Nonnull DebugConnectionInfo debugConnectionInfo)
 	{
 		return new MicrosoftDebugProcess(session, runProfile, debugConnectionInfo);
 	}

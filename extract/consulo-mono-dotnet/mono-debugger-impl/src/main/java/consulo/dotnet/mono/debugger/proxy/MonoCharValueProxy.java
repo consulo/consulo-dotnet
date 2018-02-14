@@ -16,7 +16,7 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mono.debugger.CharValueMirror;
@@ -32,7 +32,7 @@ public class MonoCharValueProxy extends MonoValueProxyBase<CharValueMirror> impl
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Character getValue()
 	{

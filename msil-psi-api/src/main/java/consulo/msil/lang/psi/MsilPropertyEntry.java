@@ -16,8 +16,9 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetPropertyDeclaration;
 
@@ -27,7 +28,7 @@ import consulo.dotnet.psi.DotNetPropertyDeclaration;
  */
 public interface MsilPropertyEntry extends MsilEntry, DotNetPropertyDeclaration
 {
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	MsilCustomAttribute[] getAttributes();
 

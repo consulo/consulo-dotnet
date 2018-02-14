@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -41,23 +42,23 @@ public class MsilCustomAttributeStubElementType extends AbstractMsilStubElementT
 		super("MSIL_CUSTOM_ATTRIBTE");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilCustomAttribute createElement(@NotNull ASTNode astNode)
+	public MsilCustomAttribute createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilCustomAttributeImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilCustomAttribute createPsi(@NotNull MsilCustomAttributeStub msilCustomAttributeStub)
+	public MsilCustomAttribute createPsi(@Nonnull MsilCustomAttributeStub msilCustomAttributeStub)
 	{
 		return new MsilCustomAttributeImpl(msilCustomAttributeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilCustomAttributeStub createStub(@NotNull MsilCustomAttribute msilCustomAttribute, StubElement stubElement)
+	public MsilCustomAttributeStub createStub(@Nonnull MsilCustomAttribute msilCustomAttribute, StubElement stubElement)
 	{
 		DotNetType type = msilCustomAttribute.getType();
 		String ref = type == null ? null : type.getText();
@@ -65,14 +66,14 @@ public class MsilCustomAttributeStubElementType extends AbstractMsilStubElementT
 	}
 
 	@Override
-	public void serialize(@NotNull MsilCustomAttributeStub msilCustomAttributeStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilCustomAttributeStub msilCustomAttributeStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilCustomAttributeStub.getTypeRef());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilCustomAttributeStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilCustomAttributeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilCustomAttributeStub(stubElement, this, ref);

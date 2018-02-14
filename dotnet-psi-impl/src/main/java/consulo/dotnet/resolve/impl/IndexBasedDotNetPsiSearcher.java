@@ -16,8 +16,8 @@
 
 package consulo.dotnet.resolve.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -43,25 +43,25 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 		myProject = project;
 	}
 
-	@NotNull
-	protected abstract DotNetNamespaceAsElement createNamespace(@NotNull String indexKey, @NotNull String qName);
+	@Nonnull
+	protected abstract DotNetNamespaceAsElement createNamespace(@Nonnull String indexKey, @Nonnull String qName);
 
-	@NotNull
+	@Nonnull
 	public abstract StubIndexKey<String, DotNetQualifiedElement> getElementByQNameIndexKey();
 
-	@NotNull
+	@Nonnull
 	public abstract StubIndexKey<String, DotNetQualifiedElement> getNamespaceIndexKey();
 
 	@RequiredReadAction
 	@Override
 	@Nullable
-	public final DotNetNamespaceAsElement findNamespace(@NotNull String qName, @NotNull GlobalSearchScope scope)
+	public final DotNetNamespaceAsElement findNamespace(@Nonnull String qName, @Nonnull GlobalSearchScope scope)
 	{
 		return findNamespaceImpl(DotNetNamespaceStubUtil.getIndexableNamespace(qName), qName, scope);
 	}
 
 	@Nullable
-	public DotNetNamespaceAsElement findNamespaceImpl(@NotNull String indexKey, @NotNull String qName, @NotNull GlobalSearchScope scope)
+	public DotNetNamespaceAsElement findNamespaceImpl(@Nonnull String indexKey, @Nonnull String qName, @Nonnull GlobalSearchScope scope)
 	{
 		if(DotNetNamespaceStubUtil.ROOT_FOR_INDEXING.equals(indexKey))
 		{
@@ -75,10 +75,10 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 		return null;
 	}
 
-	private static boolean isFoundAnyOneElement(@NotNull Project project,
-			@NotNull final String indexKey,
-			@NotNull StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
-			@NotNull GlobalSearchScope scope)
+	private static boolean isFoundAnyOneElement(@Nonnull Project project,
+			@Nonnull final String indexKey,
+			@Nonnull StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
+			@Nonnull GlobalSearchScope scope)
 	{
 		return !StubIndex.getInstance().processAllKeys(keyForIndex, s ->
 		{
@@ -87,7 +87,7 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 		}, scope, new GlobalSearchScopeFilter(scope));
 	}
 
-	@NotNull
+	@Nonnull
 	public Project getProject()
 	{
 		return myProject;

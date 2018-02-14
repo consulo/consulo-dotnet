@@ -22,9 +22,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -57,7 +58,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	protected Project myProject;
 	protected String myQName;
 
-	protected BaseDotNetNamespaceAsElement(@NotNull Project project, @NotNull Language language, @NotNull String qName)
+	protected BaseDotNetNamespaceAsElement(@Nonnull Project project, @Nonnull Language language, @Nonnull String qName)
 	{
 		super(PsiManager.getInstance(project), language);
 		myQName = qName;
@@ -66,7 +67,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 
 	@Override
 	@RequiredReadAction
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place)
+	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
 	{
 		GlobalSearchScope globalSearchScope = state.get(RESOLVE_SCOPE);
 		if(globalSearchScope == null)
@@ -97,21 +98,21 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		return true;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
-	public Collection<PsiElement> findChildren(@NotNull String name, @NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
+	public Collection<PsiElement> findChildren(@Nonnull String name, @Nonnull GlobalSearchScope globalSearchScope, @Nonnull ChildrenFilter filter)
 	{
 		return findChildren(name, globalSearchScope, DotNetTypeTransformer.INSTANCE, filter);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
-	public Collection<PsiElement> findChildren(@NotNull String name,
-			@NotNull GlobalSearchScope globalSearchScope,
-			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
-			@NotNull ChildrenFilter filter)
+	public Collection<PsiElement> findChildren(@Nonnull String name,
+			@Nonnull GlobalSearchScope globalSearchScope,
+			@Nonnull NotNullFunction<PsiElement, PsiElement> transformer,
+			@Nonnull ChildrenFilter filter)
 	{
 		List<PsiElement> list = new SmartList<>();
 		for(PsiElement element : getChildren(globalSearchScope, filter))
@@ -131,18 +132,18 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 
 	@RequiredReadAction
 	@Override
-	@NotNull
+	@Nonnull
 	@SuppressWarnings("unchecked")
-	public Collection<PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull ChildrenFilter filter)
+	public Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull ChildrenFilter filter)
 	{
 		return getChildren(globalSearchScope, DotNetTypeTransformer.INSTANCE, filter);
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull NotNullFunction<PsiElement, PsiElement> transformer, @NotNull ChildrenFilter filter)
+	public Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull NotNullFunction<PsiElement, PsiElement> transformer, @Nonnull ChildrenFilter filter)
 	{
 		switch(filter)
 		{
@@ -167,23 +168,23 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		return Collections.emptyList();
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	protected Set<? extends PsiElement> getOnlyElements(@NotNull GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyElements(@Nonnull GlobalSearchScope globalSearchScope)
 	{
 		return Collections.emptySet();
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	protected Set<? extends PsiElement> getOnlyNamespaces(@NotNull GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyNamespaces(@Nonnull GlobalSearchScope globalSearchScope)
 	{
 		return Collections.emptySet();
 	}
 
 	@SuppressWarnings("unchecked")
-	@NotNull
-	public static List<PsiElement> transformData(@NotNull Iterable<? extends PsiElement> collection, int size, NotNullFunction<PsiElement, PsiElement> transformer)
+	@Nonnull
+	public static List<PsiElement> transformData(@Nonnull Iterable<? extends PsiElement> collection, int size, NotNullFunction<PsiElement, PsiElement> transformer)
 	{
 		if(size == 0)
 		{
@@ -231,7 +232,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
 	{
 		return null;
 	}

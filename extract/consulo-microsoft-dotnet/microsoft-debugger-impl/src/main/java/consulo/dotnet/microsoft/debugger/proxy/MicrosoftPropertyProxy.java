@@ -16,8 +16,8 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -33,7 +33,7 @@ import mssdw.PropertyMirror;
  */
 public class MicrosoftPropertyProxy extends MicrosoftVariableProxyBase<PropertyMirror> implements DotNetPropertyProxy
 {
-	public MicrosoftPropertyProxy(@NotNull PropertyMirror mirror)
+	public MicrosoftPropertyProxy(@Nonnull PropertyMirror mirror)
 	{
 		super(mirror);
 	}
@@ -45,7 +45,7 @@ public class MicrosoftPropertyProxy extends MicrosoftVariableProxyBase<PropertyM
 		return MicrosoftTypeProxy.of(myMirror.type());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy getParentType()
 	{
@@ -60,7 +60,7 @@ public class MicrosoftPropertyProxy extends MicrosoftVariableProxyBase<PropertyM
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getValue(@NotNull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
+	public DotNetValueProxy getValue(@Nonnull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy)
 	{
 		MicrosoftStackFrameProxy msStackFrameProxy = (MicrosoftStackFrameProxy) frameProxy;
 		MicrosoftValueProxyBase<?> msValueProxy = (MicrosoftValueProxyBase<?>) proxy;
@@ -68,7 +68,7 @@ public class MicrosoftPropertyProxy extends MicrosoftVariableProxyBase<PropertyM
 	}
 
 	@Override
-	public void setValue(@NotNull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @NotNull DotNetValueProxy newValueProxy)
+	public void setValue(@Nonnull DotNetStackFrameProxy threadProxy, @Nullable DotNetValueProxy proxy, @Nonnull DotNetValueProxy newValueProxy)
 	{
 		//MonoThreadProxy monoThreadProxy = (MonoThreadProxy) threadProxy.getThread();
 		//MonoObjectValueProxy monoValueProxyBase = (MonoObjectValueProxy) proxy;

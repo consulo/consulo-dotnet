@@ -18,8 +18,9 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
@@ -60,13 +61,13 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 		myMethodId = frameMirror.location().method().id();
 	}
 
-	@NotNull
+	@Nonnull
 	public StackFrameMirror getFrameMirror()
 	{
 		return getRefreshedFrame();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
 	{
@@ -94,7 +95,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy)
+	public DotNetValueProxy getParameterValue(@Nonnull DotNetMethodParameterProxy parameterProxy)
 	{
 		try
 		{
@@ -109,7 +110,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void setParameterValue(@NotNull DotNetMethodParameterProxy parameterProxy, @NotNull DotNetValueProxy valueProxy)
+	public void setParameterValue(@Nonnull DotNetMethodParameterProxy parameterProxy, @Nonnull DotNetValueProxy valueProxy)
 	{
 		MonoMethodParameterProxy proxy = (MonoMethodParameterProxy) parameterProxy;
 
@@ -120,7 +121,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy getLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy)
+	public DotNetValueProxy getLocalValue(@Nonnull DotNetLocalVariableProxy localVariableProxy)
 	{
 		try
 		{
@@ -135,7 +136,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void setLocalValue(@NotNull DotNetLocalVariableProxy localVariableProxy, @NotNull DotNetValueProxy valueProxy)
+	public void setLocalValue(@Nonnull DotNetLocalVariableProxy localVariableProxy, @Nonnull DotNetValueProxy valueProxy)
 	{
 		MonoLocalVariableProxy proxy = (MonoLocalVariableProxy) localVariableProxy;
 
@@ -144,7 +145,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 		getRefreshedFrame().setLocalOrParameterValues(new ImmutablePair<>(proxy.getMirror(), value));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetThreadProxy getThread()
 	{
@@ -157,7 +158,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 		return myIndex;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Object getEqualityObject()
 	{
@@ -171,7 +172,7 @@ public class MonoStackFrameProxy implements DotNetStackFrameProxy
 		return new MonoSourceLocation(getRefreshedFrame().location());
 	}
 
-	@NotNull
+	@Nonnull
 	private StackFrameMirror getRefreshedFrame()
 	{
 		try

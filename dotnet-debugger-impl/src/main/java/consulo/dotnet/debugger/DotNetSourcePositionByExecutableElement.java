@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -36,7 +36,7 @@ public class DotNetSourcePositionByExecutableElement implements XSourcePosition,
 	private XSourcePosition myOriginalPosition;
 	private PsiElement myExecutableElement;
 
-	public DotNetSourcePositionByExecutableElement(@NotNull XSourcePosition originalPosition, @NotNull PsiElement executableElement)
+	public DotNetSourcePositionByExecutableElement(@Nonnull XSourcePosition originalPosition, @Nonnull PsiElement executableElement)
 	{
 		myOriginalPosition = originalPosition;
 		myExecutableElement = executableElement;
@@ -62,16 +62,16 @@ public class DotNetSourcePositionByExecutableElement implements XSourcePosition,
 		return myOriginalPosition.getOffset();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public VirtualFile getFile()
 	{
 		return myOriginalPosition.getFile();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public Navigatable createNavigatable(@NotNull Project project)
+	public Navigatable createNavigatable(@Nonnull Project project)
 	{
 		return myOriginalPosition.createNavigatable(project);
 	}

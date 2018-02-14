@@ -18,9 +18,11 @@ package consulo.msil.representation;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -43,44 +45,44 @@ public class MsilFileRepresentationVirtualFile extends LightVirtualFile
 		}
 
 		@Override
-		public void deleteFile(Object requestor, @NotNull VirtualFile vFile) throws IOException
+		public void deleteFile(Object requestor, @Nonnull VirtualFile vFile) throws IOException
 		{
 
 		}
 
 		@Override
-		public void moveFile(Object requestor, @NotNull VirtualFile vFile, @NotNull VirtualFile newParent) throws IOException
+		public void moveFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent) throws IOException
 		{
 
 		}
 
 		@Override
-		public void renameFile(Object requestor, @NotNull VirtualFile vFile, @NotNull String newName) throws IOException
+		public void renameFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull String newName) throws IOException
 		{
 
 		}
 
 		@Override
-		public VirtualFile createChildFile(Object requestor, @NotNull VirtualFile vDir, @NotNull String fileName) throws IOException
-		{
-			return null;
-		}
-
-		@NotNull
-		@Override
-		public VirtualFile createChildDirectory(Object requestor, @NotNull VirtualFile vDir, @NotNull String dirName) throws IOException
+		public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException
 		{
 			return null;
 		}
 
+		@Nonnull
 		@Override
-		public VirtualFile copyFile(Object requestor, @NotNull VirtualFile virtualFile, @NotNull VirtualFile newParent, @NotNull String copyName) throws IOException
+		public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException
 		{
 			return null;
 		}
 
 		@Override
-		@NotNull
+		public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile virtualFile, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException
+		{
+			return null;
+		}
+
+		@Override
+		@Nonnull
 		public String getProtocol()
 		{
 			return PROTOCOL;
@@ -88,7 +90,7 @@ public class MsilFileRepresentationVirtualFile extends LightVirtualFile
 
 		@Override
 		@Nullable
-		public VirtualFile findFileByPath(@NotNull String path)
+		public VirtualFile findFileByPath(@Nonnull String path)
 		{
 			return null;
 		}
@@ -100,7 +102,7 @@ public class MsilFileRepresentationVirtualFile extends LightVirtualFile
 
 		@Override
 		@Nullable
-		public VirtualFile refreshAndFindFileByPath(@NotNull String path)
+		public VirtualFile refreshAndFindFileByPath(@Nonnull String path)
 		{
 			return null;
 		}
@@ -114,7 +116,7 @@ public class MsilFileRepresentationVirtualFile extends LightVirtualFile
 		setWritable(false);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public MyVirtualFileSystem getFileSystem()
 	{

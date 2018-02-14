@@ -16,7 +16,8 @@
 
 package consulo.csharp.cfs.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.Language;
 
 /**
@@ -32,7 +33,7 @@ public class CfsLanguage extends Language
 		super("CFS");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDisplayName()
 	{

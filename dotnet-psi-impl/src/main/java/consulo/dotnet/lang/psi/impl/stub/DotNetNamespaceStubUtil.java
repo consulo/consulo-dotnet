@@ -16,7 +16,8 @@
 
 package consulo.dotnet.lang.psi.impl.stub;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -31,23 +32,23 @@ public class DotNetNamespaceStubUtil
 {
 	public static String ROOT_FOR_INDEXING = "<root>";
 
-	@NotNull
-	public static String getIndexableNamespace(@NotNull String namespace)
+	@Nonnull
+	public static String getIndexableNamespace(@Nonnull String namespace)
 	{
 		return StringUtil.notNullizeIfEmpty(namespace, ROOT_FOR_INDEXING);
 	}
 
-	@NotNull
-	public static String getIndexableNamespace(@NotNull QualifiedName qualifiedName)
+	@Nonnull
+	public static String getIndexableNamespace(@Nonnull QualifiedName qualifiedName)
 	{
 		return StringUtil.notNullizeIfEmpty(qualifiedName.join("."), ROOT_FOR_INDEXING);
 	}
 
-	public static void indexStub(@NotNull IndexSink indexSink,
-			@NotNull StubIndexKey<String, ? extends DotNetQualifiedElement> elementByQNameKey,
-			@NotNull StubIndexKey<String, ? extends DotNetQualifiedElement> namespaceKey,
-			@NotNull String namespace,
-			@NotNull String name)
+	public static void indexStub(@Nonnull IndexSink indexSink,
+			@Nonnull StubIndexKey<String, ? extends DotNetQualifiedElement> elementByQNameKey,
+			@Nonnull StubIndexKey<String, ? extends DotNetQualifiedElement> namespaceKey,
+			@Nonnull String namespace,
+			@Nonnull String name)
 	{
 		String indexableNamespace = getIndexableNamespace(namespace);
 

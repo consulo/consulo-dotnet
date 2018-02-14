@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -41,23 +42,23 @@ public class MsilXXXAccessorStubElementType extends AbstractMsilStubElementType<
 		super("MSIL_XXX_ACCESSOR");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilXXXAcessor createElement(@NotNull ASTNode astNode)
+	public MsilXXXAcessor createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilXXXAccessorImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilXXXAcessor createPsi(@NotNull MsilXXXAccessorStub msilXXXAccessorStub)
+	public MsilXXXAcessor createPsi(@Nonnull MsilXXXAccessorStub msilXXXAccessorStub)
 	{
 		return new MsilXXXAccessorImpl(msilXXXAccessorStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilXXXAccessorStub createStub(@NotNull MsilXXXAcessor accessor, StubElement stubElement)
+	public MsilXXXAccessorStub createStub(@Nonnull MsilXXXAcessor accessor, StubElement stubElement)
 	{
 		DotNetXXXAccessor.Kind accessorType = accessor.getAccessorKind();
 		String name = accessor.getMethodName();
@@ -65,15 +66,15 @@ public class MsilXXXAccessorStubElementType extends AbstractMsilStubElementType<
 	}
 
 	@Override
-	public void serialize(@NotNull MsilXXXAccessorStub stub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilXXXAccessorStub stub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeVarInt(stub.getIndex());
 		stubOutputStream.writeName(stub.getMethodName());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilXXXAccessorStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilXXXAccessorStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		int i = inputStream.readVarInt();
 		StringRef ref = inputStream.readName();

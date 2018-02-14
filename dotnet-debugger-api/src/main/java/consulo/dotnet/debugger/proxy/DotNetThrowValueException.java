@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
@@ -35,13 +35,13 @@ public class DotNetThrowValueException extends RuntimeException
 	private String myType;
 	private String myForceMessage;
 
-	public DotNetThrowValueException(DotNetStackFrameProxy frameProxy, @NotNull DotNetValueProxy throwValue)
+	public DotNetThrowValueException(DotNetStackFrameProxy frameProxy, @Nonnull DotNetValueProxy throwValue)
 	{
 		myFrameProxy = frameProxy;
 		myThrowValue = throwValue;
 	}
 
-	public DotNetThrowValueException(@NotNull String type, @Nullable String message)
+	public DotNetThrowValueException(@Nonnull String type, @Nullable String message)
 	{
 		myType = type;
 		myForceMessage = message;

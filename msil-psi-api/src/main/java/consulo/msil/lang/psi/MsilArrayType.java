@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetArrayType;
 
@@ -26,7 +26,7 @@ import consulo.dotnet.psi.DotNetArrayType;
  */
 public interface MsilArrayType extends DotNetArrayType
 {
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	MsilArrayDimension[] getDimensions();
 }

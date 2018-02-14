@@ -19,10 +19,10 @@ package consulo.dotnet.ui.chooser;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetShortNameSearcher;
@@ -67,7 +67,7 @@ public class DotNetTypeChooser extends AbstractTreeClassChooserDialog<DotNetType
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	protected List<DotNetTypeDeclaration> getClassesByName(String name, boolean checkBoxState, String pattern, GlobalSearchScope searchScope)
 	{

@@ -16,7 +16,8 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mssdw.CharValueMirror;
@@ -32,7 +33,7 @@ public class MicrosoftCharValueProxy extends MicrosoftValueProxyBase<CharValueMi
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Character getValue()
 	{

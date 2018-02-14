@@ -18,8 +18,8 @@ package consulo.dotnet.compiler;
 
 import java.io.File;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.compiler.FileProcessingCompiler;
 import com.intellij.openapi.compiler.TimestampValidityState;
 import com.intellij.openapi.compiler.ValidityState;
@@ -40,7 +40,7 @@ public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingIt
 		myExtension = dotNetModuleExtension;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public File getFile()
 	{

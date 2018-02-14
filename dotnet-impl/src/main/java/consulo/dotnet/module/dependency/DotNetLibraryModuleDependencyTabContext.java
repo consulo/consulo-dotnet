@@ -25,7 +25,7 @@ import java.util.TreeMap;
 import javax.swing.JComponent;
 import javax.swing.JList;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.application.ApplicationManager;
@@ -71,14 +71,14 @@ public class DotNetLibraryModuleDependencyTabContext extends AddModuleDependency
 		});
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getTabName()
 	{
 		return "Standard Library";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public JComponent getComponent()
 	{
@@ -87,7 +87,7 @@ public class DotNetLibraryModuleDependencyTabContext extends AddModuleDependency
 	}
 
 	@Override
-	public List<OrderEntry> createOrderEntries(@NotNull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper)
+	public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper)
 	{
 		Object[] selectedValues = myLibraryList.getSelectedValues();
 		List<OrderEntry> orderEntries = new ArrayList<OrderEntry>(selectedValues.length);
@@ -153,7 +153,7 @@ public class DotNetLibraryModuleDependencyTabContext extends AddModuleDependency
 		});
 	}
 
-	@NotNull
+	@Nonnull
 	private Map<String, String> getAvailableSystemLibraries()
 	{
 		Map<String, String> map = new HashMap<String, String>();

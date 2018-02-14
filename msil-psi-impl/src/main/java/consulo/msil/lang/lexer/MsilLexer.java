@@ -1,6 +1,7 @@
 package consulo.msil.lang.lexer;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.LexerPosition;
 import com.intellij.lexer.LookAheadLexer;
@@ -106,7 +107,7 @@ public class MsilLexer extends LookAheadLexer
 	}
 
 
-	private boolean canSkipElement(@NotNull Lexer baseLexer)
+	private boolean canSkipElement(@Nonnull Lexer baseLexer)
 	{
 		IElementType tokenType = baseLexer.getTokenType();
 		return MsilTokenSets.WHITESPACES.contains(tokenType) || MsilTokenSets.COMMENTS.contains(tokenType);

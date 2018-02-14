@@ -16,7 +16,8 @@
 
 package consulo.dotnet.mono.debugger;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import mono.debugger.TypeMirror;
 
 /**
@@ -27,13 +28,13 @@ public class TypeMirrorUnloadedException  extends Exception
 {
 	private final String myFullName;
 
-	public TypeMirrorUnloadedException(@NotNull TypeMirror typeMirror, Exception e)
+	public TypeMirrorUnloadedException(@Nonnull TypeMirror typeMirror, Exception e)
 	{
 		super("TypeMirror " + typeMirror.fullName() + " is unloaded", e);
 		myFullName = typeMirror.fullName();
 	}
 
-	@NotNull
+	@Nonnull
 	public String getFullName()
 	{
 		return myFullName;

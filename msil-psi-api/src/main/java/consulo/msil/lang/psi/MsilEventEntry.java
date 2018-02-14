@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.dotnet.psi.DotNetEventDeclaration;
 
 /**
@@ -25,6 +25,6 @@ import consulo.dotnet.psi.DotNetEventDeclaration;
  */
 public interface MsilEventEntry extends MsilEntry, DotNetEventDeclaration
 {
-	@NotNull
+	@Nonnull
 	String getNameFromBytecode();
 }

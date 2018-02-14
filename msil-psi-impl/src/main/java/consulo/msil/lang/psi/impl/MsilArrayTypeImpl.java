@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.ArrayUtil;
@@ -36,19 +36,19 @@ import consulo.msil.lang.psi.impl.type.MsilArrayTypRefImpl;
  */
 public class MsilArrayTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implements MsilArrayType
 {
-	public MsilArrayTypeImpl(@NotNull ASTNode node)
+	public MsilArrayTypeImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilArrayTypeImpl(@NotNull MsilEmptyTypeStub stub, @NotNull IStubElementType nodeType)
+	public MsilArrayTypeImpl(@Nonnull MsilEmptyTypeStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
 	@Override
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	public MsilArrayDimension[] getDimensions()
 	{
 		return getStubOrPsiChildren(MsilStubElements.ARRAY_DIMENSION, MsilArrayDimension.ARRAY_FACTORY);
@@ -61,7 +61,7 @@ public class MsilArrayTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implement
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	protected DotNetTypeRef toTypeRefImpl()
 	{
@@ -81,7 +81,7 @@ public class MsilArrayTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implement
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetType getInnerType()
 	{

@@ -16,8 +16,8 @@
 
 package consulo.dotnet.run;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -37,14 +37,14 @@ import com.intellij.execution.ui.ConsoleView;
  */
 public class DotNetRunProfileState extends PatchableRunProfileState
 {
-	public DotNetRunProfileState(@NotNull ExecutionEnvironment executionEnvironment, @NotNull GeneralCommandLine runCommandLine)
+	public DotNetRunProfileState(@Nonnull ExecutionEnvironment executionEnvironment, @Nonnull GeneralCommandLine runCommandLine)
 	{
 		super(executionEnvironment, runCommandLine);
 	}
 
 	@Nullable
 	@Override
-	public ExecutionResult executeImpl(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException
+	public ExecutionResult executeImpl(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
 	{
 		TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
 		OSProcessHandler handler = patchHandler(new OSProcessHandler(getCommandLineForRun()));

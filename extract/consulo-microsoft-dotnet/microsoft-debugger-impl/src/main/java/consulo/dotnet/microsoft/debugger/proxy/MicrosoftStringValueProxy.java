@@ -1,6 +1,7 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
@@ -17,14 +18,14 @@ public class MicrosoftStringValueProxy extends MicrosoftValueProxyBase<StringVal
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getValue()
 	{
 		return (String) super.getValue();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetValueProxy getObjectValue()
 	{

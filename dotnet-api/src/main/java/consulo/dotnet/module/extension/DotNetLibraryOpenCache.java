@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.diagnostic.LogUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtil;
@@ -50,7 +51,7 @@ public class DotNetLibraryOpenCache
 		private int count = 1;
 		private long released = 0;
 
-		private Record(@NotNull String path, @NotNull ModuleParser file) throws IOException
+		private Record(@Nonnull String path, @Nonnull ModuleParser file) throws IOException
 		{
 			this.path = path;
 			this.file = file;
@@ -61,7 +62,7 @@ public class DotNetLibraryOpenCache
 			release(file);
 		}
 
-		@NotNull
+		@Nonnull
 		public ModuleParser get()
 		{
 			return file;
@@ -85,8 +86,8 @@ public class DotNetLibraryOpenCache
 		}, PERIOD, PERIOD, TimeUnit.MILLISECONDS);
 	}
 
-	@NotNull
-	public static Record acquire(@NotNull String path) throws IOException, MSILParseException
+	@Nonnull
+	public static Record acquire(@Nonnull String path) throws IOException, MSILParseException
 	{
 		path = FileUtil.toCanonicalPath(path);
 
@@ -122,10 +123,10 @@ public class DotNetLibraryOpenCache
 		return record;
 	}
 
-	@NotNull
+	@Nonnull
 	@Deprecated
 	@DeprecationInfo("Use #acquire(path)")
-	public static Record acquireWithNext(@NotNull String path) throws IOException, MSILParseException
+	public static Record acquireWithNext(@Nonnull String path) throws IOException, MSILParseException
 	{
 		return acquire(path);
 	}
@@ -154,7 +155,7 @@ public class DotNetLibraryOpenCache
 		}
 	}
 
-	private static void release(@NotNull ModuleParser file)
+	private static void release(@Nonnull ModuleParser file)
 	{
 		synchronized(ourLock)
 		{
@@ -186,7 +187,7 @@ public class DotNetLibraryOpenCache
 		logger().warn(new IllegalArgumentException("stray file: " + file.getAssemblyInfo().getName()));
 	}
 
-	public static void reset(@NotNull Collection<String> paths)
+	public static void reset(@Nonnull Collection<String> paths)
 	{
 		debug("resetting %s", paths);
 
@@ -219,7 +220,7 @@ public class DotNetLibraryOpenCache
 		return Logger.getInstance(DotNetLibraryOpenCache.class);
 	}
 
-	private static void debug(@NotNull String format, Object... args)
+	private static void debug(@Nonnull String format, Object... args)
 	{
 		LogUtil.debug(logger(), format, args);
 	}

@@ -19,8 +19,8 @@ package consulo.dotnet.psi;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Comparing;
@@ -42,7 +42,7 @@ public class DotNetAttributeUtil
 
 	@Nullable
 	@RequiredReadAction
-	public static DotNetAttribute findAttribute(@NotNull PsiElement owner, @NotNull String qName)
+	public static DotNetAttribute findAttribute(@Nonnull PsiElement owner, @Nonnull String qName)
 	{
 		if(!owner.isValid())
 		{
@@ -84,7 +84,7 @@ public class DotNetAttributeUtil
 	}
 
 	@RequiredReadAction
-	public static boolean hasAttribute(@NotNull final PsiElement owner, @NotNull final String qName)
+	public static boolean hasAttribute(@Nonnull final PsiElement owner, @Nonnull final String qName)
 	{
 		ConcurrentMap<String, CachedValue<Boolean>> map = owner.getUserData(ourAttributesKey);
 		if(map == null)

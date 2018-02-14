@@ -18,8 +18,8 @@ package consulo.dotnet.psi;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
@@ -29,24 +29,24 @@ import com.intellij.psi.PsiElement;
  */
 public interface DotNetModifierList extends DotNetElement
 {
-	void addModifier(@NotNull DotNetModifier modifier);
+	void addModifier(@Nonnull DotNetModifier modifier);
 
-	void removeModifier(@NotNull DotNetModifier modifier);
+	void removeModifier(@Nonnull DotNetModifier modifier);
 
-	@NotNull
+	@Nonnull
 	DotNetModifier[] getModifiers();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	DotNetAttribute[] getAttributes();
 
-	boolean hasModifier(@NotNull DotNetModifier modifier);
+	boolean hasModifier(@Nonnull DotNetModifier modifier);
 
-	boolean hasModifierInTree(@NotNull DotNetModifier modifier);
+	boolean hasModifierInTree(@Nonnull DotNetModifier modifier);
 
 	@Nullable
 	PsiElement getModifierElement(DotNetModifier modifier);
 
-	@NotNull
-	List<PsiElement> getModifierElements(@NotNull DotNetModifier modifier);
+	@Nonnull
+	List<PsiElement> getModifierElements(@Nonnull DotNetModifier modifier);
 }

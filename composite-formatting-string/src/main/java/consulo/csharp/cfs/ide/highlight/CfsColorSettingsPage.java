@@ -3,10 +3,10 @@ package consulo.csharp.cfs.ide.highlight;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.csharp.cfs.lang.CfsLanguage;
 import consulo.csharp.cfs.lang.CfsTokens;
 import consulo.csharp.cfs.lang.IndexCfsLanguageVersion;
@@ -48,13 +48,13 @@ public class CfsColorSettingsPage implements ColorSettingsPage
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public SyntaxHighlighter getHighlighter()
 	{
 		return new CfsSyntaxHighlighter(CfsLanguage.INSTANCE.findVersionByClass(IndexCfsLanguageVersion.class))
 		{
-			@NotNull
+			@Nonnull
 			@Override
 			public TextAttributesKey[] getTokenHighlights(IElementType elementType)
 			{
@@ -67,7 +67,7 @@ public class CfsColorSettingsPage implements ColorSettingsPage
 		};
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDemoText()
 	{
@@ -82,21 +82,21 @@ public class CfsColorSettingsPage implements ColorSettingsPage
 		return myTags;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public AttributesDescriptor[] getAttributeDescriptors()
 	{
 		return myAttributesDescriptors;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public ColorDescriptor[] getColorDescriptors()
 	{
 		return new ColorDescriptor[0];
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDisplayName()
 	{

@@ -16,7 +16,8 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.util.ArrayFactory;
 import consulo.dotnet.psi.DotNetParameter;
 
@@ -30,7 +31,7 @@ public interface MsilParameter extends DotNetParameter
 
 	public static ArrayFactory<MsilParameter> ARRAY_FACTORY = new ArrayFactory<MsilParameter>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public MsilParameter[] create(int count)
 		{

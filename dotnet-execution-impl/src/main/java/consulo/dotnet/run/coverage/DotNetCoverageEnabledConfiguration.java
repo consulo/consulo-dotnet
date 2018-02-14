@@ -18,7 +18,8 @@ package consulo.dotnet.run.coverage;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 
@@ -28,7 +29,7 @@ import com.intellij.execution.configurations.coverage.CoverageEnabledConfigurati
  */
 public class DotNetCoverageEnabledConfiguration extends CoverageEnabledConfiguration
 {
-	@NotNull
+	@Nonnull
 	public static DotNetCoverageEnabledConfiguration get(DotNetConfigurationWithCoverage configurationWithCoverage)
 	{
 		return (DotNetCoverageEnabledConfiguration) CoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) configurationWithCoverage);

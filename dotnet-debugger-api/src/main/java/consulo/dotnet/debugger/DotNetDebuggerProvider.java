@@ -18,8 +18,8 @@ package consulo.dotnet.debugger;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.Language;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
@@ -62,25 +62,25 @@ public abstract class DotNetDebuggerProvider
 		return null;
 	}
 
-	@NotNull
-	public abstract PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull PsiElement sourcePosition, @NotNull String text, boolean isPhysical);
+	@Nonnull
+	public abstract PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull PsiElement sourcePosition, @Nonnull String text, boolean isPhysical);
 
-	public abstract void evaluate(@NotNull DotNetStackFrameProxy frame,
-			@NotNull DotNetDebugContext debuggerContext,
-			@NotNull String expression,
+	public abstract void evaluate(@Nonnull DotNetStackFrameProxy frame,
+			@Nonnull DotNetDebugContext debuggerContext,
+			@Nonnull String expression,
 			@Nullable PsiElement elementAt,
-			@NotNull XDebuggerEvaluator.XEvaluationCallback callback,
+			@Nonnull XDebuggerEvaluator.XEvaluationCallback callback,
 			@Nullable XSourcePosition expressionPosition);
 
-	public abstract void evaluate(@NotNull DotNetStackFrameProxy frame,
-			@NotNull DotNetDebugContext debuggerContext,
-			@NotNull DotNetReferenceExpression element,
-			@NotNull Set<Object> visitedVariables,
-			@NotNull Consumer<XNamedValue> callback);
+	public abstract void evaluate(@Nonnull DotNetStackFrameProxy frame,
+			@Nonnull DotNetDebugContext debuggerContext,
+			@Nonnull DotNetReferenceExpression element,
+			@Nonnull Set<Object> visitedVariables,
+			@Nonnull Consumer<XNamedValue> callback);
 
 	@RequiredReadAction
 	@Nullable
-	public TextRange getExpressionRangeAtOffset(@NotNull PsiFile psiFile, int offset, boolean sideEffectsAllowed)
+	public TextRange getExpressionRangeAtOffset(@Nonnull PsiFile psiFile, int offset, boolean sideEffectsAllowed)
 	{
 		PsiElement elementAt = psiFile.findElementAt(offset);
 		if(elementAt == null)
@@ -112,7 +112,7 @@ public abstract class DotNetDebuggerProvider
 		return null;
 	}
 
-	public abstract boolean isSupported(@NotNull PsiFile psiFile);
+	public abstract boolean isSupported(@Nonnull PsiFile psiFile);
 
 	public abstract Language getEditorLanguage();
 }

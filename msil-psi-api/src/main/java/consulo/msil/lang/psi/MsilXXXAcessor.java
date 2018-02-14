@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.util.ArrayFactory;
 import consulo.dotnet.psi.DotNetParameter;
 import consulo.dotnet.psi.DotNetXXXAccessor;
@@ -33,7 +33,7 @@ public interface MsilXXXAcessor extends DotNetXXXAccessor
 
 	public static ArrayFactory<MsilXXXAcessor> ARRAY_FACTORY = new ArrayFactory<MsilXXXAcessor>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public MsilXXXAcessor[] create(int count)
 		{
@@ -47,10 +47,10 @@ public interface MsilXXXAcessor extends DotNetXXXAccessor
 	@Nullable
 	String getMethodName();
 
-	@NotNull
+	@Nonnull
 	DotNetParameter[] getParameters();
 
-	@NotNull
+	@Nonnull
 	DotNetTypeRef[] getParameterTypeRefs();
 
 	@Nullable

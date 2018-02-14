@@ -16,10 +16,10 @@
 
 package consulo.microsoft.dotnet.module.extension;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.dotnet.module.extension.DotNetConfigurationPanel;
 import consulo.dotnet.module.extension.DotNetMutableModuleExtension;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -34,7 +34,7 @@ import consulo.roots.ModuleRootLayer;
  */
 public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModuleExtension implements DotNetMutableModuleExtension<MicrosoftDotNetModuleExtension>
 {
-	public MicrosoftDotNetMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer module)
+	public MicrosoftDotNetMutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer module)
 	{
 		super(id, module);
 	}
@@ -45,7 +45,7 @@ public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModule
 		myIsEnabled = b;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
@@ -55,13 +55,13 @@ public class MicrosoftDotNetMutableModuleExtension extends MicrosoftDotNetModule
 	@Nullable
 	@Override
 	@RequiredDispatchThread
-	public JComponent createConfigurablePanel(@NotNull Runnable runnable)
+	public JComponent createConfigurablePanel(@Nonnull Runnable runnable)
 	{
 		return new DotNetConfigurationPanel(this, DotNetQualifiedElementQualifierProducer.INSTANCE, myVariables, runnable);
 	}
 
 	@Override
-	public boolean isModified(@NotNull MicrosoftDotNetModuleExtension extension)
+	public boolean isModified(@Nonnull MicrosoftDotNetModuleExtension extension)
 	{
 		return isModifiedImpl(extension);
 	}

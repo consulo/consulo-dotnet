@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
@@ -45,9 +45,9 @@ public class MonoStructValueProxy extends MonoValueProxyBase<StructValueMirror> 
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetStructValueProxy createNewStructValue(@NotNull Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map)
+	public DotNetStructValueProxy createNewStructValue(@Nonnull Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map)
 	{
 		Collection<DotNetValueProxy> proxies = map.values();
 		List<Value> values = ContainerUtil.map(proxies, new Function<DotNetValueProxy, Value>()
@@ -62,7 +62,7 @@ public class MonoStructValueProxy extends MonoValueProxyBase<StructValueMirror> 
 		return new MonoStructValueProxy(new StructValueMirror(myValue.virtualMachine(), myValue.type(), values.toArray(new Value[values.size()])));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> getValues()
 	{

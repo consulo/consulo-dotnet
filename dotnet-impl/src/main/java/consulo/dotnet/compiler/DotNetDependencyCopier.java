@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.RunResult;
@@ -51,7 +51,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 {
 	public static final Logger LOGGER = Logger.getInstance(DotNetDependencyCopier.class);
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDescription()
 	{
@@ -72,7 +72,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 		return true;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public ProcessingItem[] getProcessingItems(final CompileContext compileContext)
 	{

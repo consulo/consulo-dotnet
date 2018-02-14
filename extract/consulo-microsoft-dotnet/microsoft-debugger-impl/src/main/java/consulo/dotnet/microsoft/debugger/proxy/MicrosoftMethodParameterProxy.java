@@ -1,7 +1,8 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mssdw.MethodParameterMirror;
@@ -42,7 +43,7 @@ public class MicrosoftMethodParameterProxy implements DotNetMethodParameterProxy
 		return myTypeProxy = MicrosoftTypeProxy.of(myMethodParameterMirror.type());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

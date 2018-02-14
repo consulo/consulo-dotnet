@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -28,7 +28,7 @@ public interface DotNetGenericParameterListOwner extends DotNetElement
 	@Nullable
 	DotNetGenericParameterList getGenericParameterList();
 
-	@NotNull
+	@Nonnull
 	DotNetGenericParameter[] getGenericParameters();
 
 	int getGenericParametersCount();

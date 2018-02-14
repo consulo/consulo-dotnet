@@ -1,6 +1,7 @@
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -15,12 +16,12 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilCustomAttributeSignatureS
  */
 public class MsilCustomAttributeSignatureImpl extends MsilStubElementImpl<MsilCustomAttributeSignatureStub> implements MsilCustomAttributeSignature
 {
-	public MsilCustomAttributeSignatureImpl(@NotNull ASTNode node)
+	public MsilCustomAttributeSignatureImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilCustomAttributeSignatureImpl(@NotNull MsilCustomAttributeSignatureStub stub, @NotNull IStubElementType nodeType)
+	public MsilCustomAttributeSignatureImpl(@Nonnull MsilCustomAttributeSignatureStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -31,7 +32,7 @@ public class MsilCustomAttributeSignatureImpl extends MsilStubElementImpl<MsilCu
 		visitor.visitCustomAttributeSignature(this);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public byte[] getBytes()

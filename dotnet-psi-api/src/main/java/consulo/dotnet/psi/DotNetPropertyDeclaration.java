@@ -16,7 +16,7 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,6 +26,6 @@ public interface DotNetPropertyDeclaration extends DotNetVariable, DotNetVirtual
 {
 	String DEFAULT_INDEX_PROPERTY_NAME = "Item";
 
-	@NotNull
+	@Nonnull
 	DotNetXXXAccessor[] getAccessors();
 }

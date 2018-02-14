@@ -16,8 +16,9 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -27,7 +28,7 @@ import consulo.annotations.RequiredReadAction;
 public interface DotNetModifierListOwner extends DotNetElement
 {
 	@RequiredReadAction
-	boolean hasModifier(@NotNull DotNetModifier modifier);
+	boolean hasModifier(@Nonnull DotNetModifier modifier);
 
 	@Nullable
 	@RequiredReadAction

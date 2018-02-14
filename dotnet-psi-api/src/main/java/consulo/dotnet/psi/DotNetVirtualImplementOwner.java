@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.resolve.DotNetTypeRef;
 
 /**
@@ -29,6 +29,6 @@ public interface DotNetVirtualImplementOwner extends DotNetElement
 	@Nullable
 	DotNetType getTypeForImplement();
 
-	@NotNull
+	@Nonnull
 	DotNetTypeRef getTypeRefForImplement();
 }

@@ -16,7 +16,8 @@
 
 package consulo.dotnet.run;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
@@ -53,7 +54,7 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 			}
 
 			@Override
-			public void onNewConfigurationCreated(@NotNull RunConfiguration configuration)
+			public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration)
 			{
 				DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
 
@@ -71,7 +72,7 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 			}
 
 			@Override
-			public boolean isApplicable(@NotNull Project project)
+			public boolean isApplicable(@Nonnull Project project)
 			{
 				return ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetModuleExtension.class);
 			}

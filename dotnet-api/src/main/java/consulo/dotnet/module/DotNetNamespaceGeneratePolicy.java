@@ -1,7 +1,7 @@
 package consulo.dotnet.module;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -25,7 +25,7 @@ public abstract class DotNetNamespaceGeneratePolicy
 		@RequiredReadAction
 		@Nullable
 		@Override
-		public String calculateDirtyNamespace(@NotNull PsiDirectory directory)
+		public String calculateDirtyNamespace(@Nonnull PsiDirectory directory)
 		{
 			PsiPackage aPackage = PsiPackageManager.getInstance(directory.getProject()).findPackage(directory, DotNetModuleExtension.class);
 			String namespace = null;
@@ -42,7 +42,7 @@ public abstract class DotNetNamespaceGeneratePolicy
 		@RequiredReadAction
 		@Nullable
 		@Override
-		public String calculateDirtyNamespace(@NotNull PsiDirectory directory)
+		public String calculateDirtyNamespace(@Nonnull PsiDirectory directory)
 		{
 			String namespace = null;
 			Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(directory);
@@ -83,7 +83,7 @@ public abstract class DotNetNamespaceGeneratePolicy
 	@Nullable
 	@RequiredReadAction
 	@Exported
-	public String calculateNamespace(@NotNull PsiDirectory directory)
+	public String calculateNamespace(@Nonnull PsiDirectory directory)
 	{
 		String namespace = calculateDirtyNamespace(directory);
 		if(StringUtil.isEmpty(namespace))
@@ -100,5 +100,5 @@ public abstract class DotNetNamespaceGeneratePolicy
 	}
 
 	@Nullable
-	protected abstract String calculateDirtyNamespace(@NotNull PsiDirectory directory);
+	protected abstract String calculateDirtyNamespace(@Nonnull PsiDirectory directory);
 }

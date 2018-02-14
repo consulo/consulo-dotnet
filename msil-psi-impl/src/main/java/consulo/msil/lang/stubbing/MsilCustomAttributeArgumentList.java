@@ -3,7 +3,7 @@ package consulo.msil.lang.stubbing;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.msil.lang.stubbing.values.MsiCustomAttributeValue;
 
 /**
@@ -21,13 +21,13 @@ public class MsilCustomAttributeArgumentList
 		myNamedArguments = namedArguments;
 	}
 
-	@NotNull
+	@Nonnull
 	public Map<String, MsiCustomAttributeValue> getNamedArguments()
 	{
 		return myNamedArguments;
 	}
 
-	@NotNull
+	@Nonnull
 	public List<MsiCustomAttributeValue> getConstructorArguments()
 	{
 		return myConstructorArguments;

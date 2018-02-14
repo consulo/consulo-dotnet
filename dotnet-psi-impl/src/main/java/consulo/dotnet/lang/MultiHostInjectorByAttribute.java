@@ -16,8 +16,8 @@
 
 package consulo.dotnet.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.psi.DotNetAttribute;
 import consulo.dotnet.psi.DotNetAttributeUtil;
 import consulo.dotnet.psi.DotNetCallArgumentList;
@@ -44,7 +44,7 @@ import consulo.lang.util.LanguageVersionUtil;
 public class MultiHostInjectorByAttribute implements MultiHostInjector
 {
 	@Override
-	public void injectLanguages(@NotNull MultiHostRegistrar multiHostRegistrar, @NotNull PsiElement element)
+	public void injectLanguages(@Nonnull MultiHostRegistrar multiHostRegistrar, @Nonnull PsiElement element)
 	{
 		DotNetCallArgumentList argumentList = (DotNetCallArgumentList) element;
 
@@ -96,7 +96,7 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 	}
 
 	@Nullable
-	private static TextRange findTextRangeForInject(@NotNull DotNetExpression expression)
+	private static TextRange findTextRangeForInject(@Nonnull DotNetExpression expression)
 	{
 		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensions())
 		{
@@ -110,7 +110,7 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 	}
 
 	@Nullable
-	private static LanguageVersion findLanguageFromAttribute(@NotNull DotNetAttribute attribute)
+	private static LanguageVersion findLanguageFromAttribute(@Nonnull DotNetAttribute attribute)
 	{
 		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensions())
 		{

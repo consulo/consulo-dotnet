@@ -16,7 +16,8 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.psi.PsiElement;
 
 /**
@@ -25,7 +26,7 @@ import com.intellij.psi.PsiElement;
  */
 public class MsilNativeTypeRefImpl extends MsilReferenceTypeRefImpl
 {
-	public MsilNativeTypeRefImpl(@NotNull PsiElement element, @NotNull String ref)
+	public MsilNativeTypeRefImpl(@Nonnull PsiElement element, @Nonnull String ref)
 	{
 		super(element, ref);
 	}

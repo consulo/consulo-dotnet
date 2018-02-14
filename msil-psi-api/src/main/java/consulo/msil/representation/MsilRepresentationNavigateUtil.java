@@ -16,7 +16,8 @@
 
 package consulo.msil.representation;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -43,14 +44,14 @@ public class MsilRepresentationNavigateUtil
 
 	@RequiredReadAction
 	@Exported
-	public static void navigateToRepresentation(@NotNull final PsiElement msilElement, @NotNull FileType fileType)
+	public static void navigateToRepresentation(@Nonnull final PsiElement msilElement, @Nonnull FileType fileType)
 	{
 		navigateToRepresentation(msilElement, fileType, DEFAULT_NAVIGATOR);
 	}
 
 	@RequiredReadAction
 	@Exported
-	public static void navigateToRepresentation(@NotNull final PsiElement msilElement, @NotNull FileType fileType, @NotNull Consumer<PsiFile> consumer)
+	public static void navigateToRepresentation(@Nonnull final PsiElement msilElement, @Nonnull FileType fileType, @Nonnull Consumer<PsiFile> consumer)
 	{
 		MsilFileRepresentationManager manager = MsilFileRepresentationManager.getInstance(msilElement.getProject());
 

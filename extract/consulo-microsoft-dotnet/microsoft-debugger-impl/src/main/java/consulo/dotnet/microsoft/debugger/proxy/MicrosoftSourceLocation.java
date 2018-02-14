@@ -16,8 +16,9 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import mssdw.MethodMirror;
@@ -61,7 +62,7 @@ public class MicrosoftSourceLocation implements DotNetSourceLocation
 		return myFrameMirror.getColumn();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetMethodProxy getMethod()
 	{

@@ -22,8 +22,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Consumer;
@@ -36,7 +36,7 @@ import consulo.bundle.PredefinedBundlesProvider;
 public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesProvider
 {
 	@Override
-	public void createBundles(@NotNull Consumer<SdkImpl> consumer)
+	public void createBundles(@Nonnull Consumer<SdkImpl> consumer)
 	{
 		MicrosoftDotNetSdkType sdkType = MicrosoftDotNetSdkType.getInstance();
 
@@ -81,7 +81,7 @@ public class MicrosoftDotNetPredefinedBundlesProvider extends PredefinedBundlesP
 
 
 	private void collectFromReferenceAssemblies(Collection<MicrosoftDotNetFramework> set,
-			@NotNull MicrosoftDotNetSdkType sdkType,
+			@Nonnull MicrosoftDotNetSdkType sdkType,
 			@Nullable String env)
 	{
 		String envValue = System.getenv(env);

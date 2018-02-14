@@ -19,11 +19,11 @@ package consulo.dotnet.module.extension;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 
-import org.jetbrains.annotations.NotNull;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
@@ -99,7 +99,7 @@ public class DotNetConfigurationPanel extends JPanel
 		comp.setRenderer(new ColoredListCellRenderer<DotNetTarget>()
 		{
 			@Override
-			protected void customizeCellRenderer(@NotNull JList jList, DotNetTarget o, int i, boolean b, boolean b1)
+			protected void customizeCellRenderer(@Nonnull JList jList, DotNetTarget o, int i, boolean b, boolean b1)
 			{
 				append(o.getDescription());
 			}
@@ -117,7 +117,7 @@ public class DotNetConfigurationPanel extends JPanel
 		{
 			@Override
 			@RequiredReadAction
-			protected void customizeCellRenderer(@NotNull JList list, Object value, int index, boolean selected, boolean hasFocus)
+			protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus)
 			{
 				if(!mainClassList.isEnabled())
 				{
@@ -274,7 +274,7 @@ public class DotNetConfigurationPanel extends JPanel
 			}
 
 			@Override
-			public void remove(@NotNull final String element)
+			public void remove(@Nonnull final String element)
 			{
 				int i = variables.indexOf(element);
 				variables.remove(element);

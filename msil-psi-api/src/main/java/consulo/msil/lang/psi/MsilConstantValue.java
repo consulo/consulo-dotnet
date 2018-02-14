@@ -1,6 +1,6 @@
 package consulo.msil.lang.psi;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetExpression;
 import com.intellij.psi.tree.IElementType;

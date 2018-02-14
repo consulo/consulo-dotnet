@@ -18,8 +18,8 @@ package consulo.dotnet.roots.orderEntry;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.roots.OrderEntry;
@@ -48,9 +48,9 @@ public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 {
 	private RootProvider myRootProvider = new RootProviderBaseImpl()
 	{
-		@NotNull
+		@Nonnull
 		@Override
-		public String[] getUrls(@NotNull OrderRootType rootType)
+		public String[] getUrls(@Nonnull OrderRootType rootType)
 		{
 			DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
 			if(extension == null)
@@ -71,9 +71,9 @@ public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 			return urls;
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
-		public VirtualFile[] getFiles(@NotNull OrderRootType rootType)
+		public VirtualFile[] getFiles(@Nonnull OrderRootType rootType)
 		{
 			DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
 			if(extension == null)
@@ -104,12 +104,12 @@ public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 
 	private String myName;
 
-	public DotNetLibraryOrderEntryImpl(@NotNull ModuleRootLayerImpl rootLayer, String name)
+	public DotNetLibraryOrderEntryImpl(@Nonnull ModuleRootLayerImpl rootLayer, String name)
 	{
 		this(rootLayer, name, true);
 	}
 
-	public DotNetLibraryOrderEntryImpl(@NotNull ModuleRootLayerImpl rootLayer, String name, boolean init)
+	public DotNetLibraryOrderEntryImpl(@Nonnull ModuleRootLayerImpl rootLayer, String name, boolean init)
 	{
 		super(DotNetLibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
 		myName = name;
@@ -140,7 +140,7 @@ public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 		return myRootProvider;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{
@@ -167,7 +167,7 @@ public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 	}
 
 	@Override
-	public boolean isEquivalentTo(@NotNull OrderEntry entry)
+	public boolean isEquivalentTo(@Nonnull OrderEntry entry)
 	{
 		return entry instanceof DotNetLibraryOrderEntryImpl && Comparing.equal(myName, entry.getPresentableName());
 	}

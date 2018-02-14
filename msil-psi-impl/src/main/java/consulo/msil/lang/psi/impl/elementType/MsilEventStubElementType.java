@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -40,37 +41,37 @@ public class MsilEventStubElementType extends AbstractMsilStubElementType<MsilVa
 		super("MSIL_EVENT_ENTRY");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilEventEntry createElement(@NotNull ASTNode astNode)
+	public MsilEventEntry createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilEventEntryImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilEventEntry createPsi(@NotNull MsilVariableEntryStub msilEventEntryStub)
+	public MsilEventEntry createPsi(@Nonnull MsilVariableEntryStub msilEventEntryStub)
 	{
 		return new MsilEventEntryImpl(msilEventEntryStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilVariableEntryStub createStub(@NotNull MsilEventEntry eventEntry, StubElement stubElement)
+	public MsilVariableEntryStub createStub(@Nonnull MsilEventEntry eventEntry, StubElement stubElement)
 	{
 		String nameFromBytecode = eventEntry.getNameFromBytecode();
 		return new MsilVariableEntryStub(stubElement, this, nameFromBytecode);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilVariableEntryStub msilPropertyEntryStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilVariableEntryStub msilPropertyEntryStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilPropertyEntryStub.getNameFromBytecode());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilVariableEntryStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilVariableEntryStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilVariableEntryStub(stubElement, this, ref);

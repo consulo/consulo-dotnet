@@ -18,7 +18,8 @@ package consulo.msil.lang.psi.impl.elementType;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -39,36 +40,36 @@ public class MsilModifierListStubElementType extends AbstractMsilStubElementType
 		super("MSIL_MODIFIER_LIST");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilModifierList createElement(@NotNull ASTNode astNode)
+	public MsilModifierList createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilModifierListImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilModifierList createPsi(@NotNull MsilModifierListStub msilModifierListStub)
+	public MsilModifierList createPsi(@Nonnull MsilModifierListStub msilModifierListStub)
 	{
 		return new MsilModifierListImpl(msilModifierListStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilModifierListStub createStub(@NotNull MsilModifierList msilModifierList, StubElement stubElement)
+	public MsilModifierListStub createStub(@Nonnull MsilModifierList msilModifierList, StubElement stubElement)
 	{
 		return new MsilModifierListStub(stubElement, this, msilModifierList);
 	}
 
 	@Override
-	public void serialize(@NotNull MsilModifierListStub msilModifierListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilModifierListStub msilModifierListStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeVarInt(msilModifierListStub.getModifiers());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilModifierListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilModifierListStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		int modifiers = inputStream.readVarInt();
 		return new MsilModifierListStub(stubElement, this, modifiers);

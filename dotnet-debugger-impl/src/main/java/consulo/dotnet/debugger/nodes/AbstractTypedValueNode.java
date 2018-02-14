@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ObjectUtil;
@@ -36,13 +36,13 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
  */
 public abstract class AbstractTypedValueNode extends XNamedValue
 {
-	@NotNull
+	@Nonnull
 	protected final DotNetDebugContext myDebugContext;
 
 	@Nullable
 	private Ref<DotNetTypeProxy> myTypeProxy;
 
-	public AbstractTypedValueNode(@NotNull DotNetDebugContext debugContext, @NotNull String name)
+	public AbstractTypedValueNode(@Nonnull DotNetDebugContext debugContext, @Nonnull String name)
 	{
 		super(name);
 		myDebugContext = debugContext;
@@ -72,7 +72,7 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 
 	@Override
 	@RequiredDispatchThread
-	public void computeTypeSourcePosition(@NotNull XNavigatable navigatable)
+	public void computeTypeSourcePosition(@Nonnull XNavigatable navigatable)
 	{
 		DotNetTypeProxy typeOfVariable = getTypeOfVariable();
 		assert typeOfVariable != null;
@@ -90,9 +90,9 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(type.getContainingFile().getVirtualFile(), nameIdentifier.getTextOffset()));
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredDispatchThread
-	public DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull DotNetTypeProxy typeMirror)
+	public DotNetTypeDeclaration[] findTypesByQualifiedName(@Nonnull DotNetTypeProxy typeMirror)
 	{
 		return DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, myDebugContext);
 	}

@@ -16,7 +16,8 @@
 
 package consulo.dotnet.run.filters;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.execution.filters.ConsoleFilterProviderEx;
 import com.intellij.execution.filters.Filter;
@@ -31,7 +32,7 @@ import consulo.module.extension.ModuleExtensionHelper;
 public class DotNetConsoleFilterProvider implements ConsoleFilterProviderEx
 {
 	@Override
-	public Filter[] getDefaultFilters(@NotNull Project project, @NotNull GlobalSearchScope searchScope)
+	public Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope)
 	{
 		if(!ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetSimpleModuleExtension.class))
 		{
@@ -41,9 +42,9 @@ public class DotNetConsoleFilterProvider implements ConsoleFilterProviderEx
 		return new Filter[]{new DotNetExceptionFilter(project, searchScope)};
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public Filter[] getDefaultFilters(@NotNull Project project)
+	public Filter[] getDefaultFilters(@Nonnull Project project)
 	{
 		return getDefaultFilters(project, GlobalSearchScope.allScope(project));
 	}

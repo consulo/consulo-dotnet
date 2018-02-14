@@ -23,8 +23,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -77,7 +78,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 	private final ExecutorService myExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("mono vm invoker", 1);
 
-	public MonoVirtualMachineProxy(@NotNull VirtualMachine virtualMachine)
+	public MonoVirtualMachineProxy(@Nonnull VirtualMachine virtualMachine)
 	{
 		myVirtualMachine = virtualMachine;
 		mySupportSearchTypesByQualifiedName = myVirtualMachine.isAtLeastVersion(2, 9);
@@ -86,7 +87,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 	}
 
 	@Override
-	public void invoke(@NotNull Runnable runnable)
+	public void invoke(@Nonnull Runnable runnable)
 	{
 		myExecutor.execute(() ->
 		{
@@ -106,7 +107,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy findType(@NotNull Project project, @NotNull String vmQName, @NotNull VirtualFile virtualFile)
+	public DotNetTypeProxy findType(@Nonnull Project project, @Nonnull String vmQName, @Nonnull VirtualFile virtualFile)
 	{
 		try
 		{
@@ -119,42 +120,42 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public List<DotNetThreadProxy> getThreads()
 	{
 		return ContainerUtil.map(myVirtualMachine.allThreads(), threadMirror -> new MonoThreadProxy(MonoVirtualMachineProxy.this, threadMirror));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetStringValueProxy createStringValue(@NotNull String value)
+	public DotNetStringValueProxy createStringValue(@Nonnull String value)
 	{
 		return MonoValueProxyUtil.wrap(myVirtualMachine.rootAppDomain().createString(value));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetCharValueProxy createCharValue(char value)
 	{
 		return MonoValueProxyUtil.wrap(new CharValueMirror(myVirtualMachine, value));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetBooleanValueProxy createBooleanValue(boolean value)
 	{
 		return MonoValueProxyUtil.wrap(new BooleanValueMirror(myVirtualMachine, value));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetNumberValueProxy createNumberValue(int tag, @NotNull Number value)
+	public DotNetNumberValueProxy createNumberValue(int tag, @Nonnull Number value)
 	{
 		return MonoValueProxyUtil.wrap(new NumberValueMirror(myVirtualMachine, tag, value));
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetNullValueProxy createNullValue()
 	{
@@ -174,24 +175,24 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 		myBreakpointEventRequests.clear();
 	}
 
-	public void addStepRequest(@NotNull StepRequest stepRequest)
+	public void addStepRequest(@Nonnull StepRequest stepRequest)
 	{
 		myStepRequests.add(stepRequest);
 	}
 
-	public void stopStepRequest(@NotNull StepRequest stepRequest)
+	public void stopStepRequest(@Nonnull StepRequest stepRequest)
 	{
 		stepRequest.disable();
 		myStepRequests.remove(stepRequest);
 	}
 
-	public void putRequest(@NotNull XBreakpoint<?> breakpoint, @NotNull EventRequest request)
+	public void putRequest(@Nonnull XBreakpoint<?> breakpoint, @Nonnull EventRequest request)
 	{
 		myBreakpointEventRequests.putValue(breakpoint, request);
 	}
 
 	@Nullable
-	public XBreakpoint<?> findBreakpointByRequest(@NotNull EventRequest eventRequest)
+	public XBreakpoint<?> findBreakpointByRequest(@Nonnull EventRequest eventRequest)
 	{
 		for(Map.Entry<XBreakpoint, Collection<EventRequest>> entry : myBreakpointEventRequests.entrySet())
 		{
@@ -231,21 +232,21 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 		return myVirtualMachine.eventRequestManager();
 	}
 
-	@NotNull
+	@Nonnull
 	public VirtualMachine getDelegate()
 	{
 		return myVirtualMachine;
 	}
 
 	@Nullable
-	public TypeMirror findTypeMirror(@NotNull Project project, @NotNull final VirtualFile virtualFile, @NotNull final String vmQualifiedName) throws TypeMirrorUnloadedException
+	public TypeMirror findTypeMirror(@Nonnull Project project, @Nonnull final VirtualFile virtualFile, @Nonnull final String vmQualifiedName) throws TypeMirrorUnloadedException
 	{
 		List<TypeMirror> typeMirrors = findTypeMirrors(project, virtualFile, vmQualifiedName);
 		return ContainerUtil.getFirstItem(typeMirrors);
 	}
 
 	@Nullable
-	private List<TypeMirror> findTypeMirrors(@NotNull Project project, @NotNull final VirtualFile virtualFile, @NotNull final String vmQualifiedName) throws TypeMirrorUnloadedException
+	private List<TypeMirror> findTypeMirrors(@Nonnull Project project, @Nonnull final VirtualFile virtualFile, @Nonnull final String vmQualifiedName) throws TypeMirrorUnloadedException
 	{
 		try
 		{
@@ -318,8 +319,8 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 		}
 	}
 
-	@NotNull
-	private static String getAssemblyTitle(@NotNull DotNetModuleLangExtension<?> extension)
+	@Nonnull
+	private static String getAssemblyTitle(@Nonnull DotNetModuleLangExtension<?> extension)
 	{
 		return ApplicationManager.getApplication().runReadAction((Computable<String>) () ->
 		{
@@ -332,7 +333,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 		});
 	}
 
-	@NotNull
+	@Nonnull
 	private static String getAssemblyName(String name)
 	{
 		int i = name.indexOf(',');
@@ -359,7 +360,7 @@ public class MonoVirtualMachineProxy implements DotNetVirtualMachineProxy
 		myVirtualMachine.suspend();
 	}
 
-	@NotNull
+	@Nonnull
 	public List<ThreadMirror> allThreads()
 	{
 		return myVirtualMachine.allThreads();

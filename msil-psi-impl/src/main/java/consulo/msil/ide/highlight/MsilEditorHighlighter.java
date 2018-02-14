@@ -16,7 +16,7 @@
 
 package consulo.msil.ide.highlight;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 
@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
  */
 public class MsilEditorHighlighter extends LexerEditorHighlighter
 {
-	public MsilEditorHighlighter(@NotNull EditorColorsScheme scheme)
+	public MsilEditorHighlighter(@Nonnull EditorColorsScheme scheme)
 	{
 		super(new MsilSyntaxHighlighter(), scheme);
 	}

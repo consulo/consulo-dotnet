@@ -19,7 +19,8 @@ package consulo.msil.lang.parser;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderUtil;
@@ -55,9 +56,9 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		ourConstantValues.put(BOOL_KEYWORD, BOOL_LITERAL);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public ASTNode parse(@NotNull IElementType elementType, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
+	public ASTNode parse(@Nonnull IElementType elementType, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion)
 	{
 		PsiBuilder.Marker mark = builder.mark();
 		while(!builder.eof())

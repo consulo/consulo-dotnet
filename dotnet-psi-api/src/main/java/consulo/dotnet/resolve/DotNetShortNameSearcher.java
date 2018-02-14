@@ -21,8 +21,8 @@ import gnu.trove.THashSet;
 import java.util.Collection;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -37,8 +37,8 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
  */
 public abstract class DotNetShortNameSearcher
 {
-	@NotNull
-	public static DotNetShortNameSearcher getInstance(@NotNull Project project)
+	@Nonnull
+	public static DotNetShortNameSearcher getInstance(@Nonnull Project project)
 	{
 		return ServiceManager.getService(project, DotNetShortNameSearcher.class);
 	}
@@ -50,8 +50,8 @@ public abstract class DotNetShortNameSearcher
 		myProject = project;
 	}
 
-	@NotNull
-	public Collection<String> getTypeNames(@NotNull GlobalSearchScope scope, @Nullable IdFilter filter)
+	@Nonnull
+	public Collection<String> getTypeNames(@Nonnull GlobalSearchScope scope, @Nullable IdFilter filter)
 	{
 		Set<String> types = new THashSet<>();
 		collectTypeNames(Processors.cancelableCollectProcessor(types), scope, filter);
@@ -59,12 +59,12 @@ public abstract class DotNetShortNameSearcher
 	}
 
 
-	public abstract void collectTypeNames(@NotNull Processor<String> processor, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter);
+	public abstract void collectTypeNames(@Nonnull Processor<String> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter);
 
-	public abstract void collectTypes(@NotNull String key, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter, @NotNull Processor<DotNetTypeDeclaration> processor);
+	public abstract void collectTypes(@Nonnull String key, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter, @Nonnull Processor<DotNetTypeDeclaration> processor);
 
-	@NotNull
-	public Collection<DotNetTypeDeclaration> getTypes(@NotNull String key, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter)
+	@Nonnull
+	public Collection<DotNetTypeDeclaration> getTypes(@Nonnull String key, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter)
 	{
 		Set<DotNetTypeDeclaration> types = new THashSet<>();
 		collectTypes(key, scope, filter, Processors.cancelableCollectProcessor(types));

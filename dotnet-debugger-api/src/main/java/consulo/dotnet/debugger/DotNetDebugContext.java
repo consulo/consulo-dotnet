@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.execution.configurations.ModuleRunProfile;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.module.Module;
@@ -41,7 +41,7 @@ public class DotNetDebugContext
 	private final XBreakpoint<?> myBreakpoint;
 	private final NotNullLazyValue<GlobalSearchScope> myScopeValue = new NotNullLazyValue<GlobalSearchScope>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		protected GlobalSearchScope compute()
 		{
@@ -63,10 +63,10 @@ public class DotNetDebugContext
 		}
 	};
 
-	public DotNetDebugContext(@NotNull Project project,
-			@NotNull DotNetVirtualMachineProxy virtualMachine,
-			@NotNull RunProfile runProfile,
-			@NotNull XDebugSession session,
+	public DotNetDebugContext(@Nonnull Project project,
+			@Nonnull DotNetVirtualMachineProxy virtualMachine,
+			@Nonnull RunProfile runProfile,
+			@Nonnull XDebugSession session,
 			@Nullable XBreakpoint<?> breakpoint)
 	{
 		myProject = project;
@@ -76,7 +76,7 @@ public class DotNetDebugContext
 		myBreakpoint = breakpoint;
 	}
 
-	@NotNull
+	@Nonnull
 	public GlobalSearchScope getResolveScope()
 	{
 		return myScopeValue.getValue();
@@ -88,31 +88,31 @@ public class DotNetDebugContext
 		return myBreakpoint;
 	}
 
-	@NotNull
+	@Nonnull
 	public Project getProject()
 	{
 		return myProject;
 	}
 
-	@NotNull
+	@Nonnull
 	public DotNetVirtualMachineProxy getVirtualMachine()
 	{
 		return myVirtualMachine;
 	}
 
-	@NotNull
+	@Nonnull
 	public RunProfile getRunProfile()
 	{
 		return myRunProfile;
 	}
 
-	@NotNull
+	@Nonnull
 	public XDebugSession getSession()
 	{
 		return mySession;
 	}
 
-	public void invoke(@NotNull Runnable runnable)
+	public void invoke(@Nonnull Runnable runnable)
 	{
 		myVirtualMachine.invoke(runnable);
 	}

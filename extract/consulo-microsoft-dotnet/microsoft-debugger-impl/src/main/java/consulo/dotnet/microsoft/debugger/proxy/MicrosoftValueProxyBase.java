@@ -1,7 +1,7 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mssdw.MirrorWithId;
@@ -21,7 +21,7 @@ public abstract class MicrosoftValueProxyBase<T extends Value<?>> implements Dot
 	}
 
 	@Override
-	public boolean isEqualTo(@NotNull DotNetValueProxy proxy)
+	public boolean isEqualTo(@Nonnull DotNetValueProxy proxy)
 	{
 		if(proxy instanceof MicrosoftValueProxyBase)
 		{
@@ -46,7 +46,7 @@ public abstract class MicrosoftValueProxyBase<T extends Value<?>> implements Dot
 		return MicrosoftTypeProxy.of(myValue.type());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Object getValue()
 	{

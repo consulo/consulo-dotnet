@@ -16,7 +16,8 @@
 
 package consulo.dotnet.ui.chooser;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.ide.util.TreeChooser;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
@@ -29,15 +30,15 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
  */
 public abstract class DotNetTypeChooserFactory
 {
-	@NotNull
-	public static DotNetTypeChooserFactory getInstance(@NotNull Project project)
+	@Nonnull
+	public static DotNetTypeChooserFactory getInstance(@Nonnull Project project)
 	{
 		return ServiceManager.getService(project, DotNetTypeChooserFactory.class);
 	}
 
-	@NotNull
-	public abstract TreeChooser<DotNetTypeDeclaration> createChooser(@NotNull GlobalSearchScope scope);
+	@Nonnull
+	public abstract TreeChooser<DotNetTypeDeclaration> createChooser(@Nonnull GlobalSearchScope scope);
 
-	@NotNull
-	public abstract TreeChooser<DotNetTypeDeclaration> createInheriableChooser(@NotNull String vmQName, @NotNull GlobalSearchScope scope);
+	@Nonnull
+	public abstract TreeChooser<DotNetTypeDeclaration> createInheriableChooser(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope);
 }

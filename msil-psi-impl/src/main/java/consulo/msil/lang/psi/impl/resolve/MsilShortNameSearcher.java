@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi.impl.resolve;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
@@ -41,14 +41,14 @@ public class MsilShortNameSearcher extends DotNetShortNameSearcher
 	}
 
 	@Override
-	public void collectTypeNames(@NotNull Processor<String> processor, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter)
+	public void collectTypeNames(@Nonnull Processor<String> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter)
 	{
 		StubIndex.getInstance().processAllKeys(MsilIndexKeys.TYPE_BY_NAME_INDEX, processor, scope, filter);
 		MsilTypeByNameIndex.getInstance().processAllKeys(myProject, processor);
 	}
 
 	@Override
-	public void collectTypes(@NotNull String name, @NotNull GlobalSearchScope scope, @Nullable IdFilter filter, @NotNull Processor<DotNetTypeDeclaration> processor)
+	public void collectTypes(@Nonnull String name, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter, @Nonnull Processor<DotNetTypeDeclaration> processor)
 	{
 		StubIndex.getInstance().processElements(MsilIndexKeys.TYPE_BY_NAME_INDEX, name, myProject, scope, MsilClassEntry.class, processor);
 	}

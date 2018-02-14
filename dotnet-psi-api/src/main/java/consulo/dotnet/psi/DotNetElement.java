@@ -16,7 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ArrayFactory;
 
@@ -30,7 +31,7 @@ public interface DotNetElement extends PsiElement
 
 	public static ArrayFactory<DotNetElement> ARRAY_FACTORY = new ArrayFactory<DotNetElement>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetElement[] create(int count)
 		{

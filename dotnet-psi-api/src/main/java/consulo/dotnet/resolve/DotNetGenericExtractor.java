@@ -16,8 +16,8 @@
 
 package consulo.dotnet.resolve;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.psi.DotNetGenericParameter;
 
 /**
@@ -30,11 +30,11 @@ public interface DotNetGenericExtractor
 	{
 		@Nullable
 		@Override
-		public DotNetTypeRef extract(@NotNull DotNetGenericParameter parameter)
+		public DotNetTypeRef extract(@Nonnull DotNetGenericParameter parameter)
 		{
 			return null;
 		}
 	};
 	@Nullable
-	DotNetTypeRef extract(@NotNull DotNetGenericParameter parameter);
+	DotNetTypeRef extract(@Nonnull DotNetGenericParameter parameter);
 }

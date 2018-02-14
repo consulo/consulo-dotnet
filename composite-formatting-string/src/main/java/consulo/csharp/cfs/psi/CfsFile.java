@@ -16,7 +16,8 @@
 
 package consulo.csharp.cfs.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.csharp.cfs.lang.CfsFileType;
 import consulo.csharp.cfs.lang.CfsLanguage;
 import com.intellij.extapi.psi.PsiFileBase;
@@ -29,18 +30,18 @@ import com.intellij.psi.FileViewProvider;
  */
 public class CfsFile extends PsiFileBase
 {
-	public CfsFile(@NotNull FileViewProvider viewProvider)
+	public CfsFile(@Nonnull FileViewProvider viewProvider)
 	{
 		super(viewProvider, CfsLanguage.INSTANCE);
 	}
 
-	@NotNull
+	@Nonnull
 	public CfsItem[] getItems()
 	{
 		return findChildrenByClass(CfsItem.class);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public FileType getFileType()
 	{

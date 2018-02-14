@@ -16,7 +16,7 @@
 
 package consulo.dotnet.externalAttributes;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.roots.OrderRootType;
 
 /**
@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.OrderRootType;
  */
 public class ExternalAttributesRootOrderType extends OrderRootType
 {
-	@NotNull
+	@Nonnull
 	public static ExternalAttributesRootOrderType getInstance()
 	{
 		return getOrderRootType(ExternalAttributesRootOrderType.class);

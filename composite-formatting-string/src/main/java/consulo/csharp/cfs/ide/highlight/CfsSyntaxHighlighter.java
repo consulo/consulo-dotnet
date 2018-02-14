@@ -19,7 +19,7 @@ package consulo.csharp.cfs.ide.highlight;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.csharp.cfs.lang.BaseCfsLanguageVersion;
 import consulo.csharp.cfs.lang.CfsTokens;
 import com.intellij.lexer.Lexer;
@@ -50,14 +50,14 @@ public class CfsSyntaxHighlighter extends SyntaxHighlighterBase
 		myLanguageVersion = languageVersion;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer getHighlightingLexer()
 	{
 		return myLanguageVersion.createLexer();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public TextAttributesKey[] getTokenHighlights(IElementType elementType)
 	{

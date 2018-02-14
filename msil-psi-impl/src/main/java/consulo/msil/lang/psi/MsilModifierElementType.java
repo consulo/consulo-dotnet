@@ -16,9 +16,11 @@
 
 package consulo.msil.lang.psi;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import consulo.dotnet.psi.DotNetModifier;
 import com.intellij.lang.Language;
 import com.intellij.psi.tree.IElementType;
@@ -29,12 +31,12 @@ import com.intellij.psi.tree.IElementType;
  */
 public class MsilModifierElementType extends IElementType implements DotNetModifier
 {
-	public MsilModifierElementType(@NotNull @NonNls String debugName, @Nullable Language language)
+	public MsilModifierElementType(@Nonnull @NonNls String debugName, @Nullable Language language)
 	{
 		super(debugName, language);
 	}
 
-	protected MsilModifierElementType(@NotNull @NonNls String debugName, @Nullable Language language, boolean register)
+	protected MsilModifierElementType(@Nonnull @NonNls String debugName, @Nullable Language language, boolean register)
 	{
 		super(debugName, language, register);
 	}

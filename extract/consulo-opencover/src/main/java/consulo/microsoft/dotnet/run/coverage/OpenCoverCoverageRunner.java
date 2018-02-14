@@ -22,12 +22,12 @@ import java.io.File;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.coverage.CoverageSuite;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
@@ -53,7 +53,7 @@ import consulo.util.NotNullPairFunction;
  */
 public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 {
-	@NotNull
+	@Nonnull
 	public static File getOpenCoverConsoleExecutable()
 	{
 		PluginClassLoader classLoader = (PluginClassLoader) OpenCoverCoverageRunner.class.getClassLoader();
@@ -63,7 +63,7 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 	}
 
 	@Override
-	public ProjectData loadCoverageData(@NotNull File sessionDataFile, @Nullable CoverageSuite baseCoverageSuite)
+	public ProjectData loadCoverageData(@Nonnull File sessionDataFile, @Nullable CoverageSuite baseCoverageSuite)
 	{
 		try
 		{
@@ -199,13 +199,13 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 		return "OpenCoverDotNetCoverageRunner";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public NotNullPairFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine()
 	{
 		return new NotNullPairFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine>()
 		{
-			@NotNull
+			@Nonnull
 			@Override
 			public GeneralCommandLine fun(DotNetConfigurationWithCoverage t, GeneralCommandLine v)
 			{
@@ -231,7 +231,7 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 	}
 
 	@Override
-	public boolean acceptModuleExtension(@NotNull DotNetModuleExtension<?> moduleExtension)
+	public boolean acceptModuleExtension(@Nonnull DotNetModuleExtension<?> moduleExtension)
 	{
 		return moduleExtension instanceof MicrosoftDotNetModuleExtension;
 	}

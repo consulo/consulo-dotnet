@@ -1,6 +1,6 @@
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.dotnet.debugger.proxy.value.DotNetEnumValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mssdw.EnumValueMirror;
@@ -16,7 +16,7 @@ public class MicrosoftEnumValueProxy extends MicrosoftValueProxyBase<EnumValueMi
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Object getValue()
 	{

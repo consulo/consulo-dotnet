@@ -16,8 +16,8 @@
 
 package consulo.dotnet.resolve;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -35,7 +35,7 @@ public interface DotNetTypeResolveResult
 			return null;
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetGenericExtractor getGenericExtractor()
 		{
@@ -52,7 +52,7 @@ public interface DotNetTypeResolveResult
 	@Nullable
 	PsiElement getElement();
 
-	@NotNull
+	@Nonnull
 	DotNetGenericExtractor getGenericExtractor();
 
 	boolean isNullable();

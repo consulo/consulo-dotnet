@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import consulo.dotnet.resolve.DotNetGenericExtractor;
@@ -36,7 +36,7 @@ public class MsilTypeResolveResult implements DotNetTypeResolveResult
 	private DotNetTypeRef[] myArgumentTypeRefs;
 	private NotNullLazyValue<DotNetGenericExtractor> myExtractorValue = new NotNullLazyValue<DotNetGenericExtractor>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		protected DotNetGenericExtractor compute()
 		{
@@ -67,7 +67,7 @@ public class MsilTypeResolveResult implements DotNetTypeResolveResult
 		return myElement;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetGenericExtractor getGenericExtractor()
 	{

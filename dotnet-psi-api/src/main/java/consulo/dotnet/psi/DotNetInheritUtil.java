@@ -20,7 +20,8 @@ import gnu.trove.THashSet;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
@@ -58,16 +59,16 @@ public class DotNetInheritUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, @NotNull String other, boolean deep)
+	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, @Nonnull String other, boolean deep)
 	{
 		return isInheritorImpl(typeDeclaration, other, deep, new THashSet<String>());
 	}
 
 	@RequiredReadAction
-	private static boolean isInheritorImpl(@NotNull DotNetTypeDeclaration typeDeclaration,
-			@NotNull String other,
+	private static boolean isInheritorImpl(@Nonnull DotNetTypeDeclaration typeDeclaration,
+			@Nonnull String other,
 			boolean deep,
-			@NotNull Set<String> alreadyProcessedTypes)
+			@Nonnull Set<String> alreadyProcessedTypes)
 	{
 		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
 		if(anExtends.length > 0)
@@ -105,7 +106,7 @@ public class DotNetInheritUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
+	public static boolean isParentOrSelf(@Nonnull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
 	{
 		PsiElement resolve = typeRef.resolve().getElement();
 		if(!(resolve instanceof DotNetTypeDeclaration))
@@ -117,7 +118,7 @@ public class DotNetInheritUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isParentOrSelf(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
+	public static boolean isParentOrSelf(@Nonnull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
 		if(Comparing.equal(parentClass, typeDeclaration.getVmQName()))
 		{
@@ -127,7 +128,7 @@ public class DotNetInheritUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isParent(@NotNull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
+	public static boolean isParent(@Nonnull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
 		return typeDeclaration.isInheritor(parentClass, deep);
 	}

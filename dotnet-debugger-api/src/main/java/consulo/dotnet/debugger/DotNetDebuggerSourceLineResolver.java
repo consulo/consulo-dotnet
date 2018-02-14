@@ -18,8 +18,8 @@ package consulo.dotnet.debugger;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
@@ -31,9 +31,9 @@ public abstract class DotNetDebuggerSourceLineResolver
 {
 	@Nullable
 	@RequiredReadAction
-	public abstract String resolveParentVmQName(@NotNull PsiElement element);
+	public abstract String resolveParentVmQName(@Nonnull PsiElement element);
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	public abstract Set<PsiElement> getAllExecutableChildren(@NotNull PsiElement root);
+	public abstract Set<PsiElement> getAllExecutableChildren(@Nonnull PsiElement root);
 }

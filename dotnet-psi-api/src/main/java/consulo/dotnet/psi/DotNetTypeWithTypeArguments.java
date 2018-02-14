@@ -16,8 +16,9 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 
 /**
@@ -26,7 +27,7 @@ import consulo.annotations.RequiredReadAction;
  */
 public interface DotNetTypeWithTypeArguments extends DotNetType
 {
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	DotNetType getInnerType();
 
@@ -34,7 +35,7 @@ public interface DotNetTypeWithTypeArguments extends DotNetType
 	@RequiredReadAction
 	DotNetTypeList getArgumentsList();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	DotNetType[] getArguments();
 }

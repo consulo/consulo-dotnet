@@ -16,7 +16,8 @@
 
 package consulo.dotnet.roots.orderEntry;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
@@ -32,9 +33,9 @@ import consulo.roots.orderEntry.OrderEntryTypeEditor;
  */
 public class DotNetLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<DotNetLibraryOrderEntryImpl>
 {
-	@NotNull
+	@Nonnull
 	@Override
-	public CellAppearanceEx getCellAppearance(@NotNull DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry)
+	public CellAppearanceEx getCellAppearance(@Nonnull DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry)
 	{
 		ModuleRootLayerImpl moduleRootLayer = dotNetLibraryOrderEntry.getModuleRootLayer();
 

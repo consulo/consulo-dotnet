@@ -1,6 +1,7 @@
 package consulo.dotnet.mono.debugger;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.openapi.project.Project;
@@ -15,9 +16,9 @@ import mono.debugger.TypeMirror;
  */
 public class MonoDebugUtil
 {
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@NotNull TypeMirror typeMirror, @NotNull DotNetDebugContext debugContext)
+	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@Nonnull TypeMirror typeMirror, @Nonnull DotNetDebugContext debugContext)
 	{
 		Project project = debugContext.getProject();
 		return DotNetPsiSearcher.getInstance(project).findTypes(DotNetDebuggerUtil.getVmQName(typeMirror.fullName()), debugContext.getResolveScope());

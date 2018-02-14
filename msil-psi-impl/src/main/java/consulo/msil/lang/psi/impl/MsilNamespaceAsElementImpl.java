@@ -16,7 +16,8 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.project.Project;
 import consulo.dotnet.lang.psi.impl.IndexBasedDotNetNamespaceAsElement;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
@@ -28,10 +29,10 @@ import consulo.msil.MsilLanguage;
  */
 public class MsilNamespaceAsElementImpl extends IndexBasedDotNetNamespaceAsElement
 {
-	public MsilNamespaceAsElementImpl(@NotNull Project project,
-			@NotNull String indexKey,
-			@NotNull String qName,
-			@NotNull IndexBasedDotNetPsiSearcher searcher)
+	public MsilNamespaceAsElementImpl(@Nonnull Project project,
+			@Nonnull String indexKey,
+			@Nonnull String qName,
+			@Nonnull IndexBasedDotNetPsiSearcher searcher)
 	{
 		super(project, MsilLanguage.INSTANCE, indexKey, qName, searcher);
 	}

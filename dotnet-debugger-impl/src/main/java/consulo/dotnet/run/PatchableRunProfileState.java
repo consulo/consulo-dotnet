@@ -2,8 +2,8 @@ package consulo.dotnet.run;
 
 import java.io.File;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
@@ -29,7 +29,7 @@ public abstract class PatchableRunProfileState extends UserDataHolderBase implem
 	@SuppressWarnings("unchecked")
 	private Consumer<ProcessHandler> myProcessHandlerConsumer = Consumer.EMPTY_CONSUMER;
 
-	public PatchableRunProfileState(@NotNull ExecutionEnvironment executionEnvironment, @NotNull GeneralCommandLine runCommandLine)
+	public PatchableRunProfileState(@Nonnull ExecutionEnvironment executionEnvironment, @Nonnull GeneralCommandLine runCommandLine)
 	{
 		myExecutionEnvironment = executionEnvironment;
 		myOriginalCommandLine = runCommandLine;
@@ -37,12 +37,12 @@ public abstract class PatchableRunProfileState extends UserDataHolderBase implem
 		myCommandLineForRun = runCommandLine;
 	}
 
-	public void modifyCommandLine(@NotNull NotNullFunction<GeneralCommandLine, GeneralCommandLine> function)
+	public void modifyCommandLine(@Nonnull NotNullFunction<GeneralCommandLine, GeneralCommandLine> function)
 	{
 		myCommandLineForRun = function.fun(myOriginalCommandLine);
 	}
 
-	@NotNull
+	@Nonnull
 	public GeneralCommandLine getCommandLineForRun()
 	{
 		return myCommandLineForRun;
@@ -50,7 +50,7 @@ public abstract class PatchableRunProfileState extends UserDataHolderBase implem
 
 	@Nullable
 	@Override
-	public ExecutionResult execute(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException
+	public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
 	{
 		if(!new File(myCommandLineForRun.getExePath()).exists())
 		{
@@ -60,22 +60,22 @@ public abstract class PatchableRunProfileState extends UserDataHolderBase implem
 		return executeImpl(executor, programRunner);
 	}
 
-	@NotNull
-	public <T extends ProcessHandler> T patchHandler(@NotNull T handler)
+	@Nonnull
+	public <T extends ProcessHandler> T patchHandler(@Nonnull T handler)
 	{
 		myProcessHandlerConsumer.consume(handler);
 		return handler;
 	}
 
 	@Nullable
-	public abstract ExecutionResult executeImpl(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException;
+	public abstract ExecutionResult executeImpl(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException;
 
-	public void setProcessHandlerConsumer(@NotNull Consumer<ProcessHandler> processHandlerConsumer)
+	public void setProcessHandlerConsumer(@Nonnull Consumer<ProcessHandler> processHandlerConsumer)
 	{
 		myProcessHandlerConsumer = processHandlerConsumer;
 	}
 
-	@NotNull
+	@Nonnull
 	public ExecutionEnvironment getExecutionEnvironment()
 	{
 		return myExecutionEnvironment;

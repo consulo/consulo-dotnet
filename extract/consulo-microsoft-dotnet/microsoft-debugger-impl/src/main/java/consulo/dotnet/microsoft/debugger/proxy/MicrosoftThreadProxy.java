@@ -19,8 +19,8 @@ package consulo.dotnet.microsoft.debugger.proxy;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
@@ -74,7 +74,7 @@ public class MicrosoftThreadProxy extends DotNetThreadProxy
 		return myThreadMirror.name();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public List<DotNetStackFrameProxy> getFrames() throws DotNetNotSuspendedException
 	{

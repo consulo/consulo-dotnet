@@ -16,7 +16,7 @@
 
 package consulo.dotnet.dll;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.fileTypes.ArchiveFileType;
 
 /**
@@ -28,28 +28,28 @@ public class DotNetModuleFileType extends ArchiveFileType
 	public static final DotNetModuleFileType INSTANCE = new DotNetModuleFileType();
 	public static final String PROTOCOL = "netdll";
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getProtocol()
 	{
 		return PROTOCOL;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDescription()
 	{
 		return ".NET libraries";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getId()
 	{
 		return "DLL_ARCHIVE";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDefaultExtension()
 	{

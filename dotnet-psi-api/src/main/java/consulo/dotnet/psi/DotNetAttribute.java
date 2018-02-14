@@ -16,8 +16,9 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.ArrayFactory;
 import consulo.dotnet.resolve.DotNetTypeRef;
 
@@ -31,7 +32,7 @@ public interface DotNetAttribute extends DotNetElement
 
 	public static ArrayFactory<DotNetAttribute> ARRAY_FACTORY = new ArrayFactory<DotNetAttribute>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetAttribute[] create(int count)
 		{
@@ -42,6 +43,6 @@ public interface DotNetAttribute extends DotNetElement
 	@Nullable
 	DotNetTypeDeclaration resolveToType();
 
-	@NotNull
+	@Nonnull
 	DotNetTypeRef toTypeRef();
 }

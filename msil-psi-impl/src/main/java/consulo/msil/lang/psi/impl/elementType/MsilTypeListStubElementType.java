@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
@@ -46,28 +46,28 @@ import consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
  */
 public class MsilTypeListStubElementType extends AbstractMsilStubElementType<MsilTypeListStub, DotNetTypeList>
 {
-	public MsilTypeListStubElementType(@NotNull @NonNls String debugName)
+	public MsilTypeListStubElementType(@Nonnull @NonNls String debugName)
 	{
 		super(debugName);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetTypeList createElement(@NotNull ASTNode astNode)
+	public DotNetTypeList createElement(@Nonnull ASTNode astNode)
 	{
 		return new MsilTypeListImpl(astNode);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetTypeList createPsi(@NotNull MsilTypeListStub msilTypeListStub)
+	public DotNetTypeList createPsi(@Nonnull MsilTypeListStub msilTypeListStub)
 	{
 		return new MsilTypeListImpl(msilTypeListStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilTypeListStub createStub(@NotNull DotNetTypeList dotNetTypeList, StubElement stubElement)
+	public MsilTypeListStub createStub(@Nonnull DotNetTypeList dotNetTypeList, StubElement stubElement)
 	{
 		DotNetType[] types = dotNetTypeList.getTypes();
 		List<String> typeRefs = new ArrayList<>(types.length);
@@ -98,7 +98,7 @@ public class MsilTypeListStubElementType extends AbstractMsilStubElementType<Msi
 	}
 
 	@Override
-	public void serialize(@NotNull MsilTypeListStub msilTypeListStub, @NotNull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilTypeListStub msilTypeListStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		String[] references = msilTypeListStub.geShortReferences();
 		stubOutputStream.writeByte(references.length);
@@ -108,9 +108,9 @@ public class MsilTypeListStubElementType extends AbstractMsilStubElementType<Msi
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public MsilTypeListStub deserialize(@NotNull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilTypeListStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		byte value = inputStream.readByte();
 		String[] strings = new String[value];
@@ -122,7 +122,7 @@ public class MsilTypeListStubElementType extends AbstractMsilStubElementType<Msi
 	}
 
 	@Override
-	public void indexStub(@NotNull MsilTypeListStub msilTypeListStub, @NotNull IndexSink indexSink)
+	public void indexStub(@Nonnull MsilTypeListStub msilTypeListStub, @Nonnull IndexSink indexSink)
 	{
 		if(this == MsilStubElements.EXTENDS_TYPE_LIST || this == MsilStubElements.IMPLEMENTS_TYPE_LIST)
 		{

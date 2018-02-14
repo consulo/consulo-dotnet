@@ -1,6 +1,7 @@
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -20,7 +21,7 @@ public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensi
 
 	public static ArrayFactory<MsilArrayDimensionImpl> ARRAY_FACTORY = new ArrayFactory<MsilArrayDimensionImpl>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public MsilArrayDimensionImpl[] create(int count)
 		{
@@ -28,12 +29,12 @@ public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensi
 		}
 	};
 
-	public MsilArrayDimensionImpl(@NotNull ASTNode node)
+	public MsilArrayDimensionImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilArrayDimensionImpl(@NotNull MsilArrayDimensionStub stub, @NotNull IStubElementType nodeType)
+	public MsilArrayDimensionImpl(@Nonnull MsilArrayDimensionStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}

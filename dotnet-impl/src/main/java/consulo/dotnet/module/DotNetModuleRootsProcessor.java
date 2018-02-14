@@ -3,7 +3,8 @@ package consulo.dotnet.module;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectProcedure;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.roots.ModuleRootModel;
@@ -21,7 +22,7 @@ import consulo.roots.impl.ProductionContentFolderTypeProvider;
 public class DotNetModuleRootsProcessor extends ModuleRootsProcessor
 {
 	@Override
-	public boolean containsFile(@NotNull TObjectIntHashMap<VirtualFile> roots, @NotNull final VirtualFile virtualFile)
+	public boolean containsFile(@Nonnull TObjectIntHashMap<VirtualFile> roots, @Nonnull final VirtualFile virtualFile)
 	{
 		return !roots.forEachKey(new TObjectProcedure<VirtualFile>()
 		{
@@ -33,9 +34,9 @@ public class DotNetModuleRootsProcessor extends ModuleRootsProcessor
 		});
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public VirtualFile[] getFiles(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate)
+	public VirtualFile[] getFiles(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate)
 	{
 		if(predicate.apply(ProductionContentFolderTypeProvider.getInstance()))
 		{
@@ -44,9 +45,9 @@ public class DotNetModuleRootsProcessor extends ModuleRootsProcessor
 		return VirtualFile.EMPTY_ARRAY;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public String[] getUrls(@NotNull ModuleRootModel moduleRootModel, @NotNull Predicate<ContentFolderTypeProvider> predicate)
+	public String[] getUrls(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate)
 	{
 		if(predicate.apply(ProductionContentFolderTypeProvider.getInstance()))
 		{
@@ -56,7 +57,7 @@ public class DotNetModuleRootsProcessor extends ModuleRootsProcessor
 	}
 
 	@Override
-	public boolean canHandle(@NotNull ModuleRootModel moduleRootModel)
+	public boolean canHandle(@Nonnull ModuleRootModel moduleRootModel)
 	{
 		String moduleDirUrl = moduleRootModel.getModule().getModuleDirUrl();
 		// if moduleDirUrl - need process by NullModuleDirModuleRootsProcessor

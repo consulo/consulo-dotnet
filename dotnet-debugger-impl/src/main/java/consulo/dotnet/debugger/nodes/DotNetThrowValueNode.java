@@ -16,10 +16,11 @@
 
 package consulo.dotnet.debugger.nodes;
 
+import javax.annotation.Nullable;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Ref;
 import com.intellij.xdebugger.frame.XValueModifier;
@@ -36,13 +37,13 @@ public class DotNetThrowValueNode extends DotNetAbstractVariableValueNode
 {
 	private DotNetValueProxy myThrowObject;
 
-	public DotNetThrowValueNode(@NotNull DotNetDebugContext debuggerContext, @NotNull DotNetStackFrameProxy frameProxy, @NotNull DotNetValueProxy throwObject)
+	public DotNetThrowValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull DotNetValueProxy throwObject)
 	{
 		super(debuggerContext, "exception", frameProxy);
 		myThrowObject = throwObject;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
@@ -71,7 +72,7 @@ public class DotNetThrowValueNode extends DotNetAbstractVariableValueNode
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
+	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
 	{
 
 	}

@@ -2,7 +2,8 @@ package consulo.dotnet.debugger.proxy.value;
 
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 
 /**
@@ -11,9 +12,9 @@ import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
  */
 public interface DotNetStructValueProxy extends DotNetValueProxy
 {
-	@NotNull
-	DotNetStructValueProxy createNewStructValue(@NotNull Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map);
+	@Nonnull
+	DotNetStructValueProxy createNewStructValue(@Nonnull Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map);
 
-	@NotNull
+	@Nonnull
 	Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> getValues();
 }

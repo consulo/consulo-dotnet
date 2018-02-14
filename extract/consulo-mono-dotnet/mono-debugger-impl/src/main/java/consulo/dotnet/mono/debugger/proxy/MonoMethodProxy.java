@@ -16,8 +16,8 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
@@ -58,7 +58,7 @@ public class MonoMethodProxy implements DotNetMethodProxy
 	}
 
 	@Override
-	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	public boolean isAnnotatedBy(@Nonnull String attributeVmQName)
 	{
 		for(CustomAttributeMirror customAttributeMirror : myMethodMirror.customAttributes())
 		{
@@ -72,14 +72,14 @@ public class MonoMethodProxy implements DotNetMethodProxy
 		return false;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy getDeclarationType()
 	{
 		return MonoTypeProxy.of(myMethodMirror.declaringType());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetMethodParameterProxy[] getParameters()
 	{
@@ -93,9 +93,9 @@ public class MonoMethodProxy implements DotNetMethodProxy
 		return proxies;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetLocalVariableProxy[] getLocalVariables(@NotNull DotNetStackFrameProxy frameProxy)
+	public DotNetLocalVariableProxy[] getLocalVariables(@Nonnull DotNetStackFrameProxy frameProxy)
 	{
 		MonoStackFrameProxy proxy = (MonoStackFrameProxy) frameProxy;
 
@@ -111,9 +111,9 @@ public class MonoMethodProxy implements DotNetMethodProxy
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@NotNull DotNetStackFrameProxy frameProxy,
+	public DotNetValueProxy invoke(@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy thisObjectProxy,
-			@NotNull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException
+			@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException
 	{
 		ThreadMirror thread = ((MonoThreadProxy) frameProxy.getThread()).getThreadMirror();
 		Value<?> thisObject = thisObjectProxy == null ? null : ((MonoValueProxyBase) thisObjectProxy).getMirror();
@@ -145,12 +145,12 @@ public class MonoMethodProxy implements DotNetMethodProxy
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public PsiElement findExecutableElementFromDebugInfo(@NotNull Project project, int executableChildrenAtLineIndex)
+	public PsiElement findExecutableElementFromDebugInfo(@Nonnull Project project, int executableChildrenAtLineIndex)
 	{
 		return MonoBreakpointUtil.findExecutableElementFromDebugInfo(project, myMethodMirror.debugInfo(), executableChildrenAtLineIndex);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

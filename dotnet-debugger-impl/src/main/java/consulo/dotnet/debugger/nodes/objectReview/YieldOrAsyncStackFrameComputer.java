@@ -18,8 +18,9 @@ package consulo.dotnet.debugger.nodes.objectReview;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
@@ -40,11 +41,11 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 {
 	@Override
-	public boolean computeStackFrame(@NotNull final DotNetDebugContext debugContext,
+	public boolean computeStackFrame(@Nonnull final DotNetDebugContext debugContext,
 			@Nullable final DotNetValueProxy thisObject,
-			@NotNull final DotNetStackFrameProxy stackFrameMirror,
-			@NotNull Set<Object> visitedVariables,
-			@NotNull final XValueChildrenList childrenList)
+			@Nonnull final DotNetStackFrameProxy stackFrameMirror,
+			@Nonnull Set<Object> visitedVariables,
+			@Nonnull final XValueChildrenList childrenList)
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 

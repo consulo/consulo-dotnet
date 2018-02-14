@@ -24,7 +24,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.Processor;
@@ -410,7 +411,7 @@ public class MicrosoftDebugThread extends Thread
 		return mySession;
 	}
 
-	public void invoke(@NotNull Consumer<MicrosoftVirtualMachineProxy> processor)
+	public void invoke(@Nonnull Consumer<MicrosoftVirtualMachineProxy> processor)
 	{
 		if(myVirtualMachine == null)
 		{

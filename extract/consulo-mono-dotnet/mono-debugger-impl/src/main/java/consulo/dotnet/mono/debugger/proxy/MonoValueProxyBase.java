@@ -16,8 +16,9 @@
 
 package consulo.dotnet.mono.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.MirrorWithId;
@@ -42,7 +43,7 @@ public abstract class MonoValueProxyBase<T extends Value<?>> implements DotNetVa
 	}
 
 	@Override
-	public boolean isEqualTo(@NotNull DotNetValueProxy proxy)
+	public boolean isEqualTo(@Nonnull DotNetValueProxy proxy)
 	{
 		if(proxy instanceof MonoValueProxyBase)
 		{
@@ -62,7 +63,7 @@ public abstract class MonoValueProxyBase<T extends Value<?>> implements DotNetVa
 		return MonoTypeProxy.of(myValue::type);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Object getValue()
 	{

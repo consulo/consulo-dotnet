@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -30,13 +30,13 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  */
 public class DotNetArrayValueNode extends DotNetAbstractVariableValueNode
 {
-	@NotNull
+	@Nonnull
 	private final DotNetArrayValueProxy myArrayValueMirror;
 	private final int myIndex;
 	@Nullable
 	private final DotNetValueProxy myValue;
 
-	public DotNetArrayValueNode(@NotNull DotNetDebugContext debuggerContext, @NotNull String name, @NotNull DotNetStackFrameProxy frameProxy, @NotNull DotNetArrayValueProxy valueMirrorNode,
+	public DotNetArrayValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull String name, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull DotNetArrayValueProxy valueMirrorNode,
 			int index)
 	{
 		super(debuggerContext, name, frameProxy);
@@ -53,7 +53,7 @@ public class DotNetArrayValueNode extends DotNetAbstractVariableValueNode
 	}
 
 	@Override
-	public void setValueForVariableImpl(@NotNull DotNetValueProxy value)
+	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
 	{
 		myArrayValueMirror.set(myIndex, value);
 	}

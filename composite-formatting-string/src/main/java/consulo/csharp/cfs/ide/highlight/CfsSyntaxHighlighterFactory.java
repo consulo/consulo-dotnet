@@ -16,7 +16,7 @@
 
 package consulo.csharp.cfs.ide.highlight;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.csharp.cfs.lang.BaseCfsLanguageVersion;
 import consulo.csharp.cfs.lang.CfsLanguage;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -34,9 +34,9 @@ public class CfsSyntaxHighlighterFactory extends LanguageVersionableSyntaxHighli
 		super(CfsLanguage.INSTANCE);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public SyntaxHighlighter getSyntaxHighlighter(@NotNull LanguageVersion languageVersion)
+	public SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion)
 	{
 		return new CfsSyntaxHighlighter((BaseCfsLanguageVersion)languageVersion);
 	}

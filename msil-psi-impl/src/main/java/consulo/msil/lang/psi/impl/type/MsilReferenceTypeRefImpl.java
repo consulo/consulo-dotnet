@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -37,7 +37,7 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 	private final PsiElement myElement;
 	protected final String myRef;
 
-	public MsilReferenceTypeRefImpl(@NotNull PsiElement element, @NotNull String ref)
+	public MsilReferenceTypeRefImpl(@Nonnull PsiElement element, @Nonnull String ref)
 	{
 		super(element.getProject());
 		myElement = element;
@@ -45,7 +45,7 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public String toString()
 	{
@@ -53,7 +53,7 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	protected DotNetTypeResolveResult resolveResult()
 	{

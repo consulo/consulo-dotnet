@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.light.LightTypeProxy;
 
 /**
@@ -26,15 +26,15 @@ import consulo.dotnet.debugger.proxy.light.LightTypeProxy;
  */
 public interface DotNetTypeProxy
 {
-	boolean isAnnotatedBy(@NotNull String attributeVmQName);
+	boolean isAnnotatedBy(@Nonnull String attributeVmQName);
 
 	@Nullable
 	DotNetTypeProxy getDeclarationType();
 
-	@NotNull
+	@Nonnull
 	String getName();
 
-	@NotNull
+	@Nonnull
 	String getFullName();
 
 	boolean isArray();
@@ -42,26 +42,26 @@ public interface DotNetTypeProxy
 	@Nullable
 	DotNetTypeProxy getBaseType();
 
-	@NotNull
+	@Nonnull
 	DotNetTypeProxy[] getInterfaces();
 
-	@NotNull
+	@Nonnull
 	DotNetFieldProxy[] getFields();
 
-	@NotNull
+	@Nonnull
 	DotNetPropertyProxy[] getProperties();
 
-	@NotNull
+	@Nonnull
 	DotNetMethodProxy[] getMethods();
 
 	boolean isNested();
 
 	@Nullable
-	DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params);
+	DotNetMethodProxy findMethodByName(@Nonnull String name, boolean deep, DotNetTypeProxy... params);
 
-	boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType);
+	boolean isAssignableFrom(@Nonnull DotNetTypeProxy otherType);
 
-	@NotNull
+	@Nonnull
 	default DotNetTypeProxy lightCopy()
 	{
 		return new LightTypeProxy(this);

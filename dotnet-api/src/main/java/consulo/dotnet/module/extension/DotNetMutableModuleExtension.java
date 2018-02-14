@@ -16,8 +16,8 @@
 
 package consulo.dotnet.module.extension;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.DotNetTarget;
 
 /**
@@ -27,17 +27,17 @@ import consulo.dotnet.DotNetTarget;
 public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetModuleExtension<T>,
 		DotNetSimpleMutableModuleExtension<T>
 {
-	void setFileName(@NotNull String name);
+	void setFileName(@Nonnull String name);
 
-	void setNamespacePrefix(@NotNull String prefix);
+	void setNamespacePrefix(@Nonnull String prefix);
 
-	void setOutputDir(@NotNull String name);
+	void setOutputDir(@Nonnull String name);
 
 	void setAllowSourceRoots(boolean val);
 
 	void setMainType(@Nullable String qName);
 
-	void setTarget(@NotNull DotNetTarget target);
+	void setTarget(@Nonnull DotNetTarget target);
 
 	void setAllowDebugInfo(boolean allowDebugInfo);
 }

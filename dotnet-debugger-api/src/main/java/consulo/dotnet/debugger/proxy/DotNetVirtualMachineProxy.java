@@ -18,8 +18,9 @@ package consulo.dotnet.debugger.proxy;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
@@ -35,25 +36,25 @@ import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 public interface DotNetVirtualMachineProxy
 {
 	@Nullable
-	DotNetTypeProxy findType(@NotNull Project project, @NotNull String vmQName, @NotNull VirtualFile virtualFile);
+	DotNetTypeProxy findType(@Nonnull Project project, @Nonnull String vmQName, @Nonnull VirtualFile virtualFile);
 
-	void invoke(@NotNull Runnable runnable);
+	void invoke(@Nonnull Runnable runnable);
 
-	@NotNull
+	@Nonnull
 	List<DotNetThreadProxy> getThreads();
 
-	@NotNull
-	DotNetStringValueProxy createStringValue(@NotNull String value);
+	@Nonnull
+	DotNetStringValueProxy createStringValue(@Nonnull String value);
 
-	@NotNull
+	@Nonnull
 	DotNetCharValueProxy createCharValue(char value);
 
-	@NotNull
+	@Nonnull
 	DotNetBooleanValueProxy createBooleanValue(boolean value);
 
-	@NotNull
-	DotNetNumberValueProxy createNumberValue(int tag, @NotNull Number value);
+	@Nonnull
+	DotNetNumberValueProxy createNumberValue(int tag, @Nonnull Number value);
 
-	@NotNull
+	@Nonnull
 	DotNetNullValueProxy createNullValue();
 }

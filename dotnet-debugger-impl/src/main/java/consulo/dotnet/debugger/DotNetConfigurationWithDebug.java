@@ -16,7 +16,8 @@
 
 package consulo.dotnet.debugger;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.xdebugger.XDebugSession;
@@ -33,6 +34,6 @@ public interface DotNetConfigurationWithDebug extends RunConfiguration
 		return true;
 	}
 
-	@NotNull
-	DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
+	@Nonnull
+	DotNetDebugProcessBase createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
 }

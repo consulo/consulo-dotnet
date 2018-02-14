@@ -16,8 +16,9 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetTypeRef;
 
@@ -32,7 +33,7 @@ public interface DotNetLikeMethodDeclaration extends DotNetModifierListOwner, Do
 	@RequiredReadAction
 	DotNetType getReturnType();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef getReturnTypeRef();
 }

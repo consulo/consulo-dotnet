@@ -16,7 +16,8 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import mssdw.NumberValueMirror;
@@ -32,7 +33,7 @@ public class MicrosoftNumberValueProxy extends MicrosoftValueProxyBase<NumberVal
 		super(value);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Number getValue()
 	{

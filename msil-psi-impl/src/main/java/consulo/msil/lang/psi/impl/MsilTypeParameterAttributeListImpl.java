@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -34,12 +34,12 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilTypeParameterAttributeLis
  */
 public class MsilTypeParameterAttributeListImpl extends MsilStubElementImpl<MsilTypeParameterAttributeListStub> implements MsilTypeParameterAttributeList
 {
-	public MsilTypeParameterAttributeListImpl(@NotNull ASTNode node)
+	public MsilTypeParameterAttributeListImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilTypeParameterAttributeListImpl(@NotNull MsilTypeParameterAttributeListStub stub, @NotNull IStubElementType nodeType)
+	public MsilTypeParameterAttributeListImpl(@Nonnull MsilTypeParameterAttributeListStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -64,7 +64,7 @@ public class MsilTypeParameterAttributeListImpl extends MsilStubElementImpl<Msil
 		return element == null ? null : element.getText();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public MsilCustomAttribute[] getAttributes()

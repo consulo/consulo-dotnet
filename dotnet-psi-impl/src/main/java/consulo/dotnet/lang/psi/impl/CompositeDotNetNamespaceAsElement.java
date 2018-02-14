@@ -20,7 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -41,7 +42,7 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 {
 	private List<DotNetNamespaceAsElement> myList;
 
-	public CompositeDotNetNamespaceAsElement(Project project, @NotNull String qName, List<DotNetNamespaceAsElement> list)
+	public CompositeDotNetNamespaceAsElement(Project project, @Nonnull String qName, List<DotNetNamespaceAsElement> list)
 	{
 		super(project, Language.ANY, qName);
 		myList = list;
@@ -62,7 +63,7 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 
 	@RequiredReadAction
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place)
+	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
 	{
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
@@ -75,12 +76,12 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
-	public Collection<PsiElement> findChildren(@NotNull String name,
-			@NotNull GlobalSearchScope globalSearchScope,
-			@NotNull NotNullFunction<PsiElement, PsiElement> transformer,
-			@NotNull ChildrenFilter filter)
+	public Collection<PsiElement> findChildren(@Nonnull String name,
+			@Nonnull GlobalSearchScope globalSearchScope,
+			@Nonnull NotNullFunction<PsiElement, PsiElement> transformer,
+			@Nonnull ChildrenFilter filter)
 	{
 		Collection<Collection<PsiElement>> list = new SmartList<>();
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
@@ -92,10 +93,10 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<PsiElement> getChildren(@NotNull GlobalSearchScope globalSearchScope, @NotNull NotNullFunction<PsiElement, PsiElement> transformer, @NotNull ChildrenFilter filter)
+	public Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull NotNullFunction<PsiElement, PsiElement> transformer, @Nonnull ChildrenFilter filter)
 	{
 		List<Collection<PsiElement>> list = new SmartList<>();
 		for(DotNetNamespaceAsElement element : myList)

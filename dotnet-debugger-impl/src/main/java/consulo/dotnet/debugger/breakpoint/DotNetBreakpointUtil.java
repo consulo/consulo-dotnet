@@ -16,9 +16,9 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -32,7 +32,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
  */
 public class DotNetBreakpointUtil
 {
-	public static void updateLineBreakpointIcon(@NotNull Project project, Boolean result, @NotNull XLineBreakpoint breakpoint)
+	public static void updateLineBreakpointIcon(@Nonnull Project project, Boolean result, @Nonnull XLineBreakpoint breakpoint)
 	{
 		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 

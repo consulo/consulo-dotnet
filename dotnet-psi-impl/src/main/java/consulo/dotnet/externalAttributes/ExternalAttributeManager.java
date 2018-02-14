@@ -4,7 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
@@ -29,8 +30,8 @@ import consulo.vfs.util.ArchiveVfsUtil;
  */
 public class ExternalAttributeManager
 {
-	@NotNull
-	public static ExternalAttributeManager getInstance(@NotNull Project project)
+	@Nonnull
+	public static ExternalAttributeManager getInstance(@Nonnull Project project)
 	{
 		return ServiceManager.getService(project, ExternalAttributeManager.class);
 	}
@@ -45,7 +46,7 @@ public class ExternalAttributeManager
 		connect.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter()
 		{
 			@Override
-			public void after(@NotNull List<? extends VFileEvent> events)
+			public void after(@Nonnull List<? extends VFileEvent> events)
 			{
 				for(VFileEvent event : events)
 				{
@@ -64,8 +65,8 @@ public class ExternalAttributeManager
 		});
 	}
 
-	@NotNull
-	public ExternalAttributeHolder resolveHolder(@NotNull VirtualFile virtualFile)
+	@Nonnull
+	public ExternalAttributeHolder resolveHolder(@Nonnull VirtualFile virtualFile)
 	{
 		VirtualFile localFile = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
 		if(localFile == null)
@@ -85,8 +86,8 @@ public class ExternalAttributeManager
 		}
 	}
 
-	@NotNull
-	private ExternalAttributeHolder resolveHolderImpl(@NotNull VirtualFile virtualFile, @NotNull VirtualFile localFile)
+	@Nonnull
+	private ExternalAttributeHolder resolveHolderImpl(@Nonnull VirtualFile virtualFile, @Nonnull VirtualFile localFile)
 	{
 		VirtualFile archiveFile = ArchiveVfsUtil.getArchiveRootForLocalFile(localFile);
 		if(archiveFile == null)

@@ -18,8 +18,8 @@ package consulo.csharp.cfs.ide.highlight;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.csharp.cfs.psi.CfsFile;
 import consulo.csharp.cfs.psi.CfsItem;
@@ -102,7 +102,7 @@ public class CfsItemHighlightUsagesHandlerFactory implements HighlightUsagesHand
 						InjectedLanguageUtil.enumerate(expression, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 						{
 							@Override
-							public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places)
+							public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places)
 							{
 								if(injectedPsi instanceof CfsFile)
 								{
@@ -126,7 +126,7 @@ public class CfsItemHighlightUsagesHandlerFactory implements HighlightUsagesHand
 	}
 
 	@RequiredReadAction
-	public static void addOccurrence(@NotNull List<TextRange> ranges, @NotNull PsiElement element)
+	public static void addOccurrence(@Nonnull List<TextRange> ranges, @Nonnull PsiElement element)
 	{
 		TextRange range = element.getTextRange();
 		if(range != null)

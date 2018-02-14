@@ -18,9 +18,11 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import java.util.function.Supplier;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
@@ -45,7 +47,7 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	}
 
 	@Nullable
-	public static MonoTypeProxy of(@NotNull Supplier<TypeMirror> supplier)
+	public static MonoTypeProxy of(@Nonnull Supplier<TypeMirror> supplier)
 	{
 		try
 		{
@@ -60,13 +62,13 @@ public class MonoTypeProxy implements DotNetTypeProxy
 
 	private TypeMirror myTypeMirror;
 
-	private MonoTypeProxy(@NotNull TypeMirror typeMirror)
+	private MonoTypeProxy(@Nonnull TypeMirror typeMirror)
 	{
 		myTypeMirror = typeMirror;
 	}
 
 	@Override
-	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	public boolean isAnnotatedBy(@Nonnull String attributeVmQName)
 	{
 		for(CustomAttributeMirror customAttributeMirror : myTypeMirror.customAttributes())
 		{
@@ -92,14 +94,14 @@ public class MonoTypeProxy implements DotNetTypeProxy
 		return new MonoTypeProxy(parentType);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{
 		return myTypeMirror.name();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getFullName()
 	{
@@ -124,7 +126,7 @@ public class MonoTypeProxy implements DotNetTypeProxy
 		return new MonoTypeProxy(baseType);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy[] getInterfaces()
 	{
@@ -138,7 +140,7 @@ public class MonoTypeProxy implements DotNetTypeProxy
 		return proxies;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetFieldProxy[] getFields()
 	{
@@ -152,7 +154,7 @@ public class MonoTypeProxy implements DotNetTypeProxy
 		return proxies;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetPropertyProxy[] getProperties()
 	{
@@ -166,7 +168,7 @@ public class MonoTypeProxy implements DotNetTypeProxy
 		return proxies;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetMethodProxy[] getMethods()
 	{
@@ -188,7 +190,7 @@ public class MonoTypeProxy implements DotNetTypeProxy
 
 	@Nullable
 	@Override
-	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
+	public DotNetMethodProxy findMethodByName(@Nonnull String name, boolean deep, DotNetTypeProxy... params)
 	{
 		TypeMirror[] typeMirrors = new TypeMirror[params.length];
 		for(int i = 0; i < params.length; i++)
@@ -205,7 +207,7 @@ public class MonoTypeProxy implements DotNetTypeProxy
 	}
 
 	@Override
-	public boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType)
+	public boolean isAssignableFrom(@Nonnull DotNetTypeProxy otherType)
 	{
 		MonoTypeProxy monoTypeProxy = (MonoTypeProxy) otherType;
 		return myTypeMirror.isAssignableFrom(monoTypeProxy.myTypeMirror);

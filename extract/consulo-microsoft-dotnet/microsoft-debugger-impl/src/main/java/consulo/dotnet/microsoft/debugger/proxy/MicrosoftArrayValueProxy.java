@@ -16,8 +16,8 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
@@ -60,7 +60,7 @@ public class MicrosoftArrayValueProxy extends MicrosoftValueProxyBase<ArrayValue
 	}
 
 	@Override
-	public void set(int index, @NotNull DotNetValueProxy proxy)
+	public void set(int index, @Nonnull DotNetValueProxy proxy)
 	{
 		//MonoValueProxyBase<?> valueProxyBase = (MonoValueProxyBase<?>) proxy;
 		//myValue.set(index, valueProxyBase.getMirror());

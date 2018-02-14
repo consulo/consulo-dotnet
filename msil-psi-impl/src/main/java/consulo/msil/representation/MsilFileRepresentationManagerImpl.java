@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import org.picocontainer.Disposable;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -49,7 +50,7 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 		project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener()
 		{
 			@Override
-			public void before(@NotNull List<? extends VFileEvent> events)
+			public void before(@Nonnull List<? extends VFileEvent> events)
 			{
 				for(VFileEvent event : events)
 				{
@@ -59,9 +60,9 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 		});
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@NotNull MsilFile msilFile, @NotNull VirtualFile virtualFile)
+	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@Nonnull MsilFile msilFile, @Nonnull VirtualFile virtualFile)
 	{
 		MsilFileRepresentationProvider[] extensions = MsilFileRepresentationProvider.EP_NAME.getExtensions();
 		List<Pair<String, ? extends FileType>> list = new ArrayList<Pair<String, ? extends FileType>>(extensions.length);
@@ -78,7 +79,7 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 
 	@Override
 	@RequiredReadAction
-	public PsiFile getRepresentationFile(@NotNull FileType fileType, @NotNull MsilFile msilFile)
+	public PsiFile getRepresentationFile(@Nonnull FileType fileType, @Nonnull MsilFile msilFile)
 	{
 		VirtualFile virtualFile = msilFile.getVirtualFile();
 		if(virtualFile == null)

@@ -16,9 +16,11 @@
 
 package consulo.dotnet.microsoft.debugger.proxy;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.util.ArrayUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -44,13 +46,13 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 
 	private TypeMirror myTypeMirror;
 
-	private MicrosoftTypeProxy(@NotNull TypeMirror typeMirror)
+	private MicrosoftTypeProxy(@Nonnull TypeMirror typeMirror)
 	{
 		myTypeMirror = typeMirror;
 	}
 
 	@Override
-	public boolean isAnnotatedBy(@NotNull String attributeVmQName)
+	public boolean isAnnotatedBy(@Nonnull String attributeVmQName)
 	{
 		return ArrayUtil.contains(attributeVmQName, myTypeMirror.customAttributes());
 	}
@@ -62,14 +64,14 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{
 		return myTypeMirror.name();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getFullName()
 	{
@@ -94,7 +96,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		return new MicrosoftTypeProxy(baseType);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetTypeProxy[] getInterfaces()
 	{
@@ -109,7 +111,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		return new DotNetTypeProxy[0];
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetFieldProxy[] getFields()
 	{
@@ -123,7 +125,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		return proxies;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetPropertyProxy[] getProperties()
 	{
@@ -137,7 +139,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 		return proxies;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetMethodProxy[] getMethods()
 	{
@@ -159,7 +161,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 
 	@Nullable
 	@Override
-	public DotNetMethodProxy findMethodByName(@NotNull String name, boolean deep, DotNetTypeProxy... params)
+	public DotNetMethodProxy findMethodByName(@Nonnull String name, boolean deep, DotNetTypeProxy... params)
 	{
 		TypeMirror[] typeMirrors = new TypeMirror[params.length];
 		for(int i = 0; i < params.length; i++)
@@ -176,7 +178,7 @@ public class MicrosoftTypeProxy implements DotNetTypeProxy
 	}
 
 	@Override
-	public boolean isAssignableFrom(@NotNull DotNetTypeProxy otherType)
+	public boolean isAssignableFrom(@Nonnull DotNetTypeProxy otherType)
 	{
 		MicrosoftTypeProxy MicrosoftTypeProxy = (MicrosoftTypeProxy) otherType;
 		return myTypeMirror.isAssignableFrom(MicrosoftTypeProxy.myTypeMirror);

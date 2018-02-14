@@ -1,6 +1,7 @@
 package consulo.dotnet.run.coverage;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.execution.configurations.ModuleRunProfile;
 import com.intellij.execution.configurations.RunConfigurationModule;
 
@@ -10,6 +11,6 @@ import com.intellij.execution.configurations.RunConfigurationModule;
  */
 public interface DotNetConfigurationWithCoverage extends ModuleRunProfile
 {
-	@NotNull
+	@Nonnull
 	RunConfigurationModule getConfigurationModule();
 }

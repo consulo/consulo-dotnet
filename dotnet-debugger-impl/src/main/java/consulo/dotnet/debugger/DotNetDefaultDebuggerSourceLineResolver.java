@@ -19,8 +19,9 @@ package consulo.dotnet.debugger;
 import java.util.Collections;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -36,7 +37,7 @@ public class DotNetDefaultDebuggerSourceLineResolver extends DotNetDebuggerSourc
 	@RequiredReadAction
 	@Override
 	@Nullable
-	public String resolveParentVmQName(@NotNull PsiElement element)
+	public String resolveParentVmQName(@Nonnull PsiElement element)
 	{
 		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(element, DotNetCodeBlockOwner.class, false);
 		if(codeBlockOwner == null)
@@ -60,10 +61,10 @@ public class DotNetDefaultDebuggerSourceLineResolver extends DotNetDebuggerSourc
 		return typeDeclaration.getVmQName();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
-	public Set<PsiElement> getAllExecutableChildren(@NotNull PsiElement root)
+	public Set<PsiElement> getAllExecutableChildren(@Nonnull PsiElement root)
 	{
 		return Collections.emptySet();
 	}

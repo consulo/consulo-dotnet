@@ -13,7 +13,7 @@ package org.emonic.base.documentation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.w3c.dom.Element;
 
 public class TypeDocumentation extends Documentation implements ITypeDocumentation
@@ -31,7 +31,7 @@ public class TypeDocumentation extends Documentation implements ITypeDocumentati
 		myDocumentations.add(doc);
 	}
 
-	@NotNull
+	@Nonnull
 	public List<IDocumentation> getDocumentation()
 	{
 		return myDocumentations;

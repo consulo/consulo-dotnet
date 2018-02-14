@@ -16,8 +16,9 @@
 
 package consulo.dotnet.debugger.proxy.light;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 
@@ -67,7 +68,7 @@ public class LightSourceLocation implements DotNetSourceLocation
 		return myColumn;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public DotNetMethodProxy getMethod()
 	{

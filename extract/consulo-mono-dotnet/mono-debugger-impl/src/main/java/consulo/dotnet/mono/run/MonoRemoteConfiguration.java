@@ -16,7 +16,8 @@
 
 package consulo.dotnet.mono.run;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.actions.StopProcessAction;
 import com.intellij.execution.configuration.ConfigurationFactoryEx;
@@ -53,15 +54,15 @@ public class MonoRemoteConfiguration extends ConfigurationTypeBase
 			{
 				return new DotNetRemoteConfiguration(project, this)
 				{
-					@NotNull
+					@Nonnull
 					@Override
-					public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo info) throws ExecutionException
+					public DotNetDebugProcessBase createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull DebugConnectionInfo info) throws ExecutionException
 					{
 						MonoDebugProcess process = new MonoDebugProcess(session, this, info);
 						process.getDebugThread().addListener(new MonoVirtualMachineListener()
 						{
 							@Override
-							public void connectionSuccess(@NotNull VirtualMachine machine)
+							public void connectionSuccess(@Nonnull VirtualMachine machine)
 							{
 								ProcessHandler processHandler = process.getProcessHandler();
 								processHandler.notifyTextAvailable(String.format("Success attach to %s:%d", info.getHost(), info.getPort()), ProcessOutputTypes.STDOUT);
@@ -86,7 +87,7 @@ public class MonoRemoteConfiguration extends ConfigurationTypeBase
 			}
 
 			@Override
-			public boolean isApplicable(@NotNull Project project)
+			public boolean isApplicable(@Nonnull Project project)
 			{
 				return ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetModuleExtension.class);
 			}

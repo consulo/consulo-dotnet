@@ -16,7 +16,8 @@
 
 package consulo.dotnet.run;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
@@ -39,7 +40,7 @@ import consulo.dotnet.execution.DebugConnectionInfo;
  */
 public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public String getRunnerId()
 	{
@@ -48,7 +49,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 
 	@Override
 	@RequiredDispatchThread
-	protected RunContentDescriptor doExecute(@NotNull final RunProfileState state, @NotNull final ExecutionEnvironment env) throws ExecutionException
+	protected RunContentDescriptor doExecute(@Nonnull final RunProfileState state, @Nonnull final ExecutionEnvironment env) throws ExecutionException
 	{
 		final DebugConnectionInfo debugConnectionInfo;
 		if(state instanceof UserDataHolder)
@@ -95,7 +96,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 	}
 
 	@Override
-	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile)
+	public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile runProfile)
 	{
 		if(!DefaultDebugExecutor.EXECUTOR_ID.equals(executorId))
 		{

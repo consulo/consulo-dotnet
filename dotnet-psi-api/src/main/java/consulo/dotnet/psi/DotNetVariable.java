@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.psi.PsiElement;
@@ -36,7 +36,7 @@ public interface DotNetVariable extends PsiNameIdentifierOwner, DotNetNamedEleme
 	@RequiredReadAction
 	PsiElement getConstantKeywordElement();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef toTypeRef(boolean resolveFromInitializer);
 

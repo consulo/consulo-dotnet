@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.openapi.Disposable;
@@ -59,36 +60,36 @@ import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
  */
 public class DotNetNamespaceCacheManager implements Disposable
 {
-	@NotNull
-	public static DotNetNamespaceCacheManager getInstance(@NotNull Project project)
+	@Nonnull
+	public static DotNetNamespaceCacheManager getInstance(@Nonnull Project project)
 	{
 		return ServiceManager.getService(project, DotNetNamespaceCacheManager.class);
 	}
 
 	public static interface ItemCalculator
 	{
-		@NotNull
+		@Nonnull
 		@RequiredReadAction
-		Set<PsiElement> compute(@NotNull Project project,
+		Set<PsiElement> compute(@Nonnull Project project,
 				@Nullable final IndexBasedDotNetPsiSearcher searcher,
-				@NotNull final String indexKey,
-				@NotNull final String thisQName,
-				@NotNull final GlobalSearchScope scope);
+				@Nonnull final String indexKey,
+				@Nonnull final String thisQName,
+				@Nonnull final GlobalSearchScope scope);
 
-		@NotNull
+		@Nonnull
 		DotNetNamespaceAsElement.ChildrenFilter getFilter();
 	}
 
 	public static final ItemCalculator ONLY_ELEMENTS = new ItemCalculator()
 	{
 		@RequiredReadAction
-		@NotNull
+		@Nonnull
 		@Override
-		public Set<PsiElement> compute(@NotNull final Project project,
+		public Set<PsiElement> compute(@Nonnull final Project project,
 				@Nullable final IndexBasedDotNetPsiSearcher searcher,
-				@NotNull final String indexKey,
-				@NotNull final String thisQName,
-				@NotNull final GlobalSearchScope scope)
+				@Nonnull final String indexKey,
+				@Nonnull final String thisQName,
+				@Nonnull final GlobalSearchScope scope)
 		{
 			assert searcher != null;
 
@@ -124,7 +125,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 			return elements.isEmpty() ? Collections.<PsiElement>emptySet() : elements;
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetNamespaceAsElement.ChildrenFilter getFilter()
 		{
@@ -135,13 +136,13 @@ public class DotNetNamespaceCacheManager implements Disposable
 	public static final ItemCalculator ONLY_NAMESPACES = new ItemCalculator()
 	{
 		@RequiredReadAction
-		@NotNull
+		@Nonnull
 		@Override
-		public Set<PsiElement> compute(@NotNull final Project project,
+		public Set<PsiElement> compute(@Nonnull final Project project,
 				@Nullable final IndexBasedDotNetPsiSearcher searcher,
-				@NotNull final String indexKey,
-				@NotNull final String thisQName,
-				@NotNull final GlobalSearchScope scope)
+				@Nonnull final String indexKey,
+				@Nonnull final String thisQName,
+				@Nonnull final GlobalSearchScope scope)
 		{
 			assert searcher != null;
 
@@ -180,7 +181,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 			return namespaces.isEmpty() ? Collections.<PsiElement>emptySet() : namespaces;
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		public DotNetNamespaceAsElement.ChildrenFilter getFilter()
 		{
@@ -307,8 +308,8 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 
 	@RequiredReadAction
-	@NotNull
-	public Set<DotNetTypeDeclaration> computeTypes(@NotNull DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
+	@Nonnull
+	public Set<DotNetTypeDeclaration> computeTypes(@Nonnull DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
 	{
 		Map<GlobalSearchScope, Set<DotNetTypeDeclaration>> map = myTypesCache.get(qName);
 		if(map != null)
@@ -331,7 +332,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		return compute;
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	private static Set<DotNetTypeDeclaration> computeTypesImpl(DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
 	{
@@ -344,14 +345,14 @@ public class DotNetNamespaceCacheManager implements Disposable
 		return typeDeclarations.isEmpty() ? Collections.<DotNetTypeDeclaration>emptySet() : typeDeclarations;
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	public Set<PsiElement> computeElements(@Nullable IndexBasedDotNetPsiSearcher searcher,
-			@NotNull DotNetNamespaceAsElement key,
-			@NotNull String indexKey,
-			@NotNull String thisQName,
-			@NotNull GlobalSearchScope scope,
-			@NotNull ItemCalculator calculator)
+			@Nonnull DotNetNamespaceAsElement key,
+			@Nonnull String indexKey,
+			@Nonnull String thisQName,
+			@Nonnull GlobalSearchScope scope,
+			@Nonnull ItemCalculator calculator)
 	{
 		Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> rootMap = selectMap(calculator);
 
@@ -376,7 +377,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		return compute;
 	}
 
-	@NotNull
+	@Nonnull
 	private Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> selectMap(ItemCalculator calculator)
 	{
 		switch(calculator.getFilter())

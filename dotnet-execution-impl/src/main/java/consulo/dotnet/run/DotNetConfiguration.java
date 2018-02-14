@@ -22,9 +22,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
@@ -126,7 +127,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		element.addContent(coverageElement);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
 	public SettingsEditor<? extends RunConfiguration> getConfigurationEditor()
@@ -139,7 +140,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 	@Nullable
 	@Override
-	public RunProfileState getState(@NotNull Executor executor, @NotNull final ExecutionEnvironment executionEnvironment) throws ExecutionException
+	public RunProfileState getState(@Nonnull Executor executor, @Nonnull final ExecutionEnvironment executionEnvironment) throws ExecutionException
 	{
 		Module module = getConfigurationModule().getModule();
 		if(module == null)
@@ -213,12 +214,12 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	}
 
 	@Override
-	public void setEnvs(@NotNull Map<String, String> map)
+	public void setEnvs(@Nonnull Map<String, String> map)
 	{
 		myEnvsMap = map;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Map<String, String> getEnvs()
 	{
@@ -254,9 +255,9 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		return extension instanceof DotNetModuleExtensionWithDebug;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public DotNetDebugProcessBase createDebuggerProcess(@NotNull XDebugSession session, @NotNull DebugConnectionInfo debugConnectionInfo) throws ExecutionException
+	public DotNetDebugProcessBase createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull DebugConnectionInfo debugConnectionInfo) throws ExecutionException
 	{
 		Module module = getConfigurationModule().getModule();
 		if(module == null)

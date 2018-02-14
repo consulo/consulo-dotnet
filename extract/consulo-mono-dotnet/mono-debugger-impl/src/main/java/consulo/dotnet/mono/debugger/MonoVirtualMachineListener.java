@@ -18,7 +18,8 @@ package consulo.dotnet.mono.debugger;
 
 import java.util.EventListener;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import mono.debugger.VirtualMachine;
 
 /**
@@ -27,7 +28,7 @@ import mono.debugger.VirtualMachine;
  */
 public interface MonoVirtualMachineListener extends EventListener
 {
-	void connectionSuccess(@NotNull VirtualMachine machine);
+	void connectionSuccess(@Nonnull VirtualMachine machine);
 
 	void connectionStopped();
 

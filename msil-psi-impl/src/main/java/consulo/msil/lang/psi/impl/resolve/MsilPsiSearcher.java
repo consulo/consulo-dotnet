@@ -19,7 +19,8 @@ package consulo.msil.lang.psi.impl.resolve;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -44,21 +45,21 @@ public class MsilPsiSearcher extends IndexBasedDotNetPsiSearcher
 		super(project);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	protected DotNetNamespaceAsElement createNamespace(@NotNull String indexKey, @NotNull String qName)
+	protected DotNetNamespaceAsElement createNamespace(@Nonnull String indexKey, @Nonnull String qName)
 	{
 		return new MsilNamespaceAsElementImpl(myProject, indexKey, qName, this);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public StubIndexKey<String, DotNetQualifiedElement> getElementByQNameIndexKey()
 	{
 		return MsilIndexKeys.ELEMENT_BY_QNAME_INDEX;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public StubIndexKey<String, DotNetQualifiedElement> getNamespaceIndexKey()
 	{
@@ -66,9 +67,9 @@ public class MsilPsiSearcher extends IndexBasedDotNetPsiSearcher
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
-	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@NotNull String vmQName, @NotNull GlobalSearchScope scope)
+	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope)
 	{
 		if(DumbService.isDumb(myProject))
 		{

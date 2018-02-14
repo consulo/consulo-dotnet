@@ -16,7 +16,7 @@
 
 package consulo.dotnet.resolve;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,6 +24,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface DotNetTypeRefWithInnerTypeRef extends DotNetTypeRef
 {
-	@NotNull
+	@Nonnull
 	DotNetTypeRef getInnerTypeRef();
 }

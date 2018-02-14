@@ -16,8 +16,9 @@
 
 package consulo.msil.lang.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -33,12 +34,12 @@ import consulo.msil.lang.psi.impl.elementType.stub.MsilAssemblyEntryStub;
  */
 public class MsilAssemblyEntryImpl extends MsilStubElementImpl<MsilAssemblyEntryStub> implements MsilAssemblyEntry
 {
-	public MsilAssemblyEntryImpl(@NotNull ASTNode node)
+	public MsilAssemblyEntryImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilAssemblyEntryImpl(@NotNull MsilAssemblyEntryStub stub, @NotNull IStubElementType nodeType)
+	public MsilAssemblyEntryImpl(@Nonnull MsilAssemblyEntryStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -50,12 +51,12 @@ public class MsilAssemblyEntryImpl extends MsilStubElementImpl<MsilAssemblyEntry
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull String s) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
 	{
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public MsilCustomAttribute[] getAttributes()
 	{

@@ -16,7 +16,8 @@
 
 package consulo.dotnet.ide;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.dotnet.psi.DotNetConstructorDeclaration;
 import consulo.dotnet.psi.DotNetFieldDeclaration;
 import consulo.dotnet.psi.DotNetGenericParameter;
@@ -35,8 +36,8 @@ import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
  */
 public class DotNetElementPresentationUtil
 {
-	@NotNull
-	public static <T extends DotNetGenericParameterListOwner & DotNetNamedElement> String formatTypeWithGenericParameters(@NotNull T el)
+	@Nonnull
+	public static <T extends DotNetGenericParameterListOwner & DotNetNamedElement> String formatTypeWithGenericParameters(@Nonnull T el)
 	{
 		DotNetGenericParameter[] genericParameters = el.getGenericParameters();
 		String name = el.getName();
@@ -51,7 +52,7 @@ public class DotNetElementPresentationUtil
 		return builder.toString();
 	}
 
-	public static void formatTypeGenericParameters(@NotNull DotNetGenericParameter[] parameters, @NotNull StringBuilder builder)
+	public static void formatTypeGenericParameters(@Nonnull DotNetGenericParameter[] parameters, @Nonnull StringBuilder builder)
 	{
 		if(parameters.length > 0)
 		{
@@ -77,9 +78,9 @@ public class DotNetElementPresentationUtil
 
 	public static final int METHOD_SCALA_LIKE_FULL = METHOD_SCALA_FORMAT | METHOD_WITH_RETURN_TYPE | METHOD_PARAMETER_NAME;
 
-	@NotNull
+	@Nonnull
 	@Deprecated
-	public static String formatMethod(@NotNull DotNetLikeMethodDeclaration methodDeclaration, int flags)
+	public static String formatMethod(@Nonnull DotNetLikeMethodDeclaration methodDeclaration, int flags)
 	{
 		StringBuilder builder = new StringBuilder();
 
@@ -102,9 +103,9 @@ public class DotNetElementPresentationUtil
 		return builder.toString();
 	}
 
-	@NotNull
+	@Nonnull
 	@Deprecated
-	public static String formatField(@NotNull DotNetFieldDeclaration fieldDeclaration)
+	public static String formatField(@Nonnull DotNetFieldDeclaration fieldDeclaration)
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(fieldDeclaration.getName());
@@ -114,7 +115,7 @@ public class DotNetElementPresentationUtil
 	}
 
 	@Deprecated
-	private static void formatParameters(@NotNull DotNetLikeMethodDeclaration methodDeclaration, @NotNull StringBuilder builder, final int flags)
+	private static void formatParameters(@Nonnull DotNetLikeMethodDeclaration methodDeclaration, @Nonnull StringBuilder builder, final int flags)
 	{
 		DotNetParameter[] parameters = methodDeclaration.getParameters();
 		if(parameters.length == 0)
@@ -156,8 +157,8 @@ public class DotNetElementPresentationUtil
 		}
 	}
 
-	@NotNull
-	public static String formatGenericParameters(@NotNull DotNetGenericParameterListOwner owner)
+	@Nonnull
+	public static String formatGenericParameters(@Nonnull DotNetGenericParameterListOwner owner)
 	{
 		DotNetGenericParameter[] genericParameters = owner.getGenericParameters();
 		if(genericParameters.length == 0)

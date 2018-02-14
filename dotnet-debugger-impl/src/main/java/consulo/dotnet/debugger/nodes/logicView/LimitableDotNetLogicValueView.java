@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.nodes.logicView;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.ObjectUtil;
@@ -37,21 +37,21 @@ public abstract class LimitableDotNetLogicValueView<T extends DotNetValueProxy> 
 {
 	private static final Key<Integer> ourLastIndex = Key.create("dotnet-limit-last-index");
 
-	public abstract int getSize(@NotNull T value);
+	public abstract int getSize(@Nonnull T value);
 
-	public abstract boolean isMyValue(@NotNull DotNetValueProxy value);
+	public abstract boolean isMyValue(@Nonnull DotNetValueProxy value);
 
-	@NotNull
-	public abstract XNamedValue createChildValue(int index, @NotNull DotNetDebugContext context, @NotNull DotNetStackFrameProxy frameProxy, @NotNull T value);
+	@Nonnull
+	public abstract XNamedValue createChildValue(int index, @Nonnull DotNetDebugContext context, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull T value);
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void computeChildren(@NotNull UserDataHolderBase dataHolder,
-			@NotNull DotNetDebugContext debugContext,
-			@NotNull DotNetAbstractVariableValueNode parentNode,
-			@NotNull DotNetStackFrameProxy frameProxy,
+	public void computeChildren(@Nonnull UserDataHolderBase dataHolder,
+			@Nonnull DotNetDebugContext debugContext,
+			@Nonnull DotNetAbstractVariableValueNode parentNode,
+			@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy oldValue,
-			@NotNull XCompositeNode node)
+			@Nonnull XCompositeNode node)
 	{
 		if(oldValue == null || !isMyValue(oldValue))
 		{

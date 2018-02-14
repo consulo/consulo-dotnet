@@ -16,7 +16,8 @@
 
 package consulo.csharp.cfs.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.csharp.cfs.psi.CfsFile;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
@@ -34,14 +35,14 @@ public class CfsParserDefinition extends LanguageVersionableParserDefinition
 {
 	private static final IFileElementType FILE_ELEMENT = new IFileElementType(CfsLanguage.INSTANCE);
 
-	@NotNull
+	@Nonnull
 	@Override
 	public IFileElementType getFileNodeType()
 	{
 		return FILE_ELEMENT;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiElement createElement(ASTNode astNode)
 	{
@@ -54,7 +55,7 @@ public class CfsParserDefinition extends LanguageVersionableParserDefinition
 		return new CfsFile(fileViewProvider);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode astNode, ASTNode astNode2)
 	{
