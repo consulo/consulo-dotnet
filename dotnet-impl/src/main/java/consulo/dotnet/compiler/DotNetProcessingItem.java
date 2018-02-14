@@ -20,10 +20,11 @@ import java.io.File;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import com.intellij.openapi.compiler.FileProcessingCompiler;
 import com.intellij.openapi.compiler.TimestampValidityState;
 import com.intellij.openapi.compiler.ValidityState;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 
 /**
  * @author VISTALL
@@ -32,9 +33,9 @@ import consulo.dotnet.module.extension.DotNetModuleExtension;
 public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingItem
 {
 	private final File myFile;
-	private final DotNetModuleExtension<?> myExtension;
+	private final DotNetRunModuleExtension<?> myExtension;
 
-	public DotNetProcessingItem(File file, DotNetModuleExtension<?> dotNetModuleExtension)
+	public DotNetProcessingItem(File file, DotNetRunModuleExtension<?> dotNetModuleExtension)
 	{
 		myFile = file;
 		myExtension = dotNetModuleExtension;
@@ -54,7 +55,7 @@ public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingIt
 		return new TimestampValidityState(myFile.lastModified());
 	}
 
-	public DotNetModuleExtension<?> getExtension()
+	public DotNetRunModuleExtension<?> getExtension()
 	{
 		return myExtension;
 	}

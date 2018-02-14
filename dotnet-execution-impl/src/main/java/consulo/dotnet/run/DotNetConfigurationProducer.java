@@ -16,9 +16,6 @@
 
 package consulo.dotnet.run;
 
-import consulo.dotnet.DotNetTarget;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.actions.RunConfigurationProducer;
 import com.intellij.openapi.module.Module;
@@ -27,6 +24,9 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.dotnet.DotNetTarget;
+import consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 
 /**
  * @author VISTALL
@@ -79,7 +79,7 @@ public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNet
 		{
 			return null;
 		}
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		DotNetRunModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
 		if(extension != null)
 		{
 			if(extension.getTarget() == DotNetTarget.EXECUTABLE || extension.getTarget() == DotNetTarget.WIN_EXECUTABLE)

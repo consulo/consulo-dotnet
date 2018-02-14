@@ -104,7 +104,6 @@ public class DotNetCoverageEngine extends CoverageEngine
 	@Override
 	public String getQualifiedName(@Nonnull File outputFile, @Nonnull final PsiFile sourceFile)
 	{
-
 		return ApplicationManager.getApplication().runReadAction(new Computable<String>()
 		{
 			@Override

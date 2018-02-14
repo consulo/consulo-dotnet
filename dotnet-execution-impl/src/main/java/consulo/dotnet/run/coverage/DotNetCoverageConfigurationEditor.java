@@ -29,7 +29,7 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBCheckBox;
 
@@ -46,11 +46,11 @@ public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConf
 	public DotNetCoverageConfigurationEditor()
 	{
 		myPanel.add(myEnabledCheckBox);
-		myPanel.add(LabeledComponent.left(myRunnersBox, "Runner"));
-		myRunnersBox.setRenderer(new ColoredListCellRendererWrapper<Object>()
+		myPanel.add(LabeledComponent.create(myRunnersBox, "Runner"));
+		myRunnersBox.setRenderer(new ColoredListCellRenderer<Object>()
 		{
 			@Override
-			protected void doCustomize(JList list, Object value, int index, boolean selected, boolean hasFocus)
+			protected void customizeCellRenderer(@Nonnull JList<?> jList, Object value, int i, boolean b, boolean b1)
 			{
 				if(value == null)
 				{

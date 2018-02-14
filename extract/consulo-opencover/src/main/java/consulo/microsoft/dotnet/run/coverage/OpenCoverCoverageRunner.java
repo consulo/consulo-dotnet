@@ -40,7 +40,7 @@ import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.execution.ParametersListUtil;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
 import consulo.dotnet.run.coverage.DotNetCoverageRunner;
@@ -231,7 +231,7 @@ public class OpenCoverCoverageRunner extends DotNetCoverageRunner
 	}
 
 	@Override
-	public boolean acceptModuleExtension(@Nonnull DotNetModuleExtension<?> moduleExtension)
+	public boolean acceptModuleExtension(@Nonnull DotNetRunModuleExtension<?> moduleExtension)
 	{
 		return moduleExtension instanceof MicrosoftDotNetModuleExtension;
 	}

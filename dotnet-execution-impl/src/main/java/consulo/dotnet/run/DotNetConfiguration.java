@@ -56,6 +56,7 @@ import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.debugger.DotNetModuleExtensionWithDebug;
 import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.dotnet.run.coverage.DotNetCoverageConfigurationEditor;
 import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
@@ -101,7 +102,6 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	public void readExternal(Element element) throws InvalidDataException
 	{
 		super.readExternal(element);
-		readModule(element);
 
 		XmlSerializer.deserializeInto(this, element);
 
@@ -117,7 +117,6 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	public void writeExternal(Element element) throws WriteExternalException
 	{
 		super.writeExternal(element);
-		writeModule(element);
 
 		XmlSerializer.serializeInto(this, element);
 
@@ -148,7 +147,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 			throw new ExecutionException("Module is null");
 		}
 
-		DotNetModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+		DotNetRunModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
 
 		if(extension == null)
 		{
@@ -174,7 +173,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		{
 			runCommandLine.addParameters(StringUtil.split(programParameters, " "));
 		}
-		runCommandLine.setPassParentEnvironment(runProfile.isPassParentEnvs());
+		runCommandLine.withParentEnvironmentType(runProfile.isPassParentEnvs() ? GeneralCommandLine.ParentEnvironmentType.CONSOLE : GeneralCommandLine.ParentEnvironmentType.NONE);
 		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
 		runCommandLine.setWorkDirectory(DotNetMacroUtil.expand(module, runProfile.getWorkingDirectory(), false));
 

@@ -18,7 +18,6 @@ package consulo.dotnet.run;
 
 import javax.annotation.Nonnull;
 
-import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.execution.configuration.ConfigurationFactoryEx;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.RunConfiguration;
@@ -28,6 +27,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 
 /**
@@ -54,13 +55,14 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 			}
 
 			@Override
+			@RequiredDispatchThread
 			public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration)
 			{
 				DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
 
 				for(Module module : ModuleManager.getInstance(configuration.getProject()).getModules())
 				{
-					DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+					DotNetRunModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
 					if(extension != null)
 					{
 						dotNetConfiguration.setName(module.getName());
@@ -74,7 +76,7 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 			@Override
 			public boolean isApplicable(@Nonnull Project project)
 			{
-				return ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetModuleExtension.class);
+				return ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetRunModuleExtension.class);
 			}
 		});
 	}

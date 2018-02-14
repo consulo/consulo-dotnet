@@ -39,6 +39,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotations.Exported;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryImpl;
 import consulo.dotnet.roots.orderEntry.DotNetRootPolicy;
 import consulo.roots.types.BinariesOrderRootType;
@@ -153,7 +154,7 @@ public class DotNetCompilerUtil
 
 				processed.add(depModule);
 
-				DotNetModuleExtension dependencyExtension = ModuleUtilCore.getExtension(depModule, DotNetModuleExtension.class);
+				DotNetRunModuleExtension dependencyExtension = ModuleUtilCore.getExtension(depModule, DotNetRunModuleExtension.class);
 				if(dependencyExtension != null && dependencyExtension.getTarget() == target)
 				{
 					set.add(new File(DotNetMacroUtil.expandOutputFile(dependencyExtension)));

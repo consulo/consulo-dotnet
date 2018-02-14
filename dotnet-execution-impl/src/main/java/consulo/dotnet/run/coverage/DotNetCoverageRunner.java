@@ -21,7 +21,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageRunner;
 import com.intellij.execution.configurations.GeneralCommandLine;
@@ -29,6 +28,7 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.util.SmartList;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.util.NotNullPairFunction;
 
 /**
@@ -47,7 +47,7 @@ public abstract class DotNetCoverageRunner extends CoverageRunner
 		Module module = ((DotNetConfigurationWithCoverage) configuration).getConfigurationModule().getModule();
 		if(module != null)
 		{
-			DotNetModuleExtension moduleExtension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+			DotNetRunModuleExtension moduleExtension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
 			if(moduleExtension == null)
 			{
 				return Collections.emptyList();
@@ -68,7 +68,7 @@ public abstract class DotNetCoverageRunner extends CoverageRunner
 	@Nonnull
 	public abstract NotNullPairFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine();
 
-	public abstract boolean acceptModuleExtension(@Nonnull DotNetModuleExtension<?> moduleExtension);
+	public abstract boolean acceptModuleExtension(@Nonnull DotNetRunModuleExtension<?> moduleExtension);
 
 	@Override
 	public boolean acceptsCoverageEngine(@Nonnull CoverageEngine engine)

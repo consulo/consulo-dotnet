@@ -31,7 +31,7 @@ import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.macro.TargetFileExtensionMacro;
 
 /**
@@ -54,19 +54,19 @@ public class DotNetMacroUtil
 	}
 
 	@Nonnull
-	public static String expandOutputFile(@Nonnull DotNetModuleExtension<?> extension)
+	public static String expandOutputFile(@Nonnull DotNetRunModuleExtension<?> extension)
 	{
 		return expandOutputFile(extension, false);
 	}
 
 	@Nonnull
-	public static String expandOutputFile(@Nonnull DotNetModuleExtension<?> extension, boolean debugSymbols)
+	public static String expandOutputFile(@Nonnull DotNetRunModuleExtension<?> extension, boolean debugSymbols)
 	{
 		return expand(extension.getModule(), extension.getOutputDir() + "/" + extension.getFileName(), debugSymbols);
 	}
 
 	@Nonnull
-	public static String expandOutputDir(@Nonnull DotNetModuleExtension<?> extension)
+	public static String expandOutputDir(@Nonnull DotNetRunModuleExtension<?> extension)
 	{
 		return expand(extension.getModule(), extension.getOutputDir(), false);
 	}

@@ -18,10 +18,7 @@ package consulo.dotnet.module.extension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.dotnet.DotNetTarget;
-import consulo.dotnet.execution.DebugConnectionInfo;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
+
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
@@ -30,7 +27,7 @@ import consulo.annotations.RequiredReadAction;
  * @author VISTALL
  * @since 20.11.13.
  */
-public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetSimpleModuleExtension<T>
+public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetSimpleModuleExtension<T>, DotNetRunModuleExtension<T>
 {
 	String MODULE_OUTPUT_DIR = "$ModuleProductionOutputDirPath$";
 
@@ -45,30 +42,16 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	String DEFAULT_OUTPUT_DIR = MODULE_OUTPUT_DIR;
 
 
+	@Nullable
+	Sdk getSdk();
+
 	boolean isAllowSourceRoots();
-
-	@Nonnull
-	DotNetTarget getTarget();
-
-	boolean isAllowDebugInfo();
-
-	@Nonnull
-	String getFileName();
 
 	@Nonnull
 	String getNamespacePrefix();
 
-	@Nonnull
-	String getOutputDir();
-
 	@Nullable
 	String getMainType();
-
-	@Nonnull
-	GeneralCommandLine createDefaultCommandLine(@Nonnull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
-
-	@Nonnull
-	String getDebugFileExtension();
 
 	@Nonnull
 	@RequiredReadAction

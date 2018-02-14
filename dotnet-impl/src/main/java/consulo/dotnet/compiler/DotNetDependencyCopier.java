@@ -25,6 +25,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.RunResult;
@@ -41,6 +42,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 
 /**
@@ -88,7 +90,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 			DotNetSimpleModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetSimpleModuleExtension.class);
 			assert dotNetModuleExtension != null;
 
-			if(!dotNetModuleExtension.isSupportCompilation() || !(dotNetModuleExtension instanceof DotNetModuleExtension))
+			if(!dotNetModuleExtension.isSupportCompilation() || !(dotNetModuleExtension instanceof DotNetRunModuleExtension))
 			{
 				continue;
 			}
@@ -117,7 +119,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				{
 					continue;
 				}
-				itemList.add(new DotNetProcessingItem(file, (DotNetModuleExtension<?>) dotNetModuleExtension));
+				itemList.add(new DotNetProcessingItem(file, (DotNetRunModuleExtension<?>) dotNetModuleExtension));
 			}
 		}
 

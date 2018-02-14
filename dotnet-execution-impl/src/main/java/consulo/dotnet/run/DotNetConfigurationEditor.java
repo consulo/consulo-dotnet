@@ -17,7 +17,6 @@
 package consulo.dotnet.run;
 
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import javax.annotation.Nonnull;
 import javax.swing.JComboBox;
@@ -32,7 +31,8 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 
 /**
  * @author VISTALL
@@ -67,6 +67,7 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 
 	@Nonnull
 	@Override
+	@RequiredDispatchThread
 	protected JComponent createEditor()
 	{
 		myProgramParametersPanel = new CommonProgramParametersPanel();
@@ -75,20 +76,16 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 		myModuleComboBox.setRenderer(new ModuleListCellRenderer());
 		for(Module module : ModuleManager.getInstance(myProject).getModules())
 		{
-			if(ModuleUtilCore.getExtension(module, DotNetModuleExtension.class) != null)
+			if(ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class) != null)
 			{
 				myModuleComboBox.addItem(module);
 			}
 		}
-		myModuleComboBox.addItemListener(new ItemListener()
+		myModuleComboBox.addItemListener(e ->
 		{
-			@Override
-			public void itemStateChanged(ItemEvent e)
+			if(e.getStateChange() == ItemEvent.SELECTED)
 			{
-				if(e.getStateChange() == ItemEvent.SELECTED)
-				{
-					myProgramParametersPanel.setModuleContext((Module) myModuleComboBox.getSelectedItem());
-				}
+				myProgramParametersPanel.setModuleContext((Module) myModuleComboBox.getSelectedItem());
 			}
 		});
 
