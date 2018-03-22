@@ -24,8 +24,8 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
@@ -340,7 +340,7 @@ public class DotNetStackFrame extends XStackFrame
 			final Ref<DotNetDebuggerProvider> providerRef = Ref.create();
 			final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<>();
 
-			ApplicationManager.getApplication().runReadAction(() ->
+			ReadAction.run(() ->
 			{
 				PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
 				if(psiElement != null)

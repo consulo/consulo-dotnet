@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.Icon;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.Icon;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayFactory;
@@ -32,7 +32,6 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
-import consulo.dotnet.util.ArrayUtil2;
 
 /**
  * @author VISTALL
@@ -50,7 +49,7 @@ public class DotNetExecutionStack extends XExecutionStack
 	private DotNetDebugContext myDebuggerContext;
 	private DotNetThreadProxy myThreadProxy;
 
-	public DotNetExecutionStack(DotNetDebugContext debuggerContext, DotNetThreadProxy threadProxy)
+	public DotNetExecutionStack(@Nonnull DotNetDebugContext debuggerContext, @Nonnull DotNetThreadProxy threadProxy)
 	{
 		super(calcName(threadProxy), getIcon(threadProxy));
 
@@ -93,8 +92,7 @@ public class DotNetExecutionStack extends XExecutionStack
 		{
 			DotNetVirtualMachineUtil.checkCallForUIThread();
 
-			List<DotNetStackFrameProxy> frames = myThreadProxy.getFrames();
-			DotNetStackFrameProxy frame = ArrayUtil2.safeGet(frames, 0);
+			DotNetStackFrameProxy frame = myThreadProxy.getFrame(0);
 			if(frame == null)
 			{
 				return null;

@@ -1,9 +1,14 @@
 package consulo.dotnet.mono.debugger.proxy;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.intellij.openapi.util.NullableLazyValue;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.DotNetVariableProxy;
 import consulo.util.pointers.Named;
 import mono.debugger.MirrorWithIdAndName;
+import mono.debugger.TypeMirror;
 
 /**
  * @author VISTALL
@@ -11,11 +16,22 @@ import mono.debugger.MirrorWithIdAndName;
  */
 public abstract class MonoVariableProxyBase<T extends MirrorWithIdAndName> implements Named, DotNetVariableProxy
 {
+	private NullableLazyValue<DotNetTypeProxy> myTypeValue = NullableLazyValue.of(() -> MonoTypeProxy.of(fetchType()));
 	protected T myMirror;
 
 	public MonoVariableProxyBase(@Nonnull T mirror)
 	{
 		myMirror = mirror;
+	}
+
+	@Nullable
+	protected abstract TypeMirror fetchType();
+
+	@Nullable
+	@Override
+	public final DotNetTypeProxy getType()
+	{
+		return myTypeValue.getValue();
 	}
 
 	@Nonnull

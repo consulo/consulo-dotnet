@@ -12,6 +12,7 @@ import mono.debugger.MethodMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.PropertyMirror;
 import mono.debugger.ThrowValueException;
+import mono.debugger.TypeMirror;
 
 /**
  * @author VISTALL
@@ -26,9 +27,9 @@ public class MonoPropertyProxy extends MonoVariableProxyBase<PropertyMirror> imp
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getType()
+	protected TypeMirror fetchType()
 	{
-		return MonoTypeProxy.of(myMirror.type());
+		return myMirror.type();
 	}
 
 	@Nonnull

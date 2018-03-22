@@ -41,7 +41,7 @@ public class DotNetSuspendContext extends XSuspendContext
 		myActiveThreadId = activeThreadId;
 
 		List<DotNetThreadProxy> threadProxies = debuggerContext.getVirtualMachine().getThreads();
-		List<DotNetExecutionStack> list = new ArrayList<DotNetExecutionStack>(threadProxies.size());
+		List<DotNetExecutionStack> list = new ArrayList<>(threadProxies.size());
 		for(DotNetThreadProxy mirror : threadProxies)
 		{
 			list.add(new DotNetExecutionStack(debuggerContext, mirror));

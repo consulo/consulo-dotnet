@@ -2,6 +2,7 @@ package consulo.dotnet.mono.debugger.proxy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import org.joou.ULong;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
@@ -15,6 +16,7 @@ import consulo.internal.dotnet.asm.signature.FieldAttributes;
 import mono.debugger.FieldMirror;
 import mono.debugger.ObjectValueMirror;
 import mono.debugger.ThrowValueException;
+import mono.debugger.TypeMirror;
 
 /**
  * @author VISTALL
@@ -29,9 +31,9 @@ public class MonoFieldProxy extends MonoVariableProxyBase<FieldMirror> implement
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getType()
+	protected TypeMirror fetchType()
 	{
-		return MonoTypeProxy.of(myMirror.type());
+		return myMirror.type();
 	}
 
 	@Override

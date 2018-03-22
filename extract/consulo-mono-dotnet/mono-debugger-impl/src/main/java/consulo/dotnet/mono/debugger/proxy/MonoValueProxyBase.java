@@ -19,6 +19,7 @@ package consulo.dotnet.mono.debugger.proxy;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.intellij.openapi.util.NullableLazyValue;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import mono.debugger.MirrorWithId;
@@ -31,6 +32,9 @@ import mono.debugger.Value;
 public abstract class MonoValueProxyBase<T extends Value<?>> implements DotNetValueProxy
 {
 	protected T myValue;
+
+	private final NullableLazyValue<DotNetTypeProxy> myTypeValue = NullableLazyValue.of(() -> MonoTypeProxy.of(myValue::type));
+	private final NullableLazyValue<Object> myValueValue = NullableLazyValue.of(() -> myValue.value());
 
 	public MonoValueProxyBase(T value)
 	{
@@ -60,13 +64,13 @@ public abstract class MonoValueProxyBase<T extends Value<?>> implements DotNetVa
 	@Override
 	public DotNetTypeProxy getType()
 	{
-		return MonoTypeProxy.of(myValue::type);
+		return myTypeValue.getValue();
 	}
 
 	@Nonnull
 	@Override
 	public Object getValue()
 	{
-		return myValue.value();
+		return myValueValue.getValue();
 	}
 }

@@ -3,8 +3,8 @@ package consulo.dotnet.mono.debugger.proxy;
 import javax.annotation.Nullable;
 
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import mono.debugger.LocalVariableMirror;
+import mono.debugger.TypeMirror;
 
 /**
  * @author VISTALL
@@ -19,8 +19,8 @@ public class MonoLocalVariableProxy extends MonoVariableProxyBase<LocalVariableM
 
 	@Nullable
 	@Override
-	public DotNetTypeProxy getType()
+	protected TypeMirror fetchType()
 	{
-		return MonoTypeProxy.of(myMirror::type);
+		return myMirror.type();
 	}
 }

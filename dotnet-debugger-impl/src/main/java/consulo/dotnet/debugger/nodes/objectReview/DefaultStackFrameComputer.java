@@ -43,7 +43,7 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 {
 	@Override
 	public boolean computeStackFrame(@Nonnull DotNetDebugContext debugContext,
-			@Nullable DotNetValueProxy thisObject,
+			@Nullable DotNetValueProxy value,
 			@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nonnull Set<Object> visitedVariables,
 			@Nonnull XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
@@ -57,8 +57,6 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 		}
 
 		DotNetMethodProxy method = sourceLocation.getMethod();
-
-		DotNetValueProxy value = frameProxy.getThisObject();
 
 		if(value instanceof DotNetObjectValueProxy)
 		{

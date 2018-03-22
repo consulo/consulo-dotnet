@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.BitUtil;
 import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -38,6 +40,9 @@ public class MonoThreadProxy extends DotNetThreadProxy
 {
 	private MonoVirtualMachineProxy myVirtualMachineProxy;
 	private ThreadMirror myThreadMirror;
+
+	private final NotNullLazyValue<Long> myIdValue = NotNullLazyValue.createValue(() -> getIdFromThread(myVirtualMachineProxy, myThreadMirror));
+	private final NotNullLazyValue<String> myNameValue = NotNullLazyValue.createValue(() -> myThreadMirror.name());
 
 	public MonoThreadProxy(MonoVirtualMachineProxy virtualMachineProxy, ThreadMirror threadMirror)
 	{
@@ -65,7 +70,7 @@ public class MonoThreadProxy extends DotNetThreadProxy
 	@Override
 	public long getId()
 	{
-		return getIdFromThread(myVirtualMachineProxy, myThreadMirror);
+		return myIdValue.getValue();
 	}
 
 	@Override
@@ -86,7 +91,7 @@ public class MonoThreadProxy extends DotNetThreadProxy
 	@Override
 	public String getName()
 	{
-		return myThreadMirror.name();
+		return myNameValue.getValue();
 	}
 
 	@Nonnull
