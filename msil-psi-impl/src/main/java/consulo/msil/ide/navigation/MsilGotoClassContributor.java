@@ -39,6 +39,7 @@ import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
@@ -163,7 +164,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 						@Override
 						public Icon getIconFor(LanguageFileType aValue)
 						{
-							return aValue.getIcon();
+							return TargetAWT.to(aValue.getIcon());
 						}
 
 						@Override

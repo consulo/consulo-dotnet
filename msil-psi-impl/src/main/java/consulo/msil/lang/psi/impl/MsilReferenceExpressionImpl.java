@@ -18,6 +18,9 @@ package consulo.msil.lang.psi.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.annotations.RequiredReadAction;
+import consulo.annotations.RequiredWriteAction;
 import consulo.dotnet.psi.DotNetReferenceExpression;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
@@ -50,6 +53,7 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 		return DotNetTypeRef.ERROR_TYPE;
 	}
 
+	@RequiredReadAction
 	@Nonnull
 	@Override
 	public ResolveResult[] multiResolve(boolean b)
@@ -71,18 +75,21 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public PsiElement getElement()
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public TextRange getRangeInElement()
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public PsiElement resolve()
@@ -90,6 +97,7 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 		return null;
 	}
 
+	@RequiredReadAction
 	@Nonnull
 	@Override
 	public String getCanonicalText()
@@ -97,31 +105,28 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 		return null;
 	}
 
+	@RequiredWriteAction
 	@Override
 	public PsiElement handleElementRename(String s) throws IncorrectOperationException
 	{
 		return null;
 	}
 
+	@RequiredWriteAction
 	@Override
 	public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isReferenceTo(PsiElement element)
 	{
 		return false;
 	}
 
-	@Nonnull
-	@Override
-	public Object[] getVariants()
-	{
-		return new Object[0];
-	}
-
+	@RequiredReadAction
 	@Override
 	public boolean isSoft()
 	{

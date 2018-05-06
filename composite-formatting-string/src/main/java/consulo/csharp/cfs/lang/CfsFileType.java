@@ -17,11 +17,11 @@
 package consulo.csharp.cfs.lang;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -59,7 +59,7 @@ public class CfsFileType extends LanguageFileType
 
 	@Nullable
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return AllIcons.FileTypes.Text;
 	}
