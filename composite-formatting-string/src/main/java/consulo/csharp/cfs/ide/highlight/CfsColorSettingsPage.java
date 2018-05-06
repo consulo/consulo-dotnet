@@ -5,11 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.Icon;
 
-import consulo.csharp.cfs.lang.CfsLanguage;
-import consulo.csharp.cfs.lang.CfsTokens;
-import consulo.csharp.cfs.lang.IndexCfsLanguageVersion;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -18,6 +14,9 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.psi.tree.IElementType;
+import consulo.csharp.cfs.lang.CfsLanguage;
+import consulo.csharp.cfs.lang.CfsTokens;
+import consulo.csharp.cfs.lang.IndexCfsLanguageVersion;
 
 /**
  * @author VISTALL
@@ -40,13 +39,6 @@ public class CfsColorSettingsPage implements ColorSettingsPage
 			put("text", HighlighterColors.TEXT);
 		}
 	};
-
-	@Nullable
-	@Override
-	public Icon getIcon()
-	{
-		return null;
-	}
 
 	@Nonnull
 	@Override

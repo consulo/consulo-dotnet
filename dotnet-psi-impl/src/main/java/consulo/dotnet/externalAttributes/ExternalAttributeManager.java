@@ -43,7 +43,7 @@ public class ExternalAttributeManager
 	{
 		myProject = project;
 		MessageBusConnection connect = project.getMessageBus().connect();
-		connect.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter()
+		connect.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener()
 		{
 			@Override
 			public void after(@Nonnull List<? extends VFileEvent> events)
