@@ -1,8 +1,7 @@
 package consulo.msil.ide;
 
-import javax.swing.Icon;
-
 import javax.annotation.Nonnull;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
@@ -17,6 +16,7 @@ import consulo.ide.IconDescriptorUpdater;
 import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.msil.lang.psi.MsilTokens;
 import consulo.msil.lang.psi.impl.MsilNamespaceAsElementImpl;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -36,7 +36,7 @@ public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 
 		if(element instanceof MsilClassEntry)
 		{
-			Icon main = null;
+			Image main = null;
 
 			MsilClassEntry typeDeclaration = (MsilClassEntry) element;
 			if(!DumbService.getInstance(element.getProject()).isDumb())

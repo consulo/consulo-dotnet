@@ -48,6 +48,7 @@ import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
 import consulo.dotnet.DotNetBundle;
 import consulo.dotnet.DotNetTarget;
 import consulo.extension.ui.ModuleExtensionSdkBoxBuilder;
@@ -126,7 +127,7 @@ public class DotNetConfigurationPanel extends JPanel
 
 				if(value instanceof PsiElement && qualifierProducer.isMyElement((PsiElement) value))
 				{
-					setIcon(IconDescriptorUpdaters.getIcon((PsiElement) value, 0));
+					setIcon(TargetAWT.to(IconDescriptorUpdaters.getIcon((PsiElement) value, 0)));
 					append(qualifierProducer.getQualifiedName((PsiElement) value));
 				}
 				else if(value instanceof String)

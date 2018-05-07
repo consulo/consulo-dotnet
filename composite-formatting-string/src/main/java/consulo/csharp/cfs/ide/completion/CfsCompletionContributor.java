@@ -19,6 +19,7 @@ import com.intellij.psi.impl.source.tree.injected.Place;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -65,7 +66,7 @@ public class CfsCompletionContributor extends CompletionContributor
 
 					LookupElementBuilder builder = LookupElementBuilder.create(String.valueOf(i - 1));
 					builder = builder.withTypeText(String.valueOf(i - 1));
-					builder = builder.withIcon(AllIcons.Nodes.Parameter);
+					builder = builder.withIcon((Image) AllIcons.Nodes.Parameter);
 					builder = builder.withPresentableText(StringUtil.trimLog(callArgument.getText().trim(), 15));
 					result.addElement(builder);
 				}

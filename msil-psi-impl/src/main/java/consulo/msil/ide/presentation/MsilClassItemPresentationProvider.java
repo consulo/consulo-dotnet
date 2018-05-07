@@ -7,6 +7,7 @@ import com.intellij.navigation.ItemPresentationProvider;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.awt.TargetAWT;
 import consulo.dotnet.ide.DotNetElementPresentationUtil;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.ide.IconDescriptorUpdaters;
@@ -49,7 +50,7 @@ public class MsilClassItemPresentationProvider implements ItemPresentationProvid
 		@Override
 		public javax.swing.Icon getIcon(boolean b)
 		{
-			return IconDescriptorUpdaters.getIcon(myDeclaration, Iconable.ICON_FLAG_VISIBILITY);
+			return TargetAWT.to(IconDescriptorUpdaters.getIcon(myDeclaration, Iconable.ICON_FLAG_VISIBILITY));
 		}
 	}
 
