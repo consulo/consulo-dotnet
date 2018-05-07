@@ -16,9 +16,8 @@
 
 package consulo.microsoft.dotnet;
 
-import javax.swing.Icon;
-
 import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -26,5 +25,5 @@ import com.intellij.openapi.util.IconLoader;
  */
 public interface MicrosoftDotNetIcons
 {
-	Icon DotNet = IconLoader.findIcon("/icons/dotnet.png");
+	Image DotNet = IconLoader.findIcon("/icons/dotnet.png");
 }

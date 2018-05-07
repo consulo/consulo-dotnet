@@ -26,6 +26,7 @@ import consulo.dotnet.sdk.DotNetSdkType;
 import consulo.microsoft.dotnet.MicrosoftDotNetIcons;
 import consulo.microsoft.dotnet.util.MicrosoftDotNetUtil;
 import com.intellij.openapi.projectRoots.Sdk;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -90,7 +91,7 @@ public class MicrosoftDotNetSdkType extends DotNetSdkType
 
 	@Nullable
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return MicrosoftDotNetIcons.DotNet;
 	}

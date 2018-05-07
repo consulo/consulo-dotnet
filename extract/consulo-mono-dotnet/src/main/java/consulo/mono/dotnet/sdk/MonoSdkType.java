@@ -23,12 +23,9 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 
-import javax.annotation.Nullable;
-import consulo.dotnet.sdk.DotNetSdkType;
-import consulo.mono.dotnet.MonoDotNetIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -51,6 +48,9 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.dotnet.sdk.DotNetSdkType;
+import consulo.mono.dotnet.MonoDotNetIcons;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -202,7 +202,7 @@ public class MonoSdkType extends DotNetSdkType
 
 	@Nullable
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return MonoDotNetIcons.Mono;
 	}

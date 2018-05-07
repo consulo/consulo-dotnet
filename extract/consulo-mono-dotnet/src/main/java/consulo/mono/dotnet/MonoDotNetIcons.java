@@ -16,9 +16,8 @@
 
 package consulo.mono.dotnet;
 
-import javax.swing.Icon;
-
 import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -26,5 +25,5 @@ import com.intellij.openapi.util.IconLoader;
  */
 public interface MonoDotNetIcons
 {
-	Icon Mono = IconLoader.findIcon("/icons/mono.png");
+	Image Mono = IconLoader.findIcon("/icons/mono.png");
 }

@@ -18,12 +18,12 @@ package consulo.dotnet.sdk;
 
 import java.io.File;
 
-import javax.swing.Icon;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.dotnet.DotNetIcons;
+
 import com.intellij.openapi.projectRoots.SdkType;
+import consulo.dotnet.DotNetIcons;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -72,7 +72,7 @@ public class RoslynBundleType extends SdkType
 
 	@Nullable
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return DotNetIcons.NetFoundation;
 	}
