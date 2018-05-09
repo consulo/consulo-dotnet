@@ -17,10 +17,9 @@
 package consulo.dotnet.debugger.breakpoint;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 
-import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.TreeChooser;
 import com.intellij.openapi.application.ApplicationManager;
@@ -38,6 +37,7 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointPr
 import consulo.dotnet.debugger.breakpoint.ui.DotNetExceptionBreakpointPropertiesPanel;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.ui.chooser.DotNetTypeChooserFactory;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -58,14 +58,14 @@ public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<D
 
 	@Nonnull
 	@Override
-	public Icon getEnabledIcon()
+	public Image getEnabledIcon()
 	{
 		return AllIcons.Debugger.Db_exception_breakpoint;
 	}
 
 	@Nonnull
 	@Override
-	public Icon getDisabledIcon()
+	public Image getDisabledIcon()
 	{
 		return AllIcons.Debugger.Db_disabled_exception_breakpoint;
 	}

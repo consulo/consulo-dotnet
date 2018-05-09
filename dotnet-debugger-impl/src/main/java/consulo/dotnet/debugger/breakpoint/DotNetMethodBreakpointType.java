@@ -17,9 +17,8 @@
 package consulo.dotnet.debugger.breakpoint;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -28,6 +27,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.ui.DotNetMethodBreakpointPropertiesPanel;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -48,14 +48,14 @@ public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethod
 
 	@Nonnull
 	@Override
-	public Icon getEnabledIcon()
+	public Image getEnabledIcon()
 	{
 		return AllIcons.Debugger.Db_method_breakpoint;
 	}
 
 	@Nonnull
 	@Override
-	public Icon getDisabledIcon()
+	public Image getDisabledIcon()
 	{
 		return AllIcons.Debugger.Db_disabled_method_breakpoint;
 	}

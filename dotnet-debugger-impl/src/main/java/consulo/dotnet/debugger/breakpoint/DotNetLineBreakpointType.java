@@ -23,9 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
@@ -55,6 +54,7 @@ import consulo.dotnet.debugger.DotNetEditorsProvider;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.util.ArrayUtil2;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -193,7 +193,6 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		return newSet;
 	}
 
-
 	class AllBreakpointVariant extends XLineBreakpointVariant
 	{
 		@Nonnull
@@ -207,7 +206,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		@RequiredReadAction
 		@Nullable
 		@Override
-		public Icon getIcon()
+		public Image getIcon()
 		{
 			return null;
 		}
@@ -260,7 +259,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		@Nullable
 		@Override
 		@RequiredDispatchThread
-		public Icon getIcon()
+		public Image getIcon()
 		{
 			return AllIcons.Debugger.LambdaBreakpoint;
 		}

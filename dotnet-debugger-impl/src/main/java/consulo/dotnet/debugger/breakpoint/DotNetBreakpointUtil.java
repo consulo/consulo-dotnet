@@ -17,7 +17,6 @@
 package consulo.dotnet.debugger.breakpoint;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
@@ -25,6 +24,7 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.SuspendPolicy;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -36,7 +36,7 @@ public class DotNetBreakpointUtil
 	{
 		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
-		Icon icon = null;
+		Image icon = null;
 		SuspendPolicy suspendPolicy = breakpoint.getSuspendPolicy();
 		if(breakpoint.isTemporary())
 		{
