@@ -16,13 +16,14 @@
 
 package consulo.dotnet.externalAttributes;
 
-import javax.swing.Icon;
+import javax.annotation.Nonnull;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -30,19 +31,21 @@ import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
  */
 public class ExternalAttributesOrderRootTypeUIFactory implements OrderRootTypeUIFactory
 {
+	@Nonnull
 	@Override
 	public SdkPathEditor createPathEditor(Sdk sdk)
 	{
-		return new SdkPathEditor(getNodeText(), ExternalAttributesRootOrderType.getInstance(),
-				FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), sdk);
+		return new SdkPathEditor(getNodeText(), ExternalAttributesRootOrderType.getInstance(), FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), sdk);
 	}
 
+	@Nonnull
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return AllIcons.Nodes.Annotationtype;
 	}
 
+	@Nonnull
 	@Override
 	public String getNodeText()
 	{
