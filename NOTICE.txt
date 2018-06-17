@@ -1,1 +1,0 @@
-Repository contains some code from http://emonic.sourceforge.net/ with EPL license
