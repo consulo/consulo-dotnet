@@ -61,7 +61,6 @@
 		<module>extract/consulo-microsoft-dotnet/microsoft-dotnet-impl</module>
 		<module>extract/consulo-mono-dotnet</module>
 		<module>extract/consulo-mono-dotnet/mono-debugger-impl</module>
-		<module>extract/consulo-opencover</module>
 
 		<module>dotnet-impl</module>
 	</modules>
