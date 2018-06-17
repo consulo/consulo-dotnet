@@ -56,10 +56,6 @@
 		<module>msil-psi-impl</module>
 		<module>composite-formatting-string</module>
 
-		<module>extract/consulo-microsoft-dotnet</module>
-		<module>extract/consulo-microsoft-dotnet/microsoft-debugger-impl</module>
-		<module>extract/consulo-microsoft-dotnet/microsoft-dotnet-impl</module>
-
 		<module>dotnet-impl</module>
 	</modules>
 </project>
