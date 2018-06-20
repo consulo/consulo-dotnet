@@ -22,34 +22,34 @@ import consulo.testFramework.ParsingTestCase;
  * @author VISTALL
  * @since 13.05.2015
  */
-public class MsilParsingTest extends ParsingTestCase
+public abstract class MsilParsingTest extends ParsingTestCase
 {
 	public MsilParsingTest()
 	{
 		super("/msil-psi-impl/testData/parsing/", "msil");
 	}
 
-	public void _testFieldConstWithValue()
+	public void testFieldConstWithValue()
 	{
 		doTest(true);
 	}
 
-	public void _testArrayList()
+	public void testArrayList()
 	{
 		doTest(true);
 	}
 
-	public void _testFieldWithAttribute()
+	public void testFieldWithAttribute()
 	{
 		doTest(true);
 	}
 
-	public void _testTestCustomAttributeSignature()
+	public void testTestCustomAttributeSignature()
 	{
 		doTest(true);
 	}
 
-	public void _testGenericParameterCustomAttribute()
+	public void testGenericParameterCustomAttribute()
 	{
 		doTest(true);
 	}
