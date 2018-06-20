@@ -29,27 +29,27 @@ public class MsilParsingTest extends ParsingTestCase
 		super("/msil-psi-impl/testData/parsing/", "msil");
 	}
 
-	public void testFieldConstWithValue()
+	public void _testFieldConstWithValue()
 	{
 		doTest(true);
 	}
 
-	public void testArrayList()
+	public void _testArrayList()
 	{
 		doTest(true);
 	}
 
-	public void testFieldWithAttribute()
+	public void _testFieldWithAttribute()
 	{
 		doTest(true);
 	}
 
-	public void testTestCustomAttributeSignature()
+	public void _testTestCustomAttributeSignature()
 	{
 		doTest(true);
 	}
 
-	public void testGenericParameterCustomAttribute()
+	public void _testGenericParameterCustomAttribute()
 	{
 		doTest(true);
 	}
