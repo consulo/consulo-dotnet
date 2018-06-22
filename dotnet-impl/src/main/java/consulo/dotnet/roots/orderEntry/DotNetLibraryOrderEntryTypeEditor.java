@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
+import consulo.awt.TargetAWT;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
@@ -43,7 +44,6 @@ public class DotNetLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<D
 
 		ModuleExtensionProviderEP providerEP = extension == null ? null : ModuleExtensionProviders.findProvider(extension.getId());
 
-		return SimpleTextCellAppearance.synthetic(dotNetLibraryOrderEntry.getPresentableName(), providerEP == null ? AllIcons.Toolbar.Unknown :
-				providerEP.getIcon());
+		return SimpleTextCellAppearance.synthetic(dotNetLibraryOrderEntry.getPresentableName(), providerEP == null ? AllIcons.Toolbar.Unknown : TargetAWT.to(providerEP.getIcon()));
 	}
 }
