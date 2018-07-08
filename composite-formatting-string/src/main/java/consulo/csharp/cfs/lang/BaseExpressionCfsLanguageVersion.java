@@ -31,7 +31,7 @@ import com.intellij.psi.tree.IElementType;
  */
 public abstract class BaseExpressionCfsLanguageVersion extends BaseCfsLanguageVersion
 {
-	private IElementType myExpressionElementType;
+	protected IElementType myExpressionElementType;
 
 	public BaseExpressionCfsLanguageVersion(@Nonnull Language baseLanguage)
 	{
