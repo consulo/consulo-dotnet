@@ -42,11 +42,11 @@ public class DotNetTypeRefCacheUtil
 {
 	private static class DotNetTypeRefCachedValueProvider<E extends PsiElement> implements CachedValueProvider<DotNetTypeRef>
 	{
-		private final Key[] myDropKey;
+		private final Object[] myDropKey;
 		private final E myElement;
 		private final NotNullFunction<E, DotNetTypeRef> myResolver;
 
-		public DotNetTypeRefCachedValueProvider(@Nonnull Key[] dropKey, @Nonnull E element, @Nonnull NotNullFunction<E, DotNetTypeRef> resolver)
+		public DotNetTypeRefCachedValueProvider(@Nonnull Object[] dropKey, @Nonnull E element, @Nonnull NotNullFunction<E, DotNetTypeRef> resolver)
 		{
 			myDropKey = dropKey;
 			myElement = element;
@@ -102,7 +102,7 @@ public class DotNetTypeRefCacheUtil
 	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(@Nonnull Key<CachedValue<DotNetTypeRef>> key,
 																	@Nonnull E element,
 																	@Nonnull final NotNullFunction<E, DotNetTypeRef> resolver,
-																	Key... modifierKeys)
+																	Object... modifierKeys)
 	{
 		return getResultCacheResultImpl(key, element, resolver, modifierKeys);
 	}
@@ -113,7 +113,7 @@ public class DotNetTypeRefCacheUtil
 	private static <E extends PsiElement> DotNetTypeRef getResultCacheResultImpl(@Nonnull Key<CachedValue<DotNetTypeRef>> cachedValueKey,
 																				 @Nonnull E element,
 																				 @Nonnull final NotNullFunction<E, DotNetTypeRef> resolver,
-																				 @Nonnull Key... modifierKeys)
+																				 @Nonnull Object... modifierKeys)
 	{
 		Class<? extends NotNullFunction> aClass = resolver.getClass();
 		if(!BitUtil.isSet(aClass.getModifiers(), Modifier.STATIC))
