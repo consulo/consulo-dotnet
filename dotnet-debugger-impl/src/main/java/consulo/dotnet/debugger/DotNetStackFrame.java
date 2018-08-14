@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Ref;
@@ -50,6 +49,7 @@ import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;
@@ -136,7 +136,7 @@ public class DotNetStackFrame extends XStackFrame
 				{
 					if(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo(method) != null)
 					{
-						PsiElement executableElement = ReadAction.compute(() -> method.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), executableChildrenAtLineIndex));
+						PsiElement executableElement = AccessRule.read(() -> method.findExecutableElementFromDebugInfo(myDebuggerContext.getProject(), executableChildrenAtLineIndex));
 
 						if(executableElement != null)
 						{
@@ -152,7 +152,7 @@ public class DotNetStackFrame extends XStackFrame
 		{
 			final DotNetTypeProxy declarationType = method.getDeclarationType();
 
-			return ReadAction.compute(() ->
+			return AccessRule.read(() ->
 			{
 				DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(myDebuggerContext.getProject()).findType(DotNetDebuggerUtil.getVmQName(declarationType), myDebuggerContext.getResolveScope
 						());
@@ -340,7 +340,7 @@ public class DotNetStackFrame extends XStackFrame
 			final Ref<DotNetDebuggerProvider> providerRef = Ref.create();
 			final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<>();
 
-			ReadAction.run(() ->
+			AccessRule.read(() ->
 			{
 				PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
 				if(psiElement != null)
