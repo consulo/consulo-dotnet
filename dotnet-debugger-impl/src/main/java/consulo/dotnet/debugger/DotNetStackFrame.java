@@ -19,7 +19,9 @@ package consulo.dotnet.debugger;
 import gnu.trove.THashSet;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -36,7 +38,6 @@ import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.containers.ArrayListSet;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -338,7 +339,7 @@ public class DotNetStackFrame extends XStackFrame
 		if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())
 		{
 			final Ref<DotNetDebuggerProvider> providerRef = Ref.create();
-			final Set<DotNetReferenceExpression> referenceExpressions = new ArrayListSet<>();
+			final Map<String, DotNetReferenceExpression> referenceExpressions = new HashMap<>();
 
 			AccessRule.read(() ->
 			{
@@ -369,7 +370,7 @@ public class DotNetStackFrame extends XStackFrame
 										return;
 									}
 
-									referenceExpressions.add((DotNetReferenceExpression) element);
+									referenceExpressions.put(element.getText(), (DotNetReferenceExpression) element);
 								}
 							}
 						});
@@ -381,7 +382,7 @@ public class DotNetStackFrame extends XStackFrame
 			{
 				DotNetDebuggerProvider provider = providerRef.get();
 				assert provider != null;
-				for(DotNetReferenceExpression referenceExpression : referenceExpressions)
+				for(DotNetReferenceExpression referenceExpression : referenceExpressions.values())
 				{
 					try
 					{
