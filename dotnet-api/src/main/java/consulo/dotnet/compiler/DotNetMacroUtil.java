@@ -18,6 +18,7 @@ package consulo.dotnet.compiler;
 
 import gnu.trove.THashMap;
 
+import java.io.File;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -62,7 +63,15 @@ public class DotNetMacroUtil
 	@Nonnull
 	public static String expandOutputFile(@Nonnull DotNetRunModuleExtension<?> extension, boolean debugSymbols)
 	{
-		return expand(extension.getModule(), extension.getOutputDir() + "/" + extension.getFileName(), debugSymbols);
+		String outputDir = FileUtil.toSystemDependentName(extension.getOutputDir());
+		if(outputDir.charAt(outputDir.length() - 1) == File.separatorChar)
+		{
+			return expand(extension.getModule(), outputDir + extension.getFileName(), debugSymbols);
+		}
+		else
+		{
+			return expand(extension.getModule(), outputDir + File.separatorChar + extension.getFileName(), debugSymbols);
+		}
 	}
 
 	@Nonnull
