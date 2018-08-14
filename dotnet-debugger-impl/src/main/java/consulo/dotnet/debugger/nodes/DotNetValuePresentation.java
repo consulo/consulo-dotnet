@@ -22,10 +22,10 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ObjectUtil;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
 import consulo.dotnet.DotNetTypes;
@@ -302,7 +302,7 @@ public class DotNetValuePresentation extends XValuePresentation
 			@Override
 			public void visitErrorValue(@Nonnull DotNetErrorValueProxy proxy)
 			{
-				renderer.renderError(ObjectUtil.notNull(proxy.getErrorMessage(), "Unknown error"));
+				renderer.renderError(proxy.getErrorMessage());
 			}
 		});
 	}

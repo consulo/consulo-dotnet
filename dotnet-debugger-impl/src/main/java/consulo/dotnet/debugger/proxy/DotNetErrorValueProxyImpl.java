@@ -18,6 +18,8 @@ package consulo.dotnet.debugger.proxy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.intellij.util.ObjectUtil;
 import consulo.dotnet.debugger.proxy.value.DotNetErrorValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
@@ -42,7 +44,7 @@ public class DotNetErrorValueProxyImpl implements DotNetErrorValueProxy
 	@Override
 	public String getErrorMessage()
 	{
-		return myThrowable.getMessage();
+		return ObjectUtil.notNull(myThrowable.getMessage(), "Unknown error");
 	}
 
 	@Nullable
