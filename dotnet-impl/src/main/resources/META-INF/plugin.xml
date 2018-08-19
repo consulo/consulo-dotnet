@@ -25,12 +25,6 @@
 		<xi:fallback/>
 	</xi:include>
 
-	<application-components>
-		<component>
-			<implementation-class>consulo.dotnet.dll.vfs.DotNetArchiveFileSystem</implementation-class>
-		</component>
-	</application-components>
-
 	<project-components>
 		<component>
 			<implementation-class>consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent</implementation-class>
@@ -148,5 +142,7 @@
 		<testFinder implementation="consulo.dotnet.testIntegration.DotNetTestFinder"/>
 
 		<pathMacroExpendableProtocol protocol="netdll"/>
+
+		<virtualFileSystem implementation="consulo.dotnet.dll.vfs.DotNetArchiveFileSystem" />
 	</extensions>
 </idea-plugin>
