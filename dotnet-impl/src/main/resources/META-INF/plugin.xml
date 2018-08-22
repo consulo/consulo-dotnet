@@ -139,6 +139,6 @@
 
 		<virtualFileSystem implementation="consulo.dotnet.dll.vfs.DotNetArchiveFileSystem" />
 
-		<projectService serviceImplementation="consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent" lazy="false" id="".
+		<projectService serviceImplementation="consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent" lazy="false" />
 	</extensions>
 </idea-plugin>
