@@ -20,8 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
-import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.diagnostic.Logger;
+
 import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.dotnet.module.extension.DotNetLibraryOpenCache;
@@ -34,10 +33,8 @@ import consulo.vfs.impl.archive.ArchiveFileSystemBase;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements ApplicationComponent
+public class DotNetArchiveFileSystem extends ArchiveFileSystemBase
 {
-	public static final Logger LOGGER = Logger.getInstance(DotNetArchiveFileSystem.class);
-
 	@Nonnull
 	public static DotNetArchiveFileSystem getInstance()
 	{
