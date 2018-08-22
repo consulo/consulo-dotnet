@@ -25,12 +25,6 @@
 		<xi:fallback/>
 	</xi:include>
 
-	<project-components>
-		<component>
-			<implementation-class>consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent</implementation-class>
-		</component>
-	</project-components>
-
 	<extensionPoints>
 		<extensionPoint name="debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
 		<extensionPoint name="debuggerSourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
@@ -144,5 +138,7 @@
 		<pathMacroExpendableProtocol protocol="netdll"/>
 
 		<virtualFileSystem implementation="consulo.dotnet.dll.vfs.DotNetArchiveFileSystem" />
+
+		<projectService serviceImplementation="consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent" lazy="false" id="".
 	</extensions>
 </idea-plugin>

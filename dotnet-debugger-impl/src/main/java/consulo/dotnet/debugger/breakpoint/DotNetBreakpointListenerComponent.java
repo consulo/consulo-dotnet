@@ -17,8 +17,9 @@
 package consulo.dotnet.debugger.breakpoint;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -32,24 +33,20 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointPrope
  * @author VISTALL
  * @since 03.05.2016
  */
-public class DotNetBreakpointListenerComponent extends AbstractProjectComponent
+@Singleton
+public class DotNetBreakpointListenerComponent
 {
-	public DotNetBreakpointListenerComponent(Project project)
+	@Inject
+	public DotNetBreakpointListenerComponent(Project project, XDebuggerManager debuggerManager)
 	{
-		super(project);
-	}
-
-	@Override
-	public void initComponent()
-	{
-		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(myProject).getBreakpointManager();
+		XBreakpointManager breakpointManager = debuggerManager.getBreakpointManager();
 
 		breakpointManager.addBreakpointListener(DotNetMethodBreakpointType.getInstance(), new XBreakpointListener<XLineBreakpoint<DotNetMethodBreakpointProperties>>()
 		{
 			@Override
 			public void breakpointAdded(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 			{
-				XDebugSessionImpl.NOTIFICATION_GROUP.createNotification("Method breakpoints may dramatically slow down debugging", MessageType.WARNING).notify((myProject));
+				XDebugSessionImpl.NOTIFICATION_GROUP.createNotification("Method breakpoints may dramatically slow down debugging", MessageType.WARNING).notify(project);
 			}
 		});
 	}
