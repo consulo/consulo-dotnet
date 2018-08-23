@@ -37,9 +37,9 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointPrope
 public class DotNetBreakpointListenerComponent
 {
 	@Inject
-	public DotNetBreakpointListenerComponent(Project project, XDebuggerManager debuggerManager)
+	public DotNetBreakpointListenerComponent(Project project)
 	{
-		XBreakpointManager breakpointManager = debuggerManager.getBreakpointManager();
+		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
 		breakpointManager.addBreakpointListener(DotNetMethodBreakpointType.getInstance(), new XBreakpointListener<XLineBreakpoint<DotNetMethodBreakpointProperties>>()
 		{
