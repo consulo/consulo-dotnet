@@ -40,6 +40,11 @@ public class DotNetBreakpointListenerComponent
 	@Inject
 	public DotNetBreakpointListenerComponent(Project project, StartupManager startupManager)
 	{
+		if(project.isDefault())
+		{
+			return;
+		}
+
 		startupManager.registerPostStartupActivity(uiAccess ->
 		{
 			XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
