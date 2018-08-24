@@ -21,8 +21,9 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 
-import org.picocontainer.Disposable;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -40,9 +41,10 @@ import consulo.msil.lang.psi.MsilFile;
  * @author VISTALL
  * @since 27.05.14
  */
+@Singleton
 public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationManager implements Disposable
 {
-	private MultiMap<VirtualFile, PsiFile> myFiles = new ConcurrentMultiMap<VirtualFile, PsiFile>();
+	private MultiMap<VirtualFile, PsiFile> myFiles = new ConcurrentMultiMap<>();
 
 	public MsilFileRepresentationManagerImpl(Project project)
 	{
