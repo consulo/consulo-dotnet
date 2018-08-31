@@ -20,6 +20,9 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -33,6 +36,7 @@ import consulo.dotnet.resolve.DotNetPsiSearcher;
  * @author VISTALL
  * @since 13.07.14
  */
+@Singleton
 public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 {
 	private static final ExtensionPointName<DotNetPsiSearcher> EP_NAME = ExtensionPointName.create("consulo.dotnet.psiSearcher");
@@ -40,6 +44,7 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	private DotNetPsiSearcher[] mySearchers;
 	private DotNetNamespaceCacheManager myCacheManager;
 
+	@Inject
 	public DotNetPsiSearcherImpl(Project project, DotNetNamespaceCacheManager cacheManager)
 	{
 		mySearchers = EP_NAME.getExtensions(project);

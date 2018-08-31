@@ -18,6 +18,9 @@ package consulo.dotnet.resolve.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetShortNameSearcher;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -30,10 +33,12 @@ import com.intellij.util.indexing.IdFilter;
  * @author VISTALL
  * @since 08.07.2015
  */
+@Singleton
 public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 {
 	private static final ExtensionPointName<DotNetShortNameSearcher> EP_NAME = ExtensionPointName.create("consulo.dotnet.shortNameSearcher");
 
+	@Inject
 	public DotNetShortNameSearcherImpl(Project project)
 	{
 		super(project);

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.components.ServiceManager;
@@ -28,6 +30,7 @@ import consulo.vfs.util.ArchiveVfsUtil;
  * @author VISTALL
  * @since 27.07.2015
  */
+@Singleton
 public class ExternalAttributeManager
 {
 	@Nonnull
@@ -39,6 +42,7 @@ public class ExternalAttributeManager
 	private Map<VirtualFile, ExternalAttributeHolder> myCache = ContainerUtil.createConcurrentWeakMap();
 	private final Project myProject;
 
+	@Inject
 	ExternalAttributeManager(Project project)
 	{
 		myProject = project;

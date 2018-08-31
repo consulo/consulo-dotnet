@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import org.emonic.base.documentation.IDocumentation;
 import com.intellij.openapi.components.ServiceManager;
@@ -20,16 +21,13 @@ import consulo.roots.types.DocumentationOrderRootType;
  * @author VISTALL
  * @since 13.05.14
  */
+@Singleton
 public class DotNetDocumentationCache
 {
 	@Nonnull
 	public static DotNetDocumentationCache getInstance()
 	{
 		return ServiceManager.getService(DotNetDocumentationCache.class);
-	}
-
-	public DotNetDocumentationCache()
-	{
 	}
 
 	@Nullable

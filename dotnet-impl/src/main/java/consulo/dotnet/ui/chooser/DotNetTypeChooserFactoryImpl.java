@@ -17,6 +17,8 @@
 package consulo.dotnet.ui.chooser;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.ide.util.TreeChooser;
@@ -27,10 +29,12 @@ import com.intellij.psi.search.GlobalSearchScope;
  * @author VISTALL
  * @since 29.04.2016
  */
+@Singleton
 public class DotNetTypeChooserFactoryImpl extends DotNetTypeChooserFactory
 {
 	private Project myProject;
 
+	@Inject
 	public DotNetTypeChooserFactoryImpl(Project project)
 	{
 		myProject = project;

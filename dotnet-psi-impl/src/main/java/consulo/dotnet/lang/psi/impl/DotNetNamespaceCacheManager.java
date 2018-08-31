@@ -25,6 +25,8 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
@@ -58,6 +60,7 @@ import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
  * @author VISTALL
  * @since 03.03.2016
  */
+@Singleton
 public class DotNetNamespaceCacheManager implements Disposable
 {
 	@Nonnull
@@ -198,6 +201,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	private long myLastOutOfCodeCount;
 
+	@Inject
 	DotNetNamespaceCacheManager(Project project, PsiModificationTracker modificationTracker)
 	{
 		myProject = project;
