@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.intellij.openapi.Disposable;
@@ -46,6 +47,7 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 {
 	private MultiMap<VirtualFile, PsiFile> myFiles = new ConcurrentMultiMap<>();
 
+	@Inject
 	public MsilFileRepresentationManagerImpl(Project project)
 	{
 		super(project);
