@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -39,6 +41,7 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 {
 	private final Project myProject;
 
+	@Inject
 	public MsilFileRepresentationProjectViewProvider(Project project)
 	{
 		myProject = project;
@@ -54,7 +57,7 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 	@Override
 	public Collection<AbstractTreeNode> modify(AbstractTreeNode parent, Collection<AbstractTreeNode> children, ViewSettings settings)
 	{
-		List<AbstractTreeNode> newList = new ArrayList<AbstractTreeNode>(children.size());
+		List<AbstractTreeNode> newList = new ArrayList<>(children.size());
 
 		for(AbstractTreeNode n : children)
 		{

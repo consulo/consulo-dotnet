@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -40,6 +41,7 @@ import consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex;
  */
 public class MsilPsiSearcher extends IndexBasedDotNetPsiSearcher
 {
+	@Inject
 	public MsilPsiSearcher(Project project)
 	{
 		super(project);
