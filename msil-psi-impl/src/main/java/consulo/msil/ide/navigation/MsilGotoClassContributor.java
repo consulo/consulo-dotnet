@@ -5,16 +5,15 @@ import gnu.trove.THashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.Icon;
 
-import javax.annotation.Nullable;
 import com.intellij.ide.DataManager;
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.GotoClassContributor;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -32,12 +31,10 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CommonProcessors;
-import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
-import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
@@ -109,82 +106,76 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 		@Override
 		public void navigate(final boolean requestFocus)
 		{
-			DataManager.getInstance().getDataContextFromFocus().doWhenDone(new Consumer<DataContext>()
-			{
-				@RequiredDispatchThread
-				@Override
-				public void consume(DataContext dataContext)
+			DataManager.getInstance().getDataContextFromFocus().doWhenDone(dataContext -> {
+				final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+				assert project != null;
+				final Set<LanguageFileType> languageFileTypes = new THashSet<>();
+				Module[] modules = ModuleManager.getInstance(project).getModules();
+				MsilFileRepresentationProvider[] extensions = MsilFileRepresentationProvider.EP_NAME.getExtensions();
+				for(Module module : modules)
 				{
-					final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-					assert project != null;
-					final Set<LanguageFileType> languageFileTypes = new THashSet<>();
-					Module[] modules = ModuleManager.getInstance(project).getModules();
-					MsilFileRepresentationProvider[] extensions = MsilFileRepresentationProvider.EP_NAME.getExtensions();
-					for(Module module : modules)
+					final DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
+					if(extension == null)
 					{
-						final DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
-						if(extension == null)
-						{
-							continue;
-						}
-						MsilFileRepresentationProvider provider = ContainerUtil.find(extensions, it -> it.getFileType() == extension.getFileType());
-						if(provider == null)
-						{
-							continue;
-						}
-						languageFileTypes.add(extension.getFileType());
+						continue;
+					}
+					MsilFileRepresentationProvider provider = ContainerUtil.find(extensions, it -> it.getFileType() == extension.getFileType());
+					if(provider == null)
+					{
+						continue;
+					}
+					languageFileTypes.add(extension.getFileType());
+				}
+
+				if(languageFileTypes.isEmpty())
+				{
+					((NavigationItem) myMsilClassEntry).navigate(requestFocus);
+					return;
+				}
+
+				final MsilFileRepresentationManager representationManager = MsilFileRepresentationManager.getInstance(project);
+				if(languageFileTypes.size() == 1)
+				{
+					LanguageFileType languageFileType = ContainerUtil.getFirstItem(languageFileTypes);
+					PsiFile representationFile = representationManager.getRepresentationFile(languageFileType, myMsilClassEntry.getContainingFile().getVirtualFile());
+					representationFile.navigate(requestFocus);
+					return;
+				}
+
+				languageFileTypes.add(MsilFileType.INSTANCE);
+				BaseListPopupStep<LanguageFileType> step = new BaseListPopupStep<LanguageFileType>("Choose " + "language", languageFileTypes.toArray(new LanguageFileType[languageFileTypes.size
+						()]))
+				{
+					@Nonnull
+					@Override
+					public String getTextFor(LanguageFileType value)
+					{
+						return value.getLanguage().getDisplayName();
 					}
 
-					if(languageFileTypes.isEmpty())
+					@Override
+					public Icon getIconFor(LanguageFileType aValue)
 					{
-						((NavigationItem) myMsilClassEntry).navigate(requestFocus);
-						return;
+						return TargetAWT.to(aValue.getIcon());
 					}
 
-					final MsilFileRepresentationManager representationManager = MsilFileRepresentationManager.getInstance(project);
-					if(languageFileTypes.size() == 1)
+					@Override
+					public PopupStep onChosen(LanguageFileType selectedValue, boolean finalChoice)
 					{
-						LanguageFileType languageFileType = ContainerUtil.getFirstItem(languageFileTypes);
-						PsiFile representationFile = representationManager.getRepresentationFile(languageFileType, myMsilClassEntry.getContainingFile().getVirtualFile());
-						representationFile.navigate(requestFocus);
-						return;
-					}
-
-					languageFileTypes.add(MsilFileType.INSTANCE);
-					BaseListPopupStep<LanguageFileType> step = new BaseListPopupStep<LanguageFileType>("Choose " + "language", languageFileTypes.toArray(new LanguageFileType[languageFileTypes.size
-							()]))
-					{
-						@Nonnull
-						@Override
-						public String getTextFor(LanguageFileType value)
+						if(selectedValue == MsilFileType.INSTANCE)
 						{
-							return value.getLanguage().getDisplayName();
-						}
-
-						@Override
-						public Icon getIconFor(LanguageFileType aValue)
-						{
-							return TargetAWT.to(aValue.getIcon());
-						}
-
-						@Override
-						public PopupStep onChosen(LanguageFileType selectedValue, boolean finalChoice)
-						{
-							if(selectedValue == MsilFileType.INSTANCE)
-							{
-								((NavigationItem) myMsilClassEntry).navigate(requestFocus);
-								return FINAL_CHOICE;
-							}
-
-							PsiFile representationFile = representationManager.getRepresentationFile(selectedValue, myMsilClassEntry.getContainingFile().getVirtualFile());
-							representationFile.navigate(requestFocus);
+							((NavigationItem) myMsilClassEntry).navigate(requestFocus);
 							return FINAL_CHOICE;
 						}
-					};
 
-					ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(step);
-					listPopup.showCenteredInCurrentWindow(project);
-				}
+						PsiFile representationFile = representationManager.getRepresentationFile(selectedValue, myMsilClassEntry.getContainingFile().getVirtualFile());
+						representationFile.navigate(requestFocus);
+						return FINAL_CHOICE;
+					}
+				};
+
+				ListPopup listPopup = JBPopupFactory.getInstance().createListPopup(step);
+				listPopup.showCenteredInCurrentWindow(project);
 			});
 		}
 
@@ -222,10 +213,10 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 	{
 		StubIndex.getInstance().processElements(MsilIndexKeys.TYPE_BY_NAME_INDEX, name, parameters.getProject(), parameters.getSearchScope(), parameters.getIdFilter(), MsilClassEntry.class,
 				msilClassEntry ->
-		{
-			ProgressManager.checkCanceled();
-			return processor.process(new NavigatableWithRepresentation(msilClassEntry));
-		});
+				{
+					ProgressManager.checkCanceled();
+					return processor.process(new NavigatableWithRepresentation(msilClassEntry));
+				});
 	}
 
 	@Nullable
