@@ -28,7 +28,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredDispatchThread;
-import consulo.awt.TargetAWT;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.representation.MsilFileRepresentationManager;
 
@@ -84,6 +83,6 @@ public class MsilRepresentFileNode extends AbstractTreeNode<Pair<String, ? exten
 		Pair<String, ? extends FileType> value = getValue();
 
 		presentation.setPresentableText(value.getFirst());
-		presentation.setIcon(TargetAWT.to(value.getSecond().getIcon()));
+		presentation.setIcon(value.getSecond().getIcon());
 	}
 }
