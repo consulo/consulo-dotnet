@@ -31,7 +31,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.FormBuilder;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 
 /**
@@ -67,7 +67,7 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 
 	@Nonnull
 	@Override
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	protected JComponent createEditor()
 	{
 		myProgramParametersPanel = new CommonProgramParametersPanel();

@@ -45,7 +45,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
@@ -240,7 +240,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 		@Nonnull
 		@Override
-		@RequiredDispatchThread
+		@RequiredUIAccess
 		public String getText()
 		{
 			String text;
@@ -258,7 +258,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 		@Nullable
 		@Override
-		@RequiredDispatchThread
+		@RequiredUIAccess
 		public Image getIcon()
 		{
 			return AllIcons.Debugger.LambdaBreakpoint;
@@ -266,7 +266,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
 		@Nullable
 		@Override
-		@RequiredDispatchThread
+		@RequiredUIAccess
 		public TextRange getHighlightRange()
 		{
 			return myExecutableChild.getTextRange();

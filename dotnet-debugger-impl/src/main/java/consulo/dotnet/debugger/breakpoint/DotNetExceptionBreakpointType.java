@@ -31,7 +31,7 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.ui.DotNetExceptionBreakpointPropertiesPanel;
@@ -113,7 +113,7 @@ public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<D
 
 	@Nullable
 	@Override
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public XBreakpoint<DotNetExceptionBreakpointProperties> addBreakpoint(final Project project, JComponent parentComponent)
 	{
 		TreeChooser<DotNetTypeDeclaration> chooser = DotNetTypeChooserFactory.getInstance(project).createInheriableChooser(DotNetTypes.System.Exception, GlobalSearchScope.projectScope(project));

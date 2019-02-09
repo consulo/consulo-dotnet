@@ -46,7 +46,7 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.dotnet.DotNetBundle;
@@ -60,7 +60,7 @@ import consulo.ide.IconDescriptorUpdaters;
  */
 public class DotNetConfigurationPanel extends JPanel
 {
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public DotNetConfigurationPanel(DotNetMutableModuleExtension<?> extension, DotNetElementQualifierProducer qualifierProducer, List<String> variables, Runnable updater)
 	{
 		super(new VerticalFlowLayout(true, true));
@@ -297,14 +297,14 @@ public class DotNetConfigurationPanel extends JPanel
 			String name = Messages.showInputDialog(DotNetConfigurationPanel.this, DotNetBundle.message("new.variable.message"), DotNetBundle.message("new.variable.title"), null, null, new
 					InputValidator()
 			{
-				@RequiredDispatchThread
+				@RequiredUIAccess
 				@Override
 				public boolean checkInput(String s)
 				{
 					return !variables.contains(s);
 				}
 
-				@RequiredDispatchThread
+				@RequiredUIAccess
 				@Override
 				public boolean canClose(String s)
 				{

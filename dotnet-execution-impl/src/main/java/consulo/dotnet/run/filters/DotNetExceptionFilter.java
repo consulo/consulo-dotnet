@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import com.intellij.execution.filters.Filter;
@@ -54,7 +54,7 @@ public class DotNetExceptionFilter implements Filter
 		}
 
 		@Override
-		@RequiredDispatchThread
+		@RequiredUIAccess
 		public void navigate(Project project)
 		{
 			DotNetTypeDeclaration type = DotNetPsiSearcher.getInstance(project).findType(myType, mySearchScope);

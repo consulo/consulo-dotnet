@@ -24,7 +24,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XNavigatable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
@@ -71,7 +71,7 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 	public abstract DotNetTypeProxy getTypeOfVariableImpl();
 
 	@Override
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public void computeTypeSourcePosition(@Nonnull XNavigatable navigatable)
 	{
 		DotNetTypeProxy typeOfVariable = getTypeOfVariable();
@@ -91,7 +91,7 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 	}
 
 	@Nonnull
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public DotNetTypeDeclaration[] findTypesByQualifiedName(@Nonnull DotNetTypeProxy typeMirror)
 	{
 		return DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, myDebugContext);

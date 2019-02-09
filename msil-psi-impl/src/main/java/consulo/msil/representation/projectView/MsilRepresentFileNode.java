@@ -27,7 +27,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.representation.MsilFileRepresentationManager;
 
@@ -65,7 +65,7 @@ public class MsilRepresentFileNode extends AbstractTreeNode<Pair<String, ? exten
 	}
 
 	@Override
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public void navigate(boolean requestFocus)
 	{
 		PsiFile representationFile = MsilFileRepresentationManager.getInstance(getProject()).getRepresentationFile(getValue().getSecond(),

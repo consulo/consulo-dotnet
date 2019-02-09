@@ -48,7 +48,7 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
@@ -106,7 +106,7 @@ public class DotNetStackFrame extends XStackFrame
 
 	@Nullable
 	@Override
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public XSourcePosition getSourcePosition()
 	{
 		return myXSourcePosition;

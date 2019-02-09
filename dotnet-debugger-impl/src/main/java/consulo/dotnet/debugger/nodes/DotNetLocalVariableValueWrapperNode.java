@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.intellij.xdebugger.frame.XNavigatable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -52,7 +52,7 @@ public class DotNetLocalVariableValueWrapperNode extends DotNetAbstractVariableV
 	}
 
 	@Override
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public void computeSourcePosition(@Nonnull XNavigatable navigatable)
 	{
 		DotNetLocalVariableValueNode.computeSourcePosition(navigatable, getName(), myDebugContext, myFrameProxy);

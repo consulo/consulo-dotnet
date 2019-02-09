@@ -18,7 +18,7 @@ package consulo.dotnet.debugger.nodes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetVariable;
@@ -59,7 +59,7 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 	}
 
 	@Override
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public void computeSourcePosition(@Nonnull XNavigatable navigatable)
 	{
 		computeSourcePosition(navigatable, getName(), myDebugContext, myFrameProxy);

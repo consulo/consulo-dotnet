@@ -27,7 +27,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 
@@ -55,7 +55,7 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 			}
 
 			@Override
-			@RequiredDispatchThread
+			@RequiredUIAccess
 			public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration)
 			{
 				DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
