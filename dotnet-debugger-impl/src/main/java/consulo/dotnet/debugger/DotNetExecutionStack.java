@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.Icon;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
@@ -32,6 +31,7 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -67,7 +67,7 @@ public class DotNetExecutionStack extends XExecutionStack
 		return "[" + threadMirror.getId() + "] " + StringUtil.defaultIfEmpty(threadMirror.getName(), "Unnamed");
 	}
 
-	private static Icon getIcon(DotNetThreadProxy threadProxy)
+	private static Image getIcon(DotNetThreadProxy threadProxy)
 	{
 		if(threadProxy.isSuspended())
 		{

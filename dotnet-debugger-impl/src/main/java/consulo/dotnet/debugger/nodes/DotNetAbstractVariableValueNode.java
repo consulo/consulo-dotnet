@@ -17,9 +17,8 @@
 package consulo.dotnet.debugger.nodes;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.UserDataHolderBase;
@@ -44,6 +43,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -88,7 +88,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	@Nonnull
-	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
+	public Image getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 

@@ -20,9 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Ref;
@@ -44,6 +43,7 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -103,7 +103,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 
 	@Nonnull
 	@Override
-	public Icon getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
+	public Image getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
 	{
 		return myObjectValueMirrorGetter == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value;
 	}
