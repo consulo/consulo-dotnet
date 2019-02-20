@@ -26,9 +26,9 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
-import consulo.ui.FormBuilder;
 import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
+import consulo.ui.util.FormBuilder;
 
 /**
  * @author VISTALL
