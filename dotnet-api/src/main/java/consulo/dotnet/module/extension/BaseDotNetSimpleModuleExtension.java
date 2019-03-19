@@ -24,13 +24,12 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import org.jdom.Document;
-import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
+
+import org.jdom.Document;
+import org.jdom.Element;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.OrderRootType;
