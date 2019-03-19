@@ -297,10 +297,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 
 				assert ref.get() != null;
 
-				PluginClassLoader classLoader = (PluginClassLoader) getClass().getClassLoader();
-				IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());
-				assert plugin != null;
-				File dir = new File(plugin.getPath(), "externalAttributes");
+				File dir = new File(PluginManager.getPluginPath(BaseDotNetSimpleModuleExtension.class), "externalAttributes");
 
 				List<String> urls = new SmartList<String>();
 				String requiredFileName = name + ".xml";

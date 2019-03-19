@@ -21,13 +21,11 @@ import java.io.File;
 import javax.annotation.Nonnull;
 
 import org.jetbrains.annotations.NonNls;
-import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
+import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 
 /**
  * @author VISTALL
@@ -55,9 +53,6 @@ public abstract class DotNetSdkType extends SdkType
 	@Nonnull
 	protected static File getLoaderFile(Class<?> clazz, String fileName)
 	{
-		PluginClassLoader classLoader = (PluginClassLoader) clazz.getClassLoader();
-		IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());
-		assert plugin != null;
-		return new File(new File(plugin.getPath(), "loader"), fileName);
+		return new File(new File(PluginManager.getPluginPath(clazz), "loader"), fileName);
 	}
 }
