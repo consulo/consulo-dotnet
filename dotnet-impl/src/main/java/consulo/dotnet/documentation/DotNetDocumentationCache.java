@@ -58,7 +58,7 @@ public class DotNetDocumentationCache
 			Collections.addAll(files, orderEntry.getFiles(DocumentationOrderRootType.getInstance()));
 		}
 
-		for(DotNetDocumentationResolver documentationResolver : DotNetDocumentationResolver.EP_NAME.getExtensions())
+		for(DotNetDocumentationResolver documentationResolver : DotNetDocumentationResolver.EP_NAME.getExtensionList())
 		{
 			IDocumentation documentation = documentationResolver.resolveDocumentation(files, navigationElement);
 			if(documentation != null)

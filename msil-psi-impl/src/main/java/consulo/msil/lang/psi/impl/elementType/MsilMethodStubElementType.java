@@ -82,7 +82,7 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 	@Override
 	public void indexStub(@Nonnull MsilMethodEntryStub msilMethodEntryStub, @Nonnull IndexSink indexSink)
 	{
-		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())
+		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensionList())
 		{
 			indexer.indexMethod(msilMethodEntryStub, indexSink);
 		}

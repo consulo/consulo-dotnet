@@ -52,7 +52,7 @@ public abstract class DotNetDebuggerProvider
 		{
 			return null;
 		}
-		for(DotNetDebuggerProvider dotNetDebuggerProvider : DotNetDebuggerProvider.EP_NAME.getExtensions())
+		for(DotNetDebuggerProvider dotNetDebuggerProvider : DotNetDebuggerProvider.EP_NAME.getExtensionList())
 		{
 			if(dotNetDebuggerProvider.getEditorLanguage() == language)
 			{

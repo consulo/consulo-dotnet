@@ -103,7 +103,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 					Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES);
 					files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES));
 
-					for(DotNetDependencyCopierExtension copierExtension : DotNetDependencyCopierExtension.EP_NAME.getExtensions())
+					for(DotNetDependencyCopierExtension copierExtension : DotNetDependencyCopierExtension.EP_NAME.getExtensionList())
 					{
 						files.addAll(copierExtension.collectDependencies(module));
 					}

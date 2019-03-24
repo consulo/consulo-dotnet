@@ -25,7 +25,7 @@ public class DotNetDebuggerProviders
 	@Nullable
 	public static DotNetDebuggerProvider findByPsiFile(@Nonnull PsiFile psiFile)
 	{
-		for(DotNetDebuggerProvider provider : DotNetDebuggerProvider.EP_NAME.getExtensions())
+		for(DotNetDebuggerProvider provider : DotNetDebuggerProvider.EP_NAME.getExtensionList())
 		{
 			if(provider.isSupported(psiFile))
 			{

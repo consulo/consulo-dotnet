@@ -31,7 +31,7 @@ public class DotNetTestFrameworks
 	@RequiredReadAction
 	public static boolean isTestType(@Nonnull DotNetTypeDeclaration typeDeclaration)
 	{
-		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensions())
+		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensionList())
 		{
 			if(framework.isTestType(typeDeclaration))
 			{
@@ -44,7 +44,7 @@ public class DotNetTestFrameworks
 	@RequiredReadAction
 	public static boolean isTestMethod(@Nonnull DotNetLikeMethodDeclaration methodDeclaration)
 	{
-		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensions())
+		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensionList())
 		{
 			if(framework.isTestMethod(methodDeclaration))
 			{

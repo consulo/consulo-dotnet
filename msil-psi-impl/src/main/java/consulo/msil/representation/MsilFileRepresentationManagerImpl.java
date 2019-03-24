@@ -68,14 +68,14 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 	@Override
 	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@Nonnull MsilFile msilFile, @Nonnull VirtualFile virtualFile)
 	{
-		MsilFileRepresentationProvider[] extensions = MsilFileRepresentationProvider.EP_NAME.getExtensions();
-		List<Pair<String, ? extends FileType>> list = new ArrayList<Pair<String, ? extends FileType>>(extensions.length);
+		List<MsilFileRepresentationProvider> extensions = MsilFileRepresentationProvider.EP_NAME.getExtensionList();
+		List<Pair<String, ? extends FileType>> list = new ArrayList<>(extensions.size());
 		for(MsilFileRepresentationProvider extension : extensions)
 		{
 			String fileName = extension.getRepresentFileName(msilFile);
 			if(fileName != null)
 			{
-				list.add(new Pair<String, FileType>(fileName, extension.getFileType()));
+				list.add(Pair.create(fileName, extension.getFileType()));
 			}
 		}
 		return list;

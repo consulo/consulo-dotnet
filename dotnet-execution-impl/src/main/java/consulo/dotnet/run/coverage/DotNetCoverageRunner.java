@@ -53,7 +53,7 @@ public abstract class DotNetCoverageRunner extends CoverageRunner
 				return Collections.emptyList();
 			}
 			List<DotNetCoverageRunner> list = new SmartList<DotNetCoverageRunner>();
-			for(CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensions())
+			for(CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensionList())
 			{
 				if(coverageRunner instanceof DotNetCoverageRunner && ((DotNetCoverageRunner) coverageRunner).acceptModuleExtension(moduleExtension))
 				{

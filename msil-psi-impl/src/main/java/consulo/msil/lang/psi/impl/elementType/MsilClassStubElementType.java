@@ -99,7 +99,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 			DotNetNamespaceStubUtil.indexStub(indexSink, MsilIndexKeys.ELEMENT_BY_QNAME_INDEX, MsilIndexKeys.NAMESPACE_INDEX, msilClassEntryStub.getNamespace(), msilClassEntryStub.getName());
 		}
 
-		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensions())
+		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensionList())
 		{
 			indexer.indexClass(msilClassEntryStub, indexSink);
 		}

@@ -2,6 +2,7 @@ package consulo.msil.ide.navigation;
 
 import gnu.trove.THashSet;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -111,7 +112,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 				assert project != null;
 				final Set<LanguageFileType> languageFileTypes = new THashSet<>();
 				Module[] modules = ModuleManager.getInstance(project).getModules();
-				MsilFileRepresentationProvider[] extensions = MsilFileRepresentationProvider.EP_NAME.getExtensions();
+				List<MsilFileRepresentationProvider> extensions = MsilFileRepresentationProvider.EP_NAME.getExtensionList();
 				for(Module module : modules)
 				{
 					final DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);

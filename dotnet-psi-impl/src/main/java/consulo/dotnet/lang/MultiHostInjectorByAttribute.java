@@ -98,7 +98,7 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 	@Nullable
 	private static TextRange findTextRangeForInject(@Nonnull DotNetExpression expression)
 	{
-		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensions())
+		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensionList())
 		{
 			TextRange textRange = attributeHelper.getTextRangeForInject(expression);
 			if(textRange != null)
@@ -112,7 +112,7 @@ public class MultiHostInjectorByAttribute implements MultiHostInjector
 	@Nullable
 	private static LanguageVersion findLanguageFromAttribute(@Nonnull DotNetAttribute attribute)
 	{
-		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensions())
+		for(MultiHostInjectorByAttributeHelper attributeHelper : MultiHostInjectorByAttributeHelper.EP_NAME.getExtensionList())
 		{
 			String languageId = attributeHelper.getLanguageId(attribute);
 			if(languageId != null)

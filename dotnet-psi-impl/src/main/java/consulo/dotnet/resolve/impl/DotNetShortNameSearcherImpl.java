@@ -47,7 +47,7 @@ public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 	@Override
 	public void collectTypeNames(@Nonnull Processor<String> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter)
 	{
-		for(DotNetShortNameSearcher nameSearcher : EP_NAME.getExtensions(myProject))
+		for(DotNetShortNameSearcher nameSearcher : EP_NAME.getExtensionList(myProject))
 		{
 			nameSearcher.collectTypeNames(processor, scope, filter);
 		}
@@ -59,7 +59,7 @@ public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 			@Nullable IdFilter filter,
 			@Nonnull Processor<DotNetTypeDeclaration> processor)
 	{
-		for(DotNetShortNameSearcher nameSearcher : EP_NAME.getExtensions(myProject))
+		for(DotNetShortNameSearcher nameSearcher : EP_NAME.getExtensionList(myProject))
 		{
 			nameSearcher.collectTypes(key, scope, filter, processor);
 		}
