@@ -16,22 +16,21 @@
 
 package consulo.dotnet.externalAttributes;
 
-import gnu.trove.THashMap;
-
-import java.io.IOException;
-import java.util.Map;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeNodeImpl;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeSimpleNodeImpl;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenNodeImpl;
+import gnu.trove.THashMap;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -39,9 +38,16 @@ import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenNode
  */
 public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 {
+	private static final Logger LOG = Logger.getInstance(SingleExternalAttributeHolder.class);
+
 	@Nonnull
 	public static ExternalAttributeHolder load(VirtualFile file)
 	{
+		if(file.isDirectory())
+		{
+			return EMPTY;
+		}
+
 		try
 		{
 			Document document = JDOMUtil.loadDocument(file.getInputStream());
@@ -82,7 +88,7 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 		}
 		catch(JDOMException | IOException e)
 		{
-			e.printStackTrace();
+			LOG.error(e);
 		}
 		return EMPTY;
 	}
