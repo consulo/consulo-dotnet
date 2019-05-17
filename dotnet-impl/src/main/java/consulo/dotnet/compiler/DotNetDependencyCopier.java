@@ -16,25 +16,8 @@
 
 package consulo.dotnet.compiler;
 
-import java.io.DataInput;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.Result;
-import com.intellij.openapi.application.RunResult;
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.FileProcessingCompiler;
-import com.intellij.openapi.compiler.PackagingCompiler;
-import com.intellij.openapi.compiler.TimestampValidityState;
-import com.intellij.openapi.compiler.ValidityState;
+import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -44,6 +27,15 @@ import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.DataInput;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -95,23 +87,17 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 				continue;
 			}
 
-			RunResult<Set<File>> r = new ReadAction<Set<File>>()
+			Set<File> list = ReadAction.compute(() ->
 			{
-				@Override
-				protected void run(Result<Set<File>> listResult) throws Throwable
+				Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES);
+				files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES));
+
+				for(DotNetDependencyCopierExtension copierExtension : DotNetDependencyCopierExtension.EP_NAME.getExtensionList())
 				{
-					Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES);
-					files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES));
-
-					for(DotNetDependencyCopierExtension copierExtension : DotNetDependencyCopierExtension.EP_NAME.getExtensionList())
-					{
-						files.addAll(copierExtension.collectDependencies(module));
-					}
-					listResult.setResult(files);
+					files.addAll(copierExtension.collectDependencies(module));
 				}
-			}.execute();
-
-			Set<File> list = r.getResultObject();
+				return files;
+			});
 
 			for(File file : list)
 			{
