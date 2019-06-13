@@ -16,14 +16,6 @@
 
 package consulo.msil.representation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -37,6 +29,13 @@ import com.intellij.util.containers.ConcurrentMultiMap;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotations.RequiredReadAction;
 import consulo.msil.lang.psi.MsilFile;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -103,7 +102,7 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 
 		String fileName = null;
 		MsilFileRepresentationProvider provider = null;
-		for(MsilFileRepresentationProvider extension : MsilFileRepresentationProvider.EP_NAME.getExtensions())
+		for(MsilFileRepresentationProvider extension : MsilFileRepresentationProvider.EP_NAME.getExtensionList())
 		{
 			String temp = extension.getRepresentFileName(msilFile);
 			if(temp != null)

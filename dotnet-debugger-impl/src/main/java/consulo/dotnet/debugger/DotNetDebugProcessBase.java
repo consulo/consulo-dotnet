@@ -1,9 +1,5 @@
 package consulo.dotnet.debugger;
 
-import java.util.Collection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
@@ -27,6 +23,10 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointPr
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -121,11 +121,11 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	@Override
 	public AsyncResult<Void> stopAsync()
 	{
-		AsyncResult<Void> result = new AsyncResult<>();
+		AsyncResult<Void> result = AsyncResult.undefined();
 		Task.Backgroundable.queue(getSession().getProject(), "Waiting for debugger response...", indicator ->
 		{
 			stopImpl();
-			result.setDone(null);
+			result.setDone();
 		});
 		return result;
 	}

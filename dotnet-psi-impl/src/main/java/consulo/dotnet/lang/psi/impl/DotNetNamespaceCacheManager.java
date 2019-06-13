@@ -16,18 +16,6 @@
 
 package consulo.dotnet.lang.psi.impl;
 
-import gnu.trove.THashSet;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.openapi.Disposable;
@@ -35,8 +23,8 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -55,6 +43,16 @@ import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.GlobalSearchScopeFilter;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
+import gnu.trove.THashSet;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -212,7 +210,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		}
 
 		MessageBusConnection connect = project.getMessageBus().connect();
-		connect.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter()
+		connect.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener()
 		{
 			@Override
 			public void rootsChanged(ModuleRootEvent event)
@@ -223,11 +221,6 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 		connect.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener()
 		{
-			@Override
-			public void enteredDumbMode()
-			{
-			}
-
 			@Override
 			public void exitDumbMode()
 			{
@@ -257,7 +250,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	@RequiredReadAction
 	@Nullable
-	public DotNetNamespaceAsElement computeNamespace(DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
+	public DotNetNamespaceAsElement computeNamespace(List<DotNetPsiSearcher> searchers, String qName, GlobalSearchScope scope)
 	{
 		Map<GlobalSearchScope, Ref<DotNetNamespaceAsElement>> map = myNamespacesCache.get(qName);
 		if(map != null)
@@ -282,7 +275,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	@Nullable
 	@RequiredReadAction
-	private static DotNetNamespaceAsElement computeNamespaceImpl(Project project, DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
+	private static DotNetNamespaceAsElement computeNamespaceImpl(Project project, List<DotNetPsiSearcher> searchers, String qName, GlobalSearchScope scope)
 	{
 		if(DumbService.isDumb(project))
 		{
@@ -313,7 +306,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	@RequiredReadAction
 	@Nonnull
-	public Set<DotNetTypeDeclaration> computeTypes(@Nonnull DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
+	public Set<DotNetTypeDeclaration> computeTypes(@Nonnull List<DotNetPsiSearcher> searchers, String qName, GlobalSearchScope scope)
 	{
 		Map<GlobalSearchScope, Set<DotNetTypeDeclaration>> map = myTypesCache.get(qName);
 		if(map != null)
@@ -338,7 +331,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	@Nonnull
 	@RequiredReadAction
-	private static Set<DotNetTypeDeclaration> computeTypesImpl(DotNetPsiSearcher[] searchers, String qName, GlobalSearchScope scope)
+	private static Set<DotNetTypeDeclaration> computeTypesImpl(List<DotNetPsiSearcher> searchers, String qName, GlobalSearchScope scope)
 	{
 		Set<DotNetTypeDeclaration> typeDeclarations = new SmartHashSet<>();
 		for(DotNetPsiSearcher searcher : searchers)

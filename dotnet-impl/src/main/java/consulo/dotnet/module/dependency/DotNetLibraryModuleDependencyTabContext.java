@@ -16,18 +16,6 @@
 
 package consulo.dotnet.module.dependency;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.swing.JComponent;
-import javax.swing.JList;
-
-import javax.annotation.Nonnull;
-import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
-import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
@@ -36,15 +24,21 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigur
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Computable;
 import com.intellij.ui.CollectionListModel;
-import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.UIUtil;
+import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
+import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryImpl;
 import consulo.module.extension.ModuleExtension;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabContext;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -52,17 +46,17 @@ import consulo.roots.ui.configuration.classpath.dependencyTab.AddModuleDependenc
  */
 public class DotNetLibraryModuleDependencyTabContext extends AddModuleDependencyTabContext
 {
-	private final JBList myLibraryList;
+	private final JBList<Map.Entry<String, String>> myLibraryList;
 
 	public DotNetLibraryModuleDependencyTabContext(ClasspathPanel classpathPanel, StructureConfigurableContext context)
 	{
 		super(classpathPanel, context);
 
-		myLibraryList = new JBList();
-		myLibraryList.setCellRenderer(new ColoredListCellRendererWrapper<Map.Entry<String, String>>()
+		myLibraryList = new JBList<>();
+		myLibraryList.setCellRenderer(new ColoredListCellRenderer<Map.Entry<String, String>>()
 		{
 			@Override
-			protected void doCustomize(JList jList, Map.Entry<String, String> entry, int i, boolean b, boolean b2)
+			protected void customizeCellRenderer(@Nonnull JList<? extends Map.Entry<String, String>> list, Map.Entry<String, String> entry, int i, boolean b, boolean b1)
 			{
 				append(entry.getKey());
 				append(" ");

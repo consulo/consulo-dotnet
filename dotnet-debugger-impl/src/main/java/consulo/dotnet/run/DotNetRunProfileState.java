@@ -16,8 +16,6 @@
 
 package consulo.dotnet.run;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -26,10 +24,14 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
+import com.intellij.execution.process.ProcessHandlerFactory;
 import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -47,7 +49,7 @@ public class DotNetRunProfileState extends PatchableRunProfileState
 	public ExecutionResult executeImpl(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
 	{
 		TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
-		OSProcessHandler handler = patchHandler(new OSProcessHandler(getCommandLineForRun()));
+		OSProcessHandler handler = patchHandler(ProcessHandlerFactory.getInstance().createProcessHandler(getCommandLineForRun()));
 		ProcessTerminatedListener.attach(handler, myExecutionEnvironment.getProject());
 
 		ConsoleView console = builder.getConsole();

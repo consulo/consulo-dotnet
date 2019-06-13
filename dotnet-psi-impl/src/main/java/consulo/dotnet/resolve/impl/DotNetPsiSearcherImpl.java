@@ -16,13 +16,6 @@
 
 package consulo.dotnet.resolve.impl;
 
-import java.util.Collection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -31,6 +24,13 @@ import consulo.dotnet.lang.psi.impl.DotNetNamespaceCacheManager;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -41,13 +41,13 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 {
 	private static final ExtensionPointName<DotNetPsiSearcher> EP_NAME = ExtensionPointName.create("consulo.dotnet.psiSearcher");
 
-	private DotNetPsiSearcher[] mySearchers;
+	private List<DotNetPsiSearcher> mySearchers;
 	private DotNetNamespaceCacheManager myCacheManager;
 
 	@Inject
 	public DotNetPsiSearcherImpl(Project project, DotNetNamespaceCacheManager cacheManager)
 	{
-		mySearchers = EP_NAME.getExtensions(project);
+		mySearchers = EP_NAME.getExtensionList(project);
 		myCacheManager = cacheManager;
 	}
 

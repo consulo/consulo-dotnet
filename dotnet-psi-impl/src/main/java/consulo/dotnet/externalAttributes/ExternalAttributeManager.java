@@ -1,18 +1,10 @@
 package consulo.dotnet.externalAttributes;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -25,6 +17,13 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -59,7 +58,7 @@ public class ExternalAttributeManager
 			}
 		});
 
-		connect.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter()
+		connect.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener()
 		{
 			@Override
 			public void rootsChanged(ModuleRootEvent event)

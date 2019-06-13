@@ -16,13 +16,13 @@
 
 package consulo.dotnet.run;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.openapi.extensions.ExtensionPointName;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import com.intellij.openapi.extensions.ExtensionPointName;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +30,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
  */
 public abstract class DotNetTestFramework
 {
-	public static final ExtensionPointName<DotNetTestFramework> EP_NAME = new ExtensionPointName<>("consulo.dotnet.testFramework");
+	public static final ExtensionPointName<DotNetTestFramework> EP_NAME = ExtensionPointName.create("consulo.dotnet.testFramework");
 
 	@RequiredReadAction
 	public boolean isTestType(@Nonnull DotNetTypeDeclaration typeDeclaration)
