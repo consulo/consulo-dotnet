@@ -16,6 +16,16 @@
  */
 package consulo.dotnet.module.extension;
 
+import com.intellij.openapi.diagnostic.LogUtil;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.ConcurrencyUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.DeprecationInfo;
+import consulo.internal.dotnet.asm.mbel.ModuleParser;
+import consulo.internal.dotnet.asm.parse.MSILParseException;
+import consulo.logging.Logger;
+
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -23,17 +33,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
-
-import com.intellij.openapi.diagnostic.LogUtil;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.DeprecationInfo;
-import consulo.internal.dotnet.asm.mbel.ModuleParser;
-import consulo.internal.dotnet.asm.parse.MSILParseException;
 
 /**
  * @author VISTALL
