@@ -24,6 +24,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.tree.IStubFileElementType;
 import consulo.dotnet.DotNetTypes;
+import consulo.internal.dotnet.asm.mbel.ModuleParser;
 import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
 import consulo.msil.MsilLanguage;
 import consulo.msil.lang.psi.MsilFile;
@@ -77,7 +78,7 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		int version = 72 + DotNetArchiveFile.VERSION;
+		int version = 72 + DotNetArchiveFile.VERSION + ModuleParser.VERSION;
 		for(MsilStubIndexer msilStubIndexer : MsilStubIndexer.EP_NAME.getExtensionList())
 		{
 			version += msilStubIndexer.getVersion();
