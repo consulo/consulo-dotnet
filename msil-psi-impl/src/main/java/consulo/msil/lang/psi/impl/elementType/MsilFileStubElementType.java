@@ -16,9 +16,6 @@
 
 package consulo.msil.lang.psi.impl.elementType;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.impl.source.CharTableImpl;
@@ -27,10 +24,14 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.tree.IStubFileElementType;
 import consulo.dotnet.DotNetTypes;
+import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
 import consulo.msil.MsilLanguage;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilFileStub;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
  * @author VISTALL
@@ -76,7 +77,7 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		int version = 72;
+		int version = 72 + DotNetArchiveFile.VERSION;
 		for(MsilStubIndexer msilStubIndexer : MsilStubIndexer.EP_NAME.getExtensionList())
 		{
 			version += msilStubIndexer.getVersion();
