@@ -16,14 +16,18 @@
 
 package consulo.dotnet.sdk;
 
-import java.io.File;
+import com.intellij.execution.ExecutionException;
+import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.process.CapturingProcessHandler;
+import com.intellij.execution.process.ProcessOutput;
+import com.intellij.openapi.projectRoots.SdkType;
+import consulo.dotnet.DotNetIcons;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.openapi.projectRoots.SdkType;
-import consulo.dotnet.DotNetIcons;
-import consulo.ui.image.Image;
+import java.io.File;
 
 /**
  * @author VISTALL
@@ -31,10 +35,12 @@ import consulo.ui.image.Image;
  */
 public class RoslynBundleType extends SdkType
 {
+	private static final Logger LOG = Logger.getInstance(RoslynBundleType.class);
+
 	@Nonnull
 	public static RoslynBundleType getInstance()
 	{
-		return EP_NAME.findExtension(RoslynBundleType.class);
+		return EP_NAME.findExtensionOrFail(RoslynBundleType.class);
 	}
 
 	public RoslynBundleType()
@@ -45,22 +51,41 @@ public class RoslynBundleType extends SdkType
 	@Override
 	public boolean isValidSdkHome(String path)
 	{
-		return new File(path, "Roslyn.Diagnostics.Analyzers.dll").exists() ||
-				new File(path, "Roslyn.Diagnostics.Analyzers.dll").exists() ||
-				new File(path, "csc.exe").exists();
+		return new File(path, "csc.exe").exists();
 	}
 
 	@Nullable
 	@Override
 	public String getVersionString(String sdkHome)
 	{
-		return "undefined";
+		GeneralCommandLine commandLine = new GeneralCommandLine();
+		commandLine.setExePath(sdkHome + "/" + "csc.exe");
+		commandLine.addParameter("/version");
+
+		try
+		{
+			ProcessOutput processOutput = new CapturingProcessHandler(commandLine).runProcess();
+			String version = processOutput.getStdout().trim();
+			// 3.0.1-dev (dev-build)
+			int i = version.indexOf("(");
+			if(i != -1)
+			{
+				version = version.substring(0, i);
+				version = version.trim();
+			}
+			return version;
+		}
+		catch(ExecutionException e)
+		{
+			LOG.error(e);
+		}
+		return "?";
 	}
 
 	@Override
 	public String suggestSdkName(String currentSdkName, String sdkHome)
 	{
-		return getPresentableName();
+		return getPresentableName() + " "+ getVersionString(sdkHome);
 	}
 
 	@Nonnull
