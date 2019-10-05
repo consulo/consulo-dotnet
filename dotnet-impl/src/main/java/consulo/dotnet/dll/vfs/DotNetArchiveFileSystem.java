@@ -16,18 +16,17 @@
 
 package consulo.dotnet.dll.vfs;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.dotnet.dll.DotNetModuleFileType;
-import consulo.dotnet.module.extension.DotNetLibraryOpenCache;
+import consulo.internal.dotnet.asm.mbel.ModuleParser;
 import consulo.internal.dotnet.asm.parse.MSILParseException;
 import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author VISTALL
@@ -50,12 +49,10 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase
 	@Override
 	public ArchiveFile createArchiveFile(@Nonnull String path) throws IOException
 	{
-		DotNetLibraryOpenCache.Record record = null;
 		try
 		{
 			File file = new File(path);
-			record = DotNetLibraryOpenCache.acquire(path);
-			return new DotNetArchiveFile(file, record.get(), file.lastModified());
+			return new DotNetArchiveFile(file, new ModuleParser(new File(path)), file.lastModified());
 		}
 		catch(MSILParseException e)
 		{
@@ -65,13 +62,6 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase
 		catch(Exception e)
 		{
 			throw new IOException(e);
-		}
-		finally
-		{
-			if(record != null)
-			{
-				record.finish();
-			}
 		}
 	}
 }
