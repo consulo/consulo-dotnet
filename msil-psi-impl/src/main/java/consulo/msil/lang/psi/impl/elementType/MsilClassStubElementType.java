@@ -16,10 +16,6 @@
 
 package consulo.msil.lang.psi.impl.elementType;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
@@ -34,6 +30,9 @@ import consulo.msil.lang.psi.impl.MsilClassEntryImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilStubIndexer;
 import consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
  * @author VISTALL
@@ -92,7 +91,7 @@ public class MsilClassStubElementType extends AbstractMsilStubElementType<MsilCl
 	public void indexStub(@Nonnull MsilClassEntryStub msilClassEntryStub, @Nonnull IndexSink indexSink)
 	{
 		indexSink.occurrence(MsilIndexKeys.TYPE_BY_NAME_INDEX, MsilHelper.cutGenericMarker(msilClassEntryStub.getName()));
-		indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, msilClassEntryStub.getVmQName());
+		indexSink.occurrence(MsilIndexKeys.TYPE_BY_QNAME_INDEX, msilClassEntryStub.getVmQName().hashCode());
 
 		if(!msilClassEntryStub.isNested())
 		{

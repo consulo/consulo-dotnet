@@ -16,27 +16,27 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub.index;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.psi.stubs.StringStubIndexExtension;
+import com.intellij.psi.stubs.IntStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 import consulo.msil.lang.psi.MsilClassEntry;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 22.05.14
  */
-public class MsilTypeByQNameIndex extends StringStubIndexExtension<MsilClassEntry>
+public class MsilTypeByQNameIndex extends IntStubIndexExtension<MsilClassEntry>
 {
 	@Nonnull
 	public static MsilTypeByQNameIndex getInstance()
 	{
-		return EP_NAME.findExtension(MsilTypeByQNameIndex.class);
+		return EP_NAME.findExtensionOrFail(MsilTypeByQNameIndex.class);
 	}
 
 	@Nonnull
 	@Override
-	public StubIndexKey<String, MsilClassEntry> getKey()
+	public StubIndexKey<Integer, MsilClassEntry> getKey()
 	{
 		return MsilIndexKeys.TYPE_BY_QNAME_INDEX;
 	}

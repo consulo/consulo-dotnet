@@ -77,6 +77,6 @@ public class MsilPsiSearcher extends IndexBasedDotNetPsiSearcher
 		{
 			return Collections.emptyList();
 		}
-		return MsilTypeByQNameIndex.getInstance().get(vmQName, myProject, scope);
+		return MsilTypeByQNameIndex.getInstance().get(vmQName.hashCode(), myProject, scope);
 	}
 }

@@ -29,7 +29,7 @@ public interface MsilIndexKeys
 {
 	StubIndexKey<String, MsilClassEntry> TYPE_BY_NAME_INDEX = StubIndexKey.createIndexKey("msil.type.by.name.index");
 
-	StubIndexKey<String, MsilClassEntry> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("msil.type.by.qname.index");
+	StubIndexKey<Integer, MsilClassEntry> TYPE_BY_QNAME_INDEX = StubIndexKey.createIndexKey("msil.type.by.qname.index");
 
 	StubIndexKey<String, DotNetQualifiedElement> ELEMENT_BY_QNAME_INDEX = StubIndexKey.createIndexKey("msil.element.by.qname.index");
 
