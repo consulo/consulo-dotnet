@@ -84,6 +84,7 @@
 		<defaultLibraryRootDetector implementation="consulo.dotnet.library.DotNetLibraryDirectoryDetector"/>
 
 		<applicationService serviceImplementation="consulo.dotnet.documentation.DotNetDocumentationCache"/>
+		<applicationService serviceImplementation="consulo.dotnet.module.extension.AssemblyInfoCacheService" />
 
 		<projectService serviceInterface="consulo.dotnet.resolve.DotNetPsiSearcher"
 						serviceImplementation="consulo.dotnet.resolve.impl.DotNetPsiSearcherImpl"/>

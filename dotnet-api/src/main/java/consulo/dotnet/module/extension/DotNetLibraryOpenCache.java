@@ -20,7 +20,6 @@ import com.intellij.openapi.diagnostic.LogUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.DeprecationInfo;
 import consulo.internal.dotnet.asm.mbel.ModuleParser;
 import consulo.internal.dotnet.asm.parse.MSILParseException;
 import consulo.logging.Logger;
@@ -120,14 +119,6 @@ public class DotNetLibraryOpenCache
 		}
 
 		return record;
-	}
-
-	@Nonnull
-	@Deprecated
-	@DeprecationInfo("Use #acquire(path)")
-	public static Record acquireWithNext(@Nonnull String path) throws IOException, MSILParseException
-	{
-		return acquire(path);
 	}
 
 	private static ModuleParser tryOpen(String path) throws IOException, MSILParseException

@@ -16,25 +16,10 @@
 
 package consulo.dotnet.module.extension;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.jdom.Document;
-import org.jdom.Element;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Ref;
@@ -52,13 +37,22 @@ import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
-import consulo.internal.dotnet.asm.mbel.ModuleParser;
+import consulo.internal.dotnet.asm.mbel.AssemblyInfo;
+import consulo.logging.Logger;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
+import org.jdom.Document;
+import org.jdom.Element;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
@@ -72,8 +66,8 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 
 	protected Sdk myLastSdk;
 
-	protected List<String> myVariables = new ArrayList<String>();
-	protected Map<String, Map<OrderRootType, String[]>> myUrlsCache = new HashMap<String, Map<OrderRootType, String[]>>();
+	protected List<String> myVariables = new ArrayList<>();
+	protected Map<String, Map<OrderRootType, String[]>> myUrlsCache = new HashMap<>();
 	protected DotNetModuleSdkPointer mySdkPointer;
 
 	public BaseDotNetSimpleModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer)
@@ -106,7 +100,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	@Override
 	public Map<String, String> getAvailableSystemLibraries()
 	{
-		Map<String, String> map = new TreeMap<String, String>();
+		Map<String, String> map = new TreeMap<>();
 		File[] directoriesForLibraries = getFilesForLibraries();
 		for(File childFile : directoriesForLibraries)
 		{
@@ -164,7 +158,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		Map<OrderRootType, String[]> orderRootTypeMap = myUrlsCache.get(name);
 		if(orderRootTypeMap == null)
 		{
-			myUrlsCache.put(name, orderRootTypeMap = new HashMap<OrderRootType, String[]>());
+			myUrlsCache.put(name, orderRootTypeMap = new HashMap<>());
 		}
 
 		String[] urls = orderRootTypeMap.get(orderRootType);
@@ -198,6 +192,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		}
 	}
 
+	@RequiredReadAction
 	@Override
 	public void commit(@Nonnull S mutableModuleExtension)
 	{
@@ -220,14 +215,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	{
 		File[] filesForLibraries = getFilesForLibraries();
 		String nameWithExtension = name + ".dll";
-		File singleFile = ContainerUtil.find(filesForLibraries, new Condition<File>()
-		{
-			@Override
-			public boolean value(File file)
-			{
-				return file.getName().equalsIgnoreCase(nameWithExtension);
-			}
-		});
+		File singleFile = ContainerUtil.find(filesForLibraries, file -> file.getName().equalsIgnoreCase(nameWithExtension));
 
 		if(singleFile != null && isValidLibrary(singleFile, name, cache))
 		{
@@ -236,7 +224,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 
 		for(File childFile : filesForLibraries)
 		{
-			if(isValidLibrary(childFile, name, cache))
+			if("dll".equals(FileUtilRt.getExtension(childFile.getName())) && isValidLibrary(childFile, name, cache))
 			{
 				return childFile;
 			}
@@ -298,7 +286,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 
 				File dir = new File(PluginManager.getPluginPath(BaseDotNetSimpleModuleExtension.class), "externalAttributes");
 
-				List<String> urls = new SmartList<String>();
+				List<String> urls = new SmartList<>();
 				String requiredFileName = name + ".xml";
 				FileUtil.visitFiles(dir, new Processor<File>()
 				{
@@ -321,7 +309,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 			}
 			catch(Exception e)
 			{
-				BaseDotNetSimpleModuleExtension.LOGGER.error(e);
+				LOGGER.error(e);
 			}
 		}
 		return ArrayUtil.EMPTY_STRING_ARRAY;
@@ -381,24 +369,12 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	@Nullable
 	private static Couple<String> parseLibrary(File f)
 	{
-		DotNetLibraryOpenCache.Record record = null;
-		try
-		{
-			record = DotNetLibraryOpenCache.acquire(f.getPath());
-			ModuleParser moduleParser = record.get();
-			return Couple.of(moduleParser.getAssemblyInfo().getName(), moduleParser.getAssemblyInfo().getMajorVersion() + "." + moduleParser.getAssemblyInfo().getMinorVersion() +
-					"." + moduleParser.getAssemblyInfo().getBuildNumber() + "." + moduleParser.getAssemblyInfo().getRevisionNumber());
-		}
-		catch(Exception e)
+		AssemblyInfo assemblyInfo = AssemblyInfoCacheService.getInstance().getAssemblyInfo(f);
+		if(assemblyInfo == null)
 		{
 			return null;
 		}
-		finally
-		{
-			if(record != null)
-			{
-				record.finish();
-			}
-		}
+		String ver = assemblyInfo.getMajorVersion() + "." + assemblyInfo.getMinorVersion() + "." + assemblyInfo.getBuildNumber() + "." + assemblyInfo.getRevisionNumber();
+		return Couple.of(assemblyInfo.getName(), ver);
 	}
 }
