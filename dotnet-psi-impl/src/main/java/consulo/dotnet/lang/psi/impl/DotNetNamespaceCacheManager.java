@@ -266,7 +266,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 		if(map == null)
 		{
-			myNamespacesCache.put(qName, map = ContainerUtil.<GlobalSearchScope, Ref<DotNetNamespaceAsElement>>newConcurrentMap());
+			myNamespacesCache.put(qName, map = ContainerUtil.createWeakKeyWeakValueMap());
 		}
 
 		map.put(scope, Ref.create(compute));
@@ -322,7 +322,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 		if(map == null)
 		{
-			myTypesCache.put(qName, map = ContainerUtil.<GlobalSearchScope, Set<DotNetTypeDeclaration>>newConcurrentMap());
+			myTypesCache.put(qName, map = ContainerUtil.createWeakKeyWeakValueMap());
 		}
 
 		map.put(scope, compute);
