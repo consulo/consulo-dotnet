@@ -24,7 +24,6 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -104,7 +103,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		File[] directoriesForLibraries = getFilesForLibraries();
 		for(File childFile : directoriesForLibraries)
 		{
-			if(!FileUtilRt.getExtension(childFile.getName()).equals("dll"))
+			if(!DotNetModuleFileType.isDllFile(childFile.getName()))
 			{
 				continue;
 			}
@@ -224,7 +223,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 
 		for(File childFile : filesForLibraries)
 		{
-			if("dll".equals(FileUtilRt.getExtension(childFile.getName())) && isValidLibrary(childFile, name, cache))
+			if(DotNetModuleFileType.isDllFile(childFile.getName()) && isValidLibrary(childFile, name, cache))
 			{
 				return childFile;
 			}

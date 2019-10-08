@@ -16,8 +16,10 @@
 
 package consulo.dotnet.dll;
 
-import javax.annotation.Nonnull;
+import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.fileTypes.ArchiveFileType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,6 +27,13 @@ import consulo.fileTypes.ArchiveFileType;
  */
 public class DotNetModuleFileType extends ArchiveFileType
 {
+	public static boolean isDllFile(@Nonnull String filePath)
+	{
+		return FileUtilRt.extensionEquals(filePath, ourExtension);
+	}
+
+	private static final String ourExtension = "dll";
+
 	public static final DotNetModuleFileType INSTANCE = new DotNetModuleFileType();
 	public static final String PROTOCOL = "netdll";
 
@@ -53,6 +62,6 @@ public class DotNetModuleFileType extends ArchiveFileType
 	@Override
 	public String getDefaultExtension()
 	{
-		return "dll";
+		return ourExtension;
 	}
 }
