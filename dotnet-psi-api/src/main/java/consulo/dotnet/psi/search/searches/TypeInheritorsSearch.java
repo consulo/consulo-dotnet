@@ -16,13 +16,6 @@
  */
 package consulo.dotnet.psi.search.searches;
 
-import gnu.trove.THashSet;
-
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -37,17 +30,18 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiSearchScopeUtil;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.searches.ExtensibleQueryFactory;
-import com.intellij.util.EmptyQuery;
-import com.intellij.util.Function;
-import com.intellij.util.Processor;
-import com.intellij.util.Query;
-import com.intellij.util.QueryExecutor;
+import com.intellij.util.*;
 import com.intellij.util.containers.Stack;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
+import gnu.trove.THashSet;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -65,7 +59,7 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 		INSTANCE.registerExecutor(new QueryExecutor<DotNetTypeDeclaration, SearchParameters>()
 		{
 			@Override
-			public boolean execute(@Nonnull final SearchParameters parameters, @Nonnull final Processor<DotNetTypeDeclaration> consumer)
+			public boolean execute(@Nonnull final SearchParameters parameters, @Nonnull final Processor<? super DotNetTypeDeclaration> consumer)
 			{
 				final String baseVmQName = parameters.getVmQName();
 				final SearchScope searchScope = parameters.getScope();
@@ -228,7 +222,7 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 	}
 
 	@RequiredReadAction
-	private static boolean processInheritors(@Nonnull final Processor<DotNetTypeDeclaration> consumer,
+	private static boolean processInheritors(@Nonnull final Processor<? super DotNetTypeDeclaration> consumer,
 			@Nonnull final String baseVmQName,
 			@Nonnull final SearchScope searchScope,
 			@Nonnull final SearchParameters parameters)
