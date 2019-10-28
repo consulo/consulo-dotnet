@@ -1,5 +1,6 @@
 package consulo.dotnet.psi;
 
+import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
 
 import javax.annotation.Nullable;
@@ -15,13 +16,13 @@ public interface DotNetCodeBodyProxy
 		@RequiredReadAction
 		@Nullable
 		@Override
-		public DotNetElement getElement()
+		public PsiElement getElement()
 		{
 			return null;
 		}
 
 		@Override
-		public void replace(@Nullable DotNetElement element)
+		public void replace(@Nullable PsiElement element)
 		{
 			throw new UnsupportedOperationException();
 		}
@@ -30,7 +31,7 @@ public interface DotNetCodeBodyProxy
 	@Nullable
 	@RequiredReadAction
 	default DotNetExpression asExpression() {
-		DotNetElement element = getElement();
+		PsiElement element = getElement();
 		return element instanceof DotNetExpression ? (DotNetExpression) element : null;
 	}
 
@@ -38,13 +39,13 @@ public interface DotNetCodeBodyProxy
 	@RequiredReadAction
 	default DotNetStatement asStatement()
 	{
-		DotNetElement element = getElement();
+		PsiElement element = getElement();
 		return element instanceof DotNetStatement ? (DotNetStatement) element : null;
 	}
 
 	@Nullable
 	@RequiredReadAction
-	DotNetElement getElement();
+	PsiElement getElement();
 
-	void replace(@Nullable DotNetElement element);
+	void replace(@Nullable PsiElement element);
 }
