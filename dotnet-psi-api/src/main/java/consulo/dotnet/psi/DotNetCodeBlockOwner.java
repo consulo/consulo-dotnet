@@ -16,8 +16,7 @@
 
 package consulo.dotnet.psi;
 
-import javax.annotation.Nullable;
-import com.intellij.psi.PsiElement;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,6 +24,6 @@ import com.intellij.psi.PsiElement;
  */
 public interface DotNetCodeBlockOwner extends DotNetElement
 {
-	@Nullable
-	PsiElement getCodeBlock();
+	@Nonnull
+	DotNetCodeBodyProxy getCodeBlock();
 }

@@ -16,17 +16,16 @@
 
 package consulo.dotnet.debugger;
 
-import java.util.Collections;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -44,7 +43,7 @@ public class DotNetDefaultDebuggerSourceLineResolver extends DotNetDebuggerSourc
 		{
 			return null;
 		}
-		PsiElement codeBlock = codeBlockOwner.getCodeBlock();
+		PsiElement codeBlock = codeBlockOwner.getCodeBlock().getElement();
 		if(codeBlock == null)
 		{
 			return null;

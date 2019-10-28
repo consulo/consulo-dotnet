@@ -90,7 +90,7 @@ public class DotNetLineBreakpointTypeResolver implements XLineBreakpointTypeReso
 				{
 					if(parent.getTextRange().getEndOffset() >= document.getLineEndOffset(line))
 					{
-						PsiElement body = ((DotNetCodeBlockOwner) parent).getCodeBlock();
+						PsiElement body = ((DotNetCodeBlockOwner) parent).getCodeBlock().getElement();
 						if(body instanceof DotNetCompositeStatement)
 						{
 							DotNetStatement[] statements = ((DotNetCompositeStatement) body).getStatements();

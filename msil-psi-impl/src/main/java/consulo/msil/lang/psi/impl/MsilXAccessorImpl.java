@@ -104,11 +104,11 @@ public class MsilXAccessorImpl extends MsilStubElementImpl<MsilXAccessorStub> im
 		visitor.visitElement(this);
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
-	public PsiElement getCodeBlock()
+	public DotNetCodeBodyProxy getCodeBlock()
 	{
-		return null;
+		return DotNetCodeBodyProxy.EMPTY;
 	}
 
 	@RequiredReadAction

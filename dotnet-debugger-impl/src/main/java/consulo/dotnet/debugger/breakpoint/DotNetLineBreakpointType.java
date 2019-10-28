@@ -16,15 +16,6 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
@@ -32,11 +23,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -45,7 +32,6 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
-import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
@@ -54,7 +40,12 @@ import consulo.dotnet.debugger.DotNetEditorsProvider;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.util.ArrayUtil2;
+import consulo.ui.RequiredUIAccess;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -65,7 +56,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 	@Nonnull
 	public static DotNetLineBreakpointType getInstance()
 	{
-		return EXTENSION_POINT_NAME.findExtension(DotNetLineBreakpointType.class);
+		return EXTENSION_POINT_NAME.findExtensionOrFail(DotNetLineBreakpointType.class);
 	}
 
 	public DotNetLineBreakpointType()
@@ -186,7 +177,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			return Collections.emptySet();
 		}
 
-		Set<PsiElement> newSet = new LinkedHashSet<PsiElement>(allExecutableChildren.size() + 1);
+		Set<PsiElement> newSet = new LinkedHashSet<>(allExecutableChildren.size() + 1);
 		newSet.add(likeMethod);
 		newSet.addAll(allExecutableChildren);
 
