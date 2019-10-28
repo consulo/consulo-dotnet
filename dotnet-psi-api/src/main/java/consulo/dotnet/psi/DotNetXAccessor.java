@@ -16,10 +16,11 @@
 
 package consulo.dotnet.psi;
 
-import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.ArrayFactory;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -28,11 +29,11 @@ import com.intellij.util.ArrayFactory;
  * Property
  * Event
  */
-public interface DotNetXXXAccessor extends DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetNamedElement, DotNetCodeBlockOwner
+public interface DotNetXAccessor extends DotNetModifierListOwner, PsiNameIdentifierOwner, DotNetNamedElement, DotNetCodeBlockOwner
 {
-	DotNetXXXAccessor[] EMPTY_ARRAY = new DotNetXXXAccessor[0];
+	DotNetXAccessor[] EMPTY_ARRAY = new DotNetXAccessor[0];
 
-	ArrayFactory<DotNetXXXAccessor> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetXXXAccessor[count];
+	ArrayFactory<DotNetXAccessor> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetXAccessor[count];
 
 	String VALUE = "value";
 

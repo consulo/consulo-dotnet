@@ -16,10 +16,6 @@
 
 package consulo.msil.lang.psi.impl;
 
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -31,26 +27,20 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotations.RequiredReadAction;
-import consulo.dotnet.psi.DotNetModifier;
-import consulo.dotnet.psi.DotNetModifierList;
-import consulo.dotnet.psi.DotNetNamedElement;
-import consulo.dotnet.psi.DotNetParameter;
-import consulo.dotnet.psi.DotNetType;
+import consulo.dotnet.psi.*;
 import consulo.dotnet.resolve.DotNetTypeRef;
-import consulo.msil.lang.psi.MsilClassEntry;
-import consulo.msil.lang.psi.MsilMethodEntry;
-import consulo.msil.lang.psi.MsilParameterList;
-import consulo.msil.lang.psi.MsilStubTokenSets;
-import consulo.msil.lang.psi.MsilTokenSets;
-import consulo.msil.lang.psi.MsilTokens;
-import consulo.msil.lang.psi.MsilXXXAcessor;
-import consulo.msil.lang.psi.impl.elementType.stub.MsilXXXAccessorStub;
+import consulo.msil.lang.psi.*;
+import consulo.msil.lang.psi.impl.elementType.stub.MsilXAccessorStub;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 24.05.14
  */
-public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub> implements MsilXXXAcessor
+public class MsilXAccessorImpl extends MsilStubElementImpl<MsilXAccessorStub> implements MsilXAcessor
 {
 	private class CacheValueProvider implements CachedValueProvider<MsilMethodEntry>
 	{
@@ -98,12 +88,12 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 
 	private CacheValueProvider myCacheValueProvider = new CacheValueProvider();
 
-	public MsilXXXAccessorImpl(@Nonnull ASTNode node)
+	public MsilXAccessorImpl(@Nonnull ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilXXXAccessorImpl(@Nonnull MsilXXXAccessorStub stub, @Nonnull IStubElementType nodeType)
+	public MsilXAccessorImpl(@Nonnull MsilXAccessorStub stub, @Nonnull IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -111,7 +101,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 	@Override
 	public void accept(MsilVisitor visitor)
 	{
-
+		visitor.visitElement(this);
 	}
 
 	@Nullable
@@ -167,7 +157,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 	@Override
 	public String getMethodName()
 	{
-		MsilXXXAccessorStub stub = getGreenStub();
+		MsilXAccessorStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getMethodName();
@@ -218,7 +208,7 @@ public class MsilXXXAccessorImpl extends MsilStubElementImpl<MsilXXXAccessorStub
 	@Override
 	public Kind getAccessorKind()
 	{
-		MsilXXXAccessorStub stub = getGreenStub();
+		MsilXAccessorStub stub = getGreenStub();
 		if(stub != null)
 		{
 			return stub.getAccessorType();

@@ -16,6 +16,7 @@
 
 package consulo.dotnet.debugger;
 
+import consulo.dotnet.psi.*;
 import gnu.trove.THashSet;
 
 import java.io.File;
@@ -65,14 +66,7 @@ import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.dotnet.psi.DotNetAccessorOwner;
-import consulo.dotnet.psi.DotNetConstructorDeclaration;
-import consulo.dotnet.psi.DotNetModifier;
-import consulo.dotnet.psi.DotNetNamedElement;
-import consulo.dotnet.psi.DotNetQualifiedElement;
-import consulo.dotnet.psi.DotNetReferenceExpression;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.psi.DotNetXXXAccessor;
+import consulo.dotnet.psi.DotNetXAccessor;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.internal.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
@@ -173,7 +167,7 @@ public class DotNetStackFrame extends XStackFrame
 
 					if(element instanceof DotNetAccessorOwner)
 					{
-						for(DotNetXXXAccessor accessor : ((DotNetAccessorOwner) element).getAccessors())
+						for(DotNetXAccessor accessor : ((DotNetAccessorOwner) element).getAccessors())
 						{
 							if(Comparing.equal(getVmName(accessor), method.getName()))
 							{
@@ -204,12 +198,12 @@ public class DotNetStackFrame extends XStackFrame
 			}
 			return MsilHelper.CONSTRUCTOR_NAME;
 		}
-		if(element instanceof DotNetXXXAccessor)
+		if(element instanceof DotNetXAccessor)
 		{
 			PsiElement parent = element.getParent();
 			if(parent instanceof DotNetNamedElement)
 			{
-				DotNetXXXAccessor.Kind accessorKind = ((DotNetXXXAccessor) element).getAccessorKind();
+				DotNetXAccessor.Kind accessorKind = ((DotNetXAccessor) element).getAccessorKind();
 				if(accessorKind != null)
 				{
 					return accessorKind.name().toUpperCase(Locale.US) + "_" + ((DotNetNamedElement) parent).getName();

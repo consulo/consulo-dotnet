@@ -16,8 +16,6 @@
 
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import consulo.dotnet.psi.DotNetType;
 import consulo.msil.lang.psi.impl.MsilArrayTypeImpl;
@@ -26,6 +24,8 @@ import consulo.msil.lang.psi.impl.MsilTypeByRefImpl;
 import consulo.msil.lang.psi.impl.MsilTypeWithTypeArgumentsImpl;
 import consulo.msil.lang.psi.impl.elementType.*;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -56,7 +56,7 @@ public interface MsilStubElements
 	MsilClassGenericTypeStubElementType CLASS_GENERIC_TYPE = new MsilClassGenericTypeStubElementType();
 	MsilGenericParameterListStubElementType GENERIC_PARAMETER_LIST = new MsilGenericParameterListStubElementType();
 	MsilGenericParameterStubElementType GENERIC_PARAMETER = new MsilGenericParameterStubElementType();
-	MsilXXXAccessorStubElementType XXX_ACCESSOR = new MsilXXXAccessorStubElementType();
+	MsilXAccessorStubElementType XACCESSOR = new MsilXAccessorStubElementType();
 	MsilArrayDimensionStubElementType ARRAY_DIMENSION = new MsilArrayDimensionStubElementType();
 	MsilCustomAttributeSignatureElementType CUSTOM_ATTRIBUTE_SIGNATURE = new MsilCustomAttributeSignatureElementType();
 	MsilConstantValueStubElementType CONSTANT_VALUE = new MsilConstantValueStubElementType();

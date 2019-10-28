@@ -11,5 +11,5 @@ public interface DotNetAccessorOwner extends DotNetElement
 {
 	@Nonnull
 	@RequiredReadAction
-	DotNetXXXAccessor[] getAccessors();
+	DotNetXAccessor[] getAccessors();
 }

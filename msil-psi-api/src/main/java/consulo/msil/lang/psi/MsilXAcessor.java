@@ -16,30 +16,23 @@
 
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.util.ArrayFactory;
 import consulo.dotnet.psi.DotNetParameter;
-import consulo.dotnet.psi.DotNetXXXAccessor;
+import consulo.dotnet.psi.DotNetXAccessor;
 import consulo.dotnet.resolve.DotNetTypeRef;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 24.05.14
  */
-public interface MsilXXXAcessor extends DotNetXXXAccessor
+public interface MsilXAcessor extends DotNetXAccessor
 {
-	public static final MsilXXXAcessor[] EMPTY_ARRAY = new MsilXXXAcessor[0];
+	public static final MsilXAcessor[] EMPTY_ARRAY = new MsilXAcessor[0];
 
-	public static ArrayFactory<MsilXXXAcessor> ARRAY_FACTORY = new ArrayFactory<MsilXXXAcessor>()
-	{
-		@Nonnull
-		@Override
-		public MsilXXXAcessor[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new MsilXXXAcessor[count];
-		}
-	};
+	public static ArrayFactory<MsilXAcessor> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new MsilXAcessor[count];
 
 	@Nullable
 	DotNetTypeRef getReturnType();

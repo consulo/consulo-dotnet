@@ -16,57 +16,57 @@
 
 package consulo.msil.lang.psi.impl.elementType;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
 import consulo.annotations.RequiredReadAction;
-import consulo.dotnet.psi.DotNetXXXAccessor;
-import consulo.msil.lang.psi.MsilXXXAcessor;
-import consulo.msil.lang.psi.impl.MsilXXXAccessorImpl;
-import consulo.msil.lang.psi.impl.elementType.stub.MsilXXXAccessorStub;
+import consulo.dotnet.psi.DotNetXAccessor;
+import consulo.msil.lang.psi.MsilXAcessor;
+import consulo.msil.lang.psi.impl.MsilXAccessorImpl;
+import consulo.msil.lang.psi.impl.elementType.stub.MsilXAccessorStub;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
  * @author VISTALL
  * @since 24.05.14
  */
-public class MsilXXXAccessorStubElementType extends AbstractMsilStubElementType<MsilXXXAccessorStub, MsilXXXAcessor>
+public class MsilXAccessorStubElementType extends AbstractMsilStubElementType<MsilXAccessorStub, MsilXAcessor>
 {
-	public MsilXXXAccessorStubElementType()
+	public MsilXAccessorStubElementType()
 	{
-		super("MSIL_XXX_ACCESSOR");
+		super("MSIL_XACCESSOR");
 	}
 
 	@Nonnull
 	@Override
-	public MsilXXXAcessor createElement(@Nonnull ASTNode astNode)
+	public MsilXAcessor createElement(@Nonnull ASTNode astNode)
 	{
-		return new MsilXXXAccessorImpl(astNode);
+		return new MsilXAccessorImpl(astNode);
 	}
 
 	@Nonnull
 	@Override
-	public MsilXXXAcessor createPsi(@Nonnull MsilXXXAccessorStub msilXXXAccessorStub)
+	public MsilXAcessor createPsi(@Nonnull MsilXAccessorStub msilXAccessorStub)
 	{
-		return new MsilXXXAccessorImpl(msilXXXAccessorStub, this);
+		return new MsilXAccessorImpl(msilXAccessorStub, this);
 	}
 
+	@Nonnull
 	@RequiredReadAction
 	@Override
-	public MsilXXXAccessorStub createStub(@Nonnull MsilXXXAcessor accessor, StubElement stubElement)
+	public MsilXAccessorStub createStub(@Nonnull MsilXAcessor accessor, StubElement stubElement)
 	{
-		DotNetXXXAccessor.Kind accessorType = accessor.getAccessorKind();
+		DotNetXAccessor.Kind accessorType = accessor.getAccessorKind();
 		String name = accessor.getMethodName();
-		return new MsilXXXAccessorStub(stubElement, this, accessorType == null ? -1 : accessorType.ordinal(), name);
+		return new MsilXAccessorStub(stubElement, this, accessorType == null ? -1 : accessorType.ordinal(), name);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilXXXAccessorStub stub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(@Nonnull MsilXAccessorStub stub, @Nonnull StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeVarInt(stub.getIndex());
 		stubOutputStream.writeName(stub.getMethodName());
@@ -74,10 +74,10 @@ public class MsilXXXAccessorStubElementType extends AbstractMsilStubElementType<
 
 	@Nonnull
 	@Override
-	public MsilXXXAccessorStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilXAccessorStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		int i = inputStream.readVarInt();
 		StringRef ref = inputStream.readName();
-		return new MsilXXXAccessorStub(stubElement, this, i, ref);
+		return new MsilXAccessorStub(stubElement, this, i, ref);
 	}
 }

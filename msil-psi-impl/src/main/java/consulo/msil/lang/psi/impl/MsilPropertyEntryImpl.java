@@ -16,21 +16,22 @@
 
 package consulo.msil.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.dotnet.psi.DotNetType;
-import consulo.dotnet.psi.DotNetXXXAccessor;
+import consulo.dotnet.psi.DotNetXAccessor;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.msil.lang.psi.MsilCustomAttribute;
 import consulo.msil.lang.psi.MsilPropertyEntry;
 import consulo.msil.lang.psi.MsilStubElements;
-import consulo.msil.lang.psi.MsilXXXAcessor;
+import consulo.msil.lang.psi.MsilXAcessor;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -52,9 +53,9 @@ public class MsilPropertyEntryImpl extends MsilQVariableImpl implements MsilProp
 	@Override
 	public boolean hasModifier(@Nonnull DotNetModifier modifier)
 	{
-		for(DotNetXXXAccessor dotNetXXXAccessor : getAccessors())
+		for(DotNetXAccessor dotNetXAccessor : getAccessors())
 		{
-			if(dotNetXXXAccessor.hasModifier(modifier))
+			if(dotNetXAccessor.hasModifier(modifier))
 			{
 				return true;
 			}
@@ -70,9 +71,9 @@ public class MsilPropertyEntryImpl extends MsilQVariableImpl implements MsilProp
 
 	@Nonnull
 	@Override
-	public DotNetXXXAccessor[] getAccessors()
+	public DotNetXAccessor[] getAccessors()
 	{
-		return getStubOrPsiChildren(MsilStubElements.XXX_ACCESSOR, MsilXXXAcessor.ARRAY_FACTORY);
+		return getStubOrPsiChildren(MsilStubElements.XACCESSOR, MsilXAcessor.ARRAY_FACTORY);
 	}
 
 	@RequiredReadAction

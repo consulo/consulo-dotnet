@@ -25,5 +25,5 @@ import javax.annotation.Nonnull;
 public interface DotNetEventDeclaration extends DotNetVariable, DotNetVirtualImplementOwner, DotNetMemberOwner, DotNetQualifiedElement, DotNetAccessorOwner
 {
 	@Nonnull
-	DotNetXXXAccessor[] getAccessors();
+	DotNetXAccessor[] getAccessors();
 }

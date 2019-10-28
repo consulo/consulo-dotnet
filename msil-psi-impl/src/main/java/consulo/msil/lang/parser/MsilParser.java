@@ -322,7 +322,7 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 
 		parseParameterList(builder);
 
-		mark.done(XXX_ACCESSOR);
+		mark.done(XACCESSOR);
 	}
 
 	private void parseParameterList(PsiBuilder builder)

@@ -27,5 +27,5 @@ public interface DotNetPropertyDeclaration extends DotNetVariable, DotNetVirtual
 	String DEFAULT_INDEX_PROPERTY_NAME = "Item";
 
 	@Nonnull
-	DotNetXXXAccessor[] getAccessors();
+	DotNetXAccessor[] getAccessors();
 }

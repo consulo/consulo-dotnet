@@ -20,26 +20,26 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
-import consulo.dotnet.psi.DotNetXXXAccessor;
-import consulo.msil.lang.psi.MsilXXXAcessor;
+import consulo.dotnet.psi.DotNetXAccessor;
+import consulo.msil.lang.psi.MsilXAcessor;
 
 /**
  * @author VISTALL
  * @since 24.05.14
  */
-public class MsilXXXAccessorStub extends StubBase<MsilXXXAcessor>
+public class MsilXAccessorStub extends StubBase<MsilXAcessor>
 {
 	private int myIndex;
 	private String myName;
 
-	public MsilXXXAccessorStub(StubElement parent, IStubElementType elementType, int index, String name)
+	public MsilXAccessorStub(StubElement parent, IStubElementType elementType, int index, String name)
 	{
 		super(parent, elementType);
 		myIndex = index;
 		myName = name;
 	}
 
-	public MsilXXXAccessorStub(StubElement parent, IStubElementType elementType, int i, StringRef name)
+	public MsilXAccessorStub(StubElement parent, IStubElementType elementType, int i, StringRef name)
 	{
 		this(parent, elementType, i, StringRef.toString(name));
 	}
@@ -54,8 +54,8 @@ public class MsilXXXAccessorStub extends StubBase<MsilXXXAcessor>
 		return myIndex;
 	}
 
-	public DotNetXXXAccessor.Kind getAccessorType()
+	public DotNetXAccessor.Kind getAccessorType()
 	{
-		return myIndex == -1 ? null : DotNetXXXAccessor.Kind.VALUES[myIndex];
+		return myIndex == -1 ? null : DotNetXAccessor.Kind.VALUES[myIndex];
 	}
 }

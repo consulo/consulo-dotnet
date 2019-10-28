@@ -1,17 +1,5 @@
 package consulo.dotnet.debugger.breakpoint;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.annotations.RequiredReadAction;
-import consulo.dotnet.psi.DotNetCodeBlockOwner;
-import consulo.dotnet.psi.DotNetCompositeStatement;
-import consulo.dotnet.psi.DotNetExpression;
-import consulo.dotnet.psi.DotNetFieldDeclaration;
-import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
-import consulo.dotnet.psi.DotNetModifierList;
-import consulo.dotnet.psi.DotNetStatement;
-import consulo.dotnet.psi.DotNetXXXAccessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -25,7 +13,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
+import consulo.annotations.RequiredReadAction;
+import consulo.dotnet.psi.*;
 import consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -93,7 +86,7 @@ public class DotNetLineBreakpointTypeResolver implements XLineBreakpointTypeReso
 					element = element.getParent();
 				}
 
-				if(parent instanceof DotNetLikeMethodDeclaration || parent instanceof DotNetXXXAccessor)
+				if(parent instanceof DotNetLikeMethodDeclaration || parent instanceof DotNetXAccessor)
 				{
 					if(parent.getTextRange().getEndOffset() >= document.getLineEndOffset(line))
 					{
