@@ -16,7 +16,6 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import javax.annotation.Nonnull;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -27,6 +26,8 @@ import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import consulo.dotnet.resolve.DotNetTypeResolveResult;
 import consulo.msil.lang.psi.MsilClassEntry;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -73,6 +74,12 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 		}
 
 		return DotNetTypeResolveResult.EMPTY;
+	}
+
+	@Override
+	public boolean isEqualToVmQName(@Nonnull String vmQName)
+	{
+		return vmQName.equals(myRef);
 	}
 
 	@Override

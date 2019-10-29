@@ -16,11 +16,11 @@
 
 package consulo.dotnet.resolve;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -149,6 +149,12 @@ public interface DotNetTypeRef
 	@Deprecated
 	String getQualifiedText();
 
+	/**
+	 * @return true if type ref equal to `vmQName`. It's optimize version. If this method failed - need call #resolve()
+	 */
+	default boolean isEqualToVmQName(@Nonnull String vmQName) {
+		return false;
+	}
 
 	@RequiredReadAction
 	@Nonnull

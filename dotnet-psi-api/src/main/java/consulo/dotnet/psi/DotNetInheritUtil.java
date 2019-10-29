@@ -16,17 +16,18 @@
 
 package consulo.dotnet.psi;
 
-import gnu.trove.THashSet;
-
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.resolve.DotNetTypeRef;
+import gnu.trove.THashSet;
+
+import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -37,45 +38,54 @@ public class DotNetInheritUtil
 	@RequiredReadAction
 	public static boolean isStruct(DotNetTypeDeclaration typeDeclaration)
 	{
-		return isInheritor(typeDeclaration, DotNetTypes.System.ValueType, true);
+		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isInheritor(typeDeclaration, DotNetTypes.System.ValueType, false), PsiModificationTracker
+				.MODIFICATION_COUNT));
 	}
 
 	@RequiredReadAction
 	public static boolean isAttribute(DotNetTypeDeclaration typeDeclaration)
 	{
-		return isInheritor(typeDeclaration, DotNetTypes.System.Attribute, true);
+		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isInheritor(typeDeclaration, DotNetTypes.System.Attribute, true), PsiModificationTracker
+				.MODIFICATION_COUNT));
 	}
 
 	@RequiredReadAction
 	public static boolean isException(DotNetTypeDeclaration typeDeclaration)
 	{
-		return isParentOrSelf(DotNetTypes.System.Exception, typeDeclaration, true);
+		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isInheritor(typeDeclaration, DotNetTypes.System.Exception, true), PsiModificationTracker
+				.MODIFICATION_COUNT));
 	}
 
 	@RequiredReadAction
 	public static boolean isEnum(DotNetTypeDeclaration typeDeclaration)
 	{
-		return isInheritor(typeDeclaration, DotNetTypes.System.Enum, true);
+		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isInheritor(typeDeclaration, DotNetTypes.System.Enum, false), PsiModificationTracker
+				.MODIFICATION_COUNT));
 	}
 
 	@RequiredReadAction
 	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, @Nonnull String other, boolean deep)
 	{
-		return isInheritorImpl(typeDeclaration, other, deep, new THashSet<String>());
+		return isInheritorImpl(typeDeclaration, other, deep, new THashSet<>());
 	}
 
 	@RequiredReadAction
 	private static boolean isInheritorImpl(@Nonnull DotNetTypeDeclaration typeDeclaration,
-			@Nonnull String other,
-			boolean deep,
-			@Nonnull Set<String> alreadyProcessedTypes)
+										   @Nonnull String otherVmQName,
+										   boolean deep,
+										   @Nonnull Set<String> alreadyProcessedTypes)
 	{
 		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
 		if(anExtends.length > 0)
 		{
-			for(DotNetTypeRef dotNetType : anExtends)
+			for(DotNetTypeRef typeRef : anExtends)
 			{
-				PsiElement psiElement = dotNetType.resolve().getElement();
+				if(typeRef.isEqualToVmQName(otherVmQName))
+				{
+					return true;
+				}
+
+				PsiElement psiElement = typeRef.resolve().getElement();
 				if(psiElement instanceof DotNetTypeDeclaration)
 				{
 					if(psiElement.isEquivalentTo(typeDeclaration))
@@ -84,7 +94,7 @@ public class DotNetInheritUtil
 					}
 
 					String vmQName = ((DotNetTypeDeclaration) psiElement).getVmQName();
-					if(Comparing.equal(vmQName, other))
+					if(Comparing.equal(vmQName, otherVmQName))
 					{
 						return true;
 					}
@@ -93,7 +103,7 @@ public class DotNetInheritUtil
 					{
 						if(alreadyProcessedTypes.add(vmQName))
 						{
-							if(isInheritorImpl((DotNetTypeDeclaration) psiElement, other, true, alreadyProcessedTypes))
+							if(isInheritorImpl((DotNetTypeDeclaration) psiElement, otherVmQName, true, alreadyProcessedTypes))
 							{
 								return true;
 							}
