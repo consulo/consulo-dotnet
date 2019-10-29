@@ -16,19 +16,20 @@
 
 package consulo.dotnet.resolve.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
+import com.intellij.util.CommonProcessors;
 import consulo.annotations.RequiredReadAction;
 import consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
-import consulo.dotnet.resolve.GlobalSearchScopeFilter;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -76,15 +77,13 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 	}
 
 	private static boolean isFoundAnyOneElement(@Nonnull Project project,
-			@Nonnull final String indexKey,
-			@Nonnull StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
-			@Nonnull GlobalSearchScope scope)
+												@Nonnull final String indexKey,
+												@Nonnull StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
+												@Nonnull GlobalSearchScope scope)
 	{
-		return !StubIndex.getInstance().processAllKeys(keyForIndex, s ->
-		{
-			ProgressManager.checkCanceled();
-			return !indexKey.equals(s);
-		}, scope, new GlobalSearchScopeFilter(scope));
+		CommonProcessors.FindFirstProcessor<PsiElement> processor = new CommonProcessors.FindFirstProcessor<>();
+		StubIndex.getInstance().processElements(keyForIndex, indexKey, project, scope, DotNetQualifiedElement.class, processor);
+		return processor.getFoundValue() != null;
 	}
 
 	@Nonnull

@@ -16,8 +16,6 @@
 
 package consulo.msil.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import consulo.dotnet.lang.psi.impl.DotNetPsiCountUtil;
@@ -27,6 +25,8 @@ import consulo.msil.lang.psi.MsilParameter;
 import consulo.msil.lang.psi.MsilParameterList;
 import consulo.msil.lang.psi.MsilStubElements;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilParameterListStub;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -77,6 +77,6 @@ public class MsilParameterListImpl extends MsilStubElementImpl<MsilParameterList
 	@Override
 	public void accept(MsilVisitor visitor)
 	{
-
+		visitor.visitElement(this);
 	}
 }
