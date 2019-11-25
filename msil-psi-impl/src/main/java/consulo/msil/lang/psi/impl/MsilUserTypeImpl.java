@@ -22,7 +22,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetReferenceExpression;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.msil.lang.psi.MsilTokenSets;

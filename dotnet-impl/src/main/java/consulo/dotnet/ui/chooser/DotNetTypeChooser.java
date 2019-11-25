@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetShortNameSearcher;
 import com.intellij.ide.util.AbstractTreeClassChooserDialog;

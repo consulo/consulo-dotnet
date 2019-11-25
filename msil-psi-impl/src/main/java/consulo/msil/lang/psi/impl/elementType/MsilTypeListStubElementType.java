@@ -30,7 +30,7 @@ import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.StringRef;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetType;
 import consulo.dotnet.psi.DotNetTypeList;
 import consulo.dotnet.psi.DotNetTypeWithTypeArguments;

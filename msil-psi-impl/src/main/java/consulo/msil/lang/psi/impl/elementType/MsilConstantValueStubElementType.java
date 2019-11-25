@@ -13,7 +13,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.StringRef;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.msil.lang.psi.MsilConstantValue;
 import consulo.msil.lang.psi.MsilTokens;
 import consulo.msil.lang.psi.impl.MsilConstantValueImpl;

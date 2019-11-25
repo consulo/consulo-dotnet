@@ -32,7 +32,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
@@ -40,7 +40,7 @@ import consulo.dotnet.debugger.DotNetEditorsProvider;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.util.ArrayUtil2;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

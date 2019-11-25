@@ -18,7 +18,7 @@ package consulo.dotnet.debugger;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 

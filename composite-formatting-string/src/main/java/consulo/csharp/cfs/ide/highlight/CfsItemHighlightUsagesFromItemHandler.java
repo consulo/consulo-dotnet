@@ -19,7 +19,7 @@ package consulo.csharp.cfs.ide.highlight;
 import java.util.Collections;
 import java.util.List;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.csharp.cfs.psi.CfsFile;
 import consulo.csharp.cfs.psi.CfsItem;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;

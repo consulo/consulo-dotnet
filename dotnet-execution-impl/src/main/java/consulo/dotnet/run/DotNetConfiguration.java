@@ -49,7 +49,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.xdebugger.XDebugSession;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.compiler.DotNetMacroUtil;
 import consulo.dotnet.debugger.DotNetConfigurationWithDebug;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;

@@ -16,16 +16,14 @@
 
 package consulo.dotnet.module.extension;
 
-import java.util.List;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkType;
+import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
+import consulo.module.extension.ModuleInheritableNamedPointer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
-import consulo.annotations.Immutable;
-import consulo.annotations.InheritImmutable;
-import consulo.module.extension.ModuleInheritableNamedPointer;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -47,8 +45,6 @@ public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtensi
 	@Nonnull
 	Class<? extends SdkType> getSdkTypeClass();
 
-	@InheritImmutable
-	@Immutable
 	@Nonnull
 	List<String> getVariables();
 

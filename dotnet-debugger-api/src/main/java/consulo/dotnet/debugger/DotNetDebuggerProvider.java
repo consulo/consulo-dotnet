@@ -32,7 +32,7 @@ import com.intellij.util.Consumer;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XNamedValue;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.psi.DotNetReferenceExpression;
 import consulo.dotnet.psi.DotNetType;

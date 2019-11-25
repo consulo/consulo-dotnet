@@ -21,7 +21,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetXAccessor;
 import consulo.msil.lang.psi.MsilXAcessor;
 import consulo.msil.lang.psi.impl.MsilXAccessorImpl;

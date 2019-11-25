@@ -18,7 +18,7 @@ package consulo.msil.lang.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.dotnet.psi.DotNetType;

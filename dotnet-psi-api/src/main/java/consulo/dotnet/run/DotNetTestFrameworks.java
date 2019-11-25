@@ -16,11 +16,11 @@
 
 package consulo.dotnet.run;
 
-import javax.annotation.Nonnull;
-
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

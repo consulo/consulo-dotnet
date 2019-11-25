@@ -16,15 +16,15 @@
 
 package consulo.dotnet.module.extension;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.dotnet.compiler.DotNetCompileFailedException;
-import consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.dotnet.compiler.DotNetCompileFailedException;
+import consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
 import consulo.module.extension.ModuleExtension;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

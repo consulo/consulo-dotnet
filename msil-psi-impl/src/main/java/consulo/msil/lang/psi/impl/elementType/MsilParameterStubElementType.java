@@ -25,7 +25,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.msil.lang.psi.MsilParameter;
 import consulo.msil.lang.psi.impl.MsilParameterImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilParameterStub;

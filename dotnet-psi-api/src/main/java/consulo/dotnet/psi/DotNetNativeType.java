@@ -18,7 +18,7 @@ package consulo.dotnet.psi;
 
 import javax.annotation.Nonnull;
 import com.intellij.psi.tree.IElementType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
 /**

@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ConcurrentMultiMap;
 import com.intellij.util.containers.MultiMap;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.msil.lang.psi.MsilFile;
 
 import javax.annotation.Nonnull;

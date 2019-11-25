@@ -17,7 +17,7 @@
 package consulo.dotnet.run;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;

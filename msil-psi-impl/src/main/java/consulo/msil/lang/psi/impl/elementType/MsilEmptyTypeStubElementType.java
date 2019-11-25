@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NonNls;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetType;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 

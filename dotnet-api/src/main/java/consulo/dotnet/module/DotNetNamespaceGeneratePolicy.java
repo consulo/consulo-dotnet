@@ -1,18 +1,19 @@
 package consulo.dotnet.module;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import consulo.annotations.Exported;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -82,7 +83,7 @@ public abstract class DotNetNamespaceGeneratePolicy
 
 	@Nullable
 	@RequiredReadAction
-	@Exported
+	@UsedInPlugin
 	public String calculateNamespace(@Nonnull PsiDirectory directory)
 	{
 		String namespace = calculateDirtyNamespace(directory);

@@ -16,9 +16,6 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
@@ -34,8 +31,11 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetParameter;
 import consulo.dotnet.psi.DotNetParameterListOwner;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

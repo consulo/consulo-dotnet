@@ -29,7 +29,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.dotnet.debugger.DotNetConfigurationWithDebug;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.execution.DebugConnectionInfo;

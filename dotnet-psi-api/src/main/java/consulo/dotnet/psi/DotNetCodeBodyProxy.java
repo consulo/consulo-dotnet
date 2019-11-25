@@ -1,7 +1,7 @@
 package consulo.dotnet.psi;
 
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nullable;
 

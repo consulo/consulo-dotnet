@@ -17,7 +17,7 @@
 package consulo.msil.lang.psi.impl.type;
 
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import consulo.dotnet.resolve.DotNetTypeResolveResult;

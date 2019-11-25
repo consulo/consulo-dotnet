@@ -16,11 +16,10 @@
 
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nonnull;
-
-import consulo.annotations.Immutable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetUserType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,7 +32,6 @@ public interface MsilUserType extends DotNetUserType
 		CLASS,
 		STRUCT;
 
-		@Immutable
 		public static final Target[] VALUES = values();
 	}
 

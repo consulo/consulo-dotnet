@@ -1,17 +1,5 @@
 package consulo.msil.lang.stubbing;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.joou.UByte;
-import org.joou.UInteger;
-import org.joou.UShort;
 import com.google.common.primitives.Longs;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
@@ -19,15 +7,10 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import consulo.annotations.Exported;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
-import consulo.dotnet.psi.DotNetAttributeUtil;
-import consulo.dotnet.psi.DotNetExpression;
-import consulo.dotnet.psi.DotNetNamedElement;
-import consulo.dotnet.psi.DotNetParameter;
-import consulo.dotnet.psi.DotNetType;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.psi.*;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.internal.dotnet.asm.STypeSignatureParser;
@@ -39,21 +22,24 @@ import consulo.internal.dotnet.asm.signature.TypeSignature;
 import consulo.internal.dotnet.asm.signature.TypeSignatureParser;
 import consulo.internal.dotnet.asm.signature.ValueTypeSignature;
 import consulo.internal.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
-import consulo.msil.lang.psi.MsilConstantValue;
-import consulo.msil.lang.psi.MsilCustomAttribute;
-import consulo.msil.lang.psi.MsilCustomAttributeSignature;
-import consulo.msil.lang.psi.MsilFieldEntry;
-import consulo.msil.lang.psi.MsilTokens;
+import consulo.msil.lang.psi.*;
 import consulo.msil.lang.psi.impl.MsilNativeTypeImpl;
 import consulo.msil.lang.psi.impl.MsilUserTypeImpl;
 import consulo.msil.lang.stubbing.values.MsiCustomAttributeValue;
 import consulo.msil.lang.stubbing.values.MsilCustomAttributeEnumValue;
+import org.joou.UByte;
+import org.joou.UInteger;
+import org.joou.UShort;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 10.07.2015
  */
-@Exported
+@UsedInPlugin
 public class MsilCustomAttributeStubber
 {
 	private static final Logger LOGGER = Logger.getInstance(MsilCustomAttributeStubber.class);

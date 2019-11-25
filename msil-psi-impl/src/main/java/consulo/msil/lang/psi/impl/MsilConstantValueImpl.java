@@ -8,7 +8,7 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiUtilCore;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.msil.lang.psi.MsilConstantValue;
 import consulo.msil.lang.psi.MsilTokens;

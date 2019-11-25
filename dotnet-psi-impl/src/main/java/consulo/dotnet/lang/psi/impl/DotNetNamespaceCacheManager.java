@@ -36,7 +36,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IdFilter;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;

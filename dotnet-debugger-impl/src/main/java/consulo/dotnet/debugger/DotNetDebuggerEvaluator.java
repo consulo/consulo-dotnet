@@ -28,7 +28,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 
 /**

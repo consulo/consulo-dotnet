@@ -18,7 +18,7 @@ package consulo.msil.lang.psi.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetElement;
 import consulo.dotnet.util.ArrayUtil2;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;

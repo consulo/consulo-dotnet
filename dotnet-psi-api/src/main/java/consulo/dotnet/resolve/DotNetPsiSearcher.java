@@ -16,21 +16,20 @@
 
 package consulo.dotnet.resolve;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.Immutable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -51,7 +50,6 @@ public abstract class DotNetPsiSearcher
 		STRUCT,
 		UNKNOWN;
 
-		@Immutable
 		@Nonnull
 		public static TypeResoleKind[] VALUES = values();
 	}

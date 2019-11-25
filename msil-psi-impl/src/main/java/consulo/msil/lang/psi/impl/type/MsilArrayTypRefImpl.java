@@ -18,7 +18,7 @@ package consulo.msil.lang.psi.impl.type;
 
 import javax.annotation.Nonnull;
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetArrayTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;

@@ -16,35 +16,23 @@
 
 package consulo.msil.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
-import consulo.dotnet.psi.DotNetAttribute;
-import consulo.dotnet.psi.DotNetGenericParameterList;
-import consulo.dotnet.psi.DotNetModifier;
-import consulo.dotnet.psi.DotNetModifierList;
-import consulo.dotnet.psi.DotNetTypeList;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.dotnet.psi.*;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.DotNetTypeRef;
-import consulo.msil.lang.psi.MsilClassEntry;
-import consulo.msil.lang.psi.MsilCustomAttribute;
-import consulo.msil.lang.psi.MsilGenericParameter;
-import consulo.msil.lang.psi.MsilMethodEntry;
-import consulo.msil.lang.psi.MsilStubElements;
-import consulo.msil.lang.psi.MsilTokenSets;
-import consulo.msil.lang.psi.MsilTokens;
-import consulo.msil.lang.psi.MsilUserType;
+import consulo.msil.lang.psi.*;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilGenericParameterStub;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

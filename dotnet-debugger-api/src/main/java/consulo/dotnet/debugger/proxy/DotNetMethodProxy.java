@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.light.LightMethodProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.util.pointers.Named;

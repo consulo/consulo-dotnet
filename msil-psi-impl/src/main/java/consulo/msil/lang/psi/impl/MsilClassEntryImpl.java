@@ -16,15 +16,6 @@
 
 package consulo.msil.lang.psi.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -38,30 +29,23 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.lang.psi.impl.DotNetTypeRefCacheUtil;
-import consulo.dotnet.psi.DotNetFieldDeclaration;
-import consulo.dotnet.psi.DotNetGenericParameter;
-import consulo.dotnet.psi.DotNetGenericParameterList;
-import consulo.dotnet.psi.DotNetInheritUtil;
-import consulo.dotnet.psi.DotNetModifier;
-import consulo.dotnet.psi.DotNetModifierList;
-import consulo.dotnet.psi.DotNetNamedElement;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.psi.DotNetTypeList;
+import consulo.dotnet.psi.*;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
-import consulo.msil.lang.psi.MsilClassEntry;
-import consulo.msil.lang.psi.MsilCustomAttribute;
-import consulo.msil.lang.psi.MsilStubElements;
-import consulo.msil.lang.psi.MsilStubTokenSets;
-import consulo.msil.lang.psi.MsilTokenSets;
-import consulo.msil.lang.psi.MsilTokens;
-import consulo.msil.lang.psi.MsilTypeParameterAttributeList;
+import consulo.msil.lang.psi.*;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import consulo.msil.lang.psi.impl.type.MsilNativeTypeRefImpl;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL

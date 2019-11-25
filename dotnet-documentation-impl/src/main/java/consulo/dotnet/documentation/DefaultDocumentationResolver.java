@@ -31,7 +31,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.*;
 import consulo.dotnet.resolve.DotNetArrayTypeRef;
 import consulo.dotnet.resolve.DotNetPointerTypeRef;

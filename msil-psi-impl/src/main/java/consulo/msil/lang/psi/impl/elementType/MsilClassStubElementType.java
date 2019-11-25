@@ -22,7 +22,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.msil.lang.psi.MsilClassEntry;

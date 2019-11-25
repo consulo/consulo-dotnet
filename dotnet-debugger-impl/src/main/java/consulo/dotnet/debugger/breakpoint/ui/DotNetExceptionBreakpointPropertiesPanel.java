@@ -16,17 +16,17 @@
 
 package consulo.dotnet.debugger.breakpoint.ui;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.ValueComponent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -32,7 +32,7 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.searches.ExtensibleQueryFactory;
 import com.intellij.util.*;
 import com.intellij.util.containers.Stack;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.dotnet.psi.DotNetTypeDeclaration;

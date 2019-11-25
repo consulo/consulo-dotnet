@@ -36,7 +36,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.psi.DotNetQualifiedElement;

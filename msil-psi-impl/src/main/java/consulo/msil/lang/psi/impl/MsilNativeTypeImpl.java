@@ -25,7 +25,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.tree.IElementType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetNativeType;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.msil.lang.psi.MsilTokenSets;

@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.msil.lang.psi.MsilCustomAttributeSignature;
 import consulo.msil.lang.psi.impl.MsilCustomAttributeSignatureImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilCustomAttributeSignatureStub;

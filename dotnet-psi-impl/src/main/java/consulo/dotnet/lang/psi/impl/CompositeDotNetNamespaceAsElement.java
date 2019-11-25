@@ -31,7 +31,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 
 /**

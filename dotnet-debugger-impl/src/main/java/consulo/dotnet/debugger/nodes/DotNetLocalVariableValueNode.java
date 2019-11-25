@@ -18,8 +18,8 @@ package consulo.dotnet.debugger.nodes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetVariable;
 import com.intellij.openapi.util.Ref;

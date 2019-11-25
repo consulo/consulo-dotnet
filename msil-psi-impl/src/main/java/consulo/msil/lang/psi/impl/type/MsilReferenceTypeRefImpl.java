@@ -19,7 +19,7 @@ package consulo.msil.lang.psi.impl.type;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.DotNetTypeRef;

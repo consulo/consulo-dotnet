@@ -26,7 +26,7 @@ import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetNativeType;
 import consulo.msil.lang.psi.MsilTokenSets;
 import consulo.msil.lang.psi.impl.MsilNativeTypeImpl;

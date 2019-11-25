@@ -26,7 +26,7 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
 import com.intellij.util.containers.HashMap;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.DotNetTypeList;
 import consulo.dotnet.psi.search.searches.DirectTypeInheritorsSearch;

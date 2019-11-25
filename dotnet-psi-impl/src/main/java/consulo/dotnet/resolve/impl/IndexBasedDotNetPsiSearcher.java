@@ -22,7 +22,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.util.CommonProcessors;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;

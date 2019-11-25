@@ -31,7 +31,7 @@ import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;

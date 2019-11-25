@@ -24,7 +24,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.msil.lang.psi.MsilMethodGenericType;
 import consulo.msil.lang.psi.impl.MsilMethodGenericTypeImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilMethodGenericTypeStub;

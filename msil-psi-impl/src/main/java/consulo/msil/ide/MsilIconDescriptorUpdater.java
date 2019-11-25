@@ -7,7 +7,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.BitUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.DotNetInheritUtil;
 import consulo.dotnet.psi.DotNetModifierListOwner;

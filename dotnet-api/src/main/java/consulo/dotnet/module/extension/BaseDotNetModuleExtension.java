@@ -16,23 +16,22 @@
 
 package consulo.dotnet.module.extension;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.jdom.Element;
-import consulo.dotnet.DotNetTarget;
-import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.dotnet.DotNetTarget;
+import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import consulo.module.extension.ModuleExtension;
 import consulo.roots.ModuleRootLayer;
+import org.jdom.Element;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL

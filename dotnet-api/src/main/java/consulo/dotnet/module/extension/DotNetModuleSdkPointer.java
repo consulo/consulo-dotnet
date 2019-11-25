@@ -16,22 +16,21 @@
 
 package consulo.dotnet.module.extension;
 
-import javax.annotation.Nonnull;
-
-import org.jdom.Element;
-
-import javax.annotation.Nullable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.bundle.SdkUtil;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.util.pointers.NamedPointer;
+import org.jdom.Element;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

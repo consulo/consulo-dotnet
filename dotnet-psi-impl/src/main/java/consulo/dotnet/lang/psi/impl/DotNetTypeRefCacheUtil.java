@@ -16,11 +16,6 @@
 
 package consulo.dotnet.lang.psi.impl;
 
-import java.lang.reflect.Modifier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolderEx;
 import com.intellij.psi.PsiElement;
@@ -30,9 +25,13 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.BitUtil;
 import com.intellij.util.NotNullFunction;
-import consulo.annotations.Exported;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetTypeRef;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Modifier;
 
 /**
  * @author VISTALL
@@ -64,7 +63,7 @@ public class DotNetTypeRefCacheUtil
 
 	private static final Key<CachedValue<DotNetTypeRef>> ourDefaultCacheKey = Key.create("DotNetTypeRefCacheUtil.ourDefaultCacheKey");
 
-	@Exported
+	@UsedInPlugin
 	@Nonnull
 	@RequiredReadAction
 	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(@Nonnull E element, @Nonnull final NotNullFunction<E, DotNetTypeRef> resolver)
@@ -72,7 +71,7 @@ public class DotNetTypeRefCacheUtil
 		return cacheTypeRef(ourDefaultCacheKey, element, resolver);
 	}
 
-	@Exported
+	@UsedInPlugin
 	@Nonnull
 	@RequiredReadAction
 	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(@Nonnull Key<CachedValue<DotNetTypeRef>> key, @Nonnull E element, @Nonnull final NotNullFunction<E, DotNetTypeRef> resolver)
@@ -80,7 +79,7 @@ public class DotNetTypeRefCacheUtil
 		return cacheTypeRef(key, element, resolver, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
 	}
 
-	@Exported
+	@UsedInPlugin
 	@Nonnull
 	@RequiredReadAction
 	public static <E extends PsiElement> DotNetTypeRef localCacheTypeRef(@Nonnull E element, @Nonnull final NotNullFunction<E, DotNetTypeRef> resolver)
@@ -88,7 +87,7 @@ public class DotNetTypeRefCacheUtil
 		return localCacheTypeRef(ourDefaultCacheKey, element, resolver);
 	}
 
-	@Exported
+	@UsedInPlugin
 	@Nonnull
 	@RequiredReadAction
 	public static <E extends PsiElement> DotNetTypeRef localCacheTypeRef(@Nonnull Key<CachedValue<DotNetTypeRef>> key, @Nonnull E element, @Nonnull final NotNullFunction<E, DotNetTypeRef> resolver)
@@ -96,7 +95,7 @@ public class DotNetTypeRefCacheUtil
 		return cacheTypeRef(key, element, resolver, PsiModificationTracker.MODIFICATION_COUNT);
 	}
 
-	@Exported
+	@UsedInPlugin
 	@Nonnull
 	@RequiredReadAction
 	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(@Nonnull Key<CachedValue<DotNetTypeRef>> key,
@@ -107,7 +106,7 @@ public class DotNetTypeRefCacheUtil
 		return getResultCacheResultImpl(key, element, resolver, modifierKeys);
 	}
 
-	@Exported
+	@UsedInPlugin
 	@Nonnull
 	@RequiredReadAction
 	private static <E extends PsiElement> DotNetTypeRef getResultCacheResultImpl(@Nonnull Key<CachedValue<DotNetTypeRef>> cachedValueKey,

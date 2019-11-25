@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.msil.lang.psi.MsilCustomAttributeSignature;
 import consulo.msil.lang.psi.MsilTokens;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilCustomAttributeSignatureStub;

@@ -16,18 +16,18 @@
 
 package consulo.msil.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.annotations.RequiredReadAction;
-import consulo.annotations.RequiredWriteAction;
-import consulo.dotnet.psi.DotNetReferenceExpression;
-import consulo.dotnet.resolve.DotNetTypeRef;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveResult;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.dotnet.psi.DotNetReferenceExpression;
+import consulo.dotnet.resolve.DotNetTypeRef;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

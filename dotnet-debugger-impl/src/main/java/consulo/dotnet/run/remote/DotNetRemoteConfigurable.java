@@ -16,8 +16,6 @@
 
 package consulo.dotnet.run.remote;
 
-import javax.annotation.Nullable;
-
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -26,9 +24,11 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
-import consulo.ui.RequiredUIAccess;
 import consulo.ui.TextBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.util.FormBuilder;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -32,7 +32,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;

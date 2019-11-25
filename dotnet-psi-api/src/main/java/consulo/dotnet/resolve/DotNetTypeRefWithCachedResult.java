@@ -19,7 +19,7 @@ package consulo.dotnet.resolve;
 import javax.annotation.Nonnull;
 
 import com.intellij.openapi.project.Project;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 /**
  * @author VISTALL

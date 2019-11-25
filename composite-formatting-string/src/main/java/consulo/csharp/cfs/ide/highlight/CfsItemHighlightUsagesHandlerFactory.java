@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.csharp.cfs.psi.CfsFile;
 import consulo.csharp.cfs.psi.CfsItem;
 import consulo.dotnet.psi.DotNetCallArgumentList;
