@@ -16,34 +16,28 @@
 
 package consulo.dotnet.compiler;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.LibraryOrderEntry;
-import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
-import com.intellij.openapi.roots.ModuleOrderEntry;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
 import consulo.dotnet.DotNetTarget;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryImpl;
 import consulo.dotnet.roots.orderEntry.DotNetRootPolicy;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -51,7 +45,7 @@ import consulo.vfs.util.ArchiveVfsUtil;
  */
 public class DotNetCompilerUtil
 {
-	@Exported
+	@UsedInPlugin
 	public static final Condition<OrderEntry> ACCEPT_ALL = Conditions.alwaysFalse();
 	public static final Condition<OrderEntry> SKIP_STD_LIBRARIES = orderEntry -> orderEntry instanceof DotNetLibraryOrderEntryImpl;
 
