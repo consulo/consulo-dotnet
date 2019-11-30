@@ -14,16 +14,14 @@
   ~ limitations under the License.
   -->
 
-<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
+<consulo-plugin>
 	<id>consulo.dotnet</id>
 	<name>.NET API</name>
 	<version>SNAPSHOT</version>
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
 	<depends config-file="com.intellij.xml.xml" optional="true">com.intellij.xml</depends>
 
-	<xi:include href="/META-INF/CompositeFormattingString.xml" xpointer="xpointer(/idea-plugin/*)">
-		<xi:fallback/>
-	</xi:include>
+	<import path="/META-INF/CompositeFormattingString.xml" />
 
 	<extensionPoints>
 		<extensionPoint name="debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
@@ -142,4 +140,4 @@
 
 		<projectService serviceImplementation="consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent" lazy="false" />
 	</extensions>
-</idea-plugin>
+</consulo-plugin>

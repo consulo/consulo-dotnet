@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<idea-plugin>
+<consulo-plugin>
 	<extensions defaultExtensionNs="com.intellij">
 		<colorSettingsPage implementation="consulo.csharp.cfs.ide.highlight.CfsColorSettingsPage" />
 		<highlightUsagesHandlerFactory implementation="consulo.csharp.cfs.ide.highlight.CfsItemHighlightUsagesHandlerFactory"/>
@@ -26,4 +26,4 @@
 
 		<lang.defineVersion language="CFS" implementationClass="consulo.csharp.cfs.lang.IndexCfsLanguageVersion" />
 	</extensions>
-</idea-plugin>
+</consulo-plugin>
