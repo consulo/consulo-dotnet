@@ -16,13 +16,6 @@
 
 package consulo.dotnet.compiler;
 
-import gnu.trove.THashMap;
-
-import java.io.File;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -30,10 +23,15 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.macro.TargetFileExtensionMacro;
+import consulo.util.dataholder.Key;
+import gnu.trove.THashMap;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.Map;
 
 /**
  * @author VISTALL

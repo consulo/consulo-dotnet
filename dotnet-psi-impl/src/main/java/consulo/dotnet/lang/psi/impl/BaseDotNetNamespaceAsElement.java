@@ -19,7 +19,6 @@ package consulo.dotnet.lang.psi.impl;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
@@ -35,6 +34,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetTypeTransformer;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -47,8 +47,8 @@ import java.util.*;
  */
 public abstract class BaseDotNetNamespaceAsElement extends LightElement implements DotNetNamespaceAsElement
 {
-	public static Key<GlobalSearchScope> RESOLVE_SCOPE = Key.create("resolve.scope");
-	public static Key<ChildrenFilter> FILTER = Key.create("namespace.children.filter");
+	public static final Key<GlobalSearchScope> RESOLVE_SCOPE = Key.create("resolve.scope");
+	public static final Key<ChildrenFilter> FILTER = Key.create("namespace.children.filter");
 
 	protected Project myProject;
 	protected String myQName;

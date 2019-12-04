@@ -16,8 +16,6 @@
 
 package consulo.msil.lang;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
@@ -34,6 +32,8 @@ import consulo.msil.lang.parser.MsilParser;
 import consulo.msil.lang.psi.MsilStubElements;
 import consulo.msil.lang.psi.MsilTokenSets;
 import consulo.msil.lang.psi.impl.MsilFileImpl;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -94,12 +94,5 @@ public class MsilParserDefinition implements ParserDefinition
 	public PsiFile createFile(FileViewProvider fileViewProvider)
 	{
 		return new MsilFileImpl(fileViewProvider);
-	}
-
-	@Nonnull
-	@Override
-	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode astNode, ASTNode astNode2)
-	{
-		return SpaceRequirements.MAY;
 	}
 }

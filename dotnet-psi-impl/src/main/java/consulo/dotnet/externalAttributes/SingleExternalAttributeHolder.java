@@ -16,12 +16,12 @@
 
 package consulo.dotnet.externalAttributes;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeNodeImpl;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeSimpleNodeImpl;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenNodeImpl;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import org.jdom.Document;
 import org.jdom.Element;

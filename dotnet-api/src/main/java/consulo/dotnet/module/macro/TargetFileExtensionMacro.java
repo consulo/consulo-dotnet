@@ -5,8 +5,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.Key;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.util.dataholder.Key;
 
 /**
  * @author VISTALL
@@ -14,7 +14,7 @@ import consulo.dotnet.module.extension.DotNetModuleExtension;
  */
 public class TargetFileExtensionMacro extends Macro
 {
-	public static Key<Boolean> DEBUG_SYMBOLS = Key.create("debug.symbols");
+	public static final Key<Boolean> DEBUG_SYMBOLS = Key.create("debug.symbols");
 
 	@Override
 	public String getName()

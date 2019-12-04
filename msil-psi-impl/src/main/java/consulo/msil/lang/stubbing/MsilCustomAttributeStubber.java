@@ -1,7 +1,6 @@
 package consulo.msil.lang.stubbing;
 
 import com.google.common.primitives.Longs;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.PsiElement;
@@ -22,6 +21,7 @@ import consulo.internal.dotnet.asm.signature.TypeSignature;
 import consulo.internal.dotnet.asm.signature.TypeSignatureParser;
 import consulo.internal.dotnet.asm.signature.ValueTypeSignature;
 import consulo.internal.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
+import consulo.logging.Logger;
 import consulo.msil.lang.psi.*;
 import consulo.msil.lang.psi.impl.MsilNativeTypeImpl;
 import consulo.msil.lang.psi.impl.MsilUserTypeImpl;
