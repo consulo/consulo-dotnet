@@ -16,16 +16,17 @@
 
 package consulo.dotnet.debugger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
+import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -33,13 +34,13 @@ import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
  */
 public class DotNetVirtualMachineUtil
 {
-	private static final Logger LOGGER = Logger.getInstance(DotNetVirtualMachineUtil.class);
+	private static final Logger LOG = Logger.getInstance(DotNetVirtualMachineUtil.class);
 
 	public static void checkCallForUIThread()
 	{
-		if(ApplicationManager.getApplication().isDispatchThread())
+		if(UIAccess.isUIThread())
 		{
-			LOGGER.error("Calls from UI thread is prohibited", new Exception());
+			LOG.error(new IllegalStateException("Calls from UI thread is prohibited"));
 		}
 	}
 

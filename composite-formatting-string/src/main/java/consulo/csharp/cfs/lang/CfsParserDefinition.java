@@ -54,11 +54,4 @@ public class CfsParserDefinition extends LanguageVersionableParserDefinition
 	{
 		return new CfsFile(fileViewProvider);
 	}
-
-	@Nonnull
-	@Override
-	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode astNode, ASTNode astNode2)
-	{
-		return SpaceRequirements.MAY;
-	}
 }

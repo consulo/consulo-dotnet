@@ -17,7 +17,7 @@
 package consulo.dotnet.run;
 
 import consulo.dotnet.execution.DebugConnectionInfo;
-import com.intellij.openapi.util.Key;
+import consulo.util.dataholder.Key;
 
 /**
  * @author VISTALL

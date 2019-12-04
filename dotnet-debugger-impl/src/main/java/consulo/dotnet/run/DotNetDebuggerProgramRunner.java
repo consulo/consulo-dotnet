@@ -16,8 +16,6 @@
 
 package consulo.dotnet.run;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
@@ -26,13 +24,15 @@ import com.intellij.execution.runners.DefaultProgramRunner;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.util.UserDataHolder;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.dotnet.debugger.DotNetConfigurationWithDebug;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
 import consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.UserDataHolder;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

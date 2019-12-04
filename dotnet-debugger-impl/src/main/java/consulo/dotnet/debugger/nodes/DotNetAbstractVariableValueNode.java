@@ -16,18 +16,10 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XValueChildrenList;
-import com.intellij.xdebugger.frame.XValueModifier;
-import com.intellij.xdebugger.frame.XValueNode;
-import com.intellij.xdebugger.frame.XValuePlace;
+import com.intellij.xdebugger.frame.*;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
@@ -37,13 +29,12 @@ import consulo.dotnet.debugger.proxy.DotNetErrorValueProxyImpl;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetErrorValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.dotnet.debugger.proxy.value.*;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.UserDataHolderBase;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
