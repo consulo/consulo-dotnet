@@ -57,7 +57,11 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 			{
 				for(VFileEvent event : events)
 				{
-					myFiles.remove(event.getFile());
+					VirtualFile file = event.getFile();
+					if(file != null)
+					{
+						myFiles.remove(file);
+					}
 				}
 			}
 		});
