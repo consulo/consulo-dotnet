@@ -38,6 +38,9 @@ public interface DotNetVirtualMachineProxy
 	@Nullable
 	DotNetTypeProxy findType(@Nonnull Project project, @Nonnull String vmQName, @Nonnull VirtualFile virtualFile);
 
+	@Nullable
+	DotNetTypeProxy findTypeInCorlib(@Nonnull String vmQName);
+
 	void invoke(@Nonnull Runnable runnable);
 
 	@Nonnull
