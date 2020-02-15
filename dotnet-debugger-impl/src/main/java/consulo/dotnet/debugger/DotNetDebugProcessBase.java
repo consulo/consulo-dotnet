@@ -1,5 +1,11 @@
 package consulo.dotnet.debugger;
 
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.process.ProcessHandler;
@@ -8,6 +14,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -22,11 +29,12 @@ import consulo.dotnet.debugger.breakpoint.DotNetMethodBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
+import consulo.dotnet.debugger.nodes.logicView.ArrayDotNetLogicValueView;
+import consulo.dotnet.debugger.nodes.logicView.DefaultDotNetLogicValueView;
+import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
+import consulo.dotnet.debugger.nodes.logicView.EnumerableDotNetLogicValueView;
+import consulo.dotnet.debugger.nodes.logicView.StringDotNetLogicValueView;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -40,18 +48,33 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	private final RunProfile myRunProfile;
 	protected final XDebuggerManager myDebuggerManager;
 
+	private NotNullLazyValue<DotNetLogicValueView[]> myLogicValueViewsLazy;
+
 	public DotNetDebugProcessBase(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile)
 	{
 		super(session);
 
 		myRunProfile = runProfile;
 		myDebuggerManager = XDebuggerManager.getInstance(session.getProject());
+
+		myLogicValueViewsLazy = NotNullLazyValue.createValue(this::createLogicValueViews);
 	}
 
 	@Nonnull
 	public DotNetDebugContext createDebugContext(@Nonnull DotNetVirtualMachineProxy proxy, @Nullable XBreakpoint<?> breakpoint)
 	{
-		return new DotNetDebugContext(getSession().getProject(), proxy, myRunProfile, getSession(), breakpoint);
+		return new DotNetDebugContext(getSession().getProject(), proxy, myRunProfile, getSession(), breakpoint, myLogicValueViewsLazy.getValue());
+	}
+
+	@Nonnull
+	protected DotNetLogicValueView[] createLogicValueViews()
+	{
+		return new DotNetLogicValueView[]{
+				new ArrayDotNetLogicValueView(),
+				new StringDotNetLogicValueView(),
+				new EnumerableDotNetLogicValueView(),
+				new DefaultDotNetLogicValueView()
+		};
 	}
 
 	public abstract void start();

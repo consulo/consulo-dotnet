@@ -16,17 +16,18 @@
 
 package consulo.dotnet.debugger.nodes.logicView;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
 import com.intellij.xdebugger.frame.XCompositeNode;
+import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.nodes.DotNetAbstractVariableValueNode;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.util.dataholder.UserDataHolderBase;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -41,7 +42,7 @@ public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 	}
 
 	public abstract void computeChildrenImpl(@Nonnull DotNetDebugContext debugContext,
-			@Nonnull DotNetAbstractVariableValueNode parentNode,
+			@Nonnull XNamedValue parentNode,
 			@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@Nonnull XValueChildrenList childrenList);
@@ -49,7 +50,7 @@ public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 	@Override
 	public void computeChildren(@Nonnull UserDataHolderBase dataHolder,
 			@Nonnull DotNetDebugContext debugContext,
-			@Nonnull DotNetAbstractVariableValueNode parentNode,
+			@Nonnull XNamedValue parentNode,
 			@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@Nonnull XCompositeNode node)

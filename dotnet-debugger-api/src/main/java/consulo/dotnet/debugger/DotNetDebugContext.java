@@ -18,6 +18,8 @@ package consulo.dotnet.debugger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+
 import com.intellij.execution.configurations.ModuleRunProfile;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.openapi.module.Module;
@@ -26,6 +28,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 
 /**
@@ -39,11 +42,25 @@ public class DotNetDebugContext
 	private final RunProfile myRunProfile;
 	private final XDebugSession mySession;
 	private final XBreakpoint<?> myBreakpoint;
-	private final NotNullLazyValue<GlobalSearchScope> myScopeValue = new NotNullLazyValue<GlobalSearchScope>()
+	@Nonnull
+	private final DotNetLogicValueView[] myLogicValueViews;
+	private final NotNullLazyValue<GlobalSearchScope> myScopeValue;
+
+	public DotNetDebugContext(@Nonnull Project project,
+							  @Nonnull DotNetVirtualMachineProxy virtualMachine,
+							  @Nonnull RunProfile runProfile,
+							  @Nonnull XDebugSession session,
+							  @Nullable XBreakpoint<?> breakpoint,
+							  @Nonnull DotNetLogicValueView[] logicValueViews)
 	{
-		@Nonnull
-		@Override
-		protected GlobalSearchScope compute()
+		myProject = project;
+		myVirtualMachine = virtualMachine;
+		myRunProfile = runProfile;
+		mySession = session;
+		myBreakpoint = breakpoint;
+		myLogicValueViews = logicValueViews;
+
+		myScopeValue = NotNullLazyValue.createValue(() ->
 		{
 			if(myRunProfile instanceof ModuleRunProfile)
 			{
@@ -60,20 +77,13 @@ public class DotNetDebugContext
 			{
 				return GlobalSearchScope.allScope(getProject());
 			}
-		}
-	};
+		});
+	}
 
-	public DotNetDebugContext(@Nonnull Project project,
-			@Nonnull DotNetVirtualMachineProxy virtualMachine,
-			@Nonnull RunProfile runProfile,
-			@Nonnull XDebugSession session,
-			@Nullable XBreakpoint<?> breakpoint)
+	@Nonnull
+	public DotNetLogicValueView[] getLogicValueViews()
 	{
-		myProject = project;
-		myVirtualMachine = virtualMachine;
-		myRunProfile = runProfile;
-		mySession = session;
-		myBreakpoint = breakpoint;
+		return myLogicValueViews;
 	}
 
 	@Nonnull

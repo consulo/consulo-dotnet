@@ -6,6 +6,9 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+
+import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
@@ -34,7 +37,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 
 	@Override
 	public void computeChildrenImpl(@Nonnull DotNetDebugContext debugContext,
-			@Nonnull DotNetAbstractVariableValueNode parentNode,
+			@Nonnull XNamedValue parentNode,
 			@Nonnull DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
 			@Nonnull XValueChildrenList childrenList)
@@ -71,7 +74,7 @@ public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 				DotNetFieldOrPropertyProxy fieldMirror = entry.getKey();
 				DotNetValueProxy fieldValue = entry.getValue();
 
-				DotNetStructValueInfo valueInfo = new DotNetStructValueInfo((DotNetStructValueProxy) value, parentNode, fieldMirror, fieldValue);
+				DotNetStructValueInfo valueInfo = new DotNetStructValueInfo((DotNetStructValueProxy) value, (DotNetAbstractVariableValueNode)parentNode, fieldMirror, fieldValue);
 
 				childrenList.add(new DotNetFieldOrPropertyValueNode(debugContext, fieldMirror, frameProxy, null, valueInfo));
 			}
