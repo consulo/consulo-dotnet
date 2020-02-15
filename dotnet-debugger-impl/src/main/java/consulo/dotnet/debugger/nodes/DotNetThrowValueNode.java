@@ -19,14 +19,15 @@ package consulo.dotnet.debugger.nodes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.Ref;
 import com.intellij.xdebugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.ui.image.Image;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -44,7 +45,7 @@ public class DotNetThrowValueNode extends DotNetAbstractVariableValueNode
 
 	@Nonnull
 	@Override
-	public Image getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
+	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
 	{
 		return AllIcons.Nodes.ExceptionClass;
 	}

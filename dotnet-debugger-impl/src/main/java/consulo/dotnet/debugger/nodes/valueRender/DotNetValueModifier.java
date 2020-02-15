@@ -20,7 +20,8 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.openapi.util.Ref;
+
+
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
@@ -28,6 +29,7 @@ import consulo.dotnet.debugger.nodes.TypeTag;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -36,11 +38,11 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 public class DotNetValueModifier extends XValueModifier
 {
 	private final Consumer<DotNetValueProxy> myValueSetFunction;
-	private final Ref<DotNetValueProxy> myValueProxyRef;
+	private final SimpleReference<DotNetValueProxy> myValueProxyRef;
 	private final DotNetDebugContext myDebugContext;
 	private final TypeTag myTypeTag;
 
-	public DotNetValueModifier(@Nonnull Consumer<DotNetValueProxy> valueSetFunction, @Nonnull Ref<DotNetValueProxy> valueProxyRef, @Nonnull DotNetDebugContext debugContext, @Nonnull TypeTag typeTag)
+	public DotNetValueModifier(@Nonnull Consumer<DotNetValueProxy> valueSetFunction, @Nonnull SimpleReference<DotNetValueProxy> valueProxyRef, @Nonnull DotNetDebugContext debugContext, @Nonnull TypeTag typeTag)
 	{
 		myValueSetFunction = valueSetFunction;
 		myValueProxyRef = valueProxyRef;

@@ -22,9 +22,9 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Getter;
-import com.intellij.openapi.util.Ref;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.xdebugger.frame.XCompositeNode;
@@ -44,6 +44,7 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.ui.image.Image;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -103,7 +104,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 
 	@Nonnull
 	@Override
-	public Image getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
+	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
 	{
 		return myObjectValueMirrorGetter == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value;
 	}

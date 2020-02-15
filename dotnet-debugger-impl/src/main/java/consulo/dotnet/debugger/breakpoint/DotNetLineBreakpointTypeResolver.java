@@ -1,10 +1,13 @@
 package consulo.dotnet.debugger.breakpoint;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
@@ -14,11 +17,16 @@ import com.intellij.util.Processor;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.psi.*;
+import consulo.dotnet.psi.DotNetCodeBlockOwner;
+import consulo.dotnet.psi.DotNetCompositeStatement;
+import consulo.dotnet.psi.DotNetExpression;
+import consulo.dotnet.psi.DotNetFieldDeclaration;
+import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
+import consulo.dotnet.psi.DotNetModifierList;
+import consulo.dotnet.psi.DotNetStatement;
+import consulo.dotnet.psi.DotNetXAccessor;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -50,7 +58,7 @@ public class DotNetLineBreakpointTypeResolver implements XLineBreakpointTypeReso
 			return Pair.empty();
 		}
 
-		final Ref<Pair<XLineBreakpointType<?>, PsiElement>> result = Ref.create(Pair.<XLineBreakpointType<?>, PsiElement>empty());
+		final SimpleReference<Pair<XLineBreakpointType<?>, PsiElement>> result = SimpleReference.create(Pair.<XLineBreakpointType<?>, PsiElement>empty());
 
 		XDebuggerUtil.getInstance().iterateLine(project, document, line, new Processor<PsiElement>()
 		{

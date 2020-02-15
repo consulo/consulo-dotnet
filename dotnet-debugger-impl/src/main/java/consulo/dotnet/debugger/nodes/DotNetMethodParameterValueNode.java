@@ -16,8 +16,11 @@
 
 package consulo.dotnet.debugger.nodes;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
@@ -33,9 +36,7 @@ import consulo.dotnet.psi.DotNetParameter;
 import consulo.dotnet.psi.DotNetParameterListOwner;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -55,7 +56,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 
 	@Nonnull
 	@Override
-	public Image getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
+	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
 	{
 		return AllIcons.Nodes.Parameter;
 	}

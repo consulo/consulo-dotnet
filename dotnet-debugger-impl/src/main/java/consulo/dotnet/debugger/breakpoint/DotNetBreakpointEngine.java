@@ -19,12 +19,12 @@ package consulo.dotnet.debugger.breakpoint;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
@@ -45,6 +45,7 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -95,7 +96,7 @@ public class DotNetBreakpointEngine
 					{
 						return null;
 					}
-					final Ref<XValue> valueRef = Ref.create();
+					final SimpleReference<XValue> valueRef = SimpleReference.create();
 					provider.evaluate(frameProxy, debugContext, conditionExpression.getExpression(), elementAt, new XDebuggerEvaluator.XEvaluationCallback()
 					{
 						@Override

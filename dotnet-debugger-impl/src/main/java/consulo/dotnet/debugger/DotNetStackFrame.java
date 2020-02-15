@@ -16,7 +16,6 @@
 
 package consulo.dotnet.debugger;
 
-import consulo.dotnet.psi.*;
 import gnu.trove.THashSet;
 
 import java.io.File;
@@ -28,10 +27,10 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -49,7 +48,6 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
@@ -66,10 +64,19 @@ import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.dotnet.psi.DotNetAccessorOwner;
+import consulo.dotnet.psi.DotNetConstructorDeclaration;
+import consulo.dotnet.psi.DotNetModifier;
+import consulo.dotnet.psi.DotNetNamedElement;
+import consulo.dotnet.psi.DotNetQualifiedElement;
+import consulo.dotnet.psi.DotNetReferenceExpression;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.DotNetXAccessor;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.internal.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -332,7 +339,7 @@ public class DotNetStackFrame extends XStackFrame
 
 		if(XDebuggerSettingsManager.getInstance().getDataViewSettings().isAutoExpressions())
 		{
-			final Ref<DotNetDebuggerProvider> providerRef = Ref.create();
+			final SimpleReference<DotNetDebuggerProvider> providerRef = SimpleReference.create();
 			final Map<String, DotNetReferenceExpression> referenceExpressions = new HashMap<>();
 
 			AccessRule.read(() ->

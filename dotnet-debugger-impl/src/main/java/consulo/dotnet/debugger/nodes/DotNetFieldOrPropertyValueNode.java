@@ -19,8 +19,8 @@ package consulo.dotnet.debugger.nodes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.Ref;
 import com.intellij.xdebugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
@@ -32,6 +32,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -94,7 +95,7 @@ public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueN
 
 	@Nonnull
 	@Override
-	public Image getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
+	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
 	{
 		boolean isStatic = myFieldOrPropertyMirror.isStatic();
 

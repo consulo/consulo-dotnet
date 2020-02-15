@@ -18,11 +18,8 @@ package consulo.dotnet.debugger.nodes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.psi.DotNetCodeBlockOwner;
-import consulo.dotnet.psi.DotNetVariable;
-import com.intellij.openapi.util.Ref;
+
+
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -32,11 +29,16 @@ import com.intellij.psi.scope.util.PsiScopesUtilCore;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNavigatable;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.dotnet.psi.DotNetCodeBlockOwner;
+import consulo.dotnet.psi.DotNetVariable;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -84,7 +86,7 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 			return;
 		}
 
-		final Ref<DotNetVariable> elementRef = Ref.create();
+		final SimpleReference<DotNetVariable> elementRef = SimpleReference.create();
 		PsiScopesUtilCore.treeWalkUp(new BaseScopeProcessor()
 		{
 			@Override

@@ -23,8 +23,8 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
@@ -38,6 +38,7 @@ import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.*;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -84,7 +85,7 @@ public class DotNetValuePresentation extends XValuePresentation
 			return null;
 		}
 
-		final Ref<String> result = Ref.create();
+		final SimpleReference<String> result = SimpleReference.create();
 
 		myValue.accept(new DotNetValueProxyVisitor()
 		{

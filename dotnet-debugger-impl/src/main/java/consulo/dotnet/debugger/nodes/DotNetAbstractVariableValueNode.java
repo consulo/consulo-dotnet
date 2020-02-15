@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XValueChildrenList;
@@ -45,6 +44,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -56,9 +56,9 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	protected final DotNetStackFrameProxy myFrameProxy;
 	private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
 
-	private volatile Ref<TypeTag> myTypeTag;
+	private volatile SimpleReference<TypeTag> myTypeTag;
 
-	private final Ref<DotNetValueProxy> myLastValueRef = Ref.create();
+	private final SimpleReference<DotNetValueProxy> myLastValueRef = SimpleReference.create();
 
 	public DotNetAbstractVariableValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull String name, @Nonnull DotNetStackFrameProxy frameProxy)
 	{
@@ -76,7 +76,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 
-		myTypeTag = Ref.create();
+		myTypeTag = SimpleReference.create();
 
 		DotNetTypeProxy typeOfVariable = alreadyCalledType != null ? alreadyCalledType : getTypeOfVariable();
 		if(typeOfVariable == null)
@@ -89,7 +89,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	@Nonnull
-	public Image getIconForVariable(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
+	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 
@@ -146,7 +146,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	 * @param alreadyCalledValue  null if value not fetched. null inside ref mean null from vm
 	 */
 	@Nullable
-	public DotNetTypeProxy getTypeOfVariableOrValue(@Nullable Ref<DotNetValueProxy> alreadyCalledValue)
+	public DotNetTypeProxy getTypeOfVariableOrValue(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 
@@ -210,7 +210,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 				}
 			}
 
-			DotNetTypeProxy typeOfVariable = getTypeOfVariableOrValue(Ref.create(value));
+			DotNetTypeProxy typeOfVariable = getTypeOfVariableOrValue(SimpleReference.create(value));
 
 			if(typeOfVariable == null)
 			{
@@ -257,6 +257,6 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 
 		myLastValueRef.set(valueOfVariable);
 
-		xValueNode.setPresentation(getIconForVariable(Ref.create(valueOfVariable)), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren(valueOfVariable));
+		xValueNode.setPresentation(getIconForVariable(SimpleReference.create(valueOfVariable)), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren(valueOfVariable));
 	}
 }

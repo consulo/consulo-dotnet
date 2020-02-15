@@ -16,6 +16,21 @@
 
 package consulo.dotnet.lang.psi.impl;
 
+import gnu.trove.THashSet;
+
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+
 import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.openapi.Disposable;
@@ -25,7 +40,6 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -43,14 +57,7 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
-import gnu.trove.THashSet;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -196,10 +203,10 @@ public class DotNetNamespaceCacheManager implements Disposable
 		}
 	};
 
-	private final Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> myElementsCache = ContainerUtil.newConcurrentMap();
-	private final Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> myChildNamespacesCache = ContainerUtil.newConcurrentMap();
-	private final Map<String, Map<GlobalSearchScope, Set<DotNetTypeDeclaration>>> myTypesCache = ContainerUtil.newConcurrentMap();
-	private final Map<String, Map<GlobalSearchScope, Ref<DotNetNamespaceAsElement>>> myNamespacesCache = ContainerUtil.newConcurrentMap();
+	private final Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> myElementsCache = consulo.util.collection.ContainerUtil.newConcurrentMap();
+	private final Map<DotNetNamespaceAsElement, Map<GlobalSearchScope, Set<PsiElement>>> myChildNamespacesCache = consulo.util.collection.ContainerUtil.newConcurrentMap();
+	private final Map<String, Map<GlobalSearchScope, Set<DotNetTypeDeclaration>>> myTypesCache = consulo.util.collection.ContainerUtil.newConcurrentMap();
+	private final Map<String, Map<GlobalSearchScope, SimpleReference<DotNetNamespaceAsElement>>> myNamespacesCache = consulo.util.collection.ContainerUtil.newConcurrentMap();
 
 	private final Project myProject;
 
@@ -247,10 +254,10 @@ public class DotNetNamespaceCacheManager implements Disposable
 	@Nullable
 	public DotNetNamespaceAsElement computeNamespace(List<DotNetPsiSearcher> searchers, String qName, GlobalSearchScope scope)
 	{
-		Map<GlobalSearchScope, Ref<DotNetNamespaceAsElement>> map = myNamespacesCache.get(qName);
+		Map<GlobalSearchScope, SimpleReference<DotNetNamespaceAsElement>> map = myNamespacesCache.get(qName);
 		if(map != null)
 		{
-			Ref<DotNetNamespaceAsElement> ref = map.get(scope);
+			SimpleReference<DotNetNamespaceAsElement> ref = map.get(scope);
 			if(ref != null)
 			{
 				return ref.get();
@@ -264,7 +271,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 			myNamespacesCache.put(qName, map = new ConcurrentHashMap<>());
 		}
 
-		map.put(scope, Ref.create(compute));
+		map.put(scope, SimpleReference.create(compute));
 		return compute;
 	}
 
@@ -362,7 +369,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 		if(map == null)
 		{
-			rootMap.put(key, map = ContainerUtil.<GlobalSearchScope, Set<PsiElement>>newConcurrentMap());
+			rootMap.put(key, map = consulo.util.collection.ContainerUtil.<GlobalSearchScope, Set<PsiElement>>newConcurrentMap());
 		}
 
 		map.put(scope, compute);

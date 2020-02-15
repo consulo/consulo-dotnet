@@ -18,17 +18,19 @@ package consulo.dotnet.debugger.nodes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.openapi.util.Ref;
+
+
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ObjectUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XNavigatable;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -40,7 +42,7 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 	protected final DotNetDebugContext myDebugContext;
 
 	@Nullable
-	private Ref<DotNetTypeProxy> myTypeProxy;
+	private SimpleReference<DotNetTypeProxy> myTypeProxy;
 
 	public AbstractTypedValueNode(@Nonnull DotNetDebugContext debugContext, @Nonnull String name)
 	{
@@ -53,7 +55,7 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 
-		Ref<DotNetTypeProxy> typeProxy = myTypeProxy;
+		SimpleReference<DotNetTypeProxy> typeProxy = myTypeProxy;
 		if(typeProxy != null)
 		{
 			return typeProxy.get();
@@ -61,7 +63,7 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 		else
 		{
 			DotNetTypeProxy value = getTypeOfVariableImpl();
-			typeProxy = Ref.create(value);
+			typeProxy = SimpleReference.create(value);
 			myTypeProxy = typeProxy;
 			return value;
 		}

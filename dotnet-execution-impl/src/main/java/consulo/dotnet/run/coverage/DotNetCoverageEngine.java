@@ -24,8 +24,8 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.dotnet.psi.DotNetFile;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
+
+
 import com.intellij.coverage.CoverageAnnotator;
 import com.intellij.coverage.CoverageEngine;
 import com.intellij.coverage.CoverageFileProvider;
@@ -41,10 +41,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiRecursiveElementVisitor;
+import consulo.dotnet.psi.DotNetFile;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -109,7 +111,7 @@ public class DotNetCoverageEngine extends CoverageEngine
 			@Override
 			public String compute()
 			{
-				final Ref<String> ref = Ref.create();
+				final SimpleReference<String> ref = SimpleReference.create();
 				sourceFile.accept(new PsiRecursiveElementVisitor()
 				{
 					@Override

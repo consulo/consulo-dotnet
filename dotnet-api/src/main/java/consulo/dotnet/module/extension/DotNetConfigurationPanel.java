@@ -16,15 +16,31 @@
 
 package consulo.dotnet.module.extension;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.ui.*;
+import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.ui.InputValidator;
+import com.intellij.openapi.ui.LabeledComponent;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.ui.*;
+import com.intellij.ui.CollectionComboBoxModel;
+import com.intellij.ui.CollectionListModel;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
@@ -35,12 +51,7 @@ import consulo.dotnet.DotNetTarget;
 import consulo.extension.ui.ModuleExtensionSdkBoxBuilder;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.annotation.Nonnull;
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import java.util.ArrayList;
-import java.util.List;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -157,7 +168,7 @@ public class DotNetConfigurationPanel extends JPanel
 		{
 			ApplicationManager.getApplication().executeOnPooledThread((Runnable) () ->
 			{
-				final Ref<PsiElement> selected = Ref.create();
+				final SimpleReference<PsiElement> selected = SimpleReference.create();
 				final List<Object> newItems = new ArrayList<>();
 				newItems.add(null);
 

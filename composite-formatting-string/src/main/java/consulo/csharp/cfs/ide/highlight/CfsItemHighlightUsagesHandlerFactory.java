@@ -20,17 +20,12 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.csharp.cfs.psi.CfsFile;
-import consulo.csharp.cfs.psi.CfsItem;
-import consulo.dotnet.psi.DotNetCallArgumentList;
-import consulo.dotnet.psi.DotNetExpression;
-import consulo.codeInsight.TargetElementUtil;
+
+
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactory;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -38,6 +33,13 @@ import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.codeInsight.TargetElementUtil;
+import consulo.csharp.cfs.psi.CfsFile;
+import consulo.csharp.cfs.psi.CfsItem;
+import consulo.dotnet.psi.DotNetCallArgumentList;
+import consulo.dotnet.psi.DotNetExpression;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
@@ -88,7 +90,7 @@ public class CfsItemHighlightUsagesHandlerFactory implements HighlightUsagesHand
 				DotNetCallArgumentList callArgumentList = (DotNetCallArgumentList) targetElement.getParent();
 				assert callArgumentList != null;
 
-				final Ref<CfsFile> cfsFileRef = Ref.create();
+				final SimpleReference<CfsFile> cfsFileRef = SimpleReference.create();
 				DotNetExpression[] expressions = callArgumentList.getExpressions();
 				int thisIndex = ArrayUtil.indexOf(callArgumentList.getArguments(), targetElement);
 				if(thisIndex == -1)

@@ -16,13 +16,26 @@
 
 package consulo.dotnet.module.extension;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
+import org.jdom.Document;
+import org.jdom.Element;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -43,15 +56,8 @@ import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.vfs.util.ArchiveVfsUtil;
-import org.jdom.Document;
-import org.jdom.Element;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
-import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
@@ -210,7 +216,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	}
 
 	@Nullable
-	private File getLibraryByAssemblyName(@Nonnull final String name, @Nullable Ref<Couple<String>> cache)
+	private File getLibraryByAssemblyName(@Nonnull final String name, @Nullable SimpleReference<Couple<String>> cache)
 	{
 		File[] filesForLibraries = getFilesForLibraries();
 		String nameWithExtension = name + ".dll";
@@ -274,7 +280,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		{
 			try
 			{
-				final Ref<Couple<String>> ref = Ref.create();
+				final SimpleReference<Couple<String>> ref = SimpleReference.create();
 				File libraryFile = getLibraryByAssemblyName(name, ref);
 				if(libraryFile == null)
 				{
@@ -314,7 +320,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		return ArrayUtil.EMPTY_STRING_ARRAY;
 	}
 
-	private boolean isValidLibrary(@Nonnull File file, @Nonnull final String name, @Nullable Ref<Couple<String>> cache)
+	private boolean isValidLibrary(@Nonnull File file, @Nonnull final String name, @Nullable SimpleReference<Couple<String>> cache)
 	{
 		Couple<String> info = parseLibrary(file);
 		if(info == null)
