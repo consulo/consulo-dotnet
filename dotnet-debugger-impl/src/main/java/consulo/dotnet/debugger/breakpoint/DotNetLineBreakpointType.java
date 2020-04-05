@@ -16,6 +16,16 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
@@ -23,7 +33,11 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -42,10 +56,6 @@ import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.util.ArrayUtil2;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
 
 /**
  * @author VISTALL
@@ -172,16 +182,15 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		DotNetDebuggerSourceLineResolver resolver = DotNetDebuggerSourceLineResolverEP.INSTANCE.forLanguage(psiFile.getLanguage());
 
 		Set<PsiElement> allExecutableChildren = resolver.getAllExecutableChildren(element);
-		if(allExecutableChildren.isEmpty())
+		if(!allExecutableChildren.isEmpty())
 		{
-			return Collections.emptySet();
+			Set<PsiElement> newSet = new LinkedHashSet<>(allExecutableChildren.size() + 1);
+			newSet.add(likeMethod);
+			newSet.addAll(allExecutableChildren);
+			return newSet;
 		}
 
-		Set<PsiElement> newSet = new LinkedHashSet<>(allExecutableChildren.size() + 1);
-		newSet.add(likeMethod);
-		newSet.addAll(allExecutableChildren);
-
-		return newSet;
+		return Collections.singleton(likeMethod);
 	}
 
 	class AllBreakpointVariant extends XLineBreakpointVariant

@@ -139,5 +139,7 @@
 		<virtualFileSystem implementation="consulo.dotnet.dll.vfs.DotNetArchiveFileSystem" />
 
 		<projectService serviceImplementation="consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent" lazy="false" />
+
+		<projectService serviceImplementation="consulo.dotnet.lang.psi.impl.DotNetTypeRefCacheManager" />
 	</extensions>
 </consulo-plugin>
