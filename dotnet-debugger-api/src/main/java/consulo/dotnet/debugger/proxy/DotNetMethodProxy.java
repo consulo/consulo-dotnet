@@ -18,6 +18,7 @@ package consulo.dotnet.debugger.proxy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
@@ -48,8 +49,18 @@ public interface DotNetMethodProxy extends Named
 
 	@Nullable
 	DotNetValueProxy invoke(@Nonnull DotNetStackFrameProxy frameProxy,
-			@Nullable DotNetValueProxy thisObject,
-			@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException;
+							@Nullable DotNetValueProxy thisObject,
+							@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException;
+
+	@Nullable
+	default DotNetMethodInvokeResult invokeAdvanced(@Nonnull DotNetStackFrameProxy frameProxy,
+													@Nullable DotNetValueProxy thisObject,
+													@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException
+	{
+		DotNetValueProxy valueProxy = invoke(frameProxy, thisObject, arguments);
+		assert valueProxy != null;
+		return new DotNetMethodInvokeResult(valueProxy, null);
+	}
 
 	@Nullable
 	@RequiredReadAction
