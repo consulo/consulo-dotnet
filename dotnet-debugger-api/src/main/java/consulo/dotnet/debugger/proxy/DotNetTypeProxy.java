@@ -19,6 +19,7 @@ package consulo.dotnet.debugger.proxy;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.dotnet.debugger.proxy.light.LightTypeProxy;
+import consulo.util.collection.ArrayUtil;
 
 /**
  * @author VISTALL
@@ -36,6 +37,12 @@ public interface DotNetTypeProxy
 
 	@Nonnull
 	String getFullName();
+
+	@Nonnull
+	default String[] getGenericParameters()
+	{
+		return ArrayUtil.EMPTY_STRING_ARRAY;
+	}
 
 	boolean isArray();
 

@@ -31,11 +31,13 @@ public class LightTypeProxy implements DotNetTypeProxy
 {
 	private String myName;
 	private String myFullName;
+	private String[] myGenericParameters;
 
 	public LightTypeProxy(DotNetTypeProxy proxy)
 	{
 		myName = proxy.getName();
 		myFullName = proxy.getFullName();
+		myGenericParameters = proxy.getGenericParameters();
 	}
 
 	@Override
@@ -63,6 +65,13 @@ public class LightTypeProxy implements DotNetTypeProxy
 	public String getFullName()
 	{
 		return myFullName;
+	}
+
+	@Nonnull
+	@Override
+	public String[] getGenericParameters()
+	{
+		return myGenericParameters;
 	}
 
 	@Override
