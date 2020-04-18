@@ -52,7 +52,7 @@ public interface DotNetMethodProxy extends Named
 							@Nullable DotNetValueProxy thisObject,
 							@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException;
 
-	@Nullable
+	@Nonnull
 	default DotNetMethodInvokeResult invokeAdvanced(@Nonnull DotNetStackFrameProxy frameProxy,
 													@Nullable DotNetValueProxy thisObject,
 													@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException
