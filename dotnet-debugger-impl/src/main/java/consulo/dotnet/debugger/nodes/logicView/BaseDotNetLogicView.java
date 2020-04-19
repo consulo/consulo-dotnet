@@ -27,6 +27,7 @@ import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.logging.Logger;
 import consulo.util.dataholder.UserDataHolderBase;
 
 /**
@@ -35,6 +36,8 @@ import consulo.util.dataholder.UserDataHolderBase;
  */
 public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 {
+	private static final Logger LOG = Logger.getInstance(BaseDotNetLogicView.class);
+
 	@Override
 	public boolean canHandle(@Nonnull DotNetDebugContext debugContext, @Nonnull DotNetTypeProxy typeMirror)
 	{
@@ -55,10 +58,18 @@ public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 			@Nullable DotNetValueProxy value,
 			@Nonnull XCompositeNode node)
 	{
-		XValueChildrenList childrenList = new XValueChildrenList();
 
-		computeChildrenImpl(debugContext, parentNode, frameProxy, value, childrenList);
+		try
+		{
+			XValueChildrenList childrenList = new XValueChildrenList();
+			computeChildrenImpl(debugContext, parentNode, frameProxy, value, childrenList);
+			node.addChildren(childrenList, true);
+		}
+		catch(Throwable e)
+		{
+			node.setErrorMessage(e.toString());
 
-		node.addChildren(childrenList, true);
+			LOG.warn(e);
+		}
 	}
 }

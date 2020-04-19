@@ -112,7 +112,8 @@ public class DefaultStackFrameComputer implements StackFrameComputer
 				}
 
 				DotNetFieldProxy[] fields = type.getFields();
-				if(fields.length != 1)
+
+				if(fields.length == 0)
 				{
 					continue;
 				}
