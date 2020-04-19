@@ -16,14 +16,14 @@
 
 package consulo.dotnet.debugger.nodes.logicView.enumerator;
 
-import java.util.Iterator;
-
+import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
+import consulo.dotnet.debugger.proxy.DotNetMethodInvokeResult;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
@@ -31,62 +31,53 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
  * @author VISTALL
  * @since 20.09.14
  */
-public class IEnumeratorAsIterator implements Iterator<DotNetValueProxy>
+public class IEnumeratorAsIterator
 {
 	private DotNetStackFrameProxy myFrameProxy;
 	private DotNetValueProxy myValue;
 	private DotNetMethodProxy myMoveNextMethod;
 	private DotNetMethodProxy myCurrent;
 
-	public IEnumeratorAsIterator(DotNetStackFrameProxy frameProxy, DotNetValueProxy value) throws CantCreateException
+	public IEnumeratorAsIterator(DotNetVirtualMachineProxy virtualMachineProxy, DotNetStackFrameProxy frameProxy, DotNetValueProxy value, DotNetTypeProxy typeOfValue) throws CantCreateException
 	{
 		myFrameProxy = frameProxy;
 		myValue = value;
 
-		DotNetTypeProxy typeMirror = myValue.getType();
-
-		myMoveNextMethod = DotNetDebuggerSearchUtil.findMethod("MoveNext", typeMirror);
+		myMoveNextMethod = DotNetDebuggerSearchUtil.findMethodImplementation(virtualMachineProxy, DotNetTypes.System.Collections.IEnumerator, "MoveNext", typeOfValue);
 		if(myMoveNextMethod == null)
 		{
 			throw new CantCreateException();
 		}
 
-		myCurrent = DotNetDebuggerSearchUtil.findGetterForProperty("Current", typeMirror);
+		myCurrent = DotNetDebuggerSearchUtil.findGetterForPropertyImplementation(virtualMachineProxy, DotNetTypes.System.Collections.IEnumerator, "Current", typeOfValue);
+
 		if(myCurrent == null)
 		{
 			throw new CantCreateException();
 		}
 	}
 
-	@Override
-	public boolean hasNext()
+	public boolean hasNext() throws DotNetNotSuspendedException
 	{
-		try
+		DotNetMethodInvokeResult result = myMoveNextMethod.invokeAdvanced(myFrameProxy, myValue);
+		DotNetValueProxy invoke = result.getResult();
+		boolean hasNext = invoke instanceof DotNetBooleanValueProxy && ((DotNetBooleanValueProxy) invoke).getValue();
+		DotNetValueProxy outThis = result.getOutThis();
+		if(outThis != null)
 		{
-			DotNetValueProxy invoke = myMoveNextMethod.invoke(myFrameProxy, myValue);
-			return invoke instanceof DotNetBooleanValueProxy && ((DotNetBooleanValueProxy) invoke).getValue();
+			myValue = outThis;
 		}
-		catch(DotNetThrowValueException | DotNetNotSuspendedException ignored)
-		{
-			return false;
-		}
+		return hasNext;
 	}
 
-	@Override
-	public DotNetValueProxy next()
+	public DotNetValueProxy next() throws DotNetNotSuspendedException
 	{
-		try
+		DotNetMethodInvokeResult result = myCurrent.invokeAdvanced(myFrameProxy, myValue);
+		DotNetValueProxy outThis = result.getOutThis();
+		if(outThis != null)
 		{
-			return myCurrent.invoke(myFrameProxy, myValue);
+			myValue = outThis;
 		}
-		catch(DotNetThrowValueException | DotNetNotSuspendedException ignored)
-		{
-		}
-		return null;
-	}
-
-	@Override
-	public void remove()
-	{
+		return result.getResult();
 	}
 }

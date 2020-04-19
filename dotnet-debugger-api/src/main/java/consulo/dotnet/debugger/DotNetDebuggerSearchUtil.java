@@ -19,11 +19,14 @@ package consulo.dotnet.debugger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
@@ -32,8 +35,10 @@ import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 
 /**
  * @author VISTALL
@@ -125,6 +130,78 @@ public class DotNetDebuggerSearchUtil
 		return b != null && isInImplementList(b, qName);
 	}
 
+	@Nullable
+	public static DotNetMethodProxy findMethodImplementation(DotNetVirtualMachineProxy proxy, String vmQName, String methodName, DotNetTypeProxy typeMirror)
+	{
+		DotNetTypeProxy typeInCorlib = proxy.findTypeInCorlib(vmQName);
+		if(typeInCorlib == null)
+		{
+			return null;
+		}
+
+		String hideImplMethodName = getVmQTypeNameForHideImplementation(typeInCorlib, vmQName) + "." + methodName;
+
+		Map<String, DotNetMethodProxy> result = new LinkedHashMap<>();
+
+		collectMethodImplementation0(hideImplMethodName, methodName, typeMirror, result);
+
+		// first return hide impl
+		for(DotNetMethodProxy impl : result.values())
+		{
+			int i = impl.getName().indexOf('.');
+			if(i > 0)
+			{
+				return impl;
+			}
+		}
+		return ContainerUtil.getFirstItem(result.values());
+	}
+
+	private static void collectMethodImplementation0(String hideImplMethodName, String methodName, DotNetTypeProxy typeMirror, Map<String, DotNetMethodProxy> result)
+	{
+		DotNetMethodProxy[] methods = typeMirror.getMethods();
+		for(DotNetMethodProxy methodMirror : methods)
+		{
+			String name = methodMirror.getName();
+			if(name.equals(methodName) && methodMirror.getParameters().length == 0)
+			{
+				result.putIfAbsent(methodMirror.getName(), methodMirror);
+			}
+			// hide implementation
+			else if(name.equals(hideImplMethodName))
+			{
+				result.putIfAbsent(methodMirror.getName(), methodMirror);
+			}
+		}
+
+		DotNetTypeProxy baseType = typeMirror.getBaseType();
+		if(baseType != null)
+		{
+			collectMethodImplementation0(hideImplMethodName, methodName, baseType, result);
+		}
+	}
+
+	@Nonnull
+	private static String getVmQTypeNameForHideImplementation(DotNetTypeProxy mirror, String vmQName)
+	{
+		String[] genericParameters = mirror.getGenericParameters();
+		if(genericParameters.length > 0)
+		{
+			return MsilHelper.cutGenericMarker(vmQName) + "<" + StringUtil.join(genericParameters, ",") + ">";
+		}
+		else
+		{
+			return mirror.getFullName();
+		}
+	}
+
+	@Nullable
+	public static DotNetMethodProxy findGetterForPropertyImplementation(DotNetVirtualMachineProxy proxy, String vmQName, String property, DotNetTypeProxy typeMirror)
+	{
+		return findMethodImplementation(proxy, vmQName, "get_" + property, typeMirror);
+	}
+
+	@Deprecated
 	public static DotNetMethodProxy findMethod(String method, DotNetTypeProxy typeMirror)
 	{
 		DotNetMethodProxy[] methods = typeMirror.getMethods();
@@ -155,6 +232,7 @@ public class DotNetDebuggerSearchUtil
 		return null;
 	}
 
+	@Deprecated
 	public static DotNetMethodProxy findGetterForProperty(String property, DotNetTypeProxy typeMirror)
 	{
 		for(DotNetPropertyProxy propertyMirror : typeMirror.getProperties())

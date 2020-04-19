@@ -6,16 +6,19 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
+import consulo.annotation.UsedInPlugin;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.nodes.DotNetSimpleValueNode;
+import consulo.dotnet.debugger.nodes.DotNetThrowValueNode;
 import consulo.dotnet.debugger.nodes.logicView.enumerator.CantCreateException;
 import consulo.dotnet.debugger.nodes.logicView.enumerator.IEnumeratorAsIterator;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
+import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
@@ -43,6 +46,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 		return DotNetDebuggerSearchUtil.isInImplementList(typeMirror, "System.Collections.IEnumerable");
 	}
 
+	@UsedInPlugin
 	public void addIgnoredType(String typeQualifedName)
 	{
 		myIgnoreTypeSet.add(typeQualifedName);
@@ -64,7 +68,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 
 		assert type != null;
 
-		DotNetMethodProxy getEnumerator = DotNetDebuggerSearchUtil.findMethod("System.Collections.IEnumerable.GetEnumerator", type);
+		DotNetMethodProxy getEnumerator = DotNetDebuggerSearchUtil.findMethodImplementation(debugContext.getVirtualMachine(), "System.Collections.IEnumerable", "GetEnumerator", type);
 
 		if(getEnumerator == null)
 		{
@@ -82,13 +86,15 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 		}
 
 		// need test returned object
+		DotNetTypeProxy typeOfValue;
 		try
 		{
 			if(getEnumeratorValue == null)
 			{
 				return;
 			}
-			getEnumeratorValue.getType();
+			typeOfValue = getEnumeratorValue.getType();
+			assert typeOfValue != null;
 		}
 		catch(Exception e)
 		{
@@ -98,7 +104,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 
 		try
 		{
-			IEnumeratorAsIterator iterator = new IEnumeratorAsIterator(frameProxy, getEnumeratorValue);
+			IEnumeratorAsIterator iterator = new IEnumeratorAsIterator(debugContext.getVirtualMachine(), frameProxy, getEnumeratorValue, typeOfValue);
 
 			int i = 0;
 			while(iterator.hasNext())
@@ -107,14 +113,22 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 
 				if(next == null)
 				{
-					continue;
+					break;
 				}
 				childrenList.add(new DotNetSimpleValueNode(debugContext, String.valueOf(i++), frameProxy, next));
 			}
 		}
+		catch(DotNetThrowValueException e)
+		{
+			childrenList.add(new DotNetThrowValueNode(debugContext, frameProxy, e.getThrowExceptionValue()));
+			LOG.warn(e);
+		}
 		catch(CantCreateException e)
 		{
 			LOG.warn(e);
+		}
+		catch(DotNetNotSuspendedException ignored)
+		{
 		}
 	}
 }
