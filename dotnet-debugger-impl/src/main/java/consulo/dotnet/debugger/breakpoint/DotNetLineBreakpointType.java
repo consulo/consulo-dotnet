@@ -137,14 +137,19 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		}
 
 		Set<PsiElement> allExecutableChildren = collectExecutableChildren(file, position.getLine());
+		if(allExecutableChildren.isEmpty() || allExecutableChildren.size() == 1)
+		{
+			return Collections.emptyList();
+		}
 
 		List<XLineBreakpointVariant> variants = new ArrayList<XLineBreakpointVariant>(1 + allExecutableChildren.size());
-		variants.add(new AllBreakpointVariant());
 		int i = -1;
 		for(PsiElement allExecutableChild : allExecutableChildren)
 		{
-			variants.add(new SingleExecutableVariant(allExecutableChild, i++));
+			variants.add(new SingleExecutableVariant(position, allExecutableChild, i++));
 		}
+		variants.add(new AllBreakpointVariant(position));
+
 		return variants;
 	}
 
@@ -193,30 +198,11 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		return Collections.singleton(likeMethod);
 	}
 
-	class AllBreakpointVariant extends XLineBreakpointVariant
+	class AllBreakpointVariant extends XLineBreakpointAllVariant
 	{
-		@Nonnull
-		@RequiredReadAction
-		@Override
-		public String getText()
+		public AllBreakpointVariant(XSourcePosition position)
 		{
-			return "All";
-		}
-
-		@RequiredReadAction
-		@Nullable
-		@Override
-		public Image getIcon()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Nullable
-		@Override
-		public TextRange getHighlightRange()
-		{
-			return null;
+			super(position);
 		}
 
 		@Nullable
@@ -227,14 +213,16 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		}
 	}
 
-	class SingleExecutableVariant extends AllBreakpointVariant
+	class SingleExecutableVariant extends XLineBreakpointVariant
 	{
-		private PsiElement myExecutableChild;
+		private final XSourcePosition myPosition;
+		private final PsiElement myElement;
 		private int myIndex;
 
-		public SingleExecutableVariant(PsiElement executableChild, int index)
+		public SingleExecutableVariant(XSourcePosition position, PsiElement element, int index)
 		{
-			myExecutableChild = executableChild;
+			myPosition = position;
+			myElement = element;
 			myIndex = index;
 		}
 
@@ -244,16 +232,15 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		public String getText()
 		{
 			String text;
-			if(myExecutableChild instanceof PsiNameIdentifierOwner)
+			if(myElement instanceof PsiNameIdentifierOwner)
 			{
-				TextRange textRange = new TextRange(myExecutableChild.getTextOffset(), myExecutableChild.getTextRange().getEndOffset());
-				text = textRange.substring(myExecutableChild.getContainingFile().getText());
+				return "Line";
 			}
 			else
 			{
-				text = myExecutableChild.getText();
+				text = myElement.getText();
+				return StringUtil.shortenTextWithEllipsis(text, 100, 0);
 			}
-			return StringUtil.shortenTextWithEllipsis(text, 100, 0);
 		}
 
 		@Nullable
@@ -261,6 +248,10 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		@RequiredUIAccess
 		public Image getIcon()
 		{
+			if(myElement instanceof PsiNameIdentifierOwner)
+			{
+				return AllIcons.Debugger.Db_set_breakpoint;
+			}
 			return AllIcons.Debugger.LambdaBreakpoint;
 		}
 
@@ -269,7 +260,25 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 		@RequiredUIAccess
 		public TextRange getHighlightRange()
 		{
-			return myExecutableChild.getTextRange();
+			if(myElement instanceof PsiNameIdentifierOwner)
+			{
+				return intersectWithLine(myElement.getTextRange(), myElement.getContainingFile(), myPosition.getLine());
+			}
+			return myElement.getTextRange();
+		}
+
+		@Nullable
+		public TextRange intersectWithLine(@Nullable TextRange range, @Nullable PsiFile file, int line)
+		{
+			if(range != null && file != null)
+			{
+				Document document = PsiDocumentManager.getInstance(file.getProject()).getDocument(file);
+				if(document != null)
+				{
+					range = range.intersection(DocumentUtil.getLineTextRange(document, line));
+				}
+			}
+			return range;
 		}
 
 		@Nullable
