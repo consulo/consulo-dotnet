@@ -18,8 +18,8 @@ package consulo.dotnet.module.dependency;
 
 import javax.annotation.Nonnull;
 
+import consulo.disposer.Disposable;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.roots.ModuleRootLayer;

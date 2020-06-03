@@ -1,6 +1,6 @@
 package consulo.dotnet.module.extension;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;

@@ -32,7 +32,7 @@ import javax.inject.Singleton;
 
 import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;

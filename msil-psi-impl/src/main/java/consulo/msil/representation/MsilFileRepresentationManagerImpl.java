@@ -16,7 +16,14 @@
 
 package consulo.msil.representation;
 
-import com.intellij.openapi.Disposable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
@@ -28,14 +35,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ConcurrentMultiMap;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.disposer.Disposable;
 import consulo.msil.lang.psi.MsilFile;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author VISTALL
