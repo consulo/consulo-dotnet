@@ -16,35 +16,25 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XValueChildrenList;
-import com.intellij.xdebugger.frame.XValueModifier;
-import com.intellij.xdebugger.frame.XValueNode;
-import com.intellij.xdebugger.frame.XValuePlace;
+import com.intellij.xdebugger.frame.*;
 import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
-import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
-import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.*;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -122,15 +112,15 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 	}
 
 	@Override
-	protected void computePresentationImpl(@Nonnull XValueNode xValueNode, @Nonnull XValuePlace xValuePlace)
+	protected void computePresentationImpl(@Nonnull XValueNode node, @Nonnull XValuePlace xValuePlace)
 	{
 		if(myObjectValueMirrorGetter == null)
 		{
-			xValueNode.setPresentation(getIconForVariable(null), new XRegularValuePresentation("", null, ""), true);
+			node.setPresentation(getIconForVariable(null), new XRegularValuePresentation("", null, ""), true);
 		}
 		else
 		{
-			super.computePresentationImpl(xValueNode, xValuePlace);
+			super.computePresentationImpl(node, xValuePlace);
 		}
 	}
 

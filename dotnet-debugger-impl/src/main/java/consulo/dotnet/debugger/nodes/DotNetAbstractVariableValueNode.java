@@ -16,17 +16,9 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XValueChildrenList;
-import com.intellij.xdebugger.frame.XValueModifier;
-import com.intellij.xdebugger.frame.XValueNode;
-import com.intellij.xdebugger.frame.XValuePlace;
+import com.intellij.xdebugger.frame.*;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
@@ -36,15 +28,13 @@ import consulo.dotnet.debugger.proxy.DotNetErrorValueProxyImpl;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetErrorValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.dotnet.debugger.proxy.value.*;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -74,18 +64,36 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 			return myTypeTag.get();
 		}
 
-		DotNetVirtualMachineUtil.checkCallForUIThread();
-
-		myTypeTag = SimpleReference.create();
-
-		DotNetTypeProxy typeOfVariable = alreadyCalledType != null ? alreadyCalledType : getTypeOfVariable();
-		if(typeOfVariable == null)
+		if(alreadyCalledType != null)
 		{
-			return null;
+			TypeTag typeTag = TypeTag.byType(alreadyCalledType.getFullName());
+			myTypeTag = SimpleReference.create(typeTag);
+			return typeTag;
 		}
-		TypeTag typeTag = TypeTag.byType(typeOfVariable.getFullName());
-		myTypeTag.set(typeTag);
-		return typeTag;
+		else
+		{
+			DotNetVirtualMachineUtil.checkCallForUIThread();
+
+			myTypeTag = SimpleReference.create();
+
+			DotNetTypeProxy typeOfVariable = getTypeOfVariable();
+			if(typeOfVariable == null)
+			{
+				return null;
+			}
+
+			TypeTag typeTag = TypeTag.byType(typeOfVariable.getFullName());
+			myTypeTag.set(typeTag);
+			return typeTag;
+		}
+	}
+
+	private void setTypeTagIfNotSet()
+	{
+		if(myTypeTag == null)
+		{
+			myTypeTag = SimpleReference.create();
+		}
 	}
 
 	@Nonnull
@@ -96,11 +104,14 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 		DotNetTypeProxy typeOfVariable = getTypeOfVariableOrValue(alreadyCalledValue);
 		if(typeOfVariable == null)
 		{
+			// set type tag to null - do not allow call from typeTag()
+			setTypeTagIfNotSet();
 			return AllIcons.Debugger.Value;
 		}
 
 		if(typeOfVariable.isArray())
 		{
+			setTypeTagIfNotSet();
 			return AllIcons.Debugger.Db_array;
 		}
 
@@ -143,7 +154,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 	}
 
 	/**
-	 * @param alreadyCalledValue  null if value not fetched. null inside ref mean null from vm
+	 * @param alreadyCalledValue null if value not fetched. null inside ref mean null from vm
 	 */
 	@Nullable
 	public DotNetTypeProxy getTypeOfVariableOrValue(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
@@ -245,18 +256,25 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 				valueOfVariable instanceof DotNetStructValueProxy && !((DotNetStructValueProxy) valueOfVariable).getValues().isEmpty();
 	}
 
+	protected void postInitialize(@Nullable DotNetValueProxy valueOfVariable)
+	{
+	}
+
 	@Override
 	public void computePresentation(@Nonnull XValueNode xValueNode, @Nonnull XValuePlace xValuePlace)
 	{
 		myDebugContext.invoke(() -> computePresentationImpl(xValueNode, xValuePlace));
 	}
 
-	protected void computePresentationImpl(@Nonnull XValueNode xValueNode, @Nonnull XValuePlace xValuePlace)
+	protected void computePresentationImpl(@Nonnull XValueNode node, @Nonnull XValuePlace xValuePlace)
 	{
 		DotNetValueProxy valueOfVariable = getValueOfVariable();
 
 		myLastValueRef.set(valueOfVariable);
 
-		xValueNode.setPresentation(getIconForVariable(SimpleReference.create(valueOfVariable)), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren(valueOfVariable));
+		postInitialize(valueOfVariable);
+
+		node.setPresentation(getIconForVariable(SimpleReference.create(valueOfVariable)), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren
+				(valueOfVariable));
 	}
 }

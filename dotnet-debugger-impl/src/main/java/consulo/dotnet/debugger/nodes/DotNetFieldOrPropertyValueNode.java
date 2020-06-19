@@ -16,23 +16,18 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
 import com.intellij.icons.AllIcons;
 import com.intellij.xdebugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
-import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.*;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -73,6 +68,12 @@ public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueN
 	{
 		this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.getName(), stackFrame, thisObjectMirror);
 		myFieldValue = fieldValue;
+	}
+
+	@Override
+	protected void postInitialize(DotNetValueProxy valueOfVariable)
+	{
+		typeTag(null);
 	}
 
 	@Nullable

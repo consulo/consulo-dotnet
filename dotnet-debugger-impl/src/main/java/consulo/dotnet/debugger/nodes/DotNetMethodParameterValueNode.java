@@ -37,6 +37,7 @@ import consulo.dotnet.psi.DotNetParameterListOwner;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.util.lang.ref.SoftReference;
 
 /**
  * @author VISTALL
@@ -58,6 +59,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 	@Override
 	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
 	{
+		typeTag(null);
 		return AllIcons.Nodes.Parameter;
 	}
 
