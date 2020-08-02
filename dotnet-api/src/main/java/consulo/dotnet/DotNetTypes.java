@@ -78,6 +78,8 @@ public interface DotNetTypes
 				String AsyncStateMachineAttribute = "System.Runtime.CompilerServices.AsyncStateMachineAttribute";
 				String ExtensionAttribute = "System.Runtime.CompilerServices.ExtensionAttribute";
 				String IndexerName = "System.Runtime.CompilerServices.IndexerName";
+				String NullableContextAttribute = "System.Runtime.CompilerServices.NullableContextAttribute";
+				String NullableMembersAttribute = "System.Runtime.CompilerServices.NullableMembersAttribute";
 			}
 		}
 

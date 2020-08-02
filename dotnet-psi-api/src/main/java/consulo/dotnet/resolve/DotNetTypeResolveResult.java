@@ -16,9 +16,10 @@
 
 package consulo.dotnet.resolve;
 
+import com.intellij.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
@@ -34,26 +35,30 @@ public interface DotNetTypeResolveResult
 		{
 			return null;
 		}
-
-		@Nonnull
-		@Override
-		public DotNetGenericExtractor getGenericExtractor()
-		{
-			return DotNetGenericExtractor.EMPTY;
-		}
-
-		@Override
-		public boolean isNullable()
-		{
-			return true;
-		}
 	};
 
 	@Nullable
 	PsiElement getElement();
 
 	@Nonnull
-	DotNetGenericExtractor getGenericExtractor();
+	default DotNetGenericExtractor getGenericExtractor()
+	{
+		return DotNetGenericExtractor.EMPTY;
+	}
 
-	boolean isNullable();
+	/**
+	 * Return true if it's reference type, or struct wrapper (System.Nullable)
+	 */
+	default boolean isNullable()
+	{
+		return true;
+	}
+
+	/**
+	 * Return true if reference type declate as nullable
+	 */
+	default boolean isExplicitNullable()
+	{
+		return false;
+	}
 }

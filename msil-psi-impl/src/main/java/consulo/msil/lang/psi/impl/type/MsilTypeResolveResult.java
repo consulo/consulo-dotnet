@@ -16,15 +16,16 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.psi.PsiElement;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import consulo.dotnet.resolve.DotNetGenericExtractor;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.dotnet.resolve.DotNetTypeResolveResult;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.PsiElement;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -33,12 +34,15 @@ import com.intellij.psi.PsiElement;
 public class MsilTypeResolveResult implements DotNetTypeResolveResult
 {
 	private final PsiElement myElement;
-	private DotNetTypeRef[] myArgumentTypeRefs;
-	private NotNullLazyValue<DotNetGenericExtractor> myExtractorValue = new NotNullLazyValue<DotNetGenericExtractor>()
+	private final DotNetTypeRef[] myArgumentTypeRefs;
+	private final NotNullLazyValue<DotNetGenericExtractor> myExtractorValue;
+
+	public MsilTypeResolveResult(PsiElement element, DotNetTypeRef[] argumentTypeRefs)
 	{
-		@Nonnull
-		@Override
-		protected DotNetGenericExtractor compute()
+		myElement = element;
+		myArgumentTypeRefs = argumentTypeRefs;
+
+		myExtractorValue = NotNullLazyValue.createValue(() ->
 		{
 			if(myArgumentTypeRefs.length == 0)
 			{
@@ -51,13 +55,7 @@ public class MsilTypeResolveResult implements DotNetTypeResolveResult
 				return new MsilGenericExtractorImpl(genericParameters, myArgumentTypeRefs);
 			}
 			return DotNetGenericExtractor.EMPTY;
-		}
-	};
-
-	public MsilTypeResolveResult(PsiElement element, DotNetTypeRef[] argumentTypeRefs)
-	{
-		myElement = element;
-		myArgumentTypeRefs = argumentTypeRefs;
+		});
 	}
 
 	@Nullable
@@ -72,11 +70,5 @@ public class MsilTypeResolveResult implements DotNetTypeResolveResult
 	public DotNetGenericExtractor getGenericExtractor()
 	{
 		return myExtractorValue.getValue();
-	}
-
-	@Override
-	public boolean isNullable()
-	{
-		return true;
 	}
 }
