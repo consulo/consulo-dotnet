@@ -16,18 +16,22 @@
 
 package consulo.dotnet.module;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.psi.PsiElement;
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.dotnet.module.extension.DotNetModuleLangExtension;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 11.02.15
  */
+@Deprecated
+@DeprecationInfo("Use AssemblyModuleService")
 public class DotNetAssemblyUtil
 {
 	@Nullable

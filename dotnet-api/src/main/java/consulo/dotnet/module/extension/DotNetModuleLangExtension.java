@@ -25,6 +25,8 @@ import consulo.module.extension.ModuleExtension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -42,6 +44,19 @@ public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T
 	@Nullable
 	@RequiredReadAction
 	String getAssemblyTitle();
+
+	@RequiredReadAction
+	default boolean isInternalsVisibleTo(@Nonnull String assemblyName)
+	{
+		return getInternalsVisibleToAssemblies().contains(assemblyName);
+	}
+
+	@Nonnull
+	@RequiredReadAction
+	default Set<String> getInternalsVisibleToAssemblies()
+	{
+		return Collections.emptySet();
+	}
 
 	@Nonnull
 	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder() throws DotNetCompileFailedException;
