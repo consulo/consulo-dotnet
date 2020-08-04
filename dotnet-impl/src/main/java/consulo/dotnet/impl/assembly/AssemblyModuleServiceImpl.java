@@ -48,7 +48,7 @@ public class AssemblyModuleServiceImpl implements AssemblyModuleService
 			VirtualFile rootFile = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
 			if(rootFile != null && rootFile.getFileType() == DotNetModuleFileType.INSTANCE)
 			{
-				return new DotNetModuleAsAssemblyModule(element.getProject(), rootFile);
+				return new DotNetModuleAsAssemblyModule(myProject, rootFile);
 			}
 		}
 		return UnknownAssemblyModule.INSTANCE;

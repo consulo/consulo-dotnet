@@ -142,6 +142,6 @@
 
 		<projectService serviceImplementation="consulo.dotnet.lang.psi.impl.DotNetTypeRefCacheManager" />
 
-		<projectService serviceInterface="consulo.dotnet.assembly.AssemblyModule" serviceImplementation="consulo.dotnet.impl.assembly.AssemblyModuleServiceImpl" />
+		<projectService serviceInterface="consulo.dotnet.assembly.AssemblyModuleService" serviceImplementation="consulo.dotnet.impl.assembly.AssemblyModuleServiceImpl" />
 	</extensions>
 </consulo-plugin>
