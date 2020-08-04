@@ -152,7 +152,8 @@ public interface DotNetTypeRef
 	/**
 	 * @return true if type ref equal to `vmQName`. It's optimize version. If this method failed - need call #resolve()
 	 */
-	default boolean isEqualToVmQName(@Nonnull String vmQName) {
+	default boolean isEqualToVmQName(@Nonnull String vmQName)
+	{
 		return false;
 	}
 
