@@ -74,7 +74,7 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
 			}
 			else
 			{
-				listItemPresentation.setIcon(AllIcons.Nodes.Module);
+				listItemPresentation.withIcon(AllIcons.Nodes.Module);
 				listItemPresentation.append(module.getName());
 			}
 		});
