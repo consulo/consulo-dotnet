@@ -1,5 +1,6 @@
 package consulo.msil.ide.navigation;
 
+import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 
 import java.util.List;
@@ -155,9 +156,9 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 					}
 
 					@Override
-					public Icon getIconFor(LanguageFileType aValue)
+					public Image getIconFor(LanguageFileType aValue)
 					{
-						return TargetAWT.to(aValue.getIcon());
+						return aValue.getIcon();
 					}
 
 					@Override
