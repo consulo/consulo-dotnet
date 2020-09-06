@@ -108,7 +108,7 @@
 		<orderEntryType implementation="consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryType"/>
 		<orderEntryTypeEditor key="dot-net-library" implementationClass="consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryTypeEditor"/>
 
-		<addModuleDependencyTabFactory implementation="consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyTabFactory"/>
+		<addModuleDependencyActionProvider implementation="consulo.dotnet.module.dependency.DotNetLibraryModuleDependencyActionProvider"/>
 
 		<orderRootType implementation="consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType"/>
 		<orderRootTypeEditor key="dotNetExternalAttributes"
