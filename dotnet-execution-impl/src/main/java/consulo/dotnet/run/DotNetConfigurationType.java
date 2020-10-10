@@ -37,9 +37,10 @@ import consulo.module.extension.ModuleExtensionHelper;
  */
 public class DotNetConfigurationType extends ConfigurationTypeBase
 {
+	@Nonnull
 	public static DotNetConfigurationType getInstance()
 	{
-		return CONFIGURATION_TYPE_EP.findExtension(DotNetConfigurationType.class);
+		return EP_NAME.findExtensionOrFail(DotNetConfigurationType.class);
 	}
 
 	public DotNetConfigurationType()

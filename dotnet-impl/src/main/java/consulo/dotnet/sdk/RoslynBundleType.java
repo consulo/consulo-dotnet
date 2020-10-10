@@ -21,7 +21,7 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.projectRoots.SdkType;
-import consulo.dotnet.DotNetIcons;
+import consulo.dotnet.icon.DotNetIconGroup;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 
@@ -99,6 +99,6 @@ public class RoslynBundleType extends SdkType
 	@Override
 	public Image getIcon()
 	{
-		return DotNetIcons.NetFoundation;
+		return DotNetIconGroup.netFoundation();
 	}
 }
