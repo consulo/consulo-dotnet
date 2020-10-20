@@ -21,6 +21,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.configurations.PtyCommandLine;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
@@ -49,7 +50,9 @@ public class DotNetRunProfileState extends PatchableRunProfileState
 	public ExecutionResult executeImpl(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
 	{
 		TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
-		OSProcessHandler handler = patchHandler(ProcessHandlerFactory.getInstance().createProcessHandler(getCommandLineForRun()));
+		GeneralCommandLine commandLineForRun = getCommandLineForRun();
+		OSProcessHandler handler = patchHandler(ProcessHandlerFactory.getInstance().createProcessHandler(new PtyCommandLine(commandLineForRun)));
+		handler.setHasPty(true);
 		ProcessTerminatedListener.attach(handler, myExecutionEnvironment.getProject());
 
 		ConsoleView console = builder.getConsole();

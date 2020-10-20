@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
@@ -41,7 +41,7 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 {
 	private final Project myProject;
 
-	@Inject
+	@jakarta.inject.Inject
 	public MsilFileRepresentationProjectViewProvider(Project project)
 	{
 		myProject = project;

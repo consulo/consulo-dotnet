@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -42,7 +42,7 @@ import consulo.msil.lang.psi.MsilFile;
  * @author VISTALL
  * @since 27.05.14
  */
-@Singleton
+@jakarta.inject.Singleton
 public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationManager implements Disposable
 {
 	private MultiMap<VirtualFile, PsiFile> myFiles = new ConcurrentMultiMap<>();

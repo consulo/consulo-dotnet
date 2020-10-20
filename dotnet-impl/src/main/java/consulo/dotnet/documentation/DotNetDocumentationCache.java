@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import org.emonic.base.documentation.IDocumentation;
 import com.intellij.openapi.components.ServiceManager;
@@ -21,7 +21,7 @@ import consulo.roots.types.DocumentationOrderRootType;
  * @author VISTALL
  * @since 13.05.14
  */
-@Singleton
+@jakarta.inject.Singleton
 public class DotNetDocumentationCache
 {
 	@Nonnull

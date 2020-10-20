@@ -17,8 +17,8 @@
 package consulo.dotnet.debugger.breakpoint;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
@@ -34,7 +34,7 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointPrope
  * @author VISTALL
  * @since 03.05.2016
  */
-@Singleton
+@jakarta.inject.Singleton
 public class DotNetBreakpointListenerComponent
 {
 	@Inject

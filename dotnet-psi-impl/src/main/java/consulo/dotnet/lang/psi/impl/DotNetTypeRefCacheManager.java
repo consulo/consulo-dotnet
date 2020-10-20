@@ -1,8 +1,8 @@
 package consulo.dotnet.lang.psi.impl;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;

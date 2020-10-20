@@ -27,8 +27,8 @@ import consulo.dotnet.resolve.DotNetPsiSearcher;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,7 +36,7 @@ import java.util.List;
  * @author VISTALL
  * @since 13.07.14
  */
-@Singleton
+@jakarta.inject.Singleton
 public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 {
 	private static final ExtensionPointName<DotNetPsiSearcher> EP_NAME = ExtensionPointName.create("consulo.dotnet.psiSearcher");
@@ -44,7 +44,7 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	private List<DotNetPsiSearcher> mySearchers;
 	private DotNetNamespaceCacheManager myCacheManager;
 
-	@Inject
+	@jakarta.inject.Inject
 	public DotNetPsiSearcherImpl(Project project, DotNetNamespaceCacheManager cacheManager)
 	{
 		mySearchers = EP_NAME.getExtensionList(project);

@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;

@@ -27,8 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
@@ -63,7 +63,7 @@ import consulo.util.lang.ref.SimpleReference;
  * @author VISTALL
  * @since 03.03.2016
  */
-@Singleton
+@jakarta.inject.Singleton
 public class DotNetNamespaceCacheManager implements Disposable
 {
 	@Nonnull

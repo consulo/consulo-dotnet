@@ -18,7 +18,7 @@ package consulo.msil.lang.psi.impl.resolve;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -37,7 +37,7 @@ import consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByNameIndex;
  */
 public class MsilShortNameSearcher extends DotNetShortNameSearcher
 {
-	@Inject
+	@jakarta.inject.Inject
 	public MsilShortNameSearcher(Project project)
 	{
 		super(project);

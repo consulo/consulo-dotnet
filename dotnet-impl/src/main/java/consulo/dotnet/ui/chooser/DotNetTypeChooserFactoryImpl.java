@@ -17,8 +17,8 @@
 package consulo.dotnet.ui.chooser;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import com.intellij.ide.util.TreeChooser;
@@ -34,7 +34,7 @@ public class DotNetTypeChooserFactoryImpl extends DotNetTypeChooserFactory
 {
 	private Project myProject;
 
-	@Inject
+	@jakarta.inject.Inject
 	public DotNetTypeChooserFactoryImpl(Project project)
 	{
 		myProject = project;

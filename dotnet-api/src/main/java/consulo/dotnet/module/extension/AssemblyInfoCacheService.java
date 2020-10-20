@@ -9,7 +9,7 @@ import consulo.internal.dotnet.asm.mbel.ModuleParser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

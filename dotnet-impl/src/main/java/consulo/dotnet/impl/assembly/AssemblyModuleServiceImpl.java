@@ -13,8 +13,8 @@ import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.vfs.util.ArchiveVfsUtil;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
