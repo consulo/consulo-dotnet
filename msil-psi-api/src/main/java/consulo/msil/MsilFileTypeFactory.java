@@ -16,10 +16,10 @@
 
 package consulo.msil;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,5 +31,7 @@ public class MsilFileTypeFactory extends FileTypeFactory
 	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
 	{
 		consumer.consume(MsilFileType.INSTANCE);
+		// obsolete extension
+		consumer.consume(MsilFileType.INSTANCE, "msil");
 	}
 }
