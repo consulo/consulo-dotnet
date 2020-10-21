@@ -30,8 +30,6 @@ public class MsilFileTypeFactory extends FileTypeFactory
 	@Override
 	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
 	{
-		consumer.consume(MsilFileType.INSTANCE);
-		// obsolete extension
-		consumer.consume(MsilFileType.INSTANCE, "msil");
+		consumer.consume(MsilFileType.INSTANCE, "il;msil");
 	}
 }
