@@ -1,13 +1,8 @@
 package consulo.dotnet.debugger;
 
-import java.util.Collection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.application.ApplicationManager;
@@ -29,12 +24,12 @@ import consulo.dotnet.debugger.breakpoint.DotNetMethodBreakpointType;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
-import consulo.dotnet.debugger.nodes.logicView.ArrayDotNetLogicValueView;
-import consulo.dotnet.debugger.nodes.logicView.DefaultDotNetLogicValueView;
-import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
-import consulo.dotnet.debugger.nodes.logicView.EnumerableDotNetLogicValueView;
-import consulo.dotnet.debugger.nodes.logicView.StringDotNetLogicValueView;
+import consulo.dotnet.debugger.nodes.logicView.*;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -101,7 +96,12 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	@Override
 	public ExecutionConsole createConsole()
 	{
-		return myResult.getExecutionConsole();
+		ExecutionConsole executionConsole = myResult.getExecutionConsole();
+		if(executionConsole == null)
+		{
+			return TextConsoleBuilderFactory.getInstance().createBuilder(getSession().getProject()).getConsole();
+		}
+		return executionConsole;
 	}
 
 	@Nonnull

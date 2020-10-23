@@ -16,25 +16,10 @@
 
 package consulo.dotnet.run;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.jdom.Element;
 import com.intellij.execution.CommonProgramRunConfigurationParameters;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.configurations.ModuleBasedConfiguration;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunConfigurationModule;
-import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.configurations.*;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -60,18 +45,25 @@ import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.dotnet.run.coverage.DotNetCoverageConfigurationEditor;
 import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
+import consulo.execution.console.ConsoleType;
+import org.jdom.Element;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 26.11.13.
  */
 public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements CommonProgramRunConfigurationParameters, DotNetConfigurationWithCoverage,
-		DotNetConfigurationWithDebug
+		DotNetConfigurationWithDebug, DotNetConfigurationConsoleTypeProvider
 {
 	private String myProgramParameters;
 	private String myWorkingDir = "";
 	private Map<String, String> myEnvsMap = Collections.emptyMap();
 	private boolean myPassParentEnvs = true;
+	private ConsoleType myConsoleType = ConsoleType.BUILTIN;
 
 	public DotNetConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory)
 	{
@@ -272,5 +264,21 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 			throw new ExecutionException("Debugger is not supported");
 		}
 		return moduleExtensionWithDebug.createDebuggerProcess(session, this, debugConnectionInfo);
+	}
+
+	public void setConsoleType(ConsoleType consoleType)
+	{
+		myConsoleType = consoleType;
+	}
+
+	@Nonnull
+	@Override
+	public ConsoleType getConsoleType()
+	{
+		if(myConsoleType == null)
+		{
+			myConsoleType = ConsoleType.BUILTIN;
+		}
+		return myConsoleType;
 	}
 }

@@ -16,23 +16,14 @@
 
 package consulo.dotnet.run;
 
-import java.awt.event.ItemEvent;
-
-import javax.annotation.Nonnull;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-
-import com.intellij.application.options.ModuleListCellRenderer;
-import com.intellij.execution.ui.CommonProgramParametersPanel;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ui.FormBuilder;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.dotnet.module.extension.DotNetRunModuleExtension;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -42,8 +33,7 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 {
 	private final Project myProject;
 
-	private JComboBox myModuleComboBox;
-	private CommonProgramParametersPanel myProgramParametersPanel;
+	private DotNetProgramParametersPanel myProgramParametersPanel;
 
 	public DotNetConfigurationEditor(Project project)
 	{
@@ -54,15 +44,12 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 	protected void resetEditorFrom(DotNetConfiguration runConfiguration)
 	{
 		myProgramParametersPanel.reset(runConfiguration);
-		myModuleComboBox.setSelectedItem(runConfiguration.getConfigurationModule().getModule());
-		myProgramParametersPanel.setModuleContext(runConfiguration.getConfigurationModule().getModule());
 	}
 
 	@Override
 	protected void applyEditorTo(DotNetConfiguration runConfiguration) throws ConfigurationException
 	{
 		myProgramParametersPanel.applyTo(runConfiguration);
-		runConfiguration.getConfigurationModule().setModule((Module) myModuleComboBox.getSelectedItem());
 	}
 
 	@Nonnull
@@ -70,29 +57,7 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 	@RequiredUIAccess
 	protected JComponent createEditor()
 	{
-		myProgramParametersPanel = new CommonProgramParametersPanel();
-
-		myModuleComboBox = new JComboBox();
-		myModuleComboBox.setRenderer(new ModuleListCellRenderer());
-		for(Module module : ModuleManager.getInstance(myProject).getModules())
-		{
-			if(ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class) != null)
-			{
-				myModuleComboBox.addItem(module);
-			}
-		}
-		myModuleComboBox.addItemListener(e ->
-		{
-			if(e.getStateChange() == ItemEvent.SELECTED)
-			{
-				myProgramParametersPanel.setModuleContext((Module) myModuleComboBox.getSelectedItem());
-			}
-		});
-
-		FormBuilder formBuilder = FormBuilder.createFormBuilder();
-		formBuilder.addLabeledComponent("Module", myModuleComboBox);
-
-		myProgramParametersPanel.add(formBuilder.getPanel());
-		return myProgramParametersPanel;
+		myProgramParametersPanel = new DotNetProgramParametersPanel(myProject);
+		return new BorderLayoutPanel().addToTop(myProgramParametersPanel);
 	}
 }

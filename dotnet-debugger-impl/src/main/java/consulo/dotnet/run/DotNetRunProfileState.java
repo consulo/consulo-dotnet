@@ -21,7 +21,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.configurations.PtyCommandLine;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
@@ -30,6 +30,7 @@ import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.console.ConsoleType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,14 +50,31 @@ public class DotNetRunProfileState extends PatchableRunProfileState
 	@Override
 	public ExecutionResult executeImpl(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
 	{
-		TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
 		GeneralCommandLine commandLineForRun = getCommandLineForRun();
-		OSProcessHandler handler = patchHandler(ProcessHandlerFactory.getInstance().createProcessHandler(new PtyCommandLine(commandLineForRun)));
-		handler.setHasPty(true);
-		ProcessTerminatedListener.attach(handler, myExecutionEnvironment.getProject());
 
-		ConsoleView console = builder.getConsole();
-		console.attachToProcess(handler);
+		boolean enableConsole = true;
+		OSProcessHandler handler;
+		RunProfile runProfile = myExecutionEnvironment.getRunProfile();
+		if(runProfile instanceof DotNetConfigurationConsoleTypeProvider)
+		{
+			ConsoleType consoleType = ((DotNetConfigurationConsoleTypeProvider) runProfile).getConsoleType();
+
+			handler = consoleType.createHandler(commandLineForRun);
+			enableConsole = consoleType.isConsoleViewSupported();
+		}
+		else
+		{
+			handler = patchHandler(ProcessHandlerFactory.getInstance().createProcessHandler(commandLineForRun));
+		}
+
+		ProcessTerminatedListener.attach(handler, myExecutionEnvironment.getProject());
+		ConsoleView console = null;
+		if(enableConsole)
+		{
+			TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(getExecutionEnvironment().getProject());
+			console = builder.getConsole();
+			console.attachToProcess(handler);
+		}
 		return new DefaultExecutionResult(console, handler);
 	}
 }
