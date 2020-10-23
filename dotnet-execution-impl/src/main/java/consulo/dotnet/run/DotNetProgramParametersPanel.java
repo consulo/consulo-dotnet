@@ -10,10 +10,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.ui.CollectionComboBoxModel;
+import com.intellij.ui.ColoredListCellRenderer;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.execution.console.ConsoleType;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +85,14 @@ public class DotNetProgramParametersPanel extends CommonProgramParametersPanel
 			}
 		}
 		myConsoleTypeBox = new ComboBox<>(new CollectionComboBoxModel<>(consoleTypeList));
-
+		myConsoleTypeBox.setRenderer(new ColoredListCellRenderer<ConsoleType>()
+		{
+			@Override
+			protected void customizeCellRenderer(@Nonnull JList list, ConsoleType value, int index, boolean selected, boolean hasFocus)
+			{
+				append(value.getDisplayName().get());
+			}
+		});
 		myConsoleTypeLabeled = LabeledComponent.create(myConsoleTypeBox, "Console");
 
 		add(myConsoleTypeLabeled);

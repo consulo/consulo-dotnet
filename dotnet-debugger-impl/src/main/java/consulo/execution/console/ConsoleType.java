@@ -5,10 +5,15 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.configurations.PtyCommandLine;
 import com.intellij.execution.process.OSProcessHandler;
+import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessHandlerFactory;
+import com.intellij.openapi.util.SystemInfo;
+import consulo.container.boot.ContainerPathManager;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -17,20 +22,20 @@ import java.util.List;
  */
 public enum ConsoleType
 {
-	BUILTIN(true)
+	BUILTIN("Builtin", true)
 			{
 				@Nonnull
 				@Override
-				public OSProcessHandler createHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException
+				public ProcessHandler createHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException
 				{
 					return ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
 				}
 			},
-	EXTERNAL_EMULATION(true)
+	EXTERNAL_EMULATION("Builtin with external emulation", true)
 			{
 				@Nonnull
 				@Override
-				public OSProcessHandler createHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException
+				public ProcessHandler createHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException
 				{
 					PtyCommandLine ptyCommandLine = new PtyCommandLine(commandLine);
 					OSProcessHandler handler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(ptyCommandLine);
@@ -38,20 +43,20 @@ public enum ConsoleType
 					return handler;
 				}
 			},
-	EXTERNAL(false)
+	EXTERNAL("External", Platform.current().os().isWindows())
 			{
 				@Nonnull
 				@Override
-				public OSProcessHandler createHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException
+				public ProcessHandler createHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException
 				{
 					Platform.OperatingSystem os = Platform.current().os();
 					if(os.isWindows())
 					{
 						String exePath = commandLine.getExePath();
 
-						commandLine.setExePath("cmd.exe");
+						commandLine.setExePath(getRunnerPath());
 
-						List<String> newArgs = List.of("/c", "start", exePath);
+						List<String> newArgs = List.of("/c", exePath);
 
 						String[] oldArgs = commandLine.getParametersList().getArray();
 						ParametersList parametersList = commandLine.getParametersList();
@@ -65,6 +70,18 @@ public enum ConsoleType
 					throw new UnsupportedOperationException();
 				}
 
+				@Nonnull
+				private String getRunnerPath()
+				{
+					if(!SystemInfo.isWindows)
+					{
+						throw new IllegalStateException("There is no need of runner under unix based OS");
+					}
+
+					File runnerw = new File(ContainerPathManager.get().getBinPath(), SystemInfo.is64Bit ? "runnerw64.exe" : "runnerw.exe");
+					return runnerw.getPath();
+				}
+
 				@Override
 				public boolean isConsoleViewSupported()
 				{
@@ -72,11 +89,18 @@ public enum ConsoleType
 				}
 			};
 
+	private final LocalizeValue myDisplayName;
 	private final boolean myAvaliable;
 
-	ConsoleType(boolean avaliable)
+	ConsoleType(String displayName, boolean avaliable)
 	{
+		myDisplayName = LocalizeValue.of(displayName);
 		myAvaliable = avaliable;
+	}
+
+	public LocalizeValue getDisplayName()
+	{
+		return myDisplayName;
 	}
 
 	public boolean isAvaliable()
@@ -90,5 +114,5 @@ public enum ConsoleType
 	}
 
 	@Nonnull
-	public abstract OSProcessHandler createHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
+	public abstract ProcessHandler createHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
 }
