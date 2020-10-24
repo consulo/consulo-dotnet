@@ -16,6 +16,7 @@
 
 package consulo.dotnet;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetMethodDeclaration;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.dotnet.psi.DotNetNamedElement;
@@ -23,7 +24,6 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetArrayTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRefUtil;
-import consulo.dotnet.DotNetTypes;
 
 /**
  * @author VISTALL
@@ -31,6 +31,7 @@ import consulo.dotnet.DotNetTypes;
  */
 public class DotNetRunUtil
 {
+	@RequiredReadAction
 	public static boolean hasEntryPoint(DotNetTypeDeclaration typeDeclaration)
 	{
 		for(DotNetNamedElement dotNetNamedElement : typeDeclaration.getMembers())
@@ -43,6 +44,7 @@ public class DotNetRunUtil
 		return false;
 	}
 
+	@RequiredReadAction
 	public static boolean isEntryPoint(DotNetMethodDeclaration methodDeclaration)
 	{
 		if(!methodDeclaration.hasModifier(DotNetModifier.STATIC))
@@ -65,7 +67,6 @@ public class DotNetRunUtil
 			return false;
 		}
 		DotNetTypeRef dotNetTypeRef = parameterTypesForRuntime[0];
-		return dotNetTypeRef instanceof DotNetArrayTypeRef && DotNetTypeRefUtil.isVmQNameEqual(((DotNetArrayTypeRef) dotNetTypeRef).getInnerTypeRef
-				(), methodDeclaration, DotNetTypes.System.String);
+		return dotNetTypeRef instanceof DotNetArrayTypeRef && DotNetTypeRefUtil.isVmQNameEqual(((DotNetArrayTypeRef) dotNetTypeRef).getInnerTypeRef(), DotNetTypes.System.String);
 	}
 }

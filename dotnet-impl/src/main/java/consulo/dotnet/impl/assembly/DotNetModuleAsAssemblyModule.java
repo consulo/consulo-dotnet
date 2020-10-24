@@ -117,7 +117,7 @@ class DotNetModuleAsAssemblyModule implements AssemblyModule
 				MsilCustomAttribute[] attributes = assemblyEntry.getAttributes();
 				for(MsilCustomAttribute attribute : attributes)
 				{
-					if(DotNetTypeRefUtil.isVmQNameEqual(attribute.toTypeRef(), attribute, DotNetTypes.System.Runtime.CompilerServices.InternalsVisibleToAttribute))
+					if(DotNetTypeRefUtil.isVmQNameEqual(attribute.toTypeRef(), DotNetTypes.System.Runtime.CompilerServices.InternalsVisibleToAttribute))
 					{
 						MsilCustomAttributeArgumentList argumentList = MsilCustomAttributeStubber.build(attribute);
 						List<MsiCustomAttributeValue> constructorArguments = argumentList.getConstructorArguments();
