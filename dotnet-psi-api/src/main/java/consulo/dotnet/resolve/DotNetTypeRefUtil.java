@@ -16,13 +16,14 @@
 
 package consulo.dotnet.resolve;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetType;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -44,7 +45,7 @@ public class DotNetTypeRefUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isVmQNameEqual(@Nonnull DotNetTypeRef typeRef, @Nonnull PsiElement element, @Nonnull String expectedVmQName)
+	public static boolean isVmQNameEqual(@Nonnull DotNetTypeRef typeRef, @Nonnull String expectedVmQName)
 	{
 		DotNetTypeResolveResult typeResolveResult = typeRef.resolve();
 		PsiElement typeResolveResultElement = typeResolveResult.getElement();
