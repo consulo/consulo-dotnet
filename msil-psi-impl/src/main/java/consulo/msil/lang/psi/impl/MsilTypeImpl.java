@@ -33,6 +33,19 @@ import javax.annotation.Nonnull;
  */
 public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElementImpl<T> implements DotNetType
 {
+	private static class Resolver implements NotNullFunction<MsilTypeImpl<?>, DotNetTypeRef>
+	{
+		private static final Resolver INSTANCE = new Resolver();
+
+		@Override
+		@Nonnull
+		@RequiredReadAction
+		public DotNetTypeRef fun(MsilTypeImpl<?> msilType)
+		{
+			return msilType.toTypeRefImpl();
+		}
+	}
+
 	protected MsilTypeImpl(@Nonnull ASTNode node)
 	{
 		super(node);
@@ -48,7 +61,7 @@ public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElemen
 	@Override
 	public final DotNetTypeRef toTypeRef()
 	{
-		return DotNetTypeRefCacheUtil.cacheTypeRef(this, MsilTypeImpl::toTypeRefImpl);
+		return DotNetTypeRefCacheUtil.cacheTypeRef(this, Resolver.INSTANCE);
 	}
 
 	@RequiredReadAction
