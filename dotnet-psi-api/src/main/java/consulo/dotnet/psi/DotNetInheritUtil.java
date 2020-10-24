@@ -116,7 +116,7 @@ public class DotNetInheritUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isParentOrSelf(@Nonnull String parentClass, DotNetTypeRef typeRef, PsiElement element, boolean deep)
+	public static boolean isParentOrSelf(@Nonnull String parentClass, DotNetTypeRef typeRef, boolean deep)
 	{
 		PsiElement resolve = typeRef.resolve().getElement();
 		if(!(resolve instanceof DotNetTypeDeclaration))
