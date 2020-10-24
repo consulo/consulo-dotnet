@@ -16,8 +16,6 @@
 
 package consulo.msil.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
@@ -27,25 +25,14 @@ import consulo.dotnet.lang.psi.impl.DotNetTypeRefCacheUtil;
 import consulo.dotnet.psi.DotNetType;
 import consulo.dotnet.resolve.DotNetTypeRef;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 12-May-16
  */
 public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElementImpl<T> implements DotNetType
 {
-	private static class Resolver implements NotNullFunction<MsilTypeImpl<?>, DotNetTypeRef>
-	{
-		private static final Resolver INSTANCE = new Resolver();
-
-		@Override
-		@Nonnull
-		@RequiredReadAction
-		public DotNetTypeRef fun(MsilTypeImpl<?> msilType)
-		{
-			return msilType.toTypeRefImpl();
-		}
-	}
-
 	protected MsilTypeImpl(@Nonnull ASTNode node)
 	{
 		super(node);
@@ -61,7 +48,7 @@ public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElemen
 	@Override
 	public final DotNetTypeRef toTypeRef()
 	{
-		return DotNetTypeRefCacheUtil.cacheTypeRef(this, Resolver.INSTANCE);
+		return DotNetTypeRefCacheUtil.cacheTypeRef(this, MsilTypeImpl::toTypeRefImpl);
 	}
 
 	@RequiredReadAction

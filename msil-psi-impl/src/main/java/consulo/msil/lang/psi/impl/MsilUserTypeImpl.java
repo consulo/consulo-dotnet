@@ -16,8 +16,6 @@
 
 package consulo.msil.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -30,6 +28,8 @@ import consulo.msil.lang.psi.MsilTokens;
 import consulo.msil.lang.psi.MsilUserType;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilUserTypeStub;
 import consulo.msil.lang.psi.impl.type.MsilReferenceTypeRefImpl;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -106,6 +106,6 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements 
 	@Override
 	public DotNetTypeRef toTypeRefImpl()
 	{
-		return new MsilReferenceTypeRefImpl(this, getReferenceText());
+		return new MsilReferenceTypeRefImpl(getProject(), getResolveScope(), getReferenceText());
 	}
 }

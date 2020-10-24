@@ -16,11 +16,6 @@
 
 package consulo.msil.lang.psi.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -32,6 +27,10 @@ import consulo.msil.lang.psi.MsilTokenSets;
 import consulo.msil.lang.psi.MsilTokens;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilNativeTypeStub;
 import consulo.msil.lang.psi.impl.type.MsilNativeTypeRefImpl;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -115,6 +114,6 @@ public class MsilNativeTypeImpl extends MsilTypeImpl<MsilNativeTypeStub> impleme
 		}
 		String ref = ourTypes.get(elementType);
 		assert ref != null : elementType.toString();
-		return new MsilNativeTypeRefImpl(this, ref);
+		return new MsilNativeTypeRefImpl(getProject(), getResolveScope(), ref);
 	}
 }

@@ -63,7 +63,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		public DotNetTypeRef fun(MsilClassEntryImpl msilClassEntry)
 		{
 			DotNetFieldDeclaration value = findFieldByName(msilClassEntry, "__value");
-			return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(msilClassEntry, DotNetTypes.System.Int32);
+			return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(msilClassEntry.getProject(), msilClassEntry.getResolveScope(), DotNetTypes.System.Int32);
 		}
 	}
 

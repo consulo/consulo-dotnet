@@ -16,9 +16,10 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import javax.annotation.Nonnull;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.search.GlobalSearchScope;
 
-import com.intellij.psi.PsiElement;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,9 +27,9 @@ import com.intellij.psi.PsiElement;
  */
 public class MsilNativeTypeRefImpl extends MsilReferenceTypeRefImpl
 {
-	public MsilNativeTypeRefImpl(@Nonnull PsiElement element, @Nonnull String ref)
+	public MsilNativeTypeRefImpl(@Nonnull Project project, @Nonnull GlobalSearchScope resolveScope, @Nonnull String ref)
 	{
-		super(element, ref);
+		super(project, resolveScope, ref);
 	}
 
 	@Override

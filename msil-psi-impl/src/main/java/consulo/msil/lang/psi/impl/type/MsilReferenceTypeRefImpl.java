@@ -18,7 +18,7 @@ package consulo.msil.lang.psi.impl.type;
 
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.*;
@@ -32,14 +32,25 @@ import javax.annotation.Nonnull;
  */
 public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 {
-	private final PsiElement myElement;
+	@Nonnull
+	private final GlobalSearchScope myResolveScope;
+	@Nonnull
 	protected final String myRef;
+	@Nonnull
+	private final Project myProject;
 
-	public MsilReferenceTypeRefImpl(@Nonnull PsiElement element, @Nonnull String ref)
+	public MsilReferenceTypeRefImpl(@Nonnull Project project, @Nonnull GlobalSearchScope resolveScope, @Nonnull String ref)
 	{
-		super(element.getProject());
-		myElement = element;
+		super(project);
+		myProject = project;
+		myResolveScope = resolveScope;
 		myRef = ref;
+	}
+
+	@Nonnull
+	public GlobalSearchScope getResolveScope()
+	{
+		return myResolveScope;
 	}
 
 	@RequiredReadAction
@@ -55,13 +66,12 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 	@Override
 	protected DotNetTypeResolveResult resolveResult()
 	{
-		Project project = myElement.getProject();
-		if(DumbService.isDumb(project))
+		if(DumbService.isDumb(myProject))
 		{
 			return DotNetTypeResolveResult.EMPTY;
 		}
 
-		DotNetTypeDeclaration[] types = DotNetPsiSearcher.getInstance(project).findTypes(myRef, myElement.getResolveScope());
+		DotNetTypeDeclaration[] types = DotNetPsiSearcher.getInstance(myProject).findTypes(myRef, myResolveScope);
 		for(DotNetTypeDeclaration type : types)
 		{
 			if(type instanceof MsilClassEntry)
