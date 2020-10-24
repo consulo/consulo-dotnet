@@ -21,10 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
-import consulo.dotnet.resolve.DotNetTypeRef;
-import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
-import consulo.dotnet.resolve.DotNetTypeResolveResult;
+import consulo.dotnet.resolve.*;
 import consulo.msil.lang.psi.MsilClassEntry;
 
 import javax.annotation.Nonnull;
@@ -73,6 +70,11 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 			}
 		}
 
+		if(types.length > 0)
+		{
+			return new SimpleTypeResolveResult(types[0], true);
+		}
+		
 		return DotNetTypeResolveResult.EMPTY;
 	}
 
