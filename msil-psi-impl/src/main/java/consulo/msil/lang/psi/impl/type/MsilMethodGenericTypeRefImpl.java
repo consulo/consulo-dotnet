@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import javax.annotation.Nonnull;
+import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
@@ -24,7 +24,8 @@ import consulo.dotnet.resolve.DotNetTypeResolveResult;
 import consulo.dotnet.resolve.SimpleTypeResolveResult;
 import consulo.dotnet.util.ArrayUtil2;
 import consulo.msil.lang.psi.MsilMethodEntry;
-import com.intellij.psi.PsiElement;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +38,7 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 
 	public MsilMethodGenericTypeRefImpl(MsilMethodEntry parent, int index)
 	{
-		super(parent.getProject());
+		super(parent.getProject(), parent.getResolveScope());
 		myParent = parent;
 		myIndex = index;
 	}

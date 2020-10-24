@@ -16,14 +16,14 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import javax.annotation.Nonnull;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Comparing;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetArrayTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import consulo.dotnet.resolve.DotNetTypeResolveResult;
-import com.intellij.openapi.util.Comparing;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,9 +34,9 @@ public class MsilArrayTypRefImpl extends DotNetTypeRefWithCachedResult implement
 	private final DotNetTypeRef myInnerTypeRef;
 	private final int[] myLowerValues;
 
-	public MsilArrayTypRefImpl(Project project, DotNetTypeRef innerTypeRef, int[] lowerValues)
+	public MsilArrayTypRefImpl(DotNetTypeRef innerTypeRef, int[] lowerValues)
 	{
-		super(project);
+		super(innerTypeRef.getProject(), innerTypeRef.getResolveScope());
 		myInnerTypeRef = innerTypeRef;
 		myLowerValues = lowerValues;
 	}

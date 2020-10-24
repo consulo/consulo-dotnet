@@ -33,24 +33,12 @@ import javax.annotation.Nonnull;
 public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 {
 	@Nonnull
-	private final GlobalSearchScope myResolveScope;
-	@Nonnull
 	protected final String myRef;
-	@Nonnull
-	private final Project myProject;
 
 	public MsilReferenceTypeRefImpl(@Nonnull Project project, @Nonnull GlobalSearchScope resolveScope, @Nonnull String ref)
 	{
-		super(project);
-		myProject = project;
-		myResolveScope = resolveScope;
+		super(project, resolveScope);
 		myRef = ref;
-	}
-
-	@Nonnull
-	public GlobalSearchScope getResolveScope()
-	{
-		return myResolveScope;
 	}
 
 	@RequiredReadAction

@@ -17,6 +17,7 @@
 package consulo.dotnet.resolve;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
 
@@ -44,6 +45,13 @@ public interface DotNetTypeRef
 		@Nonnull
 		@Override
 		public Project getProject()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		@Nonnull
+		@Override
+		public GlobalSearchScope getResolveScope()
 		{
 			throw new UnsupportedOperationException();
 		}
@@ -86,6 +94,13 @@ public interface DotNetTypeRef
 		public Delegate(DotNetTypeRef delegate)
 		{
 			myDelegate = delegate;
+		}
+
+		@Nonnull
+		@Override
+		public GlobalSearchScope getResolveScope()
+		{
+			return myDelegate.getResolveScope();
 		}
 
 		@Nonnull
@@ -140,6 +155,9 @@ public interface DotNetTypeRef
 
 	@Nonnull
 	Project getProject();
+
+	@Nonnull
+	GlobalSearchScope getResolveScope();
 
 	@Nonnull
 	@Deprecated

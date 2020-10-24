@@ -16,8 +16,6 @@
 
 package consulo.msil.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
@@ -28,6 +26,9 @@ import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.msil.lang.psi.MsilStubTokenSets;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 import consulo.msil.lang.psi.impl.type.MsilPointerTypeRefImpl;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -75,6 +76,6 @@ public class MsilPointerTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> impleme
 		{
 			return DotNetTypeRef.ERROR_TYPE;
 		}
-		return new MsilPointerTypeRefImpl(getProject(), innerType.toTypeRef());
+		return new MsilPointerTypeRefImpl(innerType.toTypeRef());
 	}
 }

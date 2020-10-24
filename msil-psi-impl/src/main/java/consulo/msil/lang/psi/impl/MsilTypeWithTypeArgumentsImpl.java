@@ -94,6 +94,6 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilTypeImpl<MsilEmptyTypeStu
 			rArguments[i] = argument.toTypeRef();
 		}
 
-		return new MsilTypeWithTypeArgumentsRefImpl(getProject(), innerType.toTypeRef(), rArguments);
+		return new MsilTypeWithTypeArgumentsRefImpl(innerType.toTypeRef(), rArguments);
 	}
 }

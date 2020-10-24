@@ -77,7 +77,7 @@ public class MsilArrayTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implement
 			}
 		}
 
-		return new MsilArrayTypRefImpl(getProject(), getInnerType().toTypeRef(), lowerValues);
+		return new MsilArrayTypRefImpl(getInnerType().toTypeRef(), lowerValues);
 	}
 
 	@RequiredReadAction

@@ -16,10 +16,11 @@
 
 package consulo.dotnet.resolve;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.search.GlobalSearchScope;
 import consulo.annotation.access.RequiredReadAction;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,13 +28,15 @@ import consulo.annotation.access.RequiredReadAction;
  */
 public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 {
-	private final Project myProject;
+	protected final Project myProject;
+	protected final GlobalSearchScope myResolveScope;
 
 	private volatile DotNetTypeResolveResult myResult;
 
-	protected DotNetTypeRefWithCachedResult(Project project)
+	protected DotNetTypeRefWithCachedResult(Project project, GlobalSearchScope resolveScope)
 	{
 		myProject = project;
+		myResolveScope = resolveScope;
 	}
 
 	@Nonnull
@@ -41,6 +44,13 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 	public Project getProject()
 	{
 		return myProject;
+	}
+
+	@Nonnull
+	@Override
+	public GlobalSearchScope getResolveScope()
+	{
+		return myResolveScope;
 	}
 
 	@Nonnull

@@ -53,6 +53,6 @@ public class MsilTypeByRefImpl extends MsilTypeImpl<MsilEmptyTypeStub> implement
 	@Override
 	protected DotNetTypeRef toTypeRefImpl()
 	{
-		return new MsilRefTypeRefImpl(getProject(), getInnerType().toTypeRef());
+		return new MsilRefTypeRefImpl(getInnerType().toTypeRef());
 	}
 }
