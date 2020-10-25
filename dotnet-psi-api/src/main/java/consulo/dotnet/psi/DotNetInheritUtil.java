@@ -17,17 +17,19 @@
 package consulo.dotnet.psi;
 
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
+import consulo.dotnet.psi.internal.DotNetInheritCache;
 import consulo.dotnet.resolve.DotNetTypeRef;
-import gnu.trove.THashSet;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -35,6 +37,8 @@ import java.util.Set;
  */
 public class DotNetInheritUtil
 {
+	private static final Key<Map<Pair<String, Boolean>, Boolean>> ourInheritorCache = Key.create("dotnet.inheritor.cache");
+
 	@RequiredReadAction
 	public static boolean isStruct(DotNetTypeDeclaration typeDeclaration)
 	{
@@ -64,55 +68,9 @@ public class DotNetInheritUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, @Nonnull String other, boolean deep)
+	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, @Nonnull String otherVmQName, boolean deep)
 	{
-		return isInheritorImpl(typeDeclaration, other, deep, new THashSet<>());
-	}
-
-	@RequiredReadAction
-	private static boolean isInheritorImpl(@Nonnull DotNetTypeDeclaration typeDeclaration,
-										   @Nonnull String otherVmQName,
-										   boolean deep,
-										   @Nonnull Set<String> alreadyProcessedTypes)
-	{
-		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
-		if(anExtends.length > 0)
-		{
-			for(DotNetTypeRef typeRef : anExtends)
-			{
-				if(typeRef.isEqualToVmQName(otherVmQName))
-				{
-					return true;
-				}
-
-				PsiElement psiElement = typeRef.resolve().getElement();
-				if(psiElement instanceof DotNetTypeDeclaration)
-				{
-					if(psiElement.isEquivalentTo(typeDeclaration))
-					{
-						return false;
-					}
-
-					String vmQName = ((DotNetTypeDeclaration) psiElement).getVmQName();
-					if(Comparing.equal(vmQName, otherVmQName))
-					{
-						return true;
-					}
-
-					if(deep)
-					{
-						if(alreadyProcessedTypes.add(vmQName))
-						{
-							if(isInheritorImpl((DotNetTypeDeclaration) psiElement, otherVmQName, true, alreadyProcessedTypes))
-							{
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
+		return DotNetInheritCache.getInstance(typeDeclaration.getProject()).calcResult(typeDeclaration, otherVmQName, deep);
 	}
 
 	@RequiredReadAction

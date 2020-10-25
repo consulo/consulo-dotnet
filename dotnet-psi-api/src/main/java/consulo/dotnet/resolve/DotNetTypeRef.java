@@ -46,14 +46,14 @@ public interface DotNetTypeRef
 		@Override
 		public Project getProject()
 		{
-			throw new UnsupportedOperationException();
+			throw new UnsupportedOperationException(myText);
 		}
 
 		@Nonnull
 		@Override
 		public GlobalSearchScope getResolveScope()
 		{
-			throw new UnsupportedOperationException();
+			throw new UnsupportedOperationException(myText);
 		}
 
 		@Nonnull

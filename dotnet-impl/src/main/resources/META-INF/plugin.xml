@@ -21,7 +21,7 @@
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
 	<depends config-file="com.intellij.xml.xml" optional="true">com.intellij.xml</depends>
 
-	<import path="/META-INF/CompositeFormattingString.xml" />
+	<import path="/META-INF/CompositeFormattingString.xml"/>
 
 	<extensionPoints>
 		<extensionPoint name="debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
@@ -82,7 +82,7 @@
 		<defaultLibraryRootDetector implementation="consulo.dotnet.library.DotNetLibraryDirectoryDetector"/>
 
 		<applicationService serviceImplementation="consulo.dotnet.documentation.DotNetDocumentationCache"/>
-		<applicationService serviceImplementation="consulo.dotnet.module.extension.AssemblyInfoCacheService" />
+		<applicationService serviceImplementation="consulo.dotnet.module.extension.AssemblyInfoCacheService"/>
 
 		<projectService serviceInterface="consulo.dotnet.resolve.DotNetPsiSearcher"
 						serviceImplementation="consulo.dotnet.resolve.impl.DotNetPsiSearcherImpl"/>
@@ -136,12 +136,14 @@
 
 		<pathMacroExpendableProtocol protocol="netdll"/>
 
-		<virtualFileSystem implementation="consulo.dotnet.dll.vfs.DotNetArchiveFileSystem" />
+		<virtualFileSystem implementation="consulo.dotnet.dll.vfs.DotNetArchiveFileSystem"/>
 
-		<projectService serviceImplementation="consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent" lazy="false" />
+		<projectService serviceImplementation="consulo.dotnet.debugger.breakpoint.DotNetBreakpointListenerComponent" lazy="false"/>
 
-		<projectService serviceImplementation="consulo.dotnet.lang.psi.impl.DotNetTypeRefCacheManager" />
+		<projectService serviceImplementation="consulo.dotnet.lang.psi.impl.DotNetTypeRefCacheManager"/>
 
-		<projectService serviceInterface="consulo.dotnet.assembly.AssemblyModuleService" serviceImplementation="consulo.dotnet.impl.assembly.AssemblyModuleServiceImpl" />
+		<projectService serviceImplementation="consulo.dotnet.psi.internal.DotNetInheritCache"/>
+
+		<projectService serviceInterface="consulo.dotnet.assembly.AssemblyModuleService" serviceImplementation="consulo.dotnet.impl.assembly.AssemblyModuleServiceImpl"/>
 	</extensions>
 </consulo-plugin>
