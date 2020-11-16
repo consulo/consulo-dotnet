@@ -16,12 +16,6 @@
 
 package consulo.dotnet.lang.psi.impl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -29,10 +23,16 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.NotNullFunction;
-import com.intellij.util.SmartList;
+import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -83,7 +83,7 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 			@Nonnull NotNullFunction<PsiElement, PsiElement> transformer,
 			@Nonnull ChildrenFilter filter)
 	{
-		Collection<Collection<PsiElement>> list = new SmartList<>();
+		Collection<Collection<PsiElement>> list = new ArrayList<>();
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
 			Collection<PsiElement> children = dotNetNamespaceAsElement.findChildren(name, globalSearchScope, transformer, filter);
@@ -98,12 +98,29 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	@SuppressWarnings("unchecked")
 	public Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull NotNullFunction<PsiElement, PsiElement> transformer, @Nonnull ChildrenFilter filter)
 	{
-		List<Collection<PsiElement>> list = new SmartList<>();
+		List<Collection<PsiElement>> list = new ArrayList<>();
 		for(DotNetNamespaceAsElement element : myList)
 		{
 			Collection<PsiElement> children = element.getChildren(globalSearchScope, transformer, filter);
 			list.add(children);
 		}
 		return list.isEmpty() ? Collections.emptyList() : ContainerUtil.concat(list);
+	}
+
+	@RequiredReadAction
+	@Override
+	public boolean processChildren(@Nonnull GlobalSearchScope globalSearchScope,
+								   @Nonnull NotNullFunction<PsiElement, PsiElement> transformer,
+								   @Nonnull ChildrenFilter filter,
+								   @Nonnull Processor<PsiElement> processor)
+	{
+		for(DotNetNamespaceAsElement element : myList)
+		{
+			if(!element.processChildren(globalSearchScope, transformer, filter, processor))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }

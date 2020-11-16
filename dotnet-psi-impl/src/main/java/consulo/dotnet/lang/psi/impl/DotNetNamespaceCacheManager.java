@@ -16,23 +16,8 @@
 
 package consulo.dotnet.lang.psi.impl;
 
-import gnu.trove.THashSet;
-
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import com.intellij.ProjectTopics;
 import com.intellij.codeInsight.daemon.impl.SmartHashSet;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
@@ -46,11 +31,12 @@ import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
+import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IdFilter;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.disposer.Disposable;
 import consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -58,12 +44,20 @@ import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import consulo.util.lang.ref.SimpleReference;
+import gnu.trove.THashSet;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
  * @since 03.03.2016
  */
-@jakarta.inject.Singleton
+@Singleton
 public class DotNetNamespaceCacheManager implements Disposable
 {
 	@Nonnull
@@ -82,6 +76,27 @@ public class DotNetNamespaceCacheManager implements Disposable
 								@Nonnull final String thisQName,
 								@Nonnull final GlobalSearchScope scope);
 
+		@RequiredReadAction
+		default boolean process(@Nonnull Project project,
+								@Nullable final IndexBasedDotNetPsiSearcher searcher,
+								@Nonnull final String indexKey,
+								@Nonnull final String thisQName,
+								@Nonnull final GlobalSearchScope scope,
+								@Nonnull Processor<PsiElement> processor)
+		{
+			Set<PsiElement> elements = compute(project, searcher, indexKey, thisQName, scope);
+
+			for(PsiElement element : elements)
+			{
+				if(!processor.process(element))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		@Nonnull
 		DotNetNamespaceAsElement.ChildrenFilter getFilter();
 	}
@@ -97,6 +112,24 @@ public class DotNetNamespaceCacheManager implements Disposable
 									   @Nonnull final String thisQName,
 									   @Nonnull final GlobalSearchScope scope)
 		{
+			Set<PsiElement> elements = new HashSet<>();
+			process(project, searcher, indexKey, thisQName, scope, it ->
+			{
+				elements.add(it);
+				return true;
+			});
+			return elements;
+		}
+
+		@RequiredReadAction
+		@Override
+		public boolean process(@Nonnull Project project,
+							   @Nullable IndexBasedDotNetPsiSearcher searcher,
+							   @Nonnull String indexKey,
+							   @Nonnull String thisQName,
+							   @Nonnull GlobalSearchScope scope,
+							   @Nonnull Processor<PsiElement> processor)
+		{
 			assert searcher != null;
 
 			StubIndexKey<String, DotNetQualifiedElement> key = searcher.getElementByQNameIndexKey();
@@ -109,40 +142,42 @@ public class DotNetNamespaceCacheManager implements Disposable
 				return true;
 			}, scope, IdFilter.getProjectIdFilter(project, true));
 
-			Set<PsiElement> elements = new THashSet<>(qNames.size());
 			for(String qName : qNames)
 			{
 				ProgressManager.checkCanceled();
 
 				if(thisQName.isEmpty() && qName.startsWith(indexKey))
 				{
-					collectElements(project, scope, key, stubIndex, elements, qName);
-
+					if(!processElements(project, scope, key, stubIndex, qName, processor))
+					{
+						return false;
+					}
 				}
 				else if(qName.startsWith(thisQName))
 				{
 					String packageName = StringUtil.getPackageName(qName);
 					if(packageName.equals(thisQName))
 					{
-						collectElements(project, scope, key, stubIndex, elements, qName);
+						if(!processElements(project, scope, key, stubIndex, qName, processor))
+						{
+							return false;
+						}
 					}
 				}
 			}
 
-			return elements.isEmpty() ? Collections.<PsiElement>emptySet() : elements;
+			return true;
 		}
 
-		private void collectElements(@Nonnull Project project,
-									 @Nonnull GlobalSearchScope scope,
-									 @Nonnull StubIndexKey<String, DotNetQualifiedElement> key,
-									 @Nonnull StubIndex stubIndex,
-									 @Nonnull Set<PsiElement> elements,
-									 @Nonnull String qName)
+
+		private boolean processElements(@Nonnull Project project,
+										@Nonnull GlobalSearchScope scope,
+										@Nonnull StubIndexKey<String, DotNetQualifiedElement> key,
+										@Nonnull StubIndex stubIndex,
+										@Nonnull String qName,
+										@Nonnull Processor<PsiElement> processor)
 		{
-			stubIndex.processElements(key, qName, project, scope, DotNetQualifiedElement.class, it -> {
-				elements.add(it);
-				return true;
-			});
+			return stubIndex.processElements(key, qName, project, scope, DotNetQualifiedElement.class, processor::process);
 		}
 
 		@Nonnull
@@ -164,6 +199,24 @@ public class DotNetNamespaceCacheManager implements Disposable
 									   @Nonnull final String thisQName,
 									   @Nonnull final GlobalSearchScope scope)
 		{
+			Set<PsiElement> elements = new HashSet<>();
+			process(project, searcher, indexKey, thisQName, scope, it ->
+			{
+				elements.add(it);
+				return true;
+			});
+			return elements;
+		}
+
+		@RequiredReadAction
+		@Override
+		public boolean process(@Nonnull Project project,
+							   @Nullable IndexBasedDotNetPsiSearcher searcher,
+							   @Nonnull String indexKey,
+							   @Nonnull String thisQName,
+							   @Nonnull GlobalSearchScope scope,
+							   @Nonnull Processor<PsiElement> processor)
+		{
 			assert searcher != null;
 
 			Set<String> fromIndex = new THashSet<>();
@@ -172,9 +225,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 				return true;
 			}, scope, IdFilter.getProjectIdFilter(project, true));
 
-
 			DotNetPsiSearcher psiSearcher = DotNetPsiSearcher.getInstance(project);
-			Set<PsiElement> namespaces = new LinkedHashSet<>();
 			for(String qName : fromIndex)
 			{
 				ProgressManager.checkCanceled();
@@ -188,11 +239,18 @@ public class DotNetNamespaceCacheManager implements Disposable
 					String packageName = StringUtil.getPackageName(qName);
 					if(packageName.equals(thisQName))
 					{
-						ContainerUtil.addIfNotNull(namespaces, psiSearcher.findNamespace(qName, scope));
+						DotNetNamespaceAsElement namespaceElement = psiSearcher.findNamespace(qName, scope);
+						if(namespaceElement != null)
+						{
+							if(!processor.process(namespaceElement))
+							{
+								return false;
+							}
+						}
 					}
 				}
 			}
-			return namespaces.isEmpty() ? Collections.<PsiElement>emptySet() : namespaces;
+			return true;
 		}
 
 		@Nonnull

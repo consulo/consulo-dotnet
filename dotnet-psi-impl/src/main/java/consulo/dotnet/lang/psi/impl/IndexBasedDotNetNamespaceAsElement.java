@@ -16,13 +16,6 @@
 
 package consulo.dotnet.lang.psi.impl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -30,12 +23,19 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.util.NotNullFunction;
+import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -53,6 +53,36 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 		super(project, language, qName);
 		myIndexKey = indexKey;
 		mySearcher = searcher;
+	}
+
+	@RequiredReadAction
+	@Override
+	public boolean processChildren(@Nonnull GlobalSearchScope globalSearchScope,
+								   @Nonnull NotNullFunction<PsiElement, PsiElement> transformer,
+								   @Nonnull ChildrenFilter filter,
+								   @Nonnull Processor<PsiElement> processor)
+	{
+		if(filter == ChildrenFilter.ONLY_ELEMENTS)
+		{
+			return DotNetNamespaceCacheManager.ONLY_ELEMENTS.process(getProject(), mySearcher, myIndexKey, myQName, globalSearchScope, processor);
+		}
+
+		if(filter == ChildrenFilter.ONLY_NAMESPACES)
+		{
+			return DotNetNamespaceCacheManager.ONLY_NAMESPACES.process(getProject(), mySearcher, myIndexKey, myQName, globalSearchScope, processor);
+		}
+
+		if(!processChildren(globalSearchScope, transformer, ChildrenFilter.ONLY_ELEMENTS, processor))
+		{
+			return false;
+		}
+
+		if(!processChildren(globalSearchScope, transformer, ChildrenFilter.ONLY_NAMESPACES, processor))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	@Nonnull

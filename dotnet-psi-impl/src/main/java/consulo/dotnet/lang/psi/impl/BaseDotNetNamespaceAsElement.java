@@ -35,7 +35,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetTypeTransformer;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -123,15 +122,6 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		{
 			toAdd.add(element);
 		}
-	}
-
-	@RequiredReadAction
-	@Override
-	@Nonnull
-	@SuppressWarnings("unchecked")
-	public Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull ChildrenFilter filter)
-	{
-		return getChildren(globalSearchScope, DotNetTypeTransformer.INSTANCE, filter);
 	}
 
 	@RequiredReadAction
@@ -227,7 +217,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
+	public PsiElement setName(@Nonnull String s) throws IncorrectOperationException
 	{
 		return null;
 	}
