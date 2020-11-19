@@ -56,7 +56,7 @@ public class DotNetInheritUtil
 	@RequiredReadAction
 	public static boolean isException(DotNetTypeDeclaration typeDeclaration)
 	{
-		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isInheritor(typeDeclaration, DotNetTypes.System.Exception, true), PsiModificationTracker
+		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isParentOrSelf(DotNetTypes.System.Exception, typeDeclaration, true), PsiModificationTracker
 				.MODIFICATION_COUNT));
 	}
 
