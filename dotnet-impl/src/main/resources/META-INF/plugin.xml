@@ -16,8 +16,9 @@
 
 <consulo-plugin>
 	<id>consulo.dotnet</id>
-	<name>.NET API</name>
+	<name>.NET Common</name>
 	<version>SNAPSHOT</version>
+	<category>Software Framework</category>
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
 	<depends config-file="com.intellij.xml.xml" optional="true">com.intellij.xml</depends>
 
