@@ -44,6 +44,12 @@ public class DotNetInheritCache implements Disposable
 	public boolean calcResult(DotNetTypeDeclaration declaration, String otherVmQName, boolean deep)
 	{
 		String declVmQName = declaration.getVmQName();
+		// if vmqname is null - don't use cache
+		if(declVmQName == null)
+		{
+			return isInheritorImpl(declaration, otherVmQName, deep, new HashSet<>());
+		}
+
 		Pair<String, Boolean> otherPair = Pair.create(otherVmQName, deep);
 
 		Map<Pair<String, Boolean>, Boolean> map = myResult.get(declVmQName);
