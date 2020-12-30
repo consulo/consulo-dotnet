@@ -16,14 +16,14 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.openapi.util.Couple;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
@@ -33,6 +33,7 @@ public class DotNetDebuggerCompilerGenerateUtil
 {
 	public static final Pattern LambdaMethodPattern = Pattern.compile("<([\\S\\d]+)>m__([\\d]+)");
 	public static final Pattern YieldNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__Iterator(\\p{XDigit}+)");
+	public static final Pattern YieldNestedTypeRoslynPattern = Pattern.compile("<([\\S\\d]+)>d__(\\p{XDigit}+)");
 	public static final Pattern AsyncNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__async(\\p{XDigit}+)");
 	public static final Pattern SomeReferenceToOriginalPattern = Pattern.compile("<([\\S\\d]+)>__([\\d]+)");
 
@@ -41,6 +42,8 @@ public class DotNetDebuggerCompilerGenerateUtil
 
 	private static final Pattern LocalVarWrapperPatternMono = Pattern.compile("\\$locvar\\p{XDigit}+");
 	private static final Pattern LocalVarWrapperPatternMS = Pattern.compile("CS\\$<>\\p{XDigit}+__locals\\p{XDigit}+");
+
+	private static final Pattern AsyncThisWrapperRoslyn = Pattern.compile("<>(\\d)__this");
 
 	@Nullable
 	public static Couple<String> extractLambdaInfo(@Nonnull DotNetMethodProxy methodMirror)
@@ -65,12 +68,31 @@ public class DotNetDebuggerCompilerGenerateUtil
 
 	public static boolean isYieldOrAsyncNestedType(@Nonnull DotNetTypeProxy typeMirror)
 	{
-		return typeMirror.isNested() && (YieldNestedTypePattern.matcher(typeMirror.getName()).matches() || AsyncNestedTypePattern.matcher(typeMirror.getName()).matches());
+		String name = typeMirror.getName();
+
+		if(typeMirror.isNested())
+		{
+			if(YieldNestedTypePattern.matcher(name).matches())
+			{
+				return true;
+			}
+
+			if(YieldNestedTypeRoslynPattern.matcher(name).matches())
+			{
+				return true;
+			}
+		}
+
+		if(AsyncNestedTypePattern.matcher(name).matches())
+		{
+			return true;
+		}
+		return false;
 	}
 
 	public static boolean isYieldOrAsyncThisField(@Nonnull String fieldName)
 	{
-		return "$this".equals(fieldName) || "<>f__this".equals(fieldName);
+		return "$this".equals(fieldName) || "<>f__this".equals(fieldName) || AsyncThisWrapperRoslyn.matcher(fieldName).matches();
 	}
 
 	public static boolean needSkipVariableByName(@Nonnull String name)
