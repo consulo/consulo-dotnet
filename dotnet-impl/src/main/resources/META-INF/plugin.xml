@@ -58,6 +58,8 @@
 		<stubIndex implementation="consulo.msil.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex"/>
 		<stubIndex implementation="consulo.msil.lang.psi.impl.elementType.stub.index.MsilExtendsListIndex"/>
 
+		<virtualFileSystem implementation="consulo.msil.representation.fileSystem.MsilFileRepresentationVirtualFileSystem"/>
+
 		<gotoClassContributor implementation="consulo.msil.ide.navigation.MsilGotoClassContributor"/>
 
 		<itemPresentationProvider forClass="consulo.msil.lang.psi.MsilClassEntry"

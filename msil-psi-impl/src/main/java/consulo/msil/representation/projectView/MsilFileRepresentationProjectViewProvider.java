@@ -16,22 +16,23 @@
 
 package consulo.msil.representation.projectView;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.representation.MsilFileRepresentationManager;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -41,10 +42,13 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 {
 	private final Project myProject;
 
-	@jakarta.inject.Inject
-	public MsilFileRepresentationProjectViewProvider(Project project)
+	private Provider<MsilFileRepresentationManager> myManagerProvider;
+
+	@Inject
+	public MsilFileRepresentationProjectViewProvider(Project project, Provider<MsilFileRepresentationManager> managerProvider)
 	{
 		myProject = project;
+		myManagerProvider = managerProvider;
 	}
 
 	@Nullable
@@ -61,6 +65,8 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 
 		for(AbstractTreeNode n : children)
 		{
+			ProgressManager.checkCanceled();
+
 			if(n instanceof MsilFileNode)
 			{
 				newList.add(n);
@@ -70,7 +76,7 @@ public class MsilFileRepresentationProjectViewProvider implements SelectableTree
 			Object value = n.getValue();
 			if(value instanceof MsilFile)
 			{
-				List<Pair<String, ? extends FileType>> representFiles = MsilFileRepresentationManager.getInstance(myProject).getRepresentFileInfos((MsilFile) value);
+				List<Pair<String, ? extends FileType>> representFiles = myManagerProvider.get().getRepresentFileInfos((MsilFile) value);
 				if(representFiles.isEmpty())
 				{
 					newList.add(n);

@@ -16,56 +16,35 @@
 
 package consulo.msil.representation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.containers.ConcurrentMultiMap;
-import com.intellij.util.containers.MultiMap;
+import com.intellij.psi.PsiManager;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import consulo.msil.lang.psi.MsilFile;
+import consulo.msil.representation.fileSystem.MsilFileRepresentationVirtualFileSystem;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 27.05.14
  */
-@jakarta.inject.Singleton
+@Singleton
 public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationManager implements Disposable
 {
-	private MultiMap<VirtualFile, PsiFile> myFiles = new ConcurrentMultiMap<>();
-
 	@Inject
-	public MsilFileRepresentationManagerImpl(Project project)
+	public MsilFileRepresentationManagerImpl(Project project, VirtualFileManager virtualFileManager)
 	{
 		super(project);
-		project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener()
-		{
-			@Override
-			public void before(@Nonnull List<? extends VFileEvent> events)
-			{
-				for(VFileEvent event : events)
-				{
-					VirtualFile file = event.getFile();
-					if(file != null)
-					{
-						myFiles.remove(file);
-					}
-				}
-			}
-		});
 	}
 
 	@Nonnull
@@ -95,43 +74,22 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 			return null;
 		}
 
-		Collection<PsiFile> values = myFiles.getModifiable(virtualFile);
+		String originalUrl = virtualFile.getUrl() + MsilFileRepresentationVirtualFileSystem.SEPARATOR + fileType.getId();
 
-		for(PsiFile value : values)
-		{
-			if(value.getFileType() == fileType)
-			{
-				return value;
-			}
-		}
+		String constructUrl = VirtualFileManager.constructUrl(MsilFileRepresentationVirtualFileSystem.PROTOCOL, originalUrl);
 
-		String fileName = null;
-		MsilFileRepresentationProvider provider = null;
-		for(MsilFileRepresentationProvider extension : MsilFileRepresentationProvider.EP_NAME.getExtensionList())
-		{
-			String temp = extension.getRepresentFileName(msilFile);
-			if(temp != null)
-			{
-				fileName = temp;
-				provider = extension;
-				break;
-			}
-		}
-
-		if(fileName == null)
+		VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(constructUrl);
+		if(file == null)
 		{
 			return null;
 		}
-
-		PsiFile transform = provider.transform(fileName, msilFile);
-
-		values.add(transform);
-		return transform;
+		
+		return PsiManager.getInstance(myProject).findFile(file);
 	}
 
 	@Override
 	public void dispose()
 	{
-		myFiles.clear();
+
 	}
 }

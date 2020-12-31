@@ -16,13 +16,14 @@
 
 package consulo.msil.representation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.msil.representation.fileSystem.MsilFileRepresentationVirtualFile;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

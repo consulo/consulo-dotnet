@@ -16,20 +16,20 @@
 
 package consulo.msil.representation.projectView;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.representation.MsilFileRepresentationManager;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author VISTALL
@@ -45,6 +45,7 @@ public class MsilRepresentFileNode extends AbstractTreeNode<Pair<String, ? exten
 		myPsiFile = psiFile;
 	}
 
+	@RequiredReadAction
 	@Nonnull
 	@Override
 	public Collection<? extends AbstractTreeNode> getChildren()

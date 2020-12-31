@@ -16,13 +16,13 @@
 
 package consulo.msil.representation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.msil.lang.psi.MsilFile;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.PsiFile;
+import consulo.msil.lang.psi.MsilFile;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +36,7 @@ public interface MsilFileRepresentationProvider
 	String getRepresentFileName(@Nonnull MsilFile msilFile);
 
 	@Nonnull
-	PsiFile transform(String fileName, @Nonnull MsilFile msilFile);
+	CharSequence buildContent(String fileName, @Nonnull final MsilFile msilFile);
 
 	@Nonnull
 	FileType getFileType();
