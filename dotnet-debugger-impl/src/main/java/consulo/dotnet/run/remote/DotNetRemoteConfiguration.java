@@ -16,21 +16,12 @@
 
 package consulo.dotnet.run.remote;
 
-import java.util.Collection;
-
-import javax.annotation.Nonnull;
-
-import org.jdom.Element;
 import com.intellij.compiler.options.CompileStepBeforeRun;
 import com.intellij.diagnostic.logging.LogConfigurationPanel;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ModuleBasedConfiguration;
-import com.intellij.execution.configurations.RemoteRunProfile;
-import com.intellij.execution.configurations.RunConfigurationModule;
-import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
 import com.intellij.openapi.module.Module;
@@ -43,6 +34,10 @@ import com.intellij.openapi.util.WriteExternalException;
 import consulo.dotnet.debugger.DotNetConfigurationWithDebug;
 import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.dotnet.run.DotNetRunKeys;
+import org.jdom.Element;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -64,11 +59,6 @@ public abstract class DotNetRemoteConfiguration extends ModuleBasedConfiguration
 	public void writeExternal(final Element element) throws WriteExternalException
 	{
 		super.writeExternal(element);
-		final Module module = getConfigurationModule().getModule();
-		if(module != null)
-		{
-			writeModule(element);
-		}
 		DefaultJDOMExternalizer.writeExternal(this, element);
 	}
 
@@ -76,7 +66,6 @@ public abstract class DotNetRemoteConfiguration extends ModuleBasedConfiguration
 	public void readExternal(final Element element) throws InvalidDataException
 	{
 		super.readExternal(element);
-		readModule(element);
 		DefaultJDOMExternalizer.readExternal(this, element);
 	}
 
