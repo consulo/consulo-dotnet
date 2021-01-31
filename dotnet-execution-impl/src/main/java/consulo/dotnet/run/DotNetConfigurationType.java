@@ -68,7 +68,6 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 					{
 						dotNetConfiguration.setName(module.getName());
 						dotNetConfiguration.setModule(module);
-						dotNetConfiguration.setWorkingDirectory(extension.getOutputDir());
 						break;
 					}
 				}

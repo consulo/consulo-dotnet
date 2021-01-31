@@ -23,6 +23,8 @@ import com.intellij.execution.configurations.*;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.util.ProgramParametersUtil;
+import com.intellij.openapi.components.PathMacroUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -60,7 +62,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		DotNetConfigurationWithDebug, DotNetConfigurationConsoleTypeProvider
 {
 	private String myProgramParameters;
-	private String myWorkingDir = "";
+	private String myWorkingDir = PathMacroUtil.MODULE_WORKING_DIR;
 	private Map<String, String> myEnvsMap = Collections.emptyMap();
 	private boolean myPassParentEnvs = true;
 	private ConsoleType myConsoleType = ConsoleType.BUILTIN;
@@ -167,7 +169,13 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		}
 		runCommandLine.withParentEnvironmentType(runProfile.isPassParentEnvs() ? GeneralCommandLine.ParentEnvironmentType.CONSOLE : GeneralCommandLine.ParentEnvironmentType.NONE);
 		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
-		runCommandLine.setWorkDirectory(DotNetMacroUtil.expand(module, runProfile.getWorkingDirectory(), false));
+
+		String workDir = myWorkingDir;
+		if(consulo.util.lang.StringUtil.isEmptyOrSpaces(workDir))
+		{
+			workDir = DotNetMacroUtil.expand(module, extension.getOutputDir(), false);
+		}
+		runCommandLine.withWorkDirectory(workDir);
 
 		DotNetRunProfileState state = new DotNetRunProfileState(executionEnvironment, runCommandLine);
 		if(debugConnectionInfo != null)
