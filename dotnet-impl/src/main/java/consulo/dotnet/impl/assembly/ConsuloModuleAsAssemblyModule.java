@@ -66,4 +66,10 @@ class ConsuloModuleAsAssemblyModule implements AssemblyModule
 	{
 		return module instanceof ConsuloModuleAsAssemblyModule && myModule.equals(((ConsuloModuleAsAssemblyModule) module).myModule);
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof ConsuloModuleAsAssemblyModule && ((ConsuloModuleAsAssemblyModule) obj).myModule.equals(myModule);
+	}
 }

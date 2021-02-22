@@ -137,4 +137,10 @@ class DotNetModuleAsAssemblyModule implements AssemblyModule
 		}
 		return assemblies;
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj instanceof DotNetModuleAsAssemblyModule && ((DotNetModuleAsAssemblyModule) obj).myModuleFile.equals(myModuleFile);
+	}
 }

@@ -49,4 +49,10 @@ class UnknownAssemblyModule implements AssemblyModule
 	{
 		return module instanceof UnknownAssemblyModule;
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		return obj == this;
+	}
 }
