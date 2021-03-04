@@ -1,9 +1,10 @@
 package consulo.msil.lang.stubbing;
 
 import com.google.common.primitives.Longs;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import consulo.annotation.UsedInPlugin;
@@ -33,6 +34,7 @@ import org.joou.UShort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -59,6 +61,7 @@ public class MsilCustomAttributeStubber
 		{
 			boolean failed = false;
 			DotNetParameter[] parameters = attribute.getParameterList().getParameters();
+			Project project = attribute.getProject();
 			for(DotNetParameter parameter : parameters)
 			{
 				try
@@ -70,7 +73,7 @@ public class MsilCustomAttributeStubber
 					}
 
 					TypeSignature typeSignature = toTypeSignature(type);
-					MsiCustomAttributeValue attributeValue = buildArgument(attribute, typeSignature, byteBuffer);
+					MsiCustomAttributeValue attributeValue = buildArgument(project, typeSignature, byteBuffer);
 					if(attributeValue != null)
 					{
 						constructorArguments.add(attributeValue);
@@ -98,13 +101,13 @@ public class MsilCustomAttributeStubber
 						{
 							continue;
 						}
-						CharSequence name = XStubUtil.getString(byteBuffer, CharsetToolkit.UTF8_CHARSET);
+						CharSequence name = XStubUtil.getString(byteBuffer, StandardCharsets.UTF_8);
 						if(name.length() == 0)
 						{
 							continue;
 						}
 
-						MsiCustomAttributeValue attributeValue = buildArgument(attribute, typeSignature, byteBuffer);
+						MsiCustomAttributeValue attributeValue = buildArgument(project, typeSignature, byteBuffer);
 						if(attributeValue != null)
 						{
 							namedArguments.put(name.toString(), attributeValue);
@@ -211,7 +214,7 @@ public class MsilCustomAttributeStubber
 	}
 
 	@RequiredReadAction
-	private static MsiCustomAttributeValue buildArgument(@Nonnull PsiElement scope, TypeSignature typeSignature, ByteBuffer byteBuffer)
+	private static MsiCustomAttributeValue buildArgument(@Nonnull Project project, TypeSignature typeSignature, ByteBuffer byteBuffer)
 	{
 		if(typeSignature == TypeSignature.I1)
 		{
@@ -261,14 +264,14 @@ public class MsilCustomAttributeStubber
 		}
 		else if(typeSignature == TypeSignature.STRING)
 		{
-			return new MsiCustomAttributeValue(typeSignature, XStubUtil.getString(byteBuffer, CharsetToolkit.UTF8_CHARSET));
+			return new MsiCustomAttributeValue(typeSignature, XStubUtil.getString(byteBuffer, StandardCharsets.UTF_8));
 		}
 		else if(typeSignature instanceof ClassTypeSignature)
 		{
 			String vmQName = ((ClassTypeSignature) typeSignature).getClassType().getFullName();
 			if(vmQName.equals(DotNetTypes.System.Type))
 			{
-				CharSequence text = XStubUtil.getString(byteBuffer, CharsetToolkit.UTF8_CHARSET);
+				CharSequence text = XStubUtil.getString(byteBuffer, StandardCharsets.UTF_8);
 				TypeSignature stringTypeSignature = STypeSignatureParser.parse(text);
 				return new MsiCustomAttributeValue(typeSignature, stringTypeSignature);
 			}
@@ -279,7 +282,7 @@ public class MsilCustomAttributeStubber
 			switch(b)
 			{
 				case 0x55: // enum
-					CharSequence text = XStubUtil.getString(byteBuffer, CharsetToolkit.UTF8_CHARSET);
+					CharSequence text = XStubUtil.getString(byteBuffer, StandardCharsets.UTF_8);
 					TypeSignature stringTypeSignature = STypeSignatureParser.parse(text);
 					return new MsiCustomAttributeValue(typeSignature, stringTypeSignature);
 			}
@@ -289,10 +292,10 @@ public class MsilCustomAttributeStubber
 		{
 			String vmQName = ((ValueTypeSignature) typeSignature).getValueType().getFullName();
 
-			DotNetTypeDeclaration resolvedElement = DotNetPsiSearcher.getInstance(scope.getProject()).findType(vmQName, scope.getResolveScope());
+			DotNetTypeDeclaration resolvedElement = DotNetPsiSearcher.getInstance(project).findType(vmQName, GlobalSearchScope.allScope(project));
 			if(resolvedElement != null && resolvedElement.isEnum())
 			{
-				Number value = getValue(scope, byteBuffer, resolvedElement.getTypeRefForEnumConstants());
+				Number value = getValue(byteBuffer, resolvedElement.getTypeRefForEnumConstants());
 				if(value != null)
 				{
 					Map<Long, String> map = new HashMap<>();
@@ -344,16 +347,16 @@ public class MsilCustomAttributeStubber
 					throw new IllegalArgumentException("Cant get value from enum: " + vmQName);
 				}
 			}
-			MsilCustomAttributeStubber.LOGGER.error("Can't get value for ValueType: " + vmQName);
+			LOGGER.warn("Can't get value for ValueType: " + vmQName);
 			return null;
 		}
-		MsilCustomAttributeStubber.LOGGER.error("Cant get value for: " + typeSignature);
+		LOGGER.warn("Cant get value for: " + typeSignature);
 		return null;
 	}
 
 	@Nullable
 	@RequiredReadAction
-	private static Number getValue(PsiElement scope, ByteBuffer byteBuffer, DotNetTypeRef typeRef)
+	private static Number getValue(ByteBuffer byteBuffer, DotNetTypeRef typeRef)
 	{
 		PsiElement resolvedElement = typeRef.resolve().getElement();
 		String qName = null;
@@ -391,7 +394,7 @@ public class MsilCustomAttributeStubber
 		{
 			return byteBuffer.getShort();
 		}
-		MsilCustomAttributeStubber.LOGGER.warn("Unknown type: " + qName);
+		LOGGER.warn("Unknown type: " + qName);
 		return null;
 	}
 
