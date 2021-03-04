@@ -16,9 +16,14 @@
 
 package consulo.msil.representation.fileSystem;
 
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectLocator;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFilePathWrapper;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -26,29 +31,46 @@ import com.intellij.testFramework.LightVirtualFile;
 import consulo.application.AccessRule;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.representation.MsilFileRepresentationProvider;
+import consulo.util.io.URLUtil;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 27.05.14
  */
-public class MsilFileRepresentationVirtualFile extends LightVirtualFile
+public class MsilFileRepresentationVirtualFile extends LightVirtualFile implements VirtualFilePathWrapper
 {
 	private final String myPath;
-	private final Project myProject;
-	private final VirtualFile myIlFile;
+	private final String myIlFileUrl;
 	private final MsilFileRepresentationProvider myMsilFileRepresentationProvider;
 	private CharSequence myContent;
 
-	public MsilFileRepresentationVirtualFile(String name, String path, FileType fileType, Project project, VirtualFile ilFile, MsilFileRepresentationProvider msilFileRepresentationProvider)
+	private final Supplier<String> myPresentablePath;
+
+	public MsilFileRepresentationVirtualFile(String name, String path, FileType fileType, VirtualFile ilFile, MsilFileRepresentationProvider msilFileRepresentationProvider)
 	{
 		super(name, fileType, "");
 		myPath = path;
-		myProject = project;
-		myIlFile = ilFile;
+		myIlFileUrl = ilFile.getUrl();
 		myMsilFileRepresentationProvider = msilFileRepresentationProvider;
 		setWritable(false);
+
+		myPresentablePath = NotNullLazyValue.createValue(() -> {
+			String temp = myPath.substring(myPath.indexOf(URLUtil.ARCHIVE_SEPARATOR) + 2, myPath.length());
+			temp = temp.substring(0, temp.indexOf(MsilFileRepresentationVirtualFileSystem.SEPARATOR));
+			temp = temp.substring(0, temp.lastIndexOf("."));
+			temp = temp + "." + myMsilFileRepresentationProvider.getFileType().getDefaultExtension();
+			return temp;
+		});
+	}
+
+	@Nonnull
+	@Override
+	public String getPresentablePath()
+	{
+		return myPresentablePath.get();
 	}
 
 	@Nonnull
@@ -63,19 +85,30 @@ public class MsilFileRepresentationVirtualFile extends LightVirtualFile
 	{
 		if(myContent == null)
 		{
-			myContent = buildText();
+			CharSequence content = buildText();
+			myContent = content;
+			return content;
 		}
 		return myContent;
 	}
 
+	@Nonnull
 	private CharSequence buildText()
 	{
-		if(!myIlFile.isValid())
+		VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(myIlFileUrl);
+		if(fileByUrl == null || !fileByUrl.isValid())
 		{
 			return "";
 		}
 
-		PsiFile file = AccessRule.read(() -> PsiManager.getInstance(myProject).findFile(myIlFile));
+		Project project = ReadAction.compute(() -> ProjectLocator.getInstance().guessProjectForFile(fileByUrl));
+
+		if(project == null)
+		{
+			return "";
+		}
+
+		PsiFile file = AccessRule.read(() -> PsiManager.getInstance(project).findFile(fileByUrl));
 
 		if(file == null)
 		{

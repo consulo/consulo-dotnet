@@ -15,8 +15,6 @@ import consulo.msil.representation.MsilFileRepresentationProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
@@ -32,8 +30,6 @@ public class MsilFileRepresentationVirtualFileSystem extends DeprecatedVirtualFi
 
 	public static final String PROTOCOL = "msil";
 	public static final String SEPARATOR = "|";
-
-	private Map<String, MsilFileRepresentationVirtualFile> myFiles = new ConcurrentHashMap<>();
 
 	@Nonnull
 	@Override
@@ -98,7 +94,7 @@ public class MsilFileRepresentationVirtualFileSystem extends DeprecatedVirtualFi
 		}
 
 		String fileName = msilProvider.getRepresentFileName((MsilFile) msilFile);
-		return new MsilFileRepresentationVirtualFile(fileName, path, type, project, file, msilProvider);
+		return new MsilFileRepresentationVirtualFile(fileName, path, type, file, msilProvider);
 	}
 
 	@Override
