@@ -16,11 +16,6 @@
 
 package consulo.msil.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.psi.DotNetElement;
-import consulo.dotnet.util.ArrayUtil2;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
@@ -33,6 +28,12 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.ArrayFactory;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.dotnet.psi.DotNetElement;
+import consulo.dotnet.util.ArrayUtil2;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

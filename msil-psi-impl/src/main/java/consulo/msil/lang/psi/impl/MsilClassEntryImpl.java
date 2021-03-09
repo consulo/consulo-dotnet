@@ -23,23 +23,19 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.dotnet.DotNetTypes;
-import consulo.dotnet.lang.psi.impl.DotNetTypeRefCacheUtil;
 import consulo.dotnet.psi.*;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.msil.lang.psi.*;
 import consulo.msil.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import consulo.msil.lang.psi.impl.type.MsilNativeTypeRefImpl;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -148,7 +144,15 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@RequiredReadAction
 	public DotNetTypeRef getTypeRefForEnumConstants()
 	{
-		return DotNetTypeRefCacheUtil.cacheTypeRef(this, Resolver.INSTANCE);
+		return CachedValuesManager.getProjectPsiDependentCache(this, it -> getTypeRefFromEnumConstantsImpl());
+	}
+
+	@Nonnull
+	@RequiredReadAction
+	private DotNetTypeRef getTypeRefFromEnumConstantsImpl()
+	{
+		DotNetFieldDeclaration value = findFieldByName(this, "__value");
+		return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(getProject(), getResolveScope(), DotNetTypes.System.Int32);
 	}
 
 	@Nullable
@@ -178,11 +182,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
-		return CachedValuesManager.getCachedValue(this, () ->
-		{
-			DotNetNamedElement[] stubOrPsiChildren = getStubOrPsiChildren(MsilStubTokenSets.MEMBER_STUBS, DotNetNamedElement.ARRAY_FACTORY);
-			return CachedValueProvider.Result.create(stubOrPsiChildren, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
-		});
+		return CachedValuesManager.getProjectPsiDependentCache(this, (it) -> it.getStubOrPsiChildren(MsilStubTokenSets.MEMBER_STUBS, DotNetNamedElement.ARRAY_FACTORY));
 	}
 
 	@RequiredReadAction
@@ -289,7 +289,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 
 	@RequiredWriteAction
 	@Override
-	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
+	public PsiElement setName(@Nonnull String s) throws IncorrectOperationException
 	{
 		return null;
 	}

@@ -16,11 +16,11 @@
 
 package consulo.dotnet.psi;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.util.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetTypeRef;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,15 +30,7 @@ public interface DotNetType extends DotNetElement
 {
 	public static final DotNetType[] EMPTY_ARRAY = new DotNetType[0];
 
-	public static ArrayFactory<DotNetType> ARRAY_FACTORY = new ArrayFactory<DotNetType>()
-	{
-		@Nonnull
-		@Override
-		public DotNetType[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new DotNetType[count];
-		}
-	};
+	public static ArrayFactory<DotNetType> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetType[count];
 
 	@Nonnull
 	@RequiredReadAction

@@ -16,11 +16,6 @@
 
 package consulo.dotnet.lang.psi.impl;
 
-import java.lang.reflect.Modifier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.CachedValue;
@@ -35,10 +30,16 @@ import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Modifier;
+
 /**
  * @author VISTALL
  * @since 12-May-16
  */
+@Deprecated
+@DeprecationInfo("Use CachedValuesManager#getProjectPsiDependentCache")
 public class DotNetTypeRefCacheUtil
 {
 	private static class DotNetTypeRefCachedValueProvider<E extends PsiElement> implements CachedValueProvider<DotNetTypeRef>

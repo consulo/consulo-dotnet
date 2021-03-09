@@ -82,7 +82,7 @@ public class MsilXAccessorImpl extends MsilStubElementImpl<MsilXAccessorStub> im
 			{
 				return null;
 			}
-			return Result.create(method, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
+			return Result.create(method, PsiModificationTracker.MODIFICATION_COUNT);
 		}
 	}
 

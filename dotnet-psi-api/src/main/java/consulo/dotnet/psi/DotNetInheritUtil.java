@@ -17,19 +17,14 @@
 package consulo.dotnet.psi;
 
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.internal.DotNetInheritCache;
 import consulo.dotnet.resolve.DotNetTypeRef;
-import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -37,34 +32,28 @@ import java.util.Map;
  */
 public class DotNetInheritUtil
 {
-	private static final Key<Map<Pair<String, Boolean>, Boolean>> ourInheritorCache = Key.create("dotnet.inheritor.cache");
-
 	@RequiredReadAction
 	public static boolean isStruct(DotNetTypeDeclaration typeDeclaration)
 	{
-		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isInheritor(typeDeclaration, DotNetTypes.System.ValueType, false), PsiModificationTracker
-				.MODIFICATION_COUNT));
+		return CachedValuesManager.getProjectPsiDependentCache(typeDeclaration, (t) -> isInheritor(t, DotNetTypes.System.ValueType, false));
 	}
 
 	@RequiredReadAction
 	public static boolean isAttribute(DotNetTypeDeclaration typeDeclaration)
 	{
-		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isInheritor(typeDeclaration, DotNetTypes.System.Attribute, true), PsiModificationTracker
-				.MODIFICATION_COUNT));
+		return CachedValuesManager.getProjectPsiDependentCache(typeDeclaration, (t) -> isInheritor(t, DotNetTypes.System.Attribute, true));
 	}
 
 	@RequiredReadAction
 	public static boolean isException(DotNetTypeDeclaration typeDeclaration)
 	{
-		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isParentOrSelf(DotNetTypes.System.Exception, typeDeclaration, true), PsiModificationTracker
-				.MODIFICATION_COUNT));
+		return CachedValuesManager.getProjectPsiDependentCache(typeDeclaration, (t) -> isParentOrSelf(DotNetTypes.System.Exception, t, true));
 	}
 
 	@RequiredReadAction
 	public static boolean isEnum(DotNetTypeDeclaration typeDeclaration)
 	{
-		return CachedValuesManager.getCachedValue(typeDeclaration, () -> CachedValueProvider.Result.create(isInheritor(typeDeclaration, DotNetTypes.System.Enum, false), PsiModificationTracker
-				.MODIFICATION_COUNT));
+		return CachedValuesManager.getProjectPsiDependentCache(typeDeclaration, (t) -> isInheritor(t, DotNetTypes.System.Enum, false));
 	}
 
 	@RequiredReadAction

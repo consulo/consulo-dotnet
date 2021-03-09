@@ -16,10 +16,9 @@
 
 package consulo.dotnet.psi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.util.ArrayFactory;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -29,15 +28,7 @@ public interface DotNetParameter extends DotNetVariable
 {
 	public static final DotNetParameter[] EMPTY_ARRAY = new DotNetParameter[0];
 
-	public static ArrayFactory<DotNetParameter> ARRAY_FACTORY = new ArrayFactory<DotNetParameter>()
-	{
-		@Nonnull
-		@Override
-		public DotNetParameter[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new DotNetParameter[count];
-		}
-	};
+	public static ArrayFactory<DotNetParameter> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetParameter[count];
 
 	@Nullable
 	DotNetParameterListOwner getOwner();
