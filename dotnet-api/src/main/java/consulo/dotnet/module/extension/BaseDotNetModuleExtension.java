@@ -181,7 +181,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	@Override
 	public String getOutputDir()
 	{
-		return StringUtil.notNullizeIfEmpty(myOutputDirectory, DEFAULT_OUTPUT_DIR);
+		return StringUtil.notNullize(myOutputDirectory);
 	}
 
 	public void setFileName(@Nonnull String name)

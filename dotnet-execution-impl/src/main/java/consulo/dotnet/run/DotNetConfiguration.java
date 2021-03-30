@@ -23,8 +23,6 @@ import com.intellij.execution.configurations.*;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.util.ProgramParametersUtil;
-import com.intellij.openapi.components.PathMacroUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -62,8 +60,8 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		DotNetConfigurationWithDebug, DotNetConfigurationConsoleTypeProvider
 {
 	private String myProgramParameters;
-	private String myWorkingDir = PathMacroUtil.MODULE_WORKING_DIR;
-	private Map<String, String> myEnvsMap = Collections.emptyMap();
+	private String myWorkingDir;
+	private Map<String, String> myEnvsMap = new HashMap<>();
 	private boolean myPassParentEnvs = true;
 	private ConsoleType myConsoleType = ConsoleType.BUILTIN;
 
@@ -173,7 +171,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		String workDir = myWorkingDir;
 		if(consulo.util.lang.StringUtil.isEmptyOrSpaces(workDir))
 		{
-			workDir = DotNetMacroUtil.expand(module, extension.getOutputDir(), false);
+			workDir = DotNetMacroUtil.expandOutputDir(extension);
 		}
 		runCommandLine.withWorkDirectory(workDir);
 

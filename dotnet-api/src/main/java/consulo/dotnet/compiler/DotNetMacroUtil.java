@@ -24,14 +24,15 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.VfsUtil;
+import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.macro.TargetFileExtensionMacro;
-import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -42,14 +43,14 @@ public class DotNetMacroUtil
 	@Nonnull
 	public static DataContext createContext(@Nonnull Module module, boolean debugSymbols)
 	{
-		Map<Key, Object> map = new THashMap<>();
-		map.put(CommonDataKeys.PROJECT, module.getProject());
-		map.put(LangDataKeys.MODULE, module);
+		SimpleDataContext.Builder builder = SimpleDataContext.builder();
+		builder = builder.add(CommonDataKeys.PROJECT, module.getProject());
+		builder = builder.add(LangDataKeys.MODULE, module);
 		if(debugSymbols)
 		{
-			map.put(TargetFileExtensionMacro.DEBUG_SYMBOLS, Boolean.TRUE);
+			builder = builder.add(TargetFileExtensionMacro.DEBUG_SYMBOLS, Boolean.TRUE);
 		}
-		return SimpleDataContext.getSimpleContext(map, null);
+		return builder.build();
 	}
 
 	@Nonnull
@@ -62,6 +63,13 @@ public class DotNetMacroUtil
 	public static String expandOutputFile(@Nonnull DotNetRunModuleExtension<?> extension, boolean debugSymbols)
 	{
 		String outputDir = FileUtil.toSystemDependentName(extension.getOutputDir());
+		if(StringUtil.isEmpty(outputDir))
+		{
+			String url = ModuleCompilerPathsManager.getInstance(extension.getModule()).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
+			assert url != null;
+			outputDir = FileUtil.toSystemDependentName(VfsUtil.urlToPath(url));
+		}
+
 		if(outputDir.charAt(outputDir.length() - 1) == File.separatorChar)
 		{
 			return expand(extension.getModule(), outputDir + extension.getFileName(), debugSymbols);
@@ -75,7 +83,15 @@ public class DotNetMacroUtil
 	@Nonnull
 	public static String expandOutputDir(@Nonnull DotNetRunModuleExtension<?> extension)
 	{
-		return expand(extension.getModule(), extension.getOutputDir(), false);
+		String outputDir = FileUtil.toSystemDependentName(extension.getOutputDir());
+		if(StringUtil.isEmpty(outputDir))
+		{
+			String url = ModuleCompilerPathsManager.getInstance(extension.getModule()).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
+			assert url != null;
+			outputDir = FileUtil.toSystemDependentName(VfsUtil.urlToPath(url));
+		}
+
+		return expand(extension.getModule(), outputDir, false);
 	}
 
 	@Nonnull

@@ -29,17 +29,13 @@ import javax.annotation.Nullable;
  */
 public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetSimpleModuleExtension<T>, DotNetRunModuleExtension<T>
 {
-	String MODULE_OUTPUT_DIR = "$ModuleProductionOutputDirPath$";
-
-	String CONFIGURATION = "$ModuleProfileName$";
-
 	String MODULE_NAME = "$ModuleName$";
 
 	String OUTPUT_FILE_EXT = "$TargetFileExt$";
 
 	String DEFAULT_FILE_NAME = MODULE_NAME + "." + OUTPUT_FILE_EXT;
 
-	String DEFAULT_OUTPUT_DIR = MODULE_OUTPUT_DIR;
+	String DEFAULT_OUTPUT_DIR = "";
 
 
 	@Nullable
