@@ -19,7 +19,6 @@ package consulo.dotnet.module.dependency;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Computable;
 import com.intellij.ui.CollectionListModel;
@@ -34,6 +33,8 @@ import consulo.localize.LocalizeValue;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.roots.ModuleRootLayer;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.roots.ui.configuration.classpath.AddModuleDependencyActionProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -158,9 +159,11 @@ public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDep
 	}
 
 	@Override
-	public DotNetLibraryModuleDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull StructureConfigurableContext structureConfigurableContext)
+	public DotNetLibraryModuleDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel,
+															  @Nonnull ModulesConfigurator modulesConfigurator,
+															  @Nonnull LibrariesConfigurator librariesConfigurator)
 	{
-		return new DotNetLibraryModuleDependencyContext(classpathPanel, structureConfigurableContext);
+		return new DotNetLibraryModuleDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
 	}
 
 	@Nonnull

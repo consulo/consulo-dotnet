@@ -19,12 +19,13 @@ package consulo.dotnet.module.dependency;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryImpl;
 import consulo.module.extension.ModuleExtension;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.roots.ui.configuration.classpath.AddModuleDependencyContext;
 
 import javax.annotation.Nonnull;
@@ -39,9 +40,9 @@ import java.util.Map;
  */
 public class DotNetLibraryModuleDependencyContext extends AddModuleDependencyContext<List<Map.Entry<String, String>>>
 {
-	public DotNetLibraryModuleDependencyContext(ClasspathPanel classpathPanel, StructureConfigurableContext context)
+	public DotNetLibraryModuleDependencyContext(ClasspathPanel classpathPanel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator)
 	{
-		super(classpathPanel, context);
+		super(classpathPanel, modulesConfigurator, librariesConfigurator);
 	}
 
 	@Nonnull
