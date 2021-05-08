@@ -16,18 +16,6 @@
 
 package consulo.dotnet.debugger;
 
-import gnu.trove.THashSet;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
@@ -56,27 +44,19 @@ import consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;
 import consulo.dotnet.debugger.nodes.objectReview.DefaultStackFrameComputer;
 import consulo.dotnet.debugger.nodes.objectReview.StackFrameComputer;
 import consulo.dotnet.debugger.nodes.objectReview.YieldOrAsyncStackFrameComputer;
-import consulo.dotnet.debugger.proxy.DotNetAbsentInformationException;
-import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
-import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
-import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
-import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
-import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.*;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.dotnet.psi.DotNetAccessorOwner;
-import consulo.dotnet.psi.DotNetConstructorDeclaration;
-import consulo.dotnet.psi.DotNetModifier;
-import consulo.dotnet.psi.DotNetNamedElement;
-import consulo.dotnet.psi.DotNetQualifiedElement;
-import consulo.dotnet.psi.DotNetReferenceExpression;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.psi.DotNetXAccessor;
+import consulo.dotnet.psi.*;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.internal.dotnet.msil.decompiler.textBuilder.util.XStubUtil;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -309,7 +289,7 @@ public class DotNetStackFrame extends XStackFrame
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 
 		final XValueChildrenList childrenList = new XValueChildrenList();
-		final Set<Object> visitedVariables = new THashSet<>();
+		final Set<Object> visitedVariables = new HashSet<>();
 		try
 		{
 			final DotNetValueProxy value = myFrameProxy.getThisObject();

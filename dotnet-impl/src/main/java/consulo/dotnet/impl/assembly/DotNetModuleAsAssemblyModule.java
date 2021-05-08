@@ -36,10 +36,10 @@ import consulo.msil.lang.stubbing.MsilCustomAttributeArgumentList;
 import consulo.msil.lang.stubbing.MsilCustomAttributeStubber;
 import consulo.msil.lang.stubbing.values.MsiCustomAttributeValue;
 import consulo.vfs.util.ArchiveVfsUtil;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -107,7 +107,7 @@ class DotNetModuleAsAssemblyModule implements AssemblyModule
 			return Collections.emptySet();
 		}
 
-		Set<String> assemblies = new THashSet<>();
+		Set<String> assemblies = new HashSet<>();
 		for(PsiElement psiElement : ((MsilFile) file).getMembers())
 		{
 			if(psiElement instanceof MsilAssemblyEntry)

@@ -1,15 +1,5 @@
 package consulo.msil.ide.navigation;
 
-import consulo.ui.image.Image;
-import gnu.trove.THashSet;
-
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.Icon;
-
 import com.intellij.ide.DataManager;
 import com.intellij.navigation.ChooseByNameContributorEx;
 import com.intellij.navigation.GotoClassContributor;
@@ -38,7 +28,6 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.awt.TargetAWT;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
@@ -47,6 +36,13 @@ import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import consulo.msil.representation.MsilFileRepresentationManager;
 import consulo.msil.representation.MsilFileRepresentationProvider;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -111,7 +107,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 			DataManager.getInstance().getDataContextFromFocus().doWhenDone(dataContext -> {
 				final Project project = dataContext.getData(CommonDataKeys.PROJECT);
 				assert project != null;
-				final Set<LanguageFileType> languageFileTypes = new THashSet<>();
+				final Set<LanguageFileType> languageFileTypes = new HashSet<>();
 				Module[] modules = ModuleManager.getInstance(project).getModules();
 				List<MsilFileRepresentationProvider> extensions = MsilFileRepresentationProvider.EP_NAME.getExtensionList();
 				for(Module module : modules)

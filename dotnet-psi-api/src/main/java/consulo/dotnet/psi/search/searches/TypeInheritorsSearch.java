@@ -16,14 +16,6 @@
  */
 package consulo.dotnet.psi.search.searches;
 
-import gnu.trove.THashSet;
-
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
@@ -36,11 +28,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiSearchScopeUtil;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.search.searches.ExtensibleQueryFactory;
-import com.intellij.util.EmptyQuery;
-import com.intellij.util.Function;
-import com.intellij.util.Processor;
-import com.intellij.util.Query;
-import com.intellij.util.QueryExecutor;
+import com.intellij.util.*;
 import com.intellij.util.containers.Stack;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
@@ -49,6 +37,11 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -261,7 +254,7 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 		final SimpleReference<String> currentBase = SimpleReference.create(null);
 		final Stack<String> stack = new Stack<String>();
 		// there are two sets for memory optimization: it's cheaper to hold FQN than PsiClass
-		final Set<String> processedFqns = new THashSet<String>(); // FQN of processed classes if the class has one
+		final Set<String> processedFqns = new HashSet<String>(); // FQN of processed classes if the class has one
 
 		final Processor<DotNetTypeDeclaration> processor = new Processor<DotNetTypeDeclaration>()
 		{

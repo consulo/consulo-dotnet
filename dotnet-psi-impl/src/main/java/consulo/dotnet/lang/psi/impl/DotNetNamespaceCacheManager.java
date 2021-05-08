@@ -44,7 +44,6 @@ import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import consulo.util.lang.ref.SimpleReference;
-import gnu.trove.THashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -135,7 +134,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 			StubIndexKey<String, DotNetQualifiedElement> key = searcher.getElementByQNameIndexKey();
 			StubIndex stubIndex = StubIndex.getInstance();
 
-			Set<String> qNames = new THashSet<>();
+			Set<String> qNames = new HashSet<>();
 			stubIndex.processAllKeys(key, qName ->
 			{
 				qNames.add(qName);
@@ -219,7 +218,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		{
 			assert searcher != null;
 
-			Set<String> fromIndex = new THashSet<>();
+			Set<String> fromIndex = new HashSet<>();
 			StubIndex.getInstance().processAllKeys(searcher.getNamespaceIndexKey(), it -> {
 				fromIndex.add(it);
 				return true;

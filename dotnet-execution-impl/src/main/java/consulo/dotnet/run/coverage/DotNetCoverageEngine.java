@@ -16,8 +16,6 @@
 
 package consulo.dotnet.run.coverage;
 
-import gnu.trove.THashSet;
-
 import java.io.File;
 import java.util.List;
 import java.util.Set;
@@ -180,7 +178,7 @@ public class DotNetCoverageEngine extends CoverageEngine
 			@Override
 			public Set<String> compute()
 			{
-				final Set<String> set = new THashSet<String>();
+				final Set<String> set = new HashSet<String>();
 				sourceFile.accept(new PsiRecursiveElementVisitor()
 				{
 					@Override

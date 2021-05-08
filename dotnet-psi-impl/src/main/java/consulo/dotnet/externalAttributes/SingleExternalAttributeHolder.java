@@ -22,7 +22,6 @@ import consulo.dotnet.externalAttributes.nodes.ExternalAttributeNodeImpl;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeSimpleNodeImpl;
 import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenNodeImpl;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -30,6 +29,7 @@ import org.jdom.JDOMException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -111,7 +111,7 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 		}
 	}
 
-	private Map<String, ExternalAttributeWithChildrenNode> myClasses = new THashMap<>();
+	private Map<String, ExternalAttributeWithChildrenNode> myClasses = new HashMap<>();
 
 	@Nullable
 	@Override
