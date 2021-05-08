@@ -16,20 +16,7 @@
 
 package consulo.dotnet.run.coverage;
 
-import java.io.File;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.coverage.CoverageAnnotator;
-import com.intellij.coverage.CoverageEngine;
-import com.intellij.coverage.CoverageFileProvider;
-import com.intellij.coverage.CoverageRunner;
-import com.intellij.coverage.CoverageSuite;
-import com.intellij.coverage.CoverageSuitesBundle;
+import com.intellij.coverage.*;
 import com.intellij.coverage.view.CoverageViewExtension;
 import com.intellij.coverage.view.CoverageViewManager;
 import com.intellij.execution.configurations.RunConfigurationBase;
@@ -45,6 +32,13 @@ import com.intellij.psi.PsiRecursiveElementVisitor;
 import consulo.dotnet.psi.DotNetFile;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
