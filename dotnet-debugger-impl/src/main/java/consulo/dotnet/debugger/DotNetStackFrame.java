@@ -322,10 +322,10 @@ public class DotNetStackFrame extends XStackFrame
 			final SimpleReference<DotNetDebuggerProvider> providerRef = SimpleReference.create();
 			final Map<String, DotNetReferenceExpression> referenceExpressions = new HashMap<>();
 
-			AccessRule.read(() ->
+			PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
+			if(psiElement != null)
 			{
-				PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebuggerContext, myFrameProxy);
-				if(psiElement != null)
+				AccessRule.read(() ->
 				{
 					DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(psiElement.getLanguage());
 					if(provider == null)
@@ -356,8 +356,8 @@ public class DotNetStackFrame extends XStackFrame
 							}
 						});
 					}
-				}
-			});
+				});
+			}
 
 			if(!referenceExpressions.isEmpty())
 			{

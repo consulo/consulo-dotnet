@@ -16,15 +16,13 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
 import com.intellij.icons.AllIcons;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.XNavigatable;
+import consulo.application.AccessRule;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
@@ -37,7 +35,9 @@ import consulo.dotnet.psi.DotNetParameterListOwner;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.util.lang.ref.SoftReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -67,39 +67,48 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 	@RequiredUIAccess
 	public void computeSourcePosition(@Nonnull XNavigatable navigatable)
 	{
+		myDebugContext.getVirtualMachine().invoke(() -> navigatable.setSourcePosition(computeSourcePositionImpl()));
+	}
+
+	@Nullable
+	private XSourcePosition computeSourcePositionImpl()
+	{
 		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(myDebugContext, myFrame);
 		if(psiElement == null)
 		{
-			return;
+			return null;
 		}
-		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(psiElement, DotNetCodeBlockOwner.class);
-		if(codeBlockOwner == null)
+		return AccessRule.read(() ->
 		{
-			return;
-		}
+			DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(psiElement, DotNetCodeBlockOwner.class);
+			if(codeBlockOwner == null)
+			{
+				return null;
+			}
 
-		// search parameterlist owner
-		DotNetParameterListOwner parameterListOwner = PsiTreeUtil.getParentOfType(codeBlockOwner, DotNetParameterListOwner.class, false);
-		if(parameterListOwner == null)
-		{
-			return;
-		}
+			// search parameterlist owner
+			DotNetParameterListOwner parameterListOwner = PsiTreeUtil.getParentOfType(codeBlockOwner, DotNetParameterListOwner.class, false);
+			if(parameterListOwner == null)
+			{
+				return null;
+			}
 
-		DotNetParameter[] psiParameters = parameterListOwner.getParameters();
+			DotNetParameter[] psiParameters = parameterListOwner.getParameters();
 
-		DotNetSourceLocation sourceLocation = myFrame.getSourceLocation();
-		if(sourceLocation == null)
-		{
-			return;
-		}
+			DotNetSourceLocation sourceLocation = myFrame.getSourceLocation();
+			if(sourceLocation == null)
+			{
+				return null;
+			}
 
-		DotNetParameter parameter = psiParameters[myParameter.getIndex()];
-		PsiElement nameIdentifier = parameter.getNameIdentifier();
-		if(nameIdentifier == null)
-		{
-			return;
-		}
-		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(parameter.getContainingFile().getVirtualFile(), nameIdentifier.getTextOffset()));
+			DotNetParameter parameter = psiParameters[myParameter.getIndex()];
+			PsiElement nameIdentifier = parameter.getNameIdentifier();
+			if(nameIdentifier == null)
+			{
+				return null;
+			}
+			return XDebuggerUtil.getInstance().createPositionByOffset(parameter.getContainingFile().getVirtualFile(), nameIdentifier.getTextOffset());
+		});
 	}
 
 	@Nullable

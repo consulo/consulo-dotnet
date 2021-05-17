@@ -16,9 +16,7 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import javax.annotation.Nullable;
-
-import consulo.annotation.access.RequiredReadAction;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -28,6 +26,9 @@ import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.ui.UIAccess;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -36,9 +37,10 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 public class DotNetSourcePositionUtil
 {
 	@Nullable
-	@RequiredReadAction
 	public static PsiElement resolveTargetPsiElement(DotNetDebugContext context, DotNetStackFrameProxy stackFrameProxy)
 	{
+		UIAccess.assetIsNotUIThread();
+
 		DotNetSourceLocation sourceLocation = stackFrameProxy.getSourceLocation();
 		if(sourceLocation == null)
 		{
@@ -54,13 +56,16 @@ public class DotNetSourcePositionUtil
 		{
 			return null;
 		}
-		PsiFile file = PsiManager.getInstance(context.getProject()).findFile(fileByPath);
-		if(file == null)
+		return ReadAction.compute(() ->
 		{
-			return null;
-		}
-		int line = sourceLocation.getLineZeroBased();
-		int column = sourceLocation.getColumn();
-		return DotNetDebuggerUtil.findPsiElement(file, line, column);
+			PsiFile file = PsiManager.getInstance(context.getProject()).findFile(fileByPath);
+			if(file == null)
+			{
+				return null;
+			}
+			int line = sourceLocation.getLineZeroBased();
+			int column = sourceLocation.getColumn();
+			return DotNetDebuggerUtil.findPsiElement(file, line, column);
+		});
 	}
 }

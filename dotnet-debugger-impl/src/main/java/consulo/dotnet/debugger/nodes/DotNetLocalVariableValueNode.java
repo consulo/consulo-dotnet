@@ -16,20 +16,16 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.BaseScopeProcessor;
 import com.intellij.psi.scope.util.PsiScopesUtilCore;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.frame.XNavigatable;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.AccessRule;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -39,6 +35,9 @@ import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetVariable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -70,48 +69,53 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 	@RequiredReadAction
 	public static void computeSourcePosition(@Nonnull XNavigatable navigatable, String name, DotNetDebugContext debugContext, DotNetStackFrameProxy proxy)
 	{
+		debugContext.getVirtualMachine().invoke(() -> navigatable.setSourcePosition(computeSourcePositionImpl(name, debugContext, proxy)));
+	}
+
+	@Nullable
+	private static XSourcePosition computeSourcePositionImpl(String name, DotNetDebugContext debugContext, DotNetStackFrameProxy proxy)
+	{
 		if(StringUtil.isEmpty(name))
 		{
-			return;
+			return null;
 		}
+
 		PsiElement psiElement = DotNetSourcePositionUtil.resolveTargetPsiElement(debugContext, proxy);
 		if(psiElement == null)
 		{
-			return;
+			return null;
 		}
 
-		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(psiElement, DotNetCodeBlockOwner.class);
-		if(codeBlockOwner == null)
+		return AccessRule.read(() ->
 		{
-			return;
-		}
-
-		final SimpleReference<DotNetVariable> elementRef = SimpleReference.create();
-		PsiScopesUtilCore.treeWalkUp(new BaseScopeProcessor()
-		{
-			@Override
-			public boolean execute(@Nonnull PsiElement element, ResolveState state)
+			DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(psiElement, DotNetCodeBlockOwner.class);
+			if(codeBlockOwner == null)
 			{
+				return null;
+			}
+
+			final SimpleReference<DotNetVariable> elementRef = SimpleReference.create();
+			PsiScopesUtilCore.treeWalkUp((element, state) -> {
 				if(element instanceof DotNetVariable && name.equals(((DotNetVariable) element).getName()))
 				{
 					elementRef.set((DotNetVariable) element);
 					return false;
 				}
 				return true;
-			}
-		}, psiElement, codeBlockOwner);
+			}, psiElement, codeBlockOwner);
 
-		DotNetVariable element = elementRef.get();
-		if(element == null)
-		{
-			return;
-		}
-		PsiFile containingFile = element.getContainingFile();
-		if(containingFile == null)
-		{
-			return;
-		}
-		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(containingFile.getVirtualFile(), element.getTextOffset()));
+			DotNetVariable element = elementRef.get();
+			if(element == null)
+			{
+				return null;
+			}
+			PsiFile containingFile = element.getContainingFile();
+			if(containingFile == null)
+			{
+				return null;
+			}
+			return XDebuggerUtil.getInstance().createPositionByOffset(containingFile.getVirtualFile(), element.getTextOffset());
+		});
 	}
 
 	@Nullable
