@@ -17,7 +17,6 @@
 package consulo.dotnet.lang.psi.impl;
 
 import com.intellij.ProjectTopics;
-import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
@@ -399,7 +398,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 	@RequiredReadAction
 	private static Set<DotNetTypeDeclaration> computeTypesImpl(List<DotNetPsiSearcher> searchers, String qName, GlobalSearchScope scope)
 	{
-		Set<DotNetTypeDeclaration> typeDeclarations = new SmartHashSet<>();
+		Set<DotNetTypeDeclaration> typeDeclarations = new HashSet<>();
 		for(DotNetPsiSearcher searcher : searchers)
 		{
 			typeDeclarations.addAll(searcher.findTypesImpl(qName, scope));

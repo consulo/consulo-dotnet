@@ -16,22 +16,6 @@
 
 package consulo.dotnet.testIntegration;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.psi.DotNetInheritUtil;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.resolve.DotNetShortNameSearcher;
-import consulo.dotnet.run.DotNetTestFrameworks;
-import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
@@ -40,6 +24,16 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.testIntegration.TestFinder;
 import com.intellij.testIntegration.TestFinderHelper;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.dotnet.psi.DotNetInheritUtil;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.resolve.DotNetShortNameSearcher;
+import consulo.dotnet.run.DotNetTestFrameworks;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
@@ -75,7 +69,7 @@ public class DotNetTestFinder implements TestFinder
 
 		DotNetShortNameSearcher shortNameSearcher = DotNetShortNameSearcher.getInstance(project);
 
-		Set<PsiElement> elements = new SmartHashSet<PsiElement>();
+		Set<PsiElement> elements = new HashSet<>();
 		Pattern pattern = Pattern.compile(".*" + name + ".*");
 		for(String typeName : shortNameSearcher.getTypeNames(globalSearchScope, null))
 		{
