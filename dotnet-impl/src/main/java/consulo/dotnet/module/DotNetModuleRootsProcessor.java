@@ -9,7 +9,7 @@ import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ModuleRootsProcessor;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
 
 import javax.annotation.Nonnull;
 
@@ -20,9 +20,16 @@ import javax.annotation.Nonnull;
 public class DotNetModuleRootsProcessor extends ModuleRootsProcessor
 {
 	@Override
-	public boolean containsFile(@Nonnull TObjectIntHashMap<VirtualFile> roots, @Nonnull final VirtualFile virtualFile)
+	public boolean containsFile(@Nonnull ObjectIntMap<VirtualFile> roots, @Nonnull final VirtualFile virtualFile)
 	{
-		return !roots.forEachKey(object -> !VfsUtil.isAncestor(object, virtualFile, false));
+		for(VirtualFile object : roots.keySet())
+		{
+			if(VfsUtil.isAncestor(object, virtualFile, false))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Nonnull
