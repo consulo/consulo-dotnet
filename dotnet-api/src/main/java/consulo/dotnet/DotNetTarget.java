@@ -16,6 +16,8 @@
 
 package consulo.dotnet;
 
+import consulo.localize.LocalizeValue;
+
 /**
  * @author VISTALL
  * @since 20.12.13.
@@ -41,8 +43,8 @@ public enum DotNetTarget
 		return myExtension;
 	}
 
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return myDescription;
+		return LocalizeValue.of(myDescription);
 	}
 }

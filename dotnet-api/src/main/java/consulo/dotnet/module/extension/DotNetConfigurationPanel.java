@@ -89,7 +89,7 @@ public class DotNetConfigurationPanel extends JPanel
 			@Override
 			protected void customizeCellRenderer(@Nonnull JList jList, DotNetTarget o, int i, boolean b, boolean b1)
 			{
-				append(o.getDescription());
+				append(o.getDescription().get());
 			}
 		});
 		comp.setSelectedItem(extension.getTarget());
