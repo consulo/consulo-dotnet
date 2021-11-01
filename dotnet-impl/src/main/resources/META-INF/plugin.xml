@@ -24,6 +24,10 @@
 
 	<import path="/META-INF/CompositeFormattingString.xml"/>
 
+	<permissions>
+		<permission type="PROCESS"/>
+	</permissions>
+
 	<extensionPoints>
 		<extensionPoint name="debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
 		<extensionPoint name="debuggerSourceLineResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
