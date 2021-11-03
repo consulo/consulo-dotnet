@@ -24,9 +24,13 @@
 
 	<import path="/META-INF/CompositeFormattingString.xml"/>
 
+	<tags>
+		<tag>software.framework</tag>
+	</tags>
+
 	<permissions>
-		<permission type="PROCESS"/>
-		<permission type="SOCKET"/>
+		<permission type="PROCESS_CREATE"/>
+		<permission type="SOCKET_BIND"/>
 	</permissions>
 
 	<extensionPoints>
