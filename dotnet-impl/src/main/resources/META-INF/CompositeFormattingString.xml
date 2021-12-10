@@ -19,7 +19,6 @@
 		<colorSettingsPage implementation="consulo.csharp.cfs.ide.highlight.CfsColorSettingsPage" />
 		<highlightUsagesHandlerFactory implementation="consulo.csharp.cfs.ide.highlight.CfsItemHighlightUsagesHandlerFactory"/>
 		<completion.contributor language="CFS" implementationClass="consulo.csharp.cfs.ide.completion.CfsCompletionContributor" />
-		<fileTypeFactory implementation="consulo.csharp.cfs.lang.CfsFileTypeFactory" />
 		<lang.parserDefinition language="CFS" implementationClass="consulo.csharp.cfs.lang.CfsParserDefinition" />
 		<lang.braceMatcher language="CFS" implementationClass="consulo.csharp.cfs.lang.CfsPairedBraceMatcher" />
 		<lang.syntaxHighlighterFactory key="CFS" implementationClass="consulo.csharp.cfs.ide.highlight.CfsSyntaxHighlighterFactory" />

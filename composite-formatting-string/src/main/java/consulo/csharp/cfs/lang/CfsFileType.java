@@ -16,12 +16,12 @@
 
 package consulo.csharp.cfs.lang;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,19 +45,19 @@ public class CfsFileType extends LanguageFileType
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return getDefaultExtension();
+		return LocalizeValue.of();
 	}
 
 	@Nonnull
 	@Override
 	public String getDefaultExtension()
 	{
-		return "cfs";
+		return "";
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	public Image getIcon()
 	{

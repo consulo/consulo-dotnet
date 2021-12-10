@@ -18,6 +18,7 @@ package consulo.dotnet.dll;
 
 import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.fileTypes.ArchiveFileType;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
 
@@ -46,9 +47,9 @@ public class DotNetModuleFileType extends ArchiveFileType
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return ".NET libraries";
+		return LocalizeValue.localizeTODO(".NET libraries");
 	}
 
 	@Nonnull

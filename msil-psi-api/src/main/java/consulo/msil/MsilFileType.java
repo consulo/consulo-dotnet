@@ -18,6 +18,7 @@ package consulo.msil;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -45,9 +46,9 @@ public class MsilFileType extends LanguageFileType
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return "Microsoft Intermediate Language files";
+		return LocalizeValue.localizeTODO("Microsoft Intermediate Language files");
 	}
 
 	@Nonnull
