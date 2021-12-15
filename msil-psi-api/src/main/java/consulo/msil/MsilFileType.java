@@ -16,13 +16,12 @@
 
 package consulo.msil;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -58,10 +57,10 @@ public class MsilFileType extends LanguageFileType
 		return "il";
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	public Image getIcon()
 	{
-		return AllIcons.FileTypes.Any_type;
+		return PlatformIconGroup.fileTypesBinary();
 	}
 }
