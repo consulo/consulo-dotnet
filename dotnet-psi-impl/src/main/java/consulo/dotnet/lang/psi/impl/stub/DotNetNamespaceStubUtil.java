@@ -16,13 +16,14 @@
 
 package consulo.dotnet.lang.psi.impl.stub;
 
-import javax.annotation.Nonnull;
-
-import consulo.dotnet.psi.DotNetQualifiedElement;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.psi.util.QualifiedName;
+import consulo.dotnet.psi.DotNetQualifiedElement;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +34,7 @@ public class DotNetNamespaceStubUtil
 	public static String ROOT_FOR_INDEXING = "<root>";
 
 	@Nonnull
-	public static String getIndexableNamespace(@Nonnull String namespace)
+	public static String getIndexableNamespace(@Nullable String namespace)
 	{
 		return StringUtil.notNullizeIfEmpty(namespace, ROOT_FOR_INDEXING);
 	}
@@ -47,7 +48,7 @@ public class DotNetNamespaceStubUtil
 	public static void indexStub(@Nonnull IndexSink indexSink,
 			@Nonnull StubIndexKey<String, ? extends DotNetQualifiedElement> elementByQNameKey,
 			@Nonnull StubIndexKey<String, ? extends DotNetQualifiedElement> namespaceKey,
-			@Nonnull String namespace,
+			@Nullable String namespace,
 			@Nonnull String name)
 	{
 		String indexableNamespace = getIndexableNamespace(namespace);
