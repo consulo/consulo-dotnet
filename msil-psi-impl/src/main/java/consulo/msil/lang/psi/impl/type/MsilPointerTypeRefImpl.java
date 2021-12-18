@@ -49,7 +49,7 @@ public class MsilPointerTypeRefImpl extends DotNetTypeRefWithCachedResult implem
 	@RequiredReadAction
 	@Nonnull
 	@Override
-	public String toString()
+	public String getVmQName()
 	{
 		return myInnerTypeRef.toString() + "*";
 	}

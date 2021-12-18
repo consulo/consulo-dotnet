@@ -49,7 +49,7 @@ public class MsilRefTypeRefImpl extends DotNetTypeRefWithCachedResult implements
 	@RequiredReadAction
 	@Nonnull
 	@Override
-	public String toString()
+	public String getVmQName()
 	{
 		return myTypeRef.toString() + "&";
 	}

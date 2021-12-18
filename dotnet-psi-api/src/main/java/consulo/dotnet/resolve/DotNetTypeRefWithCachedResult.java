@@ -53,20 +53,6 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 		return myResolveScope;
 	}
 
-	@Nonnull
-	@Override
-	public final String getPresentableText()
-	{
-		return toString();
-	}
-
-	@Nonnull
-	@Override
-	public final String getQualifiedText()
-	{
-		return toString();
-	}
-
 	@RequiredReadAction
 	@Nonnull
 	@Override
@@ -92,5 +78,8 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 
 	@RequiredReadAction
 	@Nonnull
-	public abstract String toString();
+	public String toString()
+	{
+		return getVmQName();
+	}
 }

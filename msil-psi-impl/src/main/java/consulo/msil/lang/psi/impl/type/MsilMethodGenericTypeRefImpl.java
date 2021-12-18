@@ -53,6 +53,13 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 		return myIndex;
 	}
 
+	@Nonnull
+	@Override
+	public String getVmQName()
+	{
+		return "";
+	}
+
 	@RequiredReadAction
 	@Nonnull
 	@Override

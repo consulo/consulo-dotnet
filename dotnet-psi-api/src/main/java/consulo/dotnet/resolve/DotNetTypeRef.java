@@ -58,18 +58,9 @@ public interface DotNetTypeRef
 
 		@Nonnull
 		@Override
-		@Deprecated
-		public String getPresentableText()
+		public String getVmQName()
 		{
-			return myText;
-		}
-
-		@Nonnull
-		@Override
-		@Deprecated
-		public String getQualifiedText()
-		{
-			return getPresentableText();
+			return "__" + myText;
 		}
 
 		@RequiredReadAction
@@ -83,7 +74,7 @@ public interface DotNetTypeRef
 		@Override
 		public String toString()
 		{
-			return getPresentableText();
+			return myText;
 		}
 	}
 
@@ -106,17 +97,9 @@ public interface DotNetTypeRef
 		@Nonnull
 		@Override
 		@Deprecated
-		public String getPresentableText()
+		public String getVmQName()
 		{
-			return myDelegate.getPresentableText();
-		}
-
-		@Nonnull
-		@Override
-		@Deprecated
-		public String getQualifiedText()
-		{
-			return myDelegate.getQualifiedText();
+			return myDelegate.getVmQName();
 		}
 
 		@RequiredReadAction
@@ -160,12 +143,7 @@ public interface DotNetTypeRef
 	GlobalSearchScope getResolveScope();
 
 	@Nonnull
-	@Deprecated
-	String getPresentableText();
-
-	@Nonnull
-	@Deprecated
-	String getQualifiedText();
+	String getVmQName();
 
 	/**
 	 * @return true if type ref equal to `vmQName`. It's optimize version. If this method failed - need call #resolve()

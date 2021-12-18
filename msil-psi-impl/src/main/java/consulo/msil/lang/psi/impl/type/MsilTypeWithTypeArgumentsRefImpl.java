@@ -58,7 +58,7 @@ public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedRes
 	@RequiredReadAction
 	@Nonnull
 	@Override
-	public String toString()
+	public String getVmQName()
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(myTypeRef.toString());

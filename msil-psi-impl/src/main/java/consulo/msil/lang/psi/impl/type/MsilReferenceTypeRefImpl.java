@@ -41,6 +41,13 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 		myRef = ref;
 	}
 
+	@Nonnull
+	@Override
+	public String getVmQName()
+	{
+		return myRef;
+	}
+
 	@RequiredReadAction
 	@Nonnull
 	@Override

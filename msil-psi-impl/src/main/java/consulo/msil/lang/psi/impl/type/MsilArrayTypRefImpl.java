@@ -44,7 +44,7 @@ public class MsilArrayTypRefImpl extends DotNetTypeRefWithCachedResult implement
 	@RequiredReadAction
 	@Nonnull
 	@Override
-	public String toString()
+	public String getVmQName()
 	{
 		return myInnerTypeRef.toString() + "[]";
 	}
