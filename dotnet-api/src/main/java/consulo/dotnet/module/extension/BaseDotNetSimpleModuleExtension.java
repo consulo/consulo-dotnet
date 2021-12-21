@@ -16,21 +16,6 @@
 
 package consulo.dotnet.module.extension;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import org.jdom.Document;
-import org.jdom.Element;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.Comparing;
@@ -41,11 +26,11 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.container.plugin.PluginManager;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
@@ -58,6 +43,14 @@ import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.vfs.util.ArchiveVfsUtil;
+import org.jdom.Document;
+import org.jdom.Element;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
@@ -293,21 +286,17 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 
 				List<String> urls = new SmartList<>();
 				String requiredFileName = name + ".xml";
-				FileUtil.visitFiles(dir, new Processor<File>()
+				FileUtil.visitFiles(dir, file ->
 				{
-					@Override
-					public boolean process(File file)
+					if(file.isDirectory())
 					{
-						if(file.isDirectory())
-						{
-							return true;
-						}
-						if(Comparing.equal(requiredFileName, file.getName(), false) && isValidExternalFile(ref.get().getSecond(), file))
-						{
-							urls.add(VfsUtil.pathToUrl(file.getPath()));
-						}
 						return true;
 					}
+					if(Comparing.equal(requiredFileName, file.getName(), false) && isValidExternalFile(ref.get().getSecond(), file))
+					{
+						urls.add(VfsUtil.pathToUrl(file.getPath()));
+					}
+					return true;
 				});
 
 				return ArrayUtil.toStringArray(urls);

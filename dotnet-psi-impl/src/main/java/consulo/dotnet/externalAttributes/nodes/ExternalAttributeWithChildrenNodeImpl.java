@@ -16,14 +16,13 @@
 
 package consulo.dotnet.externalAttributes.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
+import consulo.dotnet.externalAttributes.ExternalAttributeSimpleNode;
+import consulo.dotnet.externalAttributes.ExternalAttributeWithChildrenNode;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.dotnet.externalAttributes.ExternalAttributeWithChildrenNode;
-import consulo.dotnet.externalAttributes.ExternalAttributeSimpleNode;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ import consulo.dotnet.externalAttributes.ExternalAttributeSimpleNode;
  */
 public class ExternalAttributeWithChildrenNodeImpl extends ExternalAttributeSimpleNodeImpl implements ExternalAttributeWithChildrenNode
 {
-	private final List<ExternalAttributeSimpleNode> myChildren = new ArrayList<ExternalAttributeSimpleNode>();
+	private final List<ExternalAttributeSimpleNode> myChildren = new ArrayList<>();
 
 	public ExternalAttributeWithChildrenNodeImpl(String qualifiedName)
 	{

@@ -16,16 +16,18 @@
 
 package consulo.dotnet.sdk;
 
-import java.io.File;
-
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.VfsUtil;
+import consulo.container.plugin.PluginManager;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
+import consulo.dotnet.module.extension.BaseDotNetSimpleModuleExtension;
+
+import javax.annotation.Nonnull;
+import java.io.File;
 
 /**
  * @author VISTALL
@@ -33,7 +35,7 @@ import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
  */
 public abstract class DotNetSdkType extends SdkType
 {
-	public DotNetSdkType(@NonNls String name)
+	public DotNetSdkType(@Nonnull String name)
 	{
 		super(name);
 	}
@@ -42,6 +44,30 @@ public abstract class DotNetSdkType extends SdkType
 	public boolean isRootTypeApplicable(OrderRootType type)
 	{
 		return type == ExternalAttributesRootOrderType.getInstance();
+	}
+
+	@Override
+	public void setupSdkPaths(@Nonnull Sdk sdk)
+	{
+		SdkModificator sdkModificator = sdk.getSdkModificator();
+
+		File dir = new File(PluginManager.getPluginPath(BaseDotNetSimpleModuleExtension.class), "externalAttributes");
+
+		FileUtil.visitFiles(dir, file ->
+		{
+			if(file.isDirectory())
+			{
+				return true;
+			}
+
+			if(file.getName().endsWith(".xml"))
+			{
+				sdkModificator.addRoot(VfsUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.getInstance());
+			}
+			return true;
+		});
+
+		sdkModificator.commitChanges();
 	}
 
 	@Nonnull

@@ -12,15 +12,15 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
-
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +100,7 @@ public class ExternalAttributeManager
 
 		List<OrderEntry> orderEntriesForFile = ProjectFileIndex.getInstance(myProject).getOrderEntriesForFile(virtualFile);
 
-		List<VirtualFile> externalAttributeFiles = new SmartList<VirtualFile>();
+		List<VirtualFile> externalAttributeFiles = new ArrayList<>();
 		for(OrderEntry orderEntry : orderEntriesForFile)
 		{
 			if(ArrayUtil.contains(archiveFile, orderEntry.getFiles(BinariesOrderRootType.getInstance())))
@@ -123,7 +123,7 @@ public class ExternalAttributeManager
 		}
 		else
 		{
-			List<ExternalAttributeHolder> list = new SmartList<ExternalAttributeHolder>();
+			List<ExternalAttributeHolder> list = new ArrayList<>();
 			for(VirtualFile externalAttributeFile : externalAttributeFiles)
 			{
 				list.add(SingleExternalAttributeHolder.load(externalAttributeFile));

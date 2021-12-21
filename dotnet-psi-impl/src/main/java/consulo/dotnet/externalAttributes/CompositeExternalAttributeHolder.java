@@ -16,13 +16,12 @@
 
 package consulo.dotnet.externalAttributes;
 
-import java.util.List;
+import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenCompositeNodeImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.util.SmartList;
-import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenCompositeNodeImpl;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import consulo.dotnet.externalAttributes.nodes.ExternalAttributeWithChildrenComp
  */
 public class CompositeExternalAttributeHolder implements ExternalAttributeHolder
 {
-	private List<ExternalAttributeHolder> myHolders;
+	private final List<ExternalAttributeHolder> myHolders;
 
 	public CompositeExternalAttributeHolder(@Nonnull List<ExternalAttributeHolder> holders)
 	{
@@ -41,7 +40,7 @@ public class CompositeExternalAttributeHolder implements ExternalAttributeHolder
 	@Override
 	public ExternalAttributeWithChildrenNode findClassNode(@Nonnull String qname)
 	{
-		List<ExternalAttributeWithChildrenNode> list = new SmartList<ExternalAttributeWithChildrenNode>();
+		List<ExternalAttributeWithChildrenNode> list = new ArrayList<>();
 		for(ExternalAttributeHolder holder : myHolders)
 		{
 			ExternalAttributeWithChildrenNode classNode = holder.findClassNode(qname);
