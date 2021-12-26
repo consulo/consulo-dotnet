@@ -18,8 +18,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -76,15 +74,7 @@ public class DotNetProgramParametersPanel extends CommonProgramParametersPanel
 		myModuleLabeled = LabeledComponent.create(myModuleComboBox, "Module");
 		add(myModuleLabeled);
 
-		List<ConsoleType> consoleTypeList = new ArrayList<>();
-		for(ConsoleType consoleType : ConsoleType.values())
-		{
-			if(consoleType.isAvaliable())
-			{
-				consoleTypeList.add(consoleType);
-			}
-		}
-		myConsoleTypeBox = new ComboBox<>(new CollectionComboBoxModel<>(consoleTypeList));
+		myConsoleTypeBox = new ComboBox<>(new CollectionComboBoxModel<>(ConsoleType.listSupported()));
 		myConsoleTypeBox.setRenderer(new ColoredListCellRenderer<ConsoleType>()
 		{
 			@Override
