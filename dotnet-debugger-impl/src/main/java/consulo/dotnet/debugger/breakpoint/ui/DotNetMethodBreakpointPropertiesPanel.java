@@ -16,21 +16,18 @@
 
 package consulo.dotnet.debugger.breakpoint.ui;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.annotation.Nonnull;
-import javax.swing.Box;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ui.DialogUtil;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author VISTALL
@@ -51,7 +48,6 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 		myWatchExitCheckBox = new JCheckBox("Method exit");
 		DialogUtil.registerMnemonic(myWatchEntryCheckBox);
 		DialogUtil.registerMnemonic(myWatchExitCheckBox);
-
 
 		Box watchBox = Box.createVerticalBox();
 		panel = new JPanel(new BorderLayout());
@@ -99,17 +95,31 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 		return panel;
 	}
 
+	@RequiredUIAccess
 	@Override
 	public void loadFrom(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 	{
-		myWatchEntryCheckBox.setSelected(breakpoint.getProperties().METHOD_ENTRY);
-		myWatchExitCheckBox.setSelected(breakpoint.getProperties().METHOD_EXIT);
+		DotNetMethodBreakpointProperties properties = breakpoint.getProperties();
+		if(properties == null)
+		{
+			return;
+		}
+
+		myWatchEntryCheckBox.setSelected(properties.METHOD_ENTRY);
+		myWatchExitCheckBox.setSelected(properties.METHOD_EXIT);
 	}
 
+	@RequiredUIAccess
 	@Override
 	public void saveTo(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 	{
-		breakpoint.getProperties().METHOD_ENTRY = myWatchEntryCheckBox.isSelected();
-		breakpoint.getProperties().METHOD_EXIT = myWatchExitCheckBox.isSelected();
+		DotNetMethodBreakpointProperties properties = breakpoint.getProperties();
+		if(properties == null)
+		{
+			return;
+		}
+
+		properties.METHOD_ENTRY = myWatchEntryCheckBox.isSelected();
+		properties.METHOD_EXIT = myWatchExitCheckBox.isSelected();
 	}
 }

@@ -78,15 +78,26 @@ public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomP
 	@RequiredUIAccess
 	public void loadFrom(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
 	{
-		myNotifyCaughtCheckBox.setValue(breakpoint.getProperties().NOTIFY_CAUGHT);
-		myNotifyUncaughtCheckBox.setValue(breakpoint.getProperties().NOTIFY_UNCAUGHT);
+		DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
+		if(properties == null)
+		{
+			return;
+		}
+		myNotifyCaughtCheckBox.setValue(properties.NOTIFY_CAUGHT);
+		myNotifyUncaughtCheckBox.setValue(properties.NOTIFY_UNCAUGHT);
 	}
 
 	@Override
 	@RequiredUIAccess
 	public void saveTo(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
 	{
-		breakpoint.getProperties().NOTIFY_CAUGHT = myNotifyCaughtCheckBox.getValue();
-		breakpoint.getProperties().NOTIFY_UNCAUGHT = myNotifyUncaughtCheckBox.getValue();
+		DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
+		if(properties == null)
+		{
+			return;
+		}
+
+		properties.NOTIFY_CAUGHT = myNotifyCaughtCheckBox.getValue();
+		properties.NOTIFY_UNCAUGHT = myNotifyUncaughtCheckBox.getValue();
 	}
 }
