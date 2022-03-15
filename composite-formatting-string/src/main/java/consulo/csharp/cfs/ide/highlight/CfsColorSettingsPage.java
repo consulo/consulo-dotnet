@@ -1,22 +1,21 @@
 package consulo.csharp.cfs.ide.highlight;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.options.colors.AttributesDescriptor;
-import com.intellij.openapi.options.colors.ColorDescriptor;
-import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.psi.tree.IElementType;
+import consulo.codeEditor.HighlighterColors;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.csharp.cfs.lang.CfsLanguage;
 import consulo.csharp.cfs.lang.CfsTokens;
 import consulo.csharp.cfs.lang.IndexCfsLanguageVersion;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.DefaultLanguageHighlighterColors;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL

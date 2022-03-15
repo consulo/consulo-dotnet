@@ -16,13 +16,13 @@
 
 package consulo.csharp.cfs.lang;
 
-import javax.annotation.Nonnull;
+import consulo.language.ast.TokenSet;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.MergingLexerAdapter;
+import consulo.language.version.LanguageVersion;
+import consulo.language.version.LanguageVersionWithParsing;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.tree.TokenSet;
-import consulo.lang.LanguageVersion;
-import consulo.lang.LanguageVersionWithParsing;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

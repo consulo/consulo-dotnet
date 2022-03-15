@@ -1,16 +1,15 @@
 package consulo.dotnet.module;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiPackage;
+import consulo.language.psi.PsiPackageManager;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

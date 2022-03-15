@@ -16,16 +16,16 @@
 
 package consulo.dotnet.debugger;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.debugger.XSourcePosition;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiElement;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.impl.ui.ExecutionPointHighlighter;
 
 /**
  * @author VISTALL

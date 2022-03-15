@@ -16,17 +16,15 @@
 
 package consulo.csharp.cfs.ide.highlight;
 
-import java.util.List;
-
 import consulo.annotation.access.RequiredReadAction;
 import consulo.csharp.cfs.psi.CfsFile;
 import consulo.csharp.cfs.psi.CfsItem;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.Consumer;
-import com.intellij.util.SmartList;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.util.collection.SmartList;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL

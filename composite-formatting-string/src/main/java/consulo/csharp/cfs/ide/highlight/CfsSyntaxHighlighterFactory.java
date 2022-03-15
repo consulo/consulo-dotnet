@@ -16,12 +16,13 @@
 
 package consulo.csharp.cfs.ide.highlight;
 
-import javax.annotation.Nonnull;
 import consulo.csharp.cfs.lang.BaseCfsLanguageVersion;
 import consulo.csharp.cfs.lang.CfsLanguage;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
-import consulo.lang.LanguageVersion;
+import consulo.language.editor.highlight.LanguageVersionableSyntaxHighlighterFactory;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.version.LanguageVersion;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

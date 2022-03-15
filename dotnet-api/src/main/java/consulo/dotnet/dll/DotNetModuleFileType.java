@@ -16,9 +16,8 @@
 
 package consulo.dotnet.dll;
 
-import com.intellij.openapi.util.io.FileUtilRt;
-import consulo.fileTypes.ArchiveFileType;
 import consulo.localize.LocalizeValue;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 
 import javax.annotation.Nonnull;
 

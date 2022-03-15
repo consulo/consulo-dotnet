@@ -16,22 +16,21 @@
 
 package consulo.dotnet.debugger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayFactory;
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XStackFrame;
+import consulo.application.AllIcons;
+import consulo.debugger.frame.XExecutionStack;
+import consulo.debugger.frame.XStackFrame;
 import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayFactory;
+import consulo.util.lang.StringUtil;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL

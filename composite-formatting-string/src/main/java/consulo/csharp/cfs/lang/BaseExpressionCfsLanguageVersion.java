@@ -16,14 +16,14 @@
 
 package consulo.csharp.cfs.lang;
 
-import javax.annotation.Nonnull;
-
 import consulo.csharp.cfs.lang.lexer.CfsLexer;
 import consulo.csharp.cfs.lang.parser.CfsParser;
-import com.intellij.lang.Language;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.PsiParser;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

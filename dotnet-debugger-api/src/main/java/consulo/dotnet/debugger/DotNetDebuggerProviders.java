@@ -1,12 +1,13 @@
 package consulo.dotnet.debugger;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 
 /**
  * @author VISTALL

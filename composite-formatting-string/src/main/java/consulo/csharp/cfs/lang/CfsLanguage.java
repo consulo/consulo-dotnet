@@ -16,9 +16,9 @@
 
 package consulo.csharp.cfs.lang;
 
-import javax.annotation.Nonnull;
+import consulo.language.Language;
 
-import com.intellij.lang.Language;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

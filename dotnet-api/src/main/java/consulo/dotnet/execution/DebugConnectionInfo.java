@@ -16,8 +16,6 @@
 
 package consulo.dotnet.execution;
 
-import com.intellij.util.net.NetUtils;
-
 /**
  * @author VISTALL
  * @since 10.04.14

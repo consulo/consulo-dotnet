@@ -17,8 +17,8 @@
 package consulo.csharp.cfs.lang;
 
 import consulo.csharp.cfs.psi.CfsItem;
-import com.intellij.psi.tree.IElementType;
-import consulo.psi.tree.ElementTypeAsPsiFactory;
+import consulo.language.ast.ElementTypeAsPsiFactory;
+import consulo.language.ast.IElementType;
 
 /**
  * @author VISTALL

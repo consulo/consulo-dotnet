@@ -16,8 +16,9 @@
 
 package consulo.dotnet.externalAttributes;
 
+import consulo.content.OrderRootType;
+
 import javax.annotation.Nonnull;
-import com.intellij.openapi.roots.OrderRootType;
 
 /**
  * @author VISTALL

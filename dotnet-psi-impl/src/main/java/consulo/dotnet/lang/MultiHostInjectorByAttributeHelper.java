@@ -16,13 +16,13 @@
 
 package consulo.dotnet.lang;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import consulo.component.extension.ExtensionPointName;
+import consulo.document.util.TextRange;
 import consulo.dotnet.psi.DotNetAttribute;
 import consulo.dotnet.psi.DotNetExpression;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.TextRange;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

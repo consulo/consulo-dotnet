@@ -1,15 +1,13 @@
 package consulo.dotnet.module.extension;
 
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.concurrency.AppExecutorUtil;
-import consulo.internal.dotnet.asm.mbel.AssemblyInfo;
-import consulo.internal.dotnet.asm.mbel.ModuleParser;
+import consulo.ide.ServiceManager;
+import consulo.util.lang.ObjectUtil;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

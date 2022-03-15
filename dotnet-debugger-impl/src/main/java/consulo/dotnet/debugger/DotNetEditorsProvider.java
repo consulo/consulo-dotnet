@@ -1,26 +1,26 @@
 package consulo.dotnet.debugger;
 
-import java.util.Collection;
-import java.util.Collections;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.debugger.XDebugSession;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.evaluation.XDebuggerEditorsProviderBase;
+import consulo.language.Language;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.impl.plain.PsiPlainTextFileImpl;
+import consulo.language.plain.PlainTextFileType;
+import consulo.language.plain.PlainTextLanguage;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.fileTypes.PlainTextLanguage;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.SingleRootFileViewProvider;
-import com.intellij.psi.impl.source.PsiPlainTextFileImpl;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author VISTALL

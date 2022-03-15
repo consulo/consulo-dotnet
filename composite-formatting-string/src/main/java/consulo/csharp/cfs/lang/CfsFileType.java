@@ -16,8 +16,8 @@
 
 package consulo.csharp.cfs.lang;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.application.AllIcons;
+import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 

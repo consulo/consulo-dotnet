@@ -16,13 +16,13 @@
 
 package consulo.csharp.cfs.psi;
 
-import javax.annotation.Nonnull;
-
 import consulo.csharp.cfs.lang.CfsFileType;
 import consulo.csharp.cfs.lang.CfsLanguage;
-import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.FileViewProvider;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.psi.PsiFileBase;
+import consulo.virtualFileSystem.fileType.FileType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

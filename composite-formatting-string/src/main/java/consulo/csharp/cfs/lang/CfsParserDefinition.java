@@ -16,16 +16,16 @@
 
 package consulo.csharp.cfs.lang;
 
-import javax.annotation.Nonnull;
-
 import consulo.csharp.cfs.psi.CfsFile;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IFileElementType;
-import consulo.lang.LanguageVersionableParserDefinition;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IFileElementType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.version.LanguageVersionableParserDefinition;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

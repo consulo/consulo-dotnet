@@ -1,7 +1,7 @@
 package consulo.csharp.cfs.ide.highlight;
 
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.editor.DefaultLanguageHighlighterColors;
 
 /**
  * @author VISTALL

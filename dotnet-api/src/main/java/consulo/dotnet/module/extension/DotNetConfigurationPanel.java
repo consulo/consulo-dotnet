@@ -16,24 +16,19 @@
 
 package consulo.dotnet.module.extension;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.ui.*;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.ui.*;
-import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBTextField;
-import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
 import consulo.dotnet.DotNetBundle;
 import consulo.dotnet.DotNetTarget;
-import consulo.extension.ui.ModuleExtensionSdkBoxBuilder;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiElement;
+import consulo.project.DumbService;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.*;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;

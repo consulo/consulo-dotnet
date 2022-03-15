@@ -17,9 +17,9 @@
 package consulo.csharp.cfs.lang.lexer;
 
 import consulo.csharp.cfs.lang.CfsTokens;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.lexer.MergingLexerAdapter;
 
 /**
  * @author VISTALL

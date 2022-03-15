@@ -16,19 +16,13 @@
 
 package consulo.dotnet.compiler;
 
-import com.intellij.ide.macro.Macro;
-import com.intellij.ide.macro.MacroManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.dataContext.DataContext;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.macro.TargetFileExtensionMacro;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.module.Module;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;

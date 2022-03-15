@@ -16,23 +16,22 @@
 
 package consulo.csharp.cfs.psi;
 
-import javax.annotation.Nonnull;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceBase;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.impl.source.tree.injected.Place;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
 import consulo.csharp.cfs.lang.CfsTokens;
+import consulo.document.util.TextRange;
 import consulo.dotnet.psi.DotNetCallArgumentList;
 import consulo.dotnet.psi.DotNetExpression;
 import consulo.dotnet.util.ArrayUtil2;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceBase;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.util.collection.ArrayUtil;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

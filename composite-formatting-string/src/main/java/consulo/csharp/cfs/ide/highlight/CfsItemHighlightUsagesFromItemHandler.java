@@ -16,19 +16,19 @@
 
 package consulo.csharp.cfs.ide.highlight;
 
-import java.util.Collections;
-import java.util.List;
-
 import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.Editor;
 import consulo.csharp.cfs.psi.CfsFile;
 import consulo.csharp.cfs.psi.CfsItem;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
-import com.intellij.util.Consumer;
-import com.intellij.util.SmartList;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.util.collection.SmartList;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -67,7 +67,7 @@ public class CfsItemHighlightUsagesFromItemHandler extends HighlightUsagesHandle
 	@Override
 	protected void selectTargets(List<CfsItem> targets, Consumer<List<CfsItem>> selectionConsumer)
 	{
-		selectionConsumer.consume(targets);
+		selectionConsumer.accept(targets);
 	}
 
 	@Override

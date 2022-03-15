@@ -16,11 +16,11 @@
 
 package consulo.dotnet.module.extension;
 
-import java.util.Map;
+import consulo.content.OrderRootType;
+import consulo.module.extension.ModuleExtension;
 
 import javax.annotation.Nonnull;
-import com.intellij.openapi.roots.OrderRootType;
-import consulo.module.extension.ModuleExtension;
+import java.util.Map;
 
 /**
  * @author VISTALL

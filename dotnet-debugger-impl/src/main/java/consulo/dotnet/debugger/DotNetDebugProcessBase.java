@@ -1,23 +1,15 @@
 package consulo.dotnet.debugger;
 
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.intellij.xdebugger.frame.XSuspendContext;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.Task;
+import consulo.debugger.XDebugProcess;
+import consulo.debugger.XDebugSession;
+import consulo.debugger.XDebuggerManager;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.breakpoint.XBreakpoint;
+import consulo.debugger.breakpoint.XLineBreakpoint;
+import consulo.debugger.evaluation.XDebuggerEditorsProvider;
+import consulo.debugger.frame.XSuspendContext;
 import consulo.dotnet.debugger.breakpoint.DotNetExceptionBreakpointType;
 import consulo.dotnet.debugger.breakpoint.DotNetLineBreakpointType;
 import consulo.dotnet.debugger.breakpoint.DotNetMethodBreakpointType;
@@ -26,6 +18,11 @@ import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointPropert
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.nodes.logicView.*;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
+import consulo.execution.ExecutionResult;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

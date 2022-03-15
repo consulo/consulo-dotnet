@@ -1,25 +1,20 @@
 package consulo.csharp.cfs.ide.completion;
 
-import javax.annotation.Nonnull;
+import consulo.application.AllIcons;
 import consulo.csharp.cfs.lang.CfsTokens;
 import consulo.dotnet.psi.DotNetCallArgumentList;
 import consulo.dotnet.psi.DotNetExpression;
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionParameters;
-import consulo.codeInsight.completion.CompletionProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.patterns.StandardPatterns;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.impl.source.tree.injected.Place;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.ProcessingContext;
+import consulo.language.editor.completion.*;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.pattern.StandardPatterns;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.ProcessingContext;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

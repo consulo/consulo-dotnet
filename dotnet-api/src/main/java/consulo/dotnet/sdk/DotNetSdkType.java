@@ -16,15 +16,14 @@
 
 package consulo.dotnet.sdk;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
 import consulo.container.plugin.PluginManager;
+import consulo.content.OrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkModificator;
+import consulo.content.bundle.SdkType;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.dotnet.module.extension.BaseDotNetSimpleModuleExtension;
+import consulo.util.io.FileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;

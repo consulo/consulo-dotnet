@@ -1,10 +1,10 @@
 package consulo.dotnet.debugger;
 
-import javax.annotation.Nonnull;
-
+import consulo.debugger.XDebugSession;
 import consulo.dotnet.execution.DebugConnectionInfo;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.xdebugger.XDebugSession;
+import consulo.execution.configuration.RunProfile;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

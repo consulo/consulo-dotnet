@@ -16,11 +16,11 @@
 
 package consulo.dotnet.impl.assembly;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.assembly.AssemblyModule;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
@@ -41,7 +41,7 @@ class ConsuloModuleAsAssemblyModule implements AssemblyModule
 	ConsuloModuleAsAssemblyModule(@Nonnull Module module)
 	{
 		myModule = module;
-		myLangExtension = ModuleUtil.getExtension(module, DotNetModuleLangExtension.class);
+		myLangExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
 	}
 
 	@RequiredReadAction

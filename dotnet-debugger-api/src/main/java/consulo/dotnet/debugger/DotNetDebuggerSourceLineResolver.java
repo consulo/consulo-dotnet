@@ -16,12 +16,12 @@
 
 package consulo.dotnet.debugger;
 
-import java.util.Set;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.psi.PsiElement;
+import java.util.Set;
 
 /**
  * @author VISTALL

@@ -20,13 +20,13 @@
 	<parent>
 		<groupId>consulo</groupId>
 		<artifactId>arch.ide-provided</artifactId>
-		<version>2-SNAPSHOT</version>
+		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>consulo.plugin</groupId>
 	<artifactId>consulo.dotnet</artifactId>
-	<version>2-SNAPSHOT</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>consulo-plugin</packaging>
 
 	<repositories>
@@ -45,7 +45,7 @@
 			<plugin>
 				<groupId>consulo.maven</groupId>
 				<artifactId>maven-consulo-plugin</artifactId>
-				<version>2-SNAPSHOT</version>
+				<version>3-SNAPSHOT</version>
 				<extensions>true</extensions>
 				<configuration>
 					<repositoryChannel>nightly</repositoryChannel>
@@ -137,13 +137,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>consulo.dotnet-dotnet.msil.impl</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>consulo</groupId>
-			<artifactId>consulo-compiler-impl</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

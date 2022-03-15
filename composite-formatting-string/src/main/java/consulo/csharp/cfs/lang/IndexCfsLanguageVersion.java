@@ -16,17 +16,18 @@
 
 package consulo.csharp.cfs.lang;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.csharp.cfs.lang.lexer.CfsLexer;
 import consulo.csharp.cfs.lang.parser.CfsParser;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import consulo.lang.LanguageVersionWithDefinition;
-import consulo.lang.LanguageVersionWithParsing;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.PsiParser;
+import consulo.language.psi.PsiElement;
+import consulo.language.version.LanguageVersionWithDefinition;
+import consulo.language.version.LanguageVersionWithParsing;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

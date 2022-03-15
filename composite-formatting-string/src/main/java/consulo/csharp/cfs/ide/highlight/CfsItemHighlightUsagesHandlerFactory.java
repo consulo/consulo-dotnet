@@ -16,30 +16,24 @@
 
 package consulo.csharp.cfs.ide.highlight;
 
-import java.util.List;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.Editor;
+import consulo.csharp.cfs.psi.CfsFile;
+import consulo.csharp.cfs.psi.CfsItem;
+import consulo.document.util.TextRange;
+import consulo.dotnet.psi.DotNetCallArgumentList;
+import consulo.dotnet.psi.DotNetExpression;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactory;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ArrayUtil;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.codeInsight.TargetElementUtil;
-import consulo.csharp.cfs.psi.CfsFile;
-import consulo.csharp.cfs.psi.CfsItem;
-import consulo.dotnet.psi.DotNetCallArgumentList;
-import consulo.dotnet.psi.DotNetExpression;
-import consulo.util.lang.ref.SimpleReference;
+import java.util.List;
 
 /**
  * @author VISTALL

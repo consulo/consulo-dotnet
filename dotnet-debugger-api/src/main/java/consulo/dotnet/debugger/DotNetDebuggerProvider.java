@@ -16,26 +16,26 @@
 
 package consulo.dotnet.debugger;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.lang.Language;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Consumer;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.XNamedValue;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.component.extension.ExtensionPointName;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.evaluation.XDebuggerEvaluator;
+import consulo.debugger.frame.XNamedValue;
+import consulo.document.util.TextRange;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.psi.DotNetReferenceExpression;
 import consulo.dotnet.psi.DotNetType;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
