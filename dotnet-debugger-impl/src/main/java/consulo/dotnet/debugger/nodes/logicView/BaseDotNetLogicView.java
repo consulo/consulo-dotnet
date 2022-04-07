@@ -16,19 +16,18 @@
 
 package consulo.dotnet.debugger.nodes.logicView;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XNamedValue;
-import com.intellij.xdebugger.frame.XValueChildrenList;
+import consulo.debugger.frame.XCompositeNode;
+import consulo.debugger.frame.XNamedValue;
+import consulo.debugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.logging.Logger;
 import consulo.util.dataholder.UserDataHolderBase;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -16,26 +16,26 @@
 
 package consulo.dotnet.impl.assembly;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.assembly.AssemblyModule;
 import consulo.dotnet.resolve.DotNetTypeRefUtil;
 import consulo.internal.dotnet.asm.signature.TypeSignature;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValuesManager;
 import consulo.msil.lang.psi.MsilAssemblyEntry;
 import consulo.msil.lang.psi.MsilCustomAttribute;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.lang.stubbing.MsilCustomAttributeArgumentList;
 import consulo.msil.lang.stubbing.MsilCustomAttributeStubber;
 import consulo.msil.lang.stubbing.values.MsiCustomAttributeValue;
+import consulo.project.Project;
 import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

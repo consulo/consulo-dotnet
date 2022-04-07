@@ -16,32 +16,35 @@
  */
 package consulo.dotnet.psi.search.searches;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
-import com.intellij.psi.PsiBundle;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.PsiSearchScopeUtil;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.search.searches.ExtensibleQueryFactory;
-import com.intellij.util.*;
-import com.intellij.util.containers.Stack;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.util.Query;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
+import consulo.application.util.query.ExtensibleQueryFactory;
+import consulo.application.util.query.QueryExecutor;
+import consulo.content.scope.SearchScope;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.language.psi.PsiBundle;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -162,10 +165,10 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 
 	@Nonnull
 	public static Query<DotNetTypeDeclaration> search(@Nonnull final DotNetTypeDeclaration typeDeclaration,
-			@Nonnull SearchScope scope,
-			final boolean checkDeep,
-			final boolean checkInheritance,
-			Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+													  @Nonnull SearchScope scope,
+													  final boolean checkDeep,
+													  final boolean checkInheritance,
+													  Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		String vmQName = ApplicationManager.getApplication().runReadAction(new Computable<String>()
 		{

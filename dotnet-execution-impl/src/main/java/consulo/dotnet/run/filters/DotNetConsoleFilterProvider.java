@@ -16,14 +16,15 @@
 
 package consulo.dotnet.run.filters;
 
-import javax.annotation.Nonnull;
-
+import consulo.content.scope.SearchScope;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import com.intellij.execution.filters.ConsoleFilterProviderEx;
-import com.intellij.execution.filters.Filter;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.execution.ui.console.ConsoleFilterProviderEx;
+import consulo.execution.ui.console.Filter;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.extension.ModuleExtensionHelper;
+import consulo.project.Project;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +33,7 @@ import consulo.module.extension.ModuleExtensionHelper;
 public class DotNetConsoleFilterProvider implements ConsoleFilterProviderEx
 {
 	@Override
-	public Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope)
+	public Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull SearchScope searchScope)
 	{
 		if(!ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetSimpleModuleExtension.class))
 		{

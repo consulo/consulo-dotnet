@@ -18,6 +18,7 @@ package consulo.dotnet.debugger;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.debugger.XSourcePosition;
+import consulo.debugger.XSourcePositionWithHighlighter;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;
@@ -31,7 +32,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 23.07.2015
  */
-public class DotNetSourcePositionByExecutableElement implements XSourcePosition, ExecutionPointHighlighter.HighlighterProvider
+public class DotNetSourcePositionByExecutableElement implements XSourcePosition, XSourcePositionWithHighlighter
 {
 	private XSourcePosition myOriginalPosition;
 	private PsiElement myExecutableElement;

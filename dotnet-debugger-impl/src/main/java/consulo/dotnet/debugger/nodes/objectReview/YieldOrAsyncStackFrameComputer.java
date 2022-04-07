@@ -16,13 +16,7 @@
 
 package consulo.dotnet.debugger.nodes.objectReview;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.xdebugger.frame.XValueChildrenList;
+import consulo.debugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
@@ -33,6 +27,11 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.util.collection.ContainerUtil;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * @author VISTALL

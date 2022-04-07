@@ -16,29 +16,29 @@
 
 package consulo.dotnet.compiler;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
-import javax.annotation.Nonnull;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.CapturingProcessHandler;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
-import com.intellij.openapi.compiler.TranslatingCompiler;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.problems.Problem;
-import com.intellij.problems.WolfTheProblemSolver;
-import com.intellij.util.Chunk;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.TranslatingCompiler;
+import consulo.compiler.scope.CompileScope;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
+import consulo.language.editor.wolfAnalyzer.Problem;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
+import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.local.CapturingProcessHandler;
+import consulo.process.local.ProcessOutput;
+import consulo.project.Project;
+import consulo.util.collection.Chunk;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.fileType.FileType;
+
+import javax.annotation.Nonnull;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
  * @author VISTALL

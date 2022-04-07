@@ -1,17 +1,15 @@
 package consulo.dotnet.module;
 
-import com.google.common.base.Predicate;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
-import consulo.roots.ContentFolderTypeProvider;
-import consulo.roots.impl.ModuleRootsProcessor;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL

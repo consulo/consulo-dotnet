@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.breakpoint.ui;
 
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
+import consulo.debugger.breakpoint.XBreakpoint;
+import consulo.debugger.breakpoint.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;

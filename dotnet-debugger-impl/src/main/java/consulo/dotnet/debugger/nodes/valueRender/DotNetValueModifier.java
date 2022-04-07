@@ -16,20 +16,18 @@
 
 package consulo.dotnet.debugger.nodes.valueRender;
 
-import java.util.function.Consumer;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.xdebugger.frame.XValueModifier;
+import consulo.debugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.nodes.TypeTag;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL

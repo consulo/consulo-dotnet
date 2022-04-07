@@ -16,13 +16,13 @@
 
 package consulo.dotnet.psi;
 
-import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.CachedValuesManager;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.internal.DotNetInheritCache;
 import consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.CachedValuesManager;
+import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
 

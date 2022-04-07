@@ -16,14 +16,14 @@
  */
 package consulo.dotnet.psi.search.searches;
 
-import javax.annotation.Nonnull;
-
+import consulo.application.util.Query;
+import consulo.application.util.query.ExtensibleQueryFactory;
+import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.search.searches.ExtensibleQueryFactory;
-import com.intellij.util.Query;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -16,10 +16,10 @@
 
 package consulo.dotnet.debugger.breakpoint.properties;
 
-import javax.annotation.Nullable;
+import consulo.debugger.breakpoint.XBreakpointProperties;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

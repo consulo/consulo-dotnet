@@ -16,11 +16,10 @@
 
 package consulo.dotnet.lang.psi.impl.stub;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.psi.util.QualifiedName;
 import consulo.dotnet.psi.DotNetQualifiedElement;
+import consulo.language.psi.stub.IndexSink;
+import consulo.language.psi.stub.StubIndexKey;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

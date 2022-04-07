@@ -16,7 +16,6 @@
 
 package consulo.dotnet.module.extension;
 
-
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginManager;
 import consulo.content.OrderRootType;

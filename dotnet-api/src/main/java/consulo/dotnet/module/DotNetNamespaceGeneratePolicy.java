@@ -10,6 +10,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,7 +57,7 @@ public abstract class DotNetNamespaceGeneratePolicy
 					{
 						return null;
 					}
-					String relativePath = VfsUtil.getRelativePath(directory.getVirtualFile(), moduleDir, '.');
+					String relativePath = VirtualFileUtil.getRelativePath(directory.getVirtualFile(), moduleDir, '.');
 
 					if(!StringUtil.isEmpty(relativePath))
 					{

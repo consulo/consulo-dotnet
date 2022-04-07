@@ -16,13 +16,11 @@
 
 package consulo.dotnet.compiler;
 
-import java.io.File;
-import java.util.List;
+import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
-
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.Module;
+import java.io.File;
+import java.util.List;
 
 /**
  * @author VISTALL

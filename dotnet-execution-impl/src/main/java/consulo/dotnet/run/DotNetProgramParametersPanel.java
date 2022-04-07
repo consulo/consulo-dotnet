@@ -1,19 +1,13 @@
 package consulo.dotnet.run;
 
-import com.intellij.application.options.ModuleListCellRenderer;
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.ui.CommonProgramParametersPanel;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.ColoredListCellRenderer;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
-import consulo.execution.console.ConsoleType;
+import consulo.execution.CommonProgramRunConfigurationParameters;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.ModuleManager;
+import consulo.process.ProcessConsoleType;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.LabeledComponent;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -26,7 +20,7 @@ import java.awt.event.ItemEvent;
 public class DotNetProgramParametersPanel extends CommonProgramParametersPanel
 {
 	private ComboBox<Module> myModuleComboBox;
-	private ComboBox<ConsoleType> myConsoleTypeBox;
+	private ComboBox<ProcessConsoleType> myConsoleTypeBox;
 
 	private final Project myProject;
 	private LabeledComponent<ComboBox<Module>> myModuleLabeled;

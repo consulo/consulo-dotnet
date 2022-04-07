@@ -16,13 +16,11 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.frame.XNavigatable;
 import consulo.application.AccessRule;
+import consulo.application.AllIcons;
+import consulo.debugger.XDebuggerUtil;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.frame.XNavigatable;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
@@ -32,6 +30,8 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetParameter;
 import consulo.dotnet.psi.DotNetParameterListOwner;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;

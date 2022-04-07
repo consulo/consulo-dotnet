@@ -16,15 +16,16 @@
 
 package consulo.dotnet.module;
 
-import javax.annotation.Nonnull;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.module.content.ModuleFileIndex;
+import consulo.module.content.ModuleRootManager;
+import consulo.virtualFileSystem.VirtualFile;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.roots.ModuleFileIndex;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,6 +33,7 @@ import com.intellij.psi.PsiFile;
  */
 public class DotNetModuleUtil
 {
+	@RequiredReadAction
 	public static boolean isUnderSourceRoot(@Nonnull PsiElement element)
 	{
 		Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(element);

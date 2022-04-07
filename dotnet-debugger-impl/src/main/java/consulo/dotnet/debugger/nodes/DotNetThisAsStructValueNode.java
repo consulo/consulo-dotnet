@@ -16,10 +16,10 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XValueChildrenList;
-import com.intellij.xdebugger.frame.XValueModifier;
+import consulo.application.AllIcons;
+import consulo.debugger.frame.XCompositeNode;
+import consulo.debugger.frame.XValueChildrenList;
+import consulo.debugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;

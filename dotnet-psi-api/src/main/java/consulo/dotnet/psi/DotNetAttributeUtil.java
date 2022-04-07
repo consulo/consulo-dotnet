@@ -16,16 +16,16 @@
 
 package consulo.dotnet.psi;
 
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.psi.util.CachedValue;
+import consulo.language.psi.util.CachedValueProvider;
+import consulo.language.psi.util.CachedValuesManager;
+import consulo.project.DumbService;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

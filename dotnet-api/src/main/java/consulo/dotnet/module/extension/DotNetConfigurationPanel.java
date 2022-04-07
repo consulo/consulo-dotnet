@@ -27,6 +27,7 @@ import consulo.project.DumbService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;

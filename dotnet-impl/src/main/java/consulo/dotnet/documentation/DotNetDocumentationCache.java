@@ -1,21 +1,19 @@
 package consulo.dotnet.documentation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import consulo.content.base.DocumentationOrderRootType;
+import consulo.ide.ServiceManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.virtualFileSystem.VirtualFile;
+import org.emonic.base.documentation.IDocumentation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
-
-import org.emonic.base.documentation.IDocumentation;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import consulo.roots.types.DocumentationOrderRootType;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author VISTALL

@@ -16,15 +16,16 @@
 
 package consulo.dotnet.compiler;
 
+import consulo.compiler.TranslatingCompilerFilesMonitorHelper;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.extension.ModuleExtension;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
-import consulo.module.extension.ModuleExtension;
 
 /**
  * @author VISTALL

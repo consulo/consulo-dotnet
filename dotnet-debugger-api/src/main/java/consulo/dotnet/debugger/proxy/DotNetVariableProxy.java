@@ -16,17 +16,16 @@
 
 package consulo.dotnet.debugger.proxy;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.util.pointers.Named;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
- *
+ * <p>
  * equals() & hashCode() override required
  */
-public interface DotNetVariableProxy extends Named
+public interface DotNetVariableProxy
 {
 	@Nullable
 	DotNetTypeProxy getType();
@@ -36,4 +35,7 @@ public interface DotNetVariableProxy extends Named
 
 	@Override
 	int hashCode();
+
+	@Nonnull
+	String getName();
 }

@@ -16,20 +16,21 @@
 
 package consulo.dotnet.resolve;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.NotNullFunction;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.ide.ServiceManager;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -54,7 +55,7 @@ public abstract class DotNetPsiSearcher
 		public static TypeResoleKind[] VALUES = values();
 	}
 
-	public static final NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> DEFAULT_TRANSFORMER = typeDeclaration -> typeDeclaration;
+	public static final Function<DotNetTypeDeclaration, DotNetTypeDeclaration> DEFAULT_TRANSFORMER = typeDeclaration -> typeDeclaration;
 
 	@Nullable
 	@RequiredReadAction
@@ -72,7 +73,7 @@ public abstract class DotNetPsiSearcher
 
 	@Nonnull
 	@RequiredReadAction
-	public DotNetTypeDeclaration[] findTypes(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope, @Nonnull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	public DotNetTypeDeclaration[] findTypes(@Nonnull String vmQName, @Nonnull SearchScope scope, @Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		Collection<? extends DotNetTypeDeclaration> declarations = findTypesImpl(vmQName, scope);
 		if(declarations.isEmpty())
@@ -83,7 +84,7 @@ public abstract class DotNetPsiSearcher
 
 		for(DotNetTypeDeclaration declaration : declarations)
 		{
-			list.add(transformer.fun(declaration));
+			list.add(transformer.apply(declaration));
 		}
 
 		return ContainerUtil.toArray(list, DotNetTypeDeclaration.ARRAY_FACTORY);
@@ -91,18 +92,18 @@ public abstract class DotNetPsiSearcher
 
 	@Nonnull
 	@RequiredReadAction
-	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope);
+	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull SearchScope scope);
 
 	@Nullable
 	@RequiredReadAction
-	public DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope)
+	public DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull SearchScope scope)
 	{
 		return findType(vmQName, scope, DEFAULT_TRANSFORMER);
 	}
 
 	@Nullable
 	@RequiredReadAction
-	public DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope, @Nonnull NotNullFunction<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	public DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull SearchScope scope, @Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		DotNetTypeDeclaration[] types = findTypes(vmQName, scope, transformer);
 		return ArrayUtil.getFirstElement(types);

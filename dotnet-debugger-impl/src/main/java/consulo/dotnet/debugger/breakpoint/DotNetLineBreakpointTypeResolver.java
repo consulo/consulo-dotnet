@@ -1,32 +1,24 @@
 package consulo.dotnet.debugger.breakpoint;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.function.Processor;
+import consulo.debugger.XDebuggerUtil;
+import consulo.debugger.breakpoint.XLineBreakpointType;
+import consulo.debugger.breakpoint.XLineBreakpointTypeResolver;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.dotnet.psi.*;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.SimpleReference;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
-import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.psi.DotNetCodeBlockOwner;
-import consulo.dotnet.psi.DotNetCompositeStatement;
-import consulo.dotnet.psi.DotNetExpression;
-import consulo.dotnet.psi.DotNetFieldDeclaration;
-import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
-import consulo.dotnet.psi.DotNetModifierList;
-import consulo.dotnet.psi.DotNetStatement;
-import consulo.dotnet.psi.DotNetXAccessor;
-import consulo.util.lang.ref.SimpleReference;
-import consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver;
 
 /**
  * @author VISTALL

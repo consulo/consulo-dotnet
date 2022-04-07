@@ -16,28 +16,27 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.JComponent;
-
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.util.TreeChooser;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
-import com.intellij.xdebugger.breakpoints.XBreakpointType;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.debugger.XDebuggerManager;
+import consulo.debugger.breakpoint.XBreakpoint;
+import consulo.debugger.breakpoint.XBreakpointType;
+import consulo.debugger.breakpoint.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetExceptionBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.ui.DotNetExceptionBreakpointPropertiesPanel;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.ui.chooser.DotNetTypeChooserFactory;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
 
 /**
  * @author VISTALL

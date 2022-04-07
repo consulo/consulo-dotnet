@@ -16,12 +16,12 @@
 
 package consulo.dotnet.debugger;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.xdebugger.XDebugSession;
+import consulo.debugger.XDebugSession;
 import consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.process.ExecutionException;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

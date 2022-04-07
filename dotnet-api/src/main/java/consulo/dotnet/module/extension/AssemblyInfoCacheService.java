@@ -3,6 +3,8 @@ package consulo.dotnet.module.extension;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.ServiceManager;
+import consulo.internal.dotnet.asm.mbel.AssemblyInfo;
+import consulo.internal.dotnet.asm.mbel.ModuleParser;
 import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Singleton;
 

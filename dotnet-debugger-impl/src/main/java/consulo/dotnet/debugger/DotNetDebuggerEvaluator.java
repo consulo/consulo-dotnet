@@ -16,20 +16,21 @@
 
 package consulo.dotnet.debugger;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.breakpoint.XExpression;
+import consulo.debugger.evaluation.XDebuggerEvaluator;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.language.file.LanguageFileType;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.xdebugger.XExpression;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 
 /**
  * @author VISTALL

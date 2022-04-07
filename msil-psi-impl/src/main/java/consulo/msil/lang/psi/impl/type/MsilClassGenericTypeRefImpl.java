@@ -16,14 +16,14 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import com.intellij.openapi.util.Comparing;
-import com.intellij.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import consulo.dotnet.resolve.DotNetTypeResolveResult;
 import consulo.dotnet.resolve.SimpleTypeResolveResult;
 import consulo.msil.lang.psi.MsilClassEntry;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

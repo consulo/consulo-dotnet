@@ -16,18 +16,18 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
+import consulo.application.AllIcons;
+import consulo.debugger.breakpoint.XLineBreakpoint;
+import consulo.debugger.breakpoint.XLineBreakpointType;
+import consulo.debugger.breakpoint.ui.XBreakpointCustomPropertiesPanel;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.breakpoint.ui.DotNetMethodBreakpointPropertiesPanel;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

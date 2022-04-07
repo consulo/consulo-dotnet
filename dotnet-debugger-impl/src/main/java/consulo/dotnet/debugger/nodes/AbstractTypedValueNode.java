@@ -16,21 +16,20 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ObjectUtil;
-import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.frame.XNamedValue;
-import com.intellij.xdebugger.frame.XNavigatable;
+import consulo.debugger.XDebuggerUtil;
+import consulo.debugger.frame.XNamedValue;
+import consulo.debugger.frame.XNavigatable;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

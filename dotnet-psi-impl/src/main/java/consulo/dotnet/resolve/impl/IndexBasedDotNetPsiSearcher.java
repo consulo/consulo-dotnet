@@ -16,17 +16,18 @@
 
 package consulo.dotnet.resolve.impl;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.util.CommonProcessors;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.function.CommonProcessors;
+import consulo.content.scope.SearchScope;
 import consulo.dotnet.lang.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.language.psi.stub.StubIndexKey;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,7 +63,7 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 	}
 
 	@Nullable
-	public DotNetNamespaceAsElement findNamespaceImpl(@Nonnull String indexKey, @Nonnull String qName, @Nonnull GlobalSearchScope scope)
+	public DotNetNamespaceAsElement findNamespaceImpl(@Nonnull String indexKey, @Nonnull String qName, @Nonnull SearchScope scope)
 	{
 		if(DotNetNamespaceStubUtil.ROOT_FOR_INDEXING.equals(indexKey))
 		{
@@ -79,10 +80,10 @@ public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
 	private static boolean isFoundAnyOneElement(@Nonnull Project project,
 												@Nonnull final String indexKey,
 												@Nonnull StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
-												@Nonnull GlobalSearchScope scope)
+												@Nonnull SearchScope scope)
 	{
 		CommonProcessors.FindFirstProcessor<PsiElement> processor = new CommonProcessors.FindFirstProcessor<>();
-		StubIndex.getInstance().processElements(keyForIndex, indexKey, project, scope, DotNetQualifiedElement.class, processor);
+		StubIndex.getInstance().processElements(keyForIndex, indexKey, project, (GlobalSearchScope) scope, DotNetQualifiedElement.class, processor);
 		return processor.getFoundValue() != null;
 	}
 

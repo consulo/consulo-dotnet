@@ -16,13 +16,11 @@
 
 package consulo.dotnet.dll.vfs;
 
-import com.intellij.openapi.vfs.VirtualFileManager;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.internal.dotnet.asm.mbel.ModuleParser;
 import consulo.internal.dotnet.asm.parse.MSILParseException;
 import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
-import consulo.vfs.impl.archive.ArchiveFile;
-import consulo.vfs.impl.archive.ArchiveFileSystemBase;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import java.io.File;

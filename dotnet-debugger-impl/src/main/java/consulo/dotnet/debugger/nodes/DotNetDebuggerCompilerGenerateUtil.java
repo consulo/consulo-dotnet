@@ -16,9 +16,9 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import com.intellij.openapi.util.Couple;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

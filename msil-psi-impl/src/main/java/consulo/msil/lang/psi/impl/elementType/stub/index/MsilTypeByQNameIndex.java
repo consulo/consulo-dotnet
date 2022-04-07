@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub.index;
 
-import com.intellij.psi.stubs.IntStubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
+import consulo.language.psi.stub.IntStubIndexExtension;
+import consulo.language.psi.stub.StubIndexKey;
 import consulo.msil.lang.psi.MsilClassEntry;
 
 import javax.annotation.Nonnull;

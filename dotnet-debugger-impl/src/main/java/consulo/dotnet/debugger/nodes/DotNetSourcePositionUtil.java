@@ -16,17 +16,17 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.application.ReadAction;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.proxy.DotNetSourceLocation;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.ui.UIAccess;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;
 

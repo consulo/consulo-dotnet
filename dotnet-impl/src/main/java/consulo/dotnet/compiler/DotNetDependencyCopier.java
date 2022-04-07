@@ -16,17 +16,18 @@
 
 package consulo.dotnet.compiler;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.compiler.*;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.application.ReadAction;
+import consulo.compiler.*;
+import consulo.compiler.scope.CompileScope;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
+import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.util.io.FileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

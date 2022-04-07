@@ -16,15 +16,14 @@
 
 package consulo.dotnet.module;
 
-import java.util.Set;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.module.content.layer.ContentFolderSupportPatcher;
+import consulo.module.content.layer.ModifiableRootModel;
 
 import javax.annotation.Nonnull;
-
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import consulo.roots.ContentFolderSupportPatcher;
-import consulo.roots.ContentFolderTypeProvider;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import java.util.Set;
 
 /**
  * @author VISTALL

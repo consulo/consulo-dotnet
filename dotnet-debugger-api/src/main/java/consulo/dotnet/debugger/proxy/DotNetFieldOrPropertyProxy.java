@@ -1,9 +1,10 @@
 package consulo.dotnet.debugger.proxy;
 
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.util.collection.ArrayFactory;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.util.ArrayFactory;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
@@ -13,15 +14,7 @@ public interface DotNetFieldOrPropertyProxy extends DotNetVariableProxy
 {
 	public static final DotNetFieldOrPropertyProxy[] EMPTY_ARRAY = new DotNetFieldOrPropertyProxy[0];
 
-	public static ArrayFactory<DotNetFieldOrPropertyProxy> ARRAY_FACTORY = new ArrayFactory<DotNetFieldOrPropertyProxy>()
-	{
-		@Nonnull
-		@Override
-		public DotNetFieldOrPropertyProxy[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new DotNetFieldOrPropertyProxy[count];
-		}
-	};
+	public static ArrayFactory<DotNetFieldOrPropertyProxy> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetFieldOrPropertyProxy[count];
 
 	boolean isStatic();
 

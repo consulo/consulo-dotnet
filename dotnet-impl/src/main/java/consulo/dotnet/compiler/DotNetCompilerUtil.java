@@ -16,23 +16,23 @@
 
 package consulo.dotnet.compiler;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.UsedInPlugin;
+import consulo.content.bundle.Sdk;
+import consulo.content.library.Library;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.roots.orderEntry.DotNetLibraryOrderEntryImpl;
 import consulo.dotnet.roots.orderEntry.DotNetRootPolicy;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.io.File;

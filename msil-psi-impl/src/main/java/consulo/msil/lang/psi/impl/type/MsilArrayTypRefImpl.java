@@ -16,12 +16,12 @@
 
 package consulo.msil.lang.psi.impl.type;
 
-import com.intellij.openapi.util.Comparing;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.resolve.DotNetArrayTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRef;
 import consulo.dotnet.resolve.DotNetTypeRefWithCachedResult;
 import consulo.dotnet.resolve.DotNetTypeResolveResult;
+import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
 

@@ -16,19 +16,18 @@
 
 package consulo.dotnet.resolve.impl;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.component.extension.ExtensionPointName;
+import consulo.content.scope.SearchScope;
 import consulo.dotnet.lang.psi.impl.DotNetNamespaceCacheManager;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public DotNetNamespaceAsElement findNamespace(@Nonnull String qName, @Nonnull GlobalSearchScope scope)
+	public DotNetNamespaceAsElement findNamespace(@Nonnull String qName, @Nonnull SearchScope scope)
 	{
 		return myCacheManager.computeNamespace(mySearchers, qName, scope);
 	}
@@ -62,7 +61,7 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	@RequiredReadAction
 	@Nonnull
 	@Override
-	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope)
+	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull SearchScope scope)
 	{
 		return myCacheManager.computeTypes(mySearchers, vmQName, scope);
 	}

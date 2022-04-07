@@ -16,17 +16,17 @@
 
 package consulo.dotnet.module.extension;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.bundle.SdkUtil;
+import consulo.component.util.pointer.NamedPointer;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkUtil;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import consulo.util.pointers.NamedPointer;
+import consulo.project.Project;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

@@ -16,10 +16,10 @@
 
 package consulo.dotnet.resolve;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nonnull;
 

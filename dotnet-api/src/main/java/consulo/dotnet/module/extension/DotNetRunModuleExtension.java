@@ -1,14 +1,14 @@
 package consulo.dotnet.module.extension;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.execution.DebugConnectionInfo;
 import consulo.module.extension.ModuleExtension;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

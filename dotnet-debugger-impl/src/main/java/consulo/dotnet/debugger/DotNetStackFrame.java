@@ -28,6 +28,7 @@ import consulo.debugger.frame.XCompositeNode;
 import consulo.debugger.frame.XStackFrame;
 import consulo.debugger.frame.XValueChildrenList;
 import consulo.debugger.setting.XDebuggerSettingsManager;
+import consulo.debugger.ui.XDebuggerUIConstants;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.debugger.nodes.DotNetDebuggerCompilerGenerateUtil;
 import consulo.dotnet.debugger.nodes.DotNetSourcePositionUtil;

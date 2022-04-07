@@ -16,10 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.util.ArrayFactory;
+import consulo.language.psi.PsiNamedElement;
+import consulo.util.collection.ArrayFactory;
 
 /**
  * @author VISTALL
@@ -29,13 +27,5 @@ public interface DotNetNamedElement extends DotNetElement, PsiNamedElement
 {
 	public static final DotNetNamedElement[] EMPTY_ARRAY = new DotNetNamedElement[0];
 
-	public static ArrayFactory<DotNetNamedElement> ARRAY_FACTORY = new ArrayFactory<DotNetNamedElement>()
-	{
-		@Nonnull
-		@Override
-		public DotNetNamedElement[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new DotNetNamedElement[count];
-		}
-	};
+	public static ArrayFactory<DotNetNamedElement> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetNamedElement[count];
 }

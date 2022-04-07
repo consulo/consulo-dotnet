@@ -16,9 +16,9 @@
 
 package consulo.dotnet.resolve;
 
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.NotNullFunction;
 
 /**
  * @author VISTALL

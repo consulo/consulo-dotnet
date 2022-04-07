@@ -16,29 +16,22 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.xdebugger.frame.presentation.XValuePresentation;
-import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
+import consulo.debugger.frame.presentation.XValuePresentation;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
 import consulo.dotnet.debugger.nodes.valueRender.DotNetValueTextRendererProxy;
-import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
-import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
-import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
-import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.*;
 import consulo.dotnet.debugger.proxy.value.*;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL

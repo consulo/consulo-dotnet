@@ -22,6 +22,7 @@ import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.macro.TargetFileExtensionMacro;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.module.Module;
+import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 
@@ -37,9 +38,9 @@ public class DotNetMacroUtil
 	@Nonnull
 	public static DataContext createContext(@Nonnull Module module, boolean debugSymbols)
 	{
-		SimpleDataContext.Builder builder = SimpleDataContext.builder();
-		builder = builder.add(CommonDataKeys.PROJECT, module.getProject());
-		builder = builder.add(LangDataKeys.MODULE, module);
+		DataContext.Builder builder = DataContext.builder();
+		builder = builder.add(Project.KEY, module.getProject());
+		builder = builder.add(Module.KEY, module);
 		if(debugSymbols)
 		{
 			builder = builder.add(TargetFileExtensionMacro.DEBUG_SYMBOLS, Boolean.TRUE);

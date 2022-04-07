@@ -16,9 +16,8 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.xdebugger.frame.*;
+import consulo.application.AllIcons;
+import consulo.debugger.frame.*;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetVirtualMachineUtil;
@@ -31,6 +30,7 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.*;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;

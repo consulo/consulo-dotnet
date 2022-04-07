@@ -16,17 +16,17 @@
 
 package consulo.dotnet.run;
 
-import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.actions.RunConfigurationProducer;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.Trinity;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
+import consulo.execution.action.ConfigurationContext;
+import consulo.execution.action.RunConfigurationProducer;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.util.lang.Trinity;
+import consulo.util.lang.ref.Ref;
 
 /**
  * @author VISTALL

@@ -16,24 +16,24 @@
 
 package consulo.msil.lang.psi.impl.resolve;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import javax.annotation.Nonnull;
-import jakarta.inject.Inject;
-
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndexKey;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndexKey;
 import consulo.msil.lang.psi.impl.MsilNamespaceAsElementImpl;
 import consulo.msil.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import consulo.msil.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import jakarta.inject.Inject;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author VISTALL
@@ -71,12 +71,12 @@ public class MsilPsiSearcher extends IndexBasedDotNetPsiSearcher
 	@RequiredReadAction
 	@Nonnull
 	@Override
-	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope)
+	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull SearchScope scope)
 	{
 		if(DumbService.isDumb(myProject))
 		{
 			return Collections.emptyList();
 		}
-		return MsilTypeByQNameIndex.getInstance().get(vmQName.hashCode(), myProject, scope);
+		return MsilTypeByQNameIndex.getInstance().get(vmQName.hashCode(), myProject, (GlobalSearchScope) scope);
 	}
 }

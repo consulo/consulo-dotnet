@@ -16,26 +16,15 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XExpression;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.XValue;
-import com.intellij.xdebugger.impl.XSourcePositionImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.debugger.XDebugSession;
+import consulo.debugger.breakpoint.XExpression;
+import consulo.debugger.breakpoint.XLineBreakpoint;
+import consulo.debugger.evaluation.XDebuggerEvaluator;
+import consulo.debugger.frame.XValue;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerProvider;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
@@ -45,7 +34,16 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -55,9 +53,9 @@ public class DotNetBreakpointEngine
 {
 	@Nullable
 	private XValue evaluateBreakpointExpression(@Nonnull final DotNetStackFrameProxy frameProxy,
-			@Nonnull final XLineBreakpoint<?> breakpoint,
-			@Nullable final XExpression conditionExpression,
-			@Nonnull final DotNetDebugContext debugContext)
+												@Nonnull final XLineBreakpoint<?> breakpoint,
+												@Nullable final XExpression conditionExpression,
+												@Nonnull final DotNetDebugContext debugContext)
 	{
 		if(conditionExpression == null)
 		{

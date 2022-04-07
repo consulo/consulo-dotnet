@@ -16,15 +16,14 @@
 
 package consulo.dotnet.compiler;
 
-import java.io.File;
+import consulo.compiler.FileProcessingCompiler;
+import consulo.compiler.TimestampValidityState;
+import consulo.compiler.ValidityState;
+import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.openapi.compiler.FileProcessingCompiler;
-import com.intellij.openapi.compiler.TimestampValidityState;
-import com.intellij.openapi.compiler.ValidityState;
-import consulo.dotnet.module.extension.DotNetRunModuleExtension;
+import java.io.File;
 
 /**
  * @author VISTALL

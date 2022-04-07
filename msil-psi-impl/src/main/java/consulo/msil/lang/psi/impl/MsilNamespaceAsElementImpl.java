@@ -16,12 +16,12 @@
 
 package consulo.msil.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.openapi.project.Project;
 import consulo.dotnet.lang.psi.impl.IndexBasedDotNetNamespaceAsElement;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
 import consulo.msil.MsilLanguage;
+import consulo.project.Project;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

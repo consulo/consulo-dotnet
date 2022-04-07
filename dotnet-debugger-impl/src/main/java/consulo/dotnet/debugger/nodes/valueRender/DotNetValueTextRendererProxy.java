@@ -16,10 +16,11 @@
 
 package consulo.dotnet.debugger.nodes.valueRender;
 
+import consulo.colorScheme.TextAttributesKey;
+import consulo.debugger.frame.presentation.XValuePresentation;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 
 /**
  * @author VISTALL

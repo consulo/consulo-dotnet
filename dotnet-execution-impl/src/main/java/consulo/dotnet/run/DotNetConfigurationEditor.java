@@ -16,11 +16,11 @@
 
 package consulo.dotnet.run;
 
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.configurable.ConfigurationException;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.BorderLayoutPanel;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -16,25 +16,25 @@
 
 package consulo.dotnet.run.filters;
 
+import consulo.content.scope.SearchScope;
+import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.resolve.DotNetPsiSearcher;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.resolve.DotNetPsiSearcher;
-import com.intellij.execution.filters.Filter;
-import com.intellij.execution.filters.HyperlinkInfo;
-import com.intellij.execution.filters.HyperlinkInfoFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.pom.Navigatable;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
  * @author VISTALL
@@ -45,9 +45,9 @@ public class DotNetExceptionFilter implements Filter
 	private static class TypeLink implements HyperlinkInfo
 	{
 		private String myType;
-		private GlobalSearchScope mySearchScope;
+		private SearchScope mySearchScope;
 
-		public TypeLink(String type, GlobalSearchScope searchScope)
+		public TypeLink(String type, SearchScope searchScope)
 		{
 			myType = type;
 			mySearchScope = searchScope;
@@ -68,9 +68,9 @@ public class DotNetExceptionFilter implements Filter
 	private static final Pattern ourPattern = Pattern.compile("  at (.+)\\.(.+) \\((.+)?\\) (\\[.+\\] )?in (.+):(\\d+)\\W+");
 
 	private final Project myProject;
-	private final GlobalSearchScope mySearchScope;
+	private final SearchScope mySearchScope;
 
-	public DotNetExceptionFilter(Project project, GlobalSearchScope searchScope)
+	public DotNetExceptionFilter(Project project, SearchScope searchScope)
 	{
 		myProject = project;
 		mySearchScope = searchScope;

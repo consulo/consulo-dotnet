@@ -16,9 +16,9 @@
 
 package consulo.msil.lang.psi.impl.elementType.stub.index;
 
-import com.intellij.psi.stubs.StubIndexKey;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.psi.DotNetTypeList;
+import consulo.language.psi.stub.StubIndexKey;
 import consulo.msil.lang.psi.MsilClassEntry;
 
 /**

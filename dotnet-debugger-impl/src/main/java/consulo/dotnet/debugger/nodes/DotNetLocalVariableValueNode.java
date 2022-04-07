@@ -16,16 +16,11 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.scope.util.PsiScopesUtilCore;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.frame.XNavigatable;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
+import consulo.debugger.XDebuggerUtil;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.frame.XNavigatable;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
@@ -33,7 +28,11 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetVariable;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;

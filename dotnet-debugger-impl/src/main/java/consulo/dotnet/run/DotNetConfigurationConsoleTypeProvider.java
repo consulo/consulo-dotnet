@@ -1,6 +1,6 @@
 package consulo.dotnet.run;
 
-import consulo.execution.console.ConsoleType;
+import consulo.process.ProcessConsoleType;
 
 import javax.annotation.Nonnull;
 
@@ -11,5 +11,5 @@ import javax.annotation.Nonnull;
 public interface DotNetConfigurationConsoleTypeProvider
 {
 	@Nonnull
-	ConsoleType getConsoleType();
+	ProcessConsoleType getConsoleType();
 }

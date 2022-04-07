@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.xdebugger.frame.XValueModifier;
+import consulo.application.AllIcons;
+import consulo.debugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.*;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;

@@ -16,16 +16,16 @@
 
 package consulo.dotnet.ide;
 
-import javax.annotation.Nonnull;
-
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.AllIcons;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.run.DotNetTestFrameworks;
-import com.intellij.icons.AllIcons;
-import com.intellij.psi.PsiElement;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.IconDescriptor;
-import consulo.ide.IconDescriptorUpdater;
+import consulo.language.icon.IconDescriptor;
+import consulo.language.icon.IconDescriptorUpdater;
+import consulo.language.psi.PsiElement;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

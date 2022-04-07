@@ -16,7 +16,7 @@
 
 package consulo.dotnet.debugger;
 
-import com.intellij.lang.LanguageExtension;
+import consulo.language.LanguageExtension;
 
 /**
  * @author VISTALL

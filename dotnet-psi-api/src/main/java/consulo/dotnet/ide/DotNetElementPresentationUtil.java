@@ -16,13 +16,13 @@
 
 package consulo.dotnet.ide;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiNamedElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
+import consulo.language.psi.PsiNamedElement;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 

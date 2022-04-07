@@ -16,15 +16,15 @@
 
 package consulo.dotnet.debugger;
 
-import java.util.ArrayList;
-import java.util.List;
+import consulo.debugger.frame.XExecutionStack;
+import consulo.debugger.frame.XSuspendContext;
+import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XSuspendContext;
-import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL

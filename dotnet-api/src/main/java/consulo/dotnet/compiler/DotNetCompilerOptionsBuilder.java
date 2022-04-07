@@ -17,6 +17,7 @@
 package consulo.dotnet.compiler;
 
 import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.module.Module;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.virtualFileSystem.VirtualFile;
 

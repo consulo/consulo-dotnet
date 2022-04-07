@@ -1,29 +1,24 @@
 package consulo.dotnet.debugger.nodes.logicView;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.xdebugger.frame.XNamedValue;
-import com.intellij.xdebugger.frame.XValueChildrenList;
 import consulo.annotation.UsedInPlugin;
+import consulo.debugger.frame.XNamedValue;
+import consulo.debugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.nodes.DotNetSimpleValueNode;
 import consulo.dotnet.debugger.nodes.DotNetThrowValueNode;
 import consulo.dotnet.debugger.nodes.logicView.enumerator.CantCreateException;
 import consulo.dotnet.debugger.nodes.logicView.enumerator.IEnumeratorAsIterator;
-import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
-import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
-import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.debugger.proxy.*;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.logging.Logger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -54,10 +49,10 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 
 	@Override
 	public void computeChildrenImpl(@Nonnull DotNetDebugContext debugContext,
-			@Nonnull XNamedValue parentNode,
-			@Nonnull DotNetStackFrameProxy frameProxy,
-			@Nullable DotNetValueProxy value,
-			@Nonnull XValueChildrenList childrenList)
+									@Nonnull XNamedValue parentNode,
+									@Nonnull DotNetStackFrameProxy frameProxy,
+									@Nullable DotNetValueProxy value,
+									@Nonnull XValueChildrenList childrenList)
 	{
 		if(!(value instanceof DotNetObjectValueProxy) && !(value instanceof DotNetStringValueProxy))
 		{

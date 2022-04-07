@@ -16,21 +16,17 @@
 
 package consulo.dotnet.debugger.breakpoint.ui;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import consulo.debugger.breakpoint.XLineBreakpoint;
+import consulo.debugger.breakpoint.ui.XBreakpointCustomPropertiesPanel;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.util.DialogUtil;
 
 import javax.annotation.Nonnull;
-import javax.swing.Box;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
-import com.intellij.ui.IdeBorderFactory;
-import com.intellij.util.ui.DialogUtil;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.breakpoints.ui.XBreakpointCustomPropertiesPanel;
-import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author VISTALL
@@ -51,7 +47,6 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 		myWatchExitCheckBox = new JCheckBox("Method exit");
 		DialogUtil.registerMnemonic(myWatchEntryCheckBox);
 		DialogUtil.registerMnemonic(myWatchExitCheckBox);
-
 
 		Box watchBox = Box.createVerticalBox();
 		panel = new JPanel(new BorderLayout());

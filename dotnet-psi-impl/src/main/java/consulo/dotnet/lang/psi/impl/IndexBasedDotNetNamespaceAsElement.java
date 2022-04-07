@@ -16,20 +16,17 @@
 
 package consulo.dotnet.lang.psi.impl;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.psi.util.QualifiedName;
-import com.intellij.util.NotNullFunction;
-import com.intellij.util.Processor;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.resolve.DotNetPsiSearcher;
 import consulo.dotnet.resolve.impl.IndexBasedDotNetPsiSearcher;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

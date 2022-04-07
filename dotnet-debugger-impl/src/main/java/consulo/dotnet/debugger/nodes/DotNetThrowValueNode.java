@@ -16,18 +16,17 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.icons.AllIcons;
-import com.intellij.xdebugger.frame.XValueModifier;
+import consulo.application.AllIcons;
+import consulo.debugger.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

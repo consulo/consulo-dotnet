@@ -16,25 +16,25 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
-import javax.annotation.Nonnull;
+import consulo.debugger.XBreakpointManager;
+import consulo.debugger.XDebuggerManager;
+import consulo.debugger.breakpoint.XLineBreakpoint;
+import consulo.debugger.event.XBreakpointListener;
+import consulo.debugger.ui.XDebuggerUIConstants;
+import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
+import consulo.project.Project;
+import consulo.project.startup.StartupManager;
+import consulo.project.ui.notification.NotificationType;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.breakpoints.XBreakpointListener;
-import com.intellij.xdebugger.breakpoints.XBreakpointManager;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.impl.XDebugSessionImpl;
-import consulo.dotnet.debugger.breakpoint.properties.DotNetMethodBreakpointProperties;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 03.05.2016
  */
-@jakarta.inject.Singleton
+@Singleton
 public class DotNetBreakpointListenerComponent
 {
 	@Inject
@@ -54,7 +54,7 @@ public class DotNetBreakpointListenerComponent
 				@Override
 				public void breakpointAdded(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 				{
-					XDebugSessionImpl.NOTIFICATION_GROUP.createNotification("Method breakpoints may dramatically slow down debugging", MessageType.WARNING).notify(project);
+					XDebuggerUIConstants.NOTIFICATION_GROUP.createNotification("Method breakpoints may dramatically slow down debugging", NotificationType.WARNING).notify(project);
 				}
 			});
 		});

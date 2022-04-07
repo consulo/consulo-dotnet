@@ -16,37 +16,15 @@
 
 package consulo.dotnet.debugger.breakpoint;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.DocumentUtil;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.AllIcons;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.breakpoint.XLineBreakpoint;
+import consulo.debugger.breakpoint.XLineBreakpointType;
+import consulo.debugger.evaluation.XDebuggerEditorsProvider;
+import consulo.document.Document;
+import consulo.document.util.DocumentUtil;
+import consulo.document.util.TextRange;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
@@ -54,8 +32,19 @@ import consulo.dotnet.debugger.DotNetEditorsProvider;
 import consulo.dotnet.debugger.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.util.ArrayUtil2;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -96,9 +85,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			return null;
 		}
 
-		XBreakpointBase base = (XBreakpointBase) breakpoint;
-
-		PsiFile file = PsiManager.getInstance(base.getProject()).findFile(virtualFile);
+		PsiFile file = PsiManager.getInstance(breakpoint.getProject()).findFile(virtualFile);
 		if(file == null)
 		{
 			return null;

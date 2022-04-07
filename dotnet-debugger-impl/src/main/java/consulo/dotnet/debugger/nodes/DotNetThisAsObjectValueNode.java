@@ -16,12 +16,11 @@
 
 package consulo.dotnet.debugger.nodes;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.Getter;
-import com.intellij.util.CommonProcessors;
-import com.intellij.util.Processor;
-import com.intellij.xdebugger.frame.*;
-import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
+import consulo.application.AllIcons;
+import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.function.Processor;
+import consulo.debugger.frame.*;
+import consulo.debugger.frame.presentation.XRegularValuePresentation;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
@@ -35,6 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -43,9 +43,9 @@ import java.util.Set;
 public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 {
 	public static void addStaticNode(@Nonnull XValueChildrenList list,
-			@Nonnull DotNetDebugContext debuggerContext,
-			@Nonnull DotNetStackFrameProxy frameProxy,
-			@Nonnull DotNetTypeProxy typeProxy)
+									 @Nonnull DotNetDebugContext debuggerContext,
+									 @Nonnull DotNetStackFrameProxy frameProxy,
+									 @Nonnull DotNetTypeProxy typeProxy)
 	{
 		boolean result = processFieldOrProperty(typeProxy, null, CommonProcessors.<DotNetFieldOrPropertyProxy>alwaysFalse());
 		if(result)
@@ -57,28 +57,20 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 
 	@Nonnull
 	private final DotNetTypeProxy myType;
-	private final Getter<DotNetObjectValueProxy> myObjectValueMirrorGetter;
+	private final Supplier<DotNetObjectValueProxy> myObjectValueMirrorGetter;
 
 	public DotNetThisAsObjectValueNode(@Nonnull DotNetDebugContext debuggerContext,
-			@Nonnull DotNetStackFrameProxy frameProxy,
-			@Nonnull DotNetTypeProxy type,
-			@Nullable final DotNetObjectValueProxy objectValueMirror)
+									   @Nonnull DotNetStackFrameProxy frameProxy,
+									   @Nonnull DotNetTypeProxy type,
+									   @Nullable final DotNetObjectValueProxy objectValueMirror)
 	{
-		this(debuggerContext, frameProxy, type, objectValueMirror == null ? null : new Getter<DotNetObjectValueProxy>()
-		{
-			@Nullable
-			@Override
-			public DotNetObjectValueProxy get()
-			{
-				return objectValueMirror;
-			}
-		});
+		this(debuggerContext, frameProxy, type, objectValueMirror == null ? null : () -> objectValueMirror);
 	}
 
 	public DotNetThisAsObjectValueNode(@Nonnull DotNetDebugContext debuggerContext,
-			@Nonnull DotNetStackFrameProxy frameProxy,
-			@Nonnull DotNetTypeProxy type,
-			@Nullable Getter<DotNetObjectValueProxy> objectValueMirrorGetter)
+									   @Nonnull DotNetStackFrameProxy frameProxy,
+									   @Nonnull DotNetTypeProxy type,
+									   @Nullable Supplier<DotNetObjectValueProxy> objectValueMirrorGetter)
 	{
 		super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", frameProxy);
 		myType = type;
@@ -147,8 +139,8 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
 	}
 
 	private static boolean processFieldOrProperty(@Nonnull DotNetTypeProxy proxy,
-			@Nullable Getter<DotNetObjectValueProxy> objectValueMirrorGetter,
-			@Nonnull Processor<DotNetFieldOrPropertyProxy> processor)
+												  @Nullable Supplier<DotNetObjectValueProxy> objectValueMirrorGetter,
+												  @Nonnull Processor<DotNetFieldOrPropertyProxy> processor)
 	{
 		DotNetFieldOrPropertyProxy[] fieldMirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(proxy, true);
 		for(DotNetFieldOrPropertyProxy fieldMirror : fieldMirrors)

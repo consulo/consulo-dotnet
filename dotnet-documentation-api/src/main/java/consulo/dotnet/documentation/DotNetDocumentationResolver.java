@@ -16,16 +16,15 @@
 
 package consulo.dotnet.documentation;
 
-import java.util.List;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.PsiElement;
+import consulo.virtualFileSystem.VirtualFile;
+import org.emonic.base.documentation.IDocumentation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.emonic.base.documentation.IDocumentation;
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
+import java.util.List;
 
 /**
  * @author VISTALL

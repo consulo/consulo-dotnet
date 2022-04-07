@@ -1,15 +1,7 @@
 package consulo.dotnet.debugger.nodes.logicView;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.xdebugger.frame.XNamedValue;
-import com.intellij.xdebugger.frame.XValueChildrenList;
+import consulo.debugger.frame.XNamedValue;
+import consulo.debugger.frame.XValueChildrenList;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.nodes.DotNetAbstractVariableValueNode;
@@ -22,6 +14,12 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL

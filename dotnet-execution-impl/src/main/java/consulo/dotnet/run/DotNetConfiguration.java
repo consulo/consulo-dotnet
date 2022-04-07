@@ -16,25 +16,9 @@
 
 package consulo.dotnet.run;
 
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.*;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
-import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.options.SettingsEditorGroup;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.xmlb.XmlSerializer;
-import com.intellij.xdebugger.XDebugSession;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.content.bundle.Sdk;
+import consulo.debugger.XDebugSession;
 import consulo.dotnet.compiler.DotNetMacroUtil;
 import consulo.dotnet.debugger.DotNetConfigurationWithDebug;
 import consulo.dotnet.debugger.DotNetDebugProcessBase;
@@ -45,7 +29,21 @@ import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.dotnet.run.coverage.DotNetCoverageConfigurationEditor;
 import consulo.dotnet.run.coverage.DotNetCoverageEnabledConfiguration;
-import consulo.execution.console.ConsoleType;
+import consulo.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.configuration.*;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessConsoleType;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -63,7 +61,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	private String myWorkingDir;
 	private Map<String, String> myEnvsMap = new HashMap<>();
 	private boolean myPassParentEnvs = true;
-	private ConsoleType myConsoleType = ConsoleType.BUILTIN;
+	private ProcessConsoleType myConsoleType = ProcessConsoleType.BUILTIN;
 
 	public DotNetConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory)
 	{
@@ -272,18 +270,18 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		return moduleExtensionWithDebug.createDebuggerProcess(session, this, debugConnectionInfo);
 	}
 
-	public void setConsoleType(ConsoleType consoleType)
+	public void setConsoleType(ProcessConsoleType consoleType)
 	{
 		myConsoleType = consoleType;
 	}
 
 	@Nonnull
 	@Override
-	public ConsoleType getConsoleType()
+	public ProcessConsoleType getConsoleType()
 	{
 		if(myConsoleType == null)
 		{
-			myConsoleType = ConsoleType.BUILTIN;
+			myConsoleType = ProcessConsoleType.BUILTIN;
 		}
 		return myConsoleType;
 	}

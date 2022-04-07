@@ -2,6 +2,7 @@ package consulo.dotnet.debugger;
 
 import consulo.application.ApplicationManager;
 import consulo.application.progress.Task;
+import consulo.application.util.function.Computable;
 import consulo.debugger.XDebugProcess;
 import consulo.debugger.XDebugSession;
 import consulo.debugger.XDebuggerManager;
@@ -22,7 +23,9 @@ import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.process.ProcessHandler;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.lazy.LazyValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +43,7 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 	private final RunProfile myRunProfile;
 	protected final XDebuggerManager myDebuggerManager;
 
-	private NotNullLazyValue<DotNetLogicValueView[]> myLogicValueViewsLazy;
+	private LazyValue<DotNetLogicValueView[]> myLogicValueViewsLazy;
 
 	public DotNetDebugProcessBase(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile)
 	{
@@ -49,13 +52,13 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess
 		myRunProfile = runProfile;
 		myDebuggerManager = XDebuggerManager.getInstance(session.getProject());
 
-		myLogicValueViewsLazy = NotNullLazyValue.createValue(this::createLogicValueViews);
+		myLogicValueViewsLazy = LazyValue.notNull(this::createLogicValueViews);
 	}
 
 	@Nonnull
 	public DotNetDebugContext createDebugContext(@Nonnull DotNetVirtualMachineProxy proxy, @Nullable XBreakpoint<?> breakpoint)
 	{
-		return new DotNetDebugContext(getSession().getProject(), proxy, myRunProfile, getSession(), breakpoint, myLogicValueViewsLazy.getValue());
+		return new DotNetDebugContext(getSession().getProject(), proxy, myRunProfile, getSession(), breakpoint, myLogicValueViewsLazy.get());
 	}
 
 	@Nonnull
