@@ -35,7 +35,9 @@ public class DotNetDebuggerCompilerGenerateUtil
 	public static final Pattern YieldNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__Iterator(\\p{XDigit}+)");
 	public static final Pattern YieldNestedTypeRoslynPattern = Pattern.compile("<([\\S\\d]+)>d__(\\p{XDigit}+)");
 	public static final Pattern AsyncNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__async(\\p{XDigit}+)");
+
 	public static final Pattern SomeReferenceToOriginalPattern = Pattern.compile("<([\\S\\d]+)>__([\\d]+)");
+	public static final Pattern SomeReferenceToOriginalRoslynPattern = Pattern.compile("<([\\S\\d]+)>(\\d+)__([\\d]+)");
 
 	private static final Pattern AsyncLambdaFirstWrapperMS = Pattern.compile("<>c__DisplayClass([\\d]+)_([\\d]+)");
 	private static final Pattern AsyncLambdaFirstWrapperMono = Pattern.compile("<([\\S\\d]+)>c__AnonStorey([\\d]+)");
@@ -110,6 +112,12 @@ public class DotNetDebuggerCompilerGenerateUtil
 	public static String extractNotGeneratedName(@Nonnull String name)
 	{
 		Matcher matcher = SomeReferenceToOriginalPattern.matcher(name);
+		if(matcher.matches())
+		{
+			return matcher.group(1);
+		}
+
+		matcher = SomeReferenceToOriginalRoslynPattern.matcher(name);
 		if(matcher.matches())
 		{
 			return matcher.group(1);

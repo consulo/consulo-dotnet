@@ -48,6 +48,7 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 		DialogUtil.registerMnemonic(myWatchEntryCheckBox);
 		DialogUtil.registerMnemonic(myWatchExitCheckBox);
 
+
 		Box watchBox = Box.createVerticalBox();
 		panel = new JPanel(new BorderLayout());
 		panel.add(myWatchEntryCheckBox, BorderLayout.NORTH);
@@ -94,17 +95,31 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 		return panel;
 	}
 
+	@RequiredUIAccess
 	@Override
 	public void loadFrom(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 	{
-		myWatchEntryCheckBox.setSelected(breakpoint.getProperties().METHOD_ENTRY);
-		myWatchExitCheckBox.setSelected(breakpoint.getProperties().METHOD_EXIT);
+		DotNetMethodBreakpointProperties properties = breakpoint.getProperties();
+		if(properties == null)
+		{
+			return;
+		}
+
+		myWatchEntryCheckBox.setSelected(properties.METHOD_ENTRY);
+		myWatchExitCheckBox.setSelected(properties.METHOD_EXIT);
 	}
 
+	@RequiredUIAccess
 	@Override
 	public void saveTo(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 	{
-		breakpoint.getProperties().METHOD_ENTRY = myWatchEntryCheckBox.isSelected();
-		breakpoint.getProperties().METHOD_EXIT = myWatchExitCheckBox.isSelected();
+		DotNetMethodBreakpointProperties properties = breakpoint.getProperties();
+		if(properties == null)
+		{
+			return;
+		}
+
+		properties.METHOD_ENTRY = myWatchEntryCheckBox.isSelected();
+		properties.METHOD_EXIT = myWatchExitCheckBox.isSelected();
 	}
 }
