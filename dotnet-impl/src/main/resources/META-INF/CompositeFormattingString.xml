@@ -15,14 +15,14 @@
   -->
 
 <consulo-plugin>
-	<extensions defaultExtensionNs="com.intellij">
-		<colorSettingsPage implementation="consulo.csharp.cfs.ide.highlight.CfsColorSettingsPage" />
-		<highlightUsagesHandlerFactory implementation="consulo.csharp.cfs.ide.highlight.CfsItemHighlightUsagesHandlerFactory"/>
-		<completion.contributor language="CFS" implementationClass="consulo.csharp.cfs.ide.completion.CfsCompletionContributor" />
-		<lang.parserDefinition language="CFS" implementationClass="consulo.csharp.cfs.lang.CfsParserDefinition" />
-		<lang.braceMatcher language="CFS" implementationClass="consulo.csharp.cfs.lang.CfsPairedBraceMatcher" />
-		<lang.syntaxHighlighterFactory key="CFS" implementationClass="consulo.csharp.cfs.ide.highlight.CfsSyntaxHighlighterFactory" />
+	<extensions defaultExtensionNs="consulo">
+		<colorSettingsPage implementation="consulo.dotnet.cfs.ide.highlight.CfsColorSettingsPage" />
+		<highlightUsagesHandlerFactory implementation="consulo.dotnet.cfs.ide.highlight.CfsItemHighlightUsagesHandlerFactory"/>
+		<completion.contributor language="CFS" implementationClass="consulo.dotnet.cfs.ide.completion.CfsCompletionContributor" />
+		<lang.parserDefinition language="CFS" implementationClass="consulo.dotnet.cfs.lang.CfsParserDefinition" />
+		<lang.braceMatcher language="CFS" implementationClass="consulo.dotnet.cfs.lang.CfsPairedBraceMatcher" />
+		<lang.syntaxHighlighterFactory language="CFS" implementationClass="consulo.dotnet.cfs.ide.highlight.CfsSyntaxHighlighterFactory" />
 
-		<lang.defineVersion language="CFS" implementationClass="consulo.csharp.cfs.lang.IndexCfsLanguageVersion" />
+		<lang.defineVersion language="CFS" implementationClass="consulo.dotnet.cfs.lang.IndexCfsLanguageVersion" />
 	</extensions>
 </consulo-plugin>

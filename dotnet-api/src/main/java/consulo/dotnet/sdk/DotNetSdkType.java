@@ -24,6 +24,7 @@ import consulo.content.bundle.SdkType;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.dotnet.module.extension.BaseDotNetSimpleModuleExtension;
 import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -61,7 +62,7 @@ public abstract class DotNetSdkType extends SdkType
 
 			if(file.getName().endsWith(".xml"))
 			{
-				sdkModificator.addRoot(VfsUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.getInstance());
+				sdkModificator.addRoot(VirtualFileUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.getInstance());
 			}
 			return true;
 		});

@@ -16,7 +16,7 @@
 
 package consulo.msil;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
@@ -61,6 +61,6 @@ public class MsilFileType extends LanguageFileType
 	@Override
 	public Image getIcon()
 	{
-		return PlatformIconGroup.fileTypesBinary();
+		return PlatformIconGroup.filetypesBinary();
 	}
 }

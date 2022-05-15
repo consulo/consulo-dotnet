@@ -16,8 +16,8 @@
  */
 package consulo.dotnet.psi.search.searches;
 
-import consulo.application.util.Query;
 import consulo.application.util.query.ExtensibleQueryFactory;
+import consulo.application.util.query.Query;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.psi.scope.GlobalSearchScope;

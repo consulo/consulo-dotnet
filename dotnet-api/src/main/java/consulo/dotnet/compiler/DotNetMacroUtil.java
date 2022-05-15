@@ -22,9 +22,12 @@ import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.macro.TargetFileExtensionMacro;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.module.Module;
+import consulo.pathMacro.Macro;
+import consulo.pathMacro.MacroManager;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -48,7 +51,7 @@ public class DotNetMacroUtil
 		return builder.build();
 	}
 
-	@Nonnull
+	@Nonnull                                                                   
 	public static String expandOutputFile(@Nonnull DotNetRunModuleExtension<?> extension)
 	{
 		return expandOutputFile(extension, false);
@@ -62,7 +65,7 @@ public class DotNetMacroUtil
 		{
 			String url = ModuleCompilerPathsManager.getInstance(extension.getModule()).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
 			assert url != null;
-			outputDir = FileUtil.toSystemDependentName(VfsUtil.urlToPath(url));
+			outputDir = FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(url));
 		}
 
 		if(outputDir.charAt(outputDir.length() - 1) == File.separatorChar)
@@ -83,7 +86,7 @@ public class DotNetMacroUtil
 		{
 			String url = ModuleCompilerPathsManager.getInstance(extension.getModule()).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
 			assert url != null;
-			outputDir = FileUtil.toSystemDependentName(VfsUtil.urlToPath(url));
+			outputDir = FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(url));
 		}
 
 		return expand(extension.getModule(), outputDir, false);

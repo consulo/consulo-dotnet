@@ -16,8 +16,8 @@
 
 package consulo.dotnet.debugger;
 
-import consulo.debugger.XDebugSession;
-import consulo.debugger.breakpoint.XBreakpoint;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
 import consulo.execution.configuration.ModuleRunProfile;

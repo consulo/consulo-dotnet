@@ -16,9 +16,9 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import javax.annotation.Nonnull;
+import consulo.util.collection.ArrayFactory;
 
-import com.intellij.util.ArrayFactory;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

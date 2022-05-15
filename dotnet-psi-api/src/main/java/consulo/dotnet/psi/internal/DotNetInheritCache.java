@@ -3,8 +3,7 @@ package consulo.dotnet.psi.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.resolve.DotNetTypeRef;
-import consulo.ide.ServiceManager;
+import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.project.Project;
@@ -29,7 +28,7 @@ public class DotNetInheritCache implements Disposable
 	@Nonnull
 	public static DotNetInheritCache getInstance(@Nonnull Project project)
 	{
-		return ServiceManager.getService(project, DotNetInheritCache.class);
+		return project.getInstance(DotNetInheritCache.class);
 	}
 
 	private final Map<String, Map<Pair<String, Boolean>, Boolean>> myResult = new ConcurrentHashMap<>();

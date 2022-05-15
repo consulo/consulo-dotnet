@@ -16,18 +16,13 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import java.util.List;
+import consulo.dotnet.debugger.proxy.value.*;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import consulo.dotnet.debugger.proxy.value.DotNetBooleanValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetCharValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetNullValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetNumberValueProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
+import java.util.List;
 
 /**
  * @author VISTALL

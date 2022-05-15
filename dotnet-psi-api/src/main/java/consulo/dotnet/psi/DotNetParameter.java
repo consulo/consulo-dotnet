@@ -16,7 +16,7 @@
 
 package consulo.dotnet.psi;
 
-import com.intellij.util.ArrayFactory;
+import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nullable;
 

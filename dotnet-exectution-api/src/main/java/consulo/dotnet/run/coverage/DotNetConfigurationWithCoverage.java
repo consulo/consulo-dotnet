@@ -1,9 +1,9 @@
 package consulo.dotnet.run.coverage;
 
-import javax.annotation.Nonnull;
+import consulo.execution.configuration.ModuleRunProfile;
+import consulo.execution.configuration.RunConfigurationModule;
 
-import com.intellij.execution.configurations.ModuleRunProfile;
-import com.intellij.execution.configurations.RunConfigurationModule;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

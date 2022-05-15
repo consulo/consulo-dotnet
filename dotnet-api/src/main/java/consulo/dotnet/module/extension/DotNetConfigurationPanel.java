@@ -23,8 +23,10 @@ import consulo.dotnet.DotNetBundle;
 import consulo.dotnet.DotNetTarget;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
+import consulo.module.ui.extension.ModuleExtensionSdkBoxBuilder;
 import consulo.project.DumbService;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -285,13 +287,6 @@ public class DotNetConfigurationPanel extends JPanel
 				public boolean checkInput(String s)
 				{
 					return !variables.contains(s);
-				}
-
-				@RequiredUIAccess
-				@Override
-				public boolean canClose(String s)
-				{
-					return true;
 				}
 			});
 

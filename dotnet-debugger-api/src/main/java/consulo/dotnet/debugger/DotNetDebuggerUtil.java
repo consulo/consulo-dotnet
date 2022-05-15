@@ -16,17 +16,18 @@
 
 package consulo.dotnet.debugger;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
+import consulo.dotnet.psi.DotNetTypeDeclarationUtil;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.psi.DotNetTypeDeclarationUtil;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 
 /**
  * @author VISTALL

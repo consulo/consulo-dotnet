@@ -17,12 +17,12 @@
 package consulo.dotnet.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.StubBasedPsiElement;
-import consulo.language.psi.util.CachedValue;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.util.CachedValuesManager;
 import consulo.project.DumbService;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;

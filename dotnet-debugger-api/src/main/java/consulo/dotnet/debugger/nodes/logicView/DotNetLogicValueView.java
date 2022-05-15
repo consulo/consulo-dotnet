@@ -1,7 +1,7 @@
 package consulo.dotnet.debugger.nodes.logicView;
 
-import consulo.debugger.frame.XCompositeNode;
-import consulo.debugger.frame.XNamedValue;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XNamedValue;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;

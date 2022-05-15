@@ -16,16 +16,16 @@
 
 package consulo.msil.representation;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Consumer;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -33,14 +33,7 @@ import javax.annotation.Nonnull;
  */
 public class MsilRepresentationNavigateUtil
 {
-	public static final Consumer<PsiFile> DEFAULT_NAVIGATOR = new Consumer<PsiFile>()
-	{
-		@Override
-		public void consume(PsiFile file)
-		{
-			file.navigate(true);
-		}
-	};
+	public static final Consumer<PsiFile> DEFAULT_NAVIGATOR = file -> file.navigate(true);
 
 	@RequiredReadAction
 	@UsedInPlugin
@@ -67,6 +60,6 @@ public class MsilRepresentationNavigateUtil
 			return;
 		}
 
-		consumer.consume(representationFile);
+		consumer.accept(representationFile);
 	}
 }

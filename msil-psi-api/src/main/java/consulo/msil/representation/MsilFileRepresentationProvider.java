@@ -16,10 +16,9 @@
 
 package consulo.msil.representation;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.PsiFile;
+import consulo.component.extension.ExtensionPointName;
 import consulo.msil.lang.psi.MsilFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

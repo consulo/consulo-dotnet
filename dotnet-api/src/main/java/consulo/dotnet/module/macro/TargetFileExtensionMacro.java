@@ -4,6 +4,7 @@ import consulo.dataContext.DataContext;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
+import consulo.pathMacro.Macro;
 import consulo.util.dataholder.Key;
 
 /**

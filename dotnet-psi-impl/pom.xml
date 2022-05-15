@@ -20,7 +20,7 @@
 
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.ide-provided</artifactId>
+		<artifactId>arch.ide-api-provided</artifactId>
 		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
@@ -42,6 +42,11 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
+		<dependency>
+			<groupId>consulo</groupId>
+			<artifactId>consulo-ide-impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>consulo.dotnet-dotnet.psi.api</artifactId>

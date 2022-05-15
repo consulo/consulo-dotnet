@@ -19,9 +19,9 @@ package consulo.dotnet.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.internal.DotNetInheritCache;
-import consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.util.CachedValuesManager;
+import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
@@ -35,25 +35,25 @@ public class DotNetInheritUtil
 	@RequiredReadAction
 	public static boolean isStruct(DotNetTypeDeclaration typeDeclaration)
 	{
-		return CachedValuesManager.getProjectPsiDependentCache(typeDeclaration, (t) -> isInheritor(t, DotNetTypes.System.ValueType, false));
+		return LanguageCachedValueUtil.getProjectPsiDependentCache(typeDeclaration, (t) -> isInheritor(t, DotNetTypes.System.ValueType, false));
 	}
 
 	@RequiredReadAction
 	public static boolean isAttribute(DotNetTypeDeclaration typeDeclaration)
 	{
-		return CachedValuesManager.getProjectPsiDependentCache(typeDeclaration, (t) -> isInheritor(t, DotNetTypes.System.Attribute, true));
+		return LanguageCachedValueUtil.getProjectPsiDependentCache(typeDeclaration, (t) -> isInheritor(t, DotNetTypes.System.Attribute, true));
 	}
 
 	@RequiredReadAction
 	public static boolean isException(DotNetTypeDeclaration typeDeclaration)
 	{
-		return CachedValuesManager.getProjectPsiDependentCache(typeDeclaration, (t) -> isParentOrSelf(DotNetTypes.System.Exception, t, true));
+		return LanguageCachedValueUtil.getProjectPsiDependentCache(typeDeclaration, (t) -> isParentOrSelf(DotNetTypes.System.Exception, t, true));
 	}
 
 	@RequiredReadAction
 	public static boolean isEnum(DotNetTypeDeclaration typeDeclaration)
 	{
-		return CachedValuesManager.getProjectPsiDependentCache(typeDeclaration, (t) -> isInheritor(t, DotNetTypes.System.Enum, false));
+		return LanguageCachedValueUtil.getProjectPsiDependentCache(typeDeclaration, (t) -> isInheritor(t, DotNetTypes.System.Enum, false));
 	}
 
 	@RequiredReadAction

@@ -16,7 +16,7 @@
 
 package consulo.dotnet.psi;
 
-import consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nonnull;

@@ -16,41 +16,40 @@
 
 package parsing;
 
-import consulo.testFramework.ParsingTestCase;
 
 /**
  * @author VISTALL
  * @since 13.05.2015
  */
-public abstract class MsilParsingTest extends ParsingTestCase
-{
-	public MsilParsingTest()
-	{
-		super("/msil-psi-impl/testData/parsing/", "msil");
-	}
-
-	public void testFieldConstWithValue()
-	{
-		doTest(true);
-	}
-
-	public void testArrayList()
-	{
-		doTest(true);
-	}
-
-	public void testFieldWithAttribute()
-	{
-		doTest(true);
-	}
-
-	public void testTestCustomAttributeSignature()
-	{
-		doTest(true);
-	}
-
-	public void testGenericParameterCustomAttribute()
-	{
-		doTest(true);
-	}
-}
+//public abstract class MsilParsingTest extends ParsingTestCase
+//{
+//	public MsilParsingTest()
+//	{
+//		super("/msil-psi-impl/testData/parsing/", "msil");
+//	}
+//
+//	public void testFieldConstWithValue()
+//	{
+//		doTest(true);
+//	}
+//
+//	public void testArrayList()
+//	{
+//		doTest(true);
+//	}
+//
+//	public void testFieldWithAttribute()
+//	{
+//		doTest(true);
+//	}
+//
+//	public void testTestCustomAttributeSignature()
+//	{
+//		doTest(true);
+//	}
+//
+//	public void testGenericParameterCustomAttribute()
+//	{
+//		doTest(true);
+//	}
+//}

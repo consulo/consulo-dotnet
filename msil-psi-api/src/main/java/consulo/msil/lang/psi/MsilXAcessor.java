@@ -16,10 +16,10 @@
 
 package consulo.msil.lang.psi;
 
-import com.intellij.util.ArrayFactory;
 import consulo.dotnet.psi.DotNetParameter;
 import consulo.dotnet.psi.DotNetXAccessor;
-import consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.psi.resolve.DotNetTypeRef;
+import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

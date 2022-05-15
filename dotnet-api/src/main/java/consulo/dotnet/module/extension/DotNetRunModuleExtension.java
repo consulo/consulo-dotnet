@@ -2,7 +2,7 @@ package consulo.dotnet.module.extension;
 
 import consulo.content.bundle.Sdk;
 import consulo.dotnet.DotNetTarget;
-import consulo.dotnet.execution.DebugConnectionInfo;
+import consulo.dotnet.util.DebugConnectionInfo;
 import consulo.module.extension.ModuleExtension;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;

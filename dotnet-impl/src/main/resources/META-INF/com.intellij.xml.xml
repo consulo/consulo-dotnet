@@ -15,11 +15,11 @@
   -->
 
 <consulo-plugin>
-	<extensions defaultExtensionNs="com.intellij">
-		<defaultLibraryRootDetector implementation="consulo.dotnet.library.DotNetXmlDocumentationRootDetector"/>
+	<extensions defaultExtensionNs="consulo">
+		<defaultLibraryRootDetector implementation="consulo.dotnet.impl.library.DotNetXmlDocumentationRootDetector"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="consulo.dotnet">
-		<documentationResolver implementation="consulo.dotnet.documentation.DefaultDocumentationResolver"/>
+		<documentationResolver implementation="consulo.dotnet.documentation.impl.DefaultDocumentationResolver"/>
 	</extensions>
 </consulo-plugin>

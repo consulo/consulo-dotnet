@@ -16,10 +16,11 @@
 
 package consulo.dotnet.psi;
 
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.ResolveResult;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveResult;
 
 /**
  * @author VISTALL

@@ -18,9 +18,9 @@ package consulo.dotnet.debugger;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.component.extension.ExtensionPointName;
-import consulo.debugger.XSourcePosition;
-import consulo.debugger.evaluation.XDebuggerEvaluator;
-import consulo.debugger.frame.XNamedValue;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.evaluation.XDebuggerEvaluator;
+import consulo.execution.debug.frame.XNamedValue;
 import consulo.document.util.TextRange;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.psi.DotNetReferenceExpression;

@@ -17,7 +17,7 @@
 package consulo.dotnet.psi;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.util.collection.ArrayFactory;
 

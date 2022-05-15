@@ -28,6 +28,7 @@ import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import consulo.internal.dotnet.asm.mbel.AssemblyInfo;
 import consulo.logging.Logger;
 import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -41,6 +42,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -54,7 +56,7 @@ import java.util.regex.Pattern;
  * @author VISTALL
  * @since 22.02.2015
  */
-public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionImpl<S> implements DotNetSimpleModuleExtension<S>
+public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionBase<S> implements DotNetSimpleModuleExtension<S>
 {
 	public static final Logger LOGGER = Logger.getInstance(BaseDotNetSimpleModuleExtension.class);
 
@@ -292,7 +294,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 					}
 					if(Comparing.equal(requiredFileName, file.getName(), false) && isValidExternalFile(ref.get().getSecond(), file))
 					{
-						urls.add(VfsUtil.pathToUrl(file.getPath()));
+						urls.add(VirtualFileUtil.pathToUrl(file.getPath()));
 					}
 					return true;
 				});

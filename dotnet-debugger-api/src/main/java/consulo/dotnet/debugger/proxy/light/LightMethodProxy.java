@@ -16,19 +16,14 @@
 
 package consulo.dotnet.debugger.proxy.light;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.dotnet.debugger.proxy.*;
+import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.debugger.proxy.DotNetLocalVariableProxy;
-import consulo.dotnet.debugger.proxy.DotNetMethodParameterProxy;
-import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
-import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
-import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
-import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
 /**
  * @author VISTALL
