@@ -36,6 +36,18 @@
 		</repository>
 	</repositories>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<groupId>consulo.plugin</groupId>
 	<artifactId>consulo.dotnet-dotnet.debugger.impl</artifactId>
 	<version>3-SNAPSHOT</version>
@@ -62,33 +74,6 @@
 			<groupId>consulo.internal</groupId>
 			<artifactId>dotnet.asm</artifactId>
 			<version>3-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>consulo</groupId>
-			<artifactId>consulo-container-api</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>consulo</groupId>
-			<artifactId>consulo-util-nodep</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>consulo</groupId>
-			<artifactId>consulo-util-jna</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
