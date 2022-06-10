@@ -226,15 +226,6 @@ public class DotNetConfigurationPanel extends JPanel
 
 		final LabeledComponent<JBTextField> namespaceComponent = LabeledComponent.create(namespacePrefixField, "Namespace:");
 
-		JBCheckBox allowSourceRootsBox = new JBCheckBox(DotNetBundle.message("allow.source.roots.label"), extension.isAllowSourceRoots());
-		allowSourceRootsBox.addActionListener(e ->
-		{
-			extension.setAllowSourceRoots(allowSourceRootsBox.isSelected());
-			namespaceComponent.setVisible(!allowSourceRootsBox.isSelected());
-
-			updater.run();
-		});
-		add(allowSourceRootsBox);
 		add(namespaceComponent);
 
 		CollectionListModel<String> dataModel = new CollectionListModel<String>(variables)

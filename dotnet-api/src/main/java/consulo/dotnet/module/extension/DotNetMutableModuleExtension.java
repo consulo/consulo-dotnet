@@ -16,9 +16,10 @@
 
 package consulo.dotnet.module.extension;
 
+import consulo.dotnet.DotNetTarget;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.dotnet.DotNetTarget;
 
 /**
  * @author VISTALL
@@ -32,8 +33,6 @@ public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>
 	void setNamespacePrefix(@Nonnull String prefix);
 
 	void setOutputDir(@Nonnull String name);
-
-	void setAllowSourceRoots(boolean val);
 
 	void setMainType(@Nullable String qName);
 

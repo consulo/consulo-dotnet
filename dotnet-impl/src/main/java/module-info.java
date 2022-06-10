@@ -7,6 +7,12 @@ module consulo.dotnet.impl
 	requires consulo.ide.api;
 	requires consulo.ide.impl;
 
+	requires consulo.internal.dotnet.asm;
+	requires consulo.internal.dotnet.msil.decompiler;
+
+	// TODO remove this dependency in future
+	requires java.desktop;
+
 	requires consulo.dotnet.composite.formatting.string;
 	requires consulo.dotnet.debugger.api;
 	requires consulo.dotnet.debugger.impl;

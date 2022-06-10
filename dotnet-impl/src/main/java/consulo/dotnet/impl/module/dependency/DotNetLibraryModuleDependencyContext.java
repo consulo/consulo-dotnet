@@ -16,17 +16,19 @@
 
 package consulo.dotnet.impl.module.dependency;
 
+import consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryModel;
+import consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryType;
 import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
-import consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryImpl;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import consulo.ide.impl.roots.ui.configuration.classpath.AddModuleDependencyContext;
+import consulo.ide.setting.module.AddModuleDependencyContext;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.orderEntry.CustomOrderEntry;
+import consulo.module.content.layer.orderEntry.CustomOrderEntryModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -52,11 +54,11 @@ public class DotNetLibraryModuleDependencyContext extends AddModuleDependencyCon
 		List<OrderEntry> orderEntries = new ArrayList<>(selectedValues.size());
 		for(Map.Entry<String, String> selectedValue : selectedValues)
 		{
-			DotNetLibraryOrderEntryImpl orderEntry = new DotNetLibraryOrderEntryImpl((ModuleRootLayerImpl) layer, selectedValue.getKey());
+			DotNetLibraryOrderEntryModel model = new DotNetLibraryOrderEntryModel(selectedValue.getKey());
 
-			layer.addOrderEntry(orderEntry);
+			CustomOrderEntry<DotNetLibraryOrderEntryModel> entry = layer.addCustomOderEntry(DotNetLibraryOrderEntryType.getInstance(), model);
 
-			orderEntries.add(orderEntry);
+			orderEntries.add(entry);
 		}
 		return orderEntries;
 	}
@@ -81,9 +83,14 @@ public class DotNetLibraryModuleDependencyContext extends AddModuleDependencyCon
 		OrderEntry[] orderEntries = layer.getOrderEntries();
 		for(OrderEntry orderEntry : orderEntries)
 		{
-			if(orderEntry instanceof DotNetLibraryOrderEntryImpl && orderEntry.getPresentableName().equalsIgnoreCase(name))
+			if(orderEntry instanceof CustomOrderEntry)
 			{
-				return orderEntry;
+				CustomOrderEntryModel model = ((CustomOrderEntry<?>) orderEntry).getModel();
+
+				if(model instanceof DotNetLibraryOrderEntryModel && model.getPresentableName().equalsIgnoreCase(name))
+				{
+					return orderEntry;
+				}
 			}
 		}
 		return null;

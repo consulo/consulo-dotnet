@@ -19,15 +19,14 @@ package consulo.dotnet.impl.module.dependency;
 import consulo.application.Application;
 import consulo.application.util.function.Computable;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import consulo.ide.impl.roots.ui.configuration.classpath.AddModuleDependencyActionProvider;
+import consulo.ide.setting.module.AddModuleDependencyActionProvider;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootLayer;
-import consulo.module.impl.internal.extension.ModuleExtensionProviders;
-import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
+import consulo.module.extension.ModuleExtensionHelper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
@@ -174,9 +173,9 @@ public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDep
 		DotNetSimpleModuleExtension extension = moduleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
 		if(extension != null)
 		{
-			ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extension.getId());
-			assert provider != null;
-			return provider.getIcon();
+			Image icon = ModuleExtensionHelper.getInstance(moduleRootLayer.getProject()).getModuleExtensionIcon(extension.getId());
+			assert icon != null;
+			return icon;
 		}
 		throw new IllegalArgumentException("No .NET extension");
 	}

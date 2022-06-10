@@ -1,35 +1,14 @@
-/*
- * Copyright 2013-2014 must-be.org
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package consulo.dotnet.impl.roots.orderEntry;
 
 import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
-import consulo.content.impl.internal.RootProviderBaseImpl;
+import consulo.content.RootProviderBase;
 import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
-import consulo.module.content.layer.orderEntry.RootPolicy;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.orderEntry.CustomOrderEntryModel;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.impl.internal.ProjectRootManagerImpl;
-import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
-import consulo.module.impl.internal.layer.orderEntry.ClonableOrderEntry;
-import consulo.module.impl.internal.layer.orderEntry.LibraryOrderEntryBaseImpl;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
@@ -42,11 +21,11 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 21.08.14
+ * @since 28-May-22
  */
-public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements ClonableOrderEntry, OrderEntryWithTracking
+public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel
 {
-	private RootProvider myRootProvider = new RootProviderBaseImpl()
+	private RootProvider myRootProvider = new RootProviderBase()
 	{
 		@Nonnull
 		@Override
@@ -102,23 +81,13 @@ public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 		}
 	};
 
-	private String myName;
+	private ModuleRootLayer myModuleRootLayer;
 
-	public DotNetLibraryOrderEntryImpl(@Nonnull ModuleRootLayerImpl rootLayer, String name)
-	{
-		this(rootLayer, name, true);
-	}
+	private final String myName;
 
-	public DotNetLibraryOrderEntryImpl(@Nonnull ModuleRootLayerImpl rootLayer, String name, boolean init)
+	public DotNetLibraryOrderEntryModel(String name)
 	{
-		super(DotNetLibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
 		myName = name;
-		if(init)
-		{
-			init();
-
-			myProjectRootManagerImpl.addOrderWithTracking(this);
-		}
 	}
 
 	@Nullable
@@ -133,11 +102,22 @@ public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 		return extension.getSdk();
 	}
 
-	@Nullable
 	@Override
-	public RootProvider getRootProvider()
+	public boolean isEquivalentTo(@Nonnull CustomOrderEntryModel model)
 	{
-		return myRootProvider;
+		return model instanceof DotNetLibraryOrderEntryModel && Comparing.equal(myName, model.getPresentableName());
+	}
+
+	@Override
+	public boolean isSynthetic()
+	{
+		return false;
+	}
+
+	@Override
+	public void bind(@Nonnull ModuleRootLayer moduleRootLayer)
+	{
+		myModuleRootLayer = moduleRootLayer;
 	}
 
 	@Nonnull
@@ -153,34 +133,17 @@ public class DotNetLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 		return myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class) != null;
 	}
 
+	@Nonnull
 	@Override
-	public <R> R accept(RootPolicy<R> rRootPolicy, @Nullable R r)
+	public RootProvider getRootProvider()
 	{
-		if(rRootPolicy instanceof DotNetRootPolicy)
-		{
-			return (R) ((DotNetRootPolicy) rRootPolicy).visitDotNetLibrary(this, r);
-		}
-		else
-		{
-			return rRootPolicy.visitOrderEntry(this, r);
-		}
+		return myRootProvider;
 	}
 
+	@Nonnull
 	@Override
-	public boolean isEquivalentTo(@Nonnull OrderEntry entry)
+	public CustomOrderEntryModel clone()
 	{
-		return entry instanceof DotNetLibraryOrderEntryImpl && Comparing.equal(myName, entry.getPresentableName());
-	}
-
-	@Override
-	public boolean isSynthetic()
-	{
-		return false;
-	}
-
-	@Override
-	public OrderEntry cloneEntry(ModuleRootLayerImpl layer)
-	{
-		return new DotNetLibraryOrderEntryImpl(layer, getPresentableName());
+		return new DotNetLibraryOrderEntryModel(myName);
 	}
 }

@@ -18,31 +18,34 @@ package consulo.dotnet.impl.roots.orderEntry;
 
 import consulo.application.AllIcons;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.util.SimpleTextCellAppearance;
-import consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor;
-import consulo.module.impl.internal.extension.ModuleExtensionProviders;
-import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
-import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
+import consulo.ide.setting.module.CustomOrderEntryTypeEditor;
+import consulo.module.content.layer.orderEntry.CustomOrderEntry;
+import consulo.module.extension.ModuleExtensionHelper;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 06-Jun-16
  */
-public class DotNetLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<DotNetLibraryOrderEntryImpl>
+public class DotNetLibraryOrderEntryTypeEditor implements CustomOrderEntryTypeEditor<DotNetLibraryOrderEntryModel>
 {
 	@Nonnull
 	@Override
-	public CellAppearanceEx getCellAppearance(@Nonnull DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry)
+	public Consumer<ColoredTextContainer> getRender(@Nonnull CustomOrderEntry<DotNetLibraryOrderEntryModel> orderEntry, @Nonnull DotNetLibraryOrderEntryModel model)
 	{
-		ModuleRootLayerImpl moduleRootLayer = dotNetLibraryOrderEntry.getModuleRootLayer();
+		return it -> {
+			ModuleExtensionHelper moduleExtensionHelper = ModuleExtensionHelper.getInstance(orderEntry.getOwnerModule().getProject());
 
-		DotNetSimpleModuleExtension extension = moduleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
+			DotNetSimpleModuleExtension extension = orderEntry.getModuleRootLayer().getExtension(DotNetSimpleModuleExtension.class);
 
-		ModuleExtensionProviderEP providerEP = extension == null ? null : ModuleExtensionProviders.findProvider(extension.getId());
+			Image icon = extension == null ? AllIcons.Toolbar.Unknown : moduleExtensionHelper.getModuleExtensionIcon(extension.getId());
 
-		return SimpleTextCellAppearance.synthetic(dotNetLibraryOrderEntry.getPresentableName(), providerEP == null ? AllIcons.Toolbar.Unknown : providerEP.getIcon());
+			it.append(model.getPresentableName());
+			it.setIcon(icon);
+		};
 	}
 }

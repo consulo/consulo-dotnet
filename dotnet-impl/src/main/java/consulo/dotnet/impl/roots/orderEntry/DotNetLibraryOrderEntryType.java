@@ -16,9 +16,9 @@
 
 package consulo.dotnet.impl.roots.orderEntry;
 
+import consulo.application.Application;
 import consulo.module.content.layer.ModuleRootLayer;
-import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
+import consulo.module.content.layer.orderEntry.CustomOrderEntryTypeProvider;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
@@ -28,12 +28,12 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21.08.14
  */
-public class DotNetLibraryOrderEntryType implements OrderEntryType<DotNetLibraryOrderEntryImpl>
+public class DotNetLibraryOrderEntryType implements CustomOrderEntryTypeProvider<DotNetLibraryOrderEntryModel>
 {
 	@Nonnull
 	public static DotNetLibraryOrderEntryType getInstance()
 	{
-		return EP_NAME.findExtensionOrFail(DotNetLibraryOrderEntryType.class);
+		return EP.findExtensionOrFail(Application.get(), DotNetLibraryOrderEntryType.class);
 	}
 
 	@Nonnull
@@ -45,7 +45,7 @@ public class DotNetLibraryOrderEntryType implements OrderEntryType<DotNetLibrary
 
 	@Nonnull
 	@Override
-	public DotNetLibraryOrderEntryImpl loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException
+	public DotNetLibraryOrderEntryModel loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException
 	{
 		String name = element.getAttributeValue("name");
 		if(name.endsWith(".dll"))
@@ -53,12 +53,12 @@ public class DotNetLibraryOrderEntryType implements OrderEntryType<DotNetLibrary
 			int lastIndex = name.lastIndexOf(".dll");
 			name = name.substring(0, lastIndex);
 		}
-		return new DotNetLibraryOrderEntryImpl((ModuleRootLayerImpl) moduleRootLayer, name);
+		return new DotNetLibraryOrderEntryModel(name);
 	}
 
 	@Override
-	public void storeOrderEntry(@Nonnull Element element, @Nonnull DotNetLibraryOrderEntryImpl dotNetLibraryOrderEntry)
+	public void storeOrderEntry(@Nonnull Element element, @Nonnull DotNetLibraryOrderEntryModel model)
 	{
-		element.setAttribute("name", dotNetLibraryOrderEntry.getPresentableName());
+		element.setAttribute("name", model.getPresentableName());
 	}
 }

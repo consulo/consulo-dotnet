@@ -106,7 +106,6 @@
 
 		<macro implementation="consulo.dotnet.module.macro.TargetFileExtensionMacro"/>
 
-		<contentFolderSupportPatcher implementation="consulo.dotnet.impl.module.DotNetContentFolderSupportPatcher"/>
 		<iconDescriptorUpdater implementation="consulo.dotnet.impl.ide.DotNetIconDescriptorUpdater"/>
 		<consoleFilterProvider implementation="consulo.dotnet.run.impl.filters.DotNetConsoleFilterProvider"/>
 		<configurationType implementation="consulo.dotnet.run.impl.DotNetConfigurationType"/>
@@ -117,7 +116,7 @@
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.impl.breakpoint.DotNetExceptionBreakpointType"/>
 		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.impl.breakpoint.DotNetMethodBreakpointType"/>
 
-		<orderEntryType implementation="consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryType"/>
+		<customOrderEntryTypeProvider implementation="consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryType"/>
 		<orderEntryTypeEditor key="dot-net-library" implementationClass="consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryTypeEditor"/>
 
 		<addModuleDependencyActionProvider implementation="consulo.dotnet.impl.module.dependency.DotNetLibraryModuleDependencyActionProvider"/>
@@ -136,8 +135,6 @@
 						   implementationClass="consulo.dotnet.psi.impl.MultiHostInjectorByAttribute"/>
 
 		<psi.packageSupportProvider implementation="consulo.dotnet.impl.packageSupport.DotNetPackageSupportProvider"/>
-
-		<moduleRootsProcessor implementation="consulo.dotnet.impl.module.DotNetModuleRootsProcessor"/>
 
 		<coverageEngine implementation="consulo.dotnet.run.impl.coverage.DotNetCoverageEngine"/>
 		<programRunner implementation="consulo.dotnet.run.impl.coverage.DotNetCoverageProgramRunner"/>

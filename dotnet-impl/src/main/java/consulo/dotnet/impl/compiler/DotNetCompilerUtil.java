@@ -22,17 +22,13 @@ import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.compiler.DotNetMacroUtil;
-import consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryImpl;
-import consulo.dotnet.impl.roots.orderEntry.DotNetRootPolicy;
+import consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryModel;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.*;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
@@ -52,7 +48,8 @@ public class DotNetCompilerUtil
 {
 	@UsedInPlugin
 	public static final Condition<OrderEntry> ACCEPT_ALL = Conditions.alwaysFalse();
-	public static final Condition<OrderEntry> SKIP_STD_LIBRARIES = orderEntry -> orderEntry instanceof DotNetLibraryOrderEntryImpl;
+	public static final Condition<OrderEntry> SKIP_STD_LIBRARIES = orderEntry -> orderEntry instanceof CustomOrderEntry && ((CustomOrderEntry) orderEntry).getModel() instanceof
+			DotNetLibraryOrderEntryModel;
 
 	@Nonnull
 	public static Set<File> collectDependencies(@Nonnull final Module module, @Nonnull final DotNetTarget target, final boolean debugSymbol, @Nonnull final Condition<OrderEntry> skipCondition)
@@ -64,16 +61,21 @@ public class DotNetCompilerUtil
 		processed.add(module);
 
 		ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-		moduleRootManager.processOrder(new DotNetRootPolicy<Object>()
+		moduleRootManager.processOrder(new RootPolicy<>()
 		{
 			@Override
-			public Object visitDotNetLibrary(DotNetLibraryOrderEntryImpl orderEntry, Object value)
+			public Object visitCustomOrderEntry(CustomOrderEntry orderEntry, Object value)
 			{
-				if(skipCondition.value(orderEntry))
+				CustomOrderEntryModel model = orderEntry.getModel();
+				if(model instanceof DotNetLibraryOrderEntryModel)
 				{
-					return null;
+					if(skipCondition.value(orderEntry))
+					{
+						return null;
+					}
+					collectFromRoot(orderEntry);
 				}
-				collectFromRoot(orderEntry);
+
 				return null;
 			}
 
