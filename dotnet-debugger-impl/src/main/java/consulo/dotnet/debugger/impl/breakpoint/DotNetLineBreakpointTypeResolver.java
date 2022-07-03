@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 19.03.2015
  */
-public class DotNetLineBreakpointTypeResolver implements XLineBreakpointTypeResolver
+public abstract class DotNetLineBreakpointTypeResolver implements XLineBreakpointTypeResolver
 {
 	@Nullable
 	@Override
