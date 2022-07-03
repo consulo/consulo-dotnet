@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.library;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.library.ui.RootDetector;
@@ -34,6 +35,7 @@ import java.util.Collections;
  * @author VISTALL
  * @since 01.02.14
  */
+@ExtensionImpl
 public class DotNetXmlDocumentationRootDetector extends RootDetector
 {
 	public DotNetXmlDocumentationRootDetector()
