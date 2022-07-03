@@ -1,5 +1,6 @@
 package consulo.dotnet.module.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.language.util.ModuleUtilCore;
@@ -11,6 +12,7 @@ import consulo.util.dataholder.Key;
  * @author VISTALL
  * @since 18.08.14
  */
+@ExtensionImpl
 public class TargetFileExtensionMacro extends Macro
 {
 	public static final Key<Boolean> DEBUG_SYMBOLS = Key.create("debug.symbols");

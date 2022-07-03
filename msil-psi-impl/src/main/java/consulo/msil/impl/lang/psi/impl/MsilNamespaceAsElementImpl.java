@@ -17,7 +17,7 @@
 package consulo.msil.impl.lang.psi.impl;
 
 import consulo.dotnet.psi.impl.IndexBasedDotNetNamespaceAsElement;
-import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcher;
+import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcherExtension;
 import consulo.msil.MsilLanguage;
 import consulo.project.Project;
 
@@ -32,7 +32,7 @@ public class MsilNamespaceAsElementImpl extends IndexBasedDotNetNamespaceAsEleme
 	public MsilNamespaceAsElementImpl(@Nonnull Project project,
 			@Nonnull String indexKey,
 			@Nonnull String qName,
-			@Nonnull IndexBasedDotNetPsiSearcher searcher)
+			@Nonnull IndexBasedDotNetPsiSearcherExtension searcher)
 	{
 		super(project, MsilLanguage.INSTANCE, indexKey, qName, searcher);
 	}

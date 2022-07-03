@@ -17,6 +17,7 @@
 package consulo.dotnet.cfs.ide.highlight;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dotnet.cfs.psi.CfsFile;
 import consulo.dotnet.cfs.psi.CfsItem;
@@ -43,6 +44,7 @@ import java.util.List;
  * @author VISTALL
  * @since 28.03.2015
  */
+@ExtensionImpl
 public class CfsItemHighlightUsagesHandlerFactory implements HighlightUsagesHandlerFactory
 {
 	@Nullable

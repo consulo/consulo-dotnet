@@ -17,6 +17,8 @@
 package consulo.dotnet.psi.resolve;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.project.Project;
@@ -34,7 +36,8 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 13.07.14
  */
-public abstract class DotNetPsiSearcher
+@ServiceAPI(ComponentScope.PROJECT)
+public abstract class DotNetPsiSearcher implements DotNetPsiSearcherExtension
 {
 	@Nonnull
 	public static DotNetPsiSearcher getInstance(@Nonnull Project project)

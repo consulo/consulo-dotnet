@@ -17,6 +17,8 @@
 package consulo.dotnet.psi.test;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetNamedElement;
@@ -28,9 +30,10 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 19.12.2015
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DotNetTestFramework
 {
-	public static final ExtensionPointName<DotNetTestFramework> EP_NAME = ExtensionPointName.create("consulo.dotnet.testFramework");
+	public static final ExtensionPointName<DotNetTestFramework> EP_NAME = ExtensionPointName.create(DotNetTestFramework.class);
 
 	@RequiredReadAction
 	public boolean isTestType(@Nonnull DotNetTypeDeclaration typeDeclaration)

@@ -17,6 +17,13 @@
 package consulo.dotnet.debugger;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
+import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
@@ -27,8 +34,17 @@ import java.util.Set;
  * @author VISTALL
  * @since 19.07.2015
  */
-public abstract class DotNetDebuggerSourceLineResolver
+public interface DotNetDebuggerSourceLineResolver extends LanguageExtension
 {
+	ExtensionPointCacheKey<DotNetDebuggerSourceLineResolver, ByLanguageValue<DotNetDebuggerSourceLineResolver>> KEY = ExtensionPointCacheKey.create("DotNetDebuggerSourceLineResolver",
+			LanguageOneToOne.build(new DotNetDefaultDebuggerSourceLineResolver()));
+
+	@Nonnull
+	static DotNetDebuggerSourceLineResolver forLanguage(@Nonnull Language language)
+	{
+		return Application.get().getExtensionPoint(DotNetDebuggerSourceLineResolver.class).getOrBuildCache(KEY).requiredGet(language);
+	}
+
 	@Nullable
 	@RequiredReadAction
 	public abstract String resolveParentVmQName(@Nonnull PsiElement element);

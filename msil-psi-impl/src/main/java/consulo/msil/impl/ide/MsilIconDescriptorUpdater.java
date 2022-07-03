@@ -1,6 +1,7 @@
 package consulo.msil.impl.ide;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.dotnet.DotNetTypes;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 05.07.2015
  */
+@ExtensionImpl
 public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 {
 	@Override

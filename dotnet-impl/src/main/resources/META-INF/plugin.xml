@@ -20,9 +20,6 @@
 	<version>SNAPSHOT</version>
 	<category>Software Framework</category>
 	<resource-bundle>messages.DotNetBundle</resource-bundle>
-	<depends config-file="com.intellij.xml.xml" optional="true">com.intellij.xml</depends>
-
-	<import path="/META-INF/CompositeFormattingString.xml"/>
 
 	<tags>
 		<tag>software.framework</tag>
@@ -33,126 +30,9 @@
 		<permission type="SOCKET_BIND"/>
 	</permissions>
 
-	<extensionPoints>
-		<extensionPoint name="debuggerProvider" interface="consulo.dotnet.debugger.DotNetDebuggerProvider"/>
-		<extensionPoint name="debuggerSourceLineResolver" beanClass="consulo.language.LanguageExtensionPoint">
-			<with attribute="implementationClass" implements="consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver"/>
-		</extensionPoint>
 
-		<extensionPoint name="psiSearcher" interface="consulo.dotnet.psi.resolve.DotNetPsiSearcher" area="PROJECT"/>
-		<extensionPoint name="shortNameSearcher" interface="consulo.dotnet.psi.resolve.DotNetShortNameSearcher" area="PROJECT"/>
-		<extensionPoint name="stubIndexer" interface="consulo.msil.impl.lang.psi.impl.elementType.stub.MsilStubIndexer"/>
-		<extensionPoint name="typeInheritorsSearch" interface="consulo.application.util.query.QueryExecutor"/>
-		<extensionPoint name="directTypeInheritorsSearch" interface="consulo.application.util.query.QueryExecutor"/>
-		<extensionPoint name="allTypesSearch" interface="consulo.application.util.query.QueryExecutor"/>
-		<extensionPoint name="documentationResolver" interface="consulo.dotnet.documentation.DotNetDocumentationResolver"/>
-		<extensionPoint name="msilFileRepresentation" interface="consulo.msil.representation.MsilFileRepresentationProvider"/>
-
-		<extensionPoint name="injectionByAttributeHelper" interface="consulo.dotnet.psi.MultiHostInjectorByAttributeHelper"/>
-
-		<extensionPoint name="dependencyCopierExtension" interface="consulo.dotnet.impl.compiler.DotNetDependencyCopierExtension"/>
-		<extensionPoint name="testFramework" interface="consulo.dotnet.psi.test.DotNetTestFramework"/>
-	</extensionPoints>
-
-	<extensions defaultExtensionNs="consulo.dotnet">
-		<psiSearcher implementation="consulo.msil.impl.lang.psi.impl.resolve.MsilPsiSearcher"/>
-		<shortNameSearcher implementation="consulo.msil.impl.lang.psi.impl.resolve.MsilShortNameSearcher"/>
-		<directTypeInheritorsSearch implementation="consulo.msil.impl.lang.psi.impl.searchers.MsilDirectTypeInheritorsSearcherExecutor"/>
-	</extensions>
 
 	<extensions defaultExtensionNs="consulo">
-		<stubIndex implementation="consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilTypeByNameIndex"/>
-		<stubIndex implementation="consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilTypeByQNameIndex"/>
-		<stubIndex implementation="consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilElementByQNameIndex"/>
-		<stubIndex implementation="consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilNamespaceIndex"/>
-		<stubIndex implementation="consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilExtendsListIndex"/>
-
-		<virtualFileSystem implementation="consulo.msil.impl.representation.fileSystem.MsilFileRepresentationVirtualFileSystem"/>
-
-		<gotoClassContributor implementation="consulo.msil.impl.ide.navigation.MsilGotoClassContributor"/>
-
-		<itemPresentationProvider forClass="consulo.msil.lang.psi.MsilClassEntry"
-								  implementationClass="consulo.msil.impl.ide.presentation.MsilClassItemPresentationProvider"/>
-
-		<fileTypeFactory implementation="consulo.msil.MsilFileTypeFactory"/>
 		<stubElementTypeHolder class="consulo.msil.impl.lang.psi.MsilStubElements"/>
-		<lang.parserDefinition language="MSIL" implementationClass="consulo.msil.impl.lang.MsilParserDefinition"/>
-		<editorHighlighterProvider filetype="MSIL" implementationClass="consulo.msil.impl.ide.highlight.MsilEditorHighlighterProvider"/>
-
-		<treeStructureProvider implementation="consulo.msil.impl.representation.projectView.MsilFileRepresentationProjectViewProvider"/>
-
-		<iconDescriptorUpdater implementation="consulo.msil.impl.ide.MsilIconDescriptorUpdater"/>
-		<projectService serviceInterface="consulo.msil.representation.MsilFileRepresentationManager"
-						serviceImplementation="consulo.msil.impl.representation.MsilFileRepresentationManagerImpl"/>
-
-		<defaultHighlightingSettingProvider
-				implementation="consulo.msil.impl.representation.MsilRepresentationHighlightingSettingProvider"/>
-
-		<fileTypeFactory implementation="consulo.dotnet.impl.dll.DotNetModuleFileTypeFactory"/>
-
-		<defaultLibraryRootDetector implementation="consulo.dotnet.impl.library.DotNetLibraryRootDetector"/>
-		<defaultLibraryRootDetector implementation="consulo.dotnet.impl.library.DotNetLibraryDirectoryDetector"/>
-
-		<applicationService serviceImplementation="consulo.dotnet.impl.documentation.DotNetDocumentationCache"/>
-		<applicationService serviceImplementation="consulo.dotnet.module.extension.AssemblyInfoCacheService"/>
-
-		<projectService serviceInterface="consulo.dotnet.psi.resolve.DotNetPsiSearcher"
-						serviceImplementation="consulo.dotnet.psi.impl.resolve.impl.DotNetPsiSearcherImpl"/>
-		<projectService serviceInterface="consulo.dotnet.psi.resolve.DotNetShortNameSearcher"
-						serviceImplementation="consulo.dotnet.psi.impl.resolve.impl.DotNetShortNameSearcherImpl"/>
-		<projectService serviceImplementation="consulo.dotnet.psi.impl.externalAttributes.ExternalAttributeManager"/>
-		<projectService serviceImplementation="consulo.dotnet.psi.impl.DotNetNamespaceCacheManager"/>
-		<projectService serviceInterface="consulo.dotnet.psi.ui.chooser.DotNetTypeChooserFactory" serviceImplementation="consulo.dotnet.impl.ui.chooser.DotNetTypeChooserFactoryImpl"/>
-
-		<macro implementation="consulo.dotnet.module.macro.TargetFileExtensionMacro"/>
-
-		<iconDescriptorUpdater implementation="consulo.dotnet.impl.ide.DotNetIconDescriptorUpdater"/>
-		<consoleFilterProvider implementation="consulo.dotnet.run.impl.filters.DotNetConsoleFilterProvider"/>
-		<configurationType implementation="consulo.dotnet.run.impl.DotNetConfigurationType"/>
-		<runConfigurationProducer implementation="consulo.dotnet.run.impl.DotNetConfigurationProducer"/>
-		<programRunner implementation="consulo.dotnet.debugger.impl.runner.DotNetDebuggerProgramRunner" id="dotnet-debugger"/>
-
-		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.impl.breakpoint.DotNetLineBreakpointType"/>
-		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.impl.breakpoint.DotNetExceptionBreakpointType"/>
-		<xdebugger.breakpointType implementation="consulo.dotnet.debugger.impl.breakpoint.DotNetMethodBreakpointType"/>
-
-		<customOrderEntryTypeProvider implementation="consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryType"/>
-		<orderEntryTypeEditor key="dot-net-library" implementationClass="consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryTypeEditor"/>
-
-		<addModuleDependencyActionProvider implementation="consulo.dotnet.impl.module.dependency.DotNetLibraryModuleDependencyActionProvider"/>
-
-		<orderRootType implementation="consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType"/>
-		<orderRootTypeEditor key="dotNetExternalAttributes"
-							 implementationClass="consulo.dotnet.impl.externalAttribute.ExternalAttributesOrderRootTypeUIFactory"/>
-
-		<compiler implementation="consulo.dotnet.impl.compiler.DotNetCompiler"/>
-		<compiler implementation="consulo.dotnet.impl.compiler.DotNetDependencyCopier"/>
-		<compiler.translatingHelper implementation="consulo.dotnet.impl.compiler.DotNetTranslatingCompilerFilesMonitorHelper"/>
-		<compiler.moduleScopeFactory implementation="consulo.dotnet.impl.compiler.DotNetCompileModuleScopeFactory"/>
-
-
-		<multiHostInjector forClass="consulo.dotnet.psi.DotNetCallArgumentList"
-						   implementationClass="consulo.dotnet.psi.impl.MultiHostInjectorByAttribute"/>
-
-		<psi.packageSupportProvider implementation="consulo.dotnet.impl.packageSupport.DotNetPackageSupportProvider"/>
-
-		<coverageEngine implementation="consulo.dotnet.run.impl.coverage.DotNetCoverageEngine"/>
-		<programRunner implementation="consulo.dotnet.run.impl.coverage.DotNetCoverageProgramRunner"/>
-
-		<sdkType implementation="consulo.dotnet.impl.sdk.RoslynBundleType"/>
-
-		<testFinder implementation="consulo.dotnet.impl.testIntegration.DotNetTestFinder"/>
-
-		<pathMacroExpendableProtocol protocol="netdll"/>
-
-		<virtualFileSystem implementation="consulo.dotnet.impl.dll.vfs.DotNetArchiveFileSystem"/>
-
-		<projectService serviceImplementation="consulo.dotnet.debugger.impl.breakpoint.DotNetBreakpointListenerComponent" lazy="false"/>
-
-		<projectService serviceImplementation="consulo.dotnet.psi.impl.DotNetTypeRefCacheManager"/>
-
-		<projectService serviceImplementation="consulo.dotnet.psi.internal.DotNetInheritCache"/>
-
-		<projectService serviceInterface="consulo.dotnet.assembly.AssemblyModuleService" serviceImplementation="consulo.dotnet.impl.assembly.AssemblyModuleServiceImpl"/>
 	</extensions>
 </consulo-plugin>

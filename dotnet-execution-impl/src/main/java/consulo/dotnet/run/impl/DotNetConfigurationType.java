@@ -16,6 +16,7 @@
 
 package consulo.dotnet.run.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.execution.configuration.ConfigurationFactory;
@@ -35,6 +36,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 26.11.13.
  */
+@ExtensionImpl
 public class DotNetConfigurationType extends ConfigurationTypeBase
 {
 	@Nonnull

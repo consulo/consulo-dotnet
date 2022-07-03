@@ -17,6 +17,8 @@
 package consulo.msil.representation;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.msil.MsilFileType;
@@ -35,6 +37,7 @@ import java.util.List;
  * @author VISTALL
  * @since 27.05.14
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class MsilFileRepresentationManager
 {
 	@Nonnull

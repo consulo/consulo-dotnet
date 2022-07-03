@@ -16,8 +16,10 @@
 
 package consulo.dotnet.cfs.ide.highlight;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.cfs.lang.BaseCfsLanguageVersion;
 import consulo.dotnet.cfs.lang.CfsLanguage;
+import consulo.language.Language;
 import consulo.language.editor.highlight.LanguageVersionableSyntaxHighlighterFactory;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.version.LanguageVersion;
@@ -28,11 +30,14 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 31.08.14
  */
+@ExtensionImpl
 public class CfsSyntaxHighlighterFactory extends LanguageVersionableSyntaxHighlighterFactory
 {
-	public CfsSyntaxHighlighterFactory()
+	@Nonnull
+	@Override
+	public Language getLanguage()
 	{
-		super(CfsLanguage.INSTANCE);
+		return CfsLanguage.INSTANCE;
 	}
 
 	@Nonnull

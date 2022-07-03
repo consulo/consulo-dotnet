@@ -17,21 +17,21 @@
 package consulo.dotnet.debugger.impl.breakpoint;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.execution.debug.XSourcePosition;
-import consulo.execution.debug.breakpoint.XLineBreakpoint;
-import consulo.execution.debug.breakpoint.XLineBreakpointType;
-import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
-import consulo.dotnet.debugger.impl.DotNetDebuggerSourceLineResolverEP;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.impl.DotNetEditorsProvider;
 import consulo.dotnet.debugger.impl.breakpoint.properties.DotNetLineBreakpointProperties;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.util.ArrayUtil2;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.debug.breakpoint.XLineBreakpointType;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
@@ -50,6 +50,7 @@ import java.util.*;
  * @author VISTALL
  * @since 10.04.14
  */
+@ExtensionImpl
 public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBreakpointProperties>
 {
 	@Nonnull
@@ -171,7 +172,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 			return Collections.emptySet();
 		}
 
-		DotNetDebuggerSourceLineResolver resolver = DotNetDebuggerSourceLineResolverEP.INSTANCE.forLanguage(psiFile.getLanguage());
+		DotNetDebuggerSourceLineResolver resolver = DotNetDebuggerSourceLineResolver.forLanguage(psiFile.getLanguage());
 
 		Set<PsiElement> allExecutableChildren = resolver.getAllExecutableChildren(element);
 		if(!allExecutableChildren.isEmpty())

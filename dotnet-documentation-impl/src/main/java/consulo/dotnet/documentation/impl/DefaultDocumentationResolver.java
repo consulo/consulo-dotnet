@@ -17,6 +17,7 @@
 package consulo.dotnet.documentation.impl;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.documentation.DotNetDocumentationResolver;
 import consulo.dotnet.psi.*;
 import consulo.dotnet.psi.resolve.DotNetArrayTypeRef;
@@ -37,6 +38,7 @@ import java.util.List;
  * @author VISTALL
  * @since 14.05.14
  */
+@ExtensionImpl(order = "last")
 public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 {
 	@RequiredReadAction

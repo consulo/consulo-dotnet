@@ -16,6 +16,9 @@
 
 package consulo.dotnet.debugger.impl.breakpoint;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
@@ -35,6 +38,8 @@ import javax.annotation.Nonnull;
  * @since 03.05.2016
  */
 @Singleton
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public class DotNetBreakpointListenerComponent
 {
 	@Inject

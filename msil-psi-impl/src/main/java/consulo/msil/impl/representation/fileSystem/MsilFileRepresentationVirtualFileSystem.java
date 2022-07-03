@@ -1,5 +1,6 @@
 package consulo.msil.impl.representation.fileSystem;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AccessRule;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiFile;
@@ -20,6 +21,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 31/12/2020
  */
+@ExtensionImpl
 public class MsilFileRepresentationVirtualFileSystem extends BaseVirtualFileSystem
 {
 	@Nonnull

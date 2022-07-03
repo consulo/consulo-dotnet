@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.externalAttribute;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.content.bundle.Sdk;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
@@ -30,8 +31,16 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 02.09.14
  */
+@ExtensionImpl
 public class ExternalAttributesOrderRootTypeUIFactory implements OrderRootTypeUIFactory
 {
+	@Nonnull
+	@Override
+	public String getOrderRootTypeId()
+	{
+		return "dotNetExternalAttributes";
+	}
+
 	@Nonnull
 	@Override
 	public SdkPathEditor createPathEditor(Sdk sdk)

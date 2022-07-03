@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.compiler;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.TranslatingCompilerFilesMonitorHelper;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.language.util.ModuleUtilCore;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 16.01.14
  */
+@ExtensionImpl
 public class DotNetTranslatingCompilerFilesMonitorHelper implements TranslatingCompilerFilesMonitorHelper
 {
 	@Nullable

@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.sdk;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.bundle.SdkType;
 import consulo.dotnet.icon.DotNetIconGroup;
 import consulo.logging.Logger;
@@ -33,6 +34,7 @@ import java.io.File;
  * @author VISTALL
  * @since 08.06.2015
  */
+@ExtensionImpl
 public class RoslynBundleType extends SdkType
 {
 	private static final Logger LOG = Logger.getInstance(RoslynBundleType.class);

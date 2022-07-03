@@ -16,6 +16,8 @@
 
 package consulo.msil.impl.lang.psi.impl.elementType.stub;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.stub.IndexSink;
 
@@ -25,9 +27,10 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22.05.14
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public class MsilStubIndexer
 {
-	public static final ExtensionPointName<MsilStubIndexer> EP_NAME = ExtensionPointName.create("consulo.dotnet.stubIndexer");
+	public static final ExtensionPointName<MsilStubIndexer> EP_NAME = ExtensionPointName.create(MsilStubIndexer.class);
 
 	public void indexClass(@Nonnull MsilClassEntryStub msilClassEntryStub, @Nonnull IndexSink indexSink)
 	{

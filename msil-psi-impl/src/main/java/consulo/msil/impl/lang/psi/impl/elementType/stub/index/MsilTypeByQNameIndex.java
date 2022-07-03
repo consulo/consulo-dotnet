@@ -16,6 +16,7 @@
 
 package consulo.msil.impl.lang.psi.impl.elementType.stub.index;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.stub.IntStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.msil.lang.psi.MsilClassEntry;
@@ -26,6 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22.05.14
  */
+@ExtensionImpl
 public class MsilTypeByQNameIndex extends IntStubIndexExtension<MsilClassEntry>
 {
 	@Nonnull

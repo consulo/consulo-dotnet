@@ -1,6 +1,7 @@
 package consulo.msil.impl.ide.navigation;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
@@ -9,7 +10,7 @@ import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.navigation.ChooseByNameContributorEx;
-import consulo.ide.navigation.GotoClassContributor;
+import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.file.LanguageFileType;
@@ -24,8 +25,8 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.msil.MsilFileType;
-import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
+import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.msil.representation.MsilFileRepresentationManager;
 import consulo.msil.representation.MsilFileRepresentationProvider;
 import consulo.navigation.ItemPresentation;
@@ -47,7 +48,8 @@ import java.util.Set;
  * @author VISTALL
  * @since 05.07.2015
  */
-public class MsilGotoClassContributor implements ChooseByNameContributorEx, GotoClassContributor
+@ExtensionImpl
+public class MsilGotoClassContributor implements ChooseByNameContributorEx, GotoClassOrTypeContributor
 {
 	private static final class NavigatableWithRepresentation extends FakePsiElement implements NavigationItem
 	{

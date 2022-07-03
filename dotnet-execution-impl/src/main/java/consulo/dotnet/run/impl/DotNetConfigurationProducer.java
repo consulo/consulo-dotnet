@@ -16,6 +16,7 @@
 
 package consulo.dotnet.run.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
@@ -32,6 +33,7 @@ import consulo.util.lang.ref.Ref;
  * @author VISTALL
  * @since 28.03.14
  */
+@ExtensionImpl
 public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNetConfiguration>
 {
 	public DotNetConfigurationProducer()

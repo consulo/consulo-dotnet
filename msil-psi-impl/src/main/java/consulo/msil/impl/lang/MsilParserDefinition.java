@@ -16,6 +16,8 @@
 
 package consulo.msil.impl.lang;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IFileElementType;
 import consulo.language.ast.TokenSet;
@@ -27,6 +29,7 @@ import consulo.language.parser.PsiParser;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersion;
+import consulo.msil.MsilLanguage;
 import consulo.msil.impl.lang.lexer.MsilLexer;
 import consulo.msil.impl.lang.parser.MsilParser;
 import consulo.msil.impl.lang.psi.MsilStubElements;
@@ -39,8 +42,16 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21.05.14
  */
+@ExtensionImpl
 public class MsilParserDefinition implements ParserDefinition
 {
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return MsilLanguage.INSTANCE;
+	}
+
 	@Nonnull
 	@Override
 	public Lexer createLexer(@Nonnull LanguageVersion languageVersion)

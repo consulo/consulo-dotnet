@@ -16,6 +16,7 @@
 
 package consulo.dotnet.run.impl.coverage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.run.PatchableRunProfileState;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.execution.configuration.*;
@@ -38,6 +39,7 @@ import java.util.function.BiFunction;
  * @author VISTALL
  * @since 10.01.15
  */
+@ExtensionImpl
 public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 {
 	@Nonnull

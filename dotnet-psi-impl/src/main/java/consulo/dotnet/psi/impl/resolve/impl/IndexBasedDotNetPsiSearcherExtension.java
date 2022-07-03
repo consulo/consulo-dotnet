@@ -19,10 +19,10 @@ package consulo.dotnet.psi.impl.resolve.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.function.CommonProcessors;
 import consulo.content.scope.SearchScope;
-import consulo.dotnet.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.dotnet.psi.DotNetQualifiedElement;
+import consulo.dotnet.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.dotnet.psi.resolve.DotNetNamespaceAsElement;
-import consulo.dotnet.psi.resolve.DotNetPsiSearcher;
+import consulo.dotnet.psi.resolve.DotNetPsiSearcherExtension;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.StubIndex;
@@ -36,11 +36,11 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 19.10.14
  */
-public abstract class IndexBasedDotNetPsiSearcher extends DotNetPsiSearcher
+public abstract class IndexBasedDotNetPsiSearcherExtension implements DotNetPsiSearcherExtension
 {
 	protected Project myProject;
 
-	public IndexBasedDotNetPsiSearcher(Project project)
+	public IndexBasedDotNetPsiSearcherExtension(Project project)
 	{
 		myProject = project;
 	}

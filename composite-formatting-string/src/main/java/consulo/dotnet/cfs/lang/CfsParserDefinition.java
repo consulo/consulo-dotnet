@@ -16,7 +16,9 @@
 
 package consulo.dotnet.cfs.lang;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.cfs.psi.CfsFile;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.FileViewProvider;
@@ -31,9 +33,17 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 20.08.14
  */
+@ExtensionImpl
 public class CfsParserDefinition extends LanguageVersionableParserDefinition
 {
 	private static final IFileElementType FILE_ELEMENT = new IFileElementType(CfsLanguage.INSTANCE);
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return CfsLanguage.INSTANCE;
+	}
 
 	@Nonnull
 	@Override

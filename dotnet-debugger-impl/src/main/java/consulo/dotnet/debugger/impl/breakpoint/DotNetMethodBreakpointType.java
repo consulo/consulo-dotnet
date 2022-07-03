@@ -16,6 +16,7 @@
 
 package consulo.dotnet.debugger.impl.breakpoint;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.dotnet.debugger.impl.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.impl.breakpoint.ui.DotNetMethodBreakpointPropertiesPanel;
@@ -25,6 +26,7 @@ import consulo.execution.debug.breakpoint.ui.XBreakpointCustomPropertiesPanel;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,6 +35,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 03.05.2016
  */
+@ExtensionImpl
 public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethodBreakpointProperties>
 {
 	@Nonnull
@@ -41,7 +44,8 @@ public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethod
 		return EXTENSION_POINT_NAME.findExtensionOrFail(DotNetMethodBreakpointType.class);
 	}
 
-	private DotNetMethodBreakpointType()
+	@Inject
+	DotNetMethodBreakpointType()
 	{
 		super("dotnet-method-breakpoint", ".NET Method Breakpoints");
 	}

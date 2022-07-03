@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.dll;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
@@ -26,6 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 12.12.13.
  */
+@ExtensionImpl
 public class DotNetModuleFileTypeFactory extends FileTypeFactory
 {
 	@Override

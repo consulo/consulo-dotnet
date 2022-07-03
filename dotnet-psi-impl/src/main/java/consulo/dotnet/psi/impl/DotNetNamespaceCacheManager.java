@@ -17,28 +17,31 @@
 package consulo.dotnet.psi.impl;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcher;
+import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcherExtension;
 import consulo.dotnet.psi.impl.stub.DotNetNamespaceStubUtil;
 import consulo.dotnet.psi.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.psi.resolve.DotNetPsiSearcher;
+import consulo.dotnet.psi.resolve.DotNetPsiSearcherExtension;
 import consulo.language.psi.AnyPsiChangeListener;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.IdFilter;
 import consulo.language.psi.stub.StubIndex;
 import consulo.language.psi.stub.StubIndexKey;
-import consulo.module.content.ProjectTopics;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -56,6 +59,8 @@ import java.util.function.Predicate;
  * @since 03.03.2016
  */
 @Singleton
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class DotNetNamespaceCacheManager implements Disposable
 {
 	@Nonnull
@@ -69,14 +74,14 @@ public class DotNetNamespaceCacheManager implements Disposable
 		@Nonnull
 		@RequiredReadAction
 		Set<PsiElement> compute(@Nonnull Project project,
-								@Nullable final IndexBasedDotNetPsiSearcher searcher,
+								@Nullable final IndexBasedDotNetPsiSearcherExtension searcher,
 								@Nonnull final String indexKey,
 								@Nonnull final String thisQName,
 								@Nonnull final SearchScope scope);
 
 		@RequiredReadAction
 		default boolean process(@Nonnull Project project,
-								@Nullable final IndexBasedDotNetPsiSearcher searcher,
+								@Nullable final IndexBasedDotNetPsiSearcherExtension searcher,
 								@Nonnull final String indexKey,
 								@Nonnull final String thisQName,
 								@Nonnull final SearchScope scope,
@@ -105,7 +110,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		@Nonnull
 		@Override
 		public Set<PsiElement> compute(@Nonnull final Project project,
-									   @Nullable final IndexBasedDotNetPsiSearcher searcher,
+									   @Nullable final IndexBasedDotNetPsiSearcherExtension searcher,
 									   @Nonnull final String indexKey,
 									   @Nonnull final String thisQName,
 									   @Nonnull final SearchScope scope)
@@ -122,7 +127,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		@RequiredReadAction
 		@Override
 		public boolean process(@Nonnull Project project,
-							   @Nullable IndexBasedDotNetPsiSearcher searcher,
+							   @Nullable IndexBasedDotNetPsiSearcherExtension searcher,
 							   @Nonnull String indexKey,
 							   @Nonnull String thisQName,
 							   @Nonnull SearchScope scope,
@@ -191,7 +196,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		@Nonnull
 		@Override
 		public Set<PsiElement> compute(@Nonnull final Project project,
-									   @Nullable final IndexBasedDotNetPsiSearcher searcher,
+									   @Nullable final IndexBasedDotNetPsiSearcherExtension searcher,
 									   @Nonnull final String indexKey,
 									   @Nonnull final String thisQName,
 									   @Nonnull final SearchScope scope)
@@ -208,7 +213,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		@RequiredReadAction
 		@Override
 		public boolean process(@Nonnull Project project,
-							   @Nullable IndexBasedDotNetPsiSearcher searcher,
+							   @Nullable IndexBasedDotNetPsiSearcherExtension searcher,
 							   @Nonnull String indexKey,
 							   @Nonnull String thisQName,
 							   @Nonnull SearchScope scope,
@@ -276,7 +281,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		}
 
 		MessageBusConnection connect = project.getMessageBus().connect();
-		connect.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener()
+		connect.subscribe(ModuleRootListener.class, new ModuleRootListener()
 		{
 			@Override
 			public void rootsChanged(ModuleRootEvent event)
@@ -285,7 +290,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 			}
 		});
 
-		connect.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener()
+		connect.subscribe(DumbModeListener.class, new DumbModeListener()
 		{
 			@Override
 			public void exitDumbMode()
@@ -294,7 +299,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 			}
 		});
 
-		project.getMessageBus().connect().subscribe(PsiManager.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener()
+		project.getMessageBus().connect().subscribe(AnyPsiChangeListener.class, new AnyPsiChangeListener()
 		{
 			@Override
 			public void beforePsiChanged(boolean isPhysical)
@@ -314,7 +319,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	@RequiredReadAction
 	@Nullable
-	public DotNetNamespaceAsElement computeNamespace(List<DotNetPsiSearcher> searchers, String qName, SearchScope scope)
+	public DotNetNamespaceAsElement computeNamespace(List<DotNetPsiSearcherExtension> searchers, String qName, SearchScope scope)
 	{
 		Map<SearchScope, SimpleReference<DotNetNamespaceAsElement>> map = myNamespacesCache.get(qName);
 		if(map != null)
@@ -339,7 +344,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	@Nullable
 	@RequiredReadAction
-	private static DotNetNamespaceAsElement computeNamespaceImpl(Project project, List<DotNetPsiSearcher> searchers, String qName, SearchScope scope)
+	private static DotNetNamespaceAsElement computeNamespaceImpl(Project project, List<DotNetPsiSearcherExtension> searchers, String qName, SearchScope scope)
 	{
 		if(DumbService.isDumb(project))
 		{
@@ -347,7 +352,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 		}
 
 		List<DotNetNamespaceAsElement> namespaceAsElements = new SmartList<>();
-		for(DotNetPsiSearcher searcher : searchers)
+		for(DotNetPsiSearcherExtension searcher : searchers)
 		{
 			DotNetNamespaceAsElement namespace = searcher.findNamespace(qName, scope);
 			if(namespace != null)
@@ -370,7 +375,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	@RequiredReadAction
 	@Nonnull
-	public Set<DotNetTypeDeclaration> computeTypes(@Nonnull List<DotNetPsiSearcher> searchers, String qName, SearchScope scope)
+	public Set<DotNetTypeDeclaration> computeTypes(@Nonnull List<DotNetPsiSearcherExtension> searchers, String qName, SearchScope scope)
 	{
 		Map<SearchScope, Set<DotNetTypeDeclaration>> map = myTypesCache.get(qName);
 		if(map != null)
@@ -395,10 +400,10 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	@Nonnull
 	@RequiredReadAction
-	private static Set<DotNetTypeDeclaration> computeTypesImpl(List<DotNetPsiSearcher> searchers, String qName, SearchScope scope)
+	private static Set<DotNetTypeDeclaration> computeTypesImpl(List<DotNetPsiSearcherExtension> searchers, String qName, SearchScope scope)
 	{
 		Set<DotNetTypeDeclaration> typeDeclarations = new HashSet<>();
-		for(DotNetPsiSearcher searcher : searchers)
+		for(DotNetPsiSearcherExtension searcher : searchers)
 		{
 			typeDeclarations.addAll(searcher.findTypesImpl(qName, scope));
 		}
@@ -408,7 +413,7 @@ public class DotNetNamespaceCacheManager implements Disposable
 
 	@Nonnull
 	@RequiredReadAction
-	public Set<PsiElement> computeElements(@Nullable IndexBasedDotNetPsiSearcher searcher,
+	public Set<PsiElement> computeElements(@Nullable IndexBasedDotNetPsiSearcherExtension searcher,
 										   @Nonnull DotNetNamespaceAsElement key,
 										   @Nonnull String indexKey,
 										   @Nonnull String thisQName,

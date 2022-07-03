@@ -17,11 +17,12 @@
 package consulo.msil.impl.lang.psi.impl.resolve;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.resolve.DotNetNamespaceAsElement;
-import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcher;
+import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcherExtension;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.msil.impl.lang.psi.impl.MsilNamespaceAsElementImpl;
@@ -39,10 +40,11 @@ import java.util.Collections;
  * @author VISTALL
  * @since 13.07.14
  */
-public class MsilPsiSearcher extends IndexBasedDotNetPsiSearcher
+@ExtensionImpl
+public class MsilPsiSearcherExtension extends IndexBasedDotNetPsiSearcherExtension
 {
 	@Inject
-	public MsilPsiSearcher(Project project)
+	public MsilPsiSearcherExtension(Project project)
 	{
 		super(project);
 	}

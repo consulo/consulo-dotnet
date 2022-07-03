@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.compiler;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.TranslatingCompiler;
@@ -47,6 +48,7 @@ import java.util.Arrays;
  * @author VISTALL
  * @since 26.11.13.
  */
+@ExtensionImpl(id = "dotnet-compiler")
 public class DotNetCompiler implements TranslatingCompiler
 {
 	public static final Logger LOGGER = Logger.getInstance(DotNetCompiler.class);

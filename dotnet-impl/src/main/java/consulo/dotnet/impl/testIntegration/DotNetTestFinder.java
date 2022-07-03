@@ -17,6 +17,7 @@
 package consulo.dotnet.impl.testIntegration;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.psi.DotNetInheritUtil;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.resolve.DotNetShortNameSearcher;
@@ -39,6 +40,7 @@ import java.util.regex.Pattern;
  * @author VISTALL
  * @since 03.04.2016
  */
+@ExtensionImpl
 public class DotNetTestFinder implements TestFinder
 {
 	@Nullable

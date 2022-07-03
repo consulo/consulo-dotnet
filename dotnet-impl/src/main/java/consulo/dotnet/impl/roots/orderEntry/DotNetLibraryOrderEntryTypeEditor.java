@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.roots.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.ide.setting.module.CustomOrderEntryTypeEditor;
@@ -31,6 +32,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 06-Jun-16
  */
+@ExtensionImpl
 public class DotNetLibraryOrderEntryTypeEditor implements CustomOrderEntryTypeEditor<DotNetLibraryOrderEntryModel>
 {
 	@Nonnull
@@ -47,5 +49,12 @@ public class DotNetLibraryOrderEntryTypeEditor implements CustomOrderEntryTypeEd
 			it.append(model.getPresentableName());
 			it.setIcon(icon);
 		};
+	}
+
+	@Nonnull
+	@Override
+	public String getOrderTypeId()
+	{
+		return "dot-net-library";
 	}
 }

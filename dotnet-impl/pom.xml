@@ -48,9 +48,6 @@
 				<extensions>true</extensions>
 				<configuration>
 					<repositoryChannel>valhalla</repositoryChannel>
-					<dependencies>
-						<dependency>com.intellij.xml</dependency>
-					</dependencies>
 					<packaging>
 						<skip>${dev.mode}</skip>
 						<version>${build.number}</version>

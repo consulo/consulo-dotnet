@@ -16,6 +16,7 @@
 
 package consulo.dotnet.cfs.lang;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.cfs.lang.lexer.CfsLexer;
 import consulo.dotnet.cfs.lang.parser.CfsParser;
 import consulo.language.lexer.Lexer;
@@ -33,6 +34,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 12.03.2015
  */
+@ExtensionImpl
 public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements LanguageVersionWithParsing, LanguageVersionWithDefinition
 {
 	public IndexCfsLanguageVersion()

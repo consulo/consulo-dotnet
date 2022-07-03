@@ -1,5 +1,8 @@
 package consulo.dotnet.impl.documentation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.dotnet.documentation.DotNetDocumentationResolver;
 import consulo.ide.ServiceManager;
@@ -22,6 +25,8 @@ import java.util.List;
  * @since 13.05.14
  */
 @Singleton
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
 public class DotNetDocumentationCache
 {
 	@Nonnull

@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.dll.vfs;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.ide.impl.vfs.impl.archive.ArchiveEntry;
 import consulo.ide.impl.vfs.impl.archive.ArchiveFile;
@@ -25,6 +26,7 @@ import consulo.internal.dotnet.asm.parse.MSILParseException;
 import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveEntry;
 import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +39,8 @@ import java.util.Iterator;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class DotNetArchiveFileSystem extends ArchiveFileSystemBase
+@ExtensionImpl
+public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements VirtualFileSystemWithMacroSupport
 {
 	private static class DotNetArchiveFileWrapper implements ArchiveFile
 	{

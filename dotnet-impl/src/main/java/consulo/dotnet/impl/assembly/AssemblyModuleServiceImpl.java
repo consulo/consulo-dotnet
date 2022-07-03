@@ -1,6 +1,7 @@
 package consulo.dotnet.impl.assembly;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.dotnet.assembly.AssemblyModule;
 import consulo.dotnet.assembly.AssemblyModuleService;
 import consulo.dotnet.dll.DotNetModuleFileType;
@@ -21,6 +22,7 @@ import javax.annotation.Nonnull;
  * @since 2020-08-02
  */
 @Singleton
+@ServiceImpl
 public class AssemblyModuleServiceImpl implements AssemblyModuleService
 {
 	private final Project myProject;

@@ -16,6 +16,8 @@
 
 package consulo.dotnet.impl.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 
@@ -27,9 +29,10 @@ import java.util.List;
  * @author VISTALL
  * @since 25.09.14
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DotNetDependencyCopierExtension
 {
-	ExtensionPointName<DotNetDependencyCopierExtension> EP_NAME = ExtensionPointName.create("consulo.dotnet.dependencyCopierExtension");
+	ExtensionPointName<DotNetDependencyCopierExtension> EP_NAME = ExtensionPointName.create(DotNetDependencyCopierExtension.class);
 
 	@Nonnull
 	List<File> collectDependencies(@Nonnull Module module);

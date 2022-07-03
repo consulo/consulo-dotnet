@@ -16,8 +16,9 @@
 
 package consulo.dotnet.impl.packageSupport;
 
-import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.impl.psi.impl.DotNetPackage;
+import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 10.01.14
  */
+@ExtensionImpl
 public class DotNetPackageSupportProvider implements PsiPackageSupportProvider
 {
 	@Override

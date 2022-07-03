@@ -16,6 +16,7 @@
 
 package consulo.dotnet.run.impl.filters;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.execution.ui.console.ConsoleFilterProviderEx;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 16.01.14
  */
+@ExtensionImpl
 public class DotNetConsoleFilterProvider implements ConsoleFilterProviderEx
 {
 	@Override

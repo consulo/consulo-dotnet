@@ -16,6 +16,7 @@
 
 package consulo.msil;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21.05.14
  */
+@ExtensionImpl
 public class MsilFileTypeFactory extends FileTypeFactory
 {
 	@Override

@@ -1,11 +1,14 @@
 package consulo.dotnet.psi.internal;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.PsiModificationTrackerListener;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
@@ -23,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2020-10-25
  */
 @Singleton
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class DotNetInheritCache implements Disposable
 {
 	@Nonnull
@@ -36,7 +41,7 @@ public class DotNetInheritCache implements Disposable
 	@Inject
 	public DotNetInheritCache(Project project)
 	{
-		project.getMessageBus().connect(this).subscribe(PsiModificationTracker.TOPIC, myResult::clear);
+		project.getMessageBus().connect(this).subscribe(PsiModificationTrackerListener.class, myResult::clear);
 	}
 
 	@RequiredReadAction

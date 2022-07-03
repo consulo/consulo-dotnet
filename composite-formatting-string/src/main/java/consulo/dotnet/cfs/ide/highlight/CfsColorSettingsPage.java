@@ -1,5 +1,6 @@
 package consulo.dotnet.cfs.ide.highlight;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.TextAttributesKey;
@@ -21,6 +22,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 25.03.2015
  */
+@ExtensionImpl
 public class CfsColorSettingsPage implements ColorSettingsPage
 {
 	private AttributesDescriptor[] myAttributesDescriptors = new AttributesDescriptor[]{

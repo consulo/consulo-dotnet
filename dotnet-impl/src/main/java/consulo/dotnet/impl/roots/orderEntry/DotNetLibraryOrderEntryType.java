@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.roots.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.CustomOrderEntryTypeProvider;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21.08.14
  */
+@ExtensionImpl
 public class DotNetLibraryOrderEntryType implements CustomOrderEntryTypeProvider<DotNetLibraryOrderEntryModel>
 {
 	@Nonnull

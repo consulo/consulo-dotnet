@@ -17,6 +17,7 @@
 package consulo.dotnet.impl.ide;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 29.03.14
  */
+@ExtensionImpl
 public class DotNetIconDescriptorUpdater implements IconDescriptorUpdater
 {
 	@RequiredReadAction

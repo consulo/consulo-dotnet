@@ -29,7 +29,7 @@ import consulo.language.psi.StubBasedPsiElement;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.StubElement;
 import consulo.navigation.ItemPresentation;
-import consulo.navigation.ItemPresentationProviders;
+import consulo.navigation.ItemPresentationProvider;
 import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nonnull;
@@ -54,7 +54,7 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 	@Override
 	public ItemPresentation getPresentation()
 	{
-		return ItemPresentationProviders.getItemPresentation(this);
+		return ItemPresentationProvider.getItemPresentation(this);
 	}
 
 	@RequiredReadAction

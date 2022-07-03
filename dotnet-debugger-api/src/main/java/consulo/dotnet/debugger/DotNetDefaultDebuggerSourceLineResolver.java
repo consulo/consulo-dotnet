@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.dotnet.debugger.impl;
+package consulo.dotnet.debugger;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 
@@ -32,7 +32,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 23.07.2015
  */
-public class DotNetDefaultDebuggerSourceLineResolver extends DotNetDebuggerSourceLineResolver
+class DotNetDefaultDebuggerSourceLineResolver implements DotNetDebuggerSourceLineResolver
 {
 	@RequiredReadAction
 	@Override
@@ -67,5 +67,12 @@ public class DotNetDefaultDebuggerSourceLineResolver extends DotNetDebuggerSourc
 	public Set<PsiElement> getAllExecutableChildren(@Nonnull PsiElement root)
 	{
 		return Collections.emptySet();
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return Language.ANY;
 	}
 }

@@ -16,6 +16,7 @@
 
 package consulo.msil.impl.representation;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import consulo.msil.impl.representation.fileSystem.MsilFileRepresentationVirtualFile;
@@ -29,6 +30,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 03.06.14
  */
+@ExtensionImpl
 public class MsilRepresentationHighlightingSettingProvider extends DefaultHighlightingSettingProvider
 {
 	@Nullable

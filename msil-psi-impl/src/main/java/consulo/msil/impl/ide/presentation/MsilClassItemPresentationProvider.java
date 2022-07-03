@@ -1,12 +1,13 @@
 package consulo.msil.impl.ide.presentation;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.util.Iconable;
 import consulo.dotnet.psi.DotNetElementPresentationUtil;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
-import consulo.navigation.NavigationItem;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
@@ -17,7 +18,8 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 05.07.2015
  */
-public class MsilClassItemPresentationProvider implements ItemPresentationProvider<NavigationItem>
+@ExtensionImpl
+public class MsilClassItemPresentationProvider implements ItemPresentationProvider<MsilClassEntry>
 {
 	private static class Item implements ItemPresentation
 	{
@@ -55,8 +57,16 @@ public class MsilClassItemPresentationProvider implements ItemPresentationProvid
 		}
 	}
 
+	@Nonnull
 	@Override
-	public ItemPresentation getPresentation(NavigationItem item)
+	public Class<MsilClassEntry> getItemClass()
+	{
+		return MsilClassEntry.class;
+	}
+
+	@Nonnull
+	@Override
+	public ItemPresentation getPresentation(MsilClassEntry item)
 	{
 		return new Item((DotNetTypeDeclaration) item);
 	}

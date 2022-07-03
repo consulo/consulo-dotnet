@@ -16,6 +16,7 @@
 
 package consulo.dotnet.psi.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
 import consulo.dotnet.psi.*;
 import consulo.dotnet.util.ArrayUtil2;
@@ -36,8 +37,16 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 31.08.14
  */
+@ExtensionImpl
 public class MultiHostInjectorByAttribute implements MultiHostInjector
 {
+	@Nonnull
+	@Override
+	public Class<? extends PsiElement> getElementClass()
+	{
+		return DotNetCallArgumentList.class;
+	}
+
 	@Override
 	public void injectLanguages(@Nonnull MultiHostRegistrar multiHostRegistrar, @Nonnull PsiElement element)
 	{

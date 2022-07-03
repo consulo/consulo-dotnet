@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.module.dependency;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.util.function.Computable;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
@@ -45,6 +46,7 @@ import java.util.TreeMap;
  * @author VISTALL
  * @since 28.09.14
  */
+@ExtensionImpl
 public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDependencyActionProvider<List<Map.Entry<String, String>>, DotNetLibraryModuleDependencyContext>
 {
 	private static class SelectDialog extends DialogWrapper

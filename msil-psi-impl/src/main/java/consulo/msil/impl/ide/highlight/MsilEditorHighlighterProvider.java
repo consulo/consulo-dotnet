@@ -16,9 +16,11 @@
 
 package consulo.msil.impl.ide.highlight;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.EditorHighlighterProvider;
+import consulo.msil.MsilFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -30,12 +32,21 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 21.05.14
  */
+@ExtensionImpl
 public class MsilEditorHighlighterProvider implements EditorHighlighterProvider
 {
+	@Nonnull
 	@Override
 	public EditorHighlighter getEditorHighlighter(
 			@Nullable Project project, @Nonnull FileType fileType, @Nullable VirtualFile virtualFile, @Nonnull EditorColorsScheme editorColorsScheme)
 	{
 		return new MsilEditorHighlighter(editorColorsScheme);
+	}
+
+	@Nonnull
+	@Override
+	public FileType getFileType()
+	{
+		return MsilFileType.INSTANCE;
 	}
 }

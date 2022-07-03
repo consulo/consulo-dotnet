@@ -17,6 +17,7 @@
 package consulo.msil.impl.representation;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -41,6 +42,7 @@ import java.util.List;
  * @since 27.05.14
  */
 @Singleton
+@ServiceImpl
 public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationManager implements Disposable
 {
 	private final VirtualFileManager myVirtualFileManager;

@@ -16,15 +16,16 @@
 
 package consulo.msil.impl.lang.psi.impl.resolve;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.psi.resolve.DotNetShortNameSearcher;
+import consulo.dotnet.psi.resolve.DotNetShortNameSearcherExtension;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.IdFilter;
 import consulo.language.psi.stub.StubIndex;
-import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilTypeByNameIndex;
+import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
@@ -36,12 +37,15 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 08.07.2015
  */
-public class MsilShortNameSearcher extends DotNetShortNameSearcher
+@ExtensionImpl
+public class MsilShortNameSearcher implements DotNetShortNameSearcherExtension
 {
+	private final Project myProject;
+
 	@Inject
 	public MsilShortNameSearcher(Project project)
 	{
-		super(project);
+		myProject = project;
 	}
 
 	@Override

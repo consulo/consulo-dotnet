@@ -16,6 +16,8 @@
 
 package consulo.dotnet.psi.resolve;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.function.Processors;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -33,7 +35,8 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 08.07.2015
  */
-public abstract class DotNetShortNameSearcher
+@ServiceAPI(ComponentScope.PROJECT)
+public abstract class DotNetShortNameSearcher implements DotNetShortNameSearcherExtension
 {
 	@Nonnull
 	public static DotNetShortNameSearcher getInstance(@Nonnull Project project)

@@ -16,6 +16,8 @@
 
 package consulo.dotnet.psi.ui.chooser;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.editor.ui.TreeChooser;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -27,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 29.04.2016
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class DotNetTypeChooserFactory
 {
 	@Nonnull

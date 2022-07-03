@@ -18,7 +18,7 @@ package consulo.dotnet.psi.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetQualifiedElement;
-import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcher;
+import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcherExtension;
 import consulo.dotnet.psi.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.psi.resolve.DotNetPsiSearcher;
 import consulo.language.Language;
@@ -46,9 +46,9 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	protected String myIndexKey;
 
 	@Nonnull
-	private final IndexBasedDotNetPsiSearcher mySearcher;
+	private final IndexBasedDotNetPsiSearcherExtension mySearcher;
 
-	protected IndexBasedDotNetNamespaceAsElement(@Nonnull Project project, @Nonnull Language language, @Nonnull String indexKey, @Nonnull String qName, @Nonnull IndexBasedDotNetPsiSearcher searcher)
+	protected IndexBasedDotNetNamespaceAsElement(@Nonnull Project project, @Nonnull Language language, @Nonnull String indexKey, @Nonnull String qName, @Nonnull IndexBasedDotNetPsiSearcherExtension searcher)
 	{
 		super(project, language, qName);
 		myIndexKey = indexKey;

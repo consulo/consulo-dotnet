@@ -16,14 +16,16 @@
 
 package consulo.dotnet.impl.library;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.BinariesOrderRootType;
-import consulo.ide.impl.idea.openapi.roots.libraries.ui.FileTypeBasedRootFilter;
+import consulo.content.library.ui.FileTypeBasedRootFilter;
 import consulo.msil.MsilFileType;
 
 /**
  * @author VISTALL
  * @since 01.02.14
  */
+@ExtensionImpl
 public class DotNetLibraryRootDetector extends FileTypeBasedRootFilter
 {
 	public DotNetLibraryRootDetector()

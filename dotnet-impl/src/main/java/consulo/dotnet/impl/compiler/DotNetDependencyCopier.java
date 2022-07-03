@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.compiler;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ReadAction;
 import consulo.compiler.*;
 import consulo.compiler.scope.CompileScope;
@@ -27,7 +28,6 @@ import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.util.ModuleUtilCore;
-import consulo.logging.Logger;
 import consulo.module.Module;
 
 import javax.annotation.Nonnull;
@@ -43,15 +43,14 @@ import java.util.Set;
  * @author VISTALL
  * @since 26.11.13.
  */
+@ExtensionImpl(id = "dotnet-dependency", order = "after dotnet-compiler")
 public class DotNetDependencyCopier implements FileProcessingCompiler, PackagingCompiler
 {
-	public static final Logger LOGGER = Logger.getInstance(DotNetDependencyCopier.class);
-
 	@Nonnull
 	@Override
 	public String getDescription()
 	{
-		return "#";
+		return "DotNetDependencyCopier";
 	}
 
 	@Override

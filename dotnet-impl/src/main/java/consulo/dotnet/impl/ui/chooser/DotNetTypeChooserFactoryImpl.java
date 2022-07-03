@@ -16,11 +16,13 @@
 
 package consulo.dotnet.impl.ui.chooser;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.ui.chooser.DotNetTypeChooserFactory;
 import consulo.language.editor.ui.TreeChooser;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -30,11 +32,12 @@ import javax.annotation.Nonnull;
  * @since 29.04.2016
  */
 @Singleton
+@ServiceImpl
 public class DotNetTypeChooserFactoryImpl extends DotNetTypeChooserFactory
 {
 	private Project myProject;
 
-	@jakarta.inject.Inject
+	@Inject
 	public DotNetTypeChooserFactoryImpl(Project project)
 	{
 		myProject = project;

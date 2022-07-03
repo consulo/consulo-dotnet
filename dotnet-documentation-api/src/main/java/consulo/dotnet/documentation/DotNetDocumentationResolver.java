@@ -17,6 +17,8 @@
 package consulo.dotnet.documentation;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.virtualFileSystem.VirtualFile;
@@ -30,9 +32,10 @@ import java.util.List;
  * @author VISTALL
  * @since 13.05.14
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DotNetDocumentationResolver
 {
-	ExtensionPointName<DotNetDocumentationResolver> EP_NAME = ExtensionPointName.create("consulo.dotnet.documentationResolver");
+	ExtensionPointName<DotNetDocumentationResolver> EP_NAME = ExtensionPointName.create(DotNetDocumentationResolver.class);
 
 	@Nullable
 	@RequiredReadAction

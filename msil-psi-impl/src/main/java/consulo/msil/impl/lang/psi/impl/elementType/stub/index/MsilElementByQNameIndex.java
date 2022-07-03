@@ -16,6 +16,7 @@
 
 package consulo.msil.impl.lang.psi.impl.elementType.stub.index;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
@@ -26,6 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 23.09.14
  */
+@ExtensionImpl
 public class MsilElementByQNameIndex extends StringStubIndexExtension<DotNetQualifiedElement>
 {
 	@Nonnull

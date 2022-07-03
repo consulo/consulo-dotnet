@@ -16,6 +16,7 @@
 
 package consulo.dotnet.debugger.impl.runner;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.dotnet.debugger.impl.DotNetConfigurationWithDebug;
 import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
@@ -38,6 +39,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 16.12.13.
  */
+@ExtensionImpl(id = "dotnet-debugger")
 public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 {
 	@Nonnull

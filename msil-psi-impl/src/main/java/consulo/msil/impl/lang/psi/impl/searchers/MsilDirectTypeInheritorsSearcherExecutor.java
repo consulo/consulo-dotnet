@@ -16,16 +16,17 @@
 package consulo.msil.impl.lang.psi.impl.searchers;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
-import consulo.application.util.query.QueryExecutor;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.DotNetTypeList;
 import consulo.dotnet.psi.search.searches.DirectTypeInheritorsSearch;
+import consulo.dotnet.psi.search.searches.DirectTypeInheritorsSearchExecutor;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -35,7 +36,8 @@ import consulo.util.lang.StringUtil;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class MsilDirectTypeInheritorsSearcherExecutor implements QueryExecutor<DotNetTypeDeclaration, DirectTypeInheritorsSearch.SearchParameters>
+@ExtensionImpl
+public class MsilDirectTypeInheritorsSearcherExecutor implements DirectTypeInheritorsSearchExecutor
 {
 	@Override
 	public boolean execute(@Nonnull final DirectTypeInheritorsSearch.SearchParameters p, @Nonnull final Processor<? super DotNetTypeDeclaration> consumer)

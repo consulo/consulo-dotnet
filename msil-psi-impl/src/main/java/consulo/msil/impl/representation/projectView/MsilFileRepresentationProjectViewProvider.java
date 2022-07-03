@@ -16,6 +16,7 @@
 
 package consulo.msil.impl.representation.projectView;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.language.psi.PsiElement;
 import consulo.msil.lang.psi.MsilFile;
@@ -38,6 +39,7 @@ import java.util.List;
  * @author VISTALL
  * @since 27.05.14
  */
+@ExtensionImpl
 public class MsilFileRepresentationProjectViewProvider implements SelectableTreeStructureProvider
 {
 	private final Project myProject;

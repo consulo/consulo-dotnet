@@ -16,10 +16,11 @@
 
 package consulo.dotnet.psi.impl.resolve.impl;
 
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ServiceImpl;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.resolve.DotNetShortNameSearcher;
+import consulo.dotnet.psi.resolve.DotNetShortNameSearcherExtension;
 import consulo.language.psi.stub.IdFilter;
 import consulo.project.Project;
 import jakarta.inject.Inject;
@@ -34,10 +35,9 @@ import java.util.function.Predicate;
  * @since 08.07.2015
  */
 @Singleton
+@ServiceImpl
 public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 {
-	private static final ExtensionPointName<DotNetShortNameSearcher> EP_NAME = ExtensionPointName.create("consulo.dotnet.shortNameSearcher");
-
 	@Inject
 	public DotNetShortNameSearcherImpl(Project project)
 	{
@@ -47,7 +47,7 @@ public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 	@Override
 	public void collectTypeNames(@Nonnull Predicate<String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter)
 	{
-		for(DotNetShortNameSearcher nameSearcher : EP_NAME.getExtensionList(myProject))
+		for(DotNetShortNameSearcherExtension nameSearcher : myProject.getExtensionList(DotNetShortNameSearcherExtension.class))
 		{
 			nameSearcher.collectTypeNames(processor, scope, filter);
 		}
@@ -59,7 +59,7 @@ public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 			@Nullable IdFilter filter,
 			@Nonnull Predicate<DotNetTypeDeclaration> processor)
 	{
-		for(DotNetShortNameSearcher nameSearcher : EP_NAME.getExtensionList(myProject))
+		for(DotNetShortNameSearcherExtension nameSearcher : myProject.getExtensionList(DotNetShortNameSearcherExtension.class))
 		{
 			nameSearcher.collectTypes(key, scope, filter, processor);
 		}

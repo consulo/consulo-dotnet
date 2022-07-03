@@ -16,7 +16,9 @@
 
 package consulo.dotnet.cfs.lang;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.BracePair;
+import consulo.language.Language;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiFile;
@@ -27,6 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 31.08.14
  */
+@ExtensionImpl
 public class CfsPairedBraceMatcher implements PairedBraceMatcher
 {
 	private static BracePair[] ourPairs = new BracePair[]{
@@ -49,5 +52,12 @@ public class CfsPairedBraceMatcher implements PairedBraceMatcher
 	public int getCodeConstructStart(PsiFile file, int i)
 	{
 		return i;
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return CfsLanguage.INSTANCE;
 	}
 }

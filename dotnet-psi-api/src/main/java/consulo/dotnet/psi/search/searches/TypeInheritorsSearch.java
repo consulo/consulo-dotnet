@@ -18,20 +18,17 @@ package consulo.dotnet.psi.search.searches;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.query.EmptyQuery;
 import consulo.application.util.query.ExtensibleQueryFactory;
 import consulo.application.util.query.Query;
-import consulo.application.util.query.QueryExecutor;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.psi.DotNetModifier;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.resolve.DotNetPsiSearcher;
-import consulo.language.psi.PsiBundle;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.logging.Logger;
@@ -57,37 +54,6 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 	public static final Logger LOGGER = Logger.getInstance(TypeInheritorsSearch.class);
 
 	public static final TypeInheritorsSearch INSTANCE = new TypeInheritorsSearch();
-
-	static
-	{
-		INSTANCE.registerExecutor(new QueryExecutor<DotNetTypeDeclaration, SearchParameters>()
-		{
-			@Override
-			public boolean execute(@Nonnull final SearchParameters parameters, @Nonnull final Processor<? super DotNetTypeDeclaration> consumer)
-			{
-				final String baseVmQName = parameters.getVmQName();
-				final SearchScope searchScope = parameters.getScope();
-
-				TypeInheritorsSearch.LOGGER.assertTrue(searchScope != null);
-
-				ProgressIndicator progress = ProgressIndicatorProvider.getGlobalProgressIndicator();
-				if(progress != null)
-				{
-					progress.pushState();
-					progress.setText(PsiBundle.message("psi.search.inheritors.of.class.progress", baseVmQName));
-				}
-
-				boolean result = processInheritors(consumer, baseVmQName, searchScope, parameters);
-
-				if(progress != null)
-				{
-					progress.popState();
-				}
-
-				return result;
-			}
-		});
-	}
 
 	public static class SearchParameters
 	{
@@ -161,7 +127,7 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 
 	private TypeInheritorsSearch()
 	{
-		super("consulo.dotnet");
+		super(TypeInheritorsSearchExecutor.class);
 	}
 
 	@Nonnull
@@ -226,35 +192,34 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
 	}
 
 	@RequiredReadAction
-	private static boolean processInheritors(@Nonnull final Processor<? super DotNetTypeDeclaration> consumer,
-											 @Nonnull final String baseVmQName,
-											 @Nonnull final SearchScope searchScope,
-											 @Nonnull final SearchParameters parameters)
+	static boolean processInheritors(@Nonnull final Processor<? super DotNetTypeDeclaration> consumer,
+									 @Nonnull final String baseVmQName,
+									 @Nonnull final SearchScope searchScope,
+									 @Nonnull final SearchParameters parameters)
 	{
 
 		if(DotNetTypes.System.Object.equals(baseVmQName))
 		{
-			return AllTypesSearch.search(searchScope, parameters.getProject(), parameters.getNameCondition()).forEach(new
-																															  Processor<DotNetTypeDeclaration>()
-																															  {
-																																  @Override
-																																  public boolean process(final DotNetTypeDeclaration aClass)
-																																  {
-																																	  ProgressIndicatorProvider.checkCanceled();
-																																	  final String qname1 = ApplicationManager.getApplication()
-																																			  .runReadAction(new Computable<String>()
-																																			  {
-																																				  @Override
-																																				  @Nullable
-																																				  public String compute()
-																																				  {
-																																					  return aClass.getVmQName();
-																																				  }
-																																			  });
-																																	  return DotNetTypes.System.Object.equals(qname1) || consumer
-																																			  .process(parameters.myTransformer.apply(aClass));
-																																  }
-																															  });
+			return AllTypesSearch.search(searchScope, parameters.getProject(), parameters.getNameCondition()).forEach(new Processor<DotNetTypeDeclaration>()
+			{
+				@Override
+				public boolean process(final DotNetTypeDeclaration aClass)
+				{
+					ProgressIndicatorProvider.checkCanceled();
+					final String qname1 = ApplicationManager.getApplication()
+							.runReadAction(new Computable<String>()
+							{
+								@Override
+								@Nullable
+								public String compute()
+								{
+									return aClass.getVmQName();
+								}
+							});
+					return DotNetTypes.System.Object.equals(qname1) || consumer
+							.process(parameters.myTransformer.apply(aClass));
+				}
+			});
 		}
 
 		final SimpleReference<String> currentBase = SimpleReference.create(null);

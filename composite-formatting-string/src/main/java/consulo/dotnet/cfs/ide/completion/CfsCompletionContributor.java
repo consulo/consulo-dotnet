@@ -1,9 +1,12 @@
 package consulo.dotnet.cfs.ide.completion;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.dotnet.cfs.lang.CfsLanguage;
 import consulo.dotnet.cfs.lang.CfsTokens;
 import consulo.dotnet.psi.DotNetCallArgumentList;
 import consulo.dotnet.psi.DotNetExpression;
+import consulo.language.Language;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.inject.InjectedLanguageManager;
@@ -20,6 +23,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 24.03.2015
  */
+@ExtensionImpl
 public class CfsCompletionContributor extends CompletionContributor
 {
 	public CfsCompletionContributor()
@@ -67,5 +71,12 @@ public class CfsCompletionContributor extends CompletionContributor
 				}
 			}
 		});
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return CfsLanguage.INSTANCE;
 	}
 }

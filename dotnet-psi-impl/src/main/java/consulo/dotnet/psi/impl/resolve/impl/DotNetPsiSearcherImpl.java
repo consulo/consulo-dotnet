@@ -17,12 +17,13 @@
 package consulo.dotnet.psi.impl.resolve.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ServiceImpl;
 import consulo.content.scope.SearchScope;
-import consulo.dotnet.psi.impl.DotNetNamespaceCacheManager;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.psi.impl.DotNetNamespaceCacheManager;
 import consulo.dotnet.psi.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.psi.resolve.DotNetPsiSearcher;
+import consulo.dotnet.psi.resolve.DotNetPsiSearcherExtension;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -30,24 +31,22 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 13.07.14
  */
 @Singleton
+@ServiceImpl
 public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 {
-	private static final ExtensionPointName<DotNetPsiSearcher> EP_NAME = ExtensionPointName.create("consulo.dotnet.psiSearcher");
-
-	private List<DotNetPsiSearcher> mySearchers;
-	private DotNetNamespaceCacheManager myCacheManager;
+	private final Project myProject;
+	private final DotNetNamespaceCacheManager myCacheManager;
 
 	@Inject
 	public DotNetPsiSearcherImpl(Project project, DotNetNamespaceCacheManager cacheManager)
 	{
-		mySearchers = EP_NAME.getExtensionList(project);
+		myProject = project;
 		myCacheManager = cacheManager;
 	}
 
@@ -56,7 +55,7 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	@Override
 	public DotNetNamespaceAsElement findNamespace(@Nonnull String qName, @Nonnull SearchScope scope)
 	{
-		return myCacheManager.computeNamespace(mySearchers, qName, scope);
+		return myCacheManager.computeNamespace(myProject.getExtensionList(DotNetPsiSearcherExtension.class), qName, scope);
 	}
 
 	@RequiredReadAction
@@ -64,6 +63,6 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	@Override
 	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull SearchScope scope)
 	{
-		return myCacheManager.computeTypes(mySearchers, vmQName, scope);
+		return myCacheManager.computeTypes(myProject.getExtensionList(DotNetPsiSearcherExtension.class), vmQName, scope);
 	}
 }

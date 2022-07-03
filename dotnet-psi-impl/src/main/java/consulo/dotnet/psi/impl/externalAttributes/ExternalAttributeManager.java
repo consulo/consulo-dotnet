@@ -1,11 +1,13 @@
 package consulo.dotnet.psi.impl.externalAttributes;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.dotnet.externalAttributes.ExternalAttributeHolder;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectTopics;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -13,7 +15,6 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -31,6 +32,8 @@ import java.util.Map;
  * @since 27.07.2015
  */
 @Singleton
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class ExternalAttributeManager
 {
 	@Nonnull
@@ -47,7 +50,7 @@ public class ExternalAttributeManager
 	{
 		myProject = project;
 		MessageBusConnection connect = project.getMessageBus().connect();
-		connect.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener()
+		connect.subscribe(BulkFileListener.class, new BulkFileListener()
 		{
 			@Override
 			public void after(@Nonnull List<? extends VFileEvent> events)
@@ -59,7 +62,7 @@ public class ExternalAttributeManager
 			}
 		});
 
-		connect.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener()
+		connect.subscribe(ModuleRootListener.class, new ModuleRootListener()
 		{
 			@Override
 			public void rootsChanged(ModuleRootEvent event)

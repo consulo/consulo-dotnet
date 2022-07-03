@@ -16,6 +16,7 @@
 
 package consulo.dotnet.impl.compiler;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.scope.CompileModuleScopeFactory;
 import consulo.compiler.scope.FileIndexCompileScope;
 import consulo.compiler.scope.ModuleRootCompileScope;
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 20.12.13.
  */
+@ExtensionImpl
 public class DotNetCompileModuleScopeFactory implements CompileModuleScopeFactory
 {
 	@Nullable

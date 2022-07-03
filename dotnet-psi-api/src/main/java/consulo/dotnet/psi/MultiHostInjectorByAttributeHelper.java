@@ -16,6 +16,8 @@
 
 package consulo.dotnet.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 
@@ -26,9 +28,10 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 02.09.14
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface MultiHostInjectorByAttributeHelper
 {
-	ExtensionPointName<MultiHostInjectorByAttributeHelper> EP_NAME = ExtensionPointName.create("consulo.dotnet.injectionByAttributeHelper");
+	ExtensionPointName<MultiHostInjectorByAttributeHelper> EP_NAME = ExtensionPointName.create(MultiHostInjectorByAttributeHelper.class);
 
 	@Nullable
 	String getLanguageId(@Nonnull DotNetAttribute attribute);

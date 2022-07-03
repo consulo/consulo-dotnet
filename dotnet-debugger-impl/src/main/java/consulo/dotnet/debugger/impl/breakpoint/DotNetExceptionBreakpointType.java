@@ -16,6 +16,7 @@
 
 package consulo.dotnet.debugger.impl.breakpoint;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.dotnet.DotNetTypes;
@@ -43,6 +44,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 29.04.2016
  */
+@ExtensionImpl
 public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<DotNetExceptionBreakpointProperties>, DotNetExceptionBreakpointProperties>
 {
 	@Nonnull

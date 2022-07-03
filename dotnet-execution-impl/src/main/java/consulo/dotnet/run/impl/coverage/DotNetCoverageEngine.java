@@ -16,6 +16,7 @@
 
 package consulo.dotnet.run.impl.coverage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.dotnet.psi.DotNetFile;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -42,6 +43,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 10.01.15
  */
+@ExtensionImpl
 public class DotNetCoverageEngine extends CoverageEngine
 {
 	@Override
