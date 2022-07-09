@@ -29,8 +29,4 @@
 		<permission type="PROCESS_CREATE"/>
 		<permission type="SOCKET_BIND"/>
 	</permissions>
-
-	<extensions defaultExtensionNs="consulo">
-		<stubElementTypeHolder class="consulo.msil.impl.lang.psi.MsilStubElements"/>
-	</extensions>
 </consulo-plugin>
