@@ -14,7 +14,7 @@ import java.util.List;
  * @since 09-Jul-22
  */
 @ExtensionImpl
-public class MsilStubElementTypeHolder extends StubElementTypeHolder<MsilStubTokenSets>
+public class MsilStubElementTypeHolder extends StubElementTypeHolder<MsilStubElements>
 {
 	@Nullable
 	@Override
@@ -27,6 +27,6 @@ public class MsilStubElementTypeHolder extends StubElementTypeHolder<MsilStubTok
 	@Override
 	public List<ObjectStubSerializerProvider> loadSerializers()
 	{
-		return allFromStaticFields(MsilStubTokenSets.class, Field::get);
+		return allFromStaticFields(MsilStubElements.class, Field::get);
 	}
 }
