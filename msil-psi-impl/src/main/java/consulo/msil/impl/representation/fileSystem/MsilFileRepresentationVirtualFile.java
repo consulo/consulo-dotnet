@@ -18,7 +18,6 @@ package consulo.msil.impl.representation.fileSystem;
 
 import consulo.application.AccessRule;
 import consulo.application.ReadAction;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.msil.lang.psi.MsilFile;
@@ -26,6 +25,7 @@ import consulo.msil.representation.MsilFileRepresentationProvider;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.util.io.URLUtil;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
@@ -57,7 +57,7 @@ public class MsilFileRepresentationVirtualFile extends TextLightVirtualFileBase 
 		myMsilFileRepresentationProvider = msilFileRepresentationProvider;
 		setWritable(false);
 
-		myPresentablePath = NotNullLazyValue.createValue(() -> {
+		myPresentablePath = LazyValue.notNull(() -> {
 			String temp = myPath.substring(myPath.indexOf(URLUtil.ARCHIVE_SEPARATOR) + 2, myPath.length());
 			temp = temp.substring(0, temp.indexOf(MsilFileRepresentationVirtualFileSystem.SEPARATOR));
 			temp = temp.substring(0, temp.lastIndexOf("."));

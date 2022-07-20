@@ -16,7 +16,7 @@
 
 package consulo.dotnet.run.impl.coverage;
 
-import consulo.ide.impl.idea.coverage.SimpleCoverageAnnotator;
+import consulo.execution.coverage.SimpleCoverageAnnotator;
 import consulo.project.Project;
 
 /**

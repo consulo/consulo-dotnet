@@ -20,14 +20,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.run.PatchableRunProfileState;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.execution.configuration.*;
-import consulo.execution.coverage.CoverageEnabledConfiguration;
-import consulo.execution.coverage.CoverageExecutor;
-import consulo.execution.coverage.CoverageRunner;
+import consulo.execution.coverage.*;
 import consulo.execution.runner.DefaultProgramRunner;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.ide.impl.idea.coverage.CoverageHelper;
-import consulo.ide.impl.idea.coverage.CoverageRunnerData;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 

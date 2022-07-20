@@ -107,7 +107,7 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 	@Override
 	public String getPresentableParentQName()
 	{
-		return consulo.ide.impl.idea.openapi.util.text.StringUtil.getPackageName(getNameFromBytecode());
+		return StringUtil.getPackageName(getNameFromBytecode());
 	}
 
 	@Nullable

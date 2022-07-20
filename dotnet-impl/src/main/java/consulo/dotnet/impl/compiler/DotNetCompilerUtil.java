@@ -24,7 +24,6 @@ import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.compiler.DotNetMacroUtil;
 import consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryModel;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -34,6 +33,7 @@ import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -128,7 +128,7 @@ public class DotNetCompilerUtil
 					{
 						if(Comparing.equal(virtualFileForArchive.getExtension(), target.getExtension()))
 						{
-							set.add(VfsUtil.virtualToIoFile(virtualFileForArchive));
+							set.add(VirtualFileUtil.virtualToIoFile(virtualFileForArchive));
 						}
 					}
 				}

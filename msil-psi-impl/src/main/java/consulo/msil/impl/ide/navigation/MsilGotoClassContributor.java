@@ -8,7 +8,6 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataManager;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.psi.DotNetQualifiedElement;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.navigation.ChooseByNameContributorEx;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
@@ -37,6 +36,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

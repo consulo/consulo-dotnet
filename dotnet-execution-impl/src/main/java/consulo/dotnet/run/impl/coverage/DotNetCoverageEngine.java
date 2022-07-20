@@ -23,6 +23,7 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.coverage.*;
+import consulo.execution.coverage.view.CoverageViewExtension;
 import consulo.execution.test.AbstractTestProxy;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

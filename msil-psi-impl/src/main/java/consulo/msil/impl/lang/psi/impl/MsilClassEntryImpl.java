@@ -226,7 +226,7 @@ public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> 
 		{
 			return stub.getNamespace();
 		}
-		return consulo.ide.impl.idea.openapi.util.text.StringUtil.getPackageName(getNameFromBytecode());
+		return StringUtil.getPackageName(getNameFromBytecode());
 	}
 
 	@RequiredReadAction

@@ -17,8 +17,8 @@
 package consulo.msil.impl.representation;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
+import consulo.language.editor.DefaultHighlightingSettingProvider;
+import consulo.language.editor.FileHighlightingSetting;
 import consulo.msil.impl.representation.fileSystem.MsilFileRepresentationVirtualFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

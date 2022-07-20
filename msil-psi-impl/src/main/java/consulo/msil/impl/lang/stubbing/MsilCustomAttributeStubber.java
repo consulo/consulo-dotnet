@@ -212,7 +212,7 @@ public class MsilCustomAttributeStubber
 	@Nonnull
 	private static AbstractTypeReference parse(String referenceText)
 	{
-		return new AssemblyTypeRef(null, consulo.ide.impl.idea.openapi.util.text.StringUtil.getPackageName(referenceText), StringUtil.getShortName(referenceText));
+		return new AssemblyTypeRef(null, StringUtil.getPackageName(referenceText), StringUtil.getShortName(referenceText));
 	}
 
 	@RequiredReadAction

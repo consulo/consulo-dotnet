@@ -26,9 +26,10 @@ import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
+import consulo.util.io.FilePermissionCopier;
+import consulo.util.io.FileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -133,7 +134,7 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 
 			try
 			{
-				FileUtil.copy(file, copyFile);
+				FileUtil.copy(file, copyFile, FilePermissionCopier.BY_NIO2);
 
 				items.add(new DotNetProcessingItem(copyFile, null));
 			}

@@ -19,7 +19,6 @@ package consulo.msil.impl.lang.psi.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.*;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
@@ -30,8 +29,9 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.msil.impl.lang.psi.MsilStubElements;
 import consulo.msil.impl.lang.psi.MsilStubTokenSets;
 import consulo.msil.impl.lang.psi.MsilTokenSets;
-import consulo.msil.lang.psi.*;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilMethodEntryStub;
+import consulo.msil.lang.psi.*;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

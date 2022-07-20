@@ -5,7 +5,6 @@ import consulo.content.RootProvider;
 import consulo.content.RootProviderBase;
 import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.CustomOrderEntryModel;
 import consulo.module.extension.ModuleExtension;
@@ -14,6 +13,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,7 +60,7 @@ public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel
 				return VirtualFile.EMPTY_ARRAY;
 			}
 
-			List<VirtualFile> virtualFiles = new SmartList<VirtualFile>();
+			List<VirtualFile> virtualFiles = new SmartList<>();
 			for(ModuleExtension moduleExtension : myModuleRootLayer.getExtensions())
 			{
 				if(moduleExtension instanceof DotNetModuleExtensionWithLibraryProviding)
@@ -77,7 +77,7 @@ public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel
 					}
 				}
 			}
-			return VfsUtil.toVirtualFileArray(virtualFiles);
+			return VirtualFileUtil.toVirtualFileArray(virtualFiles);
 		}
 	};
 

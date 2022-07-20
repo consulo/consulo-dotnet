@@ -21,8 +21,8 @@ import consulo.dotnet.psi.DotNetGenericParameterListOwner;
 import consulo.dotnet.psi.resolve.DotNetGenericExtractor;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.dotnet.psi.resolve.DotNetTypeResolveResult;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.language.psi.PsiElement;
+import consulo.util.lang.lazy.LazyValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,14 +35,14 @@ public class MsilTypeResolveResult implements DotNetTypeResolveResult
 {
 	private final PsiElement myElement;
 	private final DotNetTypeRef[] myArgumentTypeRefs;
-	private final NotNullLazyValue<DotNetGenericExtractor> myExtractorValue;
+	private final LazyValue<DotNetGenericExtractor> myExtractorValue;
 
 	public MsilTypeResolveResult(PsiElement element, DotNetTypeRef[] argumentTypeRefs)
 	{
 		myElement = element;
 		myArgumentTypeRefs = argumentTypeRefs;
 
-		myExtractorValue = NotNullLazyValue.createValue(() ->
+		myExtractorValue = LazyValue.notNull(() ->
 		{
 			if(myArgumentTypeRefs.length == 0)
 			{
@@ -69,6 +69,6 @@ public class MsilTypeResolveResult implements DotNetTypeResolveResult
 	@Override
 	public DotNetGenericExtractor getGenericExtractor()
 	{
-		return myExtractorValue.getValue();
+		return myExtractorValue.get();
 	}
 }
