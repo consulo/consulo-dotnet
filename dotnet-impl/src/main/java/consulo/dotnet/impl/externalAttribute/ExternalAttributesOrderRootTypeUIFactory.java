@@ -21,8 +21,8 @@ import consulo.application.AllIcons;
 import consulo.content.bundle.Sdk;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.SdkPathEditor;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderRootTypeUIFactory;
+import consulo.ide.ui.OrderRootTypeUIFactory;
+import consulo.ide.ui.SdkPathEditor;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
