@@ -18,10 +18,13 @@ package consulo.dotnet.impl.ui.chooser;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.dotnet.psi.resolve.DotNetShortNameSearcher;
 import consulo.dotnet.psi.ui.chooser.DotNetTypeChooserFactory;
 import consulo.language.editor.ui.TreeChooser;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.project.Project;
+import consulo.language.editor.ui.TreeClassChooserFactory;
+import consulo.language.psi.stub.IdFilter;
+import consulo.localize.LocalizeValue;
+import consulo.project.content.scope.ProjectAwareSearchScope;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -35,25 +38,39 @@ import javax.annotation.Nonnull;
 @ServiceImpl
 public class DotNetTypeChooserFactoryImpl extends DotNetTypeChooserFactory
 {
-	private Project myProject;
+	private static final TreeClassChooserFactory.ClassProvider<DotNetTypeDeclaration> ourClassProvider = (project, name, searchInLibraries, pattern, searchScope) ->
+	{
+		return DotNetShortNameSearcher.getInstance(project).getTypes(name, searchScope, IdFilter.getProjectIdFilter(project, true));
+	};
+
+	private final TreeClassChooserFactory myTreeClassChooserFactory;
 
 	@Inject
-	public DotNetTypeChooserFactoryImpl(Project project)
+	public DotNetTypeChooserFactoryImpl(TreeClassChooserFactory treeClassChooserFactory)
 	{
-		myProject = project;
+		myTreeClassChooserFactory = treeClassChooserFactory;
 	}
 
 	@Nonnull
 	@Override
-	public TreeChooser<DotNetTypeDeclaration> createChooser(@Nonnull GlobalSearchScope scope)
+	public TreeChooser<DotNetTypeDeclaration> createChooser(@Nonnull ProjectAwareSearchScope scope)
 	{
-		return new DotNetTypeChooser("Choose Type", myProject, scope, null);
+		TreeClassChooserFactory.Builder<DotNetTypeDeclaration> builder = myTreeClassChooserFactory.newChooser(DotNetTypeDeclaration.class);
+		builder.withTitle(LocalizeValue.localizeTODO("Choose Type"));
+		builder.withSearchScope(scope);
+		builder.withClassProvider(ourClassProvider);
+		return builder.build();
 	}
 
 	@Nonnull
 	@Override
-	public TreeChooser<DotNetTypeDeclaration> createInheriableChooser(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope)
+	public TreeChooser<DotNetTypeDeclaration> createInheriableChooser(@Nonnull String baseVmQName, @Nonnull ProjectAwareSearchScope scope)
 	{
-		return new DotNetTypeChooser("Choose Type", myProject, scope, vmQName);
+		TreeClassChooserFactory.Builder<DotNetTypeDeclaration> builder = myTreeClassChooserFactory.newChooser(DotNetTypeDeclaration.class);
+		builder.withTitle(LocalizeValue.localizeTODO("Choose Type"));
+		builder.withSearchScope(scope);
+		builder.withClassProvider(ourClassProvider);
+		builder.withClassFilter(element -> element.isInheritor(baseVmQName, true));
+		return builder.build();
 	}
 }

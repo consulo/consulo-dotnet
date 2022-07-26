@@ -20,8 +20,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.editor.ui.TreeChooser;
-import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
+import consulo.project.content.scope.ProjectAwareSearchScope;
 
 import javax.annotation.Nonnull;
 
@@ -39,8 +39,8 @@ public abstract class DotNetTypeChooserFactory
 	}
 
 	@Nonnull
-	public abstract TreeChooser<DotNetTypeDeclaration> createChooser(@Nonnull GlobalSearchScope scope);
+	public abstract TreeChooser<DotNetTypeDeclaration> createChooser(@Nonnull ProjectAwareSearchScope scope);
 
 	@Nonnull
-	public abstract TreeChooser<DotNetTypeDeclaration> createInheriableChooser(@Nonnull String vmQName, @Nonnull GlobalSearchScope scope);
+	public abstract TreeChooser<DotNetTypeDeclaration> createInheriableChooser(@Nonnull String baseVmQName, @Nonnull ProjectAwareSearchScope scope);
 }
