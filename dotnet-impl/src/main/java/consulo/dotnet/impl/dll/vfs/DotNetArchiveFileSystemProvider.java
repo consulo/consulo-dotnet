@@ -18,15 +18,13 @@ package consulo.dotnet.impl.dll.vfs;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.dll.DotNetModuleFileType;
-import consulo.ide.impl.vfs.impl.archive.ArchiveEntry;
-import consulo.ide.impl.vfs.impl.archive.ArchiveFile;
-import consulo.ide.impl.vfs.impl.archive.ArchiveFileSystemBase;
 import consulo.internal.dotnet.asm.mbel.ModuleParser;
 import consulo.internal.dotnet.asm.parse.MSILParseException;
 import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveEntry;
 import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
+import consulo.virtualFileSystem.archive.ArchiveEntry;
+import consulo.virtualFileSystem.archive.ArchiveFile;
+import consulo.virtualFileSystem.archive.ArchiveFileSystemProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +38,7 @@ import java.util.Iterator;
  * @since 28.11.13.
  */
 @ExtensionImpl
-public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements VirtualFileSystemWithMacroSupport
+public class DotNetArchiveFileSystemProvider implements ArchiveFileSystemProvider
 {
 	private static class DotNetArchiveFileWrapper implements ArchiveFile
 	{
@@ -142,14 +140,10 @@ public class DotNetArchiveFileSystem extends ArchiveFileSystemBase implements Vi
 	}
 
 	@Nonnull
-	public static DotNetArchiveFileSystem getInstance()
+	@Override
+	public String getProtocol()
 	{
-		return (DotNetArchiveFileSystem) VirtualFileManager.getInstance().getFileSystem(DotNetModuleFileType.PROTOCOL);
-	}
-
-	public DotNetArchiveFileSystem()
-	{
-		super(DotNetModuleFileType.PROTOCOL);
+		return DotNetModuleFileType.PROTOCOL;
 	}
 
 	@Nonnull

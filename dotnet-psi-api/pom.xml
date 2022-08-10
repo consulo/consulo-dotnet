@@ -48,12 +48,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>consulo</groupId>
-			<artifactId>consulo-ide-impl</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>consulo.internal</groupId>
 			<artifactId>dotnet.msil.decompiler</artifactId>
 			<version>3-SNAPSHOT</version>

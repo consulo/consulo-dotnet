@@ -9,15 +9,13 @@ open module consulo.dotnet.msil.impl
 	requires consulo.dotnet.msil.api;
 	requires consulo.language.impl;
 	requires consulo.dotnet.psi.impl;
+	requires consulo.project.ui.view.api;
 	requires consulo.ide.api;
 
 	requires consulo.internal.dotnet.asm;
 	requires consulo.internal.dotnet.msil.decompiler;
 
 	requires org.jooq.joou;
-
-	// TODO remove this dependency in future
-	requires consulo.ide.impl;
 
 	exports consulo.msil.impl.ide;
 	exports consulo.msil.impl.ide.highlight;

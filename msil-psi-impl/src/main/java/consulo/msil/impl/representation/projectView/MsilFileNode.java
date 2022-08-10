@@ -16,11 +16,11 @@
 
 package consulo.msil.impl.representation.projectView;
 
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiFileNode;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.representation.MsilFileRepresentationManager;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;

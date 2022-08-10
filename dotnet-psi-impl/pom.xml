@@ -43,11 +43,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>consulo</groupId>
-			<artifactId>consulo-ide-impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>consulo.dotnet-dotnet.psi.api</artifactId>
 			<version>${project.version}</version>
