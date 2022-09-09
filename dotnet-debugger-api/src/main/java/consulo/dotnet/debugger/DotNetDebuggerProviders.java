@@ -1,6 +1,7 @@
 package consulo.dotnet.debugger;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
@@ -26,13 +27,6 @@ public class DotNetDebuggerProviders
 	@Nullable
 	public static DotNetDebuggerProvider findByPsiFile(@Nonnull PsiFile psiFile)
 	{
-		for(DotNetDebuggerProvider provider : DotNetDebuggerProvider.EP_NAME.getExtensionList())
-		{
-			if(provider.isSupported(psiFile))
-			{
-				return provider;
-			}
-		}
-		return null;
+		return Application.get().getExtensionPoint(DotNetDebuggerProvider.class).findFirstSafe(provider -> provider.isSupported(psiFile));
 	}
 }
