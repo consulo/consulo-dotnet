@@ -16,17 +16,9 @@
 
 package consulo.dotnet.debugger;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.dotnet.psi.DotNetCodeBlockOwner;
-import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.Language;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.util.PsiTreeUtil;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * @author VISTALL
@@ -34,41 +26,6 @@ import java.util.Set;
  */
 class DotNetDefaultDebuggerSourceLineResolver implements DotNetDebuggerSourceLineResolver
 {
-	@RequiredReadAction
-	@Override
-	@Nullable
-	public String resolveParentVmQName(@Nonnull PsiElement element)
-	{
-		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(element, DotNetCodeBlockOwner.class, false);
-		if(codeBlockOwner == null)
-		{
-			return null;
-		}
-		PsiElement codeBlock = codeBlockOwner.getCodeBlock().getElement();
-		if(codeBlock == null)
-		{
-			return null;
-		}
-		if(!PsiTreeUtil.isAncestor(codeBlock, element, false))
-		{
-			return null;
-		}
-		DotNetTypeDeclaration typeDeclaration = PsiTreeUtil.getParentOfType(codeBlockOwner, DotNetTypeDeclaration.class);
-		if(typeDeclaration == null)
-		{
-			return null;
-		}
-		return typeDeclaration.getVmQName();
-	}
-
-	@Nonnull
-	@Override
-	@RequiredReadAction
-	public Set<PsiElement> getAllExecutableChildren(@Nonnull PsiElement root)
-	{
-		return Collections.emptySet();
-	}
-
 	@Nonnull
 	@Override
 	public Language getLanguage()
