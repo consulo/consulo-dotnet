@@ -17,6 +17,8 @@
 package consulo.dotnet.debugger;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.dotnet.psi.DotNetCodeBlockOwner;
@@ -36,6 +38,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 19.07.2015
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DotNetDebuggerSourceLineResolver extends LanguageExtension
 {
 	ExtensionPointCacheKey<DotNetDebuggerSourceLineResolver, ByLanguageValue<DotNetDebuggerSourceLineResolver>> KEY = ExtensionPointCacheKey.create("DotNetDebuggerSourceLineResolver",
