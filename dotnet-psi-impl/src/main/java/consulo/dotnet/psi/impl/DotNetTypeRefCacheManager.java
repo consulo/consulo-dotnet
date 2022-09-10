@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  * @since 2020-04-05
  */
 @Singleton
-@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class DotNetTypeRefCacheManager
 {
