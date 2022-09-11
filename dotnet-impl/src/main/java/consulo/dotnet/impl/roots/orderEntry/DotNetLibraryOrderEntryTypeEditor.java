@@ -20,8 +20,8 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.ide.setting.module.CustomOrderEntryTypeEditor;
+import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.module.content.layer.orderEntry.CustomOrderEntry;
-import consulo.module.extension.ModuleExtensionHelper;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.image.Image;
 
@@ -40,13 +40,15 @@ public class DotNetLibraryOrderEntryTypeEditor implements CustomOrderEntryTypeEd
 	public Consumer<ColoredTextContainer> getRender(@Nonnull CustomOrderEntry<DotNetLibraryOrderEntryModel> orderEntry, @Nonnull DotNetLibraryOrderEntryModel model)
 	{
 		return it -> {
-			ModuleExtensionHelper moduleExtensionHelper = ModuleExtensionHelper.getInstance(orderEntry.getOwnerModule().getProject());
 
 			DotNetSimpleModuleExtension extension = orderEntry.getModuleRootLayer().getExtension(DotNetSimpleModuleExtension.class);
 
-			Image icon = extension == null ? AllIcons.Toolbar.Unknown : moduleExtensionHelper.getModuleExtensionIcon(extension.getId());
+			ModuleExtensionProvider<?> provider = extension == null ? null : ModuleExtensionProvider.findProvider(extension.getId());
+
+			Image icon = provider == null ? AllIcons.Toolbar.Unknown : provider.getIcon();
 
 			it.append(model.getPresentableName());
+	
 			it.setIcon(icon);
 		};
 	}
