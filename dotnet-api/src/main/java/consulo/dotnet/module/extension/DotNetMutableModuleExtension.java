@@ -34,6 +34,8 @@ public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>
 
 	void setOutputDir(@Nonnull String name);
 
+	void setAllowSourceRoots(boolean val);
+
 	void setMainType(@Nullable String qName);
 
 	void setTarget(@Nonnull DotNetTarget target);

@@ -41,6 +41,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 {
 	protected DotNetTarget myTarget = DotNetTarget.EXECUTABLE;
 	protected boolean myAllowDebugInfo;
+	protected boolean myAllowSourceRoots;
 	protected String myMainType;
 	protected String myNamespacePrefix;
 	protected String myFileName = DEFAULT_FILE_NAME;
@@ -57,6 +58,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		return super.isModifiedImpl(ex) ||
 				!myTarget.equals(ex.myTarget) ||
 				myAllowDebugInfo != ex.isAllowDebugInfo() ||
+				myAllowSourceRoots != ex.isAllowSourceRoots() ||
 				!Comparing.equal(myMainType, ex.myMainType) ||
 				!Comparing.equal(myNamespacePrefix, ex.myNamespacePrefix) ||
 				!Comparing.equal(getFileName(), ex.getFileName()) ||
@@ -76,6 +78,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 
 		myTarget = mutableModuleExtension.myTarget;
 		myAllowDebugInfo = mutableModuleExtension.myAllowDebugInfo;
+		myAllowSourceRoots = mutableModuleExtension.myAllowSourceRoots;
 		myMainType = mutableModuleExtension.myMainType;
 		myFileName = mutableModuleExtension.myFileName;
 		myNamespacePrefix = mutableModuleExtension.myNamespacePrefix;
@@ -90,6 +93,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 
 		myTarget = DotNetTarget.valueOf(element.getAttributeValue("target", DotNetTarget.EXECUTABLE.name()));
 		myAllowDebugInfo = Boolean.valueOf(element.getAttributeValue("debug", "false"));
+		myAllowSourceRoots = Boolean.valueOf(element.getAttributeValue("allow-source-roots", "false"));
 		myFileName = element.getAttributeValue("file-name", DEFAULT_FILE_NAME);
 		myOutputDirectory = element.getAttributeValue("output-dir", DEFAULT_OUTPUT_DIR);
 		myMainType = element.getAttributeValue("main-type");
@@ -103,6 +107,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 
 		element.setAttribute("target", myTarget.name());
 		element.setAttribute("debug", Boolean.toString(myAllowDebugInfo));
+		element.setAttribute("allow-source-roots", Boolean.toString(myAllowSourceRoots));
 		element.setAttribute("file-name", myFileName);
 		element.setAttribute("output-dir", myOutputDirectory);
 		element.setAttribute("namespace-prefix", getNamespacePrefix());
@@ -152,6 +157,12 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		return myMainType;
 	}
 
+	@Override
+	public boolean isAllowSourceRoots()
+	{
+		return myAllowSourceRoots;
+	}
+
 	@Nonnull
 	@Override
 	public String getNamespacePrefix()
@@ -186,6 +197,11 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	public void setOutputDir(@Nonnull String dir)
 	{
 		myOutputDirectory = dir;
+	}
+
+	public void setAllowSourceRoots(boolean val)
+	{
+		myAllowSourceRoots = val;
 	}
 
 	public void setAllowDebugInfo(boolean allowDebugInfo)

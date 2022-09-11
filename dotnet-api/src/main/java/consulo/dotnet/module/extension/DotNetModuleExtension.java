@@ -16,7 +16,6 @@
 
 package consulo.dotnet.module.extension;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.content.bundle.Sdk;
 import consulo.language.psi.PsiElement;
@@ -42,12 +41,7 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 	@Nullable
 	Sdk getSdk();
 
-	@Deprecated
-	@DeprecationInfo("Dead - always return false")
-	default boolean isAllowSourceRoots()
-	{
-		return false;
-	}
+	boolean isAllowSourceRoots();
 
 	@Nonnull
 	String getNamespacePrefix();

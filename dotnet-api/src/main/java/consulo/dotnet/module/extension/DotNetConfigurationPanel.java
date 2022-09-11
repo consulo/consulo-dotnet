@@ -226,6 +226,15 @@ public class DotNetConfigurationPanel extends JPanel
 
 		final LabeledComponent<JBTextField> namespaceComponent = LabeledComponent.create(namespacePrefixField, "Namespace:");
 
+		JBCheckBox allowSourceRootsBox = new JBCheckBox(DotNetBundle.message("allow.source.roots.label"), extension.isAllowSourceRoots());
+		allowSourceRootsBox.addActionListener(e ->
+		{
+			extension.setAllowSourceRoots(allowSourceRootsBox.isSelected());
+			namespaceComponent.setVisible(!allowSourceRootsBox.isSelected());
+
+			updater.run();
+		});
+		add(allowSourceRootsBox);
 		add(namespaceComponent);
 
 		CollectionListModel<String> dataModel = new CollectionListModel<String>(variables)
@@ -272,14 +281,14 @@ public class DotNetConfigurationPanel extends JPanel
 		{
 			String name = Messages.showInputDialog(DotNetConfigurationPanel.this, DotNetBundle.message("new.variable.message"), DotNetBundle.message("new.variable.title"), null, null, new
 					InputValidator()
-			{
-				@RequiredUIAccess
-				@Override
-				public boolean checkInput(String s)
-				{
-					return !variables.contains(s);
-				}
-			});
+					{
+						@RequiredUIAccess
+						@Override
+						public boolean checkInput(String s)
+						{
+							return !variables.contains(s);
+						}
+					});
 
 			if(StringUtil.isEmpty(name))
 			{
