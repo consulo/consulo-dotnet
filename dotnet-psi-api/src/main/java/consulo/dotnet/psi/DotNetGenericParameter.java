@@ -16,10 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.util.ArrayFactory;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.util.collection.ArrayFactory;
 
 /**
  * @author VISTALL
@@ -29,15 +27,7 @@ public interface DotNetGenericParameter extends DotNetNamedElement, DotNetModifi
 {
 	public static final DotNetGenericParameter[] EMPTY_ARRAY = new DotNetGenericParameter[0];
 
-	public static ArrayFactory<DotNetGenericParameter> ARRAY_FACTORY = new ArrayFactory<DotNetGenericParameter>()
-	{
-		@Nonnull
-		@Override
-		public DotNetGenericParameter[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new DotNetGenericParameter[count];
-		}
-	};
+	public static ArrayFactory<DotNetGenericParameter> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetGenericParameter[count];
 
 	int getIndex();
 }

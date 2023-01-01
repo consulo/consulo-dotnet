@@ -16,26 +16,26 @@
 
 package consulo.dotnet.impl.assembly;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.assembly.AssemblyModule;
-import consulo.dotnet.resolve.DotNetTypeRefUtil;
+import consulo.dotnet.psi.resolve.DotNetTypeRefUtil;
 import consulo.internal.dotnet.asm.signature.TypeSignature;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.msil.lang.psi.MsilAssemblyEntry;
 import consulo.msil.lang.psi.MsilCustomAttribute;
 import consulo.msil.lang.psi.MsilFile;
-import consulo.msil.lang.stubbing.MsilCustomAttributeArgumentList;
-import consulo.msil.lang.stubbing.MsilCustomAttributeStubber;
-import consulo.msil.lang.stubbing.values.MsiCustomAttributeValue;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.msil.impl.lang.stubbing.MsilCustomAttributeArgumentList;
+import consulo.msil.impl.lang.stubbing.MsilCustomAttributeStubber;
+import consulo.msil.impl.lang.stubbing.values.MsiCustomAttributeValue;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -89,7 +89,7 @@ class DotNetModuleAsAssemblyModule implements AssemblyModule
 	@Nonnull
 	@RequiredReadAction
 	private static Set<String> calcBinaryAllowedAssemblies(Project project, VirtualFile moduleFile)
-	{
+	{                                                                            
 		VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(moduleFile);
 		if(archiveRootForLocalFile == null)
 		{

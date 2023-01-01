@@ -16,10 +16,10 @@
 
 package test;
 
-import consulo.csharp.cfs.lang.CfsTokens;
-import consulo.csharp.cfs.lang.lexer.CfsLexer;
-import com.intellij.lexer.Lexer;
-import com.intellij.psi.tree.IElementType;
+import consulo.dotnet.cfs.lang.CfsTokens;
+import consulo.dotnet.cfs.lang.lexer.CfsLexer;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.Lexer;
 
 /**
  * @author VISTALL

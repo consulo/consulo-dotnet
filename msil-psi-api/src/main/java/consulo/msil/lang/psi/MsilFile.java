@@ -16,9 +16,8 @@
 
 package consulo.msil.lang.psi;
 
-import com.intellij.psi.PsiElement;
 import consulo.dotnet.psi.DotNetMemberOwner;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author VISTALL

@@ -16,12 +16,13 @@
 
 package consulo.dotnet.compiler;
 
+import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.module.Module;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.dotnet.module.extension.DotNetModuleExtension;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author VISTALL

@@ -16,20 +16,18 @@
 
 package consulo.dotnet.compiler;
 
-import com.intellij.ide.macro.Macro;
-import com.intellij.ide.macro.MacroManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.dataContext.DataContext;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.macro.TargetFileExtensionMacro;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.module.Module;
+import consulo.pathMacro.Macro;
+import consulo.pathMacro.MacroManager;
+import consulo.project.Project;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -43,9 +41,9 @@ public class DotNetMacroUtil
 	@Nonnull
 	public static DataContext createContext(@Nonnull Module module, boolean debugSymbols)
 	{
-		SimpleDataContext.Builder builder = SimpleDataContext.builder();
-		builder = builder.add(CommonDataKeys.PROJECT, module.getProject());
-		builder = builder.add(LangDataKeys.MODULE, module);
+		DataContext.Builder builder = DataContext.builder();
+		builder = builder.add(Project.KEY, module.getProject());
+		builder = builder.add(Module.KEY, module);
 		if(debugSymbols)
 		{
 			builder = builder.add(TargetFileExtensionMacro.DEBUG_SYMBOLS, Boolean.TRUE);
@@ -53,7 +51,7 @@ public class DotNetMacroUtil
 		return builder.build();
 	}
 
-	@Nonnull
+	@Nonnull                                                                   
 	public static String expandOutputFile(@Nonnull DotNetRunModuleExtension<?> extension)
 	{
 		return expandOutputFile(extension, false);
@@ -67,7 +65,7 @@ public class DotNetMacroUtil
 		{
 			String url = ModuleCompilerPathsManager.getInstance(extension.getModule()).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
 			assert url != null;
-			outputDir = FileUtil.toSystemDependentName(VfsUtil.urlToPath(url));
+			outputDir = FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(url));
 		}
 
 		if(outputDir.charAt(outputDir.length() - 1) == File.separatorChar)
@@ -88,7 +86,7 @@ public class DotNetMacroUtil
 		{
 			String url = ModuleCompilerPathsManager.getInstance(extension.getModule()).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
 			assert url != null;
-			outputDir = FileUtil.toSystemDependentName(VfsUtil.urlToPath(url));
+			outputDir = FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(url));
 		}
 
 		return expand(extension.getModule(), outputDir, false);

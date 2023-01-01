@@ -16,13 +16,12 @@
 
 package consulo.dotnet.module.extension;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author VISTALL

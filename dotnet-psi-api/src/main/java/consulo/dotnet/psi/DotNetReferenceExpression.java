@@ -16,8 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import com.intellij.psi.PsiPolyVariantReference;
-import com.intellij.psi.PsiQualifiedReferenceElement;
+import consulo.language.psi.PsiPolyVariantReference;
+import consulo.language.psi.PsiQualifiedReferenceElement;
 
 /**
  * @author VISTALL

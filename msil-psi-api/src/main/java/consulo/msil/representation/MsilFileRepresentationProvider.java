@@ -16,10 +16,11 @@
 
 package consulo.msil.representation;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.PsiFile;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
 import consulo.msil.lang.psi.MsilFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,9 +29,10 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 27.05.14
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface MsilFileRepresentationProvider
 {
-	ExtensionPointName<MsilFileRepresentationProvider> EP_NAME = ExtensionPointName.create("consulo.dotnet.msilFileRepresentation");
+	ExtensionPointName<MsilFileRepresentationProvider> EP_NAME = ExtensionPointName.create(MsilFileRepresentationProvider.class);
 
 	@Nullable
 	String getRepresentFileName(@Nonnull MsilFile msilFile);

@@ -16,15 +16,15 @@
 
 package consulo.dotnet.module.extension;
 
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.DotNetTarget;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
+import consulo.language.psi.PsiElement;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.extension.ModuleExtension;
-import consulo.roots.ModuleRootLayer;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

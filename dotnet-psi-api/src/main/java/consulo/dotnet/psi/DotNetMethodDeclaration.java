@@ -16,7 +16,7 @@
 
 package consulo.dotnet.psi;
 
-import com.intellij.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiNameIdentifierOwner;
 
 /**
  * @author VISTALL

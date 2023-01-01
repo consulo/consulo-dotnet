@@ -1,12 +1,14 @@
 package consulo.dotnet.debugger;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 
 /**
  * @author VISTALL
@@ -25,13 +27,6 @@ public class DotNetDebuggerProviders
 	@Nullable
 	public static DotNetDebuggerProvider findByPsiFile(@Nonnull PsiFile psiFile)
 	{
-		for(DotNetDebuggerProvider provider : DotNetDebuggerProvider.EP_NAME.getExtensionList())
-		{
-			if(provider.isSupported(psiFile))
-			{
-				return provider;
-			}
-		}
-		return null;
+		return Application.get().getExtensionPoint(DotNetDebuggerProvider.class).findFirstSafe(provider -> provider.isSupported(psiFile));
 	}
 }

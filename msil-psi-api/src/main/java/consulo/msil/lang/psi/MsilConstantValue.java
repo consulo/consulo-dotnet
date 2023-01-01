@@ -1,9 +1,10 @@
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetExpression;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

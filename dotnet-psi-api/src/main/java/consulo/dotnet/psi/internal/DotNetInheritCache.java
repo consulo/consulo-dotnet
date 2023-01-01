@@ -1,14 +1,15 @@
 package consulo.dotnet.psi.internal;
 
-import com.google.common.base.Objects;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import consulo.dotnet.resolve.DotNetTypeRef;
+import consulo.dotnet.psi.resolve.DotNetTypeRef;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiModificationTrackerListener;
+import consulo.project.Project;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -16,6 +17,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,12 +26,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2020-10-25
  */
 @Singleton
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class DotNetInheritCache implements Disposable
 {
 	@Nonnull
 	public static DotNetInheritCache getInstance(@Nonnull Project project)
 	{
-		return ServiceManager.getService(project, DotNetInheritCache.class);
+		return project.getInstance(DotNetInheritCache.class);
 	}
 
 	private final Map<String, Map<Pair<String, Boolean>, Boolean>> myResult = new ConcurrentHashMap<>();
@@ -37,7 +41,7 @@ public class DotNetInheritCache implements Disposable
 	@Inject
 	public DotNetInheritCache(Project project)
 	{
-		project.getMessageBus().connect(this).subscribe(PsiModificationTracker.TOPIC, myResult::clear);
+		project.getMessageBus().connect(this).subscribe(PsiModificationTrackerListener.class, myResult::clear);
 	}
 
 	@RequiredReadAction
@@ -94,7 +98,7 @@ public class DotNetInheritCache implements Disposable
 					}
 
 					String vmQName = ((DotNetTypeDeclaration) psiElement).getVmQName();
-					if(Objects.equal(vmQName, otherVmQName))
+					if(Objects.equals(vmQName, otherVmQName))
 					{
 						return true;
 					}

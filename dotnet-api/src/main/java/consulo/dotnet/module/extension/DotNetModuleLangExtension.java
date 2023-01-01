@@ -16,11 +16,11 @@
 
 package consulo.dotnet.module.extension;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.compiler.DotNetCompileFailedException;
 import consulo.dotnet.compiler.DotNetCompilerOptionsBuilder;
+import consulo.language.file.LanguageFileType;
+import consulo.language.psi.PsiElement;
 import consulo.module.extension.ModuleExtension;
 
 import javax.annotation.Nonnull;

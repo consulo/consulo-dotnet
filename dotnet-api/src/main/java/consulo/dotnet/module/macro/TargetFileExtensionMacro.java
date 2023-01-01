@@ -1,17 +1,18 @@
 package consulo.dotnet.module.macro;
 
-import com.intellij.ide.macro.Macro;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.dataContext.DataContext;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.pathMacro.Macro;
 import consulo.util.dataholder.Key;
 
 /**
  * @author VISTALL
  * @since 18.08.14
  */
+@ExtensionImpl
 public class TargetFileExtensionMacro extends Macro
 {
 	public static final Key<Boolean> DEBUG_SYMBOLS = Key.create("debug.symbols");
@@ -31,7 +32,7 @@ public class TargetFileExtensionMacro extends Macro
 	@Override
 	public String expand(DataContext dataContext)
 	{
-		final Module module = dataContext.getData(LangDataKeys.MODULE);
+		final Module module = dataContext.getData(Module.KEY);
 		if(module == null)
 		{
 			return null;

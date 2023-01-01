@@ -16,10 +16,11 @@
 
 package consulo.dotnet.psi;
 
+import consulo.language.ast.IElementType;
+import consulo.util.collection.ArrayFactory;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.ArrayFactory;
 
 /**
  * @author VISTALL

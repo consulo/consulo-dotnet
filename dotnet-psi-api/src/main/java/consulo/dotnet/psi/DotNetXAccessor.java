@@ -16,9 +16,9 @@
 
 package consulo.dotnet.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.util.ArrayFactory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nullable;
 

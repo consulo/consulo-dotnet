@@ -16,20 +16,20 @@
 
 package consulo.dotnet.debugger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-
-import com.intellij.execution.configurations.ModuleRunProfile;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import consulo.dotnet.debugger.proxy.DotNetVirtualMachineProxy;
+import consulo.execution.configuration.ModuleRunProfile;
+import consulo.execution.configuration.RunProfile;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.util.lang.lazy.LazyValue;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -44,7 +44,7 @@ public class DotNetDebugContext
 	private final XBreakpoint<?> myBreakpoint;
 	@Nonnull
 	private final DotNetLogicValueView[] myLogicValueViews;
-	private final NotNullLazyValue<GlobalSearchScope> myScopeValue;
+	private final Supplier<GlobalSearchScope> myScopeValue;
 
 	public DotNetDebugContext(@Nonnull Project project,
 							  @Nonnull DotNetVirtualMachineProxy virtualMachine,
@@ -60,7 +60,7 @@ public class DotNetDebugContext
 		myBreakpoint = breakpoint;
 		myLogicValueViews = logicValueViews;
 
-		myScopeValue = NotNullLazyValue.createValue(() ->
+		myScopeValue = LazyValue.notNull(() ->
 		{
 			if(myRunProfile instanceof ModuleRunProfile)
 			{
@@ -89,7 +89,7 @@ public class DotNetDebugContext
 	@Nonnull
 	public GlobalSearchScope getResolveScope()
 	{
-		return myScopeValue.getValue();
+		return myScopeValue.get();
 	}
 
 	@Nullable

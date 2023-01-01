@@ -19,14 +19,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.ide-provided</artifactId>
-		<version>2-SNAPSHOT</version>
+		<artifactId>arch.ide-api-provided</artifactId>
+		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>consulo.plugin</groupId>
 	<artifactId>consulo.dotnet</artifactId>
-	<version>2-SNAPSHOT</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>consulo-plugin</packaging>
 
 	<repositories>
@@ -45,13 +45,9 @@
 			<plugin>
 				<groupId>consulo.maven</groupId>
 				<artifactId>maven-consulo-plugin</artifactId>
-				<version>2-SNAPSHOT</version>
 				<extensions>true</extensions>
 				<configuration>
-					<repositoryChannel>nightly</repositoryChannel>
-					<dependencies>
-						<dependency>com.intellij.xml</dependency>
-					</dependencies>
+					<repositoryChannel>valhalla</repositoryChannel>
 					<packaging>
 						<skip>${dev.mode}</skip>
 						<version>${build.number}</version>
@@ -140,33 +136,19 @@
 		</dependency>
 
 		<dependency>
-			<groupId>consulo</groupId>
-			<artifactId>consulo-compiler-impl</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>consulo.internal</groupId>
 			<artifactId>dotnet.asm</artifactId>
-			<version>2-SNAPSHOT</version>
+			<version>3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>consulo.internal</groupId>
 			<artifactId>dotnet.msil.decompiler</artifactId>
-			<version>2-SNAPSHOT</version>
+			<version>3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jooq</groupId>
-			<artifactId>joou-java-6</artifactId>
-			<version>0.9.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>com.intellij.xml</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
+			<artifactId>joou</artifactId>
+			<version>0.9.4</version>
 		</dependency>
 	</dependencies>
 </project>

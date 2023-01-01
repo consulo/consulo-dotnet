@@ -16,9 +16,10 @@
 
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nonnull;
-import com.intellij.util.ArrayFactory;
 import consulo.dotnet.psi.DotNetElement;
+import consulo.util.collection.ArrayFactory;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

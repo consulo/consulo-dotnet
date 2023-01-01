@@ -16,22 +16,23 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.debugger.proxy.light.LightMethodProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import consulo.util.pointers.Named;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 18.04.2016
  */
-public interface DotNetMethodProxy extends Named
+public interface DotNetMethodProxy
 {
+	String getName();
+
 	boolean isStatic();
 
 	boolean isAbstract();

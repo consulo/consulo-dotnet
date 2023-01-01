@@ -16,33 +16,33 @@
 
 package consulo.dotnet.module.extension;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.URLUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginManager;
+import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.DocumentationOrderRootType;
+import consulo.content.bundle.Sdk;
 import consulo.dotnet.dll.DotNetModuleFileType;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import consulo.internal.dotnet.asm.mbel.AssemblyInfo;
 import consulo.logging.Logger;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.extension.ModuleInheritableNamedPointer;
-import consulo.module.extension.impl.ModuleExtensionImpl;
-import consulo.roots.ModuleRootLayer;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.DocumentationOrderRootType;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.SmartList;
+import consulo.util.io.FileUtil;
+import consulo.util.io.URLUtil;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.vfs.util.ArchiveVfsUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -56,7 +56,7 @@ import java.util.regex.Pattern;
  * @author VISTALL
  * @since 22.02.2015
  */
-public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionImpl<S> implements DotNetSimpleModuleExtension<S>
+public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimpleModuleExtension<S>> extends ModuleExtensionBase<S> implements DotNetSimpleModuleExtension<S>
 {
 	public static final Logger LOGGER = Logger.getInstance(BaseDotNetSimpleModuleExtension.class);
 
@@ -294,7 +294,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 					}
 					if(Comparing.equal(requiredFileName, file.getName(), false) && isValidExternalFile(ref.get().getSecond(), file))
 					{
-						urls.add(VfsUtil.pathToUrl(file.getPath()));
+						urls.add(VirtualFileUtil.pathToUrl(file.getPath()));
 					}
 					return true;
 				});

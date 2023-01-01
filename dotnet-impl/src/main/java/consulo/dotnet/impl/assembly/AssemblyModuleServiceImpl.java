@@ -1,26 +1,28 @@
 package consulo.dotnet.impl.assembly;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.dotnet.assembly.AssemblyModule;
 import consulo.dotnet.assembly.AssemblyModuleService;
 import consulo.dotnet.dll.DotNetModuleFileType;
-import consulo.vfs.util.ArchiveVfsUtil;
-
-import javax.annotation.Nonnull;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2020-08-02
  */
 @Singleton
+@ServiceImpl
 public class AssemblyModuleServiceImpl implements AssemblyModuleService
 {
 	private final Project myProject;

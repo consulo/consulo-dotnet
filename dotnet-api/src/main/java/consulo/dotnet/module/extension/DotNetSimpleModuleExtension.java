@@ -16,8 +16,8 @@
 
 package consulo.dotnet.module.extension;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkType;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 

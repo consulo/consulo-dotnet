@@ -16,16 +16,17 @@
 
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nonnull;
-
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.navigation.NavigationItem;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 21.05.14
  */
-public interface MsilClassEntry extends MsilEntry, DotNetTypeDeclaration
+public interface MsilClassEntry extends MsilEntry, DotNetTypeDeclaration, NavigationItem
 {
 	@Nonnull
 	MsilCustomAttribute[] getAttributes();

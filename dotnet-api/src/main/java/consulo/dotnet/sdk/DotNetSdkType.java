@@ -16,15 +16,15 @@
 
 package consulo.dotnet.sdk;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
 import consulo.container.plugin.PluginManager;
+import consulo.content.OrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkModificator;
+import consulo.content.bundle.SdkType;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.dotnet.module.extension.BaseDotNetSimpleModuleExtension;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -62,7 +62,7 @@ public abstract class DotNetSdkType extends SdkType
 
 			if(file.getName().endsWith(".xml"))
 			{
-				sdkModificator.addRoot(VfsUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.getInstance());
+				sdkModificator.addRoot(VirtualFileUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.getInstance());
 			}
 			return true;
 		});

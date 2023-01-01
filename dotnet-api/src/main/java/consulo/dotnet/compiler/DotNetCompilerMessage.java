@@ -16,7 +16,7 @@
 
 package consulo.dotnet.compiler;
 
-import com.intellij.openapi.compiler.CompilerMessageCategory;
+import consulo.compiler.CompilerMessageCategory;
 
 /**
  * @author VISTALL

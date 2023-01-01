@@ -16,11 +16,11 @@
 
 package consulo.dotnet.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.util.collection.ArrayFactory;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.util.ArrayFactory;
-import consulo.annotation.access.RequiredReadAction;
 
 /**
  * @author VISTALL
