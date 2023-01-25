@@ -26,5 +26,5 @@ import consulo.language.ast.IElementType;
  */
 public interface CfsElements
 {
-	IElementType ITEM = new ElementTypeAsPsiFactory("CFS_ITEM", CfsLanguage.INSTANCE, CfsItem.class);
+	IElementType ITEM = new ElementTypeAsPsiFactory("CFS_ITEM", CfsLanguage.INSTANCE, CfsItem::new);
 }
