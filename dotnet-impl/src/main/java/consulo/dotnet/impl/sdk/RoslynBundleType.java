@@ -22,7 +22,7 @@ import consulo.dotnet.icon.DotNetIconGroup;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.CapturingProcessHandler;
+import consulo.process.local.ExecUtil;
 import consulo.process.local.ProcessOutput;
 import consulo.ui.image.Image;
 
@@ -66,7 +66,7 @@ public class RoslynBundleType extends SdkType
 
 		try
 		{
-			ProcessOutput processOutput = new CapturingProcessHandler(commandLine).runProcess();
+			ProcessOutput processOutput = ExecUtil.execAndGetOutput(commandLine);
 			String version = processOutput.getStdout().trim();
 			// 3.0.1-dev (dev-build)
 			int i = version.indexOf("(");

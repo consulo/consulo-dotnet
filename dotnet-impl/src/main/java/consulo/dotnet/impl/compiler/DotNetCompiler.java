@@ -32,7 +32,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.CapturingProcessHandler;
+import consulo.process.local.ExecUtil;
 import consulo.process.local.ProcessOutput;
 import consulo.project.Project;
 import consulo.util.collection.Chunk;
@@ -129,9 +129,7 @@ public class DotNetCompiler implements TranslatingCompiler
 			GeneralCommandLine commandLine = builder.createCommandLine(module, virtualFiles, dotNetModuleExtension);
 			commandLine = commandLine.withCharset(StandardCharsets.UTF_8);
 
-			CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine);
-
-			ProcessOutput processOutput = processHandler.runProcess();
+			ProcessOutput processOutput = ExecUtil.execAndGetOutput(commandLine);
 			for(String line : processOutput.getStdoutLines())
 			{
 				try
