@@ -36,12 +36,12 @@ public class DotNetCompileModuleScopeFactory implements CompileModuleScopeFactor
 {
 	@Nullable
 	@Override
-	public FileIndexCompileScope createScope(@Nonnull Module module, boolean b)
+	public FileIndexCompileScope createScope(@Nonnull Module module, boolean includeDependentModules, boolean includeTestScope)
 	{
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		if(extension != null && !extension.isAllowSourceRoots())
 		{
-			return new ModuleRootCompileScope(module, b);
+			return new ModuleRootCompileScope(module, includeDependentModules);
 		}
 		return null;
 	}
