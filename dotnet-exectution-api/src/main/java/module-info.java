@@ -9,4 +9,5 @@ open module consulo.dotnet.execution.api
 
 	exports consulo.dotnet.run;
 	exports consulo.dotnet.run.coverage;
+	exports consulo.dotnet.execution.localize;
 }

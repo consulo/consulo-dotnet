@@ -17,7 +17,7 @@
 package consulo.dotnet.run.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
+import consulo.dotnet.execution.localize.DotNetExecutionLocalize;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationTypeBase;
@@ -27,6 +27,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.extension.ModuleExtensionHelper;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -47,7 +48,7 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 
 	public DotNetConfigurationType()
 	{
-		super("#DotNetConfigurationType", ".NET Application", "", AllIcons.RunConfigurations.Application);
+		super("#DotNetConfigurationType", DotNetExecutionLocalize.dotnetApplicationName(), PlatformIconGroup.runconfigurationsApplication());
 
 		addFactory(new ConfigurationFactory(this)
 		{
