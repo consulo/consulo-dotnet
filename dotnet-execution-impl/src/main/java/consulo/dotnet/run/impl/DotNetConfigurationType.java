@@ -52,6 +52,13 @@ public class DotNetConfigurationType extends ConfigurationTypeBase
 
 		addFactory(new ConfigurationFactory(this)
 		{
+			@Nonnull
+			@Override
+			public String getId()
+			{
+				return ".NET Application";
+			}
+
 			@Override
 			public RunConfiguration createTemplateConfiguration(Project project)
 			{
