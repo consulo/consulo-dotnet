@@ -22,8 +22,8 @@ import consulo.dotnet.icon.DotNetIconGroup;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.ExecUtil;
-import consulo.process.local.ProcessOutput;
+import consulo.process.util.CapturingProcessUtil;
+import consulo.process.util.ProcessOutput;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -66,7 +66,7 @@ public class RoslynBundleType extends SdkType
 
 		try
 		{
-			ProcessOutput processOutput = ExecUtil.execAndGetOutput(commandLine);
+			ProcessOutput processOutput = CapturingProcessUtil.execAndGetOutput(commandLine);
 			String version = processOutput.getStdout().trim();
 			// 3.0.1-dev (dev-build)
 			int i = version.indexOf("(");
