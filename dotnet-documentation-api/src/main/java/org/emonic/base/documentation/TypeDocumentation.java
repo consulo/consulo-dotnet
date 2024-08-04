@@ -13,7 +13,7 @@ package org.emonic.base.documentation;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import org.w3c.dom.Element;
 
 public class TypeDocumentation extends Documentation implements ITypeDocumentation

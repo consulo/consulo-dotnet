@@ -16,9 +16,9 @@
 
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetArrayType;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

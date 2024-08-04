@@ -24,8 +24,7 @@ import consulo.language.lexer.Lexer;
 import consulo.msil.impl.lang.lexer.MsilLexer;
 import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.MsilTokens;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

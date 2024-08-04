@@ -28,10 +28,9 @@ import consulo.dotnet.debugger.impl.breakpoint.properties.DotNetMethodBreakpoint
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.NotificationType;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

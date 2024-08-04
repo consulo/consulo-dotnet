@@ -21,7 +21,7 @@ import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcherExtension
 import consulo.msil.MsilLanguage;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

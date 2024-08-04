@@ -26,7 +26,7 @@ import consulo.msil.lang.psi.MsilFieldEntry;
 import consulo.msil.impl.lang.psi.impl.MsilFieldEntryImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

@@ -28,8 +28,7 @@ import consulo.msil.lang.psi.MsilUserType;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilUserTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilReferenceTypeRefImpl;
 import consulo.util.lang.StringUtil;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

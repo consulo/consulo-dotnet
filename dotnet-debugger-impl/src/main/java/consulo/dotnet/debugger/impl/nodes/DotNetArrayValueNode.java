@@ -16,13 +16,13 @@
 
 package consulo.dotnet.debugger.impl.nodes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +37,7 @@ public class DotNetArrayValueNode extends DotNetAbstractVariableValueNode
 	private final DotNetValueProxy myValue;
 
 	public DotNetArrayValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull String name, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull DotNetArrayValueProxy valueMirrorNode,
-			int index)
+								int index)
 	{
 		super(debuggerContext, name, frameProxy);
 		myArrayValueMirror = valueMirrorNode;

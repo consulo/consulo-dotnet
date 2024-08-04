@@ -19,8 +19,8 @@ package consulo.dotnet.run.impl.coverage;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.coverage.CoverageEnabledConfiguration;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**

@@ -18,7 +18,7 @@ package consulo.dotnet.util;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

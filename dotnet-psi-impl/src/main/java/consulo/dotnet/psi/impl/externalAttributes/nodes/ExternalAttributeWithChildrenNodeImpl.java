@@ -19,8 +19,9 @@ package consulo.dotnet.psi.impl.externalAttributes.nodes;
 import consulo.dotnet.externalAttributes.ExternalAttributeSimpleNode;
 import consulo.dotnet.externalAttributes.ExternalAttributeWithChildrenNode;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 

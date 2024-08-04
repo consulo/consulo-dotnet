@@ -25,7 +25,7 @@ import consulo.module.content.layer.orderEntry.CustomOrderEntry;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

@@ -15,7 +15,7 @@ import consulo.msil.impl.lang.psi.impl.MsilConstantValueImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilConstantValueStub;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

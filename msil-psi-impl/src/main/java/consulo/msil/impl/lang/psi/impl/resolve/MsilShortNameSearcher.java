@@ -27,10 +27,11 @@ import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilTypeByNameIndex;
 import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.project.Project;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+
 import java.util.function.Predicate;
 
 /**

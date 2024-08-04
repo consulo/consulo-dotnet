@@ -20,8 +20,8 @@ import consulo.dotnet.psi.DotNetModifier;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Locale;
 
 /**

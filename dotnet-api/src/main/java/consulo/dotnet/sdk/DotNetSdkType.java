@@ -26,7 +26,7 @@ import consulo.dotnet.module.extension.BaseDotNetSimpleModuleExtension;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**

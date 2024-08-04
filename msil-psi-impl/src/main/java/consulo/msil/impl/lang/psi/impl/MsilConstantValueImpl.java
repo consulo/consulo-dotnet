@@ -12,9 +12,8 @@ import consulo.msil.lang.psi.MsilConstantValue;
 import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.impl.lang.psi.impl.elementType.MsilConstantValueStubElementType;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilConstantValueStub;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

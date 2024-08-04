@@ -6,8 +6,7 @@ import consulo.language.lexer.LexerPosition;
 import consulo.language.lexer.LookAheadLexer;
 import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.MsilTokens;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

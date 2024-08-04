@@ -16,11 +16,11 @@
 
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetPropertyDeclaration;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

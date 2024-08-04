@@ -26,7 +26,7 @@ import consulo.msil.lang.psi.MsilEventEntry;
 import consulo.msil.impl.lang.psi.impl.MsilEventEntryImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

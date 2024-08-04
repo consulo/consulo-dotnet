@@ -21,8 +21,8 @@ import consulo.content.bundle.SdkType;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

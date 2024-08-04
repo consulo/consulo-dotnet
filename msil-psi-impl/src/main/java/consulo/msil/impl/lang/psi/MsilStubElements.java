@@ -25,7 +25,7 @@ import consulo.msil.impl.lang.psi.impl.MsilTypeWithTypeArgumentsImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.*;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -36,7 +36,7 @@ import consulo.msil.impl.lang.psi.MsilStubElements;
 import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.impl.MsilFileImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -2,8 +2,7 @@ package consulo.dotnet.run.coverage;
 
 import consulo.execution.configuration.ModuleRunProfile;
 import consulo.execution.configuration.RunConfigurationModule;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

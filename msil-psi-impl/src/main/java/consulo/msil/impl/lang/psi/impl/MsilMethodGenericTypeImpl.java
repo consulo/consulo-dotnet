@@ -27,7 +27,7 @@ import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilMethodGenericTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilMethodGenericTypeRefImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

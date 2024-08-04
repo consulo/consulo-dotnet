@@ -4,9 +4,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.module.extension.DotNetElementQualifierProducer;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

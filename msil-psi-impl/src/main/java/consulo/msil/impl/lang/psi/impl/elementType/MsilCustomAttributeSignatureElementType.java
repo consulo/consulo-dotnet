@@ -10,7 +10,7 @@ import consulo.msil.lang.psi.MsilCustomAttributeSignature;
 import consulo.msil.impl.lang.psi.impl.MsilCustomAttributeSignatureImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilCustomAttributeSignatureStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

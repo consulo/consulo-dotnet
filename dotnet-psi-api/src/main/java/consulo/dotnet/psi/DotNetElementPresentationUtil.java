@@ -20,8 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.language.psi.PsiNamedElement;
 import consulo.util.lang.StringUtil;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

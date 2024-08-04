@@ -25,7 +25,7 @@ import consulo.language.psi.stub.StubOutputStream;
 import consulo.msil.impl.lang.psi.impl.MsilGenericParameterListImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilGenericParameterListStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

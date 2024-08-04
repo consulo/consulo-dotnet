@@ -25,8 +25,8 @@ import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

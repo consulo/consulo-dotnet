@@ -20,8 +20,7 @@ import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.psi.stub.PsiFileStubImpl;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.impl.lang.psi.MsilStubElements;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

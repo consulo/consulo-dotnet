@@ -29,7 +29,7 @@ import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilArrayTypRefImpl;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

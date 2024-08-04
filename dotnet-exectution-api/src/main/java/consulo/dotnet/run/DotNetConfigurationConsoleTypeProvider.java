@@ -2,7 +2,7 @@ package consulo.dotnet.run;
 
 import consulo.process.ProcessConsoleType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

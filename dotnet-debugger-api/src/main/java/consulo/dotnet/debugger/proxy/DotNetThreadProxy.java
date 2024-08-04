@@ -18,9 +18,9 @@ package consulo.dotnet.debugger.proxy;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.dotnet.util.ArrayUtil2;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

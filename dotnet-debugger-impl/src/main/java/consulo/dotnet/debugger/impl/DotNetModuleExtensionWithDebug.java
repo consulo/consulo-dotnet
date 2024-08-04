@@ -4,7 +4,7 @@ import consulo.execution.debug.XDebugSession;
 import consulo.dotnet.util.DebugConnectionInfo;
 import consulo.execution.configuration.RunProfile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

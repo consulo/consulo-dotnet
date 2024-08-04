@@ -8,7 +8,7 @@ import consulo.msil.lang.psi.MsilCustomAttributeSignature;
 import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilCustomAttributeSignatureStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

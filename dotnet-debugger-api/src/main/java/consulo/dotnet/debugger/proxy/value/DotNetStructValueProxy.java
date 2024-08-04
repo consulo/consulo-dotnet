@@ -2,7 +2,7 @@ package consulo.dotnet.debugger.proxy.value;
 
 import java.util.Map;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 

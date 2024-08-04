@@ -21,7 +21,7 @@ import consulo.dotnet.util.DebugConnectionInfo;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.process.ExecutionException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

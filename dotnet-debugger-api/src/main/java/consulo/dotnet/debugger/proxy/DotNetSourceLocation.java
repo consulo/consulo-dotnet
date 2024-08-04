@@ -16,9 +16,9 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
 import consulo.dotnet.debugger.proxy.light.LightSourceLocation;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -27,7 +27,7 @@ import consulo.msil.lang.psi.MsilXAcessor;
 import consulo.msil.impl.lang.psi.impl.MsilXAccessorImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilXAccessorStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

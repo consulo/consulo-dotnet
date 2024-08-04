@@ -24,8 +24,7 @@ import consulo.execution.ui.console.Filter;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.Project;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -19,7 +19,7 @@ package consulo.dotnet.externalAttributes;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.OrderRootType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -18,8 +18,7 @@ package consulo.msil.impl.ide.highlight;
 
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

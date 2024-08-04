@@ -22,8 +22,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

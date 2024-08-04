@@ -31,7 +31,7 @@ import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilClassEntryStub;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilStubIndexer;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

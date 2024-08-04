@@ -23,8 +23,7 @@ import consulo.execution.debug.breakpoint.SuspendPolicy;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

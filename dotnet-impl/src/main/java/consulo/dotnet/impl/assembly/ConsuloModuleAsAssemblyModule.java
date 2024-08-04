@@ -22,9 +22,8 @@ import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.util.lang.ObjectUtil;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -16,8 +16,8 @@
 
 package consulo.dotnet.externalAttributes;
 
-import javax.annotation.Nonnull;
 import consulo.dotnet.DotNetTypes;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

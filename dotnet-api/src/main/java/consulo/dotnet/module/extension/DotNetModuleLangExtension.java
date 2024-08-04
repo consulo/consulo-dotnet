@@ -23,8 +23,8 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiElement;
 import consulo.module.extension.ModuleExtension;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.Set;
 

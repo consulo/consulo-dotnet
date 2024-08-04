@@ -10,10 +10,10 @@
  ******************************************************************************/
 package consulo.dotnet.documentation.impl;
 
+import jakarta.annotation.Nonnull;
 import org.emonic.base.documentation.IDocumentation;
 import org.emonic.base.documentation.ITypeDocumentation;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

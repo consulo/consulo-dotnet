@@ -16,7 +16,7 @@
 
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.dotnet.psi.DotNetEventDeclaration;
 
 /**

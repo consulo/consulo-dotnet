@@ -26,7 +26,7 @@ import consulo.msil.lang.psi.MsilTypeParameterAttributeList;
 import consulo.msil.impl.lang.psi.impl.MsilTypeParameterAttributeListImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilTypeParameterAttributeListStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

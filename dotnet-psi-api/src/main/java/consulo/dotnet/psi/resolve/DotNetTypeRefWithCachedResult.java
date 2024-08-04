@@ -19,8 +19,7 @@ package consulo.dotnet.psi.resolve;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

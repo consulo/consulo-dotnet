@@ -16,9 +16,9 @@
 
 package consulo.dotnet.psi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

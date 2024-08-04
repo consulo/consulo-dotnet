@@ -27,7 +27,7 @@ import consulo.msil.lang.psi.MsilCustomAttribute;
 import consulo.msil.impl.lang.psi.impl.MsilCustomAttributeImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilCustomAttributeStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

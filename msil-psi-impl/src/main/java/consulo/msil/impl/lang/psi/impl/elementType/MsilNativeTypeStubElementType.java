@@ -27,8 +27,8 @@ import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.impl.MsilNativeTypeImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilNativeTypeStub;
 import consulo.util.collection.ArrayUtil;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**

@@ -9,7 +9,7 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.psi.PsiBundle;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

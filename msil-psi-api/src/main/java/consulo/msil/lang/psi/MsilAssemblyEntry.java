@@ -16,8 +16,8 @@
 
 package consulo.msil.lang.psi;
 
-import javax.annotation.Nonnull;
 import consulo.dotnet.psi.DotNetNamedElement;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

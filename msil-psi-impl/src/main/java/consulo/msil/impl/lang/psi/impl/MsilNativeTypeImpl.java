@@ -28,7 +28,7 @@ import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilNativeTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilNativeTypeRefImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 

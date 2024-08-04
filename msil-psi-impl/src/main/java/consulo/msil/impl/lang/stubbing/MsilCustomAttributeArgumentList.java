@@ -2,7 +2,7 @@ package consulo.msil.impl.lang.stubbing;
 
 import consulo.msil.impl.lang.stubbing.values.MsiCustomAttributeValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 

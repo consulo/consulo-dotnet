@@ -7,10 +7,9 @@ import consulo.component.util.ModificationTracker;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.language.psi.AnyPsiChangeListener;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

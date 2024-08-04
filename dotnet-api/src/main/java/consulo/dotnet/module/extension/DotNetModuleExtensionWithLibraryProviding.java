@@ -19,7 +19,7 @@ package consulo.dotnet.module.extension;
 import consulo.content.OrderRootType;
 import consulo.module.extension.ModuleExtension;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 /**

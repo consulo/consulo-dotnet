@@ -26,8 +26,7 @@ import consulo.msil.MsilLanguage;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.impl.lang.psi.MsilStubTokenSets;
 import consulo.virtualFileSystem.fileType.FileType;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

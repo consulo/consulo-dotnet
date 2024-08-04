@@ -24,8 +24,8 @@ import consulo.execution.coverage.CoverageEnabledConfiguration;
 import consulo.execution.coverage.CoverageRunner;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**

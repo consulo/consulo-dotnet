@@ -25,7 +25,7 @@ import consulo.dotnet.util.ArrayUtil2;
 import consulo.language.psi.PsiElement;
 import consulo.msil.lang.psi.MsilMethodEntry;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

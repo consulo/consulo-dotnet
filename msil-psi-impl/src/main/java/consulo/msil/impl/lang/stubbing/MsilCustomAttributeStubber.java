@@ -30,12 +30,13 @@ import consulo.msil.lang.psi.MsilCustomAttributeSignature;
 import consulo.msil.lang.psi.MsilFieldEntry;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nullable;
 import org.joou.UByte;
 import org.joou.UInteger;
 import org.joou.UShort;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 

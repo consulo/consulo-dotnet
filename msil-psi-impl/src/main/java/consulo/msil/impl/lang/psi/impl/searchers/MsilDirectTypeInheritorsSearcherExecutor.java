@@ -32,8 +32,8 @@ import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilExtendsListIndex;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 @ExtensionImpl

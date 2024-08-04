@@ -26,8 +26,7 @@ import consulo.language.psi.stub.StubElement;
 import consulo.msil.lang.psi.MsilGenericParameter;
 import consulo.msil.lang.psi.MsilUserType;
 import consulo.util.lang.BitUtil;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

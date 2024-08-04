@@ -33,7 +33,7 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

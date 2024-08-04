@@ -30,7 +30,7 @@ import consulo.module.content.layer.orderEntry.CustomOrderEntryModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.extension.ModuleExtension;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

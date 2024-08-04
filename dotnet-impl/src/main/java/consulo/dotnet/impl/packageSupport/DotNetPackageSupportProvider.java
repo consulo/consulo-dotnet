@@ -26,7 +26,7 @@ import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

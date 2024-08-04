@@ -30,9 +30,9 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;

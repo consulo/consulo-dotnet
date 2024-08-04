@@ -26,7 +26,7 @@ import consulo.module.Module;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.collection.SmartList;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;

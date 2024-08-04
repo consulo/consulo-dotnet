@@ -26,7 +26,7 @@ import consulo.msil.lang.psi.MsilClassGenericType;
 import consulo.msil.impl.lang.psi.impl.MsilClassGenericTypeImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilClassGenericTypeStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
