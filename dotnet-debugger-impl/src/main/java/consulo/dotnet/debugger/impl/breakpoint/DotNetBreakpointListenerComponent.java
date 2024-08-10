@@ -16,51 +16,35 @@
 
 package consulo.dotnet.debugger.impl.breakpoint;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.annotation.component.ServiceImpl;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.dotnet.debugger.impl.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.event.XBreakpointListener;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
-import consulo.dotnet.debugger.impl.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.project.Project;
-import consulo.project.startup.StartupManager;
+import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 03.05.2016
  */
-@Singleton
-@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
-@ServiceImpl
-public class DotNetBreakpointListenerComponent
-{
-	@Inject
-	public DotNetBreakpointListenerComponent(Project project, StartupManager startupManager)
-	{
-		if(project.isDefault())
-		{
-			return;
-		}
+@ExtensionImpl
+public class DotNetBreakpointListenerComponent implements PostStartupActivity, DumbAware {
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
-		startupManager.registerPostStartupActivity(uiAccess ->
-		{
-			XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
-
-			breakpointManager.addBreakpointListener(DotNetMethodBreakpointType.getInstance(), new XBreakpointListener<XLineBreakpoint<DotNetMethodBreakpointProperties>>()
-			{
-				@Override
-				public void breakpointAdded(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
-				{
-					XDebuggerUIConstants.NOTIFICATION_GROUP.createNotification("Method breakpoints may dramatically slow down debugging", NotificationType.WARNING).notify(project);
-				}
-			});
-		});
-	}
+        breakpointManager.addBreakpointListener(DotNetMethodBreakpointType.getInstance(), new XBreakpointListener<>() {
+            @Override
+            public void breakpointAdded(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint) {
+                XDebuggerUIConstants.NOTIFICATION_GROUP.createNotification("Method breakpoints may dramatically slow down debugging", NotificationType.WARNING).notify(project);
+            }
+        });
+    }
 }
