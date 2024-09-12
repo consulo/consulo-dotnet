@@ -23,81 +23,71 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29.04.2016
  */
-public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomPropertiesPanel<XBreakpoint<DotNetExceptionBreakpointProperties>>
-{
-	private CheckBox myNotifyCaughtCheckBox;
-	private CheckBox myNotifyUncaughtCheckBox;
+public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomPropertiesPanel<XBreakpoint<DotNetExceptionBreakpointProperties>> {
+    private CheckBox myNotifyCaughtCheckBox;
+    private CheckBox myNotifyUncaughtCheckBox;
 
-	@Nonnull
-	@Override
-	@RequiredUIAccess
-	public Component getUIComponent()
-	{
-		myNotifyCaughtCheckBox = CheckBox.create("Caught exception");
-		myNotifyUncaughtCheckBox = CheckBox.create("Uncaught exception");
+    @Nonnull
+    @Override
+    @RequiredUIAccess
+    public Component getUIComponent() {
+        myNotifyCaughtCheckBox = CheckBox.create("Caught exception");
+        myNotifyUncaughtCheckBox = CheckBox.create("Uncaught exception");
 
-		VerticalLayout notificationLayout = VerticalLayout.create();
-		notificationLayout.add(myNotifyCaughtCheckBox);
-		notificationLayout.add(myNotifyUncaughtCheckBox);
+        VerticalLayout notificationLayout = VerticalLayout.create();
+        notificationLayout.add(myNotifyCaughtCheckBox);
+        notificationLayout.add(myNotifyUncaughtCheckBox);
 
-		ValueComponent.ValueListener<Boolean> listener = valueEvent ->
-		{
-			Component source = valueEvent.getComponent();
-			if(!myNotifyCaughtCheckBox.getValue() && !myNotifyUncaughtCheckBox.getValue())
-			{
-				CheckBox toCheck = null;
-				if(myNotifyCaughtCheckBox.equals(source))
-				{
-					toCheck = myNotifyUncaughtCheckBox;
-				}
-				else if(myNotifyUncaughtCheckBox.equals(source))
-				{
-					toCheck = myNotifyCaughtCheckBox;
-				}
-				if(toCheck != null)
-				{
-					toCheck.setValue(true);
-				}
-			}
-		};
-		myNotifyCaughtCheckBox.addValueListener(listener);
-		myNotifyUncaughtCheckBox.addValueListener(listener);
-		return LabeledLayout.create("Notifications", notificationLayout);
-	}
+        ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> listener = valueEvent -> {
+            Component source = valueEvent.getComponent();
+            if (!myNotifyCaughtCheckBox.getValue() && !myNotifyUncaughtCheckBox.getValue()) {
+                CheckBox toCheck = null;
+                if (myNotifyCaughtCheckBox.equals(source)) {
+                    toCheck = myNotifyUncaughtCheckBox;
+                }
+                else if (myNotifyUncaughtCheckBox.equals(source)) {
+                    toCheck = myNotifyCaughtCheckBox;
+                }
+                if (toCheck != null) {
+                    toCheck.setValue(true);
+                }
+            }
+        };
+        myNotifyCaughtCheckBox.addValueListener(listener);
+        myNotifyUncaughtCheckBox.addValueListener(listener);
+        return LabeledLayout.create("Notifications", notificationLayout);
+    }
 
-	@Override
-	@RequiredUIAccess
-	public void loadFrom(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
-	{
-		DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
-		if(properties == null)
-		{
-			return;
-		}
-		myNotifyCaughtCheckBox.setValue(properties.NOTIFY_CAUGHT);
-		myNotifyUncaughtCheckBox.setValue(properties.NOTIFY_UNCAUGHT);
-	}
+    @Override
+    @RequiredUIAccess
+    public void loadFrom(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint) {
+        DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
+        if (properties == null) {
+            return;
+        }
+        myNotifyCaughtCheckBox.setValue(properties.NOTIFY_CAUGHT);
+        myNotifyUncaughtCheckBox.setValue(properties.NOTIFY_UNCAUGHT);
+    }
 
-	@Override
-	@RequiredUIAccess
-	public void saveTo(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
-	{
-		DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
-		if(properties == null)
-		{
-			return;
-		}
+    @Override
+    @RequiredUIAccess
+    public void saveTo(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint) {
+        DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
+        if (properties == null) {
+            return;
+        }
 
-		properties.NOTIFY_CAUGHT = myNotifyCaughtCheckBox.getValue();
-		properties.NOTIFY_UNCAUGHT = myNotifyUncaughtCheckBox.getValue();
-	}
+        properties.NOTIFY_CAUGHT = myNotifyCaughtCheckBox.getValue();
+        properties.NOTIFY_UNCAUGHT = myNotifyUncaughtCheckBox.getValue();
+    }
 }
