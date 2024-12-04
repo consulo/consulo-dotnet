@@ -16,11 +16,11 @@
 
 package consulo.dotnet.debugger.impl.breakpoint;
 
-import consulo.application.AllIcons;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.SuspendPolicy;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -29,54 +29,41 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 19.07.2015
  */
-public class DotNetBreakpointUtil
-{
-	public static void updateLineBreakpointIcon(@Nonnull Project project, Boolean result, @Nonnull XLineBreakpoint breakpoint)
-	{
-		XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
+public class DotNetBreakpointUtil {
+    public static void updateLineBreakpointIcon(@Nonnull Project project, Boolean result, @Nonnull XLineBreakpoint breakpoint) {
+        XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
-		Image icon = null;
-		SuspendPolicy suspendPolicy = breakpoint.getSuspendPolicy();
-		if(breakpoint.isTemporary())
-		{
-			if(suspendPolicy == SuspendPolicy.NONE)
-			{
-				icon = AllIcons.Debugger.Db_temporary_breakpoint;
-			}
-			else
-			{
-				icon = AllIcons.Debugger.Db_muted_temporary_breakpoint;
-			}
-		}
-		else
-		{
-			if(result == null)
-			{
-				// cleanup it
-			}
-			else if(result)
-			{
-				if(suspendPolicy == SuspendPolicy.NONE || !breakpoint.isEnabled())
-				{
-					icon = AllIcons.Debugger.Db_muted_verified_breakpoint;
-				}
-				else
-				{
-					icon = AllIcons.Debugger.Db_verified_breakpoint;
-				}
-			}
-			else
-			{
-				if(suspendPolicy == SuspendPolicy.NONE || !breakpoint.isEnabled())
-				{
-					icon = AllIcons.Debugger.Db_muted_invalid_breakpoint;
-				}
-				else
-				{
-					icon = AllIcons.Debugger.Db_invalid_breakpoint;
-				}
-			}
-		}
-		breakpointManager.updateBreakpointPresentation(breakpoint, icon, null);
-	}
+        Image icon = null;
+        SuspendPolicy suspendPolicy = breakpoint.getSuspendPolicy();
+        if (breakpoint.isTemporary()) {
+            if (suspendPolicy == SuspendPolicy.NONE) {
+                icon = ExecutionDebugIconGroup.breakpointBreakpoint();
+            }
+            else {
+                icon = ExecutionDebugIconGroup.breakpointBreakpointmuted();
+            }
+        }
+        else {
+            if (result == null) {
+                // cleanup it
+            }
+            else if (result) {
+                if (suspendPolicy == SuspendPolicy.NONE || !breakpoint.isEnabled()) {
+                    icon = ExecutionDebugIconGroup.breakpointBreakpointmuted();
+                }
+                else {
+                    icon = ExecutionDebugIconGroup.breakpointBreakpointvalid();
+                }
+            }
+            else {
+                if (suspendPolicy == SuspendPolicy.NONE || !breakpoint.isEnabled()) {
+                    icon = ExecutionDebugIconGroup.breakpointBreakpointmuteddisabled();
+                }
+                else {
+                    icon = ExecutionDebugIconGroup.breakpointBreakpointinvalid();
+                }
+            }
+        }
+        breakpointManager.updateBreakpointPresentation(breakpoint, icon, null);
+    }
 }

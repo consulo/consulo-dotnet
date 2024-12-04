@@ -16,92 +16,83 @@
 
 package consulo.dotnet.debugger.impl.nodes;
 
-import consulo.application.AllIcons;
-import consulo.execution.debug.frame.XCompositeNode;
-import consulo.execution.debug.frame.XValueChildrenList;
-import consulo.execution.debug.frame.XValueModifier;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.execution.debug.frame.XValueModifier;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 05.01.16
  */
-public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
-{
-	@Nonnull
-	private final DotNetTypeProxy myTypeMirror;
-	private final DotNetStructValueProxy myValue;
+public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode {
+    @Nonnull
+    private final DotNetTypeProxy myTypeMirror;
+    private final DotNetStructValueProxy myValue;
 
-	public DotNetThisAsStructValueNode(@Nonnull DotNetDebugContext debuggerContext,
-			@Nonnull DotNetStackFrameProxy frameProxy,
-			@Nonnull DotNetTypeProxy typeMirror,
-			@Nonnull DotNetStructValueProxy value)
-	{
-		super(debuggerContext, "this", frameProxy);
-		myTypeMirror = typeMirror;
-		myValue = value;
-	}
+    public DotNetThisAsStructValueNode(@Nonnull DotNetDebugContext debuggerContext,
+                                       @Nonnull DotNetStackFrameProxy frameProxy,
+                                       @Nonnull DotNetTypeProxy typeMirror,
+                                       @Nonnull DotNetStructValueProxy value) {
+        super(debuggerContext, "this", frameProxy);
+        myTypeMirror = typeMirror;
+        myValue = value;
+    }
 
-	@Nullable
-	@Override
-	public XValueModifier getModifier()
-	{
-		return null;
-	}
+    @Nullable
+    @Override
+    public XValueModifier getModifier() {
+        return null;
+    }
 
-	@Nonnull
-	@Override
-	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
-	{
-		return AllIcons.Debugger.Value;
-	}
+    @Nonnull
+    @Override
+    public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue) {
+        return ExecutionDebugIconGroup.nodeValue();
+    }
 
-	@Nullable
-	@Override
-	public DotNetValueProxy getValueOfVariableImpl()
-	{
-		return myValue;
-	}
+    @Nullable
+    @Override
+    public DotNetValueProxy getValueOfVariableImpl() {
+        return myValue;
+    }
 
-	@Override
-	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
-	{
-	}
+    @Override
+    public void setValueForVariableImpl(@Nonnull DotNetValueProxy value) {
+    }
 
-	@Override
-	public void computeChildren(@Nonnull XCompositeNode node)
-	{
-		final XValueChildrenList childrenList = new XValueChildrenList();
+    @Override
+    public void computeChildren(@Nonnull XCompositeNode node) {
+        final XValueChildrenList childrenList = new XValueChildrenList();
 
-		Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map = myValue.getValues();
-		for(Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy> entry : map.entrySet())
-		{
-			DotNetFieldOrPropertyProxy key = entry.getKey();
-			DotNetValueProxy value = entry.getValue();
+        Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map = myValue.getValues();
+        for (Map.Entry<DotNetFieldOrPropertyProxy, DotNetValueProxy> entry : map.entrySet()) {
+            DotNetFieldOrPropertyProxy key = entry.getKey();
+            DotNetValueProxy value = entry.getValue();
 
-			DotNetStructValueInfo valueInfo = new DotNetStructValueInfo(myValue, this, key, value);
+            DotNetStructValueInfo valueInfo = new DotNetStructValueInfo(myValue, this, key, value);
 
-			childrenList.add(new DotNetFieldOrPropertyValueNode(myDebugContext, key, myFrameProxy, null, valueInfo));
-		}
+            childrenList.add(new DotNetFieldOrPropertyValueNode(myDebugContext, key, myFrameProxy, null, valueInfo));
+        }
 
-		node.addChildren(childrenList, true);
-	}
+        node.addChildren(childrenList, true);
+    }
 
-	@Nonnull
-	@Override
-	public DotNetTypeProxy getTypeOfVariableImpl()
-	{
-		return myTypeMirror;
-	}
+    @Nonnull
+    @Override
+    public DotNetTypeProxy getTypeOfVariableImpl() {
+        return myTypeMirror;
+    }
 }

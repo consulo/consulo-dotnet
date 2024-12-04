@@ -16,23 +16,23 @@
 
 package consulo.dotnet.debugger.impl.nodes;
 
-import consulo.application.AllIcons;
-import consulo.execution.debug.frame.*;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.impl.DotNetVirtualMachineUtil;
-import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import consulo.dotnet.debugger.impl.nodes.valueRender.DotNetValueModifier;
 import consulo.dotnet.debugger.impl.proxy.DotNetErrorValueProxyImpl;
+import consulo.dotnet.debugger.nodes.logicView.DotNetLogicValueView;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThrowValueException;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.*;
+import consulo.execution.debug.frame.*;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -40,241 +40,205 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 11.04.14
  */
-public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValueNode
-{
-	@Nonnull
-	protected final DotNetStackFrameProxy myFrameProxy;
-	private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
+public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValueNode {
+    @Nonnull
+    protected final DotNetStackFrameProxy myFrameProxy;
+    private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
 
-	private volatile SimpleReference<TypeTag> myTypeTag;
+    private volatile SimpleReference<TypeTag> myTypeTag;
 
-	private final SimpleReference<DotNetValueProxy> myLastValueRef = SimpleReference.create();
+    private final SimpleReference<DotNetValueProxy> myLastValueRef = SimpleReference.create();
 
-	public DotNetAbstractVariableValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull String name, @Nonnull DotNetStackFrameProxy frameProxy)
-	{
-		super(debuggerContext, name);
-		myFrameProxy = frameProxy;
-	}
+    public DotNetAbstractVariableValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull String name, @Nonnull DotNetStackFrameProxy frameProxy) {
+        super(debuggerContext, name);
+        myFrameProxy = frameProxy;
+    }
 
-	@Nullable
-	public TypeTag typeTag(@Nullable DotNetTypeProxy alreadyCalledType)
-	{
-		if(myTypeTag != null)
-		{
-			return myTypeTag.get();
-		}
+    @Nullable
+    public TypeTag typeTag(@Nullable DotNetTypeProxy alreadyCalledType) {
+        if (myTypeTag != null) {
+            return myTypeTag.get();
+        }
 
-		if(alreadyCalledType != null)
-		{
-			TypeTag typeTag = TypeTag.byType(alreadyCalledType.getFullName());
-			myTypeTag = SimpleReference.create(typeTag);
-			return typeTag;
-		}
-		else
-		{
-			DotNetVirtualMachineUtil.checkCallForUIThread();
+        if (alreadyCalledType != null) {
+            TypeTag typeTag = TypeTag.byType(alreadyCalledType.getFullName());
+            myTypeTag = SimpleReference.create(typeTag);
+            return typeTag;
+        }
+        else {
+            DotNetVirtualMachineUtil.checkCallForUIThread();
 
-			myTypeTag = SimpleReference.create();
+            myTypeTag = SimpleReference.create();
 
-			DotNetTypeProxy typeOfVariable = getTypeOfVariable();
-			if(typeOfVariable == null)
-			{
-				return null;
-			}
+            DotNetTypeProxy typeOfVariable = getTypeOfVariable();
+            if (typeOfVariable == null) {
+                return null;
+            }
 
-			TypeTag typeTag = TypeTag.byType(typeOfVariable.getFullName());
-			myTypeTag.set(typeTag);
-			return typeTag;
-		}
-	}
+            TypeTag typeTag = TypeTag.byType(typeOfVariable.getFullName());
+            myTypeTag.set(typeTag);
+            return typeTag;
+        }
+    }
 
-	private void setTypeTagIfNotSet()
-	{
-		if(myTypeTag == null)
-		{
-			myTypeTag = SimpleReference.create();
-		}
-	}
+    private void setTypeTagIfNotSet() {
+        if (myTypeTag == null) {
+            myTypeTag = SimpleReference.create();
+        }
+    }
 
-	@Nonnull
-	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
-	{
-		DotNetVirtualMachineUtil.checkCallForUIThread();
+    @Nonnull
+    public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue) {
+        DotNetVirtualMachineUtil.checkCallForUIThread();
 
-		DotNetTypeProxy typeOfVariable = getTypeOfVariableOrValue(alreadyCalledValue);
-		if(typeOfVariable == null)
-		{
-			// set type tag to null - do not allow call from typeTag()
-			setTypeTagIfNotSet();
-			return AllIcons.Debugger.Value;
-		}
+        DotNetTypeProxy typeOfVariable = getTypeOfVariableOrValue(alreadyCalledValue);
+        if (typeOfVariable == null) {
+            // set type tag to null - do not allow call from typeTag()
+            setTypeTagIfNotSet();
+            return ExecutionDebugIconGroup.nodeValue();
+        }
 
-		if(typeOfVariable.isArray())
-		{
-			setTypeTagIfNotSet();
-			return AllIcons.Debugger.Db_array;
-		}
+        if (typeOfVariable.isArray()) {
+            setTypeTagIfNotSet();
+            return ExecutionDebugIconGroup.nodeArray();
+        }
 
-		TypeTag typeTag = typeTag(typeOfVariable);
-		if(typeTag != null && typeTag != TypeTag.String)
-		{
-			return AllIcons.Debugger.Db_primitive;
-		}
+        TypeTag typeTag = typeTag(typeOfVariable);
+        if (typeTag != null && typeTag != TypeTag.String) {
+            return ExecutionDebugIconGroup.nodePrimitive();
+        }
 
-		DotNetTypeProxy baseType = typeOfVariable.getBaseType();
-		if(baseType != null && DotNetTypes.System.Enum.equals(baseType.getFullName()))
-		{
-			return AllIcons.Nodes.Enum;
-		}
+        DotNetTypeProxy baseType = typeOfVariable.getBaseType();
+        if (baseType != null && DotNetTypes.System.Enum.equals(baseType.getFullName())) {
+            return PlatformIconGroup.nodesEnum();
+        }
 
-		return AllIcons.Debugger.Value;
-	}
+        return ExecutionDebugIconGroup.nodeValue();
+    }
 
-	@Nullable
-	protected abstract DotNetValueProxy getValueOfVariableImpl();
+    @Nullable
+    protected abstract DotNetValueProxy getValueOfVariableImpl();
 
-	@Nullable
-	public DotNetValueProxy getValueOfVariable()
-	{
-		DotNetVirtualMachineUtil.checkCallForUIThread();
+    @Nullable
+    public DotNetValueProxy getValueOfVariable() {
+        DotNetVirtualMachineUtil.checkCallForUIThread();
 
-		try
-		{
-			return getValueOfVariableImpl();
-		}
-		catch(Throwable e)
-		{
-			DotNetValueProxy proxy = null;
-			if(e instanceof DotNetThrowValueException)
-			{
-				proxy = ((DotNetThrowValueException) e).getThrowExceptionValue();
-			}
-			return new DotNetErrorValueProxyImpl(e, proxy);
-		}
-	}
+        try {
+            return getValueOfVariableImpl();
+        }
+        catch (Throwable e) {
+            DotNetValueProxy proxy = null;
+            if (e instanceof DotNetThrowValueException) {
+                proxy = ((DotNetThrowValueException) e).getThrowExceptionValue();
+            }
+            return new DotNetErrorValueProxyImpl(e, proxy);
+        }
+    }
 
-	/**
-	 * @param alreadyCalledValue null if value not fetched. null inside ref mean null from vm
-	 */
-	@Nullable
-	public DotNetTypeProxy getTypeOfVariableOrValue(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
-	{
-		DotNetVirtualMachineUtil.checkCallForUIThread();
+    /**
+     * @param alreadyCalledValue null if value not fetched. null inside ref mean null from vm
+     */
+    @Nullable
+    public DotNetTypeProxy getTypeOfVariableOrValue(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue) {
+        DotNetVirtualMachineUtil.checkCallForUIThread();
 
-		DotNetValueProxy valueOfVariable = alreadyCalledValue != null ? alreadyCalledValue.get() : getValueOfVariable();
-		if(valueOfVariable == null)
-		{
-			return getTypeOfVariable();
-		}
-		try
-		{
-			return valueOfVariable.getType();
-		}
-		catch(Exception e)
-		{
-			return getTypeOfVariable();
-		}
-	}
+        DotNetValueProxy valueOfVariable = alreadyCalledValue != null ? alreadyCalledValue.get() : getValueOfVariable();
+        if (valueOfVariable == null) {
+            return getTypeOfVariable();
+        }
+        try {
+            return valueOfVariable.getType();
+        }
+        catch (Exception e) {
+            return getTypeOfVariable();
+        }
+    }
 
-	protected abstract void setValueForVariableImpl(@Nonnull DotNetValueProxy value);
+    protected abstract void setValueForVariableImpl(@Nonnull DotNetValueProxy value);
 
-	public void setValueForVariable(@Nonnull DotNetValueProxy value)
-	{
-		DotNetVirtualMachineUtil.checkCallForUIThread();
+    public void setValueForVariable(@Nonnull DotNetValueProxy value) {
+        DotNetVirtualMachineUtil.checkCallForUIThread();
 
-		setValueForVariableImpl(value);
-	}
+        setValueForVariableImpl(value);
+    }
 
-	@Nullable
-	@Override
-	public XValueModifier getModifier()
-	{
-		TypeTag typeTag = typeTag(null);
-		if(typeTag != null)
-		{
-			return new DotNetValueModifier(this::setValueForVariable, myLastValueRef, myDebugContext, typeTag);
-		}
-		return null;
-	}
+    @Nullable
+    @Override
+    public XValueModifier getModifier() {
+        TypeTag typeTag = typeTag(null);
+        if (typeTag != null) {
+            return new DotNetValueModifier(this::setValueForVariable, myLastValueRef, myDebugContext, typeTag);
+        }
+        return null;
+    }
 
-	@Override
-	public void computeChildren(@Nonnull XCompositeNode node)
-	{
-		myDebugContext.invoke(() ->
-		{
-			DotNetValueProxy value = getValueOfVariable();
-			if(value instanceof DotNetErrorValueProxy)
-			{
-				DotNetValueProxy throwObject = ((DotNetErrorValueProxy) value).getThrowObject();
+    @Override
+    public void computeChildren(@Nonnull XCompositeNode node) {
+        myDebugContext.invoke(() ->
+        {
+            DotNetValueProxy value = getValueOfVariable();
+            if (value instanceof DotNetErrorValueProxy) {
+                DotNetValueProxy throwObject = ((DotNetErrorValueProxy) value).getThrowObject();
 
-				if(throwObject == null)
-				{
-					node.setErrorMessage("No children for error value");
-					return;
-				}
-				else
-				{
-					XValueChildrenList list = new XValueChildrenList(1);
-					list.add(new DotNetThrowValueNode(myDebugContext, myFrameProxy, throwObject));
-					node.addChildren(list, true);
-					return;
-				}
-			}
+                if (throwObject == null) {
+                    node.setErrorMessage("No children for error value");
+                    return;
+                }
+                else {
+                    XValueChildrenList list = new XValueChildrenList(1);
+                    list.add(new DotNetThrowValueNode(myDebugContext, myFrameProxy, throwObject));
+                    node.addChildren(list, true);
+                    return;
+                }
+            }
 
-			DotNetTypeProxy typeOfVariable = getTypeOfVariableOrValue(SimpleReference.create(value));
+            DotNetTypeProxy typeOfVariable = getTypeOfVariableOrValue(SimpleReference.create(value));
 
-			if(typeOfVariable == null)
-			{
-				node.setErrorMessage("Variable type is not resolved");
-				return;
-			}
+            if (typeOfVariable == null) {
+                node.setErrorMessage("Variable type is not resolved");
+                return;
+            }
 
-			DotNetLogicValueView valueView = null;
-			for(DotNetLogicValueView temp : myDebugContext.getLogicValueViews())
-			{
-				if(temp.canHandle(myDebugContext, typeOfVariable))
-				{
-					valueView = temp;
-					break;
-				}
-			}
+            DotNetLogicValueView valueView = null;
+            for (DotNetLogicValueView temp : myDebugContext.getLogicValueViews()) {
+                if (temp.canHandle(myDebugContext, typeOfVariable)) {
+                    valueView = temp;
+                    break;
+                }
+            }
 
-			assert valueView != null : "Required default implementation";
+            assert valueView != null : "Required default implementation";
 
-			valueView.computeChildren(myDataHolder, myDebugContext, this, myFrameProxy, value, node);
-		});
-	}
+            valueView.computeChildren(myDataHolder, myDebugContext, this, myFrameProxy, value, node);
+        });
+    }
 
-	private boolean canHaveChildren(@Nullable DotNetValueProxy valueOfVariable)
-	{
-		DotNetVirtualMachineUtil.checkCallForUIThread();
+    private boolean canHaveChildren(@Nullable DotNetValueProxy valueOfVariable) {
+        DotNetVirtualMachineUtil.checkCallForUIThread();
 
-		return valueOfVariable instanceof DotNetObjectValueProxy ||
-				valueOfVariable instanceof DotNetErrorValueProxy && ((DotNetErrorValueProxy) valueOfVariable).getThrowObject() != null ||
-				valueOfVariable instanceof DotNetArrayValueProxy && ((DotNetArrayValueProxy) valueOfVariable).getLength() != 0 ||
-				valueOfVariable instanceof DotNetStringValueProxy && !StringUtil.isEmpty(((String) valueOfVariable.getValue())) ||
-				valueOfVariable instanceof DotNetStructValueProxy && !((DotNetStructValueProxy) valueOfVariable).getValues().isEmpty();
-	}
+        return valueOfVariable instanceof DotNetObjectValueProxy ||
+            valueOfVariable instanceof DotNetErrorValueProxy && ((DotNetErrorValueProxy) valueOfVariable).getThrowObject() != null ||
+            valueOfVariable instanceof DotNetArrayValueProxy && ((DotNetArrayValueProxy) valueOfVariable).getLength() != 0 ||
+            valueOfVariable instanceof DotNetStringValueProxy && !StringUtil.isEmpty(((String) valueOfVariable.getValue())) ||
+            valueOfVariable instanceof DotNetStructValueProxy && !((DotNetStructValueProxy) valueOfVariable).getValues().isEmpty();
+    }
 
-	protected void postInitialize(@Nullable DotNetValueProxy valueOfVariable)
-	{
-	}
+    protected void postInitialize(@Nullable DotNetValueProxy valueOfVariable) {
+    }
 
-	@Override
-	public void computePresentation(@Nonnull XValueNode xValueNode, @Nonnull XValuePlace xValuePlace)
-	{
-		myDebugContext.invoke(() -> computePresentationImpl(xValueNode, xValuePlace));
-	}
+    @Override
+    public void computePresentation(@Nonnull XValueNode xValueNode, @Nonnull XValuePlace xValuePlace) {
+        myDebugContext.invoke(() -> computePresentationImpl(xValueNode, xValuePlace));
+    }
 
-	protected void computePresentationImpl(@Nonnull XValueNode node, @Nonnull XValuePlace xValuePlace)
-	{
-		DotNetValueProxy valueOfVariable = getValueOfVariable();
+    protected void computePresentationImpl(@Nonnull XValueNode node, @Nonnull XValuePlace xValuePlace) {
+        DotNetValueProxy valueOfVariable = getValueOfVariable();
 
-		myLastValueRef.set(valueOfVariable);
+        myLastValueRef.set(valueOfVariable);
 
-		postInitialize(valueOfVariable);
+        postInitialize(valueOfVariable);
 
-		node.setPresentation(getIconForVariable(SimpleReference.create(valueOfVariable)), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren
-				(valueOfVariable));
-	}
+        node.setPresentation(getIconForVariable(SimpleReference.create(valueOfVariable)), new DotNetValuePresentation(myDebugContext, myFrameProxy, valueOfVariable), canHaveChildren
+            (valueOfVariable));
+    }
 }

@@ -16,22 +16,23 @@
 
 package consulo.dotnet.debugger.impl.nodes;
 
-import consulo.application.AllIcons;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
-import consulo.execution.debug.frame.*;
-import consulo.execution.debug.frame.presentation.XRegularValuePresentation;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.DotNetDebuggerSearchUtil;
 import consulo.dotnet.debugger.proxy.*;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
+import consulo.execution.debug.frame.*;
+import consulo.execution.debug.frame.presentation.XRegularValuePresentation;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -40,157 +41,127 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 11.04.14
  */
-public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
-{
-	public static void addStaticNode(@Nonnull XValueChildrenList list,
-									 @Nonnull DotNetDebugContext debuggerContext,
-									 @Nonnull DotNetStackFrameProxy frameProxy,
-									 @Nonnull DotNetTypeProxy typeProxy)
-	{
-		boolean result = processFieldOrProperty(typeProxy, null, CommonProcessors.<DotNetFieldOrPropertyProxy>alwaysFalse());
-		if(result)
-		{
-			return;
-		}
-		list.add(new DotNetThisAsObjectValueNode(debuggerContext, frameProxy, typeProxy, (DotNetObjectValueProxy) null));
-	}
+public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode {
+    public static void addStaticNode(@Nonnull XValueChildrenList list,
+                                     @Nonnull DotNetDebugContext debuggerContext,
+                                     @Nonnull DotNetStackFrameProxy frameProxy,
+                                     @Nonnull DotNetTypeProxy typeProxy) {
+        boolean result = processFieldOrProperty(typeProxy, null, CommonProcessors.<DotNetFieldOrPropertyProxy>alwaysFalse());
+        if (result) {
+            return;
+        }
+        list.add(new DotNetThisAsObjectValueNode(debuggerContext, frameProxy, typeProxy, (DotNetObjectValueProxy) null));
+    }
 
-	@Nonnull
-	private final DotNetTypeProxy myType;
-	private final Supplier<DotNetObjectValueProxy> myObjectValueMirrorGetter;
+    @Nonnull
+    private final DotNetTypeProxy myType;
+    private final Supplier<DotNetObjectValueProxy> myObjectValueMirrorGetter;
 
-	public DotNetThisAsObjectValueNode(@Nonnull DotNetDebugContext debuggerContext,
-									   @Nonnull DotNetStackFrameProxy frameProxy,
-									   @Nonnull DotNetTypeProxy type,
-									   @Nullable final DotNetObjectValueProxy objectValueMirror)
-	{
-		this(debuggerContext, frameProxy, type, objectValueMirror == null ? null : () -> objectValueMirror);
-	}
+    public DotNetThisAsObjectValueNode(@Nonnull DotNetDebugContext debuggerContext,
+                                       @Nonnull DotNetStackFrameProxy frameProxy,
+                                       @Nonnull DotNetTypeProxy type,
+                                       @Nullable final DotNetObjectValueProxy objectValueMirror) {
+        this(debuggerContext, frameProxy, type, objectValueMirror == null ? null : () -> objectValueMirror);
+    }
 
-	public DotNetThisAsObjectValueNode(@Nonnull DotNetDebugContext debuggerContext,
-									   @Nonnull DotNetStackFrameProxy frameProxy,
-									   @Nonnull DotNetTypeProxy type,
-									   @Nullable Supplier<DotNetObjectValueProxy> objectValueMirrorGetter)
-	{
-		super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", frameProxy);
-		myType = type;
-		myObjectValueMirrorGetter = objectValueMirrorGetter;
-	}
+    public DotNetThisAsObjectValueNode(@Nonnull DotNetDebugContext debuggerContext,
+                                       @Nonnull DotNetStackFrameProxy frameProxy,
+                                       @Nonnull DotNetTypeProxy type,
+                                       @Nullable Supplier<DotNetObjectValueProxy> objectValueMirrorGetter) {
+        super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", frameProxy);
+        myType = type;
+        myObjectValueMirrorGetter = objectValueMirrorGetter;
+    }
 
-	@Nullable
-	@Override
-	public XValueModifier getModifier()
-	{
-		return null;
-	}
+    @Nullable
+    @Override
+    public XValueModifier getModifier() {
+        return null;
+    }
 
-	@Nonnull
-	@Override
-	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
-	{
-		return myObjectValueMirrorGetter == null ? AllIcons.Nodes.Static : AllIcons.Debugger.Value;
-	}
+    @Nonnull
+    @Override
+    public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue) {
+        return myObjectValueMirrorGetter == null ? PlatformIconGroup.nodesStatic() : ExecutionDebugIconGroup.nodeValue();
+    }
 
-	@Nullable
-	@Override
-	public DotNetValueProxy getValueOfVariableImpl()
-	{
-		return myObjectValueMirrorGetter == null ? null : myObjectValueMirrorGetter.get();
-	}
+    @Nullable
+    @Override
+    public DotNetValueProxy getValueOfVariableImpl() {
+        return myObjectValueMirrorGetter == null ? null : myObjectValueMirrorGetter.get();
+    }
 
-	@Override
-	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
-	{
-	}
+    @Override
+    public void setValueForVariableImpl(@Nonnull DotNetValueProxy value) {
+    }
 
-	@Override
-	protected void computePresentationImpl(@Nonnull XValueNode node, @Nonnull XValuePlace xValuePlace)
-	{
-		if(myObjectValueMirrorGetter == null)
-		{
-			node.setPresentation(getIconForVariable(null), new XRegularValuePresentation("", null, ""), true);
-		}
-		else
-		{
-			super.computePresentationImpl(node, xValuePlace);
-		}
-	}
+    @Override
+    protected void computePresentationImpl(@Nonnull XValueNode node, @Nonnull XValuePlace xValuePlace) {
+        if (myObjectValueMirrorGetter == null) {
+            node.setPresentation(getIconForVariable(null), new XRegularValuePresentation("", null, ""), true);
+        }
+        else {
+            super.computePresentationImpl(node, xValuePlace);
+        }
+    }
 
-	@Override
-	public void computeChildren(@Nonnull XCompositeNode node)
-	{
-		final XValueChildrenList childrenList = new XValueChildrenList();
+    @Override
+    public void computeChildren(@Nonnull XCompositeNode node) {
+        final XValueChildrenList childrenList = new XValueChildrenList();
 
-		final Set<String> visited = new HashSet<String>();
-		processFieldOrProperty(myType, myObjectValueMirrorGetter, new Processor<DotNetFieldOrPropertyProxy>()
-		{
-			@Override
-			public boolean process(DotNetFieldOrPropertyProxy fieldOrPropertyProxy)
-			{
-				if(!visited.add(fieldOrPropertyProxy.getName()))
-				{
-					return true;
-				}
-				childrenList.add(new DotNetFieldOrPropertyValueNode(myDebugContext, fieldOrPropertyProxy, myFrameProxy, fieldOrPropertyProxy.isStatic() ? null : myObjectValueMirrorGetter.get()));
-				return true;
-			}
-		});
-		node.addChildren(childrenList, true);
-	}
+        final Set<String> visited = new HashSet<>();
+        processFieldOrProperty(myType, myObjectValueMirrorGetter, fieldOrPropertyProxy -> {
+            if (!visited.add(fieldOrPropertyProxy.getName())) {
+                return true;
+            }
+            childrenList.add(new DotNetFieldOrPropertyValueNode(myDebugContext, fieldOrPropertyProxy, myFrameProxy, fieldOrPropertyProxy.isStatic() ? null : myObjectValueMirrorGetter.get()));
+            return true;
+        });
+        node.addChildren(childrenList, true);
+    }
 
-	private static boolean processFieldOrProperty(@Nonnull DotNetTypeProxy proxy,
-												  @Nullable Supplier<DotNetObjectValueProxy> objectValueMirrorGetter,
-												  @Nonnull Processor<DotNetFieldOrPropertyProxy> processor)
-	{
-		DotNetFieldOrPropertyProxy[] fieldMirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(proxy, true);
-		for(DotNetFieldOrPropertyProxy fieldMirror : fieldMirrors)
-		{
-			if(!fieldMirror.isStatic() && objectValueMirrorGetter == null || fieldMirror.isStatic() && objectValueMirrorGetter != null)
-			{
-				continue;
-			}
+    private static boolean processFieldOrProperty(@Nonnull DotNetTypeProxy proxy,
+                                                  @Nullable Supplier<DotNetObjectValueProxy> objectValueMirrorGetter,
+                                                  @Nonnull Processor<DotNetFieldOrPropertyProxy> processor) {
+        DotNetFieldOrPropertyProxy[] fieldMirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(proxy, true);
+        for (DotNetFieldOrPropertyProxy fieldMirror : fieldMirrors) {
+            if (!fieldMirror.isStatic() && objectValueMirrorGetter == null || fieldMirror.isStatic() && objectValueMirrorGetter != null) {
+                continue;
+            }
 
-			if(isHiddenPropertyOrField(fieldMirror))
-			{
-				continue;
-			}
+            if (isHiddenPropertyOrField(fieldMirror)) {
+                continue;
+            }
 
-			if(!processor.process(fieldMirror))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+            if (!processor.process(fieldMirror)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	public static boolean isHiddenPropertyOrField(DotNetFieldOrPropertyProxy proxy)
-	{
-		if(proxy instanceof DotNetPropertyProxy)
-		{
-			if(((DotNetPropertyProxy) proxy).isArrayProperty())
-			{
-				return true;
-			}
+    public static boolean isHiddenPropertyOrField(DotNetFieldOrPropertyProxy proxy) {
+        if (proxy instanceof DotNetPropertyProxy) {
+            if (((DotNetPropertyProxy) proxy).isArrayProperty()) {
+                return true;
+            }
 
-			DotNetMethodProxy getMethod = ((DotNetPropertyProxy) proxy).getGetMethod();
-			// if get accessor is abstract - it will generate dummy impl with backend field
-			if(getMethod == null || getMethod.isAnnotatedBy(DotNetTypes.System.Runtime.CompilerServices.CompilerGeneratedAttribute))
-			{
-				return true;
-			}
-		}
+            DotNetMethodProxy getMethod = ((DotNetPropertyProxy) proxy).getGetMethod();
+            // if get accessor is abstract - it will generate dummy impl with backend field
+            if (getMethod == null || getMethod.isAnnotatedBy(DotNetTypes.System.Runtime.CompilerServices.CompilerGeneratedAttribute)) {
+                return true;
+            }
+        }
 
-		if(DotNetDebuggerCompilerGenerateUtil.needSkipVariableByName(proxy.getName()))
-		{
-			return true;
-		}
-		return false;
-	}
+        if (DotNetDebuggerCompilerGenerateUtil.needSkipVariableByName(proxy.getName())) {
+            return true;
+        }
+        return false;
+    }
 
-	@Nonnull
-	@Override
-	public DotNetTypeProxy getTypeOfVariableImpl()
-	{
-		return myType;
-	}
+    @Nonnull
+    @Override
+    public DotNetTypeProxy getTypeOfVariableImpl() {
+        return myType;
+    }
 }

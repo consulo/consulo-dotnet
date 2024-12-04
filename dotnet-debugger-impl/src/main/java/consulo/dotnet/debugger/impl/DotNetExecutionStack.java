@@ -16,17 +16,16 @@
 
 package consulo.dotnet.debugger.impl;
 
-import consulo.application.AllIcons;
 import consulo.dotnet.debugger.DotNetDebugContext;
-import consulo.execution.debug.frame.XExecutionStack;
-import consulo.execution.debug.frame.XStackFrame;
 import consulo.dotnet.debugger.proxy.DotNetNotSuspendedException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetThreadProxy;
+import consulo.execution.debug.frame.XExecutionStack;
+import consulo.execution.debug.frame.XStackFrame;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,120 +37,101 @@ import java.util.List;
  * @author VISTALL
  * @since 10.04.14
  */
-public class DotNetExecutionStack extends XExecutionStack
-{
-	public static final DotNetExecutionStack[] EMPTY_ARRAY = new DotNetExecutionStack[0];
+public class DotNetExecutionStack extends XExecutionStack {
+    public static final DotNetExecutionStack[] EMPTY_ARRAY = new DotNetExecutionStack[0];
 
-	public static ArrayFactory<DotNetExecutionStack> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetExecutionStack[count];
+    public static ArrayFactory<DotNetExecutionStack> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetExecutionStack[count];
 
-	private DotNetStackFrame myTopFrame;
-	private boolean myTopFrameCalculated;
+    private DotNetStackFrame myTopFrame;
+    private boolean myTopFrameCalculated;
 
-	private DotNetDebugContext myDebuggerContext;
-	private DotNetThreadProxy myThreadProxy;
+    private DotNetDebugContext myDebuggerContext;
+    private DotNetThreadProxy myThreadProxy;
 
-	public DotNetExecutionStack(@Nonnull DotNetDebugContext debuggerContext, @Nonnull DotNetThreadProxy threadProxy)
-	{
-		super(calcName(threadProxy), getIcon(threadProxy));
+    public DotNetExecutionStack(@Nonnull DotNetDebugContext debuggerContext, @Nonnull DotNetThreadProxy threadProxy) {
+        super(calcName(threadProxy), getIcon(threadProxy));
 
-		DotNetVirtualMachineUtil.checkCallForUIThread();
+        DotNetVirtualMachineUtil.checkCallForUIThread();
 
-		myDebuggerContext = debuggerContext;
-		myThreadProxy = threadProxy;
+        myDebuggerContext = debuggerContext;
+        myThreadProxy = threadProxy;
 
-		calcTopFrame(); // calc top frame
-	}
+        calcTopFrame(); // calc top frame
+    }
 
-	@Nonnull
-	private static String calcName(DotNetThreadProxy threadMirror)
-	{
-		return "[" + threadMirror.getId() + "] " + StringUtil.defaultIfEmpty(threadMirror.getName(), "Unnamed");
-	}
+    @Nonnull
+    private static String calcName(DotNetThreadProxy threadMirror) {
+        return "[" + threadMirror.getId() + "] " + StringUtil.defaultIfEmpty(threadMirror.getName(), "Unnamed");
+    }
 
-	private static Image getIcon(DotNetThreadProxy threadProxy)
-	{
-		if(threadProxy.isSuspended())
-		{
-			return AllIcons.Debugger.ThreadSuspended;
-		}
-		if(threadProxy.isRunning())
-		{
-			return AllIcons.Debugger.ThreadRunning;
-		}
-		return AllIcons.Debugger.ThreadFrozen;
-	}
+    private static Image getIcon(DotNetThreadProxy threadProxy) {
+        if (threadProxy.isSuspended()) {
+            return ExecutionDebugIconGroup.threadThreadsuspended();
+        }
+        if (threadProxy.isRunning()) {
+            return ExecutionDebugIconGroup.threadThreadrunning();
+        }
+        return ExecutionDebugIconGroup.threadThreadfrozen();
+    }
 
-	public DotNetThreadProxy getThreadProxy()
-	{
-		return myThreadProxy;
-	}
+    public DotNetThreadProxy getThreadProxy() {
+        return myThreadProxy;
+    }
 
-	@Nullable
-	private XStackFrame calcTopFrame()
-	{
-		try
-		{
-			DotNetVirtualMachineUtil.checkCallForUIThread();
+    @Nullable
+    private XStackFrame calcTopFrame() {
+        try {
+            DotNetVirtualMachineUtil.checkCallForUIThread();
 
-			DotNetStackFrameProxy frame = myThreadProxy.getFrame(0);
-			if(frame == null)
-			{
-				return null;
-			}
-			return myTopFrame = new DotNetStackFrame(myDebuggerContext, frame);
-		}
-		catch(DotNetNotSuspendedException ignored)
-		{
-			return null;
-		}
-		finally
-		{
-			myTopFrameCalculated = true;
-		}
-	}
+            DotNetStackFrameProxy frame = myThreadProxy.getFrame(0);
+            if (frame == null) {
+                return null;
+            }
+            return myTopFrame = new DotNetStackFrame(myDebuggerContext, frame);
+        }
+        catch (DotNetNotSuspendedException ignored) {
+            return null;
+        }
+        finally {
+            myTopFrameCalculated = true;
+        }
+    }
 
-	@Nullable
-	@Override
-	public XStackFrame getTopFrame()
-	{
-		if(myTopFrameCalculated)
-		{
-			return myTopFrame;
-		}
-		return calcTopFrame();
-	}
+    @Nullable
+    @Override
+    public XStackFrame getTopFrame() {
+        if (myTopFrameCalculated) {
+            return myTopFrame;
+        }
+        return calcTopFrame();
+    }
 
-	@Override
-	public void computeStackFrames(XStackFrameContainer frameContainer)
-	{
-		myDebuggerContext.invoke(() ->
-		{
-			List<DotNetStackFrameProxy> frames = Collections.emptyList();
-			try
-			{
-				frames = myThreadProxy.getFrames();
-			}
-			catch(DotNetNotSuspendedException ignored)
-			{
-			}
+    @Override
+    public void computeStackFrames(XStackFrameContainer frameContainer) {
+        myDebuggerContext.invoke(() ->
+        {
+            List<DotNetStackFrameProxy> frames = Collections.emptyList();
+            try {
+                frames = myThreadProxy.getFrames();
+            }
+            catch (DotNetNotSuspendedException ignored) {
+            }
 
-			List<DotNetStackFrame> stackFrames = new ArrayList<>();
-			for(int j = 0; j < frames.size(); j++)
-			{
-				DotNetStackFrameProxy frameProxy = frames.get(j);
+            List<DotNetStackFrame> stackFrames = new ArrayList<>();
+            for (int j = 0; j < frames.size(); j++) {
+                DotNetStackFrameProxy frameProxy = frames.get(j);
 
-				DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, frameProxy);
+                DotNetStackFrame stackFrame = new DotNetStackFrame(myDebuggerContext, frameProxy);
 
-				if(j == 0)
-				{
-					myTopFrameCalculated = true;
-					myTopFrame = stackFrame;
-				}
+                if (j == 0) {
+                    myTopFrameCalculated = true;
+                    myTopFrame = stackFrame;
+                }
 
-				stackFrames.add(stackFrame);
-			}
+                stackFrames.add(stackFrame);
+            }
 
-			frameContainer.addStackFrames(stackFrames, true);
-		});
-	}
+            frameContainer.addStackFrames(stackFrames, true);
+        });
+    }
 }

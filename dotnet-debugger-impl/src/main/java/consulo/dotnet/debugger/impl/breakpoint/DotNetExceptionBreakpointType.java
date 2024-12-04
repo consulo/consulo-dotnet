@@ -17,7 +17,6 @@
 package consulo.dotnet.debugger.impl.breakpoint;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.dotnet.DotNetTypes;
 import consulo.dotnet.debugger.impl.breakpoint.properties.DotNetExceptionBreakpointProperties;
@@ -28,15 +27,16 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.breakpoint.ui.XBreakpointCustomPropertiesPanel;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.language.editor.ui.TreeChooser;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.function.Supplier;
 
@@ -45,98 +45,82 @@ import java.util.function.Supplier;
  * @since 29.04.2016
  */
 @ExtensionImpl
-public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<DotNetExceptionBreakpointProperties>, DotNetExceptionBreakpointProperties>
-{
-	@Nonnull
-	public static DotNetExceptionBreakpointType getInstance()
-	{
-		return EXTENSION_POINT_NAME.findExtensionOrFail(DotNetExceptionBreakpointType.class);
-	}
+public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<DotNetExceptionBreakpointProperties>, DotNetExceptionBreakpointProperties> {
+    @Nonnull
+    public static DotNetExceptionBreakpointType getInstance() {
+        return EXTENSION_POINT_NAME.findExtensionOrFail(DotNetExceptionBreakpointType.class);
+    }
 
-	public DotNetExceptionBreakpointType()
-	{
-		super("dotnet-exception-breakpoint", ".NET Exception Breakpoints");
-	}
+    public DotNetExceptionBreakpointType() {
+        super("dotnet-exception-breakpoint", ".NET Exception Breakpoints");
+    }
 
-	@Nonnull
-	@Override
-	public Image getEnabledIcon()
-	{
-		return AllIcons.Debugger.Db_exception_breakpoint;
-	}
+    @Nonnull
+    @Override
+    public Image getEnabledIcon() {
+        return ExecutionDebugIconGroup.breakpointBreakpointexception();
+    }
 
-	@Nonnull
-	@Override
-	public Image getDisabledIcon()
-	{
-		return AllIcons.Debugger.Db_disabled_exception_breakpoint;
-	}
+    @Nonnull
+    @Override
+    public Image getDisabledIcon() {
+        return ExecutionDebugIconGroup.breakpointBreakpointexceptiondisabled();
+    }
 
-	@Nullable
-	@Override
-	public XBreakpointCustomPropertiesPanel<XBreakpoint<DotNetExceptionBreakpointProperties>> createCustomPropertiesPanel(@Nonnull Project project)
-	{
-		return new DotNetExceptionBreakpointPropertiesPanel();
-	}
+    @Nullable
+    @Override
+    public XBreakpointCustomPropertiesPanel<XBreakpoint<DotNetExceptionBreakpointProperties>> createCustomPropertiesPanel(@Nonnull Project project) {
+        return new DotNetExceptionBreakpointPropertiesPanel();
+    }
 
-	@Override
-	public String getDisplayText(XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint)
-	{
-		String name = breakpoint.getProperties().VM_QNAME;
-		if(name != null)
-		{
-			return name;
-		}
-		else
-		{
-			return "Any exception";
-		}
-	}
+    @Override
+    public String getDisplayText(XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint) {
+        String name = breakpoint.getProperties().VM_QNAME;
+        if (name != null) {
+            return name;
+        }
+        else {
+            return "Any exception";
+        }
+    }
 
-	@Nullable
-	@Override
-	public DotNetExceptionBreakpointProperties createProperties()
-	{
-		return new DotNetExceptionBreakpointProperties();
-	}
+    @Nullable
+    @Override
+    public DotNetExceptionBreakpointProperties createProperties() {
+        return new DotNetExceptionBreakpointProperties();
+    }
 
-	@Nullable
-	@Override
-	public XBreakpoint<DotNetExceptionBreakpointProperties> createDefaultBreakpoint(@Nonnull XBreakpointCreator<DotNetExceptionBreakpointProperties> creator)
-	{
-		return creator.createBreakpoint(new DotNetExceptionBreakpointProperties());
-	}
+    @Nullable
+    @Override
+    public XBreakpoint<DotNetExceptionBreakpointProperties> createDefaultBreakpoint(@Nonnull XBreakpointCreator<DotNetExceptionBreakpointProperties> creator) {
+        return creator.createBreakpoint(new DotNetExceptionBreakpointProperties());
+    }
 
-	@Override
-	public boolean isAddBreakpointButtonVisible()
-	{
-		return true;
-	}
+    @Override
+    public boolean isAddBreakpointButtonVisible() {
+        return true;
+    }
 
-	@Nullable
-	@Override
-	@RequiredUIAccess
-	public XBreakpoint<DotNetExceptionBreakpointProperties> addBreakpoint(final Project project, JComponent parentComponent)
-	{
-		TreeChooser<DotNetTypeDeclaration> chooser = DotNetTypeChooserFactory.getInstance(project).createInheriableChooser(DotNetTypes.System.Exception, GlobalSearchScope.projectScope(project));
+    @Nullable
+    @Override
+    @RequiredUIAccess
+    public XBreakpoint<DotNetExceptionBreakpointProperties> addBreakpoint(final Project project, JComponent parentComponent) {
+        TreeChooser<DotNetTypeDeclaration> chooser = DotNetTypeChooserFactory.getInstance(project).createInheriableChooser(DotNetTypes.System.Exception, GlobalSearchScope.projectScope(project));
 
-		chooser.showDialog();
-		final DotNetTypeDeclaration selectedType = chooser.getSelected();
-		final String qName = selectedType == null ? null : selectedType.getVmQName();
+        chooser.showDialog();
+        final DotNetTypeDeclaration selectedType = chooser.getSelected();
+        final String qName = selectedType == null ? null : selectedType.getVmQName();
 
-		if(!StringUtil.isEmpty(qName))
-		{
-			return ApplicationManager.getApplication().runWriteAction(new Supplier<XBreakpoint<DotNetExceptionBreakpointProperties>>()
-			{
-				@Override
-				public XBreakpoint<DotNetExceptionBreakpointProperties> get()
-				{
-					DotNetExceptionBreakpointProperties properties = new DotNetExceptionBreakpointProperties();
-					properties.VM_QNAME = qName;
-					return XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpoint(DotNetExceptionBreakpointType.this, properties);
-				}
-			});
-		}
-		return null;
-	}
+        if (!StringUtil.isEmpty(qName)) {
+            return ApplicationManager.getApplication().runWriteAction(new Supplier<XBreakpoint<DotNetExceptionBreakpointProperties>>() {
+                @Override
+                public XBreakpoint<DotNetExceptionBreakpointProperties> get() {
+                    DotNetExceptionBreakpointProperties properties = new DotNetExceptionBreakpointProperties();
+                    properties.VM_QNAME = qName;
+                    return XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpoint(DotNetExceptionBreakpointType.this, properties);
+                }
+            });
+        }
+        return null;
+    }
 }

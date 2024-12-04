@@ -17,12 +17,12 @@
 package consulo.dotnet.debugger.impl.breakpoint;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.dotnet.debugger.impl.breakpoint.properties.DotNetMethodBreakpointProperties;
 import consulo.dotnet.debugger.impl.breakpoint.ui.DotNetMethodBreakpointPropertiesPanel;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpointType;
 import consulo.execution.debug.breakpoint.ui.XBreakpointCustomPropertiesPanel;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
@@ -35,51 +35,43 @@ import jakarta.inject.Inject;
  * @since 03.05.2016
  */
 @ExtensionImpl
-public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethodBreakpointProperties>
-{
-	@Nonnull
-	public static DotNetMethodBreakpointType getInstance()
-	{
-		return EXTENSION_POINT_NAME.findExtensionOrFail(DotNetMethodBreakpointType.class);
-	}
+public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethodBreakpointProperties> {
+    @Nonnull
+    public static DotNetMethodBreakpointType getInstance() {
+        return EXTENSION_POINT_NAME.findExtensionOrFail(DotNetMethodBreakpointType.class);
+    }
 
-	@Inject
-	DotNetMethodBreakpointType()
-	{
-		super("dotnet-method-breakpoint", ".NET Method Breakpoints");
-	}
+    @Inject
+    DotNetMethodBreakpointType() {
+        super("dotnet-method-breakpoint", ".NET Method Breakpoints");
+    }
 
-	@Nonnull
-	@Override
-	public Image getEnabledIcon()
-	{
-		return AllIcons.Debugger.Db_method_breakpoint;
-	}
+    @Nonnull
+    @Override
+    public Image getEnabledIcon() {
+        return ExecutionDebugIconGroup.breakpointBreakpointmethod();
+    }
 
-	@Nonnull
-	@Override
-	public Image getDisabledIcon()
-	{
-		return AllIcons.Debugger.Db_disabled_method_breakpoint;
-	}
+    @Nonnull
+    @Override
+    public Image getDisabledIcon() {
+        return ExecutionDebugIconGroup.breakpointBreakpointmethoddisabled();
+    }
 
-	@Nullable
-	@Override
-	public XBreakpointCustomPropertiesPanel<XLineBreakpoint<DotNetMethodBreakpointProperties>> createCustomPropertiesPanel(@Nonnull Project project)
-	{
-		return new DotNetMethodBreakpointPropertiesPanel();
-	}
+    @Nullable
+    @Override
+    public XBreakpointCustomPropertiesPanel<XLineBreakpoint<DotNetMethodBreakpointProperties>> createCustomPropertiesPanel(@Nonnull Project project) {
+        return new DotNetMethodBreakpointPropertiesPanel();
+    }
 
-	@Nullable
-	@Override
-	public DotNetMethodBreakpointProperties createBreakpointProperties(@Nonnull VirtualFile file, int line)
-	{
-		return new DotNetMethodBreakpointProperties();
-	}
+    @Nullable
+    @Override
+    public DotNetMethodBreakpointProperties createBreakpointProperties(@Nonnull VirtualFile file, int line) {
+        return new DotNetMethodBreakpointProperties();
+    }
 
-	@Override
-	public boolean canBeHitInOtherPlaces()
-	{
-		return true;
-	}
+    @Override
+    public boolean canBeHitInOtherPlaces() {
+        return true;
+    }
 }
