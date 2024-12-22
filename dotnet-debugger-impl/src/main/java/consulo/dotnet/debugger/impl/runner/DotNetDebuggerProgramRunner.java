@@ -19,11 +19,12 @@ package consulo.dotnet.debugger.impl.runner;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.dotnet.debugger.impl.DotNetConfigurationWithDebug;
-import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
+import consulo.dotnet.debugger.impl.DotNetDebugProcess;
 import consulo.dotnet.util.DebugConnectionInfo;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.debug.DefaultDebugExecutor;
+import consulo.execution.debug.XDebugProcess;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.runner.DefaultProgramRunner;
@@ -32,7 +33,6 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolder;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -81,7 +81,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 		FileDocumentManager.getInstance().saveAllDocuments();
 		XDebugSession debugSession = XDebuggerManager.getInstance(env.getProject()).startSession(env, session ->
 		{
-			DotNetDebugProcessBase process = configurationWithDebug.createDebuggerProcess(session, debugConnectionInfo);
+			DotNetDebugProcess process = configurationWithDebug.createDebuggerProcess(session, debugConnectionInfo);
 			if(!debugConnectionInfo.isServer())
 			{
 				process.start();
@@ -92,7 +92,7 @@ public class DotNetDebuggerProgramRunner extends DefaultProgramRunner
 			{
 				process.start();
 			}
-			return process;
+			return (XDebugProcess) process;
 		});
 		return debugSession.getRunContentDescriptor();
 	}

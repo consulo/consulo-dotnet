@@ -13,5 +13,5 @@ import jakarta.annotation.Nonnull;
 public interface DotNetModuleExtensionWithDebug
 {
 	@Nonnull
-	DotNetDebugProcessBase createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile, @Nonnull DebugConnectionInfo debugConnectionInfo);
+	DotNetDebugProcess createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile, @Nonnull DebugConnectionInfo debugConnectionInfo);
 }

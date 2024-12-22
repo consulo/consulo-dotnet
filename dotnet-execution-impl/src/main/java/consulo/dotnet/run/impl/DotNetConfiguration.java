@@ -20,7 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.content.bundle.Sdk;
 import consulo.dotnet.compiler.DotNetMacroUtil;
 import consulo.dotnet.debugger.impl.DotNetConfigurationWithDebug;
-import consulo.dotnet.debugger.impl.DotNetDebugProcessBase;
+import consulo.dotnet.debugger.impl.DotNetDebugProcess;
 import consulo.dotnet.debugger.impl.DotNetModuleExtensionWithDebug;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
@@ -49,10 +49,9 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
-
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -258,7 +257,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 	@Nonnull
 	@Override
-	public DotNetDebugProcessBase createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull DebugConnectionInfo debugConnectionInfo) throws ExecutionException
+	public DotNetDebugProcess createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull DebugConnectionInfo debugConnectionInfo) throws ExecutionException
 	{
 		Module module = getConfigurationModule().getModule();
 		if(module == null)

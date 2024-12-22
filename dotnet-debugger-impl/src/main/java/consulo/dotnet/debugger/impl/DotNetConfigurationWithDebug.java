@@ -35,5 +35,5 @@ public interface DotNetConfigurationWithDebug extends RunConfiguration
 	}
 
 	@Nonnull
-	DotNetDebugProcessBase createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
+	DotNetDebugProcess createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
 }
