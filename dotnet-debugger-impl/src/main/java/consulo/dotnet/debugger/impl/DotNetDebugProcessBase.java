@@ -103,7 +103,7 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess implements Do
     @Nonnull
     @Override
     public XDebuggerEditorsProvider getEditorsProvider() {
-        return new DotNetEditorsProvider(getSession());
+        return new DotNetEditorsProvider(getSession(), myRunProfile);
     }
 
     @Override

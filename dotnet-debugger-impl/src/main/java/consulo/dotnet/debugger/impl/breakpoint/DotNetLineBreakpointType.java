@@ -25,6 +25,7 @@ import consulo.dotnet.debugger.DotNetDebuggerSourceLineResolver;
 import consulo.dotnet.debugger.DotNetDebuggerUtil;
 import consulo.dotnet.debugger.impl.DotNetEditorsProvider;
 import consulo.dotnet.debugger.impl.breakpoint.properties.DotNetLineBreakpointProperties;
+import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.dotnet.util.ArrayUtil2;
 import consulo.execution.debug.XSourcePosition;
@@ -34,6 +35,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -98,7 +100,16 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
     @Nullable
     @Override
     public XDebuggerEditorsProvider getEditorsProvider(@Nonnull XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint, @Nonnull Project project) {
-        return new DotNetEditorsProvider(null);
+        VirtualFile file = breakpoint.getFile();
+        if (file == null) {
+            return new DotNetEditorsProvider(null, null);
+        }
+
+        DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(project, file, DotNetModuleLangExtension.class);
+        if (extension != null) {
+            return new DotNetEditorsProvider(extension.getFileType());
+        }
+        return new DotNetEditorsProvider(null, null);
     }
 
     @Nonnull
