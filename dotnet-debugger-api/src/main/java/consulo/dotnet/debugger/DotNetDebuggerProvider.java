@@ -33,9 +33,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -44,73 +44,66 @@ import java.util.function.Consumer;
  * @since 10.04.14
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class DotNetDebuggerProvider
-{
-	@Nullable
-	public static DotNetDebuggerProvider getProvider(@Nullable Language language)
-	{
-		if(language == null)
-		{
-			return null;
-		}
-		return Application.get().getExtensionPoint(DotNetDebuggerProvider.class).findFirstSafe(it -> it.getEditorLanguage() == language);
-	}
+public abstract class DotNetDebuggerProvider {
+    @Nullable
+    public static DotNetDebuggerProvider getProvider(@Nullable Language language) {
+        if (language == null) {
+            return null;
+        }
+        return Application.get().getExtensionPoint(DotNetDebuggerProvider.class).findFirstSafe(it -> it.getEditorLanguage() == language);
+    }
 
-	@Nonnull
-	public abstract PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull PsiElement sourcePosition, @Nonnull String text, boolean isPhysical);
+    @Nonnull
+    public abstract PsiFile createExpressionCodeFragment(@Nonnull Project project,
+                                                         @Nullable PsiElement sourcePosition,
+                                                         @Nonnull String text,
+                                                         boolean isPhysical);
 
-	public abstract void evaluate(@Nonnull DotNetStackFrameProxy frame,
-			@Nonnull DotNetDebugContext debuggerContext,
-			@Nonnull String expression,
-			@Nullable PsiElement elementAt,
-			@Nonnull XDebuggerEvaluator.XEvaluationCallback callback,
-			@Nullable XSourcePosition expressionPosition);
+    public abstract void evaluate(@Nonnull DotNetStackFrameProxy frame,
+                                  @Nonnull DotNetDebugContext debuggerContext,
+                                  @Nonnull String expression,
+                                  @Nullable PsiElement elementAt,
+                                  @Nonnull XDebuggerEvaluator.XEvaluationCallback callback,
+                                  @Nullable XSourcePosition expressionPosition);
 
-	public abstract void evaluate(@Nonnull DotNetStackFrameProxy frame,
-			@Nonnull DotNetDebugContext debuggerContext,
-			@Nonnull DotNetReferenceExpression element,
-			@Nonnull Set<Object> visitedVariables,
-			@Nonnull Consumer<XNamedValue> callback);
+    public abstract void evaluate(@Nonnull DotNetStackFrameProxy frame,
+                                  @Nonnull DotNetDebugContext debuggerContext,
+                                  @Nonnull DotNetReferenceExpression element,
+                                  @Nonnull Set<Object> visitedVariables,
+                                  @Nonnull Consumer<XNamedValue> callback);
 
-	@RequiredReadAction
-	@Nullable
-	public TextRange getExpressionRangeAtOffset(@Nonnull PsiFile psiFile, int offset, boolean sideEffectsAllowed)
-	{
-		PsiElement elementAt = psiFile.findElementAt(offset);
-		if(elementAt == null)
-		{
-			return null;
-		}
+    @RequiredReadAction
+    @Nullable
+    public TextRange getExpressionRangeAtOffset(@Nonnull PsiFile psiFile, int offset, boolean sideEffectsAllowed) {
+        PsiElement elementAt = psiFile.findElementAt(offset);
+        if (elementAt == null) {
+            return null;
+        }
 
-		PsiNameIdentifierOwner owner = PsiTreeUtil.getParentOfType(elementAt, PsiNameIdentifierOwner.class);
-		if(owner != null)
-		{
-			PsiElement nameIdentifier = owner.getNameIdentifier();
-			TextRange textRange = nameIdentifier == null ? null : nameIdentifier.getTextRange();
-			if(textRange != null && textRange.contains(offset))
-			{
-				return textRange;
-			}
-		}
+        PsiNameIdentifierOwner owner = PsiTreeUtil.getParentOfType(elementAt, PsiNameIdentifierOwner.class);
+        if (owner != null) {
+            PsiElement nameIdentifier = owner.getNameIdentifier();
+            TextRange textRange = nameIdentifier == null ? null : nameIdentifier.getTextRange();
+            if (textRange != null && textRange.contains(offset)) {
+                return textRange;
+            }
+        }
 
-		DotNetReferenceExpression referenceExpression = PsiTreeUtil.getParentOfType(elementAt, DotNetReferenceExpression.class);
-		if(referenceExpression != null)
-		{
-			// skip type references
-			if(PsiTreeUtil.getParentOfType(referenceExpression, DotNetType.class) != null)
-			{
-				return null;
-			}
-			return referenceExpression.getTextRange();
-		}
-		return null;
-	}
+        DotNetReferenceExpression referenceExpression = PsiTreeUtil.getParentOfType(elementAt, DotNetReferenceExpression.class);
+        if (referenceExpression != null) {
+            // skip type references
+            if (PsiTreeUtil.getParentOfType(referenceExpression, DotNetType.class) != null) {
+                return null;
+            }
+            return referenceExpression.getTextRange();
+        }
+        return null;
+    }
 
-	@RequiredReadAction
-	public boolean isSupported(@Nonnull PsiFile psiFile)
-	{
-		return psiFile.getLanguage() == getEditorLanguage();
-	}
+    @RequiredReadAction
+    public boolean isSupported(@Nonnull PsiFile psiFile) {
+        return psiFile.getLanguage() == getEditorLanguage();
+    }
 
-	public abstract Language getEditorLanguage();
+    public abstract Language getEditorLanguage();
 }
