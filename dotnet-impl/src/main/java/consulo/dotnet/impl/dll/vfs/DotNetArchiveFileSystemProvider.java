@@ -25,9 +25,9 @@ import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveEntry;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystemProvider;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,131 +38,113 @@ import java.util.Iterator;
  * @since 28.11.13.
  */
 @ExtensionImpl
-public class DotNetArchiveFileSystemProvider implements ArchiveFileSystemProvider
-{
-	private static class DotNetArchiveFileWrapper implements ArchiveFile
-	{
-		private final DotNetArchiveFile myArchiveFile;
+public class DotNetArchiveFileSystemProvider implements ArchiveFileSystemProvider {
+    private static class DotNetArchiveFileWrapper implements ArchiveFile {
+        private final DotNetArchiveFile myArchiveFile;
 
-		private DotNetArchiveFileWrapper(DotNetArchiveFile archiveFile)
-		{
-			myArchiveFile = archiveFile;
-		}
+        private DotNetArchiveFileWrapper(DotNetArchiveFile archiveFile) {
+            myArchiveFile = archiveFile;
+        }
 
-		@Nonnull
-		@Override
-		public String getName()
-		{
-			return myArchiveFile.getName();
-		}
+        @Nonnull
+        @Override
+        public String getName() {
+            return myArchiveFile.getName();
+        }
 
-		@Nullable
-		@Override
-		public ArchiveEntry getEntry(String s)
-		{
-			DotNetArchiveEntry entry = myArchiveFile.getEntry(s);
-			return entry == null ? null : new DotNetArchiveEntryWrapper(entry);
-		}
+        @Nullable
+        @Override
+        public ArchiveEntry getEntry(String s) {
+            DotNetArchiveEntry entry = myArchiveFile.getEntry(s);
+            return entry == null ? null : new DotNetArchiveEntryWrapper(entry);
+        }
 
-		@Nullable
-		@Override
-		public InputStream getInputStream(@Nonnull ArchiveEntry archiveEntry) throws IOException
-		{
-			return myArchiveFile.getInputStream(((DotNetArchiveEntryWrapper) archiveEntry).myArchiveEntry);
-		}
+        @Nullable
+        @Override
+        public InputStream getInputStream(@Nonnull ArchiveEntry archiveEntry) throws IOException {
+            return myArchiveFile.getInputStream(((DotNetArchiveEntryWrapper) archiveEntry).myArchiveEntry);
+        }
 
-		@Nonnull
-		@Override
-		public Iterator<? extends ArchiveEntry> entries()
-		{
-			return new Iterator<>()
-			{
-				private Iterator<? extends DotNetArchiveEntry> myEntries = myArchiveFile.entries().iterator();
+        @Nonnull
+        @Override
+        public Iterator<? extends ArchiveEntry> entries() {
+            return new Iterator<>() {
+                private Iterator<? extends DotNetArchiveEntry> myEntries = myArchiveFile.entries().iterator();
 
-				@Override
-				public boolean hasNext()
-				{
-					return myEntries.hasNext();
-				}
+                @Override
+                public boolean hasNext() {
+                    return myEntries.hasNext();
+                }
 
-				@Override
-				public ArchiveEntry next()
-				{
-					return new DotNetArchiveEntryWrapper(myEntries.next());
-				}
-			};
-		}
+                @Override
+                public ArchiveEntry next() {
+                    return new DotNetArchiveEntryWrapper(myEntries.next());
+                }
+            };
+        }
 
-		@Override
-		public int getSize()
-		{
-			return myArchiveFile.getSize();
-		}
+        @Override
+        public int getSize() {
+            return myArchiveFile.getSize();
+        }
 
-		@Override
-		public void close() throws IOException
-		{
-		}
-	}
+        @Override
+        public void close() throws IOException {
+        }
+    }
 
-	private static class DotNetArchiveEntryWrapper implements ArchiveEntry
-	{
-		private final DotNetArchiveEntry myArchiveEntry;
+    private static class DotNetArchiveEntryWrapper implements ArchiveEntry {
+        private final DotNetArchiveEntry myArchiveEntry;
 
-		private DotNetArchiveEntryWrapper(DotNetArchiveEntry archiveEntry)
-		{
-			myArchiveEntry = archiveEntry;
-		}
+        private DotNetArchiveEntryWrapper(DotNetArchiveEntry archiveEntry) {
+            myArchiveEntry = archiveEntry;
+        }
 
-		@Override
-		public String getName()
-		{
-			return myArchiveEntry.getName();
-		}
+        @Override
+        public String getName() {
+            return myArchiveEntry.getName();
+        }
 
-		@Override
-		public long getSize()
-		{
-			return myArchiveEntry.getSize();
-		}
+        @Override
+        public long getSize() {
+            return myArchiveEntry.getSize();
+        }
 
-		@Override
-		public long getTime()
-		{
-			return myArchiveEntry.getTime();
-		}
+        @Override
+        public long getTime() {
+            return myArchiveEntry.getTime();
+        }
 
-		@Override
-		public boolean isDirectory()
-		{
-			return myArchiveEntry.isDirectory();
-		}
-	}
+        @Override
+        public boolean isDirectory() {
+            return myArchiveEntry.isDirectory();
+        }
+    }
 
-	@Nonnull
-	@Override
-	public String getProtocol()
-	{
-		return DotNetModuleFileType.PROTOCOL;
-	}
+    @Nonnull
+    @Override
+    public String getProtocol() {
+        return DotNetModuleFileType.PROTOCOL;
+    }
 
-	@Nonnull
-	@Override
-	public ArchiveFile createArchiveFile(@Nonnull String path) throws IOException
-	{
-		try
-		{
-			File file = new File(path);
-			return new DotNetArchiveFileWrapper(new DotNetArchiveFile(file, new ModuleParser(new File(path)), file.lastModified()));
-		}
-		catch(MSILParseException e)
-		{
-			// ignore initial parse exception
-			return ArchiveFile.EMPTY;
-		}
-		catch(Exception e)
-		{
-			throw new IOException(e);
-		}
-	}
+    @Nonnull
+    @Override
+    public ArchiveFile createArchiveFile(@Nonnull String path) throws IOException {
+        try {
+            File file = new File(path);
+            return new DotNetArchiveFileWrapper(new DotNetArchiveFile(file, new ModuleParser(new File(path)), file.lastModified()));
+        }
+        catch (MSILParseException e) {
+            // ignore initial parse exception
+            return ArchiveFile.EMPTY;
+        }
+        catch (Exception e) {
+            throw new IOException(e);
+        }
+    }
+
+    // @Override
+    public boolean isNeedToRepackArchive() {
+        return true;
+    }
 }
