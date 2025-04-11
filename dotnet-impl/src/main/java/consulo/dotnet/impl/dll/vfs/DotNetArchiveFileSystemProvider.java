@@ -143,7 +143,7 @@ public class DotNetArchiveFileSystemProvider implements ArchiveFileSystemProvide
         }
     }
 
-    // @Override
+    @Override
     public boolean isNeedToRepackArchive() {
         return true;
     }

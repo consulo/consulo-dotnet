@@ -24,83 +24,69 @@ import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.RunConfigurationProducer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.util.lang.Trinity;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 
 /**
  * @author VISTALL
  * @since 28.03.14
  */
 @ExtensionImpl
-public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNetConfiguration>
-{
-	public DotNetConfigurationProducer()
-	{
-		super(DotNetConfigurationType.getInstance().getConfigurationFactories()[0]);
-	}
+public class DotNetConfigurationProducer extends RunConfigurationProducer<DotNetConfiguration> {
+    public DotNetConfigurationProducer() {
+        super(DotNetConfigurationType.getInstance().getConfigurationFactories()[0]);
+    }
 
-	@Override
-	protected boolean setupConfigurationFromContext(DotNetConfiguration configuration, ConfigurationContext context, Ref<PsiElement> sourceElement)
-	{
-		Trinity<Module, String, PsiFile> contextInfo = getModuleForRun(context);
-		if(contextInfo != null)
-		{
-			configuration.setName(contextInfo.getFirst().getName());
-			configuration.setModule(contextInfo.getFirst());
-			configuration.setWorkingDirectory(contextInfo.getSecond());
-			sourceElement.set(contextInfo.getThird());
-			return true;
-		}
-		return false;
-	}
+    @Override
+    protected boolean setupConfigurationFromContext(DotNetConfiguration configuration, ConfigurationContext context, SimpleReference<PsiElement> sourceElement) {
+        Trinity<Module, String, PsiFile> contextInfo = getModuleForRun(context);
+        if (contextInfo != null) {
+            configuration.setName(contextInfo.getFirst().getName());
+            configuration.setModule(contextInfo.getFirst());
+            configuration.setWorkingDirectory(contextInfo.getSecond());
+            sourceElement.set(contextInfo.getThird());
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public boolean isConfigurationFromContext(DotNetConfiguration configuration, ConfigurationContext context)
-	{
-		Trinity<Module, String, PsiFile> contextInfo = getModuleForRun(context);
-		if(contextInfo == null)
-		{
-			return false;
-		}
+    @Override
+    public boolean isConfigurationFromContext(DotNetConfiguration configuration, ConfigurationContext context) {
+        Trinity<Module, String, PsiFile> contextInfo = getModuleForRun(context);
+        if (contextInfo == null) {
+            return false;
+        }
 
-		return configuration.getConfigurationModule().getModule() == contextInfo.getFirst();
-	}
+        return configuration.getConfigurationModule().getModule() == contextInfo.getFirst();
+    }
 
-	private Trinity<Module, String, PsiFile> getModuleForRun(ConfigurationContext configurationContext)
-	{
-		PsiElement psiLocation = configurationContext.getPsiLocation();
-		if(psiLocation == null)
-		{
-			return null;
-		}
+    private Trinity<Module, String, PsiFile> getModuleForRun(ConfigurationContext configurationContext) {
+        PsiElement psiLocation = configurationContext.getPsiLocation();
+        if (psiLocation == null) {
+            return null;
+        }
 
-		Module module = configurationContext.getModule();
-		if(module == null)
-		{
-			return null;
-		}
-		DotNetRunModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
-		if(extension != null)
-		{
-			if(extension.getTarget() == DotNetTarget.EXECUTABLE || extension.getTarget() == DotNetTarget.WIN_EXECUTABLE)
-			{
-				PsiFile containingFile = psiLocation.getContainingFile();
-				if(containingFile == null)
-				{
-					return null;
-				}
+        Module module = configurationContext.getModule();
+        if (module == null) {
+            return null;
+        }
+        DotNetRunModuleExtension<?> extension = module.getExtension(DotNetRunModuleExtension.class);
+        if (extension != null) {
+            if (extension.getTarget() == DotNetTarget.EXECUTABLE || extension.getTarget() == DotNetTarget.WIN_EXECUTABLE) {
+                PsiFile containingFile = psiLocation.getContainingFile();
+                if (containingFile == null) {
+                    return null;
+                }
 
-				DotNetModuleLangExtension langExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
-				if(langExtension == null || langExtension.getFileType() != containingFile.getFileType())
-				{
-					return null;
-				}
-				return Trinity.create(module, extension.getOutputDir(), containingFile);
-			}
-			return null;
-		}
-		return null;
-	}
+                DotNetModuleLangExtension<?> langExtension = module.getExtension(DotNetModuleLangExtension.class);
+                if (langExtension == null || langExtension.getFileType() != containingFile.getFileType()) {
+                    return null;
+                }
+                return Trinity.create(module, extension.getOutputDir(), containingFile);
+            }
+            return null;
+        }
+        return null;
+    }
 }
