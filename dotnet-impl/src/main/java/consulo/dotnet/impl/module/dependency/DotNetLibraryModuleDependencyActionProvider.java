@@ -18,7 +18,6 @@ package consulo.dotnet.impl.module.dependency;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.util.function.Computable;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
 import consulo.ide.setting.module.ClasspathPanel;
@@ -33,7 +32,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -42,161 +40,143 @@ import javax.swing.border.Border;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 28.09.14
  */
 @ExtensionImpl
-public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDependencyActionProvider<List<Map.Entry<String, String>>, DotNetLibraryModuleDependencyContext>
-{
-	private static class SelectDialog extends DialogWrapper
-	{
-		private final JBList<Map.Entry<String, String>> myLibraryList;
-		@Nonnull
-		private final DotNetLibraryModuleDependencyContext myContext;
+public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDependencyActionProvider<List<Map.Entry<String, String>>, DotNetLibraryModuleDependencyContext> {
+    private static class SelectDialog extends DialogWrapper {
+        private final JBList<Map.Entry<String, String>> myLibraryList;
+        @Nonnull
+        private final DotNetLibraryModuleDependencyContext myContext;
 
-		protected SelectDialog(@Nonnull DotNetLibraryModuleDependencyContext context, @Nonnull Image defaultIcon)
-		{
-			super(context.getProject(), false);
-			myContext = context;
-			setTitle("Select Library");
+        protected SelectDialog(@Nonnull DotNetLibraryModuleDependencyContext context, @Nonnull Image defaultIcon) {
+            super(context.getProject(), false);
+            myContext = context;
+            setTitle("Select Library");
 
-			myLibraryList = new JBList<>();
-			myLibraryList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-			myLibraryList.setCellRenderer(new ColoredListCellRenderer<Map.Entry<String, String>>()
-			{
-				@Override
-				protected void customizeCellRenderer(@Nonnull JList<? extends Map.Entry<String, String>> list, Map.Entry<String, String> entry, int i, boolean b, boolean b1)
-				{
-					setIcon(defaultIcon);
+            myLibraryList = new JBList<>();
+            myLibraryList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            myLibraryList.setCellRenderer(new ColoredListCellRenderer<Map.Entry<String, String>>() {
+                @Override
+                protected void customizeCellRenderer(@Nonnull JList<? extends Map.Entry<String, String>> list, Map.Entry<String, String> entry, int i, boolean b, boolean b1) {
+                    setIcon(defaultIcon);
 
-					append(entry.getKey());
-					append(" ");
-					append("(" + entry.getValue() + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
-				}
-			});
+                    append(entry.getKey());
+                    append(" ");
+                    append("(" + entry.getValue() + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
+                }
+            });
 
-			init();
-		}
+            init();
+        }
 
-		@Nullable
-		@Override
-		protected String getDimensionServiceKey()
-		{
-			setScalableSize(300, 600);
-			return super.getDimensionServiceKey();
-		}
+        @Nullable
+        @Override
+        protected String getDimensionServiceKey() {
+            setScalableSize(300, 600);
+            return super.getDimensionServiceKey();
+        }
 
-		@Nullable
-		@Override
-		protected Border createContentPaneBorder()
-		{
-			return JBUI.Borders.empty();
-		}
+        @Nullable
+        @Override
+        protected Border createContentPaneBorder() {
+            return JBUI.Borders.empty();
+        }
 
-		@Nullable
-		@Override
-		protected JComponent createCenterPanel()
-		{
-			reloadSystemLibraries();
-			return ScrollPaneFactory.createScrollPane(myLibraryList, true);
-		}
+        @Nullable
+        @Override
+        protected JComponent createCenterPanel() {
+            reloadSystemLibraries();
+            return ScrollPaneFactory.createScrollPane(myLibraryList, true);
+        }
 
-		@Nonnull
-		public List<Map.Entry<String, String>> getSelectedValues()
-		{
-			return myLibraryList.getSelectedValuesList();
-		}
+        @Nonnull
+        public List<Map.Entry<String, String>> getSelectedValues() {
+            return myLibraryList.getSelectedValuesList();
+        }
 
-		private void reloadSystemLibraries()
-		{
-			final DotNetSimpleModuleExtension<?> extension = myContext.getClasspathPanel().getRootModel().getExtension(DotNetSimpleModuleExtension.class);
-			if(extension == null)
-			{
-				return;
-			}
-			myLibraryList.setPaintBusy(true);
-			Application application = Application.get();
+        private void reloadSystemLibraries() {
+            final DotNetSimpleModuleExtension<?> extension = myContext.getClasspathPanel().getRootModel().getExtension(DotNetSimpleModuleExtension.class);
+            if (extension == null) {
+                return;
+            }
+            myLibraryList.setPaintBusy(true);
+            Application application = Application.get();
 
-			application.executeOnPooledThread((Runnable) () -> {
-				final Map<String, String> availableSystemLibraries = myContext.getAvailableSystemLibraries();
+            application.executeOnPooledThread((Runnable) () -> {
+                final Map<String, String> availableSystemLibraries = myContext.getAvailableSystemLibraries();
 
-				final Map<String, String> map = application.runReadAction((Computable<Map<String, String>>) () -> {
-					Map<String, String> map1 = new TreeMap<>();
+                final Map<String, String> map = application.runReadAction((Supplier<Map<String, String>>) () -> {
+                    Map<String, String> map1 = new TreeMap<>();
 
-					for(Map.Entry<String, String> entry : availableSystemLibraries.entrySet())
-					{
-						if(DotNetLibraryModuleDependencyContext.findOrderEntry(entry.getKey(), myContext.getClasspathPanel().getRootModel()) != null)
-						{
-							continue;
-						}
-						map1.put(entry.getKey(), entry.getValue());
-					}
-					return map1;
-				});
+                    for (Map.Entry<String, String> entry : availableSystemLibraries.entrySet()) {
+                        if (DotNetLibraryModuleDependencyContext.findOrderEntry(entry.getKey(), myContext.getClasspathPanel().getRootModel()) != null) {
+                            continue;
+                        }
+                        map1.put(entry.getKey(), entry.getValue());
+                    }
+                    return map1;
+                });
 
-				UIUtil.invokeLaterIfNeeded(() -> {
-					CollectionListModel<Map.Entry<String, String>> model = new CollectionListModel<Map.Entry<String, String>>(map.entrySet());
+                UIUtil.invokeLaterIfNeeded(() -> {
+                    CollectionListModel<Map.Entry<String, String>> model = new CollectionListModel<Map.Entry<String, String>>(map.entrySet());
 
-					myLibraryList.setModel(model);
-					myLibraryList.setPaintBusy(false);
-				});
-			});
-		}
+                    myLibraryList.setModel(model);
+                    myLibraryList.setPaintBusy(false);
+                });
+            });
+        }
 
-	}
+    }
 
-	@Override
-	public boolean isAvailable(@Nonnull DotNetLibraryModuleDependencyContext context)
-	{
-		ModifiableRootModel model = context.getClasspathPanel().getRootModel();
-		return model.getExtension(DotNetSimpleModuleExtension.class) != null;
-	}
+    @Override
+    public boolean isAvailable(@Nonnull DotNetLibraryModuleDependencyContext context) {
+        ModifiableRootModel model = context.getClasspathPanel().getRootModel();
+        return model.getExtension(DotNetSimpleModuleExtension.class) != null;
+    }
 
-	@Override
-	public DotNetLibraryModuleDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel,
-															  @Nonnull ModulesConfigurator modulesConfigurator,
-															  @Nonnull LibrariesConfigurator librariesConfigurator)
-	{
-		return new DotNetLibraryModuleDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
-	}
+    @Override
+    public DotNetLibraryModuleDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel,
+                                                              @Nonnull ModulesConfigurator modulesConfigurator,
+                                                              @Nonnull LibrariesConfigurator librariesConfigurator) {
+        return new DotNetLibraryModuleDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
+    }
 
-	@Nonnull
-	@Override
-	public LocalizeValue getActionName(@Nonnull ModuleRootLayer moduleRootLayer)
-	{
-		return LocalizeValue.of(".NET Standard Library");
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getActionName(@Nonnull ModuleRootLayer moduleRootLayer) {
+        return LocalizeValue.of(".NET Standard Library");
+    }
 
-	@Nonnull
-	@Override
-	public Image getIcon(@Nonnull ModuleRootLayer moduleRootLayer)
-	{
-		DotNetSimpleModuleExtension extension = moduleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
-		if(extension != null)
-		{
-			Image icon = ModuleExtensionHelper.getInstance(moduleRootLayer.getProject()).getModuleExtensionIcon(extension.getId());
-			assert icon != null;
-			return icon;
-		}
-		throw new IllegalArgumentException("No .NET extension");
-	}
+    @Nonnull
+    @Override
+    public Image getIcon(@Nonnull ModuleRootLayer moduleRootLayer) {
+        DotNetSimpleModuleExtension extension = moduleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
+        if (extension != null) {
+            Image icon = ModuleExtensionHelper.getInstance(moduleRootLayer.getProject()).getModuleExtensionIcon(extension.getId());
+            assert icon != null;
+            return icon;
+        }
+        throw new IllegalArgumentException("No .NET extension");
+    }
 
-	@RequiredUIAccess
-	@Nonnull
-	@Override
-	public AsyncResult<List<Map.Entry<String, String>>> invoke(@Nonnull DotNetLibraryModuleDependencyContext context)
-	{
-		Image defaultIcon = getIcon(context.getClasspathPanel().getRootModel());
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public AsyncResult<List<Map.Entry<String, String>>> invoke(@Nonnull DotNetLibraryModuleDependencyContext context) {
+        Image defaultIcon = getIcon(context.getClasspathPanel().getRootModel());
 
-		AsyncResult<List<Map.Entry<String, String>>> result = AsyncResult.undefined();
+        AsyncResult<List<Map.Entry<String, String>>> result = AsyncResult.undefined();
 
-		SelectDialog dialog = new SelectDialog(context, defaultIcon);
-		AsyncResult<Void> showAsync = dialog.showAsync();
+        SelectDialog dialog = new SelectDialog(context, defaultIcon);
+        AsyncResult<Void> showAsync = dialog.showAsync();
 
-		showAsync.doWhenDone(() -> result.setDone(dialog.getSelectedValues()));
-		showAsync.doWhenRejected((Runnable) result::setRejected);
-		return result;
-	}
+        showAsync.doWhenDone(() -> result.setDone(dialog.getSelectedValues()));
+        showAsync.doWhenRejected((Runnable) result::setRejected);
+        return result;
+    }
 }

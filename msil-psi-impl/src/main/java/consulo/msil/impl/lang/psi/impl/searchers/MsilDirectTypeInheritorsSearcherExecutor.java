@@ -20,8 +20,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.application.util.function.Computable;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.DotNetTypeList;
@@ -35,17 +33,17 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @ExtensionImpl
-public class MsilDirectTypeInheritorsSearcherExecutor implements DirectTypeInheritorsSearchExecutor
-{
-	@Override
-	public boolean execute(@Nonnull final DirectTypeInheritorsSearch.SearchParameters p, @Nonnull final Processor<? super DotNetTypeDeclaration> consumer)
-	{
-		String vmQName = p.getVmQName();
+public class MsilDirectTypeInheritorsSearcherExecutor implements DirectTypeInheritorsSearchExecutor {
+    @Override
+    public boolean execute(@Nonnull final DirectTypeInheritorsSearch.SearchParameters p, @Nonnull final Predicate<? super DotNetTypeDeclaration> consumer) {
+        String vmQName = p.getVmQName();
 
 		/*if(DotNetTypes.System_Object.equals(qualifiedName))
-		{
+        {
 			final SearchScope scope = useScope;
 
 			return AllClassesSearch.search(scope, aClass.getProject()).forEach(new Processor<DotNetTypeDeclaration>()
@@ -74,60 +72,52 @@ public class MsilDirectTypeInheritorsSearcherExecutor implements DirectTypeInher
 			});
 		}  */
 
-		SearchScope useScope = p.getScope();
-		final GlobalSearchScope scope = useScope instanceof GlobalSearchScope ? (GlobalSearchScope) useScope : new EverythingGlobalScope(p.getProject());
-		final String searchKey = MsilHelper.cutGenericMarker(StringUtil.getShortName(vmQName));
+        SearchScope useScope = p.getScope();
+        final GlobalSearchScope scope = useScope instanceof GlobalSearchScope ? (GlobalSearchScope) useScope : new EverythingGlobalScope(p.getProject());
+        final String searchKey = MsilHelper.cutGenericMarker(StringUtil.getShortName(vmQName));
 
-		if(StringUtil.isEmpty(searchKey))
-		{
-			return true;
-		}
+        if (StringUtil.isEmpty(searchKey)) {
+            return true;
+        }
 
-		Collection<DotNetTypeList> candidates = ApplicationManager.getApplication().runReadAction((Computable<Collection<DotNetTypeList>>) () -> MsilExtendsListIndex.getInstance().get(searchKey, p
-				.getProject(), scope));
+        Collection<DotNetTypeList> candidates = ApplicationManager.getApplication().runReadAction((Supplier<Collection<DotNetTypeList>>) () -> MsilExtendsListIndex.getInstance().get(searchKey, p
+            .getProject(), scope));
 
-		Map<String, List<DotNetTypeDeclaration>> classes = new HashMap<>();
+        Map<String, List<DotNetTypeDeclaration>> classes = new HashMap<>();
 
-		for(DotNetTypeList referenceList : candidates)
-		{
-			ProgressIndicatorProvider.checkCanceled();
+        for (DotNetTypeList referenceList : candidates) {
+            ProgressIndicatorProvider.checkCanceled();
 
-			ReadAction.run(() ->
-			{
-				final DotNetTypeDeclaration candidate = (DotNetTypeDeclaration) referenceList.getParent();
-				if(!checkInheritance(p, vmQName, candidate))
-				{
-					return;
-				}
+            ReadAction.run(() ->
+            {
+                final DotNetTypeDeclaration candidate = (DotNetTypeDeclaration) referenceList.getParent();
+                if (!checkInheritance(p, vmQName, candidate)) {
+                    return;
+                }
 
-				String fqn = candidate.getPresentableQName();
-				List<DotNetTypeDeclaration> list = classes.get(fqn);
-				if(list == null)
-				{
-					list = new ArrayList<>();
-					classes.put(fqn, list);
-				}
-				list.add(candidate);
-			});
-		}
+                String fqn = candidate.getPresentableQName();
+                List<DotNetTypeDeclaration> list = classes.get(fqn);
+                if (list == null) {
+                    list = new ArrayList<>();
+                    classes.put(fqn, list);
+                }
+                list.add(candidate);
+            });
+        }
 
-		for(List<DotNetTypeDeclaration> sameNamedClasses : classes.values())
-		{
-			for(DotNetTypeDeclaration sameNamedClass : sameNamedClasses)
-			{
-				if(!consumer.process(sameNamedClass))
-				{
-					return false;
-				}
-			}
-		}
+        for (List<DotNetTypeDeclaration> sameNamedClasses : classes.values()) {
+            for (DotNetTypeDeclaration sameNamedClass : sameNamedClasses) {
+                if (!consumer.test(sameNamedClass)) {
+                    return false;
+                }
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@RequiredReadAction
-	private static boolean checkInheritance(final DirectTypeInheritorsSearch.SearchParameters p, final String vmQName, final DotNetTypeDeclaration candidate)
-	{
-		return !p.isCheckInheritance() || candidate.isInheritor(vmQName, false);
-	}
+    @RequiredReadAction
+    private static boolean checkInheritance(final DirectTypeInheritorsSearch.SearchParameters p, final String vmQName, final DotNetTypeDeclaration candidate) {
+        return !p.isCheckInheritance() || candidate.isInheritor(vmQName, false);
+    }
 }
