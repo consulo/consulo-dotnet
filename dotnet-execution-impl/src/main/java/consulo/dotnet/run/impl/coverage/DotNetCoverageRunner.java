@@ -27,6 +27,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.collection.SmartList;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -35,44 +36,37 @@ import java.util.function.BiFunction;
  * @author VISTALL
  * @since 10.01.15
  */
-public abstract class DotNetCoverageRunner extends CoverageRunner
-{
-	@Nonnull
-	public static List<DotNetCoverageRunner> findAvailableRunners(@Nonnull RunProfile configuration)
-	{
-		if(!(configuration instanceof DotNetConfigurationWithCoverage))
-		{
-			return Collections.emptyList();
-		}
-		Module module = ((DotNetConfigurationWithCoverage) configuration).getConfigurationModule().getModule();
-		if(module != null)
-		{
-			DotNetRunModuleExtension moduleExtension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
-			if(moduleExtension == null)
-			{
-				return Collections.emptyList();
-			}
-			List<DotNetCoverageRunner> list = new SmartList<DotNetCoverageRunner>();
-			for(CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensionList())
-			{
-				if(coverageRunner instanceof DotNetCoverageRunner && ((DotNetCoverageRunner) coverageRunner).acceptModuleExtension(moduleExtension))
-				{
-					list.add((DotNetCoverageRunner) coverageRunner);
-				}
-			}
-			return list;
-		}
-		return Collections.emptyList();
-	}
+public abstract class DotNetCoverageRunner extends CoverageRunner {
+    @Nonnull
+    public static List<DotNetCoverageRunner> findAvailableRunners(@Nonnull RunProfile configuration) {
+        if (!(configuration instanceof DotNetConfigurationWithCoverage)) {
+            return Collections.emptyList();
+        }
+        Module module = ((DotNetConfigurationWithCoverage)configuration).getConfigurationModule().getModule();
+        if (module != null) {
+            DotNetRunModuleExtension moduleExtension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
+            if (moduleExtension == null) {
+                return Collections.emptyList();
+            }
+            List<DotNetCoverageRunner> list = new SmartList<DotNetCoverageRunner>();
+            for (CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensionList()) {
+                if (coverageRunner instanceof DotNetCoverageRunner && ((DotNetCoverageRunner)coverageRunner).acceptModuleExtension(
+                    moduleExtension)) {
+                    list.add((DotNetCoverageRunner)coverageRunner);
+                }
+            }
+            return list;
+        }
+        return Collections.emptyList();
+    }
 
-	@Nonnull
-	public abstract BiFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine();
+    @Nonnull
+    public abstract BiFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine();
 
-	public abstract boolean acceptModuleExtension(@Nonnull DotNetRunModuleExtension<?> moduleExtension);
+    public abstract boolean acceptModuleExtension(@Nonnull DotNetRunModuleExtension<?> moduleExtension);
 
-	@Override
-	public boolean acceptsCoverageEngine(@Nonnull CoverageEngine engine)
-	{
-		return engine instanceof DotNetCoverageEngine;
-	}
+    @Override
+    public boolean acceptsCoverageEngine(@Nonnull CoverageEngine engine) {
+        return engine instanceof DotNetCoverageEngine;
+    }
 }
