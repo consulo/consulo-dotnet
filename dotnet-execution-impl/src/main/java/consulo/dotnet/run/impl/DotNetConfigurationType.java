@@ -17,12 +17,10 @@
 package consulo.dotnet.run.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.dotnet.execution.localize.DotNetExecutionLocalize;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
-import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.ConfigurationTypeBase;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.RunConfigurationModule;
+import consulo.execution.configuration.*;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -30,7 +28,6 @@ import consulo.module.extension.ModuleExtensionHelper;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -38,56 +35,46 @@ import jakarta.annotation.Nonnull;
  * @since 26.11.13.
  */
 @ExtensionImpl
-public class DotNetConfigurationType extends ConfigurationTypeBase
-{
-	@Nonnull
-	public static DotNetConfigurationType getInstance()
-	{
-		return EP_NAME.findExtensionOrFail(DotNetConfigurationType.class);
-	}
+public class DotNetConfigurationType extends ConfigurationTypeBase {
+    @Nonnull
+    public static DotNetConfigurationType getInstance() {
+        return Application.get().getExtensionPoint(ConfigurationType.class).findExtensionOrFail(DotNetConfigurationType.class);
+    }
 
-	public DotNetConfigurationType()
-	{
-		super("#DotNetConfigurationType", DotNetExecutionLocalize.dotnetApplicationName(), PlatformIconGroup.runconfigurationsApplication());
+    public DotNetConfigurationType() {
+        super("#DotNetConfigurationType", DotNetExecutionLocalize.dotnetApplicationName(), PlatformIconGroup.runconfigurationsApplication());
 
-		addFactory(new ConfigurationFactory(this)
-		{
-			@Nonnull
-			@Override
-			public String getId()
-			{
-				return ".NET Application";
-			}
+        addFactory(new ConfigurationFactory(this) {
+            @Nonnull
+            @Override
+            public String getId() {
+                return ".NET Application";
+            }
 
-			@Override
-			public RunConfiguration createTemplateConfiguration(Project project)
-			{
-				return new DotNetConfiguration("Unnamed", new RunConfigurationModule(project), this);
-			}
+            @Override
+            public RunConfiguration createTemplateConfiguration(Project project) {
+                return new DotNetConfiguration("Unnamed", new RunConfigurationModule(project), this);
+            }
 
-			@Override
-			@RequiredUIAccess
-			public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration)
-			{
-				DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
+            @Override
+            @RequiredUIAccess
+            public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
+                DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
 
-				for(Module module : ModuleManager.getInstance(configuration.getProject()).getModules())
-				{
-					DotNetRunModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
-					if(extension != null)
-					{
-						dotNetConfiguration.setName(module.getName());
-						dotNetConfiguration.setModule(module);
-						break;
-					}
-				}
-			}
+                for (Module module : ModuleManager.getInstance(configuration.getProject()).getModules()) {
+                    DotNetRunModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
+                    if (extension != null) {
+                        dotNetConfiguration.setName(module.getName());
+                        dotNetConfiguration.setModule(module);
+                        break;
+                    }
+                }
+            }
 
-			@Override
-			public boolean isApplicable(@Nonnull Project project)
-			{
-				return ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetRunModuleExtension.class);
-			}
-		});
-	}
+            @Override
+            public boolean isApplicable(@Nonnull Project project) {
+                return ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetRunModuleExtension.class);
+            }
+        });
+    }
 }
