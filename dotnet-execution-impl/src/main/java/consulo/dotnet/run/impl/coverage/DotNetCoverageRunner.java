@@ -16,6 +16,7 @@
 
 package consulo.dotnet.run.impl.coverage;
 
+import consulo.application.Application;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.execution.configuration.RunProfile;
@@ -34,28 +35,25 @@ import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
- * @since 10.01.15
+ * @since 2015-01-10
  */
 public abstract class DotNetCoverageRunner extends CoverageRunner {
     @Nonnull
     public static List<DotNetCoverageRunner> findAvailableRunners(@Nonnull RunProfile configuration) {
-        if (!(configuration instanceof DotNetConfigurationWithCoverage)) {
+        if (!(configuration instanceof DotNetConfigurationWithCoverage dotNetConfigurationWithCoverage)) {
             return Collections.emptyList();
         }
-        Module module = ((DotNetConfigurationWithCoverage)configuration).getConfigurationModule().getModule();
+        Module module = dotNetConfigurationWithCoverage.getConfigurationModule().getModule();
         if (module != null) {
             DotNetRunModuleExtension moduleExtension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
             if (moduleExtension == null) {
                 return Collections.emptyList();
             }
-            List<DotNetCoverageRunner> list = new SmartList<DotNetCoverageRunner>();
-            for (CoverageRunner coverageRunner : CoverageRunner.EP_NAME.getExtensionList()) {
-                if (coverageRunner instanceof DotNetCoverageRunner && ((DotNetCoverageRunner)coverageRunner).acceptModuleExtension(
-                    moduleExtension)) {
-                    list.add((DotNetCoverageRunner)coverageRunner);
-                }
-            }
-            return list;
+            return Application.get().getExtensionPoint(CoverageRunner.class).collectExtensionsSafe(
+                new SmartList<>(),
+                coverageRunner -> coverageRunner instanceof DotNetCoverageRunner dotNetCoverageRunner
+                    && dotNetCoverageRunner.acceptModuleExtension(moduleExtension) ? dotNetCoverageRunner : null
+            );
         }
         return Collections.emptyList();
     }
