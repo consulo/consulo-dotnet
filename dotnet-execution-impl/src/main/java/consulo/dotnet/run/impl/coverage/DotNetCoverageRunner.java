@@ -49,7 +49,7 @@ public abstract class DotNetCoverageRunner extends CoverageRunner {
             if (moduleExtension == null) {
                 return Collections.emptyList();
             }
-            return Application.get().getExtensionPoint(CoverageRunner.class).collectExtensionsSafe(
+            return Application.get().getExtensionPoint(CoverageRunner.class).collectMapped(
                 new SmartList<>(),
                 coverageRunner -> coverageRunner instanceof DotNetCoverageRunner dotNetCoverageRunner
                     && dotNetCoverageRunner.acceptModuleExtension(moduleExtension) ? dotNetCoverageRunner : null
