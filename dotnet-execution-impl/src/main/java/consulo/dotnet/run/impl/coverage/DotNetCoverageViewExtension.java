@@ -18,13 +18,13 @@ package consulo.dotnet.run.impl.coverage;
 import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineData;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.psi.resolve.DotNetPsiSearcher;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.execution.coverage.view.CoverageListRootNode;
 import consulo.execution.coverage.view.CoverageViewExtension;
 import consulo.execution.coverage.view.ElementColumnInfo;
@@ -35,7 +35,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.ColumnInfo;
-
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -163,7 +162,7 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension {
             new ElementColumnInfo(),
             new PercentageCoverageColumnInfo(
                 1,
-                "Statistics, %",
+                ExecutionCoverageLocalize.tableColumnNameStatistics(),
                 getSuitesBundle(),
                 getStateBean()
             )
