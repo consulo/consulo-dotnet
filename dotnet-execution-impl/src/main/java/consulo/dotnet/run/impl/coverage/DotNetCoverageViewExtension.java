@@ -17,6 +17,7 @@ package consulo.dotnet.run.impl.coverage;
 
 import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineData;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -44,7 +45,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 10.01.15
+ * @since 2015-01-10
  */
 public class DotNetCoverageViewExtension extends CoverageViewExtension {
     private static final String UNKNOWN = "?? %";
@@ -70,6 +71,7 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension {
 
     @Nullable
     @Override
+    @RequiredReadAction
     public String getPercentage(int columnIdx, AbstractTreeNode node) {
         Object value = node.getValue();
         if (!(value instanceof PsiElement)) {
@@ -84,9 +86,10 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension {
         }
     }
 
+    @RequiredReadAction
     private double getPercentValue(PsiElement value, double unknownValue) {
-        if (value instanceof DotNetTypeDeclaration) {
-            String vmQName = ((DotNetTypeDeclaration) value).getVmQName();
+        if (value instanceof DotNetTypeDeclaration typeDeclaration) {
+            String vmQName = typeDeclaration.getVmQName();
             if (vmQName == null) {
                 return unknownValue;
             }
@@ -111,9 +114,8 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension {
 
             return (i / len) * 100;
         }
-        else if (value instanceof DotNetNamespaceAsElement) {
-            Collection<PsiElement> children =
-                ((DotNetNamespaceAsElement) value).getChildren(mySearchScope, DotNetNamespaceAsElement.ChildrenFilter.NONE);
+        else if (value instanceof DotNetNamespaceAsElement namespaceAsElement) {
+            Collection<PsiElement> children = namespaceAsElement.getChildren(mySearchScope, DotNetNamespaceAsElement.ChildrenFilter.NONE);
             double all = 0;
             for (PsiElement temp : children) {
                 all += getPercentValue(temp, 0);
@@ -125,47 +127,47 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension {
     }
 
     @Override
-    public List<AbstractTreeNode> getChildrenNodes(final AbstractTreeNode node) {
-        return ApplicationManager.getApplication().runReadAction(new Supplier<List<AbstractTreeNode>>() {
-            @Override
-            public List<AbstractTreeNode> get() {
-                List<AbstractTreeNode> nodes = new ArrayList<AbstractTreeNode>();
-                Object element = node.getValue();
-                if (element instanceof DotNetNamespaceAsElement) {
-                    Collection<PsiElement> children =
-                        ((DotNetNamespaceAsElement) element).getChildren(mySearchScope, DotNetNamespaceAsElement.ChildrenFilter.NONE);
-                    for (PsiElement element1 : children) {
-                        if (element1 instanceof PsiNamedElement) {
-                            CoverageListRootNode e = new CoverageListRootNode(getProject(), (PsiNamedElement) element1, getSuitesBundle(),
-                                getStateBean()
-                            );
-                            e.setParent(node);
-                            nodes.add(e);
-                        }
+    public List<AbstractTreeNode> getChildrenNodes(AbstractTreeNode node) {
+        return myProject.getApplication().runReadAction((Supplier<List<AbstractTreeNode>>) () -> {
+            List<AbstractTreeNode> nodes = new ArrayList<>();
+            Object element = node.getValue();
+            if (element instanceof DotNetNamespaceAsElement namespaceAsElement) {
+                Collection<PsiElement> children =
+                    namespaceAsElement.getChildren(mySearchScope, DotNetNamespaceAsElement.ChildrenFilter.NONE);
+                for (PsiElement child : children) {
+                    if (child instanceof PsiNamedElement namedElement) {
+                        CoverageListRootNode e = new CoverageListRootNode(getProject(), namedElement, getSuitesBundle(),
+                            getStateBean()
+                        );
+                        e.setParent(node);
+                        nodes.add(e);
                     }
                 }
-                else if (element instanceof DotNetTypeDeclaration) {
-                    for (DotNetNamedElement element1 : ((DotNetTypeDeclaration) element).getMembers()) {
-                        if (element1 instanceof DotNetTypeDeclaration) {
-                            CoverageListRootNode e = new CoverageListRootNode(getProject(), element1, getSuitesBundle(), getStateBean());
-                            e.setParent(node);
-                            nodes.add(e);
-                        }
-                    }
-                }
-                return nodes;
             }
+            else if (element instanceof DotNetTypeDeclaration typeDeclaration) {
+                for (DotNetNamedElement members : typeDeclaration.getMembers()) {
+                    if (members instanceof DotNetTypeDeclaration) {
+                        CoverageListRootNode e = new CoverageListRootNode(getProject(), members, getSuitesBundle(), getStateBean());
+                        e.setParent(node);
+                        nodes.add(e);
+                    }
+                }
+            }
+            return nodes;
         });
     }
 
     @Override
     public ColumnInfo[] createColumnInfos() {
-        return new ColumnInfo[]{new ElementColumnInfo(), new PercentageCoverageColumnInfo(
-            1,
-            "Statistics, %",
-            getSuitesBundle(),
-            getStateBean()
-        )};
+        return new ColumnInfo[]{
+            new ElementColumnInfo(),
+            new PercentageCoverageColumnInfo(
+                1,
+                "Statistics, %",
+                getSuitesBundle(),
+                getStateBean()
+            )
+        };
     }
 
     @Nullable
@@ -175,6 +177,7 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension {
     }
 
     @Override
+    @RequiredReadAction
     public AbstractTreeNode createRootNode() {
         DotNetNamespaceAsElement namespace = DotNetPsiSearcher.getInstance(getProject()).findNamespace("", mySearchScope);
         return new CoverageListRootNode(getProject(), namespace, getSuitesBundle(), getStateBean());
