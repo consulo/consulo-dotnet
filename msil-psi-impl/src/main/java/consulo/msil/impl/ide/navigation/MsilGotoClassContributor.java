@@ -149,7 +149,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 					@Override
 					public String getTextFor(LanguageFileType value)
 					{
-						return value.getLanguage().getDisplayName();
+						return value.getLanguage().getDisplayName().get();
 					}
 
 					@Override

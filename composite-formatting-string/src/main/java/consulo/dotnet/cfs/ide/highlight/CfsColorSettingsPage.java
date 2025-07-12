@@ -5,14 +5,12 @@ import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.dotnet.cfs.lang.CfsLanguage;
 import consulo.dotnet.cfs.lang.CfsTokens;
 import consulo.dotnet.cfs.lang.IndexCfsLanguageVersion;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -85,15 +83,8 @@ public class CfsColorSettingsPage implements ColorSettingsPage
 
 	@Nonnull
 	@Override
-	public ColorDescriptor[] getColorDescriptors()
-	{
-		return new ColorDescriptor[0];
-	}
-
-	@Nonnull
-	@Override
 	public String getDisplayName()
 	{
-		return CfsLanguage.INSTANCE.getDisplayName();
+		return CfsLanguage.INSTANCE.getDisplayName().get();
 	}
 }

@@ -35,7 +35,7 @@ public abstract class BaseExpressionCfsLanguageVersion extends BaseCfsLanguageVe
 
 	public BaseExpressionCfsLanguageVersion(@Nonnull Language baseLanguage)
 	{
-		super(baseLanguage.getName() + "_EXPRESSION", CfsLanguage.INSTANCE);
+		super(baseLanguage.getID() + "_EXPRESSION", CfsLanguage.INSTANCE);
 	}
 
 	public abstract IElementType createExpressionElementType();

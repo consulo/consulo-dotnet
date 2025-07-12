@@ -17,6 +17,7 @@
 package consulo.dotnet.cfs.lang;
 
 import consulo.language.Language;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -34,8 +35,8 @@ public class CfsLanguage extends Language
 
 	@Nonnull
 	@Override
-	public String getDisplayName()
+	public LocalizeValue getDisplayName()
 	{
-		return "Composite Formatting String";
+		return LocalizeValue.localizeTODO("Composite Formatting String");
 	}
 }
