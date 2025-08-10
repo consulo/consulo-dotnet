@@ -11,6 +11,7 @@ import consulo.dotnet.cfs.lang.IndexCfsLanguageVersion;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -83,8 +84,8 @@ public class CfsColorSettingsPage implements ColorSettingsPage
 
 	@Nonnull
 	@Override
-	public String getDisplayName()
+	public LocalizeValue getDisplayName()
 	{
-		return CfsLanguage.INSTANCE.getDisplayName().get();
+		return CfsLanguage.INSTANCE.getDisplayName();
 	}
 }
