@@ -55,6 +55,11 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase {
                 }
             }
         }
+
+        if (runProfile instanceof DotNetConfurationWithDefaultDebugFileType confurationWithDefaultDebugFileType) {
+            return confurationWithDefaultDebugFileType.getDefaultDebuggerFileType();
+        }
+
         return PlainTextFileType.INSTANCE;
     }
 
