@@ -38,6 +38,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -89,7 +90,7 @@ public class DotNetBreakpointEngine {
                     }
 
                     @Override
-                    public void errorOccurred(@Nonnull String errorMessage) {
+                    public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
                     }
                 }, XDebuggerUtil.getInstance().createPositionByElement(elementAt));
                 return valueRef.get();

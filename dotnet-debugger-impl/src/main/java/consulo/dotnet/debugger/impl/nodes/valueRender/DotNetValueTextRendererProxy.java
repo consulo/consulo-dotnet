@@ -18,7 +18,7 @@ package consulo.dotnet.debugger.impl.nodes.valueRender;
 
 import consulo.colorScheme.TextAttributesKey;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -26,131 +26,114 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 22-Oct-17
  */
-public class DotNetValueTextRendererProxy implements XValuePresentation.XValueTextRenderer
-{
-	enum Type
-	{
-		value,
-		stringValue,
-		numericValue,
-		charValue,
-		keywordValue,
-		comment,
-		specialSymbol,
-		error
-	}
+public class DotNetValueTextRendererProxy implements XValuePresentation.XValueTextRenderer {
+    enum Type {
+        value,
+        stringValue,
+        numericValue,
+        charValue,
+        keywordValue,
+        comment,
+        specialSymbol,
+        error
+    }
 
-	private Type myType;
-	private String myValue;
+    private Type myType;
+    private Object myValue;
 
-	public void renderBack(@Nonnull XValuePresentation.XValueTextRenderer renderer)
-	{
-		// not rendered
-		if(myType == null)
-		{
-			return;
-		}
+    public void renderBack(@Nonnull XValuePresentation.XValueTextRenderer renderer) {
+        // not rendered
+        if (myType == null) {
+            return;
+        }
 
-		switch(myType)
-		{
-			case value:
-				renderer.renderValue(myValue);
-				break;
-			case stringValue:
-				renderer.renderStringValue(myValue);
-				break;
-			case numericValue:
-				renderer.renderNumericValue(myValue);
-				break;
-			case charValue:
-				renderer.renderCharValue(myValue);
-				break;
-			case keywordValue:
-				renderer.renderKeywordValue(myValue);
-				break;
-			case comment:
-				renderer.renderComment(myValue);
-				break;
-			case specialSymbol:
-				renderer.renderSpecialSymbol(myValue);
-				break;
-			case error:
-				renderer.renderError(myValue);
-				break;
-		}
-	}
+        switch (myType) {
+            case value:
+                renderer.renderValue((String) myValue);
+                break;
+            case stringValue:
+                renderer.renderStringValue((String) myValue);
+                break;
+            case numericValue:
+                renderer.renderNumericValue((String) myValue);
+                break;
+            case charValue:
+                renderer.renderCharValue((String) myValue);
+                break;
+            case keywordValue:
+                renderer.renderKeywordValue((String) myValue);
+                break;
+            case comment:
+                renderer.renderComment((String) myValue);
+                break;
+            case specialSymbol:
+                renderer.renderSpecialSymbol((String) myValue);
+                break;
+            case error:
+                renderer.renderError((LocalizeValue) myValue);
+                break;
+        }
+    }
 
-	private void set(Type type, String value)
-	{
-		assert myValue == null;
+    private void set(Type type, Object value) {
+        assert myValue == null;
 
-		myType = type;
-		myValue = value;
-	}
+        myType = type;
+        myValue = value;
+    }
 
-	@Override
-	public void renderValue(@Nonnull String value)
-	{
-		set(Type.value, value);
-	}
+    @Override
+    public void renderValue(@Nonnull String value) {
+        set(Type.value, value);
+    }
 
-	@Override
-	public void renderStringValue(@Nonnull String value)
-	{
-		set(Type.stringValue, value);
-	}
+    @Override
+    public void renderStringValue(@Nonnull String value) {
+        set(Type.stringValue, value);
+    }
 
-	@Override
-	public void renderNumericValue(@Nonnull String value)
-	{
-		set(Type.numericValue, value);
-	}
+    @Override
+    public void renderNumericValue(@Nonnull String value) {
+        set(Type.numericValue, value);
+    }
 
-	@Override
-	public void renderCharValue(@Nonnull String value)
-	{
-		set(Type.charValue, value);
-	}
+    @Override
+    public void renderCharValue(@Nonnull String value) {
+        set(Type.charValue, value);
+    }
 
-	@Override
-	public void renderKeywordValue(@Nonnull String value)
-	{
-		set(Type.keywordValue, value);
-	}
+    @Override
+    public void renderKeywordValue(@Nonnull String value) {
+        set(Type.keywordValue, value);
+    }
 
-	@Override
-	public void renderValue(@Nonnull String value, @Nonnull TextAttributesKey key)
-	{
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void renderValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength)
-	{
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength) {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength)
-	{
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public void renderComment(@Nonnull String comment)
-	{
-		set(Type.comment, comment);
-	}
+    @Override
+    public void renderComment(@Nonnull String comment) {
+        set(Type.comment, comment);
+    }
 
-	@Override
-	public void renderSpecialSymbol(@Nonnull String symbol)
-	{
-		set(Type.specialSymbol, symbol);
-	}
+    @Override
+    public void renderSpecialSymbol(@Nonnull String symbol) {
+        set(Type.specialSymbol, symbol);
+    }
 
-	@Override
-	public void renderError(@Nonnull String error)
-	{
-		set(Type.error, error);
-	}
+    @Override
+    public void renderError(@Nonnull LocalizeValue error) {
+        set(Type.error, error);
+    }
 }
