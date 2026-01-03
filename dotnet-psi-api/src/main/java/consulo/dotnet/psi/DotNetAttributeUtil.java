@@ -106,12 +106,7 @@ public class DotNetAttributeUtil
 				@RequiredReadAction
 				public Result<Boolean> compute()
 				{
-					Key key =  PsiModificationTracker.MODIFICATION_COUNT;
-					if(owner instanceof StubBasedPsiElement)
-					{
-						key = PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT;
-					}
-					return Result.create(findAttribute(owner, qName) != null, key);
+					return Result.create(findAttribute(owner, qName) != null, PsiModificationTracker.MODIFICATION_COUNT);
 				}
 			}, false);
 			map.putIfAbsent(qName, provider);
