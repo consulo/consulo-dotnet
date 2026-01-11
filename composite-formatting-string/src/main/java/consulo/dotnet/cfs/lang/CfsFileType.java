@@ -47,7 +47,7 @@ public class CfsFileType extends LanguageFileType
 	@Override
 	public LocalizeValue getDescription()
 	{
-		return LocalizeValue.of();
+		return LocalizeValue.empty();
 	}
 
 	@Nonnull
