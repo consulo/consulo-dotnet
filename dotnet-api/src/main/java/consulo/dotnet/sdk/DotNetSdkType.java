@@ -23,62 +23,56 @@ import consulo.content.bundle.SdkModificator;
 import consulo.content.bundle.SdkType;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.dotnet.module.extension.BaseDotNetSimpleModuleExtension;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 
 /**
  * @author VISTALL
  * @since 20.12.13.
  */
-public abstract class DotNetSdkType extends SdkType
-{
-	public DotNetSdkType(@Nonnull String name)
-	{
-		super(name);
-	}
+public abstract class DotNetSdkType extends SdkType {
+    protected DotNetSdkType(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Image icon) {
+        super(id, displayName, icon);
+    }
 
-	@Override
-	public boolean isRootTypeApplicable(OrderRootType type)
-	{
-		return type == ExternalAttributesRootOrderType.getInstance();
-	}
+    @Override
+    public boolean isRootTypeApplicable(OrderRootType type) {
+        return type == ExternalAttributesRootOrderType.getInstance();
+    }
 
-	@Override
-	public void setupSdkPaths(@Nonnull Sdk sdk)
-	{
-		SdkModificator sdkModificator = sdk.getSdkModificator();
+    @Override
+    public void setupSdkPaths(@Nonnull Sdk sdk) {
+        SdkModificator sdkModificator = sdk.getSdkModificator();
 
-		File dir = new File(PluginManager.getPluginPath(BaseDotNetSimpleModuleExtension.class), "externalAttributes");
+        File dir = new File(PluginManager.getPluginPath(BaseDotNetSimpleModuleExtension.class), "externalAttributes");
 
-		FileUtil.visitFiles(dir, file ->
-		{
-			if(file.isDirectory())
-			{
-				return true;
-			}
+        FileUtil.visitFiles(dir, file ->
+        {
+            if (file.isDirectory()) {
+                return true;
+            }
 
-			if(file.getName().endsWith(".xml"))
-			{
-				sdkModificator.addRoot(VirtualFileUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.getInstance());
-			}
-			return true;
-		});
+            if (file.getName().endsWith(".xml")) {
+                sdkModificator.addRoot(VirtualFileUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.getInstance());
+            }
+            return true;
+        });
 
-		sdkModificator.commitChanges();
-	}
+        sdkModificator.commitChanges();
+    }
 
-	@Nonnull
-	public File getLoaderFile(@Nonnull Sdk sdk)
-	{
-		return getLoaderFile(getClass(), "loader.exe");
-	}
+    @Nonnull
+    public File getLoaderFile(@Nonnull Sdk sdk) {
+        return getLoaderFile(getClass(), "loader.exe");
+    }
 
-	@Nonnull
-	protected static File getLoaderFile(Class<?> clazz, String fileName)
-	{
-		return new File(new File(PluginManager.getPluginPath(clazz), "loader"), fileName);
-	}
+    @Nonnull
+    protected static File getLoaderFile(Class<?> clazz, String fileName) {
+        return new File(new File(PluginManager.getPluginPath(clazz), "loader"), fileName);
+    }
 }
