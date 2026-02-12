@@ -20,6 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.content.bundle.SdkType;
 import consulo.dotnet.icon.DotNetIconGroup;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
@@ -41,11 +42,11 @@ public class RoslynBundleType extends SdkType {
 
     @Nonnull
     public static RoslynBundleType getInstance() {
-        return Application.get().getExtensionPoint(RoslynBundleType.class).findExtensionOrFail(RoslynBundleType.class);
+        return Application.get().getExtensionPoint(SdkType.class).findExtensionOrFail(RoslynBundleType.class);
     }
 
     public RoslynBundleType() {
-        super("ROSLYN_BUNDLE");
+        super("ROSLYN_BUNDLE", LocalizeValue.localizeTODO("Roslyn"), DotNetIconGroup.netfoundation());
     }
 
     @Override
@@ -75,22 +76,5 @@ public class RoslynBundleType extends SdkType {
             LOG.error(e);
         }
         return "?";
-    }
-
-    @Override
-    public String suggestSdkName(String currentSdkName, String sdkHome) {
-        return getPresentableName() + " " + getVersionString(sdkHome);
-    }
-
-    @Nonnull
-    @Override
-    public String getPresentableName() {
-        return "Roslyn";
-    }
-
-    @Nonnull
-    @Override
-    public Image getIcon() {
-        return DotNetIconGroup.netfoundation();
     }
 }
