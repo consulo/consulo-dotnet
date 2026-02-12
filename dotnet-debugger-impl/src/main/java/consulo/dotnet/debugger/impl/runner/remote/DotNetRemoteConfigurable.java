@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.dotnet.debugger.impl.runner.remote;
 
-import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
@@ -32,80 +31,70 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 27-Dec-16
+ * @since 2016-12-27
  */
-public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> extends SettingsEditor<C>
-{
-	private final Project myProject;
+public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> extends SettingsEditor<C> {
+    private final Project myProject;
 
-	private TextBox myHostField;
-	private TextBox myPortField;
-	private ComboBox<Module> myModuleComboBox;
-	private ComboBox<Boolean> myModeBox;
+    private TextBox myHostField;
+    private TextBox myPortField;
+    private ComboBox<Module> myModuleComboBox;
+    private ComboBox<Boolean> myModeBox;
 
-	public DotNetRemoteConfigurable(Project project)
-	{
-		myProject = project;
-	}
+    public DotNetRemoteConfigurable(Project project) {
+        myProject = project;
+    }
 
-	@Nullable
-	@Override
-	@RequiredUIAccess
-	protected Component createUIComponent()
-	{
-		FormBuilder formBuilder = FormBuilder.create();
+    @Nullable
+    @Override
+    @RequiredUIAccess
+    protected Component createUIComponent() {
+        FormBuilder formBuilder = FormBuilder.create();
 
-		formBuilder.addLabeled("Host", myHostField = TextBox.create());
-		formBuilder.addLabeled("Port", myPortField = TextBox.create());
-		formBuilder.addLabeled("Module", myModuleComboBox = ComboBox.create(ModuleManager.getInstance(myProject).getSortedModules()));
+        formBuilder.addLabeled("Host", myHostField = TextBox.create());
+        formBuilder.addLabeled("Port", myPortField = TextBox.create());
+        formBuilder.addLabeled("Module", myModuleComboBox = ComboBox.create(ModuleManager.getInstance(myProject).getSortedModules()));
 
-		ComboBox.Builder<Boolean> modeBuilder = ComboBox.builder();
-		modeBuilder.add(Boolean.TRUE, "attach");
-		modeBuilder.add(Boolean.FALSE, "listen");
-		myModeBox = modeBuilder.build();
+        ComboBox.Builder<Boolean> modeBuilder = ComboBox.builder();
+        modeBuilder.add(Boolean.TRUE, "attach");
+        modeBuilder.add(Boolean.FALSE, "listen");
+        myModeBox = modeBuilder.build();
 
-		formBuilder.addLabeled("Mode", myModeBox);
+        formBuilder.addLabeled("Mode", myModeBox);
 
-		myModuleComboBox.setRender((listItemPresentation, i, module) ->
-		{
-			if(module == null)
-			{
-				listItemPresentation.append("<none>");
-			}
-			else
-			{
-				listItemPresentation.withIcon(AllIcons.Nodes.Module);
-				listItemPresentation.append(module.getName());
-			}
-		});
-		return formBuilder.build();
-	}
+        myModuleComboBox.setRenderer((presentation, i, module) -> {
+            if (module == null) {
+                presentation.append("<none>");
+            }
+            else {
+                presentation.withIcon(PlatformIconGroup.nodesModule());
+                presentation.append(module.getName());
+            }
+        });
+        return formBuilder.build();
+    }
 
-	@Override
-	@RequiredUIAccess
-	protected void resetEditorFrom(C remoteConfiguration)
-	{
-		myHostField.setValue(remoteConfiguration.HOST);
-		myPortField.setValue(String.valueOf(remoteConfiguration.PORT));
-		Module module = remoteConfiguration.getConfigurationModule().getModule();
-		myModuleComboBox.setValue(module != null ? module : null);
-		myModeBox.setValue(remoteConfiguration.SERVER_MODE);
-	}
+    @Override
+    @RequiredUIAccess
+    protected void resetEditorFrom(C remoteConfiguration) {
+        myHostField.setValue(remoteConfiguration.HOST);
+        myPortField.setValue(String.valueOf(remoteConfiguration.PORT));
+        Module module = remoteConfiguration.getConfigurationModule().getModule();
+        myModuleComboBox.setValue(module != null ? module : null);
+        myModeBox.setValue(remoteConfiguration.SERVER_MODE);
+    }
 
-	@Override
-	@RequiredUIAccess
-	protected void applyEditorTo(C remoteConfiguration) throws ConfigurationException
-	{
-		remoteConfiguration.HOST = myHostField.getValue();
-		try
-		{
-			remoteConfiguration.PORT = Integer.parseInt(myPortField.getValue());
-		}
-		catch(NumberFormatException e)
-		{
-			//
-		}
-		remoteConfiguration.SERVER_MODE = myModeBox.getValue();
-		remoteConfiguration.getConfigurationModule().setModule(myModuleComboBox.getValue());
-	}
+    @Override
+    @RequiredUIAccess
+    protected void applyEditorTo(C remoteConfiguration) throws ConfigurationException {
+        remoteConfiguration.HOST = myHostField.getValue();
+        try {
+            remoteConfiguration.PORT = Integer.parseInt(myPortField.getValue());
+        }
+        catch (NumberFormatException e) {
+            //
+        }
+        remoteConfiguration.SERVER_MODE = myModeBox.getValue();
+        remoteConfiguration.getConfigurationModule().setModule(myModuleComboBox.getValue());
+    }
 }
