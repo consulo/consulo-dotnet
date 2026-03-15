@@ -16,9 +16,8 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import jakarta.annotation.Nonnull;
 import consulo.dotnet.debugger.proxy.light.LightSourceLocation;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,10 +34,8 @@ public interface DotNetSourceLocation
 
 	int getColumn();
 
-	@Nonnull
 	DotNetMethodProxy getMethod();
 
-	@Nonnull
 	default DotNetSourceLocation lightCopy()
 	{
 		return new LightSourceLocation(this);

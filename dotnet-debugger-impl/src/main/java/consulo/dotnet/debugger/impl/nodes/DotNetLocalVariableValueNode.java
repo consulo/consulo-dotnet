@@ -36,8 +36,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -61,13 +60,13 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 
 	@Override
 	@RequiredUIAccess
-	public void computeSourcePosition(@Nonnull XNavigatable navigatable)
+	public void computeSourcePosition(XNavigatable navigatable)
 	{
 		computeSourcePosition(navigatable, getName(), myDebugContext, myFrameProxy);
 	}
 
 	@RequiredReadAction
-	public static void computeSourcePosition(@Nonnull XNavigatable navigatable, String name, DotNetDebugContext debugContext, DotNetStackFrameProxy proxy)
+	public static void computeSourcePosition(XNavigatable navigatable, String name, DotNetDebugContext debugContext, DotNetStackFrameProxy proxy)
 	{
 		debugContext.getVirtualMachine().invoke(() -> navigatable.setSourcePosition(computeSourcePositionImpl(name, debugContext, proxy)));
 	}
@@ -133,7 +132,7 @@ public class DotNetLocalVariableValueNode extends DotNetAbstractVariableValueNod
 	}
 
 	@Override
-	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
+	public void setValueForVariableImpl(DotNetValueProxy value)
 	{
 		myFrameProxy.setLocalValue(myLocal, value);
 	}

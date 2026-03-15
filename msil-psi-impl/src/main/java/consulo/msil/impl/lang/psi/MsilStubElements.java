@@ -25,7 +25,6 @@ import consulo.msil.impl.lang.psi.impl.MsilTypeWithTypeArgumentsImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.*;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -62,64 +61,56 @@ public interface MsilStubElements
 	MsilConstantValueStubElementType CONSTANT_VALUE = new MsilConstantValueStubElementType();
 	MsilEmptyTypeStubElementType POINTER_TYPE = new MsilEmptyTypeStubElementType("MSIL_POINTER_TYPE")
 	{
-		@Nonnull
 		@Override
-		public DotNetType createElement(@Nonnull ASTNode astNode)
+		public DotNetType createElement(ASTNode astNode)
 		{
 			return new MsilPointerTypeImpl(astNode);
 		}
 
-		@Nonnull
 		@Override
-		public DotNetType createPsi(@Nonnull MsilEmptyTypeStub msilEmptyTypeStub)
+		public DotNetType createPsi(MsilEmptyTypeStub msilEmptyTypeStub)
 		{
 			return new MsilPointerTypeImpl(msilEmptyTypeStub, this);
 		}
 	};
 	MsilEmptyTypeStubElementType TYPE_BY_REF = new MsilEmptyTypeStubElementType("MSIL_TYPE_BY_REF")
 	{
-		@Nonnull
 		@Override
-		public DotNetType createElement(@Nonnull ASTNode astNode)
+		public DotNetType createElement(ASTNode astNode)
 		{
 			return new MsilTypeByRefImpl(astNode);
 		}
 
-		@Nonnull
 		@Override
-		public DotNetType createPsi(@Nonnull MsilEmptyTypeStub msilEmptyTypeStub)
+		public DotNetType createPsi(MsilEmptyTypeStub msilEmptyTypeStub)
 		{
 			return new MsilTypeByRefImpl(msilEmptyTypeStub, this);
 		}
 	};
 	MsilEmptyTypeStubElementType TYPE_WITH_TYPE_ARGUMENTS = new MsilEmptyTypeStubElementType("MSIL_TYPE_WRAPPER_WITH_TYPE_ARGUMENTS")
 	{
-		@Nonnull
 		@Override
-		public DotNetType createElement(@Nonnull ASTNode astNode)
+		public DotNetType createElement(ASTNode astNode)
 		{
 			return new MsilTypeWithTypeArgumentsImpl(astNode);
 		}
 
-		@Nonnull
 		@Override
-		public DotNetType createPsi(@Nonnull MsilEmptyTypeStub msilEmptyTypeStub)
+		public DotNetType createPsi(MsilEmptyTypeStub msilEmptyTypeStub)
 		{
 			return new MsilTypeWithTypeArgumentsImpl(msilEmptyTypeStub, this);
 		}
 	};
 	MsilEmptyTypeStubElementType ARRAY_TYPE = new MsilEmptyTypeStubElementType("ARRAY_TYPE")
 	{
-		@Nonnull
 		@Override
-		public DotNetType createElement(@Nonnull ASTNode astNode)
+		public DotNetType createElement(ASTNode astNode)
 		{
 			return new MsilArrayTypeImpl(astNode);
 		}
 
-		@Nonnull
 		@Override
-		public DotNetType createPsi(@Nonnull MsilEmptyTypeStub msilEmptyTypeStub)
+		public DotNetType createPsi(MsilEmptyTypeStub msilEmptyTypeStub)
 		{
 			return new MsilArrayTypeImpl(msilEmptyTypeStub, this);
 		}

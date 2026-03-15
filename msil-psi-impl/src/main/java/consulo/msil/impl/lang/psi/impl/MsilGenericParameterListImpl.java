@@ -24,7 +24,6 @@ import consulo.msil.lang.psi.MsilGenericParameter;
 import consulo.msil.impl.lang.psi.MsilStubElements;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilGenericParameterListStub;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,12 +31,12 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilGenericParameterListImpl extends MsilStubElementImpl<MsilGenericParameterListStub> implements DotNetGenericParameterList
 {
-	public MsilGenericParameterListImpl(@Nonnull ASTNode node)
+	public MsilGenericParameterListImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilGenericParameterListImpl(@Nonnull MsilGenericParameterListStub stub, @Nonnull IStubElementType nodeType)
+	public MsilGenericParameterListImpl(MsilGenericParameterListStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -48,7 +47,6 @@ public class MsilGenericParameterListImpl extends MsilStubElementImpl<MsilGeneri
 
 	}
 
-	@Nonnull
 	@Override
 	public MsilGenericParameter[] getParameters()
 	{

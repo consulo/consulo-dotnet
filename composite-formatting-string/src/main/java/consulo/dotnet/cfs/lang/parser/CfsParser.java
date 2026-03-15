@@ -25,7 +25,6 @@ import consulo.language.parser.PsiBuilderUtil;
 import consulo.language.parser.PsiParser;
 import consulo.language.version.LanguageVersion;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -40,9 +39,8 @@ public class CfsParser implements PsiParser
 		myArgumentElementType = argumentElementType;
 	}
 
-	@Nonnull
 	@Override
-	public ASTNode parse(@Nonnull IElementType elementType, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion)
+	public ASTNode parse(IElementType elementType, PsiBuilder builder, LanguageVersion languageVersion)
 	{
 		PsiBuilder.Marker mark = builder.mark();
 		while(!builder.eof())

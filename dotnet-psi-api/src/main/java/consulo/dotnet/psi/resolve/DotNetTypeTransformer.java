@@ -17,7 +17,6 @@
 package consulo.dotnet.psi.resolve;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -29,7 +28,6 @@ public class DotNetTypeTransformer implements Function<PsiElement, PsiElement>
 {
 	public static final DotNetTypeTransformer INSTANCE = new DotNetTypeTransformer();
 
-	@Nonnull
 	@Override
 	public PsiElement apply(PsiElement element)
 	{

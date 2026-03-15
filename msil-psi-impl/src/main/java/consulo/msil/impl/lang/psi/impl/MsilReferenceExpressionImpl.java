@@ -26,8 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ import jakarta.annotation.Nullable;
  */
 public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotNetReferenceExpression
 {
-	public MsilReferenceExpressionImpl(@Nonnull ASTNode node)
+	public MsilReferenceExpressionImpl(ASTNode node)
 	{
 		super(node);
 	}
@@ -46,7 +45,6 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 		visitor.visitElement(this);
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{
@@ -54,7 +52,6 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public ResolveResult[] multiResolve(boolean b)
 	{
@@ -98,7 +95,6 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public String getCanonicalText()
 	{
@@ -114,7 +110,7 @@ public class MsilReferenceExpressionImpl extends MsilElementImpl implements DotN
 
 	@RequiredWriteAction
 	@Override
-	public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException
+	public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException
 	{
 		return null;
 	}

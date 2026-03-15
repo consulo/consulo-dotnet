@@ -4,7 +4,6 @@ import consulo.execution.debug.XDebugSession;
 import consulo.dotnet.util.DebugConnectionInfo;
 import consulo.execution.configuration.RunProfile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -12,6 +11,5 @@ import jakarta.annotation.Nonnull;
  */
 public interface DotNetModuleExtensionWithDebug
 {
-	@Nonnull
-	DotNetDebugProcess createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile, @Nonnull DebugConnectionInfo debugConnectionInfo);
+	DotNetDebugProcess createDebuggerProcess(XDebugSession session, RunProfile runProfile, DebugConnectionInfo debugConnectionInfo);
 }

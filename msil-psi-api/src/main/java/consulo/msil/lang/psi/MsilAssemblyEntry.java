@@ -17,7 +17,6 @@
 package consulo.msil.lang.psi;
 
 import consulo.dotnet.psi.DotNetNamedElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,6 +24,5 @@ import jakarta.annotation.Nonnull;
  */
 public interface MsilAssemblyEntry extends MsilEntry, DotNetNamedElement
 {
-	@Nonnull
 	MsilCustomAttribute[] getAttributes();
 }

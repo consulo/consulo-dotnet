@@ -22,8 +22,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,26 +36,22 @@ public interface DotNetMethodProxy
 
 	boolean isAbstract();
 
-	boolean isAnnotatedBy(@Nonnull String attributeVmQName);
+	boolean isAnnotatedBy(String attributeVmQName);
 
-	@Nonnull
 	DotNetTypeProxy getDeclarationType();
 
-	@Nonnull
 	DotNetMethodParameterProxy[] getParameters();
 
-	@Nonnull
-	DotNetLocalVariableProxy[] getLocalVariables(@Nonnull DotNetStackFrameProxy frameProxy);
+	DotNetLocalVariableProxy[] getLocalVariables(DotNetStackFrameProxy frameProxy);
 
 	@Nullable
-	DotNetValueProxy invoke(@Nonnull DotNetStackFrameProxy frameProxy,
+	DotNetValueProxy invoke(DotNetStackFrameProxy frameProxy,
 							@Nullable DotNetValueProxy thisObject,
-							@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException;
+							DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException;
 
-	@Nonnull
-	default DotNetMethodInvokeResult invokeAdvanced(@Nonnull DotNetStackFrameProxy frameProxy,
+	default DotNetMethodInvokeResult invokeAdvanced(DotNetStackFrameProxy frameProxy,
 													@Nullable DotNetValueProxy thisObject,
-													@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException
+													DotNetValueProxy... arguments) throws DotNetThrowValueException, DotNetNotSuspendedException
 	{
 		DotNetValueProxy valueProxy = invoke(frameProxy, thisObject, arguments);
 		assert valueProxy != null;
@@ -65,9 +60,8 @@ public interface DotNetMethodProxy
 
 	@Nullable
 	@RequiredReadAction
-	PsiElement findExecutableElementFromDebugInfo(@Nonnull Project project, int executableChildrenAtLineIndex);
+	PsiElement findExecutableElementFromDebugInfo(Project project, int executableChildrenAtLineIndex);
 
-	@Nonnull
 	default DotNetMethodProxy lightCopy()
 	{
 		return new LightMethodProxy(this);

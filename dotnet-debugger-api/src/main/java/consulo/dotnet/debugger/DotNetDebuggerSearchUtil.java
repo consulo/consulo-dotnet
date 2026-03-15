@@ -23,8 +23,7 @@ import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -34,7 +33,7 @@ import java.util.*;
  */
 public class DotNetDebuggerSearchUtil
 {
-	public static DotNetFieldOrPropertyProxy[] getFieldAndProperties(@Nonnull DotNetTypeProxy proxy, boolean deep)
+	public static DotNetFieldOrPropertyProxy[] getFieldAndProperties(DotNetTypeProxy proxy, boolean deep)
 	{
 		List<DotNetFieldOrPropertyProxy> proxies = new ArrayList<DotNetFieldOrPropertyProxy>();
 
@@ -79,7 +78,7 @@ public class DotNetDebuggerSearchUtil
 	}
 
 	@Nullable
-	public static String toStringValue(@Nonnull DotNetStackFrameProxy threadProxy, @Nonnull DotNetValueProxy valueProxy)
+	public static String toStringValue(DotNetStackFrameProxy threadProxy, DotNetValueProxy valueProxy)
 	{
 		try
 		{
@@ -169,7 +168,6 @@ public class DotNetDebuggerSearchUtil
 		}
 	}
 
-	@Nonnull
 	private static String getVmQTypeNameForHideImplementation(DotNetTypeProxy mirror, String vmQName)
 	{
 		String[] genericParameters = mirror.getGenericParameters();

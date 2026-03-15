@@ -22,8 +22,7 @@ import consulo.language.Language;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,7 +42,7 @@ public class CfsPairedBraceMatcher implements PairedBraceMatcher
 	}
 
 	@Override
-	public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType elementType, @Nullable IElementType contextElement)
+	public boolean isPairedBracesAllowedBeforeType(IElementType elementType, @Nullable IElementType contextElement)
 	{
 		return contextElement != null && (contextElement == CfsTokens.START || contextElement == CfsTokens.END);
 	}
@@ -54,7 +53,6 @@ public class CfsPairedBraceMatcher implements PairedBraceMatcher
 		return i;
 	}
 
-	@Nonnull
 	@Override
 	public Language getLanguage()
 	{

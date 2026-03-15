@@ -21,7 +21,6 @@ import consulo.dotnet.psi.DotNetTypeList;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,13 +29,11 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class MsilExtendsListIndex extends StringStubIndexExtension<DotNetTypeList>
 {
-	@Nonnull
 	public static MsilExtendsListIndex getInstance()
 	{
 		return StubIndexExtension.EP_NAME.findExtensionOrFail(MsilExtendsListIndex.class);
 	}
 
-	@Nonnull
 	@Override
 	public StubIndexKey<String, DotNetTypeList> getKey()
 	{

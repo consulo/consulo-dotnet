@@ -27,7 +27,6 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,6 @@ public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomP
     private CheckBox myNotifyCaughtCheckBox;
     private CheckBox myNotifyUncaughtCheckBox;
 
-    @Nonnull
     @Override
     @RequiredUIAccess
     public Component getUIComponent() {
@@ -70,7 +68,7 @@ public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomP
 
     @Override
     @RequiredUIAccess
-    public void loadFrom(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint) {
+    public void loadFrom(XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint) {
         DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
         if (properties == null) {
             return;
@@ -81,7 +79,7 @@ public class DotNetExceptionBreakpointPropertiesPanel extends XBreakpointCustomP
 
     @Override
     @RequiredUIAccess
-    public void saveTo(@Nonnull XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint) {
+    public void saveTo(XBreakpoint<DotNetExceptionBreakpointProperties> breakpoint) {
         DotNetExceptionBreakpointProperties properties = breakpoint.getProperties();
         if (properties == null) {
             return;

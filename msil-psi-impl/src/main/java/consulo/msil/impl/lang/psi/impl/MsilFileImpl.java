@@ -26,7 +26,6 @@ import consulo.msil.MsilLanguage;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.impl.lang.psi.MsilStubTokenSets;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,12 +33,11 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilFileImpl extends PsiFileBase implements MsilFile
 {
-	public MsilFileImpl(@Nonnull FileViewProvider viewProvider)
+	public MsilFileImpl(FileViewProvider viewProvider)
 	{
 		super(viewProvider, MsilLanguage.INSTANCE);
 	}
 
-	@Nonnull
 	@Override
 	public FileType getFileType()
 	{
@@ -47,7 +45,6 @@ public class MsilFileImpl extends PsiFileBase implements MsilFile
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{

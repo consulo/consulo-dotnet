@@ -34,10 +34,8 @@ import consulo.msil.lang.psi.*;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilXAccessorStub;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -91,12 +89,12 @@ public class MsilXAccessorImpl extends MsilStubElementImpl<MsilXAccessorStub> im
 
 	private CacheValueProvider myCacheValueProvider = new CacheValueProvider();
 
-	public MsilXAccessorImpl(@Nonnull ASTNode node)
+	public MsilXAccessorImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilXAccessorImpl(@Nonnull MsilXAccessorStub stub, @Nonnull IStubElementType nodeType)
+	public MsilXAccessorImpl(MsilXAccessorStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -107,7 +105,6 @@ public class MsilXAccessorImpl extends MsilStubElementImpl<MsilXAccessorStub> im
 		visitor.visitElement(this);
 	}
 
-	@Nonnull
 	@Override
 	public DotNetCodeBodyProxy getCodeBlock()
 	{
@@ -116,7 +113,7 @@ public class MsilXAccessorImpl extends MsilStubElementImpl<MsilXAccessorStub> im
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@Nonnull DotNetModifier modifier)
+	public boolean hasModifier(DotNetModifier modifier)
 	{
 		MsilMethodEntry msilMethodEntry = resolveToMethod();
 		return msilMethodEntry != null && msilMethodEntry.hasModifier(modifier);
@@ -139,7 +136,7 @@ public class MsilXAccessorImpl extends MsilStubElementImpl<MsilXAccessorStub> im
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
+	public PsiElement setName(String s) throws IncorrectOperationException
 	{
 		return null;
 	}
@@ -169,7 +166,6 @@ public class MsilXAccessorImpl extends MsilStubElementImpl<MsilXAccessorStub> im
 		return childByType == null ? null : StringUtil.unquoteString(childByType.getText());
 	}
 
-	@Nonnull
 	@Override
 	public DotNetParameter[] getParameters()
 	{
@@ -181,7 +177,6 @@ public class MsilXAccessorImpl extends MsilStubElementImpl<MsilXAccessorStub> im
 		return stubOrPsiChild.getParameters();
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeRef[] getParameterTypeRefs()
 	{

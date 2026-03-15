@@ -23,7 +23,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.StubBasedPsiElement;
 import consulo.language.psi.stub.StubElement;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ import java.util.List;
  */
 public class DotNetPsiCountUtil
 {
-	public static int countChildrenOfType(@Nonnull StubBasedPsiElement<?> psiElement, @Nonnull Class<? extends PsiElement> classOfElement)
+	public static int countChildrenOfType(StubBasedPsiElement<?> psiElement, Class<? extends PsiElement> classOfElement)
 	{
 		StubElement stub = psiElement.getStub();
 		if(stub != null)
@@ -42,7 +41,7 @@ public class DotNetPsiCountUtil
 		return countChildrenOfType(psiElement.getNode(), classOfElement);
 	}
 
-	public static int countChildrenOfType(@Nonnull StubBasedPsiElement<?> psiElement, @Nonnull IElementType elementType)
+	public static int countChildrenOfType(StubBasedPsiElement<?> psiElement, IElementType elementType)
 	{
 		StubElement stub = psiElement.getStub();
 		if(stub != null)
@@ -52,7 +51,7 @@ public class DotNetPsiCountUtil
 		return countChildrenOfType(psiElement.getNode(), elementType);
 	}
 
-	public static int countChildrenOfType(@Nonnull StubBasedPsiElement<?> psiElement, @Nonnull TokenSet tokenSet)
+	public static int countChildrenOfType(StubBasedPsiElement<?> psiElement, TokenSet tokenSet)
 	{
 		StubElement stub = psiElement.getStub();
 		if(stub != null)
@@ -62,7 +61,7 @@ public class DotNetPsiCountUtil
 		return countChildrenOfType(psiElement.getNode(), tokenSet);
 	}
 
-	public static int countChildrenOfType(@Nonnull ASTNode node, @Nonnull IElementType elementType)
+	public static int countChildrenOfType(ASTNode node, IElementType elementType)
 	{
 		int count = 0;
 		for(ASTNode child = node.getFirstChildNode(); child != null; child = child.getTreeNext())
@@ -76,7 +75,7 @@ public class DotNetPsiCountUtil
 		return count;
 	}
 
-	public static int countChildrenOfType(@Nonnull ASTNode node, @Nonnull TokenSet tokenSet)
+	public static int countChildrenOfType(ASTNode node, TokenSet tokenSet)
 	{
 		int count = 0;
 		for(ASTNode child = node.getFirstChildNode(); child != null; child = child.getTreeNext())
@@ -90,7 +89,7 @@ public class DotNetPsiCountUtil
 		return count;
 	}
 
-	public static int countChildrenOfType(@Nonnull StubElement<?> stubElement, final IElementType elementType)
+	public static int countChildrenOfType(StubElement<?> stubElement, final IElementType elementType)
 	{
 		int count = 0;
 		List<StubElement> childrenStubs = stubElement.getChildrenStubs();
@@ -107,7 +106,7 @@ public class DotNetPsiCountUtil
 		return count;
 	}
 
-	public static int countChildrenOfType(@Nonnull StubElement<?> stubElement, final TokenSet types)
+	public static int countChildrenOfType(StubElement<?> stubElement, final TokenSet types)
 	{
 		int count = 0;
 		List<StubElement> childrenStubs = stubElement.getChildrenStubs();
@@ -124,7 +123,7 @@ public class DotNetPsiCountUtil
 		return count;
 	}
 
-	public static int countChildrenOfType(@Nonnull ASTNode node, @Nonnull Class<? extends PsiElement> classOfElement)
+	public static int countChildrenOfType(ASTNode node, Class<? extends PsiElement> classOfElement)
 	{
 		int count = 0;
 		for(ASTNode child = node.getFirstChildNode(); child != null; child = child.getTreeNext())
@@ -138,7 +137,7 @@ public class DotNetPsiCountUtil
 		return count;
 	}
 
-	public static int countChildrenOfType(@Nonnull StubElement<?> stubElement, final Class<? extends PsiElement> classOfElement)
+	public static int countChildrenOfType(StubElement<?> stubElement, final Class<? extends PsiElement> classOfElement)
 	{
 		int count = 0;
 		List<StubElement> childrenStubs = stubElement.getChildrenStubs();

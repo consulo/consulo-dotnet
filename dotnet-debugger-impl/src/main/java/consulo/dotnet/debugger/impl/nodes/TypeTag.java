@@ -1,8 +1,7 @@
 package consulo.dotnet.debugger.impl.nodes;
 
 import consulo.internal.dotnet.asm.signature.SignatureConstants;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -50,7 +49,7 @@ public enum TypeTag
 	}
 
 	@Nullable
-	public static TypeTag byType(@Nonnull String type)
+	public static TypeTag byType(String type)
 	{
 		for(TypeTag value : VALUES)
 		{
@@ -62,7 +61,7 @@ public enum TypeTag
 		return null;
 	}
 
-	public static int tagByType(@Nonnull String type)
+	public static int tagByType(String type)
 	{
 		for(TypeTag value : VALUES)
 		{
@@ -74,7 +73,6 @@ public enum TypeTag
 		return -1;
 	}
 
-	@Nonnull
 	public static String typeByTag(int tag)
 	{
 		for(TypeTag value : VALUES)

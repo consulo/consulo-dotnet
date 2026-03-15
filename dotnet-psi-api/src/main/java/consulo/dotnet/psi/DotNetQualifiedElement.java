@@ -18,9 +18,8 @@ package consulo.dotnet.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.collection.ArrayFactory;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,6 @@ public interface DotNetQualifiedElement extends DotNetNamedElement
 
 	public static ArrayFactory<DotNetQualifiedElement> ARRAY_FACTORY = new ArrayFactory<DotNetQualifiedElement>()
 	{
-		@Nonnull
 		@Override
 		public DotNetQualifiedElement[] create(int count)
 		{

@@ -9,8 +9,7 @@ import consulo.ide.ServiceManager;
 import consulo.internal.dotnet.asm.mbel.AssemblyInfo;
 import consulo.internal.dotnet.asm.mbel.ModuleParser;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -28,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 @ServiceImpl
 public class AssemblyInfoCacheService implements Disposable
 {
-	@Nonnull
 	public static AssemblyInfoCacheService getInstance()
 	{
 		return ServiceManager.getService(AssemblyInfoCacheService.class);
@@ -43,7 +41,7 @@ public class AssemblyInfoCacheService implements Disposable
 	}
 
 	@Nullable
-	public AssemblyInfo getAssemblyInfo(@Nonnull File file)
+	public AssemblyInfo getAssemblyInfo(File file)
 	{
 		Object value = myCachePath.computeIfAbsent(file, s -> {
 			try

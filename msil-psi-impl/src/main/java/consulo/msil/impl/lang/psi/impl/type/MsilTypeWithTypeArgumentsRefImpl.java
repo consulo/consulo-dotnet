@@ -24,7 +24,6 @@ import consulo.dotnet.psi.resolve.DotNetTypeResolveResult;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -43,7 +42,6 @@ public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedRes
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	protected DotNetTypeResolveResult resolveResult()
 	{
@@ -56,7 +54,6 @@ public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedRes
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public String getVmQName()
 	{
@@ -76,14 +73,12 @@ public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedRes
 		return builder.toString();
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeRef[] getArgumentTypeRefs()
 	{
 		return myArguments;
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeRef getInnerTypeRef()
 	{
@@ -91,7 +86,7 @@ public class MsilTypeWithTypeArgumentsRefImpl extends DotNetTypeRefWithCachedRes
 	}
 
 	@Override
-	public boolean isEqualToVmQName(@Nonnull String vmQName)
+	public boolean isEqualToVmQName(String vmQName)
 	{
 		return myTypeRef.isEqualToVmQName(vmQName);
 	}

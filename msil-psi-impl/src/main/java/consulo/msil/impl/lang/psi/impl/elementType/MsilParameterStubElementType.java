@@ -26,7 +26,6 @@ import consulo.msil.lang.psi.MsilParameter;
 import consulo.msil.impl.lang.psi.impl.MsilParameterImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilParameterStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -40,37 +39,34 @@ public class MsilParameterStubElementType extends AbstractMsilStubElementType<Ms
 		super("MSIL_PARAMETER");
 	}
 
-	@Nonnull
 	@Override
-	public MsilParameter createElement(@Nonnull ASTNode astNode)
+	public MsilParameter createElement(ASTNode astNode)
 	{
 		return new MsilParameterImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public MsilParameter createPsi(@Nonnull MsilParameterStub msilParameterStub)
+	public MsilParameter createPsi(MsilParameterStub msilParameterStub)
 	{
 		return new MsilParameterImpl(msilParameterStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilParameterStub createStub(@Nonnull MsilParameter msilParameter, StubElement stubElement)
+	public MsilParameterStub createStub(MsilParameter msilParameter, StubElement stubElement)
 	{
 		String name = msilParameter.getName();
 		return new MsilParameterStub(stubElement, this, name);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilParameterStub msilParameterStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilParameterStub msilParameterStub, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilParameterStub.getName());
 	}
 
-	@Nonnull
 	@Override
-	public MsilParameterStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilParameterStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef name = inputStream.readName();
 		return new MsilParameterStub(stubElement, this, StringRef.toString(name));

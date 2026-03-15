@@ -20,8 +20,7 @@ import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.util.lang.Couple;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +47,7 @@ public class DotNetDebuggerCompilerGenerateUtil
 	private static final Pattern AsyncThisWrapperRoslyn = Pattern.compile("<>(\\d)__this");
 
 	@Nullable
-	public static Couple<String> extractLambdaInfo(@Nonnull DotNetMethodProxy methodMirror)
+	public static Couple<String> extractLambdaInfo(DotNetMethodProxy methodMirror)
 	{
 		Matcher matcher = LambdaMethodPattern.matcher(methodMirror.getName());
 		if(matcher.matches())
@@ -58,17 +57,17 @@ public class DotNetDebuggerCompilerGenerateUtil
 		return null;
 	}
 
-	public static boolean isLocalVarWrapper(@Nonnull String name)
+	public static boolean isLocalVarWrapper(String name)
 	{
 		return LocalVarWrapperPatternMono.matcher(name).matches() || LocalVarWrapperPatternMS.matcher(name).matches();
 	}
 
-	public static boolean isAsyncLambdaWrapper(@Nonnull DotNetTypeProxy typeMirror)
+	public static boolean isAsyncLambdaWrapper(DotNetTypeProxy typeMirror)
 	{
 		return typeMirror.isNested() && (AsyncLambdaFirstWrapperMono.matcher(typeMirror.getName()).matches() || AsyncLambdaFirstWrapperMS.matcher(typeMirror.getName()).matches());
 	}
 
-	public static boolean isYieldOrAsyncNestedType(@Nonnull DotNetTypeProxy typeMirror)
+	public static boolean isYieldOrAsyncNestedType(DotNetTypeProxy typeMirror)
 	{
 		String name = typeMirror.getName();
 
@@ -92,12 +91,12 @@ public class DotNetDebuggerCompilerGenerateUtil
 		return false;
 	}
 
-	public static boolean isYieldOrAsyncThisField(@Nonnull String fieldName)
+	public static boolean isYieldOrAsyncThisField(String fieldName)
 	{
 		return "$this".equals(fieldName) || "<>f__this".equals(fieldName) || AsyncThisWrapperRoslyn.matcher(fieldName).matches();
 	}
 
-	public static boolean needSkipVariableByName(@Nonnull String name)
+	public static boolean needSkipVariableByName(String name)
 	{
 		if(name.isEmpty())
 		{
@@ -109,7 +108,7 @@ public class DotNetDebuggerCompilerGenerateUtil
 	}
 
 	@Nullable
-	public static String extractNotGeneratedName(@Nonnull String name)
+	public static String extractNotGeneratedName(String name)
 	{
 		Matcher matcher = SomeReferenceToOriginalPattern.matcher(name);
 		if(matcher.matches())

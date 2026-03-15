@@ -21,7 +21,6 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,8 +35,7 @@ import java.util.Map;
 @ServiceImpl
 public class ExternalAttributeManager
 {
-	@Nonnull
-	public static ExternalAttributeManager getInstance(@Nonnull Project project)
+	public static ExternalAttributeManager getInstance(Project project)
 	{
 		return project.getInstance(ExternalAttributeManager.class);
 	}
@@ -53,7 +51,7 @@ public class ExternalAttributeManager
 		connect.subscribe(BulkFileListener.class, new BulkFileListener()
 		{
 			@Override
-			public void after(@Nonnull List<? extends VFileEvent> events)
+			public void after(List<? extends VFileEvent> events)
 			{
 				for(VFileEvent event : events)
 				{
@@ -72,8 +70,7 @@ public class ExternalAttributeManager
 		});
 	}
 
-	@Nonnull
-	public ExternalAttributeHolder resolveHolder(@Nonnull VirtualFile virtualFile)
+	public ExternalAttributeHolder resolveHolder(VirtualFile virtualFile)
 	{
 		VirtualFile localFile = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
 		if(localFile == null)
@@ -93,8 +90,7 @@ public class ExternalAttributeManager
 		}
 	}
 
-	@Nonnull
-	private ExternalAttributeHolder resolveHolderImpl(@Nonnull VirtualFile virtualFile, @Nonnull VirtualFile localFile)
+	private ExternalAttributeHolder resolveHolderImpl(VirtualFile virtualFile, VirtualFile localFile)
 	{
 		VirtualFile archiveFile = ArchiveVfsUtil.getArchiveRootForLocalFile(localFile);
 		if(archiveFile == null)

@@ -30,12 +30,11 @@ import consulo.msil.lang.psi.MsilCustomAttributeSignature;
 import consulo.msil.lang.psi.MsilFieldEntry;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.joou.UByte;
 import org.joou.UInteger;
 import org.joou.UShort;
 
-import jakarta.annotation.Nonnull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -49,7 +48,6 @@ public class MsilCustomAttributeStubber
 {
 	private static final Logger LOGGER = Logger.getInstance(MsilCustomAttributeStubber.class);
 
-	@Nonnull
 	@RequiredReadAction
 	public static MsilCustomAttributeArgumentList build(MsilCustomAttribute attribute)
 	{
@@ -128,7 +126,7 @@ public class MsilCustomAttributeStubber
 	}
 
 	@RequiredReadAction
-	private static TypeSignature toTypeSignature(@Nonnull DotNetType type)
+	private static TypeSignature toTypeSignature(DotNetType type)
 	{
 		if(type instanceof MsilNativeTypeImpl)
 		{
@@ -210,14 +208,13 @@ public class MsilCustomAttributeStubber
 		return null;
 	}
 
-	@Nonnull
 	private static AbstractTypeReference parse(String referenceText)
 	{
 		return new AssemblyTypeRef(null, StringUtil.getPackageName(referenceText), StringUtil.getShortName(referenceText));
 	}
 
 	@RequiredReadAction
-	private static MsiCustomAttributeValue buildArgument(@Nonnull Project project, TypeSignature typeSignature, ByteBuffer byteBuffer)
+	private static MsiCustomAttributeValue buildArgument(Project project, TypeSignature typeSignature, ByteBuffer byteBuffer)
 	{
 		if(typeSignature == TypeSignature.I1)
 		{

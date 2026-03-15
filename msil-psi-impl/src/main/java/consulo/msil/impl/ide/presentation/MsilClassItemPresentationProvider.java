@@ -11,8 +11,7 @@ import consulo.navigation.ItemPresentationProvider;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -25,7 +24,7 @@ public class MsilClassItemPresentationProvider implements ItemPresentationProvid
 	{
 		private final DotNetTypeDeclaration myDeclaration;
 
-		public Item(@Nonnull DotNetTypeDeclaration declaration)
+		public Item(DotNetTypeDeclaration declaration)
 		{
 			myDeclaration = declaration;
 		}
@@ -57,14 +56,12 @@ public class MsilClassItemPresentationProvider implements ItemPresentationProvid
 		}
 	}
 
-	@Nonnull
 	@Override
 	public Class<MsilClassEntry> getItemClass()
 	{
 		return MsilClassEntry.class;
 	}
 
-	@Nonnull
 	@Override
 	public ItemPresentation getPresentation(MsilClassEntry item)
 	{

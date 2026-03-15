@@ -26,8 +26,7 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +47,7 @@ public class DotNetExecutionStack extends XExecutionStack {
     private DotNetDebugContext myDebuggerContext;
     private DotNetThreadProxy myThreadProxy;
 
-    public DotNetExecutionStack(@Nonnull DotNetDebugContext debuggerContext, @Nonnull DotNetThreadProxy threadProxy) {
+    public DotNetExecutionStack(DotNetDebugContext debuggerContext, DotNetThreadProxy threadProxy) {
         super(calcName(threadProxy), getIcon(threadProxy));
 
         DotNetVirtualMachineUtil.checkCallForUIThread();
@@ -59,7 +58,6 @@ public class DotNetExecutionStack extends XExecutionStack {
         calcTopFrame(); // calc top frame
     }
 
-    @Nonnull
     private static String calcName(DotNetThreadProxy threadMirror) {
         return "[" + threadMirror.getId() + "] " + StringUtil.defaultIfEmpty(threadMirror.getName(), "Unnamed");
     }

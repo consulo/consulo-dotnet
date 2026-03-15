@@ -2,7 +2,6 @@ package consulo.msil.impl.lang.stubbing;
 
 import consulo.msil.impl.lang.stubbing.values.MsiCustomAttributeValue;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
@@ -21,13 +20,11 @@ public class MsilCustomAttributeArgumentList
 		myNamedArguments = namedArguments;
 	}
 
-	@Nonnull
 	public Map<String, MsiCustomAttributeValue> getNamedArguments()
 	{
 		return myNamedArguments;
 	}
 
-	@Nonnull
 	public List<MsiCustomAttributeValue> getConstructorArguments()
 	{
 		return myConstructorArguments;

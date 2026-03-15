@@ -32,10 +32,8 @@ import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilMethodEntryStub;
 import consulo.msil.lang.psi.*;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,12 +41,12 @@ import jakarta.annotation.Nullable;
  */
 public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub> implements MsilMethodEntry
 {
-	public MsilMethodEntryImpl(@Nonnull ASTNode node)
+	public MsilMethodEntryImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilMethodEntryImpl(@Nonnull MsilMethodEntryStub stub, @Nonnull IStubElementType nodeType)
+	public MsilMethodEntryImpl(MsilMethodEntryStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -60,7 +58,6 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetType getReturnType()
 	{
@@ -68,14 +65,12 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeRef getReturnTypeRef()
 	{
 		return getReturnType().toTypeRef();
 	}
 
-	@Nonnull
 	@Override
 	public DotNetCodeBodyProxy getCodeBlock()
 	{
@@ -89,7 +84,6 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return getStubOrPsiChild(MsilStubElements.GENERIC_PARAMETER_LIST);
 	}
 
-	@Nonnull
 	@Override
 	public DotNetGenericParameter[] getGenericParameters()
 	{
@@ -106,20 +100,18 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@Nonnull DotNetModifier modifier)
+	public boolean hasModifier(DotNetModifier modifier)
 	{
 		return getModifierList().hasModifier(modifier);
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetModifierList getModifierList()
 	{
 		return getRequiredStubOrPsiChild(MsilStubElements.MODIFIER_LIST);
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeRef[] getParameterTypeRefs()
 	{
@@ -134,7 +126,6 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return getRequiredStubOrPsiChild(MsilStubElements.PARAMETER_LIST);
 	}
 
-	@Nonnull
 	@Override
 	public DotNetParameter[] getParameters()
 	{
@@ -177,7 +168,6 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	}
 
 	@Override
-	@Nonnull
 	public String getNameFromBytecode()
 	{
 		MsilMethodEntryStub stub = getGreenStub();
@@ -190,7 +180,6 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public MsilCustomAttribute[] getAttributes()
 	{
@@ -198,7 +187,6 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public MsilCustomAttribute[] getParameterAttributes(int index)
 	{
@@ -233,9 +221,8 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
-	public MsilCustomAttribute[] getGenericParameterAttributes(@Nonnull String name)
+	public MsilCustomAttribute[] getGenericParameterAttributes(String name)
 	{
 		MsilTypeParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.TYPE_PARAMETER_ATTRIBUTE_LIST, MsilTypeParameterAttributeList
 				.ARRAY_FACTORY);
@@ -250,13 +237,13 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
+	public PsiElement setName(String s) throws IncorrectOperationException
 	{
 		return null;
 	}
 
 	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement
+	public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement
 			place)
 	{
 		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
@@ -276,7 +263,6 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
 		return null;
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeRef getTypeRefForImplement()
 	{

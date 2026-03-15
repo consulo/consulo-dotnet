@@ -24,8 +24,7 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.psi.stub.IdFilter;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,8 +38,7 @@ import java.util.function.Predicate;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class DotNetShortNameSearcher implements DotNetShortNameSearcherExtension
 {
-	@Nonnull
-	public static DotNetShortNameSearcher getInstance(@Nonnull Project project)
+	public static DotNetShortNameSearcher getInstance(Project project)
 	{
 		return project.getInstance(DotNetShortNameSearcher.class);
 	}
@@ -52,8 +50,7 @@ public abstract class DotNetShortNameSearcher implements DotNetShortNameSearcher
 		myProject = project;
 	}
 
-	@Nonnull
-	public Collection<String> getTypeNames(@Nonnull SearchScope scope, @Nullable IdFilter filter)
+	public Collection<String> getTypeNames(SearchScope scope, @Nullable IdFilter filter)
 	{
 		Set<String> types = new HashSet<>();
 		collectTypeNames(Processors.cancelableCollectProcessor(types), scope, filter);
@@ -61,12 +58,11 @@ public abstract class DotNetShortNameSearcher implements DotNetShortNameSearcher
 	}
 
 
-	public abstract void collectTypeNames(@Nonnull Predicate<String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter);
+	public abstract void collectTypeNames(Predicate<String> processor, SearchScope scope, @Nullable IdFilter filter);
 
-	public abstract void collectTypes(@Nonnull String key, @Nonnull SearchScope scope, @Nullable IdFilter filter, @Nonnull Predicate<DotNetTypeDeclaration> processor);
+	public abstract void collectTypes(String key, SearchScope scope, @Nullable IdFilter filter, Predicate<DotNetTypeDeclaration> processor);
 
-	@Nonnull
-	public Collection<DotNetTypeDeclaration> getTypes(@Nonnull String key, @Nonnull SearchScope scope, @Nullable IdFilter filter)
+	public Collection<DotNetTypeDeclaration> getTypes(String key, SearchScope scope, @Nullable IdFilter filter)
 	{
 		Set<DotNetTypeDeclaration> types = new HashSet<>();
 		collectTypes(key, scope, filter, Processors.cancelableCollectProcessor(types));

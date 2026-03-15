@@ -21,8 +21,7 @@ import consulo.content.bundle.SdkType;
 import consulo.dotnet.module.DotNetNamespaceGeneratePolicy;
 import consulo.module.extension.ModuleInheritableNamedPointer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -33,7 +32,6 @@ import java.util.List;
  */
 public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends DotNetModuleExtensionWithLibraryProviding<T>
 {
-	@Nonnull
 	ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 
 	@Nullable
@@ -42,10 +40,8 @@ public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtensi
 	@Nullable
 	String getSdkName();
 
-	@Nonnull
 	Class<? extends SdkType> getSdkTypeClass();
 
-	@Nonnull
 	List<String> getVariables();
 
 	/**
@@ -53,6 +49,5 @@ public interface DotNetSimpleModuleExtension<T extends DotNetSimpleModuleExtensi
 	 */
 	boolean isSupportCompilation();
 
-	@Nonnull
 	DotNetNamespaceGeneratePolicy getNamespaceGeneratePolicy();
 }

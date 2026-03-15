@@ -31,8 +31,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -75,7 +74,7 @@ public class DotNetDebuggerEvaluator extends XDebuggerEvaluator
 	}
 
 	@Override
-	public void evaluate(@Nonnull XExpression expression, @Nonnull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+	public void evaluate(XExpression expression, XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 	{
 		DotNetDebuggerProvider provider = DotNetDebuggerProvider.getProvider(expression.getLanguage());
 		if(provider != null)
@@ -88,7 +87,7 @@ public class DotNetDebuggerEvaluator extends XDebuggerEvaluator
 	}
 
 	@Override
-	public void evaluate(@Nonnull String expression, @Nonnull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+	public void evaluate(String expression, XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 	{
 		if(expressionPosition == null)
 		{

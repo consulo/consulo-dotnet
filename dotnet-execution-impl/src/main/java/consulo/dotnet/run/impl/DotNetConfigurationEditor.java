@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -52,7 +51,6 @@ public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguratio
 		myProgramParametersPanel.applyTo(runConfiguration);
 	}
 
-	@Nonnull
 	@Override
 	@RequiredUIAccess
 	protected JComponent createEditor()

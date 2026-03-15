@@ -23,14 +23,13 @@ import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19.07.2015
  */
 public class DotNetBreakpointUtil {
-    public static void updateLineBreakpointIcon(@Nonnull Project project, Boolean result, @Nonnull XLineBreakpoint breakpoint) {
+    public static void updateLineBreakpointIcon(Project project, Boolean result, XLineBreakpoint breakpoint) {
         XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
         Image icon = null;

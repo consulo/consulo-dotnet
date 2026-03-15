@@ -21,7 +21,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.stub.IndexSink;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,12 +31,12 @@ public class MsilStubIndexer
 {
 	public static final ExtensionPointName<MsilStubIndexer> EP_NAME = ExtensionPointName.create(MsilStubIndexer.class);
 
-	public void indexClass(@Nonnull MsilClassEntryStub msilClassEntryStub, @Nonnull IndexSink indexSink)
+	public void indexClass(MsilClassEntryStub msilClassEntryStub, IndexSink indexSink)
 	{
 		// nothing
 	}
 
-	public void indexMethod(@Nonnull MsilMethodEntryStub stub,  @Nonnull IndexSink indexSink)
+	public void indexMethod(MsilMethodEntryStub stub,  IndexSink indexSink)
 	{
 		// nothing
 	}

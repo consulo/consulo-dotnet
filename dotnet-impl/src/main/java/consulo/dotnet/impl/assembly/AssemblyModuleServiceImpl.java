@@ -15,7 +15,6 @@ import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,9 +33,8 @@ public class AssemblyModuleServiceImpl implements AssemblyModuleService
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
-	public AssemblyModule resolve(@Nonnull PsiElement element)
+	public AssemblyModule resolve(PsiElement element)
 	{
 		Module module = ModuleUtilCore.findModuleForPsiElement(element);
 		if(module != null)

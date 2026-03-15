@@ -25,10 +25,9 @@ import consulo.module.extension.ModuleExtension;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +47,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	protected String myFileName = DEFAULT_FILE_NAME;
 	protected String myOutputDirectory = DEFAULT_OUTPUT_DIR;
 
-	public BaseDotNetModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer)
+	public BaseDotNetModuleExtension(String id, ModuleRootLayer moduleRootLayer)
 	{
 		super(id, moduleRootLayer);
 	}
@@ -73,7 +72,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	}
 
 	@Override
-	public void commit(@Nonnull S mutableModuleExtension)
+	public void commit(S mutableModuleExtension)
 	{
 		super.commit(mutableModuleExtension);
 
@@ -88,7 +87,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 
 	@RequiredReadAction
 	@Override
-	protected void loadStateImpl(@Nonnull Element element)
+	protected void loadStateImpl(Element element)
 	{
 		super.loadStateImpl(element);
 
@@ -102,7 +101,7 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	}
 
 	@Override
-	protected void getStateImpl(@Nonnull Element element)
+	protected void getStateImpl(Element element)
 	{
 		super.getStateImpl(element);
 
@@ -118,7 +117,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		}
 	}
 
-	@Nonnull
 	@Override
 	@RequiredReadAction
 	public PsiElement[] getEntryPointElements()
@@ -134,7 +132,6 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		return ContainerUtil.toArray(list, PsiElement.ARRAY_FACTORY);
 	}
 
-	@Nonnull
 	@Override
 	public DotNetNamespaceGeneratePolicy getNamespaceGeneratePolicy()
 	{
@@ -164,38 +161,35 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 		return myAllowSourceRoots;
 	}
 
-	@Nonnull
 	@Override
 	public String getNamespacePrefix()
 	{
 		return StringUtil.notNullize(myNamespacePrefix);
 	}
 
-	@Nonnull
 	@Override
 	public String getFileName()
 	{
 		return StringUtil.notNullizeIfEmpty(myFileName, DEFAULT_FILE_NAME);
 	}
 
-	@Nonnull
 	@Override
 	public String getOutputDir()
 	{
 		return StringUtil.notNullize(myOutputDirectory);
 	}
 
-	public void setFileName(@Nonnull String name)
+	public void setFileName(String name)
 	{
 		myFileName = name;
 	}
 
-	public void setNamespacePrefix(@Nonnull String namespacePrefix)
+	public void setNamespacePrefix(String namespacePrefix)
 	{
 		myNamespacePrefix = namespacePrefix;
 	}
 
-	public void setOutputDir(@Nonnull String dir)
+	public void setOutputDir(String dir)
 	{
 		myOutputDirectory = dir;
 	}
@@ -216,13 +210,12 @@ public abstract class BaseDotNetModuleExtension<S extends BaseDotNetModuleExtens
 	}
 
 	@Override
-	@Nonnull
 	public DotNetTarget getTarget()
 	{
 		return myTarget;
 	}
 
-	public void setTarget(@Nonnull DotNetTarget target)
+	public void setTarget(DotNetTarget target)
 	{
 		myTarget = target;
 	}

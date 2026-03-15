@@ -18,7 +18,6 @@ package consulo.msil.lang.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetFieldDeclaration;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,10 +25,8 @@ import jakarta.annotation.Nonnull;
  */
 public interface MsilFieldEntry extends MsilEntry, DotNetFieldDeclaration
 {
-	@Nonnull
 	@RequiredReadAction
 	MsilCustomAttribute[] getAttributes();
 
-	@Nonnull
 	String getNameFromBytecode();
 }

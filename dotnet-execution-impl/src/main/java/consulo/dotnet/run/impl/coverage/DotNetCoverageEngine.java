@@ -32,8 +32,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
@@ -67,7 +66,6 @@ public class DotNetCoverageEngine extends CoverageEngine
 		return false;
 	}
 
-	@Nonnull
 	@Override
 	public CoverageEnabledConfiguration createCoverageEnabledConfiguration(@Nullable RunConfigurationBase conf)
 	{
@@ -80,9 +78,9 @@ public class DotNetCoverageEngine extends CoverageEngine
 
 	@Nullable
 	@Override
-	public CoverageSuite createCoverageSuite(@Nonnull CoverageRunner covRunner,
-			@Nonnull String name,
-			@Nonnull CoverageFileProvider coverageDataFileProvider,
+	public CoverageSuite createCoverageSuite(CoverageRunner covRunner,
+			String name,
+			CoverageFileProvider coverageDataFileProvider,
 			@Nullable String[] filters,
 			long lastCoverageTimeStamp,
 			@Nullable String suiteToMerge,
@@ -97,7 +95,7 @@ public class DotNetCoverageEngine extends CoverageEngine
 
 	@Nullable
 	@Override
-	public String getQualifiedName(@Nonnull File outputFile, @Nonnull final PsiFile sourceFile)
+	public String getQualifiedName(File outputFile, final PsiFile sourceFile)
 	{
 		return ApplicationManager.getApplication().runReadAction(new Supplier<String>()
 		{
@@ -124,22 +122,21 @@ public class DotNetCoverageEngine extends CoverageEngine
 
 	@Nullable
 	@Override
-	public CoverageSuite createCoverageSuite(@Nonnull CoverageRunner covRunner,
-			@Nonnull String name,
-			@Nonnull CoverageFileProvider coverageDataFileProvider,
-			@Nonnull CoverageEnabledConfiguration config)
+	public CoverageSuite createCoverageSuite(CoverageRunner covRunner,
+			String name,
+			CoverageFileProvider coverageDataFileProvider,
+			CoverageEnabledConfiguration config)
 	{
 		return new DotNetCoverageSuite(name, coverageDataFileProvider, System.currentTimeMillis(), false, false, true, covRunner, this);
 	}
 
 	@Nullable
 	@Override
-	public CoverageSuite createEmptyCoverageSuite(@Nonnull CoverageRunner coverageRunner)
+	public CoverageSuite createEmptyCoverageSuite(CoverageRunner coverageRunner)
 	{
 		return new DotNetCoverageSuite(this);
 	}
 
-	@Nonnull
 	@Override
 	public CoverageAnnotator getCoverageAnnotator(Project project)
 	{
@@ -147,26 +144,25 @@ public class DotNetCoverageEngine extends CoverageEngine
 	}
 
 	@Override
-	public boolean coverageEditorHighlightingApplicableTo(@Nonnull PsiFile psiFile)
+	public boolean coverageEditorHighlightingApplicableTo(PsiFile psiFile)
 	{
 		return psiFile instanceof DotNetFile;
 	}
 
 	@Override
-	public boolean acceptedByFilters(@Nonnull PsiFile psiFile, @Nonnull CoverageSuitesBundle suite)
+	public boolean acceptedByFilters(PsiFile psiFile, CoverageSuitesBundle suite)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean recompileProjectAndRerunAction(@Nonnull Module module, @Nonnull CoverageSuitesBundle suite, @Nonnull Runnable chooseSuiteAction)
+	public boolean recompileProjectAndRerunAction(Module module, CoverageSuitesBundle suite, Runnable chooseSuiteAction)
 	{
 		return false;
 	}
 
-	@Nonnull
 	@Override
-	public Set<String> getQualifiedNames(@Nonnull final PsiFile sourceFile)
+	public Set<String> getQualifiedNames(final PsiFile sourceFile)
 	{
 		return ApplicationManager.getApplication().runReadAction(new Supplier<Set<String>>()
 		{
@@ -192,14 +188,14 @@ public class DotNetCoverageEngine extends CoverageEngine
 	}
 
 	@Override
-	public List<PsiElement> findTestsByNames(@Nonnull String[] testNames, @Nonnull Project project)
+	public List<PsiElement> findTestsByNames(String[] testNames, Project project)
 	{
 		return null;
 	}
 
 	@Nullable
 	@Override
-	public String getTestMethodName(@Nonnull PsiElement element, @Nonnull AbstractTestProxy testProxy)
+	public String getTestMethodName(PsiElement element, AbstractTestProxy testProxy)
 	{
 		return null;
 	}

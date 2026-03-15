@@ -30,7 +30,6 @@ import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilExtendsListIndex;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -39,7 +38,7 @@ import java.util.function.Supplier;
 @ExtensionImpl
 public class MsilDirectTypeInheritorsSearcherExecutor implements DirectTypeInheritorsSearchExecutor {
     @Override
-    public boolean execute(@Nonnull final DirectTypeInheritorsSearch.SearchParameters p, @Nonnull final Predicate<? super DotNetTypeDeclaration> consumer) {
+    public boolean execute(final DirectTypeInheritorsSearch.SearchParameters p, final Predicate<? super DotNetTypeDeclaration> consumer) {
         String vmQName = p.getVmQName();
 
 		/*if(DotNetTypes.System_Object.equals(qualifiedName))

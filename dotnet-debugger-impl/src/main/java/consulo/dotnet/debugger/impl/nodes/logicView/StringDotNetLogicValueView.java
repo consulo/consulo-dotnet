@@ -9,7 +9,6 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -18,26 +17,25 @@ import jakarta.annotation.Nonnull;
 public class StringDotNetLogicValueView extends LimitableDotNetLogicValueView<DotNetStringValueProxy>
 {
 	@Override
-	public boolean canHandle(@Nonnull DotNetDebugContext debugContext, @Nonnull DotNetTypeProxy typeMirror)
+	public boolean canHandle(DotNetDebugContext debugContext, DotNetTypeProxy typeMirror)
 	{
 		return typeMirror.getFullName().equals(DotNetTypes.System.String);
 	}
 
 	@Override
-	public int getSize(@Nonnull DotNetStringValueProxy value)
+	public int getSize(DotNetStringValueProxy value)
 	{
 		return value.getValue().length();
 	}
 
 	@Override
-	public boolean isMyValue(@Nonnull DotNetValueProxy value)
+	public boolean isMyValue(DotNetValueProxy value)
 	{
 		return value instanceof DotNetStringValueProxy;
 	}
 
-	@Nonnull
 	@Override
-	public XNamedValue createChildValue(int index, @Nonnull DotNetDebugContext context, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull DotNetStringValueProxy value)
+	public XNamedValue createChildValue(int index, DotNetDebugContext context, DotNetStackFrameProxy frameProxy, DotNetStringValueProxy value)
 	{
 		char c = value.getValue().charAt(index);
 		return new DotNetSimpleValueNode(context, "[" + index + "]", frameProxy, context.getVirtualMachine().createCharValue(c));

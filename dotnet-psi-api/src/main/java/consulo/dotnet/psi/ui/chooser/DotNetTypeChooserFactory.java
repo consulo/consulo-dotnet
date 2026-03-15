@@ -23,7 +23,6 @@ import consulo.language.editor.ui.TreeChooser;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,15 +31,12 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class DotNetTypeChooserFactory
 {
-	@Nonnull
-	public static DotNetTypeChooserFactory getInstance(@Nonnull Project project)
+	public static DotNetTypeChooserFactory getInstance(Project project)
 	{
 		return project.getInstance(DotNetTypeChooserFactory.class);
 	}
 
-	@Nonnull
-	public abstract TreeChooser<DotNetTypeDeclaration> createChooser(@Nonnull ProjectAwareSearchScope scope);
+	public abstract TreeChooser<DotNetTypeDeclaration> createChooser(ProjectAwareSearchScope scope);
 
-	@Nonnull
-	public abstract TreeChooser<DotNetTypeDeclaration> createInheriableChooser(@Nonnull String baseVmQName, @Nonnull ProjectAwareSearchScope scope);
+	public abstract TreeChooser<DotNetTypeDeclaration> createInheriableChooser(String baseVmQName, ProjectAwareSearchScope scope);
 }

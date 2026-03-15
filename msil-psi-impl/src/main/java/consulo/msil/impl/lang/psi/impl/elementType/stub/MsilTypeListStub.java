@@ -20,7 +20,6 @@ import consulo.dotnet.psi.DotNetTypeList;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.StubBase;
 import consulo.language.psi.stub.StubElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,6 @@ public class MsilTypeListStub extends StubBase<DotNetTypeList>
 		myReferences = references;
 	}
 
-	@Nonnull
 	public String[] geShortReferences()
 	{
 		return myReferences;

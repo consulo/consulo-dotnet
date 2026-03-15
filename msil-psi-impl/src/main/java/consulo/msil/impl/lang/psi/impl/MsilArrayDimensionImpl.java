@@ -9,7 +9,6 @@ import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilArrayDimensionStub;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -21,7 +20,6 @@ public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensi
 
 	public static ArrayFactory<MsilArrayDimensionImpl> ARRAY_FACTORY = new ArrayFactory<MsilArrayDimensionImpl>()
 	{
-		@Nonnull
 		@Override
 		public MsilArrayDimensionImpl[] create(int count)
 		{
@@ -29,12 +27,12 @@ public class MsilArrayDimensionImpl extends MsilStubElementImpl<MsilArrayDimensi
 		}
 	};
 
-	public MsilArrayDimensionImpl(@Nonnull ASTNode node)
+	public MsilArrayDimensionImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilArrayDimensionImpl(@Nonnull MsilArrayDimensionStub stub, @Nonnull IStubElementType nodeType)
+	public MsilArrayDimensionImpl(MsilArrayDimensionStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}

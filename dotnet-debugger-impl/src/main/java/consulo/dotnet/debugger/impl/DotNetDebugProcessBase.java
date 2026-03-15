@@ -27,8 +27,7 @@ import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.process.ProcessHandler;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -46,7 +45,7 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess implements Do
 
     private LazyValue<DotNetLogicValueView[]> myLogicValueViewsLazy;
 
-    public DotNetDebugProcessBase(@Nonnull XDebugSession session, @Nonnull RunProfile runProfile) {
+    public DotNetDebugProcessBase(XDebugSession session, RunProfile runProfile) {
         super(session);
 
         myRunProfile = runProfile;
@@ -56,12 +55,10 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess implements Do
     }
 
     @Override
-    @Nonnull
-    public DotNetDebugContext createDebugContext(@Nonnull DotNetVirtualMachineProxy proxy, @Nullable XBreakpoint<?> breakpoint) {
+    public DotNetDebugContext createDebugContext(DotNetVirtualMachineProxy proxy, @Nullable XBreakpoint<?> breakpoint) {
         return new DotNetDebugContext(getSession().getProject(), proxy, myRunProfile, getSession(), breakpoint, myLogicValueViewsLazy.get());
     }
 
-    @Nonnull
     protected DotNetLogicValueView[] createLogicValueViews() {
         return new DotNetLogicValueView[]{
             new ArrayDotNetLogicValueView(),
@@ -90,7 +87,6 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess implements Do
         return myResult.getProcessHandler();
     }
 
-    @Nonnull
     @Override
     public ExecutionConsole createConsole() {
         ExecutionConsole executionConsole = myResult.getExecutionConsole();
@@ -100,7 +96,6 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess implements Do
         return executionConsole;
     }
 
-    @Nonnull
     @Override
     public XDebuggerEditorsProvider getEditorsProvider() {
         return new DotNetEditorsProvider(getSession(), myRunProfile);
@@ -127,10 +122,9 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess implements Do
     }
 
     @Override
-    public void runToPosition(@Nonnull XSourcePosition position, @Nullable XSuspendContext context) {
+    public void runToPosition(XSourcePosition position, @Nullable XSuspendContext context) {
     }
 
-    @Nonnull
     @Override
     public AsyncResult<Void> stopAsync() {
         AsyncResult<Void> result = AsyncResult.undefined();
@@ -145,26 +139,22 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess implements Do
     protected abstract void stopImpl();
 
     @Override
-    @Nonnull
     public Collection<? extends XLineBreakpoint<?>> getLineBreakpoints() {
         return ApplicationManager.getApplication().runReadAction((Supplier<Collection<? extends XLineBreakpoint<DotNetLineBreakpointProperties>>>) () -> myDebuggerManager.getBreakpointManager()
             .getBreakpoints(DotNetLineBreakpointType.getInstance()));
     }
 
-    @Nonnull
     public Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>> getMethodBreakpoints() {
         return ApplicationManager.getApplication().runReadAction((Supplier<Collection<? extends XLineBreakpoint<DotNetMethodBreakpointProperties>>>) () -> myDebuggerManager.getBreakpointManager()
             .getBreakpoints(DotNetMethodBreakpointType.getInstance()));
     }
 
-    @Nonnull
     public Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>> getExceptionBreakpoints() {
         return ApplicationManager.getApplication().runReadAction((Supplier<Collection<? extends XBreakpoint<DotNetExceptionBreakpointProperties>>>) () -> myDebuggerManager.getBreakpointManager()
             .getBreakpoints(DotNetExceptionBreakpointType.getInstance()));
     }
 
     @Override
-    @Nonnull
     public XBreakpointManager getBreakpointManager() {
         return myDebuggerManager.getBreakpointManager();
     }

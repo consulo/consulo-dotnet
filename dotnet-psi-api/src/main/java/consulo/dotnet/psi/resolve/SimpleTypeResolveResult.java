@@ -18,8 +18,7 @@ package consulo.dotnet.psi.resolve;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public class SimpleTypeResolveResult implements DotNetTypeResolveResult
 		this(element, DotNetGenericExtractor.EMPTY);
 	}
 
-	public SimpleTypeResolveResult(@Nullable PsiElement element, @Nonnull DotNetGenericExtractor extractor)
+	public SimpleTypeResolveResult(@Nullable PsiElement element, DotNetGenericExtractor extractor)
 	{
 		myElement = element;
 		myExtractor = extractor;
@@ -47,7 +46,7 @@ public class SimpleTypeResolveResult implements DotNetTypeResolveResult
 		this(element, DotNetGenericExtractor.EMPTY, nullable);
 	}
 
-	public SimpleTypeResolveResult(@Nullable PsiElement element, @Nonnull DotNetGenericExtractor extractor, boolean nullable)
+	public SimpleTypeResolveResult(@Nullable PsiElement element, DotNetGenericExtractor extractor, boolean nullable)
 	{
 		myElement = element;
 		myExtractor = extractor;
@@ -61,7 +60,6 @@ public class SimpleTypeResolveResult implements DotNetTypeResolveResult
 		return myElement;
 	}
 
-	@Nonnull
 	@Override
 	public DotNetGenericExtractor getGenericExtractor()
 	{

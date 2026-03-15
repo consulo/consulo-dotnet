@@ -35,7 +35,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -51,8 +50,7 @@ public class DotNetCompilerUtil
 	public static final Condition<OrderEntry> SKIP_STD_LIBRARIES = orderEntry -> orderEntry instanceof CustomOrderEntry && ((CustomOrderEntry) orderEntry).getModel() instanceof
 			DotNetLibraryOrderEntryModel;
 
-	@Nonnull
-	public static Set<File> collectDependencies(@Nonnull final Module module, @Nonnull final DotNetTarget target, final boolean debugSymbol, @Nonnull final Condition<OrderEntry> skipCondition)
+	public static Set<File> collectDependencies(final Module module, final DotNetTarget target, final boolean debugSymbol, final Condition<OrderEntry> skipCondition)
 	{
 		Set<File> set = new HashSet<>();
 

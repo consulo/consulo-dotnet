@@ -30,8 +30,7 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,10 +41,10 @@ import java.util.function.Supplier;
  * @since 11.04.14
  */
 public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode {
-    public static void addStaticNode(@Nonnull XValueChildrenList list,
-                                     @Nonnull DotNetDebugContext debuggerContext,
-                                     @Nonnull DotNetStackFrameProxy frameProxy,
-                                     @Nonnull DotNetTypeProxy typeProxy) {
+    public static void addStaticNode(XValueChildrenList list,
+                                     DotNetDebugContext debuggerContext,
+                                     DotNetStackFrameProxy frameProxy,
+                                     DotNetTypeProxy typeProxy) {
         boolean result = processFieldOrProperty(typeProxy, null, CommonProcessors.<DotNetFieldOrPropertyProxy>alwaysFalse());
         if (result) {
             return;
@@ -53,20 +52,19 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
         list.add(new DotNetThisAsObjectValueNode(debuggerContext, frameProxy, typeProxy, (DotNetObjectValueProxy) null));
     }
 
-    @Nonnull
     private final DotNetTypeProxy myType;
     private final Supplier<DotNetObjectValueProxy> myObjectValueMirrorGetter;
 
-    public DotNetThisAsObjectValueNode(@Nonnull DotNetDebugContext debuggerContext,
-                                       @Nonnull DotNetStackFrameProxy frameProxy,
-                                       @Nonnull DotNetTypeProxy type,
+    public DotNetThisAsObjectValueNode(DotNetDebugContext debuggerContext,
+                                       DotNetStackFrameProxy frameProxy,
+                                       DotNetTypeProxy type,
                                        @Nullable final DotNetObjectValueProxy objectValueMirror) {
         this(debuggerContext, frameProxy, type, objectValueMirror == null ? null : () -> objectValueMirror);
     }
 
-    public DotNetThisAsObjectValueNode(@Nonnull DotNetDebugContext debuggerContext,
-                                       @Nonnull DotNetStackFrameProxy frameProxy,
-                                       @Nonnull DotNetTypeProxy type,
+    public DotNetThisAsObjectValueNode(DotNetDebugContext debuggerContext,
+                                       DotNetStackFrameProxy frameProxy,
+                                       DotNetTypeProxy type,
                                        @Nullable Supplier<DotNetObjectValueProxy> objectValueMirrorGetter) {
         super(debuggerContext, objectValueMirrorGetter == null ? "static" : "this", frameProxy);
         myType = type;
@@ -79,7 +77,6 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
         return null;
     }
 
-    @Nonnull
     @Override
     public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue) {
         return myObjectValueMirrorGetter == null ? PlatformIconGroup.nodesStatic() : ExecutionDebugIconGroup.nodeValue();
@@ -92,11 +89,11 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
     }
 
     @Override
-    public void setValueForVariableImpl(@Nonnull DotNetValueProxy value) {
+    public void setValueForVariableImpl(DotNetValueProxy value) {
     }
 
     @Override
-    protected void computePresentationImpl(@Nonnull XValueNode node, @Nonnull XValuePlace xValuePlace) {
+    protected void computePresentationImpl(XValueNode node, XValuePlace xValuePlace) {
         if (myObjectValueMirrorGetter == null) {
             node.setPresentation(getIconForVariable(null), new XRegularValuePresentation("", null, ""), true);
         }
@@ -106,7 +103,7 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
     }
 
     @Override
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
         final XValueChildrenList childrenList = new XValueChildrenList();
 
         final Set<String> visited = new HashSet<>();
@@ -120,9 +117,9 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
         node.addChildren(childrenList, true);
     }
 
-    private static boolean processFieldOrProperty(@Nonnull DotNetTypeProxy proxy,
+    private static boolean processFieldOrProperty(DotNetTypeProxy proxy,
                                                   @Nullable Supplier<DotNetObjectValueProxy> objectValueMirrorGetter,
-                                                  @Nonnull Processor<DotNetFieldOrPropertyProxy> processor) {
+                                                  Processor<DotNetFieldOrPropertyProxy> processor) {
         DotNetFieldOrPropertyProxy[] fieldMirrors = DotNetDebuggerSearchUtil.getFieldAndProperties(proxy, true);
         for (DotNetFieldOrPropertyProxy fieldMirror : fieldMirrors) {
             if (!fieldMirror.isStatic() && objectValueMirrorGetter == null || fieldMirror.isStatic() && objectValueMirrorGetter != null) {
@@ -159,7 +156,6 @@ public class DotNetThisAsObjectValueNode extends DotNetAbstractVariableValueNode
         return false;
     }
 
-    @Nonnull
     @Override
     public DotNetTypeProxy getTypeOfVariableImpl() {
         return myType;

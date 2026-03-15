@@ -11,8 +11,7 @@ import consulo.language.psi.PsiFile;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.emonic.base.documentation.IDocumentation;
 
@@ -29,7 +28,6 @@ import java.util.List;
 @ServiceImpl
 public class DotNetDocumentationCache
 {
-	@Nonnull
 	public static DotNetDocumentationCache getInstance()
 	{
 		return ServiceManager.getService(DotNetDocumentationCache.class);

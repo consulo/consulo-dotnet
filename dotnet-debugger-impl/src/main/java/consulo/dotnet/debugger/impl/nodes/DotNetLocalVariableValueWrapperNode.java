@@ -24,8 +24,7 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -53,7 +52,7 @@ public class DotNetLocalVariableValueWrapperNode extends DotNetAbstractVariableV
 
 	@Override
 	@RequiredUIAccess
-	public void computeSourcePosition(@Nonnull XNavigatable navigatable)
+	public void computeSourcePosition(XNavigatable navigatable)
 	{
 		DotNetLocalVariableValueNode.computeSourcePosition(navigatable, getName(), myDebugContext, myFrameProxy);
 	}
@@ -73,7 +72,7 @@ public class DotNetLocalVariableValueWrapperNode extends DotNetAbstractVariableV
 	}
 
 	@Override
-	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
+	public void setValueForVariableImpl(DotNetValueProxy value)
 	{
 		myField.setValue(myFrameProxy, myObjectGetter.get(), value);
 	}

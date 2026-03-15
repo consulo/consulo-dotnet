@@ -33,15 +33,13 @@ import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 11.04.14
  */
 public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValueNode {
-    @Nonnull
     protected final DotNetStackFrameProxy myFrameProxy;
     private final UserDataHolderBase myDataHolder = new UserDataHolderBase();
 
@@ -49,7 +47,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
 
     private final SimpleReference<DotNetValueProxy> myLastValueRef = SimpleReference.create();
 
-    public DotNetAbstractVariableValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull String name, @Nonnull DotNetStackFrameProxy frameProxy) {
+    public DotNetAbstractVariableValueNode(DotNetDebugContext debuggerContext, String name, DotNetStackFrameProxy frameProxy) {
         super(debuggerContext, name);
         myFrameProxy = frameProxy;
     }
@@ -87,7 +85,6 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
         }
     }
 
-    @Nonnull
     public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue) {
         DotNetVirtualMachineUtil.checkCallForUIThread();
 
@@ -154,9 +151,9 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
         }
     }
 
-    protected abstract void setValueForVariableImpl(@Nonnull DotNetValueProxy value);
+    protected abstract void setValueForVariableImpl(DotNetValueProxy value);
 
-    public void setValueForVariable(@Nonnull DotNetValueProxy value) {
+    public void setValueForVariable(DotNetValueProxy value) {
         DotNetVirtualMachineUtil.checkCallForUIThread();
 
         setValueForVariableImpl(value);
@@ -173,7 +170,7 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
     }
 
     @Override
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
         myDebugContext.invoke(() ->
         {
             DotNetValueProxy value = getValueOfVariable();
@@ -227,11 +224,11 @@ public abstract class DotNetAbstractVariableValueNode extends AbstractTypedValue
     }
 
     @Override
-    public void computePresentation(@Nonnull XValueNode xValueNode, @Nonnull XValuePlace xValuePlace) {
+    public void computePresentation(XValueNode xValueNode, XValuePlace xValuePlace) {
         myDebugContext.invoke(() -> computePresentationImpl(xValueNode, xValuePlace));
     }
 
-    protected void computePresentationImpl(@Nonnull XValueNode node, @Nonnull XValuePlace xValuePlace) {
+    protected void computePresentationImpl(XValueNode node, XValuePlace xValuePlace) {
         DotNetValueProxy valueOfVariable = getValueOfVariable();
 
         myLastValueRef.set(valueOfVariable);

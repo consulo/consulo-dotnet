@@ -16,7 +16,6 @@
 
 package consulo.dotnet.externalAttributes;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,9 +25,7 @@ import java.util.List;
  */
 public interface ExternalAttributeNode
 {
-	@Nonnull
 	List<ExternalAttributeArgumentNode> getArguments();
 
-	@Nonnull
 	String getName();
 }

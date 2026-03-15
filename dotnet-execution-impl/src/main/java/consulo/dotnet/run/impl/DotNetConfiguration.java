@@ -49,8 +49,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.*;
@@ -121,7 +120,6 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		element.addContent(coverageElement);
 	}
 
-	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
 	public SettingsEditor<? extends RunConfiguration> getConfigurationEditor()
@@ -134,7 +132,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 	@Nullable
 	@Override
-	public RunProfileState getState(@Nonnull Executor executor, @Nonnull final ExecutionEnvironment executionEnvironment) throws ExecutionException
+	public RunProfileState getState(Executor executor, final ExecutionEnvironment executionEnvironment) throws ExecutionException
 	{
 		Module module = getConfigurationModule().getModule();
 		if(module == null)
@@ -214,12 +212,11 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 	}
 
 	@Override
-	public void setEnvs(@Nonnull Map<String, String> map)
+	public void setEnvs(Map<String, String> map)
 	{
 		myEnvsMap = map;
 	}
 
-	@Nonnull
 	@Override
 	public Map<String, String> getEnvs()
 	{
@@ -255,9 +252,8 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		return extension instanceof DotNetModuleExtensionWithDebug;
 	}
 
-	@Nonnull
 	@Override
-	public DotNetDebugProcess createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull DebugConnectionInfo debugConnectionInfo) throws ExecutionException
+	public DotNetDebugProcess createDebuggerProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo) throws ExecutionException
 	{
 		Module module = getConfigurationModule().getModule();
 		if(module == null)
@@ -280,7 +276,6 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
 		myConsoleType = consoleType;
 	}
 
-	@Nonnull
 	@Override
 	public ProcessConsoleType getConsoleType()
 	{

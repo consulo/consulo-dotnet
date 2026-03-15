@@ -20,7 +20,6 @@ import consulo.content.bundle.Sdk;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -29,11 +28,9 @@ import java.util.List;
  */
 public interface DotNetSimpleMutableModuleExtension<T extends DotNetSimpleModuleExtension<T>> extends DotNetSimpleModuleExtension<T>, MutableModuleExtension<T>
 {
-	@Nonnull
 	@Override
 	List<String> getVariables();
 
 	@Override
-	@Nonnull
 	MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 }

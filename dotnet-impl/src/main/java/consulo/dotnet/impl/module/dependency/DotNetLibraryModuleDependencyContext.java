@@ -30,7 +30,6 @@ import consulo.module.content.layer.orderEntry.CustomOrderEntryModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.extension.ModuleExtension;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +46,8 @@ public class DotNetLibraryModuleDependencyContext extends AddModuleDependencyCon
 		super(classpathPanel, modulesConfigurator, librariesConfigurator);
 	}
 
-	@Nonnull
 	@Override
-	public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull List<Map.Entry<String, String>> selectedValues)
+	public List<OrderEntry> createOrderEntries(ModifiableModuleRootLayer layer, List<Map.Entry<String, String>> selectedValues)
 	{
 		List<OrderEntry> orderEntries = new ArrayList<>(selectedValues.size());
 		for(Map.Entry<String, String> selectedValue : selectedValues)
@@ -63,7 +61,6 @@ public class DotNetLibraryModuleDependencyContext extends AddModuleDependencyCon
 		return orderEntries;
 	}
 
-	@Nonnull
 	public Map<String, String> getAvailableSystemLibraries()
 	{
 		Map<String, String> map = new HashMap<>();

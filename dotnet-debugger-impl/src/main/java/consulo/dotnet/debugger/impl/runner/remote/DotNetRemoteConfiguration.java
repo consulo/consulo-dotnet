@@ -34,7 +34,6 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -68,7 +67,7 @@ public abstract class DotNetRemoteConfiguration extends ModuleBasedConfiguration
 	}
 
 	@Override
-	public RunProfileState getState(@Nonnull final Executor executor, @Nonnull final ExecutionEnvironment env) throws ExecutionException
+	public RunProfileState getState(final Executor executor, final ExecutionEnvironment env) throws ExecutionException
 	{
 		DotNetRemoteRunState state = new DotNetRemoteRunState(env);
 		state.putUserData(DebugConnectionInfo.KEY, new DebugConnectionInfo(HOST, PORT, SERVER_MODE));
@@ -76,7 +75,6 @@ public abstract class DotNetRemoteConfiguration extends ModuleBasedConfiguration
 	}
 
 	@Override
-	@Nonnull
 	public SettingsEditor<? extends DotNetRemoteConfiguration> getConfigurationEditor()
 	{
 		SettingsEditorGroup<DotNetRemoteConfiguration> group = new SettingsEditorGroup<>();

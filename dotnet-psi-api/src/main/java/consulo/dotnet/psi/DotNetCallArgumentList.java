@@ -17,7 +17,6 @@
 package consulo.dotnet.psi;
 
 import consulo.annotation.access.RequiredReadAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,10 +24,8 @@ import jakarta.annotation.Nonnull;
  */
 public interface DotNetCallArgumentList extends DotNetElement
 {
-	@Nonnull
 	DotNetExpression[] getExpressions();
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetElement[] getArguments();
 }

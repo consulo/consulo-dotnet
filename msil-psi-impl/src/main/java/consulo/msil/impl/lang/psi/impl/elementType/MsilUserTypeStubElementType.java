@@ -26,7 +26,6 @@ import consulo.msil.lang.psi.MsilUserType;
 import consulo.msil.impl.lang.psi.impl.MsilUserTypeImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilUserTypeStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -40,23 +39,21 @@ public class MsilUserTypeStubElementType extends AbstractMsilStubElementType<Msi
 		super("MSIL_USER_TYPE");
 	}
 
-	@Nonnull
 	@Override
-	public MsilUserType createElement(@Nonnull ASTNode astNode)
+	public MsilUserType createElement(ASTNode astNode)
 	{
 		return new MsilUserTypeImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public MsilUserType createPsi(@Nonnull MsilUserTypeStub msilUserTypeStub)
+	public MsilUserType createPsi(MsilUserTypeStub msilUserTypeStub)
 	{
 		return new MsilUserTypeImpl(msilUserTypeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilUserTypeStub createStub(@Nonnull MsilUserType dotNetReferenceType, StubElement stubElement)
+	public MsilUserTypeStub createStub(MsilUserType dotNetReferenceType, StubElement stubElement)
 	{
 		MsilUserType.Target target = dotNetReferenceType.getTarget();
 		String referenceText = dotNetReferenceType.getReferenceText();
@@ -64,15 +61,14 @@ public class MsilUserTypeStubElementType extends AbstractMsilStubElementType<Msi
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilUserTypeStub msilUserTypeStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilUserTypeStub msilUserTypeStub, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeByte(msilUserTypeStub.getTarget().ordinal());
 		stubOutputStream.writeName(msilUserTypeStub.getReferenceText());
 	}
 
-	@Nonnull
 	@Override
-	public MsilUserTypeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilUserTypeStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		MsilUserType.Target typeResoleKind = MsilUserType.Target.VALUES[inputStream.readByte()];
 		StringRef referenceText = inputStream.readName();

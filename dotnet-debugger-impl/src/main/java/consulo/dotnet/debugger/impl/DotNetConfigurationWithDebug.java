@@ -21,7 +21,6 @@ import consulo.dotnet.util.DebugConnectionInfo;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.process.ExecutionException;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,6 +33,5 @@ public interface DotNetConfigurationWithDebug extends RunConfiguration
 		return true;
 	}
 
-	@Nonnull
-	DotNetDebugProcess createDebuggerProcess(@Nonnull XDebugSession session, @Nonnull DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
+	DotNetDebugProcess createDebuggerProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
 }

@@ -23,7 +23,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ public abstract class DotNetTestFramework
 	public static final ExtensionPointName<DotNetTestFramework> EP_NAME = ExtensionPointName.create(DotNetTestFramework.class);
 
 	@RequiredReadAction
-	public boolean isTestType(@Nonnull DotNetTypeDeclaration typeDeclaration)
+	public boolean isTestType(DotNetTypeDeclaration typeDeclaration)
 	{
 		DotNetNamedElement[] members = typeDeclaration.getMembers();
 		for(DotNetNamedElement member : members)
@@ -49,5 +48,5 @@ public abstract class DotNetTestFramework
 	}
 
 	@RequiredReadAction
-	public abstract boolean isTestMethod(@Nonnull DotNetLikeMethodDeclaration methodDeclaration);
+	public abstract boolean isTestMethod(DotNetLikeMethodDeclaration methodDeclaration);
 }

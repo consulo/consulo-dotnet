@@ -20,8 +20,7 @@ import consulo.dotnet.debugger.proxy.value.*;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -31,28 +30,22 @@ import java.util.List;
 public interface DotNetVirtualMachineProxy
 {
 	@Nullable
-	DotNetTypeProxy findType(@Nonnull Project project, @Nonnull String vmQName, @Nonnull VirtualFile virtualFile);
+	DotNetTypeProxy findType(Project project, String vmQName, VirtualFile virtualFile);
 
 	@Nullable
-	DotNetTypeProxy findTypeInCorlib(@Nonnull String vmQName);
+	DotNetTypeProxy findTypeInCorlib(String vmQName);
 
-	void invoke(@Nonnull Runnable runnable);
+	void invoke(Runnable runnable);
 
-	@Nonnull
 	List<DotNetThreadProxy> getThreads();
 
-	@Nonnull
-	DotNetStringValueProxy createStringValue(@Nonnull String value);
+	DotNetStringValueProxy createStringValue(String value);
 
-	@Nonnull
 	DotNetCharValueProxy createCharValue(char value);
 
-	@Nonnull
 	DotNetBooleanValueProxy createBooleanValue(boolean value);
 
-	@Nonnull
-	DotNetNumberValueProxy createNumberValue(int tag, @Nonnull Number value);
+	DotNetNumberValueProxy createNumberValue(int tag, Number value);
 
-	@Nonnull
 	DotNetNullValueProxy createNullValue();
 }

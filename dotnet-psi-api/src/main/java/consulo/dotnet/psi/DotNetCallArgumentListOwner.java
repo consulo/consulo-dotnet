@@ -18,9 +18,8 @@ package consulo.dotnet.psi;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,12 +30,10 @@ public interface DotNetCallArgumentListOwner extends DotNetElement
 	@Nullable
 	DotNetCallArgumentList getParameterList();
 
-	@Nonnull
 	DotNetExpression[] getParameterExpressions();
 
 	@Nullable
 	PsiElement resolveToCallable();
 
-	@Nonnull
 	ResolveResult[] multiResolve(final boolean incompleteCode);
 }

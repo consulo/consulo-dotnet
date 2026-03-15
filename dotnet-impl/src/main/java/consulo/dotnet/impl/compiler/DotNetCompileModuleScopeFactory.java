@@ -23,9 +23,8 @@ import consulo.compiler.scope.ModuleRootCompileScope;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public class DotNetCompileModuleScopeFactory implements CompileModuleScopeFactor
 {
 	@Nullable
 	@Override
-	public FileIndexCompileScope createScope(@Nonnull Module module, boolean includeDependentModules, boolean includeTestScope)
+	public FileIndexCompileScope createScope(Module module, boolean includeDependentModules, boolean includeTestScope)
 	{
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		if(extension != null && !extension.isAllowSourceRoots())

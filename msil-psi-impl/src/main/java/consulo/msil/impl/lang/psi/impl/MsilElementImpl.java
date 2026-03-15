@@ -21,7 +21,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.psi.PsiElementVisitor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,13 +28,13 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class MsilElementImpl extends ASTWrapperPsiElement implements DotNetElement
 {
-	public MsilElementImpl(@Nonnull ASTNode node)
+	public MsilElementImpl(ASTNode node)
 	{
 		super(node);
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	public void accept(PsiElementVisitor visitor)
 	{
 		if(visitor instanceof MsilVisitor)
 		{

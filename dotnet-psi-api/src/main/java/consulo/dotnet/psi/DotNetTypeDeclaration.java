@@ -21,8 +21,7 @@ import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -50,14 +49,12 @@ public interface DotNetTypeDeclaration extends DotNetQualifiedElement, DotNetMod
 	@RequiredReadAction
 	DotNetTypeList getExtendList();
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef[] getExtendTypeRefs();
 
 	@RequiredReadAction
-	boolean isInheritor(@Nonnull String otherVmQName, boolean deep);
+	boolean isInheritor(String otherVmQName, boolean deep);
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef getTypeRefForEnumConstants();
 

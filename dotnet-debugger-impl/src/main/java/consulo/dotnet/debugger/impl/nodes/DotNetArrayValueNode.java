@@ -16,13 +16,12 @@
 
 package consulo.dotnet.debugger.impl.nodes;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import consulo.dotnet.debugger.DotNetDebugContext;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,13 +29,12 @@ import jakarta.annotation.Nonnull;
  */
 public class DotNetArrayValueNode extends DotNetAbstractVariableValueNode
 {
-	@Nonnull
 	private final DotNetArrayValueProxy myArrayValueMirror;
 	private final int myIndex;
 	@Nullable
 	private final DotNetValueProxy myValue;
 
-	public DotNetArrayValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull String name, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull DotNetArrayValueProxy valueMirrorNode,
+	public DotNetArrayValueNode(DotNetDebugContext debuggerContext, String name, DotNetStackFrameProxy frameProxy, DotNetArrayValueProxy valueMirrorNode,
 								int index)
 	{
 		super(debuggerContext, name, frameProxy);
@@ -53,7 +51,7 @@ public class DotNetArrayValueNode extends DotNetAbstractVariableValueNode
 	}
 
 	@Override
-	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
+	public void setValueForVariableImpl(DotNetValueProxy value)
 	{
 		myArrayValueMirror.set(myIndex, value);
 	}

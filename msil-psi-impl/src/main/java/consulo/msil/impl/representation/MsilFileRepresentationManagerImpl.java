@@ -33,7 +33,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,9 +53,8 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 		myVirtualFileManager = virtualFileManager;
 	}
 
-	@Nonnull
 	@Override
-	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@Nonnull MsilFile msilFile, @Nonnull VirtualFile virtualFile)
+	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(MsilFile msilFile, VirtualFile virtualFile)
 	{
 		List<MsilFileRepresentationProvider> extensions = MsilFileRepresentationProvider.EP_NAME.getExtensionList();
 		List<Pair<String, ? extends FileType>> list = new ArrayList<>(extensions.size());
@@ -73,7 +71,7 @@ public class MsilFileRepresentationManagerImpl extends MsilFileRepresentationMan
 
 	@Override
 	@RequiredReadAction
-	public PsiFile getRepresentationFile(@Nonnull FileType fileType, @Nonnull MsilFile msilFile)
+	public PsiFile getRepresentationFile(FileType fileType, MsilFile msilFile)
 	{
 		VirtualFile virtualFile = msilFile.getVirtualFile();
 		if(virtualFile == null)

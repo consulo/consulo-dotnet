@@ -17,7 +17,6 @@ import consulo.language.util.ProcessingContext;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ public class CfsCompletionContributor extends CompletionContributor
 		extend(CompletionType.BASIC, StandardPatterns.psiElement().withElementType(CfsTokens.INDEX), new CompletionProvider()
 		{
 			@Override
-			public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result)
+			public void addCompletions(CompletionParameters parameters, ProcessingContext context, CompletionResultSet result)
 			{
 				int thisArgumentInex = -1;
 				DotNetExpression[] callArguments = null;
@@ -73,7 +72,6 @@ public class CfsCompletionContributor extends CompletionContributor
 		});
 	}
 
-	@Nonnull
 	@Override
 	public Language getLanguage()
 	{

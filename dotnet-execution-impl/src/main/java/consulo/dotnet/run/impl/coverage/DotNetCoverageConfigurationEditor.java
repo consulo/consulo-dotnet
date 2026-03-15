@@ -24,7 +24,6 @@ import consulo.execution.coverage.CoverageEnabledConfiguration;
 import consulo.execution.coverage.CoverageRunner;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -45,7 +44,7 @@ public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConf
 		myRunnersBox.setRenderer(new ColoredListCellRenderer<Object>()
 		{
 			@Override
-			protected void customizeCellRenderer(@Nonnull JList<?> jList, Object value, int i, boolean b, boolean b1)
+			protected void customizeCellRenderer(JList<?> jList, Object value, int i, boolean b, boolean b1)
 			{
 				if(value == null)
 				{
@@ -109,7 +108,6 @@ public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConf
 		}
 	}
 
-	@Nonnull
 	@Override
 	protected JComponent createEditor()
 	{

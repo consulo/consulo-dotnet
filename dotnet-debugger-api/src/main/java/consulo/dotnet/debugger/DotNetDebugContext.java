@@ -27,8 +27,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -42,16 +41,15 @@ public class DotNetDebugContext
 	private final RunProfile myRunProfile;
 	private final XDebugSession mySession;
 	private final XBreakpoint<?> myBreakpoint;
-	@Nonnull
 	private final DotNetLogicValueView[] myLogicValueViews;
 	private final Supplier<GlobalSearchScope> myScopeValue;
 
-	public DotNetDebugContext(@Nonnull Project project,
-							  @Nonnull DotNetVirtualMachineProxy virtualMachine,
-							  @Nonnull RunProfile runProfile,
-							  @Nonnull XDebugSession session,
+	public DotNetDebugContext(Project project,
+							  DotNetVirtualMachineProxy virtualMachine,
+							  RunProfile runProfile,
+							  XDebugSession session,
 							  @Nullable XBreakpoint<?> breakpoint,
-							  @Nonnull DotNetLogicValueView[] logicValueViews)
+							  DotNetLogicValueView[] logicValueViews)
 	{
 		myProject = project;
 		myVirtualMachine = virtualMachine;
@@ -80,13 +78,11 @@ public class DotNetDebugContext
 		});
 	}
 
-	@Nonnull
 	public DotNetLogicValueView[] getLogicValueViews()
 	{
 		return myLogicValueViews;
 	}
 
-	@Nonnull
 	public GlobalSearchScope getResolveScope()
 	{
 		return myScopeValue.get();
@@ -98,31 +94,27 @@ public class DotNetDebugContext
 		return myBreakpoint;
 	}
 
-	@Nonnull
 	public Project getProject()
 	{
 		return myProject;
 	}
 
-	@Nonnull
 	public DotNetVirtualMachineProxy getVirtualMachine()
 	{
 		return myVirtualMachine;
 	}
 
-	@Nonnull
 	public RunProfile getRunProfile()
 	{
 		return myRunProfile;
 	}
 
-	@Nonnull
 	public XDebugSession getSession()
 	{
 		return mySession;
 	}
 
-	public void invoke(@Nonnull Runnable runnable)
+	public void invoke(Runnable runnable)
 	{
 		myVirtualMachine.invoke(runnable);
 	}

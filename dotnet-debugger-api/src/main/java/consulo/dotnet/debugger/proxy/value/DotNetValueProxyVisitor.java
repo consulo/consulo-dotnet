@@ -16,7 +16,6 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,43 +23,43 @@ import jakarta.annotation.Nonnull;
  */
 public interface DotNetValueProxyVisitor
 {
-	default void visitStringValue(@Nonnull DotNetStringValueProxy proxy)
+	default void visitStringValue(DotNetStringValueProxy proxy)
 	{
 	}
 
-	default void visitNullValue(@Nonnull DotNetNullValueProxy proxy)
+	default void visitNullValue(DotNetNullValueProxy proxy)
 	{
 	}
 
-	default void visitArrayValue(@Nonnull DotNetArrayValueProxy proxy)
+	default void visitArrayValue(DotNetArrayValueProxy proxy)
 	{
 	}
 
-	default void visitEnumValue(@Nonnull DotNetEnumValueProxy proxy)
+	default void visitEnumValue(DotNetEnumValueProxy proxy)
 	{
 	}
 
-	default void visitObjectValue(@Nonnull DotNetObjectValueProxy proxy)
+	default void visitObjectValue(DotNetObjectValueProxy proxy)
 	{
 	}
 
-	default void visitNumberValue(@Nonnull DotNetNumberValueProxy proxy)
+	default void visitNumberValue(DotNetNumberValueProxy proxy)
 	{
 	}
 
-	default void visitBooleanValue(@Nonnull DotNetBooleanValueProxy proxy)
+	default void visitBooleanValue(DotNetBooleanValueProxy proxy)
 	{
 	}
 
-	default void visitCharValue(@Nonnull DotNetCharValueProxy proxy)
+	default void visitCharValue(DotNetCharValueProxy proxy)
 	{
 	}
 
-	default void visitStructValue(@Nonnull DotNetStructValueProxy proxy)
+	default void visitStructValue(DotNetStructValueProxy proxy)
 	{
 	}
 
-	default void visitErrorValue(@Nonnull DotNetErrorValueProxy proxy)
+	default void visitErrorValue(DotNetErrorValueProxy proxy)
 	{
 	}
 }

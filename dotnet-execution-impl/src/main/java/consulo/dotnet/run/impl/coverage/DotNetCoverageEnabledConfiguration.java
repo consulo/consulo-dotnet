@@ -19,7 +19,6 @@ package consulo.dotnet.run.impl.coverage;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.coverage.CoverageEnabledConfiguration;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -29,7 +28,6 @@ import java.util.List;
  */
 public class DotNetCoverageEnabledConfiguration extends CoverageEnabledConfiguration
 {
-	@Nonnull
 	public static DotNetCoverageEnabledConfiguration get(DotNetConfigurationWithCoverage configurationWithCoverage)
 	{
 		return (DotNetCoverageEnabledConfiguration) CoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) configurationWithCoverage);

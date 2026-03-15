@@ -24,7 +24,6 @@ import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.project.DumbService;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,16 +31,14 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 {
-	@Nonnull
 	protected final String myRef;
 
-	public MsilReferenceTypeRefImpl(@Nonnull Project project, @Nonnull GlobalSearchScope resolveScope, @Nonnull String ref)
+	public MsilReferenceTypeRefImpl(Project project, GlobalSearchScope resolveScope, String ref)
 	{
 		super(project, resolveScope);
 		myRef = ref;
 	}
 
-	@Nonnull
 	@Override
 	public String getVmQName()
 	{
@@ -49,7 +46,6 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public String toString()
 	{
@@ -57,7 +53,6 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	protected DotNetTypeResolveResult resolveResult()
 	{
@@ -84,7 +79,7 @@ public class MsilReferenceTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@Override
-	public boolean isEqualToVmQName(@Nonnull String vmQName)
+	public boolean isEqualToVmQName(String vmQName)
 	{
 		return vmQName.equals(myRef);
 	}

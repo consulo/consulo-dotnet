@@ -27,7 +27,6 @@ import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilClassGenericTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilClassGenericTypeRefImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,12 +34,12 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilClassGenericTypeImpl extends MsilTypeImpl<MsilClassGenericTypeStub> implements MsilClassGenericType
 {
-	public MsilClassGenericTypeImpl(@Nonnull ASTNode node)
+	public MsilClassGenericTypeImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilClassGenericTypeImpl(@Nonnull MsilClassGenericTypeStub stub, @Nonnull IStubElementType nodeType)
+	public MsilClassGenericTypeImpl(MsilClassGenericTypeStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -59,7 +58,6 @@ public class MsilClassGenericTypeImpl extends MsilTypeImpl<MsilClassGenericTypeS
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRefImpl()
 	{

@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public class MsilFileTypeFactory extends FileTypeFactory
 {
 	@Override
-	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
+	public void createFileTypes(FileTypeConsumer consumer)
 	{
 		consumer.consume(MsilFileType.INSTANCE, "il;msil");
 	}

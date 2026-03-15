@@ -22,8 +22,7 @@ import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ public class DotNetAssemblyUtil
 {
 	@Nullable
 	@RequiredReadAction
-	public static String getAssemblyTitle(@Nonnull PsiElement element)
+	public static String getAssemblyTitle(PsiElement element)
 	{
 		Module module = ModuleUtilCore.findModuleForPsiElement(element);
 		if(module == null)

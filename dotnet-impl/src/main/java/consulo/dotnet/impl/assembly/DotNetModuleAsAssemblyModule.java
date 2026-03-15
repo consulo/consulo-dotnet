@@ -36,7 +36,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -59,7 +58,6 @@ class DotNetModuleAsAssemblyModule implements AssemblyModule
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public String getName()
 	{
@@ -68,25 +66,23 @@ class DotNetModuleAsAssemblyModule implements AssemblyModule
 
 	@RequiredReadAction
 	@Override
-	public boolean isAllowedAssembly(@Nonnull String assemblyName)
+	public boolean isAllowedAssembly(String assemblyName)
 	{
 		return getBinaryAllowedAssemblies(myModuleFile).contains(assemblyName);
 	}
 
 	@Override
-	public boolean equals(@Nonnull AssemblyModule module)
+	public boolean equals(AssemblyModule module)
 	{
 		return module instanceof DotNetModuleAsAssemblyModule && myModuleFile.equals(((DotNetModuleAsAssemblyModule) module).myModuleFile);
 	}
 
-	@Nonnull
 	private Set<String> getBinaryAllowedAssemblies(VirtualFile moduleFile)
 	{
 		return CachedValuesManager.getManager(myProject).getCachedValue(myProject, () -> CachedValueProvider.Result.create(calcBinaryAllowedAssemblies(myProject, moduleFile), VirtualFileManager
 				.VFS_STRUCTURE_MODIFICATIONS));
 	}
 
-	@Nonnull
 	@RequiredReadAction
 	private static Set<String> calcBinaryAllowedAssemblies(Project project, VirtualFile moduleFile)
 	{                                                                            

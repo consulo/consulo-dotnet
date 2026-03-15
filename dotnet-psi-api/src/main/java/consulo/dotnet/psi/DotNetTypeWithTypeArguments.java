@@ -17,8 +17,7 @@
 package consulo.dotnet.psi;
 
 import consulo.annotation.access.RequiredReadAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,7 +25,6 @@ import jakarta.annotation.Nullable;
  */
 public interface DotNetTypeWithTypeArguments extends DotNetType
 {
-	@Nonnull
 	@RequiredReadAction
 	DotNetType getInnerType();
 
@@ -34,7 +32,6 @@ public interface DotNetTypeWithTypeArguments extends DotNetType
 	@RequiredReadAction
 	DotNetTypeList getArgumentsList();
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetType[] getArguments();
 }

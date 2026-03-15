@@ -22,7 +22,6 @@ import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.dotnet.psi.resolve.DotNetTypeRefWithCachedResult;
 import consulo.dotnet.psi.resolve.DotNetTypeResolveResult;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,7 +38,6 @@ public class MsilRefTypeRefImpl extends DotNetTypeRefWithCachedResult implements
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	protected DotNetTypeResolveResult resolveResult()
 	{
@@ -47,14 +45,12 @@ public class MsilRefTypeRefImpl extends DotNetTypeRefWithCachedResult implements
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public String getVmQName()
 	{
 		return myTypeRef.toString() + "&";
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeRef getInnerTypeRef()
 	{

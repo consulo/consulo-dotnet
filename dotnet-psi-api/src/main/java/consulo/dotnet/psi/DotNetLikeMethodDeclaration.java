@@ -16,8 +16,7 @@
 
 package consulo.dotnet.psi;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
@@ -33,7 +32,6 @@ public interface DotNetLikeMethodDeclaration extends DotNetModifierListOwner, Do
 	@RequiredReadAction
 	DotNetType getReturnType();
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef getReturnTypeRef();
 }

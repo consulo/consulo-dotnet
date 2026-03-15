@@ -17,7 +17,6 @@
 package consulo.dotnet.assembly;
 
 import consulo.annotation.access.RequiredReadAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,12 +26,11 @@ import jakarta.annotation.Nonnull;
  */
 public interface AssemblyModule
 {
-	@Nonnull
 	@RequiredReadAction
 	String getName();
 
 	@RequiredReadAction
-	boolean isAllowedAssembly(@Nonnull String assemblyName);
+	boolean isAllowedAssembly(String assemblyName);
 
-	boolean equals(@Nonnull AssemblyModule module);
+	boolean equals(AssemblyModule module);
 }

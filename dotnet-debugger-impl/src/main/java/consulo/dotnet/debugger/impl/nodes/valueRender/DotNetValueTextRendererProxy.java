@@ -19,8 +19,7 @@ package consulo.dotnet.debugger.impl.nodes.valueRender;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ public class DotNetValueTextRendererProxy implements XValuePresentation.XValueTe
     private Type myType;
     private Object myValue;
 
-    public void renderBack(@Nonnull XValuePresentation.XValueTextRenderer renderer) {
+    public void renderBack(XValuePresentation.XValueTextRenderer renderer) {
         // not rendered
         if (myType == null) {
             return;
@@ -83,57 +82,57 @@ public class DotNetValueTextRendererProxy implements XValuePresentation.XValueTe
     }
 
     @Override
-    public void renderValue(@Nonnull String value) {
+    public void renderValue(String value) {
         set(Type.value, value);
     }
 
     @Override
-    public void renderStringValue(@Nonnull String value) {
+    public void renderStringValue(String value) {
         set(Type.stringValue, value);
     }
 
     @Override
-    public void renderNumericValue(@Nonnull String value) {
+    public void renderNumericValue(String value) {
         set(Type.numericValue, value);
     }
 
     @Override
-    public void renderCharValue(@Nonnull String value) {
+    public void renderCharValue(String value) {
         set(Type.charValue, value);
     }
 
     @Override
-    public void renderKeywordValue(@Nonnull String value) {
+    public void renderKeywordValue(String value) {
         set(Type.keywordValue, value);
     }
 
     @Override
-    public void renderValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
+    public void renderValue(String value, TextAttributesKey key) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength) {
+    public void renderStringValue(String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
+    public void renderStringValue(String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void renderComment(@Nonnull String comment) {
+    public void renderComment(String comment) {
         set(Type.comment, comment);
     }
 
     @Override
-    public void renderSpecialSymbol(@Nonnull String symbol) {
+    public void renderSpecialSymbol(String symbol) {
         set(Type.specialSymbol, symbol);
     }
 
     @Override
-    public void renderError(@Nonnull LocalizeValue error) {
+    public void renderError(LocalizeValue error) {
         set(Type.error, error);
     }
 }

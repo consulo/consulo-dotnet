@@ -27,7 +27,6 @@ import consulo.module.Module;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.collection.SmartList;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,8 +37,7 @@ import java.util.function.BiFunction;
  * @since 2015-01-10
  */
 public abstract class DotNetCoverageRunner extends CoverageRunner {
-    @Nonnull
-    public static List<DotNetCoverageRunner> findAvailableRunners(@Nonnull RunProfile configuration) {
+    public static List<DotNetCoverageRunner> findAvailableRunners(RunProfile configuration) {
         if (!(configuration instanceof DotNetConfigurationWithCoverage dotNetConfigurationWithCoverage)) {
             return Collections.emptyList();
         }
@@ -58,13 +56,12 @@ public abstract class DotNetCoverageRunner extends CoverageRunner {
         return Collections.emptyList();
     }
 
-    @Nonnull
     public abstract BiFunction<DotNetConfigurationWithCoverage, GeneralCommandLine, GeneralCommandLine> getModifierForCommandLine();
 
-    public abstract boolean acceptModuleExtension(@Nonnull DotNetRunModuleExtension<?> moduleExtension);
+    public abstract boolean acceptModuleExtension(DotNetRunModuleExtension<?> moduleExtension);
 
     @Override
-    public boolean acceptsCoverageEngine(@Nonnull CoverageEngine engine) {
+    public boolean acceptsCoverageEngine(CoverageEngine engine) {
         return engine instanceof DotNetCoverageEngine;
     }
 }

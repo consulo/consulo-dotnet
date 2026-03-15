@@ -21,7 +21,6 @@ import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,28 +35,24 @@ public class CfsFileType extends LanguageFileType
 		super(CfsLanguage.INSTANCE);
 	}
 
-	@Nonnull
 	@Override
 	public String getId()
 	{
 		return "CFS";
 	}
 
-	@Nonnull
 	@Override
 	public LocalizeValue getDescription()
 	{
 		return LocalizeValue.empty();
 	}
 
-	@Nonnull
 	@Override
 	public String getDefaultExtension()
 	{
 		return "";
 	}
 
-	@Nonnull
 	@Override
 	public Image getIcon()
 	{

@@ -26,8 +26,7 @@ import consulo.language.version.LanguageVersionWithDefinition;
 import consulo.language.version.LanguageVersionWithParsing;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -41,7 +40,6 @@ public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements L
 		super("INDEX", CfsLanguage.INSTANCE);
 	}
 
-	@Nonnull
 	@Override
 	public Lexer createInnerLexer()
 	{
@@ -60,7 +58,6 @@ public class IndexCfsLanguageVersion extends BaseCfsLanguageVersion implements L
 		return true;
 	}
 
-	@Nonnull
 	@Override
 	public PsiParser createParser()
 	{

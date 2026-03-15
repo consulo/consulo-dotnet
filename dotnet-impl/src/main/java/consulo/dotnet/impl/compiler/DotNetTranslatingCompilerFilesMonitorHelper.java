@@ -24,9 +24,8 @@ import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public class DotNetTranslatingCompilerFilesMonitorHelper implements TranslatingC
 {
 	@Nullable
 	@Override
-	public VirtualFile[] getRootsForModule(@Nonnull Module module)
+	public VirtualFile[] getRootsForModule(Module module)
 	{
 		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
 		if(extension == null || extension.isAllowSourceRoots())

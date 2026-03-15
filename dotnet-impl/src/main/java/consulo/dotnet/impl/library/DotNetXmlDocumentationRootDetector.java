@@ -26,7 +26,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,9 +42,8 @@ public class DotNetXmlDocumentationRootDetector extends RootDetector
 		super(DocumentationOrderRootType.getInstance(), false, ".NET xml documentation");
 	}
 
-	@Nonnull
 	@Override
-	public Collection<VirtualFile> detectRoots(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator)
+	public Collection<VirtualFile> detectRoots(VirtualFile rootCandidate, ProgressIndicator progressIndicator)
 	{
 		if(rootCandidate.getFileSystem() instanceof ArchiveFileSystem)
 		{

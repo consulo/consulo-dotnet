@@ -21,7 +21,6 @@ import consulo.language.psi.stub.IntStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.msil.lang.psi.MsilClassEntry;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,13 +29,11 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class MsilTypeByQNameIndex extends IntStubIndexExtension<MsilClassEntry>
 {
-	@Nonnull
 	public static MsilTypeByQNameIndex getInstance()
 	{
 		return EP_NAME.findExtensionOrFail(MsilTypeByQNameIndex.class);
 	}
 
-	@Nonnull
 	@Override
 	public StubIndexKey<Integer, MsilClassEntry> getKey()
 	{

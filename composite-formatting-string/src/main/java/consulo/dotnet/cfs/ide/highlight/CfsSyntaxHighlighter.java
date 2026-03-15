@@ -24,7 +24,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import consulo.language.lexer.Lexer;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,14 +49,12 @@ public class CfsSyntaxHighlighter extends SyntaxHighlighterBase
 		myLanguageVersion = languageVersion;
 	}
 
-	@Nonnull
 	@Override
 	public Lexer getHighlightingLexer()
 	{
 		return myLanguageVersion.createLexer();
 	}
 
-	@Nonnull
 	@Override
 	public TextAttributesKey[] getTokenHighlights(IElementType elementType)
 	{

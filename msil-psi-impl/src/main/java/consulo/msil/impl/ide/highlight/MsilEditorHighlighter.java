@@ -18,7 +18,6 @@ package consulo.msil.impl.ide.highlight;
 
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilEditorHighlighter extends LexerEditorHighlighter
 {
-	public MsilEditorHighlighter(@Nonnull EditorColorsScheme scheme)
+	public MsilEditorHighlighter(EditorColorsScheme scheme)
 	{
 		super(new MsilSyntaxHighlighter(), scheme);
 	}

@@ -26,7 +26,7 @@ import consulo.language.psi.stub.StubElement;
 import consulo.msil.lang.psi.MsilGenericParameter;
 import consulo.msil.lang.psi.MsilUserType;
 import consulo.util.lang.BitUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -50,7 +50,7 @@ public class MsilGenericParameterStub extends StubBase<DotNetGenericParameter>
 		myName = StringRef.toString(name);
 	}
 
-	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable String name, int modifierMask, @Nullable MsilUserType.Target typeKind)
+	public MsilGenericParameterStub(StubElement parent, IStubElementType elementType, @Nullable String name, int modifierMask, MsilUserType.@Nullable Target typeKind)
 	{
 		super(parent, elementType);
 		myModifierMask = modifierMask;
@@ -84,8 +84,7 @@ public class MsilGenericParameterStub extends StubBase<DotNetGenericParameter>
 		return myName;
 	}
 
-	@Nullable
-	public MsilUserType.Target getTarget()
+	public MsilUserType.@Nullable Target getTarget()
 	{
 		return myTargetIndex == -1 ? null : MsilUserType.Target.VALUES[myTargetIndex];
 	}

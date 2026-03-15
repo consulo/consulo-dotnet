@@ -25,11 +25,10 @@ import consulo.dotnet.psi.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.psi.resolve.DotNetPsiSearcher;
 import consulo.dotnet.psi.resolve.DotNetPsiSearcherExtension;
 import consulo.project.Project;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -54,15 +53,14 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public DotNetNamespaceAsElement findNamespace(@Nonnull String qName, @Nonnull SearchScope scope)
+	public DotNetNamespaceAsElement findNamespace(String qName, SearchScope scope)
 	{
 		return myCacheManager.computeNamespace(myProject.getExtensionList(DotNetPsiSearcherExtension.class), qName, scope);
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
-	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull SearchScope scope)
+	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(String vmQName, SearchScope scope)
 	{
 		return myCacheManager.computeTypes(myProject.getExtensionList(DotNetPsiSearcherExtension.class), vmQName, scope);
 	}

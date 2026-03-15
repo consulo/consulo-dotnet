@@ -30,8 +30,7 @@ import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -45,8 +44,7 @@ public interface DotNetDebuggerSourceLineResolver extends LanguageExtension
 	ExtensionPointCacheKey<DotNetDebuggerSourceLineResolver, ByLanguageValue<DotNetDebuggerSourceLineResolver>> KEY = ExtensionPointCacheKey.create("DotNetDebuggerSourceLineResolver",
 			LanguageOneToOne.build(new DotNetDefaultDebuggerSourceLineResolver()));
 
-	@Nonnull
-	static DotNetDebuggerSourceLineResolver forLanguage(@Nonnull Language language)
+	static DotNetDebuggerSourceLineResolver forLanguage(Language language)
 	{
 		return Application.get().getExtensionPoint(DotNetDebuggerSourceLineResolver.class).getOrBuildCache(KEY).requiredGet(language);
 	}
@@ -54,7 +52,7 @@ public interface DotNetDebuggerSourceLineResolver extends LanguageExtension
 	@Nullable
 	@RequiredReadAction
 	@SuppressWarnings("unused") // used in impl dotnet plugins
-	default String resolveParentVmQName(@Nonnull PsiElement element)
+	default String resolveParentVmQName(PsiElement element)
 	{
 		DotNetCodeBlockOwner codeBlockOwner = PsiTreeUtil.getParentOfType(element, DotNetCodeBlockOwner.class, false);
 		if(codeBlockOwner == null)
@@ -78,9 +76,8 @@ public interface DotNetDebuggerSourceLineResolver extends LanguageExtension
 		return typeDeclaration.getVmQName();
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	default Set<PsiElement> getAllExecutableChildren(@Nonnull PsiElement root)
+	default Set<PsiElement> getAllExecutableChildren(PsiElement root)
 	{
 		return Set.of();
 	}

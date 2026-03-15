@@ -22,7 +22,6 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.impl.psi.PsiFileBase;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,18 +29,16 @@ import jakarta.annotation.Nonnull;
  */
 public class CfsFile extends PsiFileBase
 {
-	public CfsFile(@Nonnull FileViewProvider viewProvider)
+	public CfsFile(FileViewProvider viewProvider)
 	{
 		super(viewProvider, CfsLanguage.INSTANCE);
 	}
 
-	@Nonnull
 	public CfsItem[] getItems()
 	{
 		return findChildrenByClass(CfsItem.class);
 	}
 
-	@Nonnull
 	@Override
 	public FileType getFileType()
 	{

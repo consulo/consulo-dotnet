@@ -23,7 +23,6 @@ import consulo.language.Language;
 import consulo.language.editor.highlight.LanguageVersionableSyntaxHighlighterFactory;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.version.LanguageVersion;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,16 +31,14 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class CfsSyntaxHighlighterFactory extends LanguageVersionableSyntaxHighlighterFactory
 {
-	@Nonnull
 	@Override
 	public Language getLanguage()
 	{
 		return CfsLanguage.INSTANCE;
 	}
 
-	@Nonnull
 	@Override
-	public SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion)
+	public SyntaxHighlighter getSyntaxHighlighter(LanguageVersion languageVersion)
 	{
 		return new CfsSyntaxHighlighter((BaseCfsLanguageVersion)languageVersion);
 	}

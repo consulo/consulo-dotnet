@@ -6,7 +6,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -15,13 +14,11 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface AssemblyModuleService
 {
-	@Nonnull
-	static AssemblyModuleService getInstance(@Nonnull Project project)
+	static AssemblyModuleService getInstance(Project project)
 	{
 		return ServiceManager.getService(project, AssemblyModuleService.class);
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	AssemblyModule resolve(@Nonnull PsiElement element);
+	AssemblyModule resolve(PsiElement element);
 }

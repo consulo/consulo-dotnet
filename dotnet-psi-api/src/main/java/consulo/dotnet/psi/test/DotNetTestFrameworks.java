@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
 public class DotNetTestFrameworks
 {
 	@RequiredReadAction
-	public static boolean isTestType(@Nonnull DotNetTypeDeclaration typeDeclaration)
+	public static boolean isTestType(DotNetTypeDeclaration typeDeclaration)
 	{
 		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensionList())
 		{
@@ -42,7 +41,7 @@ public class DotNetTestFrameworks
 	}
 
 	@RequiredReadAction
-	public static boolean isTestMethod(@Nonnull DotNetLikeMethodDeclaration methodDeclaration)
+	public static boolean isTestMethod(DotNetLikeMethodDeclaration methodDeclaration)
 	{
 		for(DotNetTestFramework framework : DotNetTestFramework.EP_NAME.getExtensionList())
 		{

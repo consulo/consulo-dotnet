@@ -30,9 +30,8 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +46,6 @@ import java.util.Set;
 @ExtensionImpl(id = "dotnet-dependency", order = "after dotnet-compiler")
 public class DotNetDependencyCopier implements FileProcessingCompiler, PackagingCompiler
 {
-	@Nonnull
 	@Override
 	public String getDescription()
 	{
@@ -68,7 +66,6 @@ public class DotNetDependencyCopier implements FileProcessingCompiler, Packaging
 		return true;
 	}
 
-	@Nonnull
 	@Override
 	public ProcessingItem[] getProcessingItems(final CompileContext compileContext)
 	{

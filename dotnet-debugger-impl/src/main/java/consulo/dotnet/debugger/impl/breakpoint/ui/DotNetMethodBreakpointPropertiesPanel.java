@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.util.DialogUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -38,7 +37,6 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 	private JCheckBox myWatchEntryCheckBox;
 	private JCheckBox myWatchExitCheckBox;
 
-	@Nonnull
 	@Override
 	public JComponent getComponent()
 	{
@@ -98,7 +96,7 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 
 	@RequiredUIAccess
 	@Override
-	public void loadFrom(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
+	public void loadFrom(XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 	{
 		DotNetMethodBreakpointProperties properties = breakpoint.getProperties();
 		if(properties == null)
@@ -112,7 +110,7 @@ public class DotNetMethodBreakpointPropertiesPanel extends XBreakpointCustomProp
 
 	@RequiredUIAccess
 	@Override
-	public void saveTo(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
+	public void saveTo(XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint)
 	{
 		DotNetMethodBreakpointProperties properties = breakpoint.getProperties();
 		if(properties == null)

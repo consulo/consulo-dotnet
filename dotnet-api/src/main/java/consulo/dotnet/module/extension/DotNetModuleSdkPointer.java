@@ -27,10 +27,9 @@ import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -51,7 +50,7 @@ public class DotNetModuleSdkPointer implements MutableModuleInheritableNamedPoin
 	}
 
 	@Nullable
-	public String getItemNameFromModule(@Nonnull Module module)
+	public String getItemNameFromModule(Module module)
 	{
 		final DotNetSimpleModuleExtension<?> extension = (DotNetSimpleModuleExtension) ModuleUtilCore.getExtension(module, myModuleExtensionId);
 		if(extension != null)
@@ -62,7 +61,7 @@ public class DotNetModuleSdkPointer implements MutableModuleInheritableNamedPoin
 	}
 
 	@Nullable
-	public Sdk getItemFromModule(@Nonnull Module module)
+	public Sdk getItemFromModule(Module module)
 	{
 		final DotNetSimpleModuleExtension<?> extension = (DotNetSimpleModuleExtension) ModuleUtilCore.getExtension(module, myModuleExtensionId);
 		if(extension != null)
@@ -72,8 +71,7 @@ public class DotNetModuleSdkPointer implements MutableModuleInheritableNamedPoin
 		return null;
 	}
 
-	@Nonnull
-	public NamedPointer<Sdk> getPointer(@Nonnull Project project, @Nonnull String name)
+	public NamedPointer<Sdk> getPointer(Project project, String name)
 	{
 		return SdkUtil.createPointer(name);
 	}

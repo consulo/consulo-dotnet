@@ -21,7 +21,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,21 +41,18 @@ public interface DotNetTypeRef
 			myText = text;
 		}
 
-		@Nonnull
 		@Override
 		public Project getProject()
 		{
 			throw new UnsupportedOperationException(myText);
 		}
 
-		@Nonnull
 		@Override
 		public GlobalSearchScope getResolveScope()
 		{
 			throw new UnsupportedOperationException(myText);
 		}
 
-		@Nonnull
 		@Override
 		public String getVmQName()
 		{
@@ -64,7 +60,6 @@ public interface DotNetTypeRef
 		}
 
 		@RequiredReadAction
-		@Nonnull
 		@Override
 		public DotNetTypeResolveResult resolve()
 		{
@@ -87,14 +82,12 @@ public interface DotNetTypeRef
 			myDelegate = delegate;
 		}
 
-		@Nonnull
 		@Override
 		public GlobalSearchScope getResolveScope()
 		{
 			return myDelegate.getResolveScope();
 		}
 
-		@Nonnull
 		@Override
 		@Deprecated
 		public String getVmQName()
@@ -103,21 +96,18 @@ public interface DotNetTypeRef
 		}
 
 		@RequiredReadAction
-		@Nonnull
 		@Override
 		public DotNetTypeResolveResult resolve()
 		{
 			return myDelegate.resolve();
 		}
 
-		@Nonnull
 		@Override
 		public Project getProject()
 		{
 			return myDelegate.getProject();
 		}
 
-		@Nonnull
 		public DotNetTypeRef getDelegate()
 		{
 			return myDelegate;
@@ -136,24 +126,20 @@ public interface DotNetTypeRef
 
 	DotNetTypeRef AUTO_TYPE = new AdapterInternal("var");
 
-	@Nonnull
 	Project getProject();
 
-	@Nonnull
 	GlobalSearchScope getResolveScope();
 
-	@Nonnull
 	String getVmQName();
 
 	/**
 	 * @return true if type ref equal to `vmQName`. It's optimize version. If this method failed - need call #resolve()
 	 */
-	default boolean isEqualToVmQName(@Nonnull String vmQName)
+	default boolean isEqualToVmQName(String vmQName)
 	{
 		return false;
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	DotNetTypeResolveResult resolve();
 }

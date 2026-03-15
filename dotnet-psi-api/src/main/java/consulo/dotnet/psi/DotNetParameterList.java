@@ -16,7 +16,6 @@
 
 package consulo.dotnet.psi;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
 
@@ -28,9 +27,7 @@ public interface DotNetParameterList extends DotNetElement
 {
 	int getParametersCount();
 
-	@Nonnull
 	DotNetParameter[] getParameters();
 
-	@Nonnull
 	DotNetTypeRef[] getParameterTypeRefs();
 }

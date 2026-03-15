@@ -22,9 +22,7 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.IndexSink;
 import consulo.language.psi.stub.StubElement;
 import consulo.msil.MsilLanguage;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,16 +30,14 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class AbstractMsilStubElementType<T extends StubElement, E extends DotNetElement> extends IStubElementType<T, E> implements IElementTypeAsPsiFactory
 {
-	public AbstractMsilStubElementType(@Nonnull @NonNls String debugName)
+	public AbstractMsilStubElementType(String debugName)
 	{
 		super(debugName, MsilLanguage.INSTANCE);
 	}
 
 	@Override
-	@Nonnull
-	public abstract E createPsi(@Nonnull T t);
+	public abstract E createPsi(T t);
 
-	@Nonnull
 	@Override
 	public String getExternalId()
 	{
@@ -49,7 +45,7 @@ public abstract class AbstractMsilStubElementType<T extends StubElement, E exten
 	}
 
 	@Override
-	public void indexStub(@Nonnull T t, @Nonnull IndexSink indexSink)
+	public void indexStub(T t, IndexSink indexSink)
 	{
 	}
 }

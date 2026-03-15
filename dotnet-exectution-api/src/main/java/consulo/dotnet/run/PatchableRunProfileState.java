@@ -10,8 +10,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.dataholder.UserDataHolderBase;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -30,7 +29,7 @@ public abstract class PatchableRunProfileState extends UserDataHolderBase implem
 	private Consumer<ProcessHandler> myProcessHandlerConsumer = processHandler -> {
 	};
 
-	public PatchableRunProfileState(@Nonnull ExecutionEnvironment executionEnvironment, @Nonnull GeneralCommandLine runCommandLine)
+	public PatchableRunProfileState(ExecutionEnvironment executionEnvironment, GeneralCommandLine runCommandLine)
 	{
 		myExecutionEnvironment = executionEnvironment;
 		myOriginalCommandLine = runCommandLine;
@@ -38,12 +37,11 @@ public abstract class PatchableRunProfileState extends UserDataHolderBase implem
 		myCommandLineForRun = runCommandLine;
 	}
 
-	public void modifyCommandLine(@Nonnull Function<GeneralCommandLine, GeneralCommandLine> function)
+	public void modifyCommandLine(Function<GeneralCommandLine, GeneralCommandLine> function)
 	{
 		myCommandLineForRun = function.apply(myOriginalCommandLine);
 	}
 
-	@Nonnull
 	public GeneralCommandLine getCommandLineForRun()
 	{
 		return myCommandLineForRun;
@@ -51,7 +49,7 @@ public abstract class PatchableRunProfileState extends UserDataHolderBase implem
 
 	@Nullable
 	@Override
-	public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
+	public ExecutionResult execute(Executor executor, ProgramRunner programRunner) throws ExecutionException
 	{
 		if(!new File(myCommandLineForRun.getExePath()).exists())
 		{
@@ -61,22 +59,20 @@ public abstract class PatchableRunProfileState extends UserDataHolderBase implem
 		return executeImpl(executor, programRunner);
 	}
 
-	@Nonnull
-	public <T extends ProcessHandler> T patchHandler(@Nonnull T handler)
+	public <T extends ProcessHandler> T patchHandler(T handler)
 	{
 		myProcessHandlerConsumer.accept(handler);
 		return handler;
 	}
 
 	@Nullable
-	public abstract ExecutionResult executeImpl(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException;
+	public abstract ExecutionResult executeImpl(Executor executor, ProgramRunner programRunner) throws ExecutionException;
 
-	public void setProcessHandlerConsumer(@Nonnull Consumer<ProcessHandler> processHandlerConsumer)
+	public void setProcessHandlerConsumer(Consumer<ProcessHandler> processHandlerConsumer)
 	{
 		myProcessHandlerConsumer = processHandlerConsumer;
 	}
 
-	@Nonnull
 	public ExecutionEnvironment getExecutionEnvironment()
 	{
 		return myExecutionEnvironment;

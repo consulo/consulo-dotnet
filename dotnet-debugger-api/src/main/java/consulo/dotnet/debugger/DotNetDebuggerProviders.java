@@ -6,8 +6,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -17,14 +16,14 @@ public class DotNetDebuggerProviders
 {
 	@Nullable
 	@RequiredReadAction
-	public static DotNetDebuggerProvider findByVirtualFile(@Nonnull Project project, @Nonnull VirtualFile virtualFile)
+	public static DotNetDebuggerProvider findByVirtualFile(Project project, VirtualFile virtualFile)
 	{
 		PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
 		return file != null ? findByPsiFile(file) : null;
 	}
 
 	@Nullable
-	public static DotNetDebuggerProvider findByPsiFile(@Nonnull PsiFile psiFile)
+	public static DotNetDebuggerProvider findByPsiFile(PsiFile psiFile)
 	{
 		return Application.get().getExtensionPoint(DotNetDebuggerProvider.class).findFirstSafe(provider -> provider.isSupported(psiFile));
 	}

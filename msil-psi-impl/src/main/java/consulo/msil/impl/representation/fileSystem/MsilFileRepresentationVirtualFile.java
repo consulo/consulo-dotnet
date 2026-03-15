@@ -33,7 +33,6 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -66,21 +65,18 @@ public class MsilFileRepresentationVirtualFile extends TextLightVirtualFileBase 
 		});
 	}
 
-	@Nonnull
 	@Override
 	public String getPresentablePath()
 	{
 		return myPresentablePath.get();
 	}
 
-	@Nonnull
 	@Override
 	public String getPath()
 	{
 		return myPath;
 	}
 
-	@Nonnull
 	public CharSequence getContent()
 	{
 		if(myContent == null)
@@ -92,7 +88,6 @@ public class MsilFileRepresentationVirtualFile extends TextLightVirtualFileBase 
 		return myContent;
 	}
 
-	@Nonnull
 	private CharSequence buildText()
 	{
 		VirtualFile fileByUrl = VirtualFileManager.getInstance().findFileByUrl(myIlFileUrl);
@@ -118,7 +113,6 @@ public class MsilFileRepresentationVirtualFile extends TextLightVirtualFileBase 
 		return AccessRule.read(() -> myMsilFileRepresentationProvider.buildContent(getName(), (MsilFile) file));
 	}
 
-	@Nonnull
 	@Override
 	public VirtualFileSystem getFileSystem()
 	{

@@ -3,8 +3,7 @@ package consulo.dotnet.module.extension;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -12,9 +11,9 @@ import jakarta.annotation.Nullable;
  */
 public interface DotNetElementQualifierProducer
 {
-	boolean isMyElement(@Nonnull PsiElement element);
+	boolean isMyElement(PsiElement element);
 
 	@Nullable
 	@RequiredReadAction
-	String getQualifiedName(@Nonnull PsiElement element);
+	String getQualifiedName(PsiElement element);
 }

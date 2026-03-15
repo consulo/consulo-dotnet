@@ -12,8 +12,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ public abstract class DotNetNamespaceGeneratePolicy
 		@RequiredReadAction
 		@Nullable
 		@Override
-		public String calculateDirtyNamespace(@Nonnull PsiDirectory directory)
+		public String calculateDirtyNamespace(PsiDirectory directory)
 		{
 			PsiPackage aPackage = PsiPackageManager.getInstance(directory.getProject()).findPackage(directory, DotNetModuleExtension.class);
 			String namespace = null;
@@ -43,7 +42,7 @@ public abstract class DotNetNamespaceGeneratePolicy
 		@RequiredReadAction
 		@Nullable
 		@Override
-		public String calculateDirtyNamespace(@Nonnull PsiDirectory directory)
+		public String calculateDirtyNamespace(PsiDirectory directory)
 		{
 			String namespace = null;
 			Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(directory);
@@ -84,7 +83,7 @@ public abstract class DotNetNamespaceGeneratePolicy
 	@Nullable
 	@RequiredReadAction
 	@UsedInPlugin
-	public String calculateNamespace(@Nonnull PsiDirectory directory)
+	public String calculateNamespace(PsiDirectory directory)
 	{
 		String namespace = calculateDirtyNamespace(directory);
 		if(StringUtil.isEmpty(namespace))
@@ -101,5 +100,5 @@ public abstract class DotNetNamespaceGeneratePolicy
 	}
 
 	@Nullable
-	protected abstract String calculateDirtyNamespace(@Nonnull PsiDirectory directory);
+	protected abstract String calculateDirtyNamespace(PsiDirectory directory);
 }

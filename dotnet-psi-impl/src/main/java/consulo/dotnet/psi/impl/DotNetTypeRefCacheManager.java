@@ -7,7 +7,6 @@ import consulo.component.util.ModificationTracker;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.language.psi.AnyPsiChangeListener;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -20,8 +19,7 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class DotNetTypeRefCacheManager
 {
-	@Nonnull
-	public static DotNetTypeRefCacheManager getInstance(@Nonnull Project project)
+	public static DotNetTypeRefCacheManager getInstance(Project project)
 	{
 		return project.getInstance(DotNetTypeRefCacheManager.class);
 	}
@@ -49,7 +47,6 @@ public class DotNetTypeRefCacheManager
 		});
 	}
 
-	@Nonnull
 	public ModificationTracker getModificationTracker(boolean isPhysical)
 	{
 		return isPhysical ? myPhysicalTracker : myNonPhysicalTracker;

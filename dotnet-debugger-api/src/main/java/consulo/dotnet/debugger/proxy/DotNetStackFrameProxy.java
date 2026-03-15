@@ -16,10 +16,9 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,25 +28,22 @@ public interface DotNetStackFrameProxy
 {
 	int getIndex();
 
-	@Nonnull
 	DotNetThreadProxy getThread();
 
-	@Nonnull
 	Object getEqualityObject();
 
 	@Nullable
 	DotNetSourceLocation getSourceLocation();
 
-	@Nonnull
 	DotNetValueProxy getThisObject() throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException;
 
 	@Nullable
-	DotNetValueProxy getParameterValue(@Nonnull DotNetMethodParameterProxy parameterProxy);
+	DotNetValueProxy getParameterValue(DotNetMethodParameterProxy parameterProxy);
 
-	void setParameterValue(@Nonnull DotNetMethodParameterProxy parameterProxy, @Nonnull DotNetValueProxy valueProxy);
+	void setParameterValue(DotNetMethodParameterProxy parameterProxy, DotNetValueProxy valueProxy);
 
 	@Nullable
-	DotNetValueProxy getLocalValue(@Nonnull DotNetLocalVariableProxy localVariableProxy);
+	DotNetValueProxy getLocalValue(DotNetLocalVariableProxy localVariableProxy);
 
-	void setLocalValue(@Nonnull DotNetLocalVariableProxy localVariableProxy, @Nonnull DotNetValueProxy valueProxy);
+	void setLocalValue(DotNetLocalVariableProxy localVariableProxy, DotNetValueProxy valueProxy);
 }

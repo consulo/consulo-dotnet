@@ -26,42 +26,40 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 11.04.14
  */
 public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueNode {
-    @Nonnull
     private final DotNetFieldOrPropertyProxy myFieldOrPropertyMirror;
     private final DotNetObjectValueProxy myThisObjectMirror;
     @Nullable
     private DotNetStructValueInfo myFieldValue;
 
-    public DotNetFieldOrPropertyValueNode(@Nonnull DotNetDebugContext debuggerContext,
-                                          @Nonnull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
-                                          @Nonnull String name,
-                                          @Nonnull DotNetStackFrameProxy stackFrame,
+    public DotNetFieldOrPropertyValueNode(DotNetDebugContext debuggerContext,
+                                          DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
+                                          String name,
+                                          DotNetStackFrameProxy stackFrame,
                                           @Nullable DotNetObjectValueProxy thisObjectMirror) {
         super(debuggerContext, name, stackFrame);
         myFieldOrPropertyMirror = fieldOrPropertyMirror;
         myThisObjectMirror = thisObjectMirror;
     }
 
-    public DotNetFieldOrPropertyValueNode(@Nonnull DotNetDebugContext debuggerContext,
-                                          @Nonnull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
-                                          @Nonnull DotNetStackFrameProxy threadMirror,
+    public DotNetFieldOrPropertyValueNode(DotNetDebugContext debuggerContext,
+                                          DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
+                                          DotNetStackFrameProxy threadMirror,
                                           @Nullable DotNetObjectValueProxy thisObjectMirror) {
         this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.getName(), threadMirror, thisObjectMirror);
     }
 
-    public DotNetFieldOrPropertyValueNode(@Nonnull DotNetDebugContext debuggerContext,
-                                          @Nonnull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
-                                          @Nonnull DotNetStackFrameProxy stackFrame,
+    public DotNetFieldOrPropertyValueNode(DotNetDebugContext debuggerContext,
+                                          DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
+                                          DotNetStackFrameProxy stackFrame,
                                           @Nullable DotNetObjectValueProxy thisObjectMirror,
-                                          @Nonnull DotNetStructValueInfo fieldValue) {
+                                          DotNetStructValueInfo fieldValue) {
         this(debuggerContext, fieldOrPropertyMirror, fieldOrPropertyMirror.getName(), stackFrame, thisObjectMirror);
         myFieldValue = fieldValue;
     }
@@ -86,7 +84,6 @@ public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueN
         return super.getModifier();
     }
 
-    @Nonnull
     @Override
     public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue) {
         boolean isStatic = myFieldOrPropertyMirror.isStatic();
@@ -131,7 +128,7 @@ public class DotNetFieldOrPropertyValueNode extends DotNetAbstractVariableValueN
     }
 
     @Override
-    public void setValueForVariableImpl(@Nonnull DotNetValueProxy value) {
+    public void setValueForVariableImpl(DotNetValueProxy value) {
         if (myFieldValue != null) {
             myFieldValue.setValue(value);
         }

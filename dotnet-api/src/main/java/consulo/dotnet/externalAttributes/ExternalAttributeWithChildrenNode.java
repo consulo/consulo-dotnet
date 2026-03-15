@@ -18,7 +18,6 @@ package consulo.dotnet.externalAttributes;
 
 import java.util.List;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,6 +25,5 @@ import jakarta.annotation.Nonnull;
  */
 public interface ExternalAttributeWithChildrenNode extends ExternalAttributeSimpleNode
 {
-	@Nonnull
 	List<ExternalAttributeSimpleNode> getChildren();
 }

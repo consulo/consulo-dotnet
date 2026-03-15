@@ -17,7 +17,6 @@
 package consulo.dotnet.psi;
 
 import consulo.annotation.access.RequiredReadAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +24,6 @@ import jakarta.annotation.Nonnull;
  */
 public interface DotNetArrayType extends DotNetType
 {
-	@Nonnull
 	@RequiredReadAction
 	DotNetType getInnerType();
 }

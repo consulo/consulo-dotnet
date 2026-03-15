@@ -6,7 +6,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -28,33 +27,29 @@ public interface DotNetNamespaceAsElement extends DotNetQualifiedElement
 		NONE
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	default Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull ChildrenFilter filter)
+	default Collection<PsiElement> getChildren(GlobalSearchScope globalSearchScope, ChildrenFilter filter)
 	{
 		return getChildren(globalSearchScope, DotNetTypeTransformer.INSTANCE, filter);
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull Function<PsiElement, PsiElement> transformer, @Nonnull ChildrenFilter filter);
-
-	@Nonnull
-	@RequiredReadAction
-	Collection<PsiElement> findChildren(@Nonnull String name, @Nonnull GlobalSearchScope globalSearchScope, @Nonnull ChildrenFilter filter);
-
-	@Nonnull
-	@RequiredReadAction
-	Collection<PsiElement> findChildren(@Nonnull String name,
-										@Nonnull GlobalSearchScope globalSearchScope,
-										@Nonnull Function<PsiElement, PsiElement> transformer,
-										@Nonnull ChildrenFilter filter);
+	Collection<PsiElement> getChildren(GlobalSearchScope globalSearchScope, Function<PsiElement, PsiElement> transformer, ChildrenFilter filter);
 
 	@RequiredReadAction
-	default boolean processChildren(@Nonnull GlobalSearchScope globalSearchScope,
-									@Nonnull Function<PsiElement, PsiElement> transformer,
-									@Nonnull ChildrenFilter filter,
-									@Nonnull Predicate<PsiElement> processor)
+	Collection<PsiElement> findChildren(String name, GlobalSearchScope globalSearchScope, ChildrenFilter filter);
+
+	@RequiredReadAction
+	Collection<PsiElement> findChildren(String name,
+										GlobalSearchScope globalSearchScope,
+										Function<PsiElement, PsiElement> transformer,
+										ChildrenFilter filter);
+
+	@RequiredReadAction
+	default boolean processChildren(GlobalSearchScope globalSearchScope,
+									Function<PsiElement, PsiElement> transformer,
+									ChildrenFilter filter,
+									Predicate<PsiElement> processor)
 	{
 		Collection<PsiElement> children = getChildren(globalSearchScope, transformer, filter);
 

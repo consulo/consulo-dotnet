@@ -25,8 +25,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public class DotNetSourcePositionByExecutableElement implements XSourcePosition,
 	private XSourcePosition myOriginalPosition;
 	private PsiElement myExecutableElement;
 
-	public DotNetSourcePositionByExecutableElement(@Nonnull XSourcePosition originalPosition, @Nonnull PsiElement executableElement)
+	public DotNetSourcePositionByExecutableElement(XSourcePosition originalPosition, PsiElement executableElement)
 	{
 		myOriginalPosition = originalPosition;
 		myExecutableElement = executableElement;
@@ -63,16 +62,14 @@ public class DotNetSourcePositionByExecutableElement implements XSourcePosition,
 		return myOriginalPosition.getOffset();
 	}
 
-	@Nonnull
 	@Override
 	public VirtualFile getFile()
 	{
 		return myOriginalPosition.getFile();
 	}
 
-	@Nonnull
 	@Override
-	public Navigatable createNavigatable(@Nonnull Project project)
+	public Navigatable createNavigatable(Project project)
 	{
 		return myOriginalPosition.createNavigatable(project);
 	}

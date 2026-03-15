@@ -25,8 +25,7 @@ import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,7 +44,6 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public String getVmQName()
 	{
@@ -69,7 +67,6 @@ public class MsilClassGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeResolveResult resolveResult()
 	{

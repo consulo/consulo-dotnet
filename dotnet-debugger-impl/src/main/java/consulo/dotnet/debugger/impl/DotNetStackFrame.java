@@ -54,8 +54,7 @@ import consulo.util.lang.Couple;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -246,11 +245,11 @@ public class DotNetStackFrame extends XStackFrame {
 
     @Override
     @RequiredReadAction
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
         myDebuggerContext.invoke(() -> computeChildrenImpl(node));
     }
 
-    private void computeChildrenImpl(@Nonnull XCompositeNode node) {
+    private void computeChildrenImpl(XCompositeNode node) {
         DotNetVirtualMachineUtil.checkCallForUIThread();
 
         final XValueChildrenList childrenList = new XValueChildrenList();

@@ -25,8 +25,7 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,8 +38,7 @@ import java.util.function.Function;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class DotNetPsiSearcher implements DotNetPsiSearcherExtension
 {
-	@Nonnull
-	public static DotNetPsiSearcher getInstance(@Nonnull Project project)
+	public static DotNetPsiSearcher getInstance(Project project)
 	{
 		return project.getInstance(DotNetPsiSearcher.class);
 	}
@@ -52,7 +50,6 @@ public abstract class DotNetPsiSearcher implements DotNetPsiSearcherExtension
 		STRUCT,
 		UNKNOWN;
 
-		@Nonnull
 		public static TypeResoleKind[] VALUES = values();
 	}
 
@@ -60,21 +57,19 @@ public abstract class DotNetPsiSearcher implements DotNetPsiSearcherExtension
 
 	@Nullable
 	@RequiredReadAction
-	public DotNetNamespaceAsElement findNamespace(@Nonnull String qName, @Nonnull SearchScope scope)
+	public DotNetNamespaceAsElement findNamespace(String qName, SearchScope scope)
 	{
 		return null;
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	public DotNetTypeDeclaration[] findTypes(@Nonnull String vmQName, @Nonnull SearchScope scope)
+	public DotNetTypeDeclaration[] findTypes(String vmQName, SearchScope scope)
 	{
 		return findTypes(vmQName, scope, DEFAULT_TRANSFORMER);
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	public DotNetTypeDeclaration[] findTypes(@Nonnull String vmQName, @Nonnull SearchScope scope, @Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	public DotNetTypeDeclaration[] findTypes(String vmQName, SearchScope scope, Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		Collection<? extends DotNetTypeDeclaration> declarations = findTypesImpl(vmQName, scope);
 		if(declarations.isEmpty())
@@ -91,20 +86,19 @@ public abstract class DotNetPsiSearcher implements DotNetPsiSearcherExtension
 		return ContainerUtil.toArray(list, DotNetTypeDeclaration.ARRAY_FACTORY);
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull SearchScope scope);
+	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(String vmQName, SearchScope scope);
 
 	@Nullable
 	@RequiredReadAction
-	public DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull SearchScope scope)
+	public DotNetTypeDeclaration findType(String vmQName, SearchScope scope)
 	{
 		return findType(vmQName, scope, DEFAULT_TRANSFORMER);
 	}
 
 	@Nullable
 	@RequiredReadAction
-	public DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull SearchScope scope, @Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	public DotNetTypeDeclaration findType(String vmQName, SearchScope scope, Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		DotNetTypeDeclaration[] types = findTypes(vmQName, scope, transformer);
 		return ArrayUtil.getFirstElement(types);

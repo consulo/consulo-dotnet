@@ -22,8 +22,7 @@ import consulo.language.psi.stub.StubIndexKey;
 import consulo.language.psi.util.QualifiedName;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,23 +32,21 @@ public class DotNetNamespaceStubUtil
 {
 	public static String ROOT_FOR_INDEXING = "<root>";
 
-	@Nonnull
 	public static String getIndexableNamespace(@Nullable String namespace)
 	{
 		return StringUtil.notNullizeIfEmpty(namespace, ROOT_FOR_INDEXING);
 	}
 
-	@Nonnull
-	public static String getIndexableNamespace(@Nonnull QualifiedName qualifiedName)
+	public static String getIndexableNamespace(QualifiedName qualifiedName)
 	{
 		return StringUtil.notNullizeIfEmpty(qualifiedName.join("."), ROOT_FOR_INDEXING);
 	}
 
-	public static void indexStub(@Nonnull IndexSink indexSink,
-			@Nonnull StubIndexKey<String, ? extends DotNetQualifiedElement> elementByQNameKey,
-			@Nonnull StubIndexKey<String, ? extends DotNetQualifiedElement> namespaceKey,
+	public static void indexStub(IndexSink indexSink,
+			StubIndexKey<String, ? extends DotNetQualifiedElement> elementByQNameKey,
+			StubIndexKey<String, ? extends DotNetQualifiedElement> namespaceKey,
 			@Nullable String namespace,
-			@Nonnull String name)
+			String name)
 	{
 		String indexableNamespace = getIndexableNamespace(namespace);
 

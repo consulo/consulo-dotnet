@@ -21,7 +21,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,28 +35,24 @@ public class MsilFileType extends LanguageFileType
 		super(MsilLanguage.INSTANCE);
 	}
 
-	@Nonnull
 	@Override
 	public String getId()
 	{
 		return "MSIL";
 	}
 
-	@Nonnull
 	@Override
 	public LocalizeValue getDescription()
 	{
 		return LocalizeValue.localizeTODO("Microsoft Intermediate Language files");
 	}
 
-	@Nonnull
 	@Override
 	public String getDefaultExtension()
 	{
 		return "il";
 	}
 
-	@Nonnull
 	@Override
 	public Image getIcon()
 	{

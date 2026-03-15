@@ -29,7 +29,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -38,8 +37,7 @@ import java.io.File;
  */
 public class DotNetMacroUtil
 {
-	@Nonnull
-	public static DataContext createContext(@Nonnull Module module, boolean debugSymbols)
+	public static DataContext createContext(Module module, boolean debugSymbols)
 	{
 		DataContext.Builder builder = DataContext.builder();
 		builder = builder.add(Project.KEY, module.getProject());
@@ -51,14 +49,12 @@ public class DotNetMacroUtil
 		return builder.build();
 	}
 
-	@Nonnull                                                                   
-	public static String expandOutputFile(@Nonnull DotNetRunModuleExtension<?> extension)
+	public static String expandOutputFile(DotNetRunModuleExtension<?> extension)
 	{
 		return expandOutputFile(extension, false);
 	}
 
-	@Nonnull
-	public static String expandOutputFile(@Nonnull DotNetRunModuleExtension<?> extension, boolean debugSymbols)
+	public static String expandOutputFile(DotNetRunModuleExtension<?> extension, boolean debugSymbols)
 	{
 		String outputDir = FileUtil.toSystemDependentName(extension.getOutputDir());
 		if(StringUtil.isEmpty(outputDir))
@@ -78,8 +74,7 @@ public class DotNetMacroUtil
 		}
 	}
 
-	@Nonnull
-	public static String expandOutputDir(@Nonnull DotNetRunModuleExtension<?> extension)
+	public static String expandOutputDir(DotNetRunModuleExtension<?> extension)
 	{
 		String outputDir = FileUtil.toSystemDependentName(extension.getOutputDir());
 		if(StringUtil.isEmpty(outputDir))
@@ -92,8 +87,7 @@ public class DotNetMacroUtil
 		return expand(extension.getModule(), outputDir, false);
 	}
 
-	@Nonnull
-	public static String expand(@Nonnull Module module, @Nonnull String path, boolean debugSymbols)
+	public static String expand(Module module, String path, boolean debugSymbols)
 	{
 		String newPath;
 		try

@@ -2,7 +2,6 @@ package consulo.dotnet.run;
 
 import consulo.process.ProcessConsoleType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -10,6 +9,5 @@ import jakarta.annotation.Nonnull;
  */
 public interface DotNetConfigurationConsoleTypeProvider
 {
-	@Nonnull
 	ProcessConsoleType getConsoleType();
 }

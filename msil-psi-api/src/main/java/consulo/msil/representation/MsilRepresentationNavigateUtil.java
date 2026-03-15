@@ -24,7 +24,6 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -37,14 +36,14 @@ public class MsilRepresentationNavigateUtil
 
 	@RequiredReadAction
 	@UsedInPlugin
-	public static void navigateToRepresentation(@Nonnull final PsiElement msilElement, @Nonnull FileType fileType)
+	public static void navigateToRepresentation(final PsiElement msilElement, FileType fileType)
 	{
 		navigateToRepresentation(msilElement, fileType, DEFAULT_NAVIGATOR);
 	}
 
 	@RequiredReadAction
 	@UsedInPlugin
-	public static void navigateToRepresentation(@Nonnull final PsiElement msilElement, @Nonnull FileType fileType, @Nonnull Consumer<PsiFile> consumer)
+	public static void navigateToRepresentation(final PsiElement msilElement, FileType fileType, Consumer<PsiFile> consumer)
 	{
 		MsilFileRepresentationManager manager = MsilFileRepresentationManager.getInstance(msilElement.getProject());
 

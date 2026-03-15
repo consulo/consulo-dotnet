@@ -19,9 +19,8 @@ package consulo.dotnet.psi.impl.externalAttributes;
 import consulo.dotnet.externalAttributes.ExternalAttributeHolder;
 import consulo.dotnet.externalAttributes.ExternalAttributeWithChildrenNode;
 import consulo.dotnet.psi.impl.externalAttributes.nodes.ExternalAttributeWithChildrenCompositeNodeImpl;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,14 +32,14 @@ public class CompositeExternalAttributeHolder implements ExternalAttributeHolder
 {
 	private final List<ExternalAttributeHolder> myHolders;
 
-	public CompositeExternalAttributeHolder(@Nonnull List<ExternalAttributeHolder> holders)
+	public CompositeExternalAttributeHolder(List<ExternalAttributeHolder> holders)
 	{
 		myHolders = holders;
 	}
 
 	@Nullable
 	@Override
-	public ExternalAttributeWithChildrenNode findClassNode(@Nonnull String qname)
+	public ExternalAttributeWithChildrenNode findClassNode(String qname)
 	{
 		List<ExternalAttributeWithChildrenNode> list = new ArrayList<>();
 		for(ExternalAttributeHolder holder : myHolders)

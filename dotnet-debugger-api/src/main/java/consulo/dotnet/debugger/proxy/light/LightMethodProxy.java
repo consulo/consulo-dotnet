@@ -21,8 +21,7 @@ import consulo.dotnet.debugger.proxy.*;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -52,37 +51,34 @@ public class LightMethodProxy implements DotNetMethodProxy
 	}
 
 	@Override
-	public boolean isAnnotatedBy(@Nonnull String attributeVmQName)
+	public boolean isAnnotatedBy(String attributeVmQName)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeProxy getDeclarationType()
 	{
 		return myTypeProxy;
 	}
 
-	@Nonnull
 	@Override
 	public DotNetMethodParameterProxy[] getParameters()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@Nonnull
 	@Override
-	public DotNetLocalVariableProxy[] getLocalVariables(@Nonnull DotNetStackFrameProxy frameProxy)
+	public DotNetLocalVariableProxy[] getLocalVariables(DotNetStackFrameProxy frameProxy)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	@Nullable
 	@Override
-	public DotNetValueProxy invoke(@Nonnull DotNetStackFrameProxy frameProxy,
+	public DotNetValueProxy invoke(DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy thisObject,
-			@Nonnull DotNetValueProxy... arguments) throws DotNetThrowValueException
+			DotNetValueProxy... arguments) throws DotNetThrowValueException
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -90,12 +86,11 @@ public class LightMethodProxy implements DotNetMethodProxy
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public PsiElement findExecutableElementFromDebugInfo(@Nonnull Project project, int executableChildrenAtLineIndex)
+	public PsiElement findExecutableElementFromDebugInfo(Project project, int executableChildrenAtLineIndex)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@Nonnull
 	@Override
 	public String getName()
 	{

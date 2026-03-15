@@ -1,7 +1,6 @@
 package consulo.dotnet.debugger.proxy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
@@ -14,13 +13,12 @@ public class DotNetMethodInvokeResult
 	private DotNetValueProxy myResult;
 	private DotNetValueProxy myOutThis;
 
-	public DotNetMethodInvokeResult(@Nonnull DotNetValueProxy result, @Nullable DotNetValueProxy outThis)
+	public DotNetMethodInvokeResult(DotNetValueProxy result, @Nullable DotNetValueProxy outThis)
 	{
 		myResult = result;
 		myOutThis = outThis;
 	}
 
-	@Nonnull
 	public DotNetValueProxy getResult()
 	{
 		return myResult;

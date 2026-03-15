@@ -27,8 +27,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.BiFunction;
 
 /**
@@ -38,7 +37,6 @@ import java.util.function.BiFunction;
 @ExtensionImpl
 public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 {
-	@Nonnull
 	@Override
 	public String getRunnerId()
 	{
@@ -46,7 +44,7 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 	}
 
 	@Override
-	public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile)
+	public boolean canRun(String executorId, RunProfile profile)
 	{
 		if(!CoverageExecutor.EXECUTOR_ID.equals(executorId))
 		{
@@ -80,7 +78,7 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 
 	@Nullable
 	@Override
-	protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull final ExecutionEnvironment environment) throws ExecutionException
+	protected RunContentDescriptor doExecute(RunProfileState state, final ExecutionEnvironment environment) throws ExecutionException
 	{
 		if(state instanceof PatchableRunProfileState)
 		{

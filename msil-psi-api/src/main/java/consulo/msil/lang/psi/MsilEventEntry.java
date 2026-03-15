@@ -16,7 +16,6 @@
 
 package consulo.msil.lang.psi;
 
-import jakarta.annotation.Nonnull;
 import consulo.dotnet.psi.DotNetEventDeclaration;
 
 /**
@@ -25,6 +24,5 @@ import consulo.dotnet.psi.DotNetEventDeclaration;
  */
 public interface MsilEventEntry extends MsilEntry, DotNetEventDeclaration
 {
-	@Nonnull
 	String getNameFromBytecode();
 }

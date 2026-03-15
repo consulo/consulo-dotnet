@@ -16,8 +16,7 @@
 
 package consulo.dotnet.debugger.proxy.light;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import consulo.dotnet.debugger.proxy.DotNetFieldProxy;
 import consulo.dotnet.debugger.proxy.DotNetMethodProxy;
 import consulo.dotnet.debugger.proxy.DotNetPropertyProxy;
@@ -41,7 +40,7 @@ public class LightTypeProxy implements DotNetTypeProxy
 	}
 
 	@Override
-	public boolean isAnnotatedBy(@Nonnull String attributeVmQName)
+	public boolean isAnnotatedBy(String attributeVmQName)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -53,21 +52,18 @@ public class LightTypeProxy implements DotNetTypeProxy
 		throw new UnsupportedOperationException();
 	}
 
-	@Nonnull
 	@Override
 	public String getName()
 	{
 		return myName;
 	}
 
-	@Nonnull
 	@Override
 	public String getFullName()
 	{
 		return myFullName;
 	}
 
-	@Nonnull
 	@Override
 	public String[] getGenericParameters()
 	{
@@ -87,28 +83,24 @@ public class LightTypeProxy implements DotNetTypeProxy
 		throw new UnsupportedOperationException();
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeProxy[] getInterfaces()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@Nonnull
 	@Override
 	public DotNetFieldProxy[] getFields()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@Nonnull
 	@Override
 	public DotNetPropertyProxy[] getProperties()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	@Nonnull
 	@Override
 	public DotNetMethodProxy[] getMethods()
 	{
@@ -123,13 +115,13 @@ public class LightTypeProxy implements DotNetTypeProxy
 
 	@Nullable
 	@Override
-	public DotNetMethodProxy findMethodByName(@Nonnull String name, boolean deep, DotNetTypeProxy... params)
+	public DotNetMethodProxy findMethodByName(String name, boolean deep, DotNetTypeProxy... params)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public boolean isAssignableFrom(@Nonnull DotNetTypeProxy otherType)
+	public boolean isAssignableFrom(DotNetTypeProxy otherType)
 	{
 		throw new UnsupportedOperationException();
 	}

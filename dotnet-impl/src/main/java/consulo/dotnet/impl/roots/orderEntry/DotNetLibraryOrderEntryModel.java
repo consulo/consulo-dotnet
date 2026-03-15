@@ -15,8 +15,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -28,9 +27,8 @@ public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel
 {
 	private RootProvider myRootProvider = new RootProviderBase()
 	{
-		@Nonnull
 		@Override
-		public String[] getUrls(@Nonnull OrderRootType rootType)
+		public String[] getUrls(OrderRootType rootType)
 		{
 			DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
 			if(extension == null)
@@ -51,9 +49,8 @@ public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel
 			return urls;
 		}
 
-		@Nonnull
 		@Override
-		public VirtualFile[] getFiles(@Nonnull OrderRootType rootType)
+		public VirtualFile[] getFiles(OrderRootType rootType)
 		{
 			DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
 			if(extension == null)
@@ -104,7 +101,7 @@ public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel
 	}
 
 	@Override
-	public boolean isEquivalentTo(@Nonnull CustomOrderEntryModel model)
+	public boolean isEquivalentTo(CustomOrderEntryModel model)
 	{
 		return model instanceof DotNetLibraryOrderEntryModel && Comparing.equal(myName, model.getPresentableName());
 	}
@@ -116,12 +113,11 @@ public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel
 	}
 
 	@Override
-	public void bind(@Nonnull ModuleRootLayer moduleRootLayer)
+	public void bind(ModuleRootLayer moduleRootLayer)
 	{
 		myModuleRootLayer = moduleRootLayer;
 	}
 
-	@Nonnull
 	@Override
 	public String getPresentableName()
 	{
@@ -134,14 +130,12 @@ public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel
 		return myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class) != null;
 	}
 
-	@Nonnull
 	@Override
 	public RootProvider getRootProvider()
 	{
 		return myRootProvider;
 	}
 
-	@Nonnull
 	@Override
 	public CustomOrderEntryModel clone()
 	{

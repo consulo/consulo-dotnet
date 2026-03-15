@@ -16,11 +16,10 @@
 
 package consulo.msil.lang.psi;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetPropertyDeclaration;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,6 @@ import jakarta.annotation.Nonnull;
  */
 public interface MsilPropertyEntry extends MsilEntry, DotNetPropertyDeclaration
 {
-	@Nonnull
 	@RequiredReadAction
 	MsilCustomAttribute[] getAttributes();
 

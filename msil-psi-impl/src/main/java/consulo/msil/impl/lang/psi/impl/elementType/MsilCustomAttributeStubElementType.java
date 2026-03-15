@@ -27,7 +27,6 @@ import consulo.msil.lang.psi.MsilCustomAttribute;
 import consulo.msil.impl.lang.psi.impl.MsilCustomAttributeImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilCustomAttributeStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -41,23 +40,21 @@ public class MsilCustomAttributeStubElementType extends AbstractMsilStubElementT
 		super("MSIL_CUSTOM_ATTRIBTE");
 	}
 
-	@Nonnull
 	@Override
-	public MsilCustomAttribute createElement(@Nonnull ASTNode astNode)
+	public MsilCustomAttribute createElement(ASTNode astNode)
 	{
 		return new MsilCustomAttributeImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public MsilCustomAttribute createPsi(@Nonnull MsilCustomAttributeStub msilCustomAttributeStub)
+	public MsilCustomAttribute createPsi(MsilCustomAttributeStub msilCustomAttributeStub)
 	{
 		return new MsilCustomAttributeImpl(msilCustomAttributeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilCustomAttributeStub createStub(@Nonnull MsilCustomAttribute msilCustomAttribute, StubElement stubElement)
+	public MsilCustomAttributeStub createStub(MsilCustomAttribute msilCustomAttribute, StubElement stubElement)
 	{
 		DotNetType type = msilCustomAttribute.getType();
 		String ref = type == null ? null : type.getText();
@@ -65,14 +62,13 @@ public class MsilCustomAttributeStubElementType extends AbstractMsilStubElementT
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilCustomAttributeStub msilCustomAttributeStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilCustomAttributeStub msilCustomAttributeStub, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilCustomAttributeStub.getTypeRef());
 	}
 
-	@Nonnull
 	@Override
-	public MsilCustomAttributeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilCustomAttributeStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilCustomAttributeStub(stubElement, this, ref);

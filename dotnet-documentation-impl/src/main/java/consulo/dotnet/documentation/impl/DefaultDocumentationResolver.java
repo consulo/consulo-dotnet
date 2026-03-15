@@ -28,8 +28,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.emonic.base.documentation.IDocumentation;
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public IDocumentation resolveDocumentation(@Nonnull List<VirtualFile> orderEntryFiles, @Nonnull PsiElement element)
+	public IDocumentation resolveDocumentation(List<VirtualFile> orderEntryFiles, PsiElement element)
 	{
 		for(VirtualFile orderEntryFile : orderEntryFiles)
 		{
@@ -59,7 +58,7 @@ public class DefaultDocumentationResolver implements DotNetDocumentationResolver
 
 	@Nullable
 	private IDocumentation resolveDocumentation(
-			@Nonnull VirtualFile virtualFile, @Nonnull PsiElement element)
+			VirtualFile virtualFile, PsiElement element)
 	{
 		if(!"xml".equals(virtualFile.getExtension()))
 		{

@@ -8,7 +8,6 @@ import consulo.msil.lang.psi.MsilCustomAttributeSignature;
 import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilCustomAttributeSignatureStub;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -16,12 +15,12 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilCustomAttributeSignatureImpl extends MsilStubElementImpl<MsilCustomAttributeSignatureStub> implements MsilCustomAttributeSignature
 {
-	public MsilCustomAttributeSignatureImpl(@Nonnull ASTNode node)
+	public MsilCustomAttributeSignatureImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilCustomAttributeSignatureImpl(@Nonnull MsilCustomAttributeSignatureStub stub, @Nonnull IStubElementType nodeType)
+	public MsilCustomAttributeSignatureImpl(MsilCustomAttributeSignatureStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -32,7 +31,6 @@ public class MsilCustomAttributeSignatureImpl extends MsilStubElementImpl<MsilCu
 		visitor.visitCustomAttributeSignature(this);
 	}
 
-	@Nonnull
 	@Override
 	@RequiredReadAction
 	public byte[] getBytes()

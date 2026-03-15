@@ -28,7 +28,6 @@ import consulo.project.content.scope.ProjectAwareSearchScope;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -51,9 +50,8 @@ public class DotNetTypeChooserFactoryImpl extends DotNetTypeChooserFactory
 		myTreeClassChooserFactory = treeClassChooserFactory;
 	}
 
-	@Nonnull
 	@Override
-	public TreeChooser<DotNetTypeDeclaration> createChooser(@Nonnull ProjectAwareSearchScope scope)
+	public TreeChooser<DotNetTypeDeclaration> createChooser(ProjectAwareSearchScope scope)
 	{
 		TreeClassChooserFactory.Builder<DotNetTypeDeclaration> builder = myTreeClassChooserFactory.newChooser(DotNetTypeDeclaration.class);
 		builder.withTitle(LocalizeValue.localizeTODO("Choose Type"));
@@ -62,9 +60,8 @@ public class DotNetTypeChooserFactoryImpl extends DotNetTypeChooserFactory
 		return builder.build();
 	}
 
-	@Nonnull
 	@Override
-	public TreeChooser<DotNetTypeDeclaration> createInheriableChooser(@Nonnull String baseVmQName, @Nonnull ProjectAwareSearchScope scope)
+	public TreeChooser<DotNetTypeDeclaration> createInheriableChooser(String baseVmQName, ProjectAwareSearchScope scope)
 	{
 		TreeClassChooserFactory.Builder<DotNetTypeDeclaration> builder = myTreeClassChooserFactory.newChooser(DotNetTypeDeclaration.class);
 		builder.withTitle(LocalizeValue.localizeTODO("Choose Type"));

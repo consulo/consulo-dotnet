@@ -42,8 +42,7 @@ import consulo.localize.LocalizeValue;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -51,10 +50,10 @@ import jakarta.annotation.Nullable;
  */
 public class DotNetBreakpointEngine {
     @Nullable
-    private XValue evaluateBreakpointExpression(@Nonnull final DotNetStackFrameProxy frameProxy,
-                                                @Nonnull final XLineBreakpoint<?> breakpoint,
+    private XValue evaluateBreakpointExpression(final DotNetStackFrameProxy frameProxy,
+                                                final XLineBreakpoint<?> breakpoint,
                                                 @Nullable final XExpression conditionExpression,
-                                                @Nonnull final DotNetDebugContext debugContext) {
+                                                final DotNetDebugContext debugContext) {
         if (conditionExpression == null) {
             return null;
         }
@@ -85,12 +84,12 @@ public class DotNetBreakpointEngine {
                 final SimpleReference<XValue> valueRef = SimpleReference.create();
                 provider.evaluate(frameProxy, debugContext, conditionExpression.getExpression(), elementAt, new XDebuggerEvaluator.XEvaluationCallback() {
                     @Override
-                    public void evaluated(@Nonnull XValue result) {
+                    public void evaluated(XValue result) {
                         valueRef.set(result);
                     }
 
                     @Override
-                    public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+                    public void errorOccurred(LocalizeValue errorMessage) {
                     }
                 }, XDebuggerUtil.getInstance().createPositionByElement(elementAt));
                 return valueRef.get();
@@ -100,7 +99,7 @@ public class DotNetBreakpointEngine {
     }
 
     @Nullable
-    public String tryEvaluateBreakpointLogMessage(@Nonnull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws
+    public String tryEvaluateBreakpointLogMessage(DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws
         DotNetNotSuspendedException {
         XExpression logExpressionObject = breakpoint.getLogExpressionObject();
         if (logExpressionObject == null) {
@@ -131,7 +130,7 @@ public class DotNetBreakpointEngine {
         return null;
     }
 
-    public boolean tryEvaluateBreakpointCondition(@Nonnull DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception {
+    public boolean tryEvaluateBreakpointCondition(DotNetThreadProxy threadProxy, final XLineBreakpoint<?> breakpoint, final DotNetDebugContext debugContext) throws Exception {
         final XExpression conditionExpression = breakpoint.getConditionExpression();
         if (conditionExpression == null) {
             return true;

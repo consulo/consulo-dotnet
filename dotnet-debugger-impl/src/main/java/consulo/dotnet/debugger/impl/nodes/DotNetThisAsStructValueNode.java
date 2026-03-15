@@ -28,8 +28,7 @@ import consulo.execution.debug.frame.XValueModifier;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -38,14 +37,13 @@ import java.util.Map;
  * @since 05.01.16
  */
 public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode {
-    @Nonnull
     private final DotNetTypeProxy myTypeMirror;
     private final DotNetStructValueProxy myValue;
 
-    public DotNetThisAsStructValueNode(@Nonnull DotNetDebugContext debuggerContext,
-                                       @Nonnull DotNetStackFrameProxy frameProxy,
-                                       @Nonnull DotNetTypeProxy typeMirror,
-                                       @Nonnull DotNetStructValueProxy value) {
+    public DotNetThisAsStructValueNode(DotNetDebugContext debuggerContext,
+                                       DotNetStackFrameProxy frameProxy,
+                                       DotNetTypeProxy typeMirror,
+                                       DotNetStructValueProxy value) {
         super(debuggerContext, "this", frameProxy);
         myTypeMirror = typeMirror;
         myValue = value;
@@ -57,7 +55,6 @@ public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
         return null;
     }
 
-    @Nonnull
     @Override
     public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue) {
         return ExecutionDebugIconGroup.nodeValue();
@@ -70,11 +67,11 @@ public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
     }
 
     @Override
-    public void setValueForVariableImpl(@Nonnull DotNetValueProxy value) {
+    public void setValueForVariableImpl(DotNetValueProxy value) {
     }
 
     @Override
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
         final XValueChildrenList childrenList = new XValueChildrenList();
 
         Map<DotNetFieldOrPropertyProxy, DotNetValueProxy> map = myValue.getValues();
@@ -90,7 +87,6 @@ public class DotNetThisAsStructValueNode extends DotNetAbstractVariableValueNode
         node.addChildren(childrenList, true);
     }
 
-    @Nonnull
     @Override
     public DotNetTypeProxy getTypeOfVariableImpl() {
         return myTypeMirror;

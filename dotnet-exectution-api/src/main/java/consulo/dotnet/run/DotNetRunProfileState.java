@@ -32,8 +32,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ProcessHandlerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -41,14 +40,14 @@ import jakarta.annotation.Nullable;
  */
 public class DotNetRunProfileState extends PatchableRunProfileState
 {
-	public DotNetRunProfileState(@Nonnull ExecutionEnvironment executionEnvironment, @Nonnull GeneralCommandLine runCommandLine)
+	public DotNetRunProfileState(ExecutionEnvironment executionEnvironment, GeneralCommandLine runCommandLine)
 	{
 		super(executionEnvironment, runCommandLine);
 	}
 
 	@Nullable
 	@Override
-	public ExecutionResult executeImpl(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
+	public ExecutionResult executeImpl(Executor executor, ProgramRunner programRunner) throws ExecutionException
 	{
 		GeneralCommandLine commandLineForRun = getCommandLineForRun();
 

@@ -18,7 +18,6 @@ package consulo.dotnet.debugger.proxy;
 
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,6 @@ public interface DotNetMethodParameterProxy extends DotNetVariableProxy
 
 	public static ArrayFactory<DotNetMethodParameterProxy> ARRAY_FACTORY = new ArrayFactory<DotNetMethodParameterProxy>()
 	{
-		@Nonnull
 		@Override
 		public DotNetMethodParameterProxy[] create(int count)
 		{

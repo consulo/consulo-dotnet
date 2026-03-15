@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,12 +36,12 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class DotNetBreakpointListenerComponent implements PostStartupActivity, DumbAware {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
 
         breakpointManager.addBreakpointListener(DotNetMethodBreakpointType.getInstance(), new XBreakpointListener<>() {
             @Override
-            public void breakpointAdded(@Nonnull XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint) {
+            public void breakpointAdded(XLineBreakpoint<DotNetMethodBreakpointProperties> breakpoint) {
                 XDebuggerUIConstants.NOTIFICATION_GROUP.createNotification("Method breakpoints may dramatically slow down debugging", NotificationType.WARNING).notify(project);
             }
         });

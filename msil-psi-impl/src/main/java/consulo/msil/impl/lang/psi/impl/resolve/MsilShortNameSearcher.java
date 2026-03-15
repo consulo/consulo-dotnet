@@ -27,10 +27,9 @@ import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilIndexKeys;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.index.MsilTypeByNameIndex;
 import consulo.msil.lang.psi.MsilClassEntry;
 import consulo.project.Project;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -50,14 +49,14 @@ public class MsilShortNameSearcher implements DotNetShortNameSearcherExtension
 	}
 
 	@Override
-	public void collectTypeNames(@Nonnull Predicate<String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter)
+	public void collectTypeNames(Predicate<String> processor, SearchScope scope, @Nullable IdFilter filter)
 	{
 		StubIndex.getInstance().processAllKeys(MsilIndexKeys.TYPE_BY_NAME_INDEX, processor::test, (GlobalSearchScope) scope, filter);
 		MsilTypeByNameIndex.getInstance().processAllKeys(myProject, processor::test);
 	}
 
 	@Override
-	public void collectTypes(@Nonnull String name, @Nonnull SearchScope scope, @Nullable IdFilter filter, @Nonnull Predicate<DotNetTypeDeclaration> processor)
+	public void collectTypes(String name, SearchScope scope, @Nullable IdFilter filter, Predicate<DotNetTypeDeclaration> processor)
 	{
 		StubIndex.getInstance().processElements(MsilIndexKeys.TYPE_BY_NAME_INDEX, name, myProject, (GlobalSearchScope) scope, MsilClassEntry.class, processor::test);
 	}

@@ -28,8 +28,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,8 +40,7 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class MsilFileRepresentationManager
 {
-	@Nonnull
-	public static MsilFileRepresentationManager getInstance(@Nonnull Project project)
+	public static MsilFileRepresentationManager getInstance(Project project)
 	{
 		return project.getInstance(MsilFileRepresentationManager.class);
 	}
@@ -54,8 +52,7 @@ public abstract class MsilFileRepresentationManager
 		myProject = project;
 	}
 
-	@Nonnull
-	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(@Nonnull MsilFile msilFile)
+	public List<Pair<String, ? extends FileType>> getRepresentFileInfos(MsilFile msilFile)
 	{
 		VirtualFile virtualFile = msilFile.getVirtualFile();
 		if(virtualFile == null)
@@ -65,16 +62,15 @@ public abstract class MsilFileRepresentationManager
 		return getRepresentFileInfos(msilFile, virtualFile);
 	}
 
-	@Nonnull
-	public abstract List<Pair<String, ? extends FileType>> getRepresentFileInfos(@Nonnull MsilFile msilFile, @Nonnull VirtualFile virtualFile);
+	public abstract List<Pair<String, ? extends FileType>> getRepresentFileInfos(MsilFile msilFile, VirtualFile virtualFile);
 
 	@Nullable
 	@RequiredReadAction
-	public abstract PsiFile getRepresentationFile(@Nonnull FileType fileType, @Nonnull MsilFile msilFile);
+	public abstract PsiFile getRepresentationFile(FileType fileType, MsilFile msilFile);
 
 	@Nullable
 	@RequiredReadAction
-	public PsiFile getRepresentationFile(@Nonnull FileType fileType, @Nonnull VirtualFile virtualFile)
+	public PsiFile getRepresentationFile(FileType fileType, VirtualFile virtualFile)
 	{
 		if(virtualFile.getFileType() != MsilFileType.INSTANCE)
 		{

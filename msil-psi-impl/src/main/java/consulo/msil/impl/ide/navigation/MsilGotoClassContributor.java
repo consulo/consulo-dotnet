@@ -38,8 +38,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -145,7 +144,6 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 				BaseListPopupStep<LanguageFileType> step = new BaseListPopupStep<LanguageFileType>("Choose " + "language", languageFileTypes.toArray(new LanguageFileType[languageFileTypes.size
 						()]))
 				{
-					@Nonnull
 					@Override
 					public String getTextFor(LanguageFileType value)
 					{
@@ -198,7 +196,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 	}
 
 	@Override
-	public void processNames(@Nonnull final Processor<String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter)
+	public void processNames(final Processor<String> processor, SearchScope scope, @Nullable IdFilter filter)
 	{
 		StubIndex.getInstance().processAllKeys(MsilIndexKeys.TYPE_BY_NAME_INDEX, s ->
 		{
@@ -208,7 +206,7 @@ public class MsilGotoClassContributor implements ChooseByNameContributorEx, Goto
 	}
 
 	@Override
-	public void processElementsWithName(@Nonnull String name, @Nonnull final Processor<NavigationItem> processor, @Nonnull FindSymbolParameters parameters)
+	public void processElementsWithName(String name, final Processor<NavigationItem> processor, FindSymbolParameters parameters)
 	{
 		StubIndex.getInstance().processElements(MsilIndexKeys.TYPE_BY_NAME_INDEX, name, parameters.getProject(), (GlobalSearchScope) parameters.getSearchScope(), parameters.getIdFilter(),
 				MsilClassEntry.class,

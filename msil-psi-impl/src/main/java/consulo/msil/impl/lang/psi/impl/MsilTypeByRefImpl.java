@@ -25,7 +25,6 @@ import consulo.msil.impl.lang.psi.MsilStubTokenSets;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilRefTypeRefImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,12 +32,12 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilTypeByRefImpl extends MsilTypeImpl<MsilEmptyTypeStub> implements DotNetType
 {
-	public MsilTypeByRefImpl(@Nonnull ASTNode node)
+	public MsilTypeByRefImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilTypeByRefImpl(@Nonnull MsilEmptyTypeStub stub, @Nonnull IStubElementType nodeType)
+	public MsilTypeByRefImpl(MsilEmptyTypeStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -49,7 +48,6 @@ public class MsilTypeByRefImpl extends MsilTypeImpl<MsilEmptyTypeStub> implement
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	protected DotNetTypeRef toTypeRefImpl()
 	{

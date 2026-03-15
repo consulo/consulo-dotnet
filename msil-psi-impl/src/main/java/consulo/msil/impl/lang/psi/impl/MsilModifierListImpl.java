@@ -29,8 +29,7 @@ import consulo.msil.lang.psi.*;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilModifierListStub;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -53,12 +52,12 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 		}
 	};
 
-	public MsilModifierListImpl(@Nonnull ASTNode node)
+	public MsilModifierListImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilModifierListImpl(@Nonnull MsilModifierListStub stub, @Nonnull IStubElementType nodeType)
+	public MsilModifierListImpl(MsilModifierListStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -70,18 +69,17 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	}
 
 	@Override
-	public void addModifier(@Nonnull DotNetModifier modifier)
+	public void addModifier(DotNetModifier modifier)
 	{
 
 	}
 
 	@Override
-	public void removeModifier(@Nonnull DotNetModifier modifier)
+	public void removeModifier(DotNetModifier modifier)
 	{
 
 	}
 
-	@Nonnull
 	@Override
 	public DotNetModifier[] getModifiers()
 	{
@@ -97,7 +95,6 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetAttribute[] getAttributes()
 	{
@@ -134,7 +131,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	}
 
 	@Override
-	public boolean hasModifier(@Nonnull DotNetModifier modifier)
+	public boolean hasModifier(DotNetModifier modifier)
 	{
 		PsiElement parent = getParent();
 		if(parent instanceof MsilClassEntry)
@@ -157,7 +154,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 		return hasModifierImpl(modifier);
 	}
 
-	private boolean hasModifierImpl(@Nonnull DotNetModifier modifier)
+	private boolean hasModifierImpl(DotNetModifier modifier)
 	{
 		MsilModifierElementType elementType = asMsilModifier(modifier);
 		if(elementType == null)
@@ -174,7 +171,7 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 	}
 
 	@Override
-	public boolean hasModifierInTree(@Nonnull DotNetModifier modifier)
+	public boolean hasModifierInTree(DotNetModifier modifier)
 	{
 		MsilModifierElementType elementType = asMsilModifier(modifier);
 		if(elementType == null)
@@ -196,9 +193,8 @@ public class MsilModifierListImpl extends MsilStubElementImpl<MsilModifierListSt
 		return findChildByType(elementType);
 	}
 
-	@Nonnull
 	@Override
-	public List<PsiElement> getModifierElements(@Nonnull DotNetModifier modifier)
+	public List<PsiElement> getModifierElements(DotNetModifier modifier)
 	{
 		MsilModifierElementType elementType = asMsilModifier(modifier);
 		if(elementType == null)

@@ -25,7 +25,6 @@ import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.SdkPathEditor;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,28 +33,24 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class ExternalAttributesOrderRootTypeUIFactory implements OrderRootTypeUIFactory
 {
-	@Nonnull
 	@Override
 	public String getOrderRootTypeId()
 	{
 		return "dotNetExternalAttributes";
 	}
 
-	@Nonnull
 	@Override
 	public SdkPathEditor createPathEditor(Sdk sdk)
 	{
 		return new SdkPathEditor(getNodeText(), ExternalAttributesRootOrderType.getInstance(), FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), sdk);
 	}
 
-	@Nonnull
 	@Override
 	public Image getIcon()
 	{
 		return AllIcons.Nodes.Annotationtype;
 	}
 
-	@Nonnull
 	@Override
 	public String getNodeText()
 	{

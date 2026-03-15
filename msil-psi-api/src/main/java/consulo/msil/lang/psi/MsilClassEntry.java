@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.navigation.NavigationItem;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,13 +27,10 @@ import jakarta.annotation.Nonnull;
  */
 public interface MsilClassEntry extends MsilEntry, DotNetTypeDeclaration, NavigationItem
 {
-	@Nonnull
 	MsilCustomAttribute[] getAttributes();
 
-	@Nonnull
 	@RequiredReadAction
-	MsilCustomAttribute[] getGenericParameterAttributes(@Nonnull String name);
+	MsilCustomAttribute[] getGenericParameterAttributes(String name);
 
-	@Nonnull
 	String getNameFromBytecode();
 }

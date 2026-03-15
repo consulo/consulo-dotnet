@@ -26,9 +26,7 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.process.util.ProcessOutput;
-import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -40,7 +38,6 @@ import java.io.File;
 public class RoslynBundleType extends SdkType {
     private static final Logger LOG = Logger.getInstance(RoslynBundleType.class);
 
-    @Nonnull
     public static RoslynBundleType getInstance() {
         return Application.get().getExtensionPoint(SdkType.class).findExtensionOrFail(RoslynBundleType.class);
     }

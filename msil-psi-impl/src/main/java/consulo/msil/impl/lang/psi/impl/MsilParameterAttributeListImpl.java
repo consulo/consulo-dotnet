@@ -24,8 +24,7 @@ import consulo.msil.impl.lang.psi.MsilStubElements;
 import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.lang.psi.*;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilParameterAttributeListStub;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,12 +32,12 @@ import jakarta.annotation.Nullable;
  */
 public class MsilParameterAttributeListImpl extends MsilStubElementImpl<MsilParameterAttributeListStub> implements MsilParameterAttributeList
 {
-	public MsilParameterAttributeListImpl(@Nonnull ASTNode node)
+	public MsilParameterAttributeListImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilParameterAttributeListImpl(@Nonnull MsilParameterAttributeListStub stub, @Nonnull IStubElementType nodeType)
+	public MsilParameterAttributeListImpl(MsilParameterAttributeListStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -62,7 +61,6 @@ public class MsilParameterAttributeListImpl extends MsilStubElementImpl<MsilPara
 		return element == null ? -1 : Integer.parseInt(element.getText());
 	}
 
-	@Nonnull
 	@Override
 	@RequiredReadAction
 	public MsilCustomAttribute[] getAttributes()

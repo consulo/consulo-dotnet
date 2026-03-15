@@ -17,8 +17,7 @@
 package consulo.dotnet.psi.resolve;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,7 +38,6 @@ public interface DotNetTypeResolveResult
 	@Nullable
 	PsiElement getElement();
 
-	@Nonnull
 	default DotNetGenericExtractor getGenericExtractor()
 	{
 		return DotNetGenericExtractor.EMPTY;

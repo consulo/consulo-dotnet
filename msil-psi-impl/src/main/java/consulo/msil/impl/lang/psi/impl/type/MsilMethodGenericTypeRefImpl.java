@@ -25,7 +25,6 @@ import consulo.dotnet.util.ArrayUtil2;
 import consulo.language.psi.PsiElement;
 import consulo.msil.lang.psi.MsilMethodEntry;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -53,7 +52,6 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 		return myIndex;
 	}
 
-	@Nonnull
 	@Override
 	public String getVmQName()
 	{
@@ -61,7 +59,6 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public String toString()
 	{
@@ -74,7 +71,6 @@ public class MsilMethodGenericTypeRefImpl extends DotNetTypeRefWithCachedResult
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeResolveResult resolveResult()
 	{

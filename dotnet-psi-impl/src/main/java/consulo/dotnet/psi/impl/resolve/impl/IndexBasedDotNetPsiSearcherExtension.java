@@ -29,8 +29,7 @@ import consulo.language.psi.stub.StubIndex;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,25 +44,22 @@ public abstract class IndexBasedDotNetPsiSearcherExtension implements DotNetPsiS
 		myProject = project;
 	}
 
-	@Nonnull
-	protected abstract DotNetNamespaceAsElement createNamespace(@Nonnull String indexKey, @Nonnull String qName);
+	protected abstract DotNetNamespaceAsElement createNamespace(String indexKey, String qName);
 
-	@Nonnull
 	public abstract StubIndexKey<String, DotNetQualifiedElement> getElementByQNameIndexKey();
 
-	@Nonnull
 	public abstract StubIndexKey<String, DotNetQualifiedElement> getNamespaceIndexKey();
 
 	@RequiredReadAction
 	@Override
 	@Nullable
-	public final DotNetNamespaceAsElement findNamespace(@Nonnull String qName, @Nonnull SearchScope scope)
+	public final DotNetNamespaceAsElement findNamespace(String qName, SearchScope scope)
 	{
 		return findNamespaceImpl(DotNetNamespaceStubUtil.getIndexableNamespace(qName), qName, scope);
 	}
 
 	@Nullable
-	public DotNetNamespaceAsElement findNamespaceImpl(@Nonnull String indexKey, @Nonnull String qName, @Nonnull SearchScope scope)
+	public DotNetNamespaceAsElement findNamespaceImpl(String indexKey, String qName, SearchScope scope)
 	{
 		if(DotNetNamespaceStubUtil.ROOT_FOR_INDEXING.equals(indexKey))
 		{
@@ -77,17 +73,16 @@ public abstract class IndexBasedDotNetPsiSearcherExtension implements DotNetPsiS
 		return null;
 	}
 
-	private static boolean isFoundAnyOneElement(@Nonnull Project project,
-												@Nonnull final String indexKey,
-												@Nonnull StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
-												@Nonnull SearchScope scope)
+	private static boolean isFoundAnyOneElement(Project project,
+												final String indexKey,
+												StubIndexKey<String, DotNetQualifiedElement> keyForIndex,
+												SearchScope scope)
 	{
 		CommonProcessors.FindFirstProcessor<PsiElement> processor = new CommonProcessors.FindFirstProcessor<>();
 		StubIndex.getInstance().processElements(keyForIndex, indexKey, project, (GlobalSearchScope) scope, DotNetQualifiedElement.class, processor);
 		return processor.getFoundValue() != null;
 	}
 
-	@Nonnull
 	public Project getProject()
 	{
 		return myProject;

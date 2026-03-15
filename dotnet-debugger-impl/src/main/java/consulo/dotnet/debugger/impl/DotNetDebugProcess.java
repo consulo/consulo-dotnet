@@ -6,8 +6,7 @@ import consulo.execution.ExecutionResult;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -16,14 +15,12 @@ import java.util.Collection;
  * @since 2024-12-22
  */
 public interface DotNetDebugProcess {
-    @Nonnull
-    DotNetDebugContext createDebugContext(@Nonnull DotNetVirtualMachineProxy proxy, @Nullable XBreakpoint<?> breakpoint);
+    DotNetDebugContext createDebugContext(DotNetVirtualMachineProxy proxy, @Nullable XBreakpoint<?> breakpoint);
 
     void start();
 
     void setExecutionResult(ExecutionResult executionResult);
 
-    @Nonnull
     Collection<? extends XLineBreakpoint<?>> getLineBreakpoints();
 
     default void normalizeBreakpoints() {
@@ -32,6 +29,5 @@ public interface DotNetDebugProcess {
         }
     }
 
-    @Nonnull
     XBreakpointManager getBreakpointManager();
 }

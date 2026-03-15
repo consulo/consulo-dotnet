@@ -35,8 +35,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
@@ -52,7 +51,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	protected Project myProject;
 	protected String myQName;
 
-	protected BaseDotNetNamespaceAsElement(@Nonnull Project project, @Nonnull Language language, @Nonnull String qName)
+	protected BaseDotNetNamespaceAsElement(Project project, Language language, String qName)
 	{
 		super(PsiManager.getInstance(project), language);
 		myQName = qName;
@@ -61,7 +60,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 
 	@Override
 	@RequiredReadAction
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
+	public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place)
 	{
 		GlobalSearchScope globalSearchScope = state.get(RESOLVE_SCOPE);
 		if(globalSearchScope == null)
@@ -92,21 +91,19 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		return true;
 	}
 
-	@Nonnull
 	@Override
 	@RequiredReadAction
-	public Collection<PsiElement> findChildren(@Nonnull String name, @Nonnull GlobalSearchScope globalSearchScope, @Nonnull ChildrenFilter filter)
+	public Collection<PsiElement> findChildren(String name, GlobalSearchScope globalSearchScope, ChildrenFilter filter)
 	{
 		return findChildren(name, globalSearchScope, DotNetTypeTransformer.INSTANCE, filter);
 	}
 
-	@Nonnull
 	@Override
 	@RequiredReadAction
-	public Collection<PsiElement> findChildren(@Nonnull String name,
-											   @Nonnull GlobalSearchScope globalSearchScope,
-											   @Nonnull Function<PsiElement, PsiElement> transformer,
-											   @Nonnull ChildrenFilter filter)
+	public Collection<PsiElement> findChildren(String name,
+											   GlobalSearchScope globalSearchScope,
+											   Function<PsiElement, PsiElement> transformer,
+											   ChildrenFilter filter)
 	{
 		List<PsiElement> list = new SmartList<>();
 		for(PsiElement element : getChildren(globalSearchScope, filter))
@@ -125,10 +122,9 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull Function<PsiElement, PsiElement> transformer, @Nonnull ChildrenFilter filter)
+	public Collection<PsiElement> getChildren(GlobalSearchScope globalSearchScope, Function<PsiElement, PsiElement> transformer, ChildrenFilter filter)
 	{
 		switch(filter)
 		{
@@ -153,23 +149,20 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 		return Collections.emptyList();
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	protected Set<? extends PsiElement> getOnlyElements(@Nonnull GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyElements(GlobalSearchScope globalSearchScope)
 	{
 		return Collections.emptySet();
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	protected Set<? extends PsiElement> getOnlyNamespaces(@Nonnull GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyNamespaces(GlobalSearchScope globalSearchScope)
 	{
 		return Collections.emptySet();
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public static List<PsiElement> transformData(@Nonnull Iterable<? extends PsiElement> collection, int size, Function<PsiElement, PsiElement> transformer)
+	public static List<PsiElement> transformData(Iterable<? extends PsiElement> collection, int size, Function<PsiElement, PsiElement> transformer)
 	{
 		if(size == 0)
 		{
@@ -217,7 +210,7 @@ public abstract class BaseDotNetNamespaceAsElement extends LightElement implemen
 	}
 
 	@Override
-	public PsiElement setName(@Nonnull String s) throws IncorrectOperationException
+	public PsiElement setName(String s) throws IncorrectOperationException
 	{
 		return null;
 	}

@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.internal.dotnet.msil.decompiler.util.MsilHelper;
 import consulo.language.psi.PsiNamedElement;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,9 +27,8 @@ import jakarta.annotation.Nonnull;
  */
 public class DotNetElementPresentationUtil
 {
-	@Nonnull
 	@RequiredReadAction
-	public static <T extends DotNetGenericParameterListOwner & DotNetNamedElement> String formatTypeWithGenericParameters(@Nonnull T el)
+	public static <T extends DotNetGenericParameterListOwner & DotNetNamedElement> String formatTypeWithGenericParameters(T el)
 	{
 		DotNetGenericParameter[] genericParameters = el.getGenericParameters();
 		String name = el.getName();
@@ -46,7 +44,7 @@ public class DotNetElementPresentationUtil
 	}
 
 	@RequiredReadAction
-	public static void formatTypeGenericParameters(@Nonnull DotNetGenericParameter[] parameters, @Nonnull StringBuilder builder)
+	public static void formatTypeGenericParameters(DotNetGenericParameter[] parameters, StringBuilder builder)
 	{
 		if(parameters.length > 0)
 		{
@@ -56,9 +54,8 @@ public class DotNetElementPresentationUtil
 		}
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	public static String formatGenericParameters(@Nonnull DotNetGenericParameterListOwner owner)
+	public static String formatGenericParameters(DotNetGenericParameterListOwner owner)
 	{
 		DotNetGenericParameter[] genericParameters = owner.getGenericParameters();
 		if(genericParameters.length == 0)

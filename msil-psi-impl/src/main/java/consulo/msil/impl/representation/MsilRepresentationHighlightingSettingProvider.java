@@ -23,8 +23,7 @@ import consulo.msil.impl.representation.fileSystem.MsilFileRepresentationVirtual
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ public class MsilRepresentationHighlightingSettingProvider extends DefaultHighli
 {
 	@Nullable
 	@Override
-	public FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file)
+	public FileHighlightingSetting getDefaultSetting(Project project, VirtualFile file)
 	{
 		if(file instanceof MsilFileRepresentationVirtualFile)
 		{

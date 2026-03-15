@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,6 @@ public interface DotNetType extends DotNetElement
 
 	public static ArrayFactory<DotNetType> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new DotNetType[count];
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef toTypeRef();
 }

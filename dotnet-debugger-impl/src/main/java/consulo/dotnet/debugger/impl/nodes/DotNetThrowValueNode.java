@@ -25,8 +25,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,13 +35,12 @@ public class DotNetThrowValueNode extends DotNetAbstractVariableValueNode
 {
 	private DotNetValueProxy myThrowObject;
 
-	public DotNetThrowValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull DotNetValueProxy throwObject)
+	public DotNetThrowValueNode(DotNetDebugContext debuggerContext, DotNetStackFrameProxy frameProxy, DotNetValueProxy throwObject)
 	{
 		super(debuggerContext, "exception", frameProxy);
 		myThrowObject = throwObject;
 	}
 
-	@Nonnull
 	@Override
 	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
 	{
@@ -71,7 +69,7 @@ public class DotNetThrowValueNode extends DotNetAbstractVariableValueNode
 	}
 
 	@Override
-	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
+	public void setValueForVariableImpl(DotNetValueProxy value)
 	{
 
 	}

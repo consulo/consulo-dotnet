@@ -22,8 +22,7 @@ import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,10 +30,9 @@ import jakarta.annotation.Nullable;
  */
 public class DotNetSimpleValueNode extends DotNetAbstractVariableValueNode
 {
-	@Nonnull
 	private final DotNetValueProxy myValue;
 
-	public DotNetSimpleValueNode(@Nonnull DotNetDebugContext debuggerContext, @Nonnull String name, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull DotNetValueProxy value)
+	public DotNetSimpleValueNode(DotNetDebugContext debuggerContext, String name, DotNetStackFrameProxy frameProxy, DotNetValueProxy value)
 	{
 		super(debuggerContext, name, frameProxy);
 
@@ -56,7 +54,7 @@ public class DotNetSimpleValueNode extends DotNetAbstractVariableValueNode
 	}
 
 	@Override
-	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
+	public void setValueForVariableImpl(DotNetValueProxy value)
 	{
 	}
 

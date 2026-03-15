@@ -25,7 +25,6 @@ import consulo.msil.lang.psi.MsilMethodGenericType;
 import consulo.msil.impl.lang.psi.impl.MsilMethodGenericTypeImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilMethodGenericTypeStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -39,37 +38,34 @@ public class MsilMethodGenericTypeStubElementType extends AbstractMsilStubElemen
 		super("MSIL_METHOD_GENERIC_TYPE");
 	}
 
-	@Nonnull
 	@Override
-	public MsilMethodGenericType createElement(@Nonnull ASTNode astNode)
+	public MsilMethodGenericType createElement(ASTNode astNode)
 	{
 		return new MsilMethodGenericTypeImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public MsilMethodGenericType createPsi(@Nonnull MsilMethodGenericTypeStub msilMethodGenericTypeStub)
+	public MsilMethodGenericType createPsi(MsilMethodGenericTypeStub msilMethodGenericTypeStub)
 	{
 		return new MsilMethodGenericTypeImpl(msilMethodGenericTypeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilMethodGenericTypeStub createStub(@Nonnull MsilMethodGenericType msilMethodGenericType, StubElement stubElement)
+	public MsilMethodGenericTypeStub createStub(MsilMethodGenericType msilMethodGenericType, StubElement stubElement)
 	{
 		int index = msilMethodGenericType.getIndex();
 		return new MsilMethodGenericTypeStub(stubElement, this, index);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilMethodGenericTypeStub stub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilMethodGenericTypeStub stub, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeInt(stub.getIndex());
 	}
 
-	@Nonnull
 	@Override
-	public MsilMethodGenericTypeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilMethodGenericTypeStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		int index = inputStream.readInt();
 		return new MsilMethodGenericTypeStub(stubElement, this, index);

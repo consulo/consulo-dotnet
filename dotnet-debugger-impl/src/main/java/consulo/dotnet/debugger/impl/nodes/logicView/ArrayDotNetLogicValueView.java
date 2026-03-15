@@ -24,7 +24,6 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetArrayValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,26 +32,25 @@ import jakarta.annotation.Nonnull;
 public class ArrayDotNetLogicValueView extends LimitableDotNetLogicValueView<DotNetArrayValueProxy>
 {
 	@Override
-	public boolean canHandle(@Nonnull DotNetDebugContext debugContext, @Nonnull DotNetTypeProxy typeMirror)
+	public boolean canHandle(DotNetDebugContext debugContext, DotNetTypeProxy typeMirror)
 	{
 		return typeMirror.isArray();
 	}
 
 	@Override
-	public int getSize(@Nonnull DotNetArrayValueProxy value)
+	public int getSize(DotNetArrayValueProxy value)
 	{
 		return value.getLength();
 	}
 
 	@Override
-	public boolean isMyValue(@Nonnull DotNetValueProxy value)
+	public boolean isMyValue(DotNetValueProxy value)
 	{
 		return value instanceof DotNetArrayValueProxy;
 	}
 
-	@Nonnull
 	@Override
-	public XNamedValue createChildValue(int index, @Nonnull DotNetDebugContext context, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull DotNetArrayValueProxy value)
+	public XNamedValue createChildValue(int index, DotNetDebugContext context, DotNetStackFrameProxy frameProxy, DotNetArrayValueProxy value)
 	{
 		return new DotNetArrayValueNode(context, "[" + index + "]", frameProxy, value, index);
 	}

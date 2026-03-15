@@ -12,8 +12,7 @@ import consulo.msil.lang.psi.MsilConstantValue;
 import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.impl.lang.psi.impl.elementType.MsilConstantValueStubElementType;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilConstantValueStub;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -24,12 +23,12 @@ public class MsilConstantValueImpl extends MsilStubElementImpl<MsilConstantValue
 	private static final TokenSet ourValueSet = TokenSet.create(/*MsilTokens.NULLREF_KEYWORD, */MsilTokens.STRING_LITERAL,
 			MsilTokens.DOUBLE_LITERAL, MsilTokens.NUMBER_LITERAL, MsilTokens.BOOL_LITERAL);
 
-	public MsilConstantValueImpl(@Nonnull ASTNode node)
+	public MsilConstantValueImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilConstantValueImpl(@Nonnull MsilConstantValueStub stub, @Nonnull IStubElementType nodeType)
+	public MsilConstantValueImpl(MsilConstantValueStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -83,7 +82,6 @@ public class MsilConstantValueImpl extends MsilStubElementImpl<MsilConstantValue
 		return null;
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromParent)
 	{

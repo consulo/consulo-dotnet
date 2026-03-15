@@ -31,8 +31,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -46,15 +45,14 @@ public class DotNetTestFinder implements TestFinder
 {
 	@Nullable
 	@Override
-	public DotNetTypeDeclaration findSourceElement(@Nonnull PsiElement from)
+	public DotNetTypeDeclaration findSourceElement(PsiElement from)
 	{
 		return PsiTreeUtil.getParentOfType(from, DotNetTypeDeclaration.class);
 	}
 
-	@Nonnull
 	@Override
 	@RequiredReadAction
-	public Collection<PsiElement> findTestsForClass(@Nonnull PsiElement element)
+	public Collection<PsiElement> findTestsForClass(PsiElement element)
 	{
 		DotNetTypeDeclaration sourceElement = findSourceElement(element);
 		if(sourceElement == null)
@@ -90,10 +88,9 @@ public class DotNetTestFinder implements TestFinder
 		return elements;
 	}
 
-	@Nonnull
 	@Override
 	@RequiredReadAction
-	public Collection<PsiElement> findClassesForTest(@Nonnull PsiElement element)
+	public Collection<PsiElement> findClassesForTest(PsiElement element)
 	{
 		DotNetTypeDeclaration sourceElement = findSourceElement(element);
 		if(sourceElement == null)
@@ -142,7 +139,7 @@ public class DotNetTestFinder implements TestFinder
 
 	@Override
 	@RequiredReadAction
-	public boolean isTest(@Nonnull PsiElement element)
+	public boolean isTest(PsiElement element)
 	{
 		DotNetTypeDeclaration sourceElement = findSourceElement(element);
 		if(sourceElement == null)

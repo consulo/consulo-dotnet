@@ -22,8 +22,7 @@ import consulo.dotnet.psi.resolve.DotNetPsiSearcher;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,18 +34,15 @@ public interface MsilGenericParameter extends DotNetGenericParameter
 
 	ArrayFactory<MsilGenericParameter> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new MsilGenericParameter[count];
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef[] getExtendTypeRefs();
 
-	@Nonnull
 	@Deprecated
 	@RequiredReadAction
 	DotNetPsiSearcher.TypeResoleKind getTypeKind();
 
-	@Nullable
 	@RequiredReadAction
-	MsilUserType.Target getTarget();
+	MsilUserType.@Nullable Target getTarget();
 
 	@RequiredReadAction
 	boolean hasDefaultConstructor();

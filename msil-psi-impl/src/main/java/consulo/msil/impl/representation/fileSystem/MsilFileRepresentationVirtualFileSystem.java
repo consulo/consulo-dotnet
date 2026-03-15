@@ -14,8 +14,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -24,7 +23,6 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class MsilFileRepresentationVirtualFileSystem extends BaseVirtualFileSystem
 {
-	@Nonnull
 	public static MsilFileRepresentationVirtualFileSystem getInstance()
 	{
 		return (MsilFileRepresentationVirtualFileSystem) VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
@@ -33,7 +31,6 @@ public class MsilFileRepresentationVirtualFileSystem extends BaseVirtualFileSyst
 	public static final String PROTOCOL = "msil";
 	public static final String SEPARATOR = "|";
 
-	@Nonnull
 	@Override
 	public String getProtocol()
 	{
@@ -42,7 +39,7 @@ public class MsilFileRepresentationVirtualFileSystem extends BaseVirtualFileSyst
 
 	@Nullable
 	@Override
-	public VirtualFile findFileByPath(@Nonnull String path)
+	public VirtualFile findFileByPath(String path)
 	{
 		if(path.startsWith(PROTOCOL))
 		{
@@ -107,7 +104,7 @@ public class MsilFileRepresentationVirtualFileSystem extends BaseVirtualFileSyst
 
 	@Nullable
 	@Override
-	public VirtualFile refreshAndFindFileByPath(@Nonnull String path)
+	public VirtualFile refreshAndFindFileByPath(String path)
 	{
 		return findFileByPath(path);
 	}

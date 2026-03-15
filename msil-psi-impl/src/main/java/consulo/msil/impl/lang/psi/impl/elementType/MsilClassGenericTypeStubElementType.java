@@ -26,7 +26,6 @@ import consulo.msil.lang.psi.MsilClassGenericType;
 import consulo.msil.impl.lang.psi.impl.MsilClassGenericTypeImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilClassGenericTypeStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -40,37 +39,34 @@ public class MsilClassGenericTypeStubElementType extends AbstractMsilStubElement
 		super("MSIL_CLASS_GENERIC_TYPE");
 	}
 
-	@Nonnull
 	@Override
-	public MsilClassGenericType createElement(@Nonnull ASTNode astNode)
+	public MsilClassGenericType createElement(ASTNode astNode)
 	{
 		return new MsilClassGenericTypeImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public MsilClassGenericType createPsi(@Nonnull MsilClassGenericTypeStub msilClassGenericTypeStub)
+	public MsilClassGenericType createPsi(MsilClassGenericTypeStub msilClassGenericTypeStub)
 	{
 		return new MsilClassGenericTypeImpl(msilClassGenericTypeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilClassGenericTypeStub createStub(@Nonnull MsilClassGenericType msilClassGenericType, StubElement stubElement)
+	public MsilClassGenericTypeStub createStub(MsilClassGenericType msilClassGenericType, StubElement stubElement)
 	{
 		String name = msilClassGenericType.getGenericName();
 		return new MsilClassGenericTypeStub(stubElement, this, name);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilClassGenericTypeStub msilClassGenericTypeStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilClassGenericTypeStub msilClassGenericTypeStub, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilClassGenericTypeStub.getName());
 	}
 
-	@Nonnull
 	@Override
-	public MsilClassGenericTypeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilClassGenericTypeStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef name = inputStream.readName();
 		return new MsilClassGenericTypeStub(stubElement, this, name);

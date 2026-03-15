@@ -32,8 +32,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -50,10 +49,9 @@ import java.util.function.Supplier;
 public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDependencyActionProvider<List<Map.Entry<String, String>>, DotNetLibraryModuleDependencyContext> {
     private static class SelectDialog extends DialogWrapper {
         private final JBList<Map.Entry<String, String>> myLibraryList;
-        @Nonnull
         private final DotNetLibraryModuleDependencyContext myContext;
 
-        protected SelectDialog(@Nonnull DotNetLibraryModuleDependencyContext context, @Nonnull Image defaultIcon) {
+        protected SelectDialog(DotNetLibraryModuleDependencyContext context, Image defaultIcon) {
             super(context.getProject(), false);
             myContext = context;
             setTitle("Select Library");
@@ -62,7 +60,7 @@ public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDep
             myLibraryList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             myLibraryList.setCellRenderer(new ColoredListCellRenderer<Map.Entry<String, String>>() {
                 @Override
-                protected void customizeCellRenderer(@Nonnull JList<? extends Map.Entry<String, String>> list, Map.Entry<String, String> entry, int i, boolean b, boolean b1) {
+                protected void customizeCellRenderer(JList<? extends Map.Entry<String, String>> list, Map.Entry<String, String> entry, int i, boolean b, boolean b1) {
                     setIcon(defaultIcon);
 
                     append(entry.getKey());
@@ -94,7 +92,6 @@ public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDep
             return ScrollPaneFactory.createScrollPane(myLibraryList, true);
         }
 
-        @Nonnull
         public List<Map.Entry<String, String>> getSelectedValues() {
             return myLibraryList.getSelectedValuesList();
         }
@@ -134,27 +131,25 @@ public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDep
     }
 
     @Override
-    public boolean isAvailable(@Nonnull DotNetLibraryModuleDependencyContext context) {
+    public boolean isAvailable(DotNetLibraryModuleDependencyContext context) {
         ModifiableRootModel model = context.getClasspathPanel().getRootModel();
         return model.getExtension(DotNetSimpleModuleExtension.class) != null;
     }
 
     @Override
-    public DotNetLibraryModuleDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel,
-                                                              @Nonnull ModulesConfigurator modulesConfigurator,
-                                                              @Nonnull LibrariesConfigurator librariesConfigurator) {
+    public DotNetLibraryModuleDependencyContext createContext(ClasspathPanel classpathPanel,
+                                                              ModulesConfigurator modulesConfigurator,
+                                                              LibrariesConfigurator librariesConfigurator) {
         return new DotNetLibraryModuleDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
     }
 
-    @Nonnull
     @Override
-    public LocalizeValue getActionName(@Nonnull ModuleRootLayer moduleRootLayer) {
+    public LocalizeValue getActionName(ModuleRootLayer moduleRootLayer) {
         return LocalizeValue.of(".NET Standard Library");
     }
 
-    @Nonnull
     @Override
-    public Image getIcon(@Nonnull ModuleRootLayer moduleRootLayer) {
+    public Image getIcon(ModuleRootLayer moduleRootLayer) {
         DotNetSimpleModuleExtension extension = moduleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
         if (extension != null) {
             Image icon = ModuleExtensionHelper.getInstance(moduleRootLayer.getProject()).getModuleExtensionIcon(extension.getId());
@@ -165,9 +160,8 @@ public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDep
     }
 
     @RequiredUIAccess
-    @Nonnull
     @Override
-    public AsyncResult<List<Map.Entry<String, String>>> invoke(@Nonnull DotNetLibraryModuleDependencyContext context) {
+    public AsyncResult<List<Map.Entry<String, String>>> invoke(DotNetLibraryModuleDependencyContext context) {
         Image defaultIcon = getIcon(context.getClasspathPanel().getRootModel());
 
         AsyncResult<List<Map.Entry<String, String>>> result = AsyncResult.undefined();

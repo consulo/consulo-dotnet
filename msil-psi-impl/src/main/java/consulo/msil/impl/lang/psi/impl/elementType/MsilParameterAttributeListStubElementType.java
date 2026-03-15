@@ -25,7 +25,6 @@ import consulo.msil.lang.psi.MsilParameterAttributeList;
 import consulo.msil.impl.lang.psi.impl.MsilParameterAttributeListImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilParameterAttributeListStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -39,37 +38,34 @@ public class MsilParameterAttributeListStubElementType extends AbstractMsilStubE
 		super("MSIL_PARAMETER_ATTRIBUTE_LIST");
 	}
 
-	@Nonnull
 	@Override
-	public MsilParameterAttributeList createElement(@Nonnull ASTNode astNode)
+	public MsilParameterAttributeList createElement(ASTNode astNode)
 	{
 		return new MsilParameterAttributeListImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public MsilParameterAttributeList createPsi(@Nonnull MsilParameterAttributeListStub msilParameterAttributeListStub)
+	public MsilParameterAttributeList createPsi(MsilParameterAttributeListStub msilParameterAttributeListStub)
 	{
 		return new MsilParameterAttributeListImpl(msilParameterAttributeListStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilParameterAttributeListStub createStub(@Nonnull MsilParameterAttributeList list, StubElement stubElement)
+	public MsilParameterAttributeListStub createStub(MsilParameterAttributeList list, StubElement stubElement)
 	{
 		int index = list.getIndex();
 		return new MsilParameterAttributeListStub(stubElement, this, index);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilParameterAttributeListStub list, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilParameterAttributeListStub list, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeVarInt(list.getIndex());
 	}
 
-	@Nonnull
 	@Override
-	public MsilParameterAttributeListStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilParameterAttributeListStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		int index = inputStream.readVarInt();
 		return new MsilParameterAttributeListStub(stubElement, this, index);

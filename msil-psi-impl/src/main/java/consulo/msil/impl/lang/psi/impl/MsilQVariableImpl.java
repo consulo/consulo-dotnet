@@ -28,10 +28,8 @@ import consulo.msil.impl.lang.psi.MsilStubTokenSets;
 import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,12 +37,12 @@ import jakarta.annotation.Nullable;
  */
 public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariableEntryStub> implements DotNetVariable, DotNetQualifiedElement
 {
-	public MsilQVariableImpl(@Nonnull ASTNode node)
+	public MsilQVariableImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilQVariableImpl(@Nonnull MsilVariableEntryStub stub, @Nonnull IStubElementType nodeType)
+	public MsilQVariableImpl(MsilVariableEntryStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -65,7 +63,6 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
@@ -73,7 +70,6 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetType getType()
 	{
@@ -90,13 +86,12 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@Nonnull DotNetModifier modifier)
+	public boolean hasModifier(DotNetModifier modifier)
 	{
 		return getModifierList().hasModifier(modifier);
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetModifierList getModifierList()
 	{
@@ -130,7 +125,6 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 		return StringUtil.getShortName(getNameFromBytecode());
 	}
 
-	@Nonnull
 	public String getNameFromBytecode()
 	{
 		MsilVariableEntryStub stub = getGreenStub();
@@ -143,7 +137,7 @@ public abstract class MsilQVariableImpl extends MsilStubElementImpl<MsilVariable
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
+	public PsiElement setName(String s) throws IncorrectOperationException
 	{
 		return null;
 	}

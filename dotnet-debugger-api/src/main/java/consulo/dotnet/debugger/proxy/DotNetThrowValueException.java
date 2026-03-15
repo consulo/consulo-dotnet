@@ -21,8 +21,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,13 +35,13 @@ public class DotNetThrowValueException extends RuntimeException
 	private String myType;
 	private String myForceMessage;
 
-	public DotNetThrowValueException(DotNetStackFrameProxy frameProxy, @Nonnull DotNetValueProxy throwValue)
+	public DotNetThrowValueException(DotNetStackFrameProxy frameProxy, DotNetValueProxy throwValue)
 	{
 		myFrameProxy = frameProxy;
 		myThrowValue = throwValue;
 	}
 
-	public DotNetThrowValueException(@Nonnull String type, @Nullable String message)
+	public DotNetThrowValueException(String type, @Nullable String message)
 	{
 		myType = type;
 		myForceMessage = message;

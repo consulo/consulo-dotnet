@@ -19,8 +19,7 @@ package consulo.dotnet.psi.impl.externalAttributes.nodes;
 import consulo.dotnet.externalAttributes.ExternalAttributeSimpleNode;
 import consulo.dotnet.externalAttributes.ExternalAttributeWithChildrenNode;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +37,13 @@ public class ExternalAttributeWithChildrenNodeImpl extends ExternalAttributeSimp
 		super(qualifiedName);
 	}
 
-	public void addChild(@Nonnull ExternalAttributeSimpleNode methodNode)
+	public void addChild(ExternalAttributeSimpleNode methodNode)
 	{
 		myChildren.add(methodNode);
 	}
 
 	@Nullable
-	public ExternalAttributeSimpleNode findByName(@Nonnull String name)
+	public ExternalAttributeSimpleNode findByName(String name)
 	{
 		for(ExternalAttributeSimpleNode child : myChildren)
 		{
@@ -56,7 +55,6 @@ public class ExternalAttributeWithChildrenNodeImpl extends ExternalAttributeSimp
 		return null;
 	}
 	@Override
-	@Nonnull
 	public List<ExternalAttributeSimpleNode> getChildren()
 	{
 		return myChildren;

@@ -25,7 +25,6 @@ import consulo.module.content.layer.orderEntry.CustomOrderEntry;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -35,9 +34,8 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class DotNetLibraryOrderEntryTypeEditor implements CustomOrderEntryTypeEditor<DotNetLibraryOrderEntryModel>
 {
-	@Nonnull
 	@Override
-	public Consumer<ColoredTextContainer> getRender(@Nonnull CustomOrderEntry<DotNetLibraryOrderEntryModel> orderEntry, @Nonnull DotNetLibraryOrderEntryModel model)
+	public Consumer<ColoredTextContainer> getRender(CustomOrderEntry<DotNetLibraryOrderEntryModel> orderEntry, DotNetLibraryOrderEntryModel model)
 	{
 		return it -> {
 
@@ -53,7 +51,6 @@ public class DotNetLibraryOrderEntryTypeEditor implements CustomOrderEntryTypeEd
 		};
 	}
 
-	@Nonnull
 	@Override
 	public String getOrderTypeId()
 	{

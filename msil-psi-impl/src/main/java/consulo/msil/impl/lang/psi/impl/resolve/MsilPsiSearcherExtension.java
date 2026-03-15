@@ -32,7 +32,6 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -49,21 +48,18 @@ public class MsilPsiSearcherExtension extends IndexBasedDotNetPsiSearcherExtensi
 		super(project);
 	}
 
-	@Nonnull
 	@Override
-	protected DotNetNamespaceAsElement createNamespace(@Nonnull String indexKey, @Nonnull String qName)
+	protected DotNetNamespaceAsElement createNamespace(String indexKey, String qName)
 	{
 		return new MsilNamespaceAsElementImpl(myProject, indexKey, qName, this);
 	}
 
-	@Nonnull
 	@Override
 	public StubIndexKey<String, DotNetQualifiedElement> getElementByQNameIndexKey()
 	{
 		return MsilIndexKeys.ELEMENT_BY_QNAME_INDEX;
 	}
 
-	@Nonnull
 	@Override
 	public StubIndexKey<String, DotNetQualifiedElement> getNamespaceIndexKey()
 	{
@@ -71,9 +67,8 @@ public class MsilPsiSearcherExtension extends IndexBasedDotNetPsiSearcherExtensi
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
-	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull SearchScope scope)
+	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(String vmQName, SearchScope scope)
 	{
 		if(DumbService.isDumb(myProject))
 		{

@@ -29,8 +29,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +42,6 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 {
 	private static final Logger LOG = Logger.getInstance(SingleExternalAttributeHolder.class);
 
-	@Nonnull
 	public static ExternalAttributeHolder load(VirtualFile file)
 	{
 		if(file.isDirectory())
@@ -118,7 +116,7 @@ public class SingleExternalAttributeHolder implements ExternalAttributeHolder
 
 	@Nullable
 	@Override
-	public ExternalAttributeWithChildrenNode findClassNode(@Nonnull String qname)
+	public ExternalAttributeWithChildrenNode findClassNode(String qname)
 	{
 		return myClasses.get(qname);
 	}

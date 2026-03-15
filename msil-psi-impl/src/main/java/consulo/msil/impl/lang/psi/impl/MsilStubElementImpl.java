@@ -32,8 +32,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -41,12 +40,12 @@ import jakarta.annotation.Nullable;
  */
 public abstract class MsilStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements StubBasedPsiElement<T>, DotNetElement
 {
-	protected MsilStubElementImpl(@Nonnull ASTNode node)
+	protected MsilStubElementImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	protected MsilStubElementImpl(@Nonnull T stub, @Nonnull IStubElementType nodeType)
+	protected MsilStubElementImpl(T stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -70,7 +69,7 @@ public abstract class MsilStubElementImpl<T extends StubElement> extends StubBas
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	public void accept(PsiElementVisitor visitor)
 	{
 		if(visitor instanceof MsilVisitor)
 		{

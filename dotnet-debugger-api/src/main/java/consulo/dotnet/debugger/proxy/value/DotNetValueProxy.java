@@ -16,9 +16,8 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
-import jakarta.annotation.Nonnull;
 import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,12 +31,11 @@ public interface DotNetValueProxy
 	/**
 	 * Need check type before calling this method
 	 */
-	@Nonnull
 	Object getValue();
 
 	void accept(DotNetValueProxyVisitor visitor);
 
-	default boolean isEqualTo(@Nonnull DotNetValueProxy proxy)
+	default boolean isEqualTo(DotNetValueProxy proxy)
 	{
 		return false;
 	}

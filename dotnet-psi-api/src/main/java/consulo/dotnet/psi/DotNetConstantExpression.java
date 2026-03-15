@@ -18,9 +18,8 @@ package consulo.dotnet.psi;
 
 import consulo.language.ast.IElementType;
 import consulo.util.collection.ArrayFactory;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,6 @@ public interface DotNetConstantExpression extends DotNetExpression
 
 	public static ArrayFactory<DotNetConstantExpression> ARRAY_FACTORY = new ArrayFactory<DotNetConstantExpression>()
 	{
-		@Nonnull
 		@Override
 		public DotNetConstantExpression[] create(int count)
 		{
@@ -43,6 +41,5 @@ public interface DotNetConstantExpression extends DotNetExpression
 	@Nullable
 	Object getValue();
 
-	@Nonnull
 	IElementType getLiteralType();
 }

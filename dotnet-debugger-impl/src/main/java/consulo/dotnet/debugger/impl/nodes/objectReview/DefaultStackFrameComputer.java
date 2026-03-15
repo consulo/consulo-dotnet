@@ -26,8 +26,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -38,11 +37,11 @@ import java.util.Set;
 public class DefaultStackFrameComputer implements StackFrameComputer
 {
 	@Override
-	public boolean computeStackFrame(@Nonnull DotNetDebugContext debugContext,
+	public boolean computeStackFrame(DotNetDebugContext debugContext,
 			@Nullable DotNetValueProxy value,
-			@Nonnull DotNetStackFrameProxy frameProxy,
-			@Nonnull Set<Object> visitedVariables,
-			@Nonnull XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
+			DotNetStackFrameProxy frameProxy,
+			Set<Object> visitedVariables,
+			XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetInvalidStackFrameException, DotNetAbsentInformationException
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 

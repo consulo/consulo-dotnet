@@ -23,7 +23,6 @@ import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.module.content.layer.ContentFolderSupportPatcher;
 import consulo.module.content.layer.ModifiableRootModel;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -34,7 +33,7 @@ import java.util.Set;
 public class DotNetContentFolderSupportPatcher implements ContentFolderSupportPatcher
 {
 	@Override
-	public void patch(@Nonnull ModifiableRootModel model, @Nonnull Set<ContentFolderTypeProvider> set)
+	public void patch(ModifiableRootModel model, Set<ContentFolderTypeProvider> set)
 	{
 		DotNetModuleExtension extension = model.getExtension(DotNetModuleExtension.class);
 		if(extension != null && extension.isAllowSourceRoots())

@@ -16,7 +16,6 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,7 +23,6 @@ import jakarta.annotation.Nonnull;
  */
 public interface DotNetNumberValueProxy extends DotNetValueProxy
 {
-	@Nonnull
 	@Override
 	Number getValue();
 }

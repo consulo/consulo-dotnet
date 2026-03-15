@@ -34,8 +34,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Supplier;
@@ -46,7 +45,6 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<DotNetExceptionBreakpointProperties>, DotNetExceptionBreakpointProperties> {
-    @Nonnull
     public static DotNetExceptionBreakpointType getInstance() {
         return EXTENSION_POINT_NAME.findExtensionOrFail(DotNetExceptionBreakpointType.class);
     }
@@ -55,13 +53,11 @@ public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<D
         super("dotnet-exception-breakpoint", ".NET Exception Breakpoints");
     }
 
-    @Nonnull
     @Override
     public Image getEnabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointexception();
     }
 
-    @Nonnull
     @Override
     public Image getDisabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointexceptiondisabled();
@@ -69,7 +65,7 @@ public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<D
 
     @Nullable
     @Override
-    public XBreakpointCustomPropertiesPanel<XBreakpoint<DotNetExceptionBreakpointProperties>> createCustomPropertiesPanel(@Nonnull Project project) {
+    public XBreakpointCustomPropertiesPanel<XBreakpoint<DotNetExceptionBreakpointProperties>> createCustomPropertiesPanel(Project project) {
         return new DotNetExceptionBreakpointPropertiesPanel();
     }
 
@@ -92,7 +88,7 @@ public class DotNetExceptionBreakpointType extends XBreakpointType<XBreakpoint<D
 
     @Nullable
     @Override
-    public XBreakpoint<DotNetExceptionBreakpointProperties> createDefaultBreakpoint(@Nonnull XBreakpointCreator<DotNetExceptionBreakpointProperties> creator) {
+    public XBreakpoint<DotNetExceptionBreakpointProperties> createDefaultBreakpoint(XBreakpointCreator<DotNetExceptionBreakpointProperties> creator) {
         return creator.createBreakpoint(new DotNetExceptionBreakpointProperties());
     }
 

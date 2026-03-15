@@ -17,7 +17,6 @@
 package consulo.dotnet.externalAttributes;
 
 import consulo.dotnet.DotNetTypes;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -44,7 +43,6 @@ public class ExternalAttributeArgumentNode
 		return myType;
 	}
 
-	@Nonnull
 	public Object toJavaObject()
 	{
 		if(DotNetTypes.System.String.equals(myType))

@@ -20,8 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public class DotNetTypeDeclarationUtil
 
 	@Nullable
 	@RequiredReadAction
-	public static String getVmQName(@Nonnull DotNetTypeDeclaration typeDeclaration)
+	public static String getVmQName(DotNetTypeDeclaration typeDeclaration)
 	{
 		String vmQName;
 
@@ -67,7 +66,7 @@ public class DotNetTypeDeclarationUtil
 	}
 
 	@Nullable
-	public static String getVmName(@Nonnull DotNetTypeDeclaration typeDeclaration)
+	public static String getVmName(DotNetTypeDeclaration typeDeclaration)
 	{
 		String name = typeDeclaration.getName();
 

@@ -25,7 +25,6 @@ import consulo.msil.lang.psi.MsilModifierList;
 import consulo.msil.impl.lang.psi.impl.MsilModifierListImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilModifierListStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -39,36 +38,33 @@ public class MsilModifierListStubElementType extends AbstractMsilStubElementType
 		super("MSIL_MODIFIER_LIST");
 	}
 
-	@Nonnull
 	@Override
-	public MsilModifierList createElement(@Nonnull ASTNode astNode)
+	public MsilModifierList createElement(ASTNode astNode)
 	{
 		return new MsilModifierListImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public MsilModifierList createPsi(@Nonnull MsilModifierListStub msilModifierListStub)
+	public MsilModifierList createPsi(MsilModifierListStub msilModifierListStub)
 	{
 		return new MsilModifierListImpl(msilModifierListStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilModifierListStub createStub(@Nonnull MsilModifierList msilModifierList, StubElement stubElement)
+	public MsilModifierListStub createStub(MsilModifierList msilModifierList, StubElement stubElement)
 	{
 		return new MsilModifierListStub(stubElement, this, msilModifierList);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilModifierListStub msilModifierListStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilModifierListStub msilModifierListStub, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeVarInt(msilModifierListStub.getModifiers());
 	}
 
-	@Nonnull
 	@Override
-	public MsilModifierListStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilModifierListStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		int modifiers = inputStream.readVarInt();
 		return new MsilModifierListStub(stubElement, this, modifiers);

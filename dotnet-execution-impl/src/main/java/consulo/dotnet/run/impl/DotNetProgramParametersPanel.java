@@ -14,7 +14,6 @@ import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.LabeledComponent;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -78,7 +77,7 @@ public class DotNetProgramParametersPanel extends CommonProgramParametersPanel
 		myConsoleTypeBox.setRenderer(new ColoredListCellRenderer<ProcessConsoleType>()
 		{
 			@Override
-			protected void customizeCellRenderer(@Nonnull JList list, ProcessConsoleType value, int index, boolean selected, boolean hasFocus)
+			protected void customizeCellRenderer(JList list, ProcessConsoleType value, int index, boolean selected, boolean hasFocus)
 			{
 				append(value.getDisplayName().get());
 			}

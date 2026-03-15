@@ -12,8 +12,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,13 +40,11 @@ public class CfsColorSettingsPage implements ColorSettingsPage
 		}
 	};
 
-	@Nonnull
 	@Override
 	public SyntaxHighlighter getHighlighter()
 	{
 		return new CfsSyntaxHighlighter(CfsLanguage.INSTANCE.findVersionByClass(IndexCfsLanguageVersion.class))
 		{
-			@Nonnull
 			@Override
 			public TextAttributesKey[] getTokenHighlights(IElementType elementType)
 			{
@@ -60,7 +57,6 @@ public class CfsColorSettingsPage implements ColorSettingsPage
 		};
 	}
 
-	@Nonnull
 	@Override
 	public String getDemoText()
 	{
@@ -75,14 +71,12 @@ public class CfsColorSettingsPage implements ColorSettingsPage
 		return myTags;
 	}
 
-	@Nonnull
 	@Override
 	public AttributesDescriptor[] getAttributeDescriptors()
 	{
 		return myAttributesDescriptors;
 	}
 
-	@Nonnull
 	@Override
 	public LocalizeValue getDisplayName()
 	{

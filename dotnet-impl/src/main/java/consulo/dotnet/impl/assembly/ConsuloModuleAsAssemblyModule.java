@@ -22,8 +22,7 @@ import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,20 +30,18 @@ import jakarta.annotation.Nullable;
  */
 class ConsuloModuleAsAssemblyModule implements AssemblyModule
 {
-	@Nonnull
 	private final Module myModule;
 	@Nullable
 	private final DotNetModuleLangExtension<?> myLangExtension;
 
 	@RequiredReadAction
-	ConsuloModuleAsAssemblyModule(@Nonnull Module module)
+	ConsuloModuleAsAssemblyModule(Module module)
 	{
 		myModule = module;
 		myLangExtension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public String getName()
 	{
@@ -54,14 +51,14 @@ class ConsuloModuleAsAssemblyModule implements AssemblyModule
 
 	@RequiredReadAction
 	@Override
-	public boolean isAllowedAssembly(@Nonnull String assemblyName)
+	public boolean isAllowedAssembly(String assemblyName)
 	{
 		DotNetModuleLangExtension<?> langExtension = myLangExtension;
 		return langExtension == null || langExtension.isInternalsVisibleTo(assemblyName);
 	}
 
 	@Override
-	public boolean equals(@Nonnull AssemblyModule module)
+	public boolean equals(AssemblyModule module)
 	{
 		return module instanceof ConsuloModuleAsAssemblyModule && myModule.equals(((ConsuloModuleAsAssemblyModule) module).myModule);
 	}

@@ -27,8 +27,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -46,15 +45,13 @@ public class DotNetVirtualMachineUtil
 		}
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	public static DotNetTypeDeclaration[] findTypesByQualifiedName(@Nonnull DotNetTypeProxy typeMirror, @Nonnull DotNetDebugContext debugContext)
+	public static DotNetTypeDeclaration[] findTypesByQualifiedName(DotNetTypeProxy typeMirror, DotNetDebugContext debugContext)
 	{
 		Project project = debugContext.getProject();
 		return DotNetPsiSearcher.getInstance(project).findTypes(DotNetDebuggerUtil.getVmQName(typeMirror), debugContext.getResolveScope());
 	}
 
-	@Nonnull
 	public static String formatNameWithGeneric(@Nullable DotNetTypeProxy typeMirror)
 	{
 		if(typeMirror == null)
@@ -66,7 +63,7 @@ public class DotNetVirtualMachineUtil
 		return builder.toString();
 	}
 
-	public static void formatNameWithGeneric(@Nonnull StringBuilder builder, @Nonnull DotNetTypeProxy typeMirror)
+	public static void formatNameWithGeneric(StringBuilder builder, DotNetTypeProxy typeMirror)
 	{
 		builder.append(MsilHelper.prepareForUser(DotNetDebuggerUtil.getVmQName(typeMirror.getFullName())));
 	}

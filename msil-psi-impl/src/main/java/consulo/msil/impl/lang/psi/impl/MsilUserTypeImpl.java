@@ -28,7 +28,6 @@ import consulo.msil.lang.psi.MsilUserType;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilUserTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilReferenceTypeRefImpl;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,18 +35,17 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements MsilUserType
 {
-	public MsilUserTypeImpl(@Nonnull ASTNode node)
+	public MsilUserTypeImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilUserTypeImpl(@Nonnull MsilUserTypeStub stub, @Nonnull IStubElementType nodeType)
+	public MsilUserTypeImpl(MsilUserTypeStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public Target getTarget()
 	{
@@ -72,7 +70,6 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements 
 		return Target.CLASS;
 	}
 
-	@Nonnull
 	@Override
 	public String getReferenceText()
 	{
@@ -93,7 +90,6 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements 
 		}
 	}
 
-	@Nonnull
 	@Override
 	public DotNetReferenceExpression getReferenceExpression()
 	{
@@ -101,7 +97,6 @@ public class MsilUserTypeImpl extends MsilTypeImpl<MsilUserTypeStub> implements 
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRefImpl()
 	{

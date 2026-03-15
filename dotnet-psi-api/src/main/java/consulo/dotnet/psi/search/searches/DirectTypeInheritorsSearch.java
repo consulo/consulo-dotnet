@@ -23,7 +23,6 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ public class DirectTypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTyp
 		private final SearchScope myScope;
 		private final boolean myCheckInheritance;
 
-		public SearchParameters(@Nonnull Project project, @Nonnull String vmQName, SearchScope scope, boolean checkInheritance)
+		public SearchParameters(Project project, String vmQName, SearchScope scope, boolean checkInheritance)
 		{
 			myProject = project;
 			myVmQName = vmQName;
@@ -49,18 +48,16 @@ public class DirectTypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTyp
 			myCheckInheritance = checkInheritance;
 		}
 
-		public SearchParameters(@Nonnull Project project, String vmQName, final SearchScope scope)
+		public SearchParameters(Project project, String vmQName, final SearchScope scope)
 		{
 			this(project, vmQName, scope, true);
 		}
 
-		@Nonnull
 		public Project getProject()
 		{
 			return myProject;
 		}
 
-		@Nonnull
 		public String getVmQName()
 		{
 			return myVmQName;

@@ -27,8 +27,7 @@ import consulo.msil.impl.lang.psi.MsilStubTokenSets;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilPointerTypeRefImpl;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,12 +35,12 @@ import jakarta.annotation.Nullable;
  */
 public class MsilPointerTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implements DotNetPointerType
 {
-	public MsilPointerTypeImpl(@Nonnull ASTNode node)
+	public MsilPointerTypeImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilPointerTypeImpl(@Nonnull MsilEmptyTypeStub stub, @Nonnull IStubElementType nodeType)
+	public MsilPointerTypeImpl(MsilEmptyTypeStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -59,7 +58,6 @@ public class MsilPointerTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> impleme
 		return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
 	}
 
-	@Nonnull
 	@Override
 	public PsiElement getAsterisk()
 	{
@@ -67,7 +65,6 @@ public class MsilPointerTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> impleme
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	protected DotNetTypeRef toTypeRefImpl()
 	{

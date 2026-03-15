@@ -16,9 +16,8 @@
 
 package consulo.dotnet.psi;
 
-import jakarta.annotation.Nonnull;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,12 +25,10 @@ import jakarta.annotation.Nullable;
  */
 public interface DotNetParameterListOwner extends DotNetElement
 {
-	@Nonnull
 	DotNetTypeRef[] getParameterTypeRefs();
 
 	@Nullable
 	DotNetParameterList getParameterList();
 
-	@Nonnull
 	DotNetParameter[] getParameters();
 }

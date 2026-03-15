@@ -6,7 +6,6 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.content.scope.SearchScope;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.psi.PsiBundle;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.function.Predicate;
@@ -22,7 +21,7 @@ class DefaultTypeInheritorsSearchExecutor implements TypeInheritorsSearchExecuto
     }
 
     @Override
-    public boolean execute(@Nonnull TypeInheritorsSearch.SearchParameters parameters, @Nonnull Predicate<? super DotNetTypeDeclaration> processor) {
+    public boolean execute(TypeInheritorsSearch.SearchParameters parameters, Predicate<? super DotNetTypeDeclaration> processor) {
         final String baseVmQName = parameters.getVmQName();
         final SearchScope searchScope = parameters.getScope();
 

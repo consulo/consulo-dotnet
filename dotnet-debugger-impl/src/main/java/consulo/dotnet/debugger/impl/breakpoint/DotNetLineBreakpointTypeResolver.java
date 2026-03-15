@@ -17,8 +17,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ public abstract class DotNetLineBreakpointTypeResolver implements XLineBreakpoin
 	@Nullable
 	@Override
 	@RequiredReadAction
-	public XLineBreakpointType<?> resolveBreakpointType(@Nonnull Project project, @Nonnull VirtualFile virtualFile, final int line)
+	public XLineBreakpointType<?> resolveBreakpointType(Project project, VirtualFile virtualFile, final int line)
 	{
 		final Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
 		if(document == null)
@@ -41,8 +40,7 @@ public abstract class DotNetLineBreakpointTypeResolver implements XLineBreakpoin
 	}
 
 	@RequiredReadAction
-	@Nonnull
-	public static Pair<XLineBreakpointType<?>, PsiElement> tryResolveBreakpointType(@Nonnull final Project project, @Nonnull final VirtualFile virtualFile, final int line)
+	public static Pair<XLineBreakpointType<?>, PsiElement> tryResolveBreakpointType(final Project project, final VirtualFile virtualFile, final int line)
 	{
 		final Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
 		if(document == null)

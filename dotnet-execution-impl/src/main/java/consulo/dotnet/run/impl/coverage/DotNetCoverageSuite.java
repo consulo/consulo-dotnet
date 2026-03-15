@@ -21,8 +21,7 @@ import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageFileProvider;
 import consulo.execution.coverage.CoverageRunner;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -64,7 +63,6 @@ public class DotNetCoverageSuite extends BaseCoverageSuite
 		myEngine = engine;
 	}
 
-	@Nonnull
 	@Override
 	public CoverageEngine getCoverageEngine()
 	{

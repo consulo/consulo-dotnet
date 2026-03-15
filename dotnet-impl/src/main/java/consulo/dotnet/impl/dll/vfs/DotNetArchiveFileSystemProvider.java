@@ -25,8 +25,7 @@ import consulo.internal.dotnet.msil.decompiler.file.DotNetArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveEntry;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystemProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +45,6 @@ public class DotNetArchiveFileSystemProvider implements ArchiveFileSystemProvide
             myArchiveFile = archiveFile;
         }
 
-        @Nonnull
         @Override
         public String getName() {
             return myArchiveFile.getName();
@@ -61,11 +59,10 @@ public class DotNetArchiveFileSystemProvider implements ArchiveFileSystemProvide
 
         @Nullable
         @Override
-        public InputStream getInputStream(@Nonnull ArchiveEntry archiveEntry) throws IOException {
+        public InputStream getInputStream(ArchiveEntry archiveEntry) throws IOException {
             return myArchiveFile.getInputStream(((DotNetArchiveEntryWrapper) archiveEntry).myArchiveEntry);
         }
 
-        @Nonnull
         @Override
         public Iterator<? extends ArchiveEntry> entries() {
             return new Iterator<>() {
@@ -121,15 +118,13 @@ public class DotNetArchiveFileSystemProvider implements ArchiveFileSystemProvide
         }
     }
 
-    @Nonnull
     @Override
     public String getProtocol() {
         return DotNetModuleFileType.PROTOCOL;
     }
 
-    @Nonnull
     @Override
-    public ArchiveFile createArchiveFile(@Nonnull String path) throws IOException {
+    public ArchiveFile createArchiveFile(String path) throws IOException {
         try {
             File file = new File(path);
             return new DotNetArchiveFileWrapper(new DotNetArchiveFile(file, new ModuleParser(new File(path)), file.lastModified()));

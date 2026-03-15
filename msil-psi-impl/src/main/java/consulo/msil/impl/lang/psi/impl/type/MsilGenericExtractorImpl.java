@@ -19,8 +19,7 @@ package consulo.msil.impl.lang.psi.impl.type;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import consulo.dotnet.psi.DotNetGenericParameter;
 import consulo.dotnet.psi.resolve.DotNetGenericExtractor;
@@ -48,7 +47,7 @@ public class MsilGenericExtractorImpl implements DotNetGenericExtractor
 
 	@Nullable
 	@Override
-	public DotNetTypeRef extract(@Nonnull DotNetGenericParameter parameter)
+	public DotNetTypeRef extract(DotNetGenericParameter parameter)
 	{
 		return myMap.get(parameter);
 	}

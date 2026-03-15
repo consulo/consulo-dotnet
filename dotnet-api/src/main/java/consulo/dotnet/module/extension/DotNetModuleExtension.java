@@ -20,8 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.content.bundle.Sdk;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,13 +42,11 @@ public interface DotNetModuleExtension<T extends DotNetModuleExtension<T>> exten
 
 	boolean isAllowSourceRoots();
 
-	@Nonnull
 	String getNamespacePrefix();
 
 	@Nullable
 	String getMainType();
 
-	@Nonnull
 	@RequiredReadAction
 	PsiElement[] getEntryPointElements();
 }

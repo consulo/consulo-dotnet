@@ -24,7 +24,6 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.util.LanguageCachedValueUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,18 +31,17 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElementImpl<T> implements DotNetType
 {
-	protected MsilTypeImpl(@Nonnull ASTNode node)
+	protected MsilTypeImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	protected MsilTypeImpl(@Nonnull T stub, @Nonnull IStubElementType nodeType)
+	protected MsilTypeImpl(T stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public final DotNetTypeRef toTypeRef()
 	{
@@ -51,7 +49,6 @@ public abstract class MsilTypeImpl<T extends StubElement> extends MsilStubElemen
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	protected abstract DotNetTypeRef toTypeRefImpl();
 
 	@Override

@@ -23,7 +23,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.PsiParser;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,14 +32,13 @@ public abstract class BaseExpressionCfsLanguageVersion extends BaseCfsLanguageVe
 {
 	protected IElementType myExpressionElementType;
 
-	public BaseExpressionCfsLanguageVersion(@Nonnull Language baseLanguage)
+	public BaseExpressionCfsLanguageVersion(Language baseLanguage)
 	{
 		super(baseLanguage.getID() + "_EXPRESSION", CfsLanguage.INSTANCE);
 	}
 
 	public abstract IElementType createExpressionElementType();
 
-	@Nonnull
 	@Override
 	public PsiParser createParser()
 	{
@@ -51,7 +49,6 @@ public abstract class BaseExpressionCfsLanguageVersion extends BaseCfsLanguageVe
 		return new CfsParser(myExpressionElementType);
 	}
 
-	@Nonnull
 	@Override
 	public Lexer createInnerLexer()
 	{

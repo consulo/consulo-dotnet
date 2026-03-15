@@ -21,7 +21,6 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
  */
 public class DotNetModuleFileType extends ArchiveFileType
 {
-	public static boolean isDllFile(@Nonnull String filePath)
+	public static boolean isDllFile(String filePath)
 	{
 		return FileUtil.extensionEquals(filePath, ourExtension);
 	}
@@ -44,28 +43,24 @@ public class DotNetModuleFileType extends ArchiveFileType
 		super(VirtualFileManager.getInstance());
 	}
 
-	@Nonnull
 	@Override
 	public String getProtocol()
 	{
 		return PROTOCOL;
 	}
 
-	@Nonnull
 	@Override
 	public LocalizeValue getDescription()
 	{
 		return LocalizeValue.localizeTODO(".NET libraries");
 	}
 
-	@Nonnull
 	@Override
 	public String getId()
 	{
 		return "DLL_ARCHIVE";
 	}
 
-	@Nonnull
 	@Override
 	public String getDefaultExtension()
 	{

@@ -19,7 +19,6 @@ package consulo.msil.lang.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetUserType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,7 +34,6 @@ public interface MsilUserType extends DotNetUserType
 		public static final Target[] VALUES = values();
 	}
 
-	@Nonnull
 	@RequiredReadAction
 	Target getTarget();
 }

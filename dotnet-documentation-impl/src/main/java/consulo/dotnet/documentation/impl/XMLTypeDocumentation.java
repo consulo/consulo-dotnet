@@ -10,7 +10,6 @@
  ******************************************************************************/
 package consulo.dotnet.documentation.impl;
 
-import jakarta.annotation.Nonnull;
 import org.emonic.base.documentation.IDocumentation;
 import org.emonic.base.documentation.ITypeDocumentation;
 
@@ -32,7 +31,6 @@ final class XMLTypeDocumentation extends XMLDocumentation implements ITypeDocume
 		myMemberDocumentation.add(documentation);
 	}
 
-	@Nonnull
 	@Override
 	public List<IDocumentation> getDocumentation()
 	{

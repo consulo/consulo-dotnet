@@ -32,10 +32,8 @@ import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.lang.psi.*;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilGenericParameterStub;
 import consulo.util.collection.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,12 +41,12 @@ import jakarta.annotation.Nullable;
  */
 public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericParameterStub> implements MsilGenericParameter
 {
-	public MsilGenericParameterImpl(@Nonnull ASTNode node)
+	public MsilGenericParameterImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilGenericParameterImpl(@Nonnull MsilGenericParameterStub stub, @Nonnull IStubElementType nodeType)
+	public MsilGenericParameterImpl(MsilGenericParameterStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -60,7 +58,7 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@Nonnull DotNetModifier modifier)
+	public boolean hasModifier(DotNetModifier modifier)
 	{
 		MsilGenericParameterStub stub = getGreenStub();
 		if(stub != null)
@@ -110,13 +108,12 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 
 	@RequiredWriteAction
 	@Override
-	public PsiElement setName(@NonNls @Nonnull String s) throws IncorrectOperationException
+	public PsiElement setName(String s) throws IncorrectOperationException
 	{
 		return null;
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeRef[] getExtendTypeRefs()
 	{
@@ -129,9 +126,8 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	}
 
 	@RequiredReadAction
-	@Nullable
 	@Override
-	public MsilUserType.Target getTarget()
+	public MsilUserType.@Nullable Target getTarget()
 	{
 		MsilGenericParameterStub stub = getGreenStub();
 		if(stub != null)
@@ -156,7 +152,6 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetPsiSearcher.TypeResoleKind getTypeKind()
 	{
@@ -200,7 +195,6 @@ public class MsilGenericParameterImpl extends MsilStubElementImpl<MsilGenericPar
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetAttribute[] getAttributes()
 	{

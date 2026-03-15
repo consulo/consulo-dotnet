@@ -26,7 +26,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,7 +41,7 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 {
 	private List<DotNetNamespaceAsElement> myList;
 
-	public CompositeDotNetNamespaceAsElement(Project project, @Nonnull String qName, List<DotNetNamespaceAsElement> list)
+	public CompositeDotNetNamespaceAsElement(Project project, String qName, List<DotNetNamespaceAsElement> list)
 	{
 		super(project, Language.ANY, qName);
 		myList = list;
@@ -63,7 +62,7 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 
 	@RequiredReadAction
 	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
+	public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place)
 	{
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
 		{
@@ -76,12 +75,11 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
-	public Collection<PsiElement> findChildren(@Nonnull String name,
-											   @Nonnull GlobalSearchScope globalSearchScope,
-											   @Nonnull Function<PsiElement, PsiElement> transformer,
-											   @Nonnull ChildrenFilter filter)
+	public Collection<PsiElement> findChildren(String name,
+											   GlobalSearchScope globalSearchScope,
+											   Function<PsiElement, PsiElement> transformer,
+											   ChildrenFilter filter)
 	{
 		Collection<Collection<PsiElement>> list = new ArrayList<>();
 		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
@@ -93,10 +91,9 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<PsiElement> getChildren(@Nonnull GlobalSearchScope globalSearchScope, @Nonnull Function<PsiElement, PsiElement> transformer, @Nonnull ChildrenFilter filter)
+	public Collection<PsiElement> getChildren(GlobalSearchScope globalSearchScope, Function<PsiElement, PsiElement> transformer, ChildrenFilter filter)
 	{
 		List<Collection<PsiElement>> list = new ArrayList<>();
 		for(DotNetNamespaceAsElement element : myList)
@@ -109,10 +106,10 @@ public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElem
 
 	@RequiredReadAction
 	@Override
-	public boolean processChildren(@Nonnull GlobalSearchScope globalSearchScope,
-								   @Nonnull Function<PsiElement, PsiElement> transformer,
-								   @Nonnull ChildrenFilter filter,
-								   @Nonnull Predicate<PsiElement> processor)
+	public boolean processChildren(GlobalSearchScope globalSearchScope,
+								   Function<PsiElement, PsiElement> transformer,
+								   ChildrenFilter filter,
+								   Predicate<PsiElement> processor)
 	{
 		for(DotNetNamespaceAsElement element : myList)
 		{

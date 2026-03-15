@@ -20,8 +20,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +33,7 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase {
     private final XDebugSession mySession;
     private final LanguageFileType myLanguageFileType;
 
-    public DotNetEditorsProvider(@Nonnull LanguageFileType languageFileType) {
+    public DotNetEditorsProvider(LanguageFileType languageFileType) {
         myLanguageFileType = languageFileType;
         mySession = null;
     }
@@ -44,7 +43,6 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase {
         myLanguageFileType = findLanguageFileType(runProfile);
     }
 
-    @Nonnull
     private static LanguageFileType findLanguageFileType(@Nullable RunProfile runProfile) {
         if (runProfile instanceof ModuleRunConfiguration moduleRunConfiguration) {
             Module[] modules = moduleRunConfiguration.getModules();
@@ -65,7 +63,7 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase {
 
     @Override
     @RequiredReadAction
-    protected PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull String text, @Nullable PsiElement context, boolean isPhysical) {
+    protected PsiFile createExpressionCodeFragment(Project project, String text, @Nullable PsiElement context, boolean isPhysical) {
         if (context == null) {
             XDebugSession session = mySession;
             XSourcePosition currentPosition = session == null ? null : session.getCurrentPosition();
@@ -91,9 +89,8 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase {
     }
 
     @Override
-    @Nonnull
     @RequiredReadAction
-    public Collection<Language> getSupportedLanguages(@Nonnull Project project, @Nullable XSourcePosition sourcePosition) {
+    public Collection<Language> getSupportedLanguages(Project project, @Nullable XSourcePosition sourcePosition) {
         if (sourcePosition == null) {
             return List.of(myLanguageFileType.getLanguage());
         }
@@ -105,7 +102,6 @@ public class DotNetEditorsProvider extends XDebuggerEditorsProviderBase {
         return List.of(provider.getEditorLanguage());
     }
 
-    @Nonnull
     @Override
     public FileType getFileType() {
         return myLanguageFileType;

@@ -20,8 +20,7 @@ import consulo.dotnet.psi.DotNetParameter;
 import consulo.dotnet.psi.DotNetXAccessor;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.util.collection.ArrayFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,10 +38,8 @@ public interface MsilXAcessor extends DotNetXAccessor
 	@Nullable
 	String getMethodName();
 
-	@Nonnull
 	DotNetParameter[] getParameters();
 
-	@Nonnull
 	DotNetTypeRef[] getParameterTypeRefs();
 
 	@Nullable

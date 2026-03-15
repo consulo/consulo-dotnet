@@ -22,8 +22,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.emonic.base.documentation.IDocumentation;
 
 import java.util.List;
@@ -39,5 +38,5 @@ public interface DotNetDocumentationResolver
 
 	@Nullable
 	@RequiredReadAction
-	IDocumentation resolveDocumentation(@Nonnull List<VirtualFile> orderEntryFiles, @Nonnull PsiElement element);
+	IDocumentation resolveDocumentation(List<VirtualFile> orderEntryFiles, PsiElement element);
 }

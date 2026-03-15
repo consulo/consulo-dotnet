@@ -22,8 +22,7 @@ import consulo.dotnet.psi.DotNetParameterList;
 import consulo.dotnet.psi.DotNetType;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,7 +34,6 @@ public interface MsilCustomAttribute extends DotNetAttribute
 
 	public static ArrayFactory<MsilCustomAttribute> ARRAY_FACTORY = new ArrayFactory<MsilCustomAttribute>()
 	{
-		@Nonnull
 		@Override
 		public MsilCustomAttribute[] create(int count)
 		{
@@ -47,11 +45,9 @@ public interface MsilCustomAttribute extends DotNetAttribute
 	@RequiredReadAction
 	DotNetType getType();
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetParameterList getParameterList();
 
-	@Nonnull
 	@RequiredReadAction
 	MsilCustomAttributeSignature getSignature();
 }

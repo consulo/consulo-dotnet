@@ -16,7 +16,6 @@
 
 package consulo.dotnet.psi;
 
-import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
@@ -27,11 +26,9 @@ import consulo.dotnet.psi.resolve.DotNetTypeRef;
  */
 public interface DotNetTypeList extends DotNetElement
 {
-	@Nonnull
 	@RequiredReadAction
 	DotNetType[] getTypes();
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef[] getTypeRefs();
 

@@ -27,7 +27,6 @@ import consulo.msil.impl.lang.psi.MsilStubTokenSets;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilTypeWithTypeArgumentsRefImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,12 +34,12 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilTypeWithTypeArgumentsImpl extends MsilTypeImpl<MsilEmptyTypeStub> implements DotNetTypeWithTypeArguments
 {
-	public MsilTypeWithTypeArgumentsImpl(@Nonnull ASTNode node)
+	public MsilTypeWithTypeArgumentsImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilTypeWithTypeArgumentsImpl(@Nonnull MsilEmptyTypeStub stub, @Nonnull IStubElementType nodeType)
+	public MsilTypeWithTypeArgumentsImpl(MsilEmptyTypeStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -52,7 +51,6 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilTypeImpl<MsilEmptyTypeStu
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetType getInnerType()
 	{
@@ -60,7 +58,6 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilTypeImpl<MsilEmptyTypeStu
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeList getArgumentsList()
 	{
@@ -68,7 +65,6 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilTypeImpl<MsilEmptyTypeStu
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetType[] getArguments()
 	{
@@ -76,7 +72,6 @@ public class MsilTypeWithTypeArgumentsImpl extends MsilTypeImpl<MsilEmptyTypeStu
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRefImpl()
 	{

@@ -27,8 +27,7 @@ import consulo.project.DumbService;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -42,7 +41,7 @@ public class DotNetAttributeUtil
 
 	@Nullable
 	@RequiredReadAction
-	public static DotNetAttribute findAttribute(@Nonnull PsiElement owner, @Nonnull String qName)
+	public static DotNetAttribute findAttribute(PsiElement owner, String qName)
 	{
 		if(!owner.isValid())
 		{
@@ -84,7 +83,7 @@ public class DotNetAttributeUtil
 	}
 
 	@RequiredReadAction
-	public static boolean hasAttribute(@Nonnull final PsiElement owner, @Nonnull final String qName)
+	public static boolean hasAttribute(final PsiElement owner, final String qName)
 	{
 		ConcurrentMap<String, CachedValue<Boolean>> map = owner.getUserData(ourAttributesKey);
 		if(map == null)

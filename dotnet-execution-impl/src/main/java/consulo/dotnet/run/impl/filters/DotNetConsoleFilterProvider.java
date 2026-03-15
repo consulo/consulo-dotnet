@@ -24,7 +24,6 @@ import consulo.execution.ui.console.Filter;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class DotNetConsoleFilterProvider implements ConsoleFilterProviderEx
 {
 	@Override
-	public Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull SearchScope searchScope)
+	public Filter[] getDefaultFilters(Project project, SearchScope searchScope)
 	{
 		if(!ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetSimpleModuleExtension.class))
 		{
@@ -44,9 +43,8 @@ public class DotNetConsoleFilterProvider implements ConsoleFilterProviderEx
 		return new Filter[]{new DotNetExceptionFilter(project, searchScope)};
 	}
 
-	@Nonnull
 	@Override
-	public Filter[] getDefaultFilters(@Nonnull Project project)
+	public Filter[] getDefaultFilters(Project project)
 	{
 		return getDefaultFilters(project, GlobalSearchScope.allScope(project));
 	}

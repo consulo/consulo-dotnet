@@ -8,8 +8,7 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,21 +25,19 @@ public interface DotNetPsiSearcherExtension
 {
 	@Nullable
 	@RequiredReadAction
-	default DotNetNamespaceAsElement findNamespace(@Nonnull String qName, @Nonnull SearchScope scope)
+	default DotNetNamespaceAsElement findNamespace(String qName, SearchScope scope)
 	{
 		return null;
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	default DotNetTypeDeclaration[] findTypes(@Nonnull String vmQName, @Nonnull SearchScope scope)
+	default DotNetTypeDeclaration[] findTypes(String vmQName, SearchScope scope)
 	{
 		return findTypes(vmQName, scope, DEFAULT_TRANSFORMER);
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	default DotNetTypeDeclaration[] findTypes(@Nonnull String vmQName, @Nonnull SearchScope scope, @Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	default DotNetTypeDeclaration[] findTypes(String vmQName, SearchScope scope, Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		Collection<? extends DotNetTypeDeclaration> declarations = findTypesImpl(vmQName, scope);
 		if(declarations.isEmpty())
@@ -57,20 +54,19 @@ public interface DotNetPsiSearcherExtension
 		return ContainerUtil.toArray(list, DotNetTypeDeclaration.ARRAY_FACTORY);
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(@Nonnull String vmQName, @Nonnull SearchScope scope);
+	public abstract Collection<? extends DotNetTypeDeclaration> findTypesImpl(String vmQName, SearchScope scope);
 
 	@Nullable
 	@RequiredReadAction
-	default DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull SearchScope scope)
+	default DotNetTypeDeclaration findType(String vmQName, SearchScope scope)
 	{
 		return findType(vmQName, scope, DEFAULT_TRANSFORMER);
 	}
 
 	@Nullable
 	@RequiredReadAction
-	default DotNetTypeDeclaration findType(@Nonnull String vmQName, @Nonnull SearchScope scope, @Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
+	default DotNetTypeDeclaration findType(String vmQName, SearchScope scope, Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer)
 	{
 		DotNetTypeDeclaration[] types = findTypes(vmQName, scope, transformer);
 		return ArrayUtil.getFirstElement(types);

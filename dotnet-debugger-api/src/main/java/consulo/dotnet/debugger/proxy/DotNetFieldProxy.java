@@ -1,8 +1,7 @@
 package consulo.dotnet.debugger.proxy;
 
 import consulo.util.collection.ArrayFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -14,7 +13,6 @@ public interface DotNetFieldProxy extends DotNetFieldOrPropertyProxy
 
 	public static ArrayFactory<DotNetFieldProxy> ARRAY_FACTORY = new ArrayFactory<DotNetFieldProxy>()
 	{
-		@Nonnull
 		@Override
 		public DotNetFieldProxy[] create(int count)
 		{
@@ -25,5 +23,5 @@ public interface DotNetFieldProxy extends DotNetFieldOrPropertyProxy
 	boolean isLiteral();
 
 	@Nullable
-	Number getEnumConstantValue(@Nonnull DotNetStackFrameProxy stackFrameProxy);
+	Number getEnumConstantValue(DotNetStackFrameProxy stackFrameProxy);
 }

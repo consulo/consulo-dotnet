@@ -21,7 +21,6 @@ import consulo.dotnet.psi.impl.resolve.impl.IndexBasedDotNetPsiSearcherExtension
 import consulo.msil.MsilLanguage;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,10 +28,10 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilNamespaceAsElementImpl extends IndexBasedDotNetNamespaceAsElement
 {
-	public MsilNamespaceAsElementImpl(@Nonnull Project project,
-			@Nonnull String indexKey,
-			@Nonnull String qName,
-			@Nonnull IndexBasedDotNetPsiSearcherExtension searcher)
+	public MsilNamespaceAsElementImpl(Project project,
+			String indexKey,
+			String qName,
+			IndexBasedDotNetPsiSearcherExtension searcher)
 	{
 		super(project, MsilLanguage.INSTANCE, indexKey, qName, searcher);
 	}

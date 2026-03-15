@@ -27,7 +27,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersionableParserDefinition;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,21 +37,18 @@ public class CfsParserDefinition extends LanguageVersionableParserDefinition
 {
 	private static final IFileElementType FILE_ELEMENT = new IFileElementType(CfsLanguage.INSTANCE);
 
-	@Nonnull
 	@Override
 	public Language getLanguage()
 	{
 		return CfsLanguage.INSTANCE;
 	}
 
-	@Nonnull
 	@Override
 	public IFileElementType getFileNodeType()
 	{
 		return FILE_ELEMENT;
 	}
 
-	@Nonnull
 	@Override
 	public PsiElement createElement(ASTNode astNode)
 	{

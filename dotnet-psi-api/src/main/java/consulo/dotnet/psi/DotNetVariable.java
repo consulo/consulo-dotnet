@@ -20,8 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +35,6 @@ public interface DotNetVariable extends PsiNameIdentifierOwner, DotNetNamedEleme
 	@RequiredReadAction
 	PsiElement getConstantKeywordElement();
 
-	@Nonnull
 	@RequiredReadAction
 	DotNetTypeRef toTypeRef(boolean resolveFromInitializer);
 

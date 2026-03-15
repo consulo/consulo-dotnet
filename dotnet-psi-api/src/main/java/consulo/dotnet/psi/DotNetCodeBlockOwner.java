@@ -16,7 +16,6 @@
 
 package consulo.dotnet.psi;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,6 +23,5 @@ import jakarta.annotation.Nonnull;
  */
 public interface DotNetCodeBlockOwner extends DotNetElement
 {
-	@Nonnull
 	DotNetCodeBodyProxy getCodeBlock();
 }

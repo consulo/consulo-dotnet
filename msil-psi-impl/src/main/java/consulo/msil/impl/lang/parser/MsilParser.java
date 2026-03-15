@@ -27,7 +27,6 @@ import consulo.msil.impl.lang.psi.MsilElements;
 import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.MsilTokens;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,9 +53,8 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
 		ourConstantValues.put(BOOL_KEYWORD, BOOL_LITERAL);
 	}
 
-	@Nonnull
 	@Override
-	public ASTNode parse(@Nonnull IElementType elementType, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion)
+	public ASTNode parse(IElementType elementType, PsiBuilder builder, LanguageVersion languageVersion)
 	{
 		PsiBuilder.Marker mark = builder.mark();
 		while(!builder.eof())

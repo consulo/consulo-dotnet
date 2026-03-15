@@ -27,8 +27,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,21 +37,20 @@ public abstract class LimitableDotNetLogicValueView<T extends DotNetValueProxy> 
 {
 	private static final Key<Integer> ourLastIndex = Key.create("dotnet-limit-last-index");
 
-	public abstract int getSize(@Nonnull T value);
+	public abstract int getSize(T value);
 
-	public abstract boolean isMyValue(@Nonnull DotNetValueProxy value);
+	public abstract boolean isMyValue(DotNetValueProxy value);
 
-	@Nonnull
-	public abstract XNamedValue createChildValue(int index, @Nonnull DotNetDebugContext context, @Nonnull DotNetStackFrameProxy frameProxy, @Nonnull T value);
+	public abstract XNamedValue createChildValue(int index, DotNetDebugContext context, DotNetStackFrameProxy frameProxy, T value);
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void computeChildren(@Nonnull UserDataHolderBase dataHolder,
-			@Nonnull DotNetDebugContext debugContext,
-			@Nonnull XNamedValue parentNode,
-			@Nonnull DotNetStackFrameProxy frameProxy,
+	public void computeChildren(UserDataHolderBase dataHolder,
+			DotNetDebugContext debugContext,
+			XNamedValue parentNode,
+			DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy oldValue,
-			@Nonnull XCompositeNode node)
+			XCompositeNode node)
 	{
 		if(oldValue == null || !isMyValue(oldValue))
 		{

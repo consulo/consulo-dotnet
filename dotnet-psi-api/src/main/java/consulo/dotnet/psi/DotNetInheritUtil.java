@@ -24,7 +24,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -57,13 +56,13 @@ public class DotNetInheritUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, @Nonnull String otherVmQName, boolean deep)
+	public static boolean isInheritor(DotNetTypeDeclaration typeDeclaration, String otherVmQName, boolean deep)
 	{
 		return DotNetInheritCache.getInstance(typeDeclaration.getProject()).calcResult(typeDeclaration, otherVmQName, deep);
 	}
 
 	@RequiredReadAction
-	public static boolean isParentOrSelf(@Nonnull String parentClass, DotNetTypeRef typeRef, boolean deep)
+	public static boolean isParentOrSelf(String parentClass, DotNetTypeRef typeRef, boolean deep)
 	{
 		PsiElement resolve = typeRef.resolve().getElement();
 		if(!(resolve instanceof DotNetTypeDeclaration))
@@ -75,7 +74,7 @@ public class DotNetInheritUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isParentOrSelf(@Nonnull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
+	public static boolean isParentOrSelf(String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
 		if(Comparing.equal(parentClass, typeDeclaration.getVmQName()))
 		{
@@ -85,7 +84,7 @@ public class DotNetInheritUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isParent(@Nonnull String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
+	public static boolean isParent(String parentClass, DotNetTypeDeclaration typeDeclaration, boolean deep)
 	{
 		return typeDeclaration.isInheritor(parentClass, deep);
 	}

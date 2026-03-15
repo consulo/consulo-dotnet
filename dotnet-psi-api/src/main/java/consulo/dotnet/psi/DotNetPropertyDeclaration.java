@@ -16,7 +16,6 @@
 
 package consulo.dotnet.psi;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,6 +25,5 @@ public interface DotNetPropertyDeclaration extends DotNetVariable, DotNetVirtual
 {
 	String DEFAULT_INDEX_PROPERTY_NAME = "Item";
 
-	@Nonnull
 	DotNetXAccessor[] getAccessors();
 }

@@ -25,7 +25,6 @@ import consulo.language.psi.stub.StubOutputStream;
 import consulo.msil.impl.lang.psi.impl.MsilGenericParameterListImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilGenericParameterListStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -39,36 +38,33 @@ public class MsilGenericParameterListStubElementType extends AbstractMsilStubEle
 		super("MSIL_GENERIC_PARAMETER_LIST");
 	}
 
-	@Nonnull
 	@Override
-	public DotNetGenericParameterList createElement(@Nonnull ASTNode astNode)
+	public DotNetGenericParameterList createElement(ASTNode astNode)
 	{
 		return new MsilGenericParameterListImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public DotNetGenericParameterList createPsi(@Nonnull MsilGenericParameterListStub msilGenericParameterListStub)
+	public DotNetGenericParameterList createPsi(MsilGenericParameterListStub msilGenericParameterListStub)
 	{
 		return new MsilGenericParameterListImpl(msilGenericParameterListStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilGenericParameterListStub createStub(@Nonnull DotNetGenericParameterList dotNetGenericParameterList, StubElement stubElement)
+	public MsilGenericParameterListStub createStub(DotNetGenericParameterList dotNetGenericParameterList, StubElement stubElement)
 	{
 		return new MsilGenericParameterListStub(stubElement, this);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilGenericParameterListStub msilGenericParameterListStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilGenericParameterListStub msilGenericParameterListStub, StubOutputStream stubOutputStream) throws IOException
 	{
 
 	}
 
-	@Nonnull
 	@Override
-	public MsilGenericParameterListStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilGenericParameterListStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		return new MsilGenericParameterListStub(stubElement, this);
 	}

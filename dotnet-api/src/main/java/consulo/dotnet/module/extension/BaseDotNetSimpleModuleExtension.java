@@ -46,8 +46,7 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -68,13 +67,12 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	protected Map<String, Map<OrderRootType, String[]>> myUrlsCache = new HashMap<>();
 	protected DotNetModuleSdkPointer mySdkPointer;
 
-	public BaseDotNetSimpleModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer)
+	public BaseDotNetSimpleModuleExtension(String id, ModuleRootLayer moduleRootLayer)
 	{
 		super(id, moduleRootLayer);
 		mySdkPointer = new DotNetModuleSdkPointer(moduleRootLayer.getProject(), id);
 	}
 
-	@Nonnull
 	@Override
 	public List<String> getVariables()
 	{
@@ -87,14 +85,12 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		return false;
 	}
 
-	@Nonnull
 	@Override
 	public DotNetNamespaceGeneratePolicy getNamespaceGeneratePolicy()
 	{
 		return DotNetNamespaceGeneratePolicy.DEFAULT;
 	}
 
-	@Nonnull
 	@Override
 	public Map<String, String> getAvailableSystemLibraries()
 	{
@@ -116,7 +112,6 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		return map;
 	}
 
-	@Nonnull
 	@Override
 	public ModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
@@ -137,9 +132,8 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		return getInheritableSdk().getName();
 	}
 
-	@Nonnull
 	@Override
-	public String[] getSystemLibraryUrls(@Nonnull String name, @Nonnull OrderRootType orderRootType)
+	public String[] getSystemLibraryUrls(String name, OrderRootType orderRootType)
 	{
 		Sdk sdk = getSdk();
 		if(sdk == null)
@@ -170,7 +164,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 
 	@RequiredReadAction
 	@Override
-	protected void loadStateImpl(@Nonnull Element element)
+	protected void loadStateImpl(Element element)
 	{
 		mySdkPointer.fromXml(element);
 
@@ -181,7 +175,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	}
 
 	@Override
-	protected void getStateImpl(@Nonnull Element element)
+	protected void getStateImpl(Element element)
 	{
 		mySdkPointer.toXml(element);
 		for(String variable : myVariables)
@@ -192,7 +186,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 
 	@RequiredReadAction
 	@Override
-	public void commit(@Nonnull S mutableModuleExtension)
+	public void commit(S mutableModuleExtension)
 	{
 		super.commit(mutableModuleExtension);
 
@@ -209,7 +203,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 	}
 
 	@Nullable
-	private File getLibraryByAssemblyName(@Nonnull final String name, @Nullable SimpleReference<Couple<String>> cache)
+	private File getLibraryByAssemblyName(final String name, @Nullable SimpleReference<Couple<String>> cache)
 	{
 		File[] filesForLibraries = getFilesForLibraries();
 		String nameWithExtension = name + ".dll";
@@ -230,8 +224,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		return null;
 	}
 
-	@Nonnull
-	protected String[] getSystemLibraryUrlsImpl(@Nonnull Sdk sdk, String name, OrderRootType orderRootType)
+	protected String[] getSystemLibraryUrlsImpl(Sdk sdk, String name, OrderRootType orderRootType)
 	{
 		if(orderRootType == BinariesOrderRootType.getInstance())
 		{
@@ -309,7 +302,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		return ArrayUtil.EMPTY_STRING_ARRAY;
 	}
 
-	private boolean isValidLibrary(@Nonnull File file, @Nonnull final String name, @Nullable SimpleReference<Couple<String>> cache)
+	private boolean isValidLibrary(File file, final String name, @Nullable SimpleReference<Couple<String>> cache)
 	{
 		Couple<String> info = parseLibrary(file);
 		if(info == null)
@@ -342,7 +335,6 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 		return false;
 	}
 
-	@Nonnull
 	public File[] getFilesForLibraries()
 	{
 		Sdk sdk = getSdk();

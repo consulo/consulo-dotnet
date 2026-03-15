@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,13 +28,11 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class MsilNamespaceIndex extends StringStubIndexExtension<DotNetQualifiedElement>
 {
-	@Nonnull
 	public static MsilNamespaceIndex getInstance()
 	{
 		return EP_NAME.findExtensionOrFail(MsilNamespaceIndex.class);
 	}
 
-	@Nonnull
 	@Override
 	public StubIndexKey<String, DotNetQualifiedElement> getKey()
 	{

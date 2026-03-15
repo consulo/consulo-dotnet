@@ -35,7 +35,6 @@ import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -64,20 +63,20 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
         private final Condition<String> myNameCondition;
 
         public SearchParameters(Project project,
-                                @Nonnull final String aClassQName,
-                                @Nonnull SearchScope scope,
+                                final String aClassQName,
+                                SearchScope scope,
                                 final boolean checkDeep,
                                 final boolean checkInheritance,
                                 Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer) {
             this(project, aClassQName, scope, checkDeep, checkInheritance, Conditions.<String>alwaysTrue(), transformer);
         }
 
-        public SearchParameters(@Nonnull Project project,
-                                @Nonnull final String aClassQName,
-                                @Nonnull SearchScope scope,
+        public SearchParameters(Project project,
+                                final String aClassQName,
+                                SearchScope scope,
                                 final boolean checkDeep,
                                 final boolean checkInheritance,
-                                @Nonnull final Condition<String> nameCondition,
+                                final Condition<String> nameCondition,
                                 Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer) {
             myProject = project;
             myVmQName = aClassQName;
@@ -88,12 +87,10 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
             myTransformer = transformer;
         }
 
-        @Nonnull
         public String getVmQName() {
             return myVmQName;
         }
 
-        @Nonnull
         public Condition<String> getNameCondition() {
             return myNameCondition;
         }
@@ -119,9 +116,8 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
         super(TypeInheritorsSearchExecutor.class);
     }
 
-    @Nonnull
-    public static Query<DotNetTypeDeclaration> search(@Nonnull final DotNetTypeDeclaration typeDeclaration,
-                                                      @Nonnull SearchScope scope,
+    public static Query<DotNetTypeDeclaration> search(final DotNetTypeDeclaration typeDeclaration,
+                                                      SearchScope scope,
                                                       final boolean checkDeep,
                                                       final boolean checkInheritance,
                                                       Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer) {
@@ -137,41 +133,37 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
         return search(new SearchParameters(typeDeclaration.getProject(), vmQName, scope, checkDeep, checkInheritance, transformer));
     }
 
-    public static Query<DotNetTypeDeclaration> search(@Nonnull SearchParameters parameters) {
+    public static Query<DotNetTypeDeclaration> search(SearchParameters parameters) {
         return INSTANCE.createQuery(parameters);
     }
 
-    @Nonnull
-    public static Query<DotNetTypeDeclaration> search(@Nonnull final DotNetTypeDeclaration typeDeclaration,
-                                                      @Nonnull SearchScope scope,
+    public static Query<DotNetTypeDeclaration> search(final DotNetTypeDeclaration typeDeclaration,
+                                                      SearchScope scope,
                                                       final boolean checkDeep,
                                                       Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer) {
         return search(typeDeclaration, scope, checkDeep, true, transformer);
     }
 
-    @Nonnull
-    public static Query<DotNetTypeDeclaration> search(@Nonnull final DotNetTypeDeclaration typeDeclaration, final boolean checkDeep) {
+    public static Query<DotNetTypeDeclaration> search(final DotNetTypeDeclaration typeDeclaration, final boolean checkDeep) {
         return search(typeDeclaration, typeDeclaration.getUseScope(), checkDeep, DotNetPsiSearcher.DEFAULT_TRANSFORMER);
     }
 
-    @Nonnull
-    public static Query<DotNetTypeDeclaration> search(@Nonnull final DotNetTypeDeclaration typeDeclaration,
+    public static Query<DotNetTypeDeclaration> search(final DotNetTypeDeclaration typeDeclaration,
                                                       final boolean checkDeep,
-                                                      @Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer) {
+                                                      Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer) {
         return search(typeDeclaration, typeDeclaration.getUseScope(), checkDeep, transformer);
     }
 
-    @Nonnull
-    public static Query<DotNetTypeDeclaration> search(@Nonnull DotNetTypeDeclaration typeDeclaration,
-                                                      @Nonnull Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer) {
+    public static Query<DotNetTypeDeclaration> search(DotNetTypeDeclaration typeDeclaration,
+                                                      Function<DotNetTypeDeclaration, DotNetTypeDeclaration> transformer) {
         return search(typeDeclaration, true, transformer);
     }
 
     @RequiredReadAction
-    static boolean processInheritors(@Nonnull final Predicate<? super DotNetTypeDeclaration> consumer,
-                                     @Nonnull final String baseVmQName,
-                                     @Nonnull final SearchScope searchScope,
-                                     @Nonnull final SearchParameters parameters) {
+    static boolean processInheritors(final Predicate<? super DotNetTypeDeclaration> consumer,
+                                     final String baseVmQName,
+                                     final SearchScope searchScope,
+                                     final SearchParameters parameters) {
 
         if (DotNetTypes.System.Object.equals(baseVmQName)) {
             return AllTypesSearch.search(searchScope, parameters.getProject(), parameters.getNameCondition()).forEach(aClass -> {
@@ -239,7 +231,7 @@ public class TypeInheritorsSearch extends ExtensibleQueryFactory<DotNetTypeDecla
         return true;
     }
 
-    private static boolean isSealed(@Nonnull final DotNetTypeDeclaration baseClass) {
+    private static boolean isSealed(final DotNetTypeDeclaration baseClass) {
         return ApplicationManager.getApplication().runReadAction((Supplier<Boolean>) () -> baseClass.hasModifier(DotNetModifier.SEALED));
     }
 }

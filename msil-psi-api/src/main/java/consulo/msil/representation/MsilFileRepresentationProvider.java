@@ -22,8 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.msil.lang.psi.MsilFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,11 +34,9 @@ public interface MsilFileRepresentationProvider
 	ExtensionPointName<MsilFileRepresentationProvider> EP_NAME = ExtensionPointName.create(MsilFileRepresentationProvider.class);
 
 	@Nullable
-	String getRepresentFileName(@Nonnull MsilFile msilFile);
+	String getRepresentFileName(MsilFile msilFile);
 
-	@Nonnull
-	CharSequence buildContent(String fileName, @Nonnull final MsilFile msilFile);
+	CharSequence buildContent(String fileName, final MsilFile msilFile);
 
-	@Nonnull
 	FileType getFileType();
 }

@@ -25,7 +25,6 @@ import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class DotNetModuleUtil
 {
 	@RequiredReadAction
-	public static boolean isUnderSourceRoot(@Nonnull PsiElement element)
+	public static boolean isUnderSourceRoot(PsiElement element)
 	{
 		Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(element);
 		if(moduleForPsiElement == null)

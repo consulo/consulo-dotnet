@@ -19,7 +19,6 @@ package consulo.dotnet.externalAttributes;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.OrderRootType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,6 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class ExternalAttributesRootOrderType extends OrderRootType
 {
-	@Nonnull
 	public static ExternalAttributesRootOrderType getInstance()
 	{
 		return getOrderRootType(ExternalAttributesRootOrderType.class);

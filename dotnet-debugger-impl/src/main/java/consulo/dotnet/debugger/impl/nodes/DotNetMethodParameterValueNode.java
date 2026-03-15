@@ -36,8 +36,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -55,7 +54,6 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 		myFrame = frame;
 	}
 
-	@Nonnull
 	@Override
 	public Image getIconForVariable(@Nullable SimpleReference<DotNetValueProxy> alreadyCalledValue)
 	{
@@ -65,7 +63,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 
 	@Override
 	@RequiredUIAccess
-	public void computeSourcePosition(@Nonnull XNavigatable navigatable)
+	public void computeSourcePosition(XNavigatable navigatable)
 	{
 		myDebugContext.getVirtualMachine().invoke(() -> navigatable.setSourcePosition(computeSourcePositionImpl()));
 	}
@@ -126,7 +124,7 @@ public class DotNetMethodParameterValueNode extends DotNetAbstractVariableValueN
 	}
 
 	@Override
-	public void setValueForVariableImpl(@Nonnull DotNetValueProxy value)
+	public void setValueForVariableImpl(DotNetValueProxy value)
 	{
 		myFrame.setParameterValue(myParameter, value);
 	}

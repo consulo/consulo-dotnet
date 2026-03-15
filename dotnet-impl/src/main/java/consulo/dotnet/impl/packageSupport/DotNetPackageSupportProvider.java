@@ -26,7 +26,6 @@ import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,21 +35,20 @@ import jakarta.annotation.Nonnull;
 public class DotNetPackageSupportProvider implements PsiPackageSupportProvider
 {
 	@Override
-	public boolean isSupported(@Nonnull ModuleExtension moduleExtension)
+	public boolean isSupported(ModuleExtension moduleExtension)
 	{
 		return moduleExtension instanceof DotNetModuleExtension && ((DotNetModuleExtension) moduleExtension).isAllowSourceRoots();
 	}
 
 	@Override
-	public boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName)
+	public boolean isValidPackageName(Module module, String packageName)
 	{
 		return true;
 	}
 
-	@Nonnull
 	@Override
-	public PsiPackage createPackage(@Nonnull PsiManager psiManager, @Nonnull PsiPackageManager psiPackageManager, @Nonnull Class<? extends
-			ModuleExtension> aClass, @Nonnull String s)
+	public PsiPackage createPackage(PsiManager psiManager, PsiPackageManager psiPackageManager, Class<? extends
+			ModuleExtension> aClass, String s)
 	{
 		return new DotNetPackage(psiManager, psiPackageManager, aClass, s);
 	}

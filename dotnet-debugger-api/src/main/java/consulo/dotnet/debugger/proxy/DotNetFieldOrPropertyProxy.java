@@ -3,8 +3,7 @@ package consulo.dotnet.debugger.proxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -18,11 +17,10 @@ public interface DotNetFieldOrPropertyProxy extends DotNetVariableProxy
 
 	boolean isStatic();
 
-	@Nonnull
 	DotNetTypeProxy getParentType();
 
 	@Nullable
-	DotNetValueProxy getValue(@Nonnull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy);
+	DotNetValueProxy getValue(DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy);
 
-	void setValue(@Nonnull DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy, @Nonnull DotNetValueProxy newValueProxy);
+	void setValue(DotNetStackFrameProxy frameProxy, @Nullable DotNetValueProxy proxy, DotNetValueProxy newValueProxy);
 }

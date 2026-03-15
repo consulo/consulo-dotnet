@@ -19,7 +19,6 @@ package consulo.dotnet.psi.resolve;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,14 +37,12 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 		myResolveScope = resolveScope;
 	}
 
-	@Nonnull
 	@Override
 	public Project getProject()
 	{
 		return myProject;
 	}
 
-	@Nonnull
 	@Override
 	public GlobalSearchScope getResolveScope()
 	{
@@ -53,7 +50,6 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public final DotNetTypeResolveResult resolve()
 	{
@@ -72,11 +68,9 @@ public abstract class DotNetTypeRefWithCachedResult implements DotNetTypeRef
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	protected abstract DotNetTypeResolveResult resolveResult();
 
 	@RequiredReadAction
-	@Nonnull
 	public String toString()
 	{
 		return getVmQName();

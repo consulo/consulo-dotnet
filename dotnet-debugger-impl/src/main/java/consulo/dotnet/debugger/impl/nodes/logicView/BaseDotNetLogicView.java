@@ -27,8 +27,7 @@ import consulo.execution.debug.frame.XValueChildrenList;
 import consulo.logging.Logger;
 import consulo.util.dataholder.UserDataHolderBase;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,24 +38,24 @@ public abstract class BaseDotNetLogicView implements DotNetLogicValueView
 	private static final Logger LOG = Logger.getInstance(BaseDotNetLogicView.class);
 
 	@Override
-	public boolean canHandle(@Nonnull DotNetDebugContext debugContext, @Nonnull DotNetTypeProxy typeMirror)
+	public boolean canHandle(DotNetDebugContext debugContext, DotNetTypeProxy typeMirror)
 	{
 		return false;
 	}
 
-	public abstract void computeChildrenImpl(@Nonnull DotNetDebugContext debugContext,
-			@Nonnull XNamedValue parentNode,
-			@Nonnull DotNetStackFrameProxy frameProxy,
+	public abstract void computeChildrenImpl(DotNetDebugContext debugContext,
+			XNamedValue parentNode,
+			DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
-			@Nonnull XValueChildrenList childrenList);
+			XValueChildrenList childrenList);
 
 	@Override
-	public void computeChildren(@Nonnull UserDataHolderBase dataHolder,
-			@Nonnull DotNetDebugContext debugContext,
-			@Nonnull XNamedValue parentNode,
-			@Nonnull DotNetStackFrameProxy frameProxy,
+	public void computeChildren(UserDataHolderBase dataHolder,
+			DotNetDebugContext debugContext,
+			XNamedValue parentNode,
+			DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
-			@Nonnull XCompositeNode node)
+			XCompositeNode node)
 	{
 
 		try

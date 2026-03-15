@@ -19,7 +19,6 @@ package consulo.dotnet.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,11 +26,9 @@ import jakarta.annotation.Nonnull;
  */
 public interface DotNetNativeType extends DotNetType
 {
-	@Nonnull
 	@RequiredReadAction
 	PsiElement getTypeElement();
 
-	@Nonnull
 	@RequiredReadAction
 	IElementType getTypeElementType();
 }

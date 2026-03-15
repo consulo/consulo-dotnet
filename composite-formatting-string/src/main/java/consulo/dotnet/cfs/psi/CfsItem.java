@@ -31,7 +31,6 @@ import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,7 +38,7 @@ import jakarta.annotation.Nonnull;
  */
 public class CfsItem extends ASTWrapperPsiElement
 {
-	public CfsItem(@Nonnull ASTNode node)
+	public CfsItem(ASTNode node)
 	{
 		super(node);
 	}

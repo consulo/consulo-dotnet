@@ -29,8 +29,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.BitUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Modifier;
 import java.util.function.Function;
 
@@ -48,7 +47,7 @@ public class DotNetTypeRefCacheUtil
 		private final E myElement;
 		private final Function<E, DotNetTypeRef> myResolver;
 
-		public DotNetTypeRefCachedValueProvider(@Nonnull ModificationTracker modificationTracker, @Nonnull E element, @Nonnull Function<E, DotNetTypeRef> resolver)
+		public DotNetTypeRefCachedValueProvider(ModificationTracker modificationTracker, E element, Function<E, DotNetTypeRef> resolver)
 		{
 			myModificationTracker = modificationTracker;
 			myElement = element;
@@ -67,56 +66,50 @@ public class DotNetTypeRefCacheUtil
 	private static final Key<CachedValue<DotNetTypeRef>> ourDefaultCacheKey = Key.create("DotNetTypeRefCacheUtil.ourDefaultCacheKey");
 
 	@UsedInPlugin
-	@Nonnull
 	@RequiredReadAction
-	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(@Nonnull E element, @Nonnull final Function<E, DotNetTypeRef> resolver)
+	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(E element, final Function<E, DotNetTypeRef> resolver)
 	{
 		return getResultCacheResultImpl(ourDefaultCacheKey, element, resolver);
 	}
 
 	@UsedInPlugin
-	@Nonnull
 	@RequiredReadAction
-	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(@Nonnull Key<CachedValue<DotNetTypeRef>> key, @Nonnull E element, @Nonnull final Function<E, DotNetTypeRef> resolver)
+	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(Key<CachedValue<DotNetTypeRef>> key, E element, final Function<E, DotNetTypeRef> resolver)
 	{
 		return getResultCacheResultImpl(key, element, resolver);
 	}
 
 	@UsedInPlugin
-	@Nonnull
 	@RequiredReadAction
-	public static <E extends PsiElement> DotNetTypeRef localCacheTypeRef(@Nonnull E element, @Nonnull final Function<E, DotNetTypeRef> resolver)
+	public static <E extends PsiElement> DotNetTypeRef localCacheTypeRef(E element, final Function<E, DotNetTypeRef> resolver)
 	{
 		return getResultCacheResultImpl(ourDefaultCacheKey, element, resolver);
 	}
 
 	@UsedInPlugin
-	@Nonnull
 	@RequiredReadAction
-	public static <E extends PsiElement> DotNetTypeRef localCacheTypeRef(@Nonnull Key<CachedValue<DotNetTypeRef>> key, @Nonnull E element, @Nonnull final Function<E, DotNetTypeRef> resolver)
+	public static <E extends PsiElement> DotNetTypeRef localCacheTypeRef(Key<CachedValue<DotNetTypeRef>> key, E element, final Function<E, DotNetTypeRef> resolver)
 	{
 		return getResultCacheResultImpl(key, element, resolver);
 	}
 
 	@UsedInPlugin
-	@Nonnull
 	@RequiredReadAction
 	@Deprecated
 	@DeprecationInfo("modifierKeys is not used anymoore")
-	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(@Nonnull Key<CachedValue<DotNetTypeRef>> key,
-																	@Nonnull E element,
-																	@Nonnull final Function<E, DotNetTypeRef> resolver,
+	public static <E extends PsiElement> DotNetTypeRef cacheTypeRef(Key<CachedValue<DotNetTypeRef>> key,
+																	E element,
+																	final Function<E, DotNetTypeRef> resolver,
 																	Object... modifierKeys)
 	{
 		return getResultCacheResultImpl(key, element, resolver);
 	}
 
 	@UsedInPlugin
-	@Nonnull
 	@RequiredReadAction
-	private static <E extends PsiElement> DotNetTypeRef getResultCacheResultImpl(@Nonnull Key<CachedValue<DotNetTypeRef>> cachedValueKey,
-																				 @Nonnull E element,
-																				 @Nonnull final Function<E, DotNetTypeRef> resolver)
+	private static <E extends PsiElement> DotNetTypeRef getResultCacheResultImpl(Key<CachedValue<DotNetTypeRef>> cachedValueKey,
+																				 E element,
+																				 final Function<E, DotNetTypeRef> resolver)
 	{
 		Class<? extends Function> aClass = resolver.getClass();
 		if(!BitUtil.isSet(aClass.getModifiers(), Modifier.STATIC))

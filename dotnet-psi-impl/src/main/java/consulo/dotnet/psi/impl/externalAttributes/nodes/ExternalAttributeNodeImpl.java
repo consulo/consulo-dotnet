@@ -19,7 +19,6 @@ package consulo.dotnet.psi.impl.externalAttributes.nodes;
 import consulo.dotnet.externalAttributes.ExternalAttributeArgumentNode;
 import consulo.dotnet.externalAttributes.ExternalAttributeNode;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,19 +36,17 @@ public class ExternalAttributeNodeImpl implements ExternalAttributeNode
 		myName = name;
 	}
 
-	public void addArgument(@Nonnull ExternalAttributeArgumentNode attributeArgumentNode)
+	public void addArgument(ExternalAttributeArgumentNode attributeArgumentNode)
 	{
 		myArguments.add(attributeArgumentNode);
 	}
 
-	@Nonnull
 	@Override
 	public List<ExternalAttributeArgumentNode> getArguments()
 	{
 		return myArguments;
 	}
 
-	@Nonnull
 	@Override
 	public String getName()
 	{

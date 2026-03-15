@@ -23,8 +23,7 @@ import consulo.dotnet.debugger.proxy.DotNetInvalidObjectException;
 import consulo.dotnet.debugger.proxy.DotNetInvalidStackFrameException;
 import consulo.dotnet.debugger.proxy.DotNetStackFrameProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -34,9 +33,9 @@ import java.util.Set;
  */
 public interface StackFrameComputer
 {
-	boolean computeStackFrame(@Nonnull DotNetDebugContext debugContext,
+	boolean computeStackFrame(DotNetDebugContext debugContext,
 			@Nullable DotNetValueProxy thisObject,
-			@Nonnull DotNetStackFrameProxy frameMirrorProxy,
-			@Nonnull Set<Object> visitedVariables,
-			@Nonnull XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException;
+			DotNetStackFrameProxy frameMirrorProxy,
+			Set<Object> visitedVariables,
+			XValueChildrenList childrenList) throws DotNetInvalidObjectException, DotNetAbsentInformationException, DotNetInvalidStackFrameException;
 }

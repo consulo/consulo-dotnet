@@ -28,7 +28,6 @@ import consulo.msil.impl.lang.psi.impl.MsilMethodEntryImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilMethodEntryStub;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilStubIndexer;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -42,44 +41,41 @@ public class MsilMethodStubElementType extends AbstractMsilStubElementType<MsilM
 		super("MSIL_METHOD_ENTRY");
 	}
 
-	@Nonnull
 	@Override
-	public MsilMethodEntry createElement(@Nonnull ASTNode astNode)
+	public MsilMethodEntry createElement(ASTNode astNode)
 	{
 		return new MsilMethodEntryImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public MsilMethodEntry createPsi(@Nonnull MsilMethodEntryStub msilMethodEntryStub)
+	public MsilMethodEntry createPsi(MsilMethodEntryStub msilMethodEntryStub)
 	{
 		return new MsilMethodEntryImpl(msilMethodEntryStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilMethodEntryStub createStub(@Nonnull MsilMethodEntry msilMethodEntry, StubElement stubElement)
+	public MsilMethodEntryStub createStub(MsilMethodEntry msilMethodEntry, StubElement stubElement)
 	{
 		String name = msilMethodEntry.getNameFromBytecode();
 		return new MsilMethodEntryStub(stubElement, this, name);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilMethodEntryStub msilMethodEntryStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilMethodEntryStub msilMethodEntryStub, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilMethodEntryStub.getNameFromBytecode());
 	}
 
-	@Nonnull
 	@Override
-	public MsilMethodEntryStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilMethodEntryStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilMethodEntryStub(stubElement, this, StringRef.toString(ref));
 	}
 
 	@Override
-	public void indexStub(@Nonnull MsilMethodEntryStub msilMethodEntryStub, @Nonnull IndexSink indexSink)
+	public void indexStub(MsilMethodEntryStub msilMethodEntryStub, IndexSink indexSink)
 	{
 		for(MsilStubIndexer indexer : MsilStubIndexer.EP_NAME.getExtensionList())
 		{

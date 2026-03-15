@@ -10,7 +10,6 @@ import consulo.msil.lang.psi.MsilArrayDimension;
 import consulo.msil.impl.lang.psi.impl.MsilArrayDimensionImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilArrayDimensionStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -24,36 +23,33 @@ public class MsilArrayDimensionStubElementType extends AbstractMsilStubElementTy
 		super("ARRAY_DIMENSION");
 	}
 
-	@Nonnull
 	@Override
-	public MsilArrayDimension createPsi(@Nonnull MsilArrayDimensionStub msilArrayDimensionStub)
+	public MsilArrayDimension createPsi(MsilArrayDimensionStub msilArrayDimensionStub)
 	{
 		return new MsilArrayDimensionImpl(msilArrayDimensionStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilArrayDimensionStub createStub(@Nonnull MsilArrayDimension psi, StubElement parentStub)
+	public MsilArrayDimensionStub createStub(MsilArrayDimension psi, StubElement parentStub)
 	{
 		return new MsilArrayDimensionStub(parentStub, this, psi.getLowerValue());
 	}
 
-	@Nonnull
 	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
+	public PsiElement createElement(ASTNode astNode)
 	{
 		return new MsilArrayDimensionImpl(astNode);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilArrayDimensionStub stub, @Nonnull StubOutputStream dataStream) throws IOException
+	public void serialize(MsilArrayDimensionStub stub, StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeVarInt(stub.getLowerValue());
 	}
 
-	@Nonnull
 	@Override
-	public MsilArrayDimensionStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public MsilArrayDimensionStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		int lowerValue = dataStream.readVarInt();
 		return new MsilArrayDimensionStub(parentStub, this, lowerValue);

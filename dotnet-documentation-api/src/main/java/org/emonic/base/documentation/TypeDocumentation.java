@@ -13,7 +13,6 @@ package org.emonic.base.documentation;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.annotation.Nonnull;
 import org.w3c.dom.Element;
 
 public class TypeDocumentation extends Documentation implements ITypeDocumentation
@@ -31,7 +30,6 @@ public class TypeDocumentation extends Documentation implements ITypeDocumentati
 		myDocumentations.add(doc);
 	}
 
-	@Nonnull
 	public List<IDocumentation> getDocumentation()
 	{
 		return myDocumentations;

@@ -36,8 +36,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -105,7 +104,7 @@ public class CfsItemHighlightUsagesHandlerFactory implements HighlightUsagesHand
 						InjectedLanguageManager.getInstance(file.getProject()).enumerate(expression, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 						{
 							@Override
-							public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places)
+							public void visit(PsiFile injectedPsi, List<PsiLanguageInjectionHost.Shred> places)
 							{
 								if(injectedPsi instanceof CfsFile)
 								{
@@ -129,7 +128,7 @@ public class CfsItemHighlightUsagesHandlerFactory implements HighlightUsagesHand
 	}
 
 	@RequiredReadAction
-	public static void addOccurrence(@Nonnull List<TextRange> ranges, @Nonnull PsiElement element)
+	public static void addOccurrence(List<TextRange> ranges, PsiElement element)
 	{
 		TextRange range = element.getTextRange();
 		if(range != null)

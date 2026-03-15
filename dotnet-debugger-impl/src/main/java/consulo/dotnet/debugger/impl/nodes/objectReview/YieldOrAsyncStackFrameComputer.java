@@ -28,9 +28,8 @@ import consulo.dotnet.debugger.proxy.DotNetTypeProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Set;
 
 /**
@@ -40,11 +39,11 @@ import java.util.Set;
 public class YieldOrAsyncStackFrameComputer implements StackFrameComputer
 {
 	@Override
-	public boolean computeStackFrame(@Nonnull final DotNetDebugContext debugContext,
+	public boolean computeStackFrame(final DotNetDebugContext debugContext,
 			@Nullable final DotNetValueProxy thisObject,
-			@Nonnull final DotNetStackFrameProxy stackFrameMirror,
-			@Nonnull Set<Object> visitedVariables,
-			@Nonnull final XValueChildrenList childrenList)
+			final DotNetStackFrameProxy stackFrameMirror,
+			Set<Object> visitedVariables,
+			final XValueChildrenList childrenList)
 	{
 		DotNetVirtualMachineUtil.checkCallForUIThread();
 

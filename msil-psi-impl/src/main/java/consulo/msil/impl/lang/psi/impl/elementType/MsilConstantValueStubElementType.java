@@ -15,7 +15,6 @@ import consulo.msil.impl.lang.psi.impl.MsilConstantValueImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilConstantValueStub;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -48,16 +47,15 @@ public class MsilConstantValueStubElementType extends AbstractMsilStubElementTyp
 		super("CONSTANT_VALUE");
 	}
 
-	@Nonnull
 	@Override
-	public MsilConstantValue createPsi(@Nonnull MsilConstantValueStub msilConstantValueStub)
+	public MsilConstantValue createPsi(MsilConstantValueStub msilConstantValueStub)
 	{
 		return new MsilConstantValueImpl(msilConstantValueStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilConstantValueStub createStub(@Nonnull MsilConstantValue psi, StubElement parentStub)
+	public MsilConstantValueStub createStub(MsilConstantValue psi, StubElement parentStub)
 	{
 		IElementType valueType = psi.getValueType();
 		int index = valueType == null ? -1 : ArrayUtil.indexOf(ourElements, valueType);
@@ -65,23 +63,21 @@ public class MsilConstantValueStubElementType extends AbstractMsilStubElementTyp
 		return new MsilConstantValueStub(parentStub, this, index, valueText);
 	}
 
-	@Nonnull
 	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
+	public PsiElement createElement(ASTNode astNode)
 	{
 		return new MsilConstantValueImpl(astNode);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilConstantValueStub stub, @Nonnull StubOutputStream dataStream) throws IOException
+	public void serialize(MsilConstantValueStub stub, StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeVarInt(stub.getValueIndex());
 		dataStream.writeName(stub.getValue());
 	}
 
-	@Nonnull
 	@Override
-	public MsilConstantValueStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public MsilConstantValueStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		int valueIndex = dataStream.readVarInt();
 		StringRef valueText = dataStream.readName();

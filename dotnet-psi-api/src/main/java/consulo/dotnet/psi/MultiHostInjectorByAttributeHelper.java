@@ -21,8 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,8 +33,8 @@ public interface MultiHostInjectorByAttributeHelper
 	ExtensionPointName<MultiHostInjectorByAttributeHelper> EP_NAME = ExtensionPointName.create(MultiHostInjectorByAttributeHelper.class);
 
 	@Nullable
-	String getLanguageId(@Nonnull DotNetAttribute attribute);
+	String getLanguageId(DotNetAttribute attribute);
 
 	@Nullable
-	TextRange getTextRangeForInject(@Nonnull DotNetExpression expression);
+	TextRange getTextRangeForInject(DotNetExpression expression);
 }

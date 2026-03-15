@@ -22,8 +22,7 @@ import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,7 +44,7 @@ public class DotNetTypeRefUtil
 	}
 
 	@RequiredReadAction
-	public static boolean isVmQNameEqual(@Nonnull DotNetTypeRef typeRef, @Nonnull String expectedVmQName)
+	public static boolean isVmQNameEqual(DotNetTypeRef typeRef, String expectedVmQName)
 	{
 		DotNetTypeResolveResult typeResolveResult = typeRef.resolve();
 		PsiElement typeResolveResultElement = typeResolveResult.getElement();
@@ -57,9 +56,8 @@ public class DotNetTypeRefUtil
 		return false;
 	}
 
-	@Nonnull
 	@RequiredReadAction
-	public static DotNetTypeRef[] toArray(@Nonnull DotNetType[] arguments)
+	public static DotNetTypeRef[] toArray(DotNetType[] arguments)
 	{
 		if(arguments.length == 0)
 		{

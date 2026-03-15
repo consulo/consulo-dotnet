@@ -19,8 +19,7 @@ package consulo.dotnet.psi;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,6 +34,5 @@ public interface DotNetAttribute extends DotNetElement
 	@Nullable
 	DotNetTypeDeclaration resolveToType();
 
-	@Nonnull
 	DotNetTypeRef toTypeRef();
 }

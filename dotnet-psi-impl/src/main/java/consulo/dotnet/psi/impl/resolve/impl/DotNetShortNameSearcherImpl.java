@@ -26,8 +26,7 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -45,7 +44,7 @@ public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 	}
 
 	@Override
-	public void collectTypeNames(@Nonnull Predicate<String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter)
+	public void collectTypeNames(Predicate<String> processor, SearchScope scope, @Nullable IdFilter filter)
 	{
 		for(DotNetShortNameSearcherExtension nameSearcher : myProject.getExtensionList(DotNetShortNameSearcherExtension.class))
 		{
@@ -54,10 +53,10 @@ public class DotNetShortNameSearcherImpl extends DotNetShortNameSearcher
 	}
 
 	@Override
-	public void collectTypes(@Nonnull String key,
-			@Nonnull SearchScope scope,
+	public void collectTypes(String key,
+			SearchScope scope,
 			@Nullable IdFilter filter,
-			@Nonnull Predicate<DotNetTypeDeclaration> processor)
+			Predicate<DotNetTypeDeclaration> processor)
 	{
 		for(DotNetShortNameSearcherExtension nameSearcher : myProject.getExtensionList(DotNetShortNameSearcherExtension.class))
 		{

@@ -28,8 +28,7 @@ import consulo.msil.impl.lang.psi.MsilStubElements;
 import consulo.msil.lang.psi.MsilXAcessor;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,12 +36,12 @@ import jakarta.annotation.Nullable;
  */
 public class MsilEventEntryImpl extends MsilQVariableImpl implements MsilEventEntry
 {
-	public MsilEventEntryImpl(@Nonnull ASTNode node)
+	public MsilEventEntryImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilEventEntryImpl(@Nonnull MsilVariableEntryStub stub, @Nonnull IStubElementType nodeType)
+	public MsilEventEntryImpl(MsilVariableEntryStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -53,7 +52,6 @@ public class MsilEventEntryImpl extends MsilQVariableImpl implements MsilEventEn
 		visitor.visitEventEntry(this);
 	}
 
-	@Nonnull
 	@Override
 	public DotNetXAccessor[] getAccessors()
 	{
@@ -61,7 +59,6 @@ public class MsilEventEntryImpl extends MsilQVariableImpl implements MsilEventEn
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetNamedElement[] getMembers()
 	{
@@ -75,7 +72,6 @@ public class MsilEventEntryImpl extends MsilQVariableImpl implements MsilEventEn
 		return null;
 	}
 
-	@Nonnull
 	@Override
 	public DotNetTypeRef getTypeRefForImplement()
 	{

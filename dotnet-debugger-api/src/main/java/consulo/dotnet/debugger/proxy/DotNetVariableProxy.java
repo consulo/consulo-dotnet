@@ -16,8 +16,7 @@
 
 package consulo.dotnet.debugger.proxy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,6 +35,5 @@ public interface DotNetVariableProxy
 	@Override
 	int hashCode();
 
-	@Nonnull
 	String getName();
 }

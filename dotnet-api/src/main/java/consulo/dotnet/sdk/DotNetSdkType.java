@@ -27,7 +27,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -36,7 +35,7 @@ import java.io.File;
  * @since 20.12.13.
  */
 public abstract class DotNetSdkType extends SdkType {
-    protected DotNetSdkType(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Image icon) {
+    protected DotNetSdkType(String id, LocalizeValue displayName, Image icon) {
         super(id, displayName, icon);
     }
 
@@ -46,7 +45,7 @@ public abstract class DotNetSdkType extends SdkType {
     }
 
     @Override
-    public void setupSdkPaths(@Nonnull Sdk sdk) {
+    public void setupSdkPaths(Sdk sdk) {
         SdkModificator sdkModificator = sdk.getSdkModificator();
 
         File dir = new File(PluginManager.getPluginPath(BaseDotNetSimpleModuleExtension.class), "externalAttributes");
@@ -66,12 +65,10 @@ public abstract class DotNetSdkType extends SdkType {
         sdkModificator.commitChanges();
     }
 
-    @Nonnull
-    public File getLoaderFile(@Nonnull Sdk sdk) {
+    public File getLoaderFile(Sdk sdk) {
         return getLoaderFile(getClass(), "loader.exe");
     }
 
-    @Nonnull
     protected static File getLoaderFile(Class<?> clazz, String fileName) {
         return new File(new File(PluginManager.getPluginPath(clazz), "loader"), fileName);
     }

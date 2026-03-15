@@ -26,8 +26,7 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 /**
@@ -36,7 +35,6 @@ import jakarta.inject.Inject;
  */
 @ExtensionImpl
 public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethodBreakpointProperties> {
-    @Nonnull
     public static DotNetMethodBreakpointType getInstance() {
         return EXTENSION_POINT_NAME.findExtensionOrFail(DotNetMethodBreakpointType.class);
     }
@@ -46,13 +44,11 @@ public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethod
         super("dotnet-method-breakpoint", ".NET Method Breakpoints");
     }
 
-    @Nonnull
     @Override
     public Image getEnabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointmethod();
     }
 
-    @Nonnull
     @Override
     public Image getDisabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointmethoddisabled();
@@ -60,13 +56,13 @@ public class DotNetMethodBreakpointType extends XLineBreakpointType<DotNetMethod
 
     @Nullable
     @Override
-    public XBreakpointCustomPropertiesPanel<XLineBreakpoint<DotNetMethodBreakpointProperties>> createCustomPropertiesPanel(@Nonnull Project project) {
+    public XBreakpointCustomPropertiesPanel<XLineBreakpoint<DotNetMethodBreakpointProperties>> createCustomPropertiesPanel(Project project) {
         return new DotNetMethodBreakpointPropertiesPanel();
     }
 
     @Nullable
     @Override
-    public DotNetMethodBreakpointProperties createBreakpointProperties(@Nonnull VirtualFile file, int line) {
+    public DotNetMethodBreakpointProperties createBreakpointProperties(VirtualFile file, int line) {
         return new DotNetMethodBreakpointProperties();
     }
 

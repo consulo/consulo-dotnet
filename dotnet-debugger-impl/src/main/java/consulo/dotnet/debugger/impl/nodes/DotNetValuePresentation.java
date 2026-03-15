@@ -28,8 +28,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +48,7 @@ public class DotNetValuePresentation extends XValuePresentation
 	@Nullable
 	private DotNetValueTextRendererProxy myProxy;
 
-	public DotNetValuePresentation(DotNetDebugContext debugContext, @Nonnull DotNetStackFrameProxy stackFrame, @Nullable DotNetValueProxy value)
+	public DotNetValuePresentation(DotNetDebugContext debugContext, DotNetStackFrameProxy stackFrame, @Nullable DotNetValueProxy value)
 	{
 		myDebugContext = debugContext;
 		myStackFrame = stackFrame;
@@ -84,13 +83,13 @@ public class DotNetValuePresentation extends XValuePresentation
 		myValue.accept(new DotNetValueProxyVisitor()
 		{
 			@Override
-			public void visitStructValue(@Nonnull DotNetStructValueProxy proxy)
+			public void visitStructValue(DotNetStructValueProxy proxy)
 			{
 				result.set(DotNetVirtualMachineUtil.formatNameWithGeneric(proxy.getType()));
 			}
 
 			@Override
-			public void visitObjectValue(@Nonnull DotNetObjectValueProxy value)
+			public void visitObjectValue(DotNetObjectValueProxy value)
 			{
 				DotNetTypeProxy type = value.getType();
 
@@ -108,7 +107,7 @@ public class DotNetValuePresentation extends XValuePresentation
 			}
 
 			@Override
-			public void visitArrayValue(@Nonnull DotNetArrayValueProxy proxy)
+			public void visitArrayValue(DotNetArrayValueProxy proxy)
 			{
 				StringBuilder builder = new StringBuilder();
 				String type = DotNetVirtualMachineUtil.formatNameWithGeneric(proxy.getType());
@@ -122,7 +121,7 @@ public class DotNetValuePresentation extends XValuePresentation
 	}
 
 	@Override
-	public void renderValue(@Nonnull final XValueTextRenderer renderer)
+	public void renderValue(final XValueTextRenderer renderer)
 	{
 		if(myProxy != null)
 		{
@@ -130,18 +129,18 @@ public class DotNetValuePresentation extends XValuePresentation
 		}
 	}
 
-	private void renderValueImpl(@Nonnull final XValueTextRenderer renderer)
+	private void renderValueImpl(final XValueTextRenderer renderer)
 	{
 		myValue.accept(new DotNetValueProxyVisitor()
 		{
 			@Override
-			public void visitStringValue(@Nonnull DotNetStringValueProxy proxy)
+			public void visitStringValue(DotNetStringValueProxy proxy)
 			{
 				renderer.renderStringValue(proxy.getValue());
 			}
 
 			@Override
-			public void visitEnumValue(@Nonnull DotNetEnumValueProxy mirror)
+			public void visitEnumValue(DotNetEnumValueProxy mirror)
 			{
 				Object value = mirror.getValue();
 				if(!(value instanceof DotNetNumberValueProxy))
@@ -197,7 +196,7 @@ public class DotNetValuePresentation extends XValuePresentation
 			}
 
 			@Override
-			public void visitStructValue(@Nonnull DotNetStructValueProxy proxy)
+			public void visitStructValue(DotNetStructValueProxy proxy)
 			{
 				DotNetTypeProxy type = proxy.getType();
 				if(type == null)
@@ -232,7 +231,7 @@ public class DotNetValuePresentation extends XValuePresentation
 			}
 
 			@Override
-			public void visitObjectValue(@Nonnull DotNetObjectValueProxy value)
+			public void visitObjectValue(DotNetObjectValueProxy value)
 			{
 				DotNetTypeProxy type = value.getType();
 
@@ -264,7 +263,7 @@ public class DotNetValuePresentation extends XValuePresentation
 			}
 
 			@Override
-			public void visitCharValue(@Nonnull DotNetCharValueProxy proxy)
+			public void visitCharValue(DotNetCharValueProxy proxy)
 			{
 				Character mainValue = proxy.getValue();
 				StringBuilder builder = new StringBuilder();
@@ -277,25 +276,25 @@ public class DotNetValuePresentation extends XValuePresentation
 			}
 
 			@Override
-			public void visitBooleanValue(@Nonnull DotNetBooleanValueProxy value)
+			public void visitBooleanValue(DotNetBooleanValueProxy value)
 			{
 				renderer.renderValue(String.valueOf(value.getValue()));
 			}
 
 			@Override
-			public void visitNumberValue(@Nonnull DotNetNumberValueProxy proxy)
+			public void visitNumberValue(DotNetNumberValueProxy proxy)
 			{
 				renderer.renderValue(String.valueOf(proxy.getValue()));
 			}
 
 			@Override
-			public void visitNullValue(@Nonnull DotNetNullValueProxy value)
+			public void visitNullValue(DotNetNullValueProxy value)
 			{
 				renderer.renderValue("null");
 			}
 
 			@Override
-			public void visitErrorValue(@Nonnull DotNetErrorValueProxy proxy)
+			public void visitErrorValue(DotNetErrorValueProxy proxy)
 			{
 				renderer.renderError(proxy.getErrorMessage());
 			}

@@ -39,7 +39,6 @@ import consulo.util.collection.Chunk;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -53,7 +52,6 @@ public class DotNetCompiler implements TranslatingCompiler
 {
 	public static final Logger LOGGER = Logger.getInstance(DotNetCompiler.class);
 
-	@Nonnull
 	@Override
 	public String getDescription()
 	{
@@ -179,14 +177,12 @@ public class DotNetCompiler implements TranslatingCompiler
 		}
 	}
 
-	@Nonnull
 	@Override
 	public FileType[] getInputFileTypes()
 	{
 		return FileType.EMPTY_ARRAY;
 	}
 
-	@Nonnull
 	@Override
 	public FileType[] getOutputFileTypes()
 	{

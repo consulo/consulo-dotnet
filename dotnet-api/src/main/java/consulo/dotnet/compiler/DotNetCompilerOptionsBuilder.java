@@ -21,8 +21,7 @@ import consulo.module.Module;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,6 +32,5 @@ public interface DotNetCompilerOptionsBuilder
 	@Nullable
 	DotNetCompilerMessage convertToMessage(Module module, String line);
 
-	@Nonnull
-	GeneralCommandLine createCommandLine(@Nonnull Module module, @Nonnull VirtualFile[] results, @Nonnull DotNetModuleExtension<?> dotNetLayer) throws Exception;
+	GeneralCommandLine createCommandLine(Module module, VirtualFile[] results, DotNetModuleExtension<?> dotNetLayer) throws Exception;
 }

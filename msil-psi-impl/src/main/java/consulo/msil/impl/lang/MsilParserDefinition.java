@@ -36,7 +36,6 @@ import consulo.msil.impl.lang.psi.MsilStubElements;
 import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.impl.MsilFileImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,56 +44,48 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class MsilParserDefinition implements ParserDefinition
 {
-	@Nonnull
 	@Override
 	public Language getLanguage()
 	{
 		return MsilLanguage.INSTANCE;
 	}
 
-	@Nonnull
 	@Override
-	public Lexer createLexer(@Nonnull LanguageVersion languageVersion)
+	public Lexer createLexer(LanguageVersion languageVersion)
 	{
 		return new MsilLexer();
 	}
 
-	@Nonnull
 	@Override
-	public PsiParser createParser(@Nonnull LanguageVersion languageVersion)
+	public PsiParser createParser(LanguageVersion languageVersion)
 	{
 		return new MsilParser();
 	}
 
-	@Nonnull
 	@Override
 	public IFileElementType getFileNodeType()
 	{
 		return MsilStubElements.FILE;
 	}
 
-	@Nonnull
 	@Override
-	public TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion)
+	public TokenSet getWhitespaceTokens(LanguageVersion languageVersion)
 	{
 		return MsilTokenSets.WHITESPACES;
 	}
 
-	@Nonnull
 	@Override
-	public TokenSet getCommentTokens(@Nonnull LanguageVersion languageVersion)
+	public TokenSet getCommentTokens(LanguageVersion languageVersion)
 	{
 		return MsilTokenSets.COMMENTS;
 	}
 
-	@Nonnull
 	@Override
-	public TokenSet getStringLiteralElements(@Nonnull LanguageVersion languageVersion)
+	public TokenSet getStringLiteralElements(LanguageVersion languageVersion)
 	{
 		return TokenSet.EMPTY;
 	}
 
-	@Nonnull
 	@Override
 	public PsiElement createElement(ASTNode astNode)
 	{

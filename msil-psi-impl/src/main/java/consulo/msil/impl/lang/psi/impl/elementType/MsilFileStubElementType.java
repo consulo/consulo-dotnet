@@ -27,7 +27,6 @@ import consulo.msil.lang.psi.MsilFile;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilFileStub;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilStubIndexer;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -51,9 +50,8 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 	{
 		return new DefaultStubBuilder()
 		{
-			@Nonnull
 			@Override
-			protected StubElement createStubForFile(@Nonnull PsiFile file)
+			protected StubElement createStubForFile(PsiFile file)
 			{
 				if(file instanceof MsilFile)
 				{
@@ -64,9 +62,8 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 		};
 	}
 
-	@Nonnull
 	@Override
-	public MsilFileStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public MsilFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		return new MsilFileStub(null);
 	}
@@ -82,7 +79,6 @@ public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
 		return version;
 	}
 
-	@Nonnull
 	@Override
 	public String getExternalId()
 	{

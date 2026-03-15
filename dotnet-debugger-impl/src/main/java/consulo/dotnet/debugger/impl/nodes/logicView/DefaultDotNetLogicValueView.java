@@ -15,8 +15,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetObjectValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetStructValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -28,17 +27,17 @@ import java.util.Set;
 public class DefaultDotNetLogicValueView extends BaseDotNetLogicView
 {
 	@Override
-	public boolean canHandle(@Nonnull DotNetDebugContext debugContext, @Nonnull DotNetTypeProxy typeMirror)
+	public boolean canHandle(DotNetDebugContext debugContext, DotNetTypeProxy typeMirror)
 	{
 		return true;
 	}
 
 	@Override
-	public void computeChildrenImpl(@Nonnull DotNetDebugContext debugContext,
-			@Nonnull XNamedValue parentNode,
-			@Nonnull DotNetStackFrameProxy frameProxy,
+	public void computeChildrenImpl(DotNetDebugContext debugContext,
+			XNamedValue parentNode,
+			DotNetStackFrameProxy frameProxy,
 			@Nullable DotNetValueProxy value,
-			@Nonnull XValueChildrenList childrenList)
+			XValueChildrenList childrenList)
 	{
 		if(value instanceof DotNetObjectValueProxy)
 		{

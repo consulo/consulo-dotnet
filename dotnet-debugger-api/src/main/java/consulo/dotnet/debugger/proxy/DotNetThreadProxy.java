@@ -19,8 +19,7 @@ package consulo.dotnet.debugger.proxy;
 import java.util.List;
 
 import consulo.dotnet.util.ArrayUtil2;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,7 +36,6 @@ public abstract class DotNetThreadProxy
 	@Nullable
 	public abstract String getName();
 
-	@Nonnull
 	public abstract List<DotNetStackFrameProxy> getFrames() throws DotNetNotSuspendedException;
 
 	@Nullable

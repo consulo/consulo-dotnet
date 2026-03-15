@@ -1,6 +1,5 @@
 package consulo.dotnet.psi.resolve;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -8,6 +7,5 @@ import jakarta.annotation.Nonnull;
  */
 public interface DotNetGenericWrapperTypeRef extends DotNetTypeRef, DotNetTypeRefWithInnerTypeRef
 {
-	@Nonnull
 	DotNetTypeRef[] getArgumentTypeRefs();
 }

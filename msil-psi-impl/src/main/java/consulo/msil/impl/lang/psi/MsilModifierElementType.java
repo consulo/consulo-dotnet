@@ -20,8 +20,7 @@ import consulo.dotnet.psi.DotNetModifier;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Locale;
 
 /**
@@ -30,12 +29,12 @@ import java.util.Locale;
  */
 public class MsilModifierElementType extends IElementType implements DotNetModifier
 {
-	public MsilModifierElementType(@Nonnull String debugName, @Nullable Language language)
+	public MsilModifierElementType(String debugName, @Nullable Language language)
 	{
 		super(debugName, language);
 	}
 
-	protected MsilModifierElementType(@Nonnull String debugName, @Nullable Language language, boolean register)
+	protected MsilModifierElementType(String debugName, @Nullable Language language, boolean register)
 	{
 		super(debugName, language, register);
 	}

@@ -23,8 +23,7 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiElement;
 import consulo.module.extension.ModuleExtension;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.Set;
 
@@ -34,11 +33,9 @@ import java.util.Set;
  */
 public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T>> extends ModuleExtension<T>
 {
-	@Nonnull
 	@RequiredReadAction
 	PsiElement[] getEntryPointElements();
 
-	@Nonnull
 	LanguageFileType getFileType();
 
 	@Nullable
@@ -46,18 +43,16 @@ public interface DotNetModuleLangExtension<T extends DotNetModuleLangExtension<T
 	String getAssemblyTitle();
 
 	@RequiredReadAction
-	default boolean isInternalsVisibleTo(@Nonnull String assemblyName)
+	default boolean isInternalsVisibleTo(String assemblyName)
 	{
 		return getInternalsVisibleToAssemblies().contains(assemblyName);
 	}
 
-	@Nonnull
 	@RequiredReadAction
 	default Set<String> getInternalsVisibleToAssemblies()
 	{
 		return Collections.emptySet();
 	}
 
-	@Nonnull
 	DotNetCompilerOptionsBuilder createCompilerOptionsBuilder() throws DotNetCompileFailedException;
 }

@@ -25,9 +25,8 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,14 +34,12 @@ import jakarta.annotation.Nullable;
  */
 public class DotNetDebuggerUtil
 {
-	@Nonnull
-	public static String getVmQName(@Nonnull DotNetTypeProxy typeMirror)
+	public static String getVmQName(DotNetTypeProxy typeMirror)
 	{
 		return getVmQName(typeMirror.getFullName());
 	}
 
-	@Nonnull
-	public static String getVmQName(@Nonnull String fullName)
+	public static String getVmQName(String fullName)
 	{
 		// System.List`1[String]
 		int i = fullName.indexOf('[');
@@ -58,7 +55,7 @@ public class DotNetDebuggerUtil
 
 	@Nullable
 	@RequiredReadAction
-	public static PsiElement findPsiElement(@Nonnull PsiFile file, final int line)
+	public static PsiElement findPsiElement(PsiFile file, final int line)
 	{
 		final Document doc = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
 		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(file.getProject()).getPsiFile(doc);
@@ -83,7 +80,7 @@ public class DotNetDebuggerUtil
 
 	@Nullable
 	@RequiredReadAction
-	public static PsiElement findPsiElement(@Nonnull PsiFile file, final int line, int column)
+	public static PsiElement findPsiElement(PsiFile file, final int line, int column)
 	{
 		final Document doc = FileDocumentManager.getInstance().getDocument(file.getVirtualFile());
 		final PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(file.getProject()).getPsiFile(doc);

@@ -25,7 +25,6 @@ import consulo.dotnet.psi.test.DotNetTestFrameworks;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public class DotNetIconDescriptorUpdater implements IconDescriptorUpdater
 {
 	@RequiredReadAction
 	@Override
-	public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags)
+	public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags)
 	{
 		if(element instanceof DotNetTypeDeclaration)
 		{

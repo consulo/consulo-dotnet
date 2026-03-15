@@ -28,7 +28,6 @@ import consulo.module.extension.ModuleExtensionHelper;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class DotNetConfigurationType extends ConfigurationTypeBase {
-    @Nonnull
     public static DotNetConfigurationType getInstance() {
         return Application.get().getExtensionPoint(ConfigurationType.class).findExtensionOrFail(DotNetConfigurationType.class);
     }
@@ -45,7 +43,6 @@ public class DotNetConfigurationType extends ConfigurationTypeBase {
         super("#DotNetConfigurationType", DotNetExecutionLocalize.dotnetApplicationName(), PlatformIconGroup.runconfigurationsApplication());
 
         addFactory(new ConfigurationFactory(this) {
-            @Nonnull
             @Override
             public String getId() {
                 return ".NET Application";
@@ -58,7 +55,7 @@ public class DotNetConfigurationType extends ConfigurationTypeBase {
 
             @Override
             @RequiredUIAccess
-            public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
+            public void onNewConfigurationCreated(RunConfiguration configuration) {
                 DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
 
                 for (Module module : ModuleManager.getInstance(configuration.getProject()).getModules()) {
@@ -72,7 +69,7 @@ public class DotNetConfigurationType extends ConfigurationTypeBase {
             }
 
             @Override
-            public boolean isApplicable(@Nonnull Project project) {
+            public boolean isApplicable(Project project) {
                 return ModuleExtensionHelper.getInstance(project).hasModuleExtension(DotNetRunModuleExtension.class);
             }
         });

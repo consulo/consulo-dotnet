@@ -7,8 +7,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -16,10 +15,8 @@ import jakarta.annotation.Nullable;
  */
 public interface DotNetRunModuleExtension<T extends DotNetRunModuleExtension<T>> extends ModuleExtension<T>
 {
-	@Nonnull
 	String getFileName();
 
-	@Nonnull
 	String getOutputDir();
 
 	@Nullable
@@ -27,12 +24,9 @@ public interface DotNetRunModuleExtension<T extends DotNetRunModuleExtension<T>>
 
 	boolean isAllowDebugInfo();
 
-	@Nonnull
 	DotNetTarget getTarget();
 
-	@Nonnull
 	String getDebugFileExtension();
 
-	@Nonnull
-	GeneralCommandLine createDefaultCommandLine(@Nonnull Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
+	GeneralCommandLine createDefaultCommandLine(Sdk sdk, @Nullable DebugConnectionInfo debugConnectionInfo) throws ExecutionException;
 }

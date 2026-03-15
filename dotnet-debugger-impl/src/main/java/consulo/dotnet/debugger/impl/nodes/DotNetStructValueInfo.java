@@ -2,8 +2,7 @@ package consulo.dotnet.debugger.impl.nodes;
 
 import java.util.Map;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 import consulo.dotnet.debugger.proxy.DotNetFieldOrPropertyProxy;
@@ -22,10 +21,10 @@ public class DotNetStructValueInfo
 	private DotNetFieldOrPropertyProxy myFieldOrPropertyMirror;
 	private DotNetValueProxy myValue;
 
-	public DotNetStructValueInfo(@Nonnull DotNetStructValueProxy valueMirror,
+	public DotNetStructValueInfo(DotNetStructValueProxy valueMirror,
 			@Nullable DotNetAbstractVariableValueNode parentNode,
-			@Nonnull DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
-			@Nonnull DotNetValueProxy value)
+			DotNetFieldOrPropertyProxy fieldOrPropertyMirror,
+			DotNetValueProxy value)
 	{
 		myValueMirror = valueMirror;
 		myParentNode = parentNode;

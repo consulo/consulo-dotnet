@@ -18,7 +18,6 @@ import consulo.project.DumbService;
 import consulo.ui.image.Image;
 import consulo.util.lang.BitUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ public class MsilIconDescriptorUpdater implements IconDescriptorUpdater
 {
 	@Override
 	@RequiredReadAction
-	public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags)
+	public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags)
 	{
 		if(element instanceof MsilNamespaceAsElementImpl)
 		{

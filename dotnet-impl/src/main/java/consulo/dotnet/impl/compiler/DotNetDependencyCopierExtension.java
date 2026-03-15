@@ -21,7 +21,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.List;
 
@@ -34,6 +33,5 @@ public interface DotNetDependencyCopierExtension
 {
 	ExtensionPointName<DotNetDependencyCopierExtension> EP_NAME = ExtensionPointName.create(DotNetDependencyCopierExtension.class);
 
-	@Nonnull
-	List<File> collectDependencies(@Nonnull Module module);
+	List<File> collectDependencies(Module module);
 }

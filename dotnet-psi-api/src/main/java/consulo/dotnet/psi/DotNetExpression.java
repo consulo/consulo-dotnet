@@ -19,7 +19,6 @@ package consulo.dotnet.psi;
 import consulo.dotnet.psi.resolve.DotNetTypeRef;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,6 @@ public interface DotNetExpression extends DotNetElement
 
 	public static ArrayFactory<DotNetExpression> ARRAY_FACTORY = new ArrayFactory<DotNetExpression>()
 	{
-		@Nonnull
 		@Override
 		public DotNetExpression[] create(int count)
 		{
@@ -39,6 +37,5 @@ public interface DotNetExpression extends DotNetElement
 		}
 	};
 
-	@Nonnull
 	DotNetTypeRef toTypeRef(boolean resolveFromParent);
 }

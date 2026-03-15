@@ -29,7 +29,6 @@ import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilEmptyTypeStub;
 import consulo.msil.impl.lang.psi.impl.type.MsilArrayTypRefImpl;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,19 +36,18 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilArrayTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implements MsilArrayType
 {
-	public MsilArrayTypeImpl(@Nonnull ASTNode node)
+	public MsilArrayTypeImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilArrayTypeImpl(@Nonnull MsilEmptyTypeStub stub, @Nonnull IStubElementType nodeType)
+	public MsilArrayTypeImpl(MsilEmptyTypeStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
 	@Override
 	@RequiredReadAction
-	@Nonnull
 	public MsilArrayDimension[] getDimensions()
 	{
 		return getStubOrPsiChildren(MsilStubElements.ARRAY_DIMENSION, MsilArrayDimension.ARRAY_FACTORY);
@@ -62,7 +60,6 @@ public class MsilArrayTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implement
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	protected DotNetTypeRef toTypeRefImpl()
 	{
@@ -82,7 +79,6 @@ public class MsilArrayTypeImpl extends MsilTypeImpl<MsilEmptyTypeStub> implement
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetType getInnerType()
 	{

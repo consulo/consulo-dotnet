@@ -29,7 +29,6 @@ import consulo.language.psi.util.QualifiedName;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -45,10 +44,9 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 {
 	protected String myIndexKey;
 
-	@Nonnull
 	private final IndexBasedDotNetPsiSearcherExtension mySearcher;
 
-	protected IndexBasedDotNetNamespaceAsElement(@Nonnull Project project, @Nonnull Language language, @Nonnull String indexKey, @Nonnull String qName, @Nonnull IndexBasedDotNetPsiSearcherExtension searcher)
+	protected IndexBasedDotNetNamespaceAsElement(Project project, Language language, String indexKey, String qName, IndexBasedDotNetPsiSearcherExtension searcher)
 	{
 		super(project, language, qName);
 		myIndexKey = indexKey;
@@ -57,10 +55,10 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 
 	@RequiredReadAction
 	@Override
-	public boolean processChildren(@Nonnull GlobalSearchScope globalSearchScope,
-								   @Nonnull Function<PsiElement, PsiElement> transformer,
-								   @Nonnull ChildrenFilter filter,
-								   @Nonnull Predicate<PsiElement> processor)
+	public boolean processChildren(GlobalSearchScope globalSearchScope,
+								   Function<PsiElement, PsiElement> transformer,
+								   ChildrenFilter filter,
+								   Predicate<PsiElement> processor)
 	{
 		if(filter == ChildrenFilter.ONLY_ELEMENTS)
 		{
@@ -85,13 +83,12 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 		return true;
 	}
 
-	@Nonnull
 	@Override
 	@RequiredReadAction
-	public List<PsiElement> findChildren(@Nonnull final String name,
-			@Nonnull GlobalSearchScope globalSearchScope,
-			@Nonnull Function<PsiElement, PsiElement> transformer,
-			@Nonnull ChildrenFilter filter)
+	public List<PsiElement> findChildren(final String name,
+			GlobalSearchScope globalSearchScope,
+			Function<PsiElement, PsiElement> transformer,
+			ChildrenFilter filter)
 	{
 		switch(filter)
 		{
@@ -119,17 +116,15 @@ public abstract class IndexBasedDotNetNamespaceAsElement extends BaseDotNetNames
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
-	protected Set<? extends PsiElement> getOnlyElements(@Nonnull final GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyElements(final GlobalSearchScope globalSearchScope)
 	{
 		return DotNetNamespaceCacheManager.getInstance(myProject).computeElements(mySearcher, this, myIndexKey, myQName, globalSearchScope, DotNetNamespaceCacheManager.ONLY_ELEMENTS);
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
-	protected Set<? extends PsiElement> getOnlyNamespaces(@Nonnull final GlobalSearchScope globalSearchScope)
+	protected Set<? extends PsiElement> getOnlyNamespaces(final GlobalSearchScope globalSearchScope)
 	{
 		return DotNetNamespaceCacheManager.getInstance(myProject).computeElements(mySearcher, this, myIndexKey, myQName, globalSearchScope, DotNetNamespaceCacheManager.ONLY_NAMESPACES);
 	}

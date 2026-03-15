@@ -21,8 +21,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ import jakarta.annotation.Nullable;
 public class ExternalAttributesUtil
 {
 	@Nullable
-	public static ExternalAttributeHolder findHolder(@Nonnull PsiElement element)
+	public static ExternalAttributeHolder findHolder(PsiElement element)
 	{
 		PsiFile containingFile = element.getContainingFile();
 

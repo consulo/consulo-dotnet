@@ -24,7 +24,6 @@ import consulo.language.lexer.Lexer;
 import consulo.msil.impl.lang.lexer.MsilLexer;
 import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.MsilTokens;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,14 +31,12 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilSyntaxHighlighter extends SyntaxHighlighterBase
 {
-	@Nonnull
 	@Override
 	public Lexer getHighlightingLexer()
 	{
 		return new MsilLexer();
 	}
 
-	@Nonnull
 	@Override
 	public TextAttributesKey[] getTokenHighlights(IElementType elementType)
 	{

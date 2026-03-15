@@ -20,8 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetElement;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +32,6 @@ public interface MsilTypeParameterAttributeList extends DotNetElement
 
 	public static ArrayFactory<MsilTypeParameterAttributeList> ARRAY_FACTORY = new ArrayFactory<MsilTypeParameterAttributeList>()
 	{
-		@Nonnull
 		@Override
 		public MsilTypeParameterAttributeList[] create(int count)
 		{
@@ -45,7 +43,6 @@ public interface MsilTypeParameterAttributeList extends DotNetElement
 	@RequiredReadAction
 	String getGenericParameterName();
 
-	@Nonnull
 	@RequiredReadAction
 	MsilCustomAttribute[] getAttributes();
 }

@@ -20,7 +20,7 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.StubBase;
 import consulo.language.psi.stub.StubElement;
 import consulo.msil.lang.psi.MsilMethodEntry;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

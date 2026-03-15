@@ -22,7 +22,6 @@ import consulo.language.lexer.MergingLexerAdapter;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionWithParsing;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,31 +34,26 @@ public abstract class BaseCfsLanguageVersion extends LanguageVersion implements 
 		super(name, name, language);
 	}
 
-	@Nonnull
 	@Override
 	public Lexer createLexer()
 	{
 		return new MergingLexerAdapter(createInnerLexer(), TokenSet.create(CfsTokens.TEXT));
 	}
 
-	@Nonnull
 	public abstract Lexer createInnerLexer();
 
-	@Nonnull
 	@Override
 	public TokenSet getWhitespaceTokens()
 	{
 		return TokenSet.EMPTY;
 	}
 
-	@Nonnull
 	@Override
 	public TokenSet getCommentTokens()
 	{
 		return TokenSet.EMPTY;
 	}
 
-	@Nonnull
 	@Override
 	public TokenSet getStringLiteralElements()
 	{

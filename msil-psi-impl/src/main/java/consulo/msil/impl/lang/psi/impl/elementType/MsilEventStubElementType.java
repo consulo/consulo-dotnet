@@ -26,7 +26,6 @@ import consulo.msil.lang.psi.MsilEventEntry;
 import consulo.msil.impl.lang.psi.impl.MsilEventEntryImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -40,37 +39,34 @@ public class MsilEventStubElementType extends AbstractMsilStubElementType<MsilVa
 		super("MSIL_EVENT_ENTRY");
 	}
 
-	@Nonnull
 	@Override
-	public MsilEventEntry createElement(@Nonnull ASTNode astNode)
+	public MsilEventEntry createElement(ASTNode astNode)
 	{
 		return new MsilEventEntryImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public MsilEventEntry createPsi(@Nonnull MsilVariableEntryStub msilEventEntryStub)
+	public MsilEventEntry createPsi(MsilVariableEntryStub msilEventEntryStub)
 	{
 		return new MsilEventEntryImpl(msilEventEntryStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilVariableEntryStub createStub(@Nonnull MsilEventEntry eventEntry, StubElement stubElement)
+	public MsilVariableEntryStub createStub(MsilEventEntry eventEntry, StubElement stubElement)
 	{
 		String nameFromBytecode = eventEntry.getNameFromBytecode();
 		return new MsilVariableEntryStub(stubElement, this, nameFromBytecode);
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilVariableEntryStub msilPropertyEntryStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilVariableEntryStub msilPropertyEntryStub, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeName(msilPropertyEntryStub.getNameFromBytecode());
 	}
 
-	@Nonnull
 	@Override
-	public MsilVariableEntryStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilVariableEntryStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		StringRef ref = inputStream.readName();
 		return new MsilVariableEntryStub(stubElement, this, ref);

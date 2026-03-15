@@ -4,9 +4,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.module.extension.DotNetElementQualifierProducer;
 import consulo.dotnet.psi.DotNetQualifiedElement;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -17,7 +16,7 @@ public class DotNetQualifiedElementQualifierProducer implements DotNetElementQua
 	public static final DotNetQualifiedElementQualifierProducer INSTANCE = new DotNetQualifiedElementQualifierProducer();
 
 	@Override
-	public boolean isMyElement(@Nonnull PsiElement element)
+	public boolean isMyElement(PsiElement element)
 	{
 		return element instanceof DotNetQualifiedElement;
 	}
@@ -25,7 +24,7 @@ public class DotNetQualifiedElementQualifierProducer implements DotNetElementQua
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public String getQualifiedName(@Nonnull PsiElement element)
+	public String getQualifiedName(PsiElement element)
 	{
 		return ((DotNetQualifiedElement) element).getPresentableQName();
 	}

@@ -30,8 +30,7 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.util.dataholder.UserDataHolderBase;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -48,7 +47,7 @@ public class DotNetRemoteRunState extends UserDataHolderBase implements RunProfi
 
 	@Nullable
 	@Override
-	public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
+	public ExecutionResult execute(Executor executor, ProgramRunner programRunner) throws ExecutionException
 	{
 		TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(myEnv.getProject());
 		ProcessHandler handler = new DefaultDebugProcessHandler();

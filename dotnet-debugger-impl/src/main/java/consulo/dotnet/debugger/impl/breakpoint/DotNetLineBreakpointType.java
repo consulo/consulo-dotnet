@@ -43,8 +43,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -54,7 +53,6 @@ import java.util.*;
  */
 @ExtensionImpl
 public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBreakpointProperties> {
-    @Nonnull
     public static DotNetLineBreakpointType getInstance() {
         return EXTENSION_POINT_NAME.findExtensionOrFail(DotNetLineBreakpointType.class);
     }
@@ -99,7 +97,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
     @Nullable
     @Override
-    public XDebuggerEditorsProvider getEditorsProvider(@Nonnull XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint, @Nonnull Project project) {
+    public XDebuggerEditorsProvider getEditorsProvider(XLineBreakpoint<DotNetLineBreakpointProperties> breakpoint, Project project) {
         VirtualFile file = breakpoint.getFile();
         if (file == null) {
             return new DotNetEditorsProvider(null, null);
@@ -112,10 +110,9 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
         return new DotNetEditorsProvider(null, null);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
-    public List<? extends XLineBreakpointVariant> computeVariants(@Nonnull Project project, @Nonnull XSourcePosition position) {
+    public List<? extends XLineBreakpointVariant> computeVariants(Project project, XSourcePosition position) {
         VirtualFile virtualFile = position.getFile();
 
         PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
@@ -199,7 +196,6 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
             myIndex = index;
         }
 
-        @Nonnull
         @Override
         @RequiredUIAccess
         public String getText() {
@@ -261,7 +257,7 @@ public class DotNetLineBreakpointType extends XLineBreakpointType<DotNetLineBrea
 
     @Nullable
     @Override
-    public DotNetLineBreakpointProperties createBreakpointProperties(@Nonnull VirtualFile file, int line) {
+    public DotNetLineBreakpointProperties createBreakpointProperties(VirtualFile file, int line) {
         return new DotNetLineBreakpointProperties();
     }
 }

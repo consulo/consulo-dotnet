@@ -25,8 +25,7 @@ import consulo.msil.lang.psi.MsilFieldEntry;
 import consulo.msil.impl.lang.psi.MsilStubElements;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilVariableEntryStub;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,18 +33,17 @@ import jakarta.annotation.Nullable;
  */
 public class MsilFieldEntryImpl extends MsilQVariableImpl implements MsilFieldEntry
 {
-	public MsilFieldEntryImpl(@Nonnull ASTNode node)
+	public MsilFieldEntryImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilFieldEntryImpl(@Nonnull MsilVariableEntryStub stub, @Nonnull IStubElementType nodeType)
+	public MsilFieldEntryImpl(MsilVariableEntryStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public MsilCustomAttribute[] getAttributes()
 	{

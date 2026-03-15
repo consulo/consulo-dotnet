@@ -19,7 +19,6 @@ package consulo.dotnet.impl.assembly;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.assembly.AssemblyModule;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,6 @@ class UnknownAssemblyModule implements AssemblyModule
 	static final UnknownAssemblyModule INSTANCE = new UnknownAssemblyModule();
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public String getName()
 	{
@@ -39,13 +37,13 @@ class UnknownAssemblyModule implements AssemblyModule
 
 	@RequiredReadAction
 	@Override
-	public boolean isAllowedAssembly(@Nonnull String assemblyName)
+	public boolean isAllowedAssembly(String assemblyName)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean equals(@Nonnull AssemblyModule module)
+	public boolean equals(AssemblyModule module)
 	{
 		return module instanceof UnknownAssemblyModule;
 	}

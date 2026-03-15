@@ -34,7 +34,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;
@@ -85,7 +84,7 @@ public class DotNetConfigurationPanel extends JPanel
 		comp.setRenderer(new ColoredListCellRenderer<DotNetTarget>()
 		{
 			@Override
-			protected void customizeCellRenderer(@Nonnull JList jList, DotNetTarget o, int i, boolean b, boolean b1)
+			protected void customizeCellRenderer(JList jList, DotNetTarget o, int i, boolean b, boolean b1)
 			{
 				append(o.getDescription().get());
 			}
@@ -103,7 +102,7 @@ public class DotNetConfigurationPanel extends JPanel
 		{
 			@Override
 			@RequiredReadAction
-			protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus)
+			protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus)
 			{
 				if(!mainClassList.isEnabled())
 				{
@@ -260,7 +259,7 @@ public class DotNetConfigurationPanel extends JPanel
 			}
 
 			@Override
-			public void remove(@Nonnull final String element)
+			public void remove(final String element)
 			{
 				int i = variables.indexOf(element);
 				variables.remove(element);

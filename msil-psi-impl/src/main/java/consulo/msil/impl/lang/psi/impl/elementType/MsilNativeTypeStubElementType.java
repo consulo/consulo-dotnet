@@ -27,7 +27,6 @@ import consulo.msil.impl.lang.psi.MsilTokenSets;
 import consulo.msil.impl.lang.psi.impl.MsilNativeTypeImpl;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilNativeTypeStub;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -42,36 +41,33 @@ public class MsilNativeTypeStubElementType extends AbstractMsilStubElementType<M
 		super("MSIL_NATIVE_TYPE");
 	}
 
-	@Nonnull
 	@Override
-	public DotNetNativeType createElement(@Nonnull ASTNode astNode)
+	public DotNetNativeType createElement(ASTNode astNode)
 	{
 		return new MsilNativeTypeImpl(astNode);
 	}
 
-	@Nonnull
 	@Override
-	public DotNetNativeType createPsi(@Nonnull MsilNativeTypeStub msilNativeTypeStub)
+	public DotNetNativeType createPsi(MsilNativeTypeStub msilNativeTypeStub)
 	{
 		return new MsilNativeTypeImpl(msilNativeTypeStub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public MsilNativeTypeStub createStub(@Nonnull DotNetNativeType dotNetNativeType, StubElement stubElement)
+	public MsilNativeTypeStub createStub(DotNetNativeType dotNetNativeType, StubElement stubElement)
 	{
 		return new MsilNativeTypeStub(stubElement, this, dotNetNativeType.getTypeElement().getNode().getElementType());
 	}
 
 	@Override
-	public void serialize(@Nonnull MsilNativeTypeStub msilNativeTypeStub, @Nonnull StubOutputStream stubOutputStream) throws IOException
+	public void serialize(MsilNativeTypeStub msilNativeTypeStub, StubOutputStream stubOutputStream) throws IOException
 	{
 		stubOutputStream.writeVarInt(ArrayUtil.indexOf(MsilTokenSets.NATIVE_TYPES_AS_ARRAY, msilNativeTypeStub.getTypeElementType()));
 	}
 
-	@Nonnull
 	@Override
-	public MsilNativeTypeStub deserialize(@Nonnull StubInputStream inputStream, StubElement stubElement) throws IOException
+	public MsilNativeTypeStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
 	{
 		IElementType elementType = MsilTokenSets.NATIVE_TYPES_AS_ARRAY[inputStream.readVarInt()];
 		return new MsilNativeTypeStub(stubElement, this, elementType);

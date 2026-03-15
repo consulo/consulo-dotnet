@@ -31,8 +31,7 @@ import consulo.msil.lang.psi.MsilParameter;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,12 +39,12 @@ import jakarta.annotation.Nullable;
  */
 public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> implements MsilParameter
 {
-	public MsilParameterImpl(@Nonnull ASTNode node)
+	public MsilParameterImpl(ASTNode node)
 	{
 		super(node);
 	}
 
-	public MsilParameterImpl(@Nonnull MsilParameterStub stub, @Nonnull IStubElementType nodeType)
+	public MsilParameterImpl(MsilParameterStub stub, IStubElementType nodeType)
 	{
 		super(stub, nodeType);
 	}
@@ -66,7 +65,6 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetTypeRef toTypeRef(boolean resolveFromInitializer)
 	{
@@ -74,7 +72,6 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetType getType()
 	{
@@ -101,13 +98,12 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 
 	@RequiredReadAction
 	@Override
-	public boolean hasModifier(@Nonnull DotNetModifier modifier)
+	public boolean hasModifier(DotNetModifier modifier)
 	{
 		return getModifierList().hasModifier(modifier);
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public DotNetModifierList getModifierList()
 	{
@@ -140,7 +136,7 @@ public class MsilParameterImpl extends MsilStubElementImpl<MsilParameterStub> im
 	}
 
 	@Override
-	public PsiElement setName(@Nonnull String s) throws IncorrectOperationException
+	public PsiElement setName(String s) throws IncorrectOperationException
 	{
 		return null;
 	}

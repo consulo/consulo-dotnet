@@ -16,7 +16,6 @@
 
 package consulo.dotnet.psi;
 
-import jakarta.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 
 /**
@@ -25,7 +24,6 @@ import consulo.annotation.access.RequiredReadAction;
  */
 public interface DotNetCompositeStatement extends DotNetStatement
 {
-	@Nonnull
 	@RequiredReadAction
 	DotNetStatement[] getStatements();
 }

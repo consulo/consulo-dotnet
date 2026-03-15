@@ -16,8 +16,7 @@
 
 package consulo.dotnet.sdk;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -46,7 +45,7 @@ public enum DotNetVersion
 	}
 
 	@Nullable
-	public static DotNetVersion findVersion(@Nonnull String version, boolean startWith)
+	public static DotNetVersion findVersion(String version, boolean startWith)
 	{
 		version = version.charAt(0) == 'v' ? version.substring(1, version.length()) : version;
 		for(DotNetVersion microsoftDotNetVersion : values())
@@ -60,7 +59,6 @@ public enum DotNetVersion
 		return null;
 	}
 
-	@Nonnull
 	public String getPresentableName()
 	{
 		return myPresentableName;

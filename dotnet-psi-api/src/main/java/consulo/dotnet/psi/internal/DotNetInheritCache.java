@@ -14,7 +14,6 @@ import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -30,8 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServiceImpl
 public class DotNetInheritCache implements Disposable
 {
-	@Nonnull
-	public static DotNetInheritCache getInstance(@Nonnull Project project)
+	public static DotNetInheritCache getInstance(Project project)
 	{
 		return project.getInstance(DotNetInheritCache.class);
 	}
@@ -74,10 +72,10 @@ public class DotNetInheritCache implements Disposable
 	}
 
 	@RequiredReadAction
-	static boolean isInheritorImpl(@Nonnull DotNetTypeDeclaration typeDeclaration,
-								   @Nonnull String otherVmQName,
+	static boolean isInheritorImpl(DotNetTypeDeclaration typeDeclaration,
+								   String otherVmQName,
 								   boolean deep,
-								   @Nonnull Set<String> alreadyProcessedTypes)
+								   Set<String> alreadyProcessedTypes)
 	{
 		DotNetTypeRef[] anExtends = typeDeclaration.getExtendTypeRefs();
 		if(anExtends.length > 0)

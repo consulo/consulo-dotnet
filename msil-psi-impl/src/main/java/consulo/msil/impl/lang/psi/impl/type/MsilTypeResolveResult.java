@@ -24,8 +24,7 @@ import consulo.dotnet.psi.resolve.DotNetTypeResolveResult;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -65,7 +64,6 @@ public class MsilTypeResolveResult implements DotNetTypeResolveResult
 		return myElement;
 	}
 
-	@Nonnull
 	@Override
 	public DotNetGenericExtractor getGenericExtractor()
 	{

@@ -28,8 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,13 +36,12 @@ import jakarta.annotation.Nullable;
  */
 public abstract class AbstractTypedValueNode extends XNamedValue
 {
-	@Nonnull
 	protected final DotNetDebugContext myDebugContext;
 
 	@Nullable
 	private SimpleReference<DotNetTypeProxy> myTypeProxy;
 
-	public AbstractTypedValueNode(@Nonnull DotNetDebugContext debugContext, @Nonnull String name)
+	public AbstractTypedValueNode(DotNetDebugContext debugContext, String name)
 	{
 		super(name);
 		myDebugContext = debugContext;
@@ -73,7 +71,7 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 
 	@Override
 	@RequiredUIAccess
-	public void computeTypeSourcePosition(@Nonnull XNavigatable navigatable)
+	public void computeTypeSourcePosition(XNavigatable navigatable)
 	{
 		DotNetTypeProxy typeOfVariable = getTypeOfVariable();
 		assert typeOfVariable != null;
@@ -91,9 +89,8 @@ public abstract class AbstractTypedValueNode extends XNamedValue
 		navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByOffset(type.getContainingFile().getVirtualFile(), nameIdentifier.getTextOffset()));
 	}
 
-	@Nonnull
 	@RequiredUIAccess
-	public DotNetTypeDeclaration[] findTypesByQualifiedName(@Nonnull DotNetTypeProxy typeMirror)
+	public DotNetTypeDeclaration[] findTypesByQualifiedName(DotNetTypeProxy typeMirror)
 	{
 		return DotNetVirtualMachineUtil.findTypesByQualifiedName(typeMirror, myDebugContext);
 	}

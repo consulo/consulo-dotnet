@@ -15,8 +15,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetStringValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +31,7 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 	private final Set<String> myIgnoreTypeSet = new HashSet<>();
 
 	@Override
-	public boolean canHandle(@Nonnull DotNetDebugContext debugContext, @Nonnull DotNetTypeProxy typeMirror)
+	public boolean canHandle(DotNetDebugContext debugContext, DotNetTypeProxy typeMirror)
 	{
 		if(!myIgnoreTypeSet.isEmpty() && myIgnoreTypeSet.contains(typeMirror.getFullName()))
 		{
@@ -49,11 +48,11 @@ public class EnumerableDotNetLogicValueView extends BaseDotNetLogicView
 	}
 
 	@Override
-	public void computeChildrenImpl(@Nonnull DotNetDebugContext debugContext,
-									@Nonnull XNamedValue parentNode,
-									@Nonnull DotNetStackFrameProxy frameProxy,
+	public void computeChildrenImpl(DotNetDebugContext debugContext,
+									XNamedValue parentNode,
+									DotNetStackFrameProxy frameProxy,
 									@Nullable DotNetValueProxy value,
-									@Nonnull XValueChildrenList childrenList)
+									XValueChildrenList childrenList)
 	{
 		if(!(value instanceof DotNetObjectValueProxy) && !(value instanceof DotNetStringValueProxy))
 		{

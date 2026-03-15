@@ -19,7 +19,6 @@ package consulo.msil.impl.lang.psi.impl.type;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 public class MsilNativeTypeRefImpl extends MsilReferenceTypeRefImpl
 {
-	public MsilNativeTypeRefImpl(@Nonnull Project project, @Nonnull GlobalSearchScope resolveScope, @Nonnull String ref)
+	public MsilNativeTypeRefImpl(Project project, GlobalSearchScope resolveScope, String ref)
 	{
 		super(project, resolveScope, ref);
 	}

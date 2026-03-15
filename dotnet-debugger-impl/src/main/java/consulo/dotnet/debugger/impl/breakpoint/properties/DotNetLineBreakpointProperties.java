@@ -19,7 +19,7 @@ package consulo.dotnet.debugger.impl.breakpoint.properties;
 import consulo.execution.debug.breakpoint.XBreakpointProperties;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

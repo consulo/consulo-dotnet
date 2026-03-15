@@ -17,7 +17,6 @@
 package consulo.dotnet.debugger;
 
 import consulo.language.Language;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +24,6 @@ import jakarta.annotation.Nonnull;
  */
 class DotNetDefaultDebuggerSourceLineResolver implements DotNetDebuggerSourceLineResolver
 {
-	@Nonnull
 	@Override
 	public Language getLanguage()
 	{

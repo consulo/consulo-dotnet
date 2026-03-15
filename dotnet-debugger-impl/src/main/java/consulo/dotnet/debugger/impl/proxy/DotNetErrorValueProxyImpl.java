@@ -22,8 +22,7 @@ import consulo.dotnet.debugger.proxy.value.DotNetValueProxy;
 import consulo.dotnet.debugger.proxy.value.DotNetValueProxyVisitor;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,13 +34,12 @@ public class DotNetErrorValueProxyImpl implements DotNetErrorValueProxy
 	@Nullable
 	private DotNetValueProxy myThrowObjectProxy;
 
-	public DotNetErrorValueProxyImpl(@Nonnull Throwable throwable, @Nullable DotNetValueProxy throwObjectProxy)
+	public DotNetErrorValueProxyImpl(Throwable throwable, @Nullable DotNetValueProxy throwObjectProxy)
 	{
 		myThrowable = throwable;
 		myThrowObjectProxy = throwObjectProxy;
 	}
 
-	@Nonnull
 	@Override
 	public String getErrorMessage()
 	{
@@ -62,7 +60,6 @@ public class DotNetErrorValueProxyImpl implements DotNetErrorValueProxy
 		return null;
 	}
 
-	@Nonnull
 	@Override
 	public Object getValue()
 	{

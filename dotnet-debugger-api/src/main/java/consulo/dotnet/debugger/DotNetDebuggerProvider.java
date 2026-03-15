@@ -33,8 +33,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.function.Consumer;
@@ -53,28 +52,27 @@ public abstract class DotNetDebuggerProvider {
         return Application.get().getExtensionPoint(DotNetDebuggerProvider.class).findFirstSafe(it -> it.getEditorLanguage() == language);
     }
 
-    @Nonnull
-    public abstract PsiFile createExpressionCodeFragment(@Nonnull Project project,
+    public abstract PsiFile createExpressionCodeFragment(Project project,
                                                          @Nullable PsiElement sourcePosition,
-                                                         @Nonnull String text,
+                                                         String text,
                                                          boolean isPhysical);
 
-    public abstract void evaluate(@Nonnull DotNetStackFrameProxy frame,
-                                  @Nonnull DotNetDebugContext debuggerContext,
-                                  @Nonnull String expression,
+    public abstract void evaluate(DotNetStackFrameProxy frame,
+                                  DotNetDebugContext debuggerContext,
+                                  String expression,
                                   @Nullable PsiElement elementAt,
-                                  @Nonnull XDebuggerEvaluator.XEvaluationCallback callback,
+                                  XDebuggerEvaluator.XEvaluationCallback callback,
                                   @Nullable XSourcePosition expressionPosition);
 
-    public abstract void evaluate(@Nonnull DotNetStackFrameProxy frame,
-                                  @Nonnull DotNetDebugContext debuggerContext,
-                                  @Nonnull DotNetReferenceExpression element,
-                                  @Nonnull Set<Object> visitedVariables,
-                                  @Nonnull Consumer<XNamedValue> callback);
+    public abstract void evaluate(DotNetStackFrameProxy frame,
+                                  DotNetDebugContext debuggerContext,
+                                  DotNetReferenceExpression element,
+                                  Set<Object> visitedVariables,
+                                  Consumer<XNamedValue> callback);
 
     @RequiredReadAction
     @Nullable
-    public TextRange getExpressionRangeAtOffset(@Nonnull PsiFile psiFile, int offset, boolean sideEffectsAllowed) {
+    public TextRange getExpressionRangeAtOffset(PsiFile psiFile, int offset, boolean sideEffectsAllowed) {
         PsiElement elementAt = psiFile.findElementAt(offset);
         if (elementAt == null) {
             return null;
@@ -101,7 +99,7 @@ public abstract class DotNetDebuggerProvider {
     }
 
     @RequiredReadAction
-    public boolean isSupported(@Nonnull PsiFile psiFile) {
+    public boolean isSupported(PsiFile psiFile) {
         return psiFile.getLanguage() == getEditorLanguage();
     }
 

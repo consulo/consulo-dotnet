@@ -25,7 +25,6 @@ import consulo.language.psi.PsiPackageManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,6 @@ public class DotNetPackage extends PsiPackageBase
 
 	public static ArrayFactory<DotNetPackage> ARRAY_FACTORY = new ArrayFactory<DotNetPackage>()
 	{
-		@Nonnull
 		@Override
 		public DotNetPackage[] create(int count)
 		{
@@ -57,7 +55,6 @@ public class DotNetPackage extends PsiPackageBase
 	}
 
 	@RequiredReadAction
-	@Nonnull
 	@Override
 	public Language getLanguage()
 	{

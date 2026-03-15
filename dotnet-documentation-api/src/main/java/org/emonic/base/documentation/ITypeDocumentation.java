@@ -12,10 +12,8 @@ package org.emonic.base.documentation;
 
 import java.util.List;
 
-import jakarta.annotation.Nonnull;
 
 public interface ITypeDocumentation extends IDocumentation
 {
-	@Nonnull
 	List<IDocumentation> getDocumentation();
 }

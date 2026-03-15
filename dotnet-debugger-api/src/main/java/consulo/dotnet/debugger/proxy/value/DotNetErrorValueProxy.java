@@ -16,8 +16,7 @@
 
 package consulo.dotnet.debugger.proxy.value;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -25,7 +24,6 @@ import jakarta.annotation.Nullable;
  */
 public interface DotNetErrorValueProxy extends DotNetValueProxy
 {
-	@Nonnull
 	String getErrorMessage();
 
 	@Nullable

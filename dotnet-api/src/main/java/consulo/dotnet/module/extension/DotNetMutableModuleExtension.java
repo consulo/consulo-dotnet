@@ -18,8 +18,7 @@ package consulo.dotnet.module.extension;
 
 import consulo.dotnet.DotNetTarget;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,17 +27,17 @@ import jakarta.annotation.Nullable;
 public interface DotNetMutableModuleExtension<T extends DotNetModuleExtension<T>> extends DotNetModuleExtension<T>,
 		DotNetSimpleMutableModuleExtension<T>
 {
-	void setFileName(@Nonnull String name);
+	void setFileName(String name);
 
-	void setNamespacePrefix(@Nonnull String prefix);
+	void setNamespacePrefix(String prefix);
 
-	void setOutputDir(@Nonnull String name);
+	void setOutputDir(String name);
 
 	void setAllowSourceRoots(boolean val);
 
 	void setMainType(@Nullable String qName);
 
-	void setTarget(@Nonnull DotNetTarget target);
+	void setTarget(DotNetTarget target);
 
 	void setAllowDebugInfo(boolean allowDebugInfo);
 }
