@@ -17,6 +17,8 @@
 package consulo.dotnet.dll;
 
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
@@ -26,44 +28,42 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
  * @author VISTALL
  * @since 28.11.13.
  */
-public class DotNetModuleFileType extends ArchiveFileType
-{
-	public static boolean isDllFile(String filePath)
-	{
-		return FileUtil.extensionEquals(filePath, ourExtension);
-	}
+public class DotNetModuleFileType extends ArchiveFileType {
+    public static boolean isDllFile(String filePath) {
+        return FileUtil.extensionEquals(filePath, EXTENSION);
+    }
 
-	private static final String ourExtension = "dll";
+    public static final String EXTENSION = "dll";
 
-	public static final DotNetModuleFileType INSTANCE = new DotNetModuleFileType();
-	public static final String PROTOCOL = "netdll";
+    public static final DotNetModuleFileType INSTANCE = new DotNetModuleFileType();
+    public static final String PROTOCOL = "netdll";
 
-	protected DotNetModuleFileType()
-	{
-		super(VirtualFileManager.getInstance());
-	}
+    private DotNetModuleFileType() {
+        super(VirtualFileManager.getInstance());
+    }
 
-	@Override
-	public String getProtocol()
-	{
-		return PROTOCOL;
-	}
+    @Override
+    public Image getIcon() {
+        return PlatformIconGroup.filetypesLibraryfile();
+    }
 
-	@Override
-	public LocalizeValue getDescription()
-	{
-		return LocalizeValue.localizeTODO(".NET libraries");
-	}
+    @Override
+    public String getProtocol() {
+        return PROTOCOL;
+    }
 
-	@Override
-	public String getId()
-	{
-		return "DLL_ARCHIVE";
-	}
+    @Override
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO(".NET Library");
+    }
 
-	@Override
-	public String getDefaultExtension()
-	{
-		return ourExtension;
-	}
+    @Override
+    public LocalizeValue getDescription() {
+        return getDisplayName();
+    }
+
+    @Override
+    public String getId() {
+        return "DLL_ARCHIVE";
+    }
 }

@@ -26,11 +26,9 @@ import consulo.virtualFileSystem.fileType.FileTypeFactory;
  * @since 12.12.13.
  */
 @ExtensionImpl
-public class DotNetModuleFileTypeFactory extends FileTypeFactory
-{
-	@Override
-	public void createFileTypes(FileTypeConsumer fileTypeConsumer)
-	{
-		fileTypeConsumer.consume(DotNetModuleFileType.INSTANCE, "dll;netmodule");
-	}
+public class DotNetModuleFileTypeFactory extends FileTypeFactory {
+    @Override
+    public void createFileTypes(FileTypeConsumer fileTypeConsumer) {
+        fileTypeConsumer.consume(DotNetModuleFileType.INSTANCE, "netmodule");
+    }
 }
