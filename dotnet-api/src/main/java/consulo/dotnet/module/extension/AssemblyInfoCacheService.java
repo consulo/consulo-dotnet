@@ -3,9 +3,9 @@ package consulo.dotnet.module.extension;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
-import consulo.ide.ServiceManager;
 import consulo.internal.dotnet.asm.mbel.AssemblyInfo;
 import consulo.internal.dotnet.asm.mbel.ModuleParser;
 import consulo.util.lang.ObjectUtil;
@@ -29,7 +29,7 @@ public class AssemblyInfoCacheService implements Disposable
 {
 	public static AssemblyInfoCacheService getInstance()
 	{
-		return ServiceManager.getService(AssemblyInfoCacheService.class);
+		return Application.get().getService(AssemblyInfoCacheService.class);
 	}
 
 	private final Map<File, Object> myCachePath = new ConcurrentHashMap<>();

@@ -20,7 +20,7 @@
 
     <parent>
         <groupId>consulo</groupId>
-        <artifactId>arch.ide.java</artifactId>
+        <artifactId>arch.bind.java</artifactId>
         <version>3-SNAPSHOT</version>
         <relativePath/>
     </parent>
@@ -42,6 +42,30 @@
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-language-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-path-macro-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-compiler-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-module-ui-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>consulo.internal</groupId>
             <artifactId>dotnet.asm</artifactId>

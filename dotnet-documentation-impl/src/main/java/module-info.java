@@ -4,10 +4,9 @@
  */
 open module consulo.dotnet.documentation.impl
 {
-	requires consulo.dotnet.documentation.api;
-	requires consulo.dotnet.api;
-	requires consulo.dotnet.psi.api;
-	requires consulo.ide.api;
+    requires consulo.dotnet.documentation.api;
+    requires consulo.dotnet.api;
+    requires consulo.dotnet.psi.api;
 
-	exports consulo.dotnet.documentation.impl;
+    exports consulo.dotnet.documentation.impl;
 }

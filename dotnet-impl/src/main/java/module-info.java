@@ -2,8 +2,9 @@
  * @author VISTALL
  * @since 15-May-22
  */
-module consulo.dotnet.impl
-{
+module consulo.dotnet.impl {
+    requires consulo.language.api;
+    requires consulo.compiler.api;
     requires consulo.ide.api;
 
     requires consulo.internal.dotnet.asm;
