@@ -18,6 +18,7 @@ package consulo.dotnet.impl.roots.orderEntry;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.dotnet.module.extension.DotNetLibraryOrderEntryModel;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.ide.setting.module.CustomOrderEntryTypeEditor;
 import consulo.module.content.layer.ModuleExtensionProvider;

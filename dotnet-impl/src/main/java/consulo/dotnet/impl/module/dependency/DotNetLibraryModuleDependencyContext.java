@@ -16,7 +16,7 @@
 
 package consulo.dotnet.impl.module.dependency;
 
-import consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryModel;
+import consulo.dotnet.module.extension.DotNetLibraryOrderEntryModel;
 import consulo.dotnet.impl.roots.orderEntry.DotNetLibraryOrderEntryType;
 import consulo.dotnet.module.extension.DotNetModuleExtensionWithLibraryProviding;
 import consulo.ide.setting.module.AddModuleDependencyContext;

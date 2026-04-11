@@ -21,6 +21,7 @@ import consulo.application.ReadAction;
 import consulo.compiler.*;
 import consulo.compiler.scope.CompileScope;
 import consulo.dotnet.DotNetTarget;
+import consulo.dotnet.compiler.DotNetCompilerUtil;
 import consulo.dotnet.compiler.DotNetMacroUtil;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.dotnet.module.extension.DotNetModuleLangExtension;

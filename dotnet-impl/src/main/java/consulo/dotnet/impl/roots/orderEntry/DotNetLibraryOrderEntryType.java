@@ -18,6 +18,7 @@ package consulo.dotnet.impl.roots.orderEntry;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
+import consulo.dotnet.module.extension.DotNetLibraryOrderEntryModel;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.CustomOrderEntryTypeProvider;
 import consulo.util.xml.serializer.InvalidDataException;
