@@ -6,6 +6,7 @@ module consulo.dotnet.impl {
     requires consulo.language.api;
     requires consulo.compiler.api;
     requires consulo.ide.api;
+    requires consulo.language.impl;
 
     requires consulo.internal.dotnet.asm;
     requires consulo.internal.dotnet.msil.decompiler;

@@ -5,7 +5,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.dotnet.documentation.DotNetDocumentationResolver;
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.module.content.ProjectRootManager;
@@ -30,7 +30,7 @@ public class DotNetDocumentationCache
 {
 	public static DotNetDocumentationCache getInstance()
 	{
-		return ServiceManager.getService(DotNetDocumentationCache.class);
+		return Application.get().getInstance(DotNetDocumentationCache.class);
 	}
 
 	@Nullable
