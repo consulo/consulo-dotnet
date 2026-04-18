@@ -46,7 +46,6 @@
             <plugin>
                 <groupId>consulo.maven</groupId>
                 <artifactId>maven-consulo-plugin</artifactId>
-                <version>3-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <executions>
                     <execution>
