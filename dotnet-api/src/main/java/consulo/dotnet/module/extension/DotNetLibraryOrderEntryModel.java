@@ -23,7 +23,7 @@ import java.util.List;
 public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel {
     private RootProvider myRootProvider = new RootProviderBase() {
         @Override
-        public String[] getUrls(OrderRootType rootType) {
+        public String[] getUrls(String rootType) {
             DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
             if (extension == null) {
                 return ArrayUtil.EMPTY_STRING_ARRAY;
@@ -41,7 +41,7 @@ public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel {
         }
 
         @Override
-        public VirtualFile[] getFiles(OrderRootType rootType) {
+        public VirtualFile[] getFiles(String rootType) {
             DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
             if (extension == null) {
                 return VirtualFile.EMPTY_ARRAY;

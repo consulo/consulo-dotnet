@@ -19,6 +19,7 @@ package consulo.dotnet.impl.library;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.library.ui.FileTypeBasedRootFilter;
+import consulo.localize.LocalizeValue;
 import consulo.msil.MsilFileType;
 
 /**
@@ -26,10 +27,8 @@ import consulo.msil.MsilFileType;
  * @since 01.02.14
  */
 @ExtensionImpl
-public class DotNetLibraryRootDetector extends FileTypeBasedRootFilter
-{
-	public DotNetLibraryRootDetector()
-	{
-		super(BinariesOrderRootType.getInstance(), false, MsilFileType.INSTANCE, ".NET library");
-	}
+public class DotNetLibraryRootDetector extends FileTypeBasedRootFilter {
+    public DotNetLibraryRootDetector() {
+        super(BinariesOrderRootType.ID, false, MsilFileType.INSTANCE, LocalizeValue.localizeTODO(".NET library"));
+    }
 }

@@ -105,7 +105,7 @@ public class DotNetCompilerUtil {
             }
 
             private void collectFromRoot(OrderEntry orderEntry) {
-                for (VirtualFile virtualFile : orderEntry.getFiles(BinariesOrderRootType.getInstance())) {
+                for (VirtualFile virtualFile : orderEntry.getFiles(BinariesOrderRootType.ID)) {
                     VirtualFile virtualFileForArchive = ArchiveVfsUtil.getVirtualFileForArchive(virtualFile);
                     if (virtualFileForArchive != null) {
                         if (Comparing.equal(virtualFileForArchive.getExtension(), target.getExtension())) {

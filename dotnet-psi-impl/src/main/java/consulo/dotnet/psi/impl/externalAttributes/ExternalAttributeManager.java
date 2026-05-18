@@ -103,9 +103,9 @@ public class ExternalAttributeManager
 		List<VirtualFile> externalAttributeFiles = new ArrayList<>();
 		for(OrderEntry orderEntry : orderEntriesForFile)
 		{
-			if(ArrayUtil.contains(archiveFile, orderEntry.getFiles(BinariesOrderRootType.getInstance())))
+			if(ArrayUtil.contains(archiveFile, orderEntry.getFiles(BinariesOrderRootType.ID)))
 			{
-				VirtualFile[] files = orderEntry.getFiles(ExternalAttributesRootOrderType.getInstance());
+				VirtualFile[] files = orderEntry.getFiles(ExternalAttributesRootOrderType.ID);
 				if(files.length != 0)
 				{
 					Collections.addAll(externalAttributeFiles, files);

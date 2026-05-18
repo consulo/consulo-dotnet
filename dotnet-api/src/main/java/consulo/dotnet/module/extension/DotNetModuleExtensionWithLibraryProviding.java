@@ -25,9 +25,8 @@ import java.util.Map;
  * @author VISTALL
  * @since 09.06.2015
  */
-public interface DotNetModuleExtensionWithLibraryProviding<T extends DotNetModuleExtensionWithLibraryProviding<T>> extends ModuleExtension<T>
-{
-	Map<String, String> getAvailableSystemLibraries();
+public interface DotNetModuleExtensionWithLibraryProviding<T extends DotNetModuleExtensionWithLibraryProviding<T>> extends ModuleExtension<T> {
+    Map<String, String> getAvailableSystemLibraries();
 
-	String[] getSystemLibraryUrls(String name, OrderRootType orderRootType);
+    String[] getSystemLibraryUrls(String name, String orderRootType);
 }

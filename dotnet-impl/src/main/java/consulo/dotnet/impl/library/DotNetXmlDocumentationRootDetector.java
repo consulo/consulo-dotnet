@@ -21,6 +21,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.library.ui.RootDetector;
 import consulo.dotnet.dll.DotNetModuleFileType;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
@@ -35,34 +36,27 @@ import java.util.Collections;
  * @since 01.02.14
  */
 @ExtensionImpl
-public class DotNetXmlDocumentationRootDetector extends RootDetector
-{
-	public DotNetXmlDocumentationRootDetector()
-	{
-		super(DocumentationOrderRootType.getInstance(), false, ".NET xml documentation");
-	}
+public class DotNetXmlDocumentationRootDetector extends RootDetector {
+    public DotNetXmlDocumentationRootDetector() {
+        super(DocumentationOrderRootType.ID, false, LocalizeValue.localizeTODO(".NET xml documentation"));
+    }
 
-	@Override
-	public Collection<VirtualFile> detectRoots(VirtualFile rootCandidate, ProgressIndicator progressIndicator)
-	{
-		if(rootCandidate.getFileSystem() instanceof ArchiveFileSystem)
-		{
-			VirtualFile localFile = ArchiveVfsUtil.getVirtualFileForArchive(rootCandidate);
-			if(localFile == null || localFile.getFileType() != DotNetModuleFileType.INSTANCE)
-			{
-				return Collections.emptyList();
-			}
-			String docFilePath = localFile.getParent().getPath() + "/" + localFile.getNameWithoutExtension() + ".xml";
-			VirtualFile docFile = LocalFileSystem.getInstance().findFileByIoFile(new File(docFilePath));
-			if(docFile != null)
-			{
-				return Collections.singletonList(docFile);
-			}
-		}
-		else if("xml".equals(rootCandidate.getExtension()))
-		{
-			return Collections.singletonList(rootCandidate);
-		}
-		return Collections.emptyList();
-	}
+    @Override
+    public Collection<VirtualFile> detectRoots(VirtualFile rootCandidate, ProgressIndicator progressIndicator) {
+        if (rootCandidate.getFileSystem() instanceof ArchiveFileSystem) {
+            VirtualFile localFile = ArchiveVfsUtil.getVirtualFileForArchive(rootCandidate);
+            if (localFile == null || localFile.getFileType() != DotNetModuleFileType.INSTANCE) {
+                return Collections.emptyList();
+            }
+            String docFilePath = localFile.getParent().getPath() + "/" + localFile.getNameWithoutExtension() + ".xml";
+            VirtualFile docFile = LocalFileSystem.getInstance().findFileByIoFile(new File(docFilePath));
+            if (docFile != null) {
+                return Collections.singletonList(docFile);
+            }
+        }
+        else if ("xml".equals(rootCandidate.getExtension())) {
+            return Collections.singletonList(rootCandidate);
+        }
+        return Collections.emptyList();
+    }
 }

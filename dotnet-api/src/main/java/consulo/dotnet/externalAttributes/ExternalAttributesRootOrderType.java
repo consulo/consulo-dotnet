@@ -25,15 +25,10 @@ import consulo.content.OrderRootType;
  * @since 02.09.14
  */
 @ExtensionImpl
-public class ExternalAttributesRootOrderType extends OrderRootType
-{
-	public static ExternalAttributesRootOrderType getInstance()
-	{
-		return getOrderRootType(ExternalAttributesRootOrderType.class);
-	}
+public class ExternalAttributesRootOrderType extends OrderRootType {
+    public static final String ID = "dotNetExternalAttributes";
 
-	public ExternalAttributesRootOrderType()
-	{
-		super("dotNetExternalAttributes");
-	}
+    public ExternalAttributesRootOrderType() {
+        super(ID);
+    }
 }

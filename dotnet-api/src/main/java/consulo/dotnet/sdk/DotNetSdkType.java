@@ -40,8 +40,8 @@ public abstract class DotNetSdkType extends SdkType {
     }
 
     @Override
-    public boolean isRootTypeApplicable(OrderRootType type) {
-        return type == ExternalAttributesRootOrderType.getInstance();
+    public boolean isRootTypeApplicable(String type) {
+        return ExternalAttributesRootOrderType.ID.equals(type);
     }
 
     @Override
@@ -57,7 +57,7 @@ public abstract class DotNetSdkType extends SdkType {
             }
 
             if (file.getName().endsWith(".xml")) {
-                sdkModificator.addRoot(VirtualFileUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.getInstance());
+                sdkModificator.addRoot(VirtualFileUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.ID);
             }
             return true;
         });

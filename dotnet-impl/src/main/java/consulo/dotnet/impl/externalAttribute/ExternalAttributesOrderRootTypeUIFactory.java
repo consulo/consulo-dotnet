@@ -23,6 +23,7 @@ import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.SdkPathEditor;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 
@@ -31,29 +32,24 @@ import consulo.ui.image.Image;
  * @since 02.09.14
  */
 @ExtensionImpl
-public class ExternalAttributesOrderRootTypeUIFactory implements OrderRootTypeUIFactory
-{
-	@Override
-	public String getOrderRootTypeId()
-	{
-		return "dotNetExternalAttributes";
-	}
+public class ExternalAttributesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
+    @Override
+    public String getOrderRootTypeId() {
+        return ExternalAttributesRootOrderType.ID;
+    }
 
-	@Override
-	public SdkPathEditor createPathEditor(Sdk sdk)
-	{
-		return new SdkPathEditor(getNodeText(), ExternalAttributesRootOrderType.getInstance(), FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), sdk);
-	}
+    @Override
+    public SdkPathEditor createPathEditor(Sdk sdk) {
+        return new SdkPathEditor(LocalizeValue.localizeTODO("External Attributes"), ExternalAttributesRootOrderType.ID, FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), sdk);
+    }
 
-	@Override
-	public Image getIcon()
-	{
-		return AllIcons.Nodes.Annotationtype;
-	}
+    @Override
+    public Image getIcon() {
+        return AllIcons.Nodes.Annotationtype;
+    }
 
-	@Override
-	public String getNodeText()
-	{
-		return "External Attributes";
-	}
+    @Override
+    public String getNodeText() {
+        return "External Attributes";
+    }
 }
