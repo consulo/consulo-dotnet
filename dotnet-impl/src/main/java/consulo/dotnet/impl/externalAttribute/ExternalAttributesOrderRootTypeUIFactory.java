@@ -17,13 +17,14 @@
 package consulo.dotnet.impl.externalAttribute;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
+import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.SdkPathEditor;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
 
@@ -31,7 +32,7 @@ import consulo.ui.image.Image;
  * @author VISTALL
  * @since 02.09.14
  */
-@ExtensionImpl
+@ExtensionImpl(id = ExternalAttributesRootOrderType.ID, order = "after " + DocumentationOrderRootType.ID)
 public class ExternalAttributesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
     @Override
     public String getOrderRootTypeId() {
@@ -40,16 +41,16 @@ public class ExternalAttributesOrderRootTypeUIFactory implements OrderRootTypeUI
 
     @Override
     public SdkPathEditor createPathEditor(Sdk sdk) {
-        return new SdkPathEditor(LocalizeValue.localizeTODO("External Attributes"), ExternalAttributesRootOrderType.ID, FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), sdk);
+        return new SdkPathEditor(getNodeText(), ExternalAttributesRootOrderType.ID, FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), sdk);
     }
 
     @Override
     public Image getIcon() {
-        return AllIcons.Nodes.Annotationtype;
+        return PlatformIconGroup.modulesAnnotation();
     }
 
     @Override
-    public String getNodeText() {
-        return "External Attributes";
+    public LocalizeValue getNodeText() {
+        return LocalizeValue.localizeTODO("External Attributes");
     }
 }
