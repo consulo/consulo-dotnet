@@ -62,7 +62,9 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
 
         formBuilder.addLabeled("Mode", myModeBox);
 
-        myModuleComboBox.setRenderer((presentation, i, module) -> {
+        myModuleComboBox.setRender((presentation, item) -> {
+            Module module = item.getValue();
+
             if (module == null) {
                 presentation.append("<none>");
             }
