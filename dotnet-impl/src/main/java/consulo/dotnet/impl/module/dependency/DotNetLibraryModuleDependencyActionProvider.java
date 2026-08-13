@@ -39,6 +39,7 @@ import javax.swing.border.Border;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /**
@@ -161,16 +162,21 @@ public class DotNetLibraryModuleDependencyActionProvider implements AddModuleDep
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<List<Map.Entry<String, String>>> invoke(DotNetLibraryModuleDependencyContext context) {
+    public CompletableFuture<List<Map.Entry<String, String>>> invoke(DotNetLibraryModuleDependencyContext context) {
         Image defaultIcon = getIcon(context.getClasspathPanel().getRootModel());
 
-        AsyncResult<List<Map.Entry<String, String>>> result = AsyncResult.undefined();
+        CompletableFuture<List<Map.Entry<String, String>>> result = new CompletableFuture<>();
 
         SelectDialog dialog = new SelectDialog(context, defaultIcon);
-        AsyncResult<Void> showAsync = dialog.showAsync();
+        CompletableFuture<Void> showAsync = dialog.showAsync();
 
-        showAsync.doWhenDone(() -> result.setDone(dialog.getSelectedValues()));
-        showAsync.doWhenRejected((Runnable) result::setRejected);
+        showAsync.whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                result.completeExceptionally(throwable);
+            } else {
+                result.complete(dialog.getSelectedValues());
+            }
+        });
         return result;
     }
 }
