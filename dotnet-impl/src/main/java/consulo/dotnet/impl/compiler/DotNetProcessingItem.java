@@ -19,41 +19,37 @@ package consulo.dotnet.impl.compiler;
 import consulo.compiler.FileProcessingCompiler;
 import consulo.compiler.TimestampValidityState;
 import consulo.compiler.ValidityState;
+import consulo.compiler.util.CompilerUtil;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
+
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
  * @since 26.11.13.
  */
-public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingItem
-{
-	private final File myFile;
-	private final DotNetRunModuleExtension<?> myExtension;
+public class DotNetProcessingItem implements FileProcessingCompiler.ProcessingItem {
+    private final Path myFile;
+    private final @Nullable DotNetRunModuleExtension<?> myExtension;
 
-	public DotNetProcessingItem(File file, DotNetRunModuleExtension<?> dotNetModuleExtension)
-	{
-		myFile = file;
-		myExtension = dotNetModuleExtension;
-	}
+    public DotNetProcessingItem(Path file, @Nullable DotNetRunModuleExtension<?> dotNetModuleExtension) {
+        myFile = file;
+        myExtension = dotNetModuleExtension;
+    }
 
-	@Override
-	public File getFile()
-	{
-		return myFile;
-	}
+    @Override
+    public Path getFile() {
+        return myFile;
+    }
 
-	@Nullable
-	@Override
-	public ValidityState getValidityState()
-	{
-		return new TimestampValidityState(myFile.lastModified());
-	}
+    @Override
+    public @Nullable ValidityState getValidityState() {
+        return new TimestampValidityState(CompilerUtil.lastModified(myFile));
+    }
 
-	public DotNetRunModuleExtension<?> getExtension()
-	{
-		return myExtension;
-	}
+    public @Nullable DotNetRunModuleExtension<?> getExtension() {
+        return myExtension;
+    }
 }

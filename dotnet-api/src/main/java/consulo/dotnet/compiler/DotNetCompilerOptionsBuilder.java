@@ -19,18 +19,19 @@ package consulo.dotnet.compiler;
 import consulo.dotnet.module.extension.DotNetModuleExtension;
 import consulo.module.Module;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
+import java.util.Collection;
 
 /**
  * @author VISTALL
  * @since 25.12.13.
  */
-public interface DotNetCompilerOptionsBuilder
-{
-	@Nullable
-	DotNetCompilerMessage convertToMessage(Module module, String line);
+public interface DotNetCompilerOptionsBuilder {
+    @Nullable
+    DotNetCompilerMessage convertToMessage(Module module, String line);
 
-	GeneralCommandLine createCommandLine(Module module, VirtualFile[] results, DotNetModuleExtension<?> dotNetLayer) throws Exception;
+    GeneralCommandLine createCommandLine(Module module, Collection<Path> results, DotNetModuleExtension<?> dotNetLayer) throws Exception;
 }

@@ -28,14 +28,16 @@ import consulo.dotnet.module.extension.DotNetModuleLangExtension;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -45,114 +47,94 @@ import java.util.Set;
  * @since 26.11.13.
  */
 @ExtensionImpl(id = "dotnet-dependency", order = "after dotnet-compiler")
-public class DotNetDependencyCopier implements FileProcessingCompiler, PackagingCompiler
-{
-	@Override
-	public String getDescription()
-	{
-		return "DotNetDependencyCopier";
-	}
+public class DotNetDependencyCopier implements FileProcessingCompiler, PackagingCompiler {
+    private static final Logger LOG = Logger.getInstance(DotNetDependencyCopier.class);
 
-	@Override
-	public boolean validateConfiguration(CompileScope compileScope)
-	{
-		for(Module module : compileScope.getAffectedModules())
-		{
-			DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-			if(extension != null && extension.getSdk() == null)
-			{
-				throw new IllegalArgumentException("Sdk for module " + module.getName() + " cant be empty");
-			}
-		}
-		return true;
-	}
+    @Override
+    public String getDescription() {
+        return "DotNetDependencyCopier";
+    }
 
-	@Override
-	public ProcessingItem[] getProcessingItems(final CompileContext compileContext)
-	{
-		List<ProcessingItem> itemList = new ArrayList<>();
-		for(Module module : compileContext.getCompileScope().getAffectedModules())
-		{
-			DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
-			if(extension == null)
-			{
-				continue;
-			}
+    @Override
+    public boolean validateConfiguration(CompileScope compileScope) {
+        for (Module module : compileScope.getAffectedModules()) {
+            DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+            if (extension != null && extension.getSdk() == null) {
+                throw new IllegalArgumentException("Sdk for module " + module.getName() + " cant be empty");
+            }
+        }
+        return true;
+    }
 
-			DotNetSimpleModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetSimpleModuleExtension.class);
-			assert dotNetModuleExtension != null;
+    @Override
+    public ProcessingItem[] getProcessingItems(CompileContext compileContext) {
+        List<ProcessingItem> itemList = new ArrayList<>();
+        for (Module module : compileContext.getCompileScope().getAffectedModules()) {
+            DotNetModuleLangExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleLangExtension.class);
+            if (extension == null) {
+                continue;
+            }
 
-			if(!dotNetModuleExtension.isSupportCompilation() || !(dotNetModuleExtension instanceof DotNetRunModuleExtension))
-			{
-				continue;
-			}
+            DotNetSimpleModuleExtension dotNetModuleExtension = ModuleUtilCore.getExtension(module, DotNetSimpleModuleExtension.class);
+            assert dotNetModuleExtension != null;
 
-			Set<File> list = ReadAction.compute(() ->
-			{
-				Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES);
-				files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES));
+            if (!dotNetModuleExtension.isSupportCompilation() || !(dotNetModuleExtension instanceof DotNetRunModuleExtension)) {
+                continue;
+            }
 
-				for(DotNetDependencyCopierExtension copierExtension : DotNetDependencyCopierExtension.EP_NAME.getExtensionList())
-				{
-					files.addAll(copierExtension.collectDependencies(module));
-				}
-				return files;
-			});
+            Set<File> list = ReadAction.compute(() -> {
+                Set<File> files = DotNetCompilerUtil.collectDependencies(module, DotNetTarget.LIBRARY, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES);
+                files.addAll(DotNetCompilerUtil.collectDependencies(module, DotNetTarget.NET_MODULE, true, DotNetCompilerUtil.SKIP_STD_LIBRARIES));
 
-			for(File file : list)
-			{
-				if(!file.exists())
-				{
-					continue;
-				}
-				itemList.add(new DotNetProcessingItem(file, (DotNetRunModuleExtension<?>) dotNetModuleExtension));
-			}
-		}
+                for (DotNetDependencyCopierExtension copierExtension : DotNetDependencyCopierExtension.EP_NAME.getExtensionList()) {
+                    files.addAll(copierExtension.collectDependencies(module));
+                }
+                return files;
+            });
 
-		return itemList.isEmpty() ? ProcessingItem.EMPTY_ARRAY : itemList.toArray(new ProcessingItem[itemList.size()]);
-	}
+            for (File file : list) {
+                if (!file.exists()) {
+                    continue;
+                }
+                itemList.add(new DotNetProcessingItem(file.toPath(), (DotNetRunModuleExtension<?>) dotNetModuleExtension));
+            }
+        }
 
-	@Override
-	public ProcessingItem[] process(CompileContext compileContext, ProcessingItem[] processingItems)
-	{
-		if(processingItems.length == 0)
-		{
-			return ProcessingItem.EMPTY_ARRAY;
-		}
+        return itemList.isEmpty() ? ProcessingItem.EMPTY_ARRAY : itemList.toArray(new ProcessingItem[itemList.size()]);
+    }
 
-		List<ProcessingItem> items = new ArrayList<>(processingItems.length);
-		for(ProcessingItem processingItem : processingItems)
-		{
-			DotNetProcessingItem dotNetProcessingItem = (DotNetProcessingItem) processingItem;
-			String moduleOutputDir = DotNetMacroUtil.expandOutputDir(dotNetProcessingItem.getExtension());
+    @Override
+    public ProcessingItem[] process(CompileContext compileContext, ProcessingItem[] processingItems) {
+        if (processingItems.length == 0) {
+            return ProcessingItem.EMPTY_ARRAY;
+        }
 
-			File copyFile = new File(moduleOutputDir, processingItem.getFile().getName());
+        List<ProcessingItem> items = new ArrayList<>(processingItems.length);
+        for (ProcessingItem processingItem : processingItems) {
+            DotNetProcessingItem dotNetProcessingItem = (DotNetProcessingItem) processingItem;
+            String moduleOutputDir = DotNetMacroUtil.expandOutputDir(dotNetProcessingItem.getExtension());
 
-			File file = processingItem.getFile();
+            Path file = processingItem.getFile();
+            Path copyFile = Path.of(moduleOutputDir, file.getFileName().toString());
 
-			try
-			{
-				FileUtil.copy(file, copyFile, FilePermissionCopier.BY_NIO2);
+            try {
+                FileUtil.copy(file.toFile(), copyFile.toFile(), FilePermissionCopier.BY_NIO2);
 
-				items.add(new DotNetProcessingItem(copyFile, null));
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		return items.toArray(new ProcessingItem[items.size()]);
-	}
+                items.add(new DotNetProcessingItem(copyFile, null));
+            }
+            catch (IOException e) {
+                LOG.error(e);
+            }
+        }
+        return items.toArray(new ProcessingItem[items.size()]);
+    }
 
-	@Override
-	public ValidityState createValidityState(DataInput dataInput) throws IOException
-	{
-		long l = dataInput.readLong();
-		return new TimestampValidityState(l);
-	}
+    @Override
+    public ValidityState createValidityState(DataInput dataInput) throws IOException {
+        return TimestampValidityState.load(dataInput);
+    }
 
-	@Override
-	public void processOutdatedItem(CompileContext compileContext, File s, @Nullable ValidityState validityState)
-	{
-	}
+    @Override
+    public void processOutdatedItem(CompileContext compileContext, Path file, @Nullable ValidityState validityState) {
+    }
 }

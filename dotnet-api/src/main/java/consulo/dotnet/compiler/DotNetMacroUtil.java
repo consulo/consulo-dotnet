@@ -27,77 +27,62 @@ import consulo.pathMacro.MacroManager;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
  * @since 27.11.13.
  */
-public class DotNetMacroUtil
-{
-	public static DataContext createContext(Module module, boolean debugSymbols)
-	{
-		DataContext.Builder builder = DataContext.builder();
-		builder = builder.add(Project.KEY, module.getProject());
-		builder = builder.add(Module.KEY, module);
-		if(debugSymbols)
-		{
-			builder = builder.add(TargetFileExtensionMacro.DEBUG_SYMBOLS, Boolean.TRUE);
-		}
-		return builder.build();
-	}
+public class DotNetMacroUtil {
+    public static DataContext createContext(Module module, boolean debugSymbols) {
+        DataContext.Builder builder = DataContext.builder();
+        builder = builder.add(Project.KEY, module.getProject());
+        builder = builder.add(Module.KEY, module);
+        if (debugSymbols) {
+            builder = builder.add(TargetFileExtensionMacro.DEBUG_SYMBOLS, Boolean.TRUE);
+        }
+        return builder.build();
+    }
 
-	public static String expandOutputFile(DotNetRunModuleExtension<?> extension)
-	{
-		return expandOutputFile(extension, false);
-	}
+    public static String expandOutputFile(DotNetRunModuleExtension<?> extension) {
+        return expandOutputFile(extension, false);
+    }
 
-	public static String expandOutputFile(DotNetRunModuleExtension<?> extension, boolean debugSymbols)
-	{
-		String outputDir = FileUtil.toSystemDependentName(extension.getOutputDir());
-		if(StringUtil.isEmpty(outputDir))
-		{
-			String url = ModuleCompilerPathsManager.getInstance(extension.getModule()).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
-			assert url != null;
-			outputDir = FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(url));
-		}
+    public static String expandOutputFile(DotNetRunModuleExtension<?> extension, boolean debugSymbols) {
+        String outputDir = resolveOutputDir(extension);
 
-		if(outputDir.charAt(outputDir.length() - 1) == File.separatorChar)
-		{
-			return expand(extension.getModule(), outputDir + extension.getFileName(), debugSymbols);
-		}
-		else
-		{
-			return expand(extension.getModule(), outputDir + File.separatorChar + extension.getFileName(), debugSymbols);
-		}
-	}
+        if (outputDir.charAt(outputDir.length() - 1) == File.separatorChar) {
+            return expand(extension.getModule(), outputDir + extension.getFileName(), debugSymbols);
+        }
+        else {
+            return expand(extension.getModule(), outputDir + File.separatorChar + extension.getFileName(), debugSymbols);
+        }
+    }
 
-	public static String expandOutputDir(DotNetRunModuleExtension<?> extension)
-	{
-		String outputDir = FileUtil.toSystemDependentName(extension.getOutputDir());
-		if(StringUtil.isEmpty(outputDir))
-		{
-			String url = ModuleCompilerPathsManager.getInstance(extension.getModule()).getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance());
-			assert url != null;
-			outputDir = FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(url));
-		}
+    public static String expandOutputDir(DotNetRunModuleExtension<?> extension) {
+        return expand(extension.getModule(), resolveOutputDir(extension), false);
+    }
 
-		return expand(extension.getModule(), outputDir, false);
-	}
+    private static String resolveOutputDir(DotNetRunModuleExtension<?> extension) {
+        String outputDir = FileUtil.toSystemDependentName(extension.getOutputDir());
+        if (StringUtil.isEmpty(outputDir)) {
+            Path path = ModuleCompilerPathsManager.getInstance(extension.getModule()).getCompilerOutputPath(ProductionContentFolderTypeProvider.getInstance());
+            assert path != null;
+            outputDir = path.toString();
+        }
+        return outputDir;
+    }
 
-	public static String expand(Module module, String path, boolean debugSymbols)
-	{
-		String newPath;
-		try
-		{
-			newPath = MacroManager.getInstance().expandSilentMarcos(path, true, createContext(module, debugSymbols));
-			return FileUtil.toSystemDependentName(newPath);
-		}
-		catch(Macro.ExecutionCancelledException e)
-		{
-			return path;
-		}
-	}
+    public static String expand(Module module, String path, boolean debugSymbols) {
+        String newPath;
+        try {
+            newPath = MacroManager.getInstance().expandSilentMarcos(path, true, createContext(module, debugSymbols));
+            return FileUtil.toSystemDependentName(newPath);
+        }
+        catch (Macro.ExecutionCancelledException e) {
+            return path;
+        }
+    }
 }

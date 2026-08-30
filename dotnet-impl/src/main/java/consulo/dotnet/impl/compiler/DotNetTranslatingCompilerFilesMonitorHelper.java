@@ -27,28 +27,30 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
+
 /**
  * @author VISTALL
  * @since 16.01.14
  */
 @ExtensionImpl
-public class DotNetTranslatingCompilerFilesMonitorHelper implements TranslatingCompilerFilesMonitorHelper
-{
-	@Nullable
-	@Override
-	public VirtualFile[] getRootsForModule(Module module)
-	{
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-		if(extension == null || extension.isAllowSourceRoots())
-		{
-			return null;
-		}
-		return ModuleRootManager.getInstance(module).getContentRoots();
-	}
+public class DotNetTranslatingCompilerFilesMonitorHelper implements TranslatingCompilerFilesMonitorHelper {
+    @Override
+    public Path @Nullable [] getRootsForModule(Module module) {
+        DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+        if (extension == null || extension.isAllowSourceRoots()) {
+            return null;
+        }
+        VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+        Path[] roots = new Path[contentRoots.length];
+        for (int i = 0; i < contentRoots.length; i++) {
+            roots[i] = contentRoots[i].toNioPath();
+        }
+        return roots;
+    }
 
-	@Override
-	public boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> extension)
-	{
-		return extension instanceof DotNetModuleExtension;
-	}
+    @Override
+    public boolean isModuleExtensionAffectToCompilation(ModuleExtension<?> extension) {
+        return extension instanceof DotNetModuleExtension;
+    }
 }
