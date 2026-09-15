@@ -15,8 +15,8 @@
  */
 package consulo.dotnet.run.impl.coverage;
 
-import com.intellij.rt.coverage.data.ClassData;
-import com.intellij.rt.coverage.data.LineData;
+import consulo.execution.coverage.data.CoverageLine;
+import consulo.execution.coverage.data.CoverageUnit;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetNamedElement;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
@@ -93,16 +93,16 @@ public class DotNetCoverageViewExtension extends CoverageViewExtension {
                 return unknownValue;
             }
 
-            ClassData classData = getSuitesBundle().getCoverageData().getOrCreateClassData(vmQName);
+            CoverageUnit unit = getSuitesBundle().getCoverageData().getOrCreateUnit(vmQName);
 
-            LineData[] lines = (LineData[]) classData.getLines();
+            List<CoverageLine> lines = unit.getLines();
             if (lines == null) {
                 return unknownValue;
             }
 
             int len = 0;
             double i = 0;
-            for (LineData line : lines) {
+            for (CoverageLine line : lines) {
                 if (line != null) {
                     if (line.getHits() > 0) {
                         i++;
