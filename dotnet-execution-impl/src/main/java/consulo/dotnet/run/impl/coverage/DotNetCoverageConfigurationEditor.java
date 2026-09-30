@@ -17,15 +17,24 @@
 package consulo.dotnet.run.impl.coverage;
 
 import consulo.configurable.ConfigurationException;
+import consulo.dotnet.execution.localize.DotNetExecutionLocalize;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.coverage.CoverageEnabledConfiguration;
 import consulo.execution.coverage.CoverageRunner;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.*;
+import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.TextAttribute;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.ui.util.FormBuilder;
 
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -33,84 +42,90 @@ import javax.swing.*;
  */
 public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConfigurationWithCoverage>
 {
-	private JPanel myPanel = new JPanel(new VerticalFlowLayout());
-	private ComboBox myRunnersBox = new ComboBox();
-	private JBCheckBox myEnabledCheckBox = new JBCheckBox("Enabled?");
+	private static final Object NO_RUNNER = new Object();
 
+	private final MutableFlatDataModel<Object> myRunnersModel = FlatDataModel.of(List.of(NO_RUNNER));
+	private final ComboBox<Object> myRunnersBox;
+	private final CheckBox myEnabledCheckBox;
+
+	@RequiredUIAccess
 	public DotNetCoverageConfigurationEditor()
 	{
-		myPanel.add(myEnabledCheckBox);
-		myPanel.add(LabeledComponent.create(myRunnersBox, "Runner"));
-		myRunnersBox.setRenderer(new ColoredListCellRenderer<Object>()
+		myEnabledCheckBox = CheckBox.create(DotNetExecutionLocalize.coverageEnabledCheckbox());
+
+		myRunnersBox = ComboBox.create(myRunnersModel);
+		myRunnersBox.setRender((presentation, item) ->
 		{
-			@Override
-			protected void customizeCellRenderer(JList<?> jList, Object value, int i, boolean b, boolean b1)
+			Object value = item.getValue();
+			if(value == null || value == NO_RUNNER)
 			{
-				if(value == null)
-				{
-					append("<none>");
-				}
-				else if(value instanceof String)
-				{
-					append((String) value, SimpleTextAttributes.ERROR_ATTRIBUTES);
-				}
-				else if(value instanceof CoverageRunner)
-				{
-					append(((CoverageRunner) value).getPresentableName());
-				}
+				presentation.append(DotNetExecutionLocalize.coverageNoRunner());
+			}
+			else if(value instanceof String runnerId)
+			{
+				presentation.append(runnerId, TextAttribute.ERROR);
+			}
+			else if(value instanceof CoverageRunner coverageRunner)
+			{
+				presentation.append(coverageRunner.getPresentableName());
 			}
 		});
 	}
 
 	@Override
+	@RequiredUIAccess
 	protected void resetEditorFrom(DotNetConfigurationWithCoverage s)
 	{
 		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) s);
 
-		myEnabledCheckBox.setSelected(coverageEnabledConfiguration.isCoverageEnabled());
-		myRunnersBox.removeAllItems();
+		myEnabledCheckBox.setValue(coverageEnabledConfiguration.isCoverageEnabled());
 
-		for(DotNetCoverageRunner coverageRunner : DotNetCoverageRunner.findAvailableRunners(s))
-		{
-			myRunnersBox.addItem(coverageRunner);
-		}
+		List<Object> runners = new ArrayList<>();
+		runners.add(NO_RUNNER);
+		runners.addAll(DotNetCoverageRunner.findAvailableRunners(s));
 
+		Object selected = NO_RUNNER;
 		CoverageRunner coverageRunner = coverageEnabledConfiguration.getCoverageRunner();
 		if(coverageRunner != null)
 		{
-			myRunnersBox.setSelectedItem(coverageRunner);
+			selected = coverageRunner;
 		}
 		else if(coverageEnabledConfiguration.getRunnerId() != null)
 		{
-			myRunnersBox.setSelectedItem(coverageEnabledConfiguration.getRunnerId());
+			selected = coverageEnabledConfiguration.getRunnerId();
+			runners.add(selected);
 		}
-		else
-		{
-			myRunnersBox.setSelectedItem(null);
-		}
+
+		myRunnersModel.replaceAll(runners);
+		myRunnersBox.setValue(selected);
 	}
 
 	@Override
+	@RequiredUIAccess
 	protected void applyEditorTo(DotNetConfigurationWithCoverage s) throws ConfigurationException
 	{
 		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) s);
 
-		coverageEnabledConfiguration.setCoverageEnabled(myEnabledCheckBox.isSelected());
+		coverageEnabledConfiguration.setCoverageEnabled(Boolean.TRUE.equals(myEnabledCheckBox.getValue()));
 
-		Object selectedItem = myRunnersBox.getSelectedItem();
-		if(selectedItem instanceof CoverageRunner)
+		Object selectedItem = myRunnersBox.getValue();
+		if(selectedItem instanceof CoverageRunner coverageRunner)
 		{
-			coverageEnabledConfiguration.setCoverageRunner((CoverageRunner) selectedItem);
+			coverageEnabledConfiguration.setCoverageRunner(coverageRunner);
 		}
-		else if(selectedItem == null) // we dont interest string value, due it already set to configuration
+		else if(selectedItem == null || selectedItem == NO_RUNNER)
 		{
 			coverageEnabledConfiguration.setCoverageRunner(null);
 		}
 	}
 
 	@Override
-	protected JComponent createEditor()
+	@RequiredUIAccess
+	protected Component createUIComponent()
 	{
-		return myPanel;
+		VerticalLayout layout = VerticalLayout.create();
+		layout.add(myEnabledCheckBox);
+		layout.add(FormBuilder.create().addLabeled(DotNetExecutionLocalize.coverageRunnerLabel(), myRunnersBox).build());
+		return layout;
 	}
 }

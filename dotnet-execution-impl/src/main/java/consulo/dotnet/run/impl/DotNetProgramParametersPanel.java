@@ -1,118 +1,100 @@
 package consulo.dotnet.run.impl;
 
+import consulo.application.Application;
+import consulo.dotnet.execution.localize.DotNetExecutionLocalize;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
-import consulo.execution.CommonProgramRunConfigurationParameters;
-import consulo.execution.ui.awt.CommonProgramParametersPanel;
+import consulo.execution.ui.CommonProgramParametersLayout;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.module.ui.awt.ModuleListCellRenderer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ProcessConsoleType;
 import consulo.project.Project;
+import consulo.ui.ComboBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.CollectionComboBoxModel;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.LabeledComponent;
+import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.util.FormBuilder;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.event.ItemEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * @author VISTALL
- * @since 2020-10-23
- */
-public class DotNetProgramParametersPanel extends CommonProgramParametersPanel
-{
-	private ComboBox<Module> myModuleComboBox;
-	private ComboBox<ProcessConsoleType> myConsoleTypeBox;
+public class DotNetProgramParametersPanel extends CommonProgramParametersLayout<DotNetConfiguration> {
+    private final Project myProject;
 
-	private final Project myProject;
-	private LabeledComponent<ComboBox<Module>> myModuleLabeled;
-	private LabeledComponent<ComboBox<ProcessConsoleType>> myConsoleTypeLabeled;
+    private @Nullable ComboBox<Module> myModuleComboBox;
+    private @Nullable ComboBox<ProcessConsoleType> myConsoleTypeBox;
 
-	public DotNetProgramParametersPanel(Project project)
-	{
-		super(false);
-		myProject = project;
-		init();
-	}
+    public DotNetProgramParametersPanel(Project project) {
+        super(project.getApplication().getInstance(DialogService.class));
+        myProject = project;
+    }
 
-	@Override
-	protected void init()
-	{
-		super.init();
+    @Override
+    @RequiredUIAccess
+    protected void addAfter(FormBuilder builder) {
+        List<Module> modules = new ArrayList<>();
+        for (Module module : ModuleManager.getInstance(myProject).getModules()) {
+            if (ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class) != null) {
+                modules.add(module);
+            }
+        }
 
-		setPreferredSize(null);
-	}
+        ComboBox<Module> moduleComboBox = ComboBox.create(modules);
+        moduleComboBox.setRender((presentation, item) ->
+        {
+            Module module = item.getValue();
+            if (module != null) {
+                presentation.withIcon(PlatformIconGroup.nodesModule());
+                presentation.append(module.getName());
+            }
+        });
+        moduleComboBox.addValueListener(event -> setModuleContext(event.getValue()));
+        myModuleComboBox = moduleComboBox;
+        builder.addLabeled(DotNetExecutionLocalize.runConfigurationModuleLabel(), moduleComboBox);
 
-	@Override
-	@RequiredUIAccess
-	protected void initComponents()
-	{
-		super.initComponents();
+        ComboBox<ProcessConsoleType> consoleTypeBox = ComboBox.create(ProcessConsoleType.listSupported());
+        consoleTypeBox.setRender((presentation, item) ->
+        {
+            ProcessConsoleType consoleType = item.getValue();
+            if (consoleType != null) {
+                presentation.append(consoleType.getDisplayName());
+            }
+        });
+        myConsoleTypeBox = consoleTypeBox;
+        builder.addLabeled(DotNetExecutionLocalize.runConfigurationConsoleLabel(), consoleTypeBox);
+    }
 
-		myModuleComboBox = new ComboBox<>();
-		myModuleComboBox.setRenderer(new ModuleListCellRenderer());
-		for(Module module : ModuleManager.getInstance(myProject).getModules())
-		{
-			if(ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class) != null)
-			{
-				myModuleComboBox.addItem(module);
-			}
-		}
+    @Override
+    @RequiredUIAccess
+    public void reset(DotNetConfiguration configuration) {
+        super.reset(configuration);
 
-		myModuleComboBox.addItemListener(e ->
-		{
-			if(e.getStateChange() == ItemEvent.SELECTED)
-			{
-				setModuleContext((Module) myModuleComboBox.getSelectedItem());
-			}
-		});
+        Module module = configuration.getConfigurationModule().getModule();
 
-		myModuleLabeled = LabeledComponent.create(myModuleComboBox, "Module");
-		add(myModuleLabeled);
+        ComboBox<Module> moduleComboBox = myModuleComboBox;
+        if (moduleComboBox != null) {
+            moduleComboBox.setValue(module, false);
+        }
+        setModuleContext(module);
 
-		myConsoleTypeBox = new ComboBox<>(new CollectionComboBoxModel<>(ProcessConsoleType.listSupported()));
-		myConsoleTypeBox.setRenderer(new ColoredListCellRenderer<ProcessConsoleType>()
-		{
-			@Override
-			protected void customizeCellRenderer(JList list, ProcessConsoleType value, int index, boolean selected, boolean hasFocus)
-			{
-				append(value.getDisplayName().get());
-			}
-		});
-		myConsoleTypeLabeled = LabeledComponent.create(myConsoleTypeBox, "Console");
+        ComboBox<ProcessConsoleType> consoleTypeBox = myConsoleTypeBox;
+        if (consoleTypeBox != null) {
+            consoleTypeBox.setValue(configuration.getConsoleType());
+        }
+    }
 
-		add(myConsoleTypeLabeled);
-	}
+    @Override
+    @RequiredUIAccess
+    public void apply(DotNetConfiguration configuration) {
+        super.apply(configuration);
 
-	@Override
-	protected void setupAnchor()
-	{
-		super.setupAnchor();
-		myModuleLabeled.setAnchor(myAnchor);
-		myConsoleTypeLabeled.setAnchor(myAnchor);
-	}
+        ComboBox<Module> moduleComboBox = myModuleComboBox;
+        configuration.getConfigurationModule().setModule(moduleComboBox == null ? null : moduleComboBox.getValue());
 
-	@Override
-	public void reset(CommonProgramRunConfigurationParameters configuration)
-	{
-		super.reset(configuration);
-
-		DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
-		myModuleComboBox.setSelectedItem(dotNetConfiguration.getConfigurationModule().getModule());
-		setModuleContext(dotNetConfiguration.getConfigurationModule().getModule());
-		myConsoleTypeBox.setSelectedItem(dotNetConfiguration.getConsoleType());
-	}
-
-	@Override
-	public void applyTo(CommonProgramRunConfigurationParameters configuration)
-	{
-		super.applyTo(configuration);
-
-		DotNetConfiguration dotNetConfiguration = (DotNetConfiguration) configuration;
-		dotNetConfiguration.getConfigurationModule().setModule((Module) myModuleComboBox.getSelectedItem());
-		dotNetConfiguration.setConsoleType((ProcessConsoleType) myConsoleTypeBox.getSelectedItem());
-	}
+        ComboBox<ProcessConsoleType> consoleTypeBox = myConsoleTypeBox;
+        if (consoleTypeBox != null) {
+            configuration.setConsoleType(consoleTypeBox.getValue());
+        }
+    }
 }

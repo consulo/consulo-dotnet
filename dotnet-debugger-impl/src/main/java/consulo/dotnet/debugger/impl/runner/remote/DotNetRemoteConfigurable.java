@@ -16,63 +16,63 @@
 package consulo.dotnet.debugger.impl.runner.remote;
 
 import consulo.configurable.ConfigurationException;
+import consulo.dotnet.execution.localize.DotNetExecutionLocalize;
 import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
+import consulo.ui.IntBox;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.util.FormBuilder;
-
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2016-12-27
  */
 public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> extends SettingsEditor<C> {
-    private final Project myProject;
+    private static final int MAX_PORT = 65535;
 
-    private TextBox myHostField;
-    private TextBox myPortField;
-    private ComboBox<Module> myModuleComboBox;
-    private ComboBox<Boolean> myModeBox;
+    private final TextBox myHostField;
+    private final IntBox myPortField;
+    private final ComboBox<Module> myModuleComboBox;
+    private final ComboBox<Boolean> myModeBox;
 
-    public DotNetRemoteConfigurable(Project project) {
-        myProject = project;
-    }
-
-    @Nullable
-    @Override
     @RequiredUIAccess
-    protected Component createUIComponent() {
-        FormBuilder formBuilder = FormBuilder.create();
+    public DotNetRemoteConfigurable(Project project) {
+        myHostField = TextBox.create();
+        myPortField = IntBox.create().withRange(0, MAX_PORT);
 
-        formBuilder.addLabeled("Host", myHostField = TextBox.create());
-        formBuilder.addLabeled("Port", myPortField = TextBox.create());
-        formBuilder.addLabeled("Module", myModuleComboBox = ComboBox.create(ModuleManager.getInstance(myProject).getSortedModules()));
-
-        ComboBox.Builder<Boolean> modeBuilder = ComboBox.builder();
-        modeBuilder.add(Boolean.TRUE, "attach");
-        modeBuilder.add(Boolean.FALSE, "listen");
-        myModeBox = modeBuilder.build();
-
-        formBuilder.addLabeled("Mode", myModeBox);
-
+        myModuleComboBox = ComboBox.create(ModuleManager.getInstance(project).getSortedModules());
         myModuleComboBox.setRender((presentation, item) -> {
             Module module = item.getValue();
-
             if (module == null) {
-                presentation.append("<none>");
+                presentation.append(DotNetExecutionLocalize.runConfigurationModuleNone());
             }
             else {
                 presentation.withIcon(PlatformIconGroup.nodesModule());
                 presentation.append(module.getName());
             }
         });
+
+        myModeBox = ComboBox.<Boolean>builder()
+            .add(Boolean.TRUE, ExecutionLocalize.remoteConfigurationAttachRadio())
+            .add(Boolean.FALSE, ExecutionLocalize.remoteConfigurationListenRadio())
+            .build();
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected Component createUIComponent() {
+        FormBuilder formBuilder = FormBuilder.create();
+        formBuilder.addLabeled(ExecutionLocalize.remoteConfigurationHostLabel(), myHostField);
+        formBuilder.addLabeled(ExecutionLocalize.remoteConfigurationPortLabel(), myPortField);
+        formBuilder.addLabeled(DotNetExecutionLocalize.runConfigurationModuleLabel(), myModuleComboBox);
+        formBuilder.addLabeled(ExecutionLocalize.remoteConfigurationDebuggerModeLabel(), myModeBox);
         return formBuilder.build();
     }
 
@@ -80,9 +80,8 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
     @RequiredUIAccess
     protected void resetEditorFrom(C remoteConfiguration) {
         myHostField.setValue(remoteConfiguration.HOST);
-        myPortField.setValue(String.valueOf(remoteConfiguration.PORT));
-        Module module = remoteConfiguration.getConfigurationModule().getModule();
-        myModuleComboBox.setValue(module != null ? module : null);
+        myPortField.setValue(remoteConfiguration.PORT);
+        myModuleComboBox.setValue(remoteConfiguration.getConfigurationModule().getModule());
         myModeBox.setValue(remoteConfiguration.SERVER_MODE);
     }
 
@@ -90,13 +89,8 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
     @RequiredUIAccess
     protected void applyEditorTo(C remoteConfiguration) throws ConfigurationException {
         remoteConfiguration.HOST = myHostField.getValue();
-        try {
-            remoteConfiguration.PORT = Integer.parseInt(myPortField.getValue());
-        }
-        catch (NumberFormatException e) {
-            //
-        }
-        remoteConfiguration.SERVER_MODE = myModeBox.getValue();
+        remoteConfiguration.PORT = myPortField.getValueOrError();
+        remoteConfiguration.SERVER_MODE = myModeBox.getValueOrError();
         remoteConfiguration.getConfigurationModule().setModule(myModuleComboBox.getValue());
     }
 }

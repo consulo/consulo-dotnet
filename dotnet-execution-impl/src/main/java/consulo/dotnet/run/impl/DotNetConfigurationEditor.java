@@ -19,43 +19,36 @@ package consulo.dotnet.run.impl;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.BorderLayoutPanel;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 26.11.13.
  */
-public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguration>
-{
-	private final Project myProject;
+public class DotNetConfigurationEditor extends SettingsEditor<DotNetConfiguration> {
+    private final DotNetProgramParametersPanel myProgramParametersPanel;
 
-	private DotNetProgramParametersPanel myProgramParametersPanel;
+    public DotNetConfigurationEditor(Project project) {
+        myProgramParametersPanel = new DotNetProgramParametersPanel(project);
+    }
 
-	public DotNetConfigurationEditor(Project project)
-	{
-		myProject = project;
-	}
+    @Override
+    @RequiredUIAccess
+    protected void resetEditorFrom(DotNetConfiguration runConfiguration) {
+        myProgramParametersPanel.reset(runConfiguration);
+    }
 
-	@Override
-	protected void resetEditorFrom(DotNetConfiguration runConfiguration)
-	{
-		myProgramParametersPanel.reset(runConfiguration);
-	}
+    @Override
+    @RequiredUIAccess
+    protected void applyEditorTo(DotNetConfiguration runConfiguration) throws ConfigurationException {
+        myProgramParametersPanel.apply(runConfiguration);
+    }
 
-	@Override
-	protected void applyEditorTo(DotNetConfiguration runConfiguration) throws ConfigurationException
-	{
-		myProgramParametersPanel.applyTo(runConfiguration);
-	}
-
-	@Override
-	@RequiredUIAccess
-	protected JComponent createEditor()
-	{
-		myProgramParametersPanel = new DotNetProgramParametersPanel(myProject);
-		return new BorderLayoutPanel().addToTop(myProgramParametersPanel);
-	}
+    @Override
+    @RequiredUIAccess
+    protected Component createUIComponent() {
+        myProgramParametersPanel.build();
+        return myProgramParametersPanel.getComponent();
+    }
 }

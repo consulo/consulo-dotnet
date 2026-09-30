@@ -1,2 +1,14 @@
 dotnet.application.name:
   text: .NET Application
+coverage.enabled.checkbox:
+  text: Enabled
+coverage.no.runner:
+  text: <none>
+coverage.runner.label:
+  text: 'Runner:'
+run.configuration.console.label:
+  text: 'Console:'
+run.configuration.module.label:
+  text: 'Module:'
+run.configuration.module.none:
+  text: <none>

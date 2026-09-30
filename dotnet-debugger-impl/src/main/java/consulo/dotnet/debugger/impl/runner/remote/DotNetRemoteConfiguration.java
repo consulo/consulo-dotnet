@@ -19,12 +19,12 @@ package consulo.dotnet.debugger.impl.runner.remote;
 import consulo.compiler.execution.CompileStepBeforeRun;
 import consulo.dotnet.debugger.impl.DotNetConfigurationWithDebug;
 import consulo.dotnet.util.DebugConnectionInfo;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.*;
 import consulo.execution.configuration.log.ui.LogConfigurationPanel;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.module.Module;
 import consulo.process.ExecutionException;
@@ -41,51 +41,44 @@ import java.util.Collection;
  * @since 27-Dec-16
  */
 public abstract class DotNetRemoteConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements RunConfigurationWithSuppressedDefaultRunAction, CompileStepBeforeRun.Suppressor,
-		RemoteRunProfile, DotNetConfigurationWithDebug
-{
-	public boolean SERVER_MODE;
-	public String HOST;
-	public int PORT;
+    RemoteRunProfile, DotNetConfigurationWithDebug {
+    public boolean SERVER_MODE;
+    public String HOST;
+    public int PORT;
 
-	public DotNetRemoteConfiguration(final Project project, ConfigurationFactory configurationFactory)
-	{
-		super(new RunConfigurationModule(project), configurationFactory);
-	}
+    public DotNetRemoteConfiguration(final Project project, ConfigurationFactory configurationFactory) {
+        super(new RunConfigurationModule(project), configurationFactory);
+    }
 
-	@Override
-	public void writeExternal(final Element element) throws WriteExternalException
-	{
-		super.writeExternal(element);
-		DefaultJDOMExternalizer.writeExternal(this, element);
-	}
+    @Override
+    public void writeExternal(final Element element) throws WriteExternalException {
+        super.writeExternal(element);
+        DefaultJDOMExternalizer.writeExternal(this, element);
+    }
 
-	@Override
-	public void readExternal(final Element element) throws InvalidDataException
-	{
-		super.readExternal(element);
-		DefaultJDOMExternalizer.readExternal(this, element);
-	}
+    @Override
+    public void readExternal(final Element element) throws InvalidDataException {
+        super.readExternal(element);
+        DefaultJDOMExternalizer.readExternal(this, element);
+    }
 
-	@Override
-	public RunProfileState getState(final Executor executor, final ExecutionEnvironment env) throws ExecutionException
-	{
-		DotNetRemoteRunState state = new DotNetRemoteRunState(env);
-		state.putUserData(DebugConnectionInfo.KEY, new DebugConnectionInfo(HOST, PORT, SERVER_MODE));
-		return state;
-	}
+    @Override
+    public RunProfileState getState(final Executor executor, final ExecutionEnvironment env) throws ExecutionException {
+        DotNetRemoteRunState state = new DotNetRemoteRunState(env);
+        state.putUserData(DebugConnectionInfo.KEY, new DebugConnectionInfo(HOST, PORT, SERVER_MODE));
+        return state;
+    }
 
-	@Override
-	public SettingsEditor<? extends DotNetRemoteConfiguration> getConfigurationEditor()
-	{
-		SettingsEditorGroup<DotNetRemoteConfiguration> group = new SettingsEditorGroup<>();
-		group.addEditor(ExecutionBundle.message("run.configuration.configuration.tab.title"), new DotNetRemoteConfigurable<>(getProject()));
-		group.addEditor(ExecutionBundle.message("logs.tab.title"), new LogConfigurationPanel<>());
-		return group;
-	}
+    @Override
+    public SettingsEditor<? extends DotNetRemoteConfiguration> getConfigurationEditor() {
+        SettingsEditorGroup<DotNetRemoteConfiguration> group = new SettingsEditorGroup<>();
+        group.addEditor(ExecutionLocalize.runConfigurationConfigurationTabTitle(), new DotNetRemoteConfigurable<>(getProject()));
+        group.addEditor(ExecutionLocalize.logsTabTitle(), new LogConfigurationPanel<>());
+        return group;
+    }
 
-	@Override
-	public Collection<Module> getValidModules()
-	{
-		return getAllModules();
-	}
+    @Override
+    public Collection<Module> getValidModules() {
+        return getAllModules();
+    }
 }

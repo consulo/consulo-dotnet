@@ -35,9 +35,11 @@ import consulo.execution.configuration.*;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
@@ -49,8 +51,8 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -58,231 +60,198 @@ import java.util.*;
  * @author VISTALL
  * @since 26.11.13.
  */
-public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements CommonProgramRunConfigurationParameters, DotNetConfigurationWithCoverage,
-		DotNetConfigurationWithDebug, DotNetConfigurationConsoleTypeProvider
-{
-	private String myProgramParameters;
-	private String myWorkingDir;
-	private Map<String, String> myEnvsMap = new HashMap<>();
-	private boolean myPassParentEnvs = true;
-	private ProcessConsoleType myConsoleType = ProcessConsoleType.BUILTIN;
+public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements CommonProgramRunConfigurationParameters,
+    DotNetConfigurationWithCoverage,
+    DotNetConfigurationWithDebug,
+    DotNetConfigurationConsoleTypeProvider {
+    private String myProgramParameters;
+    private String myWorkingDir;
+    private Map<String, String> myEnvsMap = new HashMap<>();
+    private boolean myPassParentEnvs = true;
+    private ProcessConsoleType myConsoleType = ProcessConsoleType.BUILTIN;
 
-	public DotNetConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory)
-	{
-		super(name, configurationModule, factory);
-	}
+    public DotNetConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory) {
+        super(name, configurationModule, factory);
+    }
 
-	public DotNetConfiguration(RunConfigurationModule configurationModule, ConfigurationFactory factory)
-	{
-		super(configurationModule, factory);
-	}
+    public DotNetConfiguration(RunConfigurationModule configurationModule, ConfigurationFactory factory) {
+        super(configurationModule, factory);
+    }
 
-	@Override
-	@RequiredReadAction
-	public Collection<Module> getValidModules()
-	{
-		List<Module> list = new ArrayList<>();
-		for(Module module : ModuleManager.getInstance(getProject()).getModules())
-		{
-			if(ModuleUtilCore.getExtension(module, DotNetModuleExtension.class) != null)
-			{
-				list.add(module);
-			}
-		}
-		return list;
-	}
+    @Override
+    @RequiredReadAction
+    public Collection<Module> getValidModules() {
+        List<Module> list = new ArrayList<>();
+        for (Module module : ModuleManager.getInstance(getProject()).getModules()) {
+            if (ModuleUtilCore.getExtension(module, DotNetModuleExtension.class) != null) {
+                list.add(module);
+            }
+        }
+        return list;
+    }
 
-	@Override
-	public void readExternal(Element element) throws InvalidDataException
-	{
-		super.readExternal(element);
+    @Override
+    public void readExternal(Element element) throws InvalidDataException {
+        super.readExternal(element);
 
-		XmlSerializer.deserializeInto(this, element);
+        XmlSerializer.deserializeInto(this, element);
 
-		Element coverageElement = element.getChild("coverage");
-		if(coverageElement != null)
-		{
-			CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.get(this);
-			coverageEnabledConfiguration.readExternal(coverageElement);
-		}
-	}
+        Element coverageElement = element.getChild("coverage");
+        if (coverageElement != null) {
+            CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.get(this);
+            coverageEnabledConfiguration.readExternal(coverageElement);
+        }
+    }
 
-	@Override
-	public void writeExternal(Element element) throws WriteExternalException
-	{
-		super.writeExternal(element);
+    @Override
+    public void writeExternal(Element element) throws WriteExternalException {
+        super.writeExternal(element);
 
-		XmlSerializer.serializeInto(this, element);
+        XmlSerializer.serializeInto(this, element);
 
-		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.get(this);
-		Element coverageElement = new Element("coverage");
-		coverageEnabledConfiguration.writeExternal(coverageElement);
-		element.addContent(coverageElement);
-	}
+        CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.get(this);
+        Element coverageElement = new Element("coverage");
+        coverageEnabledConfiguration.writeExternal(coverageElement);
+        element.addContent(coverageElement);
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public SettingsEditor<? extends RunConfiguration> getConfigurationEditor()
-	{
-		SettingsEditorGroup group = new SettingsEditorGroup();
-		group.addEditor("General", new DotNetConfigurationEditor(getProject()));
-		group.addEditor("Coverage", new DotNetCoverageConfigurationEditor());
-		return group;
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
+        SettingsEditorGroup group = new SettingsEditorGroup();
+        group.addEditor(ExecutionLocalize.runConfigurationConfigurationTabTitle(), new DotNetConfigurationEditor(getProject()));
+        group.addEditor(ExecutionCoverageLocalize.coverageTabTitle(), new DotNetCoverageConfigurationEditor());
+        return group;
+    }
 
-	@Nullable
-	@Override
-	public RunProfileState getState(Executor executor, final ExecutionEnvironment executionEnvironment) throws ExecutionException
-	{
-		Module module = getConfigurationModule().getModule();
-		if(module == null)
-		{
-			throw new ExecutionException("Module is null");
-		}
+    @Nullable
+    @Override
+    public RunProfileState getState(Executor executor, final ExecutionEnvironment executionEnvironment) throws ExecutionException {
+        Module module = getConfigurationModule().getModule();
+        if (module == null) {
+            throw new ExecutionException("Module is null");
+        }
 
-		DotNetRunModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
+        DotNetRunModuleExtension<?> extension = ModuleUtilCore.getExtension(module, DotNetRunModuleExtension.class);
 
-		if(extension == null)
-		{
-			throw new ExecutionException("Module don't have .NET extension");
-		}
+        if (extension == null) {
+            throw new ExecutionException("Module don't have .NET extension");
+        }
 
-		Sdk sdk = extension.getSdk();
-		if(sdk == null)
-		{
-			throw new ExecutionException("SDK for module is not defined");
-		}
+        Sdk sdk = extension.getSdk();
+        if (sdk == null) {
+            throw new ExecutionException("SDK for module is not defined");
+        }
 
-		DebugConnectionInfo debugConnectionInfo = null;
-		if(executor instanceof DefaultDebugExecutor)
-		{
-			debugConnectionInfo = new DebugConnectionInfo("127.0.0.1", -1, true);
-		}
+        DebugConnectionInfo debugConnectionInfo = null;
+        if (executor instanceof DefaultDebugExecutor) {
+            debugConnectionInfo = new DebugConnectionInfo("127.0.0.1", -1, true);
+        }
 
-		DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();
-		GeneralCommandLine runCommandLine = extension.createDefaultCommandLine(sdk, debugConnectionInfo);
-		String programParameters = runProfile.getProgramParameters();
-		if(!StringUtil.isEmpty(programParameters))
-		{
-			runCommandLine.addParameters(StringUtil.split(programParameters, " "));
-		}
-		runCommandLine.withParentEnvironmentType(runProfile.isPassParentEnvs() ? GeneralCommandLine.ParentEnvironmentType.CONSOLE : GeneralCommandLine.ParentEnvironmentType.NONE);
-		runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
+        DotNetConfiguration runProfile = (DotNetConfiguration) executionEnvironment.getRunProfile();
+        GeneralCommandLine runCommandLine = extension.createDefaultCommandLine(sdk, debugConnectionInfo);
+        String programParameters = runProfile.getProgramParameters();
+        if (!StringUtil.isEmpty(programParameters)) {
+            runCommandLine.addParameters(StringUtil.split(programParameters, " "));
+        }
+        runCommandLine.withParentEnvironmentType(runProfile.isPassParentEnvs() ? GeneralCommandLine.ParentEnvironmentType.CONSOLE : GeneralCommandLine.ParentEnvironmentType.NONE);
+        runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
 
-		String workDir = myWorkingDir;
-		if(consulo.util.lang.StringUtil.isEmptyOrSpaces(workDir))
-		{
-			workDir = DotNetMacroUtil.expandOutputDir(extension);
-		}
-		runCommandLine.withWorkDirectory(workDir);
+        String workDir = myWorkingDir;
+        if (consulo.util.lang.StringUtil.isEmptyOrSpaces(workDir)) {
+            workDir = DotNetMacroUtil.expandOutputDir(extension);
+        }
+        runCommandLine.withWorkDirectory(workDir);
 
-		DotNetRunProfileState state = new DotNetRunProfileState(executionEnvironment, runCommandLine);
-		if(debugConnectionInfo != null)
-		{
-			state.putUserData(DebugConnectionInfo.KEY, debugConnectionInfo);
-		}
+        DotNetRunProfileState state = new DotNetRunProfileState(executionEnvironment, runCommandLine);
+        if (debugConnectionInfo != null) {
+            state.putUserData(DebugConnectionInfo.KEY, debugConnectionInfo);
+        }
 
-		return state;
-	}
+        return state;
+    }
 
-	@Override
-	public void setProgramParameters(@Nullable String s)
-	{
-		myProgramParameters = s;
-	}
+    @Override
+    public void setProgramParameters(@Nullable String s) {
+        myProgramParameters = s;
+    }
 
-	@Nullable
-	@Override
-	public String getProgramParameters()
-	{
-		return myProgramParameters;
-	}
+    @Nullable
+    @Override
+    public String getProgramParameters() {
+        return myProgramParameters;
+    }
 
-	@Override
-	public void setWorkingDirectory(@Nullable String s)
-	{
-		myWorkingDir = s;
-	}
+    @Override
+    public void setWorkingDirectory(@Nullable String s) {
+        myWorkingDir = s;
+    }
 
-	@Nullable
-	@Override
-	public String getWorkingDirectory()
-	{
-		return myWorkingDir;
-	}
+    @Nullable
+    @Override
+    public String getWorkingDirectory() {
+        return myWorkingDir;
+    }
 
-	@Override
-	public void setEnvs(Map<String, String> map)
-	{
-		myEnvsMap = map;
-	}
+    @Override
+    public void setEnvs(Map<String, String> map) {
+        myEnvsMap = map;
+    }
 
-	@Override
-	public Map<String, String> getEnvs()
-	{
-		return myEnvsMap;
-	}
+    @Override
+    public Map<String, String> getEnvs() {
+        return myEnvsMap;
+    }
 
-	@Override
-	public void setPassParentEnvs(boolean b)
-	{
-		myPassParentEnvs = b;
-	}
+    @Override
+    public void setPassParentEnvs(boolean b) {
+        myPassParentEnvs = b;
+    }
 
-	@Override
-	public boolean isPassParentEnvs()
-	{
-		return myPassParentEnvs;
-	}
+    @Override
+    public boolean isPassParentEnvs() {
+        return myPassParentEnvs;
+    }
 
-	@Override
-	public boolean canRun()
-	{
-		Module module = getConfigurationModule().getModule();
-		if(module == null)
-		{
-			return false;
-		}
+    @Override
+    public boolean canRun() {
+        Module module = getConfigurationModule().getModule();
+        if (module == null) {
+            return false;
+        }
 
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-		if(extension != null && !extension.isAllowDebugInfo())
-		{
-			return false;
-		}
-		return extension instanceof DotNetModuleExtensionWithDebug;
-	}
+        DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+        if (extension != null && !extension.isAllowDebugInfo()) {
+            return false;
+        }
+        return extension instanceof DotNetModuleExtensionWithDebug;
+    }
 
-	@Override
-	public DotNetDebugProcess createDebuggerProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo) throws ExecutionException
-	{
-		Module module = getConfigurationModule().getModule();
-		if(module == null)
-		{
-			throw new ExecutionException("No module information");
-		}
+    @Override
+    public DotNetDebugProcess createDebuggerProcess(XDebugSession session, DebugConnectionInfo debugConnectionInfo) throws ExecutionException {
+        Module module = getConfigurationModule().getModule();
+        if (module == null) {
+            throw new ExecutionException("No module information");
+        }
 
-		DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
-		DotNetModuleExtensionWithDebug moduleExtensionWithDebug = extension instanceof DotNetModuleExtensionWithDebug ? (DotNetModuleExtensionWithDebug) extension : null;
+        DotNetModuleExtension extension = ModuleUtilCore.getExtension(module, DotNetModuleExtension.class);
+        DotNetModuleExtensionWithDebug moduleExtensionWithDebug = extension instanceof DotNetModuleExtensionWithDebug ? (DotNetModuleExtensionWithDebug) extension : null;
 
-		if(moduleExtensionWithDebug == null)
-		{
-			throw new ExecutionException("Debugger is not supported");
-		}
-		return moduleExtensionWithDebug.createDebuggerProcess(session, this, debugConnectionInfo);
-	}
+        if (moduleExtensionWithDebug == null) {
+            throw new ExecutionException("Debugger is not supported");
+        }
+        return moduleExtensionWithDebug.createDebuggerProcess(session, this, debugConnectionInfo);
+    }
 
-	public void setConsoleType(ProcessConsoleType consoleType)
-	{
-		myConsoleType = consoleType;
-	}
+    public void setConsoleType(ProcessConsoleType consoleType) {
+        myConsoleType = consoleType;
+    }
 
-	@Override
-	public ProcessConsoleType getConsoleType()
-	{
-		if(myConsoleType == null)
-		{
-			myConsoleType = ProcessConsoleType.BUILTIN;
-		}
-		return myConsoleType;
-	}
+    @Override
+    public ProcessConsoleType getConsoleType() {
+        if (myConsoleType == null) {
+            myConsoleType = ProcessConsoleType.BUILTIN;
+        }
+        return myConsoleType;
+    }
 }

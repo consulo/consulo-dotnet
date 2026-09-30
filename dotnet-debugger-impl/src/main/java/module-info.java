@@ -9,6 +9,7 @@ open module consulo.dotnet.debugger.impl {
 	requires consulo.language.editor.ui.api;
 
 	requires consulo.dotnet.api;
+	requires consulo.dotnet.execution.api;
 	requires consulo.dotnet.psi.api;
 	requires consulo.dotnet.debugger.api;
 	requires consulo.internal.dotnet.msil.decompiler;
