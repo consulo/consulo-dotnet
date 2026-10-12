@@ -10,9 +10,6 @@ open module consulo.dotnet.api {
     
     requires consulo.internal.dotnet.asm;
 
-    // TODO [VISTALL] remove this dep in future
-    requires java.desktop;
-
     exports consulo.dotnet;
     exports consulo.dotnet.assembly;
     exports consulo.dotnet.compiler;

@@ -17,285 +17,285 @@
 package consulo.dotnet.module.extension;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.dotnet.DotNetBundle;
 import consulo.dotnet.DotNetTarget;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
-import consulo.module.ui.extension.ModuleExtensionSdkBoxBuilder;
+import consulo.localize.LocalizeValue;
+import consulo.module.ui.extension.ModuleExtensionBundleBoxBuilder;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.ui.Label;
+import consulo.ui.ListBox;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextBox;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.util.lang.Comparing;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.toolbar.AddAction;
+import consulo.ui.ex.toolbar.ToolbarDecoratorBuilderFactory;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
+import consulo.ui.util.FormBuilder;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
  * @since 31.07.14
  */
-public class DotNetConfigurationPanel extends JPanel
-{
-	@RequiredUIAccess
-	public DotNetConfigurationPanel(DotNetMutableModuleExtension<?> extension, DotNetElementQualifierProducer qualifierProducer, List<String> variables, Runnable updater)
-	{
-		super(new VerticalFlowLayout(true, true));
-		ModuleExtensionSdkBoxBuilder<DotNetMutableModuleExtension<?>> moduleExtensionSdkBoxBuilder = ModuleExtensionSdkBoxBuilder.create(extension, updater);
-		moduleExtensionSdkBoxBuilder.sdkTypeClass(extension.getSdkTypeClass());
-		moduleExtensionSdkBoxBuilder.sdkPointerFunc(DotNetSimpleMutableModuleExtension::getInheritableSdk);
+public final class DotNetConfigurationPanel {
+    private DotNetConfigurationPanel() {
+    }
 
-		add(moduleExtensionSdkBoxBuilder.build());
+    @RequiredUIAccess
+    public static Component create(
+        DotNetMutableModuleExtension<?> extension,
+        DotNetElementQualifierProducer qualifierProducer,
+        List<String> variables,
+        Disposable uiDisposable,
+        Runnable updater
+    ) {
+        ModuleExtensionBundleBoxBuilder<DotNetMutableModuleExtension<?>> sdkBoxBuilder =
+            ModuleExtensionBundleBoxBuilder.create(extension, uiDisposable, updater);
+        sdkBoxBuilder.sdkTypeClass(extension.getSdkTypeClass());
+        sdkBoxBuilder.sdkPointerFunc(DotNetSimpleMutableModuleExtension::getInheritableSdk);
 
-		JBTextField fileNameField = new JBTextField(extension.getFileName());
-		fileNameField.getEmptyText().setText(DotNetModuleExtension.DEFAULT_FILE_NAME);
-		fileNameField.getDocument().addDocumentListener(new DocumentAdapter()
-		{
-			@Override
-			protected void textChanged(DocumentEvent documentEvent)
-			{
-				extension.setFileName(fileNameField.getText());
-			}
-		});
+        TextBox fileNameBox = TextBox.create(extension.getFileName());
+        fileNameBox.setPlaceholder(LocalizeValue.of(DotNetModuleExtension.DEFAULT_FILE_NAME));
+        fileNameBox.addValueListener(event -> extension.setFileName(StringUtil.notNullize(event.getValue())));
 
-		add(LabeledComponent.create(fileNameField, DotNetBundle.message("file.label")));
+        TextBox outputDirBox = TextBox.create(extension.getOutputDir());
+        outputDirBox.addValueListener(event -> extension.setOutputDir(StringUtil.notNullize(event.getValue())));
 
-		JBTextField outputDirectoryField = new JBTextField(extension.getOutputDir());
-		outputDirectoryField.getDocument().addDocumentListener(new DocumentAdapter()
-		{
-			@Override
-			protected void textChanged(DocumentEvent documentEvent)
-			{
-				extension.setOutputDir(outputDirectoryField.getText());
-			}
-		});
+        ComboBox<DotNetTarget> targetBox = ComboBox.create(DotNetTarget.values());
+        targetBox.setTextRenderer(target -> target == null ? LocalizeValue.empty() : target.getDescription());
+        targetBox.setValue(extension.getTarget());
+        targetBox.addValueListener(event -> {
+            DotNetTarget target = event.getValue();
+            if (target != null) {
+                extension.setTarget(target);
+            }
+        });
 
-		add(LabeledComponent.create(outputDirectoryField, DotNetBundle.message("output.dir.label")));
+        ComboBox<DotNetMainTypeItem> mainTypeBox = createMainTypeBox(extension, qualifierProducer, uiDisposable);
 
-		ComboBox<DotNetTarget> comp = new ComboBox<>(DotNetTarget.values());
-		comp.setRenderer(new ColoredListCellRenderer<DotNetTarget>()
-		{
-			@Override
-			protected void customizeCellRenderer(JList jList, DotNetTarget o, int i, boolean b, boolean b1)
-			{
-				append(o.getDescription().get());
-			}
-		});
-		comp.setSelectedItem(extension.getTarget());
-		comp.addActionListener(e -> extension.setTarget((DotNetTarget) comp.getSelectedItem()));
+        TextBox namespaceBox = TextBox.create(extension.getNamespacePrefix());
+        namespaceBox.addValueListener(event -> extension.setNamespacePrefix(StringUtil.notNullize(event.getValue())));
 
-		add(LabeledComponent.create(comp, DotNetBundle.message("target.label")));
+        Label namespaceLabel = Label.create(LocalizeValue.of(DotNetBundle.message("namespace.label")));
 
-		final List<Object> items = new ArrayList<>();
-		final CollectionComboBoxModel model = new CollectionComboBoxModel(items);
-		ComboBox mainClassList = new ComboBox(model);
-		mainClassList.setEnabled(false);
-		mainClassList.setRenderer(new ColoredListCellRenderer()
-		{
-			@Override
-			@RequiredReadAction
-			protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus)
-			{
-				if(!mainClassList.isEnabled())
-				{
-					return;
-				}
+        FormBuilder formBuilder = FormBuilder.create();
+        formBuilder.addLabeled(LocalizeValue.of(DotNetBundle.message("file.label")), fileNameBox);
+        formBuilder.addLabeled(LocalizeValue.of(DotNetBundle.message("output.dir.label")), outputDirBox);
+        formBuilder.addLabeled(LocalizeValue.of(DotNetBundle.message("target.label")), targetBox);
+        formBuilder.addLabeled(LocalizeValue.of(DotNetBundle.message("main.type.label")), mainTypeBox);
+        formBuilder.addLabeled(namespaceLabel, namespaceBox);
 
-				if(value instanceof PsiElement && qualifierProducer.isMyElement((PsiElement) value))
-				{
-					setIcon(IconDescriptorUpdaters.getIcon((PsiElement) value, 0));
-					append(qualifierProducer.getQualifiedName((PsiElement) value));
-				}
-				else if(value instanceof String)
-				{
-					setIcon(AllIcons.Toolbar.Unknown);
-					append((String) value, SimpleTextAttributes.ERROR_ATTRIBUTES);
-				}
-				else
-				{
-					append("<none>");
-				}
-			}
-		});
-		mainClassList.addActionListener(e ->
-		{
-			if(!mainClassList.isEnabled())
-			{
-				return;
-			}
+        CheckBox debugInfoBox =
+            CheckBox.create(LocalizeValue.of(DotNetBundle.message("generate.debug.info.label")), extension.isAllowDebugInfo());
+        debugInfoBox.addValueListener(event -> extension.setAllowDebugInfo(Boolean.TRUE.equals(event.getValue())));
 
-			Object selectedItem = mainClassList.getSelectedItem();
-			if(selectedItem instanceof PsiElement && qualifierProducer.isMyElement((PsiElement) selectedItem))
-			{
-				extension.setMainType(qualifierProducer.getQualifiedName((PsiElement) selectedItem));
-			}
-			else if(selectedItem instanceof String)
-			{
-				extension.setMainType((String) selectedItem);
-			}
-			else
-			{
-				extension.setMainType(null);
-			}
-		});
+        CheckBox allowSourceRootsBox =
+            CheckBox.create(LocalizeValue.of(DotNetBundle.message("allow.source.roots.label")), extension.isAllowSourceRoots());
+        namespaceLabel.setVisible(!extension.isAllowSourceRoots());
+        namespaceBox.setVisible(!extension.isAllowSourceRoots());
+        allowSourceRootsBox.addValueListener(event -> {
+            boolean allowSourceRoots = Boolean.TRUE.equals(event.getValue());
+            extension.setAllowSourceRoots(allowSourceRoots);
+            namespaceLabel.setVisible(!allowSourceRoots);
+            namespaceBox.setVisible(!allowSourceRoots);
 
-		model.update();
+            updater.run();
+        });
 
-		if(!DumbService.isDumb(extension.getProject()))
-		{
-			ApplicationManager.getApplication().executeOnPooledThread((Runnable) () ->
-			{
-				final SimpleReference<PsiElement> selected = SimpleReference.create();
-				final List<Object> newItems = new ArrayList<>();
-				newItems.add(null);
+        VerticalLayout topLayout = VerticalLayout.create();
+        topLayout.add(sdkBoxBuilder.build());
+        topLayout.add(debugInfoBox);
+        topLayout.add(allowSourceRootsBox);
+        topLayout.add(formBuilder.build());
 
-				ApplicationManager.getApplication().runReadAction(() ->
-				{
-					for(PsiElement psiElement : extension.getEntryPointElements())
-					{
-						if(qualifierProducer.isMyElement(psiElement))
-						{
-							newItems.add(psiElement);
-							String mainType = extension.getMainType();
-							if(mainType != null && Comparing.equal(mainType, qualifierProducer.getQualifiedName(psiElement)))
-							{
-								selected.set(psiElement);
-							}
-						}
-					}
-				});
+        DockLayout layout = DockLayout.create();
+        layout.top(topLayout);
+        layout.center(createVariableList(variables));
+        return layout;
+    }
 
-				UIUtil.invokeLaterIfNeeded(() ->
-				{
-					PsiElement selectedType = selected.get();
-					String mainType = extension.getMainType();
-					if(mainType != null && selectedType == null)
-					{
-						newItems.add(mainType);
-					}
+    @RequiredUIAccess
+    public static Component createVariableList(List<String> variables) {
+        MutableFlatDataModel<String> model = FlatDataModel.of(variables);
+        model.addListener(event -> {
+            variables.clear();
+            for (String variable : model) {
+                variables.add(variable);
+            }
+        });
 
-					items.clear();
-					items.addAll(newItems);
+        ListBox<String> listBox = ListBox.create(model);
 
-					if(mainType != null)
-					{
-						if(selectedType != null)
-						{
-							model.setSelectedItem(selectedType);
-						}
-						else
-						{
-							model.setSelectedItem(mainType);
-						}
-					}
-					else
-					{
-						model.setSelectedItem(null);
-					}
+        Component decorated = ToolbarDecoratorBuilderFactory.getInstance()
+            .create(listBox)
+            .addOrReplaceAction(new AddAction<>() {
+                @Override
+                @RequiredUIAccess
+                protected void doAdd(AnActionEvent e) {
+                    UIAccess uiAccess = UIAccess.current();
+                    InputBoxBuilder.text()
+                        .title(LocalizeValue.of(DotNetBundle.message("new.variable.title")))
+                        .text(LocalizeValue.of(DotNetBundle.message("new.variable.message")))
+                        .validator(value -> {
+                            String name = StringUtil.notNullize(value);
+                            if (name.isEmpty()) {
+                                return InputProblem.error(LocalizeValue.of(DotNetBundle.message("new.variable.empty")));
+                            }
+                            if (model.indexOf(name) >= 0) {
+                                return InputProblem.error(LocalizeValue.of(DotNetBundle.message("new.variable.exists", name)));
+                            }
+                            return null;
+                        })
+                        .showAsync(listBox)
+                        .whenCompleteAsync((value, error) -> {
+                            if (error == null && !StringUtil.isEmpty(value) && model.indexOf(value) < 0) {
+                                model.add(value);
+                            }
+                        }, uiAccess);
+                }
+            })
+            .build();
 
-					mainClassList.setEnabled(true);
-					model.update();
-				});
-			});
-		}
+        return LabeledLayout.create(LocalizeValue.of(DotNetBundle.message("preprocessor.variables.label")), decorated);
+    }
 
-		add(LabeledComponent.create(mainClassList, DotNetBundle.message("main.type.label")));
+    @RequiredUIAccess
+    private static ComboBox<DotNetMainTypeItem> createMainTypeBox(
+        DotNetMutableModuleExtension<?> extension,
+        DotNetElementQualifierProducer qualifierProducer,
+        Disposable uiDisposable
+    ) {
+        String currentMainType = extension.getMainType();
 
-		JBCheckBox debugCombobox = new JBCheckBox(DotNetBundle.message("generate.debug.info.label"), extension.isAllowDebugInfo());
-		debugCombobox.addActionListener(e -> extension.setAllowDebugInfo(debugCombobox.isSelected()));
-		add(debugCombobox);
+        List<DotNetMainTypeItem> initialItems = new ArrayList<>();
+        initialItems.add(DotNetMainTypeItem.NONE);
+        if (currentMainType != null) {
+            initialItems.add(new DotNetMainTypeItem(currentMainType, null, true));
+        }
 
-		JBTextField namespacePrefixField = new JBTextField(extension.getNamespacePrefix());
-		namespacePrefixField.getDocument().addDocumentListener(new DocumentAdapter()
-		{
-			@Override
-			protected void textChanged(DocumentEvent documentEvent)
-			{
-				extension.setNamespacePrefix(namespacePrefixField.getText());
-			}
-		});
+        MutableFlatDataModel<DotNetMainTypeItem> model = FlatDataModel.of(initialItems);
+        ComboBox<DotNetMainTypeItem> mainTypeBox = ComboBox.create(model);
+        mainTypeBox.setRender((presentation, item) -> {
+            DotNetMainTypeItem value = item.getValue();
+            String qualifiedName = value == null ? null : value.qualifiedName();
+            if (value == null || qualifiedName == null) {
+                presentation.append(LocalizeValue.of(DotNetBundle.message("main.type.none")));
+            }
+            else if (value.valid()) {
+                presentation.withIcon(value.icon());
+                presentation.append(qualifiedName);
+            }
+            else {
+                presentation.withIcon(PlatformIconGroup.toolbarUnknown());
+                presentation.append(qualifiedName, TextAttribute.ERROR);
+            }
+        });
+        mainTypeBox.setValue(initialItems.get(initialItems.size() - 1), false);
+        mainTypeBox.setEnabled(false);
+        mainTypeBox.addValueListener(event -> {
+            if (!mainTypeBox.isEnabled()) {
+                return;
+            }
 
-		final LabeledComponent<JBTextField> namespaceComponent = LabeledComponent.create(namespacePrefixField, "Namespace:");
+            DotNetMainTypeItem value = event.getValue();
+            extension.setMainType(value == null ? null : value.qualifiedName());
+        });
 
-		JBCheckBox allowSourceRootsBox = new JBCheckBox(DotNetBundle.message("allow.source.roots.label"), extension.isAllowSourceRoots());
-		allowSourceRootsBox.addActionListener(e ->
-		{
-			extension.setAllowSourceRoots(allowSourceRootsBox.isSelected());
-			namespaceComponent.setVisible(!allowSourceRootsBox.isSelected());
+        Project project = extension.getProject();
+        if (DumbService.isDumb(project)) {
+            return mainTypeBox;
+        }
 
-			updater.run();
-		});
-		add(allowSourceRootsBox);
-		add(namespaceComponent);
+        UIAccess uiAccess = UIAccess.current();
+        CoroutineScope scope = CoroutineScope.of(project.coroutineContext());
+        Disposer.register(uiDisposable, scope::cancel);
 
-		CollectionListModel<String> dataModel = new CollectionListModel<String>(variables)
-		{
-			@Override
-			public int getSize()
-			{
-				return variables.size();
-			}
+        Coroutine.first(ReadLock.<Object, List<DotNetMainTypeItem>>apply(ignored -> collectMainTypes(extension, qualifierProducer)))
+            .runAsync(scope, null)
+            .toFuture()
+            .whenCompleteAsync((items, error) -> {
+                if (error != null || items == null || project.isDisposed() || Disposer.isDisposed(uiDisposable)) {
+                    return;
+                }
 
-			@Override
-			public String getElementAt(int index)
-			{
-				return variables.get(index);
-			}
+                applyMainTypes(extension, mainTypeBox, model, items);
+            }, uiAccess);
 
-			@Override
-			public void add(final String element)
-			{
-				int i = variables.size();
-				variables.add(element);
-				fireIntervalAdded(this, i, i);
-			}
+        return mainTypeBox;
+    }
 
-			@Override
-			public void remove(final String element)
-			{
-				int i = variables.indexOf(element);
-				variables.remove(element);
-				fireIntervalRemoved(this, i, i);
-			}
+    @RequiredUIAccess
+    private static void applyMainTypes(
+        DotNetMutableModuleExtension<?> extension,
+        ComboBox<DotNetMainTypeItem> mainTypeBox,
+        MutableFlatDataModel<DotNetMainTypeItem> model,
+        List<DotNetMainTypeItem> items
+    ) {
+        String mainType = extension.getMainType();
 
-			@Override
-			public void remove(int index)
-			{
-				variables.remove(index);
-				fireIntervalRemoved(this, index, index);
-			}
-		};
+        List<DotNetMainTypeItem> newItems = new ArrayList<>(items);
+        DotNetMainTypeItem selected = DotNetMainTypeItem.NONE;
+        if (mainType != null) {
+            selected = null;
+            for (DotNetMainTypeItem newItem : newItems) {
+                if (Objects.equals(mainType, newItem.qualifiedName())) {
+                    selected = newItem;
+                    break;
+                }
+            }
 
-		JBList variableList = new JBList(dataModel);
-		ToolbarDecorator variableDecorator = ToolbarDecorator.createDecorator(variableList);
-		variableDecorator.setAddAction(anActionButton ->
-		{
-			String name = Messages.showInputDialog(DotNetConfigurationPanel.this, DotNetBundle.message("new.variable.message"), DotNetBundle.message("new.variable.title"), null, null, new
-					InputValidator()
-					{
-						@RequiredUIAccess
-						@Override
-						public boolean checkInput(String s)
-						{
-							return !variables.contains(s);
-						}
-					});
+            if (selected == null) {
+                selected = new DotNetMainTypeItem(mainType, null, false);
+                newItems.add(selected);
+            }
+        }
 
-			if(StringUtil.isEmpty(name))
-			{
-				return;
-			}
+        model.replaceAll(newItems);
+        mainTypeBox.setValue(selected, false);
+        mainTypeBox.setEnabled(true);
+    }
 
-			dataModel.add(name);
-		});
-		add(variableDecorator.createPanel());
-	}
+    @RequiredReadAction
+    private static List<DotNetMainTypeItem> collectMainTypes(
+        DotNetMutableModuleExtension<?> extension,
+        DotNetElementQualifierProducer qualifierProducer
+    ) {
+        List<DotNetMainTypeItem> items = new ArrayList<>();
+        items.add(DotNetMainTypeItem.NONE);
+        for (PsiElement element : extension.getEntryPointElements()) {
+            if (!qualifierProducer.isMyElement(element)) {
+                continue;
+            }
+
+            String qualifiedName = qualifierProducer.getQualifiedName(element);
+            if (qualifiedName != null) {
+                items.add(new DotNetMainTypeItem(qualifiedName, IconDescriptorUpdaters.getIcon(element, 0), true));
+            }
+        }
+        return items;
+    }
 }
