@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.dotnet.impl.roots.orderEntry;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.dotnet.module.extension.DotNetLibraryOrderEntryModel;
 import consulo.dotnet.module.extension.DotNetSimpleModuleExtension;
 import consulo.ide.setting.module.CustomOrderEntryTypeEditor;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.module.content.layer.orderEntry.CustomOrderEntry;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.image.Image;
 
@@ -30,31 +29,30 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 06-Jun-16
+ * @since 2016-06-06
  */
 @ExtensionImpl
-public class DotNetLibraryOrderEntryTypeEditor implements CustomOrderEntryTypeEditor<DotNetLibraryOrderEntryModel>
-{
-	@Override
-	public Consumer<ColoredTextContainer> getRender(CustomOrderEntry<DotNetLibraryOrderEntryModel> orderEntry, DotNetLibraryOrderEntryModel model)
-	{
-		return it -> {
+public class DotNetLibraryOrderEntryTypeEditor implements CustomOrderEntryTypeEditor<DotNetLibraryOrderEntryModel> {
+    @Override
+    public Consumer<ColoredTextContainer> getRenderer(
+        CustomOrderEntry<DotNetLibraryOrderEntryModel> orderEntry,
+        DotNetLibraryOrderEntryModel model
+    ) {
+        return it -> {
+            DotNetSimpleModuleExtension extension = orderEntry.getModuleRootLayer().getExtension(DotNetSimpleModuleExtension.class);
 
-			DotNetSimpleModuleExtension extension = orderEntry.getModuleRootLayer().getExtension(DotNetSimpleModuleExtension.class);
+            ModuleExtensionProvider<?> provider = extension == null ? null : ModuleExtensionProvider.findProvider(extension.getId());
 
-			ModuleExtensionProvider<?> provider = extension == null ? null : ModuleExtensionProvider.findProvider(extension.getId());
+            Image icon = provider == null ? PlatformIconGroup.toolbarUnknown() : provider.getIcon();
 
-			Image icon = provider == null ? AllIcons.Toolbar.Unknown : provider.getIcon();
+            it.append(model.getPresentableName());
 
-			it.append(model.getPresentableName());
-	
-			it.setIcon(icon);
-		};
-	}
+            it.setIcon(icon);
+        };
+    }
 
-	@Override
-	public String getOrderTypeId()
-	{
-		return "dot-net-library";
-	}
+    @Override
+    public String getOrderTypeId() {
+        return "dot-net-library";
+    }
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.dotnet.run.impl.coverage;
 
 import consulo.configurable.ConfigurationException;
@@ -38,94 +37,83 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 10.01.15
+ * @since 2015-01-10
  */
-public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConfigurationWithCoverage>
-{
-	private static final Object NO_RUNNER = new Object();
+public class DotNetCoverageConfigurationEditor extends SettingsEditor<DotNetConfigurationWithCoverage> {
+    private static final Object NO_RUNNER = new Object();
 
-	private final MutableFlatDataModel<Object> myRunnersModel = FlatDataModel.of(List.of(NO_RUNNER));
-	private final ComboBox<Object> myRunnersBox;
-	private final CheckBox myEnabledCheckBox;
+    private final MutableFlatDataModel<Object> myRunnersModel = FlatDataModel.of(List.of(NO_RUNNER));
+    private final ComboBox<Object> myRunnersBox;
+    private final CheckBox myEnabledCheckBox;
 
-	@RequiredUIAccess
-	public DotNetCoverageConfigurationEditor()
-	{
-		myEnabledCheckBox = CheckBox.create(DotNetExecutionLocalize.coverageEnabledCheckbox());
+    @RequiredUIAccess
+    public DotNetCoverageConfigurationEditor() {
+        myEnabledCheckBox = CheckBox.create(DotNetExecutionLocalize.coverageEnabledCheckbox());
 
-		myRunnersBox = ComboBox.create(myRunnersModel);
-		myRunnersBox.setRender((presentation, item) ->
-		{
-			Object value = item.getValue();
-			if(value == null || value == NO_RUNNER)
-			{
-				presentation.append(DotNetExecutionLocalize.coverageNoRunner());
-			}
-			else if(value instanceof String runnerId)
-			{
-				presentation.append(runnerId, TextAttribute.ERROR);
-			}
-			else if(value instanceof CoverageRunner coverageRunner)
-			{
-				presentation.append(coverageRunner.getPresentableName());
-			}
-		});
-	}
+        myRunnersBox = ComboBox.create(myRunnersModel);
+        myRunnersBox.setRenderer((presentation, item) -> {
+            Object value = item.getValue();
+            if (value == null || value == NO_RUNNER) {
+                presentation.append(DotNetExecutionLocalize.coverageNoRunner());
+            }
+            else if (value instanceof String runnerId) {
+                presentation.append(runnerId, TextAttribute.ERROR);
+            }
+            else if (value instanceof CoverageRunner coverageRunner) {
+                presentation.append(coverageRunner.getPresentableName());
+            }
+        });
+    }
 
-	@Override
-	@RequiredUIAccess
-	protected void resetEditorFrom(DotNetConfigurationWithCoverage s)
-	{
-		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) s);
+    @Override
+    @RequiredUIAccess
+    protected void resetEditorFrom(DotNetConfigurationWithCoverage s) {
+        CoverageEnabledConfiguration coverageEnabledConfiguration =
+            DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) s);
 
-		myEnabledCheckBox.setValue(coverageEnabledConfiguration.isCoverageEnabled());
+        myEnabledCheckBox.setValue(coverageEnabledConfiguration.isCoverageEnabled());
 
-		List<Object> runners = new ArrayList<>();
-		runners.add(NO_RUNNER);
-		runners.addAll(DotNetCoverageRunner.findAvailableRunners(s));
+        List<Object> runners = new ArrayList<>();
+        runners.add(NO_RUNNER);
+        runners.addAll(DotNetCoverageRunner.findAvailableRunners(s));
 
-		Object selected = NO_RUNNER;
-		CoverageRunner coverageRunner = coverageEnabledConfiguration.getCoverageRunner();
-		if(coverageRunner != null)
-		{
-			selected = coverageRunner;
-		}
-		else if(coverageEnabledConfiguration.getRunnerId() != null)
-		{
-			selected = coverageEnabledConfiguration.getRunnerId();
-			runners.add(selected);
-		}
+        Object selected = NO_RUNNER;
+        CoverageRunner coverageRunner = coverageEnabledConfiguration.getCoverageRunner();
+        if (coverageRunner != null) {
+            selected = coverageRunner;
+        }
+        else if (coverageEnabledConfiguration.getRunnerId() != null) {
+            selected = coverageEnabledConfiguration.getRunnerId();
+            runners.add(selected);
+        }
 
-		myRunnersModel.replaceAll(runners);
-		myRunnersBox.setValue(selected);
-	}
+        myRunnersModel.replaceAll(runners);
+        myRunnersBox.setValue(selected);
+    }
 
-	@Override
-	@RequiredUIAccess
-	protected void applyEditorTo(DotNetConfigurationWithCoverage s) throws ConfigurationException
-	{
-		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) s);
+    @Override
+    @RequiredUIAccess
+    protected void applyEditorTo(DotNetConfigurationWithCoverage s) throws ConfigurationException {
+        CoverageEnabledConfiguration coverageEnabledConfiguration =
+            DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) s);
 
-		coverageEnabledConfiguration.setCoverageEnabled(Boolean.TRUE.equals(myEnabledCheckBox.getValue()));
+        coverageEnabledConfiguration.setCoverageEnabled(Boolean.TRUE.equals(myEnabledCheckBox.getValue()));
 
-		Object selectedItem = myRunnersBox.getValue();
-		if(selectedItem instanceof CoverageRunner coverageRunner)
-		{
-			coverageEnabledConfiguration.setCoverageRunner(coverageRunner);
-		}
-		else if(selectedItem == null || selectedItem == NO_RUNNER)
-		{
-			coverageEnabledConfiguration.setCoverageRunner(null);
-		}
-	}
+        Object selectedItem = myRunnersBox.getValue();
+        if (selectedItem instanceof CoverageRunner coverageRunner) {
+            coverageEnabledConfiguration.setCoverageRunner(coverageRunner);
+        }
+        else if (selectedItem == null || selectedItem == NO_RUNNER) {
+            coverageEnabledConfiguration.setCoverageRunner(null);
+        }
+    }
 
-	@Override
-	@RequiredUIAccess
-	protected Component createUIComponent()
-	{
-		VerticalLayout layout = VerticalLayout.create();
-		layout.add(myEnabledCheckBox);
-		layout.add(FormBuilder.create().addLabeled(DotNetExecutionLocalize.coverageRunnerLabel(), myRunnersBox).build());
-		return layout;
-	}
+    @Override
+    @RequiredUIAccess
+    protected Component createUIComponent() {
+        VerticalLayout layout = VerticalLayout.create();
+        layout.add(myEnabledCheckBox);
+        layout.add(FormBuilder.create().addLabeled(DotNetExecutionLocalize.coverageRunnerLabel(), myRunnersBox).build());
+        return layout;
+    }
 }
