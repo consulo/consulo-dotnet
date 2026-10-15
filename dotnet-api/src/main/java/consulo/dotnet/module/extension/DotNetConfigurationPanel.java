@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.dotnet.module.extension;
 
 import consulo.annotation.access.RequiredReadAction;
@@ -59,7 +58,7 @@ import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 31.07.14
+ * @since 2014-07-31
  */
 public final class DotNetConfigurationPanel {
     private DotNetConfigurationPanel() {
@@ -171,11 +170,14 @@ public final class DotNetConfigurationPanel {
                             return null;
                         })
                         .showAsync(listBox)
-                        .whenCompleteAsync((value, error) -> {
-                            if (error == null && !StringUtil.isEmpty(value) && model.indexOf(value) < 0) {
-                                model.add(value);
-                            }
-                        }, uiAccess);
+                        .whenCompleteAsync(
+                            (value, error) -> {
+                                if (error == null && !StringUtil.isEmpty(value) && model.indexOf(value) < 0) {
+                                    model.add(value);
+                                }
+                            },
+                            uiAccess
+                        );
                 }
             })
             .build();
@@ -199,7 +201,7 @@ public final class DotNetConfigurationPanel {
 
         MutableFlatDataModel<DotNetMainTypeItem> model = FlatDataModel.of(initialItems);
         ComboBox<DotNetMainTypeItem> mainTypeBox = ComboBox.create(model);
-        mainTypeBox.setRender((presentation, item) -> {
+        mainTypeBox.setRenderer((presentation, item) -> {
             DotNetMainTypeItem value = item.getValue();
             String qualifiedName = value == null ? null : value.qualifiedName();
             if (value == null || qualifiedName == null) {

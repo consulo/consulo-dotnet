@@ -48,7 +48,7 @@ public class DotNetRemoteConfigurable<C extends DotNetRemoteConfiguration> exten
         myPortField = IntBox.create().withRange(0, MAX_PORT);
 
         myModuleComboBox = ComboBox.create(ModuleManager.getInstance(project).getSortedModules());
-        myModuleComboBox.setRender((presentation, item) -> {
+        myModuleComboBox.setRenderer((presentation, item) -> {
             Module module = item.getValue();
             if (module == null) {
                 presentation.append(DotNetExecutionLocalize.runConfigurationModuleNone());

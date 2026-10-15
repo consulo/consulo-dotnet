@@ -1,6 +1,5 @@
 package consulo.dotnet.run.impl;
 
-import consulo.application.Application;
 import consulo.dotnet.execution.localize.DotNetExecutionLocalize;
 import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.execution.ui.CommonProgramParametersLayout;
@@ -41,8 +40,7 @@ public class DotNetProgramParametersPanel extends CommonProgramParametersLayout<
         }
 
         ComboBox<Module> moduleComboBox = ComboBox.create(modules);
-        moduleComboBox.setRender((presentation, item) ->
-        {
+        moduleComboBox.setRenderer((presentation, item) -> {
             Module module = item.getValue();
             if (module != null) {
                 presentation.withIcon(PlatformIconGroup.nodesModule());
@@ -54,8 +52,7 @@ public class DotNetProgramParametersPanel extends CommonProgramParametersLayout<
         builder.addLabeled(DotNetExecutionLocalize.runConfigurationModuleLabel(), moduleComboBox);
 
         ComboBox<ProcessConsoleType> consoleTypeBox = ComboBox.create(ProcessConsoleType.listSupported());
-        consoleTypeBox.setRender((presentation, item) ->
-        {
+        consoleTypeBox.setRenderer((presentation, item) -> {
             ProcessConsoleType consoleType = item.getValue();
             if (consoleType != null) {
                 presentation.append(consoleType.getDisplayName());
