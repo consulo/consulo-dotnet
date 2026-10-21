@@ -24,12 +24,8 @@ import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -37,87 +33,71 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 23.09.14
  */
-public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElement
-{
-	private List<DotNetNamespaceAsElement> myList;
+public class CompositeDotNetNamespaceAsElement extends BaseDotNetNamespaceAsElement {
+    private List<DotNetNamespaceAsElement> myList;
 
-	public CompositeDotNetNamespaceAsElement(Project project, String qName, List<DotNetNamespaceAsElement> list)
-	{
-		super(project, Language.ANY, qName);
-		myList = list;
-	}
+    public CompositeDotNetNamespaceAsElement(Project project, String qName, List<DotNetNamespaceAsElement> list) {
+        super(project, Language.ANY, qName);
+        myList = list;
+    }
 
-	@Override
-	public boolean isWritable()
-	{
-		for(DotNetNamespaceAsElement namespaceAsElement : myList)
-		{
-			if(namespaceAsElement.isWritable())
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean isWritable() {
+        for (DotNetNamespaceAsElement namespaceAsElement : myList) {
+            if (namespaceAsElement.isWritable()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place)
-	{
-		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
-		{
-			if(!dotNetNamespaceAsElement.processDeclarations(processor, state, lastParent, place))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+    @RequiredReadAction
+    @Override
+    public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place) {
+        for (DotNetNamespaceAsElement dotNetNamespaceAsElement : myList) {
+            if (!dotNetNamespaceAsElement.processDeclarations(processor, state, lastParent, place)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	@RequiredReadAction
-	@Override
-	public Collection<PsiElement> findChildren(String name,
-											   GlobalSearchScope globalSearchScope,
-											   Function<PsiElement, PsiElement> transformer,
-											   ChildrenFilter filter)
-	{
-		Collection<Collection<PsiElement>> list = new ArrayList<>();
-		for(DotNetNamespaceAsElement dotNetNamespaceAsElement : myList)
-		{
-			Collection<PsiElement> children = dotNetNamespaceAsElement.findChildren(name, globalSearchScope, transformer, filter);
-			list.add(children);
-		}
-		return list.isEmpty() ? Collections.emptyList() : ContainerUtil.concat(list);
-	}
+    @RequiredReadAction
+    @Override
+    public Collection<PsiElement> findChildren(String name,
+                                               GlobalSearchScope globalSearchScope,
+                                               Function<PsiElement, PsiElement> transformer,
+                                               ChildrenFilter filter) {
+        // every part looks a child namespace up through DotNetPsiSearcher, which merges all parts - the same child comes from each of them
+        Set<PsiElement> children = new LinkedHashSet<>();
+        for (DotNetNamespaceAsElement dotNetNamespaceAsElement : myList) {
+            children.addAll(dotNetNamespaceAsElement.findChildren(name, globalSearchScope, transformer, filter));
+        }
+        return children.isEmpty() ? Collections.emptyList() : new ArrayList<>(children);
+    }
 
-	@RequiredReadAction
-	@Override
-	@SuppressWarnings("unchecked")
-	public Collection<PsiElement> getChildren(GlobalSearchScope globalSearchScope, Function<PsiElement, PsiElement> transformer, ChildrenFilter filter)
-	{
-		List<Collection<PsiElement>> list = new ArrayList<>();
-		for(DotNetNamespaceAsElement element : myList)
-		{
-			Collection<PsiElement> children = element.getChildren(globalSearchScope, transformer, filter);
-			list.add(children);
-		}
-		return list.isEmpty() ? Collections.emptyList() : ContainerUtil.concat(list);
-	}
+    @RequiredReadAction
+    @Override
+    @SuppressWarnings("unchecked")
+    public Collection<PsiElement> getChildren(GlobalSearchScope globalSearchScope, Function<PsiElement, PsiElement> transformer, ChildrenFilter filter) {
+        Set<PsiElement> children = new LinkedHashSet<>();
+        for (DotNetNamespaceAsElement element : myList) {
+            children.addAll(element.getChildren(globalSearchScope, transformer, filter));
+        }
+        return children.isEmpty() ? Collections.emptyList() : new ArrayList<>(children);
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean processChildren(GlobalSearchScope globalSearchScope,
-								   Function<PsiElement, PsiElement> transformer,
-								   ChildrenFilter filter,
-								   Predicate<PsiElement> processor)
-	{
-		for(DotNetNamespaceAsElement element : myList)
-		{
-			if(!element.processChildren(globalSearchScope, transformer, filter, processor))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+    @RequiredReadAction
+    @Override
+    public boolean processChildren(GlobalSearchScope globalSearchScope,
+                                   Function<PsiElement, PsiElement> transformer,
+                                   ChildrenFilter filter,
+                                   Predicate<PsiElement> processor) {
+        for (DotNetNamespaceAsElement element : myList) {
+            if (!element.processChildren(globalSearchScope, transformer, filter, processor)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
