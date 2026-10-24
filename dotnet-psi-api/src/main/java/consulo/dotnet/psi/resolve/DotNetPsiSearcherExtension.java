@@ -4,7 +4,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.content.scope.SearchScope;
+import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static consulo.dotnet.psi.resolve.DotNetPsiSearcher.DEFAULT_TRANSFORMER;
 
@@ -70,5 +73,28 @@ public interface DotNetPsiSearcherExtension
 	{
 		DotNetTypeDeclaration[] types = findTypes(vmQName, scope, transformer);
 		return ArrayUtil.getFirstElement(types);
+	}
+
+	/**
+	 * Extension methods ({@code System.Runtime.CompilerServices.ExtensionAttribute}) declared in types of namespace
+	 * {@code namespace}: a language with own indexes reports its methods here, other languages see them by {@link DotNetPsiSearcher}
+	 *
+	 * @param namespace presentable qualified name, empty for the global namespace
+	 */
+	@RequiredReadAction
+	default Collection<? extends DotNetLikeMethodDeclaration> findExtensionMethods(String namespace, String name, GlobalSearchScope scope)
+	{
+		return List.of();
+	}
+
+	/**
+	 * All extension methods of namespace {@code namespace}, for completion.
+	 *
+	 * @return {@code false} if {@code processor} stopped
+	 */
+	@RequiredReadAction
+	default boolean processExtensionMethods(String namespace, GlobalSearchScope scope, Predicate<DotNetLikeMethodDeclaration> processor)
+	{
+		return true;
 	}
 }

@@ -19,18 +19,23 @@ package consulo.dotnet.psi.impl.resolve.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.content.scope.SearchScope;
+import consulo.dotnet.psi.DotNetLikeMethodDeclaration;
 import consulo.dotnet.psi.DotNetTypeDeclaration;
 import consulo.dotnet.psi.impl.DotNetNamespaceCacheManager;
 import consulo.dotnet.psi.resolve.DotNetNamespaceAsElement;
 import consulo.dotnet.psi.resolve.DotNetPsiSearcher;
 import consulo.dotnet.psi.resolve.DotNetPsiSearcherExtension;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -63,5 +68,31 @@ public class DotNetPsiSearcherImpl extends DotNetPsiSearcher
 	public Collection<? extends DotNetTypeDeclaration> findTypesImpl(String vmQName, SearchScope scope)
 	{
 		return myCacheManager.computeTypes(myProject.getExtensionList(DotNetPsiSearcherExtension.class), vmQName, scope);
+	}
+
+	@RequiredReadAction
+	@Override
+	public Collection<? extends DotNetLikeMethodDeclaration> findExtensionMethods(String namespace, String name, GlobalSearchScope scope)
+	{
+		List<DotNetLikeMethodDeclaration> result = new ArrayList<>();
+		for(DotNetPsiSearcherExtension extension : myProject.getExtensionList(DotNetPsiSearcherExtension.class))
+		{
+			result.addAll(extension.findExtensionMethods(namespace, name, scope));
+		}
+		return result;
+	}
+
+	@RequiredReadAction
+	@Override
+	public boolean processExtensionMethods(String namespace, GlobalSearchScope scope, Predicate<DotNetLikeMethodDeclaration> processor)
+	{
+		for(DotNetPsiSearcherExtension extension : myProject.getExtensionList(DotNetPsiSearcherExtension.class))
+		{
+			if(!extension.processExtensionMethods(namespace, scope, processor))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }
