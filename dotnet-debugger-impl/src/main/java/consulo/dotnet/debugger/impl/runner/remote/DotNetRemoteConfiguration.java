@@ -13,28 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.dotnet.debugger.impl.runner.remote;
 
 import consulo.compiler.execution.CompileStepBeforeRun;
 import consulo.dotnet.debugger.impl.DotNetConfigurationWithDebug;
 import consulo.dotnet.util.DebugConnectionInfo;
 import consulo.execution.configuration.*;
-import consulo.execution.configuration.log.ui.LogConfigurationPanel;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.configuration.ui.SettingsEditorGroup;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.executor.Executor;
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.module.Module;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
-import consulo.util.xml.serializer.DefaultJDOMExternalizer;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
-import org.jdom.Element;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -42,39 +35,44 @@ import java.util.Collection;
  */
 public abstract class DotNetRemoteConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements RunConfigurationWithSuppressedDefaultRunAction, CompileStepBeforeRun.Suppressor,
     RemoteRunProfile, DotNetConfigurationWithDebug {
-    public boolean SERVER_MODE;
-    public String HOST;
-    public int PORT;
-
     public DotNetRemoteConfiguration(final Project project, ConfigurationFactory configurationFactory) {
         super(new RunConfigurationModule(project), configurationFactory);
     }
 
     @Override
-    public void writeExternal(final Element element) throws WriteExternalException {
-        super.writeExternal(element);
-        DefaultJDOMExternalizer.writeExternal(this, element);
+    protected Class<DotNetRemoteConfigurationOptions> getOptionsClass() {
+        return DotNetRemoteConfigurationOptions.class;
     }
 
     @Override
-    public void readExternal(final Element element) throws InvalidDataException {
-        super.readExternal(element);
-        DefaultJDOMExternalizer.readExternal(this, element);
+    public DotNetRemoteConfigurationOptions getOptions() {
+        return (DotNetRemoteConfigurationOptions) super.getOptions();
+    }
+
+    @Override
+    protected void convertLegacyState(LegacyRunConfigurationConverter converter) {
+        super.convertLegacyState(converter);
+
+        DotNetRemoteConfigurationLegacyState old = converter.readXml(DotNetRemoteConfigurationLegacyState.class);
+
+        DotNetRemoteConfigurationOptions options = new DotNetRemoteConfigurationOptions();
+        options.setServerMode(old.SERVER_MODE);
+        options.setHost(old.HOST);
+        options.setPort(old.PORT);
+        converter.setOptions(options);
+    }
+
+    @Override
+    public List<RunConfigurationFragment<?>> createFragments() {
+        return List.of(new DotNetRemoteConnectionFragment());
     }
 
     @Override
     public RunProfileState getState(final Executor executor, final ExecutionEnvironment env) throws ExecutionException {
+        DotNetRemoteConfigurationOptions options = getOptions();
         DotNetRemoteRunState state = new DotNetRemoteRunState(env);
-        state.putUserData(DebugConnectionInfo.KEY, new DebugConnectionInfo(HOST, PORT, SERVER_MODE));
+        state.putUserData(DebugConnectionInfo.KEY, new DebugConnectionInfo(options.getHost(), options.getPort(), options.isServerMode()));
         return state;
-    }
-
-    @Override
-    public SettingsEditor<? extends DotNetRemoteConfiguration> getConfigurationEditor() {
-        SettingsEditorGroup<DotNetRemoteConfiguration> group = new SettingsEditorGroup<>();
-        group.addEditor(ExecutionLocalize.runConfigurationConfigurationTabTitle(), new DotNetRemoteConfigurable<>(getProject()));
-        group.addEditor(ExecutionLocalize.logsTabTitle(), new LogConfigurationPanel<>());
-        return group;
     }
 
     @Override

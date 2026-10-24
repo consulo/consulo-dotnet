@@ -27,19 +27,16 @@ import consulo.dotnet.module.extension.DotNetRunModuleExtension;
 import consulo.dotnet.run.DotNetConfigurationConsoleTypeProvider;
 import consulo.dotnet.run.DotNetRunProfileState;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
-import consulo.dotnet.run.impl.coverage.DotNetCoverageConfigurationEditor;
-import consulo.dotnet.run.impl.coverage.DotNetCoverageEnabledConfiguration;
 import consulo.dotnet.util.DebugConnectionInfo;
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import consulo.execution.configuration.*;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.configuration.ui.SettingsEditorGroup;
-import consulo.execution.coverage.CoverageEnabledConfiguration;
-import consulo.execution.coverage.localize.ExecutionCoverageLocalize;
+import consulo.execution.configuration.fragment.EnvironmentFragmentState;
+import consulo.execution.configuration.fragment.ProgramParametersFragmentState;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
+import consulo.execution.configuration.fragment.WorkingDirectoryFragmentState;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.executor.Executor;
-import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
@@ -48,10 +45,6 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessConsoleType;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.lang.StringUtil;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
-import consulo.util.xml.serializer.XmlSerializer;
-import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -64,12 +57,6 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
     DotNetConfigurationWithCoverage,
     DotNetConfigurationWithDebug,
     DotNetConfigurationConsoleTypeProvider {
-    private String myProgramParameters;
-    private String myWorkingDir;
-    private Map<String, String> myEnvsMap = new HashMap<>();
-    private boolean myPassParentEnvs = true;
-    private ProcessConsoleType myConsoleType = ProcessConsoleType.BUILTIN;
-
     public DotNetConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory) {
         super(name, configurationModule, factory);
     }
@@ -91,37 +78,34 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
     }
 
     @Override
-    public void readExternal(Element element) throws InvalidDataException {
-        super.readExternal(element);
-
-        XmlSerializer.deserializeInto(this, element);
-
-        Element coverageElement = element.getChild("coverage");
-        if (coverageElement != null) {
-            CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.get(this);
-            coverageEnabledConfiguration.readExternal(coverageElement);
-        }
+    protected Class<DotNetConfigurationOptions> getOptionsClass() {
+        return DotNetConfigurationOptions.class;
     }
 
     @Override
-    public void writeExternal(Element element) throws WriteExternalException {
-        super.writeExternal(element);
-
-        XmlSerializer.serializeInto(this, element);
-
-        CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.get(this);
-        Element coverageElement = new Element("coverage");
-        coverageEnabledConfiguration.writeExternal(coverageElement);
-        element.addContent(coverageElement);
+    public DotNetConfigurationOptions getOptions() {
+        return (DotNetConfigurationOptions) super.getOptions();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-        SettingsEditorGroup group = new SettingsEditorGroup();
-        group.addEditor(ExecutionLocalize.runConfigurationConfigurationTabTitle(), new DotNetConfigurationEditor(getProject()));
-        group.addEditor(ExecutionCoverageLocalize.coverageTabTitle(), new DotNetCoverageConfigurationEditor());
-        return group;
+    protected void convertLegacyState(LegacyRunConfigurationConverter converter) {
+        super.convertLegacyState(converter);
+
+        DotNetConfigurationLegacyState old = converter.readXml(DotNetConfigurationLegacyState.class);
+
+        DotNetConfigurationOptions options = new DotNetConfigurationOptions();
+        ProcessConsoleType consoleType = old.getConsoleType();
+        options.setConsoleType(consoleType == null || consoleType == ProcessConsoleType.BUILTIN ? null : consoleType.name());
+        converter.setOptions(options);
+
+        converter.addFragment(new ProgramParametersFragmentState(old.getProgramParameters()));
+        converter.addFragment(new WorkingDirectoryFragmentState(old.getWorkingDirectory()));
+        converter.addFragment(new EnvironmentFragmentState(old.getEnvs(), old.isPassParentEnvs()));
+    }
+
+    @Override
+    public List<RunConfigurationFragment<?>> createFragments() {
+        return List.of(new DotNetConsoleTypeFragment());
     }
 
     @Nullable
@@ -157,7 +141,7 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
         runCommandLine.withParentEnvironmentType(runProfile.isPassParentEnvs() ? GeneralCommandLine.ParentEnvironmentType.CONSOLE : GeneralCommandLine.ParentEnvironmentType.NONE);
         runCommandLine.getEnvironment().putAll(runProfile.getEnvs());
 
-        String workDir = myWorkingDir;
+        String workDir = getWorkingDirectory();
         if (consulo.util.lang.StringUtil.isEmptyOrSpaces(workDir)) {
             workDir = DotNetMacroUtil.expandOutputDir(extension);
         }
@@ -169,48 +153,6 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
         }
 
         return state;
-    }
-
-    @Override
-    public void setProgramParameters(@Nullable String s) {
-        myProgramParameters = s;
-    }
-
-    @Nullable
-    @Override
-    public String getProgramParameters() {
-        return myProgramParameters;
-    }
-
-    @Override
-    public void setWorkingDirectory(@Nullable String s) {
-        myWorkingDir = s;
-    }
-
-    @Nullable
-    @Override
-    public String getWorkingDirectory() {
-        return myWorkingDir;
-    }
-
-    @Override
-    public void setEnvs(Map<String, String> map) {
-        myEnvsMap = map;
-    }
-
-    @Override
-    public Map<String, String> getEnvs() {
-        return myEnvsMap;
-    }
-
-    @Override
-    public void setPassParentEnvs(boolean b) {
-        myPassParentEnvs = b;
-    }
-
-    @Override
-    public boolean isPassParentEnvs() {
-        return myPassParentEnvs;
     }
 
     @Override
@@ -243,15 +185,20 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
         return moduleExtensionWithDebug.createDebuggerProcess(session, this, debugConnectionInfo);
     }
 
-    public void setConsoleType(ProcessConsoleType consoleType) {
-        myConsoleType = consoleType;
+    public void setConsoleType(@Nullable ProcessConsoleType consoleType) {
+        getOptions().setConsoleType(consoleType == null || consoleType == ProcessConsoleType.BUILTIN ? null : consoleType.name());
     }
 
     @Override
     public ProcessConsoleType getConsoleType() {
-        if (myConsoleType == null) {
-            myConsoleType = ProcessConsoleType.BUILTIN;
+        String name = getOptions().getConsoleType();
+        if (name != null) {
+            for (ProcessConsoleType type : ProcessConsoleType.values()) {
+                if (type.name().equals(name)) {
+                    return type;
+                }
+            }
         }
-        return myConsoleType;
+        return ProcessConsoleType.BUILTIN;
     }
 }

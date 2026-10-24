@@ -57,7 +57,7 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 		}
 		CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) profile);
 		CoverageRunner coverageRunner = coverageEnabledConfiguration.getCoverageRunner();
-		if(coverageRunner == null || !coverageEnabledConfiguration.isCoverageEnabled())
+		if(coverageRunner == null)
 		{
 			return false;
 		}
@@ -85,9 +85,9 @@ public class DotNetCoverageProgramRunner extends DefaultProgramRunner
 			CoverageEnabledConfiguration coverageEnabledConfiguration = DotNetCoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) environment.getRunProfile());
 
 			CoverageRunner coverageRunner = coverageEnabledConfiguration.getCoverageRunner();
-			if(!coverageEnabledConfiguration.isCoverageEnabled() || coverageRunner == null)
+			if(coverageRunner == null)
 			{
-				throw new ExecutionException("Coverage is not enabled");
+				throw new ExecutionException("No coverage runner for the module");
 			}
 
 			DotNetCoverageRunner dotNetCoverageRunner = (DotNetCoverageRunner) coverageRunner;

@@ -19,6 +19,8 @@ package consulo.dotnet.run.impl.coverage;
 import consulo.dotnet.run.coverage.DotNetConfigurationWithCoverage;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.execution.coverage.CoverageRunner;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -28,6 +30,8 @@ import java.util.List;
  */
 public class DotNetCoverageEnabledConfiguration extends CoverageEnabledConfiguration
 {
+	private final DotNetConfigurationWithCoverage myConfiguration;
+
 	public static DotNetCoverageEnabledConfiguration get(DotNetConfigurationWithCoverage configurationWithCoverage)
 	{
 		return (DotNetCoverageEnabledConfiguration) CoverageEnabledConfiguration.getOrCreate((RunConfigurationBase) configurationWithCoverage);
@@ -36,11 +40,25 @@ public class DotNetCoverageEnabledConfiguration extends CoverageEnabledConfigura
 	public DotNetCoverageEnabledConfiguration(DotNetConfigurationWithCoverage configuration)
 	{
 		super((RunConfigurationBase) configuration);
+		myConfiguration = configuration;
+	}
 
-		List<DotNetCoverageRunner> availableRunners = DotNetCoverageRunner.findAvailableRunners(configuration);
-		if(!availableRunners.isEmpty())
-		{
-			setCoverageRunner(availableRunners.get(0));
-		}
+	/**
+	 * The first runner that supports the .NET module extension of the configuration.
+	 */
+	@Nullable
+	@Override
+	public CoverageRunner getCoverageRunner()
+	{
+		List<DotNetCoverageRunner> availableRunners = DotNetCoverageRunner.findAvailableRunners(myConfiguration);
+		return availableRunners.isEmpty() ? null : availableRunners.get(0);
+	}
+
+	@Nullable
+	@Override
+	public String getRunnerId()
+	{
+		CoverageRunner runner = getCoverageRunner();
+		return runner == null ? null : runner.getId();
 	}
 }
