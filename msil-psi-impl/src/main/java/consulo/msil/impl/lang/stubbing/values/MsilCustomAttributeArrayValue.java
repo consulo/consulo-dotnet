@@ -19,12 +19,14 @@ package consulo.msil.impl.lang.stubbing.values;
 import consulo.internal.dotnet.asm.signature.SZArrayTypeSignature;
 import consulo.internal.dotnet.asm.signature.TypeSignature;
 
+import java.util.AbstractList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Value of a single-dimension array argument of a custom attribute, e.g. {@code [Nullable(new byte[] { 1, 0 })]}.
- * Its {@link #toString()} is the C# array creation expression, which is how attribute values are presented.
+ * {@link #getValue()} is the list of the element values, presented ({@code toString()}) as the C# array creation
+ * expression - so presentations which append values as text need no knowledge of arrays.
  */
 public class MsilCustomAttributeArrayValue extends MsiCustomAttributeValue
 {
@@ -45,11 +47,13 @@ public class MsilCustomAttributeArrayValue extends MsiCustomAttributeValue
 	);
 
 	private final List<MsiCustomAttributeValue> myElements;
+	private final List<Object> myElementValues;
 
 	public MsilCustomAttributeArrayValue(SZArrayTypeSignature typeSignature, List<MsiCustomAttributeValue> elements)
 	{
 		super(typeSignature, null);
 		myElements = List.copyOf(elements);
+		myElementValues = new ElementValues();
 	}
 
 	public List<MsiCustomAttributeValue> getElements()
@@ -57,14 +61,22 @@ public class MsilCustomAttributeArrayValue extends MsiCustomAttributeValue
 		return myElements;
 	}
 
+	/**
+	 * @return the values of the elements ({@link Number}s, {@link CharSequence}s, ...), presented as C#
+	 */
 	@Override
-	public Object getValue()
+	public List<Object> getValue()
 	{
-		return this;
+		return myElementValues;
 	}
 
 	@Override
 	public String toString()
+	{
+		return myElementValues.toString();
+	}
+
+	private String present()
 	{
 		String keyword = ourKeywords.get(((SZArrayTypeSignature) getTypeSignature()).getElementType());
 
@@ -89,5 +101,26 @@ public class MsilCustomAttributeArrayValue extends MsiCustomAttributeValue
 		}
 		builder.append(" }");
 		return builder.toString();
+	}
+
+	private class ElementValues extends AbstractList<Object>
+	{
+		@Override
+		public Object get(int index)
+		{
+			return myElements.get(index).getValue();
+		}
+
+		@Override
+		public int size()
+		{
+			return myElements.size();
+		}
+
+		@Override
+		public String toString()
+		{
+			return present();
+		}
 	}
 }
