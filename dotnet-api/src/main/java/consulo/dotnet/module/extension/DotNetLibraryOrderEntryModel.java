@@ -3,6 +3,7 @@ package consulo.dotnet.module.extension;
 import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.content.RootProviderBase;
+import consulo.content.bundle.Sdk;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.CustomOrderEntryModel;
 import consulo.module.extension.ModuleExtension;
@@ -72,14 +73,18 @@ public class DotNetLibraryOrderEntryModel implements CustomOrderEntryModel {
         myName = name;
     }
 
+    /**
+     * Indexing visits one order entry per equal object, so it must name the library - not only the bundle, which every
+     * library entry of the module shares (that indexed the first library of a module and skipped the others).
+     */
     @Nullable
     @Override
     public Object getEqualObject() {
         DotNetSimpleModuleExtension extension = myModuleRootLayer.getExtension(DotNetSimpleModuleExtension.class);
-        if (extension == null) {
-            return VirtualFile.EMPTY_ARRAY;
-        }
-        return extension.getSdk();
+        return new LibraryKey(myName, extension == null ? null : extension.getSdk());
+    }
+
+    private record LibraryKey(String name, @Nullable Sdk sdk) {
     }
 
     @Override
