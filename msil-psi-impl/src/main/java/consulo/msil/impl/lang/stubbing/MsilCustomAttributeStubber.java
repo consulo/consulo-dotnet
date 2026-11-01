@@ -11,6 +11,8 @@ import consulo.internal.dotnet.asm.io.ByteBuffer;
 import consulo.internal.dotnet.asm.mbel.AbstractTypeReference;
 import consulo.internal.dotnet.asm.mbel.AssemblyTypeRef;
 import consulo.internal.dotnet.asm.signature.ClassTypeSignature;
+import consulo.internal.dotnet.asm.signature.SZArrayTypeSignature;
+import consulo.internal.dotnet.asm.signature.SignatureException;
 import consulo.internal.dotnet.asm.signature.TypeSignature;
 import consulo.internal.dotnet.asm.signature.TypeSignatureParser;
 import consulo.internal.dotnet.asm.signature.ValueTypeSignature;
@@ -20,9 +22,11 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
 import consulo.msil.impl.lang.psi.MsilTokens;
+import consulo.msil.impl.lang.psi.impl.MsilArrayTypeImpl;
 import consulo.msil.impl.lang.psi.impl.MsilNativeTypeImpl;
 import consulo.msil.impl.lang.psi.impl.MsilUserTypeImpl;
 import consulo.msil.impl.lang.stubbing.values.MsiCustomAttributeValue;
+import consulo.msil.impl.lang.stubbing.values.MsilCustomAttributeArrayValue;
 import consulo.msil.impl.lang.stubbing.values.MsilCustomAttributeEnumValue;
 import consulo.msil.lang.psi.MsilConstantValue;
 import consulo.msil.lang.psi.MsilCustomAttribute;
@@ -74,6 +78,12 @@ public class MsilCustomAttributeStubber
 					}
 
 					TypeSignature typeSignature = toTypeSignature(type);
+					if(typeSignature == null)
+					{
+						// the rest of the blob can not be read without knowing the size of this argument
+						failed = true;
+						break;
+					}
 					MsiCustomAttributeValue attributeValue = buildArgument(project, typeSignature, byteBuffer);
 					if(attributeValue != null)
 					{
@@ -192,6 +202,28 @@ public class MsilCustomAttributeStubber
 				return TypeSignature.OBJECT;
 			}
 		}
+		else if(type instanceof MsilArrayTypeImpl)
+		{
+			MsilArrayTypeImpl arrayType = (MsilArrayTypeImpl) type;
+			// only single-dimension arrays can be attribute arguments
+			if(arrayType.getDimensions().length <= 1)
+			{
+				DotNetType innerType = arrayType.getInnerType();
+				TypeSignature elementSignature = innerType == null ? null : toTypeSignature(innerType);
+				if(elementSignature != null)
+				{
+					try
+					{
+						return new SZArrayTypeSignature(elementSignature);
+					}
+					catch(SignatureException e)
+					{
+						LOGGER.warn(e);
+					}
+				}
+			}
+			return null;
+		}
 		else if(type instanceof MsilUserTypeImpl)
 		{
 			String referenceText = ((MsilUserTypeImpl) type).getReferenceText();
@@ -204,7 +236,7 @@ public class MsilCustomAttributeStubber
 					return new ClassTypeSignature(parse(referenceText));
 			}
 		}
-		LOGGER.error("Unknown how convert: " + type);
+		LOGGER.warn("Unknown how convert: " + type);
 		return null;
 	}
 
@@ -275,6 +307,28 @@ public class MsilCustomAttributeStubber
 				TypeSignature stringTypeSignature = STypeSignatureParser.parse(text);
 				return new MsiCustomAttributeValue(typeSignature, stringTypeSignature);
 			}
+		}
+		else if(typeSignature instanceof SZArrayTypeSignature)
+		{
+			SZArrayTypeSignature arrayTypeSignature = (SZArrayTypeSignature) typeSignature;
+			int count = byteBuffer.getInt();
+			if(count == -1)
+			{
+				// 0xFFFFFFFF - null array
+				return new MsiCustomAttributeValue(typeSignature, null);
+			}
+
+			List<MsiCustomAttributeValue> elements = new ArrayList<>(count);
+			for(int i = 0; i < count; i++)
+			{
+				MsiCustomAttributeValue element = buildArgument(project, arrayTypeSignature.getElementType(), byteBuffer);
+				if(element == null)
+				{
+					throw new IllegalArgumentException("Cant get array element value for: " + arrayTypeSignature.getElementType());
+				}
+				elements.add(element);
+			}
+			return new MsilCustomAttributeArrayValue(arrayTypeSignature, elements);
 		}
 		else if(typeSignature == TypeSignature.OBJECT)
 		{

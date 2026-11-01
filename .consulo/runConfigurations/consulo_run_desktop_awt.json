@@ -1,0 +1,25 @@
+{
+  "name": "consulo:run-desktop-awt",
+  "type": "MavenRunConfiguration",
+  "factoryName": "Maven",
+  "singleton": true,
+  "options": {
+    "goals": [
+      "consulo:run-desktop-awt-fork",
+      "-pl",
+      ":consulo.dotnet"
+    ],
+    "workingDirectory": "$PROJECT_DIR$",
+    "resolveToWorkspace": true
+  },
+  "beforeRun": [
+    {
+      "id": "Maven.BeforeRunTask",
+      "state": {
+        "enabled": true,
+        "projectPath": "$PROJECT_DIR$/pom.xml",
+        "goal": "package"
+      }
+    }
+  ]
+}
