@@ -153,6 +153,7 @@ DOUBLE_LITERAL = {DIGIT} "." {DIGIT}
 	"assembly"      { return MsilTokens.ASSEMBLY_KEYWORD; }
 
 	"famorassem"    { return MsilTokens.FAMORASSEMBLY_KEYWORD; }
+	"famandassem"   { return MsilTokens.FAMANDASSEMBLY_KEYWORD; }
 
 	"static"        { return MsilTokens.STATIC_KEYWORD; }
 

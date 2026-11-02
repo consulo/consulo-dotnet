@@ -56,7 +56,9 @@ public interface MsilTokenSets extends MsilTokens {
             RTSPECIALNAME_KEYWORD,
             NESTED_KEYWORD,
             BRACKET_IN_KEYWORD,
-            VARARG_KEYWORD
+            VARARG_KEYWORD,
+        // last - the stubs keep the modifiers by their index here
+        FAMANDASSEMBLY_KEYWORD
     };
 
     TokenSet MODIFIERS = TokenSet.create(MODIFIERS_AS_ARRAY);
