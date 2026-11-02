@@ -33,55 +33,44 @@ import java.io.IOException;
  * @author VISTALL
  * @since 21.05.14
  */
-public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub>
-{
-	static
-	{
-		CharTableImpl.addStringsFromClassToStatics(DotNetTypes.class);
-	}
+public class MsilFileStubElementType extends IStubFileElementType<MsilFileStub> {
+    static {
+        CharTableImpl.addStringsFromClassToStatics(DotNetTypes.class);
+    }
 
-	public MsilFileStubElementType()
-	{
-		super("MSIL_FILE", MsilLanguage.INSTANCE);
-	}
+    public MsilFileStubElementType() {
+        super("MSIL_FILE", MsilLanguage.INSTANCE);
+    }
 
-	@Override
-	public StubBuilder getBuilder()
-	{
-		return new DefaultStubBuilder()
-		{
-			@Override
-			protected StubElement createStubForFile(PsiFile file)
-			{
-				if(file instanceof MsilFile)
-				{
-					return new MsilFileStub((MsilFile) file);
-				}
-				return super.createStubForFile(file);
-			}
-		};
-	}
+    @Override
+    public StubBuilder getBuilder() {
+        return new DefaultStubBuilder() {
+            @Override
+            protected StubElement createStubForFile(PsiFile file) {
+                if (file instanceof MsilFile) {
+                    return new MsilFileStub((MsilFile) file);
+                }
+                return super.createStubForFile(file);
+            }
+        };
+    }
 
-	@Override
-	public MsilFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		return new MsilFileStub(null);
-	}
+    @Override
+    public MsilFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
+        return new MsilFileStub(null);
+    }
 
-	@Override
-	public int getStubVersion()
-	{
-		int version = 74 + DotNetArchiveFile.VERSION + ModuleParser.VERSION;
-		for(MsilStubIndexer msilStubIndexer : MsilStubIndexer.EP_NAME.getExtensionList())
-		{
-			version += msilStubIndexer.getVersion();
-		}
-		return version;
-	}
+    @Override
+    public int getStubVersion() {
+        int version = 74 + DotNetArchiveFile.VERSION + ModuleParser.VERSION;
+        for (MsilStubIndexer msilStubIndexer : MsilStubIndexer.EP_NAME.getExtensionList()) {
+            version += msilStubIndexer.getVersion();
+        }
+        return version;
+    }
 
-	@Override
-	public String getExternalId()
-	{
-		return "msil.file";
-	}
+    @Override
+    public String getExternalId() {
+        return "msil.file";
+    }
 }
