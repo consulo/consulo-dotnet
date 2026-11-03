@@ -32,42 +32,35 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 12.06.2015
  */
-public class MsilTypeParameterAttributeListImpl extends MsilStubElementImpl<MsilTypeParameterAttributeListStub> implements MsilTypeParameterAttributeList
-{
-	public MsilTypeParameterAttributeListImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class MsilTypeParameterAttributeListImpl extends MsilStubElementImpl<MsilTypeParameterAttributeListStub> implements MsilTypeParameterAttributeList {
+    public MsilTypeParameterAttributeListImpl(ASTNode node) {
+        super(node);
+    }
 
-	public MsilTypeParameterAttributeListImpl(MsilTypeParameterAttributeListStub stub, IStubElementType nodeType)
-	{
-		super(stub, nodeType);
-	}
+    public MsilTypeParameterAttributeListImpl(MsilTypeParameterAttributeListStub stub, IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
-	@Override
-	public void accept(MsilVisitor visitor)
-	{
-		visitor.visitTypeParameterAttributeList(this);
-	}
+    @Override
+    public void accept(MsilVisitor visitor) {
+        visitor.visitTypeParameterAttributeList(this);
+    }
 
-	@Nullable
-	@Override
-	@RequiredReadAction
-	public String getGenericParameterName()
-	{
-		MsilTypeParameterAttributeListStub stub = getGreenStub();
-		if(stub != null)
-		{
-			return stub.getGenericParameterName();
-		}
-		PsiElement element = findChildByType(MsilTokens.IDENTIFIER);
-		return element == null ? null : element.getText();
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public String getGenericParameterName() {
+        MsilTypeParameterAttributeListStub stub = getGreenStub();
+        if (stub != null) {
+            return stub.getGenericParameterName();
+        }
+        PsiElement element = findChildByType(MsilTokens.IDENTIFIER);
+        return element == null ? null : element.getText();
+    }
 
-	@Override
-	@RequiredReadAction
-	public MsilCustomAttribute[] getAttributes()
-	{
-		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
-	}
+    @Override
+    @RequiredReadAction
+    public MsilCustomAttribute[] getAttributes() {
+        return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
+    }
 }

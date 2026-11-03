@@ -32,43 +32,36 @@ import java.io.IOException;
  * @author VISTALL
  * @since 12.06.2015
  */
-public class MsilTypeParameterAttributeListStubElementType extends AbstractMsilStubElementType<MsilTypeParameterAttributeListStub, MsilTypeParameterAttributeList>
-{
-	public MsilTypeParameterAttributeListStubElementType()
-	{
-		super("MSIL_TYPE_PARAMETER_ATTRIBUTE_LIST");
-	}
+public class MsilTypeParameterAttributeListStubElementType extends AbstractMsilStubElementType<MsilTypeParameterAttributeListStub, MsilTypeParameterAttributeList> {
+    public MsilTypeParameterAttributeListStubElementType() {
+        super("MSIL_TYPE_PARAMETER_ATTRIBUTE_LIST");
+    }
 
-	@Override
-	public MsilTypeParameterAttributeList createElement(ASTNode astNode)
-	{
-		return new MsilTypeParameterAttributeListImpl(astNode);
-	}
+    @Override
+    public MsilTypeParameterAttributeList createElement(ASTNode astNode) {
+        return new MsilTypeParameterAttributeListImpl(astNode);
+    }
 
-	@Override
-	public MsilTypeParameterAttributeList createPsi(MsilTypeParameterAttributeListStub msilParameterAttributeListStub)
-	{
-		return new MsilTypeParameterAttributeListImpl(msilParameterAttributeListStub, this);
-	}
+    @Override
+    public MsilTypeParameterAttributeList createPsi(MsilTypeParameterAttributeListStub msilParameterAttributeListStub) {
+        return new MsilTypeParameterAttributeListImpl(msilParameterAttributeListStub, this);
+    }
 
-	@RequiredReadAction
-	@Override
-	public MsilTypeParameterAttributeListStub createStub(MsilTypeParameterAttributeList list, StubElement stubElement)
-	{
-		String name = list.getGenericParameterName();
-		return new MsilTypeParameterAttributeListStub(stubElement, this, name);
-	}
+    @RequiredReadAction
+    @Override
+    public MsilTypeParameterAttributeListStub createStub(MsilTypeParameterAttributeList list, StubElement stubElement) {
+        String name = list.getGenericParameterName();
+        return new MsilTypeParameterAttributeListStub(stubElement, this, name);
+    }
 
-	@Override
-	public void serialize(MsilTypeParameterAttributeListStub list, StubOutputStream stubOutputStream) throws IOException
-	{
-		stubOutputStream.writeName(list.getGenericParameterName());
-	}
+    @Override
+    public void serialize(MsilTypeParameterAttributeListStub list, StubOutputStream stubOutputStream) throws IOException {
+        stubOutputStream.writeName(list.getGenericParameterName());
+    }
 
-	@Override
-	public MsilTypeParameterAttributeListStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException
-	{
-		StringRef name = inputStream.readName();
-		return new MsilTypeParameterAttributeListStub(stubElement, this, name);
-	}
+    @Override
+    public MsilTypeParameterAttributeListStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException {
+        StringRef name = inputStream.readName();
+        return new MsilTypeParameterAttributeListStub(stubElement, this, name);
+    }
 }

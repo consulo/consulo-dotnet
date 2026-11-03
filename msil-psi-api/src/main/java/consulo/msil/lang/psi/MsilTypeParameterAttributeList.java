@@ -26,23 +26,20 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 12.06.2015
  */
-public interface MsilTypeParameterAttributeList extends DotNetElement
-{
-	public static final MsilTypeParameterAttributeList[] EMPTY_ARRAY = new MsilTypeParameterAttributeList[0];
+public interface MsilTypeParameterAttributeList extends DotNetElement {
+    public static final MsilTypeParameterAttributeList[] EMPTY_ARRAY = new MsilTypeParameterAttributeList[0];
 
-	public static ArrayFactory<MsilTypeParameterAttributeList> ARRAY_FACTORY = new ArrayFactory<MsilTypeParameterAttributeList>()
-	{
-		@Override
-		public MsilTypeParameterAttributeList[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new MsilTypeParameterAttributeList[count];
-		}
-	};
+    public static ArrayFactory<MsilTypeParameterAttributeList> ARRAY_FACTORY = new ArrayFactory<MsilTypeParameterAttributeList>() {
+        @Override
+        public MsilTypeParameterAttributeList[] create(int count) {
+            return count == 0 ? EMPTY_ARRAY : new MsilTypeParameterAttributeList[count];
+        }
+    };
 
-	@Nullable
-	@RequiredReadAction
-	String getGenericParameterName();
+    @Nullable
+    @RequiredReadAction
+    String getGenericParameterName();
 
-	@RequiredReadAction
-	MsilCustomAttribute[] getAttributes();
+    @RequiredReadAction
+    MsilCustomAttribute[] getAttributes();
 }

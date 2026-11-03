@@ -26,23 +26,19 @@ import consulo.msil.lang.psi.MsilParameterAttributeList;
  * @author VISTALL
  * @since 12.06.2015
  */
-public class MsilTypeParameterAttributeListStub extends StubBase<MsilParameterAttributeList>
-{
-	private final String myGenericParameterName;
+public class MsilTypeParameterAttributeListStub extends StubBase<MsilParameterAttributeList> {
+    private final String myGenericParameterName;
 
-	public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, String genericParameterName)
-	{
-		super(parent, elementType);
-		myGenericParameterName = genericParameterName;
-	}
+    public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, String genericParameterName) {
+        super(parent, elementType);
+        myGenericParameterName = genericParameterName;
+    }
 
-	public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, StringRef genericParameterName)
-	{
-		this(parent, elementType, StringRef.toString(genericParameterName));
-	}
+    public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, StringRef genericParameterName) {
+        this(parent, elementType, StringRef.toString(genericParameterName));
+    }
 
-	public String getGenericParameterName()
-	{
-		return myGenericParameterName;
-	}
+    public String getGenericParameterName() {
+        return myGenericParameterName;
+    }
 }

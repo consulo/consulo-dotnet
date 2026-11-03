@@ -49,294 +49,248 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 21.05.14
  */
-public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> implements MsilClassEntry
-{
-	private static class Resolver implements Function<MsilClassEntryImpl, DotNetTypeRef>
-	{
-		private static final Resolver INSTANCE = new Resolver();
+public class MsilClassEntryImpl extends MsilStubElementImpl<MsilClassEntryStub> implements MsilClassEntry {
+    private static class Resolver implements Function<MsilClassEntryImpl, DotNetTypeRef> {
+        private static final Resolver INSTANCE = new Resolver();
 
-		@Override
-		@RequiredReadAction
-		public DotNetTypeRef apply(MsilClassEntryImpl msilClassEntry)
-		{
-			DotNetFieldDeclaration value = findFieldByName(msilClassEntry, "__value");
-			return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(msilClassEntry.getProject(), msilClassEntry.getResolveScope(), DotNetTypes.System.Int32);
-		}
-	}
+        @Override
+        @RequiredReadAction
+        public DotNetTypeRef apply(MsilClassEntryImpl msilClassEntry) {
+            DotNetFieldDeclaration value = findFieldByName(msilClassEntry, "__value");
+            return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(msilClassEntry.getProject(), msilClassEntry.getResolveScope(), DotNetTypes.System.Int32);
+        }
+    }
 
-	public MsilClassEntryImpl(MsilClassEntryStub stub, IStubElementType nodeType)
-	{
-		super(stub, nodeType);
-	}
+    public MsilClassEntryImpl(MsilClassEntryStub stub, IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
-	public MsilClassEntryImpl(ASTNode node)
-	{
-		super(node);
-	}
+    public MsilClassEntryImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public String getNameFromBytecode()
-	{
-		PsiElement element = getNameIdentifier();
-		return element == null ? "" : StringUtil.unquoteString(element.getText());
-	}
+    @Override
+    public String getNameFromBytecode() {
+        PsiElement element = getNameIdentifier();
+        return element == null ? "" : StringUtil.unquoteString(element.getText());
+    }
 
-	@Override
-	public void accept(MsilVisitor visitor)
-	{
-		visitor.visitClassEntry(this);
-	}
+    @Override
+    public void accept(MsilVisitor visitor) {
+        visitor.visitClassEntry(this);
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean isInterface()
-	{
-		return hasModifier(MsilTokens.INTERFACE_KEYWORD);
-	}
+    @RequiredReadAction
+    @Override
+    public boolean isInterface() {
+        return hasModifier(MsilTokens.INTERFACE_KEYWORD);
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean isStruct()
-	{
-		return DotNetInheritUtil.isStruct(this);
-	}
+    @RequiredReadAction
+    @Override
+    public boolean isStruct() {
+        return DotNetInheritUtil.isStruct(this);
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean isEnum()
-	{
-		return DotNetInheritUtil.isEnum(this);
-	}
+    @RequiredReadAction
+    @Override
+    public boolean isEnum() {
+        return DotNetInheritUtil.isEnum(this);
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public DotNetTypeList getExtendList()
-	{
-		return null;
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public DotNetTypeList getExtendList() {
+        return null;
+    }
 
-	@RequiredReadAction
-	@Override
-	public DotNetTypeRef[] getExtendTypeRefs()
-	{
-		DotNetTypeList extendList = getStubOrPsiChild(MsilStubElements.EXTENDS_TYPE_LIST);
-		DotNetTypeList implementList = getStubOrPsiChild(MsilStubElements.IMPLEMENTS_TYPE_LIST);
+    @RequiredReadAction
+    @Override
+    public DotNetTypeRef[] getExtendTypeRefs() {
+        DotNetTypeList extendList = getStubOrPsiChild(MsilStubElements.EXTENDS_TYPE_LIST);
+        DotNetTypeList implementList = getStubOrPsiChild(MsilStubElements.IMPLEMENTS_TYPE_LIST);
 
-		DotNetTypeRef[] types = extendList == null ? DotNetTypeRef.EMPTY_ARRAY : extendList.getTypeRefs();
-		DotNetTypeRef[] types1 = implementList == null ? DotNetTypeRef.EMPTY_ARRAY : implementList.getTypeRefs();
-		List<DotNetTypeRef> list = new ArrayList<DotNetTypeRef>(types.length + types1.length);
-		Collections.addAll(list, types);
-		Collections.addAll(list, types1);
-		return list.toArray(DotNetTypeRef.ARRAY_FACTORY);
-	}
+        DotNetTypeRef[] types = extendList == null ? DotNetTypeRef.EMPTY_ARRAY : extendList.getTypeRefs();
+        DotNetTypeRef[] types1 = implementList == null ? DotNetTypeRef.EMPTY_ARRAY : implementList.getTypeRefs();
+        List<DotNetTypeRef> list = new ArrayList<DotNetTypeRef>(types.length + types1.length);
+        Collections.addAll(list, types);
+        Collections.addAll(list, types1);
+        return list.toArray(DotNetTypeRef.ARRAY_FACTORY);
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean isInheritor(String otherVmQName, boolean deep)
-	{
-		return DotNetInheritUtil.isInheritor(this, otherVmQName, deep);
-	}
+    @RequiredReadAction
+    @Override
+    public boolean isInheritor(String otherVmQName, boolean deep) {
+        return DotNetInheritUtil.isInheritor(this, otherVmQName, deep);
+    }
 
-	@Override
-	@RequiredReadAction
-	public DotNetTypeRef getTypeRefForEnumConstants()
-	{
-		return LanguageCachedValueUtil.getProjectPsiDependentCache(this, it -> getTypeRefFromEnumConstantsImpl());
-	}
+    @Override
+    @RequiredReadAction
+    public DotNetTypeRef getTypeRefForEnumConstants() {
+        return LanguageCachedValueUtil.getProjectPsiDependentCache(this, it -> getTypeRefFromEnumConstantsImpl());
+    }
 
-	@RequiredReadAction
-	private DotNetTypeRef getTypeRefFromEnumConstantsImpl()
-	{
-		DotNetFieldDeclaration value = findFieldByName(this, "__value");
-		return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(getProject(), getResolveScope(), DotNetTypes.System.Int32);
-	}
+    @RequiredReadAction
+    private DotNetTypeRef getTypeRefFromEnumConstantsImpl() {
+        DotNetFieldDeclaration value = findFieldByName(this, "__value");
+        return value != null ? value.toTypeRef(false) : new MsilNativeTypeRefImpl(getProject(), getResolveScope(), DotNetTypes.System.Int32);
+    }
 
-	@Nullable
-	@Override
-	public DotNetGenericParameterList getGenericParameterList()
-	{
-		return getStubOrPsiChild(MsilStubElements.GENERIC_PARAMETER_LIST);
-	}
+    @Nullable
+    @Override
+    public DotNetGenericParameterList getGenericParameterList() {
+        return getStubOrPsiChild(MsilStubElements.GENERIC_PARAMETER_LIST);
+    }
 
-	@Override
-	public DotNetGenericParameter[] getGenericParameters()
-	{
-		DotNetGenericParameterList genericParameterList = getGenericParameterList();
-		return genericParameterList == null ? DotNetGenericParameter.EMPTY_ARRAY : genericParameterList.getParameters();
-	}
+    @Override
+    public DotNetGenericParameter[] getGenericParameters() {
+        DotNetGenericParameterList genericParameterList = getGenericParameterList();
+        return genericParameterList == null ? DotNetGenericParameter.EMPTY_ARRAY : genericParameterList.getParameters();
+    }
 
-	@Override
-	public int getGenericParametersCount()
-	{
-		DotNetGenericParameterList genericParameterList = getGenericParameterList();
-		return genericParameterList == null ? 0 : genericParameterList.getGenericParametersCount();
-	}
+    @Override
+    public int getGenericParametersCount() {
+        DotNetGenericParameterList genericParameterList = getGenericParameterList();
+        return genericParameterList == null ? 0 : genericParameterList.getGenericParametersCount();
+    }
 
-	@RequiredReadAction
-	@Override
-	public DotNetNamedElement[] getMembers()
-	{
-		return LanguageCachedValueUtil.getProjectPsiDependentCache(this, (it) -> it.getStubOrPsiChildren(MsilStubTokenSets.MEMBER_STUBS, DotNetNamedElement.ARRAY_FACTORY));
-	}
+    @RequiredReadAction
+    @Override
+    public DotNetNamedElement[] getMembers() {
+        return LanguageCachedValueUtil.getProjectPsiDependentCache(this, (it) -> it.getStubOrPsiChildren(MsilStubTokenSets.MEMBER_STUBS, DotNetNamedElement.ARRAY_FACTORY));
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean hasModifier(DotNetModifier modifier)
-	{
-		return getModifierList().hasModifier(modifier);
-	}
+    @RequiredReadAction
+    @Override
+    public boolean hasModifier(DotNetModifier modifier) {
+        return getModifierList().hasModifier(modifier);
+    }
 
-	@Override
-	public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place)
-	{
-		for(DotNetGenericParameter dotNetGenericParameter : getGenericParameters())
-		{
-			if(!processor.execute(dotNetGenericParameter, state))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean processDeclarations(PsiScopeProcessor processor, ResolveState state, PsiElement lastParent, PsiElement place) {
+        for (DotNetGenericParameter dotNetGenericParameter : getGenericParameters()) {
+            if (!processor.execute(dotNetGenericParameter, state)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	@RequiredReadAction
-	@Override
-	public DotNetModifierList getModifierList()
-	{
-		return getRequiredStubOrPsiChild(MsilStubElements.MODIFIER_LIST);
-	}
+    @RequiredReadAction
+    @Override
+    public DotNetModifierList getModifierList() {
+        return getRequiredStubOrPsiChild(MsilStubElements.MODIFIER_LIST);
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public String getPresentableParentQName()
-	{
-		MsilClassEntryStub stub = getGreenStub();
-		if(stub != null)
-		{
-			return stub.getNamespace();
-		}
-		return StringUtil.getPackageName(getNameFromBytecode());
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public String getPresentableParentQName() {
+        MsilClassEntryStub stub = getGreenStub();
+        if (stub != null) {
+            return stub.getNamespace();
+        }
+        return StringUtil.getPackageName(getNameFromBytecode());
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public String getPresentableQName()
-	{
-		MsilClassEntryStub stub = getGreenStub();
-		if(stub != null)
-		{
-			return MsilHelper.append(stub.getNamespace(), stub.getName());
-		}
-		return getNameFromBytecode();
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public String getPresentableQName() {
+        MsilClassEntryStub stub = getGreenStub();
+        if (stub != null) {
+            return MsilHelper.append(stub.getNamespace(), stub.getName());
+        }
+        return getNameFromBytecode();
+    }
 
-	@Override
-	@RequiredReadAction
-	public String getVmQName()
-	{
-		MsilClassEntryStub stub = getGreenStub();
-		if(stub != null)
-		{
-			return stub.getVmQName();
-		}
-		if(hasModifier(MsilTokens.NESTED_KEYWORD))
-		{
-			PsiElement parent = getParent();
-			if(parent instanceof MsilClassEntry)  //dont throw exception if tree is broken
-			{
-				return ((MsilClassEntry) parent).getVmQName() + "/" + getNameFromBytecode();
-			}
-		}
-		return getNameFromBytecode();
-	}
+    @Override
+    @RequiredReadAction
+    public String getVmQName() {
+        MsilClassEntryStub stub = getGreenStub();
+        if (stub != null) {
+            return stub.getVmQName();
+        }
+        if (hasModifier(MsilTokens.NESTED_KEYWORD)) {
+            PsiElement parent = getParent();
+            if (parent instanceof MsilClassEntry)  //dont throw exception if tree is broken
+            {
+                return ((MsilClassEntry) parent).getVmQName() + "/" + getNameFromBytecode();
+            }
+        }
+        return getNameFromBytecode();
+    }
 
-	@Nullable
-	@Override
-	@RequiredReadAction
-	public String getVmName()
-	{
-		return getName();
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public String getVmName() {
+        return getName();
+    }
 
-	@RequiredReadAction
-	@Override
-	public String getName()
-	{
-		MsilClassEntryStub stub = getGreenStub();
-		if(stub != null)
-		{
-			return stub.getName();
-		}
-		return StringUtil.getShortName(getNameFromBytecode());
-	}
+    @RequiredReadAction
+    @Override
+    public String getName() {
+        MsilClassEntryStub stub = getGreenStub();
+        if (stub != null) {
+            return stub.getName();
+        }
+        return StringUtil.getShortName(getNameFromBytecode());
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return findChildByType(MsilTokenSets.IDENTIFIERS);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiElement getNameIdentifier() {
+        return findChildByType(MsilTokenSets.IDENTIFIERS);
+    }
 
-	@RequiredWriteAction
-	@Override
-	public PsiElement setName(String s) throws IncorrectOperationException
-	{
-		return null;
-	}
+    @RequiredWriteAction
+    @Override
+    public PsiElement setName(String s) throws IncorrectOperationException {
+        return null;
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean isNested()
-	{
-		PsiElement parentByStub = getParentByStub();
-		return parentByStub instanceof MsilClassEntry;
-	}
+    @RequiredReadAction
+    @Override
+    public boolean isNested() {
+        PsiElement parentByStub = getParentByStub();
+        return parentByStub instanceof MsilClassEntry;
+    }
 
-	@Override
-	public boolean isEquivalentTo(PsiElement another)
-	{
-		if(another instanceof DotNetTypeDeclaration)
-		{
-			return Comparing.equal(getVmQName(), ((DotNetTypeDeclaration) another).getVmQName());
-		}
-		return super.isEquivalentTo(another);
-	}
+    @Override
+    public boolean isEquivalentTo(PsiElement another) {
+        if (another instanceof DotNetTypeDeclaration) {
+            return Comparing.equal(getVmQName(), ((DotNetTypeDeclaration) another).getVmQName());
+        }
+        return super.isEquivalentTo(another);
+    }
 
-	@Override
-	public MsilCustomAttribute[] getAttributes()
-	{
-		return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
-	}
+    @Override
+    public MsilCustomAttribute[] getAttributes() {
+        return getStubOrPsiChildren(MsilStubElements.CUSTOM_ATTRIBUTE, MsilCustomAttribute.ARRAY_FACTORY);
+    }
 
-	@RequiredReadAction
-	@Override
-	public MsilCustomAttribute[] getGenericParameterAttributes(String name)
-	{
-		MsilTypeParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.TYPE_PARAMETER_ATTRIBUTE_LIST, MsilTypeParameterAttributeList.ARRAY_FACTORY);
-		for(MsilTypeParameterAttributeList attributeList : list)
-		{
-			if(name.equals(attributeList.getGenericParameterName()))
-			{
-				return attributeList.getAttributes();
-			}
-		}
-		return MsilCustomAttribute.EMPTY_ARRAY;
-	}
+    @RequiredReadAction
+    @Override
+    public MsilCustomAttribute[] getGenericParameterAttributes(String name) {
+        MsilTypeParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.TYPE_PARAMETER_ATTRIBUTE_LIST, MsilTypeParameterAttributeList.ARRAY_FACTORY);
+        for (MsilTypeParameterAttributeList attributeList : list) {
+            if (name.equals(attributeList.getGenericParameterName())) {
+                return attributeList.getAttributes();
+            }
+        }
+        return MsilCustomAttribute.EMPTY_ARRAY;
+    }
 
-	@Nullable
-	private static DotNetFieldDeclaration findFieldByName(DotNetTypeDeclaration tp, String name)
-	{
-		for(DotNetNamedElement element : tp.getMembers())
-		{
-			if(element instanceof DotNetFieldDeclaration && Comparing.equal(element.getName(), name))
-			{
-				return (DotNetFieldDeclaration) element;
-			}
-		}
-		return null;
-	}
+    @Nullable
+    private static DotNetFieldDeclaration findFieldByName(DotNetTypeDeclaration tp, String name) {
+        for (DotNetNamedElement element : tp.getMembers()) {
+            if (element instanceof DotNetFieldDeclaration && Comparing.equal(element.getName(), name)) {
+                return (DotNetFieldDeclaration) element;
+            }
+        }
+        return null;
+    }
 }
