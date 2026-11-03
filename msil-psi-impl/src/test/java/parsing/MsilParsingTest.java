@@ -16,40 +16,47 @@
 
 package parsing;
 
+import consulo.language.file.LanguageFileType;
+import consulo.msil.MsilFileType;
+import consulo.test.junit.impl.language.SimpleParsingTest;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author VISTALL
  * @since 13.05.2015
  */
-//public abstract class MsilParsingTest extends ParsingTestCase
-//{
-//	public MsilParsingTest()
-//	{
-//		super("/msil-psi-impl/testData/parsing/", "msil");
-//	}
-//
-//	public void testFieldConstWithValue()
-//	{
-//		doTest(true);
-//	}
-//
-//	public void testArrayList()
-//	{
-//		doTest(true);
-//	}
-//
-//	public void testFieldWithAttribute()
-//	{
-//		doTest(true);
-//	}
-//
-//	public void testTestCustomAttributeSignature()
-//	{
-//		doTest(true);
-//	}
-//
-//	public void testGenericParameterCustomAttribute()
-//	{
-//		doTest(true);
-//	}
-//}
+public class MsilParsingTest extends SimpleParsingTest<Object> {
+    public MsilParsingTest() {
+        super("parsing", "msil");
+    }
+
+    @Override
+    protected LanguageFileType getFileType(Context context, Object testContext) {
+        return MsilFileType.INSTANCE;
+    }
+
+    @Override
+    protected boolean checkAllPsiRoots() {
+        return false;
+    }
+
+    @Test
+    public void testFieldConstWithValue(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testArrayList(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testFieldWithAttribute(Context context) throws Exception {
+        doTest(context, null);
+    }
+
+    @Test
+    public void testGenericConstraintAttribute(Context context) throws Exception {
+        doTest(context, null);
+    }
+}

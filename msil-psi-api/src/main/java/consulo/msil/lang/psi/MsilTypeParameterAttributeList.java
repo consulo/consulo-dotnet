@@ -18,6 +18,7 @@ package consulo.msil.lang.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dotnet.psi.DotNetElement;
+import consulo.dotnet.psi.DotNetType;
 import consulo.util.collection.ArrayFactory;
 
 import org.jspecify.annotations.Nullable;
@@ -42,4 +43,17 @@ public interface MsilTypeParameterAttributeList extends DotNetElement {
 
     @RequiredReadAction
     MsilCustomAttribute[] getAttributes();
+
+    /**
+     * {@code .param constraint T, class IFoo} - the attributes of a constraint of the generic parameter, not of the parameter
+     */
+    @RequiredReadAction
+    boolean isConstraint();
+
+    /**
+     * @return the constraint type of {@code .param constraint T, class IFoo}
+     */
+    @Nullable
+    @RequiredReadAction
+    DotNetType getConstraintType();
 }

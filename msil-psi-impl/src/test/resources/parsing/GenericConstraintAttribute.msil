@@ -1,0 +1,20 @@
+.class public interface abstract System.Numerics.INumber`1<(class System.Numerics.INumber`1<!TSelf>) TSelf> extends System.Object
+{
+	.param type TSelf
+
+	.custom System.Runtime.CompilerServices.NullableAttribute::.ctor(uint8) = 
+	(
+		01 00 00 00 00
+	)
+
+	.param constraint TSelf, class System.Numerics.INumber`1<!TSelf>
+
+	.custom System.Runtime.CompilerServices.NullableAttribute::.ctor(uint8) = 
+	(
+		01 00 01 00 00
+	)
+
+	.method public static hidebysig virtual !TSelf Clamp(!TSelf 'value', !TSelf min, !TSelf max)
+	{
+	}
+}

@@ -198,7 +198,7 @@ public class MsilMethodEntryImpl extends MsilStubElementImpl<MsilMethodEntryStub
         MsilTypeParameterAttributeList[] list = getStubOrPsiChildren(MsilStubElements.TYPE_PARAMETER_ATTRIBUTE_LIST, MsilTypeParameterAttributeList
                 .ARRAY_FACTORY);
         for (MsilTypeParameterAttributeList attributeList : list) {
-            if (name.equals(attributeList.getGenericParameterName())) {
+            if (!attributeList.isConstraint() && name.equals(attributeList.getGenericParameterName())) {
                 return attributeList.getAttributes();
             }
         }

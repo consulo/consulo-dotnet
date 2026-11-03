@@ -6860,3 +6860,4 @@ MSIL_FILE
       PsiElement(RBRACE)('}')
     PsiWhiteSpace('\n')
     PsiElement(RBRACE)('}')
+  PsiWhiteSpace('\n')

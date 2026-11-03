@@ -28,14 +28,20 @@ import consulo.msil.lang.psi.MsilParameterAttributeList;
  */
 public class MsilTypeParameterAttributeListStub extends StubBase<MsilParameterAttributeList> {
     private final String myGenericParameterName;
+    private final boolean myConstraint;
 
-    public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, String genericParameterName) {
+    public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, String genericParameterName, boolean constraint) {
         super(parent, elementType);
         myGenericParameterName = genericParameterName;
+        myConstraint = constraint;
     }
 
-    public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, StringRef genericParameterName) {
-        this(parent, elementType, StringRef.toString(genericParameterName));
+    public MsilTypeParameterAttributeListStub(StubElement parent, IStubElementType elementType, StringRef genericParameterName, boolean constraint) {
+        this(parent, elementType, StringRef.toString(genericParameterName), constraint);
+    }
+
+    public boolean isConstraint() {
+        return myConstraint;
     }
 
     public String getGenericParameterName() {

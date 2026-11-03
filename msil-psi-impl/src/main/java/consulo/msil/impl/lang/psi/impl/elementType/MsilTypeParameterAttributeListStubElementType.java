@@ -51,17 +51,19 @@ public class MsilTypeParameterAttributeListStubElementType extends AbstractMsilS
     @Override
     public MsilTypeParameterAttributeListStub createStub(MsilTypeParameterAttributeList list, StubElement stubElement) {
         String name = list.getGenericParameterName();
-        return new MsilTypeParameterAttributeListStub(stubElement, this, name);
+        return new MsilTypeParameterAttributeListStub(stubElement, this, name, list.isConstraint());
     }
 
     @Override
     public void serialize(MsilTypeParameterAttributeListStub list, StubOutputStream stubOutputStream) throws IOException {
         stubOutputStream.writeName(list.getGenericParameterName());
+        stubOutputStream.writeBoolean(list.isConstraint());
     }
 
     @Override
     public MsilTypeParameterAttributeListStub deserialize(StubInputStream inputStream, StubElement stubElement) throws IOException {
         StringRef name = inputStream.readName();
-        return new MsilTypeParameterAttributeListStub(stubElement, this, name);
+        boolean constraint = inputStream.readBoolean();
+        return new MsilTypeParameterAttributeListStub(stubElement, this, name, constraint);
     }
 }

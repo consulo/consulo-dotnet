@@ -110,6 +110,7 @@ public interface MsilTokens extends StandardTokenTypes {
     IElementType IMPLEMENTS_KEYWORD = new IElementType("IMPLEMENTS_KEYWORD", MsilLanguage.INSTANCE);
 
     IElementType TYPE_KEYWORD = new IElementType("TYPE_KEYWORD", MsilLanguage.INSTANCE);
+    IElementType CONSTRAINT_KEYWORD = new IElementType("CONSTRAINT_KEYWORD", MsilLanguage.INSTANCE);
 
     IElementType BOOL_LITERAL = new IElementType("BOOL_LITERAL", MsilLanguage.INSTANCE);
 

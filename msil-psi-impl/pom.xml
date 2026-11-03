@@ -91,5 +91,17 @@
             <artifactId>joou</artifactId>
             <version>0.9.4</version>
         </dependency>
+            <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-test-junit-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

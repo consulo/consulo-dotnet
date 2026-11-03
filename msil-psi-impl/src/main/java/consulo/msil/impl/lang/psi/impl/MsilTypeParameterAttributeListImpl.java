@@ -21,7 +21,9 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.msil.lang.psi.MsilCustomAttribute;
+import consulo.dotnet.psi.DotNetType;
 import consulo.msil.impl.lang.psi.MsilStubElements;
+import consulo.msil.impl.lang.psi.MsilStubTokenSets;
 import consulo.msil.impl.lang.psi.MsilTokens;
 import consulo.msil.lang.psi.MsilTypeParameterAttributeList;
 import consulo.msil.impl.lang.psi.impl.elementType.stub.MsilTypeParameterAttributeListStub;
@@ -56,6 +58,23 @@ public class MsilTypeParameterAttributeListImpl extends MsilStubElementImpl<Msil
         }
         PsiElement element = findChildByType(MsilTokens.IDENTIFIER);
         return element == null ? null : element.getText();
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean isConstraint() {
+        MsilTypeParameterAttributeListStub stub = getGreenStub();
+        if (stub != null) {
+            return stub.isConstraint();
+        }
+        return findChildByType(MsilTokens.CONSTRAINT_KEYWORD) != null;
+    }
+
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public DotNetType getConstraintType() {
+        return getFirstStubOrPsiChild(MsilStubTokenSets.TYPE_STUBS, DotNetType.ARRAY_FACTORY);
     }
 
     @Override

@@ -106,6 +106,14 @@ public class MsilParser implements PsiParser, MsilTokens, MsilTokenSets, MsilEle
             expect(builder, IDENTIFIER, "Identifier expected");
             doneTo = TYPE_PARAMETER_ATTRIBUTE_LIST;
         }
+        // .param constraint T, class IFoo - the attributes of a constraint of a generic parameter
+        else if (expect(builder, CONSTRAINT_KEYWORD, null)) {
+            expect(builder, IDENTIFIER, "Identifier expected");
+            if (expect(builder, COMMA, "',' expected")) {
+                parseType(builder);
+            }
+            doneTo = TYPE_PARAMETER_ATTRIBUTE_LIST;
+        }
         else {
             if (expect(builder, LBRACKET, "'[' expected")) {
                 expect(builder, NUMBER_LITERAL, "Index expected");
