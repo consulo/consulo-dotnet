@@ -30,7 +30,11 @@ import java.util.regex.Pattern;
  */
 public class DotNetDebuggerCompilerGenerateUtil
 {
-	public static final Pattern LambdaMethodPattern = Pattern.compile("<([\\S\\d]+)>m__([\\d]+)");
+	// mcs: <Method>m__0 - or <>m__0 in the <Method>c__AnonStorey0 type, which has the captured variables
+	public static final Pattern LambdaMethodPattern = Pattern.compile("<([\\S\\d]*)>m__([\\d]+)");
+	// Roslyn: <Method>b__0_1 - in the type of the method, in <>c without captured variables, in <>c__DisplayClass0_0 with them
+	public static final Pattern LambdaMethodRoslynPattern = Pattern.compile("<([\\S\\d]+)>b__([\\d_]+)");
+	private static final Pattern LambdaCacheTypeRoslyn = Pattern.compile("<>c(`\\d+)?");
 	public static final Pattern YieldNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__Iterator(\\p{XDigit}+)");
 	public static final Pattern YieldNestedTypeRoslynPattern = Pattern.compile("<([\\S\\d]+)>d__(\\p{XDigit}+)");
 	public static final Pattern AsyncNestedTypePattern = Pattern.compile("<([\\S\\d]+)>c__async(\\p{XDigit}+)");
@@ -38,7 +42,7 @@ public class DotNetDebuggerCompilerGenerateUtil
 	public static final Pattern SomeReferenceToOriginalPattern = Pattern.compile("<([\\S\\d]+)>__([\\d]+)");
 	public static final Pattern SomeReferenceToOriginalRoslynPattern = Pattern.compile("<([\\S\\d]+)>(\\d+)__([\\d]+)");
 
-	private static final Pattern AsyncLambdaFirstWrapperMS = Pattern.compile("<>c__DisplayClass([\\d]+)_([\\d]+)");
+	private static final Pattern AsyncLambdaFirstWrapperMS = Pattern.compile("<>c__DisplayClass([\\d]+)(_[\\d]+)?(`\\d+)?");
 	private static final Pattern AsyncLambdaFirstWrapperMono = Pattern.compile("<([\\S\\d]+)>c__AnonStorey([\\d]+)");
 
 	private static final Pattern LocalVarWrapperPatternMono = Pattern.compile("\\$locvar\\p{XDigit}+");
@@ -49,12 +53,49 @@ public class DotNetDebuggerCompilerGenerateUtil
 	@Nullable
 	public static Couple<String> extractLambdaInfo(DotNetMethodProxy methodMirror)
 	{
-		Matcher matcher = LambdaMethodPattern.matcher(methodMirror.getName());
+		return extractLambdaInfo(methodMirror.getName(), methodMirror.getDeclarationType().getName());
+	}
+
+	/**
+	 * @return the name of the method the lambda is written in, and the number of the lambda - null if the method is no lambda
+	 */
+	@Nullable
+	public static Couple<String> extractLambdaInfo(String methodName, String declarationTypeName)
+	{
+		Matcher matcher = LambdaMethodPattern.matcher(methodName);
+		if(matcher.matches())
+		{
+			String method = matcher.group(1);
+			if(method.isEmpty())
+			{
+				// <>m__0 of <Method>c__AnonStorey0
+				Matcher storey = AsyncLambdaFirstWrapperMono.matcher(declarationTypeName);
+				method = storey.matches() ? storey.group(1) : method;
+			}
+			return Couple.of(method, matcher.group(2));
+		}
+
+		matcher = LambdaMethodRoslynPattern.matcher(methodName);
 		if(matcher.matches())
 		{
 			return Couple.of(matcher.group(1), matcher.group(2));
 		}
 		return null;
+	}
+
+	/**
+	 * A nested type the compiler makes for the lambdas of the methods of its outer type: the cache of lambdas without captured
+	 * variables (Roslyn <>c), and the closures with them (Roslyn <>c__DisplayClass0_0, mcs <Method>c__AnonStorey0)
+	 */
+	public static boolean isLambdaHolderType(DotNetTypeProxy typeMirror)
+	{
+		return typeMirror.isNested() && isLambdaHolderTypeName(typeMirror.getName());
+	}
+
+	public static boolean isLambdaHolderTypeName(String name)
+	{
+		return LambdaCacheTypeRoslyn.matcher(name).matches() || AsyncLambdaFirstWrapperMS.matcher(name).matches()
+				|| AsyncLambdaFirstWrapperMono.matcher(name).matches();
 	}
 
 	public static boolean isLocalVarWrapper(String name)

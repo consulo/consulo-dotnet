@@ -16,6 +16,8 @@
 
 package consulo.debugger.impl;
 
+import consulo.util.lang.Couple;
+
 import org.junit.Assert;
 import org.junit.Test;
 import consulo.dotnet.debugger.impl.nodes.DotNetDebuggerCompilerGenerateUtil;
@@ -26,6 +28,35 @@ import consulo.dotnet.debugger.impl.nodes.DotNetDebuggerCompilerGenerateUtil;
  */
 public class DotNetDebuggerCompilerGenerateUtilTest extends Assert
 {
+	@Test
+	public void testLambdaMethod()
+	{
+		// the names are the ones of Roslyn (csc) and mcs for the same lambdas
+		assertEquals(Couple.of("M", "1_0"), DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo("<M>b__1_0", "<>c"));
+		assertEquals(Couple.of("M", "1"), DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo("<M>b__1", "<>c__DisplayClass1_0"));
+		assertEquals(Couple.of("M", "0"), DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo("<M>m__0", "C"));
+		assertEquals(Couple.of("M", "2"), DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo("<>m__2", "<M>c__AnonStorey0"));
+
+		// a local function, an async state machine, a plain method
+		assertNull(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo("<M>g__Local|4", "<>c__DisplayClass1_0"));
+		assertNull(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo("MoveNext", "<<M>b__3>d"));
+		assertNull(DotNetDebuggerCompilerGenerateUtil.extractLambdaInfo("M", "C"));
+	}
+
+	@Test
+	public void testLambdaHolderType()
+	{
+		assertTrue(DotNetDebuggerCompilerGenerateUtil.isLambdaHolderTypeName("<>c"));
+		assertTrue(DotNetDebuggerCompilerGenerateUtil.isLambdaHolderTypeName("<>c__DisplayClass1_0"));
+		assertTrue(DotNetDebuggerCompilerGenerateUtil.isLambdaHolderTypeName("<>c__DisplayClass1_1`1"));
+		assertTrue(DotNetDebuggerCompilerGenerateUtil.isLambdaHolderTypeName("<>c__DisplayClass5"));
+		assertTrue(DotNetDebuggerCompilerGenerateUtil.isLambdaHolderTypeName("<M>c__AnonStorey0"));
+
+		assertFalse(DotNetDebuggerCompilerGenerateUtil.isLambdaHolderTypeName("<<M>b__3>d"));
+		assertFalse(DotNetDebuggerCompilerGenerateUtil.isLambdaHolderTypeName("<M>d__1"));
+		assertFalse(DotNetDebuggerCompilerGenerateUtil.isLambdaHolderTypeName("Nested"));
+	}
+
 	@Test
 	public void testYieldPattern()
 	{
