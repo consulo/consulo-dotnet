@@ -12,6 +12,7 @@ open module consulo.dotnet.api {
 
     exports consulo.dotnet;
     exports consulo.dotnet.assembly;
+    exports consulo.dotnet.assembly.summary;
     exports consulo.dotnet.compiler;
     exports consulo.dotnet.dll;
     exports consulo.dotnet.externalAttributes;

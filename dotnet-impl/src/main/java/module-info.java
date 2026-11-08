@@ -30,6 +30,7 @@ module consulo.dotnet.impl {
 
     exports consulo.dotnet.icon;
     exports consulo.dotnet.impl.assembly;
+    exports consulo.dotnet.impl.assembly.summary;
     exports consulo.dotnet.impl.compiler;
     exports consulo.dotnet.impl.dll;
     exports consulo.dotnet.impl.dll.vfs;
