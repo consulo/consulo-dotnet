@@ -19,6 +19,7 @@ open module consulo.dotnet.api {
     exports consulo.dotnet.module;
     exports consulo.dotnet.module.extension;
     exports consulo.dotnet.module.macro;
+    exports consulo.dotnet.packageManager;
     exports consulo.dotnet.sdk;
     exports consulo.dotnet.util;
 }
