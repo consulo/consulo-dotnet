@@ -30,6 +30,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Iterator;
 
 /**
@@ -124,10 +125,10 @@ public class DotNetArchiveFileSystemProvider implements ArchiveFileSystemProvide
     }
 
     @Override
-    public ArchiveFile createArchiveFile(String path) throws IOException {
+    public ArchiveFile createArchiveFile(Path path) throws IOException {
         try {
-            File file = new File(path);
-            return new DotNetArchiveFileWrapper(new DotNetArchiveFile(file, new ModuleParser(new File(path)), file.lastModified()));
+            File file = path.toFile();
+            return new DotNetArchiveFileWrapper(new DotNetArchiveFile(file, new ModuleParser(file), file.lastModified()));
         }
         catch (MSILParseException e) {
             // ignore initial parse exception
