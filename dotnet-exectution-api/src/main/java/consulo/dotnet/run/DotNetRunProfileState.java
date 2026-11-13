@@ -29,8 +29,8 @@ import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessConsoleType;
 import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.ProcessHandlerFactory;
 
 import org.jspecify.annotations.Nullable;
 
@@ -58,12 +58,13 @@ public class DotNetRunProfileState extends PatchableRunProfileState
 		{
 			ProcessConsoleType consoleType = ((DotNetConfigurationConsoleTypeProvider) runProfile).getConsoleType();
 
-			handler = ProcessHandlerFactory.getInstance().createProcessHandler(commandLineForRun, consoleType);
+			// a process of the machine of the command line
+			handler = ProcessHandlerBuilder.create(commandLineForRun).consoleType(consoleType).build();
 			enableConsole = consoleType.isConsoleViewSupported();
 		}
 		else
 		{
-			handler = patchHandler(ProcessHandlerFactory.getInstance().createProcessHandler(commandLineForRun));
+			handler = patchHandler(ProcessHandlerBuilder.create(commandLineForRun).build());
 		}
 
 		ProcessTerminatedListener.attach(handler, myExecutionEnvironment.getProject());

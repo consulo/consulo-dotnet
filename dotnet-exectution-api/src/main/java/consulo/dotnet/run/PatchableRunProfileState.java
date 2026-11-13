@@ -11,7 +11,8 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.dataholder.UserDataHolderBase;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
+
+import java.nio.file.Files;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -51,7 +52,8 @@ public abstract class PatchableRunProfileState extends UserDataHolderBase implem
 	@Override
 	public ExecutionResult execute(Executor executor, ProgramRunner programRunner) throws ExecutionException
 	{
-		if(!new File(myCommandLineForRun.getExePath()).exists())
+		// the executable of the machine of the command line
+		if(!Files.exists(myCommandLineForRun.getPlatform().fs().getPath(myCommandLineForRun.getExePath())))
 		{
 			throw new ExecutionException(myCommandLineForRun.getExePath() + " is not exists");
 		}

@@ -145,7 +145,8 @@ public class DotNetConfiguration extends ModuleBasedConfiguration<RunConfigurati
         if (consulo.util.lang.StringUtil.isEmptyOrSpaces(workDir)) {
             workDir = DotNetMacroUtil.expandOutputDir(extension);
         }
-        runCommandLine.withWorkDirectory(workDir);
+        // a directory of the machine of the command line
+        runCommandLine.withWorkingDirectory(runCommandLine.getPlatform().fs().getPath(workDir));
 
         DotNetRunProfileState state = new DotNetRunProfileState(executionEnvironment, runCommandLine);
         if (debugConnectionInfo != null) {
