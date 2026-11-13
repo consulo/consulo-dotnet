@@ -303,7 +303,7 @@ public abstract class BaseDotNetSimpleModuleExtension<S extends BaseDotNetSimple
 
     @Nullable
     private static Couple<String> parseLibrary(File f) {
-        AssemblyInfo assemblyInfo = AssemblyInfoCacheService.getInstance().getAssemblyInfo(f);
+        AssemblyInfo assemblyInfo = AssemblyInfoCacheService.getInstance().getAssemblyInfo(f.toPath());
         if (assemblyInfo == null) {
             return null;
         }

@@ -12,7 +12,7 @@ import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -32,7 +32,7 @@ public class AssemblyInfoCacheService implements Disposable
 		return Application.get().getService(AssemblyInfoCacheService.class);
 	}
 
-	private final Map<File, Object> myCachePath = new ConcurrentHashMap<>();
+	private final Map<Path, Object> myCachePath = new ConcurrentHashMap<>();
 	private final ScheduledFuture<?> myClearFuture;
 
 	public AssemblyInfoCacheService()
@@ -41,7 +41,7 @@ public class AssemblyInfoCacheService implements Disposable
 	}
 
 	@Nullable
-	public AssemblyInfo getAssemblyInfo(File file)
+	public AssemblyInfo getAssemblyInfo(Path file)
 	{
 		Object value = myCachePath.computeIfAbsent(file, s -> {
 			try

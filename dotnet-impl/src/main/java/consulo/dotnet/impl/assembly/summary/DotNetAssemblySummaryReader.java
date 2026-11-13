@@ -56,7 +56,7 @@ final class DotNetAssemblySummaryReader {
     static DotNetAssemblySummary read(Path file) {
         ModuleParser parser;
         try {
-            parser = new ModuleParser(file.toFile());
+            parser = new ModuleParser(file);
         }
         catch (IOException | MSILParseException | RuntimeException e) {
             return null;

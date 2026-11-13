@@ -17,24 +17,30 @@
 package consulo.dotnet.sdk;
 
 import consulo.container.plugin.PluginManager;
-import consulo.content.OrderRootType;
+import consulo.content.bundle.PlatformAwareSdkType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
-import consulo.content.bundle.SdkType;
 import consulo.dotnet.externalAttributes.ExternalAttributesRootOrderType;
 import consulo.dotnet.module.extension.BaseDotNetSimpleModuleExtension;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
-import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 
 /**
+ * A .NET bundle of any machine.
+ *
  * @author VISTALL
  * @since 20.12.13.
  */
-public abstract class DotNetSdkType extends SdkType {
+public abstract class DotNetSdkType extends PlatformAwareSdkType {
+    private static final Logger LOG = Logger.getInstance(DotNetSdkType.class);
+
     protected DotNetSdkType(String id, LocalizeValue displayName, Image icon) {
         super(id, displayName, icon);
     }
@@ -44,32 +50,31 @@ public abstract class DotNetSdkType extends SdkType {
         return ExternalAttributesRootOrderType.ID.equals(type);
     }
 
+    /**
+     * The external attributes are files of the IDE - the bundle of any machine gets them.
+     */
     @Override
     public void setupSdkPaths(Sdk sdk) {
         SdkModificator sdkModificator = sdk.getSdkModificator();
 
-        File dir = new File(PluginManager.getPluginPath(BaseDotNetSimpleModuleExtension.class), "externalAttributes");
+        Path dir = PluginManager.getPluginPath(BaseDotNetSimpleModuleExtension.class).toPath().resolve("externalAttributes");
 
-        FileUtil.visitFiles(dir, file ->
-        {
-            if (file.isDirectory()) {
-                return true;
-            }
-
-            if (file.getName().endsWith(".xml")) {
-                sdkModificator.addRoot(VirtualFileUtil.pathToUrl(file.getPath()), ExternalAttributesRootOrderType.ID);
-            }
-            return true;
-        });
+        try (Stream<Path> files = Files.walk(dir)) {
+            files.filter(file -> Files.isRegularFile(file) && file.getFileName().toString().endsWith(".xml"))
+                .forEach(file -> sdkModificator.addRoot(VirtualFileUtil.pathToUrl(file.toString()), ExternalAttributesRootOrderType.ID));
+        }
+        catch (IOException e) {
+            LOG.warn(e);
+        }
 
         sdkModificator.commitChanges();
     }
 
-    public File getLoaderFile(Sdk sdk) {
+    public Path getLoaderFile(Sdk sdk) {
         return getLoaderFile(getClass(), "loader.exe");
     }
 
-    protected static File getLoaderFile(Class<?> clazz, String fileName) {
-        return new File(new File(PluginManager.getPluginPath(clazz), "loader"), fileName);
+    protected static Path getLoaderFile(Class<?> clazz, String fileName) {
+        return PluginManager.getPluginPath(clazz).toPath().resolve("loader").resolve(fileName);
     }
 }

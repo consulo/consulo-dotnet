@@ -27,9 +27,9 @@ import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystemProvider;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 
@@ -127,8 +127,8 @@ public class DotNetArchiveFileSystemProvider implements ArchiveFileSystemProvide
     @Override
     public ArchiveFile createArchiveFile(Path path) throws IOException {
         try {
-            File file = path.toFile();
-            return new DotNetArchiveFileWrapper(new DotNetArchiveFile(file, new ModuleParser(file), file.lastModified()));
+            // a file of any machine - read in place
+            return new DotNetArchiveFileWrapper(new DotNetArchiveFile(path, new ModuleParser(path), Files.getLastModifiedTime(path).toMillis()));
         }
         catch (MSILParseException e) {
             // ignore initial parse exception
