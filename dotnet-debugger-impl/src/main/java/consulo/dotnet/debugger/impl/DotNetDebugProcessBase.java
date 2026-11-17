@@ -122,10 +122,6 @@ public abstract class DotNetDebugProcessBase extends XDebugProcess implements Do
     }
 
     @Override
-    public void runToPosition(XSourcePosition position, @Nullable XSuspendContext context) {
-    }
-
-    @Override
     public AsyncResult<Void> stopAsync() {
         AsyncResult<Void> result = AsyncResult.undefined();
         Task.Backgroundable.queue(getSession().getProject(), "Waiting for debugger response...", indicator ->
